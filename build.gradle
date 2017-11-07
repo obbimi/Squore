@@ -1,0 +1,134 @@
+// export ANDROID_HOME=/osshare/software/google/android-sdk-linux
+
+apply plugin: 'com.android.application'
+
+repositories {
+    mavenCentral()
+/*
+    maven {
+        url = 'https://github.com/falnatsheh/MarkdownView'
+    }
+*/
+}
+
+// Run ./gradlew -q :ScoreBoard:dependencies
+
+dependencies {
+    compile project(':AndroidBase')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+	// 24.1.1 vs 23.4.0
+    compile 'com.android.support:percent:25.3.1'
+
+    //compile 'com.android.support:support-v4:25.3.1' // not required
+
+    compile 'com.android.support:support-v13:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+
+    // ChromeCast
+    compile 'com.google.android.gms:play-services-cast:11.0.4'
+
+    //compile 'com.android.support:recyclerview-v7:25.3.1'
+}
+
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+
+    useLibrary  'org.apache.http.legacy'
+//repositories {
+//   flatDir {
+//       dirs 'libs'
+//   }
+//}
+      lintOptions {
+          disable 'MissingTranslation'
+          checkReleaseBuilds true
+          // Or, if you prefer, you can continue to check for errors in release builds,
+          // but continue the build even when errors are found:
+          abortOnError false
+          //deprecation true
+      }
+//    preBuild {
+//        doFirst {
+//            JavaCompile jc = android.applicationVariants.find { it.name == 'debug' }.javaCompile
+//            //jc.options.compilerArgs = ["-Xlint:unchecked"]
+//            //jc.options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+//            jc.options.compilerArgs << "-Xlint:deprecation"
+//        }
+//    }
+/*
+    compileJava {
+        //options.encoding = 'UTF-8'
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+*/
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 25
+
+        //multiDexEnabled true
+    }
+    sourceSets {
+        main {
+            manifest {
+                srcFile 'AndroidManifestSquore.xml'
+                //srcFile 'AndroidManifestRacketlon.xml'
+                //srcFile 'AndroidManifestTabletennis.xml'
+                //srcFile 'AndroidManifestCourtCare.xml'
+                //srcFile 'AndroidManifestUniOfNotthingham.xml'
+                //srcFile 'AndroidManifestASB.xml'
+            }
+            java {
+                srcDir 'src'
+                // exclude '**/cast/**'
+            }
+            res {
+                srcDir 'res'
+            }
+        }
+    }
+
+    //dexOptions {
+    //    preDexLibraries = false
+    //}
+    signingConfigs {
+        release {
+            storeFile file("/osshare/code/DoubleYellow/DoubleYellow.keystore")
+            storePassword "this2hib"
+            keyAlias "DoubleYellow"
+            keyPassword "this2hib"
+        }
+    }
+    buildTypes {
+/*
+        minified {
+            //debuggable true
+            minifyEnabled true
+            // 'shrinkResources=true' currently only helps for 2%
+            shrinkResources true
+            proguardFile 'proguard-project.txt'
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+*/
+        release {
+            debuggable false // must be false for play store
+
+            //old AND 3.63: 123,124 alpha
+            minifyEnabled   false // 123=true,     124=false
+            shrinkResources false //               124=false
+            proguardFile 'proguard-project.txt' // 124=enabled
+
+            // 3.63: 125 todo
+/*
+            minifyEnabled false
+            shrinkResources false
+            proguardFile 'proguard-project.txt'
+*/
+
+            signingConfig signingConfigs.release
+        }
+    }
+}
