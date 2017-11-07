@@ -1,0 +1,55 @@
+package com.doubleyellow.scoreboard.model;
+
+public enum JSONKey {
+	score,
+		result,
+		gamescores,
+		gameStartScoreOffset,
+	referee,
+		markers,
+	players,
+		colors,
+		countries,
+		clubs,
+	format,
+		numberOfPointsToWinGame,
+		// tabletennis specific key
+		nrOfServersPerPlayer,
+    	handicapFormat,
+		nrOfGamesToWinMatch,
+    	// squash specific keys
+		useHandInHandOutScoring,
+		tiebreakFormat,
+		doublesServeSequence,
+        // racketlon specific keys
+        disciplineSequence,
+	when,
+		/** yyyyMMdd format */
+		date,
+		/** HHMM format */
+		time,
+	timing,
+		start,
+		end,
+		offsets,
+	statistics,
+	conductCalls,
+		call,
+		type,
+		player,
+		game,
+	event,
+		name,
+		division,
+		round,
+		location,
+	lockState,
+		winnerBecauseOf,
+	sport,
+	appName,
+	appPackage,
+	metadata,
+		source,
+	wifi,
+}
+
