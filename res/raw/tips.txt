@@ -1,0 +1,22 @@
+Did you know that you can
+
+undo the last score by swiping from left to right or right-to-left over the person that you indicated scored the last point
+change serve side also by swiping over the servers name into the direction that they will be serving
+export matches you reffed before e.g. to transfer to another device
+start a new match by clicking on the home button (icon + title in the upper left corner) of the scoreboard
+start a new match by clicking on both player names simultaneously
+change the colors the app uses (e.g. to match your club colors)
+adjust the size of the text of most screen elements of the score board
+review scoring history of matches you reffed previously with this app
+adjust the score by click in both score buttons simultaneously (e.g if you start reffing a match that is already half-way)
+show the event and format information of the match in progress by long clicking both score buttons
+predefine a list of matches (manually, or textual in settings) for easy selection later on
+select matches as well as post results to your clubs website (if you webmaster is willing to put a little effort into it)
+long clicking on the 'Serve Side' button allows you to specify a color for it (e.g. if you don't really know the player names and need to identify them by e.g. the color of their shirt)
+transfer a match in progress to another android device using NFC (hold devices together back-to-back) (provided both phones support NFC)
+transfer your _Settings/Internet/Selectable Feed URLs_a settings to another android device using NFC
+
+share match results e.g. to facebook
+have configurable timers at your disposal
+
+For a doubles match: long click on the serve side button of the team already serving changes the server

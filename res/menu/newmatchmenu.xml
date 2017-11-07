@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+    <item android:id="@+id/cmd_ok"     app:showAsAction="ifRoom" android:icon="@drawable/ic_action_accept"  android:title="@string/cmd_ok" />
+    <item
+            android:id="@+id/sb_overflow_submenu"
+            android:icon="@drawable/ic_action_overflow"
+            android:title="@string/uc_more"
+            app:showAsAction="ifRoom">
+        <item android:id="@+id/cmd_cancel"      android:icon="@android:drawable/ic_menu_close_clear_cancel"   android:title="@string/cmd_cancel" />
+        <item android:id="@+id/uc_clear_player_fields"                                                           android:title="@string/uc_clear_player_fields" />
+        <item android:id="@+id/uc_clear_club_fields"                                                             android:title="@string/uc_clear_club_fields" />
+        <item android:id="@+id/uc_clear_country_fields"                                                          android:title="@string/uc_clear_country_fields" />
+        <item android:id="@+id/uc_clear_event_fields"                                                            android:title="@string/uc_clear_event_fields" />
+        <item android:id="@+id/uc_clear_referee_fields"                                                          android:title="@string/uc_clear_referee_fields" />
+        <item android:id="@+id/uc_clear_all_fields"                                                              android:title="@string/uc_clear_all_fields" />
+    </item>
+</menu>

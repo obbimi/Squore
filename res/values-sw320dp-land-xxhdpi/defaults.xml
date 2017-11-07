@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- matthias/bruno/S4: 1080 x 1920 ?? TODO: double check, 1080x1776, density 3.0, x-y-dpi=480 if I enable on screen buttons -->
+    <string name="setting_resource_folder" translatable="false">values-sw320dp-xxhdpi-land</string>
+<!--
+    <dimen name="main_button_padding">5dp</dimen>
+    <dimen name="main_button_margin">2dp</dimen>
+-->
+    <dimen name="txt_small">20sp</dimen>
+    <dimen name="txt_medium">25sp</dimen>
+    <dimen name="txt_normal">30sp</dimen>
+
+
+
+
+
+
+
+
+    <!--<dimen name="sb_button_minheight">50dp</dimen>-->
+    <dimen name="sb_button_padding">4dp</dimen>
+    <dimen name="sb_button_radius">36dp</dimen>
+
+<!--
+    <integer name="TextSizeScore_default">240</integer>
+    <integer name="TextSizePlayerName_default">100</integer>
+    <integer name="TextSizeServeSide_default">64</integer>
+    <integer name="TextSizeHistory_default">54</integer>
+-->
+    <integer name="AppealHandGestureIconSize_default">128</integer>
+
+    <integer name="TextSizeCalls_default">20</integer>
+    <integer name="TextSizeTabStrip">24</integer>
+    <integer name="TextSizeShowCase">18</integer> <!-- 20 was to big for Samsung S5, but OK for S4: caused by personal setting to use 85% as text size overall in android -->
+    <integer name="maxNumberOfLinesToUseForGameEndScores">7</integer>
+    <integer name="maxNumberOfPlayersInGroup_default">6</integer>
+
+    <bool name="showFullScreen_default">false</bool>
+
+</resources>

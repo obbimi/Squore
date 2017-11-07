@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="Score">Score</string>
+    <string name="Game">Game</string>
+
+    <string name="left_serveside_single_char">L</string>
+    <string name="right_serveside_single_char">R</string>
+
+    <string name="no_let_abbreviation">NL</string>
+    <string name="yes_let_abbreviation">YL</string>
+    <string name="stroke_abbreviation">ST</string>
+    <string name="conduct_warning_abbreviation">CW</string>
+    <string name="conduct_stroke_abbreviation">CS</string>
+    <string name="conduct_game_abbreviation">CG</string>
+    <string name="conduct_match_abbreviation">CM</string>
+
+    <string name="broken_string_abbreviation">BS</string>
+    <string name="broken_ball_abbreviation">BB</string>
+    <string name="broken_racket_abbreviation">BR</string>
+
+    <string name="handout">Hand-out</string>
+    <string name="lbl_all_games">All Games</string>
+    <!--<string name="lbl_game">Game</string>-->
+    <string name="lbl_players">Players</string>
+    <string name="lbl_event_and_players">Event and Players</string>
+    <string name="lbl_player">Player</string>
+    <string name="lbl_player_A">Player A</string>
+    <string name="lbl_playerA1">Player A1</string>
+    <string name="lbl_playerA2">Player A2</string>
+    <string name="lbl_player_B">Player B</string>
+    <string name="lbl_playerB1">Player B1</string>
+    <string name="lbl_playerB2">Player B2</string>
+    <string name="lbl_player_x">Player %s</string>
+    <string name="lbl_countries">Countries</string>
+    <string name="lbl_country_A">Country A</string>
+    <string name="lbl_country_B">Country B</string>
+    <string name="lbl_clubs">Clubs</string>
+    <string name="lbl_club_A">Club A</string>
+    <string name="lbl_club_B">Club B</string>
+    <string name="add_x_matches">Add %d matches</string>
+    <string name="lbl_event">Event</string>
+    <string name="lbl_division">Division</string>
+    <string name="lbl_round">Round</string>
+    <string name="lbl_location">Location</string>
+    <string name="lbl_referee">Referee</string>
+    <string name="lbl_marker">Marker</string>
+    <string name="lbl_versus">vs</string>
+
+    <string name="lbl_broken_equipment">Broken equipment reported by %s</string>
+    <string name="point_awarded_to_p">Point awarded to %s</string>
+    <string name="point">Point</string>
+    <string name="points">Points</string>
+    <string name="lbl_warning">Warning</string>
+<!--
+    <string name="last_game__score_x_induration_y_z">Last game: %s in %s %s</string>
+    <string name="last_game__score_x_induration_y_z__2lines">Last game: %s\nin %s %s</string>
+-->
+    <string name="game_ended">Game ended</string>
+    <string name="match_ended">Match ended</string>
+
+    <!-- source: http://www.worldsquash.org/ws/coaching-development/referees/referees-info/conduct-on-court -->
+    <string name="conducts_guidelines_default"><![CDATA[
+\n- Abuse of equipment (racket, ball or other equipment):
+\nMinor offence (e.g. throwing the racket onto the floor after losing a game, hitting the ball hard after the rally is over): Conduct Warning
+\nMajor offence (e.g. deliberately breaking the racket; smashing the racket against the wall; hitting the ball or throwing the racket out of the court): Conduct Stroke
+\n
+\n- Audible or Visible Obscenity:
+\nMinor offence (e.g. muttered expletive; blaspheming): Conduct Warning
+\nMajor offence (e.g. audible obscenity): Conduct Stroke
+\n
+\n- Time-wasting:
+\nMinor offence (e.g. a few seconds late back on court; taking excessive time to serve): Conduct Warning
+\nMajor offence (e.g. very late back on court; prolonged discussion with Referee): Conduct Stroke
+\n
+\n- Dissent:
+\nMinor offence (e.g. questioning a decision): Conduct Warning
+\nMajor offence (e.g. prolonged or repeated questioning of or disagreement with decisions): Conduct Stroke
+\n
+\n- Abuse of Official:
+\nMinor offence (e.g. unflattering comments about official or decisions): Conduct Warning
+\nMajor offence (e.g. pejorative comments about official or decisions): Conduct Stroke
+\nSevere offence (e.g. hitting ball at official or into spectators; throwing racket at official or into spectators): Conduct Game or Match (depending on the severity of the offence and the danger caused)
+\n
+\n- Excessive physical contact:
+\nMinor offence (e.g. running into the opponent): Conduct warning
+\nMajor offence (e.g. physical abuse of the opponent): Conduct Stroke
+\nSevere offence (e.g. deliberately injuring the opponent; dangerous play that injures the opponent): Conduct Game or Match (depending on the severity of the offence and the extent of the injury caused)
+\n
+\n- Unsporting conduct:
+\nMinor offence (e.g. making negative comments to the opponent): Conduct Warning
+\nMajor offence (e.g. repeated negative or pejorative comments to the opponent; any attempt at intimidation of the opponent): Conduct Stroke
+\nSevere offence (e.g. extreme behaviour that brings the game into disrepute): Conduct Game or Match (depending on the severity of the offence)
+\n
+\n- Coaching:
+\nFirst occurrence: Conduct Warning
+\nSecond occurrence: Conduct Stroke and expulsion of offending person
+\n
+\n- Repeated and excessive bad conduct:
+\nWhen, in the Referee’s opinion, the player is guilty of repeated acts of unacceptable conduct on court following the imposition of the penalties outlined above, the Referee may impose for the next occurrence of the offence either the same penalty for the second offence or a more severe penalty than the one already imposed. However, if a Conduct Warning has been given for both the first and the second offences, for the third offence of a similar nature a Conduct Stroke must be applied. (Example: If a player has received a Conduct Warning for Dissent, on the next occurrence of this offence, either a Conduct Warning or a Conduct Stroke may be imposed. On the third occurrence, however, a Conduct Stroke is mandatory.)
+\n
+    ]]></string>
+</resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="oal_warmup">Calentamiento</string>
+    <string name="oa_halftime">Medio tiempo!</string>
+    <string name="oa_time">Tiempo!</string>
+    <string name="oal_pause">Pausa</string>
+
+    <string name="oa_best_of_x_games_to_y">Al mejor de %s juegos</string>
+    <string name="oa_best_of_x_games">Al mejor de %s juegos</string>
+    <string name="oa_x_to_serve__y_to_receive">%1$s para servir, %2$s para recibir</string>
+    <string name="oa_love_all">0–0</string>
+
+    <string name="oa_game_to_x">Juego para %s</string>
+    <string name="oa_match_to_x">Partido para %s</string>
+    <string name="oa_1_game_all">Un juego de todo</string>
+    <string name="oa_x_games_all">%s juegos all</string>
+    <!--<string name="oa_x_leads_n_against_y">%s lidera %s a %s</string>-->
+    <!--<string name="oa_x_wins_n_against_y">Partido para %s, %s juegos a %s</string>-->
+    <string name="oa_a_leads_xGamesToy">%1$s lidera %2$s</string>
+    <string name="oa_a_wins_xGamesToy">Partido para %1$s, %2$s</string>
+    <string name="oa_x_games_TO_y">a</string>
+    <string name="oa_x_th_game">%s juego</string>
+    <string name="oa_x_to_serve">%s al servicio</string>
+    <string name="oa_love">0</string>
+    <string name="oa_game">juego</string>
+    <string name="oa_games">juegos</string>
+    <string name="oa_gameball">Bola de Juego</string>
+    <string name="oa_matchball">Bola de Partido</string>
+
+    <string name="oa_n_all">%1$s-%1$s</string>
+    <string name="oa_player_needs_2_clear_points">Al jugador debe ganar por 2 puntos</string>
+
+    <string name="oa_change_sides"></string>
+    <string name="oa_fifteen_seconds">%s Segundos!</string>
+
+    <string name="oa_decision_colon">Decisión :</string>
+    <string name="oa_yes_let">Si, Let</string>
+    <string name="oa_no_let">No Let</string>
+    <string name="oa_stroke">Stroke</string>
+    <string name="oa_stroke_to_x">Stroke para %s</string>
+    <string name="oa_conduct_warning">Advertencia por conducta</string>
+    <string name="oa_conduct_warning_x_for_type_y">Advertencia por conducta para %1$s por %2$s</string>
+    <string name="oa_conduct_stroke">Stroke por conducta</string>
+    <string name="oa_conduct_x__stroke_to_y_for_type_t">Sanctión por conducta para %1$s, Stroke para %2$s por %3$s</string>
+    <string name="oa_conduct_x__game_to_y_for_type_t">Sanctión por conducta para %1$s, Juego para %2$s por %3$s</string>
+    <string name="oa_conduct_game">Juego por conducta</string>
+    <string name="oa_conduct_match">Partido por conducta</string>
+
+    <string-array name="FirstSecondThirdFourthFifth">
+        <item>primer</item>
+        <item>segundo</item>
+        <item>tercer</item>
+        <item>cuarto</item>
+        <item>quinto</item>
+        <item>sexto</item>
+        <item>séptimo</item>
+        <item>de ocho</item>
+        <item>noveno</item>
+    </string-array>
+    <string name="officialAnnouncementsLanguage_default">es</string>
+</resources>

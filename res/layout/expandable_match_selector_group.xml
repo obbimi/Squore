@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/ll_expandable_match_selector_group"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="8dp"
+              android:background="@color/dy_dark"
+        >
+-->
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/lblListHeader"
+            android:tag="header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Dummy Text"
+            android:textStyle="bold"
+            android:textSize="@dimen/txt_medium"
+            android:textColor="@color/dy_dark"
+            android:gravity="right"
+            />
+<!--
+            android:hapticFeedbackEnabled="true"
+            android:lineSpacingExtra="@dimen/sb_button_padding"
+            android:paddingLeft="20dp"
+            android:paddingBottom="8dp"
+            android:layout_alignParentRight="true"
+</LinearLayout>
+-->

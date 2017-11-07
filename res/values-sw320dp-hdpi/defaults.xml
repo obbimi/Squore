@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Samsung S2 -->
+    <string name="setting_resource_folder" translatable="false">values-sw320dp-hdpi</string>
+
+    <dimen name="main_button_padding">5dp</dimen>
+    <dimen name="main_button_margin">2dp</dimen>
+
+    <dimen name="txt_small">15sp</dimen>
+    <dimen name="txt_medium">18sp</dimen>
+    <dimen name="txt_normal">22sp</dimen>
+
+
+
+
+
+
+
+
+    <!--<dimen name="sb_button_minheight">50dp</dimen>-->
+    <dimen name="sb_button_padding">2dp</dimen>
+    <dimen name="sb_button_radius">30dp</dimen>
+
+<!--
+    <integer name="TextSizeScore_default">180</integer>
+    <integer name="TextSizePlayerName_default">48</integer>
+    <integer name="TextSizeServeSide_default">36</integer>
+    <integer name="TextSizeHistory_default">24</integer>
+-->
+    <integer name="AppealHandGestureIconSize_default">48</integer>
+
+    <integer name="TextSizeCalls_default">12</integer>
+    <integer name="TextSizeTabStrip">18</integer>
+    <integer name="TextSizeShowCase">14</integer>
+    <integer name="maxNumberOfLinesToUseForGameEndScores">5</integer>
+
+    <bool name="showFullScreen_default">false</bool>
+
+</resources>

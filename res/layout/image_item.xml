@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  Single List Item Design -->
+<android.support.percent.PercentRelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+        >
+    <ImageButton android:id="@+id/image_item_image"
+                 app:layout_widthPercent="@fraction/image_item_ratio"
+                 app:layout_aspectRatio="100%"
+                 android:layout_marginLeft="16dp"
+                 android:background="@android:color/transparent"
+                 android:layout_width="0dp"
+                 android:layout_height="0dp"
+                 android:layout_alignParentLeft="true"
+                 android:layout_alignParentStart="true"
+                 android:layout_centerVertical="true"
+                 android:src="@drawable/ic_action_import_export" />
+    <TextView android:layout_width="match_parent"
+              android:id="@+id/image_item_text"
+              android:layout_toRightOf="@id/image_item_image"
+              android:layout_toEndOf="@id/image_item_image"
+              android:layout_alignParentRight="true"
+              android:layout_alignParentEnd="true"
+              android:layout_centerVertical="true"
+              android:layout_height="wrap_content"
+              android:text="Image Item Text"
+              android:textColor="@color/dy_white"
+              android:padding="@dimen/main_button_padding"
+              android:textSize="@dimen/txt_small"
+              android:gravity="left" />
+</android.support.percent.PercentRelativeLayout>

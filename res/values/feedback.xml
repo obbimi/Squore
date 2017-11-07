@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="cmd_feedback">Feedback</string>
+
+    <string name="lbl_do_you_like_this_app">Do you like this app?</string>
+    <string name="cmd_yes_i_like">Yes</string>
+    <string name="cmd_no_there_is_a_problem">No there is a problem</string>
+    <string name="lbl_take_a_minute_to_support">If you like Squore, take a minute to support the app.</string>
+    <string name="cmd_rate_the_app">Rate the app</string>
+    <string name="cmd_share">Share</string>
+    <string name="cmd_share_with_friends">Share with friends</string>
+    <string name="cmd_like_on_facebook">Like on facebook</string>
+    <string name="lbl_please_describe_the_problem">Please describe the problem as detailed as possible.</string>
+    <string name="cmd_email_the_developer">Email the developer</string>
+</resources>

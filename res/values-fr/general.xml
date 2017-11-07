@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fetching_data">Récupération des données…</string>
+    <string name="loading">Chargement en cours…</string>
+    <string name="loading_of_x">Chargement de %1$s… (%2$s)</string>
+    <string name="posting">Poster…</string>
+    <string name="possible_cause">Cause possible: </string>
+    <string name="could_not_load_feed_x">Impossible de charger le flux (%s)</string>
+    <string name="yesterday">Hier</string>
+    <string name="today">Aujourd\'hui</string>
+    <string name="tomorrow">Demain</string>
+    <string name="confirm">Confirmer</string>
+
+    <!-- buttons -->
+    <string name="name">Nom</string>
+    <string name="date">Date</string>
+    <string name="time">Heure</string>
+    <string name="timeunit">Unité de temps</string>
+    <string name="minutes">minutes</string>
+    <string name="seconds">secondes</string>
+    <string name="filename">Nom de fichier</string>
+    <string name="lock">Verrouiller</string>
+    <string name="locked">Verrouillé</string>
+    <string name="unlock">Déverrouiller</string>
+    <string name="total">Total</string>
+    <string name="overview">Vue d\'ensemble</string>
+    <string name="statistics">Statistiques</string>
+    <string name="handicap">Handicap</string>
+    <string name="no_handicap">Sans Handicap</string>
+    <string name="cmd_yes">Oui</string>
+    <string name="cmd_no">Non</string>
+    <string name="cmd_ok">OK</string>
+    <string name="cmd_start">Commencer</string>
+    <string name="cmd_automatic">Automatique</string>
+    <string name="cmd_suggest">Suggérer</string>
+    <string name="cmd_maximize">Agrandir</string>
+    <string name="cmd_normal">Normal</string>
+    <string name="cmd_cancel">Annuler</string>
+    <string name="cmd_none">Aucun</string>
+    <string name="cmd_add">Ajouter</string>
+    <string name="cmd_previous">Précédent</string>
+    <string name="cmd_next">Suivant</string>
+    <string name="cmd_add_x_seconds">Ajouter %s secondes</string>
+    <string name="cmd_subtract_x_seconds">Retirer %s secondes</string>
+    <string name="cmd_keep">Garder</string>
+    <string name="cmd_delete">Supprimer</string>
+    <string name="cmd_delete_all">Tout supprimer</string>
+    <string name="cmd_edit">Modifier</string>
+    <string name="cmd_open">Ouvrir</string>
+    <string name="cmd_hide">Masquer</string>
+    <string name="cmd_sort">Trier</string>
+    <string name="lbl_group_by">Grouper par</string>
+    <string name="cmd_pause">Pause</string>
+    <string name="msg_paused">En pause</string>
+    <string name="cmd_resume">Reprise</string>
+    <string name="cmd_save">Enregistrer</string>
+    <string name="cmd_close">Fermer</string>
+    <string name="cmd_new_group">Nouveau groupe</string>
+    <string name="cmd_new_match">Nouveau match</string>
+    <string name="cmd_new_matches">Nouveaux matchs</string>
+    <string name="cmd_new_matches_with">Nouveaux matchs avec</string>
+    <string name="cmd_rebuild">Reconstruire</string>
+    <string name="uc_exit">Quitter</string>
+    <string name="press_back_again_to_exit">Appuyez une nouvelle fois sur \'Retour\' pour quitter</string>
+    <string name="goto_help">Aide</string>
+    <string name="Help_elipses">Aide…</string>
+    <string name="about">A propos</string>
+    <string name="refresh">Actualiser</string>
+    <string name="filter">Filtre</string>
+    <string name="expand_all">Tout ouvrir</string>
+    <string name="collapse_all">Tout réduire</string>
+<!--
+    <string name="show_graph">Afficher le graphique</string>
+-->
+    <string name="tip">Trucs &amp; Astuces</string>
+    <string name="settings">Paramètres</string>
+    <string name="do_not_show_this_dialog_anymore">Ne plus afficher ce message</string>
+    <string name="lbl_fixed">Fixe</string>
+    <string name="lbl_none">Aucun</string>
+
+    <!-- network -->
+    <string name="no_fully_functional_connection_error">Aucun réseau fonctionnel. Peut-être avez-vous besoin pour vous connecter à votre fournisseur d\'accès internet ?</string>
+    <string name="connection_error">Erreur de connexion %1$s %2$s</string>
+    <string name="unknown_error">Erreur inconnue %s</string>
+
+    <string name="uc_more">Plus…</string>
+    <string name="uc_sort">Trier…</string>
+    <string name="uc_undo">Annuler</string>
+    <string name="uc_new">Nouveau…</string>
+    <string name="uc_edit">Modifier…</string>
+    <string name="uc_showing_x_elipses">Afficher %s …</string>
+    <string name="uc_show_elipses">Afficher…</string>
+    <string name="uc_show">Afficher</string>
+    <string name="uc_delete">Supprimer</string>
+    <string name="uc_email">Courriel</string>
+    <string name="uc_select">Choix</string>
+    <string name="uc_details">Détails</string>
+    <string name="uc_copy">Copier</string>
+    <string name="lbl_color">Couleur</string>
+    <string name="username">Nom d\'utilisateur</string>
+    <string name="password">Mot de passe</string>
+    <string name="save_password">Sauvegarder mot de passe</string>
+
+</resources>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="fetching_data">Fetching data…</string>
+    <string name="loading">Loading…</string>
+    <string name="loading_of_x">Loading of %1$s… (%2$s)</string>
+    <string name="posting">Posting…</string>
+    <string name="possible_cause">Possible cause: </string>
+    <string name="could_not_load_feed_x">Could not load Feed (%s)</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="confirm">Confirm</string>
+
+    <!-- buttons -->
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="timeunit">Time Unit</string>
+    <string name="minutes">minutes</string>
+    <string name="seconds">seconds</string>
+    <string name="filename">Filename</string>
+    <string name="lock">Lock</string>
+    <string name="locked">Locked</string>
+    <string name="unlock">Unlock</string>
+    <string name="total">Total</string>
+    <string name="overview">Overview</string>
+    <string name="statistics">Statistics</string>
+    <string name="handicap">Handicap</string>
+    <string name="no_handicap">No Handicap</string>
+    <string name="cmd_yes">Yes</string>
+    <string name="cmd_no">No</string>
+    <string name="cmd_ok">OK</string>
+    <string name="cmd_start">Start</string>
+    <string name="cmd_automatic">Automatic</string>
+    <string name="cmd_suggest">Suggest</string>
+    <string name="cmd_maximize">Maximize</string>
+    <string name="cmd_normal">Normal</string>
+    <string name="cmd_cancel">Cancel</string>
+    <string name="cmd_none">None</string>
+    <string name="cmd_add">Add</string>
+    <string name="cmd_previous">Previous</string>
+    <string name="cmd_next">Next</string>
+    <string name="cmd_add_x_seconds">Add %s secs</string>
+    <string name="cmd_subtract_x_seconds">Subtract %s secs</string>
+    <string name="cmd_keep">Keep</string>
+    <string name="cmd_delete">Delete</string>
+    <string name="cmd_delete_all">Delete all…</string>
+    <string name="cmd_edit">Edit</string>
+    <string name="cmd_open">Open</string>
+    <string name="cmd_hide">Hide</string>
+    <string name="cmd_sort">Sort</string>
+    <string name="lbl_group_by">Group by</string>
+    <string name="cmd_pause">Pause</string>
+    <string name="msg_paused">Paused</string>
+    <string name="cmd_resume">Resume</string>
+    <string name="cmd_save">Save</string>
+    <string name="cmd_close">Close</string>
+    <string name="cmd_new_group">New group</string>
+    <string name="cmd_new_match">New match</string>
+    <string name="cmd_new_matches">New matches</string>
+    <string name="cmd_new_matches_with">New matches with</string>
+    <string name="cmd_rebuild">Rebuild</string>
+    <string name="uc_exit">Exit</string>
+    <string name="press_back_again_to_exit">Press \'Back\' again to exit</string>
+    <string name="goto_help">Help</string>
+    <string name="Help_elipses">Help…</string>
+    <string name="privacy_and_terms">Privacy and Terms</string>
+    <string name="about">About</string>
+    <string name="refresh">Refresh</string>
+    <string name="filter">Filter</string>
+    <string name="expand_all">Expand all</string>
+    <string name="collapse_all">Collapse all</string>
+<!--
+    <string name="show_graph">Show Graph</string>
+-->
+    <string name="tip">Tip</string>
+    <string name="settings">Settings</string>
+    <string name="do_not_show_this_dialog_anymore">Do not show this dialog anymore</string>
+    <string name="lbl_fixed">Fixed</string>
+    <string name="lbl_none">None</string>
+
+    <!-- network -->
+    <string name="no_fully_functional_connection_error">No fully functional network. Maybe you need to login to your provider?</string>
+    <string name="connection_error">Connection error %1$s %2$s</string>
+    <string name="unknown_error">Unknown error %s</string>
+
+    <string name="uc_more">More…</string>
+    <string name="uc_sort">Sort…</string>
+    <string name="uc_undo">Undo</string>
+    <string name="uc_new">New…</string>
+    <string name="uc_edit">Edit…</string>
+    <string name="uc_showing_x_elipses">Showing %s …</string>
+    <string name="uc_show_elipses">Show…</string>
+    <string name="uc_show">Show</string>
+    <string name="uc_delete">Delete</string>
+    <string name="uc_email">Email</string>
+    <string name="uc_select">Select</string>
+    <string name="uc_details">Details</string>
+    <string name="uc_copy">Copy</string>
+    <string name="lbl_color">Color</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="save_password">Save password</string>
+
+</resources>

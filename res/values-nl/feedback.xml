@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cmd_feedback">Feedback</string>
+
+
+    <string name="lbl_do_you_like_this_app">Vind je deze app handig?</string>
+    <string name="cmd_yes_i_like">Ja</string>
+    <string name="cmd_no_there_is_a_problem">Nee, er is een probleem</string>
+    <string name="lbl_take_a_minute_to_support">Als je Squore leuk vind, zou het fijn zijn als je een minuutje de tijd neemt om de app te ondersteunen.</string>
+    <string name="cmd_rate_the_app">Waardeer de app</string>
+    <string name="cmd_share">Deel</string>
+    <string name="cmd_share_with_friends">Deel met vrienden</string>
+    <string name="cmd_like_on_facebook">\'Vind ik leuk\' op facebook</string>
+    <string name="lbl_please_describe_the_problem">Beschrijf het probleem zo gedetailleerd mogelijk.</string>
+    <string name="cmd_email_the_developer">Stuur een email naar de ontwikkelaar</string>
+</resources>

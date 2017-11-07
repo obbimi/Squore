@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="developer">Iddo Hoeve</string>
+
+    <string name="app_name_short_brand_Squash">Squore</string>
+    <string name="app_name_short_brand_Racketlon">Score Racketlon</string>
+    <string name="app_name_short_brand_Tabletennis">Score Table Tennis</string>
+    <string name="app_name_short_brand_asb">ASB Squore</string>
+    <string name="app_name_short_brand_courtcare">CourtScore</string>
+    <string name="app_name_short_brand_uniofnotthingham">CourtScore UoN</string>
+<!--
+    <string name="app_name">Squore</string>
+    <string name="app_scoreboard">Squore Board</string>
+-->
+
+    <!-- TODO: use this in e.g. feedback pages -->
+    <string name="supported_languages">en,nl,fr</string>
+    <string name="soon_to_come_languages">de,es,pt</string>
+
+    <string name="groupArchivedMatchesBy_default">Date</string>
+    <string name="sortOrderOfArchivedMatches_default">Descending</string>
+    <string name="BackKeyBehaviour_default">PressTwiceToExit</string>
+    <string name="KeepScreenOnWhen_default">MatchIsInProgress</string>
+    <string name="VolumeKeysBehaviour_default">None</string>
+
+    <string name="handicapFormat_default">None</string>
+    <string name="timerPauseBetweenGames_values_default">60,90,120,180,300</string> <!-- last 2 more aimed at racketlon ;-) -->
+    <string name="feedFeedsURL_default">/feed/feeds.php</string>
+    <string name="FlagsURLs_default"><![CDATA[/img/flag/%1$s
+\nhttp://www.geognos.com/api/en/countries/flag/%1$s.png]]>
+    </string>
+
+    <string-array name="AutoLockContextDefaultValues">
+        <!--
+                <item>__ALL__</item>
+        -->
+        <item>AtEndOfMatch</item>
+        <item>WhenMatchIsUnchangeForX_Minutes</item>
+    </string-array>
+    <string-array name="ShowPlayerColorOn_DefaultValues">
+        <item>ScoreButtonBorder</item>
+        <!--
+                <item>ServeSideButton</item>
+                <item>PlayerButton</item>
+        -->
+        <item>GameBallMessage</item>
+    </string-array>
+    <string-array name="ShowCountryAs_DefaultValues">
+    <!--<item>AbbreviationAfterName</item>-->
+        <item>FlagNextToNameOnDevice</item>
+        <item>FlagNextToNameChromeCast</item>
+    </string-array>
+    <string-array name="RallyEndStatsPrefsDefaultValues">
+        <item>RacketSide</item>
+        <item>StrikePosition</item>
+    </string-array>
+    <string-array name="OrientationPreferenceDefaultValues">
+        <item>Landscape</item>
+        <item>Portrait</item>
+    </string-array>
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues">
+        <item>OnDevice</item>
+        <!--<item>OnChromeCast</item>-->
+    </string-array>
+    <string-array name="showMatchDurationChronoOn_DefaultValues">
+        <item>OnDevice</item>
+        <item>OnChromeCast</item>
+    </string-array>
+    <string-array name="showGraphDuringTimerOn_DefaultValues">
+        <!--<item>OnDevice</item>-->
+        <item>OnChromeCast</item>
+    </string-array>
+    <string-array name="showFieldDivisionOn_DefaultValues">
+        <item>OnDevice</item>
+        <item>OnChromeCast</item>
+    </string-array>
+    <string-array name="floatingMessageForGameBallOn_DefaultValues">
+        <item>OnDevice</item>
+        <item>OnChromeCast</item>
+    </string-array>
+    <string-array name="showBrandLogoOn_DefaultValues">
+        <!--<item>OnDevice</item>-->
+        <item>OnChromeCast</item>
+    </string-array>
+
+<!--
+    <string name="baseurl_squore">http://squore.double-yellow.be</string>
+    <string name="baseurl_racketlon">http://racketlon.double-yellow.be</string>
+    <string name="baseurl_tabletennis">http://tabletennis.double-yellow.be</string>
+-->
+    <!-- https://cast.google.com/publish/#/applications/new/remote_display (Remote Display Receiver for e.g. branded app)-->
+    <!-- https://developers.google.com/cast/docs/registration#RegisterDevice (To enable a newly bought Chrome Cast to be used for development ) -->
+    <string name="REMOTE_DISPLAY_APP_ID_brand_squore">35BA3487</string>
+    <string name="REMOTE_DISPLAY_APP_ID_brand_racketlon">590DBED9</string>
+    <string name="REMOTE_DISPLAY_APP_ID_brand_tabletennis">DD0036E8</string> <!-- TODO: publish  -->
+    <string name="REMOTE_DISPLAY_APP_ID_brand_asb">BF2E4D1B</string> <!-- not a real brand, was brand of the initial brand tests -->
+    <string name="REMOTE_DISPLAY_APP_ID_brand_courtcare">BF2E4D1B</string>
+    <string name="REMOTE_DISPLAY_APP_ID_brand_uniofnotthingham">E6F9858F</string>
+
+    <string name="media_route_menu_title">Route</string>
+</resources>

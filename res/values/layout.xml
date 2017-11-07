@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- landscape -->
+
+    <!-- these 3 must sum to 100% -->
+    <fraction name="ls_vertical_margin_3x">1.0%</fraction>
+    <fraction name="ls_name_height">17.0%</fraction>
+    <fraction name="ls_score_height">80%</fraction>
+
+    <!-- these 3 must sum to less than 100% -->
+    <fraction name="ls_horizontal_margin_4x">0.5%</fraction>
+    <fraction name="ls_name_width_2x">44%</fraction>
+    <fraction name="ls_gamescores_width">10%</fraction>
+
+    <fraction name="ls_gamescores_height">60%</fraction>
+
+
+    <fraction name="ls_timer_margin_from_side_button">16%</fraction>   <!-- not TOO big so tiny chrono to be readable while not full screen AND action bar visible -->
+    <fraction name="ls_timer_height">20%</fraction>   <!-- for tiny chrono to be readable 20, else 16 may be better -->
+    <fraction name="ls_to_late_height">5%</fraction>
+    <fraction name="ls_match_timer_height">5%</fraction>
+    <fraction name="ls_match_timer_width">17%</fraction>
+    <fraction name="ls_timer_bottom_margin">2%</fraction>
+<!--
+    <fraction name="ls_side_height">17%</fraction>
+    <fraction name="ls_side_width_ratio">100%</fraction>
+-->
+    <fraction name="ls_side_width">9%</fraction>
+    <!--<fraction name="ls_side_height_ratio">100%</fraction>-->
+    <fraction name="ls_side_margin_V">2.5%</fraction> <!-- double of ls_vertical_margin_3x -->
+    <fraction name="ls_side_margin_H">1.5%</fraction> <!-- double of ls_horizontal_margin_4x -->
+
+    <fraction name="ls_score_width_2x">44%</fraction>
+    <fraction name="ls_scorehistorytable">50%</fraction>
+
+    <fraction name="ls_gamehistory">10%</fraction>
+    <fraction name="ls_branded_logo_ar150">11%</fraction>
+    <fraction name="ls_branded_logo_ar400">30%</fraction>
+
+    <!-- portrait -->
+
+    <!-- these 4 must sum to 100% -->
+    <fraction name="pt_vertical_margin_6x">0.5%</fraction>
+    <fraction name="pt_name_height_2x">9%</fraction>
+    <fraction name="pt_score_height_2x">34%</fraction>
+    <fraction name="pt_timer_height">10%</fraction> <fraction name="pt_gamescores_height">10%</fraction>
+    <fraction name="pt_to_late_height">3%</fraction>
+    <fraction name="pt_match_timer_height">3%</fraction>
+    <fraction name="pt_match_timer_width">30%</fraction>
+    <fraction name="pt_timer_topbottom_margin">1%</fraction>
+
+    <!-- these 2 must sum to 100% -->
+    <fraction name="pt_name_width">98%</fraction>
+    <fraction name="pt_horizontal_margin_2x">1.0%</fraction>
+
+    <!-- these 2 must sum to less than 100% -->
+    <fraction name="pt_score_width">80%</fraction>
+    <fraction name="pt_side_width">16%</fraction>
+    <fraction name="pt_gamehistory_width">19%</fraction>
+
+    <fraction name="pt_side_height_ratio">100%</fraction>
+<!--
+    <fraction name="pt_side_height">8%</fraction>
+-->
+    <fraction name="pt_gameball_msg_width">70%</fraction>
+    <fraction name="pt_decision_msg_width">70%</fraction>
+    <fraction name="pt_conduct_width">95%</fraction>
+
+    <fraction name="player_button_colorborder_thickness">2%</fraction>
+    <fraction name="player_button_corner_radius">8%</fraction> <!-- 10 looks fairly nice on samsung s4 -->
+<!--<fraction name="floating_action_button_radius">13%</fraction>-->
+
+    <!-- end of game presentation -->
+    <fraction name="MatchGameScoresView_height">30%</fraction>
+    <fraction name="GameGraphView_height">65%</fraction>
+    <fraction name="GameGraphView_width">60%</fraction>
+    <fraction name="Timer_heigth">25%</fraction>
+    <fraction name="Timer_width">35%</fraction>
+    <fraction name="peog_margin">2%</fraction>
+
+    <fraction name="image_item_ratio">20%</fraction>
+</resources>

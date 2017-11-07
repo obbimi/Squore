@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Game">Jeu</string>
+
+    <string name="left_serveside_single_char">G</string>
+    <string name="right_serveside_single_char">D</string>
+
+    <string name="no_let_abbreviation">NL</string>
+    <string name="yes_let_abbreviation">L</string>
+    <string name="stroke_abbreviation">ST</string>
+    <string name="conduct_warning_abbreviation">A</string>
+    <string name="conduct_stroke_abbreviation">P</string>
+    <string name="conduct_game_abbreviation">JP</string> <!-- TODO -->
+    <string name="conduct_match_abbreviation">MP</string> <!-- TODO -->
+
+    <string name="broken_string_abbreviation">CD</string> <!-- TODO -->
+    <string name="broken_ball_abbreviation">BC</string> <!-- TODO -->
+    <string name="broken_racket_abbreviation">RC</string> <!-- TODO -->
+
+    <string name="handout">Changement</string>
+    <string name="lbl_all_games">Tous les jeux</string>
+    <string name="lbl_players">Joueurs</string>
+    <string name="lbl_countries">Pays</string> <!-- TODO -->
+    <string name="lbl_event_and_players">Événement et joueurs</string>
+    <string name="lbl_player">Joueur</string>
+    <string name="lbl_player_A">Joueur A</string>
+    <string name="lbl_playerA1">Joueur A1</string>
+    <string name="lbl_playerA2">Joueur A2</string>
+    <string name="lbl_player_B">Joueur B</string>
+    <string name="lbl_playerB1">Joueur B1</string>
+    <string name="lbl_playerB2">Joueur B2</string>
+    <string name="lbl_player_x">Joueur %s</string>
+    <string name="lbl_country_A">Pays A</string> <!-- TODO -->
+    <string name="lbl_country_B">Pays B</string> <!-- TODO -->
+    <string name="lbl_clubs">Clubs</string> <!-- TODO -->
+    <string name="lbl_club_A">Club A</string> <!-- TODO -->
+    <string name="lbl_club_B">Club B</string> <!-- TODO -->
+    <string name="add_x_matches">Ajouter %d matchs</string>
+    <string name="lbl_event">Evénement</string>
+    <string name="lbl_division">Division</string>
+    <string name="lbl_round">Tour</string>
+    <string name="lbl_location">Lieu</string>
+    <string name="lbl_referee">Arbitre</string>
+    <string name="lbl_marker">Marqueur</string>
+    <string name="lbl_versus">contre</string>
+
+    <string name="lbl_broken_equipment">Matériel endommagé rapporté par %s</string>
+    <string name="point_awarded_to_p">Point attribué à %s</string>
+    <string name="point">Point</string>
+    <string name="points">Points</string>
+    <string name="lbl_warning">Avertissement</string>
+<!--
+    <string name="last_game__score_x_induration_y_z">Dernier jeu : %s en %s %s</string>
+    <string name="last_game__score_x_induration_y_z__2lines">Dernier jeu : %s\\nen %s %s</string>
+-->
+    <string name="game_ended">Fin de Jeu</string>
+    <string name="match_ended">Fin de Match</string>
+
+</resources>

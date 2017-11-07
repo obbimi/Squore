@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="rmm_title">Rate me</string>
+    <string name="rmm_message">Het lijkt er op dat je deze app wel kan waarderen, aangezien je hem al %s keer hebt gebruikt! Zou je hem daarom misschien ook in de app store willen waarderen?</string>
+    <string name="rmm_later">Misschien later</string>
+    <string name="rmm_never">Nee, nooit</string>
+
+</resources>

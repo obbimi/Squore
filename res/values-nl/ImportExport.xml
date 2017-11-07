@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Export">Exporteren</string>
+    <string name="Export_elipses">Exporteren…</string>
+    <string name="Import">Importeren</string>
+    <string name="Import_elipses">Importeren…</string>
+    <string name="ImportExport_elipses">Import/Export…</string>
+    <string name="Select_file">Selecteer bestand</string>
+    <string name="import_matches">Importeer wedstrijden</string>
+    <string name="export_matches">Exporteer wedstrijden</string>
+    <string name="upload_export_to_server">Upload export naar squore server</string>
+    <string name="upload_to_server_failed__x">Upload naar squore server mislukt: %s</string>
+    <string name="uploaded_to_server__x">Upload naar squore geslaagd:\n\n %s\n\n(URL staat op klipbord)</string>
+
+    <string name="Exported_to_x">Ge-exporteerd naar %s</string>
+    <string name="File_x_has_been_imported__Cnt_y">Bestand %1$s is geimporteerd (# %2$s)</string>
+    <string name="Source_x__Target_y">Bron: %1$s\nDoel: %2$s</string>
+    <string name="Source_x">Bron: %s</string>
+    <string name="Target_y">Doel: %s</string>
+    <string name="no_appropriate_zip_files_found_in_x">Geen geschikte zip files gevonden in %s</string>
+    <string name="no_read_rights_for_x">Geen lees rechten voor %s</string>
+    <string name="no_write_rights_for_x">Geen schrijf rechten voor %s</string>
+    <string name="could_not_determine_external_storage_location">Kon externe opslag locatie niet bepalen</string>
+
+    <string name="Archive">Archief</string>
+    <string name="Delete_file">Verwijder file</string>
+
+    <string name="x_stored_in_y">\'%1$s\' opgeslagen in \'%2$s\'</string>
+    <string name="x_restored_from_y">\'%1$s\' hersteld uit \'%2$s\'</string>
+    <string name="could_not_find_file_x">Bestand %s kon niet worden gevonden.</string>
+    <string name="did_you_already_perform_an_export_of_x">Heb je al eens een export gedaan van %s?</string>
+</resources>

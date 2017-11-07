@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:tag="mainBackgroundColor"
+        android:layout_margin="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+            android:id="@+id/splitter_v"
+            android:orientation="vertical"
+            android:layout_margin="0dp"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/dy_white"
+            android:layout_centerHorizontal="true"
+            android:layout_alignTop="@+id/evPosition"
+            android:layout_alignBottom="@+id/evPosition"/>
+            <com.doubleyellow.view.SelectEnumView
+                    android:id="@+id/evSide"
+                    android:layout_toLeftOf="@id/splitter_v"
+                    android:layout_toStartOf="@id/splitter_v"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    app:enum_columns="2"
+                    app:enum_class="com.doubleyellow.scoreboard.model.RacketSide"
+                    app:enum_display_values="@array/RacketSide_DisplayValues"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <com.doubleyellow.view.SelectEnumView
+                    android:id="@+id/evPosition"
+                    android:layout_toRightOf="@id/splitter_v"
+                    android:layout_toEndOf="@id/splitter_v"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    app:enum_class="com.doubleyellow.scoreboard.model.Position"
+                    app:enum_display_values="@array/Position_DisplayValues"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+    <LinearLayout android:orientation="vertical" android:id="@+id/splitter_evDirection" android:layout_margin="0dp" android:layout_below="@+id/evPosition" android:background="@color/dy_white" android:layout_width="match_parent" android:layout_height="1dp"/>
+    <com.doubleyellow.view.SelectEnumView
+            android:id="@+id/evDirection"
+            android:layout_above="@id/splitter_evDirection"
+            app:enum_class="com.doubleyellow.scoreboard.model.BallDirection"
+            app:enum_display_values="@array/BallDirection_DisplayValues"
+            app:enum_value="__NONE__"
+            app:enum_columns="3"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    <LinearLayout android:orientation="vertical" android:id="@+id/splitter_evTrajectory" android:layout_margin="0dp" android:layout_above="@+id/evDirection" android:layout_toLeftOf="@id/splitter_v" android:background="@color/dy_white" android:layout_width="match_parent" android:layout_height="1dp"/>
+    <com.doubleyellow.view.SelectEnumView
+            android:id="@+id/evTrajectory"
+            android:layout_below="@id/splitter_evDirection"
+            app:enum_class="com.doubleyellow.scoreboard.model.BallTrajectory"
+            app:enum_display_values="@array/BallTrajectory_DisplayValues"
+            app:enum_value="__NONE__"
+            app:enum_columns="3"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+</RelativeLayout>

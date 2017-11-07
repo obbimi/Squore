@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/ll_expandable_match_selector_item"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:background="@color/dy_white"
+        >
+-->
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/lblListItem"
+            android:tag="item"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/txt_small"
+            android:text="Dummy item"
+            android:textColor="@color/dy_white"
+            android:background="@drawable/button_dark_rc"
+            android:padding="5dp"
+            android:paddingLeft="15dp"
+            android:layout_marginBottom="5dp"/>
+
+<!--
+</LinearLayout>
+-->

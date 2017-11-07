@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_feedPostUrls_default_Squash"><![CDATA[Name=Toernooi.NL 1
+\nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches
+\nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players
+\n
+\nName=Toernooi.NL 2
+\nFeedMatches=feed/tournamentsoftware.php?nr=2&pm=matches
+\nFeedPlayers=feed/tournamentsoftware.php?nr=2&pm=players
+\n
+\nName=Toernooi.NL 3
+\nFeedMatches=feed/tournamentsoftware.php?nr=3&pm=matches
+\nFeedPlayers=feed/tournamentsoftware.php?nr=3&pm=players
+\n
+\nName=PSA Tour Wedstrijden
+\nFeedMatches=/feed/psa.php?nr=1
+\nPostResult=/demo/demo.post.matchresult.php?lang=nl
+\n
+\nName=PSA Tour Wedstrijden
+\nFeedMatches=/feed/psa.php?nr=2
+\nPostResult=/demo/demo.post.matchresult.php?lang=nl
+\n
+\nName=Demo URL
+\nFeedMatches=/demo/demo.matches.txt
+\nFeedPlayers=/demo/demo.players.txt
+\nPostResult=/demo/demo.post.matchresult.php?lang=nl
+\n
+\nName=Demo URL met Authenticatie
+\nFeedMatches=demo/demo.matches.txt?readfead=no_auth_required
+\nFeedPlayers=demo/demo.players.txt
+\nPostResult=demo/demo.post.matchresult.basic.auth.php?lang=nl
+\nAuthentication=Basic
+\n
+\nName=Double Yellow
+\nFeedMatches=http://www.double-yellow.be/box/matches.txt.php
+\nFeedPlayers=http://www.double-yellow.be/box/players.txt.php
+]]></string>
+
+    <string name="OfficialRulesURLs_default_Squash"><![CDATA[/help/rules.of.singles.squash.php?lang-nl
+\nhttp://www.worldsquash.org/ws/rules/rules-of-squash-2
+\nhttp://www.worldsquash.org/ws/wp-content/uploads/2014/01/2014-Dutch-Rules.pdf
+]]></string>
+
+    <string name="matchList_default_Squash"><![CDATA[- PSA Toernooi > Halve Finales
+\nGregory Gaultier [FRA] - Ramy Ashour [EGY]
+\nNick Matthew (GBR) - Miguel Ángel Rodríguez (COL)
+\nPiedro Schweertman (NLD) - Jan Van Den Herrewegen (BEL)
+\nMarc ter Sluis (NLD) - Joeri Hapers (BEL)
+\n- Dinsdag wedstrijden met de vrienden
+\nJan Bos - Richard
+\nRichard - Steven
+\nSteven - Jan Bos
+\n- Belgian Open > Dubbels
+\nMatthew/Wilstrop - Ashour/Shabana
+\nCastagnet/Gaultier - Elshorbagy/Momen
+]]></string>
+
+    <string name="eventList_default"><![CDATA[Interclub
+\nToernooi
+\nClubwedstrijd
+\nBoxen
+]]></string>
+    <string name="divisionList_default"><![CDATA[Jongens
+\nMeisjes
+\nHeren A
+\nHeren B
+\nHeren C
+\nDames A
+\nDames B
+]]></string>
+    <string name="roundList_default"><![CDATA[1e Ronde
+\n2e Ronde
+\n3e Ronde
+\nKwart Finale
+\nHalve Finale
+\nFinale
+]]></string>
+
+</resources>

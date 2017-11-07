@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="OfficialRulesURLs_default_Squash" formatted="false"><![CDATA[/help/rules.of.singles.squash.php?lang=fr
+\nhttp://www.ffsquash.com/medias/fichiers/R%C3%A8gles-du-jeu-officielles-WSF-2014.pdf
+\nhttp://www.ffsquash.com/fr/jouer-au-squash/le-squash/regles-du-jeu-du-squash.html
+\nhttp://www.ffsquash.com/medias/fichiers/Le%20Squash/REGLE-14-MALADIE-INDISPOSITION-BLESSURE-ET-SAIGNEMENT-Tableau-de-synthse.pdf
+\nhttp://www.ffsquash.com/medias/fichiers/Le%20Squash/Guide%20pour%20l\'application%20de%20la%20rgle%2015%20(CONDUITE).pdf
+]]></string>
+
+</resources>

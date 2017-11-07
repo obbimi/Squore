@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.doubleyellow.view.SBRelativeLayout
+    android:id="@+id/presentation_eog_root_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dy="http://double-yellow.be"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+>
+
+    <com.doubleyellow.scoreboard.history.MatchGameScoresView
+        android:id="@+id/peog_gamescores"
+        android:layout_centerInParent="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        dy:bgColorLoser="@color/dy_dark"
+        dy:bgColorWinner="@color/dy_yellow"
+        dy:textColor="@color/dy_white"
+        dy:leftToRight="true"
+        dy:showTimes="true"
+        dy:showNames="true"
+        app:layout_marginLeftPercent="@fraction/peog_margin"
+        app:layout_heightPercent="@fraction/MatchGameScoresView_height"
+        app:layout_widthPercent="100%"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+    />
+    <com.doubleyellow.scoreboard.history.GameGraphView
+        android:id="@+id/peog_gamegraph"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/peog_gamescores"
+        app:layout_marginTopPercent="@fraction/peog_margin"
+        app:layout_marginLeftPercent="@fraction/peog_margin"
+        app:layout_heightPercent="@fraction/GameGraphView_height"
+        app:layout_widthPercent="@fraction/GameGraphView_width"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+    />
+
+    <!-- timer -->
+    <com.doubleyellow.android.view.AutoResizeTextView
+        android:id="@+id/peog_timer"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/peog_gamegraph"
+        android:layout_below="@id/peog_gamescores"
+        style="@style/SBButton"
+        app:layout_marginTopPercent="@fraction/peog_margin"
+        app:layout_marginRightPercent="@fraction/peog_margin"
+        app:layout_heightPercent="@fraction/Timer_heigth"
+        app:layout_widthPercent="@fraction/Timer_width"
+        android:text="01:30"
+        android:includeFontPadding="false"
+        android:paddingTop="0px"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+    />
+
+    <!-- logo -->
+    <ImageView
+        android:id="@+id/sb_branded_logo_ar150"
+        android:src="@drawable/brand_squore"
+        android:background="@color/dy_white"
+        android:visibility="visible"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/peog_timer"
+        app:layout_marginRightPercent="@fraction/peog_margin"
+        app:layout_marginBottomPercent="@fraction/peog_margin"
+        app:layout_widthPercent="@fraction/Timer_width"
+        app:layout_aspectRatio="150%"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+    />
+    <ImageView
+        android:id="@+id/sb_branded_logo_ar400"
+        android:src="@drawable/brand_courtcare"
+        android:background="@color/dy_white"
+        android:visibility="visible"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/peog_timer"
+        app:layout_marginRightPercent="@fraction/peog_margin"
+        app:layout_marginBottomPercent="@fraction/peog_margin"
+        app:layout_widthPercent="@fraction/Timer_width"
+        app:layout_aspectRatio="400%"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+    />
+</com.doubleyellow.view.SBRelativeLayout>

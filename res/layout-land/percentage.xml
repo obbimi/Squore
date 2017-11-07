@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.doubleyellow.view.SBRelativeLayout
+        android:id="@+id/squoreboard_root_view"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:dy="http://double-yellow.be"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.doubleyellow.scoreboard.history.MatchGameScoresView
+            android:id="@+id/gamescores"
+            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            dy:backgroundColor="@color/dy_yellow"
+            dy:textColor="@color/dy_dark"
+            dy:leftToRight="false"
+            app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
+            app:layout_widthPercent="@fraction/ls_gamescores_width"
+            app:layout_aspectRatio="40%"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+    />
+<!--
+    Using this would cause the 'showcase' to draw to big a circle
+    app:layout_heightPercent="@fraction/ls_gamescores_height"
+
+            android:minHeight="40dp"
+-->
+
+    <!-- playernames: one on each side of previous game scores -->
+    <com.doubleyellow.scoreboard.view.PlayersButton
+            android:id="@+id/txt_player1"
+            app:layout_widthPercent="@fraction/ls_name_width_2x"
+            app:layout_heightPercent="@fraction/ls_name_height"
+            app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
+            app:layout_marginLeftPercent="@fraction/ls_horizontal_margin_4x"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/lbl_player_A"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+    />
+    <com.doubleyellow.scoreboard.view.PlayersButton
+            android:id="@+id/txt_player2"
+            app:layout_widthPercent="@fraction/ls_name_width_2x"
+            app:layout_heightPercent="@fraction/ls_name_height"
+            app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
+            app:layout_marginRightPercent="@fraction/ls_horizontal_margin_4x"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/lbl_player_B"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+    />
+
+<!--
+    <com.doubleyellow.android.view.AutoResizeTextView
+            style="@style/SBButton"
+            android:id="@+id/txt_player2"
+            app:layout_widthPercent="@fraction/ls_name_width_2x"
+            app:layout_heightPercent="@fraction/ls_name_height"
+            app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
+            app:layout_marginLeftPercent="@fraction/ls_horizontal_margin_4x"
+            app:layout_marginRightPercent="@fraction/ls_horizontal_margin_4x"
+            android:layout_alignParentRight="true"
+            android:text="Player 2"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:gravity="center"
+    />
+-->
+
+    <!-- score buttons underneath names -->
+    <com.doubleyellow.android.view.AutoResizeTextView
+            style="@style/SBButton"
+            android:id="@+id/btn_score1"
+            android:layout_below="@id/txt_player1"
+            app:layout_widthPercent="@fraction/ls_score_width_2x"
+            app:layout_heightPercent="@fraction/ls_score_height"
+            app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
+            app:layout_marginLeftPercent="@fraction/ls_horizontal_margin_4x"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:text="11"
+            android:includeFontPadding="false"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+    />
+
+    <com.doubleyellow.android.view.AutoResizeTextView
+            style="@style/SBButton"
+            android:id="@+id/btn_score2"
+            android:layout_below="@id/txt_player2"
+            app:layout_widthPercent="@fraction/ls_score_width_2x"
+            app:layout_heightPercent="@fraction/ls_score_height"
+            app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
+            app:layout_marginRightPercent="@fraction/ls_horizontal_margin_4x"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:text="9"
+            android:includeFontPadding="false"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+    />
+
+    <!-- side buttons underneath names towards the center -->
+    <com.doubleyellow.android.view.AutoResizeTextView
+            style="@style/SBButton"
+            android:id="@+id/btn_side1"
+            android:layout_alignTop="@id/btn_score1"
+            android:layout_alignRight="@id/txt_player1"
+            android:layout_alignEnd="@id/txt_player1"
+            app:layout_widthPercent="@fraction/ls_side_width"
+            app:layout_aspectRatio="100%"
+            app:layout_marginTopPercent="@fraction/ls_side_margin_V"
+            app:layout_marginRightPercent="@fraction/ls_side_margin_H"
+            android:padding="3dp"
+            android:text="R?"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+    />
+
+    <com.doubleyellow.android.view.AutoResizeTextView
+            style="@style/SBButton"
+            android:id="@+id/btn_side2"
+            android:layout_alignTop="@id/btn_score2"
+            android:layout_alignLeft="@id/txt_player2"
+            android:layout_alignStart="@id/txt_player2"
+            app:layout_widthPercent="@fraction/ls_side_width"
+            app:layout_aspectRatio="100%"
+            app:layout_marginTopPercent="@fraction/ls_side_margin_V"
+            app:layout_marginLeftPercent="@fraction/ls_side_margin_H"
+            android:padding="3dp"
+            android:text="L"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            />
+
+<!--
+            app:layout_widthPercent="@fraction/ls_gamehistory"
+            android:layout_height="0dp"
+            app:layout_aspectRatio="40%"
+
+            android:layout_alignLeft="@id/gamescores"
+            android:layout_alignRight="@id/gamescores"
+-->
+    <com.doubleyellow.scoreboard.view.GameHistoryView
+            android:id="@+id/scorehistorytable"
+            android:layout_centerInParent="true"
+            android:layout_alignBottom="@id/btn_score1"
+            dy:textSizePx="@integer/TextSizeHistory_default_ls"
+            dy:backgroundColor="@color/dy_yellow"
+            dy:textColor="@color/dy_dark"
+            android:layout_width="wrap_content"
+            app:layout_heightPercent="50%"
+            app:layout_marginBottomPercent="@fraction/ls_vertical_margin_3x"
+            android:layout_height="0dp"
+    />
+
+    <ImageView
+            android:id="@+id/sb_branded_logo_ar150"
+            android:contentDescription="logo with aspect ration 150"
+            android:layout_centerInParent="true"
+            android:layout_alignBottom="@id/btn_score1"
+            app:layout_widthPercent="@fraction/ls_branded_logo_ar150"
+            app:layout_aspectRatio="150%"
+            app:layout_marginBottomPercent="@fraction/ls_vertical_margin_3x"
+            android:src="@drawable/brand_squore"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+    />
+
+    <ImageView
+            android:id="@+id/sb_branded_logo_ar400"
+            android:contentDescription="logo with aspect ration 400"
+            android:layout_centerInParent="true"
+            android:layout_alignBottom="@id/btn_score1"
+            app:layout_widthPercent="@fraction/ls_branded_logo_ar400"
+            app:layout_aspectRatio="400%"
+            app:layout_marginBottomPercent="0%"
+            android:src="@drawable/brand_courtcare"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+    />
+    <com.doubleyellow.android.view.AutoResizeTextView
+            style="@style/SBButton"
+            android:text="Field X"
+            android:id="@+id/btn_match_field_division"
+            android:layout_centerInParent="true"
+            android:layout_alignBottom="@id/btn_score1"
+            app:layout_widthPercent="@fraction/ls_branded_logo_ar400"
+            app:layout_aspectRatio="800%"
+            app:layout_marginBottomPercent="0%"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+    />
+
+    <com.doubleyellow.android.view.AutoResizeTextView
+            style="@style/SBButton"
+            android:id="@+id/btn_timer"
+            android:layout_alignLeft="@id/btn_side1"
+            android:layout_alignStart="@id/btn_side1"
+            android:layout_alignRight="@id/btn_side2"
+            android:layout_alignEnd="@id/btn_side2"
+            android:layout_below="@id/btn_side1"
+            app:layout_heightPercent="@fraction/ls_timer_height"
+            app:layout_marginTopPercent="@fraction/ls_timer_margin_from_side_button"
+            android:textSize="@dimen/sb_sidebutton"
+            android:text="01:30"
+            android:includeFontPadding="false"
+            android:paddingTop="0px"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+    />
+    <!-- show tiny 'to late' timer 'within' btn_timer -->
+    <Chronometer android:id="@+id/sb_to_late_timer"
+                 app:layout_heightPercent="@fraction/ls_to_late_height"
+                 android:layout_alignBottom="@id/btn_timer"
+                 android:layout_alignRight="@id/btn_timer"
+                 android:layout_alignEnd="@id/btn_timer"
+                 android:layout_alignLeft="@id/btn_timer"
+                 android:layout_alignStart="@id/btn_timer"
+                 app:layout_marginRightPercent="3%"
+                 app:layout_marginLeftPercent="3%"
+                 android:background="@android:color/transparent"
+                 android:textColor="@android:color/holo_red_dark"
+                 android:gravity="center"
+                 android:visibility="visible"
+                 android:layout_width="0dp"
+                 android:layout_height="0dp"
+    />
+    <Chronometer android:id="@+id/sb_match_duration"
+                 android:layout_alignBottom="@id/btn_score1"
+                 android:layout_alignLeft="@id/btn_score1"
+                 android:layout_alignStart="@id/btn_score1"
+                 app:layout_widthPercent="@fraction/ls_match_timer_width"
+                 app:layout_marginBottomPercent="@fraction/ls_timer_bottom_margin"
+                 app:layout_aspectRatio="30%"
+                 app:layout_marginRightPercent="0%"
+                 app:layout_marginLeftPercent="0%"
+                 android:gravity="bottom|center_horizontal"
+                 android:visibility="visible"
+                 android:layout_width="0dp"
+                 android:layout_height="0dp"
+    />
+<!--
+    app:layout_heightPercent="@fraction/ls_match_timer_height"
+-->
+    <Chronometer android:id="@+id/sb_game_duration"
+                 android:layout_alignBottom="@id/btn_score2"
+                 android:layout_alignRight="@id/btn_score2"
+                 android:layout_alignEnd="@id/btn_score2"
+                 app:layout_widthPercent="@fraction/ls_match_timer_width"
+                 app:layout_marginBottomPercent="@fraction/ls_timer_bottom_margin"
+                 app:layout_aspectRatio="30%"
+                 app:layout_marginRightPercent="0%"
+                 app:layout_marginLeftPercent="0%"
+                 android:gravity="bottom|center_horizontal"
+                 android:visibility="visible"
+                 android:layout_width="0dp"
+                 android:layout_height="0dp"
+    />
+</com.doubleyellow.view.SBRelativeLayout>

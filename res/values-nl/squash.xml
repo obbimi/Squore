@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Game">Game</string>
+
+    <string name="left_serveside_single_char">L</string>
+    <string name="right_serveside_single_char">R</string>
+<!--
+    <string name="no_let_abbreviation">NL</string>
+    <string name="yes_let_abbreviation">YL</string>
+    <string name="stroke_abbreviation">ST</string>
+    <string name="conduct_warning_abbreviation">CW</string>
+    <string name="conduct_stroke_abbreviation">CS</string>
+    <string name="conduct_game_abbreviation">CG</string>
+    <string name="conduct_match_abbreviation">CM</string>
+-->
+    <string name="broken_string_abbreviation">KS</string>
+    <string name="broken_ball_abbreviation">KB</string>
+    <string name="broken_racket_abbreviation">KR</string>
+
+    <string name="handout">Hand-out</string>
+    <string name="lbl_all_games">Alle Games</string>
+    <!--<string name="lbl_game">Game</string>-->
+    <string name="lbl_players">Spelers</string>
+    <string name="lbl_countries">Landen</string>
+    <string name="lbl_event_and_players">Event en Spelers</string>
+    <string name="lbl_player">Speler</string>
+    <string name="lbl_player_A">Speler A</string>
+    <string name="lbl_playerA1">Speler A1</string>
+    <string name="lbl_playerA2">Speler A2</string>
+    <string name="lbl_player_B">Speler B</string>
+    <string name="lbl_playerB1">Speler B1</string>
+    <string name="lbl_playerB2">Speler B2</string>
+    <string name="lbl_player_x">Speler %s</string>
+    <string name="lbl_country_A">Land A</string>
+    <string name="lbl_country_B">Land B</string>
+    <string name="lbl_clubs">Clubs</string>
+    <string name="lbl_club_A">Club A</string>
+    <string name="lbl_club_B">Club B</string>
+    <string name="add_x_matches">Voeg %d wedstrijden toe</string>
+    <string name="lbl_event">Event</string>
+    <string name="lbl_division">Divisie</string>
+    <string name="lbl_round">Ronde</string>
+    <string name="lbl_location">Locatie</string>
+    <string name="lbl_referee">Scheidsrechter</string>
+    <string name="lbl_marker">Marker</string>
+    <string name="lbl_versus">vs</string>
+
+    <string name="lbl_broken_equipment">Kapotte uitrusting. Gemeld door %s</string>
+    <string name="point_awarded_to_p">Punt toegekend aan %s</string>
+    <string name="point">Punt</string>
+    <string name="points">Punten</string>
+    <string name="lbl_warning">Waarschuwing</string>
+<!--
+    <string name="last_game__score_x_induration_y_z">Laatste game: %s in %s %s</string>
+    <string name="last_game__score_x_induration_y_z__2lines">Laatste game: %s\nin %s %s</string>
+-->
+    <string name="game_ended">Game beëindigd</string>
+    <string name="match_ended">Match beëindigd</string>
+
+    <string name="conducts_guidelines_default"><![CDATA[
+\n- Misbruik van materiaal (racket, bal of ander materiaal):
+\nKleine overtreding (e.g. gooien van racket op de vloer na verlies van een game, hard slaan van de bal nadat de rally is beëindigd): Conduct Warning
+\nGrote overtreding (e.g. opzettelijk breken van het racket; tegen de muur gooien van het racket; buiten de baan slaan van de bal of buiten baan gooien van het racket): Conduct Stroke
+\n
+\n- Hoorbare of zichtbare obsceniteit:
+\nKleine overtreding (e.g. krachtterm mompelen; lasteren): Conduct Warning
+\nGrote overtreding (e.g. hoorbare obsceniteit): Conduct Stroke
+\n
+\n- Tijd-rekken:
+\nKleine overtreding (e.g. een paar seconden te laat op de baan; te lang tijd nemen alvorens op te slaan): Conduct Warning
+\nGrote overtreding (e.g. veel te laat terug op de baan; te lange discussie met de Scheidsrechter): Conduct Stroke
+\n
+\n- Menings verschil:
+\nKleine overtreding (e.g. in vraag stellen van een besluit): Conduct Warning
+\nGrote overtreding (e.g. lange discussie of herhaaldelijk in vraag stellen of oneens zijn met beslissingen van de scheids): Conduct Stroke
+\n
+\n- Misbruik van scheidsrechter:
+\nKleine overtreding (e.g. niet flatterend commentaar over de scheids of zijn beslissingen): Conduct Warning
+\nGrote overtreding (e.g. pejoratieve opmerkingen over scheidsrechter of beslissingen): Conduct Stroke
+\nZware overtreding (e.g. slaan van een bal naar de scheids of toeschouwers; gooien van een racket naar de scheids of toeschouwers): Conduct Game of Match (afhankelijk van de ernst van de overtreding en het veroorzaakte gevaar)
+\n
+\n- Overmatige lichamelijke contact:
+\nKleine overtreding (e.g. tegen te tegenstander op botsen): Conduct warning
+\nGrote overtreding (e.g. pijnigen van de tegenstander): Conduct Stroke
+\nSevere offence (e.g. opzettelijk blesseren van de tegenstander; gevaarlijk spel dat blessure bij de tegenstander veroorzaakt): Conduct Game of Match (afhankelijk van de ernst van de overtreding en de ernst van de veroorzaakte blessure)
+\n
+\n- Onsportief gedrag:
+\nKleine overtreding (e.g. negatieve opmerkingen maken richting de tegenstander): Conduct Warning
+\nGrote overtreding (e.g. herhaalde negatieve of pejoratieve opmerkingen aan de tegenstander; elke poging tot intimidatie van de tegenstander): Conduct Stroke
+\nSevere offence (e.g. extreem gedrag dat het spel in diskrediet brengt): Conduct Game of Match (afhankelijk van de ernst van de overtreding)
+\n
+\n- Coaching:
+\nEerste keer: Conduct Warning
+\nTweede keer: Conduct Stroke en overtredende persoon moet vertrekken
+\n
+\n- Herhaaldelijk en zeer ernstige conduct:
+\nWanneer, in de ogen van de scheidsrechter, een speler zich schuldig maakt aan herhaaldelijk onacceptable gedrag op de baan ondanks opgelegde straffen zoals hierboven beschreven,
+mag de scheidsrechter voor de volgende overtreding dezelfde of een zwaardere straf op leggen.
+Echter als een \'Conduct Warning\' is gegeven voor de eerste en de tweede overtreding moet voor de derde overtreding van dezelfde aard een \'Conduct Stroke\' worden opgelegd.
+(Voorbeeld: Als een speler al een Conduct Warning heeft ontvangen voor Dissent, mag bij de volgende overtreding van deze aard, of een Conduct Warning of een Conduct Stroke worden gegeven.
+Echter bij de derde overtreding is bestraffing met een Conduct Stroke verplicht.)
+\n
+    ]]></string>
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/expandable_match_selector_group_with_menu"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:tag="header"
+              android:layout_alignParentTop="true"
+              android:layout_alignParentLeft="true"
+              android:descendantFocusability="blocksDescendants"
+              >
+    <!-- style="@style/card.header_compound_view" -->
+    <!-- used in PreviousMatchSelector and StaticMatchSelector -->
+    <TextView
+            android:id="@+id/lblListHeader"
+            android:tag="header"
+            android:layout_alignParentLeft="true"
+            android:padding="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dummy Header"
+            android:textStyle="bold"
+            android:textSize="@dimen/txt_medium"
+            android:textColor="@color/dy_dark"
+            android:layout_marginLeft="20dp"
+            android:gravity="left|center"/>
+    <ImageButton
+            style="@style/explist.header_overflow"
+            android:tag="item"
+            android:id="@+id/card_header_button_overflow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+</RelativeLayout>

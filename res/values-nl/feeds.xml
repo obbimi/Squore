@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sb_feed">Feed</string>
+    <string name="sb_select_feed_match">Selecteer van Feed</string>
+    <string name="back_to_list_of_matches">Terug naar lijst</string>
+
+    <string name="Switch_feed_elipses">Wissel feed…</string>
+    <string name="add_new_feed">Voeg nieuwe publieke feed toe…</string>
+    <string name="feed_x_already_exist_with_name_y" formatted="true">Feed %1$s wordt al gebruikt bij feed \'%2$s\'</string>
+    <string name="Could_not_read_feed_x__y__Using_cached_content_aged_z_minutes">Kon feed %1$s niet lezen.\n\n%2$s\n\nGebruik laatst succesvol afgehaalde data (%3$d minuten oud).</string>
+
+    <string name="No_matches_in_feed">Geen matches in feed</string>
+    <string name="Error_no_feeds_in_feed">Geen feeds in feed</string>
+    <string name="No_active_feed">Geen actieve feed</string>
+    <string name="Select_one_by_pressing_the_globe_button">Selecteer er één door op de \'wereldbol\' knop te drukken</string>
+
+</resources>

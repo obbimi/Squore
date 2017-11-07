@@ -1,0 +1,11 @@
+{"result":"3-0"
+,"event":{"round":"Semi Final","name":"World Championship 2014"}
+,"colors":{"A":"#0a0a0a","B":"#9a59f5"}
+,"players":{"A":"Ramy Ashour","B":"Gregory Gaultier"}
+,"score":[["-1R-","R--1","--R2","YL--","--L3","-2R-","R3--","--ST","L--4","YL--","--R5","--YL","--L6","-4R-","R5--","L--7","-6R-","--YL","ST--","R7--","YL--","L--8","-8R-","R9--","YL--","L10--","R--9","--R10","ST--","-11L-","--YL","R--11","--R12","-12L-","YL--","--NL","R13--","L--13","--R14","-14L-","R15--","YL--","L--15","--YL","-16R-","R17--"],["R1--","L--1","-2R-","R3--","L--2","--R3","-4L-","R5--","L6--","R7--","L--4","--R5","-8L-","R9--","L10--","R--6","--ST","--R7","-11L-"],["YL--","R1--","--YL","L2--","R3--","L4--","R5--","L--1","YL--","-6R-","R7--","L--2","--R3","--L4","-8R-","R9--","L10--","--ST","R--5","-11R-"],[]]
+,"conductCalls":[]
+,"format":{"useHandInHandOutScoring":false,"nrOfGamesToWinMatch":3,"tiebreakFormat":"TwoClearPoints","numberOfPointsToWinGame":11}
+,"timing":[{"start":"20141120-194501","end":"20141120-202005"},{"start":"20141120-202140","end":"20141120-202839"},{"start":"20141120-203015","end":"20141120-203835"}]
+,"when":{"date":"20141120"
+        ,"time":""}
+}

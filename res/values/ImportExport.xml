@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="Export">Export</string>
+    <string name="Export_elipses">Export…</string>
+    <string name="Import">Import</string>
+    <string name="Import_elipses">Import…</string>
+    <string name="ImportExport_elipses">Import/Export…</string>
+    <string name="Select_file">Select File</string>
+    <string name="import_matches">Import matches</string>
+    <string name="export_matches">Export matches</string>
+    <string name="upload_export_to_server">Upload export to squore server</string>
+    <string name="upload_to_server_failed__x">Upload to squore server failed: %s</string>
+    <string name="uploaded_to_server__x">Upload to squore OK:\n\n%s\n\n(URL is on your clipboard)</string>
+
+    <string name="Exported_to_x">Exported to %s</string>
+    <string name="File_x_has_been_imported__Cnt_y">File %1$s has been imported (# %2$s)</string>
+    <string name="Source_x__Target_y">Source: %1$s\nTarget: %2$s</string>
+    <string name="Source_x">Source: %s</string>
+    <string name="Target_y">Target: %s</string>
+    <string name="no_appropriate_zip_files_found_in_x">No appropriate zip files found in %s</string>
+    <string name="no_read_rights_for_x">No read rights for %s</string>
+    <string name="no_write_rights_for_x">No write rights for %s</string>
+    <string name="could_not_determine_external_storage_location">Could not determine external storage location</string>
+
+    <string name="Archive">Archive</string>
+    <string name="Delete_file">Delete file</string>
+    <string name="Filename">File name</string>
+
+    <string name="x_stored_in_y">\'%1$s\' stored in \'%2$s\'</string>
+    <string name="x_restored_from_y">\'%1$s\' restored from \'%2$s\'</string>
+    <string name="could_not_find_file_x">Could not find file %s.</string>
+    <string name="did_you_already_perform_an_export_of_x">Did you already perform an export of %s?</string>
+</resources>

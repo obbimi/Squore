@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+    <!-- only for static -->
+    <item android:id="@+id/new_group"        app:showAsAction="always" android:icon="@android:drawable/ic_menu_add"  android:title="@string/cmd_new_group" />
+
+    <!-- only for manual -->
+    <item android:id="@+id/mt_cmd_ok" app:showAsAction="always" android:icon="@drawable/ic_action_accept"  android:title="@string/cmd_ok" />
+
+    <!-- only for feed -->
+    <item android:id="@+id/uc_switch_feed"  app:showAsAction="always" android:icon="@drawable/ic_action_web_site" android:title="@string/Switch_feed_elipses" />
+    <item android:id="@+id/mt_filter"       app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_search"   android:title="@string/filter" android:visible="false" />
+
+    <!-- for android 4.4.2 -->
+    <item
+            android:id="@+id/sb_overflow_submenu"
+            android:icon="@drawable/ic_action_overflow"
+            android:title="@string/uc_more"
+            app:showAsAction="always">
+
+        <!-- move menu items below here if you want to simulate overflow even for devices that do normally do not have it (because the have a hardware menu button) -->
+        <menu>
+            <!-- only for feed -->
+            <item android:id="@+id/show_matches_from_feed" app:showAsAction="never"                                         android:title="@string/pref_matchList" />
+            <item android:id="@+id/show_players_from_feed" app:showAsAction="never" android:icon="@drawable/ic_menu_cc"     android:title="@string/pref_playerList" />
+            <group android:id="@+id/hide_show_completed_group" android:checkableBehavior="all">
+                <item android:id="@+id/uc_hide_matches_with_result"
+                      android:checkable="@bool/hideCompletedMatchesFromFeed_default" app:showAsAction="never" android:title="@string/pref_hideCompletedMatchesFromFeed" android:icon="@android:drawable/checkbox_on_background" />
+            </group>
+            <item android:id="@+id/expand_all"   app:showAsAction="never" android:icon="@android:drawable/arrow_down_float" android:title="@string/expand_all" />
+            <item android:id="@+id/collapse_all" app:showAsAction="never" android:icon="@android:drawable/arrow_up_float"   android:title="@string/collapse_all" />
+
+            <!-- only for 'manual' -->
+            <item android:id="@+id/mt_clear_player_fields"                                                           android:title="@string/uc_clear_player_fields" />
+            <item android:id="@+id/mt_clear_club_fields"                                                             android:title="@string/uc_clear_club_fields" />
+            <item android:id="@+id/mt_clear_country_fields"                                                          android:title="@string/uc_clear_country_fields" />
+            <item android:id="@+id/mt_clear_event_fields"                                                            android:title="@string/uc_clear_event_fields" />
+            <item android:id="@+id/mt_clear_referee_fields"                                                          android:title="@string/uc_clear_referee_fields" />
+            <item android:id="@+id/mt_clear_all_fields"                                                              android:title="@string/uc_clear_all_fields" />
+
+            <!-- only for static -->
+            <item android:id="@+id/sort_group_names" app:showAsAction="never"                                               android:title="@string/cmd_sort" />
+
+            <!-- only for feed -->
+            <item android:id="@+id/uc_add_new_feed" app:showAsAction="never" android:title="@string/add_new_feed" />
+
+            <!-- only for previous/stored -->
+            <item android:id="@+id/cmd_delete_all" app:showAsAction="never" android:icon="@android:drawable/ic_menu_delete"  android:title="@string/cmd_delete_all" android:visible="false"/>
+            <item android:id="@+id/mt_cmd_export"     app:showAsAction="never" android:title="@string/Export_elipses"                                                      android:visible="false"/>
+            <item android:id="@+id/mt_cmd_import"     app:showAsAction="never" android:title="@string/Import_elipses"                                                      android:visible="false"/>
+
+            <!-- for all but 'manual' -->
+            <item android:id="@+id/mt_refresh"      app:showAsAction="never" android:icon="@drawable/ic_action_refresh"        android:title="@string/refresh" />
+
+            <!-- for all: never show close button in action bar: user should be accustomed to using the back button -->
+            <item android:id="@+id/close"     app:showAsAction="never" android:icon="@android:drawable/ic_menu_close_clear_cancel"      android:title="@string/cmd_close" />
+
+        </menu>
+    </item>
+</menu>

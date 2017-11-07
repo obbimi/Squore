@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="oal_warmup">Warm Up</string>
+    <string name="oa_halftime">Half-time!</string>
+    <string name="oa_time">Time!</string>
+    <string name="oal_pause">Pause</string>
+
+    <string name="oa_best_of_x_games_to_y">Best of %1$s games tot %2$s</string>
+    <string name="oa_best_of_x_games">Best of %1$s games</string>
+    <string name="oa_x_to_serve__y_to_receive">%1$s serveert, %2$s ontvangt</string>
+    <string name="oa_love_all">Nul-Nul</string>
+
+    <string name="oa_game_to_x">Game voor %s</string>
+    <string name="oa_match_to_x">Match voor %s</string>
+    <string name="oa_1_game_all">1–1 in games</string>
+    <string name="oa_x_games_all">%1$s-%1$s in games</string>
+    <!--<string name="oa_x_leads_n_against_y">%1$s leidt %2$s tegen %3$s</string>-->
+    <!--<string name="oa_x_wins_n_against_y">%1$s wint %2$s tegen %3$s</string>-->
+    <string name="oa_a_leads_xGamesToy">%1$s leidt %2$s</string>
+    <string name="oa_a_wins_xGamesToy">%1$s wint %2$s</string>
+    <string name="oa_x_games_TO_y">tegen</string>
+    <string name="oa_x_th_game">%s game</string>
+    <string name="oa_x_to_serve">%s serveert</string>
+    <string name="oa_love">0</string>
+    <string name="oa_game">game</string>
+    <string name="oa_games">games</string>
+    <string name="oa_gameball">Game bal</string>
+    <string name="oa_matchball">Match bal</string>
+
+    <string name="oa_n_all">%s Gelijk</string>
+    <string name="oa_player_needs_2_clear_points">Een speler moet winnen met twee punten verschil</string>
+
+    <string name="oa_change_sides">Wisselen van kant</string>
+    <string name="oa_fifteen_seconds">%s seconden!</string>
+
+    <string name="oa_decision_colon">Beslissing :</string>
+    <string name="oa_yes_let">Yes Let</string>
+    <string name="oa_no_let">No Let</string>
+    <string name="oa_stroke">Stroke</string>
+    <string name="oa_stroke_to_x">Stroke voor %s</string>
+    <string name="oa_conduct_warning">Conduct warning</string>
+    <string name="oa_conduct_warning_x_for_type_y">Conduct warning %1$s voor %2$s</string>
+    <string name="oa_conduct_stroke">Conduct stroke</string>
+    <string name="oa_conduct_x__stroke_to_y_for_type_t">Conduct %1$s, Stroke voor %2$s voor %3$s</string>
+    <string name="oa_conduct_x__game_to_y_for_type_t">Conduct %1$s, Game voor %2$s voor %3$s</string>
+    <string name="oa_conduct_game">Conduct game</string>
+    <string name="oa_conduct_match">Conduct match</string>
+
+    <string name="oal_misconduct_by">Wangedrag door %s</string>
+    <string name="oal_let_requested_by">Let gevraagd door %s</string>
+
+    <string-array name="FirstSecondThirdFourthFifth">
+        <item>eerste</item>
+        <item>tweede</item>
+        <item>derde</item>
+        <item>vierde</item>
+        <item>vijfde</item>
+        <item>zesde</item>
+        <item>zevende</item>
+        <item>achtste</item>
+        <item>negende</item>
+    </string-array>
+    <string name="officialAnnouncementsLanguage_default">nl</string>
+</resources>

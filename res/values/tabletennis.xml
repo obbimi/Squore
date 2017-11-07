@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="number_of_serves_per_player">Number of servers per player</string>
+    <string name="end_game_Tabletennis">End game</string>
+    <string name="best_of_x_games_to_y_2_Tabletennis">games to</string>
+
+    <string name="scv_side_buttons_Tabletennis">The __serve buttons__ indicate
+        \n
+        \n- who should serve
+        \n- if the player may serve twice (Ⅱ) or just one more time (Ⅰ) before serve switches to the opponent
+        \n\nThe serve indication changes automatically after each point entered.
+        \n\nIf required (but normally it is not), you can toggle player by tapping it.
+    </string>
+    <string name="scv_timer_button_Tabletennis">This button will allow you to start a __timer__.
+        \n\nIt will only appear when appropriate
+        \n
+        \n- Warmup before the match
+        \n- Between games
+    </string>
+    <string name="scv_shirt_color_Tabletennis">You can optionally __enter a color__ for both players/teams.
+        \n\nLong click the serve side button to select a color.</string>
+    <string name="scv_game_scores_Tabletennis">The scores of __previous games__ are visible here.
+        \n\nTap it to see all details of previous games.</string>
+    <!--
+    <string name="scv_overflow_submenu_Tabletennis">More options are available from the menu. You can for example:
+        \n
+        \n- Customize appearance and behaviour of the app via \'Settings\'
+        \n- Show details of previously reffed matches
+        \n- Start an injury timer
+        \n- Export/import all your reffed matches to/from a zip file
+        \n- Consult an elaborate help page for this app
+        \n- Consult the official racketlon rules
+    </string>
+    -->
+    <string name="scv_new_match_button_Tabletennis">__That\'s it. Enjoy your table tennis.__
+        \n\nStart a new match by tapping this button.</string>
+
+    <string name="sb_official_rules_Tabletennis">Official table tennis rules</string><!--  -->
+
+    <string name="pref_feedPostUrls_default_Tabletennis"><![CDATA[Name=TournamentSoftware 1
+\nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches&sport=tabletennis
+\nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players&sport=tabletennis
+\n
+\nName=TournamentSoftware 2
+\nFeedMatches=feed/tournamentsoftware.php?nr=2&pm=matches&sport=tabletennis
+\nFeedPlayers=feed/tournamentsoftware.php?nr=2&pm=players&sport=tabletennis
+\n
+\nName=Demo URL
+\nFeedMatches=demo/demo.matches.tabletennis.txt
+\nFeedPlayers=demo/demo.players.tabletennis.txt
+\nPostResult=demo/demo.post.matchresult.php?lang=en
+]]></string>
+    <string name="OfficialRulesURLs_default_Tabletennis"><![CDATA[http://www.ittf.com/?media-alias=2017_ITTF_Handbook
+\nhttps://pongworld.com/table-tennis-sport/official-rules
+]]></string>
+
+    <string name="matchList_default_Tabletennis"><![CDATA[- Seamaster 2017 ITTF World Tour Platinum, China Open
+\nOVTCHAROV Dimitrij [GER] - FAN Zhendong [CHN]
+\nHARIMOTO Tomokazu [JAP] - BOLL Timo [GER]
+\n- Tuesday matches with mates
+\nJames - Richard
+\nRichard - Steven
+\nSteven - James
+]]></string>
+
+    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Tabletennis">true</bool>
+
+</resources>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--
+    <string name="facebook_app_id">504690753001960</string>
+-->
+    <string name="msg_enter_both_player_names">Veuillez entrer le nom des deux joueurs</string>
+    <string name="msg_enter_all_player_names">Veuillez entrer le nom de tous les joueurs</string>
+    <string name="msg_enter_authentication_details">Entrez les informations d\'authentification</string>
+
+    <!-- Score board -->
+    <!--<string name="sb_not_a_valid_endscore">Le score actuel ne semble pas être une fin valide de jeu</string>-->
+    <string name="sb_start_next_game_confirm_message">Commencer le jeu suivant ?</string>
+    <string name="Start_game">Commencer le jeu</string>
+    <string name="sb_end_game_and_match_message">Fin du jeu et match</string>
+    <string name="sb_enter_player_names">Entrez le nom des joueurs</string>
+    <string name="hms_delete_all">Effacer tous les résultats</string>
+    <string name="hms_delete_selected">Effacer tous les résultats stockés</string>
+    <string name="sb_online_sheet_available">Feuille de match disponible en ligne</string>
+    <string name="sb_online_sheet_updated">Feuille de match en ligne mise à jour</string> <!-- TODO -->
+    <string name="sb_injury_type">Type de blessure</string>
+    <string name="sb_doublesServeSequence">Séquence de service</string>
+    <string name="lblPauseDuration">Durée d\'interruption</string>
+    <string name="sb_tiebreak">Tie break</string>
+    <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-partout - Le receveur %2$s choisit de jouer en %3$s ou à %4$s</string>
+    <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-partout - Le receveur %2$s choisit le point gagnant</string>
+    <string name="sb_who_will_start_to_serve">Qui commence à servir ?</string>
+    <string name="sb_cmd_toss">Tirage au sort</string>
+    <string name="sb_makeThisTheDefault">Utiliser par défaut</string>
+    <string name="sb_delete_group_of_matches_confirm">Effacer tous les matchs du groupe \'%s\' ?</string>
+    <string name="sb_cmd_ok_and_skip_timer">OK (pas de chronomètre)</string>
+    <string name="sb_cmd_ok_and_start_timer">OK (démarrer le chronomètre)</string>
+    <string name="sb_cmd_ok_plus">OK +</string>
+
+    <string name="uc_clear_all_fields">Effacer tous les champs</string> <!-- TODO -->
+    <string name="uc_clear_player_fields">Effacer les champs du joueur</string>
+    <string name="uc_clear_country_fields">Effacer les champs du pay</string> <!-- TODO -->
+    <string name="uc_clear_club_fields">Effacer les champs du club</string> <!-- TODO -->
+    <string name="uc_clear_event_fields">Effacer les champs de l\'événement</string>
+    <string name="uc_clear_referee_fields">Effacer les champs de l\'arbitre</string>
+    <string name="sb_clear_score_confirm_message">Vous voulez recommencer à zéro ? L\'historique du score du match actuel sera perdu.</string>
+    <string name="cmd_change_format">Changer le format…</string>
+    <string name="sb_select_match">Sélectionnez le match</string>
+    <string name="sb_static_match">Ma liste</string>
+    <string name="sb_select_static_match">Sélectionnez dans ma liste</string>
+    <string name="sb_whatsapp_match_summary">Partage du résultat du match via WhatsApp</string>
+    <string name="sb_twitter_match_summary">Partage du résultat du match via Twitter</string>
+    <string name="sb_put_match_summary_on_clipboard">Copier le résultat du match dans le presse-papier</string>
+    <string name="sb_send_match_result">Envoyer le résultat du match</string>
+    <string name="sb_post_match_result">Poster le résultat du match</string>
+    <string name="sb_post_match_result_q">Publier le résultat du match sur le site \'%s\'?</string>
+    <string name="sb_post_match_result_no_more">Ne pas afficher automatiquement la fenêtre de dialogue \'Poster le résultat du match\'</string>
+    <string name="sb_email_match_result">Partager le résultat du match par courriel</string>
+    <string name="sb_share_score_sheet">Partager la feuille de match</string>
+    <string name="sb_share_match_summary">Partager le résumé du match</string>
+    <string name="sb_share_matches_summary">Partager le résumé des plusieurs matches</string> <!-- TODO -->
+    <string name="Conduct">Comportement</string>
+    <string name="Appeal">Appel</string>
+    <string name="Call">Décision</string> <!-- TODO -->
+    <string name="Type">Type</string> <!-- TODO -->
+    <string name="Detail">Detail</string> <!-- TODO -->
+    <string name="Home">Home</string> <!-- TODO -->
+    <string name="Away">Away</string> <!-- TODO -->
+    <string name="score_sheet">Feuille de match</string>
+    <string name="graph_game_x">Graphique jeu %d</string>
+    <string name="graph_x">Graphique %s</string>
+    <string name="sb_edit_players">Changer le nom des joueurs…</string>
+    <string name="sb_swap_double_players">Inverser les joueurs du match de double</string>
+    <string name="sb_swap_players">Inverser les joueurs du match</string>
+    <string name="sb_choose_player">Pour quel joueur ?</string>
+    <string name="sb_choose_team">Pour quelle équipe ?</string>
+    <string name="sb_edit_event_or_player">Editer événement/joueur</string>
+    <string name="sb_new_match">Nouveau match:</string>
+    <string name="sb_matches">Matchs</string>
+    <string name="sb_new_singles_match">Nouveau match de simple</string>
+    <string name="sb_new_doubles_match">Nouveau match de double</string>
+    <string name="sb_clear_score">Redémarrez le score</string>
+    <string name="sb_adjust_score">Ajuster le score</string>
+    <string name="sb_handicap_score">Appliquer des points de handicap</string>
+    <string name="sb_sub_share_match">Partage du match…</string>
+    <string name="sb_timer">\u00A0Chronomètre</string> <!-- added non-breaking space in front for action bar -->
+    <string name="sb_injury_timer">Chronomètre pour blessures</string>
+    <string name="sb_score_details">Détails du score</string>
+    <string name="sb_official_announcement">Annonces officielles</string>
+    <string name="sb_official_rules_Squash">Règles officielles</string>
+    <string name="sb_possible_conducts">Conduites abusives</string>
+    <string name="sb_self_inflicted_injury">Blessure auto-infligée</string>
+    <string name="sb_opponent_inflicted_injury">Blessure infligée par l\'adversaire</string>
+    <string name="sb_contributed_injury">Blessure à responsabilité partagée</string>
+    <!--<string name="sb_untill_next_game">Prochain jeu dans</string>-->
+    <string name="sb_remove_match_from_my_list">Effacer le match \'%s\' de \'Ma Liste\'</string>
+    <string name="sb_delete_item">Supprimer l\'élément \'%s\'</string>
+    <string name="sb_delete_section">Supprimer la section \'%s\'</string>
+    <string name="sb_delete_group">Supprimer le groupe</string>
+    <string name="sb_edit_item">Editer l\'élément \'%s\'</string>
+    <string name="sb_new_item">Nouvel élément \'%s\'</string>
+    <string name="end_game_Squash">Fin du jeu</string>
+    <string name="end_match">Fin du match</string> <!-- TODO-->
+    <string name="sb_match_history">Historique du score</string>
+    <string name="sb_stored_matches">Matchs stockés</string>
+    <string name="no_matches_selected">Aucune match sélectionnée</string> <!-- TODO -->
+    <string name="sb_recent_matches">Matchs derniers</string> <!-- TODO -->
+    <string name="sb_preferences">Paramètres</string>
+    <string name="sb_no_matches_stored">Aucun match stocké trouvé</string>
+    <string name="match_has_finished">Le match est fini</string>
+    <string name="press_again_to_undo_last_score">Appuyez sur l\'historique du score pour annuler le dernièr score</string>
+    <string name="unable_to_interpret_entered_text_as_2_names">Désolé, je n\'ai pas pu interpréter le texte saisi comme étant 2 noms distincts</string>
+    <string name="best_of_x_games_to_y_1">Au meilleur des</string>
+    <string name="best_of_x_games_to_y_2_Squash">jeux à</string>
+
+    <string name="no_statistics_recorded_for_this_match">Aucune statistique (coups gagnants/fautes directes) enregistrée pour ce match</string>
+
+    <string name="nfc_match_send">Match envoyé !</string>
+    <string name="nfc_something_went_wrong">Quelque chose s\'est mal passé durant le transfert du match %s</string>
+    <string name="nfc_opening_match">Ouvrir un match du beam NFC: \n %1$s-%2$s</string>
+    <string name="nfc_saved_match">Match stocké du beam NFC: \n %1$s-%2$s</string>
+
+    <string name="url_match_show_details">Afficher les détails du match de l\'URL : \n %1$s-%2$s</string>
+    <string name="url_match_continue">Ouvrir le match de l\'URL : \n %1$s-%2$s</string>
+
+    <string name="player_names_swapped">Les noms des joueurs du match ont été inversés</string>
+    <string name="double_player_names_swapped">Les noms des joueurs du match de double ont été inversés (équipe %1$s)</string>
+    <string name="match_is_locked__unlock_to_allow_modifications">Ce match est verrouillé (%s). Choisissez \'Déverrouiller\' pour permettre des modifications. Ou débuter un nouveau match</string>
+    <string name="match_is_locked">Ce match est verrouillé (%s). Vous pouvez commencer une nouvelle match si vous le souhaitez.</string>
+    <string name="match_is_now_locked">Ce match est verrouillé maintenant.</string>
+    <string name="match_is__locked">Ce match est verrouillé.</string>
+    <string name="match_is_now_unlocked">Ce match est déverrouillé maintenant.</string>
+
+    <string name="Uncompleted">Incomplet</string>
+    <string name="Completed">Complet</string>
+    <string name="s1_match_s2_retrieved_from_the_web">%1$s match \'%2$s\' importé depuis le web.</string>
+    <string name="s1_match_s2_received_via_nfc">%1$s match \'%2$s\' reçu depuis le beam NFC.</string>
+    <string name="what_do_you_want_to_do_with_it">Que voulez-vous faire ?</string>
+    <string name="cmd_store_for_later_usage">Stocker pour utilisation ultérieure</string>
+    <string name="cmd_show_detail">Afficher les détails du match</string>
+    <string name="cmd_open_match_and_continue">Ouvrir et continuer à marquer</string>
+    <string name="q_use_entered_match_details">Utiliser les détails du match saisis ?</string>
+
+    <string name="creating_url_for_sharing_match_details">Création du lien pour partager les détails de match…</string>
+    <string name="select_reason_and_winner">Sélectionnez le raison et le personne gagnant</string> <!-- TODO -->
+</resources>

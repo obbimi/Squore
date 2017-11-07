@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:tag="mainBackgroundColor"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+<com.doubleyellow.view.SelectEnumView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/selectConductType"
+        app:enum_class="com.doubleyellow.scoreboard.model.ConductType"
+        app:enum_display_values="@array/ConductType_DisplayValues"
+        app:enum_columns="1"
+        android:background="@color/dy_dark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</ScrollView>

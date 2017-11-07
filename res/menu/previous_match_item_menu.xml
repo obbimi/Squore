@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+
+    <item android:id="@+id/pmi_item_details" android:icon="@drawable/ic_action_chart_line"    android:title="@string/uc_details" />
+    <item android:id="@+id/pmi_item_open"                                                     android:title="@string/cmd_open" />
+    <item android:id="@+id/pmi_match_share"  android:icon="@android:drawable/ic_menu_share"   android:title="@string/sb_share_score_sheet" />
+    <item android:id="@+id/pmi_item_email"   android:icon="@android:drawable/ic_dialog_email" android:title="@string/uc_email"              android:visible="true"/>
+    <item android:id="@+id/pmi_item_message" android:icon="@drawable/ic_action_send_now"      android:title="@string/sb_send_match_result"  android:visible="true"/>
+    <item android:id="@+id/pmi_item_clipboard"                                                android:title="@string/sb_put_match_summary_on_clipboard"  android:visible="true"/>
+
+    <item
+        android:id="@+id/pmi_item_edit"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/uc_edit"
+        android:visible="true">
+        <menu>
+            <item android:visible="true"  android:id="@+id/pmi_item_edit_event" android:title="@string/sb_edit_event_or_player" />
+            <item android:visible="false" android:id="@+id/pmi_item_edit_date"  android:title="@string/date" />
+        </menu>
+    </item>
+    <item android:id="@+id/pmi_item_delete"  android:icon="@android:drawable/ic_menu_delete"  android:title="@string/uc_delete" />
+
+</menu>

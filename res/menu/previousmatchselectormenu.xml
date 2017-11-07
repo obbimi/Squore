@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+    <item android:id="@+id/hms_delete_selected" app:showAsAction="always" android:icon="@android:drawable/ic_menu_delete" android:title="@string/hms_delete_selected" />
+    <item android:id="@+id/hms_delete_all"      app:showAsAction="never"  android:icon="@android:drawable/ic_menu_delete" android:title="@string/hms_delete_all" />
+</menu>

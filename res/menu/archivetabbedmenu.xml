@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+
+    <!-- for android 4.4.2 -->
+    <item
+            android:id="@+id/sb_sort_by"
+            android:icon="@android:drawable/ic_menu_sort_by_size"
+            android:title="@string/uc_sort"
+            app:showAsAction="ifRoom"/>
+    <item android:id="@+id/filter"       app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_search"   android:title="@string/filter" />
+    <item android:id="@+id/cmd_share_selected" app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_share"  android:title="@string/sb_share_matches_summary" />
+    <item
+            android:id="@+id/sb_overflow_submenu"
+            android:icon="@drawable/ic_action_overflow"
+            android:title="@string/uc_more"
+            app:showAsAction="always">
+
+        <!-- move menu items below here if you want to simulate overflow even for devices that do normally do not have it (because the have a hardware menu button) -->
+        <menu>
+            <item android:id="@+id/refresh"   app:showAsAction="never" android:icon="@drawable/ic_action_refresh"    android:title="@string/refresh" />
+
+            <!-- only for previous/stored -->
+            <item android:id="@+id/cmd_delete_all"   app:showAsAction="never" android:icon="@android:drawable/ic_menu_delete"  android:title="@string/cmd_delete_all" />
+            <item android:id="@+id/cmd_export"     app:showAsAction="never" android:title="@string/Export_elipses" />
+            <item android:id="@+id/cmd_import"     app:showAsAction="never" android:title="@string/Import_elipses" />
+
+            <!-- for all: never show close button in action bar: user should be accustomed to using the back button -->
+            <item android:id="@+id/close"     app:showAsAction="never" android:icon="@android:drawable/ic_menu_close_clear_cancel"      android:title="@string/cmd_close" />
+
+        </menu>
+    </item>
+</menu>

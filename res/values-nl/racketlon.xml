@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="oa_set">set</string>
+    <string name="oa_set_ball">Set bal</string>
+    <string name="oa_gummiarm_point">Gummiarm punt</string>
+    <string name="end_game_Racketlon">Beëindig set</string>
+
+    <string name="scv_side_buttons_Racketlon">De __opslag kant knoppen__ geven aan
+        \n
+        \n- wie er moet serveren
+        \n- van welke kant (L/R) (Badminton, Squash, Tennis)
+        \n- of de speler nog twee (Ⅱ) of één (Ⅰ) beurt heeft om op te slaan
+        \n
+        \nDe wisseling van kant of speler doet de app automatisch bij het ingeven van een punt.
+        \n
+        \nIndien nodig kan je van speler/kant wisselen door kort op de knop te drukken.
+    </string>
+    <string name="scv_timer_button_Racketlon">Deze knop laat het je toe een __timer__ te starten.
+        \n\nHij verschijnt alleen als een timer toepasselijk is:
+        \n
+        \n- Tussen twee sets
+        \n- Opwarming voor nieuwe sport
+    </string>
+    <string name="scv_shirt_color_Racketlon">Je kan eventueel een kleur in geven voor beide spelers/teams.
+        \n\nHoud hiervoor de __opslag kant knop__ even ingedrukt.</string>
+    <string name="scv_game_scores_Racketlon">De eindstand van __vorige sets__ van een wedstrijd, evenals het verschil in punten, zijn hier te zien.
+        \n\nDruk er op om details van reeds gespeelde sets in grafiek vorm te zien.</string>
+    <string name="scv_overflow_submenu_Racketlon">Andere opties zijn beschikbaar via het menu. Je kan er bijvoorbeeld:
+        \n
+        \n- Aanpassen van de \'Look and feel\' en van het gedrag van de app via \'Instellingen\'
+        \n- Resultaten van eerdere, met de app ingegeven, wedstrijden bekijken
+        \n- Starten van een \'Blessure timer\'
+        \n- Exporteren/importeren van alle opgeslagen wedstrijden naar een zip file
+        \n- Raadplegen van een uitgebreide help pagina
+        \n- Raadplegen van de officiele racketlon regels
+    </string>
+    <string name="scv_new_match_button_Racketlon">__Dat was het. Veel racketlon plezier.__
+        \n\nStart een nieuwe wedstrijd door op deze knop te klikken.</string>
+
+    <string name="sb_official_rules_Racketlon">Officiele racketlon regels</string>
+    <string name="best_of_x_games_to_y_2_Racketlon">Sets tot</string>
+    <string name="discipline_order">Discipline volgorde</string>
+    <string name="start_with_discipline">Begin met discipline</string>
+    <string name="moving_from_displine_x_to_y">Wissel van %1$s naar %2$s</string>
+    <string name="moving_from_displine_x_to">Wissel van %1$s naar</string>
+    <string name="if_player_x_wins_discipline_y_he_wins_the_match">Als speler %1$s het %2$s wint, wint hij de wedstrijd</string>
+    <string name="player_x_needs_1_more_point_to_win">Speler %1$s heeft nog 1 punt nodig om te winnen</string>
+    <string name="player_x_needs_y_more_points_to_win">Speler %1$s heeft nog %2$s punten nodig om te winnen</string>
+    <string name="dicispline_x_does_not_need_to_be_played">Discipline %1$s hoeft niet meer gespeeld te worden</string>
+    <string name="x_is_winner_Difference_is_y">%1$s wint. Score is +%2$s</string>
+
+    <string name="OfficialRulesURLs_default_Racketlon"><![CDATA[http://www.racketlon.net/sites/default/files/FIR%20-%20Rules%20of%20Racketlon%20(2017-01-01),%20FINAL.pdf
+]]></string>
+
+    <string name="matchList_default_Racketlon"><![CDATA[- King of Rackets > Semi Finals
+\nLukas Windischberger [AUT] - Michi Dickert [AUT]
+\nJesper Hougaard (DEN) - Peter Duyck (BEL)
+\n- Dinsdag wedstrijden met vrienden
+\nJan - Richard
+\nRichard - Steven
+\nSteven - nJan
+]]></string>
+
+</resources>

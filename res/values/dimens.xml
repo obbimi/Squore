@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Button Header -->
+    <dimen name="card_header_button_padding_left">10dp</dimen>
+    <dimen name="card_header_button_padding_right">0dp</dimen>
+    <dimen name="card_header_button_padding_bottom">0dp</dimen>
+    <dimen name="card_header_button_padding_top">0dp</dimen>
+    <dimen name="card_header_button_margin_right">2dp</dimen>
+    <dimen name="card_header_button_overflow_margin_right">3dp</dimen>
+
+</resources>

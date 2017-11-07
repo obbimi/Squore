@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="press_back_again_to_exit_intro">Press \'Back\' again to exit intro</string>
+    <string name="scv_got_it">GOT IT</string>
+    <string name="scv_first_run">Do you want a quick intro to learn the main features of the app?
+        \n
+        \nIt will show you how you can use the app in different situations during several stages of a match.
+        \n
+        \nYou can cancel the intro at any time by pressing the _Back_ button on your device.
+        \n
+        \nOr start it again from the menu _Help/Quick intro_.</string>
+    <string name="scv_toss">\nAt the start of a match, a __toss__ is typically performed.
+        \n\nPress this button to:
+        \n
+        \n- easily enter the result of the toss
+        \n- let the app do the toss for you
+    </string>
+    <string name="scv_side_buttons_Squash">The __serve side buttons__ indicate
+        \n
+        \n- who should serve
+        \n- from which side (L/R)
+        \n- if it is a handout (?)
+        \n\nThe side or player changes automatically after each point entered.
+        \n\nIf required, you can toggle side/player by tapping it.
+    </string>
+<!--
+    \n\nOn handout, the app will initially display the side the new server started serving last time (with a question mark).
+-->
+    <string name="scv_big_buttons">Press the big buttons to keep track of the points scored by each player.</string>
+    <string name="scv_undo_last">
+        \n
+        \nIf you accidentally entered a point for the wrong player you can correct it by pressing the __Undo__ button.
+        \n
+        \nAnother way to undo the last score is by swiping your finger over the score button you accidentally increased.
+    </string>
+    <string name="scv_player_buttons_appeall_Squash">Keep track of __Stroke/Yes Let/No let__ decisions by tapping the name of the player requesting a let.
+        \nEnter your decision in the dialog that appears.
+    </string>
+<!--
+    \n
+    \nIn case of _No let_ or _Stroke_, the awarded point is automatically reflected by the app. (No need to tap the big score button).
+-->
+    <string name="scv_player_buttons_misconduct_Squash">You can also keep track of __Conduct Warning/Stroke__ decisions.
+        \n
+        \nLong-press a player button for a _Misconduct_ dialog.</string>
+    <string name="scv_old_fashioned_scoring_Squash">An \'old fasioned\' scoring sheet is visible on the screen for your convenience.
+        \n\nThis can be turned off via \'Settings\'.</string>
+<!--
+    <string name="scv_home_button">At any time you can also start a new match by tapping the home button.</string>
+-->
+    <string name="scv_announcement_button_Squash">This button will appear when an __official announcement__ is in order:
+        \n
+        \n - Start of game/match
+        \n - End of game/match
+        \n - First tiebreak
+        \n\nPress it to see the announcement.</string>
+    <string name="scv_shirt_color_Squash">If you are about to ref two players you never met before, and have a hard time remembering their names,
+        you can __enter a color__ for both of them.
+        \n\nLong click the serve side button to select a color.</string>
+    <string name="scv_game_scores_Squash">The scores of __previous games__ are visible here.
+        \n\nTap it to see all details of previous games.</string>
+    <string name="scv_timer_button_Squash">This button will allow you to start a __timer__.
+        \n\nIt will only appear when appropriate
+        \n
+        \n- Warmup
+        \n- Before start of first game
+        \n- Between games
+      </string>
+<!--
+    <string name="scv_score_details">This button will allow you to review all details of a match.
+        \n
+        \n- Complete score sheet including timings
+        \n- Scoring sequence in a graph
+        \n- No let/Yes let/Stroke totals
+      </string>
+-->
+    <string name="scv_share_button">This button appears once a match is done. It allows you to share the result.
+        \n\nYou can configure it to
+        \n
+        \n- Share a link with all match details
+        \n- Share a short summary
+        \n- Post the result to a website
+        \n- Email a score sheet
+      </string>
+    <string name="scv_overflow_submenu_Squash">More options are available from the menu. You can for example:
+        \n
+        \n- Customize appearance and behaviour of the app via \'Settings\'
+        \n- Show details of previously reffed matches
+        \n- Start an injury timer
+        \n- Export/import all your reffed matches to/from a zip file
+        \n- Consult an elaborate help page for this app
+        \n- Consult the official squash rules
+        \n- Enable options to easily record FH/BH Winner/Error statistics (e.g. for coaches/trainers while observing their pupils match)
+          </string>
+    <string name="scv_toggle_action_bar">If you want to __hide the action bar__ (e.g. to maximize screen usage, or for aesthetic reasons)
+        you can easily do so: simply long-click on the __games scores__. Another long-click will make it visible again.
+        \n
+        \nNote that if you hide the action bar, the \'Undo by swiping\' is still available!
+          </string>
+    <string name="scv_few_more_gui_hints_Squash">A few more GUI hints:
+        \n
+        \n__Player buttons__
+        \n
+        \n- Touch with two fingers to record a broken ball/strings/racket event
+        \n- Swipe back and forth over one to edit (or provide more) match details
+        \n- Swipe to the left over the servers name to switch serve side to Left, idem for right
+        \n
+        \n__Score buttons__
+        \n
+        \n- Touch both at the same time to enter a start score (reffing a match that already started)
+        \n- Long-Touch both to verify the format of the match in progress
+        \n- Swipe diagonally back-and-forth over a score button to optionally restart the score (e.g. after demo-ing the app to fellow club members)
+          </string>
+    <string name="scv_few_more_good_to_knows">A few more \'Good to know-s\':
+        \n
+        \n- You can easily display the score on a big TV screen using Chrome Cast.
+        \n- You can specify a country per player. Flags for the chosen countries will be displayed.
+        \n- You can use the volume buttons to be your \'score\' buttons (must be activated via the settings).
+        \n- You can transfer a match from one android device to another using NFC.
+          </string>
+    <string name="scv_new_match_button_Squash">__That\'s it. Happy squashing, happy reffing.__
+        \n\nStart a new match by tapping this button.</string>
+</resources>

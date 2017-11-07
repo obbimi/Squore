@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="rmm_title">Notez moi</string>
+    <string name="rmm_message">Vous semblez aimer cette application, puisque vous l\'avez déjà utilisé %s fois! Ce serait génial si vous preniez un moment pour la noter.</string>
+    <string name="rmm_later">Peut-être plus tard</string>
+    <string name="rmm_never">Non, jamais</string>
+</resources>

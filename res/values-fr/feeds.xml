@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sb_feed">Flux</string>
+    <string name="sb_select_feed_match">Sélectionnez un match depuis un flux</string>
+    <string name="back_to_list_of_matches">Retourner a le flux</string> <!-- TODO -->
+
+    <string name="Switch_feed_elipses">Changer de flux…</string>
+    <string name="add_new_feed">Sélectionnez un nouveau flux public…</string>
+    <string name="feed_x_already_exist_with_name_y">Ce flux (%1$s) est déjà dans votre liste sous le nom %2$s</string>
+    <string name="Could_not_read_feed_x__y__Using_cached_content_aged_z_minutes">Impossible de lire le flux %1$s.\\n\\n%2$s\\n\\nUtilisation des données du cache (rafraîchies il y a %3$d minutes).</string>
+
+    <string name="No_matches_in_feed">Aucun match dans ce flux</string>
+    <string name="Error_no_feeds_in_feed">Aucun sujet dans ce flux</string>
+    <string name="No_active_feed">Aucun flux actif</string>
+    <string name="Select_one_by_pressing_the_globe_button">Sélectionnez-en un en appuyant sur le boutton \'globe\'</string>
+</resources>

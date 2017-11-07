@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="EndMatchManuallyBecause_DisplayValues"> <!-- TODO -->
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.EndMatchManuallyBecause -->
+        <item>Abandon sur blessure</item>
+        <item>Conduct Match</item>
+    </string-array>
+    <string-array name="BrokenEquipment_DisplayValues"> <!-- TODO -->
+        <item>Cordage</item>
+        <item>Raquette cassée</item>
+        <item>Balle creuvée</item>
+    </string-array>
+    <string-array name="OrientationPreference_DisplayValues"> <!-- TODO -->
+        <item>Paysage</item>
+        <item>Portrait</item>
+    </string-array>
+    <string-array name="PostDataPreferenceDisplayValues">
+        <item>Publier uniquement les données les plus pertinentes</item>
+        <item>Publier les données les plus pertinentes + json = {}</item>
+        <item>Publier uniquement les données json dans le corps</item>
+    </string-array>
+    <string-array name="LockState_DisplayValues">
+
+        <item>Déverrouillé (Non modifiable)</item>
+        <item>Déverrouillé</item>
+        <item>Déverrouillé (Manuel)</item>
+        <item>Déverrouillé (Fin du dernier Jeu)</item>
+        <item>Verrouillé (Manuel)</item>
+        <item>Verrouillé (Manuel)</item>
+        <item>Verrouillé (Match terminé)</item>
+        <item>Verrouillé (Match terminé)</item>
+        <item>Verrouillé (Idle Time)</item>
+        <item>Partager le matche terminé</item>
+        <item>Verrouillé (Retired)</item>
+        <item>Verrouillé (Conduct Match)</item>
+    </string-array>
+    <string-array name="DetermineTextColor_DisplayValues">
+        <item>Choisir automatiquement blanc ou noir</item>
+        <item>Choisir automatiquement depuis la palette</item>
+        <item>Sélection manuelle</item>
+    </string-array>
+    <string-array name="KeepScreenOnWhen_DisplayValues">
+        <item>Toujours</item>
+        <item>Match en cours</item>
+        <item>Jamais</item>
+    </string-array>
+    <string-array name="BackKeyBehaviour_DisplayValues">
+        <item>Appuyez deux fois pour quitter</item>
+        <item>Appuyez une fois pour quitter</item>
+        <item>Annuler dernière saisie (avec confirmation)</item>
+        <item>Annuler dernière saisie (sans confirmer)</item>
+        <item>Inverse le côté de service</item>
+    </string-array>
+    <string-array name="VolumeKeysBehaviour_DisplayValues">
+        <item>Aucun</item>
+        <item>Ajuster le score</item>
+        <item>Ajuster le score (En orientation portrait seulement)</item>
+    </string-array>
+    <string-array name="RallyEndStatsPrefs_DisplayValues">
+        <item>Côté de la frappe (CD/RV)</item>
+        <item>Position de frappe</item>
+        <item>Direction de balle</item>
+        <item>Trajectiore de balle</item>
+    </string-array>
+    <string-array name="RacketSide_DisplayValues">
+        <item>Revers</item>
+        <item>Coup droit</item>
+    </string-array>
+    <string-array name="BallDirection_DisplayValues">
+        <item>Parrallèle</item>
+        <item>Croisé</item>
+        <item>Double-mur</item>
+    </string-array>
+    <string-array name="BallTrajectory_DisplayValues">
+        <item>Fond de court</item>
+        <item>Amortie</item>
+        <item>Lobe</item>
+    </string-array>
+    <string-array name="Position_DisplayValues">
+        <item>A l\'avant</item>
+        <item>Vollée</item>
+        <item>A l\'arrière</item>
+    </string-array>
+    <string-array name="ConductType_DisplayValues">
+        <item>Abus sur matériel</item>
+        <item>Obscénité</item>
+        <item>Perte de temps</item>
+        <item>Contestation</item>
+        <item>Abus sur officiel</item>
+        <item>Contact physique</item>
+        <item>Comportement anti-sportif</item>
+        <item>Coaching</item>
+    </string-array>
+    <string-array name="timerViewType_DisplayValues"> <!-- TODO -->
+        <item>Popup avec le cercle</item>
+        <item>Entre les gros boutons (chiffres)</item>
+    </string-array>
+    <string-array name="GroupMatchesByDisplayValues">
+        <item>Evénement</item>
+        <item>Date</item>
+    </string-array>
+    <string-array name="SortOrderDisplayValues">
+        <item>Croissant</item>
+        <item>Décroissant</item>
+    </string-array>
+    <string-array name="OnlineSheetActionDisplayValues">
+        <item>Partager le lien</item>
+        <item>Aperçu</item>
+        <item>Afficher dans le navigateur</item>
+        <item>Copier dans le presse-papier</item>
+        <item>Supprimer du serveur</item>
+    </string-array>
+    <string-array name="FeatureDisplayValues">
+        <item>Ne pas utiliser</item>
+        <item>Proposer l\'utilisation</item>
+        <item>Affichage automatique</item>
+    </string-array>
+    <string-array name="FeatureDisplayValues_DoAuto">
+        <item>Ne pas proposer</item>
+        <item>Proposer</item>
+        <item>Faire automatiquement</item>
+    </string-array>
+    <string-array name="ShareMatchPrefsDisplayValues">
+        <item>Partager le lien du match détaillé</item>
+        <item>Partager les details après chaque jeu</item> <!-- TODO -->
+        <item>Partager les details après chaque demi jeu</item> <!-- TODO -->
+        <item>Partager les details après chaque point</item> <!-- TODO -->
+        <item>Partager le résumé du match</item>
+        <item>Partager le résumé des matches</item> <!-- TODO -->
+        <item>SMS du résumé du match au no par défaut</item>
+        <item>Poster le détail du match sur le site web</item>
+        <item>Envoyer par courriel la feuille de match en format texte</item>
+    </string-array>
+    <string-array name="EndGameDisplayValues">
+        <item>Ne pas proposer</item>
+        <item>Proposer</item>
+        <item>Terminer automatiquement</item>
+    </string-array>
+    <string-array name="AutoLockContextDisplayValues">
+        <item>Quand le match est fini</item>
+        <item>Quand le match n\'a pas évolué depuis X minutes</item>
+    </string-array>
+    <string-array name="ShowPlayerColorOnDisplayValues">
+        <item>Bord du bouton score</item>
+        <item>Bouton Côté de service</item>
+        <item>Bouton Joueur</item>
+        <item>Message pour Balle de Jeu</item>
+        <item>Graphique</item>
+    </string-array>
+    <string-array name="ShowCountryAsDisplayValues">
+        <item>Abréviation Dans Nom</item> <!-- TODO -->
+        <item>Drapeau à côté du nom (appareil mobile)</item> <!-- TODO -->
+        <item>Drapeau à côté du nom (Chromecast)</item> <!-- TODO -->
+    </string-array>
+    <string-array name="StartupActionDisplayValues">
+        <item>Aucun</item>
+    </string-array>
+    <string-array name="tiebreakFormatDisplayValues">
+        <item>Deux points d\'écart</item>
+        <item>Choix du receveur : en 1 ou 2 points</item>
+        <item>Choix du receveur : en 1, 2 ou 3 points</item>
+        <item>Choix du receveur : en 1 ou 3 points</item> <!-- http://en.allexperts.com/q/Squash-Racquetball-1548/few-rules.htm : US Colleges and PSA old scoring -->
+        <item>Mort subite</item>
+    </string-array>
+    <string-array name="handicapFormatDisplayValues">
+        <item>Aucun</item>
+        <item>Spécifier au début du match</item>
+        <item>Spécifier au début de chaque jeu</item>
+    </string-array>
+    <string-array name="doublesServeSequence">
+        <item>BXYA (officielle)</item>
+    </string-array>
+</resources>

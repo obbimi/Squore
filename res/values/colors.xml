@@ -1,0 +1,99 @@
+<resources>
+    <color name="dy_gray">#aaaaaa</color>
+
+    <color name="dy_dark">#181b1e</color>
+    <color name="dy_yellow">#fde800</color>
+    <color name="dy_white">#f3f3f5</color>
+    <color name="tst_color">#ffba00</color>
+
+    <color name="translucent_black">#80000000</color>
+<!--
+    <color name="translucent_white">#80ffffff</color>
+-->
+    <color name="translucent_orange">#CCffbb33</color>
+
+    <string-array name="colorSchema_Racketlon" translatable="false">
+                               <!-- scorebtn|name+sht|serveside|backgrn -->
+        <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
+        <item>|FIR Light             |#004071|#C30D14|#D6D6D6|#FFFFFF|</item><!-- purple|red|grey... -->
+        <item>|FIR Dark              |#004071|#C30D14|#D6D6D6|#000000|</item><!-- purple|red|grey... -->
+    </string-array>
+    <string-array name="colorSchema_Racquetball" translatable="false">
+                               <!-- scorebtn|name+sht|serveside|backgrn -->
+        <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
+        <item>|Light                 |#004071|#C30D14|#D6D6D6|#FFFFFF|</item><!-- purple|red|grey... -->
+        <item>|Dark                  |#004071|#C30D14|#D6D6D6|#000000|</item><!-- purple|red|grey... -->
+    </string-array>
+    <string-array name="colorSchema_Tabletennis" translatable="false">
+                                <!-- scorebtn|name  |serveside|backgrn -->
+        <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
+        <item>|Tabletennis Rubbers   |#000001|#C3161C|#DDDDDD|#FFFFFF|</item><!-- black|red|grey ... -->
+        <item>|ITTF Light            |#000000|#005043|#E3E5E4|#FFFFFF|</item><!-- black|green|light grey on white... -->
+        <item>|ITTF Dark             |#FFFFFF|#005043|#E3E5E4|#000000|</item><!-- white|green|light grey on black... -->
+    </string-array>
+    <string-array name="colorSchema_CourtCare" translatable="false">
+                               <!-- scorebtn|name+sht|serveside|backgrn -->
+        <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
+        <item>|Court Care Black Light|#000001|#ff0000|#dddddd|#FFFFFF|</item><!-- black|red|grey ... -->
+        <item>|Court Care White Dark |#FFFFFF|#ff0000|#dddddd|#000001|</item>
+        <item>|Court Care Red Light  |#ff0000|#000001|#dddddd|#FFFFFF|</item>
+        <item>|Court Care Red Dark   |#ff0000|#FFFFFF|#dddddd|#000001|</item>
+    </string-array>
+    <string-array name="colorSchema_UoN" translatable="false">
+                               <!-- scorebtn|name+sht|serveside|backgrn -->
+        <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
+        <item>|UoN Green Light       |#005f36|#deb408|#4f4f4f|#FFFFFF|</item><!-- green|gold|dark grey ... University of Notthingham -->
+        <item>|UoN Green Dark        |#005f36|#deb408|#4f4f4f|#000001|</item>
+        <item>|UoN Gold  Light       |#deb408|#005f36|#4f4f4f|#FFFFFF|</item>
+        <item>|UoN Gold  Dark        |#deb408|#005f36|#4f4f4f|#000001|</item>
+    </string-array>
+    <string-array name="colorSchema" translatable="false">
+                               <!-- scorebtn|name+sht|serveside|backgrn -->
+        <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
+        <item>|PSA                   |#141414|#4CA3D9|#D3D3D3|#FFFFFF|</item><!-- dark|blue|light grey ... -->
+        <item>|World Squash Light    |#000001|#ff0000|#dddddd|#FFFFFF|</item><!-- black|red|grey ... -->
+        <item>|World Squash Dark     |#FFFFFF|#ff0000|#dddddd|#000001|</item><!-- black|red|grey ... -->
+        <item>|Squash Skills Light   |#414141|#919191|#f9aa00|#FFFFFF|</item><!-- dark grey|light grey|yellow ... -->
+        <item>|Squash Skills Dark    |#414141|#919191|#f9aa00|#000000|</item><!-- dark grey|light grey|yellow ... -->
+        <item>|Squash Site (BR) Light|#416099|#970102|#91918f|#FFFFFF|</item><!-- blue|red|grey ... -->
+        <item>|Squash Site (RB) Light|#970102|#416099|#91918f|#FFFFFF|</item><!-- red|blue|grey ... -->
+        <item>|Squash Site (BR) Dark |#416099|#970102|#91918f|#000000|</item><!-- blue|red|grey ... -->
+        <item>|Squash Site (RB) Dark |#970102|#416099|#91918f|#000000|</item><!-- red|blue|grey ... -->
+        <item>|VSF                   |#ffba00|#000000|#ffba00|#FFFFFF|</item><!-- orange|black|orange|op white ... -->
+        <item>|SBN                   |#f04d23|#003776|#005bc5|#FFFFFF|</item><!-- orange|darkblue|lightblue ... -->
+        <item>|FIR                   |#004071|#C30D14|#D6D6D6|#FFFFFF|</item><!-- purple|red|grey... -->
+        <item>|DoubleYellow          |#181b1e|#fde800|#f3f3f5|#FFFFFF|</item>
+        <item>|ForgeRock             |#3D4245|#80B7AB|#F0ED37|#FFFFFF|</item>
+        <item>|Grey-Scale Light      |#CCCCCC|#AAAAAA|#999999|#FFFFFF|</item>
+        <item>|Grey-Scale Dark       |#666666|#444444|#222222|#000000|</item>
+    </string-array>
+    <string-array name="colorSchema_new"  translatable="false">
+    </string-array>
+    <string-array name="ColorSchema_XXX"  translatable="false">
+        <item>|name        |Color1 |Color2 |Color3 |</item>
+        <item>|Facebook    |#3b5998|#D8DFEA|#F7F7F7|#FFFFFF|</item>
+        <item>|IS4U        |#656e05|#a5af1a|#d7df21|#000000|</item>
+        <item>|Telenet     |#FFC421|#F7942F|#F26534|#FFFFFF|</item><!-- |yellow|orange|red ... -->
+        <item>|LFS         |#E4E9E6|#B0C6CF|#C60000|#FFFFFF|</item><!-- lightblue|blue|red ... -->
+        <item>|VSF Old     |#484B4A|#158CF9|#F1F1F1|#FFFFFF|</item><!-- dark|blue|light grey ... -->
+        <item>|WSA         |#A5171E|#A2A2A2|#ECECEC|#FFFFFF|</item><!-- red|blue|light grey ... -->
+    </string-array>
+    <string-array name="ColorKeys" translatable="false">
+        <item>Color0</item>
+        <item>Color1</item>
+        <item>Color2</item>
+        <item>Color3</item>
+        <item>Color9</item>
+    </string-array>
+
+    <color name="brand_squore_bg_color">#ffffffff</color>
+    <color name="brand_racketlon_bg_color">#ff004071</color>
+    <color name="brand_tabletennis_bg_color">#ffffff00</color>
+
+    <color name="brand_asb_bg_color">#ffffffff</color> <!-- first 2 determine 'transparency' ff is not, 00 is completely transparent -->
+    <color name="brand_courtcare_bg_color">#ffff0000</color>
+    <color name="brand_uniofnotthingham_bg_color">#ff005f36</color>
+    <string name="brand_asb_color_name_re">.*Squash Site.*Light.*</string>         <!-- points to entry in string-array colorSchema -->
+    <string name="brand_courtcare_color_name_re">.*World.*Squash.*Light.*</string> <!-- points to entry in string-array colorSchema -->
+    <string name="brand_uniofnotthingham_color_name_re">^[^\\w]*U.*o.*N.*</string>  <!-- points to entry in string-array colorSchema -->
+</resources>

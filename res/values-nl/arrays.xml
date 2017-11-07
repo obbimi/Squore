@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="EndMatchManuallyBecause_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.EndMatchManuallyBecause -->
+        <item>Opgave wegens blessure</item>
+        <item>Conduct Match</item>
+    </string-array>
+    <string-array name="BrokenEquipment_DisplayValues">
+        <item>Gesprongen snaren</item>
+        <item>Gebroken racket</item>
+        <item>Kapotte bal</item>
+    </string-array>
+    <string-array name="OrientationPreference_DisplayValues">
+        <item>Landschap</item>
+        <item>Portret</item>
+    </string-array>
+    <string-array name="PostDataPreferenceDisplayValues">
+        <item>Post meest relevante data</item>
+        <item>Post meest relevante data + json={}</item>
+        <item>Post enkel json in body</item>
+    </string-array>
+    <string-array name="LockState_DisplayValues">
+
+        <item>Ontgrendeld (Onveranderbaar)</item>
+        <item>Ontgrendeld</item>
+        <item>Ontgrendeld (Manueel)</item>
+        <item>Ontgrendeld (Einde Laatste Game)</item>
+        <item>Vergrendeld (Manueel)</item>
+        <item>Vergrendeld (Manueel)</item>
+        <item>Vergrendeld (Einde wedstrijd)</item>
+        <item>Vergrendeld (Manueel Einde wedstrijd)</item>
+        <item>Vergrendeld (Idle Time)</item>
+        <item>Gedeelde beëindigde wedstrijd</item>
+        <item>Vergrendeld (Opgave)</item>
+        <item>Vergrendeld (Conduct Match)</item>
+    </string-array>
+    <string-array name="DetermineTextColor_DisplayValues">
+        <item>Automatisch zwart of wit kiezen</item>
+        <item>Automatisch van kleuren pallete kiezen</item>
+        <item>Manueel</item>
+    </string-array>
+    <string-array name="KeepScreenOnWhen_DisplayValues">
+        <item>Altijd</item>
+        <item>Wedstrijd is gaande</item>
+        <item>Nooit</item>
+    </string-array>
+    <string-array name="BackKeyBehaviour_DisplayValues">
+        <item>Druk 2x om te stoppen</item>
+        <item>Druk 1x om te stoppen</item>
+        <item>Score ongedaan maken (met bevestiging)</item>
+        <item>Score ongedaan maken (geen bevestiging)</item>
+        <item>Wissel opslag kant</item>
+    </string-array>
+    <string-array name="VolumeKeysBehaviour_DisplayValues">
+        <item>Geen</item>
+        <item>Punten ingeven</item>
+        <item>Punten ingeven (Alleen in portret)</item>
+    </string-array>
+    <string-array name="RallyEndStatsPrefs_DisplayValues">
+        <item>Slag kant (FH/BH)</item>
+        <item>Slag positie</item>
+        <item>Richting van de bal</item>
+        <item>Baan van de bal</item>
+    </string-array>
+    <string-array name="RacketSide_DisplayValues">
+        <item>Backhand</item>
+        <item>Forehand</item>
+    </string-array>
+    <string-array name="BallDirection_DisplayValues">
+        <item>Straight</item>
+        <item>Cross</item>
+        <item>Boast</item>
+    </string-array>
+    <string-array name="BallTrajectory_DisplayValues">
+        <item>Length</item>
+        <item>Drop</item>
+        <item>Lob</item>
+    </string-array>
+    <string-array name="Position_DisplayValues">
+        <item>Voor</item>
+        <item>Volley</item>
+        <item>Achter</item>
+    </string-array>
+    <string-array name="ConductType_DisplayValues">
+        <item>Abuse of equipment</item>
+        <item>Obscenity</item>
+        <item>Time wasting</item>
+        <item>Dissent</item>
+        <item>Abuse of official</item>
+        <item>Physical contact</item>
+        <item>Unsporting</item>
+        <item>Coaching</item>
+    </string-array>
+    <string-array name="timerViewType_DisplayValues"> <!-- TODO -->
+        <item>Boven op scorebord met circel</item>
+        <item>In scorebord zelf, tussen score buttons</item>
+    </string-array>
+    <string-array name="GroupMatchesByDisplayValues">
+        <item>Evenement</item>
+        <item>Datum</item>
+    </string-array>
+    <string-array name="SortOrderDisplayValues">
+        <item>Oplopend</item>
+        <item>Aflopend</item>
+    </string-array>
+    <string-array name="OnlineSheetActionDisplayValues">
+        <item>Share Link</item>
+        <item>Preview</item>
+        <item>Toon in browser</item>
+        <item>Kopieer naar klipbord</item>
+        <item>Verwijder van server</item>
+    </string-array>
+    <string-array name="FeatureDisplayValues">
+        <item>Niet gebruiken</item>
+        <item>Suggereer gebruik</item>
+        <item>Toon automatisch</item>
+    </string-array>
+    <string-array name="ShareMatchPrefsDisplayValues">
+        <item>Share link met alle match details</item>
+        <item>Share match details na elke game</item>
+        <item>Share match details na elke halve game</item>
+        <item>Share match details na elk punt</item>
+        <item>Share wedstrijd samenvatting</item>
+        <item>Share wedstrijden samenvatting</item>
+        <item>SMS match samenvatting naar default nummer</item>
+        <item>Post match details naar web-site</item>
+        <item>Post score sheet als text in email</item>
+    </string-array>
+    <string-array name="FeatureDisplayValues_DoAuto">
+        <item>Niet doen</item>
+        <item>Suggereer</item>
+        <item>Automatisch uitvoeren</item>
+    </string-array>
+    <string-array name="EndGameDisplayValues">
+        <item>Niet suggereren</item>
+        <item>Suggereer</item>
+        <item>Be-eindig automatisch</item>
+    </string-array>
+    <string-array name="AutoLockContextDisplayValues">
+        <item>Bij einde match</item>
+        <item>Als match x minuten ongewijzigd is</item>
+    </string-array>
+    <string-array name="ShowPlayerColorOnDisplayValues">
+        <item>Rand van Score button</item>
+        <item>Opslag kant Button</item>
+        <item>Speler Button</item>
+        <item>Game bal bericht</item>
+        <item>Game Verloop Grafiek</item>
+    </string-array>
+    <string-array name="ShowCountryAsDisplayValues">
+        <item>Afkorring In Naam</item>
+        <item>Vlag naast naam (op mobiele toestel)</item>
+        <item>Vlag naast naam (op Chrome Cast)</item>
+    </string-array>
+    <string-array name="StartupActionDisplayValues">
+        <item>Geen</item>
+        <item>Start wedstrijd</item>
+        <item>Selecteer wedstrijd van Feed</item>
+        <item>Selecteer wedstrijd van Mijn Lijst</item>
+        <item>Start nieuwe wedstrijd</item>
+        <item>Start nieuwe dubbel wedstrijd</item>
+        <item>Wijzig spelers</item>
+        <item>Voorkeur scherm</item>
+        <item>Feedback</item>
+        <item>Toon score details</item>
+        <item>Toon Quick Intro</item>
+        <item>Toon Change Log</item>
+        <item>Toon Timer</item>
+        <item>Toon Opgeslagen wedstrijden</item>
+    </string-array>
+    <string-array name="tiebreakFormatDisplayValues">
+        <item>Twee punten verschil</item>
+        <item>Ontvanger kiest 1 or 2</item>
+        <item>Ontvanger kiest 1, 2 of 3</item>
+        <item>Ontvanger kiest 1 of 3</item>
+        <item>Sudden death</item>
+    </string-array>
+    <string-array name="handicapFormatDisplayValues">
+        <item>Geen handicap</item>
+        <item>Specifieer aan begin van wedstrijd</item>
+        <item>Specifieer aan begin elke game</item>
+    </string-array>
+    <string-array name="doublesServeSequence">
+        <item>BXYA (officieel)</item>
+    </string-array>
+</resources>

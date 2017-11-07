@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@android:color/transparent"/>
+    <stroke android:width="1dp" android:color="#66888888"/> <!-- should depend on main background color: should be color close to (but not the same as) background color. hence white but also very transparent -->
+    <padding android:left="1dp" android:top="1dp" android:right="1dp" android:bottom="1dp"/>
+</shape>

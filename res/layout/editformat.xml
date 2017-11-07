@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.doubleyellow.view.SBRelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/ll_match"
+              android:layout_margin="5dp"
+              android:layout_marginRight="2dp"
+              android:layout_marginEnd="2dp"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:id="@+id/llPoints"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/lblMatch_BestOf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/best_of_x_games_to_y_1"
+                android:textSize="@dimen/txt_small"
+                />
+        <Spinner
+                android:id="@+id/spNumberOfGamesToWin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/spGameEndScore"
+                android:orientation="vertical"/>
+
+        <TextView
+                android:id="@+id/lblMatch_GamesTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/best_of_x_games_to_y_2_Squash"
+                android:textSize="@dimen/txt_small"
+                android:layout_margin="2dp"
+                />
+        <Spinner
+                android:id="@+id/spGameEndScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/useHandInHandOutScoring"
+                android:orientation="vertical"
+                />
+    </LinearLayout>
+<!--
+        <TextView
+                android:id="@+id/lblDoublesServeSequence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sb_doublesServeSequence"
+                android:textSize="@dimen/txt_small"
+                android:layout_margin="2dp"
+                />
+    <Spinner
+            android:id="@+id/spDoublesServeSequence"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/useHandInHandOutScoring"
+            android:layoutMode="opticalBounds"
+            android:orientation="vertical"/>
+-->
+    <LinearLayout
+            android:id="@+id/llTieBreakFormat"
+            android:layout_below="@id/llPoints"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+    <TextView
+            android:id="@+id/lblTieBreakFormat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sb_tiebreak"
+            android:textSize="@dimen/txt_small"
+            android:layout_margin="2dp"
+            />
+        <com.doubleyellow.view.EnumSpinner
+                android:id="@+id/spTieBreakFormat"
+                app:enum_class="com.doubleyellow.scoreboard.model.TieBreakFormat"
+                app:enum_display_values="@array/tiebreakFormatDisplayValues"
+                android:nextFocusDown="@+id/useHandInHandOutScoring"
+                android:layoutMode="opticalBounds"
+                android:orientation="vertical"
+                android:spinnerMode="dropdown"
+                android:popupBackground="@color/dy_dark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+<!--
+    <Spinner
+            android:id="@+id/spTieBreakFormat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/useHandInHandOutScoring"
+            android:layoutMode="opticalBounds"
+            android:orientation="vertical"/>
+-->
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/llPauseDuration"
+            android:layout_below="@id/llTieBreakFormat"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+    <TextView android:inputType="none"
+              android:id="@+id/lblPauseDuration"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/lblPauseDuration"
+              android:textSize="@dimen/txt_small"
+              android:layout_margin="2dp"
+            />
+    <Spinner
+            android:id="@+id/spPauseDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layoutMode="opticalBounds"
+            android:orientation="vertical"/>
+    </LinearLayout>
+
+    <CheckBox
+            android:layout_below="@id/llPauseDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/useHandInHandOutScoring"
+            android:layout_gravity="center_horizontal"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:text="@string/pref_useEnglishScoring"
+            android:textSize="@dimen/txt_small"
+            />
+
+</com.doubleyellow.view.SBRelativeLayout>

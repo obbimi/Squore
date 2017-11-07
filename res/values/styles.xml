@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--
+    <style name="SBNonHolo" parent="@android:style/Theme">
+        <item name="android:background">#ff0000</item>
+    </style>
+-->
+
+<!--
+    With ChromeCast
+        <style name="SBTheme" parent="Theme.AppCompat">
+
+    Without ChromeCast
+        <style name="SBTheme" parent="android:Theme.Holo">
+-->
+    <style name="SBTheme" parent="Theme.AppCompat">
+        <!-- added when starting to inherit from Theme.AppCompat (for before 5.0 only?) -->
+<!--
+        <item name="colorAccent">@android:color/holo_blue_dark</item>
+        <item name="android:textColorSecondary">@android:color/holo_blue_dark</item>
+-->
+
+        <item name="circularProgressBarStyle">@style/CircularProgressBar</item>
+        <item name="preferenceCheckBoxStyle">@style/PreferenceCheckBox</item>
+        <item name="enumSpinnerStyle">@style/EnumSpinner</item>
+
+        <!--<item name="android:listPreferredItemHeightSmall">5dp</item>-->
+
+        <!--
+        <item name="android:windowNoTitle">true</item>
+-->
+<!--
+        <item name="android:windowTitleStyle">@android:style/WindowTitle.Holo</item>
+        <item name="android:windowTitleSize">25dp</item>
+-->
+
+        <!-- was still only usefull for 'Feedback' activity ?! -->
+        <!--<item name="android:windowBackground">@color/dy_white</item>-->
+
+        <item name="android:actionBarStyle">@style/SBActionBar</item>
+
+        <!-- affects the colors of the menu items: we need this only if SBTextView is used -->
+        <!--<item name="android:itemTextAppearance">@style/SBTextAppearance</item>-->
+
+        <!--<item name="android:spinnerItemStyle">@style/SBSpinnerItem</item>-->
+<!--
+        <item name="android:spinnerDropDownItemStyle">@style/SBSpinnerItem.DropDownItem</item>
+-->
+<!--
+-->
+        <item name="android:buttonStyle">@style/SBButton</item>
+
+        <!-- this applies also to dialog boxes -->
+<!--
+        <item name="android:editTextStyle">@style/SBEditText</item>
+        <item name="android:autoCompleteTextViewStyle">@style/SBAutoCompleteTextView</item>
+-->
+        <!--<item name="android:textViewStyle">@style/SBTextView</item>-->
+        <item name="android:checkboxStyle">@style/SBCheckBox</item>
+
+        <!-- NumberPicker style-->
+<!--
+        <item name="numberPickerStyle">@style/Widget.NumberPicker</item>
+-->
+    </style>
+
+    <!-- effects e.g. the color in the menu items -->
+<!--
+    <style name="SBTextAppearance">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+-->
+
+    <style name="SBSpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">
+        <item name="android:textColor">@color/dy_dark</item>
+        <item name="android:background">@color/dy_white</item>
+        <item name="android:textSize">@dimen/txt_small</item>
+    </style>
+
+<!--
+    <style name="SBSpinnerItem.DropDownItem" parent="@android:style/Widget.DropDownItem.Spinner">
+        <item name="android:background">@color/dy_dark</item>
+    </style>
+-->
+<!--
+    <style name="SBButton" parent="@android:style/Widget.Button">
+-->
+    <style name="SBButton" parent="@android:style/Widget.Holo.Button">
+        <item name="android:background">@drawable/button_dark_rc</item>
+        <item name="android:layout_margin">@dimen/sb_button_padding</item>
+        <item name="android:padding">0px</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+<!--
+        <item name="android:minHeight">@dimen/sb_button_minheight</item>
+        <item name="android:minWidth">@dimen/sb_button_minheight</item>
+-->
+    </style>
+
+    <!--  This one seems to be problematic for Myriam S (phone like Marije Hoeve). EditText does not autoshow keyboard
+        <style name="SBEditText" parent="@android:style/Widget.Holo.EditText">
+    -->
+    <!-- affects: Toast, Menu Items, TextView in layout.xml files -->
+<!--
+    <style name="SBTextView" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/dy_dark</item>
+        <item name="android:colorBackground">@color/dy_white</item>
+        <item name="android:layout_margin">0dp</item>
+        <item name="android:padding">0dp</item>
+    </style>
+-->
+
+<!--
+    <style name="SBCheckBox" parent="@android:style/Widget.Holo.CompoundButton.CheckBox">
+-->
+    <style name="SBCheckBox" parent="@android:style/Widget.Holo.Light.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/dy_dark</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:padding">10dp</item>
+<!--
+        <item name="android:drawable">@android:drawable/btn_check_holo_light</item>
+-->
+    </style>
+
+    <style name="SBEditText" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/dy_dark</item>
+<!--
+        <item name="android:background">@drawable/edit_light</item>
+-->
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="SBAutoCompleteTextView" parent="@android:style/Widget.AutoCompleteTextView">
+        <item name="android:textColor">@color/dy_dark</item>
+<!--
+        <item name="android:background">@drawable/edit_light</item>
+-->
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:padding">10dp</item>
+        <!--
+        <item name="android:colorBackground">@color/dy_white</item>
+        <item name="android:dropDownSelector">@drawable/custom_spinner</item>
+        -->
+    </style>
+
+    <style name="SBPreferencesTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+        <!-- simply by specifying this, but not modifying anything the preference screen uses the (very readable) styling of all other prefences screens of the phone -->
+
+        <!-- only influences text in popup windows (multi en single line text) and next to 'text size' slidebars. But not in the description of the preferences -->
+<!--
+        <item name="android:textAllCaps">true</item>
+-->
+        <item name="android:textSize">11dp</item>
+
+<!--
+        <item name="seekBarStyle">@android:style/Widget.SeekBar</item>
+        <item name="seekBarStyle">@android:style/Widget.Holo.SeekBar</item>
+-->
+    </style>
+
+    <!-- introduced to have a really dark action bark so that the prodominantly white icons are clearly visible -->
+    <style name="SBActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@drawable/header_back</item>
+    </style>
+
+<!--
+    <style name="TextAppearance.Holo.Widget.ActionBar.Menu" parent="TextAppearance.Holo.Small">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?android:attr/actionMenuTextColor</item>
+        <item name="android:textAllCaps">@android:bool/config_actionMenuItemAllCaps</item>
+    </style>
+-->
+
+<!--
+    <style name="SBDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:textColor">@color/dy_dark</item>
+    </style>
+-->
+
+    <!-- Button Base in Header-->
+    <style name="explist">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:paddingLeft">@dimen/card_header_button_padding_left</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginRight">@dimen/card_header_button_margin_right</item>
+    </style>
+
+    <!-- Button Overflow in Item -->
+    <style name="explist.item_overflow">
+        <item name="android:background">@drawable/menu_button_overflow</item>
+        <item name="android:layout_marginRight">@dimen/card_header_button_overflow_margin_right</item>
+    </style>
+
+    <!-- Button Overflow in Header -->
+    <style name="explist.header_overflow">
+        <item name="android:background">@drawable/menu_button_overflow</item>
+        <item name="android:layout_marginRight">@dimen/card_header_button_overflow_margin_right</item>
+    </style>
+
+    <!--Style for Header Compound View -->
+<!--
+    <style name="card"/>
+
+    <style name="card.header_compound_view">
+
+    </style>
+
+    <style name="card.header_button_frame">
+
+    </style>
+-->
+
+</resources>

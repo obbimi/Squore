@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="press_back_again_to_exit_intro">Appuyez sur \'Retour\' une nouvelle fois pour sortir de l\'intro</string>
+    <string name="scv_got_it">COMPRIS</string>
+    <string name="scv_first_run">Souhaitez-vous une rapide introduction pour découvrir les principales fonctionnalités de l\'application ?
+        \n
+        \nVous pourrez découvrir comment utiliser l\'application dans différentes situations tout au long d\'un match.
+        \n
+        \nVous pouvez sortir de cette introduction à tout instant en pressant le bouton _Retour_ de votre appareil.
+        \n
+        \nVous pourrez y revenir plus tard depuis le menu _Aide/Introduction rapide_.</string>
+    <string name="scv_toss">\nAu début d\'un match, un __tirage au sort__ est effectué.
+        \n\nAppuyez sur ce bouton pour :
+        \n
+        \n- facilement saisir le résultat du tirage au sort par les joueurs (par exemple par rotation de la raquette)
+        \n- laisser l\'application faire le tirage au sort pour vous
+    </string>
+    <string name="scv_side_buttons_Squash">Les boutons __côté de service__ indiquent :
+        \n
+        \n- quel joueur doit servir
+        \n- de quel côté (G/D)
+        \n- si c\'est un changement de service (?)
+        \n\nLe côté de service change automatiquement après chaque point saisi.
+        \n\nSi besoin, vous pouvez inverser le côté (ou le joueur) en appuyant dessus.
+    </string>
+<!--
+    \n\nSur changement de service, l\application affichera automatiquement le nouveau côté de service (en proposant le dernier choix fait par la joueur).
+-->
+    <string name="scv_big_buttons">Appuyez sur les gros boutons pour marquer les points de chaque joueur.</string>
+    <string name="scv_undo_last">
+        \n
+        \nSi vous attribuez accidentellement un point au mauvais joueur, vous pouvez corriger facilement en appuyant sur le bouton __Annuler__.
+        \n
+        \nUne autre façon d\'annuler la dernière saisie : balayer votre doigt le long du bouton que vous avez accidentellement utilisé.
+    </string>
+    <string name="scv_player_buttons_appeall_Squash">Conserver l\'historique de vos décisions de __Stroke/Let/No let__ en appuyant sur le nom du joueur qui fait appel.
+        \nSélectionnez votre décision dans la boîte de dialogue qui s\'affiche alors.
+    </string>
+<!--
+    \n
+    \nEn cas de _No let_ ou _Stroke_, le point est automatiquement affecté par l\'application au joueur concerné. (Inutile d\'appuyer pour ajouter le point).
+-->
+    <string name="scv_player_buttons_misconduct_Squash">Vous pouvez également conserver l\'historique de vos __Avertissements/Pénalités__.
+        \n
+        \nUn appui long sur le bouton du joueur pour afficher la boîte de dialogue de _Mauvais comportement_.</string>
+    <string name="scv_old_fashioned_scoring_Squash">Une feuille de marque à l\'anglaise vous est proposée à l\'affichage.
+        \n\nVous pouvez l\'afficher ou la masquer depuis le menu \'Paramètres\'.</string>
+<!--
+    <string name="scv_home_button">A chaque instant vous pouvez également démarrer un nouveau match en appuyant sur le bouton \'Home\'.</string>
+-->
+    <string name="scv_announcement_button_Squash">Ce bouton vous sera proposé lorsqu\'une __annonce officielle__ est nécessaire :
+        \n
+        \n - En début de match ou de jeu
+        \n - En fin de jeu ou de match
+        \n - Au premier tiebreak
+        \n\nUtilisez-le pour afficher le texte officiel à annoncer.</string>
+    <string name="scv_shirt_color_Squash">Si vous devez arbitrer des joueurs que vous ne connaissez pas et que vous avez du mal à retenir leurs noms,
+        vous pouvez __utiliser une couleur__ pour chacun d\'eux.
+        \n\nFaites un appui long sur le bouton de côté de service pour sélectionner une couleur (correspondant au maillot, au short, …).</string>
+    <string name="scv_game_scores_Squash">Le détail des scores des __jeux précédents__ est visible ici.
+        \n\nAppuyez dessus pour visualiser tous les détails des jeux précédents.</string>
+    <string name="scv_timer_button_Squash">Ce bouton vous permez de démarrer un __chronomètre__.
+        \n\nIl vous sera proposé dans les situations suivantes :
+        \n
+        \n- A l\'échauffement
+        \n- Au début du 1er jeu
+        \n- Entre chaque jeu
+      </string>
+<!--
+    <string name="scv_score_details">Ce bouton vous permettra de revoir tous les détails d\'un match.
+        \n
+        \n- Feuille de match complète incluant les différents temps
+        \n- Evolution des scores sur des graphiques
+        \n- Nombre de No let/Oui let/Stroke
+      </string>
+-->
+    <string name="scv_share_button">Ce bouton apparaît à la fin du math. Il vous permet de partager ou publier le résultat.
+        \n\nVous pouvez le configurer pour
+        \n
+        \n- Partager un lien avec tous les détails du match
+        \n- Partager un court résumé
+        \n- Publier le résultat vers un site internet
+        \n- Envoyer la feuille de match par courriel
+      </string>
+    <string name="scv_overflow_submenu_Squash">D\'autres options sont disponibles depuis le menu. Vous pouvez par exemple :
+        \n
+        \n- Personnaliser l\'interface et le comportement de l\'application depuis les \'Paramètres\'
+        \n- Afficher le détail de matchs précédement arbitrés
+        \n- Démarrer un chronomètre d\'interruption pour blessure
+        \n- Importer/exporter vos matchs arbitrés depuis/vers un fichier zip
+        \n- Consulter une page d\'aide
+        \n- Consulter les règles officielles
+        \n- Enregistrer facilement les statistiques \'coups gagants/fautes directes\' (pour les entraineurs durant l\'observation des matchs de leur joueur)
+          </string>
+    <string name="scv_toggle_action_bar">Si vous souhaitez __cacher la barre d\'action__ (par exemple pour maximiser l\'affichage à l\'écran, ou pour des raisons esthétiques)
+        vous pouvez le faire facilement en appuyant longuement sur les __scores des jeux__. Un nouvel appui-long le rendra visible à nouveau.
+        \n
+        \nNotez que si vous masquez la barre d\'action, la fonction \'Annuler en balayant\' est toujours disponible !
+          </string>
+    <string name="scv_few_more_gui_hints_Squash">Quelques astuces supplémentaires :
+        \n
+        \n__Boutons Joueur__
+        \n
+        \n- Appuyez avec vos deux doigts pour enregistrer une balle creuvée, un cordage ou une raquette cassée
+        \n- Balayez d\'avant en arrière pour éditer les détails du match
+        \n- Balayez vers la gauche sur le nom du serveur pour indiquer le côté de service à gauche, idem pour la droite
+        \n
+        \n__Boutons Points__
+        \n
+        \n- Appuyer sur les 2 boutons en même temps pour saisir les points précédents (cas de l\'arbitrage d\'un match déjà commencé)
+        \n- Appui-long sur les 2 boutons en même temps pour vérifier le format du match en cours
+          </string>
+    <!--\n- Swipe diagonally back-and-forth over a score button to optionally restart the score (e.g. after demo-ing the app to fellow club members)-->
+    <string name="scv_few_more_good_to_knows">Quelques autres conseils \'bons à savoir !\':
+        \n
+        \n- Vous pouvez utiliser le bouton de volume de votre appareil pour affecter les points (option activable dans les paramètres).
+        \n- Vous pouvez transférer un match en cours d\'un appareil Android vers un autre en utilisant la technologie NFC (changement d\'arbitre par exemple).
+          </string>
+    <string name="scv_new_match_button_Squash">__Voilà. Bon squash à vous, bon arbitrage !__
+        \n\nDémarrez un nouveau match en appuyant sur ce bouton.</string>
+</resources>

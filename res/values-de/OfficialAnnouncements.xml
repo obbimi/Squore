@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="oal_warmup">Aufwärmphase</string>
+    <string name="oa_halftime">Halbzeit!</string>
+    <string name="oa_time">Zeit!</string>
+    <string name="oal_pause">Pause</string>
+
+    <string name="oa_best_of_x_games_to_y">%1$s Satzspiel bis %2$s</string>
+    <string name="oa_best_of_x_games">%1$s Satzspiel</string>
+    <string name="oa_x_to_serve__y_to_receive">%1$s hat Aufschlag, %2$s Rückschläger</string>
+    <string name="oa_love_all">Null Beide</string>
+
+    <string name="oa_game_to_x">Satz an %s</string>
+    <string name="oa_match_to_x">Spiel an %s</string>
+    <string name="oa_1_game_all">Ein Satz beide</string>
+    <string name="oa_x_games_all">%s Satzen beide</string>
+    <!--<string name="oa_x_leads_n_against_y">%1$s führt %2$s-%3$s in Satzen gegen</string>-->
+    <!--<string name="oa_x_wins_n_against_y">Spiel an %1$s, %2$s Satzen zu %s</string>-->
+    <string name="oa_a_leads_xGamesToy">%1$s führt %2$s</string>
+    <string name="oa_a_wins_xGamesToy">Spiel an %1$s, %2$s</string>
+    <string name="oa_x_games_TO_y">zu</string>
+    <string name="oa_x_th_game">%s Satz</string>
+    <string name="oa_x_to_serve">Aufschläger %s</string>
+    <string name="oa_love">Null</string>
+    <string name="oa_game">Satz</string>
+    <string name="oa_games">Satzen</string>
+    <string name="oa_gameball">Satzball</string>
+    <string name="oa_matchball">Spielball</string>
+
+    <string name="oa_n_all">%s beide</string>
+    <string name="oa_player_needs_2_clear_points">Ein Spieler muss mit 2 Punkten vorsprung gewinnen</string>
+
+    <string name="oa_change_sides"></string>
+    <string name="oa_fifteen_seconds">%s Sekunden!</string>
+
+    <string name="oa_decision_colon">Entscheidung :</string>
+    <string name="oa_yes_let">Ja, Let</string>
+    <string name="oa_no_let">Kein Let</string>
+    <string name="oa_stroke">Stroke</string>
+    <string name="oa_stroke_to_x">Punkt zu %s</string>
+    <string name="oa_conduct_warning">Verwarnung</string>
+    <string name="oa_conduct_warning_x_for_type_y">Verwarnung an %1$s für %2$s</string>
+    <string name="oa_conduct_stroke">Verwarnungspunkt</string>
+    <string name="oa_conduct_x__stroke_to_y_for_type_t">Verwarnung an %1$s wegen %3$s, Punkt zu %2$s</string>
+    <string name="oa_conduct_x__game_to_y_for_type_t">Verwarnung an %1$s wegen %3$s, Satz zu %2$s</string>
+    <string name="oa_conduct_game">Verwarnungssatz</string>
+    <string name="oa_conduct_match">Verwarnungsspiel</string>
+
+    <string-array name="FirstSecondThirdFourthFifth">
+        <item>erste</item>
+        <item>zweite</item>
+        <item>dritte</item>
+        <item>vierte</item>
+        <item>fünfte</item>
+        <item>sechste</item>
+        <item>siebte</item>
+        <item>achte</item>
+        <item>neunte</item>
+    </string-array>
+    <string name="officialAnnouncementsLanguage_default">de</string>
+</resources>

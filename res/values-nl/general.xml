@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="fetching_data">Ophalen van gegevens…</string>
+    <string name="loading">Laden…</string>
+    <string name="loading_of_x">Laden van %1$s… (%2$s)</string>
+    <string name="posting">Versturen…</string>
+    <string name="possible_cause">Mogelijke oorzaak: </string>
+    <string name="could_not_load_feed_x">Kon Feed niet laden (%s)</string>
+    <string name="yesterday">Gisteren</string>
+    <string name="today">Vandaag</string>
+    <string name="tomorrow">Morgen</string>
+    <string name="confirm">Bevestig</string>
+
+    <!-- buttons -->
+    <string name="name">Naam</string>
+    <string name="date">Datum</string>
+    <string name="time">Tijd</string>
+    <string name="timeunit">Tijdseenheid</string>
+    <string name="minutes">minuten</string>
+    <string name="seconds">seconden</string>
+    <string name="filename">Naam van bestand</string>
+    <string name="lock">Vergrendel</string>
+    <string name="locked">Vergrendeld</string>
+    <string name="unlock">Ontgrendel</string>
+    <string name="total">Totaal</string>
+    <string name="overview">Overzicht</string>
+    <string name="statistics">Statistieken</string>
+    <string name="handicap">Handicap</string>
+    <string name="no_handicap">Geen Handicap</string>
+    <string name="cmd_yes">Ja</string>
+    <string name="cmd_no">Nee</string>
+    <string name="cmd_ok">OK</string>
+    <string name="cmd_start">Start</string>
+    <string name="cmd_automatic">Automatisch</string>
+    <string name="cmd_suggest">Suggereer</string>
+    <string name="cmd_maximize">Maximaliseer</string>
+    <string name="cmd_normal">Normaal</string>
+    <string name="cmd_cancel">Annuleren</string>
+    <string name="cmd_none">Geen</string>
+    <string name="cmd_add">Voeg toe</string>
+    <string name="cmd_previous">Vorige</string>
+    <string name="cmd_next">Volgende</string>
+    <string name="cmd_add_x_seconds">Voeg %s sec toe</string>
+    <string name="cmd_subtract_x_seconds">Verwijder %s sec</string>
+    <string name="cmd_keep">Behouden</string>
+    <string name="cmd_delete">Verwijder</string>
+    <string name="cmd_delete_all">Verwijder allemaal</string>
+    <string name="cmd_edit">Wijzigen</string>
+    <string name="cmd_open">Openen</string>
+    <string name="cmd_hide">Verbergen</string>
+    <string name="cmd_sort">Sorteren</string>
+    <string name="lbl_group_by">Groepeer bij</string>
+    <string name="cmd_pause">Pauzeren</string>
+    <string name="msg_paused">Gepauseerd</string>
+    <string name="cmd_resume">Hervatten</string>
+    <string name="cmd_save">Bewaren</string>
+    <string name="cmd_close">Sluiten</string>
+    <string name="cmd_new_group">Nieuwe groep</string>
+    <string name="cmd_new_match">Nieuwe wedstrijd</string>
+    <string name="cmd_new_matches">Nieuwe wedstrijden</string>
+    <string name="cmd_new_matches_with">Nieuwe wedstrijden met</string>
+    <string name="cmd_rebuild">Build</string>
+    <string name="uc_exit">Exit</string>
+    <string name="press_back_again_to_exit">Druk nogmaals op \'Terug\' om te sluiten</string>
+    <string name="goto_help">Help</string>
+    <string name="Help_elipses">Help…</string>
+    <string name="about">Over</string>
+    <string name="refresh">Vernieuwen</string>
+    <string name="filter">Filteren</string>
+    <string name="expand_all">Alles uitklappen</string>
+    <string name="collapse_all">Alles inklappen</string>
+<!--
+    <string name="show_graph">Toon Grafiek</string>
+-->
+    <string name="tip">Tip</string>
+    <string name="settings">Instellingen</string>
+    <string name="do_not_show_this_dialog_anymore">Deze dialoog niet meer tonen</string>
+    <string name="lbl_fixed">Vast</string>
+    <string name="lbl_none">Geen</string>
+
+    <!-- network -->
+    <string name="no_fully_functional_connection_error">Geen werkende netwerk verbinding. Moet je nog inloggen bij je provider?</string>
+    <string name="connection_error" formatted="false">Connectie fout %1$s %2$s</string>
+    <string name="unknown_error">Onbekende fout %s</string>
+
+    <string name="uc_more">Meer…</string>
+    <string name="uc_sort">Sorteer…</string>
+    <string name="uc_undo">Herstel</string>
+    <string name="uc_new">Nieuw…</string>
+    <string name="uc_edit">Wijzig…</string>
+    <string name="uc_showing_x_elipses">Toon %s …</string>
+    <string name="uc_show_elipses">Toon…</string>
+    <string name="uc_show">Toon</string>
+    <string name="uc_delete">Verwijder</string>
+    <string name="uc_email">Email</string>
+    <string name="uc_select">Selecteer</string>
+    <string name="uc_details">Details</string>
+    <string name="uc_copy">Kopieer</string>
+    <string name="lbl_color">Kleur</string>
+    <string name="username">Gebruikers naam</string>
+    <string name="password">Wachtwoord</string>
+    <string name="save_password">Wachtwoord onthouden</string>
+
+</resources>

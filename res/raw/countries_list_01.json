@@ -1,0 +1,258 @@
+[{"iso2":"AD", "iso3": "AND",                             "name": "Andorra"                              }
+,{"iso2":"AE", "iso3": "ARE", "fifa":"UAE", "ioc": "UAE", "name": "United Arab Emirates"                 }
+,{"iso2":"AF", "iso3": "AFG",                             "name": "Afghanistan"                          }
+,{"iso2":"AG", "iso3": "ATG",               "ioc": "ANT", "name": "Antigua and Barbuda"                  }
+,{"iso2":"AI", "iso3": "AIA",                             "name": "Anguilla"                             }
+,{"iso2":"AL", "iso3": "ALB",                             "name": "Albania"                              }
+,{"iso2":"AM", "iso3": "ARM",                             "name": "Armenia"                              }
+,{"iso2":"AO", "iso3": "AGO", "fifa":"ANG", "ioc": "ANG", "name": "Angola"                               }
+,{"iso2":"AQ", "iso3": "ATA", "fifa":"ROS",               "name": "Antarctica"                           }
+,{"iso2":"AR", "iso3": "ARG",                             "name": "Argentina"                            }
+,{"iso2":"AS", "iso3": "ASM", "fifa":"ASA", "ioc": "ASA", "name": "American Samoa"                       }
+,{"iso2":"AT", "iso3": "AUT",                             "name": "Austria"                              }
+,{"iso2":"AU", "iso3": "AUS",                             "name": "Australia"                            }
+,{"iso2":"AW", "iso3": "ABW", "fifa":"ARU", "ioc": "ARU", "name": "Aruba"                                }
+,{"iso2":"AX", "iso3": "ALA", "fifa":"ALD",               "name": "\u00c5land Islands"                   }
+,{"iso2":"AZ", "iso3": "AZE",                             "name": "Azerbaijan"                           }
+,{"iso2":"BA", "iso3": "BIH",                             "name": "Bosnia and Herzegovina"               }
+,{"iso2":"BB", "iso3": "BRB",               "ioc": "BAR", "name": "Barbados"                             }
+,{"iso2":"BD", "iso3": "BGD", "fifa":"BAN", "ioc": "BAN", "name": "Bangladesh"                           }
+,{"iso2":"BE", "iso3": "BEL",                             "name": "Belgium"                              }
+,{"iso2":"BF", "iso3": "BFA",               "ioc": "BUR", "name": "Burkina Faso"                         }
+,{"iso2":"BG", "iso3": "BGR", "fifa":"BUL", "ioc": "BUL", "name": "Bulgaria"                             }
+,{"iso2":"BH", "iso3": "BHR",               "ioc": "BRN", "name": "Bahrain"                              }
+,{"iso2":"BI", "iso3": "BDI",                             "name": "Burundi"                              }
+,{"iso2":"BJ", "iso3": "BEN",                             "name": "Benin"                                }
+,{"iso2":"BL", "iso3": "BLM",                             "name": "Saint Barthelemy"                     }
+,{"iso2":"BM", "iso3": "BMU", "fifa":"BER", "ioc": "BER", "name": "Bermuda"                              }
+,{"iso2":"BN", "iso3": "BRN", "fifa":"BRU", "ioc": "BRU", "name": "Brunei Darussalam"                    }
+,{"iso2":"BO", "iso3": "BOL",                             "name": "Bolivia, Plurinational State of"      }
+,{"iso2":"BQ", "iso3": "BES", "fifa":"ANT", "ioc": "AHO", "name": "Bonaire, Sint Eustatius and Saba"     }
+,{"iso2":"BR", "iso3": "BRA",                             "name": "Brazil"                               }
+,{"iso2":"BS", "iso3": "BHS", "fifa":"BAH", "ioc": "BAH", "name": "Bahamas"                              }
+,{"iso2":"BT", "iso3": "BTN", "fifa":"BHU", "ioc": "BHU", "name": "Bhutan"                               }
+,{"iso2":"BV", "iso3": "BVT",                             "name": "Bouvet Island"                        }
+,{"iso2":"BW", "iso3": "BWA", "fifa":"BOT", "ioc": "BOT", "name": "Botswana"                             }
+,{"iso2":"BY", "iso3": "BLR",                             "name": "Belarus"                              }
+,{"iso2":"BZ", "iso3": "BLZ",               "ioc": "BIZ", "name": "Belize"                               }
+,{"iso2":"CA", "iso3": "CAN",                             "name": "Canada"                               }
+,{"iso2":"CC", "iso3": "CCK",                             "name": "Cocos (Keeling) Islands"              }
+,{"iso2":"CD", "iso3": "COD",                             "name": "Congo, the Democratic Republic of the"}
+,{"iso2":"CF", "iso3": "CAF", "fifa":"CTA",               "name": "Central African Republic"             }
+,{"iso2":"CG", "iso3": "COG", "fifa":"CGO", "ioc": "CGO", "name": "Congo"                                }
+,{"iso2":"CH", "iso3": "CHE", "fifa":"SUI", "ioc": "SWI", "name": "Switzerland"                          } // SVI (1956 W, 1960 S), SWI (1960 W, 1964 S), after SUI
+,{"iso2":"CI", "iso3": "CIV",               "ioc": "IVC", "name": "C\u00f4te d'Ivoire"                   } // IVC (1964), CML (1968)
+,{"iso2":"CK", "iso3": "COK",                             "name": "Cook Islands"                         }
+,{"iso2":"CL", "iso3": "CHL", "fifa":"CHI", "ioc": "CHI", "name": "Chile"                                }
+,{"iso2":"CM", "iso3": "CMR",                             "name": "Cameroon"                             }
+,{"iso2":"CN", "iso3": "CHN",                             "name": "China"                                }
+,{"iso2":"CO", "iso3": "COL",                             "name": "Colombia"                             }
+,{"iso2":"CR", "iso3": "CRI", "fifa":"CRC", "ioc": "CRC", "name": "Costa Rica"                           }
+,{"iso2":"CU", "iso3": "CUB",                             "name": "Cuba"                                 }
+,{"iso2":"CV", "iso3": "CPV",                             "name": "Cape Verde"                           }
+,{"iso2":"CW", "iso3": "CUW",                             "name": "Cura\u00e7ao"                         }
+,{"iso2":"CX", "iso3": "CXR",                             "name": "Christmas Island"                     }
+,{"iso2":"CY", "iso3": "CYP",                             "name": "Cyprus"                               }
+,{"iso2":"CZ", "iso3": "CZE",               "ioc": "TCH", "name": "Czech Republic"                       } // TCH (1984)
+,{"iso2":"DE", "iso3": "DEU", "fifa":"GER", "ioc": "GER", "name": "Germany"                              }
+,{"iso2":"DJ", "iso3": "DJI",                             "name": "Djibouti"                             }
+,{"iso2":"DK", "iso3": "DNK", "fifa":"DEN", "ioc": "DEN", "name": "Denmark"                              } // DAN (1960 S, 1968 W), DIN (1968 S)
+,{"iso2":"DM", "iso3": "DMA",                             "name": "Dominica"                             }
+,{"iso2":"DO", "iso3": "DOM",                             "name": "Dominican Republic"                   }
+,{"iso2":"DZ", "iso3": "DZA", "fifa":"ALG", "ioc": "ALG", "name": "Algeria"                              }
+,{"iso2":"EC", "iso3": "ECU",                             "name": "Ecuador"                              }
+,{"iso2":"EE", "iso3": "EST",                             "name": "Estonia"                              }
+,{"iso2":"EG", "iso3": "EGY",                             "name": "Egypt"                                }
+,{"iso2":"EH", "iso3": "ESH", "fifa":"SAH",               "name": "Western Sahara"                       }
+,{"iso2":"ER", "iso3": "ERI",                             "name": "Eritrea"                              }
+,{"iso2":"ES", "iso3": "ESP",               "ioc": "SPA", "name": "Spain"                                } // SPA (1956–1964, 1968 W)
+,{"iso2":"ET", "iso3": "ETH",               "ioc": "ETI", "name": "Ethiopia"                             } // ETI (1960, 1968)
+,{"iso2":"FI", "iso3": "FIN",                             "name": "Finland"                              }
+,{"iso2":"FJ", "iso3": "FJI", "fifa":"FIJ", "ioc": "FIG", "name": "Fiji"                                 } // FIG (1960), after FIJ
+,{"iso2":"FK", "iso3": "FLK",                             "name": "Falkland Islands (Malvinas)"          }
+,{"iso2":"FM", "iso3": "FSM",                             "name": "Micronesia, Federated States of"      }
+,{"iso2":"FO", "iso3": "FRO",               "ioc": "FAR", "name": "Faroe Islands"                        }
+,{"iso2":"FR", "iso3": "FRA",                             "name": "France"                               }
+,{"iso2":"GA", "iso3": "GAB",                             "name": "Gabon"                                }
+,{"iso2":"GB", "iso3": "GBR",                             "name": "United Kingdom"                       }
+,{"iso2":"GD", "iso3": "GRD", "fifa":"GRN", "ioc": "GRN", "name": "Grenada"                              }
+,{"iso2":"GE", "iso3": "GEO",                             "name": "Georgia"                              }
+,{"iso2":"GF", "iso3": "GUF",               "ioc": "FGU", "name": "French Guiana"                        }
+,{"iso2":"GG", "iso3": "GGY", "fifa":"GBG",               "name": "Guernsey"                             }
+,{"iso2":"GH", "iso3": "GHA",                             "name": "Ghana"                                }
+,{"iso2":"GI", "iso3": "GIB", "fifa":"GBZ",               "name": "Gibraltar"                            }
+,{"iso2":"GL", "iso3": "GRL",                             "name": "Greenland"                            }
+,{"iso2":"GM", "iso3": "GMB", "fifa":"GAM", "ioc": "GAM", "name": "Gambia"                               }
+,{"iso2":"GN", "iso3": "GIN", "fifa":"GUI", "ioc": "GUI", "name": "Guinea"                               }
+,{"iso2":"GP", "iso3": "GLP",               "ioc": "GUD", "name": "Guadeloupe"                           }
+,{"iso2":"GQ", "iso3": "GNQ", "fifa":"EQG", "ioc": "GEQ", "name": "Equatorial Guinea"                    }
+,{"iso2":"GR", "iso3": "GRC", "fifa":"GRE", "ioc": "GRE", "name": "Greece"                               }
+,{"iso2":"GS", "iso3": "SGS",                             "name": "South Georgia and the South Sandwich Islands"}
+,{"iso2":"GT", "iso3": "GTM", "fifa":"GUA", "ioc": "GUT", "name": "Guatemala"                            } // GUT (1964) after GUA
+,{"iso2":"GU", "iso3": "GUM",                             "name": "Guam"                                 }
+,{"iso2":"GW", "iso3": "GNB",               "ioc": "GBS", "name": "Guinea-Bissau"                        }
+,{"iso2":"GY", "iso3": "GUY",                             "name": "Guyana"                               }
+,{"iso2":"HK", "iso3": "HKG",               "ioc": "HOK", "name": "Hong Kong"                            } // HOK (1960–1968)
+,{"iso2":"HM", "iso3": "HMD",                             "name": "Heard Island and McDonald Islands"    }
+,{"iso2":"HN", "iso3": "HND", "fifa":"HON", "ioc": "HON", "name": "Honduras"                             }
+,{"iso2":"HR", "iso3": "HRV", "fifa":"CRO", "ioc": "CRO", "name": "Croatia"                              }
+,{"iso2":"HT", "iso3": "HTI", "fifa":"HAI", "ioc": "HAI", "name": "Haiti"                                }
+,{"iso2":"HU", "iso3": "HUN",                             "name": "Hungary"                              }
+,{"iso2":"ID", "iso3": "IDN",               "ioc": "INA", "name": "Indonesia"                            }
+,{"iso2":"IE", "iso3": "IRL",                             "name": "Ireland"                              }
+,{"iso2":"IL", "iso3": "ISR",           /*"ioc": "ISL",*/ "name": "Israel"                               }
+,{"iso2":"IM", "iso3": "IMN", "fifa":"GBM",               "name": "Isle of Man"                          }
+,{"iso2":"IN", "iso3": "IND",                             "name": "India"                                }
+,{"iso2":"IO", "iso3": "IOT"   ,            "ioc": "IRQ", "name": "British Indian Ocean Territory"       }
+,{"iso2":"IQ", "iso3": "IRQ",               "ioc": "IRK", "name": "Iraq"                                 } // IRK (1960, 1968)
+,{"iso2":"IR", "iso3": "IRN",               "ioc": "IRI", "name": "Iran, Islamic Republic of"            } // IRN (1956–1988)
+,{"iso2":"IS", "iso3": "ISL",               "ioc": "ICE", "name": "Iceland"                              } // ICE (1960 W, 1964 S)
+,{"iso2":"IT", "iso3": "ITA",                             "name": "Italy"                                }
+,{"iso2":"JE", "iso3": "JEY", "fifa":"GBJ",               "name": "Jersey"                               }
+,{"iso2":"JM", "iso3": "JAM",                             "name": "Jamaica"                              }
+,{"iso2":"JO", "iso3": "JOR",                             "name": "Jordan"                               }
+,{"iso2":"JP", "iso3": "JPN",               "ioc": "JAP", "name": "Japan"                                } // JAP (1960 W)
+,{"iso2":"KE", "iso3": "KEN",                             "name": "Kenya"                                }
+,{"iso2":"KG", "iso3": "KGZ",                             "name": "Kyrgyzstan"                           }
+,{"iso2":"KH", "iso3": "KHM", "fifa":"CAM", "ioc": "CAM", "name": "Cambodia"                             }
+,{"iso2":"KI", "iso3": "KIR",                             "name": "Kiribati"                             }
+,{"iso2":"KM", "iso3": "COM",                             "name": "Comoros"                              }
+,{"iso2":"KN", "iso3": "KNA", "fifa":"SKN", "ioc": "SKN", "name": "Saint Kitts and Nevis"                }
+,{"iso2":"KP", "iso3": "PRK",               "ioc": "NKO", "name": "Korea, Democratic People's Republic of"} // North Korea NKO (1964 S, 1968 W)
+,{"iso2":"KR", "iso3": "KOR",                             "name": "Korea, Republic of"                   }
+,{"iso2":"KW", "iso3": "KWT", "fifa":"KUW", "ioc": "KUW", "name": "Kuwait"                               }
+,{"iso2":"KY", "iso3": "CYM", "fifa":"CAY", "ioc": "CAY", "name": "Cayman Islands"                       }
+,{"iso2":"KZ", "iso3": "KAZ",                             "name": "Kazakhstan"                           }
+,{"iso2":"LA", "iso3": "LAO",                             "name": "Lao People's Democratic Republic"     }
+,{"iso2":"LB", "iso3": "LBN", "fifa":"LIB", "ioc": "LEB", "name": "Lebanon"                              } // LEB (1960 W, 1964 S)
+,{"iso2":"LC", "iso3": "LCA",                             "name": "Saint Lucia"                          }
+,{"iso2":"LI", "iso3": "LIE",               "ioc": "LIC", "name": "Liechtenstein"                        } // LIC (1956 W, 1964 S, 1968 W)
+,{"iso2":"LK", "iso3": "LKA", "fifa":"SRI", "ioc": "CEY", "name": "Sri Lanka"                            } // CEY (1960-1964, 1972), CEI (1968 S), after SRI
+,{"iso2":"LR", "iso3": "LBR",                             "name": "Liberia"                              }
+,{"iso2":"LS", "iso3": "LSO", "fifa":"LES", "ioc": "LES", "name": "Lesotho"                              }
+,{"iso2":"LT", "iso3": "LTU",               "ioc": "LIT", "name": "Lithuania"                            } // LIT (1992 W)
+,{"iso2":"LU", "iso3": "LUX",                             "name": "Luxembourg"                           }
+,{"iso2":"LV", "iso3": "LVA",               "ioc": "LAT", "name": "Latvia"                               }
+,{"iso2":"LY", "iso3": "LBY",               "ioc": "LBA", "name": "Libya"                                }
+,{"iso2":"MA", "iso3": "MAR",               "ioc": "MRC", "name": "Morocco"                              } // MRC (1964)
+,{"iso2":"MC", "iso3": "MCO", "fifa":"MON", "ioc": "MON", "name": "Monaco"                               }
+,{"iso2":"MD", "iso3": "MDA",               "ioc": "MLD", "name": "Moldova, Republic of"                 } // MLD (1994)
+,{"iso2":"ME", "iso3": "MNE",               "ioc": "MGO", "name": "Montenegro"                           }
+,{"iso2":"MF", "iso3": "MAF",                             "name": "Saint Martin"                         }
+,{"iso2":"MG", "iso3": "MDG", "fifa":"MAD", "ioc": "MAG", "name": "Madagascar"                           } // MAG (1964)
+,{"iso2":"MH", "iso3": "MHL",               "ioc": "MSH", "name": "Marshall Islands"                     }
+,{"iso2":"MK", "iso3": "MKD",                             "name": "Macedonia"                            }
+,{"iso2":"ML", "iso3": "MLI",                             "name": "Mali"                                 }
+,{"iso2":"MM", "iso3": "MMR", "fifa":"MYA", "ioc": "BIR", "name": "Myanmar"                              } // BIR (1960, 1968–1988), BUR (1964)
+,{"iso2":"MN", "iso3": "MNG",               "ioc": "MGL", "name": "Mongolia"                             }
+,{"iso2":"MO", "iso3": "MAC",                             "name": "Macao"                                }
+,{"iso2":"MP", "iso3": "MNP", "fifa":"NMI", "ioc": "NMA", "name": "Northern Mariana Islands"             }
+,{"iso2":"MQ", "iso3": "MTQ",               "ioc": "MRT", "name": "Martinique"                           }
+,{"iso2":"MR", "iso3": "MRT", "fifa":"MTN", "ioc": "MTN", "name": "Mauritania"                           }
+,{"iso2":"MS", "iso3": "MSR",               "ioc": "MNT", "name": "Montserrat"                           }
+,{"iso2":"MT", "iso3": "MLT",               "ioc": "MAT", "name": "Malta"                                } // MAT (1960–1964)
+,{"iso2":"MU", "iso3": "MUS", "fifa":"MRI", "ioc": "MRI", "name": "Mauritius"                            }
+,{"iso2":"MV", "iso3": "MDV",                             "name": "Maldives"                             }
+,{"iso2":"MW", "iso3": "MWI",               "ioc": "MAW", "name": "Malawi"                               }
+,{"iso2":"MX", "iso3": "MEX",                             "name": "Mexico"                               }
+,{"iso2":"MY", "iso3": "MYS", "fifa":"MAS", "ioc": "MAL", "name": "Malaysia"                             } // MAL (1964–1988)
+,{"iso2":"MZ", "iso3": "MOZ",                             "name": "Mozambique"                           }
+,{"iso2":"NA", "iso3": "NAM",                             "name": "Namibia"                              }
+,{"iso2":"NC", "iso3": "NCL",               "ioc": "NCD", "name": "New Caledonia"                        }
+,{"iso2":"NE", "iso3": "NER", "fifa":"NIG", "ioc": "NIG", "name": "Niger"                                }
+,{"iso2":"NF", "iso3": "NFK",               "ioc": "NFI", "name": "Norfolk Island"                       }
+,{"iso2":"NG", "iso3": "NGA",               "ioc": "NGR", "name": "Nigeria"                              } // NIG (1960 S), NGA (1964)
+,{"iso2":"NI", "iso3": "NIC", "fifa":"NCA", "ioc": "NCG", "name": "Nicaragua"                            } // NCG (1964), NIC (1968)
+,{"iso2":"NL", "iso3": "NLD", "fifa":"NED", "ioc": "HOL", "name": "Netherlands"                          } // OLA (1956 W), NET (1960 W), PBA (1960 S), NLD (1964 S), HOL (1968–1988)
+,{"iso2":"NO", "iso3": "NOR",                             "name": "Norway"                               }
+,{"iso2":"NP", "iso3": "NPL", "fifa":"NEP", "ioc": "NEP", "name": "Nepal"                                }
+,{"iso2":"NR", "iso3": "NRU",                             "name": "Nauru"                                }
+,{"iso2":"NU", "iso3": "NIU",                             "name": "Niue"                                 }
+,{"iso2":"NZ", "iso3": "NZL",               "ioc": "NZE", "name": "New Zealand"                          } // NZE (1960, 1968 W)
+,{"iso2":"OM", "iso3": "OMN", "fifa":"OMA", "ioc": "OMA", "name": "Oman"                                 }
+,{"iso2":"PA", "iso3": "PAN",                             "name": "Panama"                               }
+,{"iso2":"PE", "iso3": "PER",                             "name": "Peru"                                 }
+,{"iso2":"PF", "iso3": "PYF", "fifa":"TAH", "ioc": "FPO", "name": "French Polynesia (Tahiti)"            }
+,{"iso2":"PG", "iso3": "PNG",                             "name": "Papua New Guinea"                     }
+,{"iso2":"PH", "iso3": "PHL", "fifa":"PHI", "ioc": "FIL", "name": "Philippines"                          } // FIL (1960, 1968)
+,{"iso2":"PK", "iso3": "PAK",                             "name": "Pakistan"                             }
+,{"iso2":"PL", "iso3": "POL",                             "name": "Poland"                               }
+,{"iso2":"PM", "iso3": "SPM",                             "name": "Saint Pierre and Miquelon"            }
+,{"iso2":"PN", "iso3": "PCN",                             "name": "Pitcairn"                             }
+,{"iso2":"PR", "iso3": "PRI", "fifa":"PUR", "ioc": "PRO", "name": "Puerto Rico"                          } // PRI (1960), PRO (1968)
+,{"iso2":"PS", "iso3": "PSE", "fifa":"PLE", "ioc": "PLE", "name": "Palestine"                            }
+,{"iso2":"PT", "iso3": "PRT", "fifa":"POR", "ioc": "POR", "name": "Portugal"                             }
+,{"iso2":"PW", "iso3": "PLW",                             "name": "Palau"                                }
+,{"iso2":"PY", "iso3": "PRY", "fifa":"PAR", "ioc": "PAR", "name": "Paraguay"                             }
+,{"iso2":"QA", "iso3": "QAT",                             "name": "Qatar"                                }
+,{"iso2":"RE", "iso3": "REU",                             "name": "Réunion"                              }
+,{"iso2":"RO", "iso3": "ROU",               "ioc": "ROM", "name": "Romania"                              } // ROM (1956–1960, 1972–2006), RUM (1964–1968)
+,{"iso2":"RS", "iso3": "SRB",                             "name": "Serbia"                               }
+,{"iso2":"RU", "iso3": "RUS",                             "name": "Russian Federation"                   }
+,{"iso2":"RW", "iso3": "RWA",                             "name": "Rwanda"                               }
+,{"iso2":"SA", "iso3": "SAU", "fifa":"KSA", "ioc": "KSA", "name": "Saudi Arabia"                         }
+,{"iso2":"SB", "iso3": "SLB", "fifa":"SOL", "ioc": "SOL", "name": "Solomon Islands"                      }
+,{"iso2":"SC", "iso3": "SYC", "fifa":"SEY", "ioc": "SEY", "name": "Seychelles"                           }
+,{"iso2":"SD", "iso3": "SDN", "fifa":"SUD", "ioc": "SUD", "name": "Sudan"                                }
+,{"iso2":"SE", "iso3": "SWE",               "ioc": "SVE", "name": "Sweden"                               } // SVE (1956 W, 1960 S), SUE (1968 S)
+,{"iso2":"SG", "iso3": "SGP", "fifa":"SIN", "ioc": "SIN", "name": "Singapore"                            }
+,{"iso2":"SH", "iso3": "SHN",               "ioc": "HEL", "name": "Saint Helena, Ascension and Tristan da Cunha"}
+,{"iso2":"SI", "iso3": "SVN",               "ioc": "SLO", "name": "Slovenia"                             }
+,{"iso2":"SJ", "iso3": "SJM",                             "name": "Svalbard"                             }
+,{"iso2":"SK", "iso3": "SVK",                             "name": "Slovakia"                             }
+,{"iso2":"SL", "iso3": "SLE",               "ioc": "SLA", "name": "Sierra Leone"                         } // SLA (1968)
+,{"iso2":"SM", "iso3": "SMR",               "ioc": "SMA", "name": "San Marino"                           } // SMA (1960–1964)
+,{"iso2":"SN", "iso3": "SEN",               "ioc": "SGL", "name": "Senegal"                              } // SGL (1964)
+,{"iso2":"SO", "iso3": "SOM",                             "name": "Somalia"                              }
+,{"iso2":"SR", "iso3": "SUR",                             "name": "Suriname"                             }
+,{"iso2":"SS", "iso3": "SSD",                             "name": "South Sudan"                          }
+,{"iso2":"ST", "iso3": "STP",                             "name": "Sao Tome and Principe"                }
+,{"iso2":"SV", "iso3": "SLV",               "ioc": "ESA", "name": "El Salvador"                          }
+,{"iso2":"SX", "iso3": "SXM",                             "name": "Sint Maarten (Dutch part)"            }
+,{"iso2":"SY", "iso3": "SYR",               "ioc": "SIR", "name": "Syrian Arab Republic"                 } // RAU (1960), SIR (1968)
+,{"iso2":"SZ", "iso3": "SWZ",                             "name": "Swaziland"                            }
+,{"iso2":"TC", "iso3": "TCA",               "ioc": "TKS", "name": "Turks and Caicos Islands"             }
+,{"iso2":"TD", "iso3": "TCD", "fifa":"CHA", "ioc": "CHA", "name": "Chad"                                 }
+,{"iso2":"TF", "iso3": "ATF",                             "name": "French Southern Territories"          }
+,{"iso2":"TG", "iso3": "TGO", "fifa":"TOG", "ioc": "TOG", "name": "Togo"                                 }
+,{"iso2":"TH", "iso3": "THA",                             "name": "Thailand"                             }
+,{"iso2":"TJ", "iso3": "TJK",                             "name": "Tajikistan"                           }
+,{"iso2":"TK", "iso3": "TKL",                             "name": "Tokelau"                              }
+,{"iso2":"TL", "iso3": "TLS",                             "name": "Timor-Leste"                          }
+,{"iso2":"TM", "iso3": "TKM",                             "name": "Turkmenistan"                         }
+,{"iso2":"TN", "iso3": "TUN",                             "name": "Tunisia"                              }
+,{"iso2":"TO", "iso3": "TON", "fifa":"TGA", "ioc": "TGA", "name": "Tonga"                                }
+,{"iso2":"TR", "iso3": "TUR",                             "name": "Turkey"                               }
+,{"iso2":"TT", "iso3": "TTO", "fifa":"TRI", "ioc": "TRT", "name": "Trinidad and Tobago"                  } // TRT (1964–1968) TRI (1972–2012)
+,{"iso2":"TV", "iso3": "TUV",                             "name": "Tuvalu"                               }
+,{"iso2":"TW", "iso3": "TWN", "fifa":"TPE", "ioc": "TPE", "name": "Taiwan, Province of China"            }
+,{"iso2":"TZ", "iso3": "TZA", "fifa":"TAN", "ioc": "TAN", "name": "Tanzania, United Republic of"         }
+,{"iso2":"UA", "iso3": "UKR",                             "name": "Ukraine"                              }
+,{"iso2":"UG", "iso3": "UGA",                             "name": "Uganda"                               }
+,{"iso2":"UM", "iso3": "UMI",                             "name": "United States Minor Outlying Islands" }
+,{"iso2":"US", "iso3": "USA",                             "name": "United States"                        }
+,{"iso2":"UY", "iso3": "URY", "fifa":"URU", "ioc": "URG", "name": "Uruguay"                              } // URG (1968), after URU
+,{"iso2":"UZ", "iso3": "UZB",                             "name": "Uzbekistan"                           }
+,{"iso2":"VA", "iso3": "VAT",                             "name": "Holy See (Vatican City State)"        }
+,{"iso2":"VC", "iso3": "VCT", "fifa":"VIN", "ioc": "VIN", "name": "Saint Vincent and the Grenadines"     }
+,{"iso2":"VE", "iso3": "VEN",                             "name": "Venezuela, Bolivarian Republic of"    }
+,{"iso2":"VG", "iso3": "VGB",               "ioc": "IVB", "name": "Virgin Islands, British"              }
+,{"iso2":"VI", "iso3": "VIR",               "ioc": "ISV", "name": "Virgin Islands, U.S."                 }
+,{"iso2":"VN", "iso3": "VNM", "fifa":"VIE", "ioc": "VET", "name": "Vietnam"                              } // VET (1964), VNM (1968–1976), after VIE
+,{"iso2":"VU", "iso3": "VUT", "fifa":"VAN", "ioc": "VAN", "name": "Vanuatu"                              }
+,{"iso2":"WF", "iso3": "WLF",               "ioc": "WAF", "name": "Wallis and Futuna"                    }
+,{"iso2":"WS", "iso3": "WSM", "fifa":"SAM", "ioc": "SAM", "name": "Samoa"                                }
+,{"iso2":"XK", "iso3": "XKX",                             "name": "Kosovo"                               }
+,{"iso2":"YE", "iso3": "YEM",                             "name": "Yemen"                                }
+,{"iso2":"YT", "iso3": "MYT",               "ioc": "MAY", "name": "Mayotte"                              }
+,{"iso2":"ZA", "iso3": "ZAF", "fifa":"RSA", "ioc": "SAF", "name": "South Africa"                         } // SAF (1960–1972), after RSA
+,{"iso2":"ZM", "iso3": "ZMB", "fifa":"ZAM", "ioc": "ZAM", "name": "Zambia"                               }
+,{"iso2":"ZW", "iso3": "ZWE", "fifa":"ZIM", "ioc": "RHO", "name": "Zimbabwe"                             } // RHO (1960–1972), after ZIM
+,{                            "fifa":"WAL",               "name": "Wales"                                }
+,{                            "fifa":"SCO",               "name": "Schotland"                            }
+,{                            "fifa":"ENG",               "name": "England"                              }
+,{                            "fifa":"NIR",               "name": "Northern Ireland"                     }
+]
+// https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+// http://www.rsssf.com/miscellaneous/fifa-codes.html
+// https://en.wikipedia.org/wiki/List_of_IOC_country_codes

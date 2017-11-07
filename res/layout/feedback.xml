@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+<LinearLayout android:id="@+id/ll_feedback"
+              android:orientation="vertical"
+              android:layout_margin="5dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <LinearLayout android:id="@+id/ll_do_you_like"
+                  android:orientation="vertical"
+                  android:layout_margin="5dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/lbl_do_you_like_this_app"
+                android:text="@string/lbl_do_you_like_this_app"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                />
+        <Button
+                android:id="@+id/cmd_yes_i_like"
+                android:tag="item"
+                android:text="@string/cmd_yes_i_like"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="5dp"
+                android:drawableTop="@drawable/ic_action_favorite"
+                />
+        <Button
+                android:id="@+id/cmd_no_there_is_a_problem"
+                android:tag="item"
+                android:text="@string/cmd_no_there_is_a_problem"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="5dp"
+                android:drawableTop="@drawable/ic_action_bad"
+                />
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/ll_yes_i_like"
+                  android:orientation="vertical"
+                  android:layout_margin="5dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/lbl_take_a_minute_to_support"
+                android:text="@string/lbl_take_a_minute_to_support"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                />
+        <Button
+                android:id="@+id/cmd_rate_the_app"
+                android:tag="item"
+                android:text="@string/cmd_rate_the_app"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="5dp"
+                android:drawableTop="@drawable/ic_action_star"
+                />
+        <Button
+                android:id="@+id/cmd_share_with_friends"
+                android:tag="item"
+                android:text="@string/cmd_share_with_friends"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="5dp"
+                android:drawableTop="@android:drawable/ic_menu_share"
+                />
+        <Button
+                android:id="@+id/cmd_like_on_facebook"
+                android:tag="item"
+                android:text="@string/cmd_like_on_facebook"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="5dp"
+                android:drawableTop="@drawable/facebook_like"
+                />
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/ll_no_there_is_a_problem"
+                  android:orientation="vertical"
+                  android:layout_margin="5dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/lbl_please_describe_the_problem"
+                android:text="@string/lbl_please_describe_the_problem"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                />
+        <Button
+                android:id="@+id/cmd_email_the_developer"
+                android:tag="item"
+                android:text="@string/cmd_email_the_developer"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="5dp"
+                />
+    </LinearLayout>
+
+</LinearLayout>
+</ScrollView>
