@@ -147,7 +147,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                                                 + ")??";                                                 // group 1 (lazy quantifier so that first part 'Jan' of e.g. 'Jan Rot - Na Li' is not taken as date/time part
     private static final String sSeeding        = "(?:[\\[\\(]\\d+(?:/\\d+)?[\\]\\)])?"; // match seedings with numbers greater and equal to 10 (double digits)
     public  static final String sCountry        = "(?:[\\[\\(](\\w+)[\\]\\)])?";                         // group 3 and 6
-    private static final String sClub           = "(?:[\\[\\(](\\w+)[\\]\\)])?";                         // group 4 and 7
+    private static final String sClub           = "(?:[\\[\\(]([\\w\\s\\-]+)[\\]\\)])?";                 // group 4 and 7
     private static final String sRegExpPlayer   = "([^\\[\\(:]+" + sSeeding + ")[\\s]*" + sCountry + "[\\s]*" + sClub; // group 2 (+3+4) and 5 (+6+7)
     private static final String sRegExpResult   = "("
                                                    + "("
@@ -213,14 +213,32 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     sPlayer1 = Util.removeSeeding(sPlayer1);
                     sPlayer2 = Util.removeSeeding(sPlayer2);
                 }
-                if ( StringUtil.isEmpty(CountryUtil.getIso2(sCountry1)) && StringUtil.isNotEmpty(CountryUtil.getIso2(sClub1))) {
-                    // swap country and club
+
+                // check if found club is actually a country
+                String sIsoCC1 = CountryUtil.getIso2(sCountry1);
+                String sIsoCC2 = CountryUtil.getIso2(sCountry2);
+                boolean bOneOfCountriesIsInvalid = StringUtil.isEmpty(sIsoCC1) || StringUtil.isEmpty(sIsoCC2);
+                if ( StringUtil.isEmpty(sIsoCC1) && StringUtil.isNotEmpty(CountryUtil.getIso2(sClub1))) {
+                    //  swap country and club
                     String sTmp = sClub1; sClub1 = sCountry1; sCountry1 = sTmp;
                 }
-                if ( StringUtil.isEmpty(CountryUtil.getIso2(sCountry2)) && StringUtil.isNotEmpty(CountryUtil.getIso2(sClub2))) {
+                if ( StringUtil.isEmpty(sIsoCC2) && StringUtil.isNotEmpty(CountryUtil.getIso2(sClub2))) {
                     // swap country and club
                     String sTmp = sClub2; sClub2 = sCountry2; sCountry2 = sTmp;
                 }
+
+                // check if found countries are most likely actually a clubs
+                if ( StringUtil.isEmpty(sClub1) && StringUtil.isNotEmpty(sCountry1) && bOneOfCountriesIsInvalid ) {
+                    //  swap country and club
+                    sClub1 = sCountry1;
+                    sCountry1 = "";
+                }
+                if ( StringUtil.isEmpty(sClub2) && StringUtil.isNotEmpty(sCountry2) && bOneOfCountriesIsInvalid ) {
+                    //  swap country and club
+                    sClub2 = sCountry2;
+                    sCountry2 = "";
+                }
+
                 model.setPlayerName   (Player.A, sPlayer1.trim() );
                 model.setPlayerName   (Player.B, sPlayer2.trim() );
                 model.setPlayerCountry(Player.A, sCountry1 ); // can be a club abbreviation too

@@ -287,8 +287,12 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
                 // abbreviation after a dash at the end
                 sAbbr = sClub.substring(sClub.lastIndexOf("-") + 1).trim();
             } else {
-                // guess an abbreviation
+                // guess an abbreviation: first attempt see words connect with a dash as one word
                 String sTst = sClub.replaceAll("\\b(\\w)[A-Za-z\\-]*\\b", "$1").replaceAll("\\s", "");
+                if ( sTst.length() <= 1 ) {
+                    // second attempt: see words separated by a dash as separate words
+                    sTst = sClub.replaceAll("-", " ") .replaceAll("\\b(\\w)[A-Za-z]*\\b", "$1").replaceAll("\\s", "");
+                }
                 if ( sTst.length() > 1 ) {
                     sAbbr = sTst;
                 }

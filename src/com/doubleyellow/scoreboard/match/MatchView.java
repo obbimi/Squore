@@ -187,7 +187,7 @@ public class MatchView extends SBRelativeLayout
         return false;
     }
 
-    void setPlayers(String sA, String sB, String sCountryA, String sCountryB) {
+    void setPlayers(String sA, String sB, String sCountryA, String sCountryB, String sClubA, String sClubB) {
         int iNames = 0;
         if ( StringUtil.isNotEmpty(sA) ) {
             if ( m_bIsDoubles ) {
@@ -240,6 +240,23 @@ public class MatchView extends SBRelativeLayout
                     if ( bCountriesCollapsed ) {
                         findViewById(R.id.lblCountries).callOnClick(); // to expand the parent area by default
                         bCountriesCollapsed = false;
+                    }
+                }
+            }
+        }
+
+        if ( (txtClubA != null) && (txtClubB!=null) ) {
+            if ( StringUtil.areAllEmpty(sClubA, sClubB) == false ) {
+                if ( StringUtil.isNotEmpty(sClubA) ) {
+                    txtClubA.setText(sClubA);
+                }
+                if ( StringUtil.isNotEmpty(sClubB) ) {
+                    txtClubB.setText(sClubB);
+                }
+                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 /* 15 */ ) {
+                    if ( bClubsCollapsed ) {
+                        findViewById(R.id.lblClubs).callOnClick(); // to expand the parent area by default
+                        bClubsCollapsed = false;
                     }
                 }
             }

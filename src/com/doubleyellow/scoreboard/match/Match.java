@@ -53,6 +53,8 @@ public class Match extends XActivity implements MenuHandler
         String sB          = null;
         String sCountryA   = null;
         String sCountryB   = null;
+        String sClubA      = null;
+        String sClubB      = null;
       //Bundle bundleExtra = null;
         Model  model       = null;
         {
@@ -91,6 +93,8 @@ public class Match extends XActivity implements MenuHandler
             sB         = model.getName(Player.B);
             sCountryA  = model.getCountry(Player.A);
             sCountryB  = model.getCountry(Player.B);
+            sClubA     = model.getClub(Player.A);
+            sClubB     = model.getClub(Player.B);
 
             bIsDoubles = model.isDoubles();
             if ( bIsDoubles ) {
@@ -133,7 +137,7 @@ public class Match extends XActivity implements MenuHandler
         }
 */
         if ( model != null ) {
-            vMatchView.setPlayers(sA, sB, sCountryA, sCountryB);
+            vMatchView.setPlayers(sA, sB, sCountryA, sCountryB, sClubA, sClubB);
             // if the names came from selecting a match from another place, do not auto set focus to the player names
 
             String sEN     = model.getEventName();
@@ -151,7 +155,9 @@ public class Match extends XActivity implements MenuHandler
             sFeedKey = model.getSource();
             if ( StaticMatchSelector.class.getSimpleName().equals(sFeedKey) == false ) {
                 // selected from some public feed
-                vMatchView.clearClubFields();
+                if ( StringUtil.areAllEmpty(sClubA, sClubB) ) {
+                    vMatchView.clearClubFields();
+                }
             }
         }
         ScoreBoard.updateDemoThread(this);
