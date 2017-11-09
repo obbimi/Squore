@@ -2,7 +2,17 @@
 
 apply plugin: 'com.android.application'
 
+repositories {
+  //mavenCentral()
+
+    // required to work with aar file in libs dir
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 buildscript {
+    // required for using gradle i.s.o. gradlew
     repositories {
         jcenter()
     }
@@ -11,19 +21,13 @@ buildscript {
         classpath "com.android.tools.build:gradle:2.3.0"
     }
 }
-repositories {
-    mavenCentral()
-	flatDir {
-        dirs 'libs'
-      }
-}
 
 // Run ./gradlew -q :ScoreBoard:dependencies
 
 dependencies {
-    //compile project(':AndroidBase')
-    //releaseCompile(name:'AndroidBase', ext:'aar')
+  //compile project(':AndroidBase')
 	compile 'com.doubleyellow:AndroidBase@aar'
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
 	// 24.1.1 vs 23.4.0
@@ -46,19 +50,14 @@ android {
     buildToolsVersion '25.0.2'
 
     useLibrary  'org.apache.http.legacy'
-//repositories {
-//   flatDir {
-//       dirs 'libs'
-//   }
-//}
-      lintOptions {
-          disable 'MissingTranslation'
-          checkReleaseBuilds true
-          // Or, if you prefer, you can continue to check for errors in release builds,
-          // but continue the build even when errors are found:
-          abortOnError false
-          //deprecation true
-      }
+    lintOptions {
+        disable 'MissingTranslation'
+        checkReleaseBuilds true
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+        //deprecation true
+    }
 //    preBuild {
 //        doFirst {
 //            JavaCompile jc = android.applicationVariants.find { it.name == 'debug' }.javaCompile
