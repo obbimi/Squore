@@ -14,7 +14,7 @@
 -->
 
     <!-- TODO: use this in e.g. feedback pages -->
-    <string name="supported_languages">en,nl,fr</string>
+    <string name="supported_languages">en,nl,fr,cs</string>
     <string name="soon_to_come_languages">de,es,pt</string>
 
     <string name="groupArchivedMatchesBy_default">Date</string>
