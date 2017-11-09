@@ -4,6 +4,8 @@
     - Conduct Match, or
     - retired because of injury
 - feed improvements
+    - support redirects for custom feeds
+    - allow specifying club names matches in feed (between brackets)
 
 ## 4.04 (okt 2017)
 

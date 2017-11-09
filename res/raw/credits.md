@@ -21,14 +21,14 @@ The color picker code is written and shared by Daniel Nilsson
 
 ### Circular Progress Bar
 
-The color picker code is written and shared by Pascal Welsch
+The Circular Progress Bar code (for the timer) was written and shared by Pascal Welsch
 
 - <https://github.com/passsy/android-HoloCircularProgressBar>
 
 ### Markdown
 
 The __changelog__ as well this __credits__ page are stored in MarkDown format.
-The transformation to html is done by using
+The transformation to HTML is done by using
 
 -   falnatsheh/MarkdownView
 -   <https://github.com/falnatsheh/MarkdownView>
@@ -60,7 +60,7 @@ The following people were so kind to volunteer to translate Squore into their pr
 
 ## User Help and Suggestions
 
-The following users of Squore have made valuable suggestions and/or help for improving Squore:
+The following users of Squore have made valuable suggestions/help:
 
 - Marius Flage <https://www.youtube.com/user/mflage>
 - Saqib Meer <https://www.facebook.com/samhereforyoualways>
@@ -68,5 +68,4 @@ The following users of Squore have made valuable suggestions and/or help for imp
 - Steve Cubbins
 - Andrés Orozco
 - Brian T. French
-
 
