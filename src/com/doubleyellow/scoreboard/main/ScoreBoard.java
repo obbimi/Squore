@@ -6,7 +6,9 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.*;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.nfc.*;
@@ -946,6 +948,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             // e.g. timer was showing before orientation change. Show it again
             Timer.addTimerView(iBoard);
         }
+        NotificationTimerView.cancelNotification(this); // notification is always just a timer. Just there for switching back to Squore. Use is switching back... so remove notification
+
         if ( scSequence != null ) {
             scSequence.setActivity(this);
             ShowcaseView showcaseView = scSequence.showItem(0); // passing in zero is specifically for onResume
@@ -1891,6 +1895,11 @@ touch -t 01030000 LAST.sb
         persist(true);
         MatchTabbed.persist(this);
         ArchiveTabbed.persist(this);
+
+        boolean bChangeOrientation = OrientationStatus.ChangingOrientation.equals(XActivity.status);
+        if ( (bChangeOrientation == false) && (timer != null) && timer.getSecondsLeft() > 10 ) {
+            timer.addTimerView(new NotificationTimerView(this));
+        }
     }
 
     public static File getLastMatchFile(Context context) {
@@ -2817,6 +2826,23 @@ touch -t 01030000 LAST.sb
     }
     private Menu       mainMenu                   = null;
     private MenuItem[] menuItemsWithOrWithoutText = null;
+
+
+    private static Bitmap m_appIconAsBitMap = null;
+    public static Bitmap getAppIconAsBitMap(Context ctx) {
+        if ( m_appIconAsBitMap == null) {
+            Drawable icon = null;
+            try {
+                icon = ctx.getPackageManager().getApplicationIcon(ctx.getPackageName());
+            } catch (PackageManager.NameNotFoundException e) {
+            }
+            if ( icon instanceof BitmapDrawable) {
+                BitmapDrawable bmd = (BitmapDrawable) icon;
+                m_appIconAsBitMap = bmd.getBitmap();
+            }
+        }
+        return m_appIconAsBitMap;
+    }
 
     /** Populates the scoreBoard's options menu. Called only once for ScoreBoard (but re-invoked if orientation changes) */
     @Override public boolean onCreateOptionsMenu(Menu menu) {

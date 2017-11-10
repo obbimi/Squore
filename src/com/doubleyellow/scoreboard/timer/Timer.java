@@ -186,7 +186,7 @@ public class Timer
       //private int    iCounter  = 0;
         private String TAG       = "SB." + SBCountDownTimer.class.getSimpleName();
 
-        public SBCountDownTimer(int iSecsInFuture) {
+        SBCountDownTimer(int iSecsInFuture) {
             super(iSecsInFuture * 1000 / iSpeedUpFactor, 1000 / iSpeedUpFactor);
             for(TimerView timerView:timerViews) {
                 if ( timerView.isShowing() == false ) {
@@ -216,6 +216,8 @@ public class Timer
             scoreBoard.triggerEvent(ScoreBoard.SBEvent.timerEnded, Timer.timerType);
             for(TimerView timerView:timerViews) {
                 timerView.timeIsUp();
+                if ( timerView instanceof NotificationTimerView ) { continue; } // do not hide NotificationTimerView when time is up, irrespective of preference
+
                 if ( PreferenceValues.cancelTimerWhenTimeIsUp(scoreBoard) ) {
                     timerView.cancel();
                 }
@@ -231,7 +233,7 @@ public class Timer
             return newCounter;
         }
 
-        public void stop() {
+        void stop() {
             log("Stopping timer with " + this.secsLeft + " secs left");
             super.cancel();
         }
