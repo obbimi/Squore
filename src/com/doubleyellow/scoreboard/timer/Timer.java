@@ -10,7 +10,8 @@ import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.vico.IBoard;
 import com.doubleyellow.util.StringUtil;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class that performs the actual 'count down' of a timer.
@@ -51,7 +52,7 @@ public class Timer
     }
 
     /** points the the currently active instance of the TimerView */
-    public static HashSet<TimerView> timerViews = new HashSet<TimerView>();
+    private static Map<String, TimerView> timerViews = new HashMap<>();
 
     public Timer(final ScoreBoard scoreBoard, final Type timerType, int iSecondsInitial, int iSeconds, int iReminderAt, boolean bAutoTriggered) {
         Timer.iSecondsInitial = iSecondsInitial;
@@ -89,7 +90,8 @@ public class Timer
     }
     public static void addTimerView(TimerView view) {
         if ( view == null ) { return; }
-        boolean bIsNew = Timer.timerViews.add(view);
+        TimerView tvOld = Timer.timerViews.put(view.getClass().getName(), view);
+        boolean bIsNew = tvOld == null;
         if ( bIsNew ) {
             //Log.d(TAG, "Added new " + view.toString());
             String sTitle = getTitle(scoreBoard, timerType);
@@ -121,12 +123,19 @@ public class Timer
     }
     public static boolean removeTimerView(TimerView view) {
         if ( view == null ) { return false; }
-        boolean bRemoved = Timer.timerViews.remove(view);
+        Class<? extends TimerView> aClass = view.getClass();
+        return removeTimerView(aClass);
+    }
+
+    public static boolean removeTimerView(Class<? extends TimerView> aClass) {
+        TimerView tvOld = Timer.timerViews.remove(aClass.getName());
+        boolean bRemoved = tvOld != null;
         if ( bRemoved ) {
-            view.cancel();
-            Log.d(TAG, "Removed " + view.toString());
+            //view.cancel();
+            tvOld.cancel();
+            Log.d(TAG, "Removed " + tvOld.toString());
         } else {
-            Log.d(TAG, "Already GONE " + view.toString());
+            Log.d(TAG, "Already No TimerView of class " + aClass.getName());
         }
         return bRemoved;
     }
@@ -142,7 +151,7 @@ public class Timer
     public void cancel() {
         countDownTimer.stop();
         if ( timerViews != null ) {
-            for(TimerView timerView: Timer.timerViews) {
+            for(TimerView timerView: Timer.timerViews.values()) {
                 timerView.cancel();
             }
         }
@@ -151,7 +160,7 @@ public class Timer
 
     public boolean isShowing() {
         boolean bIsShowing = false;
-        for(TimerView timerView: Timer.timerViews) {
+        for(TimerView timerView: Timer.timerViews.values()) {
             bIsShowing = bIsShowing || timerView.isShowing();
         }
         return bIsShowing;
@@ -188,7 +197,7 @@ public class Timer
 
         SBCountDownTimer(int iSecsInFuture) {
             super(iSecsInFuture * 1000 / iSpeedUpFactor, 1000 / iSpeedUpFactor);
-            for(TimerView timerView:timerViews) {
+            for(TimerView timerView:timerViews.values()) {
                 if ( timerView.isShowing() == false ) {
                     timerView.show();
                 }
@@ -202,7 +211,7 @@ public class Timer
         @Override public void onTick(long millisUntilFinished) {
             secsLeft = (int) (millisUntilFinished / (1000 / iSpeedUpFactor));
 
-            for(TimerView timerView:timerViews) {
+            for(TimerView timerView:timerViews.values()) {
                 updateTimerView(this, timerView);
             }
             if ( secsLeft == iReminderAtSecs ) {
@@ -214,7 +223,7 @@ public class Timer
             log("onFinish :");
             this.onTick(0);
             scoreBoard.triggerEvent(ScoreBoard.SBEvent.timerEnded, Timer.timerType);
-            for(TimerView timerView:timerViews) {
+            for(TimerView timerView:timerViews.values()) {
                 timerView.timeIsUp();
                 if ( timerView instanceof NotificationTimerView ) { continue; } // do not hide NotificationTimerView when time is up, irrespective of preference
 

@@ -948,6 +948,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             // e.g. timer was showing before orientation change. Show it again
             Timer.addTimerView(iBoard);
         }
+        timer.removeTimerView(NotificationTimerView.class);
         NotificationTimerView.cancelNotification(this); // notification is always just a timer. Just there for switching back to Squore. Use is switching back... so remove notification
 
         if ( scSequence != null ) {
@@ -1896,11 +1897,15 @@ touch -t 01030000 LAST.sb
         MatchTabbed.persist(this);
         ArchiveTabbed.persist(this);
 
+        Log.d(TAG, "XActivity.status: " + XActivity.status);
         boolean bChangeOrientation = OrientationStatus.ChangingOrientation.equals(XActivity.status);
-        if ( (bChangeOrientation == false) && (timer != null) && timer.getSecondsLeft() > 10 ) {
-            timer.addTimerView(new NotificationTimerView(this));
+        if ( /*(bChangeOrientation == false) &&*/ (timer != null) && timer.getSecondsLeft() > 5 ) {
+            m_notificationTimerView = new NotificationTimerView(this);
+            timer.addTimerView(m_notificationTimerView);
         }
     }
+
+    private NotificationTimerView m_notificationTimerView = null;
 
     public static File getLastMatchFile(Context context) {
         File file = new File(PreviousMatchSelector.getArchiveDir(context), "LAST." + Brand.getSport() + ".sb");
