@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="number_of_serves_per_player">Number of serves per player</string>
+    <string name="number_of_serves_per_player">Number of servers per player</string>
     <string name="end_game_Tabletennis">End game</string>
     <string name="best_of_x_games_to_y_2_Tabletennis">games to</string>
 

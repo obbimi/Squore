@@ -155,7 +155,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         b.putSerializable(MatchHistory.class.getSimpleName(), f);
         matchHistory.putExtra(MatchHistory.class.getSimpleName(), b);
         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ) {
-            activity.startActivity(matchHistory, b);
+            context.startActivity(matchHistory, b);
         }
     }
 

@@ -430,7 +430,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         public void load(boolean bUseCacheIfPresent) {
             this.clear();
 
-            if ( activity == null ) {
+            if ( context == null ) {
                 return;
             }
             String sURLMatches = PreferenceValues.getMatchesFeedURL(context);
@@ -594,7 +594,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 if ( bSuggestToShowPlayerList && StringUtil.isNotEmpty(sUseContent) ) {
                     suggestToShowPlayerList();
                 }
-            };
+            }
 /*
             if ( showTip() == false ) {
                 if ( this.getChildrenCount() == 0 )   {

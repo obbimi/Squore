@@ -11,7 +11,7 @@ import com.doubleyellow.scoreboard.R;
 public enum StartupAction {
     /* For DYBoxen comment out 'com.doubleyellow.scoreboard.R' and comment in private static class R */
     None              (0                    ),
-    StartNewMatch     (R.id.sb_new_match    ),
+    StartNewMatch     (R.id.dyn_new_match   ),
     SelectFeedMatch   (R.id.sb_select_feed_match),
     SelectStaticMatch (R.id.sb_select_static_match),
     StartNewSglsMatch (R.id.sb_enter_singles_match),

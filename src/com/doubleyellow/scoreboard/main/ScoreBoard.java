@@ -323,7 +323,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 if ( isLandscape() ) {
                     handleMenuItem(R.id.sb_swap_players);
                 } else {
-                    handleMenuItem(R.id.sb_new_match);
+                    handleMenuItem(R.id.dyn_new_match);
                 }
                 return true;
             }
@@ -597,10 +597,11 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     private ListView     drawerView;
     //private ActionBarDrawerToggle mDrawerToggle;
 
+    private static final boolean m_bHideDrawerItemsFromOldMenu = true;
+    private static final LinkedHashMap<Integer,Integer>  id2String  = new LinkedHashMap<Integer,Integer>();
     private class MenuDrawerAdapter extends BaseAdapter implements ListView.OnItemClickListener, View.OnClickListener, DrawerLayout.DrawerListener {
         private List<Integer>  id2Seq    = new ArrayList<Integer>();
       //private SparseIntArray id2String = new SparseIntArray();
-        private LinkedHashMap<Integer,Integer>  id2String  = new LinkedHashMap<Integer,Integer>();
         private SparseIntArray id2Image  = new SparseIntArray();
         private LayoutInflater inflater  = null;
 
@@ -668,6 +669,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             id2String.put(iActionId , iCaptionId);
             if ( iImageId != 0 ) {
                 id2Image .put(iActionId , iImageId  );
+            }
+            if ( m_bHideDrawerItemsFromOldMenu && (mainMenu != null) ) {
+                // does not work if menu not yet inflated
+                ViewUtil.hideMenuItemForEver(mainMenu, iActionId);
             }
         }
 
@@ -2865,6 +2870,15 @@ touch -t 01030000 LAST.sb
         initCastMenu(menu);
 
         mainMenu = menu;
+        if ( m_bHideDrawerItemsFromOldMenu && (id2String.isEmpty() == false) ) {
+            for(Integer iId: id2String.keySet() ) {
+                boolean b = ViewUtil.hideMenuItemForEver(mainMenu, iId);
+                if ( b == false ) {
+                    String sCaption = getString(id2String.get(iId));
+                    Log.w(TAG, String.format("Failed to hide %s = %s", iId, sCaption));
+                }
+            }
+        }
 /*
         if ( scSequence != null ) {
             scSequence.setMenu(mainMenu);
@@ -3122,8 +3136,7 @@ touch -t 01030000 LAST.sb
                 return true;
             }
             case R.id.float_new_match:
-            case R.id.dyn_new_match:
-            case R.id.sb_new_match: {
+            case R.id.dyn_new_match: {
                 cancelShowCase();
                 Intent nm = new Intent(this, MatchTabbed.class);
                 startActivityForResult(nm, 1); // see onActivityResult
@@ -3888,7 +3901,7 @@ touch -t 01030000 LAST.sb
     public static class MyDialogBuilder extends AlertDialog.Builder {
         private Map<ColorPrefs.ColorTarget, Integer> target2colorMapping;
 
-        public MyDialogBuilder(Context context) {
+        MyDialogBuilder(Context context) {
             super(context, iDialogTheme);
             target2colorMapping = ColorPrefs.getTarget2colorMapping(getContext());
         }

@@ -42,7 +42,7 @@ public abstract class ExpandableMatchSelector extends Fragment
 
     private   ViewGroup          llContainer;
     /** not inflated, just constructed */
-    protected String             m_sLastMessage = null;
+              String             m_sLastMessage = null;
     private   SwipeRefreshLayout swipeRefreshLayout; // should only contain a single listview/gridview
     protected ExpandableListView expandableListView;
 
@@ -171,12 +171,12 @@ public abstract class ExpandableMatchSelector extends Fragment
     /**
      * Hold a reference to the parent Activity so we can report the task's current progress and results.
      * The Android framework will pass us a reference to the newly created Activity after each configuration change.
+     * This deprecated method is still used e.g. in android 4.4
      */
     @Override public void onAttach(Activity activity) {
         super.onAttach(activity);
-        //this.activity = getActivity();
         this.activity = activity;
-        this.context = activity;
+        this.context  = activity;
         //Log.d(TAG, "Attached " + this.getClass().getSimpleName() + " to the scoreBoard");
     }
     @Override public void onAttach(Context context) {
