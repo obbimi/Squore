@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.main;
 
 import android.app.*;
@@ -6,6 +23,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.*;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.net.Uri;
@@ -199,7 +217,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                             // perform undo if swiped horizontally over server score button (= person who scored last) TODO: only true for Squash!!
                             handleMenuItem(R.id.sb_undo_last);
                         } else {
-                            Player pLastScorer = getLastScorer();
+                            Player pLastScorer = matchModel.getLastScorer();
                             if ( player.equals(pLastScorer) ) {
                                 // perform undo if swiped horizontally over last scorer
                                 handleMenuItem(R.id.sb_undo_last);
@@ -256,15 +274,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             }
             return false;
         }
-    }
-
-    private Player getLastScorer() {
-        Player pLastScorer = null;
-        ScoreLine last = matchModel.getLastScoreLine();
-        if ( last != null ) {
-            pLastScorer = last.getScoringPlayer();
-        }
-        return pLastScorer;
     }
 
     private TouchBothListener.LongClickBothListener longClickBothListener = new TouchBothListener.LongClickBothListener() {
@@ -946,6 +955,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             // e.g. timer was showing before orientation change. Show it again
             Timer.addTimerView(iBoard);
         }
+        timer.removeTimerView(NotificationTimerView.class);
+        NotificationTimerView.cancelNotification(this); // notification is always just a timer. Just there for switching back to Squore. Use is switching back... so remove notification
+
         if ( scSequence != null ) {
             scSequence.setActivity(this);
             ShowcaseView showcaseView = scSequence.showItem(0); // passing in zero is specifically for onResume
@@ -1891,7 +1903,16 @@ touch -t 01030000 LAST.sb
         persist(true);
         MatchTabbed.persist(this);
         ArchiveTabbed.persist(this);
+
+        Log.d(TAG, "XActivity.status: " + XActivity.status);
+        boolean bChangeOrientation = OrientationStatus.ChangingOrientation.equals(XActivity.status);
+        if ( /*(bChangeOrientation == false) &&*/ (timer != null) && timer.getSecondsLeft() > 5 ) {
+            m_notificationTimerView = new NotificationTimerView(this);
+            timer.addTimerView(m_notificationTimerView);
+        }
     }
+
+    private NotificationTimerView m_notificationTimerView = null;
 
     public static File getLastMatchFile(Context context) {
         File file = new File(PreviousMatchSelector.getArchiveDir(context), "LAST." + Brand.getSport() + ".sb");
@@ -2817,6 +2838,23 @@ touch -t 01030000 LAST.sb
     }
     private Menu       mainMenu                   = null;
     private MenuItem[] menuItemsWithOrWithoutText = null;
+
+
+    private static Bitmap m_appIconAsBitMap = null;
+    public static Bitmap getAppIconAsBitMap(Context ctx) {
+        if ( m_appIconAsBitMap == null) {
+            Drawable icon = null;
+            try {
+                icon = ctx.getPackageManager().getApplicationIcon(ctx.getPackageName());
+            } catch (PackageManager.NameNotFoundException e) {
+            }
+            if ( icon instanceof BitmapDrawable) {
+                BitmapDrawable bmd = (BitmapDrawable) icon;
+                m_appIconAsBitMap = bmd.getBitmap();
+            }
+        }
+        return m_appIconAsBitMap;
+    }
 
     /** Populates the scoreBoard's options menu. Called only once for ScoreBoard (but re-invoked if orientation changes) */
     @Override public boolean onCreateOptionsMenu(Menu menu) {

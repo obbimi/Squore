@@ -1,9 +1,14 @@
 ## 4.05 (nov 2017)
 
-- allow selecting reaons when manually ending match
+- allow selecting reasons when manually ending match
     - Conduct Match, or
-    - retired because of injury
+    - Retired because of injury
+- Showing the timer in the device notification area as soon as Squore app has moved into the background. Allows to quickly
+    - Check time left without re-opening Squore
+    - Switch back to Squore by clicking the notification timer
 - feed improvements
+    - support redirects for custom feeds
+    - allow specifying club names matches in feed (between brackets)
 
 ## 4.04 (okt 2017)
 

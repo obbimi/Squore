@@ -74,7 +74,7 @@ public class XActivity extends /*Activity*/ AppCompatActivity /* For Implementin
         Closing,
     }
     protected static OrientationStatus status = OrientationStatus.Showing;
-    protected void changeOrientationStatus(OrientationStatus newStatus) {
+    void changeOrientationStatus(OrientationStatus newStatus) {
         //Log.w(TAG, String.format("Changing status from %s to %s", SplashScreen.status, newStatus));
         XActivity.status = newStatus;
     }

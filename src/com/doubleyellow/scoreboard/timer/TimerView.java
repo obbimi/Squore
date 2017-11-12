@@ -14,8 +14,11 @@ public interface TimerView
     void setTime(int iStartedCountDownAtSecs, int iSecsLeft, int iReminderAtSecs);
     void setWarnMessage(String s);
     void setPausedMessage(String s);
+    /** mainly to close the timer */
     void cancel();
+    /** e.g. to set a special message, or play a sound */
     void timeIsUp();
+    /** called when a view is added to array of timerviews */
     void show();
     boolean isShowing();
 

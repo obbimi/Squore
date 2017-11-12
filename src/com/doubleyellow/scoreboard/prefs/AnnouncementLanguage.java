@@ -6,6 +6,6 @@ public enum AnnouncementLanguage {
     es,
     fr,
     nl,
-    pt
+    pt,
     ;
 }
