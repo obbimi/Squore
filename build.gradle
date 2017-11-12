@@ -3,7 +3,7 @@
 apply plugin: 'com.android.application'
 
 repositories {
-  //mavenCentral()
+    //mavenCentral()
 
     // required to work with aar file in libs dir
     flatDir {
@@ -15,7 +15,6 @@ buildscript {
     // required for using gradle i.s.o. gradlew
     repositories {
         jcenter()
-        //mavenCentral()
     }
 
     dependencies {
@@ -24,62 +23,46 @@ buildscript {
     }
 }
 
-// Run ./gradlew -q :ScoreBoard:dependencies
-
-dependencies {
-  //compile project(':AndroidBase')
-	compile 'com.doubleyellow:AndroidBase@aar'
-
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
-	// 24.1.1 vs 23.4.0
-    compile 'com.android.support:percent:25.3.1'
-
-    //compile 'com.android.support:support-v4:25.3.1' // not required
-
-    compile 'com.android.support:support-v13:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-
-    // ChromeCast
-    compile 'com.google.android.gms:play-services-cast:11.0.4'
-
-    //compile 'com.android.support:recyclerview-v7:25.3.1'
-}
-
+// Run ./gradlew -q :dependencies
 
 android {
-    compileSdkVersion 25
-    // buildToolsVersion not required for gradle 3.0.0 and higher
-    buildToolsVersion '26.0.2'
+    dependencies {
+      //compile project(':AndroidBase')
+    	compile 'com.doubleyellow:AndroidBase@aar'
+
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    	// 24.1.1 vs 23.4.0
+        compile 'com.android.support:percent:25.3.1'
+
+        //compile 'com.android.support:support-v4:25.3.1' // not required
+
+        compile 'com.android.support:support-v13:25.3.1'
+        compile 'com.android.support:appcompat-v7:25.3.1'
+
+        // ChromeCast
+        compile 'com.google.android.gms:play-services-cast:11.0.4'
+
+        //compile 'com.android.support:recyclerview-v7:25.3.1'
+    }
+
+    // 25, 26
+    compileSdkVersion 27
+    // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
+    buildToolsVersion '27.0.1'
 
     useLibrary  'org.apache.http.legacy'
     lintOptions {
         disable 'MissingTranslation'
         checkReleaseBuilds true
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
+        // Or, if you prefer, you can continue to check for errors in release builds, but continue the build even when errors are found:
         abortOnError false
         //deprecation true
     }
-//    preBuild {
-//        doFirst {
-//            JavaCompile jc = android.applicationVariants.find { it.name == 'debug' }.javaCompile
-//            //jc.options.compilerArgs = ["-Xlint:unchecked"]
-//            //jc.options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-//            jc.options.compilerArgs << "-Xlint:deprecation"
-//        }
-//    }
-/*
-    compileJava {
-        //options.encoding = 'UTF-8'
-        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-    }
-*/
     defaultConfig {
+	// must match (or be larger than) minSdkVersion of AndroidBase
         minSdkVersion 14
-        targetSdkVersion 25
-
-        //multiDexEnabled true
+        //targetSdkVersion 25
     }
     sourceSets {
         main {
@@ -101,9 +84,6 @@ android {
         }
     }
 
-    //dexOptions {
-    //    preDexLibraries = false
-    //}
     signingConfigs {
         release {
             storeFile file("/osshare/code/DoubleYellow/DoubleYellow.keystore")
@@ -113,33 +93,18 @@ android {
         }
     }
     buildTypes {
-/*
+        release {
+            signingConfig signingConfigs.release
+        }
+	/*
         minified {
             //debuggable true
             minifyEnabled true
             // 'shrinkResources=true' currently only helps for 2%
             shrinkResources true
             proguardFile 'proguard-project.txt'
-            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
-*/
-        release {
-            debuggable false // must be false for play store
-
-            //old AND 3.63: 123,124 alpha
-            minifyEnabled   false // 123=true,     124=false
-            shrinkResources false //               124=false
-            proguardFile 'proguard-project.txt' // 124=enabled
-
-            // 3.63: 125 todo
-/*
-            minifyEnabled false
-            shrinkResources false
-            proguardFile 'proguard-project.txt'
-*/
-
-            signingConfig signingConfigs.release
-        }
+	*/
     }
 }

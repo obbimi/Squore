@@ -7,3 +7,4 @@ Squore.iml
 build
 gradle
 *.sh
+*.log
