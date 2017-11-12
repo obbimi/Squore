@@ -6,3 +6,4 @@ Squore.iml
 .idea
 build
 gradle
+*.sh
