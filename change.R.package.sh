@@ -79,6 +79,7 @@ sed -i 's~^\(\s\+\)srcFile~\1//srcFile~' build.gradle
 sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifest${tobranded}\)~\1\2~" build.gradle
 #vi +/Manifest${tobranded} build.gradle
 
+exit
 rm AndroidManifest.xml
 ln -s AndroidManifest${tobranded}.xml AndroidManifest.xml
 exit
