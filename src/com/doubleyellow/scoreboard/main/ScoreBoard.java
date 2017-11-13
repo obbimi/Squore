@@ -585,6 +585,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( pl == null ) { return; }
         String sPlayerNames = matchModel.getName(pl);
         String[] saNames = sPlayerNames.split("/");
+        if ( saNames.length != 2 ) { return; }
         matchModel.setPlayerName(pl, saNames[1] + "/" + saNames[0]);
         String sMsg = getString(R.string.double_player_names_swapped, pl);
         Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
