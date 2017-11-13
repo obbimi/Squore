@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.scoreboard"
           android:versionCode="159"
-          android:versionName="4.04">
-    <!-- 4.04 (59) = revision 790 -->              <!-- nov 02: minor improvements -->
+          android:versionName="4.05">
+    <!-- 4.05 (59) = revision 790 -->              <!-- nov 13: minor improvements -->
     <!-- 4.04 (58) = revision 785 -->              <!-- okt 30: improved icons/images/drawer menu -->
     <!-- 4.03 (57) = revision 779 -->              <!-- okt 21: better handling of dialogs/network timeouts -->
     <!-- 4.03 (56) = revision 774 -->              <!-- okt 07: fix: do not swap players in Squash app -->
