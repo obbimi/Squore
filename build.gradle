@@ -60,9 +60,10 @@ android {
         //deprecation true
     }
     defaultConfig {
-	// must match (or be larger than) minSdkVersion of AndroidBase
+	    // must match (or be larger than) minSdkVersion of AndroidBase
         minSdkVersion 14
-        //targetSdkVersion 25
+        // next property is not required for building... but should be specified for publishing in play-store
+        targetSdkVersion 27
     }
     sourceSets {
         main {
