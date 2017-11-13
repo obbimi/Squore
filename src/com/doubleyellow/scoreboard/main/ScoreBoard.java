@@ -598,7 +598,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     private ListView     drawerView;
     //private ActionBarDrawerToggle mDrawerToggle;
 
-    private static final boolean m_bHideDrawerItemsFromOldMenu = true;
+    private static final boolean m_bHideDrawerItemsFromOldMenu = false; // TODO: maybe later
     private static final LinkedHashMap<Integer,Integer>  id2String  = new LinkedHashMap<Integer,Integer>();
     private class MenuDrawerAdapter extends BaseAdapter implements ListView.OnItemClickListener, View.OnClickListener, DrawerLayout.DrawerListener {
         private List<Integer>  id2Seq    = new ArrayList<Integer>();
