@@ -13,7 +13,7 @@ import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.MenuHandler;
 import com.doubleyellow.util.SortOrder;
-import com.doubleyellow.view.SelectEnumView;
+import com.doubleyellow.android.view.SelectEnumView;
 
 public class SortOptions extends BaseAlertDialog
 {

@@ -27,7 +27,7 @@ import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.MenuHandler;
-import com.doubleyellow.util.SimpleELAdapter;
+import com.doubleyellow.android.util.SimpleELAdapter;
 import org.json.JSONObject;
 
 import java.util.ArrayList;

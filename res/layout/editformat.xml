@@ -80,7 +80,7 @@
             android:textSize="@dimen/txt_small"
             android:layout_margin="2dp"
             />
-        <com.doubleyellow.view.EnumSpinner
+        <com.doubleyellow.android.view.EnumSpinner
                 android:id="@+id/spTieBreakFormat"
                 app:enum_class="com.doubleyellow.scoreboard.model.TieBreakFormat"
                 app:enum_display_values="@array/tiebreakFormatDisplayValues"

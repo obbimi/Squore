@@ -395,7 +395,7 @@
                         android:layoutMode="opticalBounds"
                         android:orientation="vertical"/>
 <!--
-                <com.doubleyellow.view.EnumSpinner
+                <com.doubleyellow.android.view.EnumSpinner
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/spDoublesServeSequence"
                         app:enum_class="com.doubleyellow.scoreboard.model.DoublesServeSequence"
@@ -431,7 +431,7 @@
                     android:layoutMode="opticalBounds"
                     android:orientation="vertical"/>
 <!--
-            <com.doubleyellow.view.EnumSpinner
+            <com.doubleyellow.android.view.EnumSpinner
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/spTieBreakFormat"
                     app:enum_class="com.doubleyellow.scoreboard.model.TieBreakFormat"

@@ -12,7 +12,7 @@ import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.RallyEndStatsPrefs;
 import com.doubleyellow.util.StringUtil;
-import com.doubleyellow.view.SelectEnumView;
+import com.doubleyellow.android.view.SelectEnumView;
 
 import java.util.EnumSet;
 

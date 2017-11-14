@@ -9,7 +9,7 @@
               android:layout_height="wrap_content"
         android:text="@string/select_reason_and_winner"
     />
-    <com.doubleyellow.view.SelectEnumView
+    <com.doubleyellow.android.view.SelectEnumView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/evReason"

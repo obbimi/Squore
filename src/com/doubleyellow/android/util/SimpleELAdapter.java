@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.doubleyellow.util;
+package com.doubleyellow.android.util;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -25,10 +25,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.doubleyellow.android.util.ContentUtil;
+
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+import com.doubleyellow.util.FileUtil;
+import com.doubleyellow.util.ListUtil;
+import com.doubleyellow.util.MapUtil;
+import com.doubleyellow.util.SortOrder;
+import com.doubleyellow.util.StringComparator;
 
 import java.io.*;
 import java.util.*;
