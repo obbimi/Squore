@@ -6,8 +6,6 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 <com.doubleyellow.android.view.SelectEnumView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/selectConductType"
         app:enum_class="com.doubleyellow.scoreboard.model.ConductType"
         app:enum_display_values="@array/ConductType_DisplayValues"
