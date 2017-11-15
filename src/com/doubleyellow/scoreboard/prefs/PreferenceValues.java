@@ -1238,7 +1238,7 @@ public class PreferenceValues extends RWValues
     public static Map<URLsKeys, String> getFeedPostDetail(Context context) {
         Map<URLsKeys, String> entry = null;
         if ( context == null ) {
-            Log.w(TAG, String.format("Could not get preference for feed. No context"));
+            Log.w(TAG, "Could not get preference for feed. No context");
             return null;
         }
 /*

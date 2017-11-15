@@ -488,7 +488,15 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 
         if ( MapUtil.isNotEmpty(mHeadersWithRecentMatches) && mHeadersWithRecentMatches.containsKey(sGroup) ) {
             // use the format
-            File f = mHeadersWithRecentMatches.get(sGroup).iterator().next();
+            Object oFiles = mHeadersWithRecentMatches.get(sGroup);
+            Collection<File> files = null;
+            if ( oFiles instanceof Collection ) {
+                files = (Collection<File>) oFiles;
+            } else {
+                files = new ArrayList<>();
+                files.add((File) oFiles);
+            }
+            File f = files.iterator().next();
             Model mTmp = Brand.getModel();
             try {
                 mTmp.fromJsonString(f);
@@ -569,7 +577,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
         return null;
     }
 
-    private Map<String, Collection<File>> mHeadersWithRecentMatches = null;
+    private Map<String, Object> mHeadersWithRecentMatches = null;
     private EMSAdapter emsAdapter;
 
     @Override public SimpleELAdapter getListAdapter(LayoutInflater inflater) {
@@ -595,7 +603,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
             if ( continueRecentMatch != Feature.DoNotUse ) {
                 // retrieve matches modified recently top optionally enrich the 'my matches' list with details of these 'in progress' matches
                 lastFewHoursMatches = PreviousMatchSelector.getLastFewHoursMatchesAsMap(context, 3 /* TODO: preference */);
-                mHeadersWithRecentMatches = new HashMap<String, Collection<File>>();
+                mHeadersWithRecentMatches = new HashMap<String, Object>();
             }
 
             List<String>      lFixedMatches = PreferenceValues.getMatchList(context);
