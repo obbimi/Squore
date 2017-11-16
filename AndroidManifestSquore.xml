@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.scoreboard"
-          android:versionCode="160"
+          android:versionCode="161"
           android:versionName="4.05">
-    <!-- 4.05 (60) = revision ??? -->              <!-- nov 16: quick fix -->
+    <!-- 4.05 (61) = revision ??? -->              <!-- nov 16: quick fix -->
     <!-- 4.05 (59) = revision 790 -->              <!-- nov 13: minor improvements -->
     <!-- 4.04 (58) = revision 785 -->              <!-- okt 30: improved icons/images/drawer menu -->
     <!-- 4.03 (57) = revision 779 -->              <!-- okt 21: better handling of dialogs/network timeouts -->
