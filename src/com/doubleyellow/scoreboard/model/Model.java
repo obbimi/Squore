@@ -2002,13 +2002,16 @@ public abstract class Model
                         if ( JsonUtil.isEmpty(timing) ) { continue; }
                         Object oStart = timing.opt(JSONKey.start.toString());
                         Object oEnd   = timing.opt(JSONKey.end  .toString());
-                        if ( oStart instanceof Long ) {
+                        if ( oStart instanceof Long || oEnd instanceof Long ) {
                             // pre 3.19
                             m_gameTimingCurrent = new GameTiming(g,(Long) oStart, (Long) oEnd, onTimingChangedListeners);
                         } else if ( oStart instanceof Integer ) {
                             // pre 3.19: start is usually 0
                             int iStart = (Integer) oStart;
-                            int iEnd   = (Integer) oEnd;
+                            int iEnd   = iStart;
+                            if ( oEnd instanceof Integer ) {
+                                iEnd = (Integer) oEnd;
+                            }
                             m_gameTimingCurrent = new GameTiming(g, iStart, iEnd, onTimingChangedListeners);
                         } else if ( oStart instanceof String ) {
                             // since 3.19
