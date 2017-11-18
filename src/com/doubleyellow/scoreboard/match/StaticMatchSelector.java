@@ -92,6 +92,8 @@ public class StaticMatchSelector extends ExpandableMatchSelector
             txt.setHint(getString(R.string.lbl_player_x, String.valueOf(i)));
             txt.setTag(ColorPrefs.Tags.item);
             txt.setText("");
+            int type = txt.getInputType() | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
+            txt.setInputType(type);
             lNames.add(txt);
         }
         ListUtil.getLast(lNames).setImeOptions(EditorInfo.IME_ACTION_DONE);

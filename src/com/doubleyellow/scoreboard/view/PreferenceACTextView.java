@@ -51,7 +51,7 @@ public class PreferenceACTextView extends AutoCompleteTextView
         }
 
         this.setSingleLine();
-        this.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        this.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
     }
 
     public void init(int iResDefaultACValues, PreferenceKeys prefListKey, PreferenceKeys prefLastKey) {

@@ -35,12 +35,16 @@ public class PlayerTextView extends AutoCompleteTextView implements ContentRecei
 {
     private static final String TAG = "SB." + PlayerTextView.class.getSimpleName();
 
-    /** Invoked when created for popup */
+    /** Invoked when created for popup EditPlayers */
     public PlayerTextView(Context context) {
         super(context, null);
         this.setSingleLine();
         this.setPadding(10,0,0,0); // to have the cursor show up better
-        this.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        this.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+    }
+
+    @Override public boolean isSuggestionsEnabled() {
+        return false;
     }
 
     public PlayerTextView(Context context, AttributeSet attrs) {
