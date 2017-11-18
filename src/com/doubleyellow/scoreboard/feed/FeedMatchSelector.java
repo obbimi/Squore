@@ -64,8 +64,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     public static Map<PreferenceKeys, String> mFeedPrefOverwrites = new HashMap<PreferenceKeys, String>();
 
+    private String m_sNoMatchesInFeed = null;
+
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        m_sNoMatchesInFeed = getString(R.string.No_matches_in_feed);
     }
 
     @Override protected void setGuiDefaults(List<String> lExpanded) {
@@ -520,7 +523,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         break;
                 }
             } else {
-                this.addItem(getString(R.string.No_matches_in_feed), result.toString());
+                this.addItem(m_sNoMatchesInFeed, result.toString());
             }
 
             // use try/catch here because getResources() may fail if user closed the activity before data was retrieved
@@ -567,7 +570,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     String sMsg = null;
                     switch (feedStatus ) {
                         case showingMatches:
-                            sMsg = getString(R.string.No_matches_in_feed);
+                            sMsg = m_sNoMatchesInFeed;
                             bSuggestToShowPlayerList = true;
                             break;
                         case showingMatchesUncompleted:
@@ -648,7 +651,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
 
             if ( iEntriesCnt == 0 ) {
-                super.addItem(getString(R.string.No_matches_in_feed), sLastFetchedURL);
+                super.addItem(m_sNoMatchesInFeed, sLastFetchedURL);
 
                 // TODO: ask user if he wants to switch to list of players (only if there actually are players in the feed)
             }
@@ -678,7 +681,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             ListUtil.removeEmpty(lInput);
 
             if ( ListUtil.isEmpty(lInput) ) {
-                super.addItem(getString(R.string.No_matches_in_feed), sLastFetchedURL);
+                super.addItem(m_sNoMatchesInFeed, sLastFetchedURL);
                 //super.clearFilter();
 
                 // TODO: ask user if he wants to switch to list of players (only if there actually are players in the feed)
@@ -813,7 +816,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 break;
             case Suggest:
                 AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
-                ab.setMessage(getString(R.string.No_matches_in_feed) + "\n" + getString(R.string.uc_show) + " " + getString(R.string.pref_playerList) + "?");
+                ab.setMessage(m_sNoMatchesInFeed + "\n" + getString(R.string.uc_show) + " " + getString(R.string.pref_playerList) + "?");
                 ab.setIcon(R.drawable.ic_menu_cc);
                 ab.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
@@ -824,7 +827,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 ab.show();
                 break;
             case Automatic:
-                String sMsg = getString(R.string.No_matches_in_feed) + "\n" + getString(R.string.uc_showing_x_elipses, getString(R.string.pref_playerList));
+                String sMsg = m_sNoMatchesInFeed + "\n" + getString(R.string.uc_showing_x_elipses, getString(R.string.pref_playerList));
                 Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
                 mt.handleMenuItem(R.id.show_players_from_feed);
                 break;
