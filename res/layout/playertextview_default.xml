@@ -7,7 +7,7 @@
         android:textCursorDrawable="@null"
         android:padding="@dimen/main_button_padding"
         android:background="@drawable/button_dark"
-        android:inputType="textCapWords|textNoSuggestions|textPersonName"
+        android:inputType="textCapWords|textNoSuggestions"
         android:tag="item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

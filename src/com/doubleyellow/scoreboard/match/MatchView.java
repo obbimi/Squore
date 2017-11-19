@@ -69,6 +69,9 @@ public class MatchView extends SBRelativeLayout
     /** introduced to be able to quickly turn it off during development */
     private boolean requestFocusFor(View v) {
         //if ( true ) { return false; }
+        if ( v == null ) {
+            return false;
+        }
         return v.requestFocus();
     }
 

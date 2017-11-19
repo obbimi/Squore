@@ -225,7 +225,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                   //case webIntegration: break;
                     case readContactsForAutoCompletion:
                     case readContactsForAutoCompletion_max:
-                        PreferenceValues.Permission bHasPermission    = PreferenceValues.doesUserHavePermissionToReadContacts(Preferences.this, true);
+                        PreferenceValues.Permission bHasPermission = PreferenceValues.doesUserHavePermissionToReadContacts(Preferences.this, true);
                         switch(bHasPermission) {
                             case Requested:
                                 break;
@@ -255,6 +255,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                                         //Toast.makeText(Preferences.this, sMsg, Toast.LENGTH_LONG).show();
                                     }
                                 }
+                                PreferenceValues.clearPlayerListCache();
                                 break;
                         }
                         break;

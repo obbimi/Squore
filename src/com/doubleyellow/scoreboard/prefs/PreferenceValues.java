@@ -749,25 +749,28 @@ public class PreferenceValues extends RWValues
     private static List<String> getPlayerList(Context context) {
         return getStringAsList(context, PreferenceKeys.playerList, R.string.playerList_default);
     }
-    private static List<String> playerList = null;
+    private static List<String> m_playerList = null;
     public static List<String> getPlayerListAndContacts(Context context) {
-        if ( ListUtil.isNotEmpty(playerList) ) {
-            return playerList;
+        if ( ListUtil.isNotEmpty(m_playerList) ) {
+            return m_playerList;
         }
-        playerList = getPlayerList(context);
+        m_playerList = getPlayerList(context);
         if ( readContactsForAutoCompletion(context) ) {
             List<String> contacts = getAllowedContacts(context);
             if ( ListUtil.isNotEmpty(contacts) ) {
-                playerList.addAll(contacts);
+                m_playerList.addAll(contacts);
             }
         } else {
             Log.d(TAG, "Not reading contacts");
         }
-        if ( ListUtil.size(playerList) < 500 ) {
+        if ( ListUtil.size(m_playerList) < 500 ) {
             // to expensive operation for large number of players
-            playerList = ListUtil.removeDuplicates(playerList);
+            m_playerList = ListUtil.removeDuplicates(m_playerList);
         }
-        return playerList;
+        return m_playerList;
+    }
+    public static void clearPlayerListCache() {
+        m_playerList.clear();
     }
 
     private static List<String> getAllowedContacts(Context context) {
@@ -788,7 +791,7 @@ public class PreferenceValues extends RWValues
         players = ListUtil.replace(players, Util.removeSeedingRegExp, "");
         List<String> lCurrent = getPlayerListAndContacts(context);
         players.removeAll(lCurrent);
-        playerList.addAll(players); // add it to the cached version as well so it won't get added twice accidentally
+        m_playerList.addAll(players); // add it to the cached version as well so it won't get added twice accidentally
         return addStringsToList(context, PreferenceKeys.playerList, players);
     }
 
@@ -811,8 +814,8 @@ public class PreferenceValues extends RWValues
             return false;
         }
 
-        if ( playerList != null ) {
-            playerList.add(sPlayer); // add it to the cached version as well so it won't get added twice accidentally
+        if ( m_playerList != null ) {
+            m_playerList.add(sPlayer); // add it to the cached version as well so it won't get added twice accidentally
         }
         return addStringToList(context, PreferenceKeys.playerList, R.string.playerList_default, sPlayer);
     }
