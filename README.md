@@ -29,3 +29,5 @@ Other 'less commonly used' features are:
 * Use handicap scoring
 
 It can be installed from the [google play store](https://play.google.com/store/apps/details?id=com.doubleyellow.scoreboard "Squore - Squash Ref Tool")
+
+Extensive help on supported features can be found [here](http://squore.double-yellow.be)
