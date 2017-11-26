@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="cmd_feedback">Ohodnotit applikaci</string>
+
+    <string name="lbl_do_you_like_this_app">Líbí se vám tato aplikace?</string>
+    <string name="cmd_yes_i_like">Ano</string>
+    <string name="cmd_no_there_is_a_problem">Ne, je to špatné</string>
+    <string name="lbl_take_a_minute_to_support">Pokud se Vám Squore líbí, věnujte prosím chvilku podpoření aplikace.</string>
+    <string name="cmd_rate_the_app">Ohodnotit aplikaci</string>
+    <string name="cmd_share">Sdílet</string>
+    <string name="cmd_share_with_friends">Sdílet s přáteli</string>
+    <string name="cmd_like_on_facebook">Lajkovat na Facebooku</string>
+    <string name="lbl_please_describe_the_problem">Prosím, popište co nejpodrobněji, co se Vám nelíbí.</string>
+    <string name="cmd_email_the_developer">Napište email tvůrci</string>
+</resources>

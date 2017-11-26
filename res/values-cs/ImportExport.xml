@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="Export">Exportovat</string>
+    <string name="Export_elipses">Exportovat…</string>
+    <string name="Import">Importovat</string>
+    <string name="Import_elipses">Importovat…</string>
+    <string name="ImportExport_elipses">Importovat/Exportovat…</string>
+    <string name="Select_file">Vybrat soubor</string>
+    <string name="import_matches">Importovat zápasy</string>
+    <string name="export_matches">Exportovat zápasy</string>
+    <string name="upload_export_to_server">Nahrát export na squore server</string>
+    <string name="upload_to_server_failed__x">Nahrání na squore server se nezdařilo: %s</string>
+    <string name="uploaded_to_server__x">Nahrání na squore server OK:\n\n%s\n\n(URL je uloženo ve schránce)</string>
+
+    <string name="Exported_to_x">Exportováno do %s</string>
+    <string name="File_x_has_been_imported__Cnt_y">Soubor %1$s byl naimportován (# %2$s)</string>
+    <string name="Source_x__Target_y">Zdroj: %1$s\nCíl: %2$s</string>
+    <string name="Source_x">Zdroj: %s</string>
+    <string name="Target_y">Cíl: %s</string>
+    <string name="no_appropriate_zip_files_found_in_x">Žádné použitelné zip soubory nenalezeny v %s</string>
+    <string name="no_read_rights_for_x">Chybí právo čtení pro %s</string>
+    <string name="no_write_rights_for_x">Chybí právo zápisu pro %s</string>
+    <string name="could_not_determine_external_storage_location">Nelze zjistit umístění externího úložiště</string>
+
+    <string name="Archive">Archivovat</string>
+    <string name="Delete_file">Smazat soubor</string>
+    <string name="Filename">Název souboru</string>
+
+    <string name="x_stored_in_y">\'%1$s\' uloženo v \'%2$s\'</string>
+    <string name="x_restored_from_y">\'%1$s\' obnoveno z \'%2$s\'</string>
+    <string name="could_not_find_file_x">Nelze najít soubor %s.</string>
+    <string name="did_you_already_perform_an_export_of_x">Opravdu jste provedli export %s?</string>
+</resources>
