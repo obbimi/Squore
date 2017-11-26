@@ -198,7 +198,7 @@
     <string name="pref_useFeedNameAsEventName_summary">Použít jméno Feedu, ze kterého byl vybrán zápas jako název soutěže</string>
     <string name="pref_useGroupNameAsEventData">Použít název skupiny jako data soutěže</string>
     <string name="pref_useGroupNameAsEventData_summary">Použít název skupiny, ze které byl vybrán zápas jako jméno soutěže a kolo pro tento zápas</string>
-    <string name="pref_feedPostUrl_not_set">Seznam zápasů, které se zde objevují, ovlivníte změnou Feedu. Feed se volí stiskem tlačítka zeměkoule. Můžete přidat i svoje vlastní Feedy konfigurací internetových odkazů v sekci \'%1$s\' obrazovky \'%2$s\'. Pro další podrobnosti navštivte webové stránky s nápovědou.</string>
+    <string name="pref_feedPostUrl_not_set">Seznam zápasů, které se zde objevují, ovlivníte změnou Feedu. Feed se volí klepnutím na tlačítko zeměkoule. Můžete přidat i svoje vlastní Feedy konfigurací internetových odkazů v sekci \'%1$s\' obrazovky \'%2$s\'. Pro další podrobnosti navštivte webové stránky s nápovědou.</string>
     <string name="posturl_tip">Můžete zadat web, kam se budou odesílat výsledky. Ve spolupráci např. s webmasterem Vašeho klubu, mohou být výsledky dostupné online okamžitě. Pro další podrobnosti navštivte webové stránky s nápovědou.</string>
     <string name="pref_readContactsForAutoCompletion">Použít kontakty v telefonu k automatickému doplňování</string>
     <string name="pref_readContactsForAutoCompletion_summary">Načíst jména kontaktů z telefonu a použít je pro funkci automatického doplňování jmen hráčů.</string>
