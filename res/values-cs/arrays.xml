@@ -22,7 +22,7 @@
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.PostDataPreference -->
         <item>Posílat pouze nejrelevantnější data</item>
         <item>Posílat nejrelevantnější data + json={}</item>
-        <item>Posílat pouze json data v 'body' části</item>
+        <item>Posílat pouze json data v \'body\' části</item>
     </string-array>
     <string-array name="LockState_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.model.LockState -->
@@ -47,9 +47,9 @@
     </string-array>
     <string-array name="KeepScreenOnWhen_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.KeepScreenOnWhen -->
-        <item>Vždy</item>
-        <item>Když probíhá zápas</item>
-        <item>Nikdy</item>
+        <item>Nikdy nezhasínat</item>
+        <item>Nezhasínat, když probíhá zápas</item>
+        <item>Neřešit v aplikaci (použije se systémové nastavení)</item>
     </string-array>
     <string-array name="BackKeyBehaviour_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.BackKeyBehaviour -->
@@ -134,8 +134,8 @@
     </string-array>
     <string-array name="FeatureDisplayValues">
         <item>Nepoužívat</item>
-        <item>Nabízet použití</item>
-        <item>Zobrazovat automaticky</item>
+        <item>Nabízet (zobrazit tlačítko)</item>
+        <item>Automaticky</item>
     </string-array>
     <string-array name="FeatureDisplayValues_DoAuto">
         <item>Nic</item>

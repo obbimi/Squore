@@ -20,7 +20,7 @@
     <string name="sb_injury_type">Druh zranění</string>
     <string name="sb_doublesServeSequence">Pořadí podání</string>
     <string name="lblPauseDuration">Délka přestávky (s)</string>
-    <string name="sb_tiebreak">Zkrácená hra (tie break)</string>
+    <string name="sb_tiebreak">Zkrácená hra</string>
     <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-všichni - Přijímající %2$s volí, zda se hraje do %3$s nebo do %4$s</string>
     <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-všichni - Přijímající %2$s volí vítězné skóre</string>
     <string name="sb_who_will_start_to_serve">Kdo začíná podávat?</string>
@@ -82,7 +82,7 @@
     <string name="sb_score_details">Podrobné výsledky</string>
     <string name="Live_Score">Skóre živě</string>
     <string name="sb_official_announcement">Hlášení rozhodčího</string>
-    <string name="sb_official_rules_Squash">Oficální pravidla squash</string>
+    <string name="sb_official_rules_Squash">Oficiální pravidla squash</string>
     <string name="sb_possible_conducts">Možné tresty</string>
     <string name="sb_self_inflicted_injury">Samozaviněné zranění</string>
     <string name="sb_opponent_inflicted_injury">Zranění způsobené protihráčem</string>
