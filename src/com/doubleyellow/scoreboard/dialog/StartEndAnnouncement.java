@@ -1,14 +1,34 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.model.Call;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.model.ScoreLine;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.*;
 
@@ -18,6 +38,8 @@ import java.util.Map;
 
 public class StartEndAnnouncement extends BaseAlertDialog
 {
+    private static final String TAG = "SB." + StartEndAnnouncement.class.getSimpleName();
+
     public StartEndAnnouncement(Context context, Model matchModel, ScoreBoard scoreBoard) {
         super(context, matchModel, scoreBoard);
     }
@@ -89,7 +111,20 @@ public class StartEndAnnouncement extends BaseAlertDialog
         int iGamesA = MapUtil.getInt(gameCount, Player.A, 0);
         int iGamesB = MapUtil.getInt(gameCount, Player.B, 0);
 
-        Player winnerOfLastGame = matchModel.getServer();
+        Player winnerOfLastGame = matchModel.getServer(); // incorrect for e.g. if last call was conductstroke or conductgame
+        ScoreLine lastScoreLine = matchModel.getLastScoreLine();
+        if ( (lastScoreLine != null) && (lastScoreLine.getServingPlayer() == null) ) {
+            // assume it was an additional scoreline to represent score change for a earlier ConductCall
+            lastScoreLine = matchModel.getLastCall();
+        }
+        if ( ( lastScoreLine != null ) && lastScoreLine.isCall() ) {
+            Call call = lastScoreLine.getCall();
+            if ( call.equals(Call.CG) || call.equals(Call.CS) ) {
+                Player pMisbehaving = lastScoreLine.getCallTargetPlayer();
+                Log.w(TAG, "Last call was CG|CS with misbehaving player " + pMisbehaving);
+                winnerOfLastGame = pMisbehaving.getOther();
+            }
+        }
         if ( matchModel.hasStarted() && bIncludeWinnerOfLastGame ) {
             Map<Player, Integer> last = ListUtil.getLast(matchModel.getEndScoreOfGames());
             if ( last != null ) {

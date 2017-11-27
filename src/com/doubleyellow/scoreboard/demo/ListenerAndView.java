@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.demo;
 
 import android.view.View;
@@ -5,24 +22,24 @@ import android.view.View;
 /**
  * helper class for demothread
  */
-public class ListenerAndView {
+class ListenerAndView {
 
-    public  View.OnClickListener     ocl  = null;
-    public  View.OnLongClickListener olcl = null;
-    public  int                      viewId = View.NO_ID;
-    public  Integer                  actionId = null;
-    public  DemoThread.DemoMessage    demoMessage = null;
-    public  int demoMessageDuration = 0;
-    public  int pauseDurationAfter  = 4;
+    View.OnClickListener     ocl  = null;
+    View.OnLongClickListener olcl = null;
+    int                      viewId = View.NO_ID;
+    Integer                  actionId = null;
+    DemoThread.DemoMessage    demoMessage = null;
+    int demoMessageDuration = 0;
+    int pauseDurationAfter  = 4;
     ListenerAndView(int v, Object o) {
         this(v, o, false);
     }
     ListenerAndView(int v, Object o, boolean bLong) {
         this.viewId = v;
-        if ( bLong == false && o instanceof View.OnClickListener ) {
+        if ( (bLong == false) && o instanceof View.OnClickListener ) {
             this.ocl = (View.OnClickListener) o;
         }
-        if ( bLong == true && o instanceof View.OnLongClickListener ) {
+        if ( (bLong == true) && o instanceof View.OnLongClickListener ) {
             this.olcl = (View.OnLongClickListener) o;
         }
     }
@@ -44,14 +61,14 @@ public class ListenerAndView {
         this.demoMessageDuration = iMessageDuration;
         this.pauseDurationAfter  = iPauseDuration;
     }
-    public ListenerAndView setPauseDuration(int iSecs) {
+    ListenerAndView setPauseDuration(int iSecs) {
         ListenerAndView lavNew = _clone();
 
         lavNew.pauseDurationAfter = iSecs;
         return lavNew;
     }
 
-    public ListenerAndView _clone() {
+    private ListenerAndView _clone() {
         ListenerAndView lavNew = new ListenerAndView();
         lavNew.viewId   = this.viewId;
         lavNew.ocl      = this.ocl;

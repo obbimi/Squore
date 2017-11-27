@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.match;
 
 import android.content.Context;
@@ -12,6 +29,7 @@ import android.widget.*;
 
 import com.doubleyellow.android.view.CountryTextView;
 import com.doubleyellow.android.view.ViewUtil;
+import com.doubleyellow.android.view.EnumSpinner;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
@@ -22,7 +40,6 @@ import com.doubleyellow.scoreboard.view.PreferenceACTextView;
 import com.doubleyellow.util.Feature;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
-import com.doubleyellow.view.EnumSpinner;
 import com.doubleyellow.view.NextFocusDownListener;
 import com.doubleyellow.view.SBRelativeLayout;
 
@@ -52,6 +69,9 @@ public class MatchView extends SBRelativeLayout
     /** introduced to be able to quickly turn it off during development */
     private boolean requestFocusFor(View v) {
         //if ( true ) { return false; }
+        if ( v == null ) {
+            return false;
+        }
         return v.requestFocus();
     }
 

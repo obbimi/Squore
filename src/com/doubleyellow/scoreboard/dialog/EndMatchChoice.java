@@ -10,7 +10,7 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.EndMatchManuallyBecause;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
-import com.doubleyellow.view.SelectEnumView;
+import com.doubleyellow.android.view.SelectEnumView;
 
 /**
  * Dialog that is shown when 'end of a match' menu/button is chosen.

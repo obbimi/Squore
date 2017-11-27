@@ -5,7 +5,7 @@
         android:tag="mainBackgroundColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <com.doubleyellow.view.SelectEnumView
+    <com.doubleyellow.android.view.SelectEnumView
             android:id="@+id/evSide"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     <LinearLayout android:orientation="vertical" android:id="@+id/splitter_evPosition" android:layout_below="@+id/evSide" android:background="@color/dy_white" android:layout_width="match_parent" android:layout_height="1dp"/>
-    <com.doubleyellow.view.SelectEnumView
+    <com.doubleyellow.android.view.SelectEnumView
             android:id="@+id/evPosition"
             android:layout_below="@id/splitter_evPosition"
             app:enum_class="com.doubleyellow.scoreboard.model.Position"
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     <!--
-        <com.doubleyellow.view.SelectEnumView
+        <com.doubleyellow.android.view.SelectEnumView
                 android:id="@+id/evSide"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
@@ -31,7 +31,7 @@
                 app:enum_class="com.doubleyellow.scoreboard.model.RacketSide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-        <com.doubleyellow.view.SelectEnumView
+        <com.doubleyellow.android.view.SelectEnumView
                 android:id="@+id/evPosition"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"/>
     -->
     <LinearLayout android:orientation="vertical" android:id="@+id/splitter_evDirection" android:layout_below="@+id/evPosition" android:background="@color/dy_white" android:layout_width="match_parent" android:layout_height="1dp"/>
-    <com.doubleyellow.view.SelectEnumView
+    <com.doubleyellow.android.view.SelectEnumView
             android:id="@+id/evDirection"
             android:layout_below="@id/splitter_evDirection"
             app:enum_class="com.doubleyellow.scoreboard.model.BallDirection"
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     <LinearLayout android:orientation="vertical" android:id="@+id/splitter_evTrajectory" android:layout_below="@id/evDirection" android:background="@color/dy_white" android:layout_width="match_parent" android:layout_height="1dp"/>
-    <com.doubleyellow.view.SelectEnumView
+    <com.doubleyellow.android.view.SelectEnumView
             android:id="@+id/evTrajectory"
             android:layout_below="@id/splitter_evTrajectory"
             app:enum_class="com.doubleyellow.scoreboard.model.BallTrajectory"

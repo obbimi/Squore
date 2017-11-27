@@ -1,4 +1,21 @@
-package com.doubleyellow.util;
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.doubleyellow.android.util;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -7,12 +24,16 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-import com.doubleyellow.android.util.ContentUtil;
+
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+import com.doubleyellow.util.FileUtil;
+import com.doubleyellow.util.ListUtil;
+import com.doubleyellow.util.MapUtil;
+import com.doubleyellow.util.SortOrder;
+import com.doubleyellow.util.StringComparator;
 
 import java.io.*;
 import java.util.*;
@@ -28,7 +49,7 @@ import java.util.regex.Pattern;
  * - FeedFeedSelector
  * - ConductInfo
  */
-public abstract class SimpleELAdapter extends BaseExpandableListAdapter
+public abstract class SimpleELAdapter extends android.widget.BaseExpandableListAdapter
 {
     protected static final String TAG = "SB." + SimpleELAdapter.class.getSimpleName();
 
@@ -360,7 +381,7 @@ public abstract class SimpleELAdapter extends BaseExpandableListAdapter
 
         ViewHolder viewHolder = null;
 
-        if( view == null ) {
+        if ( view == null ) {
             view = inflater.inflate(this.m_iResId2inflateI, null);
 
             TextView txtView = ViewUtil.getFirstView(view, TextView.class);
@@ -495,15 +516,16 @@ public abstract class SimpleELAdapter extends BaseExpandableListAdapter
             // TODO: split into multiple words? allow & and | signs?
             // TODO: if string is found in a header, keep that header AND all its childs
 
-            for(String sHeader: m_lHeadersFull){
+            for ( String sHeader: m_lHeadersFull ) {
                 List<String> childsFull = m_lHeader2ChildsFull.get(sHeader);
-                List<String> newList = new ArrayList<String>();
-                for(String child: childsFull){
+                if ( ListUtil.isEmpty(childsFull) ) { continue; }
+                List<String> newList = new ArrayList<>();
+                for ( String child: childsFull ) {
                     if( matchesQuery(child) ) {
                         newList.add(child);
                     }
                 }
-                if(newList.size() > 0){
+                if ( newList.size() > 0 ) {
                     m_lHeaders.add(sHeader);
                     if ( m_itemSorter != null ) {
                         Collections.sort(newList, m_itemSorter);

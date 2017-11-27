@@ -86,18 +86,20 @@ public class ColorPicker extends BaseAlertDialog
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         view.setLayoutParams(layoutParams);
-        view.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
-            @Override public void onColorChanged(int newColor) {
-                String rgbString = ColorUtil.getRGBString(newColor);
-                setColor(rgbString);
-            }
-        });
+        view.setOnColorChangedListener(colorChangedListener);
         //view.setAlphaSliderVisible(false); // no transparency
         if ( this.sColor != null ) {
             view.setColor(Color.parseColor(this.sColor));
         }
         return view;
     }
+
+    private ColorPickerView.OnColorChangedListener colorChangedListener = new ColorPickerView.OnColorChangedListener() {
+        @Override public void onColorChanged(int newColor) {
+            String rgbString = ColorUtil.getRGBString(newColor);
+            setColor(rgbString);
+        }
+    };
 
     private void setColor(String sRGB) {
         this.sColor = sRGB;

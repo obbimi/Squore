@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.doubleyellow.view.MarkDownView
+<com.doubleyellow.android.view.MarkDownView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/changelog"
         app:content_raw="@raw/changelog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

@@ -16,9 +16,8 @@ buildscript {
     repositories {
         jcenter()
     }
-
     dependencies {
-        //classpath 'com.android.tools.build:gradle:3.0.0'
+        //classpath 'com.android.tools.build:gradle:3.0.0' // 3.0.0 is not in jcenter
         classpath 'com.android.tools.build:gradle:2.3.0'
     }
 }
@@ -32,15 +31,16 @@ android {
 
         compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    	// 24.1.1 vs 23.4.0
+    	// 24.1.1 vs 23.4.0 vs 25.3.1 vs 27.0.1
         compile 'com.android.support:percent:25.3.1'
 
-        //compile 'com.android.support:support-v4:25.3.1' // not required
+        //compile 'com.android.support:support-v4:25.3.1'   // v4 not required
+        //compile 'com.android.support:appcompat-v7:25.3.1' // not required for building
 
         compile 'com.android.support:support-v13:25.3.1'
-        compile 'com.android.support:appcompat-v7:25.3.1'
 
         // ChromeCast
+        //compile 'com.google.android.gms:play-services-cast:11.6.0' // not found using jcenter
         compile 'com.google.android.gms:play-services-cast:11.0.4'
 
         //compile 'com.android.support:recyclerview-v7:25.3.1'

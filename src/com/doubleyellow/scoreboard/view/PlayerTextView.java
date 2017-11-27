@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.android.util.AutoSuggestAdapter;
 import com.doubleyellow.scoreboard.R;
@@ -31,26 +32,33 @@ import java.util.List;
  *
  * This makes it much easier for the app user to quickly enter player names.
  */
-public class PlayerTextView extends AutoCompleteTextView implements ContentReceiver
+public class PlayerTextView extends AppCompatAutoCompleteTextView implements ContentReceiver
 {
     private static final String TAG = "SB." + PlayerTextView.class.getSimpleName();
 
-    /** Invoked when created for popup */
+    /** Invoked when created for popup EditPlayers */
     public PlayerTextView(Context context) {
         super(context, null);
-        this.setSingleLine();
-        this.setPadding(10,0,0,0); // to have the cursor show up better
-        this.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        init();
     }
 
+    /** Invoked when using inflate e.g. from StaticMatchSelector */
     public PlayerTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        //init();
     }
 
-    public PlayerTextView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    private void init() {
+        this.setSingleLine();
+        this.setPadding(10,0,0,0); // to have the cursor show up better
+        int type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS/* | InputType.TYPE_TEXT_VARIATION_PERSON_NAME*/;
+        this.setInputType(type);
     }
+
 /*
+    @Override public boolean isSuggestionsEnabled() {
+        return false;
+    }
     @Override protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         if ( this.getVisibility() == VISIBLE ) {
             initializeAdapter();
@@ -101,7 +109,7 @@ public class PlayerTextView extends AutoCompleteTextView implements ContentRecei
             // revert to list stored in preferences
             setAutoCompleteAdapter(playerList);
         } else {
-            List<String> lInput = new ArrayList<String>(Arrays.asList(sContent.split("\n")));
+            List<String> lInput = new ArrayList<String>(Arrays.asList(sContent.split("[\r\n]+")));
             lInput.addAll(0, playerList);
             lInput = ListUtil.removeDuplicates(lInput);
             lInput = ListUtil.filter(lInput, "^\\[.*\\]$", Enums.Match.Remove); // e.g. to filter out heading(s) containing feed setting(s)
@@ -120,11 +128,12 @@ public class PlayerTextView extends AutoCompleteTextView implements ContentRecei
         if ( ListUtil.size(playerList) > 600 ) {
             mt = AutoSuggestAdapter.MatchType.startWithCI;
         }
-        ArrayAdapter<String> adapter = new AutoSuggestAdapter<String>(getContext(), iAutoCompleteLayoutResourceId, playerList, mt);
+        Context context = getContext();
+        ArrayAdapter<String> adapter = new AutoSuggestAdapter<String>(context, iAutoCompleteLayoutResourceId, playerList, mt);
 
         // let 'when to suggest' depend on the size of the complete list
         //int iSuggestAfterAtLeast = Math.min(2, Math.max(1, ListUtil.size(playerList)/100));
-        int iSuggestAfterAtLeast = PreferenceValues.numberOfCharactersBeforeAutocomplete(getContext());
+        int iSuggestAfterAtLeast = PreferenceValues.numberOfCharactersBeforeAutocomplete(context);
 
         this.setAdapter(adapter);
         this.setThreshold(iSuggestAfterAtLeast);
@@ -144,7 +153,6 @@ public class PlayerTextView extends AutoCompleteTextView implements ContentRecei
                 }
             }
         });
-
     }
 
     //------------------------------------
@@ -171,5 +179,4 @@ public class PlayerTextView extends AutoCompleteTextView implements ContentRecei
         }
     }
 */
-
 }

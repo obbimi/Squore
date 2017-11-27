@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.activity;
 
 import android.graphics.drawable.ColorDrawable;
@@ -7,7 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.doubleyellow.android.view.Orientation;
 import com.doubleyellow.android.view.ViewUtil;
 
-public class XActivity extends /*Activity*/ AppCompatActivity /* For Implementing ChromeCast */ {
+public abstract class XActivity extends /*Activity*/ AppCompatActivity /* For Implementing ChromeCast */ {
 
     protected static final String TAG = "SB." + XActivity.class.getSimpleName();
 
@@ -33,7 +50,7 @@ public class XActivity extends /*Activity*/ AppCompatActivity /* For Implementin
     // Actionbar methods
     //----------------------------------------------------
 
-    /** Method to be able to quickly switch between  when extending Activity and AppCompatActivity */
+    /** Method to be able to quickly switch between when extending Activity and AppCompatActivity */
     protected ActionBar getXActionBar() {
         return super.getSupportActionBar(); // with ChromeCast
         //return super.getActionBar();      // without Cast

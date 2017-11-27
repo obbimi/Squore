@@ -943,6 +943,18 @@ public abstract class Model
         return ListUtil.getLast(m_lScoreHistory);
     }
 
+    public ScoreLine getLastCall() {
+        int i = ListUtil.size(m_lScoreHistory) - 1;
+        while (   ( i >= 0 )
+               && (m_lScoreHistory.get(i).isCall() == false)) {
+            i--;
+        }
+        if ( (i >=0) && m_lScoreHistory.get(i).isCall() ) {
+            return m_lScoreHistory.get(i);
+        }
+        return null;
+    }
+
     private ScoreLine getLastWithValidServer() {
         int iIdx = m_lScoreHistory.size()-1;
         while ( iIdx>=0 && m_lScoreHistory.get(iIdx).getServingPlayer()==null ) {
