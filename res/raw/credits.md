@@ -11,13 +11,13 @@ The big score buttons in the mainscreen:
 The __line graphs__ in the score details have been made possible by using
 
 - jjoe64/GraphView
-- <https://github.com/jjoe64/GraphView>
+- <https://github.com/appsthatmatter/GraphView>
 
 ### Color Picker
 
 The color picker code is written and shared by Daniel Nilsson
 
-- <https://code.google.com/p/color-picker-view/>
+- <https://github.com/danielnilsson9/color-picker-view>
 
 ### Circular Progress Bar
 
