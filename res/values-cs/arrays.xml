@@ -134,7 +134,7 @@
     </string-array>
     <string-array name="FeatureDisplayValues">
         <item>Nepoužívat</item>
-        <item>Nabízet (zobrazit tlačítko)</item>
+        <item>Nabízet - zobrazit tlačítko</item>
         <item>Automaticky</item>
     </string-array>
     <string-array name="FeatureDisplayValues_DoAuto">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
     <string name="rmm_title">Ohodnoťte aplikaci</string>
-    <string name="rmm_message">Vypadá to, že se Vám aplikace líbí, použili jste ji už %s krát! Bylo by milé, pokud byste si našli chvilku na její ohodnocení.</string>
+    <string name="rmm_message">Vypadá to, že se Vám aplikace líbí, použili jste ji už %s krát! Bylo by milé, pokud byste si našli chvilku na její ohodnocení</string>
     <string name="rmm_later">Možná později</string>
     <string name="rmm_never">Nemám zájem</string>
 </resources>

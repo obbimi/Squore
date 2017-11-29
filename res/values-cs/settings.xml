@@ -12,7 +12,7 @@
     <string name="pref_Sharing_summary">Na Facebooku, SMS nebo Email</string>
     <string name="pref_Other">Různé</string>
     <string name="pref_Appearance">Vzhled</string>
-    <string name="pref_Appearance_summary">Barvy. Velikost textu. Tlačítková lišta.</string>
+    <string name="pref_Appearance_summary">Barvy. Velikost textu. Tlačítková lišta</string>
     <string name="pref_Colors">Barvy</string>
     <string name="pref_Colors_summary">Nastavení barev panelu zobrazení</string>
     <string name="pref_CountryFlags">Země/vlaječky</string>
@@ -43,7 +43,7 @@
     <string name="pref_TextSizeScore">Tlačítka skóre</string>
     <string name="pref_TextSizeHistory">Vývoj skóre</string>
     <string name="pref_TextSizeScoreAsBigAsPossible">Maximální elikost textu tlačítkách skóre</string>
-    <string name="pref_TextSizeScoreAsBigAsPossible_summary">Pozor: na některých zařízeních se mohou číslice při dvojnásobném zvětšení přestat zobrazovat.</string>
+    <string name="pref_TextSizeScoreAsBigAsPossible_summary">Pozor: na některých zařízeních se mohou číslice při dvojnásobném zvětšení přestat zobrazovat</string>
     <string name="pref_ActionBar">Tlačítková lišta</string>
     <string name="pref_showActionBar">Zobrazit tlačítkovou lištu</string>
     <string name="pref_showActionBar_summary">Bez tlačítkové lišty lze použít větší texty pro zobrazení skóre (vyžaduje restart)</string>
@@ -51,9 +51,9 @@
     <string name="pref_showFullScreen">Na celou obrazovku</string>
     <string name="pref_showScoringHistoryInMainScreen">Zobrazovat průběh zápasu na panelu</string>
     <string name="pref_showSideButtonsWithinScoreButtons">Side buttons within Score buttons</string>
-    <string name="pref_showSideButtonsWithinScoreButtons_summary">Umožnit mít tlačítka skótre ještě větší.</string>
+    <string name="pref_showSideButtonsWithinScoreButtons_summary">Umožnit mít tlačítka skótre ještě větší</string>
     <string name="pref_AppealHandGestureIconSize">Velikost ikonky v dialogu "Odvolání"</string>
-    <string name="pref_AppealHandGestureIconSize_summary">Zadejte 0 pokud nechcete zobrazovat ikonky.</string>
+    <string name="pref_AppealHandGestureIconSize_summary">Zadejte 0 pokud nechcete zobrazovat ikonky</string>
     <string name="pref_showChoosenDecisionShortly">Zobrazovat rozhodnutí jako zprávu</string>
     <string name="pref_showChoosenDecisionShortly_summary">Zobrazovat krátkou zprávu s hlášením rozhodnutí rozhodčího (po odvolání nebo prohřešku hráče)</string>
     <string name="pref_BackKeyBehaviour">Systémové tlačítko \'Zpět\'</string>
@@ -78,7 +78,7 @@
     <string name="pref_useTossFeature">Losování</string>
     <string name="pref_useTossFeature_summary">\'Nabízet\' pro zobrazení tlačítka, \'Automaticky\' pro zobrazení losování na začátku zápasu, \'Nepoužívat\'</string>
     <string name="pref_useShareFeature">Sdílení</string>
-    <string name="pref_useShareFeature_summary">Možnosti: \'Nabízet použití\' - zobrazí se tlačítko, \'Automaticky\' sdílí se na konci zápasu, \'Nepoužívat\' - vypntí sdílení</string>
+    <string name="pref_useShareFeature_summary">Nastavení sdílení výsledků - může být automaticky, ručně nebo úplně vypnuto</string>
     <string name="pref_shareAction">Sdílet</string>
     <string name="pref_shareAction_summary">Sdílet na konci zápasu v případě, že je Sdílení nastaveno na \'Nabízet\' nebo \'Automaticky\'</string>
     <string name="pref_useOfficialAnnouncementsFeature_summary">Hlášení rozhodčího: \'Nabízet\' pro zobrazení tlačítka, \'Automaticky\' pro zobrazování, \'Nepoužívat\'</string>
@@ -105,7 +105,7 @@
     <string name="pref_indicateGameBall">Indikovat setbol v tlačítkách skóre</string>
     <string name="pref_indicateGameBall_summary">Upozorňovat v tlačítkách skóre, že následující výměna může vést k vítězství v setu</string>
     <string name="pref_floatingMessageForGameBall">Zobrazovat hlášení \'Setbol\'</string>
-    <string name="pref_floatingMessageForGameBall_summary">Při setbolu a mečbolu zobrazovat \'balónkové hlášení\'</string>
+    <string name="pref_floatingMessageForGameBall_summary">Při setbolu a mečbolu zobrazovat bublinu s hlášením</string>
     <string name="pref_showNewMatchFloatButton">Zobrazovat plovoucí tlačítko \'Nový zápas\'</string>
     <string name="pref_showNewMatchFloatButton_summary">Zobrazovat plovoucí tlačítko pro nový zápas (ve vhodných situacích)</string>
     <string name="pref_keepScreenOn">Nezhasínat displej</string>
@@ -124,16 +124,15 @@
     <string name="pref_AutomateAsMuchAsPossible">Automatizace úkonů</string>
     <string name="pref_AutomateAsMuchAsPossible_dialog">Losování, časomíra, hlášení rozhodčího, konce setů</string>
     <string name="pref_ScreenLayoutPrefs">Přizpůsobit zobrazení</string>
-    <string name="pref_ScreenLayoutPrefs_dialog">Strana podání vevnitř tlačítka skóre; na celou obrazovku; schování tlačítkové lišty</string>
-
+    <string name="pref_ScreenLayoutPrefs_dialog">Volba \'Maximalizovat\' nastaví: strana podání vevnitř tlačítka skóre; zobrazení na celou obrazovku; schování tlačítkové lišty</string>
     <string name="pref_useSoundNotificationInTimer">Zvuk upozornění</string>
-    <string name="pref_useAudioNotifications">Používat audio upozornění</string>
+    <string name="pref_useAudioNotifications">Používat zvuk upozornění</string>
     <string name="pref_useSoundNotificationInTimer_summary">Zahrát zvuk upozornění po vypršení času (a když zbývá 15 vteřin do konce přestávky a v půlce zahřívání)</string>
     <string name="pref_showPauseButtonOnTimer">Zobrazovat tlačítko na přerušení časomíry</string>
     <string name="pref_cancelTimerWhenTimeIsUp">Schovat časomíru, po vypršení času</string>
     <string name="pref_showTimeIsAlreadyUpFor_Chrono">Zobrazovat malé hodiny ukazující, jak dlouho už svítí Čas!</string>
     <string name="pref_showAdjustTimeButtonsInTimer">Zobrazovat tlačítka na korekci zbývajícího času</string>
-    <string name="pref_showUseAudioCheckboxInTimer">Zobrazovat zaškrtávátko pro audio v časomíře</string>
+    <string name="pref_showUseAudioCheckboxInTimer">Zobrazovat zaškrtávátko pro zvuk v časomíře</string>
     <string name="pref_archive_summary">Seskupování a řazení archivovaných zápasů</string>
     <string name="pref_groupArchivedMatchesBy">Seskupování archivovaných zápasů podle</string>
     <string name="pref_sortOrderOfArchivedMatches">Způsob řazení archivovaných zápasů</string>
@@ -141,20 +140,20 @@
     <string name="pref_useVibrationNotificationInTimer_summary">Zavibrovat při vypršení času (a když zbývá 15 vteřin do konce přestávky, a v půlce zahřívání)</string>
     <string name="pref_timerWarmup">Doba zahřívání (s)</string>
     <string name="pref_timerWarmup_summary">Doba určená hráčům pro zahřívání na kurtu. Oficiálně 5 minut: 2,5 minuty na každé straně</string>
-    <string name="pref_timerPauseBetweenGames">Doba mezi sety (ve vteřinách)</string>
+    <string name="pref_timerPauseBetweenGames">Doba mezi sety (s)</string>
     <string name="pref_timerPauseBetweenGames_summary">Doba do kdy musí začít další set (ve vteřinách). Oficiálně 90 vteřin. (PSA: 120)</string>
     <string name="pref_timerPauseBetweenGames_values">Přednastavené hodnoty pro dobu mezi sety</string>
     <string name="pref_timerPauseBetweenGames_values_summary">Přednastavené hodnoty dob mezi sety na začátku zápasu (jen pro tento zápas), typicky 90 nebo 120</string>
     <string name="pref_timerInjury">Doba na zotavenou ze zranění (ve vteřinách)</string>
-    <string name="pref_timerInjury_summary">Doba po zranění, za kterou musí hráč nastoupit k pokračování. Oficiálně 180 vteřin.</string>
+    <string name="pref_timerInjury_summary">Doba po zranění, za kterou musí hráč nastoupit k pokračování. Oficiálně 180 vteřin</string>
 <!--
     <string name="pref_landscapeOrientationOnly">Landscape only</string>
     <string name="pref_landscapeOrientationOnly_summary">Show the scoreboard in landscape orientation only. Portrait is less intuitive.</string>
 -->
     <string name="pref_OrientationPreference">Orientace displeje</string>
-    <string name="pref_OrientationPreference_summary">Na výšku je to méně intuitivní, ale snadnější na obsluhu jednou rukou.</string>
+    <string name="pref_OrientationPreference_summary">Na výšku je to méně intuitivní, ale snadnější na obsluhu jednou rukou</string>
     <string name="pref_saveMatchesForLaterUsage">Uložit zápasy</string>
-    <string name="pref_saveMatchesForLaterUsage_summary">Uložit zápasy pro posouzení výsledků později.</string>
+    <string name="pref_saveMatchesForLaterUsage_summary">Uložit zápasy pro posouzení výsledků později</string>
     <string name="pref_gameEndScore">Počet bodů na vítězství v setu</string>
     <string name="pref_gameEndScore_summary">Oficiálně 11</string>
     <string name="pref_numberOfGamesToWin">Počet setů na vítězství v zápase</string>
@@ -162,11 +161,11 @@
     <string name="pref_handicapFormat">Nastavení hendikepu</string>
     <string name="pref_handicapFormat_summary">Umožnit na začátku zápasu skóre jiné než 0–0</string>
     <string name="pref_useEnglishScoring">Počítání na ztráty</string>
-    <string name="pref_useEnglishScoring_summary">Zastaralý typ počítání. Hráč může získat bod pouze pokud podával.</string>
+    <string name="pref_useEnglishScoring_summary">Zastaralý typ počítání. Hráč může získat bod pouze pokud podával</string>
     <string name="pref_tiebreakFormat">Formát zkrácené hry</string>
     <string name="pref_tiebreakFormat_summary">Pravidla pro zkrácenou hru - tiebreak (obvykle při 10-10)</string>
     <string name="pref_web_integration">Internet</string>
-    <string name="pref_web_integration_summary">Feed URLs pro výběr zápasů. Odesílat výsledky na web. Sdílení výsledků zápasů.</string>
+    <string name="pref_web_integration_summary">Feed URLs pro výběr zápasů. Odesílat výsledky na web. Sdílení výsledků zápasů</string>
     <string name="pref_playerList">Seznam hráčů</string>
     <string name="pref_playerList_summary">Používá se k našeptávání jmen při zadávání pomocí klávesnice</string>
     <string name="pref_clubList">Seznam klubů</string>
@@ -178,32 +177,32 @@
     <string name="pref_maxNumberOfPlayersInGroup">Počet hráčů ve skupině</string>
     <string name="pref_maxNumberOfPlayersInGroup_summary">Maximální počet hráčů ve skupině. Např. pro přidání všech šesti zápasů skupiny čtyř hráčů do \'Mého seznamu\'</string>
     <string name="pref_removeMatchFromMyListWhenSelected">Odstranit zápas z \'Mého seznamu\'</string>
-    <string name="pref_removeMatchFromMyListWhenSelected_summary">Po dohrání zápasu vybraného ze seznamu, může aplikace nabízet jeho odstranění z \'Mého seznamu\'</string>
+    <string name="pref_removeMatchFromMyListWhenSelected_summary">Po dohrání zápasu vybraného z \'Mého seznamu\', může aplikace nabízet jeho odstranění (z tohoto seznamu)</string>
     <string name="pref_continueRecentMatch">Pokračovat v posledním zápase</string>
-    <string name="pref_continueRecentMatch_summary">Pokud existuje poslední výsledek zápasu vybraného z \'Mého seznamu\', je tento výsledek použit pro pokračování zápasu</string>
+    <string name="pref_continueRecentMatch_summary">Pokud existuje výsledek zápasu naposledy vybraného z \'Mého seznamu\', je tento výsledek použit pro pokračování zápasu</string>
     <string name="pref_matchList">Seznam zápasů</string>
-    <string name="pref_matchList_summary">Pevný seznam zápasů pro jednoduchý výběr</string>
+    <string name="pref_matchList_summary">Seznam zápasů zadnaý přímo do zařízení</string>
     <string name="pref_matchList_not_set">Pokud budete rozhodovat více zápasů, zde si je můžete dopředu zadat pro pozdější použití. Seznam můžete doplňovat také v __%2$s__ -> \'%1$s\'</string>
     <string name="pref_eventList">Seznam soutěží</string>
-    <string name="pref_eventList_summary">Seznam soutěží k automatickému doplňování</string>
+    <string name="pref_eventList_summary">Používá se k našeptávání názvů soutěží</string>
     <string name="pref_roundList">Seznam kol</string>
-    <string name="pref_roundList_summary">Seznam kol k automatickému doplňování</string>
+    <string name="pref_roundList_summary">Používá se k našeptávání kol</string>
     <string name="pref_feedPostUrls">Přednastavené URL pro Feed</string>
-    <string name="pref_feedPostUrls_summary">Zde můžete nakonfigurovat URL odkazy pro Feed (a případně odesílací URL odkazy). Formát je Name=displayname,FeedMatches=http://input,PostResult=http://post (hodnoty se zobrazí v seznamu \'Aktivní URL odkazy\')</string>
+    <string name="pref_feedPostUrls_summary">Zde můžete nastavit URL odkazy pro Feed (případně i pro odesílání). Formát je Name=displayname,FeedMatches=http://input,PostResult=http://post (hodnoty se zobrazí v seznamu \'Aktivní URL odkazy\')</string>
     <string name="pref_feedPostUrl">Aktivní URL odkazy</string>
     <string name="pref_feedPostUrl_summary">Internetové adresy použité ve volbě \'Vybrat nový zápas\' (případně v \'Odeslat výsledky\')</string>
     <string name="pref_postDataPreference">Odesílání dat</string>
-    <string name="pref_postDataPreference_summary">Odesílaní ve formátu JSON umožňuje více podrobností, ale struktura se může změnit v příštích verzích aplikace.</string>
+    <string name="pref_postDataPreference_summary">Odesílaní ve formátu JSON umožňuje více podrobností, ale struktura se může změnit v příštích verzích aplikace</string>
     <string name="pref_useFeedNameAsEventName">Použít jméno Feedu jako název soutěže</string>
     <string name="pref_useFeedNameAsEventName_summary">Jméno Feedu, ze kterého byl vybrán zápas bude považováno za název soutěže</string>
     <string name="pref_useGroupNameAsEventData">Použít název skupiny jako data soutěže</string>
     <string name="pref_useGroupNameAsEventData_summary">Použít název skupiny, ze které byl vybrán zápas jako jméno soutěže a kolo pro tento zápas</string>
-    <string name="pref_feedPostUrl_not_set">Seznam zápasů, které se zde objevují, ovlivníte změnou Feedu. Feed se volí klepnutím na tlačítko zeměkoule. Můžete přidat i svoje vlastní Feedy konfigurací internetových odkazů v sekci \'%1$s\' obrazovky \'%2$s\'. Pro další podrobnosti navštivte webové stránky s nápovědou.</string>
-    <string name="posturl_tip">Můžete zadat web, kam se budou odesílat výsledky. Ve spolupráci např. s webmasterem Vašeho klubu, mohou být výsledky dostupné online okamžitě. Pro další podrobnosti navštivte webové stránky s nápovědou.</string>
-    <string name="pref_readContactsForAutoCompletion">Použít kontakty v telefonu k automatickému doplňování</string>
-    <string name="pref_readContactsForAutoCompletion_summary">Načíst jména kontaktů z telefonu a použít je pro funkci automatického doplňování jmen hráčů.</string>
+    <string name="pref_feedPostUrl_not_set">Seznam zápasů, které se zde objevují, ovlivníte změnou Feedu. Feed se volí klepnutím na tlačítko zeměkoule. Můžete přidat i svoje vlastní Feedy konfigurací internetových odkazů v sekci \'%1$s\' obrazovky \'%2$s\'. Pro další podrobnosti navštivte webové stránky s nápovědou</string>
+    <string name="posturl_tip">Můžete zadat web, kam se budou odesílat výsledky. Ve spolupráci např. s webmasterem Vašeho klubu, mohou být výsledky dostupné online okamžitě. Pro další podrobnosti navštivte webové stránky s nápovědou</string>
+    <string name="pref_readContactsForAutoCompletion">Použít kontakty v telefonu k našeptávání</string>
+    <string name="pref_readContactsForAutoCompletion_summary">Načíst jména kontaktů z telefonu a použít je pro funkci našeptávání jmen hráčů</string>
     <string name="pref_readContactsForAutoCompletion_max">Maximální počet kontaktů, které se mají načíst</string>
-    <string name="pref_readContactsForAutoCompletion_max_summary">Počet můžete na vlastní riziko zvýšit v připadě, že máte v zařízení více kontaktů, než je současná hodnota.</string>
+    <string name="pref_readContactsForAutoCompletion_max_summary">Počet můžete na vlastní riziko zvýšit v připadě, že máte v zařízení více kontaktů, než je současná hodnota</string>
     <string name="if_you_have_a_lot_of_contacts_dot_dot_dot">
         Pokud máte v zařízení velké množství kontaktů, aplikace se může zpomalit
         \n - Při spuštění
@@ -211,7 +210,7 @@
         \n
         \nVaše zařízení obsahuje %1$d kontaktů</string>
     <string name="pref_onlyForContactGroups">Používat kontakty pouze ve skupinách</string>
-    <string name="pref_onlyForContactGroups_summary">Načítat pouze jména kontaktů, které jsou v následující \'skupině kontaktů\'</string>
+    <string name="pref_onlyForContactGroups_summary">Načítat pouze jména kontaktů, které jsou v následující skupině</string>
     <string name="pref_suggestToPostResult">Nabízet odeslání výsledku zápasu</string>
     <string name="pref_suggestToPostResult_summary">Nabízet odeslání výsledku zápasu po skončení zápasu. I když není zaškrtnuto, stále můžete odeslat výsledek zápasu pomocí volby \'Odeslat výsledek zápasu na web\'</string>
     <string name="pref_showCompletedMatchesFromFeed">Zobrazovat dohrané zápasy</string>
@@ -233,7 +232,7 @@
     <string name="pref_refereeName">Jméno rozhodčího</string>
     <string name="pref_refereeName_summary">Jméno rozhodčího jak se objeví v zápise utkání</string>
     <string name="pref_refereeList">Seznam rozhodčích</string>
-    <string name="pref_refereeList_summary">K automatickému doplňování při zadávání rozhodčího/markera</string>
+    <string name="pref_refereeList_summary">Používá se k našeptávání jména rozhodčího/markera</string>
     <string name="pref_mailResultTo">Výchozí emailová adresa pro akci \'Odeslat výsledek emailem\'</string>
     <string name="pref_mailResultTo_summary">Emailová adresa bude předvyplněna při volbě \'Odeslat výsledek emailem\'</string>
     <string name="pref_mailFullScoringSheet">Emailovat celý zápis</string>
@@ -243,9 +242,9 @@
     <string name="pref_live_score_summary">Optimalizovat pro a zobrazovat živé skóre</string>
     <string name="pref_live_score_url">live</string>
     <string name="pref_live_score_url_summary">Použít toto URL pro zobrazení všech zápasů sdílených touto aplikací, např. zápasů vaší soutěže</string>
-    <string name="pref_LiveScorePrefs">Umožnit bodování živě</string>
+    <string name="pref_LiveScorePrefs">Umožnit skóre živě</string>
     <string name="pref_updateLiveScore">Aktualizovat živé bodování</string>
-    <string name="pref_LiveScorePrefs_dialog">Nastaví volby: Sdílení (na automatické) a akci na sdílení (na podrobnosti zápasu po každé polovině setu)</string>
+    <string name="pref_LiveScorePrefs_dialog">Nastaví volby: Sdílení (automatické) a akci na sdílení (podrobnosti zápasu po každé polovině setu)</string>
     <string name="pref_Cast_ShowGraphDuringTimer">Zobrazovat výsledek setu a graf bodů posledního setu mezi sety a po ukončení zápasu</string>
 
     <string name="for_this_to_take_effect_a_restart_is_required">Pro uplatnění nastavení musíte přestartovat aplikaci</string>
