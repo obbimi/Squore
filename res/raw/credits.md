@@ -57,6 +57,7 @@ Licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0)
 The following people were so kind to volunteer to translate Squore into their preferred language:
 
 - Sébastien Lepley (French)
+- Filip Hurta (Czech) 
 
 ## User Help and Suggestions
 

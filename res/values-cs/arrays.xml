@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- display values for java enumeration values -->
+
+    <string-array name="EndMatchManuallyBecause_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.EndMatchManuallyBecause -->
+        <item>Vzdal kvůli zranění</item>
+        <item>Trestný zápas</item>
+    </string-array>
+    <string-array name="BrokenEquipment_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.BrokenEquipment -->
+        <item>Prasklá struna</item>
+        <item>Prasklá raketa</item>
+        <item>Prasklý míček</item>
+    </string-array>
+    <string-array name="OrientationPreference_DisplayValues">
+        <item>Na šířku</item>
+        <item>Na výšku</item>
+    </string-array>
+    <string-array name="PostDataPreferenceDisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.PostDataPreference -->
+        <item>Posílat pouze nejrelevantnější data</item>
+        <item>Posílat nejrelevantnější data + json={}</item>
+        <item>Posílat pouze json data v \'body\' části</item>
+    </string-array>
+    <string-array name="LockState_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.LockState -->
+        <item>Odemčeno (nelze upravovat)</item>
+        <item>Odemčeno</item>
+        <item>Odemčeno (ručně)</item>
+        <item>Odemčeno (konec posledního setu)</item>
+        <item>Zamčeno (ručně)</item>
+        <item>Zamčeno (ručně)</item>
+        <item>Zamčeno (konec zápasu)</item>
+        <item>Zamčeno (ručně ukončený zápas)</item>
+        <item>Zamčeno (přestávka)</item>
+        <item>Sdílený ukončený zápas</item>
+        <item>Zamčeno (Vzdal)</item>
+        <item>Zamčeno (Trestný zápas)</item>
+    </string-array>
+    <string-array name="DetermineTextColor_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.DetermineTextColor -->
+        <item>Automaticky vybrat černou nebo bílou</item>
+        <item>Automaticky vybrat z palety</item>
+        <item>Ručně</item>
+    </string-array>
+    <string-array name="KeepScreenOnWhen_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.KeepScreenOnWhen -->
+        <item>Nikdy nezhasínat</item>
+        <item>Nezhasínat, když probíhá zápas</item>
+        <item>Neřešit v aplikaci (použije se systémové nastavení)</item>
+    </string-array>
+    <string-array name="BackKeyBehaviour_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.BackKeyBehaviour -->
+        <item>Stisknout dvakrát pro ukončení</item>
+        <item>Stisknout jednou pro ukončení</item>
+        <item>Zpět (skóre), s potvrzením</item>
+        <item>Zpět (skóre), bez potvrzení</item>
+        <item>Změnit stranu podávání</item>
+    </string-array>
+    <string-array name="VolumeKeysBehaviour_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.VolumeKeysBehaviour -->
+        <item>Nic</item>
+        <item>Upravit skóre</item>
+        <item>Upravit skóre (pouze pokud je obraz na výšku)</item>
+    </string-array>
+    <string-array name="RallyEndStatsPrefs_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.RallyEndStatsPrefs -->
+        <item>Změna strany (BH/FH)</item>
+        <item>Postavení</item>
+        <item>Směr míčku</item>
+        <item>Trajektorie míčku</item>
+    </string-array>
+    <string-array name="RacketSide_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.RacketSide -->
+        <item>Bekhend</item>
+        <item>Forhend</item>
+    </string-array>
+    <string-array name="BallDirection_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.BallDirection -->
+        <item>Přímý</item>
+        <item>Kros</item>
+        <item>Boast</item>
+    </string-array>
+    <string-array name="BallTrajectory_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.BallTrajectory -->
+        <item>Délka</item>
+        <item>Drop</item>
+        <item>Lob</item>
+    </string-array>
+    <string-array name="Position_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.Position -->
+        <item>Vpředu</item>
+        <item>Volej</item>
+        <item>Vzadu</item>
+    </string-array>
+    <string-array name="ConductType_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.ConductType -->
+        <item>Poškození vybavení</item>
+        <item>Obscénosti</item>
+        <item>Zdržování hry</item>
+        <item>Odmlouvání</item>
+        <item>Námitky vůči rozhodčímu</item>
+        <item>Zbytečný fyzický kontakt</item>
+        <item>Nesportovní chování</item>
+        <item>Přijímání pokynů kouče</item>
+    </string-array>
+    <string-array name="timerViewType_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.timer.ViewType -->
+        <item>Okno s ciferníkem</item>
+        <item>Mezi tlačítky na skóre (pouze čísla)</item>
+    </string-array>
+    <string-array name="ShowOnScreen_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ShowOnScreen -->
+        <item>V zařízení</item>
+        <item>Na ChromeCast</item>
+    </string-array>
+
+    <string-array name="GroupMatchesByDisplayValues">
+        <item>Soutěž (event)</item>
+        <item>Datum</item>
+    </string-array>
+    <string-array name="SortOrderDisplayValues">
+        <item>Vzestupně</item>
+        <item>Sestupně</item>
+    </string-array>
+    <string-array name="OnlineSheetActionDisplayValues">
+        <item>Sdílet odkaz</item>
+        <item>Náhled</item>
+        <item>Zobrazit v prohlížeči</item>
+        <item>Zkopírovat do schránky</item>
+        <item>Smazat na serveru</item>
+    </string-array>
+    <string-array name="FeatureDisplayValues">
+        <item>Nepoužívat</item>
+        <item>Nabízet - zobrazit tlačítko</item>
+        <item>Automaticky</item>
+    </string-array>
+    <string-array name="FeatureDisplayValues_DoAuto">
+        <item>Nic</item>
+        <item>Nenabízet</item>
+        <item>Provádět automaticky</item>
+    </string-array>
+    <string-array name="ShareMatchPrefsDisplayValues">
+        <item>Sdílet odkaz se všemi podrobnostmi zápasu</item>
+        <item>Sdílet podrobnosti zápasu po každém setu</item>
+        <item>Sdílet podrobnosti zápasu po každé polovině setu</item>
+        <item>Sdílet podrobnosti zápasu po každém bodu</item>
+        <item>Sdílet souhrn zápasu</item>
+        <item>Sdílet souhrn zápasů</item>
+        <item>SMS se souhrnem zápasu na výchozí číslo</item>
+        <item>Odeslat podrobnosti zápasu na web</item>
+        <item>Odeslat tabulku skóre jako text emailem</item>
+    </string-array>
+    <string-array name="EndGameDisplayValues">
+        <item>Nenabízet</item>
+        <item>Nabízet</item>
+        <item>Ukončit automaticky</item>
+    </string-array>
+    <string-array name="AutoLockContextDisplayValues">
+        <item>Po ukončení zápasu</item>
+        <item>Pokud zápas není aktualizován po dobu delší než X minut</item>
+    </string-array>
+    <string-array name="ShowPlayerColorOnDisplayValues">
+        <item>Okraje tlačítek skóre</item>
+        <item>Tlačítko strany podání</item>
+        <item>Tlačítko hráče</item>
+        <item>Ohlášení setballu</item>
+        <item>Graf skóre setu</item>
+    </string-array>
+    <string-array name="ShowCountryAsDisplayValues">
+        <item>Zkratka ve jméně</item>
+        <item>Vlaječka vedle jména (na zařízení)</item>
+        <item>Vlaječka vedle jména (Chrome Cast)</item>
+    </string-array>
+    <string-array name="StartupActionDisplayValues">
+        <item>Žádná</item>
+        <!-- all other values presume enum names are choosen wisely to represent readable english -->
+    </string-array>
+    <string-array name="tiebreakFormatDisplayValues">
+        <item>O dva body</item>
+        <item>Přijímající vybírá o 1 nebo 2</item>
+        <item>Přijímající vybírá o 1, 2 nebo 3</item>
+        <item>Přijímající vybírá o 1 nebo 3</item> <!-- http://en.allexperts.com/q/Squash-Racquetball-1548/few-rules.htm : US Colleges and PSA old scoring -->
+        <item>Náhlá smrt</item>
+    </string-array>
+    <string-array name="handicapFormatDisplayValues">
+        <item>Nepoužívat</item>
+        <item>Zadat před začátkem zápasu</item>
+        <item>Zadat před začátkem každého setu</item>
+    </string-array>
+<!--
+    <string-array name="doublesServeSequence">
+        <item>BXYA (official)</item>
+    </string-array>
+-->
+    <string-array name="doublesServeSequence">
+        <item>A2/B1/B2 poté A1/A2/B1/B2</item> <!-- DSS_2_12_12__6 -->
+        <item>A1/B1/B2 poté A1/A2/B1/B2</item> <!-- DSS_1_12_12__6 -->
+        <item>A1/A2/B1/B2</item>               <!-- DSS___12_12__6 -->
+        <item>A1/B1/A1/B1</item>               <!-- DSS___1_1____4 -->
+        <item>A1/B1/A2/B2</item>               <!-- DSS_1_1_2_2__8 -->
+    </string-array>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="sb_feed">Feed</string>
+    <string name="sb_select_feed_match">Vybrat feed</string>
+    <string name="back_to_list_of_matches">Zpět na seznam</string>
+
+    <string name="Switch_feed_elipses">Změnit feed…</string>
+    <string name="add_new_feed">Vybrat nový veřejný feed…</string>
+    <string name="feed_x_already_exist_with_name_y">Feed %1$s je již ve vašem seznamu pod jménem \'%2$s\'</string>
+    <string name="Could_not_read_feed_x__y__Using_cached_content_aged_z_minutes">Nelze načíst feed %1$s.\n\n%2$s\n\nBude použit předchozí obsah feedu uložený v aplikace (starý %3$d minut)</string>
+
+    <string name="No_matches_in_feed">Feed neobsahuje žádné zápasy</string>
+    <string name="Error_no_feeds_in_feed">Feed neobsahuje žádné feedy</string>
+    <string name="No_active_feed">Žádný aktivní feed</string>
+    <string name="Select_one_by_pressing_the_globe_button">Vyberte nějaký stisknutím na tlačítko \'globus\'</string>
+</resources>

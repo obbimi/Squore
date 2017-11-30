@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="oal_warmup">Zahřívání (Warm Up)</string>
+    <string name="oa_halftime">Polovina času (Half-time)!</string>
+    <string name="oa_time">Čas!</string>
+    <string name="oal_pause">Přestávka</string>
+
+    <string name="oa_best_of_x_games_to_y">Na nejvýše %1$s sety(ů) do %2$s</string>
+    <string name="oa_best_of_x_games">Na nejvýše %1$s sety(ů)</string>
+    <string name="oa_x_to_serve__y_to_receive">%1$s podává, %2$s příjmá</string>
+    <string name="oa_love_all">0:0</string>
+
+    <string name="oa_game_to_x">set pro %s</string>
+    <string name="oa_match_to_x">zápas pro %s</string>
+    <string name="oa_1_game_all">1:1</string>
+    <string name="oa_x_games_all">%s:%s</string>
+    <!--<string name="oa_x_leads_n_against_y">%s leads %s against %s</string>-->
+    <!--<string name="oa_x_wins_n_against_y">%s wins %s against %s</string>-->
+    <string name="oa_a_leads_xGamesToy">%1$s vede %2$s</string>
+    <string name="oa_a_wins_xGamesToy">%1$s vítězí %2$s</string>
+    <string name="oa_x_games_TO_y"></string>
+    <string name="oa_x_th_game">%s set</string>
+    <string name="oa_x_to_serve">Podává %s</string>
+    <string name="oa_love">0</string>
+    <string name="oa_game">:</string>
+    <string name="oa_games">:</string>
+    <string name="oa_gameball">Setbol</string>
+    <string name="oa_matchball">Mečbol</string>
+
+    <string name="oa_n_all">%s oba</string>
+    <string name="oa_player_needs_2_clear_points">Hráč musí vyhrát o dva body</string>
+
+    <string name="oa_change_sides">Změnit stranu!</string>
+    <string name="oa_fifteen_seconds">%s sekund!</string>
+
+    <string name="oa_decision_colon">Rozhodnutí :</string>
+    <string name="oa_yes_let">Yes Let</string>
+    <string name="oa_no_let">No Let</string>
+    <string name="oa_stroke">Stroke</string>
+    <string name="oa_stroke_to_x">Stroke pro %s</string>
+    <string name="oa_conduct_warning">Napomenutí</string>
+    <string name="oa_conduct_warning_x_for_type_y">Napomenutí %1$s za %2$s</string>
+    <string name="oa_conduct_stroke">Stroke</string>
+    <string name="oa_conduct_x__stroke_to_y_for_type_t">Chování %1$s, stroke pro %2$s za %3$s</string>
+    <string name="oa_conduct_x__game_to_y_for_type_t">Chování %1$s, set pro %2$s za %3$s</string>
+    <string name="oa_conduct_game">Trestný set</string>
+    <string name="oa_conduct_match">Trestný zápas</string>
+
+    <string name="oal_misconduct_by">Provinění %s</string>
+    <string name="oal_let_requested_by">%s žádá Let</string>
+
+    <string-array name="FirstSecondThirdFourthFifth">
+        <item>první</item>
+        <item>druhý</item>
+        <item>třetí</item>
+        <item>čtvrtý</item>
+        <item>pátý</item>
+        <item>šestý</item>
+        <item>sedmý</item>
+        <item>osmý</item>
+        <item>devátý</item>
+    </string-array>
+    <string name="officialAnnouncementsLanguage_default">cs</string>
+</resources>

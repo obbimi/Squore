@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="fetching_data">Sathuji data…</string>
+    <string name="loading">Nahrávám…</string>
+    <string name="loading_of_x">Nahrávám z %1$s… (%2$s)</string>
+    <string name="posting">Odesílám…</string>
+    <string name="possible_cause">Možná příčina: </string>
+    <string name="could_not_load_feed_x">Nelze nahrát feed (%s)</string>
+    <string name="yesterday">Včera</string>
+    <string name="today">Dnes</string>
+    <string name="tomorrow">Zítra</string>
+    <string name="confirm">Potvrďte</string>
+
+    <!-- buttons -->
+    <string name="name">Jméno</string>
+    <string name="date">Datum</string>
+    <string name="time">Čas</string>
+    <string name="timeunit">Jednotka času</string>
+    <string name="minutes">minuty</string>
+    <string name="seconds">sekundy</string>
+    <string name="filename">Název souboru</string>
+    <string name="lock">Zámek</string>
+    <string name="locked">Zamčeno</string>
+    <string name="unlock">Odemknout</string>
+    <string name="total">Celkem</string>
+    <string name="overview">Přehled</string>
+    <string name="statistics">Statistiky</string>
+    <string name="handicap">Hendikep</string>
+    <string name="no_handicap">Bez hendikepu</string>
+    <string name="cmd_yes">Ano</string>
+    <string name="cmd_no">Ne</string>
+    <string name="cmd_ok">OK</string>
+    <string name="cmd_start">Start</string>
+    <string name="cmd_automatic">Automaticky</string>
+    <string name="cmd_suggest">Nabízet</string>
+    <string name="cmd_maximize">Maximalizovat</string>
+    <string name="cmd_normal">Normální</string>
+    <string name="cmd_cancel">Zrušit</string>
+    <string name="cmd_none">Žádný</string>
+    <string name="cmd_add">Přidat</string>
+    <string name="cmd_previous">Minulý</string>
+    <string name="cmd_next">Příští</string>
+    <string name="cmd_add_x_seconds">Přidat %s sekund</string>
+    <string name="cmd_subtract_x_seconds">Odečíst %s sekund</string>
+    <string name="cmd_keep">Ponechat</string>
+    <string name="cmd_delete">Smazat</string>
+    <string name="cmd_delete_all">Smazat vše…</string>
+    <string name="cmd_edit">Upravit</string>
+    <string name="cmd_open">Otevřít</string>
+    <string name="cmd_hide">Schovat</string>
+    <string name="cmd_sort">Třídit</string>
+    <string name="lbl_group_by">Seskupit podle</string>
+    <string name="cmd_pause">Pozastavit</string>
+    <string name="msg_paused">Pozastaveno</string>
+    <string name="cmd_resume">Obnovit</string>
+    <string name="cmd_save">Uložit</string>
+    <string name="cmd_close">Zavřít</string>
+    <string name="cmd_new_group">Nová skupina</string>
+    <string name="cmd_new_match">Nový zápas</string>
+    <string name="cmd_new_matches">Nové zápasy</string>
+    <string name="cmd_new_matches_with">Nové zápasy s</string>
+    <string name="cmd_rebuild">Setavit</string>
+    <string name="uc_exit">Ukončit</string>
+    <string name="press_back_again_to_exit">Pro ukončení stiskněte \'Zpět\' ještě jednou</string>
+    <string name="goto_help">Nápověda</string>
+    <string name="Help_elipses">Nápověda…</string>
+    <string name="privacy_and_terms">Soukromí a podmínky</string>
+    <string name="about">O aplikaci</string>
+    <string name="refresh">Obnovit</string>
+    <string name="filter">Filtrovat</string>
+    <string name="expand_all">Rozbalit vše</string>
+    <string name="collapse_all">Sbalit vše</string>
+<!--
+    <string name="show_graph">Show Graph</string>
+-->
+    <string name="tip">Tip</string>
+    <string name="settings">Nastavení</string>
+    <string name="do_not_show_this_dialog_anymore">Tento dialog příště už nezobrazovat</string>
+    <string name="lbl_fixed">Přesně</string>
+    <string name="lbl_none">Žádný</string>
+
+    <!-- network -->
+    <string name="no_fully_functional_connection_error">Připojení k síti není funkční. Možná je potřeba se přihlasít k poskytovateli?</string>
+    <string name="connection_error">Chyba připojení %1$s %2$s</string>
+    <string name="unknown_error">Neznámá chyba %s</string>
+
+    <string name="uc_more">Více…</string>
+    <string name="uc_sort">Třídit…</string>
+    <string name="uc_undo">Zpět</string>
+    <string name="uc_new">Nový…</string>
+    <string name="uc_edit">Upravit…</string>
+    <string name="uc_showing_x_elipses">Zobrazuji %s …</string>
+    <string name="uc_show_elipses">Zobrazit…</string>
+    <string name="uc_show">Zobrazit</string>
+    <string name="uc_delete">Smazat</string>
+    <string name="uc_email">Email</string>
+    <string name="uc_select">Vybrat</string>
+    <string name="uc_details">Podrobnosti</string>
+    <string name="uc_copy">Kopírovat</string>
+    <string name="lbl_color">Barva</string>
+    <string name="username">Uživatelkské jméno</string>
+    <string name="password">Heslo</string>
+    <string name="save_password">Uložit heslo</string>
+
+</resources>

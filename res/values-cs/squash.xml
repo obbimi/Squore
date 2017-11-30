@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="Score">Skóre</string>
+    <string name="Game">Set</string>
+
+    <string name="left_serveside_single_char">L</string>
+    <string name="right_serveside_single_char">P</string>
+
+    <string name="no_let_abbreviation">NL</string>
+    <string name="yes_let_abbreviation">YL</string>
+    <string name="stroke_abbreviation">ST</string>
+    <string name="conduct_warning_abbreviation">TV</string>
+    <string name="conduct_stroke_abbreviation">TS</string>
+    <string name="conduct_game_abbreviation">TG</string>
+    <string name="conduct_match_abbreviation">TZ</string>
+
+    <string name="broken_string_abbreviation">PV</string>
+    <string name="broken_ball_abbreviation">PM</string>
+    <string name="broken_racket_abbreviation">PR</string>
+
+    <string name="handout">Ztráta</string>
+    <string name="lbl_all_games">All Games</string>
+    <!--<string name="lbl_game">Game</string>-->
+    <string name="lbl_players">Hráči</string>
+    <string name="lbl_event_and_players">Soutěže a hráči</string>
+    <string name="lbl_player">Hráč</string>
+    <string name="lbl_player_A">Hráč A</string>
+    <string name="lbl_playerA1">Hráč A1</string>
+    <string name="lbl_playerA2">Hráč A2</string>
+    <string name="lbl_player_B">Hráč B</string>
+    <string name="lbl_playerB1">Hráč B1</string>
+    <string name="lbl_playerB2">Hráč B2</string>
+    <string name="lbl_player_x">Hráč %s</string>
+    <string name="lbl_countries">Země</string>
+    <string name="lbl_country_A">Země A</string>
+    <string name="lbl_country_B">Země B</string>
+    <string name="lbl_clubs">Kluby</string>
+    <string name="lbl_club_A">Klub A</string>
+    <string name="lbl_club_B">Klub B</string>
+    <string name="add_x_matches">Přidat %d zápasů</string>
+    <string name="lbl_event">Soutěž</string>
+    <string name="lbl_division">Divize</string>
+    <string name="lbl_round">Kolo</string>
+    <string name="lbl_location">Místo</string>
+    <string name="lbl_referee">Rozhodčí</string>
+    <string name="lbl_marker">Marker</string>
+    <string name="lbl_versus">vs</string>
+
+    <string name="lbl_broken_equipment">Prasklé vybavení nahlásil %s</string>
+    <string name="point_awarded_to_p">Bod přidělen hráči %s</string>
+    <string name="point">Bod</string>
+    <string name="points">Body</string>
+    <string name="lbl_warning">Varování</string>
+<!--
+    <string name="last_game__score_x_induration_y_z">Last game: %s in %s %s</string>
+    <string name="last_game__score_x_induration_y_z__2lines">Last game: %s\nin %s %s</string>
+-->
+    <string name="game_ended">Set ukončen</string>
+    <string name="match_ended">Zápas ukončen</string>
+
+    <!-- source: http://www.worldsquash.org/ws/coaching-development/referees/referees-info/conduct-on-court -->
+    <string name="conducts_guidelines_default"><![CDATA[
+\n- Poškození vybavení nebo kurtu (rakety, míčku nebo jiného):
+\Lehčí provinění (např. odhození rakety po prohraném setu, prudké odpálení míčku po skončení výměny): Varování
+\nTěžší provinění (např. úmyslné zničení rakety; mlácení raketou do zdi; odpálení míčku nebo vyhození rakety mimo kurt): Trestný stroke
+\n
+\n- Slyšitelné nebo viditelné obscénosti:
+\Lehčí provinění (např. tiché nadávání či klení; rouhání se): Varování
+\nTěžší provinění (např. slyšitelné obscénosti): Trestný stroke
+\n
+\n- Zdržování hry:
+\Lehčí provinění (např. pozdní návrat na kurt v řádu několika vteřin; nepřiměřeně dlouhý čas na podání): Varování
+\nTěžší provinění (např. příliš pozdní návrat na kurt; protahování diskuse s rozhodčím): Trestný stroke
+\n
+\n- Odmlouvání:
+\Lehčí provinění (např. rozporování rozhodnutí): Varování
+\nTěžší provinění (např. protahování nebo opakované námitky či rozporování rozhodnutí): Trestný stroke
+\n
+\n- Námitky vůči Rozhodčímu nebo Markerovi:
+\Lehčí provinění (např. nevhodné komentáře rozhodčího nebo rozhodnutí): Varování
+\nTěžší provinění (např. urážlivé komentáře rozhodčího nebo rozhodnutí): Trestný stroke
+\nZávažné provinění (např. odpálení míčku směrem k rozhodčímu nebo divákům; hození rakety směrem k rozhodčímu nebo divákům): Trestný set nebo zápas (podle závažnosti provinění, případně ohrožení)
+\n
+\n- Zbytečný fyzický kontakt:
+\Lehčí provinění (např. odstrčení protihráče): Varování
+\nTěžší provinění (např. fyzické napadení protihráče): Trestný stroke
+\nZávažné provinění (např. úmyslné zranění protihráče; nebezpečná hra, vedoucí ke zranění protihráče): Trestný set nebo zápas (podle závažnosti provinění a závažnosti poranění soupeře)
+\n
+\n- Nesportovní chování:
+\Lehčí provinění (např. negativní poznámky k protihráči): Varování
+\nTěžší provinění (např. opakované negativní nebo urážlivé poznámky k protihráči; jakýkoliv pokus zastrašování soupeře): Trestný stroke
+\nZávažné provinění (např. krajně nevhodné chování poškozující pověst hry): Trestný set nebo zápas (podle závažnosti provinění)
+\n
+\n- Přijímání pokynů kouče během hry:
+\nPoprvé: Varování
+\nOpakovaně: Trestný stroke and vyloučení provinilé osoby
+\n
+\n- Opakované a krajně nevhodné chování:
+\nRozhodčí může udělit za opakující se obdobný přestupek Napomenutí, Trestný bod nebo Trestný set více než jednou, s tím, že úroveň potrestání nesmí být nižší, než předchozí trest za stejný přestupek.
+\n
+    ]]></string>
+</resources>
