@@ -47,8 +47,10 @@ android {
     }
 
     // 25, 26
+    //compileSdkVersion 25
     compileSdkVersion 27
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
+    //buildToolsVersion '25.0.2'
     buildToolsVersion '27.0.1'
 
     useLibrary  'org.apache.http.legacy'
