@@ -22,6 +22,8 @@
     <string name="oa_x_th_game">%s Satz</string>
     <string name="oa_x_to_serve">Aufschläger %s</string>
     <string name="oa_love">Null</string>
+    <string name="oa_match_firstletter">M</string>
+    <string name="oa_game_firstletter">S</string>
     <string name="oa_game">Satz</string>
     <string name="oa_games">Satzen</string>
     <string name="oa_gameball">Satzball</string>

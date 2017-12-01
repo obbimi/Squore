@@ -22,6 +22,8 @@
     <string name="oa_x_th_game">%s jeu</string>
     <string name="oa_x_to_serve">%s au service</string>
     <string name="oa_love">0</string>
+    <string name="oa_match_firstletter">M</string>
+    <string name="oa_game_firstletter">J</string>
     <string name="oa_game">Jeu</string>
     <string name="oa_games">Jeux</string>
     <string name="oa_gameball">Balle de jeu</string>

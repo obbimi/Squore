@@ -454,6 +454,8 @@ public class PreferenceValues extends RWValues
             R.string.oa_x_to_serve,
             R.string.oa_love_all,
             R.string.oa_love,
+            R.string.oa_match_firstletter,
+            R.string.oa_game_firstletter,
             R.string.oa_game,
             R.string.oa_games,
             R.string.oa_gameball,

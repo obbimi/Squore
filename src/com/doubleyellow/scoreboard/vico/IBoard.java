@@ -191,8 +191,8 @@ public class IBoard implements TimerViewContainer
         tvMatchTime.setVisibility(bShowMatchTimer?View.VISIBLE:View.GONE);
 
         if ( bShowMatchTimer ) {
-            String sWord = getOAString(context, R.string.sb_matches);
-            String sFormat = sWord.substring(0, 1).toUpperCase() + ": %s";
+            String sChar = getOAString(context, R.string.oa_match_firstletter);
+            String sFormat = sChar.toUpperCase() + ": %s";
             tvMatchTime.setFormat(sFormat);
 
             long elapsedRealtime = SystemClock.elapsedRealtime();
@@ -266,11 +266,11 @@ public class IBoard implements TimerViewContainer
     }
 
     private String getGameDurationFormat(int iGameNrZeroBased) {
-        String sWord = getOAString(context, R.string.oa_game);
+        String sChar = getOAString(context, R.string.oa_game_firstletter);
         if ( Brand.isRacketlon() ) {
-            sWord = getOAString(context, R.string.oa_set);
+            sChar = getOAString(context, R.string.oa_set).substring(0, 1);
         }
-        return sWord.substring(0, 1).toUpperCase() + (iGameNrZeroBased+1) + ": %s";
+        return sChar.toUpperCase() + (iGameNrZeroBased+1) + ": %s";
     }
 
     public void updateServeSide(Player player, DoublesServe doublesServe, ServeSide nextServeSide, boolean bIsHandout) {

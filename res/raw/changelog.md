@@ -1,3 +1,7 @@
+## 4.06 (dec 2017)
+
+- Squore has been translated into Czech. Thank you very much Filip Hurta!
+
 ## 4.05 (nov 2017)
 
 - allow selecting reasons when manually ending match
