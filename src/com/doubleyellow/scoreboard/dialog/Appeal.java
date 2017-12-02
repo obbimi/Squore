@@ -128,12 +128,6 @@ public class Appeal extends BaseAlertDialog
         this.appealingPlayer = appealingPlayer;
     }
 
-    private DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-        @Override public void onClick(DialogInterface dialog, int which) {
-            handleButtonClick(which);
-        }
-    };
-
     public final static int BTN_STROKE  = DialogInterface.BUTTON_POSITIVE;
     public final static int BTN_YES_LET = DialogInterface.BUTTON_NEUTRAL;
     public final static int BTN_NO_LET  = DialogInterface.BUTTON_NEGATIVE;

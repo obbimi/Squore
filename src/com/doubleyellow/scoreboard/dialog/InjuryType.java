@@ -1,14 +1,37 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.dialog;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.SparseArray;
+import android.view.Gravity;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.timer.Type;
-import com.doubleyellow.util.StringUtil;
+
+import java.util.EnumSet;
 
 public class InjuryType extends BaseAlertDialog
 {
@@ -24,40 +47,39 @@ public class InjuryType extends BaseAlertDialog
         return true;
     }
 
-    final SparseArray<Type> mTranslateButtonToType = new SparseArray<Type>();
     @Override public void show() {
 
         adb.setTitle(context.getString(R.string.sb_injury_type))
-           .setIcon(R.drawable.microphone)
-         //.setMessage(context.getString(R.string.sb_tiebreak_receiver_chooses_winning_score, iPointsEach, sReceiverName))
-        ;
+           .setIcon(R.drawable.microphone);
 
-        mTranslateButtonToType.put(DialogInterface.BUTTON_POSITIVE, Type.SelfInflictedInjury);
-        mTranslateButtonToType.put(DialogInterface.BUTTON_NEUTRAL , Type.ContributedInjury);
-        mTranslateButtonToType.put(DialogInterface.BUTTON_NEGATIVE, Type.OpponentInflictedInjury);
+        int screenHeightWidthMinimum = ViewUtil.getScreenHeightWidthMinimum(context);
+        llpMargin1Weight1.height       = screenHeightWidthMinimum / 8;
+        llpMargin1Weight1.width        = 3 * screenHeightWidthMinimum / 4; // might be fairly long text in language other than English
 
-        for(int i = 0; i < mTranslateButtonToType.size(); i++) {
-            int iButton = mTranslateButtonToType.keyAt(i);
-            Type   type = mTranslateButtonToType.get(iButton);
-            String text = StringUtil.capitalize(type); // TODO: internationalize
-            switch (iButton) {
-                case DialogInterface.BUTTON_POSITIVE: adb.setPositiveButton(text, chooseInjuryType); break;
-                case DialogInterface.BUTTON_NEUTRAL : adb.setNeutralButton (text, chooseInjuryType); break;
-                case DialogInterface.BUTTON_NEGATIVE: adb.setNegativeButton(text, chooseInjuryType); break;
-            }
+        llpMargin1Weight1.leftMargin   =
+        llpMargin1Weight1.rightMargin  =
+        llpMargin1Weight1.topMargin    =
+        llpMargin1Weight1.bottomMargin = screenHeightWidthMinimum / 40;
+        int iNoIconSize = PreferenceValues.getAppealHandGestureIconSize(context); // Yeghh: used to size the text...
+
+        LinearLayout ll = new LinearLayout(context);
+        ll.setOrientation(LinearLayout.VERTICAL);
+        ll.setGravity(Gravity.CENTER);
+        EnumSet<Type> types = EnumSet.of(Type.SelfInflictedInjury, Type.ContributedInjury, Type.OpponentInflictedInjury);
+        for ( Type type: types ) {
+            TextView view = getActionView(type.getNameResId(), type.ordinal(), iNoIconSize);
+            ll.addView(view, llpMargin1Weight1);
         }
+        adb.setView(ll);
+
+        ColorPrefs.setColor(ll);
+
         adb.setOnKeyListener(getOnBackKeyListener());
         dialog = adb.show();
     }
 
-    private DialogInterface.OnClickListener chooseInjuryType = new DialogInterface.OnClickListener() {
-        @Override public void onClick(DialogInterface dialogInterface, int which) {
-            handleButtonClick(which);
-        }
-    };
-
     @Override public void handleButtonClick(int which) {
-        Type type = mTranslateButtonToType.get(which);
+        Type type = Type.values()[which];
         scoreBoard.triggerEvent(ScoreBoard.SBEvent.injuryTypeClosed, type);
     }
 }

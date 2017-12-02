@@ -14,7 +14,7 @@
     <string name="hms_delete_selected">Verwijder de geselecteerd opgeslagen resultaten</string>
     <string name="sb_online_sheet_available">Online Scoreblad Beschikbaar</string>
     <string name="sb_online_sheet_updated">Online scoreblad bijgewerkt</string>
-    <string name="sb_injury_type">Blessure Type</string>
+    <string name="sb_injury_type">Oorzaak van Blessure</string>
     <string name="sb_doublesServeSequence">Opslag volgorde</string>
     <string name="lblPauseDuration">Pause Duur</string>
     <string name="sb_tiebreak">Tie Break</string>

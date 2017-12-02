@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.dialog;
 
 import android.app.AlertDialog;
@@ -68,15 +85,19 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
     protected TextView getActionView(int iCaption, final int iAction) {
         return getActionView(iCaption, iAction, 0, 0, null);
     }
+    protected TextView getActionView(int iCaption, final int iAction, final int iSize) {
+        return getActionView(iCaption, iAction, 0, iSize, null);
+    }
     private TextView getActionView(int iCaption, final int iAction, int iImage, int iSize, Direction iconDirection) {
         return getActionView(context.getString(iCaption), iAction, iImage, iSize, iconDirection);
     }
+    /** size for icon in px, if specified test size is calculated accordingly */
     TextView getActionView(String sCaption, final int iAction, int iImage, int iSize, Direction iconDirection) {
         TextView txt = new TextView(context); // using Button will give it rounded borders
         txt.setText( sCaption );
         if ( iSize > 20 ) {
             int iTxtSize = iSize / 3;
-            if ( iconDirection.equals(Direction.W) ) {
+            if ( Direction.W.equals(iconDirection) ) {
                 iTxtSize = (int) (iSize / 1.8);
             }
             txt.setTextSize(TypedValue.COMPLEX_UNIT_PX, iTxtSize);
@@ -98,7 +119,7 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
         if ( (iImage != 0) && (iSize != 0) ) {
             Drawable d = null;
             try {
-                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP /* 21 */ ) {
                     d = context.getDrawable(iImage);
                 } else {
                     d = context.getResources().getDrawable(iImage);
