@@ -84,7 +84,6 @@ public class ColorPicker extends BaseAlertDialog
 
     private View getColorPickerView() {
         ColorPickerView view = new ColorPickerView(context);
-        view.setAlphaSliderVisible(false); // no transparency
 
         //LineColorPicker view = new LineColorPicker(context, null);
 
