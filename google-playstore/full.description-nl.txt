@@ -1,0 +1,24 @@
+Ondersteunt bij het tellen van een squash match.
+
+&bull; toont duidelijk de huidige score
+&bull; toont welke kant een speler moet opslaan 
+&bull; geeft aan of het laatste punt een hand-out was
+&bull; heeft een 'undo' knop (we maken allemaal wel eens een foutje)
+&bull; mogelijkheid om 'warm-up' en 'break' timers te gebruiken
+&bull; mogelijkheid om score op een TV te presenteren mbv <b>ChromeCast</b>
+&bull; heeft mogelijkheid om het gehele score verloop van alle games op te vragen
+&bull; opvragen lijst van mogelijke 'conducts'
+&bull; van alle scherm elementen kan de text grootte worden aangepast
+&bull; bewaard huidige score (en totale score verloop) als je de app sluit
+&bull; heeft mogelijkheid om 'feed URLs' te specifieren om makkelijk matches te kunnen selecteren (i.p.v. namen in te moeten typen)
+&bull; mogelijkheid op wedstrijd resultaat te delen op e.g. facebookclubgenoot te sturen 
+&bull; mogelijkheid op wedstrijd resultaat per SMS/Email naar bijvoorbeeld een clubgenoot te sturen 
+&bull; mogelijkheid om scoreverloop in een grafiek te bekijken
+&bull; mogelijkheid om een kleur per speler te definieren (e.g. de kleur van het shirt waarin ze spelen)
+
+Score wordt op grote buttons getoond zodat, indien gewenst de spelers zelf de score kunnen aflezen als ze er om vragen (handige in een luidruchtige omgeving)
+Er is ook uiteraard een 'undo' button voor als je een vergissing hebt gemaakt.
+Ook kan je het volledige scoreverloop van alle gespeelde games bekijken.
+
+<b>Online Help:</b>
+http://squore.double-yellow.be/help/

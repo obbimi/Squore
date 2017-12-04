@@ -1,0 +1,47 @@
+Supports you in referee-ing a squash match. 
+
+<b>Features:</b>  
+&bull; clearly displays the current score (allow showing it to the players through the glass)
+&bull; shows what <b>side</b> a player is supposed to be serving
+&bull; indicates if the last point was a <b>hand-out</b>
+&bull; has a simple <b>undo</b> button (we all make mistakes)
+&bull; option to see scoring history of each game in a <b>graph</b>
+&bull; possibility of using 'warm up' and 'between games' <b>timers</b> (with optional sound/vibration notifications)
+&bull; possibility of casting the score on to a TV using <b>ChromeCast</b>
+&bull; possibility of showing <b>'injury' timers</b>
+&bull; possibility to start with a <b>'handicap score'</b>
+&bull; option to show 'official' match <b>announcements</b> (begin/end of game, end of match, tie-break)
+&bull; option to <b>record appeals</b> for a let as well as conducts, and your decision for them
+&bull; possibility to record <b>Forehand/Backhand Winner/Error</b> from the <b>Front/Back/Volley</b> and show summary
+&bull; list possible <b>conducts warning/stroke</b> possibilities
+&bull; has the possibility to recall the entire score sequences of all games of a match
+&bull; support for referee-ing doubles matches
+&bull; <b>import/export</b> functionality for previously reffed matches
+&bull; transfer 'in progress' match to another device using <b>NFC</b> (a.k.a. S-Beam)
+&bull; possibility to <b>customize</b> text size for screen elements
+&bull; saves the score (and scoring history) on exit
+&bull; can be used in landscape and portrait orientation
+&bull; option to <b>share</b> the entire scoring history on e.g. Facebook
+&bull; option to send the result of a match by text message or email e.g. to a fellow club/team mate
+&bull; when sharing by means of email it is possible to include the complete scoring history
+&bull; tries to auto-complete player names from your contact list (or just one group of your contacts)
+&bull; remembers previous entered player names for auto completion for next matches
+&bull; remembers all matches you refereed (to recall later, e.g. to note down game scores on official papers)
+&bull; specify a color per player (e.g. of the shirt they play in)
+&bull; select matches listed on e.g. <a href="http://www.tournamentsoftware.com">tournamentsoftware.com</href>
+&bull; define matches up front for easy selection later
+&bull; option to use different <b>tie-break formats</b>
+&bull; <b>customize colors</b> of the app (e.g. to match your club colors)
+&bull; <b>official WSF squash rules</b> link in menu (configurable)
+&bull; specify feed URLs to allow selecting matches/players (in stead of typing in names)
+&bull; post a result to a configurable website (ask the web-master of your club)
+You may check with your web-master if it is possible to have one or both of these last two options made available
+
+<b>Permissions:</b>
+&bull; Read Contacts: for auto-completing player names when setting up a match
+&bull; Read/Write storage:for backing up details of each match you refereed with the app
+&bull; Network Access: for reading matches/player names from a feed
+&bull; Vibration Control: mainly to notify you that a timer has (or is nearly) finished
+
+<b>Online Help:</b>
+http://squore.double-yellow.be/help/
