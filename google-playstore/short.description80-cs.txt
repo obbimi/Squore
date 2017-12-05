@@ -1,1 +1,1 @@
-Pro rozhodčího ve Squoshi. Ukazuje skóre, stranu podání, časomíru, hlášení
+Pro rozhodčího ve Squashi. Ukazuje skóre, stranu podání, časomíru, hlášení
