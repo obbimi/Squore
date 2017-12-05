@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.doubleyellow.android.util.ColorUtil;
+import com.doubleyellow.android.view.SatValHueColorPicker;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
@@ -83,16 +84,20 @@ public class ColorPicker extends BaseAlertDialog
     }
 
     private View getColorPickerView() {
-        ColorPickerView view = new ColorPickerView(context);
-
-        //LineColorPicker view = new LineColorPicker(context, null);
+        View view = new SatValHueColorPicker(context);
+        if ( false ) {
+            view = new LineColorPicker(context, null);
+        }
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         view.setLayoutParams(layoutParams);
+
+        ColorPickerView cpv = (ColorPickerView) view;
         if ( this.sColor != null ) {
-            view.setColor(Color.parseColor(this.sColor));
+            cpv.setColor(Color.parseColor(this.sColor));
         }
-        view.setOnColorChangedListener(colorChangedListener);
+        cpv.setOnColorChangedListener(colorChangedListener);
+
         return view;
     }
 
