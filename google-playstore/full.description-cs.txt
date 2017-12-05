@@ -1,0 +1,46 @@
+Pomáhá při rozhodování squashových zápasů.
+
+<b>Co umí:</b>  
+&bull; přehledně zobrazuje aktuální stav zápasu (snadno ukážete i hráčům přes sklo)
+&bull; zobrazuje, ze které <b>strany</b> má hráč podávat
+&bull; ukazuje, zda šlo u posledního bodu o <b>ztrátu</b>
+&bull; má tlačítko <b>Zpět</b> (všichni děláme chyby)
+&bull; zobrazení vývoje skóre každého setu v <b>grafu</b>
+&bull; časomíra pro dobu zahřívání a dobu mezi sety (i se zvukovým/vibračním upozorněním)
+&bull; promítání skóre na TV pomocí <b>ChromeCast</b>
+&bull; časomíra pro dobu zotavení se po zranění
+&bull; použití hendikepu pro set/zápas
+&bull; zobrazení oficiálních hlášení rozhodčího (začátek/konec setu, konec zápasu, zkrácená hra)
+&bull; <b>zaznamenávání odvolání</b> hráče (žádost o Let) a rozhodnutí, udělení trestu
+&bull; možnost zaznamenávat <b>Forhend/Bekend</b>, <b>Vítězný/Chyba</b> z pozice <b>Vpředu/Vzadu/Volej</b> a zobrazit přehled
+&bull; nabízí možnosti trestu <b>varování/trestný bod nebo set</b>
+&bull; zobrazení podrobného zápisu všech setů v zápase
+&bull; podpora rozhodování <b>čtyřher</b>
+&bull; možnost <b>importovat/exportovat</b> rozhodované zápasy
+&bull; přesun rozhodování během zápasu na jiné zařízení pomocí technologie NFC (S-Beam)
+&bull; přizpůsobení velikosti textů jednotlivých elementů na obrazovce
+&bull; ukládá skóre (včetně historie) při ukončení aplikace
+&bull; podporuje zobrazení na výšku i na šířku
+&bull; možnost sdílení zápisu, např. na Facebook
+&bull; možnost odeslání výsledku zápasu SMS/emailem, např. dalšímu členu týmu/klubu
+&bull; u sdílení emailem je možné připojit kompletní zápis
+&bull; našeptávač jmen hráčů ze seznamu kontaktů v zařízení (případně ze zadané skupiny kontaktů)
+&bull; pamatuje si jména hráčů z předchozích zápasů a našeptává je při vyplňování nového zápasu
+&bull; pamatuje si všechny rozhodované zápasy pro pozdější použití (např. pro vyplnění oficiálních formulářů)
+&bull; můžete si přiřadit k hráči barvu (např. podle barvy trička)
+&bull; vybrat zápasy vypsané např. na <a href="http://www.tournamentsoftware.com">tournamentsoftware.com</a>
+&bull; připravit si zápasy dopředu
+&bull; používat různé formáty zkrácené hry (o dva, náhlá smrt, ..)
+&bull; přizpůsobit barvy aplikace, např. aby ladily s Vašimi klubovými barvami
+&bull; odkaz na <b>oficiální WSF pravidla squashe</b> v menu (nastavitelný)
+&bull; nastavit URL feedu (propojení s webem) pro výběr zápasů nebo seznamu hráčů (místo vyplňování v zařízení)
+&bull; odeslání výsledku na web (nastavitelný) - zeptejte se webmastra svého klubu
+
+<b>Oprávnění:</b>
+&bull; Čtení kontaktů: pro našeptávač jmen hráčů při zadávání zápasu
+&bull; Čtení z/Zápis do úložiště: pro uložení podrobností zápasů, které rozhodujete
+&bull; Přístup k síti: pro čtení zápasů a jmen z feedu (webu)
+&bull; Vibrace: upozornění, např. z časomíry, apod.
+
+<b>Nápověda online (anglicky):</b>
+http://squore.double-yellow.be/help/
