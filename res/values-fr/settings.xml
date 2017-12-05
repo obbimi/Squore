@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pref_ColorTargets_Background">Background</string>                                 <!-- TODO -->
+    <string name="pref_ColorTargets_Player_Button_Background">Player Button Background</string>     <!-- TODO -->
+    <string name="pref_ColorTargets_Score_Button_Background">Score Button Background</string>       <!-- TODO -->
+    <string name="pref_ColorTargets_Serve_Button_Background">Serve Button Background</string>       <!-- TODO -->
+    <string name="pref_ColorTargets_History_Background">History Background</string>                 <!-- TODO -->
+                                                                                                    
+    <string name="pref_ColorTargets_Main_Text">Main Text</string>                                   <!-- TODO -->
+    <string name="pref_ColorTargets_Player_Button_Text">Player Button Text</string>                 <!-- TODO -->
+    <string name="pref_ColorTargets_Score_Button_Text" >Score Button Text</string>                  <!-- TODO -->
+    <string name="pref_ColorTargets_Serve_Button_Text" >Serve Button Text</string>                  <!-- TODO -->
+    <string name="pref_ColorTargets_History_Text">History Text</string>                             <!-- TODO -->
+
+    <string name="pref_Category_Layout">Layout</string>                                             <!-- TODO -->
+    <string name="pref_Category_Brand">Brand</string>                                               <!-- TODO -->
+    <string name="pref_Category_End_of_Game">End of Game</string>                                   <!-- TODO -->
+    <string name="pref_Category_Others">Others</string>                                             <!-- TODO -->
+    <string name="pref_Category_Live_Score__ChromeCast">Live Score/ChromeCast</string>              <!-- TODO -->
+    <string name="pref_Category_ChromeCast">ChromeCast</string>                                     <!-- TODO -->
+    <string name="pref_Category_Directory_for_import_export">Directory for import/export</string>   <!-- TODO -->
+    <string name="pref_Category_Contacts">Contacts</string>                                         <!-- TODO -->
+    <string name="pref_Category_Event">Event</string>                                               <!-- TODO -->
+    <string name="pref_Category_Feeds">Feeds</string>                                               <!-- TODO -->
+    <string name="pref_Category_Import_Export_Settings">Import/Export Settings</string>             <!-- TODO -->
+    <string name="pref_Make_your_choice">Make your choice</string>                                  <!-- TODO -->
+
+    <string name="pref_Show_logo_on_scoreboard">Show logo on scoreboard</string>                    <!-- TODO -->
+    <string name="pref_Hide_logo_when_game_in_progress">Hide logo when game in progress</string>    <!-- TODO -->
+    <string name="pref_Hide_division_field_when_game_in_progress">Hide division field when game in progress</string> <!-- TODO -->
+
     <string name="pref_x_changed_to_y">Paramètre
         \n %1$s
         \n est changé a

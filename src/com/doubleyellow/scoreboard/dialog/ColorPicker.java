@@ -31,6 +31,7 @@ import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.android.view.ColorPickerView;
+import com.doubleyellow.android.view.LineColorPicker;
 
 /**
  * Dialog that is displayed when user 'color' is clicked.
@@ -84,13 +85,14 @@ public class ColorPicker extends BaseAlertDialog
     private View getColorPickerView() {
         ColorPickerView view = new ColorPickerView(context);
 
+        //LineColorPicker view = new LineColorPicker(context, null);
+
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         view.setLayoutParams(layoutParams);
-        view.setOnColorChangedListener(colorChangedListener);
-        //view.setAlphaSliderVisible(false); // no transparency
         if ( this.sColor != null ) {
             view.setColor(Color.parseColor(this.sColor));
         }
+        view.setOnColorChangedListener(colorChangedListener);
         return view;
     }
 

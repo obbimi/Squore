@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pref_ColorTargets_Background">Achtergrond</string>
+    <string name="pref_ColorTargets_Player_Button_Background">Achtergrond Speler Knop</string>
+    <string name="pref_ColorTargets_Score_Button_Background">Achtergrond Score Knop</string>
+    <string name="pref_ColorTargets_Serve_Button_Background">Achtergrond Opslag Knop</string>
+    <string name="pref_ColorTargets_History_Background">Achtergrond Historiek</string>
+
+    <string name="pref_ColorTargets_Main_Text">Main Text</string>
+    <string name="pref_ColorTargets_Player_Button_Text">Speler Knop Text</string>
+    <string name="pref_ColorTargets_Score_Button_Text" >Score Knop Text</string>
+    <string name="pref_ColorTargets_Serve_Button_Text" >Opslag Knop Text</string>
+    <string name="pref_ColorTargets_History_Text">Historiek Text</string>
+
+    <string name="pref_Category_Layout">Layout</string>
+    <string name="pref_Category_Brand">Brand</string>
+    <string name="pref_Category_End_of_Game">Game Einde</string>
+    <string name="pref_Category_Others">Others</string>
+    <string name="pref_Category_Live_Score__ChromeCast">Live Score/ChromeCast</string>
+    <string name="pref_Category_ChromeCast">ChromeCast</string>
+    <string name="pref_Category_Directory_for_import_export">Folder voor import/export</string>
+    <string name="pref_Category_Contacts">Contacten</string>
+    <string name="pref_Category_Event">Eventen</string>
+    <string name="pref_Category_Feeds">Feeds</string>
+    <string name="pref_Category_Import_Export_Settings">Import/Export Instellingen</string>
+    <string name="pref_Make_your_choice">Maak je keuze</string>
+
+    <string name="pref_Show_logo_on_scoreboard">Toon logo op scoreboard</string>
+    <string name="pref_Hide_logo_when_game_in_progress">Verberg logo zodra game begint</string>
+    <string name="pref_Hide_division_field_when_game_in_progress">Verberg divisie zodra game begint</string>
+
     <string name="pref_x_changed_to_y">Instelling
         \n %1$s
         \n gewijzigd naar
