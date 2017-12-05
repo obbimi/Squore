@@ -28,7 +28,7 @@ Supports you in referee-ing a squash match.
 &bull; remembers previous entered player names for auto completion for next matches
 &bull; remembers all matches you refereed (to recall later, e.g. to note down game scores on official papers)
 &bull; specify a color per player (e.g. of the shirt they play in)
-&bull; select matches listed on e.g. <a href="http://www.tournamentsoftware.com">tournamentsoftware.com</href>
+&bull; select matches listed on e.g. <a href="http://www.tournamentsoftware.com">tournamentsoftware.com</a>
 &bull; define matches up front for easy selection later
 &bull; option to use different <b>tie-break formats</b>
 &bull; <b>customize colors</b> of the app (e.g. to match your club colors)
