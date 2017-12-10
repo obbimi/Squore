@@ -47,27 +47,27 @@
             <PreferenceCategory android:key="backgroundColors"
                                 android:title="@string/pref_ColorTargets_Backgrounds">
                 <ListPreference android:key="backgroundColor"
-                                android:title="Background"
+                                android:title="@string/pref_ColorTargets_Background"
                                 android:entryValues="@array/ColorKeys"
                                 android:defaultValue="Color9"/>
 
                 <ListPreference android:key="playerButtonBackgroundColor"
-                                android:title="Player Button Background"
+                                android:title="@string/pref_ColorTargets_Player_Button_Background"
                                 android:entryValues="@array/ColorKeys"
                                 android:defaultValue="Color2"/>
 
                 <ListPreference android:key="scoreButtonBackgroundColor"
-                                android:title="Score Button Background"
+                                android:title="@string/pref_ColorTargets_Score_Button_Background"
                                 android:entryValues="@array/ColorKeys"
                                 android:defaultValue="Color1"/>
 
                 <ListPreference android:key="serveButtonBackgroundColor"
-                                android:title="Serve Button Background"
+                                android:title="@string/pref_ColorTargets_Serve_Button_Background"
                                 android:entryValues="@array/ColorKeys"
                                 android:defaultValue="Color3"/>
 
                 <ListPreference android:key="historyBackgroundColor"
-                                android:title="History Background"
+                                android:title="@string/pref_ColorTargets_History_Background"
                                 android:entryValues="@array/ColorKeys"
                                 android:defaultValue="Color2"/>
             </PreferenceCategory>
@@ -91,23 +91,23 @@
             <PreferenceCategory android:key="textColors"
                                 android:title="@string/pref_ColorTargets_Texts">
                 <ListPreference android:key="mainTextColor"
-                                android:title="Main Text"
+                                android:title="@string/pref_ColorTargets_Main_Text"
                                 android:entryValues="@array/ColorKeys"
                                 android:defaultValue="Color0"/>
                 <ListPreference android:key="playerButtonTextColor"
-                                android:title="Player Button Text"
+                                android:title="@string/pref_ColorTargets_Player_Button_Text"
                                 android:entryValues="@array/ColorKeys"
                                 android:defaultValue="Color0"/>
                 <ListPreference android:key="scoreButtonTextColor"
-                                android:title="Score Button Text"
+                                android:title="@string/pref_ColorTargets_Score_Button_Text"
                                 android:entryValues="@array/ColorKeys"
                                 android:defaultValue="Color2"/>
                 <ListPreference android:key="serveButtonTextColor"
-                                android:title="Serve Button Text"
+                                android:title="@string/pref_ColorTargets_Serve_Button_Text"
                                 android:entryValues="@array/ColorKeys"
                                 android:defaultValue="Color0"/>
                 <ListPreference android:key="historyTextColor"
-                                android:title="History Text"
+                                android:title="@string/pref_ColorTargets_History_Text"
                                 android:entryValues="@array/ColorKeys"
                                 android:defaultValue="Color2"/>
             </PreferenceCategory>
@@ -188,7 +188,7 @@
                     />
         </PreferenceCategory>
 
-        <PreferenceCategory android:title="Layout">
+        <PreferenceCategory android:title="@string/pref_Category_Layout">
             <CheckBoxPreference android:key="showFullScreen"
                                 android:icon="@drawable/ic_media_fullscreen"
                                 android:title="@string/pref_showFullScreen"
@@ -262,7 +262,7 @@
                     dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
             <CheckBoxPreference android:key="hideFieldDivisionWhenGameInProgress"
-                                android:title="Hide division/field when game in progress"
+                                android:title="@string/pref_Hide_division_field_when_game_in_progress"
                                 android:defaultValue="@bool/hideFieldDivisionWhenGameInProgress_default"
             />
             <EditTextPreference android:key="AppealHandGestureIconSize"
@@ -274,23 +274,23 @@
 
         </PreferenceCategory>
 
-        <PreferenceCategory android:title="Brand" android:key="Brand">
+        <PreferenceCategory android:title="@string/pref_Category_Brand" android:key="Brand">
             <com.doubleyellow.prefs.EnumListPreference
                 android:key="squoreBrand"
-                android:title="Brand"
+                android:title="@string/pref_Category_Brand"
                 android:defaultValue="Squore"
                 dy:enumClass="com.doubleyellow.scoreboard.Brand"
             />
             <com.doubleyellow.prefs.EnumMultiSelectPreference
                     android:key="showBrandLogoOn"
-                    android:title="Show logo on scoreboard"
+                    android:title="@string/pref_Show_logo_on_scoreboard"
                     android:summary="Specify on what screens the logo should be visible"
                     android:defaultValue="@array/showBrandLogoOn_DefaultValues"
                     dy:displayValues="@array/ShowOnScreen_DisplayValues"
                     dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
             <CheckBoxPreference android:key="hideBrandLogoWhenGameInProgress"
-                                android:title="Hide logo when game in progress"
+                                android:title="@string/pref_Hide_logo_when_game_in_progress"
                                 android:defaultValue="@bool/hideBrandLogoWhenGameInProgress_default"
             />
         </PreferenceCategory>
@@ -392,7 +392,7 @@
             />
 
         </PreferenceCategory>
-        <PreferenceCategory android:title="End of Game">
+        <PreferenceCategory android:title="@string/pref_Category_End_of_Game">
             <CheckBoxPreference android:key="indicateGameBall"
                                 android:title="@string/pref_indicateGameBall"
                                 android:summary="@string/pref_indicateGameBall_summary"
@@ -525,7 +525,7 @@
                                 android:defaultValue="@string/OfficialRulesURLs_default_Squash"
                     />
         </PreferenceCategory>
-        <PreferenceCategory android:title="Others">
+        <PreferenceCategory android:title="@string/pref_Category_Others">
             <com.doubleyellow.prefs.EnumListPreference
                     android:key="useTossFeature"
                     android:title="@string/pref_useTossFeature"
@@ -598,7 +598,7 @@
     <PreferenceScreen android:key="LiveScore_Cast"
                       android:icon="@drawable/ic_chromecast"
                       android:summary="@string/pref_live_score_summary"
-                      android:title="Live Score / ChromeCast">
+                      android:title="@string/pref_Category_Live_Score__ChromeCast">
         <PreferenceCategory android:title="@string/Live_Score">
             <com.doubleyellow.scoreboard.prefs.LiveScorePrefs
                 android:key="LiveScorePrefs"
@@ -617,7 +617,7 @@
             </Preference>
         </PreferenceCategory>
 
-        <PreferenceCategory android:title="ChromeCast">
+        <PreferenceCategory android:title="@string/pref_Category_ChromeCast">
             <CheckBoxPreference android:key="Cast_ShowGraphDuringTimer"
                                 android:title="@string/pref_Cast_ShowGraphDuringTimer"
                                 android:icon="@drawable/ic_chromecast"
@@ -763,7 +763,7 @@
                 />
 
         <ListPreference     android:key="targetDirForImportExport"
-                            android:title="Directory for import/export"/>
+                            android:title="@string/pref_Category_Directory_for_import_export"/>
 
     </PreferenceScreen>
 
@@ -835,7 +835,7 @@
                             android:defaultValue="@integer/maxNumberOfPlayersInGroup_default"
                 />
 
-        <PreferenceCategory android:title="Contacts" android:key="Contacts">
+        <PreferenceCategory android:title="@string/pref_Category_Contacts" android:key="Contacts">
             <CheckBoxPreference android:key="readContactsForAutoCompletion"
                                 android:title="@string/pref_readContactsForAutoCompletion"
                                 android:summary="@string/pref_readContactsForAutoCompletion_summary"
@@ -891,7 +891,7 @@
                 dy:enumClass="com.doubleyellow.util.Feature"
         />
 
-        <PreferenceCategory android:title="Event" android:key="Event">
+        <PreferenceCategory android:title="@string/pref_Category_Event" android:key="Event">
             <EditTextPreference android:key="eventList"
                                 android:title="@string/pref_eventList"
                                 android:summary="@string/pref_eventList_summary"
@@ -913,7 +913,7 @@
                       android:title="@string/pref_web_integration"
                       android:summary="@string/pref_web_integration_summary"
                       >
-        <PreferenceCategory android:title="Feeds"
+        <PreferenceCategory android:title="@string/pref_Category_Feeds"
                             android:key="Feeds">
             <EditTextPreference android:key="feedPostUrls"
                                 android:title="@string/pref_feedPostUrls"
@@ -1010,7 +1010,7 @@
                     />
         </PreferenceCategory>
         <!-- TODO: hide these by default -->
-        <PreferenceCategory android:title="Technical">
+        <PreferenceCategory android:key="Technical" android:title="Technical">
             <EditTextPreference android:key="FeedFeedsURL"
                                 android:title="FeedFeedsURL"
                                 android:summary="For developer only"
@@ -1088,8 +1088,8 @@
         <com.doubleyellow.scoreboard.prefs.ExportImportPrefs
                 android:key="exportImportPrefs"
                 android:dialogIcon="@android:drawable/ic_menu_save"
-                android:title="Import/Export Settings"
-                android:dialogMessage="Make your choice"
+                android:title="@string/pref_Category_Import_Export_Settings"
+                android:dialogMessage="@string/pref_Make_your_choice"
                 android:positiveButtonText="@string/pref_import_prefs"
                 android:negativeButtonText="@string/pref_export_prefs"
                 android:persistent="false"

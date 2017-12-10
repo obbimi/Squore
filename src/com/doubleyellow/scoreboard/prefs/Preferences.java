@@ -100,7 +100,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             // text size changes
 /*
             if ( key.startsWith("TextSize")) {
-                ScoreBoard.matchModel.setDirty(); // to trigger a redraw
+                setModelDirty(); // to trigger a redraw
             }
 */
 
@@ -131,7 +131,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             DynamicListPreference.deleteCacheFile(Preferences.this, PreferenceKeys.colorSchema.toString());
 
                             this.bIgnorePrefChanges = false;
-                            ScoreBoard.matchModel.setDirty();
+                            setModelDirty();
                             PreferenceValues.setRestartRequired(Preferences.this);
                         }
                         break;
@@ -140,23 +140,23 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         if ( psHideBrandLogoWhenGameInProgress != null ) {
                             psHideBrandLogoWhenGameInProgress.setEnabled(ListUtil.isNotEmpty(PreferenceValues.showBrandLogoOn(Preferences.this)));
                         }
-                        ScoreBoard.matchModel.setDirty();
+                        setModelDirty();
                         break;
                     case hideBrandLogoWhenGameInProgress:
-                        ScoreBoard.matchModel.setDirty();
+                        setModelDirty();
                         break;
                     case showFieldDivisionOn:
                         final Preference pshideFieldDivisionWhenGameInProgress = settingsFragment.findPreference(PreferenceKeys.hideFieldDivisionWhenGameInProgress.toString());
                         if ( pshideFieldDivisionWhenGameInProgress != null ) {
                             pshideFieldDivisionWhenGameInProgress.setEnabled(ListUtil.isNotEmpty(PreferenceValues.showFieldDivisionOn(Preferences.this)));
                         }
-                        ScoreBoard.matchModel.setDirty();
+                        setModelDirty();
                         break;
                     case hideFieldDivisionWhenGameInProgress:
-                        ScoreBoard.matchModel.setDirty();
+                        setModelDirty();
                         break;
                     case textColorDetermination:
-                        ScoreBoard.matchModel.setDirty();
+                        setModelDirty();
                         DetermineTextColor determineTextColor = PreferenceValues.getTextColorDetermination(Preferences.this);
                         PreferenceGroup textColors = (PreferenceGroup) settingsFragment.findPreference(PreferenceKeys.textColors);
                         PreferenceValues.initTextColors(textColors, determineTextColor.equals(DetermineTextColor.Manual));
@@ -182,7 +182,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         break;
 /*
                     case textColorDynamically:
-                        ScoreBoard.matchModel.setDirty();
+                        setModelDirty();
                         boolean bDynamic = prefs.getBoolean(key, true);
                         PreferenceGroup textColors = (PreferenceGroup) settingsFragment.findPreference(PreferenceKeys.textColors);
                         PreferenceValues.initTextColors(textColors, bDynamic);
@@ -190,7 +190,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
 */
 /*
                     case TextSizeScoreAsBigAsPossible:
-                        ScoreBoard.matchModel.setDirty();
+                        setModelDirty();
                         boolean bAsBigAsPossible = prefs.getBoolean(key, true);
                         String sKey = PreferenceValues.TextSize.class.getSimpleName() + PreferenceValues.TextSize.Score.toString();
                         SeekBarPreference prefScore = (SeekBarPreference) settingsFragment.findPreference(sKey);
@@ -202,7 +202,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     case showPlayerColorOn:      // fall through
                     case hideFlagForSameCountry: // fall through
                     case showCountryAs:
-                        ScoreBoard.matchModel.setDirty(); // to trigger a redraw
+                        setModelDirty(); // to trigger a redraw
                         break;
                     case showActionBar:
                         boolean bShowActionBar = prefs.getBoolean(key, true);
@@ -217,7 +217,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     case showFullScreen:           // fall through
                     case prefetchFlags:            // fall through
                     case swapPlayersOn180DegreesRotationOfDeviceInLandscape: // fall through
-                        ScoreBoard.matchModel.setDirty();
+                        setModelDirty();
                         PreferenceValues.setRestartRequired(Preferences.this);
                         break;
                     case smsResultToNr: break;
@@ -401,7 +401,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             //setFlagIcon(Preferences.this, settingsFragment.findPreference(PreferenceKeys.showCountryAs));
 
             if ( bReinitColors ) {
-                ScoreBoard.matchModel.setDirty();
+                setModelDirty();
                 ColorPrefs.clearColorCache();
                 ColorPrefs.getTarget2colorMapping(Preferences.this);
                 ColorPrefs.setColorSchemaIcon (settingsFragment.findPreference(PreferenceKeys.Colors));
@@ -848,4 +848,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
         return lValues;
     }
 
+    static void setModelDirty() {
+        if ( ScoreBoard.matchModel == null) { return; }
+        ScoreBoard.matchModel.setDirty();
+    }
 }
