@@ -41,6 +41,12 @@ import com.doubleyellow.scoreboard.vico.IBoard;
 
 import java.util.Map;
 
+/**
+ * View holding
+ * - graph of last view
+ * - timer
+ * - total score
+ */
 public class EndOfGameView implements TimerViewContainer
 {
             ViewGroup          root;

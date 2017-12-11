@@ -19,7 +19,6 @@ package com.doubleyellow.scoreboard.vico;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.CountDownTimer;
@@ -1095,15 +1094,7 @@ public class IBoard implements TimerViewContainer
         return showOnScreen.equals(ShowOnScreen.OnChromeCast);
     }
 
-    public Point getPoint(Display display) {
-        Point pntDisplay = new Point();
-        display.getSize(pntDisplay);
-        return pntDisplay;
-    }
     private int getScreenHeightWidthMinimumFraction(int iResIdFraction) {
-        float fraction = context.getResources().getFraction(iResIdFraction, 1, 1);
-        Point p = getPoint(display);
-        int min = Math.min(p.x, p.y);
-        return (int) (min * fraction);
+        return ViewUtil.getScreenHeightWidthMinimumFraction(display, iResIdFraction, context);
     }
 }
