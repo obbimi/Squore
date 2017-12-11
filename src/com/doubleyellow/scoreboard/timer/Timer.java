@@ -134,18 +134,18 @@ public class Timer
             view.show();
         }
     }
-    public static boolean removeTimerView(TimerViewContainer container) {
+    public static boolean removeTimerView(boolean bIsPresentation, TimerViewContainer container) {
         if ( container == null ) { return false; }
-        return removeTimerView(container.getTimerView());
+        return removeTimerView(bIsPresentation, container.getTimerView());
     }
-    public static boolean removeTimerView(TimerView view) {
+    public static boolean removeTimerView(boolean bIsPresentation, TimerView view) {
         if ( view == null ) { return false; }
         Class<? extends TimerView> aClass = view.getClass();
-        return removeTimerView(aClass);
+        return removeTimerView(bIsPresentation, aClass);
     }
 
-    public static boolean removeTimerView(Class<? extends TimerView> aClass) {
-        TimerView tvOld = Timer.timerViews.remove(aClass.getName());
+    public static boolean removeTimerView(boolean bIsPresentation, Class<? extends TimerView> aClass) {
+        TimerView tvOld = Timer.timerViews.remove(bIsPresentation + ":" + aClass.getName());
         boolean bRemoved = tvOld != null;
         if ( bRemoved ) {
             //view.cancel();

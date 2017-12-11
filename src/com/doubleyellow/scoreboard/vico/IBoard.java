@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.vico;
 
 import android.content.Context;
@@ -8,6 +25,7 @@ import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.support.percent.PercentLayoutHelper;
 import android.support.percent.PercentRelativeLayout;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.View;
@@ -47,7 +65,7 @@ import java.util.*;
  */
 public class IBoard implements TimerViewContainer
 {
-    //private static final String TAG = "SB." + IBoard.class.getSimpleName();
+    private static final String TAG = "SB." + IBoard.class.getSimpleName();
 
     public static Player               m_firstPlayerOnScreen = Player.A;
     public static Map<Player, Integer> m_player2scoreId;
@@ -678,7 +696,7 @@ public class IBoard implements TimerViewContainer
             });
         }
         // enforce recreate
-        Timer.removeTimerView(this.sbTimerView);
+        Timer.removeTimerView(isPresentation(), this.sbTimerView);
         this.sbTimerView = null;
     }
 
@@ -865,6 +883,7 @@ public class IBoard implements TimerViewContainer
 ;
 */
             int iWidthPx = ViewUtil.getScreenHeightWidthMinimumFraction(context, R.fraction.pt_gameball_msg_width);
+            Log.d(TAG, String.format("GBM width: %s, (is presentation: %s)", iWidthPx, isPresentation()));
             gameBallMessage = new FloatingMessage.Builder(context, iWidthPx/*, vPlayerName.getWidth(), iHeight*/)
                     //.withDrawable(R.drawable.microphone)
                     .withButtonColors(mColors.get(bgColor), mColors.get(txtColor))

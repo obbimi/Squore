@@ -961,7 +961,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             // e.g. timer was showing before orientation change. Show it again
             Timer.addTimerView(iBoard.isPresentation(), iBoard);
         }
-        timer.removeTimerView(NotificationTimerView.class);
+        timer.removeTimerView(false, NotificationTimerView.class);
         NotificationTimerView.cancelNotification(this); // notification is always just a timer. Just there for switching back to Squore. Use is switching back... so remove notification
 
         if ( scSequence != null ) {
@@ -2812,7 +2812,7 @@ touch -t 01030000 LAST.sb
             Type type = Timer.timerType;
             timer.cancel();
             timer = null;
-            Timer.removeTimerView(dialogTimerView);
+            Timer.removeTimerView(false, dialogTimerView);
             dialogTimerView = null;
             this.triggerEvent(SBEvent.timerCancelled, type);
         }
@@ -4366,9 +4366,9 @@ touch -t 01030000 LAST.sb
 
         ViewUtil.SIS_Type trigger = ViewUtil.getStoreInstanceStateTrigger(outState);
         if ( trigger.equals(ViewUtil.SIS_Type.ScreenRotate) ) {
-            Timer.removeTimerView(iBoard);
+            Timer.removeTimerView(iBoard.isPresentation(), iBoard);
         }
-        Timer.removeTimerView(dialogTimerView);
+        Timer.removeTimerView(false, dialogTimerView);
         dialogTimerView = null;
 
         if ( (scSequence != null) && trigger.equals(ViewUtil.SIS_Type.ChildActivityLaunch) == false ) {
