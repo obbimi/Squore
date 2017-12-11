@@ -91,7 +91,7 @@ public class MatchHistory extends XActivity implements MenuHandler
 
         ScoreBoard.updateDemoThread(this);
         mhTimerView = new MHTimerView();
-        Timer.addTimerView(mhTimerView);
+        Timer.addTimerView(false, mhTimerView);
     }
 
     MHTimerView mhTimerView = null;

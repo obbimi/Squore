@@ -91,7 +91,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         iBoard.initFieldDivision();
 
         TimerView timerView = iBoard.getTimerView();
-        Timer.addTimerView(timerView);
+        Timer.addTimerView(true, timerView);
         if ( (ScoreBoard.timer == null) || ScoreBoard.timer.isShowing() == false ) {
             if ( timerView != null ) {
                 timerView.cancel();
@@ -133,7 +133,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         }
         // e.g. for warm-up timer
         TimerView timerView = iBoard.getTimerView();
-        Timer.addTimerView(timerView);
+        Timer.addTimerView(true, timerView);
     }
 
     // ----------------------------------------------------

@@ -853,7 +853,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
 
         iBoard = new IBoard(matchModel, this, (ViewGroup) findViewById(android.R.id.content));
-        Timer.addTimerView(getCastTimerView());
+        Timer.addTimerView(true, getCastTimerView());
 
         // Setting the touch listener
         //mPaintSurface.setOnTouchListener(mPaintSurface);
@@ -959,7 +959,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         dialogManager.showNextDialogIfChildActivity();
         if ( timer != null ) {
             // e.g. timer was showing before orientation change. Show it again
-            Timer.addTimerView(iBoard);
+            Timer.addTimerView(iBoard.isPresentation(), iBoard);
         }
         timer.removeTimerView(NotificationTimerView.class);
         NotificationTimerView.cancelNotification(this); // notification is always just a timer. Just there for switching back to Squore. Use is switching back... so remove notification
@@ -1914,7 +1914,7 @@ touch -t 01030000 LAST.sb
         boolean bChangeOrientation = OrientationStatus.ChangingOrientation.equals(XActivity.status);
         if ( /*(bChangeOrientation == false) &&*/ (timer != null) && timer.getSecondsLeft() > 5 ) {
             m_notificationTimerView = new NotificationTimerView(this);
-            timer.addTimerView(m_notificationTimerView);
+            timer.addTimerView(false, m_notificationTimerView);
         }
     }
 
@@ -3518,9 +3518,9 @@ touch -t 01030000 LAST.sb
             }
         }
         ViewType viewType = PreferenceValues.timerViewType(this);
-        Timer.addTimerView(iBoard); // always add this one, so it is always up to date if the Popup one is made hidden
+        Timer.addTimerView(iBoard.isPresentation(), iBoard); // always add this one, so it is always up to date if the Popup one is made hidden
         if ( viewType.equals(ViewType.Popup) ) {
-            Timer.addTimerView(getDialogTimerView()); // this will actually trigger the dialog to open
+            Timer.addTimerView(false, getDialogTimerView()); // this will actually trigger the dialog to open
         }
 
         if ( matchModel.getName(Player.A).equals("Iddo T") && isLandscape() ) {

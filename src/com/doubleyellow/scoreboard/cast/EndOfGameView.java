@@ -101,7 +101,7 @@ public class EndOfGameView implements TimerViewContainer
                 txtTimer.setVisibility(View.INVISIBLE); // not GONE, so logo layout remains the same
             } else {
                 TimerView timerView = this.getTimerView();
-                Timer.addTimerView(timerView);
+                Timer.addTimerView(iBoard.isPresentation(), timerView);
             }
         }
 

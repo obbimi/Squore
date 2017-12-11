@@ -101,13 +101,13 @@ public class Timer
     }
 
     /** e.g. to be invoked from MatchHistory activity and cast.Presentation */
-    public static void addTimerView(TimerViewContainer container) {
+    public static void addTimerView(boolean bIsPresentation, TimerViewContainer container) {
         if ( container == null ) { return; }
-        addTimerView(container.getTimerView());
+        addTimerView(bIsPresentation, container.getTimerView());
     }
-    public static void addTimerView(TimerView view) {
+    public static void addTimerView(boolean bIsPresentation, TimerView view) {
         if ( view == null ) { return; }
-        TimerView tvOld = Timer.timerViews.put(view.getClass().getName(), view);
+        TimerView tvOld = Timer.timerViews.put(bIsPresentation + ":" + view.getClass().getName(), view);
         boolean bIsNew = tvOld == null;
         if ( bIsNew ) {
             //Log.d(TAG, "Added new " + view.toString());

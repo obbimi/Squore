@@ -179,7 +179,7 @@ public class SBTimerView implements TimerView
             }
             int secondsLeft = ScoreBoard.timer.getSecondsLeft();
             if ( secondsLeft > 0 ) {
-                ScoreBoard.timer.addTimerView(scoreBoard.getDialogTimerView());
+                ScoreBoard.timer.addTimerView(false, scoreBoard.getDialogTimerView());
             } else {
                 SBTimerView.this.cancel();
                 if ( scoreBoard != null ) {
