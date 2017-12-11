@@ -90,7 +90,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         matchModel = ScoreBoard.matchModel;
         Context context = getContext();
 
-        iBoard = new IBoard(matchModel, context, vRoot);
+        iBoard = new IBoard(matchModel, context, getDisplay(), vRoot);
         updateViewWithColorAndScore(context);
 
         matchModel.registerListener(new ScoreChangeListener());
@@ -171,7 +171,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         }
 
         @Override public void OnGameIsHalfwayChange(int iGameZB, int iScoreA, int iScoreB, Halfway hwStatus) {
-            if ( hwStatus.isHalfway() ) {
+            if ( hwStatus.isHalfway() && hwStatus.changeSidesFor(matchModel.getSport()) ) {
                 iBoard.showMessage(getContext().getString(R.string.oa_change_sides), 5);
             } else {
                 iBoard.hideMessage();

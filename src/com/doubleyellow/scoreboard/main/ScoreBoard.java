@@ -852,7 +852,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             }
         }
 
-        iBoard = new IBoard(matchModel, this, (ViewGroup) findViewById(android.R.id.content));
+        Display display = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        iBoard = new IBoard(matchModel, this, display, (ViewGroup) findViewById(android.R.id.content));
         Timer.addTimerView(true, getCastTimerView());
 
         // Setting the touch listener

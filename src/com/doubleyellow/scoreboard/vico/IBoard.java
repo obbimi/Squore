@@ -19,6 +19,7 @@ package com.doubleyellow.scoreboard.vico;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.CountDownTimer;
@@ -28,6 +29,7 @@ import android.support.percent.PercentRelativeLayout;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
@@ -109,10 +111,12 @@ public class IBoard implements TimerViewContainer
     private Model     matchModel = null;
     private ViewGroup m_vRoot    = null;
     private Context   context    = null;
-    public IBoard(Model model, Context ctx, ViewGroup root) {
+    private Display   display    = null;
+    public IBoard(Model model, Context ctx, Display dsply, ViewGroup root) {
         m_vRoot    = root;
         matchModel = model;
         context    = ctx;
+        display    = dsply;
     }
     public void setModel(Model model) {
         matchModel = model;
@@ -752,9 +756,9 @@ public class IBoard implements TimerViewContainer
                     GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, colors);
                     gd.setShape(GradientDrawable.RECTANGLE);
                     //gd.setCornerRadius(getResources().getDimension(R.dimen.sb_button_radius));
-                    gd.setCornerRadius(ViewUtil.getScreenHeightWidthMinimumFraction(context, R.fraction.player_button_corner_radius));
+                    gd.setCornerRadius(getScreenHeightWidthMinimumFraction(R.fraction.player_button_corner_radius));
                     if (iBgColor != null) {
-                        gd.setStroke(ViewUtil.getScreenHeightWidthMinimumFraction(context, R.fraction.player_button_colorborder_thickness), iBgColor);
+                        gd.setStroke(getScreenHeightWidthMinimumFraction(R.fraction.player_button_colorborder_thickness), iBgColor);
                     }
                     view.setBackground(gd);
                     view.invalidate();
@@ -882,7 +886,7 @@ public class IBoard implements TimerViewContainer
  (matchModel.isDoubles() ? 2 : 1)*//*
 ;
 */
-            int iWidthPx = ViewUtil.getScreenHeightWidthMinimumFraction(context, R.fraction.pt_gameball_msg_width);
+            int iWidthPx = getScreenHeightWidthMinimumFraction(R.fraction.pt_gameball_msg_width);
             Log.d(TAG, String.format("GBM width: %s, (is presentation: %s)", iWidthPx, isPresentation()));
             gameBallMessage = new FloatingMessage.Builder(context, iWidthPx/*, vPlayerName.getWidth(), iHeight*/)
                     //.withDrawable(R.drawable.microphone)
@@ -943,7 +947,7 @@ public class IBoard implements TimerViewContainer
                 }
             }
             final int iResId_widthFraction = call.isConduct() ? R.fraction.pt_conduct_width : R.fraction.pt_decision_msg_width;
-            int iWidthPx = ViewUtil.getScreenHeightWidthMinimumFraction(context, iResId_widthFraction);
+            int iWidthPx = getScreenHeightWidthMinimumFraction(iResId_widthFraction);
             decisionMessages[fmIdx] = new FloatingMessage.Builder(context, iWidthPx/*, vPlayerName.getWidth(), iHeight*/)
                     //.withDrawable(R.drawable.microphone)
                     .withButtonColors(mColors.get(bgColor), mColors.get(txtColor))
@@ -1089,5 +1093,17 @@ public class IBoard implements TimerViewContainer
             showOnScreen = context.getClass().getName().contains("android.app.Presentation") ? ShowOnScreen.OnChromeCast : ShowOnScreen.OnDevice;
         }
         return showOnScreen.equals(ShowOnScreen.OnChromeCast);
+    }
+
+    public Point getPoint(Display display) {
+        Point pntDisplay = new Point();
+        display.getSize(pntDisplay);
+        return pntDisplay;
+    }
+    private int getScreenHeightWidthMinimumFraction(int iResIdFraction) {
+        float fraction = context.getResources().getFraction(iResIdFraction, 1, 1);
+        Point p = getPoint(display);
+        int min = Math.min(p.x, p.y);
+        return (int) (min * fraction);
     }
 }
