@@ -1,10 +1,29 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.history;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Point;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Display;
+
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Model;
@@ -18,6 +37,7 @@ import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.GraphViewStyle;
 import com.jjoe64.graphview.LineGraphView;
 
 import java.util.*;
@@ -165,10 +185,15 @@ public class GameGraphView extends LineGraphView
         super.getGraphViewStyle().setVerticalLabelsColor(iColorWinner);
     }
 
+    @Override protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        setDisplayDependentProps();
+    }
+
     private void initGrapView() {
         super.setShowLegend(true);
         super.setLegendAlign(GraphView.LegendAlign.BOTTOM);
-        super.setShowHorizontalLabels(false); // e.g. from 0 to 22 if the final score was 12-10: not very intresting
+        super.setShowHorizontalLabels(false); // e.g. from 0 to 22 if the final score was 12-10: not very interesting
 
         super.getGraphViewStyle().setHorizontalLabelsColor(iTxtColor);
         float txtSize = getResources().getDimension(R.dimen.txt_medium);
@@ -176,8 +201,22 @@ public class GameGraphView extends LineGraphView
         //super.getGraphViewStyle().setTextSize(getResources().getInteger(R.integer.TextSizeTabStrip) );
         //graphView.getGraphViewStyle().setNumHorizontalLabels(5);
         //graphView.getGraphViewStyle().setNumVerticalLabels(4);
-        super.getGraphViewStyle().setVerticalLabelsWidth(ViewUtil.getScreenWidth(getContext()) / 20);
-        super.getGraphViewStyle().setLegendWidth(ViewUtil.getScreenHeightWidthMaximum(getContext()) / 3); // a third of the screen width
+        setDisplayDependentProps();
+    }
+
+    private void setDisplayDependentProps() {
+        int screenWidth = ViewUtil.getScreenWidth(getContext());
+        int screenHWMax = ViewUtil.getScreenHeightWidthMaximum(getContext());
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 ) {
+            Display display = getDisplay();
+            if ( display != null ) {
+                screenWidth = ViewUtil.getScreenWidth(display, getContext());
+                screenHWMax = ViewUtil.getScreenHeightWidthMaximum(display);
+            }
+        }
+        GraphViewStyle graphViewStyle = super.getGraphViewStyle();
+        graphViewStyle.setVerticalLabelsWidth(screenWidth / 20);
+        graphViewStyle.setLegendWidth        (screenHWMax / 3); // a third of the screen width
     }
 
     private void initColors() {

@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.vico;
 
 import android.content.Context;
@@ -8,8 +25,10 @@ import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.support.percent.PercentLayoutHelper;
 import android.support.percent.PercentRelativeLayout;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
@@ -47,7 +66,7 @@ import java.util.*;
  */
 public class IBoard implements TimerViewContainer
 {
-    //private static final String TAG = "SB." + IBoard.class.getSimpleName();
+    private static final String TAG = "SB." + IBoard.class.getSimpleName();
 
     public static Player               m_firstPlayerOnScreen = Player.A;
     public static Map<Player, Integer> m_player2scoreId;
@@ -91,10 +110,12 @@ public class IBoard implements TimerViewContainer
     private Model     matchModel = null;
     private ViewGroup m_vRoot    = null;
     private Context   context    = null;
-    public IBoard(Model model, Context ctx, ViewGroup root) {
+    private Display   display    = null;
+    public IBoard(Model model, Context ctx, Display dsply, ViewGroup root) {
         m_vRoot    = root;
         matchModel = model;
         context    = ctx;
+        display    = dsply;
     }
     public void setModel(Model model) {
         matchModel = model;
@@ -678,7 +699,7 @@ public class IBoard implements TimerViewContainer
             });
         }
         // enforce recreate
-        Timer.removeTimerView(this.sbTimerView);
+        Timer.removeTimerView(isPresentation(), this.sbTimerView);
         this.sbTimerView = null;
     }
 
@@ -734,9 +755,9 @@ public class IBoard implements TimerViewContainer
                     GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, colors);
                     gd.setShape(GradientDrawable.RECTANGLE);
                     //gd.setCornerRadius(getResources().getDimension(R.dimen.sb_button_radius));
-                    gd.setCornerRadius(ViewUtil.getScreenHeightWidthMinimumFraction(context, R.fraction.player_button_corner_radius));
+                    gd.setCornerRadius(getScreenHeightWidthMinimumFraction(R.fraction.player_button_corner_radius));
                     if (iBgColor != null) {
-                        gd.setStroke(ViewUtil.getScreenHeightWidthMinimumFraction(context, R.fraction.player_button_colorborder_thickness), iBgColor);
+                        gd.setStroke(getScreenHeightWidthMinimumFraction(R.fraction.player_button_colorborder_thickness), iBgColor);
                     }
                     view.setBackground(gd);
                     view.invalidate();
@@ -864,7 +885,8 @@ public class IBoard implements TimerViewContainer
  (matchModel.isDoubles() ? 2 : 1)*//*
 ;
 */
-            int iWidthPx = ViewUtil.getScreenHeightWidthMinimumFraction(context, R.fraction.pt_gameball_msg_width);
+            int iWidthPx = getScreenHeightWidthMinimumFraction(R.fraction.pt_gameball_msg_width);
+            Log.d(TAG, String.format("GBM width: %s, (is presentation: %s)", iWidthPx, isPresentation()));
             gameBallMessage = new FloatingMessage.Builder(context, iWidthPx/*, vPlayerName.getWidth(), iHeight*/)
                     //.withDrawable(R.drawable.microphone)
                     .withButtonColors(mColors.get(bgColor), mColors.get(txtColor))
@@ -924,7 +946,7 @@ public class IBoard implements TimerViewContainer
                 }
             }
             final int iResId_widthFraction = call.isConduct() ? R.fraction.pt_conduct_width : R.fraction.pt_decision_msg_width;
-            int iWidthPx = ViewUtil.getScreenHeightWidthMinimumFraction(context, iResId_widthFraction);
+            int iWidthPx = getScreenHeightWidthMinimumFraction(iResId_widthFraction);
             decisionMessages[fmIdx] = new FloatingMessage.Builder(context, iWidthPx/*, vPlayerName.getWidth(), iHeight*/)
                     //.withDrawable(R.drawable.microphone)
                     .withButtonColors(mColors.get(bgColor), mColors.get(txtColor))
@@ -1064,11 +1086,15 @@ public class IBoard implements TimerViewContainer
     }
 
     private ShowOnScreen showOnScreen = null;
-    private boolean isPresentation() {
+    public boolean isPresentation() {
         if ( showOnScreen == null ) {
             // Presentation.class here since it was only introducted in API 17 JELLY_BEAN_MR1
             showOnScreen = context.getClass().getName().contains("android.app.Presentation") ? ShowOnScreen.OnChromeCast : ShowOnScreen.OnDevice;
         }
         return showOnScreen.equals(ShowOnScreen.OnChromeCast);
+    }
+
+    private int getScreenHeightWidthMinimumFraction(int iResIdFraction) {
+        return ViewUtil.getScreenHeightWidthMinimumFraction(display, iResIdFraction, context);
     }
 }

@@ -101,13 +101,13 @@ public class Timer
     }
 
     /** e.g. to be invoked from MatchHistory activity and cast.Presentation */
-    public static void addTimerView(TimerViewContainer container) {
+    public static void addTimerView(boolean bIsPresentation, TimerViewContainer container) {
         if ( container == null ) { return; }
-        addTimerView(container.getTimerView());
+        addTimerView(bIsPresentation, container.getTimerView());
     }
-    public static void addTimerView(TimerView view) {
+    public static void addTimerView(boolean bIsPresentation, TimerView view) {
         if ( view == null ) { return; }
-        TimerView tvOld = Timer.timerViews.put(view.getClass().getName(), view);
+        TimerView tvOld = Timer.timerViews.put(bIsPresentation + ":" + view.getClass().getName(), view);
         boolean bIsNew = tvOld == null;
         if ( bIsNew ) {
             //Log.d(TAG, "Added new " + view.toString());
@@ -134,18 +134,18 @@ public class Timer
             view.show();
         }
     }
-    public static boolean removeTimerView(TimerViewContainer container) {
+    public static boolean removeTimerView(boolean bIsPresentation, TimerViewContainer container) {
         if ( container == null ) { return false; }
-        return removeTimerView(container.getTimerView());
+        return removeTimerView(bIsPresentation, container.getTimerView());
     }
-    public static boolean removeTimerView(TimerView view) {
+    public static boolean removeTimerView(boolean bIsPresentation, TimerView view) {
         if ( view == null ) { return false; }
         Class<? extends TimerView> aClass = view.getClass();
-        return removeTimerView(aClass);
+        return removeTimerView(bIsPresentation, aClass);
     }
 
-    public static boolean removeTimerView(Class<? extends TimerView> aClass) {
-        TimerView tvOld = Timer.timerViews.remove(aClass.getName());
+    public static boolean removeTimerView(boolean bIsPresentation, Class<? extends TimerView> aClass) {
+        TimerView tvOld = Timer.timerViews.remove(bIsPresentation + ":" + aClass.getName());
         boolean bRemoved = tvOld != null;
         if ( bRemoved ) {
             //view.cancel();
