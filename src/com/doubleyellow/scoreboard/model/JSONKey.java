@@ -40,7 +40,7 @@ public enum JSONKey {
 		game,
 	event,
 		name,
-		division,
+		division, field,
 		round,
 		location,
 	lockState,

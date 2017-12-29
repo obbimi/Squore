@@ -306,13 +306,39 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     }
 
     private boolean populateModelFromString(Model model, String sText, String sGroup, String feedPostName) {
-        Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
-
         boolean bIsOnePlayerOnly = feedStatus == null ? false : feedStatus.isShowingPlayers();
         getMatchDetailsFromMatchString( model, sText, context, bIsOnePlayerOnly);
-        model.setSource(feedPostDetail.get(URLsKeys.FeedMatches));
 
         // use feed name and group name for event details
+        setModelEvent(model, sGroup, feedPostName, null);
+
+        return false;
+    }
+
+    private void populateModelFromJSON(Model model, JSONObject joMatch, String sGroup, String feedPostName) {
+        try {
+            model.setPlayerName (Player.A, joMatch.getString(Player.A.toString()));
+            model.setPlayerName (Player.B, joMatch.getString(Player.B.toString()));
+
+            // use feed name and group name for event details
+            setModelEvent(model, sGroup, feedPostName, joMatch);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // use feed name and group name for event details
+/*
+        model.setEvent ( joMatch.optString(JSONKey.event   .toString(), feedPostName)
+                       , joMatch.optString(JSONKey.division.toString(), sGroup)
+                       , null, null);
+*/
+    }
+
+    private void setModelEvent(Model model, String sGroup, String feedPostName, JSONObject joMatch) {
+        Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
+        model.setSource(feedPostDetail.get(URLsKeys.FeedMatches));
+
         String sEventName = null;
         if ( PreferenceValues.useFeedNameAsEventName(context) ) {
             sEventName = feedPostName;
@@ -324,33 +350,24 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         if ( MapUtil.isNotEmpty(feedPostDetail) && feedPostDetail.containsKey(URLsKeys.Country) ) {
             sLocation = (StringUtil.isNotEmpty(sLocation)? (sLocation + ", ") :"") + feedPostDetail.get(URLsKeys.Country);
         }
-        String sEventDivision = null;
+        String sFieldDivision = null;
         String sEventRound    = null;
         if ( StringUtil.isNotEmpty(sGroup) && (appearsToBeADate(sGroup) == false) ) {
             // make educated guess
             if( appearsToBeARound(sGroup) ) {
                 sEventRound = sGroup;
             } else {
-                sEventDivision = sGroup;
+                sFieldDivision = sGroup;
             }
         }
-        model.setEvent(sEventName, sEventDivision, sEventRound, sLocation);
-        return false;
-    }
-
-    private void populateModelFromJSON(Model model, JSONObject joMatch, String sGroup, String feedPostName) {
-        try {
-            model.setPlayerName (Player.A, joMatch.getString(Player.A.toString()));
-            model.setPlayerName (Player.B, joMatch.getString(Player.B.toString()));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if ( joMatch != null ) {
+            sEventName     = joMatch.optString(JSONKey.name    .toString(), sEventName);
+            sFieldDivision = joMatch.optString(JSONKey.division.toString(), sFieldDivision); // field?
+            sFieldDivision = joMatch.optString(JSONKey.field   .toString(), sFieldDivision); // field?
+            sEventRound    = joMatch.optString(JSONKey.round   .toString(), sEventRound);
+            sLocation      = joMatch.optString(JSONKey.location.toString(), sLocation);
         }
-
-        // use feed name and group name for event details
-        model.setEvent ( joMatch.optString(JSONKey.event   .toString(), feedPostName)
-                       , joMatch.optString(JSONKey.division.toString(), sGroup)
-                       , null, null);
-
+        model.setEvent(sEventName, sFieldDivision, sEventRound, sLocation);
     }
 
     @Override public AdapterView.OnItemLongClickListener getOnItemLongClickListener() {
@@ -579,6 +596,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 FeedMatchSelector.this.onChildClickListener.setDisabled( feedStatus.allowSelectionForMatch() == false );
             } catch (Exception e) {
                 // activity closed before data was received
+                e.printStackTrace();
             }
 
             boolean bSuggestToShowPlayerList = false;
@@ -631,10 +649,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         }
 
         private List<String> fillList(String sContent) throws Exception {
+            String format = getFormat();
             if ( sContent.startsWith("{") && sContent.endsWith("}")) {
-                return fillListJSON(getFormat(), sContent);
+                return fillListJSON(format, sContent);
             } else if ( sContent.startsWith("[") && sContent.endsWith("]")) {
-                return fillListFromJSONArray(getFormat(), "All", new JSONArray(sContent));
+                return fillListFromJSONArray(format, "All", new JSONArray(sContent));
             } else {
                 return fillListFlat(sContent);
             }
@@ -652,6 +671,13 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         final String m_sDisplayFormat = "${" + JSONKey.date + "} ${" + JSONKey.time + "} : ${" + Player.A + "} - ${" + Player.B + "} : ${" + JSONKey.result + "}";
 
         private List<String> fillListJSON(String sFormat, String sContent) throws Exception {
+            sContent = sContent.replaceAll("\\bRound\\b"   , JSONKey.round   .toString())
+                               .replaceAll("\\bDivision\\b", JSONKey.division.toString())
+                               .replaceAll("\\bField\\b"   , JSONKey.field   .toString())
+                               .replaceAll("\\bPlayers\\b" , JSONKey.players .toString())
+                               .replaceAll("\\bDate\\b"    , JSONKey.date    .toString())
+                               .replaceAll("\\bTime\\b"    , JSONKey.time    .toString())
+            ;
             JSONObject joRoot = new JSONObject(sContent);
 
             // if there is a config section, use it
@@ -659,13 +685,60 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
             int iEntriesCnt = 0;
             Iterator<String> itSections = joRoot.keys(); // Field names and or round names?
-            while(itSections.hasNext()) {
+            while ( itSections.hasNext() ) {
                 String sSection = itSections.next();
-                if ( sSection.equals(FeedKeys.FeedMetaData.toString())) { continue; }
+                if ( sSection.equals("config") ) {
+                    JSONObject joConfig = joRoot.getJSONObject(sSection);
+                    Iterator<String> itPrefKeys = joConfig.keys();
+                    while ( itPrefKeys.hasNext() ) {
+                        String         sPref  = itPrefKeys.next();
+                        PreferenceKeys key    = PreferenceKeys.valueOf(sPref);
+                        String         sValue = joConfig.getString(sPref);
+                        mFeedPrefOverwrites.put(key, sValue);
+                    }
+                    continue;
+                }
+                if ( sSection.equals(FeedKeys.FeedMetaData.toString())) {
+                    JSONObject joMeta = joRoot.getJSONObject(sSection);
+                    String sNewName = joMeta.optString("Name");
+                           sNewName = joMeta.optString("Event", sNewName);
+                    Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
+                    String sCurrentName = feedPostDetail.get(URLsKeys.Name);
+                    if ( (sNewName.equals(sCurrentName) == false) && (sNewName.trim().length() > 0) ) {
+                        // TODO: see if the feed is in the feeds.php, and if so get additional attributes from there (Region,Country!)
 
-                JSONArray entries = joRoot.getJSONArray(sSection);
-                fillListFromJSONArray(sFormat, sSection, entries);
-                iEntriesCnt += entries.length();
+                        feedPostDetail.put(URLsKeys.Name, sNewName);
+                        PreferenceValues.addOrReplaceNewFeedURL(context, feedPostDetail, true, true);
+
+                        //emsAdapter.notifyDataSetChanged();
+                        //notifyDataSetChanged();
+                        if ( getActivity() instanceof MatchTabbed ) {
+                            MatchTabbed tabbed = (MatchTabbed) getActivity();
+                            tabbed.mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                    continue;
+                }
+
+                Object values = joRoot.get(sSection);
+                JSONArray entries = null;
+                if ( values instanceof JSONArray ) {
+                    entries = (JSONArray) values;
+                } else if ( values instanceof JSONObject ) {
+                    JSONObject joChild = (JSONObject) values;
+                    entries = joChild.optJSONArray("Matches");
+                    sSection = joChild.optString("Field", sSection);
+                    if ( entries == null ) {
+                        Log.w(TAG, String.format("Not using %s with object %s as value", sSection, values));
+                    }
+                } else {
+                    Log.w(TAG, String.format("Not using %s with value %s (%s)", sSection, values, values.getClass().getName()));
+                }
+
+                if ( entries != null ) {
+                    fillListFromJSONArray(sFormat, sSection, entries);
+                    iEntriesCnt += entries.length();
+                }
             }
 
             if ( iEntriesCnt == 0 ) {
@@ -680,8 +753,19 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             for(int f=0; f < matches.length(); f++) {
 
                 JSONObject joMatch = matches.getJSONObject(f);
+                if ( joMatch.has(Player.A.toString()) == false ) {
+                    JSONArray players = joMatch.optJSONArray(JSONKey.players.toString());
+                    if ( players != null ) {
+                        joMatch.put(Player.A.toString(), players.get(0));
+                        joMatch.put(Player.B.toString(), players.get(1));
+                    }
+                }
+                if ( joMatch.has(Player.A.toString()) == false ) {
+                    Log.w(TAG, "Skipping match without players");
+                    continue;
+                }
                 String sRoundOrDivision = joMatch.optString(JSONKey.division.toString(), sSection);
-                if ( StringUtil.isEmpty(sRoundOrDivision) ) {
+                if ( StringUtil.isEmpty(sRoundOrDivision) || sRoundOrDivision.equals(sSection) ) {
                     sRoundOrDivision = joMatch.optString(JSONKey.round.toString(), sSection);
                 }
 
