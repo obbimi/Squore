@@ -1361,13 +1361,22 @@ public abstract class Model
     // Source
     //-------------------------------
 
-    private String m_sSource = "";
+    private String m_sSource   = "";
+    private String m_sSourceID = "";
 
     public String getSource() {
         return m_sSource;
     }
-    public void setSource(String sSource) {
-        m_sSource = sSource;
+    public String getSourceID() {
+        return m_sSourceID;
+    }
+    public void setSource(String sSource, String sSourceID) {
+        if ( sSource != null ) {
+            m_sSource   = sSource;
+        }
+        if ( sSourceID != null ) {
+            m_sSourceID = sSourceID;
+        }
     }
 
     //-------------------------------
@@ -1825,8 +1834,9 @@ public abstract class Model
             if ( joMatch.has(JSONKey.metadata.toString()) ) {
                 JSONObject joMetadata = joMatch.getJSONObject(JSONKey.metadata.toString());
 
-                String sSource = joMetadata.optString(JSONKey.source.toString(), "");
-                setSource(sSource);
+                String sSource   = joMetadata.optString(JSONKey.source.toString(), "");
+                String sSourceID = joMetadata.optString(JSONKey.sourceID.toString(), "");
+                setSource(sSource, sSourceID);
             }
 
             // if only name date and time of the match will be consulted (historical games)
@@ -2362,7 +2372,8 @@ public abstract class Model
         }
 
         JSONObject metaData = new JSONObject();
-        metaData.put(JSONKey.source.toString(), m_sSource);
+        metaData.put(JSONKey.source  .toString(), m_sSource);
+        metaData.put(JSONKey.sourceID.toString(), m_sSourceID);
         if ( context != null ) {
             try {
                 String packageName = context.getPackageName();
@@ -2860,7 +2871,7 @@ public abstract class Model
 
         m_sUnparsedDate       = null;
         m_sResultFast         = null;
-        setSource(null);
+        setSource(null, null);
       //m_doubleServeSequence = DoublesServeSequence.NA;
         m_in_out              = DoublesServe.NA;
         setDirty(true);

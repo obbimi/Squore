@@ -82,6 +82,6 @@ public class MatchFragment extends Fragment {
         }
         MatchView matchView = (MatchView) view;
         String sFeedKey = (this instanceof MatchFragmentDoubles) ? "ManualDoubles" : "Manual";
-        return matchView.getIntent(sFeedKey, bBackPressed);
+        return matchView.getIntent(sFeedKey, null, bBackPressed);
     }
 }

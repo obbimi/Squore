@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard;
 
 import android.content.Context;
@@ -33,7 +50,7 @@ public class ResultPoster implements ContentReceiver
     private String             sUrlName           = null;
     private PostDataPreference postDataPreference = null;
     private String             sAccountName       = null;
-    private ScoreBoard         scoreBoard            = null;
+    private ScoreBoard         scoreBoard         = null;
 
     public ResultPoster(String sURL, String sUrlName, PostDataPreference postDataPreference, String sAccountName, Authentication authentication) {
         sPostURL                = sURL;
@@ -123,8 +140,10 @@ public class ResultPoster implements ContentReceiver
                         , "club1"              , matchModel.getClub(Player.A)
                         , "club2"              , matchModel.getClub(Player.B)
                         , "result"             , sResult
+                        , "id"                 , matchModel.getSourceID()
                         , "gamescores"         , matchModel.getGameScores()
                         , "winner"             , (sWinner==null?"":sWinner)
+                        , "winnerAB"           , String.valueOf(winner)
                         , "duration"           , String.valueOf(durationInMin)
                         , "totalpointsplayer1" , String.valueOf(MapUtil.getInt(pointsWon, Player.A, 0))
                         , "totalpointsplayer2" , String.valueOf(MapUtil.getInt(pointsWon, Player.B, 0))

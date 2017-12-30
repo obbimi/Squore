@@ -337,7 +337,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     private void setModelEvent(Model model, String sGroup, String feedPostName, JSONObject joMatch) {
         Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
-        model.setSource(feedPostDetail.get(URLsKeys.FeedMatches));
+        model.setSource(feedPostDetail.get(URLsKeys.FeedMatches), null);
 
         String sEventName = null;
         if ( PreferenceValues.useFeedNameAsEventName(context) ) {
@@ -361,6 +361,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
         }
         if ( joMatch != null ) {
+            String sSourceID = joMatch.optString(JSONKey.sourceID.toString());
+                   sSourceID = joMatch.optString(JSONKey.id      .toString(), sSourceID);
+            if ( sSourceID != null ) {
+                model.setSource(null, sSourceID);
+            }
+
             sEventName     = joMatch.optString(JSONKey.name    .toString(), sEventName);
             sFieldDivision = joMatch.optString(JSONKey.division.toString(), sFieldDivision); // field?
             sFieldDivision = joMatch.optString(JSONKey.field   .toString(), sFieldDivision); // field?
@@ -677,6 +683,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                                .replaceAll("\\bPlayers\\b" , JSONKey.players .toString())
                                .replaceAll("\\bDate\\b"    , JSONKey.date    .toString())
                                .replaceAll("\\bTime\\b"    , JSONKey.time    .toString())
+                               .replaceAll("\\bID\\b"      , JSONKey.id      .toString())
             ;
             JSONObject joRoot = new JSONObject(sContent);
 
@@ -692,12 +699,27 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     Iterator<String> itPrefKeys = joConfig.keys();
                     while ( itPrefKeys.hasNext() ) {
                         String         sPref  = itPrefKeys.next();
-                        PreferenceKeys key    = PreferenceKeys.valueOf(sPref);
                         String         sValue = joConfig.getString(sPref);
-                        mFeedPrefOverwrites.put(key, sValue);
+                        try {
+                            PreferenceKeys key    = PreferenceKeys.valueOf(sPref);
+                            mFeedPrefOverwrites.put(key, sValue);
+                        } catch (Exception e) {
+                            URLsKeys key = URLsKeys.PostResult;
+                            if ( sPref.equals(key.toString())) {
+                                Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
+                                String sCurrent = feedPostDetail.get(key);
+                                if ( sValue.equals(sCurrent) == false ) {
+                                    feedPostDetail.put(key, sValue);
+                                    PreferenceValues.addOrReplaceNewFeedURL(context, feedPostDetail, true, true);
+                                }
+                            } else {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                     continue;
                 }
+/*
                 if ( sSection.equals(FeedKeys.FeedMetaData.toString())) {
                     JSONObject joMeta = joRoot.getJSONObject(sSection);
                     String sNewName = joMeta.optString("Name");
@@ -719,6 +741,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     }
                     continue;
                 }
+*/
 
                 Object values = joRoot.get(sSection);
                 JSONArray entries = null;

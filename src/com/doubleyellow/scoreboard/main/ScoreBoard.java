@@ -1693,7 +1693,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             matchModel.setEnglishScoring      (previous.isEnglishScoring      ());
             matchModel.setTiebreakFormat      (previous.getTiebreakFormat     ());
             matchModel.setHandicapFormat      (previous.getHandicapFormat     ());
-            matchModel.setSource              (previous.getSource()             );
+            matchModel.setSource              (previous.getSource() , previous.getSourceID() );
             matchModel.setReferees            (previous.getReferee(), previous.getMarker());
 /*
             for ( Player p: Model.getPlayers() ) {
@@ -1978,8 +1978,7 @@ touch -t 01030000 LAST.sb
         boolean bAtLeastOneGameFinished = matchModel.getNrOfFinishedGames() > 0;
 
         Feature continueRecentMatch = PreferenceValues.continueRecentMatch(context);
-        String sContext = matchModel.getSource();
-        boolean bPossiblyContinueThisMatchAsRecent = ( (continueRecentMatch != Feature.DoNotUse) && StaticMatchSelector.class.getSimpleName().equals(sContext));
+        boolean bPossiblyContinueThisMatchAsRecent = ( (continueRecentMatch != Feature.DoNotUse) && StaticMatchSelector.matchIsFrom(matchModel.getSource()));
 
         if ( bForceStore || bAtLeastOneGameFinished || bPossiblyContinueThisMatchAsRecent ) {
             FileUtil.writeTo(fStore, sJson);

@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.match;
 
 import android.app.ActionBar;
@@ -35,7 +52,9 @@ import com.doubleyellow.util.StringUtil;
 public class Match extends XActivity implements MenuHandler
 {
     private MatchView vMatchView;
-    private String    sFeedKey;
+    /** where the current match is selected from (source) */
+    private String    m_sSource;
+    private String    m_sSourceID;
 
     @Override public void onCreate(Bundle savedInstanceState)
     {
@@ -129,8 +148,8 @@ public class Match extends XActivity implements MenuHandler
                 vMatchView.setReferees(sRef, sMarker);
             }
 
-            sFeedKey = bundleExtra.getString(MatchDetails.FeedKey.toString(), "");
-            if ( StaticMatchSelector.class.getSimpleName().equals(sFeedKey) == false ) {
+            m_sSource = bundleExtra.getString(MatchDetails.FeedKey.toString(), "");
+            if ( StaticMatchSelector.class.getSimpleName().equals(m_sSource) == false ) {
                 // selected from some public feed
                 vMatchView.clearClubFields();
             }
@@ -144,7 +163,7 @@ public class Match extends XActivity implements MenuHandler
             String sED     = model.getEventDivision();
             String sER     = model.getEventRound();
             String sEL     = model.getEventLocation();
-            vMatchView.setEvent(sEN, sED, sER, sEL);
+            vMatchView.setEvent(sEN, sED, sER, sEL, model.getSourceID());
 
             String sRef    = model.getReferee();
             String sMarker = model.getMarker();
@@ -152,8 +171,9 @@ public class Match extends XActivity implements MenuHandler
                 vMatchView.setReferees(sRef, sMarker);
             }
 
-            sFeedKey = model.getSource();
-            if ( StaticMatchSelector.class.getSimpleName().equals(sFeedKey) == false ) {
+            m_sSource   = model.getSource();
+            m_sSourceID = model.getSourceID();
+            if ( StaticMatchSelector.matchIsFrom(m_sSource) == false ) {
                 // selected from some public feed
                 if ( StringUtil.areAllEmpty(sClubA, sClubB) ) {
                     vMatchView.clearClubFields();
@@ -176,7 +196,7 @@ public class Match extends XActivity implements MenuHandler
                 return true;
             }
             case R.id.cmd_ok:
-                Intent intent = vMatchView.getIntent(sFeedKey, false);
+                Intent intent = vMatchView.getIntent(m_sSource, m_sSourceID, false);
                 if (intent == null) return false;
                 setResult(RESULT_OK, intent);
 
@@ -223,14 +243,14 @@ public class Match extends XActivity implements MenuHandler
     }
 
     @Override public void onBackPressed() {
-        boolean bNeutralButtonIsBackToList = StaticMatchSelector.class.getSimpleName().equals(sFeedKey)
-                                          || FeedMatchSelector  .class.getSimpleName().equals(sFeedKey)
-                                          || ((sFeedKey != null) && sFeedKey.startsWith("http"));
+        boolean bNeutralButtonIsBackToList = StaticMatchSelector.matchIsFrom(m_sSource)
+                                          || FeedMatchSelector  .class.getSimpleName().equals(m_sSource)
+                                          || ((m_sSource != null) && m_sSource.startsWith("http"));
         if ( bNeutralButtonIsBackToList ) {
             handleMenuItem(R.id.dyn_new_match);
             return;
         }
-        Intent intent = vMatchView.getIntent(sFeedKey, true);
+        Intent intent = vMatchView.getIntent(m_sSource, m_sSourceID, true);
         if ( intent == null ) {
             // not enough data entered... simply leave the activity
             super.onBackPressed();

@@ -724,6 +724,16 @@
                         android:layout_gravity="center_horizontal"
                         dy:PreferenceKeys="locationList,locationLast"
                         dy:defaultACValues="@string/emptyList_default"/>
+            <TextView
+                android:id="@+id/match_id"
+                android:hint="Match ID/Source ID"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Match ID/Source ID"
+                android:textSize="@dimen/txt_medium"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                />
         </LinearLayout>
 
         <LinearLayout
