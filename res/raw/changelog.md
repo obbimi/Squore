@@ -1,3 +1,11 @@
+## 4.07 (jan 2018)
+
+- Add support for JSON feeds to select matches from
+    - More flexible than current 'plain text' feeds
+    - sample json can be found [here](http://squore.double-yellow.be/demo/demo.matches.json)
+    - ask your clubs webmaster to provided a similar feed with matches to be played at/for your club
+- More info about working with feeds within Squore can be found [here](http://squore.double-yellow.be/#Feeds) 
+
 ## 4.06 (dec 2017)
 
 - Squore has been translated into Czech. Thank you very much Filip Hurta!

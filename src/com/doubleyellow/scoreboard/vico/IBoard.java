@@ -1071,8 +1071,12 @@ public class IBoard implements TimerViewContainer
         if ( iDuration <= 0    ) { return; }
         if ( direction == null ) { return; }
         Map<ColorPrefs.ColorTarget, Integer> colors = mColors;
+        if ( MapUtil.isEmpty(colors) ) { return; }
         Integer bgColor  = colors.get(ctBg);
         Integer txtColor = colors.get(ctTxt);
+        if ( bgColor == null || txtColor == null ) {
+            return; // prevent NullPointerException when trying to convert Integer being null to an int
+        }
         if ( StringUtil.length(sMessage) < 10 ) {
             // add a few non breaking spaces
             sMessage = StringUtil.lrpad(sMessage, (char) 160, 20); // 160 is non breaking space
