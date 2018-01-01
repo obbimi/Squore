@@ -59,6 +59,13 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 {
     public static final String TAG = "SB." + StaticMatchSelector.class.getSimpleName();
 
+    public static boolean matchIsFrom(String modelSource) {
+        return StaticMatchSelector.class.getName().equals(modelSource);
+    }
+    public static void setMatchIsFrom(Model model) {
+        model.setSource(StaticMatchSelector.class.getName(), null);
+    }
+
     private LinearLayout.LayoutParams llpMargin1Weight1 = null;
 
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -457,7 +464,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
             m.setPlayerName (Player.B, saPlayers[1].trim());
         }
 
-        m.setSource(StaticMatchSelector.class.getSimpleName());
+        StaticMatchSelector.setMatchIsFrom(m);
 
         // use feed name and group name for event details
         if ( PreferenceValues.useGroupNameAsEventData(context) ) {

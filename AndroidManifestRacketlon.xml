@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.doubleyellow.racketlon"
+          android:versionCode="19"
+          android:versionName="4.08">
+    <!-- 4.08 (19) = revision 790 -->              <!-- nov 02: minor improvements -->
+    <!-- 4.08 (18) = revision 779 -->              <!-- okt 21: better handling of dialogs/network timeouts -->
+    <!-- 4.08 (17) = revision 771 -->              <!-- sep 25: color for checkbox in matchview -->
+    <!-- 4.08 (17) = revision 771 -->              <!-- sep 25: color in dialogs + minor bug fixes -->
+    <!-- 4.08 (17) = revision 771 -->              <!-- sep 25: allow starting a match from feeds player list -->
+    <!-- 4.08 (16) = revision 759 -->              <!-- aug 04: copy country code when selecting player fix -->
+    <!-- 4.08 (15) = revision 758 -->              <!-- jul 31: improvements for live scoring -->
+    <!-- 4.07 (14) = revision 747 -->              <!-- jul 18: easily change sides/flip players -->
+    <!-- 4.06 (13) = revision 741 -->              <!-- jul 16: download fix for android 7 + improved sharing for Doubles -->
+    <!-- 4.05 (12) = revision 735 -->              <!-- jul 11: improved match(ball) 'calculation' in last set + add missing Dutch translations -->
+    <!-- 4.04 (11) = revision 728 -->              <!-- jul 09: allow different sequence + double improvements -->
+    <!-- 4.03 (10) = revision 725 -->              <!-- jul 07: minor bugfixes -->
+    <!-- 4.02 ( 9) = revision 718 -->              <!-- jul 04: minor fixes: end game incorrect warning 'not allowed' after rotation -->
+    <!-- 4.01 ( 7) = revision 704 -->              <!-- jun 28: static match selection did not remember country because of faulty getTemp() model -->
+    <!-- 4.01 ( 6) = revision 703 -->              <!-- jun 27: refresh select list by means of swipe down-->
+    <!-- 4.01 ( 5) = revision 701 -->              <!-- jun 24: fix the AdjustScore dialog for racketlon-->
+    <!-- 4.01 ( 4) = revision 699 -->              <!-- jun 19: match result summary should be something like A+24 or B+15, usage of separate racketlon.dy.be subdomain -->
+    <!-- 4.00 ( 3) = revision 694 -->              <!-- jun 18: added missing dutch translations -->
+    <!-- 4.00 ( 2) = revision 692 -->              <!-- jun 17: few fixes -->
+    <!-- 4.00 ( 1) = revision 691 -->              <!-- jun 16: first racketlon version -->
+<!--
+    <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
+    <uses-feature android:name="android.permission.INTERNET" android:required="true" />
+-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <!-- to autocomplete player names from contact list -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+    <!-- for import/export functionality -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<!--
+    <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
+-->
+    <uses-sdk/>
+
+    <supports-screens
+            android:anyDensity="true"
+            android:largeScreens="true"
+            android:normalScreens="true"
+            android:smallScreens="true" />
+
+    <application
+            android:theme="@style/SBTheme"
+            android:allowBackup="true"
+            android:label="@string/app_name_short_brand_Racketlon"
+            android:icon="@drawable/logo_brand_racketlon">
+
+<!--
+    For ChromeCast
+-->
+        <service android:name="com.doubleyellow.scoreboard.cast.PresentationService" android:exported="false" />
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+
+        <!-- only for shared libraries, mine is not -->
+        <!--<uses-library android:name="com.doubleyellow.android"/>-->
+
+        <!-- Splash screen -->
+<!--
+        <activity android:name="com.doubleyellow.scoreboard.activity.SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+-->
+
+        <activity android:name="com.doubleyellow.scoreboard.main.ScoreBoard" android:label="@string/app_name_short_brand_Racketlon">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+<!--
+            <intent-filter>
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
+            </intent-filter>
+-->
+            <!--
+            <meta-data android:name="android.nfc.action.TECH_DISCOVERED" android:resource="@xml/filter_nfc" />
+            -->
+
+            <intent-filter> <data android:scheme="http"  android:host="racketlon.double-yellow.be"      android:pathPattern="/.*20.*"               /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="racketlon.double-yellow.be"      android:pathPattern="/uploads/.*.zip"       /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+
+            <intent-filter> <data android:scheme="http"  android:host="www.tournamentsoftware.com"      android:pathPattern="/sport/tournament.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="www.tournamentsoftware.com"      android:pathPattern="/sport/tournament.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="tournamentsoftware.com"          android:pathPattern="/sport/tournament.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="tournamentsoftware.com"          android:pathPattern="/sport/tournament.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="fir.tournamentsoftware.com"      android:pathPattern="/sport/tournament.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="fir.tournamentsoftware.com"      android:pathPattern="/sport/tournament.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="rfa.tournamentsoftware.com"      android:pathPattern="/sport/tournament.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="rfa.tournamentsoftware.com"      android:pathPattern="/sport/tournament.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+
+            <intent-filter> <data android:scheme="http"  android:host="www.tournamentsoftware.com"      android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="www.tournamentsoftware.com"      android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="tournamentsoftware.com"          android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="tournamentsoftware.com"          android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="fir.tournamentsoftware.com"      android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="fir.tournamentsoftware.com"      android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="rfa.tournamentsoftware.com"      android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="rfa.tournamentsoftware.com"      android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+
+            <intent-filter> <data android:scheme="http"  android:host="www.tournamentsoftware.com"      android:pathPattern="/sport/draws.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="www.tournamentsoftware.com"      android:pathPattern="/sport/draws.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="tournamentsoftware.com"          android:pathPattern="/sport/draws.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="tournamentsoftware.com"          android:pathPattern="/sport/draws.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="fir.tournamentsoftware.com"      android:pathPattern="/sport/draws.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="fir.tournamentsoftware.com"      android:pathPattern="/sport/draws.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="rfa.tournamentsoftware.com"      android:pathPattern="/sport/draws.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="rfa.tournamentsoftware.com"      android:pathPattern="/sport/draws.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+
+            <intent-filter> <data android:scheme="http"  android:host="www.tournamentsoftware.com"      android:pathPattern="/sport/players.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="www.tournamentsoftware.com"      android:pathPattern="/sport/players.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="tournamentsoftware.com"          android:pathPattern="/sport/players.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="tournamentsoftware.com"          android:pathPattern="/sport/players.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="fir.tournamentsoftware.com"      android:pathPattern="/sport/players.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="fir.tournamentsoftware.com"      android:pathPattern="/sport/players.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="rfa.tournamentsoftware.com"      android:pathPattern="/sport/players.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="rfa.tournamentsoftware.com"      android:pathPattern="/sport/players.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <!-- mimetype must match the mimetype as passed from com.doubleyellow.scoreboard.main.ScoreBoard.createNdefMessage() -->
+<!--
+                <data android:mimeType="application/com.doubleyellow.scoreboard"/>
+-->
+                <data android:mimeType="application/json"/>
+            </intent-filter>
+
+<!--
+            <intent-filter>
+                <data android:scheme="http" android:host="squore.double-yellow.be"/>
+                <action android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+-->
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.match.Match" android:label="@string/sb_new_match">
+            <!--<meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />-->
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.match.MatchTabbed" android:label="@string/sb_new_match">
+            <!--<meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />-->
+        </activity>
+        <activity android:name="com.doubleyellow.scoreboard.archive.ArchiveTabbed" android:label="@string/Archive">
+            <!--<meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />-->
+        </activity>
+        <activity android:name="com.doubleyellow.scoreboard.feed.FeedFeedSelector" android:label="@string/add_new_feed">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.match.MatchTabbed" />
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.history.MatchHistory" android:label="@string/sb_score_details">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.activity.ScoreSheetOnline" android:label="@string/sb_score_details">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.activity.ConductInfo" android:label="@string/sb_possible_conducts">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.activity.Feedback" android:label="@string/cmd_feedback">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.prefs.Preferences" android:label="@string/sb_preferences" android:theme="@style/SBPreferencesTheme">
+            <!--<meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />-->
+        </activity>
+
+    </application>
+</manifest>

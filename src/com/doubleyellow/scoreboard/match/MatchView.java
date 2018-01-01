@@ -75,7 +75,7 @@ public class MatchView extends SBRelativeLayout
         return v.requestFocus();
     }
 
-    void setEvent(String sName, String sDivision, String sRound, String sLocation) {
+    void setEvent(String sName, String sDivision, String sRound, String sLocation, String sSourceID) {
         boolean bFocusOnIfEmpty = false;
         txtEventName.setText(sName);
         if ( ViewUtil.areAllNonEmpty(txtEventName) ) {
@@ -101,6 +101,12 @@ public class MatchView extends SBRelativeLayout
                 findViewById(R.id.lblEvent).callOnClick(); // to expand the parent area by default
                 bEventCollapsed = true;
             }
+        }
+
+        if ( txtEventID != null ) {
+            txtEventID.setText(sSourceID);
+            int visibility = StringUtil.isEmpty(sSourceID) ? GONE : VISIBLE;
+            txtEventID.setVisibility(visibility);
         }
     }
 
@@ -311,6 +317,7 @@ public class MatchView extends SBRelativeLayout
     private PreferenceACTextView txtEventDivision;
     private PreferenceACTextView txtEventRound;
     private PreferenceACTextView txtEventLocation;
+    private TextView             txtEventID;
     private EditText             txtPlayerA;
     private EditText             txtPlayerA2; // doubles
     private EditText             txtPlayerB;
@@ -439,6 +446,7 @@ public class MatchView extends SBRelativeLayout
         txtEventDivision = (PreferenceACTextView) findViewById(R.id.match_division);
         txtEventRound    = (PreferenceACTextView) findViewById(R.id.match_round);
         txtEventLocation = (PreferenceACTextView) findViewById(R.id.match_location);
+        txtEventID       = (TextView)             findViewById(R.id.match_id);
         tvsEvent = new TextView[]{txtEventName,txtEventDivision,txtEventRound,txtEventLocation};
 
         txtRefereeName   = (PreferenceACTextView) findViewById(R.id.match_referee);
@@ -873,7 +881,7 @@ public class MatchView extends SBRelativeLayout
     }
 
     /** uses Model instead of MatchDetails */
-    Intent getIntent(String sFeedKey, boolean bBackPressed) {
+    Intent getIntent(String sSource, String sSourceID, boolean bBackPressed) {
         TextView[] textViews = {txtPlayerA, txtPlayerB};
         int msg_enter_player_names = R.string.msg_enter_both_player_names;
         if ( m_bIsDoubles ) {
@@ -921,14 +929,14 @@ public class MatchView extends SBRelativeLayout
             iNrOfGamesToWinMatch = (Integer.parseInt(spNumberOfGamesToWin.getSelectedItem().toString()) + 1) / 2;
         }
         Intent intent = new Intent();
-        //intent.putExtra(MatchDetails.class.getSimpleName(), getBundle(sFeedKey, iNrOfPoints2Win, iNrOfGamesToWinMatch)); // this is read by ScoreBoard.onActivityResult
-        Model  model = getModel(sFeedKey, iNrOfPoints2Win, iNrOfGamesToWinMatch);
+        //intent.putExtra(MatchDetails.class.getSimpleName(), getBundle(sSource, iNrOfPoints2Win, iNrOfGamesToWinMatch)); // this is read by ScoreBoard.onActivityResult
+        Model  model = getModel(sSource, sSourceID, iNrOfPoints2Win, iNrOfGamesToWinMatch);
         String sJson = model.toJsonString(null);
         intent.putExtra(Model.class.getSimpleName(), sJson); // this is read by ScoreBoard.onActivityResult
         return intent;
     }
 
-    private Model getModel(String sFeedKey, int iNrOfPoints2Win, int iNrOfGamesToWinMatch) {
+    private Model getModel(String sSource, String sSourceID, int iNrOfPoints2Win, int iNrOfGamesToWinMatch) {
         Model m = ModelFactory.getTemp();
         if ( m_bIsDoubles == false ) {
             m.setPlayerName(Player.A, txtPlayerA.getText().toString());
@@ -963,8 +971,8 @@ public class MatchView extends SBRelativeLayout
                      ,txtMarkerName   .getTextAndPersist().toString());
         m.setNrOfPointsToWinGame(iNrOfPoints2Win);
         m.setNrOfGamesToWinMatch(iNrOfGamesToWinMatch);
-        if ( StringUtil.isNotEmpty(sFeedKey) ) {
-            m.setSource(sFeedKey);
+        if ( StringUtil.isNotEmpty(sSource) ) {
+            m.setSource(sSource, sSourceID);
         }
 
         if ( (spTieBreakFormat != null) && (spTieBreakFormat.getVisibility() != View.GONE) && ( spTieBreakFormat.getSelectedItemPosition() != -1) ) {
@@ -1022,86 +1030,4 @@ public class MatchView extends SBRelativeLayout
         }
         return m;
     }
-/*
-    private Bundle getBundle(String sFeedKey, int iNrOfPoints2Win, int iNrOfGamesToWinMatch) {
-        Bundle bundle = new Bundle();
-        bundle.putString (MatchDetails.PlayerA            .toString(), txtPlayerA      .getText()          .toString());
-        bundle.putString (MatchDetails.PlayerB            .toString(), txtPlayerB      .getText()          .toString());
-
-        if ( (txtCountryA != null) && (txtCountryB != null) ) {
-            String sCountryA = txtCountryA.getText().toString();
-            String sCountryB = txtCountryB.getText().toString();
-            if ( txtCountryA instanceof CountryTextView && txtCountryB instanceof CountryTextView) {
-                String sCCA = ((CountryTextView)txtCountryA).getCountryCode();
-                String sCCB = ((CountryTextView)txtCountryB).getCountryCode();
-                if ( StringUtil.isNotEmpty(sCCA) ) {
-                    sCountryA = sCCA;
-                }
-                if ( StringUtil.isNotEmpty(sCCB) ) {
-                    sCountryB = sCCB;
-                }
-            }
-            bundle.putString (MatchDetails.CountryA.toString(), sCountryA);
-            bundle.putString (MatchDetails.CountryB.toString(), sCountryB);
-        }
-        if ( (txtClubA != null) && (txtClubB != null) ) {
-            bundle.putString (MatchDetails.ClubA.toString(), txtClubA.getTextAndPersist().toString());
-            bundle.putString (MatchDetails.ClubB.toString(), txtClubB.getTextAndPersist().toString());
-        }
-
-        bundle.putString (MatchDetails.EventName          .toString(), txtEventName    .getTextAndPersist().toString());
-        bundle.putString (MatchDetails.EventDivision      .toString(), txtEventDivision.getTextAndPersist().toString());
-        bundle.putString (MatchDetails.EventRound         .toString(), txtEventRound   .getTextAndPersist().toString());
-        bundle.putString (MatchDetails.EventLocation      .toString(), txtEventLocation.getTextAndPersist().toString());
-
-        bundle.putString (MatchDetails.Referee            .toString(), txtRefereeName  .getTextAndPersist().toString());
-        bundle.putString (MatchDetails.Marker             .toString(), txtMarkerName   .getTextAndPersist().toString());
-        bundle.putInt    (MatchDetails.NrOfPointsToWinGame.toString(), iNrOfPoints2Win);
-        bundle.putInt    (MatchDetails.NrOfGamesToWinMatch.toString(), iNrOfGamesToWinMatch);
-
-        if ( StringUtil.isNotEmpty(sFeedKey) ) {
-            bundle.putString(MatchDetails.FeedKey.toString(), sFeedKey);
-        }
-
-        if ( (spTieBreakFormat != null) && (spTieBreakFormat.getVisibility() != View.GONE) && ( spTieBreakFormat.getSelectedItemPosition() != -1) ) {
-            TieBreakFormat tbf = TieBreakFormat.values()[spTieBreakFormat.getSelectedItemPosition()];
-            bundle.putString(MatchDetails.TiebreakFormat.toString(), tbf.toString());
-        }
-
-        if ( (spHandicap != null) && (spHandicap.getVisibility() != View.GONE) && (spHandicap.getSelectedItemPosition() != -1) ) {
-            HandicapFormat hdc = HandicapFormat.values()[spHandicap.getSelectedItemPosition()];
-            bundle.putString(MatchDetails.HandicapFormat.toString(), hdc.toString());
-        }
-        if ( (spAnnouncementLanguage != null) && (spAnnouncementLanguage.getVisibility() != View.GONE) && (spAnnouncementLanguage.getSelectedItemPosition() != -1) ) {
-            AnnouncementLanguage languageNew = AnnouncementLanguage.values()[spAnnouncementLanguage.getSelectedItemPosition()];
-            PreferenceValues.setAnnouncementLanguage(languageNew, getContext());
-        }
-        if ( (spPauseDuration != null) && (spPauseDuration.getVisibility() != View.GONE) ) {
-            String sDuration = (String) spPauseDuration.getSelectedItem();
-            if ( StringUtil.isNotEmpty(sDuration) ) {
-                int iDuration = Integer.parseInt(sDuration);
-                int iCurrentPrefValue = PreferenceValues.getPauseDuration(getContext());
-                if ( iDuration != iCurrentPrefValue) {
-                    PreferenceValues.setNumber(PreferenceKeys.timerPauseBetweenGames, getContext(), iDuration);
-                }
-                //bundle.putInt(MatchDetails.PauseDuration.toString(), iDuration);
-            }
-        }
-
-        bundle.putBoolean(MatchDetails.UseEnglishScoring.toString(), cbUseEnglishScoring != null && cbUseEnglishScoring.isChecked());
-
-        // for doubles
-        if ( m_bIsDoubles ) {
-            if ( (spDoublesServeSequence != null) && (spDoublesServeSequence.getVisibility() != View.GONE) ) {
-                DoublesServeSequence dss = DoublesServeSequence.values()[spDoublesServeSequence.getSelectedItemPosition()];
-                bundle.putString(MatchDetails.DoubleServesSequence.toString(), dss.toString());
-            }
-            if ( (txtPlayerA2 != null) && (txtPlayerB2 != null) ) {
-                bundle.putString(MatchDetails.PlayerA2.toString(), txtPlayerA2.getText().toString());
-                bundle.putString(MatchDetails.PlayerB2.toString(), txtPlayerB2.getText().toString());
-            }
-        }
-        return bundle;
-    }
-*/
 }

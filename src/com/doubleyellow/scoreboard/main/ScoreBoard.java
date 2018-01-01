@@ -1693,7 +1693,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             matchModel.setEnglishScoring      (previous.isEnglishScoring      ());
             matchModel.setTiebreakFormat      (previous.getTiebreakFormat     ());
             matchModel.setHandicapFormat      (previous.getHandicapFormat     ());
-            matchModel.setSource              (previous.getSource()             );
+            matchModel.setSource              (previous.getSource() , previous.getSourceID() );
             matchModel.setReferees            (previous.getReferee(), previous.getMarker());
 /*
             for ( Player p: Model.getPlayers() ) {
@@ -1978,8 +1978,7 @@ touch -t 01030000 LAST.sb
         boolean bAtLeastOneGameFinished = matchModel.getNrOfFinishedGames() > 0;
 
         Feature continueRecentMatch = PreferenceValues.continueRecentMatch(context);
-        String sContext = matchModel.getSource();
-        boolean bPossiblyContinueThisMatchAsRecent = ( (continueRecentMatch != Feature.DoNotUse) && StaticMatchSelector.class.getSimpleName().equals(sContext));
+        boolean bPossiblyContinueThisMatchAsRecent = ( (continueRecentMatch != Feature.DoNotUse) && StaticMatchSelector.matchIsFrom(matchModel.getSource()));
 
         if ( bForceStore || bAtLeastOneGameFinished || bPossiblyContinueThisMatchAsRecent ) {
             FileUtil.writeTo(fStore, sJson);
@@ -3709,14 +3708,17 @@ touch -t 01030000 LAST.sb
                     PreferenceValues.setString  (PreferenceKeys.divisionLast           , this, m.getEventDivision());
                     PreferenceValues.setString  (PreferenceKeys.roundLast              , this, m.getEventRound());
                     PreferenceValues.setString  (PreferenceKeys.locationLast           , this, m.getEventLocation());
-                    PreferenceValues.setEnum    (PreferenceKeys.handicapFormat, this, m.getHandicapFormat());
+                    PreferenceValues.setEnum    (PreferenceKeys.handicapFormat         , this, m.getHandicapFormat());
                     if ( Brand.isSquash() ) {
                         DoublesServeSequence eDSS = m.getDoubleServeSequence();
-                        if ((eDSS.equals(DoublesServeSequence.NA) == false)) {
+                        if ( eDSS.equals(DoublesServeSequence.NA) == false ) {
                             PreferenceValues.setEnum(PreferenceKeys.doublesServeSequence, this, eDSS);
                         }
                     }
-                    PreferenceValues.removeOverwrites(FeedMatchSelector.mFeedPrefOverwrites);
+                    if ( MapUtil.isNotEmpty(RWValues.getOverwritten() ) ) {
+                        Log.w(TAG, "remaining overwrites " + RWValues.getOverwritten());
+                        //PreferenceValues.removeOverwrites(FeedMatchSelector.mFeedPrefOverwrites);
+                    }
                     m.registerListeners(matchModel);
                     matchModel = m;
                     setPlayerNames(new String[] { matchModel.getName(Player.A), matchModel.getName(Player.B) });
