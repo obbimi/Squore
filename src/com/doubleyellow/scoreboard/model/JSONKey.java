@@ -69,5 +69,11 @@ public enum JSONKey {
 		source,
 		sourceID, id,
 	wifi,
+
+  //player,    // duplicate
+	  //name,  // duplicate
+	    club,
+	    country,
+	    seed,
 }
 

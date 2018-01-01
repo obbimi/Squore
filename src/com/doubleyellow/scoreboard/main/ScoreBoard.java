@@ -3708,14 +3708,17 @@ touch -t 01030000 LAST.sb
                     PreferenceValues.setString  (PreferenceKeys.divisionLast           , this, m.getEventDivision());
                     PreferenceValues.setString  (PreferenceKeys.roundLast              , this, m.getEventRound());
                     PreferenceValues.setString  (PreferenceKeys.locationLast           , this, m.getEventLocation());
-                    PreferenceValues.setEnum    (PreferenceKeys.handicapFormat, this, m.getHandicapFormat());
+                    PreferenceValues.setEnum    (PreferenceKeys.handicapFormat         , this, m.getHandicapFormat());
                     if ( Brand.isSquash() ) {
                         DoublesServeSequence eDSS = m.getDoubleServeSequence();
-                        if ((eDSS.equals(DoublesServeSequence.NA) == false)) {
+                        if ( eDSS.equals(DoublesServeSequence.NA) == false ) {
                             PreferenceValues.setEnum(PreferenceKeys.doublesServeSequence, this, eDSS);
                         }
                     }
-                    PreferenceValues.removeOverwrites(FeedMatchSelector.mFeedPrefOverwrites);
+                    if ( MapUtil.isNotEmpty(RWValues.getOverwritten() ) ) {
+                        Log.w(TAG, "remaining overwrites " + RWValues.getOverwritten());
+                        //PreferenceValues.removeOverwrites(FeedMatchSelector.mFeedPrefOverwrites);
+                    }
                     m.registerListeners(matchModel);
                     matchModel = m;
                     setPlayerNames(new String[] { matchModel.getName(Player.A), matchModel.getName(Player.B) });
