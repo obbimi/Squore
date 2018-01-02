@@ -3281,11 +3281,7 @@ touch -t 01030000 LAST.sb
                 setModus(null, Mode.FullAutomatedDemo);
                 return true;
             case R.id.sb_help:
-                String helpUrl = URLFeedTask.prefixWithBaseIfRequired("/help");
-
-                Uri uriUrl = buildURL(this, helpUrl, false);
-                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-                startActivity(launchBrowser);
+                showHelp();
                 return true;
             case R.id.sb_exit:
                 persist(true);
@@ -3404,27 +3400,27 @@ touch -t 01030000 LAST.sb
         show(colorPicker);
     }
 
-    private void showOfficialSquashRules() {
+    private void openInBrowser(String url) {
         try {
-            String helpUrl = PreferenceValues.getOfficialSquashRulesURL(this);
-                   helpUrl = URLFeedTask.prefixWithBaseIfRequired(helpUrl);
-            Uri uri = buildURL(this, helpUrl, true);
+            url = URLFeedTask.prefixWithBaseIfRequired(url);
+            Uri uri = buildURL(this, url,true);
             Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(launchBrowser);
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage()); // e.g. only 'browser' app has been disabled by user
+            Toast.makeText(this, "Sorry, unable to open browser with \n" + url, Toast.LENGTH_LONG).show();
         }
     }
+
+    private void showOfficialSquashRules() {
+        openInBrowser(PreferenceValues.getOfficialSquashRulesURL(this));
+    }
+
     private void showLiveScore() {
-        try {
-            String helpUrl = getString(R.string.pref_live_score_url);
-            helpUrl = URLFeedTask.prefixWithBaseIfRequired(helpUrl);
-            Uri uri = buildURL(this, helpUrl, true);
-            Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(launchBrowser);
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
+        openInBrowser(getString(R.string.pref_live_score_url));
+    }
+    private void showHelp() {
+        openInBrowser("/help");
     }
 
     /** To share to 'Live' score on a regular basis without user interaction */
@@ -3433,6 +3429,10 @@ touch -t 01030000 LAST.sb
             return;
         }
         ShareMatchPrefs prefs = PreferenceValues.getShareAction(this);
+        if ( prefs.equals(ShareMatchPrefs.PostResult) && PreferenceValues.autoSuggestToPostResult(this) ) {
+            // ensure dialog to 'suggest' posting is NOT also triggered
+            PreferenceValues.setOverwrite(PreferenceKeys.autoSuggestToPostResult, false);
+        }
         ChildActivity ca = new ChildActivity(this, null, this);
         ca.init(prefs.getMenuId());
         addToDialogStack(ca);
@@ -4095,6 +4095,13 @@ touch -t 01030000 LAST.sb
             return;
         }
 
+        if ( PreferenceValues.useShareFeature(this).equals(Feature.Automatic) ) {
+            ShareMatchPrefs prefs = PreferenceValues.getShareAction(this);
+            if ( prefs.equals(ShareMatchPrefs.PostResult) ) {
+                // match will be automatically posted, do not show the 'suggest' dialog
+                return;
+            }
+        }
         int iShowPostToSiteDialogCnt = PreferenceValues.getRunCount(this, PreferenceKeys.autoSuggestToPostResult);
         boolean bShowWithNoMoreCheckBox = PreferenceValues.autoSuggestToPostResult(this) && (iShowPostToSiteDialogCnt < 5);
 
