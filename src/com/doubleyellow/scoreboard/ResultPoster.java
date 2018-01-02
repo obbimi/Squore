@@ -31,6 +31,7 @@ import com.doubleyellow.android.task.URLTask;
 import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.util.Base64Util;
 import com.doubleyellow.util.MapUtil;
+import com.doubleyellow.util.StringUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -161,7 +162,11 @@ public class ResultPoster implements ContentReceiver
     }
 
     @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent) {
-        Log.i(TAG, "Content : " + sContent);
+        Log.d(TAG, "Content : " + sContent);
+
+        if ( StringUtil.isEmpty(sContent) ) {
+            sContent = "<html><i>No result in body of post to <b>" + sPostURL + "</b></i>. Please ask webmaster to provide a feedback text/html.</html>";
+        }
 
         scoreBoard.hideProgress();
         ScoreBoard.dialogWithOkOnly(scoreBoard, sContent);
