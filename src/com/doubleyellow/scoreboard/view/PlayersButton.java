@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.view;
 
 import android.content.Context;
@@ -58,16 +75,22 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         }
     }
 
+    private boolean m_bReuseFlagForAvatar = true;
+    private float   m_fAspectRatio_Flag   = 1.6f;
+    private float   m_fAspectRatio_Avatar = 1.0f;
+
     public static final String SUBBUTTON = "SUBBUTTON";
     private List<TextView>       nameButtons  = new ArrayList<TextView>();
     private List<TextView>       serveButtons = new ArrayList<TextView>();
     private List<ImageView>      flagImages   = new ArrayList<ImageView>(); // for now only just the one (even for doubles)
+    private List<ImageView>      avatarImages = new ArrayList<ImageView>(); // for now only just the one (even for doubles)
     private boolean              m_bIsDoubles = false;
     public void setPlayers(String players, boolean bIsDoubles) {
         if ( m_bIsDoubles != bIsDoubles ) {
             nameButtons  = new ArrayList<>();
             serveButtons = new ArrayList<>();
             flagImages   = new ArrayList<>();
+            avatarImages = new ArrayList<>();
             super.removeAllViews();
             if ( bIsDoubles ) {
                 // from singles to doubles
@@ -91,45 +114,51 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         //}
 
         for ( int n=0; n < saPlayers.length; n++ ) {
-            int iXmlIdOfSideButton      = R.id.btn_side1;
-            int sideButtonAlignParentRL = PercentRelativeLayout.ALIGN_PARENT_RIGHT;
-            int flagImageAlignParentRL  = PercentRelativeLayout.ALIGN_PARENT_LEFT;
-            //int playerNameAlignParentRL = PercentRelativeLayout.ALIGN_PARENT_LEFT;
-            int playerNameLRofServe     = PercentRelativeLayout.LEFT_OF;
-            int playerNameLRofFlag      = PercentRelativeLayout.RIGHT_OF;
+            // portrait and first in landscape: flag, avatar, name, serve
+            int avatarLRofFlag             = PercentRelativeLayout.RIGHT_OF;
+            int flagImageAlignParentRL     = PercentRelativeLayout.ALIGN_PARENT_LEFT;
+            int playerNameLRofAvatar       = PercentRelativeLayout.RIGHT_OF;
+            int playerNameLRofServe        = PercentRelativeLayout.LEFT_OF;
+            int sideButtonAlignParentRL    = PercentRelativeLayout.ALIGN_PARENT_RIGHT;
+            int playerNameAlignParentRL    = PercentRelativeLayout.ALIGN_PARENT_RIGHT;
+
             int playerNameAlignLRofPartner = PercentRelativeLayout.ALIGN_LEFT;
-            if ( (this.getId() == R.id.txt_player2) ) {
-                iXmlIdOfSideButton      = R.id.btn_side2;
+            if ( this.getId() == R.id.txt_player2 ) {
                 if ( ViewUtil.isLandscapeOrientation(getContext()) ) {
-                    sideButtonAlignParentRL = PercentRelativeLayout.ALIGN_PARENT_LEFT;
-                    flagImageAlignParentRL  = PercentRelativeLayout.ALIGN_PARENT_RIGHT;
-                    //playerNameAlignParentRL = PercentRelativeLayout.ALIGN_PARENT_RIGHT;
-                    playerNameLRofServe     = PercentRelativeLayout.RIGHT_OF;
-                    playerNameLRofFlag      = PercentRelativeLayout.LEFT_OF;
+                    avatarLRofFlag             = PercentRelativeLayout.LEFT_OF;
+                    flagImageAlignParentRL     = PercentRelativeLayout.ALIGN_PARENT_RIGHT;
+                    playerNameLRofAvatar       = PercentRelativeLayout.LEFT_OF;
+                    playerNameLRofServe        = PercentRelativeLayout.RIGHT_OF;
+                    sideButtonAlignParentRL    = PercentRelativeLayout.ALIGN_PARENT_LEFT;
+                    playerNameAlignParentRL    = PercentRelativeLayout.ALIGN_PARENT_LEFT;
+
                     playerNameAlignLRofPartner = PercentRelativeLayout.ALIGN_RIGHT;
                 }
             }
 
-            int iNameButtonId      = 100 + n;
-            int iServeSideButtonID = 200 + n;
-            int iFlagImageID       = 300 + n;
+            final int iNameButtonId      = 100 + n/* + this.getId()*/;
+            final int iServeSideButtonID = 200 + n/* + this.getId()*/;
+            final int iFlagImageID       = 300 + n/* + this.getId()*/;
+            final int iAvatarImageID     = 400 + n/* + this.getId()*/;
+        if ( bIsDoubles ) {
             if ( serveButtons.size() <= n ) {
-                // serve side button
+                // serve side button (1 for singles, 2 for doubles)
                 PercentRelativeLayout.LayoutParams rlp = new PercentRelativeLayout.LayoutParams(getContext(), null);
                 rlp.addRule(sideButtonAlignParentRL);
                 if ( serveButtons.size() == 1 ) {
+                    // for doubles, add the second serve side button below the first
                     rlp.addRule(PercentRelativeLayout.BELOW, iServeSideButtonID - 1);
                 }
 
                 PercentLayoutHelper.PercentLayoutInfo info = rlp.getPercentLayoutInfo();
                 info.heightPercent = bIsDoubles?0.50f:1.0f;
-                info.widthPercent  = -1.0f;
+              //info.widthPercent  = -1.0f;
                 info.aspectRatio   =  1.5f;
 
                 TextView bServeSide = new AutoResizeTextView(new ContextThemeWrapper(getContext(), R.style.SBButton) /*, null, R.style.SBButton*/);
                 bServeSide.setId(iServeSideButtonID);
-                bServeSide.setTag(iXmlIdOfSideButton + SUBBUTTON + n); // used to calculate parent id from within ScoreBoard listeners
-                if ( bIsDoubles == false ) {
+                bServeSide.setTag(((this.getId() == R.id.txt_player2) ? R.id.btn_side2 : R.id.btn_side1) + SUBBUTTON + n); // used to calculate parent id from within ScoreBoard listeners
+                if ( m_bIsDoubles == false ) {
                     bServeSide.setTypeface(null, Typeface.BOLD);
                 }
                 bServeSide.setText(" ");
@@ -152,29 +181,59 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
                 TextView bServeSide = serveButtons.get(n);
                 bServeSide.setVisibility(VISIBLE);
             }
+        }
 
-            if ( flagImages.size() <= 0 ) {
+            if ( flagImages.size() <= 0 ) { // for now only add a single flag and avatar imageview
                 // flag image
-                PercentRelativeLayout.LayoutParams rlp = new PercentRelativeLayout.LayoutParams(getContext(), null);
-                rlp.addRule(flagImageAlignParentRL);
+                {
+                    PercentRelativeLayout.LayoutParams rlp = new PercentRelativeLayout.LayoutParams(getContext(), null);
+                    rlp.addRule(flagImageAlignParentRL);
 
-                PercentLayoutHelper.PercentLayoutInfo info = rlp.getPercentLayoutInfo();
-                info.heightPercent =  1.0f;
-                info.widthPercent  = -1.0f;
-                info.aspectRatio   =  1.6f; // TODO: dynamic dependant of where we retrieve images from
+                    PercentLayoutHelper.PercentLayoutInfo info = rlp.getPercentLayoutInfo();
+                    info.heightPercent =  1.0f;
+                  //info.widthPercent  = -1.0f; // the default
+                    info.aspectRatio   =  m_fAspectRatio_Flag; // TODO: dynamic dependant of where we retrieve images from
 
-                ImageView ivFlag = new ImageView(getContext());
-                ivFlag.setVisibility(GONE);
-                ivFlag.setScaleType(ImageView.ScaleType.CENTER_INSIDE); // FIT_XY
-                //ivFlag.setImageResource(R.drawable.logo);
-                ivFlag.setId(iFlagImageID);
-                ivFlag.setBackgroundResource(R.drawable.image_border);
-                //ivFlag.setTag(iXmlIdOfSideButton + SUBBUTTON + n); // used to calculate parent id from within ScoreBoard listeners
-                super.addView(ivFlag, rlp);
-                flagImages.add(ivFlag);
+                    ImageView ivFlag = new ImageView(getContext());
+                  //ivFlag.setVisibility(GONE);
+                    ivFlag.setScaleType(ImageView.ScaleType.CENTER_INSIDE); // FIT_XY
+                    //ivFlag.setImageResource(R.drawable.logo);
+                    ivFlag.setId(iFlagImageID);
+                    ivFlag.setBackgroundResource(R.drawable.image_border);
+                    super.addView(ivFlag, rlp);
+                    flagImages.add(ivFlag);
 
-                if (onTouchListenerNames != null) {
-                    ivFlag.setOnTouchListener(onTouchListenerNames);
+                    if (onTouchListenerNames != null) {
+                        ivFlag.setOnTouchListener(onTouchListenerNames);
+                    }
+                    //ivFlag.setOnTouchListener(onTouchGONE);
+
+                    if ( m_bReuseFlagForAvatar ) {
+                        avatarImages.add(ivFlag);
+                    }
+                }
+
+                {
+                    PercentRelativeLayout.LayoutParams rlp = new PercentRelativeLayout.LayoutParams(getContext(), null);
+                    rlp.addRule(avatarLRofFlag, iFlagImageID);
+
+                    PercentLayoutHelper.PercentLayoutInfo info = rlp.getPercentLayoutInfo();
+                    info.heightPercent =  1.0f;
+                  //info.widthPercent  = -1.0f; // the default
+                    info.aspectRatio   =  m_fAspectRatio_Avatar;
+
+                    ImageView ivAvatar = new ImageView(getContext());
+                  //ivAvatar.setVisibility(GONE);
+                    ivAvatar.setScaleType(ImageView.ScaleType.CENTER_INSIDE); // FIT_START
+                    ivAvatar.setId(iAvatarImageID);
+                    //ivAvatar.setBackgroundResource(R.drawable.image_border);
+                    super.addView(ivAvatar, rlp);
+                    avatarImages.add(ivAvatar);
+
+                    if (onTouchListenerNames != null) {
+                        ivAvatar.setOnTouchListener(onTouchListenerNames);
+                    }
+                    //ivAvatar.setOnTouchListener(onTouchGONE);
                 }
             }
 
@@ -182,13 +241,22 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
             if ( nameButtons.size() <= n ) {
                 // player buttons
                 PercentRelativeLayout.LayoutParams rlp = new PercentRelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-                //rlp.addRule(playerNameAlignParentRL);
-                rlp.addRule(playerNameLRofServe, iServeSideButtonID);
+              //PercentRelativeLayout.LayoutParams rlp = new PercentRelativeLayout.LayoutParams(getContext(), null); // NOK
+                if ( m_bIsDoubles ) {
+                    rlp.addRule(playerNameLRofServe, iServeSideButtonID);
+                } else {
+                    rlp.addRule(playerNameAlignParentRL);
+                }
                 if ( nameButtons.size() == 1 ) {
+                    // for double, add the second name below the first
                     rlp.addRule(PercentRelativeLayout.BELOW, iNameButtonId - 1);
                     rlp.addRule(playerNameAlignLRofPartner, iNameButtonId - 1);
                 } else {
-                    rlp.addRule(playerNameLRofFlag , iFlagImageID);
+                    if ( m_bReuseFlagForAvatar ) {
+                        rlp.addRule(playerNameLRofAvatar, iFlagImageID);
+                    } else {
+                        rlp.addRule(playerNameLRofAvatar, iAvatarImageID);
+                    }
                 }
 
                 PercentLayoutHelper.PercentLayoutInfo info = rlp.getPercentLayoutInfo();
@@ -196,7 +264,7 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
 
                 b = new AutoResizeTextView(new ContextThemeWrapper(getContext(), R.style.SBButton) /*, null, R.style.SBButton*/);
                 b.setId(iNameButtonId);
-                b.setTag(this.getId() + SUBBUTTON + n); // used to calculate parent id from witin ScoreBoard listeners
+                b.setTag(this.getId() + SUBBUTTON + n); // used to calculate parent id from within ScoreBoard listeners
                 b.setTypeface(null, Typeface.BOLD); // TODO: not four doubles?
                 super.addView(b, rlp);
                 nameButtons.add(b);
@@ -213,13 +281,16 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
 
         if ( bIsDoubles == false ) {
             if ( nameButtons.size() == 2 ) {
+                // ensure, if previous match was a double, than second player name TextView is now invisible
                 nameButtons.get(1).setVisibility(GONE);
             }
 
-            // no serve buttons for singles (TODO: via preferences)
-            serveButtons.get(0).setVisibility(GONE);
-            if ( serveButtons.size() == 2 ) {
-                serveButtons.get(1).setVisibility(GONE);
+            if ( ListUtil.size(serveButtons) > 0 ) {
+                // no serve buttons for singles (TODO: via preferences)
+                serveButtons.get(0).setVisibility(GONE);
+                if ( serveButtons.size() == 2 ) {
+                    serveButtons.get(1).setVisibility(GONE);
+                }
             }
         }
 
@@ -236,7 +307,7 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
                    sOld = sOld.replaceAll(FeedMatchSelector.sCountry, "").trim();
             if ( StringUtil.isEmpty(sCountryCode) ) {
                 this.lHasCountry.clear();
-                flagImages.get(0).setVisibility(GONE);
+                flagImages.get(0).setVisibility(GONE); // TODO: if only avatar is specified (no country) layout is screwed up when using GONE for player2 in landscape
                 if ( this.bHasClub == false ) {
                     tv.setText(sOld);
                 }
@@ -251,11 +322,44 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
                         tv.setText(sOld);
                     }
                 }
-                if ( bShowFlag ) {
-                    this.lHasCountry.add(ShowCountryAs.FlagNextToNameOnDevice);
-                    PreferenceValues.downloadImage(getContext(), flagImages.get(0), sCountryCode);
-                } else {
-                    flagImages.get(0).setVisibility(GONE);
+            }
+        }
+        if ( ListUtil.size(flagImages) > 0 ) {
+            ImageView imageView = flagImages.get(0);
+            if ( bShowFlag ) {
+                this.lHasCountry.add(ShowCountryAs.FlagNextToNameOnDevice);
+                PreferenceValues.downloadImage(getContext(), imageView, sCountryCode);
+                if ( StringUtil.isNotEmpty(sCountryCode) ) {
+                    updateAspectRatio(imageView, m_fAspectRatio_Flag);
+                }
+            } else {
+                imageView.setVisibility(GONE);
+            }
+        }
+    }
+
+    public void setAvatar(String sAvatar) {
+        if ( ListUtil.size(avatarImages) > 0 ) {
+            ImageView imageView = avatarImages.get(0);
+            if ( StringUtil.isEmpty(sAvatar) ) {
+                imageView.setVisibility(GONE);
+            } else {
+                imageView.setVisibility(VISIBLE);
+                PreferenceValues.downloadAvatar(getContext(), imageView, sAvatar);
+                updateAspectRatio(imageView, m_fAspectRatio_Avatar);
+            }
+        }
+    }
+
+    private void updateAspectRatio(ImageView imageView, float fNew) {
+        if ( m_bReuseFlagForAvatar ) {
+            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+            if ( layoutParams instanceof LayoutParams ) {
+                LayoutParams plParams = (LayoutParams) layoutParams;
+                PercentLayoutHelper.PercentLayoutInfo info = plParams.getPercentLayoutInfo();
+                if ( info.aspectRatio != fNew ) {
+                    info.aspectRatio = fNew;
+                    imageView.requestLayout();
                 }
             }
         }
@@ -334,6 +438,15 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         }
     }
 
+    /** Test listener */
+/*
+    private OnTouchListener onTouchGONE = new OnTouchListener() {
+        @Override public boolean onTouch(View v, MotionEvent event) {
+            v.setVisibility(GONE);
+            return true;
+        }
+    };
+*/
     private OnTouchListener onTouchListenerNames = null;
 /*
     private OnTouchListener onTouchListenerSides = null;
@@ -348,8 +461,8 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         }
     }
 */
-    @Override public void setOnTouchListener(OnTouchListener lNames) {
-        onTouchListenerNames = lNames;
+    @Override public void setOnTouchListener(OnTouchListener listener) {
+        onTouchListenerNames = listener;
         for(TextView b: nameButtons) {
             b.setOnTouchListener(onTouchListenerNames);
         }

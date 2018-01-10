@@ -213,7 +213,7 @@ public class MatchView extends SBRelativeLayout
         return false;
     }
 
-    void setPlayers(String sA, String sB, String sCountryA, String sCountryB, String sClubA, String sClubB) {
+    void setPlayers(String sA, String sB, String sCountryA, String sCountryB, String sAvatarA, String sAvatarB, String sClubA, String sClubB) {
         int iNames = 0;
         if ( StringUtil.isNotEmpty(sA) ) {
             if ( m_bIsDoubles ) {
@@ -240,7 +240,7 @@ public class MatchView extends SBRelativeLayout
             iNames++;
         }
 
-        if ( (txtCountryA != null) && (txtCountryB!=null) ) {
+        if ( (txtCountryA != null) && (txtCountryB != null) ) {
             if ( StringUtil.isNotEmpty(sCountryA) ) {
                 txtCountryA.setText(sCountryA);
                 if ( txtCountryA instanceof CountryTextView) {
@@ -268,6 +268,14 @@ public class MatchView extends SBRelativeLayout
                         bCountriesCollapsed = false;
                     }
                 }
+            }
+        }
+
+        saAvatars[Player.A.ordinal()] = sAvatarA;
+        saAvatars[Player.B.ordinal()] = sAvatarB;
+        for(Player p: Player.values() ) {
+            if ( StringUtil.isNotEmpty(saAvatars[p.ordinal()]) ) {
+                PreferenceValues.downloadAvatar(getContext(), null, saAvatars[p.ordinal()]);
             }
         }
 
@@ -323,6 +331,7 @@ public class MatchView extends SBRelativeLayout
     private EditText             txtPlayerB;
     private EditText             txtPlayerB2; // doubles
     private TextView             txtCountryA;
+    private String[]             saAvatars = new String[2];
     private TextView             txtCountryB;
     private PreferenceACTextView txtClubA;
     private PreferenceACTextView txtClubB;
@@ -958,6 +967,9 @@ public class MatchView extends SBRelativeLayout
             m.setPlayerCountry(Player.A, sCountryA);
             m.setPlayerCountry(Player.B, sCountryB);
         }
+        m.setPlayerAvatar(Player.A, saAvatars[Player.A.ordinal()]);
+        m.setPlayerAvatar(Player.B, saAvatars[Player.B.ordinal()]);
+
         if ( (txtClubA != null) && (txtClubB != null) ) {
             m.setPlayerClub(Player.A, txtClubA.getTextAndPersist().toString());
             m.setPlayerClub(Player.B, txtClubB.getTextAndPersist().toString());

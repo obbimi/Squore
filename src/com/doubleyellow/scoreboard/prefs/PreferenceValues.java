@@ -18,22 +18,17 @@
 package com.doubleyellow.scoreboard.prefs;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Environment;
 import android.preference.*;
 import android.provider.ContactsContract;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
@@ -1008,6 +1003,29 @@ public class PreferenceValues extends RWValues
         if ( imageViewOrPreference != null ) {
             // display it after download
             imageTask = new DownloadImageTask(context.getResources(), imageViewOrPreference, sURL, sCountryCode, ImageView.ScaleType.FIT_XY, fCache, iFlagMaxCacheAgeInMin);
+            imageTask.setUserAgentString(URLTask.getMyUserAgentString(context));
+            imageTask.execute();
+            return 1;
+        } else {
+            if ( FileUtil.exists_notEmpty_youngerThan(fCache, iFlagMaxCacheAgeInMin) ) {
+                return 0;
+            } else {
+                // just download or refresh because it will most likely be used in the future
+                imageTask = new DownloadImageTask(context.getResources(), sURL, fCache, iFlagMaxCacheAgeInMin);
+                imageTask.setUserAgentString(URLTask.getMyUserAgentString(context));
+                imageTask.execute();
+                return 1;
+            }
+        }
+    }
+    public static int downloadAvatar(Context context, Object imageViewOrPreference, String sURL) {
+        int    iFlagMaxCacheAgeInMin = PreferenceValues.getMaxCacheAgeFlags(context) * 1;
+        String sCacheName            = "avatar." + sURL.replaceAll("[^\\w\\.\\-]", "_");
+        File   fCache                = new File(context.getCacheDir(), sCacheName);
+        DownloadImageTask imageTask = null;
+        if ( imageViewOrPreference != null ) {
+            // display it after download
+            imageTask = new DownloadImageTask(context.getResources(), imageViewOrPreference, sURL, sURL, ImageView.ScaleType.FIT_START, fCache, iFlagMaxCacheAgeInMin);
             imageTask.setUserAgentString(URLTask.getMyUserAgentString(context));
             imageTask.execute();
             return 1;

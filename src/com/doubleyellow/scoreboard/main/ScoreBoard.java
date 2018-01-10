@@ -1683,6 +1683,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             for(Player player: Model.getPlayers()) {
                 matchModel.setPlayerCountry(player, previous.getCountry(player));
                 matchModel.setPlayerClub   (player, previous.getClub   (player));
+                matchModel.setPlayerAvatar (player, previous.getAvatar (player));
             }
             // use event from previous
             matchModel.setEvent               (previous.getEventName(), previous.getEventDivision(), previous.getEventRound(), previous.getEventLocation());
@@ -2631,8 +2632,9 @@ touch -t 01030000 LAST.sb
         }
     }
     private class PlayerChangeListener implements Model.OnPlayerChangeListener {
-        @Override public void OnNameChange(Player p, String sName, String sCountry, String sClub, boolean bIsDoubles) {
+        @Override public void OnNameChange(Player p, String sName, String sCountry, String sAvatar, String sClub, boolean bIsDoubles) {
             iBoard.updatePlayerName   (p, sName, bIsDoubles);
+            iBoard.updatePlayerAvatar (p, sAvatar);
             iBoard.updatePlayerCountry(p, sCountry);
             iBoard.updatePlayerClub   (p, sClub);
             setMenuItemEnabled(R.id.sb_swap_double_players, bIsDoubles);
@@ -2648,6 +2650,9 @@ touch -t 01030000 LAST.sb
         }
         @Override public void OnClubChange(Player p, String sCountry) {
             iBoard.updatePlayerClub(p, sCountry);
+        }
+        @Override public void OnAvatarChange(Player p, String sAvatar) {
+            iBoard.updatePlayerAvatar(p, sAvatar);
         }
     }
 

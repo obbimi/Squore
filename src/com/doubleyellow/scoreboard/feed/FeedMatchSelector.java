@@ -320,13 +320,14 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     private void populateModelFromJSON(Model model, JSONObject joMatch, String sGroup, String feedPostName) {
         try {
             for(Player p: Player.values() ) {
-                Object o = joMatch.get(p.toString());
-                String sName = String.valueOf(o);
-                if ( o instanceof JSONObject ) {
-                    JSONObject jsonObject = (JSONObject) o;
-                    sName = jsonObject.getString("name");
-                    model.setPlayerClub(p, jsonObject.optString("club"));
-                    model.setPlayerCountry(p, jsonObject.optString("country"));
+                Object oPlayer = joMatch.get(p.toString());
+                String sName = String.valueOf(oPlayer);
+                if ( oPlayer instanceof JSONObject ) {
+                    JSONObject jsonObject = (JSONObject) oPlayer;
+                    sName = jsonObject.getString(JSONKey.name.toString());
+                    model.setPlayerClub   (p, jsonObject.optString(JSONKey.club   .toString()));
+                    model.setPlayerCountry(p, jsonObject.optString(JSONKey.country.toString()));
+                    model.setPlayerAvatar (p, jsonObject.optString(JSONKey.avatar .toString()));
 
                 }
                 model.setPlayerName (p, sName);
@@ -334,6 +335,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             String sResult = joMatch.optString(JSONKey.result.toString());
             if ( StringUtil.isNotEmpty(sResult) ) {
                 model.setResult(sResult);
+            }
+            if ( joMatch.has(JSONKey.numberOfPointsToWinGame.toString() ) ) {
+                model.setNrOfPointsToWinGame(joMatch.getInt(JSONKey.numberOfPointsToWinGame.toString()));
+            }
+            if ( joMatch.has(JSONKey.nrOfGamesToWinMatch.toString() ) ) {
+                model.setNrOfGamesToWinMatch(joMatch.getInt(JSONKey.nrOfGamesToWinMatch.toString()));
             }
 
             // use feed name and group name for event details

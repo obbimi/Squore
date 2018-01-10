@@ -128,6 +128,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
             iBoard.updateScore(p, matchModel.getScore(p));
             iBoard.updateServeSide    (p, matchModel.getNextDoubleServe(p), matchModel.getNextServeSide(p), matchModel.isLastPointHandout());
             iBoard.updatePlayerName   (p, matchModel.getName   (p), matchModel.isDoubles());
+            iBoard.updatePlayerAvatar (p, matchModel.getAvatar (p));
             iBoard.updatePlayerCountry(p, matchModel.getCountry(p));
             iBoard.updatePlayerClub   (p, matchModel.getClub   (p));
         }
@@ -285,8 +286,9 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         }
     }
     private class PlayerChangeListener implements Model.OnPlayerChangeListener {
-        @Override public void OnNameChange(Player p, String sName, String sCountry, String sClub, boolean bIsDoubles) {
+        @Override public void OnNameChange(Player p, String sName, String sCountry, String sAvatar, String sClub, boolean bIsDoubles) {
             iBoard.updatePlayerName   (p, sName, bIsDoubles);
+            iBoard.updatePlayerAvatar (p, sAvatar);
             iBoard.updatePlayerCountry(p, sCountry);
             iBoard.updatePlayerClub   (p, sClub);
         }
@@ -301,6 +303,9 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         }
         @Override public void OnClubChange(Player p, String sClub) {
             iBoard.updatePlayerClub(p, sClub);
+        }
+        @Override public void OnAvatarChange(Player p, String sAvatar) {
+            iBoard.updatePlayerAvatar(p, sAvatar);
         }
     }
     private class TimingChangedListener implements GameTiming.OnTimingChangedListener  {

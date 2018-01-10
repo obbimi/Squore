@@ -730,6 +730,13 @@ public class IBoard implements TimerViewContainer
             button.setCountry(sCountry, bShowAsTextAbbr, bShowAsFlagPref && (bHideBecauseSameCountry == false));
         }
     }
+    public void updatePlayerAvatar(Player p, String sAvatar) {
+        View view = findViewById(m_player2nameId.get(p));
+        if (view instanceof PlayersButton) {
+            PlayersButton button = (PlayersButton) view;
+            button.setAvatar(sAvatar);
+        }
+    }
 
     public void initPerPlayerColors(Player p, String sColor) {
         EnumSet<ShowPlayerColorOn> colorOns = PreferenceValues.showPlayerColorOn(context);

@@ -70,13 +70,15 @@ public abstract class Model
     }
     public interface OnPlayerChangeListener extends OnModelChangeListener {
 		/** Invoked if the name of the player stored in the model is changed */
-        void OnNameChange (Player p, String sName, String sCountry, String sClub, boolean bIsDoubles);
+        void OnNameChange (Player p, String sName, String sCountry, String sAvatar, String sClub, boolean bIsDoubles);
 		/** Invoked if the color stored for a player is changed in the model */
         void OnColorChange(Player p, String sColor);
         /** Invoked if the country stored for a player is changed in the model */
         void OnCountryChange(Player p, String sCountry);
         /** Invoked if the club stored for a player is changed in the model */
         void OnClubChange(Player p, String sClub);
+        /** Invoked if the avatar stored for a player is changed in the model */
+        void OnAvatarChange(Player p, String sClub);
     }
     public interface OnServeSideChangeListener extends OnModelChangeListener {
 		/** Invoked every time there is a change of where the next serve takes place */
@@ -179,7 +181,7 @@ public abstract class Model
             final OnPlayerChangeListener playerChangeListener = (OnPlayerChangeListener) changedListener;
             onPlayerChangeListeners.add(playerChangeListener);
             for(Player p: getPlayers() ) {
-                playerChangeListener.OnNameChange   (p, getName   (p, true, false), getCountry(p), getClub(p), isDoubles());
+                playerChangeListener.OnNameChange   (p, getName   (p, true, false), getCountry(p), getAvatar(p), getClub(p), isDoubles());
                 playerChangeListener.OnColorChange  (p, getColor  (p));
                 playerChangeListener.OnCountryChange(p, getCountry(p));
                 playerChangeListener.OnClubChange   (p, getClub   (p));
@@ -231,7 +233,7 @@ public abstract class Model
         }
         for(Player p: getPlayers()) {
             for(OnPlayerChangeListener l: onPlayerChangeListeners) {
-                l.OnNameChange   (p, getName(p), getCountry(p), getClub(p), isDoubles());
+                l.OnNameChange   (p, getName(p), getCountry(p), getAvatar(p), getClub(p), isDoubles());
               //l.OnClubChange   (p, getClub(p));
               //l.OnCountryChange(p, getCountry(p));
                 l.OnColorChange  (p, getColor(p));
@@ -266,6 +268,7 @@ public abstract class Model
     private Map<Player, String>                 m_player2Color          = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Country        = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Club           = new HashMap<Player, String>();
+    private Map<Player, String>                 m_player2Avatar         = new HashMap<Player, String>();
     private String                              m_matchDate             = DateUtil.getCurrentYYYYMMDD();
     private String                              m_matchTime             = DateUtil.getCurrentHHMMSS();
 
@@ -1423,6 +1426,10 @@ public abstract class Model
         }
         return saReturn;
     }
+    public String getAvatar(Player player) {
+        String sAvatar = m_player2Avatar.get(player);
+        return sAvatar;
+    }
 
     private static final Player[] m_players = new Player[] {Player.A, Player.B};
     private static final Player[] m_noneOfPlayers = new Player[]{};
@@ -1488,7 +1495,7 @@ public abstract class Model
         if ( sName.equals(sPrevious) == false ) {
             setDirty(false);
             for(OnPlayerChangeListener listener: onPlayerChangeListeners) {
-                listener.OnNameChange(p, sName, getCountry(p), getClub(p), isDoubles());
+                listener.OnNameChange(p, sName, getCountry(p), getAvatar(p), getClub(p), isDoubles());
             }
             return true;
         }
@@ -1521,6 +1528,23 @@ public abstract class Model
             setDirty(false);
             for(OnPlayerChangeListener listener: onPlayerChangeListeners) {
                 listener.OnClubChange(player, sClub);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean setPlayerAvatar(Player player, String sAvatar) {
+        if ( StringUtil.isNotEmpty(sAvatar) ) {
+            sAvatar = sAvatar.trim();
+        } else {
+            sAvatar = "";
+        }
+        String sPrevious = m_player2Avatar.put(player, sAvatar);
+        if ( sAvatar.equals(sPrevious) == false ) {
+            setDirty(false);
+            for(OnPlayerChangeListener listener: onPlayerChangeListeners) {
+                listener.OnAvatarChange(player, sAvatar);
             }
             return true;
         }
@@ -1928,6 +1952,16 @@ public abstract class Model
                         }
                     }
                 }
+                // read avatars
+                JSONObject joAvatars = joMatch.optJSONObject(JSONKey.avatars.toString());
+                if ( JsonUtil.isNotEmpty(joAvatars) ) {
+                    for (Player p : getPlayers()) {
+                        if ( joAvatars.has(p.toString()) ) {
+                            String sAvatar = joAvatars.getString(p.toString());
+                            m_player2Avatar.put(p, sAvatar);
+                        }
+                    }
+                }
             } catch (Exception e) {
                 // not really an error, most likely last match stored did not use these keys
                 e.printStackTrace();
@@ -2214,6 +2248,7 @@ public abstract class Model
         JSONObject joColors    = new JSONObject();
         JSONObject joCountries = new JSONObject();
         JSONObject joClubs     = new JSONObject();
+        JSONObject joAvatars   = new JSONObject();
         for(Player p : getPlayers() ) {
             joPlayers.put(p.toString(), m_player2Name.get(p));
             String sColor = m_player2Color.get(p);
@@ -2228,6 +2263,10 @@ public abstract class Model
             if ( StringUtil.isNotEmpty(sClub) ) {
                 joClubs.put(p.toString(), sClub);
             }
+            String sAvatar = m_player2Avatar.get(p);
+            if ( StringUtil.isNotEmpty(sAvatar) ) {
+                joAvatars.put(p.toString(), sAvatar);
+            }
         }
         jsonObject.put(JSONKey.players.toString(), joPlayers);
         if ( JsonUtil.isNotEmpty(joColors) ) {
@@ -2238,6 +2277,9 @@ public abstract class Model
         }
         if ( JsonUtil.isNotEmpty(joClubs) ) {
             jsonObject.put(JSONKey.clubs.toString(), joClubs);
+        }
+        if ( JsonUtil.isNotEmpty(joAvatars) ) {
+            jsonObject.put(JSONKey.avatars.toString(), joAvatars);
         }
 
         // referee
