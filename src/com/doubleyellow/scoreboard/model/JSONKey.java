@@ -28,6 +28,7 @@ public enum JSONKey {
 		colors,
 		countries,
 		clubs,
+		avatars,
 	format,
 		numberOfPointsToWinGame,
 		// tabletennis specific key
@@ -75,5 +76,6 @@ public enum JSONKey {
 	    club,
 	    country,
 	    seed,
+	    avatar,
 }
 

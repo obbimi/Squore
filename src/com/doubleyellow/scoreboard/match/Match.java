@@ -74,6 +74,8 @@ public class Match extends XActivity implements MenuHandler
         String sCountryB   = null;
         String sClubA      = null;
         String sClubB      = null;
+        String sAvatarA    = null;
+        String sAvatarB    = null;
       //Bundle bundleExtra = null;
         Model  model       = null;
         {
@@ -114,6 +116,8 @@ public class Match extends XActivity implements MenuHandler
             sCountryB  = model.getCountry(Player.B);
             sClubA     = model.getClub(Player.A);
             sClubB     = model.getClub(Player.B);
+            sAvatarA   = model.getAvatar(Player.A);
+            sAvatarB   = model.getAvatar(Player.B);
 
             bIsDoubles = model.isDoubles();
             if ( bIsDoubles ) {
@@ -156,7 +160,7 @@ public class Match extends XActivity implements MenuHandler
         }
 */
         if ( model != null ) {
-            vMatchView.setPlayers(sA, sB, sCountryA, sCountryB, sClubA, sClubB);
+            vMatchView.setPlayers(sA, sB, sCountryA, sCountryB, sAvatarA, sAvatarB, sClubA, sClubB);
             // if the names came from selecting a match from another place, do not auto set focus to the player names
 
             String sEN     = model.getEventName();
