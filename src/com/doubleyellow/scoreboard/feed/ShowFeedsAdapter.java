@@ -35,6 +35,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter use to present available feeds in FeedFeedSelector.
+ */
 class ShowFeedsAdapter extends SimpleELAdapter {
     private String           m_sName          = null;
 
@@ -70,15 +73,17 @@ class ShowFeedsAdapter extends SimpleELAdapter {
         showFeedsTask.execute(m_sName);
     }
 
-    JSONArray m_feeds = null;
+    private JSONArray m_feeds = null;
 
-    private class ShowFeedsTask extends AsyncTask<String, Void, List<String>> {
+    private /*static*/ class ShowFeedsTask extends AsyncTask<String, Void, List<String>> {
         @Override protected List<String> doInBackground(String[] sName) {
             int iEndWasDaysBackMax   = PreferenceValues.getTournamentWasBusy_DaysBack     (context);
             int iStartIsDaysAheadMax = PreferenceValues.getTournamentWillStartIn_DaysAhead(context);
             int iDurationInDaysMax   = PreferenceValues.getTournamentMaxDuration_InDays   (context);
 
             List<String> lGroupsWithActive = new ArrayList<String>();
+
+            m_iNrAlreadyFinished = m_iNrToFarInFuture = m_iNrRunningToLong = 0;
 
             for ( int f = 0; f < m_feeds.length(); f++ ) {
 
@@ -100,7 +105,7 @@ class ShowFeedsAdapter extends SimpleELAdapter {
                 }
 
                 if ( range != null ) {
-                    if ( range.getMaximum() < (-1 * iEndWasDaysBackMax)) {
+                    if ( range.getMaximum() < (-1 * iEndWasDaysBackMax) ) {
                         m_iNrAlreadyFinished++;
                         Log.d(TAG, "Skipping already finished " + joFeed);
                         continue;
@@ -110,7 +115,7 @@ class ShowFeedsAdapter extends SimpleELAdapter {
                         //Log.d(TAG, String.format("Skipping not starting within %s ", iStartIsDaysAheadMax) + joFeed);
                         continue;
                     }
-                    if ( range.getSize() > iDurationInDaysMax ) {
+                    if ( iDurationInDaysMax > 0 && range.getSize() > iDurationInDaysMax ) {
                         m_iNrRunningToLong++;
                         //Log.d(TAG, String.format("Skipping running longer than %s ", iDurationInDaysMax) + joFeed);
                         continue;
@@ -144,14 +149,18 @@ class ShowFeedsAdapter extends SimpleELAdapter {
         @Override protected void onPostExecute(List<String> lGroupsWithActive) {
             ShowFeedsAdapter.this.feedFeedSelector.postLoad(m_sName, lGroupsWithActive);
             if ( m_iNrOfItemsToSelect == 0 ) {
-                if ( m_iNrAlreadyFinished + m_iNrToFarInFuture > 0 ) {
-                    int tournamentWillStartIn_daysAhead = PreferenceValues.getTournamentWillStartIn_DaysAhead(context);
-                    String sMsg  = String.format("No entries found starting in %s days.", tournamentWillStartIn_daysAhead);
+                if ( m_iNrAlreadyFinished + m_iNrToFarInFuture + m_iNrRunningToLong > 0 ) {
+                    String sMsg = String.format("None of the %s entries presented for selection with your current preferences...", JsonUtil.size(m_feeds)); /*String.format("No entries found starting in %s days.", tournamentWillStartIn_daysAhead)*/;
                     if ( m_iNrAlreadyFinished > 0 ) {
                         sMsg += String.format("\n%s entries found that are already finished.", m_iNrAlreadyFinished);
                     }
                     if ( m_iNrToFarInFuture > 0 ) {
-                        sMsg += String.format("\n%s entries found starting in more than %s days.", m_iNrAlreadyFinished, tournamentWillStartIn_daysAhead);
+                        int tournamentWillStartIn_daysAhead = PreferenceValues.getTournamentWillStartIn_DaysAhead(context);
+                        sMsg += String.format("\n%s entries found starting in more than %s days.", m_iNrToFarInFuture, tournamentWillStartIn_daysAhead);
+                    }
+                    if ( m_iNrRunningToLong > 0 ) {
+                        int iDurationInDaysMax              = PreferenceValues.getTournamentMaxDuration_InDays   (context);
+                        sMsg += String.format("\n%s entries found running for more than %s days.", m_iNrRunningToLong, iDurationInDaysMax);
                     }
                     Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
                 }

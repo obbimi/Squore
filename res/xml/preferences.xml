@@ -1019,6 +1019,7 @@
             />
             <EditTextPreference android:key="maximumCacheAgeFeeds"
                                 android:title="Maximum Cache Age Feeds"
+                                android:summary="In minutes"
                                 android:inputType="number"
                                 android:defaultValue="@integer/maximumCacheAgeFeeds_default"
             />
@@ -1035,6 +1036,7 @@
             />
             <EditTextPreference android:key="maximumCacheAgeFlags"
                                 android:title="Maximum Cache Age Flags"
+                                android:summary="In minutes"
                                 android:inputType="number"
                                 android:defaultValue="@integer/maximumCacheAgeFlags_default"
             />
