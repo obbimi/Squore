@@ -152,6 +152,10 @@
         <item>Vlag naast naam (op mobiele toestel)</item>
         <item>Vlag naast naam (op Chrome Cast)</item>
     </string-array>
+    <string-array name="ShowAvatarOnDisplayValues">
+        <item>Op toestel</item>
+        <item>Op Chrome Cast</item>
+    </string-array>
     <string-array name="StartupActionDisplayValues">
         <item>Geen</item>
         <item>Start wedstrijd</item>

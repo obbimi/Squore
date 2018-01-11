@@ -44,6 +44,10 @@
     <string name="pref_Appearance_summary">Couleurs. Taille du texte. Barre d\'action.</string>
     <string name="pref_Colors">Couleurs</string>
     <string name="pref_Colors_summary">Contrôler les couleurs des éléments</string>
+    <string name="pref_Avatars">Players avatar</string><!-- TODO -->
+    <string name="pref_Avatars_summary">Small player image specified in feed</string><!-- TODO -->
+    <string name="pref_showAvatarOn">Show image on</string><!-- TODO -->
+    <string name="pref_hideAvatarForSameImage">Hide avatar if identical</string><!-- TODO -->
     <string name="pref_CountryFlags">Des Pays/Drapeaux</string>
     <string name="pref_CountryFlags_summary">Control how country/flags are displayed</string> <!-- TODO -->
     <string name="pref_showCountryAs">Montrer pays</string> <!-- TODO -->

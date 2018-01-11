@@ -176,6 +176,24 @@
             />
         </PreferenceCategory>
 
+        <PreferenceCategory android:key="Avatars"
+                            android:title="@string/pref_Avatars"
+                            android:summary="@string/pref_Avatars_summary">
+            <com.doubleyellow.prefs.EnumMultiSelectPreference
+                android:key="showAvatarOn"
+                android:title="@string/pref_showAvatarOn"
+                android:defaultValue="@array/ShowAvatarOn_DefaultValues"
+                dy:displayValues="@array/ShowAvatarOnDisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowAvatarOn"
+            />
+<!--
+            <CheckBoxPreference android:key="hideAvatarForSameImage"
+                                android:title="@string/pref_hideAvatarForSameImage"
+                                android:defaultValue="@bool/hideAvatarForSameImage_default"
+            />
+-->
+        </PreferenceCategory>
+
         <PreferenceCategory android:title="@string/pref_ActionBar">
             <CheckBoxPreference android:key="showActionBar"
                                 android:title="@string/pref_showActionBar"

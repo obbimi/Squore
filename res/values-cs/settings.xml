@@ -15,6 +15,10 @@
     <string name="pref_Appearance_summary">Barvy. Velikost textu. Tlačítková lišta</string>
     <string name="pref_Colors">Barvy</string>
     <string name="pref_Colors_summary">Nastavení barev panelu zobrazení</string>
+    <string name="pref_Avatars">Players avatar</string><!-- TODO -->
+    <string name="pref_Avatars_summary">Small player image specified in feed</string><!-- TODO -->
+    <string name="pref_showAvatarOn">Show image on</string><!-- TODO -->
+    <string name="pref_hideAvatarForSameImage">Hide avatar if identical</string><!-- TODO -->
     <string name="pref_CountryFlags">Země/vlaječky</string>
     <string name="pref_CountryFlags_summary">Zobrazení země a vlaječek</string>
     <string name="pref_showCountryAs">Zobrazovat zemi jako</string>

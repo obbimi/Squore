@@ -197,6 +197,8 @@ public enum PreferenceKeys {
         showChoosenDecisionShortly,
             showChoosenDecisionDuration_Appeal,
             showChoosenDecisionDuration_Conduct,
+        showAvatarOn,
+            hideAvatarForSameImage,
         showCountryAs,
             hideFlagForSameCountry,
 

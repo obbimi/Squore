@@ -725,16 +725,22 @@ public class IBoard implements TimerViewContainer
             }
             boolean bShowAsTextAbbr = countryPref.contains(ShowCountryAs.AbbreviationAfterName);
             boolean bShowAsFlagPref = (countryPref.contains(ShowCountryAs.FlagNextToNameChromeCast) && (isPresentation() == true))
-                    || (countryPref.contains(ShowCountryAs.FlagNextToNameOnDevice) && (isPresentation() == false));
+                                   || (countryPref.contains(ShowCountryAs.FlagNextToNameOnDevice  ) && (isPresentation() == false));
 
             button.setCountry(sCountry, bShowAsTextAbbr, bShowAsFlagPref && (bHideBecauseSameCountry == false));
         }
     }
     public void updatePlayerAvatar(Player p, String sAvatar) {
-        View view = findViewById(m_player2nameId.get(p));
-        if (view instanceof PlayersButton) {
-            PlayersButton button = (PlayersButton) view;
-            button.setAvatar(sAvatar);
+        EnumSet<ShowAvatarOn> avatarPref = PreferenceValues.showAvatarOn(context);
+        boolean bShowAvatar = (avatarPref.contains(ShowAvatarOn.OnChromeCast) && (isPresentation() == true))
+                           || (avatarPref.contains(ShowAvatarOn.OnDevice    ) && (isPresentation() == false));
+
+        if ( bShowAvatar ) {
+            View view = findViewById(m_player2nameId.get(p));
+            if (view instanceof PlayersButton) {
+                PlayersButton button = (PlayersButton) view;
+                button.setAvatar(sAvatar);
+            }
         }
     }
 

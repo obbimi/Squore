@@ -121,6 +121,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="Cast_ShowGraphDuringTimer_default">true</bool>
     <bool name="prefetchFlags_default">false</bool>
     <bool name="hideFlagForSameCountry_default">true</bool>
+    <bool name="hideAvatarForSameImage_default">false</bool>
     <bool name="hideBrandLogoWhenGameInProgress_default">true</bool>
     <bool name="hideFieldDivisionWhenGameInProgress_default">true</bool>
 

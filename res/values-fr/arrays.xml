@@ -152,6 +152,10 @@
         <item>Drapeau à côté du nom (appareil mobile)</item> <!-- TODO -->
         <item>Drapeau à côté du nom (Chromecast)</item> <!-- TODO -->
     </string-array>
+    <string-array name="ShowAvatarOnDisplayValues">
+        <item>On Device</item><!-- TODO -->
+        <item>On Chrome Cast</item><!-- TODO -->
+    </string-array>
     <string-array name="StartupActionDisplayValues">
         <item>Aucun</item>
     </string-array>

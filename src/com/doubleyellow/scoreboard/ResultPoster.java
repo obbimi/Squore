@@ -33,6 +33,9 @@ import com.doubleyellow.util.Base64Util;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Map;
 
@@ -165,11 +168,27 @@ public class ResultPoster implements ContentReceiver
         Log.d(TAG, "Content : " + sContent);
 
         if ( StringUtil.isEmpty(sContent) ) {
-            sContent = "<html><i>No result in body of post to <b>" + sPostURL + "</b></i>. Please ask webmaster to provide a feedback text/html.</html>";
+            sContent = "<html><i>No result in body of post to <b>" + sPostURL + "</b></i>. Please ask webmaster to provide a feedback text/html/json.</html>";
+        }
+
+        String sMessage   = sContent.trim();
+        String sTitle     = null;
+        boolean bResultOK = result.equals(FetchResult.OK);
+
+        // if returned content appears to be JSON try and interpret it
+        if ( sContent.startsWith("{") && sContent.endsWith("}") ) {
+            try {
+                JSONObject jo = new JSONObject(sContent);
+                sTitle    = jo.optString("title"  , sTitle);
+                sMessage  = jo.optString("message", sMessage);
+                bResultOK = jo.optString("result" , "OK").equalsIgnoreCase("OK");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         scoreBoard.hideProgress();
-        ScoreBoard.dialogWithOkOnly(scoreBoard, sContent);
+        ScoreBoard.dialogWithOkOnly(scoreBoard, sTitle, sMessage, bResultOK==false);
 /*
         if ( result.equals(FetchResult.OK) ) {
             if ( sContent.contains("demo.post.") ) {

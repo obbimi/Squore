@@ -612,8 +612,14 @@ public class PreferenceValues extends RWValues
     public static EnumSet<ShowCountryAs> showCountryAs(Context context) {
         return getEnumSet(PreferenceKeys.showCountryAs, context, ShowCountryAs.class, EnumSet.of(ShowCountryAs.FlagNextToNameOnDevice, ShowCountryAs.FlagNextToNameChromeCast));
     }
+    public static EnumSet<ShowAvatarOn> showAvatarOn(Context context) {
+        return getEnumSet(PreferenceKeys.showAvatarOn, context, ShowAvatarOn.class, EnumSet.of(ShowAvatarOn.OnDevice, ShowAvatarOn.OnChromeCast));
+    }
     public static boolean hideFlagForSameCountry(Context context) {
         return getBoolean(PreferenceKeys.hideFlagForSameCountry, context, R.bool.hideFlagForSameCountry_default);
+    }
+    public static boolean hideAvatarForSameImage(Context context) {
+        return getBoolean(PreferenceKeys.hideAvatarForSameImage, context, R.bool.hideAvatarForSameImage_default);
     }
     public static boolean prefetchFlags(Context context) {
         return getBoolean(PreferenceKeys.prefetchFlags, context, R.bool.prefetchFlags_default);
@@ -625,6 +631,10 @@ public class PreferenceValues extends RWValues
     public static boolean useCountries(Context context) {
         final EnumSet<ShowCountryAs> showCountryAs = showCountryAs(context);
         return ListUtil.isNotEmpty(showCountryAs);
+    }
+    public static boolean useAvatars(Context context) {
+        final EnumSet<ShowAvatarOn> showAvatarOn = showAvatarOn(context);
+        return ListUtil.isNotEmpty(showAvatarOn);
     }
 
     public static EnumSet<RallyEndStatsPrefs> recordRallyEndStatsDetails(Context context) {

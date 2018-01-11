@@ -44,6 +44,10 @@
     <string name="pref_Appearance_summary">Kleur. Text grootte. Actie bar.</string>
     <string name="pref_Colors">Kleuren</string>
     <string name="pref_Colors_summary">Controleer de kleuren van alle squore board elementen</string>
+    <string name="pref_Avatars">Spelers avatar</string>
+    <string name="pref_Avatars_summary">Kleine speler afbeelding gespecifieerd in feed</string>
+    <string name="pref_showAvatarOn">Toon kleine photo op</string>
+    <string name="pref_hideAvatarForSameImage">Verberg avatar indien gelijk</string>
     <string name="pref_CountryFlags">Landen/Vlaggen</string>
     <string name="pref_CountryFlags_summary">Bepaal hoe landen/vlaggen worden getoond</string>
     <string name="pref_showCountryAs">Toon land als</string>

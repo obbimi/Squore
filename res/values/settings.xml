@@ -45,6 +45,10 @@
     <string name="pref_Appearance_summary">Colors. Text size. Action bar.</string>
     <string name="pref_Colors">Colors</string>
     <string name="pref_Colors_summary">Control the colors of the Squore Board elements</string>
+    <string name="pref_Avatars">Players avatar</string>
+    <string name="pref_Avatars_summary">Small player image specified in feed</string>
+    <string name="pref_showAvatarOn">Show image on</string>
+    <string name="pref_hideAvatarForSameImage">Hide avatar if identical</string>
     <string name="pref_CountryFlags">Countries/Flags</string>
     <string name="pref_CountryFlags_summary">Control how country/flags are displayed</string>
     <string name="pref_showCountryAs">Show country as</string>

@@ -17,31 +17,7 @@
 
 package com.doubleyellow.scoreboard.prefs;
 
-/**
- * Keys (values before the = sign) that may be used in the configuration
- * value of the preference 'feedPostUrls'
- */
-public enum URLsKeys {
-    Name,
-    FeedPlayers,
-    FeedMatches,
-    /** an URL where match result should be posted to */
-    PostResult,
-    /**
-     * Should contain a value of enum PostDataPreference
-     */
-    PostData,
-    ValidFrom,
-    ValidTo,
-    /* None, Basic, ... */
-    Authentication,
-    Organization,
-    Country,
-    Region,
-
-    /* Json config feed keys */
-    config,
-        avatarBaseURL,
-        expandGroup,
-        Format,
+public enum ShowAvatarOn {
+    OnDevice,
+    OnChromeCast,
 }

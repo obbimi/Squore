@@ -83,6 +83,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     public static Map<PreferenceKeys, String> mFeedPrefOverwrites = new HashMap<PreferenceKeys, String>();
 
     private String m_sNoMatchesInFeed = null;
+    private String m_sAvatarBaseURL   = null;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -327,7 +328,13 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     sName = jsonObject.getString(JSONKey.name.toString());
                     model.setPlayerClub   (p, jsonObject.optString(JSONKey.club   .toString()));
                     model.setPlayerCountry(p, jsonObject.optString(JSONKey.country.toString()));
-                    model.setPlayerAvatar (p, jsonObject.optString(JSONKey.avatar .toString()));
+                    String sAvatar = jsonObject.optString(JSONKey.avatar.toString());
+
+                    // avatars in one feed are often retrieved from the same server
+                    if (StringUtil.isNotEmpty(sAvatar) && (sAvatar.startsWith("http") == false) && StringUtil.isNotEmpty(m_sAvatarBaseURL) ) {
+                        sAvatar = m_sAvatarBaseURL + sAvatar;
+                    }
+                    model.setPlayerAvatar (p, sAvatar);
 
                 }
                 model.setPlayerName (p, sName);
@@ -717,11 +724,13 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             mFeedPrefOverwrites.clear();
 
             // if there is a config section, use it
-            JSONObject joConfig = joRoot.optJSONObject("config");
+            JSONObject joConfig = joRoot.optJSONObject(URLsKeys.config.toString());
             if ( joConfig != null ) {
                 sDisplayFormat = joConfig.optString(URLsKeys.Format.toString(), getFormat());
 
-                String sExpandGroup = joConfig.optString("expandGroup");
+                m_sAvatarBaseURL = joConfig.optString(URLsKeys.avatarBaseURL.toString());
+
+                String sExpandGroup = joConfig.optString(URLsKeys.expandGroup.toString());
                 if ( StringUtil.isNotEmpty(sExpandGroup) ) {
                     lExpandedGroups.add(sExpandGroup);
                 }

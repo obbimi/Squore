@@ -3961,7 +3961,7 @@ touch -t 01030000 LAST.sb
             ab.setIcon(bAlert? android.R.drawable.ic_dialog_alert: android.R.drawable.ic_dialog_info);
         }
         if ( StringUtil.isNotEmpty(sMsg) ) {
-            if( sMsg.trim().toLowerCase().endsWith("html>")) {
+            if( sMsg.trim().toLowerCase().endsWith("html>") ) {
                 WebView wv = new WebView(context);
                 wv.loadData(sMsg, "text/html; charset=utf-8", "UTF-8");
                 ab.setView(wv);

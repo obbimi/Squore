@@ -201,6 +201,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
 */
                     case showPlayerColorOn:      // fall through
                     case hideFlagForSameCountry: // fall through
+                    case showAvatarOn:           // fall through
                     case showCountryAs:
                         setModelDirty(); // to trigger a redraw
                         break;
