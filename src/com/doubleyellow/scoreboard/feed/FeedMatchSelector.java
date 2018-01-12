@@ -408,8 +408,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     @Override public AdapterView.OnItemLongClickListener getOnItemLongClickListener() {
         return new AdapterView.OnItemLongClickListener() {
-            @Override public boolean onItemLongClick(AdapterView<?> adapterView, final View view, int i, final long l) {
-                Object itemAtPosition = adapterView.getItemAtPosition(i);
+            @Override public boolean onItemLongClick(AdapterView<?> adapterView, final View view, int iPos, final long id) {
+                Object itemAtPosition = adapterView.getItemAtPosition(iPos);
                 if ( feedStatus.equals(FeedStatus.showingPlayers) ) {
                     SimpleELAdapter listAdapter = getListAdapter(null);
                     if ( listAdapter != null ) {
@@ -420,33 +420,33 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     }
                     return false;
                 }
-                if (itemAtPosition instanceof JSONObject) {
-                    // TODO:
-                } else if (itemAtPosition instanceof String) {
-                    Model mDetails = Brand.getModel();
-                    getMatchDetailsFromMatchString(mDetails, (String) itemAtPosition, context, feedStatus.isShowingPlayers());
-                    if ( mDetails.isDirty() == false ) { return false; }
 
-                    AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
-                    String sMessage = /*MapUtil.toNiceString(mDetails)*/ mDetails.toJsonString(null); // TODO: improve
-                    ab.setMessage(sMessage)
-                      .setIcon(R.drawable.ic_action_web_site);
-                    String sResultShort = mDetails.getResult();
-                    if ( StringUtil.isNotEmpty(sResultShort) && (sResultShort.equals("0-0") == false) ) {
-                        ab.setPositiveButton(android.R.string.cancel, null);
-                    } else {
-                        ab.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override public void onClick(DialogInterface dialog, int which) {
-                                // start the match
-                                onChildClickListener.onChildClick(expandableListView, view, -1 , -1 , l);
-                            }
-                        });
-                        ab.setNegativeButton(android.R.string.cancel, null);
-                    }
-                    ab.show();
-                    return true;
+                Model mDetails = Brand.getModel();
+                if (itemAtPosition instanceof JSONObject) {
+                    populateModelFromJSON(mDetails, (JSONObject) itemAtPosition, null, PreferenceValues.getFeedPostName(context));
+                } else if (itemAtPosition instanceof String) {
+                    getMatchDetailsFromMatchString(mDetails, (String) itemAtPosition, context, feedStatus.isShowingPlayers());
                 }
-                return false;
+                if ( mDetails.isDirty() == false ) { return false; }
+
+                AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
+                String sMessage = /*MapUtil.toNiceString(mDetails)*/ mDetails.toJsonString(null); // TODO: improve
+                ab.setMessage(sMessage)
+                        .setIcon(R.drawable.ic_action_web_site);
+                String sResultShort = mDetails.getResult();
+                if ( StringUtil.isNotEmpty(sResultShort) && (sResultShort.equals("0-0") == false) ) {
+                    ab.setPositiveButton(android.R.string.cancel, null);
+                } else {
+                    ab.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            // start the match
+                            onChildClickListener.onChildClick(expandableListView, view, -1 , -1 , id);
+                        }
+                    });
+                    ab.setNegativeButton(android.R.string.cancel, null);
+                }
+                ab.show();
+                return true;
             }
         };
     }
