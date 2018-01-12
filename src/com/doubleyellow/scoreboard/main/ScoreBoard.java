@@ -2222,7 +2222,7 @@ touch -t 01030000 LAST.sb
         }
         int iRootId = (ScoreBoard.this.drawerLayout == null) ? android.R.id.content : R.id.content_frame;
         Integer color = Color.BLACK;
-        if ( mColors != null ) {
+        if ( ( mColors != null ) && mColors.containsKey(colorTarget) ) {
             color = mColors.get(colorTarget);
         }
         FloatingActionButton view = new FloatingActionButton.Builder(ScoreBoard.this, iRootId, buttonSizePx)

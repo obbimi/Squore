@@ -18,6 +18,7 @@
 package com.doubleyellow.android.util;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.util.TypedValue;
@@ -346,9 +347,10 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
 */
 
     @Override public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        if ( (groupPosition == 0) && B_DIFFERENT_TXT_SIZE_PER_ORIENTATION ) {
-            iTxtSmall  = ctx.getResources().getDimension(R.dimen.txt_small);
-            iTxtMedium = ctx.getResources().getDimension(R.dimen.txt_medium);
+        if ( (groupPosition == 0) && B_DIFFERENT_TXT_SIZE_PER_ORIENTATION && (ctx != null) ) {
+            Resources resources = ctx.getResources();
+            iTxtSmall  = resources.getDimension(R.dimen.txt_small);
+            iTxtMedium = resources.getDimension(R.dimen.txt_medium);
         }
 
         String headerTitle = (String) getGroup(groupPosition);
