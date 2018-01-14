@@ -272,6 +272,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
 
             JSONArray array = loadTypesAdapter.joRoot.optJSONArray(sName);
             if ( JsonUtil.isNotEmpty(array) ) {
+                PreferenceValues.addFeedTypeToMyList(FeedFeedSelector.this, sName);
                 changeStatus(Status.LoadingFeeds);
                 showFeedsAdapter = new ShowFeedsAdapter(FeedFeedSelector.this, FeedFeedSelector.this.getLayoutInflater(), array, sName);
             } else {

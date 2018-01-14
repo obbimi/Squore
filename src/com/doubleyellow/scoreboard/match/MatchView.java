@@ -53,9 +53,9 @@ import java.util.List;
  */
 public class MatchView extends SBRelativeLayout
 {
-    public MatchView(Context context, boolean bIsDoubles) {
+    public MatchView(Context context, boolean bIsDoubles, Model model) {
         super(context);
-        init(bIsDoubles);
+        init(bIsDoubles, model);
         if ( hideElementsBasedOnSport() == false ) {
             initExpandCollapse();
         }
@@ -428,12 +428,14 @@ public class MatchView extends SBRelativeLayout
     }
 
     private boolean m_bIsDoubles = false;
-    public void init(boolean bIsDoubles) {
+    private Model   m_model      = null;
+    public void init(boolean bIsDoubles, Model model) {
         Context context = getContext();
 
         //iForceTextSize = IBoard.iTxtSizePx_FinishedGameScores;
 
         m_bIsDoubles = bIsDoubles; // attrs.getAttributeBooleanValue(APPLICATION_NS, "isDoubles", false);
+        m_model = model;
 
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // wrap it into a scroll view so that user with small screens and large fonts.... yada yada
@@ -507,7 +509,18 @@ public class MatchView extends SBRelativeLayout
         requestFocusFor(txtPlayerA); // does not work if focus was impossible (.e.g not the initial tab in MatchTabbed)
 
         // take values from preferences as default values
-        int iGameEndPref = PreferenceValues.numberOfPointsToWinGame(context);
+        int iGameEndPref        = Model.UNDEFINED_VALUE;
+        int iNrOfGamesToWinPref = Model.UNDEFINED_VALUE;
+        if ( m_model != null ) {
+            iGameEndPref        = m_model.getNrOfPointsToWinGame();
+            iNrOfGamesToWinPref = m_model.getNrOfGamesToWinMatch();
+        }
+        if ( iGameEndPref == Model.UNDEFINED_VALUE ) {
+            iGameEndPref = PreferenceValues.numberOfPointsToWinGame(context);
+        }
+        if ( iNrOfGamesToWinPref == Model.UNDEFINED_VALUE ) {
+            iNrOfGamesToWinPref = PreferenceValues.numberOfGamesToWinMatch(context);
+        }
 /*
         npGameEndScore = null; // (NumberPicker) findViewById(R.id.npGameEndScore);
         if ( npGameEndScore != null ) {
@@ -521,7 +534,6 @@ public class MatchView extends SBRelativeLayout
         spGameEndScore = (Spinner) findViewById(R.id.spGameEndScore);
         initGameEndScore(context, spGameEndScore, iGameEndPref, 2);
 
-        int iNrOfGamesToWinPref = PreferenceValues.numberOfGamesToWinMatch(context);
         int max = Math.max(iNrOfGamesToWinPref, 11);
 /*
         npNumberOfGamesToWin = (NumberPicker) findViewById(R.id.npNumberOfGamesToWin);
@@ -753,7 +765,7 @@ public class MatchView extends SBRelativeLayout
             }
         }
     }
-
+    /** Invoked from EditFormat as well */
     public static void initGameEndScore(Context context, final Spinner spGameEndScore, int iGameEndPref, int iValueOfset) {
         if ( spGameEndScore == null ) { return; }
 
@@ -791,6 +803,7 @@ public class MatchView extends SBRelativeLayout
         setTextSizeFromBoard(spGameEndScore);
     }
 
+    /** Invoked from EditFormat as well */
     public static void initNumberOfGamesToWin(Context context, Spinner spNumberOfGamesToWin, int iNrOfGamesToWinPref, int max) {
         if ( spNumberOfGamesToWin == null ) { return; }
         List<String> list = new ArrayList<String>();

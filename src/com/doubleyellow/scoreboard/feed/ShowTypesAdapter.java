@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.feed;
 
 import android.content.Context;
@@ -281,6 +298,9 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
             }
         }
 
+        // for earlier selected 'Types', place them on top of the list
+        List<String> lMyFeedTypes =  PreferenceValues.getUsedFeedTypes(context);
+
         try {
             for ( int i=0; i < JsonUtil.size(types); i++ ) {
                 String sType = types.getString(i);
@@ -290,6 +310,11 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
             if ( ListUtil.isEmpty(lKeys) ) {
                 String sUrl = PreferenceValues.getFeedsFeedURL(context);
                 //TODO: show some message about the url that does not work
+            }
+            if ( ListUtil.isNotEmpty(lMyFeedTypes) ) {
+                lMyFeedTypes.retainAll(lKeys);
+                lKeys.removeAll(lMyFeedTypes);
+                lKeys.addAll(0, lMyFeedTypes);
             }
         } catch (JSONException e) {
             e.printStackTrace();

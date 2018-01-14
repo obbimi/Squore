@@ -31,9 +31,11 @@ public enum JSONKey {
 		avatars,
 	format,
 		numberOfPointsToWinGame,
+		numberOfGamesToWinMatch,
 		// tabletennis specific key
 		nrOfServersPerPlayer,
     	handicapFormat,
+		/** @deprecated  */
 		nrOfGamesToWinMatch,
     	// squash specific keys
 		useHandInHandOutScoring,

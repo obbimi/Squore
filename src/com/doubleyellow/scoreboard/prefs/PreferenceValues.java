@@ -794,6 +794,13 @@ public class PreferenceValues extends RWValues
         return contacts;
     }
 
+    public static int addFeedTypeToMyList(Context context, String sType) {
+        return addStringToTopOfList(context, PreferenceKeys.myUsedFeedTypes, sType);
+    }
+    public static List<String> getUsedFeedTypes(Context context) {
+        return getStringAsList(context, PreferenceKeys.myUsedFeedTypes, 0);
+    }
+
     public static int addPlayersToList(Context context, Collection<String> players) {
         players = ListUtil.replace(players, Util.removeSeedingRegExp, "");
         List<String> lCurrent = getPlayerListAndContacts(context);
@@ -857,8 +864,33 @@ public class PreferenceValues extends RWValues
         return lValues;
     }
 
+    private static int addStringToTopOfList(Context context, PreferenceKeys key, String value) {
+        if ( StringUtil.isEmpty(value) ) { return -1; }
+        List<String> lValues = getStringAsList(context, key, 0);
+
+        int iCurrentSize = ListUtil.size(lValues);
+
+        ListUtil.removeEmpty(lValues);
+        lValues = ListUtil.removeDuplicates(lValues);
+        ListUtil.removeEmpty(lValues);
+        int iIdxOld = lValues.indexOf(value);
+        if ( iIdxOld != 0 ) {
+            lValues.remove(value);
+            lValues.add(0, value);
+            try {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(key.toString(), ListUtil.join(lValues, "\n"));
+                editor.apply();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return iIdxOld;
+    }
+
     public static int addStringsToList(Context context, PreferenceKeys key, Collection<String> values) {
-        if (ListUtil.isEmpty(values)) { return 0; }
+        if ( ListUtil.isEmpty(values) ) { return 0; }
         List<String> lValues = getStringAsList(context, key, 0);
 
         int iCurrentSize = ListUtil.size(values);

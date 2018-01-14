@@ -76,6 +76,7 @@ public enum PreferenceKeys {
             tournamentMaxDuration_InDays,
             removeSeedingAfterMatchSelection,
             switchToPlayerListIfMatchListOfFeedIsEmpty,
+            myUsedFeedTypes,
         additionalPostKeyValuePairs,
         postDataPreference,
         maximumCacheAgeFlags,

@@ -493,7 +493,6 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                 m.setEvent(sEventName, sEventDivision, sEventRound, null);
             }
         }
-        m.setNrOfPointsToWinGame(Model.UNDEFINED_VALUE); // use to communicate that format still needs to be defined
 
         if ( MapUtil.isNotEmpty(mHeadersWithRecentMatches) && mHeadersWithRecentMatches.containsKey(sGroup) ) {
             // use the format
@@ -517,6 +516,9 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                 m.setPlayerClub(Player.A, mTmp.getClub(Player.A));
                 m.setPlayerClub(Player.B, mTmp.getClub(Player.B));
                 m.setEvent     (mTmp.getEventName(), mTmp.getEventDivision(), mTmp.getEventRound(), mTmp.getEventLocation());
+
+                // all relevant match format properties have been set (taken from other match): no need to present activity
+                Match.dontShow();
             } catch (IOException e) {
                 e.printStackTrace();
             }

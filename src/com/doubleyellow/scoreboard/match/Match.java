@@ -51,6 +51,18 @@ import com.doubleyellow.util.StringUtil;
  */
 public class Match extends XActivity implements MenuHandler
 {
+    private static boolean m_bShowAfterMatchSelection = true;
+    public static boolean showAfterMatchSelection() {
+        boolean bReturn = m_bShowAfterMatchSelection;
+        if ( Match.m_bShowAfterMatchSelection == false ) {
+            Match.m_bShowAfterMatchSelection = true;
+        }
+        return bReturn;
+    }
+    public static void dontShow() {
+        Match.m_bShowAfterMatchSelection = false;
+    }
+
     private MatchView vMatchView;
     /** where the current match is selected from (source) */
     private String    m_sSource;
@@ -90,34 +102,15 @@ public class Match extends XActivity implements MenuHandler
             }
         }
 
-/*
-        if ( bundleExtra != null ) {
-            sA         = bundleExtra.getString   (MatchDetails.PlayerA .toString());
-            sB         = bundleExtra.getString   (MatchDetails.PlayerB .toString());
-            sCountryA  = bundleExtra.getString   (MatchDetails.CountryA.toString());
-            sCountryB  = bundleExtra.getString   (MatchDetails.CountryB.toString());
-
-            bIsDoubles = bundleExtra.getBoolean  (MatchDetails.IsDoubles.toString(), bIsDoubles);
-            if ( bIsDoubles ) {
-                sA += "/" + bundleExtra.getString(MatchDetails.PlayerA2.toString());
-                sB += "/" + bundleExtra.getString(MatchDetails.PlayerB2.toString());
-            } else {
-                // can still be a doubles from e.g. a feed
-                String sRegExp = ".*//*
-[\\s]*[^0-9].*"; // contains forward slash NOT closely followed by a number
-                bIsDoubles = StringUtil.isNotEmpty(sA) && sA.matches(sRegExp);
-            }
-        }
-*/
         if ( model != null ) {
-            sA         = model.getName(Player.A);
-            sB         = model.getName(Player.B);
+            sA         = model.getName   (Player.A);
+            sB         = model.getName   (Player.B);
             sCountryA  = model.getCountry(Player.A);
             sCountryB  = model.getCountry(Player.B);
-            sClubA     = model.getClub(Player.A);
-            sClubB     = model.getClub(Player.B);
-            sAvatarA   = model.getAvatar(Player.A);
-            sAvatarB   = model.getAvatar(Player.B);
+            sClubA     = model.getClub   (Player.A);
+            sClubB     = model.getClub   (Player.B);
+            sAvatarA   = model.getAvatar (Player.A);
+            sAvatarB   = model.getAvatar (Player.B);
 
             bIsDoubles = model.isDoubles();
             if ( bIsDoubles ) {
@@ -131,34 +124,10 @@ public class Match extends XActivity implements MenuHandler
         }
         ViewUtil.setFullScreen(getWindow(), PreferenceValues.showFullScreen(this));
         PreferenceValues.setOverwrites(FeedMatchSelector.mFeedPrefOverwrites);
-        vMatchView = new MatchView(this, bIsDoubles);
+        vMatchView = new MatchView(this, bIsDoubles, model);
         setContentView(vMatchView);
         ColorPrefs.setColors(this, vMatchView);
 
-/*
-        if ( bundleExtra != null ) {
-            vMatchView.setPlayers(sA, sB, sCountryA, sCountryB);
-            // if the names came from selecting a match from another place, do not auto set focus to the player names
-
-            String sEN     = bundleExtra.getString(MatchDetails.EventName    .toString());
-            String sED     = bundleExtra.getString(MatchDetails.EventDivision.toString());
-            String sER     = bundleExtra.getString(MatchDetails.EventRound   .toString());
-            String sEL     = bundleExtra.getString(MatchDetails.EventLocation.toString());
-            vMatchView.setEvent(sEN, sED, sER, sEL);
-
-            String sRef    = bundleExtra.getString(MatchDetails.Referee      .toString());
-            String sMarker = bundleExtra.getString(MatchDetails.Marker       .toString());
-            if ( StringUtil.areAllEmpty(sRef, sMarker) == false ) {
-                vMatchView.setReferees(sRef, sMarker);
-            }
-
-            m_sSource = bundleExtra.getString(MatchDetails.FeedKey.toString(), "");
-            if ( StaticMatchSelector.class.getSimpleName().equals(m_sSource) == false ) {
-                // selected from some public feed
-                vMatchView.clearClubFields();
-            }
-        }
-*/
         if ( model != null ) {
             vMatchView.setPlayers(sA, sB, sCountryA, sCountryB, sAvatarA, sAvatarB, sClubA, sClubB);
             // if the names came from selecting a match from another place, do not auto set focus to the player names
@@ -203,15 +172,7 @@ public class Match extends XActivity implements MenuHandler
                 Intent intent = vMatchView.getIntent(m_sSource, m_sSourceID, false);
                 if (intent == null) return false;
                 setResult(RESULT_OK, intent);
-
-/*
-                if ( vMatchView.getDoublesServeSequence() != DoublesServeSequence.NA ) {
-                    String sSSFilename = Util.filenameForAutomaticScreenshot(this, null, ShowOnScreen.OnDevice, -1, -1, "%s.DoubleMatch." + vMatchView.getDoublesServeSequence() + ".png");
-                    if ( sSSFilename!=null ) {
-                        ViewUtil.takeScreenShot(this, Brand.brand, sSSFilename, vMatchView);
-                    }
-                }
-*/
+                Match.dontShow();
 
                 finish();
                 return true;

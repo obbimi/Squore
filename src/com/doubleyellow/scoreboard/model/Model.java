@@ -1235,7 +1235,7 @@ public abstract class Model
     }
 
     // -----------------------------------------
-    // Nr of scores per server (tabletennis)
+    // Nr of scores per server (tabletennis, racketlon)
     // -----------------------------------------
 
     int m_iNrOfServesPerPlayer = 2;
@@ -1873,7 +1873,8 @@ public abstract class Model
                 // read match format
                 JSONObject joFormat = joMatch.getJSONObject(JSONKey.format.toString());
                 int numberOfPointsToWinGame = joFormat.getInt(JSONKey.numberOfPointsToWinGame.toString());
-                int nrOfGamesToWinMatch     = joFormat.optInt(JSONKey.nrOfGamesToWinMatch    .toString()); // optional for e.g. racketlon
+                int nrOfGamesToWinMatch     = joFormat.optInt(JSONKey.nrOfGamesToWinMatch    .toString()); // old... keep for now for stored matches
+                    nrOfGamesToWinMatch     = joFormat.optInt(JSONKey.numberOfGamesToWinMatch.toString(), nrOfGamesToWinMatch); // optional for e.g. racketlon
                 setNrOfPointsToWinGame(numberOfPointsToWinGame);
                 if ( nrOfGamesToWinMatch > 0 ) {
                     setNrOfGamesToWinMatch(nrOfGamesToWinMatch);
@@ -2203,7 +2204,7 @@ public abstract class Model
         return null;
     }
 
-    JSONObject getJsonObject(Context context, JSONObject oSettings) throws JSONException {
+    public JSONObject getJsonObject(Context context, JSONObject oSettings) throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
         // games
@@ -2314,7 +2315,7 @@ public abstract class Model
         JSONObject joFormat = new JSONObject();
         joFormat.put(JSONKey.numberOfPointsToWinGame.toString(), m_iNrOfPointsToWinGame);
         if ( EnumSet.of(SportType.Racketlon).contains(getSport()) == false ) {
-            joFormat.put(JSONKey.nrOfGamesToWinMatch    .toString(), m_iNrOfGamesToWinMatch);
+            joFormat.put(JSONKey.numberOfGamesToWinMatch    .toString(), m_iNrOfGamesToWinMatch);
         }
 
         if ( EnumSet.of(SportType.Squash, SportType.Racquetball).contains(getSport()) ) {
@@ -2832,7 +2833,11 @@ public abstract class Model
 */
 
     @Override public String toString() {
-        return getGameScores() + " [" + getScore(Player.A) + "-" + getScore(Player.B) + "]" ;
+        String sAvsB = getScore(Player.A) + "-" + getScore(Player.B);
+        if ( sAvsB.equals("0-0") ) {
+            return "GtwM:" + getNrOfGamesToWinMatch() + ", PtwG:" + getNrOfPointsToWinGame();
+        }
+        return getGameScores() + " [" + sAvsB + "]";
     }
 
     //---------------------------------
@@ -2911,6 +2916,8 @@ public abstract class Model
 
         this.setEvent(null, null, null, null);
 
+        m_iNrOfGamesToWinMatch = UNDEFINED_VALUE;
+        m_iNrOfPointsToWinGame = UNDEFINED_VALUE;
         m_sUnparsedDate       = null;
         m_sResultFast         = null;
         setSource(null, null);

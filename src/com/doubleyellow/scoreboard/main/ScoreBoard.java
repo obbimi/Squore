@@ -3688,7 +3688,7 @@ touch -t 01030000 LAST.sb
                     Model m = Brand.getModel();
                     m.fromJsonString(sJson);
 
-                    if ( m.getNrOfPointsToWinGame() == Model.UNDEFINED_VALUE ) {
+                    if ( Match.showAfterMatchSelection() ) {
                         // match selected with single click from list of matches
                         String sSource = m.getSource();
                         if ( StringUtil.isNotEmpty(sSource) ) {

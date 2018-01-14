@@ -83,7 +83,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     public static Map<PreferenceKeys, String> mFeedPrefOverwrites = new HashMap<PreferenceKeys, String>();
 
     private String m_sNoMatchesInFeed = null;
-    private String m_sAvatarBaseURL   = null;
+    private JSONObject m_joFeedConfig = null;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,7 +128,6 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 return false;
             }
             Model model = Brand.getModel();
-            model.setNrOfPointsToWinGame(Model.UNDEFINED_VALUE); // use to communicate that format still needs to be defined
 
             SimpleELAdapter listAdapter  = getListAdapter(null);
             String          sGroup       = (String) listAdapter.getGroup(groupPosition);
@@ -331,8 +330,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     String sAvatar = jsonObject.optString(JSONKey.avatar.toString());
 
                     // avatars in one feed are often retrieved from the same server
-                    if (StringUtil.isNotEmpty(sAvatar) && (sAvatar.startsWith("http") == false) && StringUtil.isNotEmpty(m_sAvatarBaseURL) ) {
-                        sAvatar = m_sAvatarBaseURL + sAvatar;
+                    if ( StringUtil.isNotEmpty(sAvatar) && (sAvatar.startsWith("http") == false) && m_joFeedConfig != null ) {
+                        String sAvatarBaseURL = m_joFeedConfig.optString(URLsKeys.avatarBaseURL.toString());
+                        if ( StringUtil.isNotEmpty(sAvatarBaseURL) ) {
+                            sAvatar = sAvatarBaseURL + sAvatar;
+                        }
                     }
                     model.setPlayerAvatar (p, sAvatar);
 
@@ -343,12 +345,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             if ( StringUtil.isNotEmpty(sResult) ) {
                 model.setResult(sResult);
             }
-            if ( joMatch.has(JSONKey.numberOfPointsToWinGame.toString() ) ) {
-                model.setNrOfPointsToWinGame(joMatch.getInt(JSONKey.numberOfPointsToWinGame.toString()));
-            }
-            if ( joMatch.has(JSONKey.nrOfGamesToWinMatch.toString() ) ) {
-                model.setNrOfGamesToWinMatch(joMatch.getInt(JSONKey.nrOfGamesToWinMatch.toString()));
-            }
+
+            setMatchFormat(model, joMatch);
 
             // use feed name and group name for event details
             setModelEvent(model, sGroup, feedPostName, joMatch);
@@ -363,6 +361,26 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                        , joMatch.optString(JSONKey.division.toString(), sGroup)
                        , null, null);
 */
+    }
+
+    private void setMatchFormat(Model model, JSONObject joMatch) throws JSONException {
+        // take match config from feed config (if it exists)
+        if ( m_joFeedConfig  != null ) {
+            if ( m_joFeedConfig.has(JSONKey.numberOfPointsToWinGame.toString() ) ) {
+                model.setNrOfPointsToWinGame(m_joFeedConfig.getInt(JSONKey.numberOfPointsToWinGame.toString()));
+            }
+            if ( m_joFeedConfig.has(JSONKey.numberOfGamesToWinMatch.toString() ) ) {
+                model.setNrOfGamesToWinMatch(m_joFeedConfig.getInt(JSONKey.numberOfGamesToWinMatch.toString()));
+            }
+        }
+
+        // optionally overwrite match format by properties specified on match level
+        if ( joMatch.has(JSONKey.numberOfPointsToWinGame.toString() ) ) {
+            model.setNrOfPointsToWinGame(joMatch.getInt(JSONKey.numberOfPointsToWinGame.toString()));
+        }
+        if ( joMatch.has(JSONKey.numberOfGamesToWinMatch.toString() ) ) {
+            model.setNrOfGamesToWinMatch(joMatch.getInt(JSONKey.numberOfGamesToWinMatch.toString()));
+        }
     }
 
     private void setModelEvent(Model model, String sGroup, String feedPostName, JSONObject joMatch) {
@@ -428,24 +446,33 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     getMatchDetailsFromMatchString(mDetails, (String) itemAtPosition, context, feedStatus.isShowingPlayers());
                 }
                 if ( mDetails.isDirty() == false ) { return false; }
+                JSONObject joModel = null;
+                try {
+                    joModel = mDetails.getJsonObject(null, null);
+                    joModel.remove(JSONKey.when.toString());
+                    String sResultShort = (String) joModel.remove(JSONKey.result.toString());
 
-                AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
-                String sMessage = /*MapUtil.toNiceString(mDetails)*/ mDetails.toJsonString(null); // TODO: improve
-                ab.setMessage(sMessage)
-                        .setIcon(R.drawable.ic_action_web_site);
-                String sResultShort = mDetails.getResult();
-                if ( StringUtil.isNotEmpty(sResultShort) && (sResultShort.equals("0-0") == false) ) {
-                    ab.setPositiveButton(android.R.string.cancel, null);
-                } else {
-                    ab.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override public void onClick(DialogInterface dialog, int which) {
-                            // start the match
-                            onChildClickListener.onChildClick(expandableListView, view, -1 , -1 , id);
-                        }
-                    });
-                    ab.setNegativeButton(android.R.string.cancel, null);
+                    AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
+                    String sMessage = /*MapUtil.toNiceString(mDetails)*/ joModel.toString(); // TODO: improve
+                    ab.setMessage(sMessage)
+                            .setIcon(R.drawable.ic_action_web_site);
+                    if ( StringUtil.isNotEmpty(sResultShort) && (sResultShort.equals("0-0") == false) ) {
+                        ab.setPositiveButton(android.R.string.cancel, null);
+                    } else {
+                        ab.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override public void onClick(DialogInterface dialog, int which) {
+                                // start the match
+                                int iGroupPos = ExpandableListView.getPackedPositionGroup(id);
+                                int iChildPos = ExpandableListView.getPackedPositionChild(id);
+                                onChildClickListener.onChildClick(expandableListView, view, iGroupPos , iChildPos , id);
+                            }
+                        });
+                        ab.setNegativeButton(android.R.string.cancel, null);
+                    }
+                    ab.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                ab.show();
                 return true;
             }
         };
@@ -724,21 +751,19 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             mFeedPrefOverwrites.clear();
 
             // if there is a config section, use it
-            JSONObject joConfig = joRoot.optJSONObject(URLsKeys.config.toString());
-            if ( joConfig != null ) {
-                sDisplayFormat = joConfig.optString(URLsKeys.Format.toString(), getFormat());
+            m_joFeedConfig = joRoot.optJSONObject(URLsKeys.config.toString());
+            if ( m_joFeedConfig != null ) {
+                sDisplayFormat = m_joFeedConfig.optString(URLsKeys.Format.toString(), getFormat());
 
-                m_sAvatarBaseURL = joConfig.optString(URLsKeys.avatarBaseURL.toString());
-
-                String sExpandGroup = joConfig.optString(URLsKeys.expandGroup.toString());
+                String sExpandGroup = m_joFeedConfig.optString(URLsKeys.expandGroup.toString());
                 if ( StringUtil.isNotEmpty(sExpandGroup) ) {
                     lExpandedGroups.add(sExpandGroup);
                 }
 
-                Iterator<String> itPrefKeys = joConfig.keys();
+                Iterator<String> itPrefKeys = m_joFeedConfig.keys();
                 while ( itPrefKeys.hasNext() ) {
-                    String         sPref  = itPrefKeys.next();
-                    String         sValue = joConfig.getString(sPref);
+                    String sPref  = itPrefKeys.next();
+                    String sValue = m_joFeedConfig.getString(sPref);
                     try {
                         PreferenceKeys key    = PreferenceKeys.valueOf(sPref);
                         mFeedPrefOverwrites.put(key, sValue);

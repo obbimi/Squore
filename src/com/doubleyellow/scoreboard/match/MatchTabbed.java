@@ -482,6 +482,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
             case Manual: {
                 MatchFragment matchFragment = (MatchFragment) getFragment(defaultTab);
                 intent = matchFragment.getIntent(bBackPressed);
+                Match.dontShow();
                 break;
             }
             default: {
