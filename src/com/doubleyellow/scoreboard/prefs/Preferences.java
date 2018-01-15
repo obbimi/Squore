@@ -469,8 +469,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         public boolean onPreferenceClick(Preference prefScreen) {
                             Dialog prefScreenDialog = psColors.getDialog();
                             prefScreenDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                @Override
-                                public void onDismiss(DialogInterface arg0) {
+                                @Override public void onDismiss(DialogInterface arg0) {
                                     // new icon has already been set by our SPChange but it is not redrawn on return: hence this hack
                                     psAppearance.removePreference(psColors); // just to redraw it
                                     psAppearance.addPreference(psColors);

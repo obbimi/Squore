@@ -347,19 +347,39 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
     };
 
+    //-------------------------------------------------------------------------
+    // Helper methods to prevent score change while EndGame dialog was in about/in progress to be presented (fast double click on scorebutton on gameball)
+    //-------------------------------------------------------------------------
+    public void enableScoreButton(Player player) {
+        View view = findViewById(IBoard.m_player2scoreId.get(player));
+        if ( view == null ) { return; }
+        if ( view.isEnabled() ) { return; }
+        view.setEnabled(true);
+        Log.d(TAG, "Re-enabling score button for player " + player);
+    }
+    void disableScoreButton(View view) {
+        view.setEnabled(false);
+        Log.d(TAG, "Disabling score button for model " + matchModel);
+    }
     private class ScoreButtonListener implements View.OnClickListener
     {
         @Override public void onClick(View view) {
-            onClick(view.getId());
-        }
-        private void onClick(int iId) {
-            Player player = IBoard.m_id2player.get(iId);
+          //Log.d(TAG, "Received click for model " + matchModel);
+            Player player = IBoard.m_id2player.get(view.getId());
+            if ( matchModel.isPossibleGameBallFor(player) && (bGameEndingHasBeenCancelledThisGame == false) ) {
+                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 /* 17 */ ) {
+                    // score will go to game-end, and most likely a dialog will be build and show. Prevent any accidental score changes while dialog is about to be shown
+                    disableScoreButton(view);
+                }
+            }
+            enableScoreButton(player.getOther());
             changeScore(player);
         }
     }
 
     private void changeScore(Player player) {
         if ( warnModelIsLocked() ) { return; }
+      //Log.d(TAG, "Changing score for for model " + matchModel);
         matchModel.changeScore(player);
     }
 
@@ -2181,20 +2201,22 @@ touch -t 01030000 LAST.sb
         newMatchButton.setHidden(bVisible == false);
     }
 
-    /** might present a dialog to the user, depending on user preference */
-    private void endGame_BOP(Player leadingPlayer) {
+    /** might present a dialog to the user, Based-On-Preference. Returns true if dialog will be shown */
+    private boolean endGame_BOP(Player leadingPlayer) {
+        boolean bShowDialog = false;
         Feature endGameSuggestion = PreferenceValues.endGameSuggestion(ScoreBoard.this);
         switch(endGameSuggestion) {
             case DoNotUse:
                 break;
             case Suggest:
-                _confirmGameEnding(leadingPlayer);
+                bShowDialog = _confirmGameEnding(leadingPlayer);
                 break;
             case Automatic:
                 //nonIntrusiveGameEnding(leadingPlayer);// TODO: only enable if no automatic dialog follows (no official, no timer...)
                 matchModel.endGame();
                 break;
         }
+        return bShowDialog;
     }
 
     // ----------------------------------------------------
@@ -2336,7 +2358,12 @@ touch -t 01030000 LAST.sb
                 }
             }
             if ( bTryToAutoEndGame ) {
-                endGame_BOP(leadingPlayer);
+                if ( endGame_BOP(leadingPlayer) == false ) {
+                    // no dialog, enable score button now (in stead of in 'onDismiss' of dialog)
+                    enableScoreButton(leadingPlayer);
+                };
+            } else {
+                enableScoreButton(leadingPlayer); // we only disabled if button of leader was pressed on gameball
             }
             if ( m_liveScoreShare != null ) {
                 shareScoreSheet(ScoreBoard.this, matchModel, true);
@@ -3101,6 +3128,7 @@ touch -t 01030000 LAST.sb
             case R.id.dyn_undo_last:
             case R.id.sb_undo_last:
                 if ( warnModelIsLocked() ) { return false; }
+                enableScoreButton(matchModel.getServer());
                 matchModel.undoLast();
                 bGameEndingHasBeenCancelledThisGame = false;
                 return true;
@@ -4057,13 +4085,13 @@ touch -t 01030000 LAST.sb
 
     /** If it has been cancelled and no 'undo' has been done, assume that match format 'end score' was accidentally chosen to low */
     public boolean bGameEndingHasBeenCancelledThisGame = false;
-    private void _confirmGameEnding(Player winner) {
+    private boolean _confirmGameEnding(Player winner) {
         // only suggest once per game
-        if ( bGameEndingHasBeenCancelledThisGame == true ) { return; }
+        if ( bGameEndingHasBeenCancelledThisGame == true ) { return false; }
 
         EndGame endGame = new EndGame(this, matchModel, this);
         endGame.init(winner);
-        addToDialogStack(endGame);
+        return addToDialogStack(endGame);
     }
     private void areYouSureGameEnding() {
         EndGameChoice endGame = new EndGameChoice(this, matchModel, this);

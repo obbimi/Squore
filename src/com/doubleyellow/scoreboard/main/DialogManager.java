@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.main;
 
 import android.content.Context;
@@ -16,6 +33,9 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Helps in stacking dialogs to show on a stack an display them one after another...
+ */
 public class DialogManager {
 
     private static final String TAG = "SB." + DialogManager.class.getSimpleName();
@@ -38,6 +58,7 @@ public class DialogManager {
         dialog.show();
         baseDialog = dialog;
     }
+    /** returns true if dialog was added to the stack, false if the dialog was already on the stack or blocked from adding to the stack */
     public synchronized boolean addToDialogStack(BaseAlertDialog dialog) {
         if ( IBoard.getBlockToasts() ) { return false; }
 
@@ -46,14 +67,14 @@ public class DialogManager {
             // check if somehow a second dialog is added to the stack that is already their, do not add it
             for(BaseAlertDialog queuedDialog: baseDialogs) {
                 if ( queuedDialog.getClass().equals(dialog.getClass()) ) {
-                    Log.w(TAG, "dialog already on the stack " + dialog.getClass());
+                    Log.w(TAG, "dialog already on the stack " + dialog.getClass() + "( stack size: " + ListUtil.size(baseDialogs) + ")");
                     bAlreadyOnTheStack = true;
                     break;
                 }
             }
         }
         if ( baseDialogs.size() > 0 ) {
-            if ( baseDialogs.get(0).isShowing()== false ) {
+            if ( baseDialogs.get(0).isShowing() == false ) {
                 baseDialogs.remove(0);// e.g. for the EndGame dialog or ChildActivity
             }
         }
@@ -64,11 +85,11 @@ public class DialogManager {
             dialog.show();
             baseDialog = dialog;
         } else {
-            if ( baseDialog == null || baseDialog.isModal() == false ) { // e.g. to still start the timer if statistics are showing
+            if ( (baseDialog == null) || (baseDialog.isModal() == false) ) { // e.g. to still start the timer if statistics are showing
                 showNextDialog();
             }
         }
-        return true;
+        return (bAlreadyOnTheStack==false);
     }
     public void showNextDialogIfChildActivity() {
         if ( baseDialogs.size() > 0 && baseDialogs.get(0) instanceof ChildActivity) {
@@ -85,7 +106,8 @@ public class DialogManager {
     public synchronized void showNextDialog() {
         // remove the one last shown from the stack
         if ( ListUtil.isNotEmpty(baseDialogs) ) {
-            baseDialogs.remove(0);
+            BaseAlertDialog previous = baseDialogs.remove(0);
+            Log.d(TAG, "previous dialog removed from the stack " + previous);
             baseDialog = null;
         }
         if ( ListUtil.isNotEmpty(baseDialogs) ) {
@@ -105,11 +127,20 @@ public class DialogManager {
         boolean bTimerIsShowing        = (ScoreBoard.timer != null) && ScoreBoard.timer.isShowing();
         return bNonTimerDialogShowing || bTimerIsShowing;
     }
-    public void removeDialog(Object o) {
-        if ( o instanceof  BaseAlertDialog ) {
+    public boolean removeDialog(Object o) {
+        if ( o instanceof BaseAlertDialog ) {
             BaseAlertDialog bad = (BaseAlertDialog) o;
-            baseDialogs.remove(bad);
+            boolean remove = baseDialogs.remove(bad);
+            if ( remove ) {
+                Log.d(TAG, "dialog removed from the stack " + bad.getClass());
+            } else {
+                Log.d(TAG, "dialog was (no longer) on the stack " + bad.getClass());
+            }
+            return remove;
+        } else {
+            Log.w(TAG, "Not a base dialog " + o);
         }
+        return false;
     }
     public void clearDialogs() {
         baseDialogs.clear();

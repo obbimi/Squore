@@ -1,8 +1,26 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.dialog;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.widget.LinearLayout;
@@ -88,8 +106,7 @@ public class EndGame extends BaseAlertDialog
             }
         } else {
             adb.setIcon          (R.drawable.ic_menu_forward)
-               .setTitle(getGameOrSetString(iEndGameMsgResId))
-               .setOnKeyListener(getOnBackKeyListener());
+               .setTitle(getGameOrSetString(iEndGameMsgResId));
 
             if ( Brand.isRacketlon() ) {
                 adb.setMessage(ListUtil.join(getRacketlonMessages(matchHasEnded), "\n\n"));
@@ -104,6 +121,15 @@ public class EndGame extends BaseAlertDialog
             );
         }
 
+        adb.setOnKeyListener(getOnBackKeyListener(/*BTN_END_GAME*/));
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 /* 17 */ ) {
+            adb.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override public void onDismiss(DialogInterface dialog) {
+                    scoreBoard.triggerEvent(ScoreBoard.SBEvent.endGameDialogEnded, EndGame.this);
+                    scoreBoard.enableScoreButton(m_winner);
+                }
+            });
+        }
         dialog = adb.show(listener);
     }
 
@@ -238,6 +264,10 @@ public class EndGame extends BaseAlertDialog
                 }
                 break;
         }
-        scoreBoard.triggerEvent(ScoreBoard.SBEvent.endGameDialogEnded, this);
+        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 /* 17 */ ) {
+            // ondismiss not yet supported on current (OLD) device
+            scoreBoard.triggerEvent(ScoreBoard.SBEvent.endGameDialogEnded, this);
+            scoreBoard.enableScoreButton(m_winner);
+        }
     }
 }

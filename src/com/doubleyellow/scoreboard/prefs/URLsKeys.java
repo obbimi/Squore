@@ -44,4 +44,5 @@ public enum URLsKeys {
         avatarBaseURL,
         expandGroup,
         Format,
+        skipMatchSettings,
 }

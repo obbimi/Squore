@@ -69,4 +69,4 @@ The following users of Squore have made valuable suggestions/help:
 - Steve Cubbins
 - Andrés Orozco
 - Brian T. French
-
+- Jean-Marie Evrard from [Squash Romandie](http://squashromandie.ch)

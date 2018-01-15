@@ -36,6 +36,7 @@ import com.doubleyellow.scoreboard.dialog.SelectFeed;
 import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.match.ExpandableMatchSelector;
+import com.doubleyellow.scoreboard.match.Match;
 import com.doubleyellow.scoreboard.match.MatchTabbed;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
@@ -141,6 +142,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 if ( populateModelFromString(model, sText, sGroup, feedPostName) ) {
                     return false;
                 }
+            }
+
+            if ( (m_joFeedConfig != null) && m_joFeedConfig.optBoolean(URLsKeys.skipMatchSettings.toString(), false) ) {
+                // typically a JSON feed with all appropriate settings in the feed, no need to change settings
+                Match.dontShow();
             }
 
             Intent intent = new Intent();
@@ -371,6 +377,19 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
             if ( m_joFeedConfig.has(JSONKey.numberOfGamesToWinMatch.toString() ) ) {
                 model.setNrOfGamesToWinMatch(m_joFeedConfig.getInt(JSONKey.numberOfGamesToWinMatch.toString()));
+            }
+            if ( m_joFeedConfig.has(JSONKey.useHandInHandOutScoring.toString() ) ) {
+                boolean bUseHandInOutScoring = m_joFeedConfig.getBoolean(JSONKey.useHandInHandOutScoring.toString());
+                model.setEnglishScoring(bUseHandInOutScoring);
+            }
+            if ( m_joFeedConfig.has(JSONKey.tiebreakFormat.toString() ) ) {
+                String sTBF = m_joFeedConfig.getString(JSONKey.tiebreakFormat.toString());
+                try {
+                    TieBreakFormat tbf = TieBreakFormat.valueOf(sTBF);
+                    model.setTiebreakFormat(tbf);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -765,11 +784,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     String sPref  = itPrefKeys.next();
                     String sValue = m_joFeedConfig.getString(sPref);
                     try {
-                        PreferenceKeys key    = PreferenceKeys.valueOf(sPref);
+                        PreferenceKeys key = PreferenceKeys.valueOf(sPref);
                         mFeedPrefOverwrites.put(key, sValue);
                     } catch (Exception e) {
                         URLsKeys key = URLsKeys.PostResult;
-                        if ( sPref.equals(key.toString())) {
+                        if ( sPref.equals( key.toString() ) ) {
                             Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
                             String sCurrent = feedPostDetail.get(key);
                             if ( sValue.equals(sCurrent) == false ) {
@@ -777,7 +796,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                                 PreferenceValues.addOrReplaceNewFeedURL(context, feedPostDetail, true, true);
                             }
                         } else {
-                            e.printStackTrace();
+                            //e.printStackTrace();
                         }
                     }
                 }

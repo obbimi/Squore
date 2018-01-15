@@ -2643,6 +2643,12 @@ public abstract class Model
         return _isPossibleGameVictoryFor(When.ScoreOneMorePoint, false);
     }
 
+    public boolean isPossibleGameBallFor(Player p) {
+        Player[] pa = isPossibleGameBallFor();
+        return ( pa.length >= 1 && pa[0].equals(p) )
+            || ( pa.length >= 2 && pa[1].equals(p) );
+    }
+
     private void setGameVictoryFor(When when, Player[] gameballForNew) {
         // store the new value
         m_possibleGameFor.put(when, gameballForNew);
