@@ -18,7 +18,6 @@ Pomáhá při rozhodování squashových zápasů.
 &bull; podpora rozhodování <b>čtyřher</b>
 &bull; možnost <b>importovat/exportovat</b> rozhodované zápasy
 &bull; přesun rozhodování během zápasu na jiné zařízení pomocí technologie NFC (S-Beam)
-&bull; přizpůsobení velikosti textů jednotlivých elementů na obrazovce
 &bull; ukládá skóre (včetně historie) při ukončení aplikace
 &bull; podporuje zobrazení na výšku i na šířku
 &bull; možnost sdílení zápisu, např. na Facebook

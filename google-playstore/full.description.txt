@@ -18,7 +18,6 @@ Supports you in referee-ing a squash match.
 &bull; support for referee-ing doubles matches
 &bull; <b>import/export</b> functionality for previously reffed matches
 &bull; transfer 'in progress' match to another device using <b>NFC</b> (a.k.a. S-Beam)
-&bull; possibility to <b>customize</b> text size for screen elements
 &bull; saves the score (and scoring history) on exit
 &bull; can be used in landscape and portrait orientation
 &bull; option to <b>share</b> the entire scoring history on e.g. Facebook

@@ -1,0 +1,51 @@
+Squore est l’application idéale pour vous aider à arbitrer un match de squash.
+Par son ouverture, elle permet d’arbitrer les matchs de vos tournois disponibles en ligne. Voici la liste des fonctionnalités offertes.
+
+<b>Caractéristiques :</b>
+&bull; Affichage claire du score actuel (permet de le montrer aux joueurs à travers la vitre)
+&bull; Affichage du <b>côté</b> du service
+&bull; Indique si le dernier point était un <b>changement</b>
+&bull; Annulation d’une décision
+&bull; Option pour voir l'historique du score dans un <b>graphique</b>
+&bull; <b>Minuteurs</b> «Echauffement» et «Entre deux jeux» (notifications sonores et vibrations en option)
+&bull; Diffusion du score sur un téléviseur avec <b>ChromeCast</b>
+&bull; Minuteur de «blessure»
+&bull; Gestion des matchs avec <b>handicap</b>
+&bull; <b>Annonces</b> officielles (début, fin de partie, fin de match, « tie-break »)
+&bull; Gestion des appels « Lets » et « Comportements » et prise de décision
+&bull; Enregistrement des points gagnants ou des erreurs sur le coup droit, revers ou volée, sur le mur frontal ou en fond de court et affichage du résumé
+&bull; Affichage de la liste des « Comportements » / « Avertissements » / « Lets » / « Strokes »
+&bull; Rappel de toutes les séquences de jeu d'un match
+&bull; Arbitrage des matchs de double
+&bull; Fonctionnalité d'import/export des matchs précédemment arbitrés
+&bull; Transférer un match en cours vers un autre appareil mobile
+&bull; Enregistre le score et l'historique du match
+&bull; Orientation paysage et portrait
+&bull; Partage de l'historique complet du match sur, par exemple, Facebook
+&bull; Envoie de résultat par SMS ou e-mail par exemple à un autre club ou coéquipier
+&bull; Lors du partage par e-mail, il est possible d'inclure l'historique complet du match
+&bull; Remplissage automatique les noms des joueurs à partir de votre liste de contacts
+&bull; Mémorisation des noms de joueurs entrés précédemment pour affichage automatique
+&bull; Mémorisation de tous les matches arbitrés (pour un rappel ultérieur, par exemple pour noter les scores des matches sur les journaux officiels)
+&bull; Spécifier une couleur par joueur pour les distinguer
+&bull; Sélectionner des matches depuis une liste de tournois disponibles par exemple tournamentsoftware.com
+&bull; Définir un match par avance pour une sélection rapide plus tard
+&bull; Possibilité d'utiliser différents formats de <b>tie-break</b>
+&bull; Personnalisation des couleurs de l'application pour correspondre aux couleurs de votre club
+&bull; Lien paramétrable sur les <b>règles officielles du squash</b>
+&bull; Spécifier des URLs de flux pour permettre la sélection de matchs/joueurs au lieu de saisir des noms
+&bull; poster un résultat sur un site web configurable (demandez au webmaster de votre club)
+Vous pouvez vérifier auprès de votre webmaster s'il est possible d'avoir les deux dernières options disponibles
+
+<b>Permissions :</b>
+&bull; Lire les contacts : pour remplir automatiquement les noms des joueurs lors de la configuration d'un match
+&bull; Stockage en lecture/écriture : pour sauvegarder les détails de chaque match que vous avez arbitré
+&bull; Accès au réseau : pour lire les tournois/joueurs d'un flux
+&bull; Contrôle des vibrations : principalement pour vous informer qu'une minuterie est terminée ou presque
+
+<b>Aide en ligne :</b>
+http://squore.double-yellow.be/help/
+
+
+Nouveautés :
+Ajout de la prise en charge du format JSON pour plus de flexibilité
