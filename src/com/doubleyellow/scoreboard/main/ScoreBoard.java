@@ -675,8 +675,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             addItem(R.id.sb_settings            , R.string.settings                , R.drawable.ic_action_settings    );
             addItem(R.id.sb_stored_matches      , R.string.sb_stored_matches       , R.drawable.ic_action_view_as_list);
         startSection(R.string.ImportExport_elipses );
-            addItem(R.id.cmd_import_matches     , R.string.import_matches          , 0);
-            addItem(R.id.cmd_export_matches     , R.string.export_matches          , 0);
+            addItem(R.id.cmd_import_matches     , R.string.import_matches          , android.R.drawable.stat_sys_download);
+            addItem(R.id.cmd_export_matches     , R.string.export_matches          , android.R.drawable.ic_menu_upload);
 
             if ( ListUtil.size(id2Seq) == 0 ) {
                 id2Seq.addAll(id2String.keySet());

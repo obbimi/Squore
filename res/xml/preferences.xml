@@ -9,14 +9,15 @@
                       android:summary="@string/pref_Appearance_summary">
 
         <com.doubleyellow.scoreboard.prefs.ScreenLayoutPrefs
-                android:key="ScreenLayoutPrefs"
-                android:title="@string/pref_ScreenLayoutPrefs"
-                android:summary="@string/pref_ScreenLayoutPrefs_dialog"
-                android:dialogMessage="@string/pref_ScreenLayoutPrefs_dialog"
-                android:positiveButtonText="@string/cmd_maximize"
-                android:negativeButtonText="@string/cmd_normal"
-                android:persistent="false"
-                />
+            android:key="ScreenLayoutPrefs"
+            android:icon="@drawable/dummy"
+            android:title="@string/pref_ScreenLayoutPrefs"
+            android:summary="@string/pref_ScreenLayoutPrefs_dialog"
+            android:dialogMessage="@string/pref_ScreenLayoutPrefs_dialog"
+            android:positiveButtonText="@string/cmd_maximize"
+            android:negativeButtonText="@string/cmd_normal"
+            android:persistent="false"
+            />
 
         <PreferenceScreen android:key="Colors"
                           android:title="@string/pref_Colors"
@@ -164,15 +165,18 @@
                             android:title="@string/pref_CountryFlags"
                             android:summary="@string/pref_CountryFlags_summary">
             <com.doubleyellow.prefs.EnumMultiSelectPreference
+                android:icon="@drawable/dummy"
                 android:key="showCountryAs"
                 android:title="@string/pref_showCountryAs"
                 android:defaultValue="@array/ShowCountryAs_DefaultValues"
                 dy:displayValues="@array/ShowCountryAsDisplayValues"
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowCountryAs"
             />
-            <CheckBoxPreference android:key="hideFlagForSameCountry"
-                                android:title="@string/pref_hideFlagForSameCountry"
-                                android:defaultValue="@bool/hideFlagForSameCountry_default"
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="hideFlagForSameCountry"
+                android:title="@string/pref_hideFlagForSameCountry"
+                android:defaultValue="@bool/hideFlagForSameCountry_default"
             />
         </PreferenceCategory>
 
@@ -180,6 +184,7 @@
                             android:title="@string/pref_Avatars"
                             android:summary="@string/pref_Avatars_summary">
             <com.doubleyellow.prefs.EnumMultiSelectPreference
+                android:icon="@drawable/dummy"
                 android:key="showAvatarOn"
                 android:title="@string/pref_showAvatarOn"
                 android:defaultValue="@array/ShowAvatarOn_DefaultValues"
@@ -195,15 +200,19 @@
         </PreferenceCategory>
 
         <PreferenceCategory android:title="@string/pref_ActionBar">
-            <CheckBoxPreference android:key="showActionBar"
-                                android:title="@string/pref_showActionBar"
-                                android:summary="@string/pref_showActionBar_summary"
-                                android:defaultValue="@bool/showActionBar_default"
-                    />
-            <CheckBoxPreference android:key="showTextInActionBar"
-                                android:title="@string/pref_showTextInActionBar"
-                                android:defaultValue="@bool/showTextInActionBar_default"
-                    />
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="showActionBar"
+                android:title="@string/pref_showActionBar"
+                android:summary="@string/pref_showActionBar_summary"
+                android:defaultValue="@bool/showActionBar_default"
+                />
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="showTextInActionBar"
+                android:title="@string/pref_showTextInActionBar"
+                android:defaultValue="@bool/showTextInActionBar_default"
+                />
         </PreferenceCategory>
 
         <PreferenceCategory android:title="@string/pref_Category_Layout">
@@ -243,6 +252,7 @@
                     />
 -->
             <com.doubleyellow.prefs.EnumMultiSelectPreference
+                android:icon="@drawable/dummy"
                 android:key="showScoringHistoryInMainScreenOn"
                 android:title="@string/pref_showScoringHistoryInMainScreen"
                 android:defaultValue="@array/showScoringHistoryInMainScreenOn_DefaultValues"
@@ -266,6 +276,7 @@
                     dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
             <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/dummy"
                 android:key="timerViewType"
                 android:title="@string/pref_timerViewType"
                 android:defaultValue="@string/timerViewType_default"
@@ -273,22 +284,27 @@
                 dy:enumClass="com.doubleyellow.scoreboard.timer.ViewType"
             />
             <com.doubleyellow.prefs.EnumMultiSelectPreference
-                    android:key="showFieldDivisionOn"
-                    android:title="@string/pref_showFieldDivisionOn"
-                    android:defaultValue="@array/showFieldDivisionOn_DefaultValues"
-                    dy:displayValues="@array/ShowOnScreen_DisplayValues"
-                    dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
+                android:icon="@drawable/dummy"
+                android:key="showFieldDivisionOn"
+                android:title="@string/pref_showFieldDivisionOn"
+                android:defaultValue="@array/showFieldDivisionOn_DefaultValues"
+                dy:displayValues="@array/ShowOnScreen_DisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
-            <CheckBoxPreference android:key="hideFieldDivisionWhenGameInProgress"
-                                android:title="@string/pref_Hide_division_field_when_game_in_progress"
-                                android:defaultValue="@bool/hideFieldDivisionWhenGameInProgress_default"
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="hideFieldDivisionWhenGameInProgress"
+                android:title="@string/pref_Hide_division_field_when_game_in_progress"
+                android:defaultValue="@bool/hideFieldDivisionWhenGameInProgress_default"
             />
-            <EditTextPreference android:key="AppealHandGestureIconSize"
-                                android:title="@string/pref_AppealHandGestureIconSize"
-                                android:summary="@string/pref_AppealHandGestureIconSize_summary"
-                                android:inputType="number"
-                                android:defaultValue="@integer/AppealHandGestureIconSize_default"
-                    />
+            <EditTextPreference
+                android:icon="@drawable/dummy"
+                android:key="AppealHandGestureIconSize"
+                android:title="@string/pref_AppealHandGestureIconSize"
+                android:summary="@string/pref_AppealHandGestureIconSize_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/AppealHandGestureIconSize_default"
+            />
 
         </PreferenceCategory>
 
@@ -320,21 +336,24 @@
                        android:summary="@string/pref_Behaviour_summary">
 
         <com.doubleyellow.scoreboard.prefs.AutomateWhatCanBeAutomatedPrefs
-                android:key="AutomateWhatCanBeAutomatedPrefs"
-                android:title="@string/pref_AutomateAsMuchAsPossible"
-                android:summary="@string/pref_AutomateAsMuchAsPossible_dialog"
-                android:dialogMessage="@string/pref_AutomateAsMuchAsPossible_dialog"
-                android:positiveButtonText="@string/cmd_automatic"
-                android:negativeButtonText="@string/cmd_suggest"
-                android:persistent="false"
-                />
+            android:icon="@drawable/dummy"
+            android:key="AutomateWhatCanBeAutomatedPrefs"
+            android:title="@string/pref_AutomateAsMuchAsPossible"
+            android:summary="@string/pref_AutomateAsMuchAsPossible_dialog"
+            android:dialogMessage="@string/pref_AutomateAsMuchAsPossible_dialog"
+            android:positiveButtonText="@string/cmd_automatic"
+            android:negativeButtonText="@string/cmd_suggest"
+            android:persistent="false"
+            />
 
         <PreferenceCategory android:title="@string/pref_BehaviourConvenience">
-            <CheckBoxPreference android:key="showNewMatchFloatButton"
-                                android:title="@string/pref_showNewMatchFloatButton"
-                                android:summary="@string/pref_showNewMatchFloatButton_summary"
-                                android:defaultValue="@bool/showNewMatchFloatButton_default"
-                    />
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="showNewMatchFloatButton"
+                android:title="@string/pref_showNewMatchFloatButton"
+                android:summary="@string/pref_showNewMatchFloatButton_summary"
+                android:defaultValue="@bool/showNewMatchFloatButton_default"
+                />
 <!--
             <CheckBoxPreference android:key="keepScreenOn"
                                 android:title="@string/pref_keepScreenOn"
@@ -343,6 +362,7 @@
                     />
 -->
             <com.doubleyellow.prefs.EnumListPreference
+                    android:icon="@drawable/dummy"
                     android:key="keepScreenOnWhen"
                     android:title="@string/pref_keepScreenOn"
                     android:summary="@string/pref_keepScreenOn_summary"
@@ -374,6 +394,7 @@
                                 android:defaultValue="@bool/saveMatchesForLaterUsage_default"
                     />
             <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/dummy"
                 android:key="BackKeyBehaviour"
                 android:title="@string/pref_BackKeyBehaviour"
                 android:defaultValue="@string/BackKeyBehaviour_default"
@@ -381,6 +402,7 @@
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.BackKeyBehaviour"
                 />
             <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/dummy"
                 android:key="VolumeKeysBehaviour"
                 android:title="@string/pref_VolumeKeysBehaviour"
                 android:summary="@string/pref_VolumeKeysBehaviour_summary"
@@ -389,6 +411,7 @@
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.VolumeKeysBehaviour"
                 />
             <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/dummy"
                 android:key="StartupAction"
                 android:title="@string/pref_StartupAction"
                 android:summary="@string/pref_StartupAction_summary"
@@ -396,27 +419,34 @@
                 dy:displayValues="@array/StartupActionDisplayValues"
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.StartupAction"
                 />
-            <EditTextPreference android:key="numberOfCharactersBeforeAutocomplete"
-                                android:title="@string/pref_numberOfCharactersBeforeAutocomplete"
-                                android:summary="@string/pref_numberOfCharactersBeforeAutocomplete_summary"
-                                android:inputType="number"
-                                android:defaultValue="@integer/numberOfCharactersBeforeAutocomplete_default"
-                    />
-            <EditTextPreference android:key="numberOfCharactersBeforeAutocompleteCountry"
-                                android:title="@string/pref_numberOfCharactersBeforeAutocompleteCountry"
-                                android:summary="@string/pref_numberOfCharactersBeforeAutocompleteCountry_summary"
-                                android:inputType="number"
-                                android:defaultValue="@integer/numberOfCharactersBeforeAutocompleteCountry_default"
-            />
+            <EditTextPreference
+                android:icon="@drawable/dummy"
+                android:key="numberOfCharactersBeforeAutocomplete"
+                android:title="@string/pref_numberOfCharactersBeforeAutocomplete"
+                android:summary="@string/pref_numberOfCharactersBeforeAutocomplete_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/numberOfCharactersBeforeAutocomplete_default"
+                />
+            <EditTextPreference
+                android:icon="@drawable/dummy"
+                android:key="numberOfCharactersBeforeAutocompleteCountry"
+                android:title="@string/pref_numberOfCharactersBeforeAutocompleteCountry"
+                android:summary="@string/pref_numberOfCharactersBeforeAutocompleteCountry_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/numberOfCharactersBeforeAutocompleteCountry_default"
+                />
 
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_Category_End_of_Game">
-            <CheckBoxPreference android:key="indicateGameBall"
-                                android:title="@string/pref_indicateGameBall"
-                                android:summary="@string/pref_indicateGameBall_summary"
-                                android:defaultValue="@bool/indicateGameBall_default"
-                    />
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="indicateGameBall"
+                android:title="@string/pref_indicateGameBall"
+                android:summary="@string/pref_indicateGameBall_summary"
+                android:defaultValue="@bool/indicateGameBall_default"
+                />
             <com.doubleyellow.prefs.EnumMultiSelectPreference
+                android:icon="@drawable/dummy"
                 android:key="floatingMessageForGameBallOn"
                 android:title="@string/pref_floatingMessageForGameBall"
                 android:summary="@string/pref_floatingMessageForGameBall_summary"
@@ -490,12 +520,14 @@
                 dy:displayValues="@array/AutoLockContextDisplayValues"
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.AutoLockContext"
                 />
-            <EditTextPreference android:key="numberOfMinutesAfterWhichToLockMatch"
-                                android:title="@string/pref_numberOfMinutesAfterWhichToLockMatch"
-                                android:summary="@string/pref_numberOfMinutesAfterWhichToLockMatch_summary"
-                                android:inputType="number"
-                                android:defaultValue="@integer/numberOfMinutesAfterWhichToLockMatch_default"
-                    />
+            <EditTextPreference
+                android:icon="@drawable/dummy"
+                android:key="numberOfMinutesAfterWhichToLockMatch"
+                android:title="@string/pref_numberOfMinutesAfterWhichToLockMatch"
+                android:summary="@string/pref_numberOfMinutesAfterWhichToLockMatch_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/numberOfMinutesAfterWhichToLockMatch_default"
+                />
 
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_BehaviourOfficial">
@@ -517,11 +549,12 @@
                     />
 -->
             <com.doubleyellow.prefs.EnumListPreference
-                    android:key="officialAnnouncementsLanguage"
-                    android:title="@string/pref_officialAnnouncementsLanguage"
-                    android:defaultValue="@string/officialAnnouncementsLanguage_default"
-                    dy:enumClass="com.doubleyellow.scoreboard.prefs.AnnouncementLanguage"
-            />
+                android:icon="@drawable/dummy"
+                android:key="officialAnnouncementsLanguage"
+                android:title="@string/pref_officialAnnouncementsLanguage"
+                android:defaultValue="@string/officialAnnouncementsLanguage_default"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.AnnouncementLanguage"
+                />
             <com.doubleyellow.prefs.EnumListPreference
                     android:key="useTimersFeature"
                     android:title="@string/pref_useTimersFeature"
@@ -531,17 +564,21 @@
                     dy:displayValues="@array/FeatureDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
                     />
-            <CheckBoxPreference android:key="showChoosenDecisionShortly"
-                                android:title="@string/pref_showChoosenDecisionShortly"
-                                android:summary="@string/pref_showChoosenDecisionShortly_summary"
-                                android:defaultValue="@bool/showChoosenDecisionShortly_default"
-            />
-            <EditTextPreference android:key="OfficialSquashRulesURLs"
-                                android:title="@string/pref_OfficialSquashRulesURLs"
-                                android:summary="@string/pref_OfficialSquashRulesURLs_summary"
-                                android:inputType="textMultiLine"
-                                android:defaultValue="@string/OfficialRulesURLs_default_Squash"
-                    />
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="showChoosenDecisionShortly"
+                android:title="@string/pref_showChoosenDecisionShortly"
+                android:summary="@string/pref_showChoosenDecisionShortly_summary"
+                android:defaultValue="@bool/showChoosenDecisionShortly_default"
+                />
+            <EditTextPreference
+                android:icon="@drawable/dummy"
+                android:key="OfficialSquashRulesURLs"
+                android:title="@string/pref_OfficialSquashRulesURLs"
+                android:summary="@string/pref_OfficialSquashRulesURLs_summary"
+                android:inputType="textMultiLine"
+                android:defaultValue="@string/OfficialRulesURLs_default_Squash"
+                />
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_Category_Others">
             <com.doubleyellow.prefs.EnumListPreference
@@ -559,7 +596,8 @@
                                 android:summary="@string/pref_hapticFeedbackPerPoint_summary"
                                 android:defaultValue="@bool/hapticFeedbackPerPoint_default"
                     />
-            <CheckBoxPreference android:key="showTips"
+            <CheckBoxPreference android:icon="@drawable/dummy"
+                                android:key="showTips"
                                 android:title="@string/pref_showTips"
                                 android:defaultValue="@bool/showTips_default"
                     />
@@ -581,6 +619,7 @@
             dy:enumClass="com.doubleyellow.util.Feature"
         />
         <com.doubleyellow.prefs.EnumListPreference
+            android:icon="@drawable/dummy"
             android:key="shareAction"
             android:title="@string/pref_shareAction"
             android:summary="@string/pref_shareAction"
@@ -589,24 +628,28 @@
             dy:enumClass="com.doubleyellow.scoreboard.prefs.ShareMatchPrefs"
         />
         <EditTextPreference android:key="refereeName"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_refereeName"
                             android:summary="@string/pref_refereeName_summary"
                             android:inputType="textCapWords"
                             android:defaultValue=""
         />
         <EditTextPreference android:key="smsResultToNr"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_smsResultToNr"
                             android:summary="@string/pref_smsResultToNr_summary"
                             android:inputType="phone"
                             android:defaultValue=""
         />
         <EditTextPreference android:key="mailResultTo"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_mailResultTo"
                             android:summary="@string/pref_mailResultTo_summary"
                             android:inputType="textEmailAddress"
                             android:defaultValue=""
         />
         <CheckBoxPreference android:key="mailFullScoringSheet"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_mailFullScoringSheet"
                             android:summary="@string/pref_mailFullScoringSheet_summary"
                             android:defaultValue="@bool/mailFullScoringSheet_default"
@@ -619,6 +662,7 @@
                       android:title="@string/pref_Category_Live_Score__ChromeCast">
         <PreferenceCategory android:title="@string/Live_Score">
             <com.doubleyellow.scoreboard.prefs.LiveScorePrefs
+                android:icon="@drawable/dummy"
                 android:key="LiveScorePrefs"
                 android:title="@string/pref_LiveScorePrefs"
                 android:summary="@string/pref_LiveScorePrefs_dialog"
@@ -628,6 +672,7 @@
                 android:persistent="false"
             />
             <Preference android:title="@string/Live_Score"
+                android:icon="@drawable/dummy"
                         android:key="LiveScoreOpenURL"
                         android:summary="@string/pref_live_score_url_summary">
                 <intent android:action="android.intent.action.VIEW"
@@ -666,6 +711,7 @@
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
         />
         <com.doubleyellow.prefs.EnumListPreference
+            android:icon="@drawable/dummy"
                 android:key="useTimersFeature"
                 android:title="@string/pref_useTimersFeature"
                 android:defaultValue="Suggest"
@@ -673,6 +719,7 @@
                 dy:enumClass="com.doubleyellow.util.Feature"
                 />
         <com.doubleyellow.prefs.EnumListPreference
+            android:icon="@drawable/dummy"
                 android:key="timerViewType"
                 android:title="@string/pref_timerViewType"
                 android:defaultValue="@string/timerViewType_default"
@@ -688,18 +735,21 @@
                 />
 -->
         <EditTextPreference android:key="timerWarmup"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_timerWarmup"
                             android:summary="@string/pref_timerWarmup_summary"
                             android:inputType="number"
                             android:defaultValue="@integer/timerWarmup_default"
                 />
         <EditTextPreference android:key="timerPauseBetweenGames"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_timerPauseBetweenGames"
                             android:summary="@string/pref_timerPauseBetweenGames_summary"
                             android:inputType="number"
                             android:defaultValue="@integer/timerPauseBetweenGames_default"
                 />
         <EditTextPreference android:key="timerPauseBetweenGames_values"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_timerPauseBetweenGames_values"
                             android:summary="@string/pref_timerPauseBetweenGames_values_summary"
                             android:defaultValue="@string/timerPauseBetweenGames_values_default"
@@ -729,26 +779,32 @@
                 />
 
         <CheckBoxPreference android:key="showLastGameInfoInTimer"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_showLastGameInfoInTimer"
                             android:defaultValue="@bool/showLastGameInfoInTimer_default"
                 />
         <CheckBoxPreference android:key="showAdjustTimeButtonsInTimer"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_showAdjustTimeButtonsInTimer"
                             android:defaultValue="@bool/showAdjustTimeButtonsInTimer_default"
                 />
         <CheckBoxPreference android:key="showUseAudioCheckboxInTimer"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_showUseAudioCheckboxInTimer"
                             android:defaultValue="@bool/showUseAudioCheckboxInTimer_default"
                 />
         <CheckBoxPreference android:key="showPauseButtonOnTimer"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_showPauseButtonOnTimer"
                             android:defaultValue="@bool/showPauseButtonOnTimer_default"
                 />
         <CheckBoxPreference android:key="cancelTimerWhenTimeIsUp"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_cancelTimerWhenTimeIsUp"
                             android:defaultValue="@bool/cancelTimerWhenTimeIsUp_default"
                 />
         <CheckBoxPreference android:key="showTimeIsAlreadyUpFor_Chrono"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_showTimeIsAlreadyUpFor_Chrono"
                             android:defaultValue="@bool/showTimeIsAlreadyUpFor_Chrono_default"
                 />
@@ -766,6 +822,7 @@
                             android:defaultValue="@bool/saveMatchesForLaterUsage_default"
                 />
         <com.doubleyellow.prefs.EnumListPreference
+            android:icon="@drawable/dummy"
                 android:key="groupArchivedMatchesBy"
                 android:title="@string/pref_groupArchivedMatchesBy"
                 android:defaultValue="@string/groupArchivedMatchesBy_default"
@@ -773,6 +830,7 @@
                 dy:enumClass="com.doubleyellow.scoreboard.archive.GroupMatchesBy"
                 />
         <com.doubleyellow.prefs.EnumListPreference
+            android:icon="@drawable/dummy"
                 android:key="sortOrderOfArchivedMatches"
                 android:title="@string/pref_sortOrderOfArchivedMatches"
                 android:defaultValue="@string/sortOrderOfArchivedMatches_default"
@@ -781,14 +839,17 @@
                 />
 
         <ListPreference     android:key="targetDirForImportExport"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_Category_Directory_for_import_export"/>
 
     </PreferenceScreen>
 
     <PreferenceScreen android:key="statistics"
+                      android:icon="@drawable/dummy"
                       android:title="@string/pref_Statistics"
                       android:summary="@string/pref_Statistics_summary">
         <com.doubleyellow.prefs.EnumListPreference
+            android:icon="@drawable/dummy"
                 android:key="recordRallyEndStatsAfterEachScore"
                 android:title="@string/pref_recordRallyEndStatsAfterEachScore"
                 android:summary="@string/pref_recordRallyEndStatsAfterEachScore_summary"
@@ -797,6 +858,7 @@
                 dy:enumClass="com.doubleyellow.util.Feature"
                 />
         <com.doubleyellow.prefs.EnumMultiSelectPreference
+            android:icon="@drawable/dummy"
                 android:key="recordRallyEndStatsDetails"
                 android:title="@string/pref_recordRallyEndStatsDetails"
                 android:summary="@string/pref_recordRallyEndStatsDetails_summary"
@@ -834,12 +896,14 @@
                 />
 
         <EditTextPreference android:key="numberOfCharactersBeforeAutocomplete"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_numberOfCharactersBeforeAutocomplete"
                             android:summary="@string/pref_numberOfCharactersBeforeAutocomplete_summary"
                             android:inputType="number"
                             android:defaultValue="@integer/numberOfCharactersBeforeAutocomplete_default"
                 />
         <EditTextPreference android:key="numberOfCharactersBeforeAutocompleteCountry"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_numberOfCharactersBeforeAutocompleteCountry"
                             android:summary="@string/pref_numberOfCharactersBeforeAutocompleteCountry_summary"
                             android:inputType="number"
@@ -847,6 +911,7 @@
                 />
 
         <EditTextPreference android:key="maxNumberOfPlayersInGroup"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_maxNumberOfPlayersInGroup"
                             android:summary="@string/pref_maxNumberOfPlayersInGroup_summary"
                             android:inputType="number"
@@ -855,17 +920,20 @@
 
         <PreferenceCategory android:title="@string/pref_Category_Contacts" android:key="Contacts">
             <CheckBoxPreference android:key="readContactsForAutoCompletion"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_readContactsForAutoCompletion"
                                 android:summary="@string/pref_readContactsForAutoCompletion_summary"
                                 android:defaultValue="@bool/readContactsForAutoCompletion_default"
                     />
             <EditTextPreference android:key="readContactsForAutoCompletion_max"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_readContactsForAutoCompletion_max"
                                 android:summary="@string/pref_readContactsForAutoCompletion_max_summary"
                                 android:inputType="number"
                                 android:defaultValue="@integer/readContactsForAutoCompletion_max_default"
             />
             <ListPreference     android:key="onlyForContactGroups"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_onlyForContactGroups"
                                 android:summary="@string/pref_onlyForContactGroups_summary"
                                 android:defaultValue="0"
@@ -887,6 +955,7 @@
                             android:inputType="textMultiLine"
                 />
         <CheckBoxPreference android:key="useGroupNameAsEventData"
+            android:icon="@drawable/dummy"
                             android:title="@string/pref_useGroupNameAsEventData"
                             android:summary="@string/pref_useGroupNameAsEventData_summary"
                             android:defaultValue="@bool/useGroupNameAsEventData_default"
@@ -901,6 +970,7 @@
                 dy:enumClass="com.doubleyellow.util.Feature"
                 />
         <com.doubleyellow.prefs.EnumListPreference
+            android:icon="@drawable/dummy"
                 android:key="continueRecentMatch"
                 android:title="@string/pref_continueRecentMatch"
                 android:summary="@string/pref_continueRecentMatch_summary"
@@ -911,12 +981,14 @@
 
         <PreferenceCategory android:title="@string/pref_Category_Event" android:key="Event">
             <EditTextPreference android:key="eventList"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_eventList"
                                 android:summary="@string/pref_eventList_summary"
                                 android:defaultValue="@string/eventList_default"
                                 android:inputType="textMultiLine"
                 />
             <EditTextPreference android:key="roundList"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_roundList"
                                 android:summary="@string/pref_roundList_summary"
                                 android:defaultValue="@string/roundList_default"
@@ -934,6 +1006,7 @@
         <PreferenceCategory android:title="@string/pref_Category_Feeds"
                             android:key="Feeds">
             <EditTextPreference android:key="feedPostUrls"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_feedPostUrls"
                                 android:summary="@string/pref_feedPostUrls_summary"
                                 android:inputType="textMultiLine"
@@ -941,12 +1014,14 @@
                     />
 
             <ListPreference     android:key="feedPostUrl"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_feedPostUrl"
                                 android:summary="@string/pref_feedPostUrl_summary"
                                 android:inputType="textUri"
                                 android:defaultValue="0"
                     />
             <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/dummy"
                 android:key="postDataPreference"
                 android:title="@string/pref_postDataPreference"
                 android:summary="@string/pref_postDataPreference_summary"
@@ -955,22 +1030,26 @@
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.PostDataPreference"
                 />
             <CheckBoxPreference android:key="useFeedNameAsEventName"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_useFeedNameAsEventName"
                                 android:summary="@string/pref_useFeedNameAsEventName_summary"
                                 android:defaultValue="@bool/useFeedNameAsEventName_default"
                     />
             <CheckBoxPreference android:key="autoSuggestToPostResult"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_suggestToPostResult"
                                 android:summary="@string/pref_suggestToPostResult_summary"
                                 android:defaultValue="@bool/suggestToPostResult_default"
                     />
 
             <CheckBoxPreference android:key="hideCompletedMatchesFromFeed"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_hideCompletedMatchesFromFeed"
                                 android:summary="@string/pref_hideCompletedMatchesFromFeed_summary"
                                 android:defaultValue="@bool/hideCompletedMatchesFromFeed_default"
                     />
             <CheckBoxPreference android:key="removeSeedingAfterMatchSelection"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_removeSeedingAfterMatchSelection"
                                 android:summary="@string/pref_removeSeedingAfterMatchSelection_summary"
                                 android:defaultValue="@bool/removeSeedingAfterMatchSelection_default"
@@ -987,18 +1066,21 @@
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_VisibilityOfNewTournaments">
             <EditTextPreference android:key="tournamentWasBusy_DaysBack"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_tournamentWasBusy_DaysBack"
                                 android:summary="@string/pref_tournamentWasBusy_DaysBack_summary"
                                 android:inputType="number"
                                 android:defaultValue="@integer/tournamentWasBusy_DaysBack_default"
                     />
             <EditTextPreference android:key="tournamentWillStartIn_DaysAhead"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_tournamentWillStartIn_DaysAhead"
                                 android:summary="@string/pref_tournamentWillStartIn_DaysAhead_summary"
                                 android:inputType="number"
                                 android:defaultValue="@integer/tournamentWillStartIn_DaysAhead_default"
                     />
             <EditTextPreference android:key="tournamentMaxDuration_InDays"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_tournamentMaxDuration_InDays"
                                 android:summary="@string/pref_tournamentMaxDuration_InDays_summary"
                                 android:inputType="number"
@@ -1007,11 +1089,13 @@
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_Other">
             <CheckBoxPreference android:key="prefetchFlags"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_prefetchFlags"
                                 android:summary="@string/pref_prefetchFlags_summary"
                                 android:defaultValue="@bool/prefetchFlags_default"
             />
             <EditTextPreference android:key="OfficialSquashRulesURLs"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_OfficialSquashRulesURLs"
                                 android:summary="@string/pref_OfficialSquashRulesURLs_summary"
                                 android:inputType="textMultiLine"
@@ -1030,30 +1114,35 @@
         <!-- TODO: hide these by default -->
         <PreferenceCategory android:key="Technical" android:title="@string/pref_Category_Technical">
             <EditTextPreference android:key="FeedFeedsURL"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_feedFeedsURL"
                                 android:summary="@string/pref_feedFeedsURL_summary"
                                 android:inputType="text"
                                 android:defaultValue="@string/feedFeedsURL_default"
             />
             <EditTextPreference android:key="maximumCacheAgeFeeds"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_MaximumCacheAgeFeeds"
                                 android:summary="pref_MaximumCacheAgeFeeds_summary"
                                 android:inputType="number"
                                 android:defaultValue="@integer/maximumCacheAgeFeeds_default"
             />
             <EditTextPreference android:key="feedReadTimeout"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_feedReadTimeout"
                                 android:summary="@string/pref_feedReadTimeout_summary"
                                 android:inputType="number"
                                 android:defaultValue="@integer/feedReadTimeout_default"
             />
             <EditTextPreference android:key="FlagsURLs"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_FlagsURLs"
                                 android:summary="@string/pref_FlagsURLs_summary"
                                 android:inputType="textMultiLine"
                                 android:defaultValue="@string/FlagsURLs_default"
             />
             <EditTextPreference android:key="maximumCacheAgeFlags"
+                android:icon="@drawable/dummy"
                                 android:title="@string/pref_maximumCacheAgeFlags"
                                 android:summary="@string/pref_maximumCacheAgeFlags_summary"
                                 android:inputType="number"
@@ -1104,9 +1193,10 @@
     </PreferenceScreen>
 
 
-    <PreferenceCategory android:title="@string/pref_Other">
-
+    <PreferenceCategory android:title="@string/pref_Other"
+        >
         <com.doubleyellow.scoreboard.prefs.ExportImportPrefs
+                android:icon="@drawable/import_export_triangle"
                 android:key="exportImportPrefs"
                 android:dialogIcon="@android:drawable/ic_menu_save"
                 android:title="@string/pref_Category_Import_Export_Settings"
@@ -1117,6 +1207,7 @@
                 />
 
         <com.doubleyellow.scoreboard.prefs.ResetPrefs
+                android:icon="@drawable/dummy"
                 android:key="resetPrefs"
                 android:title="@string/pref_reset_title"
                 android:dialogMessage="@string/pref_reset_message"
