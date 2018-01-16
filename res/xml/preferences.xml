@@ -1028,21 +1028,22 @@
                     />
         </PreferenceCategory>
         <!-- TODO: hide these by default -->
-        <PreferenceCategory android:key="Technical" android:title="Technical">
+        <PreferenceCategory android:key="Technical" android:title="@string/pref_Category_Technical">
             <EditTextPreference android:key="FeedFeedsURL"
-                                android:title="FeedFeedsURL"
-                                android:summary="For developer only"
+                                android:title="@string/pref_feedFeedsURL"
+                                android:summary="@string/pref_feedFeedsURL_summary"
                                 android:inputType="text"
                                 android:defaultValue="@string/feedFeedsURL_default"
             />
             <EditTextPreference android:key="maximumCacheAgeFeeds"
-                                android:title="Maximum Cache Age Feeds"
-                                android:summary="In minutes"
+                                android:title="@string/pref_MaximumCacheAgeFeeds"
+                                android:summary="pref_MaximumCacheAgeFeeds_summary"
                                 android:inputType="number"
                                 android:defaultValue="@integer/maximumCacheAgeFeeds_default"
             />
             <EditTextPreference android:key="feedReadTimeout"
-                                android:title="Read timeout for feeds (seconds)"
+                                android:title="@string/pref_feedReadTimeout"
+                                android:summary="@string/pref_feedReadTimeout_summary"
                                 android:inputType="number"
                                 android:defaultValue="@integer/feedReadTimeout_default"
             />
@@ -1053,8 +1054,8 @@
                                 android:defaultValue="@string/FlagsURLs_default"
             />
             <EditTextPreference android:key="maximumCacheAgeFlags"
-                                android:title="Maximum Cache Age Flags"
-                                android:summary="In minutes"
+                                android:title="@string/pref_maximumCacheAgeFlags"
+                                android:summary="@string/pref_maximumCacheAgeFlags_summary"
                                 android:inputType="number"
                                 android:defaultValue="@integer/maximumCacheAgeFlags_default"
             />

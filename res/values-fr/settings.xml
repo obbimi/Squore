@@ -12,22 +12,32 @@
     <string name="pref_ColorTargets_Serve_Button_Text" >Serve Button Text</string>                  <!-- TODO -->
     <string name="pref_ColorTargets_History_Text">History Text</string>                             <!-- TODO -->
 
-    <string name="pref_Category_Layout">Layout</string>                                             <!-- TODO -->
+    <string name="pref_Category_Layout">Affichage</string>
     <string name="pref_Category_Brand">Brand</string>                                               <!-- TODO -->
-    <string name="pref_Category_End_of_Game">End of Game</string>                                   <!-- TODO -->
-    <string name="pref_Category_Others">Others</string>                                             <!-- TODO -->
+    <string name="pref_Category_Technical">Technique</string>
+    <string name="pref_Category_End_of_Game">Fin de jeu</string>
+    <string name="pref_Category_Others">Divers</string>
     <string name="pref_Category_Live_Score__ChromeCast">Live Score/ChromeCast</string>              <!-- TODO -->
-    <string name="pref_Category_ChromeCast">ChromeCast</string>                                     <!-- TODO -->
-    <string name="pref_Category_Directory_for_import_export">Directory for import/export</string>   <!-- TODO -->
+    <string name="pref_Category_ChromeCast">ChromeCast</string>
+    <string name="pref_Category_Directory_for_import_export">Répertoire pour l\'import/export</string>
     <string name="pref_Category_Contacts">Contacts</string>                                         <!-- TODO -->
-    <string name="pref_Category_Event">Event</string>                                               <!-- TODO -->
-    <string name="pref_Category_Feeds">Feeds</string>                                               <!-- TODO -->
-    <string name="pref_Category_Import_Export_Settings">Import/Export Settings</string>             <!-- TODO -->
-    <string name="pref_Make_your_choice">Make your choice</string>                                  <!-- TODO -->
+    <string name="pref_Category_Event">Evénement</string>
+    <string name="pref_Category_Feeds">Flux</string>
+    <string name="pref_Category_Import_Export_Settings">Paramètres d\'import/export</string>
+    <string name="pref_Make_your_choice">Faites votre choix</string>
+
+    <string name="pref_feedFeedsURL">Flux personnalisé</string>
+    <string name="pref_feedFeedsURL_summary">Réservé exclusivement aux développeurs</string>
+    <string name="pref_MaximumCacheAgeFeeds">Stockage en mémoire des flux</string>
+    <string name="pref_MaximumCacheAgeFeeds_summary">Durée maximale de rétension des flux avant rafraichissement (minutes)</string>
+    <string name="pref_feedReadTimeout">Read timeout for feeds</string><!-- TODO -->
+    <string name="pref_feedReadTimeout_summary">Number of seconds before reading a feed is automatically cancelled</string><!-- TODO -->
+    <string name="pref_maximumCacheAgeFlags">Stockage en mémoire des drapeaux</string>
+    <string name="pref_maximumCacheAgeFlags_summary">Durée maximale de rétension des drapeaux avant rafraichissement (minutes)</string>
 
     <string name="pref_Show_logo_on_scoreboard">Show logo on scoreboard</string>                    <!-- TODO -->
     <string name="pref_Hide_logo_when_game_in_progress">Hide logo when game in progress</string>    <!-- TODO -->
-    <string name="pref_Hide_division_field_when_game_in_progress">Hide division field when game in progress</string> <!-- TODO -->
+    <string name="pref_Hide_division_field_when_game_in_progress">Cacher le champ \'Division\' quand le jeu est en cours</string>
 
     <string name="pref_x_changed_to_y">Paramètre
         \n %1$s
@@ -44,14 +54,16 @@
     <string name="pref_Appearance_summary">Couleurs. Taille du texte. Barre d\'action.</string>
     <string name="pref_Colors">Couleurs</string>
     <string name="pref_Colors_summary">Contrôler les couleurs des éléments</string>
-    <string name="pref_Avatars">Players avatar</string><!-- TODO -->
-    <string name="pref_Avatars_summary">Small player image specified in feed</string><!-- TODO -->
-    <string name="pref_showAvatarOn">Show image on</string><!-- TODO -->
+    <string name="pref_Avatars">Image des joueurs</string>
+    <string name="pref_Avatars_summary">Petit image spécifié dans un flux</string><!-- TODO -->
+    <string name="pref_showAvatarOn">Afficher l\'image sur</string>
     <string name="pref_hideAvatarForSameImage">Hide avatar if identical</string><!-- TODO -->
-    <string name="pref_CountryFlags">Des Pays/Drapeaux</string>
+    <string name="pref_CountryFlags">Pays/Drapeaux</string>
     <string name="pref_CountryFlags_summary">Control how country/flags are displayed</string> <!-- TODO -->
     <string name="pref_showCountryAs">Montrer pays</string> <!-- TODO -->
-    <string name="pref_hideFlagForSameCountry">Hide flags for same nationality</string> <!-- TODO -->
+    <string name="pref_hideFlagForSameCountry">Cacher le drapeau lorsque la nationalité est la même</string>
+    <string name="pref_prefetchFlags">Préchargement des drapeaux</string>
+    <string name="pref_prefetchFlags_summary">Occupe environ 2 à 3Mo de stockage mémoire</string>
     <string name="pref_TextSize_summary">Contrôler la taille du texte des éléments</string>
     <string name="pref_Statistics">Statistiques coups gagnants/fautes directes</string>
     <string name="pref_Statistics_summary">Comportement pour enregistrer les coups gagnants/fautes directes</string>
@@ -98,7 +110,7 @@
     <string name="pref_recordRallyEndStatsAfterEachScore">Afficher la boîte de dialogue \'coups gagnants/fautes directes\' après chaque point</string>
     <string name="pref_recordRallyEndStatsAfterEachScore_summary">Pour maintenir les statistiques \'coups gagnants/fautes directes\' par joueur</string>
     <string name="pref_recordRallyEndStatsDetails">Détails à enregistrer</string>
-    <string name="pref_recordRallyEndStatsDetails_summary">CD/RV, Avant/Vollée/Font, Direction de balle, Trajectoire de balle</string>
+    <string name="pref_recordRallyEndStatsDetails_summary">CD/RV, Avant/Volée/Font, Direction de balle, Trajectoire de balle</string>
     <string name="pref_showTips_no_more">Ne plus afficher les \'Trucs &amp; Astuces\'</string>
     <string name="pref_useTossFeature">Utiliser le tirage au sort pour le service</string>
     <string name="pref_useTossFeature_summary">Soit proposer un choix, soit lancer en automatique au début du match, soit ne pas utiliser</string>
@@ -156,9 +168,9 @@
     <string name="pref_useSoundNotificationInTimer_summary">Notification sonore lorsque les annonces \'Time\', \'15 secondes\' ou \'2 minutes 30\' doivent être prononcées</string>
     <string name="pref_showPauseButtonOnTimer">Afficher un bouton pour mettre en pause le chronomètre</string>
     <string name="pref_cancelTimerWhenTimeIsUp">Masquer le chronomètre quand fini</string> <!-- TODO -->
-    <string name="pref_showTimeIsAlreadyUpFor_Chrono">Show tiny chronometer showing how long \'Time!\' is showing</string> <!-- TODO -->
+    <string name="pref_showTimeIsAlreadyUpFor_Chrono">Afficher un mini minuteur du temps écoulé</string>
     <string name="pref_showAdjustTimeButtonsInTimer">Afficher les boutons pour ajuster le temps restant</string>
-    <string name="pref_showUseAudioCheckboxInTimer">Show audio checkbox in timer</string> <!-- TODO -->
+    <string name="pref_showUseAudioCheckboxInTimer">Afficher la case à cocher audio sur le minuteur</string>
     <string name="pref_archive_summary">Trier et grouper les matchs archivés</string>
     <string name="pref_groupArchivedMatchesBy">Grouper les matchs archivés par</string>
     <string name="pref_sortOrderOfArchivedMatches">Ordre de tri des matchs archivés</string>
@@ -177,7 +189,7 @@
     <string name="pref_landscapeOrientationOnly_summary">Afficher en mode \'Paysage\' seulement. Le mode \'Portrait\' est moins intuitif.</string>
 -->
     <string name="pref_OrientationPreference">Orientations</string> <!-- TODO -->
-    <string name="pref_OrientationPreference_summary">What orientations to use. Le mode \'Portrait\' est moins intuitif.</string> <!-- TODO -->
+    <string name="pref_OrientationPreference_summary">Quel orientation choisir ? Le mode \'Paysage\' est plus intuitif</string>
     <string name="pref_saveMatchesForLaterUsage">Enregistrer les matchs</string>
     <string name="pref_saveMatchesForLaterUsage_summary">Enregistrer les matchs pour re-consulter les résultats plus tard.</string>
     <string name="pref_gameEndScore">Points par jeu</string>
@@ -202,10 +214,10 @@
     <string name="pref_numberOfCharactersBeforeAutocompleteCountry_summary">Le nombre de caractères, que vous devez taper avant que la saisie semi-automatique ne commence à suggérer des noms de pays possibles</string> <!-- TODO -->
     <string name="pref_maxNumberOfPlayersInGroup">Nombre de joueurs dans un groupe</string>
     <string name="pref_maxNumberOfPlayersInGroup_summary">Nombre maximum de joueur par groupe. Par ex: pour ajouter les 6 matchs d\'un groupe de 4 joueurs dans \'Ma liste\'</string>
-    <string name="pref_removeMatchFromMyListWhenSelected">Retirer match de \'Ma lista\' dès que fini</string>
+    <string name="pref_removeMatchFromMyListWhenSelected">Retirer match de \'Ma liste\' dès que fini</string>
     <string name="pref_removeMatchFromMyListWhenSelected_summary">Dès qu\'un match sélectionné dans la liste est terminé, proposer de le retirer de la liste</string>
-    <string name="pref_continueRecentMatch">Continue recente match</string> <!-- TODO -->
-    <string name="pref_continueRecentMatch_summary">If a recent result exists for a match selected from \'My List\', use that result as a starting point</string> <!-- TODO -->
+    <string name="pref_continueRecentMatch">Continuer un match récent</string>
+    <string name="pref_continueRecentMatch_summary">Si un résultat récent existe pour un match sélectionné depuis \'Ma liste\', utiliser ce résultat comme point de départ</string>
     <string name="pref_matchList">Liste des matchs</string>
     <string name="pref_matchList_summary">Liste fixe de matchs pour une sélection facile</string>
     <string name="pref_matchList_not_set">Si vous devez arbitrer plusieurs matchs, vous pouvez les définir ici pour une sélection facile plus tard. Vous pouvez également copier/coller une liste au format \'texte\' dans la section \'%1$s\' de l\'écran \'%2$s\'</string>
@@ -227,8 +239,8 @@
     <string name="posturl_tip">Vous pouvez spécifier vers quel site le résultat du match est poster. En collaboration avec le webmaster de votre club, les résultats des matchs peuvent être mis à disposition en ligne directement. Pour plus d\'informations, consultez les pages d\'aide.</string>
     <string name="pref_readContactsForAutoCompletion">Utiliser les contacts de votre appareil pour l\'auto-completion</string>
     <string name="pref_readContactsForAutoCompletion_summary">Utilise votre liste de contacts pour proposer les noms en auto-complétion lors de la saisie du nom des joueurs</string>
-    <string name="pref_readContactsForAutoCompletion_max">Maximum number of contacts to read for autocompletion</string> <!-- TODO -->
-    <string name="pref_readContactsForAutoCompletion_max_summary">Increase at your own risk if you actually do have more contacts than this number</string> <!-- TODO -->
+    <string name="pref_readContactsForAutoCompletion_max">Nombre maximum de contacts lus pour l\'autocomplétion</string>
+    <string name="pref_readContactsForAutoCompletion_max_summary">Un nombre trop élevé peut engendrer une dégradation les performances de l\'application</string>
     <string name="if_you_have_a_lot_of_contacts_dot_dot_dot">
         If your device holds a lot of contacts this may cause Squore to become slow
         \n - At startup
@@ -249,9 +261,9 @@
     <string name="pref_tournamentMaxDuration_InDays_summary">Tournoi se déroulant durant x jours maximum</string>
     <string name="pref_hideCompletedMatchesFromFeed">Masquer les matchs terminés</string>
     <string name="pref_hideCompletedMatchesFromFeed_summary">Un flux peut contenir les matchs terminés (en incluant les résultats). Si vous ne souhaitez pas les voir, sélectionnez cette option.</string>
-    <string name="pref_removeSeedingAfterMatchSelection">Remove seeding from player names</string> <!-- TODO -->
+    <string name="pref_removeSeedingAfterMatchSelection">Retirer le numéro de tête de série</string>
+    <string name="pref_removeSeedingAfterMatchSelection_summary">Retirer le numéro de tête de série du nom du joueur après la sélection dans un flux</string>
     <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Montrer la liste des joueurs quand la liste de matches est vide</string> <!-- TODO -->
-    <string name="pref_removeSeedingAfterMatchSelection_summary">Remove eg. the [5/8] seeding string after selecting a match from a feed</string> <!-- TODO -->
     <string name="pref_smsResultToNr">Numéro de téléphone par défaut pour l\'action \'Envoyer par SMS\'</string>
     <string name="pref_smsResultToNr_summary">Numéro de téléphone pré-sélectionné pour l\'envoi du résultat d\'un match par SMS</string>
     <!--<string name="pref_smsResultToNr_not_set"></string>-->
@@ -267,14 +279,14 @@
 
     <string name="pref_live_score_summary">Optimaliser l\'app pour, et regarder le Live Score</string> <!-- TODO -->
     <string name="pref_live_score_url">live?lang=fr</string>
-    <string name="pref_live_score_url_summary">Utilisez cette adresse pour avoir voir tous les matchs partagés avec Squore, par exemple liées à votre événement de squash</string> <!-- TODO -->
+    <string name="pref_live_score_url_summary">Utilisez cette adresse pour voir tous les matchs partagés avec Squore, par exemple liées à votre événement de squash</string>
     <string name="pref_LiveScorePrefs">Supporter live scoring</string> <!-- TODO -->
     <string name="pref_LiveScorePrefs_dialog">Ajuster les options: Utiliser Les Fonctions De Partage (Automatique) et Action de Partage (Partager les details après chaque demi jeu) pour supporter live score</string> <!-- TODO -->
     <string name="pref_Cast_ShowGraphDuringTimer">Afficher les scores des jeux et le score graphique de dernier jeu entre les jeux et à la fin du match</string> <!-- TODO -->
 
     <string name="for_this_to_take_effect_a_restart_is_required">Pour que cela prenne effet, un redémarrage de l\'application est nécessaire</string>
-    <string name="pref_reset_title">Restaurer les valeurs par défaut</string>
-    <string name="pref_reset_message">Remettre toutes les valeurs à leur valeur par défaut ?</string>
+    <string name="pref_reset_title">Réinitialiser l\'application</string>
+    <string name="pref_reset_message">Réinitialiser les paramètres d\'origine ?</string>
     <string name="pref_reset_all">Oui, RESTAURER les valeurs par défaut</string>
     <string name="pref_reset_no_keep">Non, CONSERVER les valeurs actuelles</string>
     <string name="pref_import_prefs">Importer les paramètres</string>

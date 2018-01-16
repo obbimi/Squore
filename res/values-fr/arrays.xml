@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="EndMatchManuallyBecause_DisplayValues"> <!-- TODO -->
+    <string-array name="EndMatchManuallyBecause_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.model.EndMatchManuallyBecause -->
         <item>Abandon sur blessure</item>
         <item>Conduct Match</item>
@@ -150,11 +150,11 @@
     <string-array name="ShowCountryAsDisplayValues">
         <item>Abréviation Dans Nom</item> <!-- TODO -->
         <item>Drapeau à côté du nom (appareil mobile)</item> <!-- TODO -->
-        <item>Drapeau à côté du nom (Chromecast)</item> <!-- TODO -->
+        <item>Drapeau à côté du nom (ChromeCast)</item> <!-- TODO -->
     </string-array>
     <string-array name="ShowAvatarOnDisplayValues">
-        <item>On Device</item><!-- TODO -->
-        <item>On Chrome Cast</item><!-- TODO -->
+        <item>Appareil mobile</item>
+        <item>ChromeCast</item>
     </string-array>
     <string-array name="StartupActionDisplayValues">
         <item>Aucun</item>

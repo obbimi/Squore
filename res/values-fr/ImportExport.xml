@@ -4,7 +4,7 @@
     <string name="Export_elipses">Exporter…</string>
     <string name="Import">Importer</string>
     <string name="Import_elipses">Importer…</string>
-    <string name="ImportExport_elipses">Importer/Exporter…</string>
+    <string name="ImportExport_elipses">Import/Export…</string>
     <string name="Select_file">Sélectionner fichier</string>
     <string name="import_matches">Importer des matchs</string>
     <string name="export_matches">Exporter des matchs</string>

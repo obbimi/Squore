@@ -15,6 +15,7 @@
 
     <string name="pref_Category_Layout">Layout</string>
     <string name="pref_Category_Brand">Brand</string>
+    <string name="pref_Category_Technical">Technical</string>
     <string name="pref_Category_End_of_Game">End of Game</string>
     <string name="pref_Category_Others">Others</string>
     <string name="pref_Category_Live_Score__ChromeCast">Live Score/ChromeCast</string>
@@ -25,6 +26,15 @@
     <string name="pref_Category_Feeds">Feeds</string>
     <string name="pref_Category_Import_Export_Settings">Import/Export Settings</string>
     <string name="pref_Make_your_choice">Make your choice</string>
+
+    <string name="pref_feedFeedsURL">feedFeedsURL</string>
+    <string name="pref_feedFeedsURL_summary">For developers only</string>
+    <string name="pref_MaximumCacheAgeFeeds">Maximum Cache Age Feeds</string>
+    <string name="pref_MaximumCacheAgeFeeds_summary">In minutes</string>
+    <string name="pref_feedReadTimeout">Read timeout for feeds</string>
+    <string name="pref_feedReadTimeout_summary">Number of seconds before reading a feed is automatically cancelled</string>
+    <string name="pref_maximumCacheAgeFlags">Maximum Cache Age Flags</string>
+    <string name="pref_maximumCacheAgeFlags_summary">In minutes</string>
 
     <string name="pref_Show_logo_on_scoreboard">Show logo on scoreboard</string>
     <string name="pref_Hide_logo_when_game_in_progress">Hide logo when game in progress</string>
@@ -213,7 +223,7 @@
     <string name="pref_maxNumberOfPlayersInGroup_summary">Maximum number of players in a group. E.g. to add all 6 matches for a group of 4 players into \'My list\'</string>
     <string name="pref_removeMatchFromMyListWhenSelected">Remove match from My List</string>
     <string name="pref_removeMatchFromMyListWhenSelected_summary">When a match selected from the list is finished, the app may suggest to remove it from \'My list\'</string>
-    <string name="pref_continueRecentMatch">Continue recente match</string>
+    <string name="pref_continueRecentMatch">Continue recent match</string>
     <string name="pref_continueRecentMatch_summary">If a recent result exists for a match selected from \'My List\', use that result as a starting point</string>
     <string name="pref_matchList">List of Matches</string>
     <string name="pref_matchList_summary">Fixed list of matches for easy selection</string>
@@ -259,8 +269,8 @@
     <string name="pref_hideCompletedMatchesFromFeed">Hide completed matches</string>
     <string name="pref_hideCompletedMatchesFromFeed_summary">A feed may contain already played matches (by including the result). If you don\'t want to see these matches, check this option</string>
     <string name="pref_removeSeedingAfterMatchSelection">Remove seeding from player names</string>
-    <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Switch to player list if match list of feed is empty</string>
     <string name="pref_removeSeedingAfterMatchSelection_summary">Remove eg. the [5/8] seeding string after selecting a match from a feed</string>
+    <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Switch to player list if match list of feed is empty</string>
     <string name="pref_smsResultToNr">Default phone number for \'SMS Result\' action</string>
     <string name="pref_smsResultToNr_summary">The phone number that will be pre-filled when you choose menu option \'Share/Message Match Result\'</string>
     <!--<string name="pref_smsResultToNr_not_set">You can set a default recipient in the \'%1$s\' screen of \'%2$s\'</string>-->

@@ -14,6 +14,7 @@
 
     <string name="pref_Category_Layout">Layout</string>
     <string name="pref_Category_Brand">Brand</string>
+    <string name="pref_Category_Technical">Technisch</string>
     <string name="pref_Category_End_of_Game">Game Einde</string>
     <string name="pref_Category_Others">Others</string>
     <string name="pref_Category_Live_Score__ChromeCast">Live Score/ChromeCast</string>
@@ -24,6 +25,15 @@
     <string name="pref_Category_Feeds">Feeds</string>
     <string name="pref_Category_Import_Export_Settings">Import/Export Instellingen</string>
     <string name="pref_Make_your_choice">Maak je keuze</string>
+
+    <string name="pref_feedFeedsURL">feedFeedsURL</string>
+    <string name="pref_feedFeedsURL_summary">Alleen voor ontwikkelaars</string>
+    <string name="pref_MaximumCacheAgeFeeds">Maximale Cache Leeftijd Feeds</string>
+    <string name="pref_MaximumCacheAgeFeeds_summary">In minuten</string>
+    <string name="pref_feedReadTimeout">Read timeout voor feeds</string>
+    <string name="pref_feedReadTimeout_summary">Aantal seconden voordat het lezen van een feed wordt afgebroken</string>
+    <string name="pref_maximumCacheAgeFlags">Maximale Cache Leeftijd Vlaggen</string>
+    <string name="pref_maximumCacheAgeFlags_summary">In minuten</string>
 
     <string name="pref_Show_logo_on_scoreboard">Toon logo op scoreboard</string>
     <string name="pref_Hide_logo_when_game_in_progress">Verberg logo zodra game begint</string>
@@ -249,8 +259,8 @@
     <string name="pref_hideCompletedMatchesFromFeed">Verberg reeds gespeelde wedstrijden</string>
     <string name="pref_hideCompletedMatchesFromFeed_summary">Een feed kan ook reeds gespeeld wedstrijden bevatten (door het resultaat te vermelden). Als je deze wedstrijden niet wilt zien vink dan deze optie aan.</string>
     <string name="pref_removeSeedingAfterMatchSelection">Verwijder plaatsing van spelers naam</string>
-    <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Toon speler lijst als match lijst (nog) leeg is</string>
     <string name="pref_removeSeedingAfterMatchSelection_summary">Verwijder eg. de [5/8] plaatsing string na het selecteren van een match van een feed</string>
+    <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Toon speler lijst als match lijst (nog) leeg is</string>
     <string name="pref_VisibilityOfNewTournaments">Selecteerbaarheid toernooien</string>
     <string name="pref_tournamentWasBusy_DaysBack">Toernooi einde</string>
     <string name="pref_tournamentWasBusy_DaysBack_summary">Het toernooi eindige maximaal x dagen geleden</string>
