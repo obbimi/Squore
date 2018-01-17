@@ -31,7 +31,7 @@ import java.util.*;
  */
 public class ColorPrefs
 {
-    private static final int ICON_SIZE = 100;  // IH 20140327
+    static int ICON_SIZE = 100;
 
     public enum ColorTarget {
         backgroundColor,

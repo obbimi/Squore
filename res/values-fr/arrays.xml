@@ -148,9 +148,9 @@
         <item>Graphique</item>
     </string-array>
     <string-array name="ShowCountryAsDisplayValues">
-        <item>Abréviation Dans Nom</item> <!-- TODO -->
-        <item>Drapeau à côté du nom (appareil mobile)</item> <!-- TODO -->
-        <item>Drapeau à côté du nom (ChromeCast)</item> <!-- TODO -->
+        <item>Abréviation dans nom</item>
+        <item>Drapeau à côté du nom (Appareil mobile)</item>
+        <item>Drapeau à côté du nom (ChromeCast)</item>
     </string-array>
     <string-array name="ShowAvatarOnDisplayValues">
         <item>Appareil mobile</item>

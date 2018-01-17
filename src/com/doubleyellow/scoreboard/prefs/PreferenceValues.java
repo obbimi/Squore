@@ -1046,6 +1046,7 @@ public class PreferenceValues extends RWValues
             // display it after download
             imageTask = new DownloadImageTask(context.getResources(), imageViewOrPreference, sURL, sCountryCode, ImageView.ScaleType.FIT_XY, fCache, iFlagMaxCacheAgeInMin);
             imageTask.setUserAgentString(URLTask.getMyUserAgentString(context));
+          //Log.d(TAG, "Starting image download task for " + imageViewOrPreference);
             imageTask.execute();
             return 1;
         } else {

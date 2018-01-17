@@ -31,9 +31,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.*;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Toast;
 import com.doubleyellow.android.SystemUtil;
+import com.doubleyellow.android.task.DownloadImageTask;
 import com.doubleyellow.android.util.ExportImport;
 import com.doubleyellow.android.util.SimpleELAdapter;
 import com.doubleyellow.prefs.DynamicListPreference;
@@ -421,6 +423,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
     }
 
     static void setFlagIcon(Context ctx, Preference pref) {
+        if ( pref == null ) { return; }
+        Log.d(TAG, "setFlagIcon for " + pref.getTitle());
         PreferenceValues.downloadImage(ctx, pref, RWValues.getDeviceLocale(ctx).getCountry());
     }
 
@@ -452,8 +456,9 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             }
 
             // 'hack' to be able to update the Icon of the 'PreferenceScreen key="Colors"' when returning from it
-            final PreferenceGroup  psAppearance = (PreferenceGroup ) this.findPreference(PreferenceKeys.Appearance.toString());
-            final PreferenceScreen psColors     = (PreferenceScreen) this.findPreference(PreferenceKeys.Colors    .toString());
+            final PreferenceGroup  psAppearance = (PreferenceGroup ) this.findPreference(PreferenceKeys.Appearance    .toString());
+            final PreferenceGroup  psInternet   = (PreferenceGroup ) this.findPreference(PreferenceKeys.webIntegration.toString());
+            final PreferenceScreen psColors     = (PreferenceScreen) this.findPreference(PreferenceKeys.Colors        .toString());
             if ( psColors != null ) {
                 if (/*Brand.getREColorPalette() !=0 && */ false ) {
                     psAppearance.removePreference(psColors);
@@ -465,8 +470,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     }
 
                     psColors.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference prefScreen) {
+                        @Override public boolean onPreferenceClick(Preference prefScreen) {
                             Dialog prefScreenDialog = psColors.getDialog();
                             prefScreenDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override public void onDismiss(DialogInterface arg0) {
@@ -534,17 +538,39 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 hideRemovePreference(psgBeh, PreferenceKeys.changeSides); // only for racketlon and tabletennis
             }
 
-            final Preference psCountryAs = this.findPreference(PreferenceKeys.showCountryAs.toString());
-            if ( (psAppearance != null) && (psCountryAs != null) ) {
-                psAppearance.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override public boolean onPreferenceClick(Preference prefScreen) {
-                        // new icon has already been set by our SPChange but it is not redrawn : hence this hack
-                        setFlagIcon(getActivity(), psCountryAs);
-                        //psAppearance.removePreference(psCountryAs); // just to redraw it
-                        //psAppearance.addPreference(psCountryAs);
-                        return false;
+            // initialize for downloading flags and setting correct dimensions
+
+            Preference.OnPreferenceClickListener countryFlagInstaller = new Preference.OnPreferenceClickListener() {
+                @Override public boolean onPreferenceClick(Preference prefScreen) {
+                    DownloadImageTask.initForPrefIcon(prefScreen);
+                    if ( DownloadImageTask.iPrefIconHW != null ) {
+                        ColorPrefs.ICON_SIZE = DownloadImageTask.iPrefIconHW;
                     }
-                });
+
+                    if (prefScreen instanceof PreferenceScreen) {
+                        PreferenceScreen screen = (PreferenceScreen) prefScreen;
+                        if ( screen == psAppearance) {
+                            ColorPrefs.setColorSchemaIcon(screen.findPreference(PreferenceKeys.Colors.toString()));
+                            ColorPrefs.setColorSchemaIcon(screen.findPreference(PreferenceKeys.colorSchema.toString()));
+                            ColorPrefs.setColorTargetIcons(screen);
+                        }
+                        EnumSet<PreferenceKeys> flagKeys = EnumSet.of(PreferenceKeys.showCountryAs, PreferenceKeys.maximumCacheAgeFlags, PreferenceKeys.prefetchFlags, PreferenceKeys.hideFlagForSameCountry);
+                        for(PreferenceKeys key: flagKeys) {
+                            setFlagIcon(getActivity(), screen.findPreference(key.toString()));
+                        }
+                    }
+                    // new icon has already been set by our SPChange but it is not redrawn : hence this hack
+
+                    //psAppearance.removePreference(psCountryAs); // just to redraw it
+                    //psAppearance.addPreference(psCountryAs);
+                    return false;
+                }
+            };
+            if ( psAppearance != null ) {
+                psAppearance.setOnPreferenceClickListener(countryFlagInstaller);
+            }
+            if ( psInternet != null ) {
+                psInternet.setOnPreferenceClickListener(countryFlagInstaller);
             }
 
             ListPreference     feedPostUrl  = (ListPreference)     this.findPreference(PreferenceKeys.feedPostUrl);
@@ -714,14 +740,11 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 Preference preference = screen.getPreference(i);
                 PreferenceValues.updatePreferenceTitle(preference);
             }
-            ColorPrefs.setColorSchemaIcon(screen.findPreference(PreferenceKeys.Colors.toString()));
-            ColorPrefs.setColorSchemaIcon(screen.findPreference(PreferenceKeys.colorSchema.toString()));
-            ColorPrefs.setColorTargetIcons(screen);
 
             //setFlagIcon(getActivity(), screen.findPreference(PreferenceKeys.showCountryAs.toString()));
-            setFlagIcon(getActivity(), screen.findPreference(PreferenceKeys.maximumCacheAgeFlags.toString()));
-            setFlagIcon(getActivity(), screen.findPreference(PreferenceKeys.prefetchFlags.toString()));
-            setFlagIcon(getActivity(), screen.findPreference(PreferenceKeys.hideFlagForSameCountry.toString()));
+            //setFlagIcon(getActivity(), screen.findPreference(PreferenceKeys.maximumCacheAgeFlags.toString()));
+            //setFlagIcon(getActivity(), screen.findPreference(PreferenceKeys.prefetchFlags.toString()));
+            //setFlagIcon(getActivity(), screen.findPreference(PreferenceKeys.hideFlagForSameCountry.toString()));
 
             //if ( Brand.isNotSquash() ) {
                 Preference pLiveScore = screen.findPreference(PreferenceKeys.LiveScoreOpenURL.toString());
