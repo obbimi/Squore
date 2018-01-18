@@ -260,20 +260,20 @@
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
             <com.doubleyellow.prefs.EnumMultiSelectPreference
-                    android:key="showMatchDurationChronoOn"
-                    android:title="@string/pref_showMatchDurationChronoOn"
-                    android:icon="@drawable/digital_clock32x32"
-                    android:defaultValue="@array/showMatchDurationChronoOn_DefaultValues"
-                    dy:displayValues="@array/ShowOnScreen_DisplayValues"
-                    dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
+                android:key="showMatchDurationChronoOn"
+                android:title="@string/pref_showMatchDurationChronoOn"
+                android:icon="@drawable/digital_clock32x32"
+                android:defaultValue="@array/showMatchDurationChronoOn_DefaultValues"
+                dy:displayValues="@array/ShowOnScreen_DisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
             <com.doubleyellow.prefs.EnumMultiSelectPreference
-                    android:key="showLastGameDurationChronoOn"
-                    android:title="@string/pref_showLastGameDurationChronoOn"
-                    android:icon="@drawable/digital_clock32x32"
-                    android:defaultValue="@array/showMatchDurationChronoOn_DefaultValues"
-                    dy:displayValues="@array/ShowOnScreen_DisplayValues"
-                    dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
+                android:key="showLastGameDurationChronoOn"
+                android:title="@string/pref_showLastGameDurationChronoOn"
+                android:icon="@drawable/digital_clock32x32"
+                android:defaultValue="@array/showMatchDurationChronoOn_DefaultValues"
+                dy:displayValues="@array/ShowOnScreen_DisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
             <com.doubleyellow.prefs.EnumListPreference
                 android:icon="@drawable/dummy"

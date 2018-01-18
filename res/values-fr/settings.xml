@@ -197,7 +197,7 @@
     <string name="pref_numberOfGamesToWin">Nombre de jeux gagnants</string>
     <string name="pref_numberOfGamesToWin_summary">Nombre de jeux pour gagner le match (Officiellement : 2 ou 3).</string>
     <string name="pref_handicapFormat">Permet de spécifier un handicap</string>
-    <string name="pref_handicapFormat_summary">Pour démarrer une jeu avec un score autre que 0–0</string>
+    <string name="pref_handicapFormat_summary">Pour démarrer un jeu avec un score autre que 0–0</string>
     <string name="pref_useEnglishScoring">Score en points indirects</string> 
     <string name="pref_useEnglishScoring_summary">\'Ancien\' format de score. Le joueur ne marque que sur son service.</string>
 	<string name="pref_tiebreakFormat">Format de tie-break</string>

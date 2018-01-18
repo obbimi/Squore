@@ -152,6 +152,10 @@
         <item>Drapeau à côté du nom (Appareil mobile)</item>
         <item>Drapeau à côté du nom (ChromeCast)</item>
     </string-array>
+    <string-array name="ShowOnScreen_DisplayValues">
+        <item>Appareil mobile</item>
+        <item>ChromeCast</item>
+    </string-array>
     <string-array name="ShowAvatarOnDisplayValues">
         <item>Appareil mobile</item>
         <item>ChromeCast</item>

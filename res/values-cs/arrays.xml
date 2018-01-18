@@ -111,11 +111,6 @@
         <item>Okno s ciferníkem</item>
         <item>Mezi tlačítky na skóre (pouze čísla)</item>
     </string-array>
-    <string-array name="ShowOnScreen_DisplayValues">
-        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ShowOnScreen -->
-        <item>V zařízení</item>
-        <item>Na ChromeCast</item>
-    </string-array>
 
     <string-array name="GroupMatchesByDisplayValues">
         <item>Soutěž (event)</item>
@@ -174,9 +169,13 @@
         <item>Vlaječka vedle jména (na zařízení)</item>
         <item>Vlaječka vedle jména (Chrome Cast)</item>
     </string-array>
+    <string-array name="ShowOnScreen_DisplayValues">
+        <item>V zařízení</item>
+        <item>Na ChromeCast</item>
+    </string-array>
     <string-array name="ShowAvatarOnDisplayValues">
-        <item>On Device</item><!-- TODO -->
-        <item>On Chrome Cast</item><!-- TODO -->
+        <item>V zařízení</item>
+        <item>Na ChromeCast</item>
     </string-array>
     <string-array name="StartupActionDisplayValues">
         <item>Žádná</item>

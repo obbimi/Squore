@@ -56,4 +56,45 @@
     <string name="game_ended">Fin de Jeu</string>
     <string name="match_ended">Fin de Match</string>
 
+    <!-- source: http://www.worldsquash.org/ws/coaching-development/referees/referees-info/conduct-on-court -->
+    <string name="conducts_guidelines_default"><![CDATA[
+\n- Abus d’équipement (raquette, balle ou autre équipement)
+\nInfraction mineure (par exemple jet de raquette au sol après la perte d’un jeu, frapper la balle fort à la fin de l’échange) : Avertissement
+\nInfraction majeure (par exemple casser délibérément sa raquette, jet de raquette sur le mur, frapper la balle ou lancer la raquette hors du court) : Point de Pénalité
+\n
+\n- Obscénité audible ou visuelle
+\nInfraction mineure (par exemple juron marmonné, blasphème) Avertissement
+\nInfraction majeure (par exemple obscénité audible) : Point de Pénalité
+\n
+\n- Perte de temps
+\nInfraction mineure (par exemple quelques secondes de retard pour revenir sur le court, temps excessif pour servir) : Avertissement
+\nInfraction majeure (par exemple très en retard pour revenir sur le court, discussion prolongée avec l’Arbitre) : Point de Pénalité
+\n
+\n- Contestation
+\nInfraction mineure (par exemple discuter une décision) : Avertissement
+\nInfraction majeure (par exemple discuter ou contester une décision de manière prolongée ou répétée) : Point de Pénalité
+\n
+\n- Abus envers l’Arbitre
+\nInfraction mineure (par exemple commentaires peu flatteurs sur l’Arbitre ou ses décisions) : Avertissement
+\nInfraction majeure (par exemple commentaires péjoratifs sur l’Arbitre ou ses décisions) : Point de Pénalité
+\nInfraction grave (par exemple jet de la balle vers l’Arbitre ou les spectateurs, jet de raquette vers l’Arbitre ou les spectateurs) : Jeu ou Match de Pénalité (selon la gravité de l’infraction et le danger causé)
+\n
+\n- Contact physique excessif
+\nInfraction mineure (par exemple percuter son adversaire) : Avertissement
+\nInfraction majeure (par exemple contact excessif avec son adversaire) : Point de Pénalité
+\nInfraction grave (par exemple blessure volontaire de son adversaire, jeu dangereux ayant entraîné une blessure de l’adversaire) : Jeu ou Match de Pénalité (selon la gravité de l’infraction et la blessure causée)
+\n
+\n- Comportement antisportif
+\nInfraction mineure (par exemple commentaires désobligeants à l’adversaire) : Avertissement
+\nInfraction majeure (par exemple commentaires désobligeants répétés ou péjoratifs à l’adversaire, tentative d’intimidation de l’adversaire) : Point de Pénalité
+\nInfraction grave (par exemple comportement extrême déshonorant le jeu) : Jeu ou Match de Pénalité (selon la gravité de l’infraction)
+\n
+\n- Coaching
+\nPremière fois : Avertissement
+\nSeconde fois : Point de Pénalité et expulsion de la personne concernée
+\n
+\n- Mauvais comportement excessif et répété
+\nQuand un Arbitre estime que le Joueur est coupable d’actes de mauvais comportement répétés après l’application des sanctions listées ci-dessus, l’Arbitre pourra décider d’appliquer pour une même infraction la même sanction ou une sanction plus sévère que la première attribuée. Toutefois, si un Avertissement a été attribué pour une première puis une deuxième infraction, alors un Point de pénalité devra être attribué pour la troisième infraction similaire (Exemple : si un joueur a reçu un avertissement pour contestation, lors de la deuxième contestation, soit un avertissement, soit un point de pénalité pourront être attribués. A la troisième contestation, cependant, un point de pénalité sera obligatoirement attribué.)
+\n
+    ]]></string>
 </resources>

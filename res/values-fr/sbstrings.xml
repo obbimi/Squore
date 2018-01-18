@@ -10,6 +10,7 @@
     <!-- Score board -->
     <!--<string name="sb_not_a_valid_endscore">Le score actuel ne semble pas être une fin valide de jeu</string>-->
     <string name="sb_start_next_game_confirm_message">Commencer le jeu suivant ?</string>
+    <string name="Quick_intro">Présentation rapide</string>
     <string name="Start_game">Commencer le jeu</string>
     <string name="sb_end_game_and_match_message">Fin du jeu et match</string>
     <string name="sb_enter_player_names">Entrez le nom des joueurs</string>
@@ -77,7 +78,8 @@
     <string name="sb_adjust_score">Ajuster le score</string>
     <string name="sb_handicap_score">Appliquer des points de handicap</string>
     <string name="sb_sub_share_match">Partage du match…</string>
-    <string name="sb_timer">\u00A0Chronomètre</string> <!-- added non-breaking space in front for action bar -->
+    <string name="sb_timer">Chronomètre</string>
+    <string name="sb_nbsp_timer">\u00A0Chronomètre</string> <!-- added non-breaking space in front for action bar -->
     <string name="sb_injury_timer">Chronomètre pour blessures</string>
     <string name="sb_score_details">Détails du score</string>
     <string name="sb_official_announcement">Annonces officielles</string>
