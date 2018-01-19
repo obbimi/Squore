@@ -1123,7 +1123,7 @@
             <EditTextPreference android:key="maximumCacheAgeFeeds"
                 android:icon="@drawable/dummy"
                                 android:title="@string/pref_MaximumCacheAgeFeeds"
-                                android:summary="pref_MaximumCacheAgeFeeds_summary"
+                                android:summary="@string/pref_MaximumCacheAgeFeeds_summary"
                                 android:inputType="number"
                                 android:defaultValue="@integer/maximumCacheAgeFeeds_default"
             />

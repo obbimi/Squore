@@ -29,9 +29,9 @@
     <string name="pref_feedFeedsURL">Flux personnalisé</string>
     <string name="pref_feedFeedsURL_summary">Réservé exclusivement aux développeurs</string>
     <string name="pref_MaximumCacheAgeFeeds">Stockage en mémoire des flux</string>
-    <string name="pref_MaximumCacheAgeFeeds_summary">Durée maximale de rétension des flux avant rafraichissement (minutes)</string>
-    <string name="pref_feedReadTimeout">Read timeout for feeds</string><!-- TODO -->
-    <string name="pref_feedReadTimeout_summary">Number of seconds before reading a feed is automatically cancelled</string><!-- TODO -->
+    <string name="pref_MaximumCacheAgeFeeds_summary">Durée maximale de rétention avant rafraichissement (minutes)</string>
+    <string name="pref_feedReadTimeout">Délai de lecture des flux</string>
+    <string name="pref_feedReadTimeout_summary">Délai avant annulation automatique de lecture d\'un flux (secondes)</string>
     <string name="pref_maximumCacheAgeFlags">Stockage en mémoire des drapeaux</string>
     <string name="pref_maximumCacheAgeFlags_summary">Durée maximale de rétension des drapeaux avant rafraichissement (minutes)</string>
 
