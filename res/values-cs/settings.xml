@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright (C) 2017  Iddo Hoeve
+**
+** Squore is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
     <string name="pref_x_changed_to_y">Nastavení
         \n %1$s
@@ -96,6 +114,7 @@
     <string name="pref_officialAnnouncementsLanguage">Jazyk hlášení</string>
     <string name="pref_officialAnnouncementsLanguage_summary">V jakém jazyce nabízet hlášení rozhodčího</string>
     <string name="pref_useTimersFeature">Používání časomíry</string>
+    <string name="pref_MatchGameDuration">Délku setu/zápasu</string> <!-- TODO -->
     <string name="pref_showMatchDurationChronoOn">Zobrazovat délku zápasu</string>
     <string name="pref_showLastGameDurationChronoOn">Zobrazovat délku setu</string>
     <string name="pref_showFieldDivisionOn">Zobrazovat divizi</string>
@@ -114,6 +133,7 @@
     <string name="pref_showNewMatchFloatButton_summary">Zobrazovat plovoucí tlačítko pro nový zápas (ve vhodných situacích)</string>
     <string name="pref_keepScreenOn">Nezhasínat displej</string>
     <string name="pref_keepScreenOn_summary">Zabránit zhasínání displeje během zápasu</string>
+    <string name="pref_TimerDialog">Časomíra Dialog</string> <!-- TODO -->
     <string name="pref_Timers">Časomíra</string>
     <string name="pref_Timers_summary">Zobrazovat automaticky. Trvání. Zahrát zvuk a/nebo zavibrovat při vypršení času</string>
     <string name="pref_Players">Hráči</string>
@@ -237,6 +257,7 @@
     <string name="pref_refereeName_summary">Jméno rozhodčího jak se objeví v zápise utkání</string>
     <string name="pref_refereeList">Seznam rozhodčích</string>
     <string name="pref_refereeList_summary">Používá se k našeptávání jména rozhodčího/markera</string>
+    <string name="pref_Mail">Emailem</string> <!-- TODO -->
     <string name="pref_mailResultTo">Výchozí emailová adresa pro akci \'Odeslat výsledek emailem\'</string>
     <string name="pref_mailResultTo_summary">Emailová adresa bude předvyplněna při volbě \'Odeslat výsledek emailem\'</string>
     <string name="pref_mailFullScoringSheet">Emailovat celý zápis</string>

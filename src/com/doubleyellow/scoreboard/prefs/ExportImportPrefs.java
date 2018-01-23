@@ -26,8 +26,8 @@ import android.util.AttributeSet;
 import android.widget.Toast;
 import com.doubleyellow.android.util.ExportImport;
 import com.doubleyellow.scoreboard.R;
-import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.util.FileUtil;
+import com.doubleyellow.util.MapUtil;
 
 import java.io.File;
 import java.util.Map;
@@ -64,17 +64,20 @@ public class ExportImportPrefs extends DialogPreference
         }
     }
 
-    public static void importSettings(Context context) {
+    public static boolean importSettings(Context context) {
         File fSettings = getSettingsBinaryFile(context, true);
         if ( fSettings.exists() == false ) {
             String sMsg  =        context.getString(R.string.could_not_find_file_x                 , fSettings.getAbsolutePath());
                    sMsg += "\n" + context.getString(R.string.did_you_already_perform_an_export_of_x, context.getString(R.string.sb_preferences));
             Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
-            return;
+            return false;
         }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         Map<String, ?> buAll = (Map<String, ?>) FileUtil.readObjectFromFile(fSettings);
+        if ( MapUtil.isEmpty(buAll) ) {
+            return false;
+        }
 
         SharedPreferences.Editor editor = preferences.edit();
         for( String sKey: buAll.keySet() ) {
@@ -102,6 +105,8 @@ public class ExportImportPrefs extends DialogPreference
 
         String sMsg = context.getString(R.string.x_restored_from_y, context.getString(R.string.sb_preferences), fSettings.getAbsolutePath());
         Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+
+        return true;
     }
 
     public static void exportSettings(Context context) {

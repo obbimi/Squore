@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright (C) 2017  Iddo Hoeve
+**
+** Squore is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
 <PreferenceScreen android:key="SBPreferences"
                   xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:dy="http://double-yellow.be">
@@ -184,7 +202,7 @@
                             android:title="@string/pref_Avatars"
                             android:summary="@string/pref_Avatars_summary">
             <com.doubleyellow.prefs.EnumMultiSelectPreference
-                android:icon="@drawable/dummy"
+                android:icon="@drawable/avatar_tux"
                 android:key="showAvatarOn"
                 android:title="@string/pref_showAvatarOn"
                 android:defaultValue="@array/ShowAvatarOn_DefaultValues"
@@ -298,7 +316,7 @@
                 android:defaultValue="@bool/hideFieldDivisionWhenGameInProgress_default"
             />
             <EditTextPreference
-                android:icon="@drawable/dummy"
+                android:icon="@drawable/yeslet_white_pref"
                 android:key="AppealHandGestureIconSize"
                 android:title="@string/pref_AppealHandGestureIconSize"
                 android:summary="@string/pref_AppealHandGestureIconSize_summary"
@@ -641,19 +659,21 @@
                             android:inputType="phone"
                             android:defaultValue=""
         />
-        <EditTextPreference android:key="mailResultTo"
-            android:icon="@drawable/dummy"
-                            android:title="@string/pref_mailResultTo"
-                            android:summary="@string/pref_mailResultTo_summary"
-                            android:inputType="textEmailAddress"
-                            android:defaultValue=""
-        />
-        <CheckBoxPreference android:key="mailFullScoringSheet"
-            android:icon="@drawable/dummy"
-                            android:title="@string/pref_mailFullScoringSheet"
-                            android:summary="@string/pref_mailFullScoringSheet_summary"
-                            android:defaultValue="@bool/mailFullScoringSheet_default"
-        />
+        <PreferenceCategory android:title="@string/pref_Mail">
+            <EditTextPreference android:key="mailResultTo"
+                android:icon="@android:drawable/ic_dialog_email"
+                android:title="@string/pref_mailResultTo"
+                android:summary="@string/pref_mailResultTo_summary"
+                android:inputType="textEmailAddress"
+                android:defaultValue=""
+            />
+            <CheckBoxPreference android:key="mailFullScoringSheet"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_mailFullScoringSheet"
+                android:summary="@string/pref_mailFullScoringSheet_summary"
+                android:defaultValue="@bool/mailFullScoringSheet_default"
+            />
+        </PreferenceCategory>
     </PreferenceScreen>
 
     <PreferenceScreen android:key="LiveScore_Cast"
@@ -694,32 +714,35 @@
                       android:title="@string/pref_Timers"
                       android:summary="@string/pref_Timers_summary"
             >
-        <com.doubleyellow.prefs.EnumMultiSelectPreference
-                android:key="showMatchDurationChronoOn"
-                android:title="@string/pref_showMatchDurationChronoOn"
-                android:icon="@drawable/digital_clock32x32"
-                android:defaultValue="@array/showMatchDurationChronoOn_DefaultValues"
-                dy:displayValues="@array/ShowOnScreen_DisplayValues"
-                dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
-        />
-        <com.doubleyellow.prefs.EnumMultiSelectPreference
-                android:key="showLastGameDurationChronoOn"
-                android:title="@string/pref_showLastGameDurationChronoOn"
-                android:icon="@drawable/digital_clock32x32"
-                android:defaultValue="@array/showMatchDurationChronoOn_DefaultValues"
-                dy:displayValues="@array/ShowOnScreen_DisplayValues"
-                dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
-        />
-        <com.doubleyellow.prefs.EnumListPreference
-            android:icon="@drawable/dummy"
+        <PreferenceCategory android:title="@string/pref_MatchGameDuration">
+            <com.doubleyellow.prefs.EnumMultiSelectPreference
+                    android:key="showMatchDurationChronoOn"
+                    android:title="@string/pref_showMatchDurationChronoOn"
+                    android:icon="@drawable/digital_clock32x32"
+                    android:defaultValue="@array/showMatchDurationChronoOn_DefaultValues"
+                    dy:displayValues="@array/ShowOnScreen_DisplayValues"
+                    dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
+            />
+            <com.doubleyellow.prefs.EnumMultiSelectPreference
+                    android:key="showLastGameDurationChronoOn"
+                    android:title="@string/pref_showLastGameDurationChronoOn"
+                    android:icon="@drawable/digital_clock32x32"
+                    android:defaultValue="@array/showMatchDurationChronoOn_DefaultValues"
+                    dy:displayValues="@array/ShowOnScreen_DisplayValues"
+                    dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
+            />
+        </PreferenceCategory>
+        <PreferenceCategory android:title="@string/pref_Timers">
+            <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/timer"
                 android:key="useTimersFeature"
                 android:title="@string/pref_useTimersFeature"
                 android:defaultValue="Suggest"
                 dy:displayValues="@array/FeatureDisplayValues"
                 dy:enumClass="com.doubleyellow.util.Feature"
                 />
-        <com.doubleyellow.prefs.EnumListPreference
-            android:icon="@drawable/dummy"
+            <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/dummy"
                 android:key="timerViewType"
                 android:title="@string/pref_timerViewType"
                 android:defaultValue="@string/timerViewType_default"
@@ -727,87 +750,92 @@
                 dy:enumClass="com.doubleyellow.scoreboard.timer.ViewType"
                 />
 <!--
-        <CheckBoxPreference android:key="showTimersAutomatically"
-                            android:icon="@drawable/timer"
-                            android:title="@string/pref_showTimersAutomatically"
-                            android:summary="@string/pref_showTimersAutomatically_summary"
-                            android:defaultValue="@bool/showTimersAutomatically_default"
+            <CheckBoxPreference android:key="showTimersAutomatically"
+                android:icon="@drawable/timer"
+                android:title="@string/pref_showTimersAutomatically"
+                android:summary="@string/pref_showTimersAutomatically_summary"
+                android:defaultValue="@bool/showTimersAutomatically_default"
                 />
 -->
-        <EditTextPreference android:key="timerWarmup"
-            android:icon="@drawable/dummy"
-                            android:title="@string/pref_timerWarmup"
-                            android:summary="@string/pref_timerWarmup_summary"
-                            android:inputType="number"
-                            android:defaultValue="@integer/timerWarmup_default"
+            <EditTextPreference android:key="timerWarmup"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_timerWarmup"
+                android:summary="@string/pref_timerWarmup_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/timerWarmup_default"
                 />
-        <EditTextPreference android:key="timerPauseBetweenGames"
-            android:icon="@drawable/dummy"
-                            android:title="@string/pref_timerPauseBetweenGames"
-                            android:summary="@string/pref_timerPauseBetweenGames_summary"
-                            android:inputType="number"
-                            android:defaultValue="@integer/timerPauseBetweenGames_default"
+            <EditTextPreference android:key="timerPauseBetweenGames"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_timerPauseBetweenGames"
+                android:summary="@string/pref_timerPauseBetweenGames_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/timerPauseBetweenGames_default"
                 />
-        <EditTextPreference android:key="timerPauseBetweenGames_values"
-            android:icon="@drawable/dummy"
-                            android:title="@string/pref_timerPauseBetweenGames_values"
-                            android:summary="@string/pref_timerPauseBetweenGames_values_summary"
-                            android:defaultValue="@string/timerPauseBetweenGames_values_default"
+            <EditTextPreference android:key="timerPauseBetweenGames_values"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_timerPauseBetweenGames_values"
+                android:summary="@string/pref_timerPauseBetweenGames_values_summary"
+                android:defaultValue="@string/timerPauseBetweenGames_values_default"
                 />
-<!--
-        <EditTextPreference android:key="timerInjury"
-                            android:title="@string/pref_timerInjury"
-                            android:summary="@string/pref_timerInjury_summary"
-                            android:inputType="number"
-                            android:defaultValue="@integer/timerInjury_default"
-                />
--->
-        <CheckBoxPreference android:key="useSoundNotificationInTimer"
-                            android:icon="@android:drawable/ic_lock_silent_mode_off"
-                            android:title="@string/pref_useSoundNotificationInTimer"
-                            android:summary="@string/pref_useSoundNotificationInTimer_summary"
-                            android:defaultValue="@bool/useSoundNotificationInTimer_default"
-                />
-<!--
-        android:icon="@android:drawable/stat_sys_ringer_vibrate"
--->
-        <CheckBoxPreference android:key="useVibrationNotificationInTimer"
-                            android:title="@string/pref_useVibrationNotificationInTimer"
-                            android:icon="@drawable/ic_lock_silent_mode_vibrate"
-                            android:summary="@string/pref_useVibrationNotificationInTimer_summary"
-                            android:defaultValue="@bool/useVibrationNotificationInTimer_default"
+            <CheckBoxPreference android:key="showTimeIsAlreadyUpFor_Chrono"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_showTimeIsAlreadyUpFor_Chrono"
+                android:defaultValue="@bool/showTimeIsAlreadyUpFor_Chrono_default"
                 />
 
-        <CheckBoxPreference android:key="showLastGameInfoInTimer"
-            android:icon="@drawable/dummy"
+            <!--
+            <EditTextPreference android:key="timerInjury"
+                android:title="@string/pref_timerInjury"
+                android:summary="@string/pref_timerInjury_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/timerInjury_default"
+                    />
+            -->
+        </PreferenceCategory>
+
+        <CheckBoxPreference android:key="useSoundNotificationInTimer"
+            android:icon="@android:drawable/ic_lock_silent_mode_off"
+            android:title="@string/pref_useSoundNotificationInTimer"
+            android:summary="@string/pref_useSoundNotificationInTimer_summary"
+            android:defaultValue="@bool/useSoundNotificationInTimer_default"
+            />
+        <!--
+                android:icon="@android:drawable/stat_sys_ringer_vibrate"
+        -->
+        <CheckBoxPreference android:key="useVibrationNotificationInTimer"
+            android:title="@string/pref_useVibrationNotificationInTimer"
+            android:icon="@drawable/ic_lock_silent_mode_vibrate"
+            android:summary="@string/pref_useVibrationNotificationInTimer_summary"
+            android:defaultValue="@bool/useVibrationNotificationInTimer_default"
+            />
+
+        <PreferenceCategory android:title="@string/pref_TimerDialog">
+            <CheckBoxPreference android:key="showLastGameInfoInTimer"
+                            android:icon="@drawable/dummy"
                             android:title="@string/pref_showLastGameInfoInTimer"
                             android:defaultValue="@bool/showLastGameInfoInTimer_default"
                 />
-        <CheckBoxPreference android:key="showAdjustTimeButtonsInTimer"
-            android:icon="@drawable/dummy"
+            <CheckBoxPreference android:key="showAdjustTimeButtonsInTimer"
+                            android:icon="@drawable/dummy"
                             android:title="@string/pref_showAdjustTimeButtonsInTimer"
                             android:defaultValue="@bool/showAdjustTimeButtonsInTimer_default"
                 />
-        <CheckBoxPreference android:key="showUseAudioCheckboxInTimer"
-            android:icon="@drawable/dummy"
+            <CheckBoxPreference android:key="showUseAudioCheckboxInTimer"
+                            android:icon="@drawable/dummy"
                             android:title="@string/pref_showUseAudioCheckboxInTimer"
                             android:defaultValue="@bool/showUseAudioCheckboxInTimer_default"
                 />
-        <CheckBoxPreference android:key="showPauseButtonOnTimer"
-            android:icon="@drawable/dummy"
+            <CheckBoxPreference android:key="showPauseButtonOnTimer"
+                            android:icon="@drawable/dummy"
                             android:title="@string/pref_showPauseButtonOnTimer"
                             android:defaultValue="@bool/showPauseButtonOnTimer_default"
                 />
-        <CheckBoxPreference android:key="cancelTimerWhenTimeIsUp"
-            android:icon="@drawable/dummy"
+            <CheckBoxPreference android:key="cancelTimerWhenTimeIsUp"
+                            android:icon="@drawable/dummy"
                             android:title="@string/pref_cancelTimerWhenTimeIsUp"
                             android:defaultValue="@bool/cancelTimerWhenTimeIsUp_default"
                 />
-        <CheckBoxPreference android:key="showTimeIsAlreadyUpFor_Chrono"
-            android:icon="@drawable/dummy"
-                            android:title="@string/pref_showTimeIsAlreadyUpFor_Chrono"
-                            android:defaultValue="@bool/showTimeIsAlreadyUpFor_Chrono_default"
-                />
+        </PreferenceCategory>
 
     </PreferenceScreen>
 
@@ -838,10 +866,9 @@
                 dy:enumClass="com.doubleyellow.util.SortOrder"
                 />
 
-        <ListPreference     android:key="targetDirForImportExport"
-            android:icon="@drawable/dummy"
-                            android:title="@string/pref_Category_Directory_for_import_export"/>
-
+        <ListPreference android:key="targetDirForImportExport"
+                        android:icon="@drawable/dummy"
+                        android:title="@string/pref_Category_Directory_for_import_export"/>
     </PreferenceScreen>
 
     <PreferenceScreen android:key="statistics"
@@ -1006,19 +1033,19 @@
         <PreferenceCategory android:title="@string/pref_Category_Feeds"
                             android:key="Feeds">
             <EditTextPreference android:key="feedPostUrls"
-                android:icon="@drawable/dummy"
-                                android:title="@string/pref_feedPostUrls"
-                                android:summary="@string/pref_feedPostUrls_summary"
-                                android:inputType="textMultiLine"
-                                android:defaultValue="@string/pref_feedPostUrls_default_Squash"
+                      android:icon="@drawable/ic_action_web_site"
+                      android:title="@string/pref_feedPostUrls"
+                      android:summary="@string/pref_feedPostUrls_summary"
+                      android:inputType="textMultiLine"
+                      android:defaultValue="@string/pref_feedPostUrls_default_Squash"
                     />
 
-            <ListPreference     android:key="feedPostUrl"
-                android:icon="@drawable/dummy"
-                                android:title="@string/pref_feedPostUrl"
-                                android:summary="@string/pref_feedPostUrl_summary"
-                                android:inputType="textUri"
-                                android:defaultValue="0"
+            <ListPreference android:key="feedPostUrl"
+                      android:icon="@drawable/dummy"
+                      android:title="@string/pref_feedPostUrl"
+                      android:summary="@string/pref_feedPostUrl_summary"
+                      android:inputType="textUri"
+                      android:defaultValue="0"
                     />
             <com.doubleyellow.prefs.EnumListPreference
                 android:icon="@drawable/dummy"

@@ -1,7 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright (C) 2017  Iddo Hoeve
+**
+** Squore is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/refresh"   app:showAsAction="always" android:icon="@drawable/ic_action_refresh"                   android:title="@string/refresh" />
     <item android:id="@+id/filter"    app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_search"              android:title="@string/filter" />
-    <item android:id="@+id/close"     app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_close_clear_cancel"  android:title="@string/cmd_close" />
+
+    <!-- for android 4.4.2 -->
+    <item
+        android:id="@+id/sb_overflow_submenu"
+        android:icon="@drawable/ic_action_overflow"
+        android:title="@string/uc_more"
+        app:showAsAction="always">
+
+        <!-- move menu items below here if you want to simulate overflow even for devices that do normally do not have it (because the have a hardware menu button) -->
+        <menu>
+            <item android:id="@+id/close"     app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_close_clear_cancel"  android:title="@string/cmd_close" />
+
+            <item android:id="@+id/expand_all"   app:showAsAction="never" android:icon="@android:drawable/arrow_down_float" android:title="@string/expand_all" />
+            <item android:id="@+id/collapse_all" app:showAsAction="never" android:icon="@android:drawable/arrow_up_float"   android:title="@string/collapse_all" />
+        </menu>
+    </item>
 </menu>

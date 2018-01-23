@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright (C) 2017  Iddo Hoeve
+**
+** Squore is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
 <resources>
     <string name="pref_ColorTargets_Background">Achtergrond</string>
     <string name="pref_ColorTargets_Player_Button_Background">Achtergrond Speler Knop</string>
@@ -133,6 +151,7 @@
     <string name="pref_officialAnnouncementsLanguage">Aankondigingen taal</string>
     <string name="pref_officialAnnouncementsLanguage_summary">Taal waarin de \'Aankondigingen\' verschijnen</string>
     <string name="pref_useTimersFeature">Gebruik \'Timers\' optie</string>
+    <string name="pref_MatchGameDuration">Game/Wedstrijd duur</string>
     <string name="pref_showMatchDurationChronoOn">Toon \'Duur van de wedstrijd\' op</string>
     <string name="pref_showLastGameDurationChronoOn">Toon \'Duur van de game\' op</string>
     <string name="pref_showFieldDivisionOn">Toon \'Veld of divisie\' op</string>
@@ -152,6 +171,7 @@
     <string name="pref_keepScreenOn">Voorkom scherm dimmen</string>
     <string name="pref_keepScreenOn_summary">Voorkom dat het scherm in slaap stand gaat</string>
     <string name="pref_Timers">Timers</string>
+    <string name="pref_TimerDialog">Timer Dialoog</string>
     <string name="pref_Timers_summary">Automatisch tonen. Duur. Speel geluid en/of vibreer na afloop.</string>
     <string name="pref_Players">Spelers</string>
     <string name="pref_Players_summary">Beheer welke waarden voor AutoComplete worden gebruikt wanneer je speler namen invoert met het keyboard.</string>
@@ -275,6 +295,7 @@
     <string name="pref_refereeName_summary">Naam van de scheidsrechter. Zal op het \'Score blad\' verschijnen als je deze deelt</string>
     <string name="pref_refereeList">Scheidsrechters Lijst</string>
     <string name="pref_refereeList_summary">Voor autocomplete wanneer je referee/markers in geeft</string>
+    <string name="pref_Mail">Email</string>
     <string name="pref_mailResultTo">Default email adres voor \'E-Mail Resultaat\'</string>
     <string name="pref_mailResultTo_summary">Het email-adres dat vooringevuld is als je menu optie \'E-mail resultaat\' kiest</string>
     <string name="pref_mailFullScoringSheet">Mail volledige score sheet</string>

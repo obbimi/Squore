@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright (C) 2017  Iddo Hoeve
+**
+** Squore is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
 
     <string name="pref_ColorTargets_Background">Background</string>
@@ -136,6 +154,7 @@
     <string name="pref_officialAnnouncementsLanguage">Announcements Language</string>
     <string name="pref_officialAnnouncementsLanguage_summary">Language in which \'Announcements\' should be suggested</string>
     <string name="pref_useTimersFeature">Use \'Timers\' feature</string>
+    <string name="pref_MatchGameDuration">Game/Match duration</string>
     <string name="pref_showMatchDurationChronoOn">Show \'Match duration\' on</string>
     <string name="pref_showLastGameDurationChronoOn">Show \'Game duration\' on</string>
     <string name="pref_showFieldDivisionOn">Show \'Field or Division\' on</string>
@@ -155,6 +174,7 @@
     <string name="pref_keepScreenOn">Keep screen on</string>
     <string name="pref_keepScreenOn_summary">Prevent screen from going to sleep during referee-ing a match</string>
     <string name="pref_Timers">Timers</string>
+    <string name="pref_TimerDialog">Timer Dialog</string>
     <string name="pref_Timers_summary">Show automatically. Duration. Play sound and/or vibrate when done.</string>
     <string name="pref_Players">Players</string>
     <string name="pref_Players_summary">Manage what values are used for AutoComplete when you are entering player names with the keyboard.</string>
@@ -278,6 +298,7 @@
     <string name="pref_refereeName_summary">Referee name as it will appear in the \'Score sheet\' if you share it</string>
     <string name="pref_refereeList">Referee List</string>
     <string name="pref_refereeList_summary">For autocomplete when typing in referee/marker names</string>
+    <string name="pref_Mail">Mail</string>
     <string name="pref_mailResultTo">Default email address for \'Mail Result\' action</string>
     <string name="pref_mailResultTo_summary">The email address that will be pre-filled when you choose menu option \'Mail Result\'</string>
     <string name="pref_mailFullScoringSheet">Mail full scoring sheet</string>

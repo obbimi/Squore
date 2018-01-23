@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright (C) 2017  Iddo Hoeve
+**
+** Squore is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
 <resources>
     <string name="pref_ColorTargets_Background">Background</string>                                 <!-- TODO -->
     <string name="pref_ColorTargets_Player_Button_Background">Player Button Background</string>     <!-- TODO -->
@@ -129,6 +147,7 @@
     <string name="pref_officialAnnouncementsLanguage">Langue des annonces</string>
     <string name="pref_officialAnnouncementsLanguage_summary">Langue utilisée pour les \'Annonces\'</string>
     <string name="pref_useTimersFeature">Utiliser la fonction \'Chronomètre\'</string>
+    <string name="pref_MatchGameDuration">Durée du jeu/match</string> <!-- TODO -->
     <string name="pref_showMatchDurationChronoOn">Montrer \'Durée du match\' sur</string>  <!-- TODO -->
     <string name="pref_showLastGameDurationChronoOn">Montrer \'Durée du jeu\' sur</string>    <!-- TODO -->
     <string name="pref_showFieldDivisionOn">Montrer \'Division\' sur</string>  <!-- TODO -->
@@ -148,6 +167,7 @@
     <string name="pref_keepScreenOn">Garder l\'écran allumé</string>
     <string name="pref_keepScreenOn_summary">Empêche l\'écran de s\'éteindre au cours d\'un match</string>
     <string name="pref_Timers">Chronomètres</string>
+    <string name="pref_TimerDialog">Chronomètre Dialogue</string> <!-- TODO -->
     <string name="pref_Timers_summary">Afficher automatiquement. Durée. Jouer un son et/ou vibrer lorsque terminé.</string>
     <string name="pref_Players">Joueurs</string>
     <string name="pref_Players_summary">Gérer les valeurs qui sont utilisés pour la saisie semi-automatique lorsque vous entrez des noms de joueur avec le clavier.</string>
@@ -271,6 +291,7 @@
     <string name="pref_refereeName_summary">Nom de l\'arbitre qui apparaitra sur la feuille de match que vous partagerez</string>
     <string name="pref_refereeList">Liste d\'arbitres</string>
     <string name="pref_refereeList_summary">Pour l\'auto-complétion lors de la saisie des noms de l\'arbitre/marqueur</string>
+    <string name="pref_Mail">Courriel</string>
     <string name="pref_mailResultTo">Adresse de courriel par défaut pour l\'action \'Envoyer par courriel\'</string>
     <string name="pref_mailResultTo_summary">Adresse de courriel pré-sélectionnée pour l\'envoi du résultat d\'un match par courriel</string>
     <string name="pref_mailFullScoringSheet">Feuille de score complète par courriel</string>

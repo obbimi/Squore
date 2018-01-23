@@ -171,6 +171,12 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                 //expListView.setAdapter(loadFeedAdapter);
                 //loadFeedAdapter.load(false);
                 return true;
+            case R.id.expand_all:
+                ExpandableListUtil.expandAll(expListView);
+				return true;
+            case R.id.collapse_all:
+                ExpandableListUtil.collapseAll(expListView);
+				return true;
             case R.id.filter:
                 initFiltering();
                 return true;
