@@ -358,6 +358,7 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
             return null;
         }
         if ( convertView == null ) {
+            if ( inflater == null ) { return null; }
             convertView = inflater.inflate(m_iResId2inflateH, null);
             ColorPrefs.setColor(convertView);
         }
@@ -384,6 +385,7 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
         ViewHolder viewHolder = null;
 
         if ( view == null ) {
+            if ( inflater == null ) { return null; }
             view = inflater.inflate(this.m_iResId2inflateI, null);
 
             TextView txtView = ViewUtil.getFirstView(view, TextView.class);
