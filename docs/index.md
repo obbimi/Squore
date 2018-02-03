@@ -11,3 +11,6 @@ Hope to move it to
 <https://obbimi.github.io/Squore>
 
 soon.
+
+![Logo](http://squore.double-yellow.be/images/google.play.high.res.logo.png)
+
