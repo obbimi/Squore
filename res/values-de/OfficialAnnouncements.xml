@@ -36,10 +36,10 @@
     <string name="oa_fifteen_seconds">%s Sekunden!</string>
 
     <string name="oa_decision_colon">Entscheidung :</string>
-    <string name="oa_yes_let">Ja, Let</string>
+    <string name="oa_yes_let">Let Ball</string>
     <string name="oa_no_let">Kein Let</string>
-    <string name="oa_stroke">Stroke</string>
-    <string name="oa_stroke_to_x">Punkt zu %s</string>
+    <string name="oa_stroke">Ball an</string>
+    <string name="oa_stroke_to_x">Ball an %s</string>
     <string name="oa_conduct_warning">Verwarnung</string>
     <string name="oa_conduct_warning_x_for_type_y">Verwarnung an %1$s für %2$s</string>
     <string name="oa_conduct_stroke">Verwarnungspunkt</string>
