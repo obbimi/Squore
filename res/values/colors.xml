@@ -30,6 +30,8 @@
         <item>|Tabletennis Rubbers   |#000001|#C3161C|#DDDDDD|#FFFFFF|</item><!-- black|red|grey ... -->
         <item>|ITTF Light            |#000000|#005043|#E3E5E4|#FFFFFF|</item><!-- black|green|light grey on white... -->
         <item>|ITTF Dark             |#FFFFFF|#005043|#E3E5E4|#000000|</item><!-- white|green|light grey on black... -->
+        <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
+        <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
     <string-array name="colorSchema_CourtCare" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
@@ -66,6 +68,8 @@
         <item>|ForgeRock             |#3D4245|#80B7AB|#F0ED37|#FFFFFF|</item>
         <item>|Grey-Scale Light      |#CCCCCC|#AAAAAA|#999999|#FFFFFF|</item>
         <item>|Grey-Scale Dark       |#666666|#444444|#222222|#000000|</item>
+        <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
+        <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
     <string-array name="colorSchema_new"  translatable="false">
     </string-array>
