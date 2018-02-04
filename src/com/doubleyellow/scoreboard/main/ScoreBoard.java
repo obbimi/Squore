@@ -2666,8 +2666,8 @@ touch -t 01030000 LAST.sb
             iBoard.updatePlayerClub   (p, sClub);
             setMenuItemEnabled(R.id.sb_swap_double_players, bIsDoubles);
         }
-        @Override public void OnColorChange(Player p, String sColor) {
-            iBoard.initPerPlayerColors(p, sColor);
+        @Override public void OnColorChange(Player p, String sColor, String sColorPrev) {
+            iBoard.initPerPlayerColors(p, sColor, sColorPrev);
         }
         @Override public void OnCountryChange(Player p, String sCountry) {
             iBoard.updatePlayerCountry(p, sCountry);

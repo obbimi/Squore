@@ -72,7 +72,7 @@ public abstract class Model
 		/** Invoked if the name of the player stored in the model is changed */
         void OnNameChange (Player p, String sName, String sCountry, String sAvatar, String sClub, boolean bIsDoubles);
 		/** Invoked if the color stored for a player is changed in the model */
-        void OnColorChange(Player p, String sColor);
+        void OnColorChange(Player p, String sColor, String sColorOld);
         /** Invoked if the country stored for a player is changed in the model */
         void OnCountryChange(Player p, String sCountry);
         /** Invoked if the club stored for a player is changed in the model */
@@ -182,7 +182,7 @@ public abstract class Model
             onPlayerChangeListeners.add(playerChangeListener);
             for(Player p: getPlayers() ) {
                 playerChangeListener.OnNameChange   (p, getName   (p, true, false), getCountry(p), getAvatar(p), getClub(p), isDoubles());
-                playerChangeListener.OnColorChange  (p, getColor  (p));
+                playerChangeListener.OnColorChange  (p, getColor  (p), null);
                 playerChangeListener.OnCountryChange(p, getCountry(p));
                 playerChangeListener.OnClubChange   (p, getClub   (p));
             }
@@ -236,7 +236,7 @@ public abstract class Model
                 l.OnNameChange   (p, getName(p), getCountry(p), getAvatar(p), getClub(p), isDoubles());
               //l.OnClubChange   (p, getClub(p));
               //l.OnCountryChange(p, getCountry(p));
-                l.OnColorChange  (p, getColor(p));
+                l.OnColorChange  (p, getColor(p), null);
             }
         }
         Player[] paGameBallFor = isPossibleGameBallFor();
@@ -1389,11 +1389,12 @@ public abstract class Model
     public void setPlayerColor(Player player, String sColor) {
         String sPrevious = m_player2Color.put(player, sColor);
         if ( (sColor != null && sPrevious == null)
-                || (sColor == null && sPrevious != null)
-                || (sColor != null && sColor.equals(sPrevious) == false)) {
+          || (sColor == null && sPrevious != null)
+          || (sColor != null && sColor.equals(sPrevious) == false)
+           ) {
             setDirty(false);
             for(OnPlayerChangeListener listener: onPlayerChangeListeners) {
-                listener.OnColorChange(player, sColor);
+                listener.OnColorChange(player, sColor, sPrevious);
             }
         }
     }

@@ -417,7 +417,7 @@ public class PreferenceValues extends RWValues
 
     private static SparseArray<String>   mOACache      = null;
     private static SparseArray<String[]> mOAArrayCache = null;
-    public static void clearOACache() {
+    static void clearOACache() {
         mOAArrayCache = null;
         mOACache      = null;
     }
@@ -776,7 +776,8 @@ public class PreferenceValues extends RWValues
         }
         return m_playerList;
     }
-    public static void clearPlayerListCache() {
+    static void clearPlayerListCache() {
+        if ( m_playerList == null ) { return; }
         m_playerList.clear();
     }
 

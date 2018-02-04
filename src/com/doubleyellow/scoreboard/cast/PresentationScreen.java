@@ -292,8 +292,8 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
             iBoard.updatePlayerCountry(p, sCountry);
             iBoard.updatePlayerClub   (p, sClub);
         }
-        @Override public void OnColorChange(Player p, String sColor) {
-            iBoard.initPerPlayerColors(p, sColor);
+        @Override public void OnColorChange(Player p, String sColor, String sColorPrev) {
+            iBoard.initPerPlayerColors(p, sColor, sColorPrev);
         }
         @Override public void OnCountryChange(Player p, String sCountry) {
             iBoard.updatePlayerCountry(p, sCountry);
