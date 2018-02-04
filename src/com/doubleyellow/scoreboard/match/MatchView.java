@@ -75,7 +75,7 @@ public class MatchView extends SBRelativeLayout
         return v.requestFocus();
     }
 
-    void setEvent(String sName, String sDivision, String sRound, String sLocation, String sSourceID) {
+    void setEvent(String sName, String sDivision, String sRound, String sLocation, String sCourt, String sSourceID) {
         boolean bFocusOnIfEmpty = false;
         txtEventName.setText(sName);
         if ( ViewUtil.areAllNonEmpty(txtEventName) ) {
@@ -103,6 +103,10 @@ public class MatchView extends SBRelativeLayout
             }
         }
 
+        if ( txtCourt != null ) {
+            txtCourt.useLastValueAsDefault(StringUtil.isEmpty(sName)); // only fill court with previous if name was also not specified
+            txtCourt.setText(sCourt);
+        }
         if ( txtEventID != null ) {
             txtEventID.setText(sSourceID);
             int visibility = StringUtil.isEmpty(sSourceID) ? GONE : VISIBLE;
@@ -325,14 +329,15 @@ public class MatchView extends SBRelativeLayout
     private PreferenceACTextView txtEventDivision;
     private PreferenceACTextView txtEventRound;
     private PreferenceACTextView txtEventLocation;
+    private PreferenceACTextView txtCourt;
     private TextView             txtEventID;
     private EditText             txtPlayerA;
     private EditText             txtPlayerA2; // doubles
     private EditText             txtPlayerB;
     private EditText             txtPlayerB2; // doubles
     private TextView             txtCountryA;
-    private String[]             saAvatars = new String[2];
     private TextView             txtCountryB;
+    private String[]             saAvatars = new String[2];
     private PreferenceACTextView txtClubA;
     private PreferenceACTextView txtClubB;
 
@@ -400,8 +405,8 @@ public class MatchView extends SBRelativeLayout
         }
     }
 
-    private void initTextViews(View[] tvsEvent) {
-        for ( View v:tvsEvent ) {
+    private void initTextViews(View[] tvs) {
+        for ( View v:tvs ) {
             NextFocusDownListener.mimicPreSdk19(this, v);
             //v.setOnEditorActionListener(onEditorActionListener);
 
@@ -458,7 +463,8 @@ public class MatchView extends SBRelativeLayout
         txtEventRound    = (PreferenceACTextView) findViewById(R.id.match_round);
         txtEventLocation = (PreferenceACTextView) findViewById(R.id.match_location);
         txtEventID       = (TextView)             findViewById(R.id.match_id);
-        tvsEvent = new TextView[]{txtEventName,txtEventDivision,txtEventRound,txtEventLocation};
+        txtCourt         = (PreferenceACTextView) findViewById(R.id.match_court);
+        tvsEvent = new TextView[]{txtEventName,txtEventDivision,txtEventRound,txtEventLocation, txtCourt};
 
         txtRefereeName   = (PreferenceACTextView) findViewById(R.id.match_referee);
         txtMarkerName    = (PreferenceACTextView) findViewById(R.id.match_marker);
@@ -996,6 +1002,9 @@ public class MatchView extends SBRelativeLayout
                      ,txtMarkerName   .getTextAndPersist().toString());
         m.setNrOfPointsToWinGame(iNrOfPoints2Win);
         m.setNrOfGamesToWinMatch(iNrOfGamesToWinMatch);
+        if ( txtCourt != null ) {
+            m.setCourt(txtCourt.getTextAndPersist().toString());
+        }
         if ( StringUtil.isNotEmpty(sSource) ) {
             m.setSource(sSource, sSourceID);
         }

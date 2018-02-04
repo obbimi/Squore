@@ -136,7 +136,7 @@ public class Match extends XActivity implements MenuHandler
             String sED     = model.getEventDivision();
             String sER     = model.getEventRound();
             String sEL     = model.getEventLocation();
-            vMatchView.setEvent(sEN, sED, sER, sEL, model.getSourceID());
+            vMatchView.setEvent(sEN, sED, sER, sEL, model.getCourt(), model.getSourceID());
 
             String sRef    = model.getReferee();
             String sMarker = model.getMarker();

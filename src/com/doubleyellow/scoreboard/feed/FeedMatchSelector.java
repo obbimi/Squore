@@ -433,6 +433,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             if ( sSourceID != null ) {
                 model.setSource(null, sSourceID);
             }
+            model.setCourt(joMatch.optString(JSONKey.court.toString()));
 
             sEventName     = joMatch.optString(JSONKey.name    .toString(), sEventName);
             sFieldDivision = joMatch.optString(JSONKey.division.toString(), sFieldDivision); // field?
@@ -1031,6 +1032,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                            .replaceAll("\\bName\\b"    , JSONKey.name    .toString())
                            .replaceAll("\\bClub\\b"    , JSONKey.club    .toString())
                            .replaceAll("\\bCountry\\b" , JSONKey.country .toString())
+                           .replaceAll("\\bCourt\\b"   , JSONKey.court   .toString())
         ;
         return sContent;
     }

@@ -39,6 +39,7 @@
     <string name="lbl_event">Evénement</string>
     <string name="lbl_division">Division</string>
     <string name="lbl_round">Tour</string>
+    <string name="lbl_court">Cour</string> <!-- TODO -->
     <string name="lbl_location">Lieu</string>
     <string name="lbl_referee">Arbitre</string>
     <string name="lbl_marker">Marqueur</string>

@@ -63,6 +63,7 @@ public enum JSONKey {
 		division, field,
 		round,
 		location,
+	    court,
 	lockState,
 		winnerBecauseOf,
 	sport,

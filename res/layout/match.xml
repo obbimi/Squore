@@ -8,8 +8,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <LinearLayout
-            android:id="@+id/ll_match_singles"
+    <LinearLayout android:id="@+id/ll_match_singles"
             android:layout_alignParentTop="true"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -62,8 +61,7 @@
                     android:layout_gravity="center_horizontal"/>
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-            android:id="@+id/ll_match_doubles"
+    <LinearLayout android:id="@+id/ll_match_doubles"
             android:layout_below="@id/ll_match_singles"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -162,8 +160,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-            android:id="@+id/ll_match_clubs"
+    <LinearLayout android:id="@+id/ll_match_clubs"
             android:layout_below="@id/ll_match_doubles"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -221,8 +218,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_match_countries"
+    <LinearLayout android:id="@+id/ll_match_countries"
         android:layout_below="@id/ll_match_clubs"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -276,16 +272,14 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-            android:id="@+id/match_splitterF"
+    <LinearLayout android:id="@+id/match_splitterF"
             android:orientation="horizontal"
             android:layout_below="@id/ll_match_countries"
             android:background="@drawable/border_dark"
             android:layout_width="match_parent"
             android:layout_height="2dp"/>
 
-    <LinearLayout
-            android:id="@+id/llMatchFormat"
+    <LinearLayout android:id="@+id/llMatchFormat"
             android:layout_below="@id/match_splitterF"
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -576,195 +570,208 @@
         </LinearLayout>
     </LinearLayout>
 
-        <LinearLayout
-                android:id="@+id/match_splitterE"
-                android:orientation="horizontal"
-                android:layout_below="@id/llMatchFormat"
-                android:background="@drawable/border_dark"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"/>
+    <LinearLayout android:id="@+id/match_splitterE"
+            android:orientation="horizontal"
+            android:layout_below="@id/llMatchFormat"
+            android:background="@drawable/border_dark"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"/>
 
-        <LinearLayout
-                android:id="@+id/ll_match_event"
-                android:layout_below="@id/match_splitterE"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="@string/lbl_event"
-                        android:textSize="@dimen/txt_medium"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:id="@+id/lblEvent"/>
-                <LinearLayout
-                        android:id="@+id/ll_match_event_texts"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                                android:id="@+id/match_event"
-                                android:background="@drawable/button_dark"
-                                android:textCursorDrawable="@null"
-                                android:paddingLeft="@dimen/sb_playername_leftpadding"
-                                android:paddingStart="@dimen/sb_playername_leftpadding"
-                                android:hint="@string/name"
-                                android:textSize="@dimen/txt_small"
-                                android:tag="item"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/sb_playername_leftpadding"
-                                android:singleLine="true"
-                                android:maxLines="1"
-                                android:nextFocusDown="@+id/match_division"
-                                android:imeOptions="actionNext"
-                                android:layout_gravity="center_horizontal"
-                                dy:PreferenceKeys="eventList,eventLast"
-                                dy:defaultACValues="@string/eventList_default"/>
-                        <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                                android:id="@+id/match_division"
-                                android:background="@drawable/button_dark"
-                                android:textCursorDrawable="@null"
-                                android:paddingLeft="@dimen/sb_playername_leftpadding"
-                                android:paddingStart="@dimen/sb_playername_leftpadding"
-                                android:hint="@string/lbl_division"
-                                android:textSize="@dimen/txt_small"
-                                android:tag="item"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/sb_playername_leftpadding"
-                                android:singleLine="true"
-                                android:maxLines="1"
-                                android:nextFocusDown="@+id/match_round"
-                                android:imeOptions="actionNext"
-                                android:layout_gravity="center_horizontal"
-                                dy:PreferenceKeys="divisionList,divisionLast"
-                                dy:defaultACValues="@string/divisionList_default"/>
-                        <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                                android:id="@+id/match_round"
-                                android:background="@drawable/button_dark"
-                                android:textCursorDrawable="@null"
-                                android:paddingLeft="@dimen/sb_playername_leftpadding"
-                                android:paddingStart="@dimen/sb_playername_leftpadding"
-                                android:hint="@string/lbl_round"
-                                android:textSize="@dimen/txt_small"
-                                android:tag="item"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/sb_playername_leftpadding"
-                                android:singleLine="true"
-                                android:maxLines="1"
-                                android:nextFocusDown="@+id/match_location"
-                                android:imeOptions="actionNext"
-                                android:layout_gravity="center_horizontal"
-                                dy:PreferenceKeys="roundList,roundLast"
-                                dy:defaultACValues="@string/roundList_default"/>
-                        <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                                android:id="@+id/match_location"
-                                android:background="@drawable/button_dark"
-                                android:textCursorDrawable="@null"
-                                android:paddingLeft="@dimen/sb_playername_leftpadding"
-                                android:paddingStart="@dimen/sb_playername_leftpadding"
-                                android:hint="@string/lbl_location"
-                                android:textSize="@dimen/txt_small"
-                                android:tag="item"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/sb_playername_leftpadding"
-                                android:singleLine="true"
-                                android:maxLines="1"
-                                android:imeOptions="actionNext"
-                                android:layout_gravity="center_horizontal"
-                                dy:PreferenceKeys="locationList,locationLast"
-                                dy:defaultACValues="@string/emptyList_default"/>
-                </LinearLayout>
-                <!-- TODO: clear button: empty event and round -->
-        </LinearLayout>
-
-        <LinearLayout
-                android:id="@+id/match_splitterR"
-                android:orientation="horizontal"
-                android:layout_below="@id/ll_match_event"
-                android:background="@drawable/border_dark"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"/>
-
-        <TextView
-                android:id="@+id/lblReferee"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_below="@id/match_splitterR"
-                android:text="@string/lbl_referee"
-                android:textSize="@dimen/txt_medium"
-                android:textAppearance="?android:attr/textAppearanceLarge"/>
-        <LinearLayout
-                android:id="@+id/ll_referees"
-                android:layout_alignTop="@id/lblReferee"
-                android:layout_toRightOf="@id/lblReferee"
-                android:layout_toEndOf="@id/lblReferee"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                        android:id="@+id/match_referee"
-                        android:background="@drawable/button_dark"
-                        android:textCursorDrawable="@null"
-                        android:paddingLeft="@dimen/sb_playername_leftpadding"
-                        android:paddingStart="@dimen/sb_playername_leftpadding"
-                        android:hint="@string/lbl_referee"
-                        android:textSize="@dimen/txt_small"
-                        android:tag="item"
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/sb_playername_leftpadding"
-                        android:singleLine="true"
-                        android:maxLines="1"
-                        android:imeOptions="actionNext"
-                        android:nextFocusDown="@+id/match_marker"
-                        android:layout_gravity="center_horizontal"
-                        dy:PreferenceKeys="refereeList,refereeName"
-                        dy:defaultACValues=""/>
-                <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                        android:id="@+id/match_marker"
-                        android:background="@drawable/button_dark"
-                        android:textCursorDrawable="@null"
-                        android:paddingLeft="@dimen/sb_playername_leftpadding"
-                        android:paddingStart="@dimen/sb_playername_leftpadding"
-                        android:hint="@string/lbl_marker"
-                        android:textSize="@dimen/txt_small"
-                        android:tag="item"
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/sb_playername_leftpadding"
-                        android:singleLine="true"
-                        android:maxLines="1"
-                        android:imeOptions="actionDone"
-                        android:layout_gravity="center_horizontal"
-                        dy:PreferenceKeys="refereeList,markerName"
-                        dy:defaultACValues=""/>
-
-        </LinearLayout>
-        <LinearLayout
-                android:id="@+id/ll_AnnouncementLanguage"
-                android:layout_below="@id/ll_referees"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <TextView android:inputType="none"
-                      android:id="@+id/lblAnnouncementLanguage"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="@string/pref_officialAnnouncementsLanguage"
-                      android:textSize="@dimen/txt_small"
-                      android:layout_margin="2dp"
-            />
-            <Spinner
-                    android:id="@+id/spAnnouncementLanguage"
+    <LinearLayout android:id="@+id/ll_match_event"
+            android:layout_below="@id/match_splitterE"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
                     android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/lbl_event"
+                    android:textSize="@dimen/txt_medium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/lblEvent"/>
+            <LinearLayout
+                    android:id="@+id/ll_match_event_texts"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.doubleyellow.scoreboard.view.PreferenceACTextView
+                            android:id="@+id/match_event"
+                            android:background="@drawable/button_dark"
+                            android:textCursorDrawable="@null"
+                            android:paddingLeft="@dimen/sb_playername_leftpadding"
+                            android:paddingStart="@dimen/sb_playername_leftpadding"
+                            android:hint="@string/name"
+                            android:textSize="@dimen/txt_small"
+                            android:tag="item"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/sb_playername_leftpadding"
+                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:nextFocusDown="@+id/match_division"
+                            android:imeOptions="actionNext"
+                            android:layout_gravity="center_horizontal"
+                            dy:PreferenceKeys="eventList,eventLast"
+                            dy:defaultACValues="@string/eventList_default"/>
+                    <com.doubleyellow.scoreboard.view.PreferenceACTextView
+                            android:id="@+id/match_division"
+                            android:background="@drawable/button_dark"
+                            android:textCursorDrawable="@null"
+                            android:paddingLeft="@dimen/sb_playername_leftpadding"
+                            android:paddingStart="@dimen/sb_playername_leftpadding"
+                            android:hint="@string/lbl_division"
+                            android:textSize="@dimen/txt_small"
+                            android:tag="item"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/sb_playername_leftpadding"
+                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:nextFocusDown="@+id/match_round"
+                            android:imeOptions="actionNext"
+                            android:layout_gravity="center_horizontal"
+                            dy:PreferenceKeys="divisionList,divisionLast"
+                            dy:defaultACValues="@string/divisionList_default"/>
+                    <com.doubleyellow.scoreboard.view.PreferenceACTextView
+                            android:id="@+id/match_round"
+                            android:background="@drawable/button_dark"
+                            android:textCursorDrawable="@null"
+                            android:paddingLeft="@dimen/sb_playername_leftpadding"
+                            android:paddingStart="@dimen/sb_playername_leftpadding"
+                            android:hint="@string/lbl_round"
+                            android:textSize="@dimen/txt_small"
+                            android:tag="item"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/sb_playername_leftpadding"
+                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:nextFocusDown="@+id/match_location"
+                            android:imeOptions="actionNext"
+                            android:layout_gravity="center_horizontal"
+                            dy:PreferenceKeys="roundList,roundLast"
+                            dy:defaultACValues="@string/roundList_default"/>
+                    <com.doubleyellow.scoreboard.view.PreferenceACTextView
+                            android:id="@+id/match_location"
+                            android:background="@drawable/button_dark"
+                            android:textCursorDrawable="@null"
+                            android:paddingLeft="@dimen/sb_playername_leftpadding"
+                            android:paddingStart="@dimen/sb_playername_leftpadding"
+                            android:hint="@string/lbl_location"
+                            android:textSize="@dimen/txt_small"
+                            android:tag="item"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/sb_playername_leftpadding"
+                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:nextFocusDown="@+id/match_court"
+                            android:imeOptions="actionNext"
+                            android:layout_gravity="center_horizontal"
+                            dy:PreferenceKeys="locationList,locationLast"
+                            dy:defaultACValues="@string/emptyList_default"/>
+
+                <com.doubleyellow.scoreboard.view.PreferenceACTextView
+                    android:id="@+id/match_court"
+                    android:background="@drawable/button_dark"
+                    android:textCursorDrawable="@null"
+                    android:paddingLeft="@dimen/sb_playername_leftpadding"
+                    android:paddingStart="@dimen/sb_playername_leftpadding"
+                    android:hint="@string/lbl_court"
+                    android:textSize="@dimen/txt_small"
+                    android:tag="item"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layoutMode="opticalBounds"
-                    android:orientation="vertical"/>
-        </LinearLayout>
+                    android:layout_margin="@dimen/sb_playername_leftpadding"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:imeOptions="actionNext"
+                    android:layout_gravity="center_horizontal"
+                    dy:PreferenceKeys="courtList,courtLast"
+                    dy:defaultACValues="@string/emptyList_default"/>
+            </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/match_splitterR"
+            android:orientation="horizontal"
+            android:layout_below="@id/ll_match_event"
+            android:background="@drawable/border_dark"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"/>
+
+    <TextView android:id="@+id/lblReferee"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_below="@id/match_splitterR"
+            android:text="@string/lbl_referee"
+            android:textSize="@dimen/txt_medium"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <LinearLayout android:id="@+id/ll_referees"
+            android:layout_alignTop="@id/lblReferee"
+            android:layout_toRightOf="@id/lblReferee"
+            android:layout_toEndOf="@id/lblReferee"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.doubleyellow.scoreboard.view.PreferenceACTextView
+                    android:id="@+id/match_referee"
+                    android:background="@drawable/button_dark"
+                    android:textCursorDrawable="@null"
+                    android:paddingLeft="@dimen/sb_playername_leftpadding"
+                    android:paddingStart="@dimen/sb_playername_leftpadding"
+                    android:hint="@string/lbl_referee"
+                    android:textSize="@dimen/txt_small"
+                    android:tag="item"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/sb_playername_leftpadding"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/match_marker"
+                    android:layout_gravity="center_horizontal"
+                    dy:PreferenceKeys="refereeList,refereeName"
+                    dy:defaultACValues=""/>
+            <com.doubleyellow.scoreboard.view.PreferenceACTextView
+                    android:id="@+id/match_marker"
+                    android:background="@drawable/button_dark"
+                    android:textCursorDrawable="@null"
+                    android:paddingLeft="@dimen/sb_playername_leftpadding"
+                    android:paddingStart="@dimen/sb_playername_leftpadding"
+                    android:hint="@string/lbl_marker"
+                    android:textSize="@dimen/txt_small"
+                    android:tag="item"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/sb_playername_leftpadding"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:imeOptions="actionDone"
+                    android:layout_gravity="center_horizontal"
+                    dy:PreferenceKeys="refereeList,markerName"
+                    dy:defaultACValues=""/>
+
+    </LinearLayout>
+    <LinearLayout android:id="@+id/ll_AnnouncementLanguage"
+            android:layout_below="@id/ll_referees"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView android:inputType="none"
+                  android:id="@+id/lblAnnouncementLanguage"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/pref_officialAnnouncementsLanguage"
+                  android:textSize="@dimen/txt_small"
+                  android:layout_margin="2dp"
+        />
+        <Spinner
+                android:id="@+id/spAnnouncementLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layoutMode="opticalBounds"
+                android:orientation="vertical"/>
+    </LinearLayout>
 </com.doubleyellow.view.SBRelativeLayout>

@@ -121,6 +121,8 @@ public enum PreferenceKeys {
         divisionLast,
     roundList,
         roundLast,
+    courtList,
+        courtLast,
     locationList,
         locationLast,
     clubList,

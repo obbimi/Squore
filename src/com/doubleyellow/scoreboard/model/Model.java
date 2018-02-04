@@ -1575,6 +1575,23 @@ public abstract class Model
     public String getMarker() { return m_sMarker; }
 
     //-------------------------------
+    // Court
+    //-------------------------------
+
+    private String m_sCourt  = "";
+    public boolean setCourt(String sCourt) {
+        if ( sCourt == null ) { sCourt   = ""; }
+        sCourt = sCourt.trim();
+        boolean bCourtChanged = m_sCourt.equals(sCourt) == false;
+        if ( bCourtChanged ) {
+            m_sCourt = sCourt;
+            setDirty(false);
+        }
+        return bCourtChanged;
+    }
+    public String getCourt() { return m_sCourt; }
+
+    //-------------------------------
     // Event
     //-------------------------------
 
@@ -1825,6 +1842,7 @@ public abstract class Model
             if ( JsonUtil.isNotEmpty(oRef) ) {
                 setReferees(oRef.optString(JSONKey.name.toString()), oRef.optString(JSONKey.markers.toString()));
             }
+            setCourt(joMatch.optString(JSONKey.court.toString()));
 
             // read players
             JSONObject joPlayers = joMatch.optJSONObject(JSONKey.players.toString());
@@ -2291,6 +2309,9 @@ public abstract class Model
             joRef.put(JSONKey.markers.toString(), m_sMarker);
             JsonUtil.removeEmpty(joRef);
             jsonObject.put(JSONKey.referee.toString(), joRef);
+        }
+        if ( StringUtil.isNotEmpty(m_sCourt) ) {
+            jsonObject.put(JSONKey.court.toString(), m_sCourt);
         }
 
         // when: date and time

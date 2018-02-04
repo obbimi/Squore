@@ -1707,6 +1707,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             }
             // use event from previous
             matchModel.setEvent               (previous.getEventName(), previous.getEventDivision(), previous.getEventRound(), previous.getEventLocation());
+            matchModel.setCourt               (previous.getCourt());
 
             matchModel.setNrOfPointsToWinGame (previous.getNrOfPointsToWinGame());
             matchModel.setNrOfGamesToWinMatch (previous.getNrOfGamesToWinMatch());
@@ -3740,6 +3741,7 @@ touch -t 01030000 LAST.sb
                     PreferenceValues.setString  (PreferenceKeys.eventLast              , this, m.getEventName());
                     PreferenceValues.setString  (PreferenceKeys.divisionLast           , this, m.getEventDivision());
                     PreferenceValues.setString  (PreferenceKeys.roundLast              , this, m.getEventRound());
+                    PreferenceValues.setString  (PreferenceKeys.courtLast              , this, m.getCourt());
                     PreferenceValues.setString  (PreferenceKeys.locationLast           , this, m.getEventLocation());
                     PreferenceValues.setEnum    (PreferenceKeys.handicapFormat         , this, m.getHandicapFormat());
                     if ( Brand.isSquash() ) {

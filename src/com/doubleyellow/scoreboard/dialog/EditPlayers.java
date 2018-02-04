@@ -73,6 +73,7 @@ public class EditPlayers extends BaseAlertDialog
         mCaptions.put(JSONKey.location, R.string.lbl_location);
         mCaptions.put(JSONKey.clubs   , R.string.lbl_clubs);
         mCaptions.put(JSONKey.round   , R.string.lbl_round);
+        mCaptions.put(JSONKey.court   , R.string.lbl_court);
         mCaptions.put(JSONKey.referee , R.string.lbl_referee);
         mCaptions.put(JSONKey.markers , R.string.lbl_marker);
     }
@@ -87,8 +88,11 @@ public class EditPlayers extends BaseAlertDialog
     @Override public void show() {
         //ViewGroup ll = initUsingLayoutXml();
 
-        List<String> eventDetails = new ArrayList<String>(Arrays.asList( matchModel.getEventName(), matchModel.getEventDivision(), matchModel.getEventRound(), matchModel.getEventLocation() ));
-        List<String> refDetails   = new ArrayList<String>(Arrays.asList( matchModel.getReferee()  , matchModel.getMarker()));
+        EnumSet<JSONKey> eEventDetails = EnumSet.of(                        JSONKey.event         ,    JSONKey.division          ,    JSONKey.round          ,    JSONKey.location          , JSONKey.court);
+        List<String> eventDetails = new ArrayList<String>(Arrays.asList( matchModel.getEventName(), matchModel.getEventDivision(), matchModel.getEventRound(), matchModel.getEventLocation(), matchModel.getCourt() ));
+
+        EnumSet<JSONKey> eReferees = EnumSet.of(                            JSONKey.referee     ,    JSONKey.markers);
+        List<String> refDetails   = new ArrayList<String>(Arrays.asList( matchModel.getReferee(), matchModel.getMarker()));
 
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
         int iMainBgColor   = mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
@@ -103,7 +107,6 @@ public class EditPlayers extends BaseAlertDialog
         ColorUtil.setBackground(ll, iMainBgColor);
 
         // event details
-        EnumSet<JSONKey> eEventDetails = EnumSet.of(JSONKey.event, JSONKey.division, JSONKey.round, JSONKey.location);
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         for ( JSONKey e: eEventDetails ) {
             final LinearLayout llLabelAndText = new LinearLayout(context);
@@ -128,6 +131,9 @@ public class EditPlayers extends BaseAlertDialog
                     break;
                 case location:
                     text.init(R.string.emptyList_default, PreferenceKeys.locationList, PreferenceKeys.locationLast);
+                    break;
+                case court:
+                    text.init(R.string.emptyList_default, PreferenceKeys.courtList, PreferenceKeys.courtLast);
                     break;
 /*
                 case ClubA:
@@ -244,8 +250,7 @@ public class EditPlayers extends BaseAlertDialog
             }
         }
 
-        // event details
-        EnumSet<JSONKey> eReferees = EnumSet.of(JSONKey.referee, JSONKey.markers);
+        // referee details
         //int iViewId = iFirstViewId;
         for ( JSONKey e: eReferees ) {
             final LinearLayout llLabelAndText = new LinearLayout(context);
@@ -410,15 +415,16 @@ public class EditPlayers extends BaseAlertDialog
                     boolean bPlayersModified = scoreBoard.setPlayerNames(saPlayers);
                     boolean bModified = bPlayersModified;
 
-                    bModified =  matchModel.setReferees     (saReferee[0], saReferee[1])                         || bModified;
-                    bModified =  matchModel.setEvent        (saEvent[0]  , saEvent[1]  , saEvent[2], saEvent[3]) || bModified;
-                    if (saCountries != null) {
-                        bModified =  matchModel.setPlayerCountry(Player.A, saCountries[0])                       || bModified;
-                        bModified =  matchModel.setPlayerCountry(Player.B, saCountries[1])                       || bModified;
+                    bModified =  matchModel.setReferees     (saReferee[0], saReferee[1])                           || bModified;
+                    bModified =  matchModel.setEvent        (saEvent[0]  , saEvent[1]  , saEvent[2], saEvent[3])   || bModified;
+                    bModified =  matchModel.setCourt(mEvent2Txt.get(JSONKey.court).getTextAndPersist().toString()) || bModified;
+                    if ( saCountries != null ) {
+                        bModified =  matchModel.setPlayerCountry(Player.A, saCountries[0])                         || bModified;
+                        bModified =  matchModel.setPlayerCountry(Player.B, saCountries[1])                         || bModified;
                     }
-                    if ( saClubs!=null ) {
-                        bModified =  matchModel.setPlayerClub   (Player.A, saClubs[0])                           || bModified;
-                        bModified =  matchModel.setPlayerClub   (Player.B, saClubs[1])                           || bModified;
+                    if ( saClubs != null ) {
+                        bModified =  matchModel.setPlayerClub   (Player.A, saClubs[0])                             || bModified;
+                        bModified =  matchModel.setPlayerClub   (Player.B, saClubs[1])                             || bModified;
                     }
 
                     // if new player names were actually entered optionally restart the game
