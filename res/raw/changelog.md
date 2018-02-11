@@ -1,3 +1,10 @@
+## 4.08 (feb 2018)
+
+- allow specifying a court for a match
+    - specifically useful in combination with Live Score
+- minor corrections for official announcements in German
+- improvements for colors/color palettes    
+
 ## 4.07 (jan 2018)
 
 - Add support for JSON feeds to select matches from

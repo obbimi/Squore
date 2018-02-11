@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.doubleyellow.scoreboard.dialog;
 
 import android.content.Context;
@@ -204,8 +220,13 @@ public class AdjustScore extends BaseAlertDialog {
                     String sB = m_lTexts.get(id + 1).getText().toString();
                     if ( StringUtil.hasEmpty(sA, sB) ) { continue; }
 
-                    int iPointsA = Integer.parseInt(sA);
-                    int iPointsB = Integer.parseInt(sB);
+                    int iPointsA = 0;
+                    int iPointsB = 0;
+                    try {
+                        iPointsA = Integer.parseInt(sA);
+                        iPointsB = Integer.parseInt(sB);
+                    } catch (NumberFormatException e) {
+                    }
                     if ( iPointsA + iPointsB == 0 ) { continue; }
                     matchModel.setGameScore_Json(s-1, iPointsA, iPointsB, 0);
                 }
