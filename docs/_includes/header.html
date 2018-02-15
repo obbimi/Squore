@@ -11,11 +11,12 @@
     {{ site.title | smartify }} · {{ site.description | smartify }}
   {%- endif -%}
 </title>
-<!--
+<link href="{{ site.baseurl }}/dist/css/scoreboard.css" rel="stylesheet">
 <link href="{{ site.baseurl }}/dist/css/squore.css" rel="stylesheet">
--->
+<!--
 <link href="http://squore.double-yellow.be/style/scoreboard.css" rel="stylesheet">
 <link href="http://squore.double-yellow.be/style/squore.css" rel="stylesheet">
+-->
 
 <!-- Documentation extras -->
 {% if page.layout == "docs" %}
