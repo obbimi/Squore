@@ -1,1 +1,26 @@
-theme: jekyll-theme-midnight
+# theme: jekyll-theme-midnight
+
+# Dependencies
+markdown:       kramdown
+
+# Server
+destination:    ./_gh_pages
+encoding:       UTF-8
+port:           9002
+baseurl:        ""
+
+plugins:
+  - jekyll-toc
+  - jekyll-redirect-from
+
+
+toc:
+  min_level:        2
+  max_level:        4
+
+# Social
+title:              Squore
+description:        "Android app to support you refferee-ing a squash match."
+authors:            "Iddo Hoeve"
+logo_path:          "http://squore.double-yellow.be/images/google.play.high.res.logo.png"
+

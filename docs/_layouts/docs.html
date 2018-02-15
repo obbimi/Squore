@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    {% include header.html %}
+  </head>
+  <body>
+
+      <div id="nav" style="border: 0px solid red">
+        <img src="{{ site.logo_path }}" class="navlogo navlogo_left"/>
+
+        {% include navigation.html %}
+
+        <img src="{{ site.logo_path }}" class="navlogo navlogo_right"/>
+
+      </div>
+
+      <div id="search" style="border: 0px solid red; position: absolute; display: block;">
+        {% include search.html %}
+      </div>
+
+      {% if page.toc %}
+          <div class="sq-toc" style="border: 0px solid blue">
+            {{ content | toc_only }}
+          </div>
+        {% else %}
+        <!--<span>No toc</span>-->
+        {% endif %}
+
+        <div class="page" role="main"  style="border: 0px solid yellow; display: block;">
+          <h2 id="content">{{ page.title | smartify }}</h2>
+          <p class="bd-lead">{{ page.description | smartify }}</p>
+          {{ content }}
+        </div>
+  </body>
+</html>

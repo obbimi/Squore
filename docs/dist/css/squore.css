@@ -1,0 +1,39 @@
+/*border-image-width: 1 1 1 1; */
+/* #141414|#4CA3D9|#D3D3D3|#FFFFFF|</item><!-- dark|blue|light grey */
+div#nav {
+    background: #000000;
+    border-bottom: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+/*
+    background-image: url("/images/google.play.high.res.logo.png");
+    background-position: left top;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-size: cover;
+    background-size: 100px;
+*/
+}
+.navlogo {
+    background: white;
+    position: absolute;
+    top: 50px;
+    width: 120px;
+}
+
+.current-page {
+    background-color: #4CA3D9 !important;
+    color: #000000;
+    font-weight: bold;
+}
+
+h2,h2,h3,h4,h5 {
+    color: #4CA3D9;
+    text-align: left;
+}
+.page a:hover { color: #000000; }

@@ -1,0 +1,38 @@
+
+<style>
+  a {
+    text-decoration: none;
+    color: #ffffff;
+  }
+</style>
+  {%- assign current_page_name = page.url | split: '/' | last        -%}
+
+
+  {%- for group in site.data.nav                             -%}
+  {%-     assign first_page      = group.pages    | first    -%}
+  {%-     assign first_page_url  = first_page.url            -%}
+
+  {%-     assign group_ctx = group.title          | slugify  -%}
+
+  {%-     assign active = nil                                -%}
+  {%-     if page.group == group_ctx                         -%}
+  {%-       assign active = 'current-page'                   -%}
+  {%-     endif                                              -%}
+
+
+    <ul class="navigation">
+      <li class="category {{ group_ctx }}">{{ group.title }}</li>
+  {%-     for doc in group.pages                                  -%}
+  {%-       assign active            = nil                                 -%}
+  {%-       if page.group == group_ctx                            -%}
+  {%-         if current_page_name contains doc.url                     -%}
+  {%-           assign active = 'current-page'                    -%}
+  {%-         endif                                               -%}
+  {%-       endif                                                 -%}
+
+          <li class="{{ active }}">
+            <a href="/{{ group_ctx }}/{{ doc.url }}"> {{ doc.title }} </a>
+          </li>
+  {%-     endfor                                                  -%}
+      </ul>
+  {%- endfor                                                      -%}

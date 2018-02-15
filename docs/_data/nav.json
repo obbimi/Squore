@@ -1,0 +1,85 @@
+[
+    {
+        "title": "Intro",
+        "pages": [
+            { "title": "About           ", "url" : "0.1.about"            },
+            { "title": "Gallery         ", "url" : "0.1.gallery"          },
+            { "title": "Showcase        ", "url" : "0.2.showcase"         }
+        ]
+    },
+    {
+        "title": "Match",
+        "pages": [
+            { "title": "Match Setup     ", "url" : "2.1.match.setup"      },
+            { "title": "Singles         ", "url" : "2.5.match.singles"    },
+            { "title": "Doubles         ", "url" : "2.6.match.doubles"    },
+            { "title": "Feeds           ", "url" : "2.2.match.from.feed"  },
+            { "title": "My List         ", "url" : "2.3.match.from.mylist"},
+            { "title": "Format          ", "url" : "2.4.match.format"     },
+            { "title": "Who-Is-Who      ", "url" : "2.7.player.colors"    },
+            { "title": "Club/Country    ", "url" : "2.8.club.country"     }
+        ]
+    },
+    {
+        "title": "Reffing",
+        "pages": [
+            { "title": "Warmup/Toss     ", "url" : "3.0.warmup.toss"      },
+            { "title": "Scoring         ", "url" : "3.1.scoring"          },
+            { "title": "Timers          ", "url" : "3.2.timers"           },
+            { "title": "Calls           ", "url" : "3.5.appeals.conducts" },
+            { "title": "Announcements   ", "url" : "3.7.announcements"    }
+        ]
+    },
+    {
+        "title": "Social",
+        "pages": [
+            { "title": "Sharing         ", "url" : "4.1.sharing"          },
+            { "title": "Transfer        ", "url" : "4.4.transfer.nfc"     },
+            { "title": "Storage/Review  ", "url" : "4.2.storage"          },
+            { "title": "ClubSite        ", "url" : "4.7.club.website"     }
+        ]
+    },
+    {
+        "title": "Tournament",
+        "pages": [
+            { "title": "LiveScore       ", "url" : "5.1.livescore"        },
+            { "title": "ChromeCast      ", "url" : "5.2.chromecast"       }
+        ]
+    },
+    {
+        "title": "Stats",
+        "pages": [
+            { "title": "Winners/Errors  ", "url" : "6.1.match.statistics" },
+            { "title": "Graphs          ", "url" : "6.3.graphs"           }
+        ]
+    },
+    {
+        "title": "Customize",
+        "pages": [
+            { "title": "Settings        ", "url" : "7.1.settings"         },
+            { "title": "Colors          ", "url" : "7.3.colors"           }
+        ]
+    },
+    {
+        "title": "Other",
+        "pages": [
+            { "title": "Shortcuts       ", "url" : "9.1.shortcuts"         },
+            { "title": "Technical       ", "url" : "9.3.technical.details" },
+            { "title": "Credits         ", "url" : "9.5.credits"           },
+            { "title": "Privacy Policy  ", "url" : "9.7.privacy.policy"    },
+            { "title": "DNT             ", "url" : "9.8.dnt"               },
+            { "title": "Apple/iOS       ", "url" : "9.9.ios"               }
+        ]
+    }
+]
+/*
+,
+{
+    "title": "Legal",
+    "pages": [
+            { "title": "Privacy Policy  ", "url" : "9.7.privacy.policy"    },
+            { "title": "EULA            ", "url" : "9.7.eula"              },
+            { "title": "Terms           ", "url" : "9.7.terms"             }
+        ]
+}
+*/
