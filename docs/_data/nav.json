@@ -66,8 +66,7 @@
             { "title": "Shortcuts       ", "url" : "9.1.shortcuts"         },
             { "title": "Technical       ", "url" : "9.3.technical.details" },
             { "title": "Credits         ", "url" : "9.5.credits"           },
-            { "title": "Privacy Policy  ", "url" : "9.7.privacy.policy"    },
-            { "title": "DNT             ", "url" : "9.8.dnt"               },
+            { "title": "Donate          ", "url" : "9.8.dnt"               },
             { "title": "Apple/iOS       ", "url" : "9.9.ios"               }
         ]
     }
