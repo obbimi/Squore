@@ -111,6 +111,7 @@
     <string name="pref_showTextInActionBar">Afficher du texte dans les boutons de la barre d\'action</string>
     <string name="pref_showFullScreen">Affichage plein écran</string>
     <string name="pref_showScoringHistoryInMainScreen">Afficher l\'historique du score</string>
+    <string name="pref_scorelineLayout">Scoreline Layout</string> <!-- TODO -->
     <string name="pref_showSideButtonsWithinScoreButtons">Boutons de changement de côté à l\'intérieur des boutons de Score</string>
     <string name="pref_showSideButtonsWithinScoreButtons_summary">Pour afficher en plus gros les boutons de Score</string>
     <string name="pref_AppealHandGestureIconSize">Taille d\'icônes dans la fenêtre \'Appel\'</string>

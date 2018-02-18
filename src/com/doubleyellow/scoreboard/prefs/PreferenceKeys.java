@@ -207,7 +207,7 @@ public enum PreferenceKeys {
 
     Appearance,
         //TextSizeScoreAsBigAsPossible,
-
+        scorelineLayout,
     Colors,
         colorSchema,
         /** grouping **/

@@ -73,7 +73,7 @@ public class EditPlayers extends BaseAlertDialog
         mCaptions.put(JSONKey.location, R.string.lbl_location);
         mCaptions.put(JSONKey.clubs   , R.string.lbl_clubs);
         mCaptions.put(JSONKey.round   , R.string.lbl_round);
-        mCaptions.put(JSONKey.court   , R.string.lbl_court);
+        mCaptions.put(JSONKey.court   , R.string.lbl_court_Squash);
         mCaptions.put(JSONKey.referee , R.string.lbl_referee);
         mCaptions.put(JSONKey.markers , R.string.lbl_marker);
     }

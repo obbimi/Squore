@@ -3,6 +3,7 @@
     <string name="number_of_serves_per_player">Aantal opslagen per speler</string>
     <string name="end_game_Tabletennis">Beëindig game</string>
     <string name="best_of_x_games_to_y_2_Tabletennis">games tot</string>
+    <string name="lbl_court_Tabletennis">Tafel</string>
 
     <string name="scv_side_buttons_Tabletennis">De __opslag kant knoppen__ geven aan
         \n

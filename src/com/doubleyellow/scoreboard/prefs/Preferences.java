@@ -529,6 +529,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 PreferenceGroup psgApp = (PreferenceGroup) ps.findPreference(PreferenceKeys.Appearance.toString());
                 hideRemovePreference(psgApp, PreferenceKeys.showScoringHistoryInMainScreenOn); // not really for racketlon and tabletennis
                 hideRemovePreference(psgApp, PreferenceKeys.AppealHandGestureIconSize       ); // not really for racketlon and tabletennis
+                hideRemovePreference(psgApp, PreferenceKeys.scorelineLayout); // not for racketlon and tabletennis
 
                 hideRemovePreference(psgBeh, PreferenceKeys.useOfficialAnnouncementsFeature); // not really for racketlon and tabletennis
                 hideRemovePreference(psgBeh, PreferenceKeys.officialAnnouncementsLanguage); // not really for racketlon and tabletennis

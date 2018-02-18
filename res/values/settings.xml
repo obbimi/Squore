@@ -112,6 +112,7 @@
     <string name="pref_showTextInActionBar">Show text in action bar buttons</string>
     <string name="pref_showFullScreen">Show full screen</string>
     <string name="pref_showScoringHistoryInMainScreen">Show scoring history on scoreboard</string>
+    <string name="pref_scorelineLayout">Scoreline Layout</string>
     <string name="pref_showSideButtonsWithinScoreButtons">Side buttons within Score buttons</string>
     <string name="pref_showSideButtonsWithinScoreButtons_summary">To make \'Score buttons\' even larger.</string>
     <string name="pref_AppealHandGestureIconSize">Iconsize in \'Appeal\' dialog</string>

@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard;
 
 import android.content.Context;
@@ -13,6 +30,7 @@ import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.ScoreLine;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.prefs.ScorelineLayout;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
@@ -49,7 +67,7 @@ public class ResultMailer {
                 Log.d(TAG, "Html: \n" + sbHtml.toString());
             } else {
                 // FULL html not yet supported in android: http://www.nowherenearithaca.com/2011/10/some-notes-for-sending-html-email-in.html
-                buildFullHtmlContent(matchModel, sbHtml);
+                buildFullHtmlContent(context, matchModel, sbHtml);
             }
 
             Spanned fromHtml = Html.fromHtml(sbHtml.toString());
@@ -236,8 +254,10 @@ public class ResultMailer {
     }
 
 
-    private void buildFullHtmlContent(Model matchModel, StringBuilder sbHtml) {
+    private void buildFullHtmlContent(Context ctx, Model matchModel, StringBuilder sbHtml) {
         sbHtml.append("<html><table><tr>");
+
+        ScorelineLayout scorelineLayout = PreferenceValues.getScorelineLayout(ctx);
 
         // draw 'set history' for all sets
         List<List<ScoreLine>> setScoreHistory = matchModel.getGameScoreHistory();
@@ -252,7 +272,10 @@ public class ResultMailer {
             for (ScoreLine line: setHistory)
             {
                 sbHtml.append("<tr>"); //.append("style='background-color:").append(target2colorMapping.get(ColorPrefs.ColorTarget.backgroundColor)).append("'>");
-                List<String> saScore = line.toStringList();
+                List<String> saScore = line.toStringList(ctx);
+                if ( scorelineLayout.swap34() ) {
+                    ScoreLine.swap(saScore, 3);
+                }
                 for(String sValue: saScore) {
                     sbHtml.append("<td> "); //.append("style='color:").append(target2colorMapping.get(ColorPrefs.ColorTarget.mainTextColor)).append("'>");
                     sbHtml.append(sValue).append("</td>");

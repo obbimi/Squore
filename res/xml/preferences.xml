@@ -277,6 +277,14 @@
                 dy:displayValues="@array/ShowOnScreen_DisplayValues"
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
+            <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/dummy"
+                android:key="scorelineLayout"
+                android:title="@string/pref_scorelineLayout"
+                android:defaultValue="@string/scorelineLayout_default"
+                dy:displayValues="@array/ScorelineLayout_DisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.ScorelineLayout"
+                />
             <com.doubleyellow.prefs.EnumMultiSelectPreference
                 android:key="showMatchDurationChronoOn"
                 android:title="@string/pref_showMatchDurationChronoOn"

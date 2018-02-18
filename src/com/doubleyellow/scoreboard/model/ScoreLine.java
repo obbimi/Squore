@@ -30,6 +30,7 @@ public class ScoreLine
 {
     public static final String TAG = "SB." + ScoreLine.class.getSimpleName();
 
+    /** holds 4 objects: Can be ServeSide or an Integer (Not Call, these are stored separately) */
     private Object[]  m_line        = new Object[4];
     private Player    scoringPlayer = null;
     private Player    servingPlayer = null;
@@ -122,6 +123,19 @@ public class ScoreLine
     public List<String> toStringList() {
         return toStringList(null);
     }
+
+    /**
+     * Return a list with 4 string
+     * - for 'normal' lines a mix of '-', 'L', 'R' and a digit
+     *      - [ 'L',  '-',  '-',  '1' ]
+     *      - [ 'R',  '2',  '-',  '-' ]
+     *      - [ '-',  '4',  'L',  '-' ]
+     *      - [ '-',  '-',  'R',  '6' ]
+     * - for 'calls', 3 spaces and the call on position 1 or 3
+     *      - [ ' ', 'YL',  ' ', ' '  ]
+     *      - [ ' ', ' ' ,  ' ', 'NL' ]
+     *      - [ ' ', ' ' ,  ' ', 'CW' ]
+     **/
     public List<String> toStringList(Context ctx) {
         List<String> lReturn = new ArrayList<String>();
         if ( this.callTargetPlayer != null ) {
@@ -187,6 +201,13 @@ public class ScoreLine
 */
         return lReturn;
     }
+
+    public static void swap(List<String> lReturn, int iThisWithPrev) {
+        String sThis = lReturn.get(iThisWithPrev);
+        String sPrev = lReturn.set(iThisWithPrev-1, sThis);
+                       lReturn.set(iThisWithPrev  , sPrev);
+    }
+
     public String toString() {
         return ListUtil.join(this.toStringList(), "");
     }

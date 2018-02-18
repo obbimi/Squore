@@ -731,7 +731,7 @@
                 android:textCursorDrawable="@null"
                 android:paddingLeft="@dimen/sb_playername_leftpadding"
                 android:paddingStart="@dimen/sb_playername_leftpadding"
-                android:hint="@string/lbl_court"
+                android:hint="@string/lbl_court_Squash"
                 android:textSize="@dimen/txt_small"
                 android:tag="item"
                 android:layout_width="match_parent"

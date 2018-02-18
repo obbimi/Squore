@@ -585,6 +585,9 @@ public class PreferenceValues extends RWValues
     public static GroupMatchesBy groupArchivedMatchesBy(Context context) {
         return getEnum(PreferenceKeys.groupArchivedMatchesBy, context, GroupMatchesBy.class, R.string.groupArchivedMatchesBy_default);
     }
+    public static ScorelineLayout getScorelineLayout(Context context) {
+        return getEnum(PreferenceKeys.scorelineLayout, context, ScorelineLayout.class, R.string.scorelineLayout_default);
+    }
     // TODO: add to preferences.xml
     public static boolean useFeedAndPostFunctionality(Context context) {
         return getBoolean(PreferenceKeys.useFeedAndPostFunctionality, context, R.bool.useFeedAndPostFunctionality_default);
@@ -1126,8 +1129,8 @@ public class PreferenceValues extends RWValues
      */
     public static void interpretOverwrites(Context context) {
         if ( mOverwrite == null ) { return; }
-        if ( mOverwrite.containsKey(PreferenceKeys.feedPostUrls) ) {
-            String sFeedUrlsEntryNew = mOverwrite.remove(PreferenceKeys.feedPostUrls);
+        if ( mOverwrite.containsKey(PreferenceKeys.feedPostUrls.toString()) ) {
+            String sFeedUrlsEntryNew = mOverwrite.remove(PreferenceKeys.feedPostUrls.toString());
             List<Map<URLsKeys, String>> urlsNew = getUrlsList(sFeedUrlsEntryNew);
             for( Map<URLsKeys, String> newEntry: urlsNew ) {
                 boolean bAllowReplace = true;
@@ -1135,24 +1138,24 @@ public class PreferenceValues extends RWValues
                 addOrReplaceNewFeedURL(context, newEntry, bAllowReplace, bMakeActive);
             }
         }
-        if ( mOverwrite.containsKey(PreferenceKeys.matchList) ) {
-            String sMatches = mOverwrite.remove(PreferenceKeys.matchList);
+        if ( mOverwrite.containsKey(PreferenceKeys.matchList.toString()) ) {
+            String sMatches = mOverwrite.remove(PreferenceKeys.matchList.toString());
             prependMatchesToList(context, Arrays.asList(StringUtil.singleCharacterSplit(sMatches)));
         }
-        if ( mOverwrite.containsKey(PreferenceKeys.showLastGameInfoInTimer) ) {
-            setBoolean(PreferenceKeys.showLastGameInfoInTimer, context, Boolean.valueOf(mOverwrite.get(PreferenceKeys.showLastGameInfoInTimer)));
+        if ( mOverwrite.containsKey(PreferenceKeys.showLastGameInfoInTimer.toString()) ) {
+            setBoolean(PreferenceKeys.showLastGameInfoInTimer, context, Boolean.valueOf(mOverwrite.remove(PreferenceKeys.showLastGameInfoInTimer.toString())));
             //setString(PreferenceKeys.showTimersAutomatically, context, mOverwrite.get(PreferenceKeys.showTimersAutomatically));
         }
 /*
-        if ( mOverwrite.containsKey(PreferenceKeys.showTimersAutomatically) ) {
+        if ( mOverwrite.containsKey(PreferenceKeys.showTimersAutomatically.toString()) ) {
             setBoolean(PreferenceKeys.showTimersAutomatically, context, Boolean.valueOf(mOverwrite.get(PreferenceKeys.showTimersAutomatically)));
             //setString(PreferenceKeys.showTimersAutomatically, context, mOverwrite.get(PreferenceKeys.showTimersAutomatically));
         }
-        if ( mOverwrite.containsKey(PreferenceKeys.showOfficalAnnouncements) ) {
+        if ( mOverwrite.containsKey(PreferenceKeys.showOfficalAnnouncements.toString()) ) {
             setBoolean(PreferenceKeys.showOfficalAnnouncements, context, Boolean.valueOf(mOverwrite.get(PreferenceKeys.showOfficalAnnouncements)));
             //setString(PreferenceKeys.showOfficalAnnouncements, context, mOverwrite.get(PreferenceKeys.showOfficalAnnouncements));
         }
-        if ( mOverwrite.containsKey(PreferenceKeys.showTieBreakDialog) ) {
+        if ( mOverwrite.containsKey(PreferenceKeys.showTieBreakDialog.toString()) ) {
             setBoolean(PreferenceKeys.showTieBreakDialog, context, Boolean.valueOf(mOverwrite.get(PreferenceKeys.showTieBreakDialog)));
             //setString(PreferenceKeys.showTieBreakDialog, context, mOverwrite.get(PreferenceKeys.showTieBreakDialog));
         }

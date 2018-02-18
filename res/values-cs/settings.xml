@@ -72,6 +72,7 @@
     <string name="pref_showTextInActionBar">Zobrazovat texty na tlačítkách v tlačítkové liště</string>
     <string name="pref_showFullScreen">Na celou obrazovku</string>
     <string name="pref_showScoringHistoryInMainScreen">Zobrazovat průběh zápasu na panelu</string>
+    <string name="pref_scorelineLayout">Scoreline Layout</string> <!-- TODO -->
     <string name="pref_showSideButtonsWithinScoreButtons">Side buttons within Score buttons</string>
     <string name="pref_showSideButtonsWithinScoreButtons_summary">Umožnit mít tlačítka skótre ještě větší</string>
     <string name="pref_AppealHandGestureIconSize">Velikost ikonky v dialogu "Odvolání"</string>

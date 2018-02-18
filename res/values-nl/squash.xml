@@ -40,7 +40,7 @@
     <string name="lbl_event">Event</string>
     <string name="lbl_division">Divisie</string>
     <string name="lbl_round">Ronde</string>
-    <string name="lbl_court">Terrein</string>
+    <string name="lbl_court_Squash">Terrein</string>
     <string name="lbl_location">Locatie</string>
     <string name="lbl_referee">Scheidsrechter</string>
     <string name="lbl_marker">Marker</string>

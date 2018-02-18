@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.view;
 
 import android.content.Context;
@@ -9,6 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.doubleyellow.scoreboard.model.*;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.prefs.ScorelineLayout;
 import com.doubleyellow.util.DateUtil;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
@@ -20,7 +39,7 @@ import java.util.*;
  * View that may display the scoring history of a single game. (Old fashioned paper sheet score)
  * This view is used in both
  * - the main view to show the history of the game in progress
- * - instanciated multiple times in the MatchHistory scoreBoard to give the scoring history of an entire match.
+ * - instantiated multiple times in the MatchHistory scoreBoard to give the scoring history of an entire match.
  */
 public class GameHistoryView extends ScrollView
 {
@@ -52,7 +71,7 @@ public class GameHistoryView extends ScrollView
             lScorelines = new ArrayList<ScoreLine>(lScorelines);
             lScorelines.add(0, new ScoreLine( null, iStartScoreA, null, iStartScoreB));
         }
-        this.history = new ArrayList<ScoreLine>(lScorelines); // TO prevent 'java.util.ConcurrentModificationException' seen when using chrome cast
+        this.history = new ArrayList<ScoreLine>(lScorelines); // to prevent 'java.util.ConcurrentModificationException' seen when using chrome cast
     }
 
     private GameTiming timing = null;
@@ -83,6 +102,8 @@ public class GameHistoryView extends ScrollView
         this.bAutoScrollDown = b;
     }
 
+    private ScorelineLayout m_scorelineLayout = ScorelineLayout.DigitsInside;
+
     public void update(boolean bOnlyAddLast)
     {
         if ( bOnlyAddLast ) {
@@ -105,9 +126,13 @@ public class GameHistoryView extends ScrollView
             tr.setLayoutParams(vgLayoutParams);
 
             List<String> saScore = line.toStringList(getContext());
+            if ( m_scorelineLayout.swap34() ) {
+                ScoreLine.swap(saScore, 3);
+            }
             for(String sValue: saScore) {
                 TextView tv = new TextView(getContext());
                 if ( line.isCall() || line.isBrokenEquipment() ) {
+                    // little smaller because call is double letters YL, NL, ST, CW, CS, CG, CM
                     tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx * 2 / 3);
                 } else {
                     tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
@@ -205,6 +230,7 @@ public class GameHistoryView extends ScrollView
     private TableLayout tableLayout = null;
     private void init(Context context, AttributeSet attrs) {
         setValuesFromXml(attrs);
+        m_scorelineLayout = PreferenceValues.getScorelineLayout(context);
 
         super.setScrollBarStyle(SCROLLBARS_INSIDE_OVERLAY);
         tableLayout = new TableLayout(context);
