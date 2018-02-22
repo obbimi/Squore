@@ -117,6 +117,8 @@
     <string name="pref_showSideButtonsWithinScoreButtons_summary">To make \'Score buttons\' even larger.</string>
     <string name="pref_AppealHandGestureIconSize">Iconsize in \'Appeal\' dialog</string>
     <string name="pref_AppealHandGestureIconSize_summary">Size of icon in \'Appeal\' dialog. Set to zero if you do not want to see the icons.</string>
+    <string name="pref_newMatchLayout">New match layout</string>
+    <string name="pref_newMatchLayout_summary">To have just a limited number of fields to fill, choose \'Simple\'</string>
     <string name="pref_showChoosenDecisionShortly">Show decision as message</string>
     <string name="pref_showChoosenDecisionShortly_summary">Show short message with the official announcement of the decision (after Appeal or Misconduct)</string>
     <string name="pref_BackKeyBehaviour">\'Back Key\' behaviour</string>

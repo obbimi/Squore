@@ -68,7 +68,9 @@ public class PreferenceValues extends RWValues
         m_restartRequired = true;
     }
     public static boolean isRestartRequired() {
-        return m_restartRequired;
+        boolean bReturn = false && m_restartRequired;
+        m_restartRequired = false;
+        return bReturn;
     }
 
     private static final String TAG = "SB." + PreferenceValues.class.getSimpleName();
@@ -251,6 +253,9 @@ public class PreferenceValues extends RWValues
 
     public static TieBreakFormat getTiebreakFormat(Context context) {
         return getEnum(PreferenceKeys.tieBreakFormat, context, TieBreakFormat.class, TieBreakFormat.TwoClearPoints);
+    }
+    public static NewMatchLayout getNewMatchLayout(Context context) {
+        return getEnum(PreferenceKeys.newMatchLayout, context, NewMatchLayout.class, NewMatchLayout.AllFields);
     }
     public static DoublesServeSequence getDoublesServeSequence(Context context) {
         return getEnum(PreferenceKeys.doublesServeSequence, context, DoublesServeSequence.class, DoublesServeSequence.values()[0], Model.mOldDSS2New);

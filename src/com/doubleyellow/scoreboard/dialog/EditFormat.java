@@ -84,7 +84,7 @@ public class EditFormat extends BaseAlertDialog {
         int iNrOfGamesToWinPref = PreferenceValues.numberOfGamesToWinMatch(context);
         int max = Math.max(iNrOfGamesToWinPref, 11);
         spNumberOfGamesToWin = (Spinner) vg.findViewById(R.id.spNumberOfGamesToWin);
-        MatchView.initNumberOfGamesToWin(context, spNumberOfGamesToWin, matchModel.getNrOfGamesToWinMatch(), max);
+        MatchView.initNumberOfGamesToWin(context, spNumberOfGamesToWin, matchModel.getNrOfGamesToWinMatch(), max, null);
 
         int iNewNrOfPointsToWinGame = 0;
         int nrOfPointsToWinGame = matchModel.getNrOfPointsToWinGame();
@@ -99,7 +99,7 @@ public class EditFormat extends BaseAlertDialog {
             }
         }
         spGameEndScore = (Spinner) vg.findViewById(R.id.spGameEndScore);
-        MatchView.initGameEndScore(context, spGameEndScore, nrOfPointsToWinGame, Math.max(2,iNewNrOfPointsToWinGame));
+        MatchView.initGameEndScore(context, spGameEndScore, nrOfPointsToWinGame, Math.max(2,iNewNrOfPointsToWinGame), null);
         spGameEndScore.setEnabled(ListUtil.size(gameScoresIncludingInProgress)<=1); // only allow editing this if no games have ended yet
 
         TieBreakFormat tbfPref = PreferenceValues.getTiebreakFormat(context);
@@ -108,7 +108,7 @@ public class EditFormat extends BaseAlertDialog {
         spTieBreakFormat.setEnabled(true); // TODO: set to false if there has already been a tiebreak format
 
         spPauseDuration = (Spinner) vg.findViewById(R.id.spPauseDuration);
-        MatchView.initPauseDuration(context, spPauseDuration);
+        MatchView.initPauseDuration(context, spPauseDuration, null);
 
         cbUseEnglishScoring = (CheckBox) vg.findViewById(R.id.useHandInHandOutScoring);
         cbUseEnglishScoring.setChecked(PreferenceValues.useHandInHandOutScoring(context));

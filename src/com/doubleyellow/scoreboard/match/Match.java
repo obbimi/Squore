@@ -32,6 +32,7 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+import com.doubleyellow.scoreboard.prefs.NewMatchLayout;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.MenuHandler;
 import com.doubleyellow.util.StringUtil;
@@ -124,7 +125,7 @@ public class Match extends XActivity implements MenuHandler
         }
         ViewUtil.setFullScreen(getWindow(), PreferenceValues.showFullScreen(this));
         PreferenceValues.setOverwrites(FeedMatchSelector.mFeedPrefOverwrites);
-        vMatchView = new MatchView(this, bIsDoubles, model);
+        vMatchView = new MatchView(this, bIsDoubles, model, NewMatchLayout.AllFields);
         setContentView(vMatchView);
         ColorPrefs.setColors(this, vMatchView);
 

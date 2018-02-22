@@ -331,6 +331,15 @@
                 android:inputType="number"
                 android:defaultValue="@integer/AppealHandGestureIconSize_default"
             />
+            <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/dummy"
+                android:key="newMatchLayout"
+                android:title="@string/pref_newMatchLayout"
+                android:summary="@string/pref_newMatchLayout_summary"
+                android:defaultValue="@string/newMatchLayout_default"
+                dy:displayValues="@array/NewMatchLayout_DisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.NewMatchLayout"
+                />
 
         </PreferenceCategory>
 

@@ -208,6 +208,7 @@ public enum PreferenceKeys {
     Appearance,
         //TextSizeScoreAsBigAsPossible,
         scorelineLayout,
+        newMatchLayout,
     Colors,
         colorSchema,
         /** grouping **/

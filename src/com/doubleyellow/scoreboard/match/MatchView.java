@@ -53,8 +53,11 @@ import java.util.List;
  */
 public class MatchView extends SBRelativeLayout
 {
-    public MatchView(Context context, boolean bIsDoubles, Model model) {
+    private NewMatchLayout m_layout = NewMatchLayout.AllFields;
+
+    public MatchView(Context context, boolean bIsDoubles, Model model, NewMatchLayout layout) {
         super(context);
+        m_layout = layout;
         init(bIsDoubles, model);
         if ( hideElementsBasedOnSport() == false ) {
             initExpandCollapse();
@@ -331,9 +334,9 @@ public class MatchView extends SBRelativeLayout
     private PreferenceACTextView txtEventLocation;
     private PreferenceACTextView txtCourt;
     private TextView             txtEventID;
-    private EditText             txtPlayerA;
+    private EditText             txtPlayerA;  // singles and doubles
     private EditText             txtPlayerA2; // doubles
-    private EditText             txtPlayerB;
+    private EditText             txtPlayerB;  // singles and doubles
     private EditText             txtPlayerB2; // doubles
     private TextView             txtCountryA;
     private TextView             txtCountryB;
@@ -392,17 +395,22 @@ public class MatchView extends SBRelativeLayout
     }
 
     private static int iForceTextSize = 0;
-    private static ArrayAdapter<String> getStringArrayAdapter(Context context, List<String> list) {
+    private static ArrayAdapter<String> getStringArrayAdapter(Context context, List<String> list, TextView tvRefTxtSize) {
+        if ( tvRefTxtSize != null ) {
+            iForceTextSize = (int) tvRefTxtSize.getTextSize();
+        }
         return EnumSpinner.getStringArrayAdapter(context, list, iForceTextSize);
     }
     private <T extends Enum<T>> void initEnumSpinner(Spinner spinner, Class<T> clazz, T value, T excludeValue, int iResourceDisplayValues) {
         EnumSpinner.init(spinner, getContext(), clazz, value, excludeValue, iResourceDisplayValues, iForceTextSize);
     }
     private static void setTextSizeFromBoard(View v) {
+/*
         if ( (v instanceof TextView) && (iForceTextSize > 0) ) {
             TextView tv = (TextView) v;
             tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, iForceTextSize);
         }
+*/
     }
 
     private void initTextViews(View[] tvs) {
@@ -445,7 +453,7 @@ public class MatchView extends SBRelativeLayout
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // wrap it into a scroll view so that user with small screens and large fonts.... yada yada
         ScrollView sv = new ScrollView(context);
-        inflater.inflate(R.layout.match, sv, true);
+        inflater.inflate(m_layout.getLayoutResId(), sv, true);
         this.addView(sv);
 
         List<Integer> lViewsToHide = new ArrayList<Integer>();
@@ -538,7 +546,7 @@ public class MatchView extends SBRelativeLayout
 */
 
         spGameEndScore = (Spinner) findViewById(R.id.spGameEndScore);
-        initGameEndScore(context, spGameEndScore, iGameEndPref, 2);
+        initGameEndScore(context, spGameEndScore, iGameEndPref, 2, txtPlayerA);
 
         int max = Math.max(iNrOfGamesToWinPref, 11);
 /*
@@ -558,10 +566,10 @@ public class MatchView extends SBRelativeLayout
 */
 
         spNumberOfGamesToWin = (Spinner) findViewById(R.id.spNumberOfGamesToWin);
-        initNumberOfGamesToWin(context, spNumberOfGamesToWin, iNrOfGamesToWinPref, max);
+        initNumberOfGamesToWin(context, spNumberOfGamesToWin, iNrOfGamesToWinPref, max, txtPlayerA);
 
         spNumberOfServesPerPlayer = (Spinner) findViewById(R.id.spNumberOfServesPerPlayer);
-        initNumberOfServesPerPlayer(context, spNumberOfServesPerPlayer, PreferenceValues.numberOfServesPerPlayer(context), 1, 5);
+        initNumberOfServesPerPlayer(context, spNumberOfServesPerPlayer, PreferenceValues.numberOfServesPerPlayer(context), 1, 5, txtPlayerA);
         {
             TieBreakFormat tbfPref = PreferenceValues.getTiebreakFormat(context);
             spTieBreakFormat = (Spinner) findViewById(R.id.spTieBreakFormat);
@@ -594,7 +602,7 @@ public class MatchView extends SBRelativeLayout
         }
         {
             spPauseDuration = (Spinner) findViewById(R.id.spPauseDuration);
-            initPauseDuration(context, spPauseDuration);
+            initPauseDuration(context, spPauseDuration, txtPlayerA);
         }
         {
             if ( PreferenceValues.useOfficialAnnouncementsFeature(context).equals(Feature.DoNotUse) ) {
@@ -682,7 +690,7 @@ public class MatchView extends SBRelativeLayout
         cbUseEnglishScoring.setChecked(PreferenceValues.useHandInHandOutScoring(context));
     }
 
-    public static void initPauseDuration(Context context, Spinner spPauseDuration) {
+    public static void initPauseDuration(Context context, Spinner spPauseDuration, TextView tvRefTxtSize) {
         if ( spPauseDuration == null ) { return; }
 
         List<String> lValues = Preferences.syncAndClean_pauseBetweenGamesValues(context);
@@ -695,7 +703,7 @@ public class MatchView extends SBRelativeLayout
             //findViewById(R.id.llPauseDuration).setVisibility(GONE);
         } else {
             int iPauseDuration = PreferenceValues.getPauseDuration(context);
-            ArrayAdapter<String> dataAdapter = getStringArrayAdapter(context, lValues);
+            ArrayAdapter<String> dataAdapter = getStringArrayAdapter(context, lValues, tvRefTxtSize);
             spPauseDuration.setAdapter(dataAdapter);
             spPauseDuration.setSelection(lValues.indexOf(String.valueOf(iPauseDuration)));
             setTextSizeFromBoard(spPauseDuration);
@@ -772,7 +780,7 @@ public class MatchView extends SBRelativeLayout
         }
     }
     /** Invoked from EditFormat as well */
-    public static void initGameEndScore(Context context, final Spinner spGameEndScore, int iGameEndPref, int iValueOfset) {
+    public static void initGameEndScore(Context context, final Spinner spGameEndScore, int iGameEndPref, int iValueOfset, TextView refTxtSize) {
         if ( spGameEndScore == null ) { return; }
 
         List<String> list = new ArrayList<String>();
@@ -786,7 +794,7 @@ public class MatchView extends SBRelativeLayout
         }
         final String sMORE = context.getResources().getString(R.string.uc_more);
         list.add(sMORE);
-        final ArrayAdapter<String> dataAdapter = getStringArrayAdapter(context, list);
+        final ArrayAdapter<String> dataAdapter = getStringArrayAdapter(context, list, refTxtSize);
         spGameEndScore.setAdapter(dataAdapter);
         spGameEndScore.setSelection(iSelectedIndex);
         spGameEndScore.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -810,7 +818,7 @@ public class MatchView extends SBRelativeLayout
     }
 
     /** Invoked from EditFormat as well */
-    public static void initNumberOfGamesToWin(Context context, Spinner spNumberOfGamesToWin, int iNrOfGamesToWinPref, int max) {
+    public static void initNumberOfGamesToWin(Context context, Spinner spNumberOfGamesToWin, int iNrOfGamesToWinPref, int max, TextView refTxtSize) {
         if ( spNumberOfGamesToWin == null ) { return; }
         List<String> list = new ArrayList<String>();
         int iSelectedIndex = 0;
@@ -822,13 +830,13 @@ public class MatchView extends SBRelativeLayout
             }
             list.add("" + iBestOf);
         }
-        ArrayAdapter<String> dataAdapter = getStringArrayAdapter(context, list);
+        ArrayAdapter<String> dataAdapter = getStringArrayAdapter(context, list, refTxtSize);
         spNumberOfGamesToWin.setAdapter(dataAdapter);
         spNumberOfGamesToWin.setSelection(iSelectedIndex);
         setTextSizeFromBoard(spNumberOfGamesToWin);
     }
 
-    public static void initNumberOfServesPerPlayer(Context context, Spinner sp, int iCurrent, int iMin, int max) {
+    public static void initNumberOfServesPerPlayer(Context context, Spinner sp, int iCurrent, int iMin, int max, TextView txtRefTxtSize) {
         if ( sp == null ) { return; }
         List<String> list = new ArrayList<String>();
         int iSelectedIndex = 0;
@@ -838,7 +846,7 @@ public class MatchView extends SBRelativeLayout
             }
             list.add("" + iIdx);
         }
-        ArrayAdapter<String> dataAdapter = getStringArrayAdapter(context, list);
+        ArrayAdapter<String> dataAdapter = getStringArrayAdapter(context, list, txtRefTxtSize);
         sp.setAdapter(dataAdapter);
         sp.setSelection(iSelectedIndex);
         setTextSizeFromBoard(sp);
@@ -993,13 +1001,17 @@ public class MatchView extends SBRelativeLayout
             m.setPlayerClub(Player.A, txtClubA.getTextAndPersist().toString());
             m.setPlayerClub(Player.B, txtClubB.getTextAndPersist().toString());
         }
-        m.setEvent( txtEventName    .getTextAndPersist().toString()
-                  , txtEventDivision.getTextAndPersist().toString()
-                  , txtEventRound   .getTextAndPersist().toString()
-                  , txtEventLocation.getTextAndPersist().toString()
-                  );
-        m.setReferees(txtRefereeName  .getTextAndPersist().toString()
-                     ,txtMarkerName   .getTextAndPersist().toString());
+        if ( txtEventName != null ) {
+            m.setEvent( txtEventName    .getTextAndPersist().toString()
+                      , txtEventDivision.getTextAndPersist().toString()
+                      , txtEventRound   .getTextAndPersist().toString()
+                      , txtEventLocation.getTextAndPersist().toString()
+            );
+        }
+        if ( txtRefereeName != null ) {
+            m.setReferees( txtRefereeName.getTextAndPersist().toString()
+                         , txtMarkerName .getTextAndPersist().toString());
+        }
         m.setNrOfPointsToWinGame(iNrOfPoints2Win);
         m.setNrOfGamesToWinMatch(iNrOfGamesToWinMatch);
         if ( txtCourt != null ) {

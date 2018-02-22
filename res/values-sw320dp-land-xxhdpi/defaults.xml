@@ -9,6 +9,7 @@
     <dimen name="txt_small">20sp</dimen>
     <dimen name="txt_medium">25sp</dimen>
     <dimen name="txt_normal">30sp</dimen>
+    <dimen name="txt_large">36sp</dimen>
 
 
 

@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 
 /**
  * To present {@link MatchView} in a fragment for {@link MatchTabbed}
@@ -40,11 +41,11 @@ public class MatchFragment extends Fragment {
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //if (rootView == null) { // removed in attempt to fix 'after rotate' problem: does not work
             Context context = getActivity();
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
                 context = getContext();
             }
             boolean bIsDoubles = this instanceof MatchFragmentDoubles;
-            MatchView rootView = new MatchView(context, bIsDoubles, null);
+            MatchView rootView = new MatchView(context, bIsDoubles, null, PreferenceValues.getNewMatchLayout(context));
             ColorPrefs.setColors(getActivity(), rootView);
         //}
 

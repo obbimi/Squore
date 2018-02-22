@@ -10,6 +10,7 @@
     <dimen name="txt_small">15sp</dimen>
     <dimen name="txt_medium">18sp</dimen>
     <dimen name="txt_normal">22sp</dimen>
+    <dimen name="txt_large">27sp</dimen>
 
 
     <dimen name="sb_playername_leftpadding">5dp</dimen>
