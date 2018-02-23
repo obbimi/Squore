@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard;
 
 import android.content.Context;
@@ -15,8 +32,8 @@ import java.util.EnumSet;
 public enum Brand
 {
     Squore          (SportType.Squash     , R.string.app_name_short_brand_Squash          , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_squore_bg_color          , R.string.REMOTE_DISPLAY_APP_ID_brand_squore          , R.array.colorSchema            , 0                                            , 3000, "http://squore.double-yellow.be"   , R.raw.changelog),
-  //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand_Racketlon       , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_racketlon       , R.array.colorSchema_Racketlon  , 0                                            , 3000, "http://racketlon.double-yellow.be", R.raw.changelog_racketlon),
   //Tabletennis     (SportType.Tabletennis, R.string.app_name_short_brand_Tabletennis     , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_tabletennis_bg_color     , R.string.REMOTE_DISPLAY_APP_ID_brand_tabletennis     , R.array.colorSchema_Tabletennis, 0                                            , 3000, "http://tabletennis.double-yellow.be", R.raw.changelog_tabletennis),
+  //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand_Racketlon       , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_racketlon       , R.array.colorSchema_Racketlon  , 0                                            , 3000, "http://racketlon.double-yellow.be", R.raw.changelog_racketlon),
   //Racquetball     (SportType.Racquetball, R.string.app_name_short_brand_Racquetball     , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, 0                                      , R.string.REMOTE_DISPLAY_APP_ID_brand_Racquetball     , R.array.colorSchema_Racquetball, 0                                            , 3000, "http://racquetball.double-yellow.be", R.raw.changelog),
   //ASB             (SportType.Squash     , R.string.app_name_short_brand_asb             , R.drawable.brand_asb_squash_court_logo_black_on_transparent, R.id.sb_branded_logo_ar150, R.color.brand_asb_bg_color             , R.string.REMOTE_DISPLAY_APP_ID_brand_asb             , R.array.colorSchema            , R.string.brand_asb_color_name_re             , 2000, "http://squore.double-yellow.be", R.raw.changelog),
   //CourtCare       (SportType.Squash     , R.string.app_name_short_brand_courtcare       , R.drawable.brand_courtcare                                 , R.id.sb_branded_logo_ar400, R.color.brand_courtcare_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_courtcare       , R.array.colorSchema_CourtCare  , R.string.brand_courtcare_color_name_re       , 4000, "http://squore.double-yellow.be", R.raw.changelog_courtcare),

@@ -90,7 +90,7 @@
     />
 
     <!-- side buttons underneath names towards the right -->
-    <com.doubleyellow.android.view.AutoResizeTextView style="@style/SBButton"
+    <com.doubleyellow.scoreboard.view.ServeButton style="@style/SBButton"
             android:id="@+id/btn_side1"
             android:layout_below="@id/txt_player1"
             android:layout_alignRight="@id/txt_player1"
@@ -104,7 +104,7 @@
             app:layout_marginTopPercent="@fraction/pt_vertical_margin_6x"
     />
 
-    <com.doubleyellow.android.view.AutoResizeTextView style="@style/SBButton"
+    <com.doubleyellow.scoreboard.view.ServeButton style="@style/SBButton"
             android:id="@+id/btn_side2"
             android:layout_above="@id/txt_player2"
             android:layout_alignRight="@id/txt_player2"

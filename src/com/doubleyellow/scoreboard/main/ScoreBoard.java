@@ -68,11 +68,12 @@ import com.doubleyellow.scoreboard.feed.Preloader;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.timer.*;
 import com.doubleyellow.scoreboard.timer.Timer;
-import com.doubleyellow.scoreboard.vico.IBoard;
-import com.doubleyellow.scoreboard.view.GameHistoryView;
 import com.doubleyellow.scoreboard.history.MatchHistory;
 import com.doubleyellow.scoreboard.match.*;
+import com.doubleyellow.scoreboard.vico.IBoard;
+import com.doubleyellow.scoreboard.view.GameHistoryView;
 import com.doubleyellow.scoreboard.view.PlayersButton;
+import com.doubleyellow.scoreboard.view.ServeButton;
 import com.doubleyellow.android.handler.OnBackPressExitHandler;
 import com.doubleyellow.scoreboard.dialog.*;
 import com.doubleyellow.scoreboard.prefs.*;
@@ -1828,7 +1829,7 @@ touch -t 01030000 LAST.sb
                 if ( matchModel.isDoubles() ) {
                     Integer iId = IBoard.m_player2serverSideId.get(player);
                     if ( iId == null ) { continue; }
-                    TextView btn = ( TextView ) findViewById(iId);
+                    View btn = ( View ) findViewById(iId);
                     btn.setVisibility(View.INVISIBLE); // do not use GONE or relative layout is screwed up
                 }
             } else {
@@ -1842,7 +1843,7 @@ touch -t 01030000 LAST.sb
         for( Player player: Model.getPlayers() ) {
             Integer iId = IBoard.m_player2serverSideId.get(player);
             if ( iId == null ) { continue; }
-            TextView btn = ( TextView ) findViewById(iId);
+            View btn = ( View ) findViewById(iId);
             if ( btn == null ) { continue; }
             btn.setOnTouchListener(serveButtonGestureListener);
         }
@@ -1853,10 +1854,10 @@ touch -t 01030000 LAST.sb
         for( Player player: Model.getPlayers() ) {
             Integer iId = IBoard.m_player2serverSideId.get(player);
             if ( iId == null ) { continue; }
-            TextView btn = ( TextView ) findViewById(iId);
+            View btn = ( View ) findViewById(iId);
             if ( btn == null ) { continue; }
 
-            // do not show for doubles: serveside buttons shown directly next to player names
+            // do not show for doubles: serve side buttons shown directly next to player names
             boolean bHide = (matchModel != null) && matchModel.isDoubles();
             btn.setVisibility(bHide ?View.INVISIBLE:View.VISIBLE); // do not use GONE or relative layout is screwed up
         }
@@ -3749,6 +3750,9 @@ touch -t 01030000 LAST.sb
                         if ( eDSS.equals(DoublesServeSequence.NA) == false ) {
                             PreferenceValues.setEnum(PreferenceKeys.doublesServeSequence, this, eDSS);
                         }
+                    }
+                    if ( Brand.isTabletennis() ) {
+                        ServeButton.setMaxForCountDown(m.getNrOfServesPerPlayer());
                     }
                     if ( MapUtil.isNotEmpty(RWValues.getOverwritten() ) ) {
                         Log.w(TAG, "remaining overwrites " + RWValues.getOverwritten());

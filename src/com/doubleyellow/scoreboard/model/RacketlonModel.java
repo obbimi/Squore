@@ -122,17 +122,18 @@ public class RacketlonModel extends Model {
         return ds;
     }
 
-    @Override public String convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar) {
+    /** What is returned is based on the discipline in progress. Can be a String or an Integer */
+    @Override public Object convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar) {
         Sport sport = getSportForSetInProgress();
-        String s1or2 = String.valueOf(serveSide.ordinal() + 1);
+        String s1or2_forRorL = String.valueOf(serveSide.ordinal() + 1);
         if ( sport.equals(Sport.Tabletennis) ) {
             if ( isInTieBreak_Racketlon_Tabletennis() ) {
-                return RIGHT_LEFT_2_1_SYMBOL[1]; // single circle only
+                return 1; // single serve only
             }
-            return RIGHT_LEFT_2_1_SYMBOL[serveSide.ordinal()];
+            return 2 - serveSide.ordinal(); // R means 2 serves left, L means 1 left
         } else {
             if ( isInTieBreak_Racketlon_Tabletennis() ) {
-                sRLInternational = s1or2 + sRLInternational;
+                sRLInternational = s1or2_forRorL + sRLInternational;
             }
         }
         return sRLInternational;

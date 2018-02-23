@@ -78,24 +78,25 @@ public class TabletennisModel extends Model
         return determineServerForNextGame_Racketlon_Tabletennis(iSetZB, true);
     }
 
-    @Override public String convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar) {
+    /** LR and Handout parameters are totally ignored. Returns character to indicate number of serves left */
+    @Override public Integer convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar) {
         boolean inTieBreak = isInTieBreak_Racketlon_Tabletennis();
         if ( m_iNrOfServesPerPlayer > 2 ) {
+            // not the default for tabletennis, but possible
             if ( inTieBreak ) {
-                return "1";
+                return 1;
             }
             int iA = getScore(Player.A);
             int iB = getScore(Player.B);
             int iTotalInGame = iA + iB;
             //int i=0;
             //for(; i < iTotalInGame - m_iNrOfServesPerPlayer; i += m_iNrOfServesPerPlayer ) { }
-            return String.valueOf(m_iNrOfServesPerPlayer - (iTotalInGame % m_iNrOfServesPerPlayer) );
+            return m_iNrOfServesPerPlayer - (iTotalInGame % m_iNrOfServesPerPlayer);
         }
-        //return String.valueOf(serveSide.ordinal() + 1);
         if ( (m_iNrOfServesPerPlayer == 1) || inTieBreak ) {
-            return RIGHT_LEFT_2_1_SYMBOL[1]; // single circle|stripe only
+            return 1; // single serve only
         }
-        return RIGHT_LEFT_2_1_SYMBOL[serveSide.ordinal()];
+        return 2 - serveSide.ordinal(); // R means 2 serves left, L means 1 left
     }
 
     @Override public boolean showChangeSidesMessageInGame(int iGameZB) {

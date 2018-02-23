@@ -57,6 +57,7 @@ import com.doubleyellow.scoreboard.timer.TimerView;
 import com.doubleyellow.scoreboard.util.SBToast;
 import com.doubleyellow.scoreboard.view.GameHistoryView;
 import com.doubleyellow.scoreboard.view.PlayersButton;
+import com.doubleyellow.scoreboard.view.ServeButton;
 
 import java.util.*;
 
@@ -296,15 +297,16 @@ public class IBoard implements TimerViewContainer
 
     public void updateServeSide(Player player, DoublesServe doublesServe, ServeSide nextServeSide, boolean bIsHandout) {
         if ( player == null ) { return; } // normally only e.g. for undo's of 'altered' scores
-        TextView btnSide = ( TextView ) findViewById(m_player2serverSideId.get(player));
+        int iServeId = m_player2serverSideId.get(player);
+        ServeButton btnSide = ( ServeButton ) findViewById(iServeId);
         if ( btnSide == null ) { return; }
-        String sDisplayValueOverwrite = serverSideDisplayValue(nextServeSide, bIsHandout);
-        btnSide.setText(sDisplayValueOverwrite);
+        Object oDisplayValueOverwrite = serverSideDisplayValue(nextServeSide, bIsHandout);
+        String sDisplayValueOverwrite = btnSide.setServeString(oDisplayValueOverwrite);
         btnSide.setEnabled(true || bIsHandout);
 
-        int id = m_player2nameId.get(player);
-        View view = findViewById(id);
-        if ( view instanceof PlayersButton) {
+        int iNameId = m_player2nameId.get(player);
+        View view = findViewById(iNameId);
+        if ( view instanceof PlayersButton ) {
             PlayersButton v = (PlayersButton) view;
             v.setServer(doublesServe, nextServeSide, bIsHandout, sDisplayValueOverwrite);
         }
@@ -391,12 +393,12 @@ public class IBoard implements TimerViewContainer
     };
 
 
-    private String serverSideDisplayValue(ServeSide serveSide, boolean bIsHandout) {
+    private Object serverSideDisplayValue(ServeSide serveSide, boolean bIsHandout) {
         if ( serveSide == null) { return ""; }
         return getServeSideCharacter(serveSide, bIsHandout);
     }
-    private String getServeSideCharacter(ServeSide serveSide, boolean bIsHandout) {
-        String sChar = PreferenceValues.getOAString(context, serveSide.getSingleCharResourceId());
+    private Object getServeSideCharacter(ServeSide serveSide, boolean bIsHandout) {
+        String sChar   = PreferenceValues.getOAString(context, serveSide.getSingleCharResourceId());
         String sHOChar = (bIsHandout?"?":"");
         return matchModel.convertServeSideCharacter(sChar, serveSide, sHOChar);
     }
@@ -457,10 +459,10 @@ public class IBoard implements TimerViewContainer
         for( Player player: Model.getPlayers() ) {
             if ( m_player2serverSideId != null ) {
                 int id = m_player2serverSideId.get(player);
-                TextView txtView = (TextView) findViewById(id);
-                if ( txtView != null ) {
-                    setBackgroundColor(txtView, mColors.get(ColorPrefs.ColorTarget.serveButtonBackgroundColor));
-                    txtView.setTextColor(mColors.get(ColorPrefs.ColorTarget.serveButtonTextColor));
+                ServeButton ssView = (ServeButton) findViewById(id);
+                if ( ssView != null ) {
+                    setBackgroundColor(ssView, mColors.get(ColorPrefs.ColorTarget.serveButtonBackgroundColor));
+                    ssView.setForegroundColor(mColors.get(ColorPrefs.ColorTarget.serveButtonTextColor));
                 }
             }
 
@@ -852,11 +854,11 @@ public class IBoard implements TimerViewContainer
         View view = findViewById(id);
         if (view == null) { return; }
 
-        if (view instanceof TextView) {
-            TextView txtView = (TextView) view;
-            setBackgroundColor(txtView, iBgColor);
-            txtView.setTextColor(iTxtColor);
-        } else if (view instanceof PlayersButton) {
+        if ( view instanceof ServeButton ) {
+            ServeButton serveButton = (ServeButton) view;
+            setBackgroundColor(serveButton, iBgColor);
+            serveButton.setForegroundColor(iTxtColor);
+        } else if ( view instanceof PlayersButton ) {
             PlayersButton button = (PlayersButton) view;
             if (bgColorDefKey.equals(ColorPrefs.ColorTarget.serveButtonBackgroundColor)) {
                 button.setTextColorServer(iTxtColor);
@@ -865,6 +867,10 @@ public class IBoard implements TimerViewContainer
                 button.setTextColor(iTxtColor);
                 button.setBackgroundColor(iBgColor);
             }
+        } else if ( view instanceof TextView ) {
+            TextView txtView = (TextView) view;
+            setBackgroundColor(txtView, iBgColor);
+            txtView.setTextColor(iTxtColor);
         }
     }
 

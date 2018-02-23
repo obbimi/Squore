@@ -438,7 +438,12 @@ public abstract class Model
     /** for now this method MUST invoke the setServerAndSide method: TODO: improve. Invoked from endGame() */
     abstract Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB);
 
-    public abstract String convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar);
+    /**
+     * Racketlon  : What character is returned is based on the discipline in progress
+     * Squash     : L or R + a question mark if handout
+     * Tabletennis: Returns character to indicate number of serves left
+     **/
+    public abstract Object convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar);
 
     public abstract boolean showChangeSidesMessageInGame(int iGameZB);
 
@@ -1190,14 +1195,6 @@ public abstract class Model
     public List<List<ScoreLine>> getGameScoreHistory() {
         return m_lGameScoreHistory;
     }
-
-    // https://en.wikipedia.org/wiki/List_of_Unicode_characters
-    //static final String[] RIGHT_LEFT_2_1_SYMBOL = {"\u2051", "\u204E"}; // 2 stars, 1 star (not decently centered)
-    //static final String[] RIGHT_LEFT_2_1_SYMBOL = {"\u2248", "\u223C"}; // 2 tildes, 1 tilde (not bad)
-    static final String[] RIGHT_LEFT_2_1_SYMBOL = {"\u2161", "\u2160"}; // 2 vertical stripes, 1 stripe (looks good, but not on e.g. tablet: font?)
-    //static final String[] RIGHT_LEFT_2_1_SYMBOL = {"\u25CE", "\u25CB"}; // bulls-eye (2 circles), white circle (1 single circle) (looks nice on S7, but looks strange on chromecast somehow and  S4)
-    //static final String[] RIGHT_LEFT_2_1_SYMBOL = {"\u2681", "\u2680"}; // dice 2, dice 1 (on S7, somehow the are colored... what color is it... may not match with)
-    //static final String[] RIGHT_LEFT_2_1_SYMBOL = {"\u26AF", "\u26AC"}; // 2 connected open dots, 1 open dot (S7: colored?)
 
     /** One-based */
     public int getGameNrInProgress() {
