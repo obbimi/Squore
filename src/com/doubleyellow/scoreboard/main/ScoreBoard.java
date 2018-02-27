@@ -942,7 +942,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( PreferenceValues.isRestartRequired() ) {
             persist(false);
             //System.exit(0); // todo in android 6 and 7, app does not restart automatically... i think it did in 5 (and 4)
-            doRestart(this);
+            //doRestart(this);
             return;
         }
 

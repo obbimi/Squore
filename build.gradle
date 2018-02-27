@@ -1,7 +1,5 @@
 // export ANDROID_HOME=/osshare/software/google/android-sdk-linux
-
 apply plugin: 'com.android.application'
-
 repositories {
     //mavenCentral()
 
@@ -10,7 +8,6 @@ repositories {
         dirs 'libs'
     }
 }
-
 buildscript {
     // required for using gradle i.s.o. gradlew
     repositories {
@@ -21,17 +18,15 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.3.0'
     }
 }
-
 // Run ./gradlew -q :dependencies
-
 android {
     dependencies {
-      //compile project(':AndroidBase')
-    	compile 'com.doubleyellow:AndroidBase@aar'
+        //compile project(':AndroidBase')
+        compile 'com.doubleyellow:AndroidBase@aar'
 
         compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    	// 24.1.1 vs 23.4.0 vs 25.3.1 vs 27.0.1
+        // 24.1.1 vs 23.4.0 vs 25.3.1 vs 27.0.1
         compile 'com.android.support:percent:25.3.1'
 
         //compile 'com.android.support:support-v4:25.3.1'   // v4 not required
@@ -53,7 +48,7 @@ android {
     //buildToolsVersion '25.0.2'
     buildToolsVersion '27.0.1'
 
-    useLibrary  'org.apache.http.legacy'
+    useLibrary 'org.apache.http.legacy'
     lintOptions {
         disable 'MissingTranslation'
         checkReleaseBuilds true
@@ -62,7 +57,7 @@ android {
         //deprecation true
     }
     defaultConfig {
-	    // must match (or be larger than) minSdkVersion of AndroidBase
+        // must match (or be larger than) minSdkVersion of AndroidBase
         minSdkVersion 14
         // next property is not required for building... but should be specified for publishing in play-store
         targetSdkVersion 27
@@ -99,15 +94,18 @@ android {
         release {
             signingConfig signingConfigs.release
         }
-	/*
-        minified {
-            //debuggable true
-            minifyEnabled true
-            // 'shrinkResources=true' currently only helps for 2%
-            shrinkResources true
-            proguardFile 'proguard-project.txt'
-            signingConfig signingConfigs.release
-        }
-	*/
+        /*
+            minified {
+                //debuggable true
+                minifyEnabled true
+                // 'shrinkResources=true' currently only helps for 2%
+                shrinkResources true
+                proguardFile 'proguard-project.txt'
+                signingConfig signingConfigs.release
+            }
+        */
+    }
+    aaptOptions {
+        ignoreAssetsPattern '_gh_pages'
     }
 }
