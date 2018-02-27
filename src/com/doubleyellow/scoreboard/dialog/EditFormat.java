@@ -156,6 +156,6 @@ public class EditFormat extends BaseAlertDialog {
                 // Do nothing.
                 break;
         }
-        scoreBoard.triggerEvent(ScoreBoard.SBEvent.editFormatDialogEnded, this);
+        showNextDialog();
     }
 }

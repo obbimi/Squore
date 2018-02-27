@@ -174,7 +174,9 @@ public class MatchModelPoster implements ContentReceiver
             // triggered from stored (old) match
             OnlineSheetAvailableChoice sheetAvailableChoice = new OnlineSheetAvailableChoice(m_context, m_model, null);
             sheetAvailableChoice.init(sShowURL);
-            sheetAvailableChoice.show();
+            //sheetAvailableChoice.show();
+            DialogManager dialogManager = DialogManager.getInstance();
+            dialogManager.addToDialogStack(sheetAvailableChoice);
         }
     }
 

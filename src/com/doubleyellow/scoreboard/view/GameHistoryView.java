@@ -40,6 +40,8 @@ import java.util.*;
  * This view is used in both
  * - the main view to show the history of the game in progress
  * - instantiated multiple times in the MatchHistory scoreBoard to give the scoring history of an entire match.
+ *
+ * @See MatchGameScoresView
  */
 public class GameHistoryView extends ScrollView
 {

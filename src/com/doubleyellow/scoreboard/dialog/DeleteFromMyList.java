@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
@@ -67,7 +68,7 @@ public class DeleteFromMyList extends BaseAlertDialog
             case KEEP_MATCH:
                 break;
         }
-        scoreBoard.triggerEvent(ScoreBoard.SBEvent.dialogClosed, this);
+        showNextDialog();
     }
 
     public static void deleteMatchFromMyList(Context context, Model matchModel) {

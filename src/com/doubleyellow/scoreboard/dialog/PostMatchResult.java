@@ -25,6 +25,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import com.doubleyellow.scoreboard.URLFeedTask;
+import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -108,6 +109,7 @@ public class PostMatchResult extends BaseAlertDialog
                 // TODO: show message that this can be turned off in the pref screen
                 break;
         }
-        scoreBoard.triggerEvent(ScoreBoard.SBEvent.dialogClosed, this);
+        showNextDialog();
+        //scoreBoard.triggerEvent(ScoreBoard.SBEvent.dialogClosed, this);
     }
 }

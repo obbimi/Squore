@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.tabletennis"
-          android:versionCode="7"
-          android:versionName="4.04">
-    <!-- 4.04 ( 7) = revision 790 -->             <!-- nov 02: minor improvements -->
-    <!-- 4.04 ( 6) = revision 779 -->             <!-- okt 21: better handling of dialogs/network timeouts -->
-    <!-- 4.04 ( 5) = revision 775-->              <!-- 07 okt: switch serve after x (in stead of always 2) + copy country code fix -->
-    <!-- 4.03 ( 4) = revision 747-->              <!-- 18 jul: easily change sides/flip players -->
-    <!-- 4.02 ( 3) = revision 742-->              <!-- jul 16: download fix for android 7 + improved sharing for Doubles -->
-    <!-- 4.02 ( 2) = revision 737-->              <!-- jul 11: new logo, minor bugfixes -->
-    <!-- 4.01 ( 1) = revision 7??-->              <!-- jun 30: first tabletennis version -->
+          android:versionCode="179"
+          android:versionName="4.09">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
     <uses-feature android:name="android.permission.INTERNET" android:required="true" />
@@ -78,6 +71,9 @@
 
             <intent-filter> <data android:scheme="http"  android:host="tabletennis.double-yellow.be"      android:pathPattern="/.*20.*"               /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="http"  android:host="tabletennis.double-yellow.be"      android:pathPattern="/uploads/.*.zip"       /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+
+            <intent-filter> <data android:scheme="http"  android:host="nttb.toernooi.nl"                  android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="nttb.toernooi.nl"                  android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
 
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>

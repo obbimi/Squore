@@ -35,6 +35,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.doubleyellow.android.view.ViewUtil;
+import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
@@ -223,5 +224,8 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
     }
     protected String getGameOrSetString(int iResId) {
         return PreferenceValues.getGameOrSetString(context, iResId);
+    }
+    protected void showNextDialog() {
+        DialogManager.getInstance().showNextDialog();
     }
 }

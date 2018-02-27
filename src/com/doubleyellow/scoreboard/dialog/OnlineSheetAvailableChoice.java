@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.dialog;
 
 import android.content.Context;
@@ -9,6 +26,7 @@ import android.util.SparseArray;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.ScoreSheetOnline;
+import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 
@@ -48,6 +66,7 @@ public class OnlineSheetAvailableChoice extends BaseAlertDialog
 
     @Override public void show() {
         adb.setTitle(context.getString(R.string.sb_online_sheet_available))
+           .setOnKeyListener(getOnBackKeyListener())
            .setIcon(android.R.drawable.ic_menu_share);
 
         mTranslateButtonToType.put(DialogInterface.BUTTON_POSITIVE, OnlineSheetAction.Preview);
@@ -77,36 +96,35 @@ public class OnlineSheetAvailableChoice extends BaseAlertDialog
 
     @Override public void handleButtonClick(int which) {
         OnlineSheetAction type = mTranslateButtonToType.get(which);
-        switch (type) {
-            case ShareLink:
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, sShowURL);
-                context.startActivity(Intent.createChooser(intent, context.getString(R.string.cmd_share_with_friends)));
-                break;
-            case Preview:
-                Intent nm = new Intent(context, ScoreSheetOnline.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(ScoreSheetOnline.class.getSimpleName(), sShowURL );
-                nm.putExtra(ScoreSheetOnline.class.getSimpleName(), bundle);
-                context.startActivity(nm);
-                break;
-            case ViewInBrowser:
-                Uri uriUrl = ScoreBoard.buildURL(context, sShowURL, false);
-                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-                context.startActivity(launchBrowser);
-                break;
-            case CopyToClipboard:
-                // TODO:
-                break;
-            case DeleteFromServer:
-                // TODO:
-                break;
+        if ( type != null ) {
+            switch (type) {
+                case ShareLink:
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_TEXT, sShowURL);
+                    context.startActivity(Intent.createChooser(intent, context.getString(R.string.cmd_share_with_friends)));
+                    break;
+                case Preview:
+                    Intent nm = new Intent(context, ScoreSheetOnline.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ScoreSheetOnline.class.getSimpleName(), sShowURL );
+                    nm.putExtra(ScoreSheetOnline.class.getSimpleName(), bundle);
+                    context.startActivity(nm);
+                    break;
+                case ViewInBrowser:
+                    Uri uriUrl = ScoreBoard.buildURL(context, sShowURL, false);
+                    Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                    context.startActivity(launchBrowser);
+                    break;
+                case CopyToClipboard:
+                    // TODO:
+                    break;
+                case DeleteFromServer:
+                    // TODO:
+                    break;
+            }
         }
         dialog.dismiss();
-        if ( scoreBoard != null ) {
-            // trigger a possible next dialog on the stack
-            scoreBoard.triggerEvent(ScoreBoard.SBEvent.dialogClosed, this);
-        }
+        showNextDialog();
     }
 }

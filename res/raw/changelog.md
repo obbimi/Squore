@@ -1,3 +1,9 @@
+## 4.09 (march 2018)
+
+- optionally use a simpler dialog for manually starting a new match
+    - shows only player names and match format fields with bigger font
+    - to activate use Settings/Appearance/New match layout
+
 ## 4.08 (feb 2018)
 
 - allow specifying a court for a match

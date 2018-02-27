@@ -276,6 +276,6 @@ public class Handicap extends BaseAlertDialog {
         //before triggering an event that might open another dialog, dismiss this one
         dialog.dismiss();
 
-        scoreBoard.triggerEvent(ScoreBoard.SBEvent.specifyHandicapClosed, this);
+        showNextDialog();
     }
 }

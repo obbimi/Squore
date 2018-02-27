@@ -42,7 +42,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
     private ViewGroup     vRoot                 = null;
     private EndOfGameView endOfGameView         = null;
 
-            IBoard        iBoard                = null;
+    private IBoard        iBoard                = null;
 
     private Model         matchModel            = null;
     private boolean       bShowGraphDuringTimer = true;
@@ -249,6 +249,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         @Override public void OnMatchEnded(Player leadingPlayer, EndMatchManuallyBecause endMatchManuallyBecause) {
             // stop the counter
             iBoard.stopMatchDurationChrono();
+            //iBoard.updateGameScores();
         }
     }
     private class GameEndListener implements Model.OnGameEndListener {

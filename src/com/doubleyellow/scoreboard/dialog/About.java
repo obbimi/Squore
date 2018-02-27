@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -61,6 +62,7 @@ public class About extends BaseAlertDialog
                 scoreBoard.handleMenuItem(R.id.sb_credits);
                 break;
         }
-        scoreBoard.triggerEvent(ScoreBoard.SBEvent.dialogClosed, this);
+        //scoreBoard.triggerEvent(ScoreBoard.SBEvent.dialogClosed, this);
+        showNextDialog();
     }
 }

@@ -179,7 +179,7 @@ public class MatchView extends SBRelativeLayout
     private boolean hideElementsBasedOnSport() {
         // hide some elements base on sport
         SportType sportType = Brand.getSport();
-        boolean bTrueGoneFalseInvisible = ViewUtil.isPortraitOrientation(getContext()); // in portrait each element is on a single line, layout is not screwed up when GONE is used. In landscape layout IS screwed up
+        boolean bTrueGoneFalseInvisible = ViewUtil.isPortraitOrientation(getContext()) || m_layout.equals(NewMatchLayout.Simple); // in portrait each element is on a single line, layout is not screwed up when GONE is used. In landscape layout IS screwed up
         switch (sportType) {
             case Tabletennis:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible

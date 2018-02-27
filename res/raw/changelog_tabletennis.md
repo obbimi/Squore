@@ -1,3 +1,11 @@
+## 4.09 (march 2018)
+
+- optionally use a simpler dialog for manually starting a new match
+    - shows only player names and match format fields with bigger font
+    - to activate use Settings/Appearance/New match layout
+- allow specifying a table for a match
+    - specifically useful in combination with Live Score
+
 ## 4.04 (19 jul 2017)
 
 - allow for serving x times (in stead of always 2 times) before serve goes to the other player

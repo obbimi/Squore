@@ -44,6 +44,7 @@ public class DialogManager {
     public static DialogManager getInstance() {
         return instance;
     }
+    private DialogManager() { }
 
     public BaseAlertDialog baseDialog  = null;
     private List<BaseAlertDialog> baseDialogs = new ArrayList<BaseAlertDialog>();

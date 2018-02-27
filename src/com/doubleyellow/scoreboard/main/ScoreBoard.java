@@ -834,7 +834,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         initCasting(this);
 
-        dialogManager = new DialogManager();
+        dialogManager = DialogManager.getInstance();
 
         handleStartedFromOtherApp();
 
@@ -2700,13 +2700,13 @@ touch -t 01030000 LAST.sb
         tossDialogEnded,
         endGameDialogEnded,
         endMatchDialogEnded,
-        editFormatDialogEnded,
+        //editFormatDialogEnded,
         restartScoreDialogEnded,
         officialAnnouncementClosed,
         injuryTypeClosed,
-        rallyEndStatsClosed,
-        specifyHandicapClosed,
-        dialogClosed,
+        //rallyEndStatsClosed,
+        //specifyHandicapClosed,
+        //dialogClosed,
     }
 
     /** This method is focused at handling gui related events */
@@ -2820,6 +2820,7 @@ touch -t 01030000 LAST.sb
 
                 break;
             }
+/*
             case editFormatDialogEnded: {
                 showNextDialog();
                 break;
@@ -2836,6 +2837,7 @@ touch -t 01030000 LAST.sb
                 showNextDialog();
                 break;
             }
+*/
         }
         return false;
     }
