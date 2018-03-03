@@ -2682,7 +2682,7 @@ public abstract class Model
                                       && ListUtil.length(gameballForOld) == 1
                                       && gameballForOld[0].equals(gameballForNew[0]);
         if ( bGameBallFor_Unchanged == false ) {
-            Log.d(TAG, String.format("Gameball %s changed from %s to %s", when, getPlayersAsList(gameballForOld), getPlayersAsList(gameballForNew)));
+            //Log.d(TAG, String.format("Gameball %s changed from %s to %s", when, getPlayersAsList(gameballForOld), getPlayersAsList(gameballForNew)));
         }
 
         if ( when.equals(When.ScoreOneMorePoint) ) {
@@ -2716,7 +2716,7 @@ public abstract class Model
                 && ListUtil.length(matchballForOld) == 1
                 && matchballForOld[0].equals(matchballForNew[0]);
         if ( bMatchBallFor_Unchanged == false ) {
-            Log.d(TAG, String.format("Matchball %s changed from %s to %s", when, getPlayersAsList(matchballForOld), getPlayersAsList(matchballForNew)));
+            //Log.d(TAG, String.format("Matchball %s changed from %s to %s", when, getPlayersAsList(matchballForOld), getPlayersAsList(matchballForNew)));
         }
 
         if ( when.equals(When.ScoreOneMorePoint) ) {

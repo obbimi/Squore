@@ -334,7 +334,9 @@ public class FullDemoThread extends DemoThread {
                         if ( bHandled == false ) {
                             if ( scoreBoard.isDialogShowing() ) {
                                 prevDialog = DialogManager.getInstance().baseDialog;
-                                prevDialog.drawTouch(lv.actionId, Color.BLUE);
+                                if ( prevDialog != null ) {
+                                    prevDialog.drawTouch(lv.actionId, Color.BLUE);
+                                }
                                 prevActionId = lv.actionId;
                                 //scoreBoard.baseDialog.handleButtonClick(lv.actionId);
                                 //scoreBoard.baseDialog.dismiss();

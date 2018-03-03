@@ -187,7 +187,9 @@ public class ColorPrefs
             String sColor    = fixColorString(mKey2Color.get(sColorKey));
             int    iColor    = Color.parseColor(sColor);
 
-            if ( determineTextColor.equals(DetermineTextColor.Manual)==false && colorTarget.toString().endsWith("TextColor")) {
+            if ( (determineTextColor.equals(DetermineTextColor.Manual)==false)
+               && colorTarget.toString().endsWith("TextColor")
+               ) {
                 boolean bChooseFromPalette = determineTextColor.equals(DetermineTextColor.AutoChooseFromPalette);
                 // calculate an appropriate text color
                 Long iDeltaW = mRGB2Distance2White.get(sColorPrevTarget);

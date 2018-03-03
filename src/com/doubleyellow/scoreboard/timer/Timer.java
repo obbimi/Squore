@@ -152,7 +152,7 @@ public class Timer
             tvOld.cancel();
             Log.d(TAG, "Removed " + tvOld.toString());
         } else {
-            Log.d(TAG, "Already No TimerView of class " + aClass.getName());
+            Log.d(TAG, "Already No more TimerView of class " + aClass.getName());
         }
         return bRemoved;
     }

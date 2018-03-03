@@ -404,8 +404,9 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     private void setModelEvent(Model model, String sGroup, String feedPostName, JSONObject joMatch) {
         Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
-        model.setSource(feedPostDetail.get(URLsKeys.FeedMatches), null);
-
+        if ( MapUtil.isNotEmpty(feedPostDetail) && feedPostDetail.containsKey(URLsKeys.FeedMatches) ) {
+            model.setSource(feedPostDetail.get(URLsKeys.FeedMatches), null);
+        }
         String sEventName = null;
         if ( PreferenceValues.useFeedNameAsEventName(context) ) {
             sEventName = feedPostName;

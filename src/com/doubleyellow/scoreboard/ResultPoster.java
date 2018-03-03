@@ -148,7 +148,7 @@ public class ResultPoster implements ContentReceiver
                         , "gamescores"         , matchModel.getGameScores()
                         , "winner"             , (sWinner==null?"":sWinner)
                       //, "winnerAB"           , String.valueOf(winner)
-                        , "winner12"           , String.valueOf(winner.ordinal() + 1)
+                        , "winner12"           , String.valueOf(winner==null?"":winner.ordinal() + 1)
                         , "duration"           , String.valueOf(durationInMin)
                         , "totalpointsplayer1" , String.valueOf(MapUtil.getInt(pointsWon, Player.A, 0))
                         , "totalpointsplayer2" , String.valueOf(MapUtil.getInt(pointsWon, Player.B, 0))

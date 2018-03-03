@@ -63,9 +63,9 @@ import com.doubleyellow.scoreboard.dialog.announcement.EndGameAnnouncement;
 import com.doubleyellow.scoreboard.dialog.announcement.EndMatchAnnouncement;
 import com.doubleyellow.scoreboard.dialog.announcement.StartGameAnnouncement;
 import com.doubleyellow.scoreboard.feed.Authentication;
-import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.feed.Preloader;
 import com.doubleyellow.scoreboard.model.*;
+import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.timer.*;
 import com.doubleyellow.scoreboard.timer.Timer;
 import com.doubleyellow.scoreboard.history.MatchHistory;
@@ -814,6 +814,13 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+            }
+
+            int iRunCount = PreferenceValues.getRunCount(this, PreferenceKeys.OrientationPreference);
+            if ( iRunCount <= 1 ) {
+                if ( Util.isMyDevice(this) ) {
+                    RWValues.setStringIfCurrentlyNotSet(PreferenceKeys.refereeName, this, "Iddo H");
                 }
             }
         } else {
@@ -2771,7 +2778,7 @@ touch -t 01030000 LAST.sb
                         matchModel.timestampStartOfGame(GameTiming.ChangedBy.TimerEnded);
                     }
                 }
-                boolean pEndOfGameViewShowing = endOfGameView != null;
+                boolean pEndOfGameViewShowing = (m_endOfGameView != null);
                 if ( pEndOfGameViewShowing ) {
                     findViewById(R.id.presentation_frame).setVisibility(View.GONE);
                     findViewById(R.id.content_frame     ).setVisibility(View.VISIBLE);
@@ -3563,11 +3570,11 @@ touch -t 01030000 LAST.sb
         if ( matchModel.getName(Player.A).equals("Iddo T") && isLandscape() ) {
             // for now this is just for me to be able to view the layout on the device while no chromecast available
             getXActionBar().hide();
-            if ( endOfGameView == null ) {
-                endOfGameView = new EndOfGameView(this, null /*iBoard*/, matchModel);
+            if ( m_endOfGameView == null ) {
+                m_endOfGameView = new EndOfGameView(this, null /*iBoard*/, matchModel);
             }
             ViewGroup presentationFrame = (ViewGroup) findViewById(R.id.presentation_frame);
-            endOfGameView.show(presentationFrame);
+            m_endOfGameView.show(presentationFrame);
             presentationFrame.setVisibility(View.VISIBLE);
             findViewById(R.id.content_frame     ).setVisibility(View.GONE);
         }
@@ -3578,7 +3585,7 @@ touch -t 01030000 LAST.sb
             triggerEvent(SBEvent.timerStarted, viewType);
         }
     }
-    private EndOfGameView endOfGameView = null;
+    private EndOfGameView m_endOfGameView = null;
 
     // ------------------------------------------------------
     // official announcements

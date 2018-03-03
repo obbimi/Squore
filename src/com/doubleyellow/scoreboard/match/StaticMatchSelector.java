@@ -617,12 +617,15 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                 mHeadersWithRecentMatches = new HashMap<String, Object>();
             }
 
-            List<String>      lFixedMatches = PreferenceValues.getMatchList(context);
+            List<String> lFixedMatches = PreferenceValues.getMatchList(context);
           //Log.d(TAG, "read list of matches: \n" + ListUtil.toNice(lFixedMatches, false));
             if ( ListUtil.isNotEmpty(lFixedMatches) ) {
                 String sHeader = context.getString(R.string.lbl_fixed); // for if configured/stored text does not contain a header as the first line
                 Model mRecycle = ModelFactory.getTemp();
-                for(String sMatch: lFixedMatches) {
+                for ( String sMatch: lFixedMatches ) {
+                    if ( StringUtil.isEmpty(sMatch) ) {
+                        continue;
+                    }
                     if ( sMatch.startsWith(HEADER_PREFIX) ) {
                         sHeader = sMatch.replaceFirst(HEADER_PREFIX, "").trim();
                         continue;

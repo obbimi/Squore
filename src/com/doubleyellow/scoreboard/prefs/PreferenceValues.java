@@ -174,7 +174,7 @@ public class PreferenceValues extends RWValues
     public static int getAppealHandGestureIconSize(Context context) {
         int iIconSize = getIntegerR(PreferenceKeys.AppealHandGestureIconSize, context, R.integer.AppealHandGestureIconSize_default);
         if ( iIconSize == context.getResources().getInteger(R.integer.AppealHandGestureIconSize_default) && (iIconSize != 0) ) {
-            iIconSize = ViewUtil.getScreenHeightWidthMinimum(context) / 8;
+            iIconSize = ViewUtil.getScreenHeightWidthMinimum(context) / 6;
             setNumber(PreferenceKeys.AppealHandGestureIconSize, context, iIconSize);
         }
         return iIconSize;
@@ -1646,7 +1646,7 @@ public class PreferenceValues extends RWValues
     private static List<String> getContacts(Context context, int iDisableOnFirstRunIfMoreThan, int iAlwaysStopAfterCnt ) {
         if ( ListUtil.isNotEmpty(m_lAllContactNames)) { return m_lAllContactNames; }
 
-        long iStart  = System.currentTimeMillis();
+        long iStart = System.currentTimeMillis();
 
         boolean bOnlyWithPhoneNr = true; // TODO: preference (with phonenr : #161 in 327 ms, else 1076 in 288ms)
         try {

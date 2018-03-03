@@ -90,7 +90,8 @@ public class EndOfGameView implements TimerViewContainer
         show();
     }
     private void show() {
-        if ( root == null ) { return; }
+        if ( root   == null ) { return; }
+        if ( iBoard == null ) { return; }
 
         bIsShowing = true;
 

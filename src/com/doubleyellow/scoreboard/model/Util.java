@@ -1,5 +1,25 @@
+/*
+ * Copyright (C) 2018  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.doubleyellow.scoreboard.model;
 
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
@@ -43,7 +63,7 @@ public class Util {
             if ( sFormat != null ) {
                 return String.format(sFormat, Brand.brand, screenType);
             }
-            if ( model.getName(Player.A).matches("(Player [AB]|Shaun|.*Matthew.*)") == false ) {
+            if ( model.getName(Player.A).matches("(Player [AB]|Shaun|.*Matthew.*|.*Ashour.*|.*Gaultier.*)") == false ) {
                 return null;
             }
             if ( (model.getMaxScore() == iMaxScore || iMaxScore == -1) && (model.getMinScore() == iMinScore || iMinScore == -1)) {
@@ -55,10 +75,38 @@ public class Util {
 
     private static Boolean bIsMyDevice = null;
     public static boolean isMyDevice(Context ctx) {
+        String address = getMacAddr();
+
         if ( bIsMyDevice == null ) {
-            bIsMyDevice = MY_DEVICE_MODEL.contains(Build.MODEL) && ContentUtil.isAppInstalled(ctx, "com.doubleyellow");
+            bIsMyDevice = MY_DEVICE_MODEL.contains(Build.MODEL) && ContentUtil.isAppInstalled(ctx, "com.doubleyellow") && "8C:F5:A3:F1:F1:96".equals(address);
         }
         return bIsMyDevice;
+    }
+
+    public static String getMacAddr() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                    return "";
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(String.format("%02X:",b));
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
+            }
+        } catch (Exception ex) {
+        }
+        return "02:00:00:00:00:00";
     }
 
 }

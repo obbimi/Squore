@@ -812,7 +812,7 @@ public class IBoard implements TimerViewContainer
     }
 
     private void setBackgroundColor(View view, Integer iBgColor) {
-        Log.d(TAG, "change bgcolor of " + view + " = " + iBgColor);
+        //Log.d(TAG, "change bgcolor of " + view + " = " + iBgColor);
         //ColorUtil.setBackground(view, iBgColor);
         setBackgroundAndBorder(view, iBgColor, mViewId2BorderColor.get(view.getId()));
     }
@@ -823,7 +823,7 @@ public class IBoard implements TimerViewContainer
             return;
         }
         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ) { /* 16 */
-            Log.d(TAG, "change color of " + view + " bg=" + iBgColor + ", brdr=" + iBorderColor);
+            //Log.d(TAG, "change color of " + view + " bg=" + iBgColor + ", brdr=" + iBorderColor);
             int[] colors = new int[] {iBgColor, iBgColor};
             GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, colors);
             // gd.setShape(GradientDrawable.RECTANGLE); // RECTANGLE is the default
@@ -936,20 +936,14 @@ public class IBoard implements TimerViewContainer
             if ( ViewUtil.isPortraitOrientation(context) ) {
                 direction = Direction.None; // middle of the screen (not 'over' player names)
             }
-/*
-            int textSize = PreferenceValues.getGameBallMessageTextSize(this); // TODO: use other screen element
-            View vPlayerName = findViewById(R.id.txt_player1);
-            if ( vPlayerName == null ) { return false; }
-            int iHeight = vPlayerName.getHeight() */
-/*//*
- (matchModel.isDoubles() ? 2 : 1)*//*
-;
-*/
+
             int iWidthPx = getScreenHeightWidthMinimumFraction(R.fraction.pt_gameball_msg_width);
             Log.d(TAG, String.format("GBM width: %s, (is presentation: %s)", iWidthPx, isPresentation()));
-            gameBallMessage = new FloatingMessage.Builder(context, iWidthPx/*, vPlayerName.getWidth(), iHeight*/)
-                    //.withDrawable(R.drawable.microphone)
-                    .withButtonColors(mColors.get(bgColor), mColors.get(txtColor))
+            FloatingMessage.Builder builder = new FloatingMessage.Builder(context, iWidthPx);
+            if ( mColors != null ) {
+                builder.withButtonColors(mColors.get(bgColor), mColors.get(txtColor));
+            }
+            gameBallMessage = builder
                     .withMessage(sMsg)
                     .withGravity(direction.getGravity())
                     .withMargins(16, 0)
@@ -1007,9 +1001,11 @@ public class IBoard implements TimerViewContainer
             }
             final int iResId_widthFraction = call.isConduct() ? R.fraction.pt_conduct_width : R.fraction.pt_decision_msg_width;
             int iWidthPx = getScreenHeightWidthMinimumFraction(iResId_widthFraction);
-            decisionMessages[fmIdx] = new FloatingMessage.Builder(context, iWidthPx/*, vPlayerName.getWidth(), iHeight*/)
-                    //.withDrawable(R.drawable.microphone)
-                    .withButtonColors(mColors.get(bgColor), mColors.get(txtColor))
+            FloatingMessage.Builder builder = new FloatingMessage.Builder(context, iWidthPx);
+            if ( mColors != null ) {
+                builder.withButtonColors(mColors.get(bgColor), mColors.get(txtColor));
+            }
+            decisionMessages[fmIdx] = builder
                     .withGravity(direction.getGravity())
                     .withMargins(16, 0)
                     .create(true, m_vRoot);
