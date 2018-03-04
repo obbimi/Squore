@@ -92,6 +92,8 @@
     <string name="pref_PlayerColor">Kleur van speler</string>
     <string name="pref_showPlayerColorOn">Kleur van speler tonen</string>
     <string name="pref_showPlayerColorOn_summary">Bepaal op welke GUI elementen de ingestelde speler kleur getoond wordt</string>
+    <string name="pref_serveButtonTransparencyNonServer">Doorzichtigheid van de opslag knop</string>
+    <string name="pref_serveButtonTransparencyNonServer_summary">Hoge waarden (max 100) maken de knop van de ontvanger minder zichtbaar</string>
     <!--
         <string name="pref_Colors_TextDynamically">Tekst kleur dynamisch</string>
         <string name="pref_Colors_TextDynamically_summary">Automatisch wit of zwart afhankelijk van achtergrond kleur</string>

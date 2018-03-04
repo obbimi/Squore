@@ -55,6 +55,8 @@
     <string name="pref_PlayerColor">Podbarvení hráče</string>
     <string name="pref_showPlayerColorOn">Podbarvovat hráče</string>
     <string name="pref_showPlayerColorOn_summary">Určit, pro které vizuální prvky použít podbarvení hráče</string>
+    <string name="pref_serveButtonTransparencyNonServer">Transparency of serve button</string> <!-- TODO -->
+    <string name="pref_serveButtonTransparencyNonServer_summary">High values (max 100) make the button of the receiver less visible</string> <!-- TODO -->
     <!--
         <string name="pref_Colors_TextDynamically">Text Color Dynamically</string>
         <string name="pref_Colors_TextDynamically_summary">Automatic black or white depending on the chosen background color</string>

@@ -171,6 +171,22 @@ public class PreferenceValues extends RWValues
     }
 */
 
+    /** User may choose for a value between 0 and 100. We translate it to a value between 0 and 255 */
+    public static int getServeButtonTransparencyNonServer(Context context) {
+        int iResDefault = getSportTypeSpecificResId(context, R.integer.serveButtonTransparencyNonServer_default_Squash);
+
+        // get user preference value ( must be between 0 and 100 )
+        int i0To100Stored = getIntegerR(PreferenceKeys.serveButtonTransparencyNonServer, context, iResDefault);
+        int i0To100 = i0To100Stored;
+            i0To100 = Math.max(  0, i0To100);
+            i0To100 = Math.min(100, i0To100);
+        if (i0To100 != i0To100Stored ) {
+            setNumber(PreferenceKeys.serveButtonTransparencyNonServer, context, i0To100);
+        }
+
+        int i0To255 = i0To100 * 255 / 100;
+        return i0To255;
+    }
     public static int getAppealHandGestureIconSize(Context context) {
         int iIconSize = getIntegerR(PreferenceKeys.AppealHandGestureIconSize, context, R.integer.AppealHandGestureIconSize_default);
         if ( iIconSize == context.getResources().getInteger(R.integer.AppealHandGestureIconSize_default) && (iIconSize != 0) ) {
@@ -670,7 +686,8 @@ public class PreferenceValues extends RWValues
     }
     /** for tabletennis and racketlon, not squash */
     public static boolean swapPlayersOn180DegreesRotationOfDeviceInLandscape(Context context) {
-        return getBoolean(PreferenceKeys.swapPlayersOn180DegreesRotationOfDeviceInLandscape, context, R.bool.swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Squash);
+        int iResDefault = getSportTypeSpecificResId(context, R.bool.swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Squash);
+        return getBoolean(PreferenceKeys.swapPlayersOn180DegreesRotationOfDeviceInLandscape, context, iResDefault);
     }
     /** for tabletennis, not squash or racketlon */
     public static boolean swapPlayersBetweenGames(Context context) {

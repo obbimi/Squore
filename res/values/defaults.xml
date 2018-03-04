@@ -64,6 +64,7 @@ http://developer.android.com/guide/practices/screens_support.html
 -->
 
 
+    <integer name="serveButtonTransparencyNonServer_default_Squash">60</integer> <!-- between 0 and 100 -->
     <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Squash">false</bool>
     <bool name="swapPlayersBetweenGames_default">true</bool>
     <bool name="useEnglishScoring_default">false</bool>

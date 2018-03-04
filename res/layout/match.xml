@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright (C) 2018  Iddo Hoeve
+**
+** Squore is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
 <com.doubleyellow.view.SBRelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:dy="http://double-yellow.be"
@@ -439,96 +457,96 @@
                     android:layout_height="wrap_content"/>
 -->
         </LinearLayout>
-            <LinearLayout
-                    android:id="@+id/llPauseDuration"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:visibility="visible"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <TextView android:inputType="none"
-                              android:id="@+id/lblPauseDuration"
-                              android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:text="@string/lblPauseDuration"
-                              android:textSize="@dimen/txt_small"
-                              android:layout_margin="2dp"
-                            />
-                    <Spinner
-                            android:id="@+id/spPauseDuration"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:nextFocusDown="@+id/spHandicapFormat"
-                            android:layoutMode="opticalBounds"
-                            android:orientation="vertical"/>
-            </LinearLayout>
-            <LinearLayout
-                    android:id="@+id/llHandicapFormat"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:visibility="visible"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <TextView android:inputType="none"
-                              android:id="@+id/lblHandicapFormat"
-                              android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:text="@string/handicap"
-                              android:textSize="@dimen/txt_small"
-                              android:layout_margin="2dp"
-                            />
-                    <Spinner
-                            android:id="@+id/spHandicapFormat"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:nextFocusDown="@+id/useHandInHandOutScoring"
-                            android:layoutMode="opticalBounds"
-                            android:orientation="vertical"/>
-            </LinearLayout>
-            <LinearLayout
-                    android:id="@+id/llDisciplineStart"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:visibility="visible"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <TextView android:inputType="none"
-                              android:id="@+id/lblDisciplineStart"
-                              android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:text="@string/start_with_discipline"
-                              android:textSize="@dimen/txt_small"
-                              android:layout_margin="2dp"
-                            />
-                    <Spinner
-                            android:id="@+id/spDisciplineStart"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layoutMode="opticalBounds"
-                            android:orientation="vertical"/>
-            </LinearLayout>
-            <LinearLayout
-                    android:id="@+id/llNumberOfServesPerPlayer"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:visibility="visible"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <TextView android:inputType="none"
-                              android:id="@+id/lblNumberOfServesPerPlayer"
-                              android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:text="@string/number_of_serves_per_player"
-                              android:textSize="@dimen/txt_small"
-                              android:layout_margin="2dp"
-                            />
-                    <Spinner
-                            android:id="@+id/spNumberOfServesPerPlayer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layoutMode="opticalBounds"
-                            android:orientation="vertical"/>
-            </LinearLayout>
+        <LinearLayout
+                android:id="@+id/llPauseDuration"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:inputType="none"
+                          android:id="@+id/lblPauseDuration"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/lblPauseDuration"
+                          android:textSize="@dimen/txt_small"
+                          android:layout_margin="2dp"
+                        />
+                <Spinner
+                        android:id="@+id/spPauseDuration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:nextFocusDown="@+id/spHandicapFormat"
+                        android:layoutMode="opticalBounds"
+                        android:orientation="vertical"/>
+        </LinearLayout>
+        <LinearLayout
+                android:id="@+id/llHandicapFormat"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:inputType="none"
+                          android:id="@+id/lblHandicapFormat"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/handicap"
+                          android:textSize="@dimen/txt_small"
+                          android:layout_margin="2dp"
+                        />
+                <Spinner
+                        android:id="@+id/spHandicapFormat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:nextFocusDown="@+id/useHandInHandOutScoring"
+                        android:layoutMode="opticalBounds"
+                        android:orientation="vertical"/>
+        </LinearLayout>
+        <LinearLayout
+                android:id="@+id/llDisciplineStart"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:inputType="none"
+                          android:id="@+id/lblDisciplineStart"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/start_with_discipline"
+                          android:textSize="@dimen/txt_small"
+                          android:layout_margin="2dp"
+                        />
+                <Spinner
+                        android:id="@+id/spDisciplineStart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layoutMode="opticalBounds"
+                        android:orientation="vertical"/>
+        </LinearLayout>
+        <LinearLayout
+                android:id="@+id/llNumberOfServesPerPlayer"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:inputType="none"
+                          android:id="@+id/lblNumberOfServesPerPlayer"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/number_of_serves_per_player"
+                          android:textSize="@dimen/txt_small"
+                          android:layout_margin="2dp"
+                        />
+                <Spinner
+                        android:id="@+id/spNumberOfServesPerPlayer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layoutMode="opticalBounds"
+                        android:orientation="vertical"/>
+        </LinearLayout>
         <LinearLayout
                 android:id="@+id/llScoringType"
                 android:orientation="vertical"

@@ -94,6 +94,8 @@
     <string name="pref_PlayerColor">Couleur du joueur</string>
     <string name="pref_showPlayerColorOn">Afficher la couleur du joueur</string>
     <string name="pref_showPlayerColorOn_summary">Déterminer sur quels éléments de l\'interface la couleur du joueur est affichée</string>
+    <string name="pref_serveButtonTransparencyNonServer">Transparency of serve button</string> <!-- TODO -->
+    <string name="pref_serveButtonTransparencyNonServer_summary">High values (max 100) make the button of the receiver less visible</string> <!-- TODO -->
     <!--
         <string name="pref_Colors_TextDynamically">Couleur de texte dynamique</string>
         <string name="pref_Colors_TextDynamically_summary">Automatiquement noir ou blanch selon la couleur de fond choisie</string>

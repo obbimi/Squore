@@ -95,6 +95,8 @@
     <string name="pref_PlayerColor">Player color</string>
     <string name="pref_showPlayerColorOn">Show color of player</string>
     <string name="pref_showPlayerColorOn_summary">Determine on which GUI elements de chosen player color is shown</string>
+    <string name="pref_serveButtonTransparencyNonServer">Transparency of serve button</string>
+    <string name="pref_serveButtonTransparencyNonServer_summary">High values (max 100) make the button of the receiver less visible</string>
     <!--
         <string name="pref_Colors_TextDynamically">Text Color Dynamically</string>
         <string name="pref_Colors_TextDynamically_summary">Automatic black or white depending on the chosen background color</string>

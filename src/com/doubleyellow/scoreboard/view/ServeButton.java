@@ -18,6 +18,8 @@
 package com.doubleyellow.scoreboard.view;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
@@ -25,7 +27,8 @@ import android.widget.Toast;
 
 import com.doubleyellow.android.view.AutoResizeTextView;
 import com.doubleyellow.scoreboard.R;
-import com.doubleyellow.view.SBRelativeLayout;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.util.StringUtil;
 
 /**
  * Serve button that indicates
@@ -62,8 +65,10 @@ public class ServeButton extends /*SBRelativeLayout*/ AutoResizeTextView
         super(context, attrs, defStyle);
 
         // known instances
-        int i1 = R.id.btn_side1;
-        int i2 = R.id.btn_side2;
+        if ( false ) {
+            int i1 = R.id.btn_side1;
+            int i2 = R.id.btn_side2;
+        }
     }
     public String setServeString(Object o) {
         String sValue = String.valueOf(o);
@@ -83,8 +88,19 @@ public class ServeButton extends /*SBRelativeLayout*/ AutoResizeTextView
         } else {
             Toast.makeText(getContext(), "TODO: ServeButton String " + this.getId() + " : " + sValue, Toast.LENGTH_LONG).show();
         }
+
+        // set transparency: if something is displayed: non transparent, if nothing is displayed semi-transparent (user preference)
+        int iTransparancyNonServer = PreferenceValues.getServeButtonTransparencyNonServer(getContext());
+        int iTransparency = StringUtil.isEmpty(sValue)? iTransparancyNonServer : 0;
+        Drawable drawable = this.getBackground();
+        if ( drawable instanceof GradientDrawable ) {
+            GradientDrawable gd = (GradientDrawable) drawable;
+            gd.setAlpha(0xFF - iTransparency);
+        }
         return sValue;
     }
+
+    /** For now this is equal to setting color of the text */
     public void setForegroundColor(int iFGColor) {
         View v = this;
         if ( v instanceof TextView ) {

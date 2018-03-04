@@ -131,6 +131,15 @@
                                 android:defaultValue="Color2"/>
             </PreferenceCategory>
 
+            <EditTextPreference
+                android:icon="@drawable/dummy"
+                android:key="serveButtonTransparencyNonServer"
+                android:title="@string/pref_serveButtonTransparencyNonServer"
+                android:summary="@string/pref_serveButtonTransparencyNonServer_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/serveButtonTransparencyNonServer_default_Squash"
+                />
+
         </PreferenceScreen>
 
 <!--

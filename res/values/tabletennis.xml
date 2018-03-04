@@ -65,5 +65,5 @@
 ]]></string>
 
     <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Tabletennis">true</bool>
-
+    <integer name="serveButtonTransparencyNonServer_default_Tabletennis">90</integer> <!-- between 0 and 100 -->
 </resources>
