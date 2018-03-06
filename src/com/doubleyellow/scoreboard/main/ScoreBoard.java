@@ -2064,7 +2064,18 @@ touch -t 01030000 LAST.sb
             if ( isPortrait() ) {
                 fMargin = .125f; // to NOT cover the Inline timer
             }
-            speakButton = getFloatingActionButton(R.id.sb_official_announcement, fMargin, R.drawable.microphone, ColorPrefs.ColorTarget.speakButtonBackgroundColor);
+            int iResImage = R.drawable.microphone;
+
+            ColorPrefs.ColorTarget colorKey = ColorPrefs.ColorTarget.speakButtonBackgroundColor;
+            Integer iBG = mColors.get(colorKey);
+            if ( iBG != null ) {
+                // if we use a light background for the microphone button... switch to the black icon version
+                int blackOrWhiteFor = ColorUtil.getBlackOrWhiteFor(iBG);
+                if ( blackOrWhiteFor == Color.BLACK ) {
+                    iResImage = R.drawable.microphone_black;
+                }
+            }
+            speakButton = getFloatingActionButton(R.id.sb_official_announcement, fMargin, iResImage, ColorPrefs.ColorTarget.speakButtonBackgroundColor);
 /*
             speakButton.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View view) {
@@ -2098,7 +2109,18 @@ touch -t 01030000 LAST.sb
 
         if ( timerButton == null ) {
             float fMargin = 1.25f;
-            timerButton = getFloatingActionButton(R.id.float_timer, fMargin, R.drawable.timer, ColorPrefs.ColorTarget.timerButtonBackgroundColor);
+            int iResImage = R.drawable.timer;
+
+            ColorPrefs.ColorTarget colorKey = ColorPrefs.ColorTarget.timerButtonBackgroundColor;
+            Integer iBG = mColors.get(colorKey);
+            if ( iBG != null ) {
+                // if we use a light background for the timer button... switch to the black icon version
+                int blackOrWhiteFor = ColorUtil.getBlackOrWhiteFor(iBG);
+                if ( blackOrWhiteFor == Color.BLACK ) {
+                    iResImage = R.drawable.timer_black;
+                }
+            }
+            timerButton = getFloatingActionButton(R.id.float_timer, fMargin, iResImage, ColorPrefs.ColorTarget.timerButtonBackgroundColor);
         }
 
         if ( m_mode.equals(Mode.Normal) == false ) {
@@ -3964,6 +3986,11 @@ touch -t 01030000 LAST.sb
 
         @Override public AlertDialog.Builder setTitle(CharSequence sTitle) {
             String sColor = ColorUtil.getRGBString(target2colorMapping.get(ColorPrefs.ColorTarget.middlest));
+            long iDistanceToBlack = ColorUtil.getDistance2Black(sColor);
+            if ( iDistanceToBlack < 50 ) {
+                // e.g. when using monochrome black
+                sColor = "#FFFFFF";
+            }
             sTitle = Html.fromHtml("<font color='" + sColor + "'>" + sTitle + "</font>");
             AlertDialog.Builder builder = super.setTitle(sTitle);
             return builder;

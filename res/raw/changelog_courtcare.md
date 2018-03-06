@@ -1,3 +1,21 @@
+## 4.10 (march 2018)
+
+- Configurable 'transparency' of the serve button of receiver
+    - this makes the serve button of the server stand out a little more
+- Improvements for using deviation color palette
+- optionally use a simpler dialog for manually starting a new match
+    - shows only player names and match format fields with bigger font
+    - to activate use Settings/Appearance/New match layout
+- allow specifying a court for a match
+    - specifically useful in combination with Live Score
+- minor corrections for official announcements in German
+- improvements for colors/color palettes    
+- Add support for JSON feeds to select matches from
+    - More flexible than current 'plain text' feeds
+    - sample json can be found [here](http://squore.double-yellow.be/demo/demo.matches.json)
+    - ask your clubs webmaster to provided a similar feed with matches to be played at/for your club
+- More info about working with feeds within CourtCare can be found [here](http://squore.double-yellow.be/#Feeds) 
+
 ## 4.03 (nov 2017)
 
 - some improvements to icons/images used

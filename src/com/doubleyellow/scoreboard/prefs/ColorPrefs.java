@@ -127,6 +127,12 @@ public class ColorPrefs
         mColor2Distance2White = new SparseArray<Long>();
         mTarget2Color         = new HashMap<ColorTarget, Integer>();
 
+        long iDeltaBW = ColorUtil.getDistance2White("#000000");
+        mColor2Distance2Black.put(COLOR_BLACK, 0L);
+        mColor2Distance2Black.put(COLOR_WHITE, iDeltaBW);
+        mColor2Distance2White.put(COLOR_WHITE, 0L);
+        mColor2Distance2White.put(COLOR_BLACK, iDeltaBW);
+
         if ( MapUtil.isEmpty(mColorScheme)) { return mTarget2Color;  }
 
         String sLightest = null;
@@ -154,7 +160,10 @@ public class ColorPrefs
                     // invalid color specified
                     iColor = COLOR_BLACK;
                 }
-                if ( iColor == COLOR_BLACK || iColor == COLOR_WHITE ) continue;
+                if ( iColor == COLOR_BLACK || iColor == COLOR_WHITE ) {
+                    //Log.w(TAG, "Not storing distance for " + key + "=" + sColor);
+                    continue;
+                }
 
                 mRGBDistance2Black   .put(sColor, iDeltaB);
                 mColor2Distance2Black.put(iColor, iDeltaB);

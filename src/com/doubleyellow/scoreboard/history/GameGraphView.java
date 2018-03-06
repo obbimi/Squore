@@ -237,14 +237,23 @@ public class GameGraphView extends LineGraphView
             Long iDistanceOfDarkest2Black     = ColorPrefs.mColor2Distance2Black.get(iColorB);
             Long iDistanceOfMiddlest2Darkest  = ColorPrefs.mColor2Distance2Darker.get(iColorA);
             Long iDistanceOfLightest2Middlest = ColorPrefs.mColor2Distance2Darker.get(iLightest);
-            if ( (iDistanceOfDarkest2Black < iDistanceOfMiddlest2Darkest) && (iDistanceOfLightest2Middlest > iDistanceOfMiddlest2Darkest)) {
-                // switch over to make lines a little lighter but still have reasonable contrast
-                iColorB = iColorA;
-                iColorA = iLightest;
-            } else if ( iDistanceOfDarkest2Black < 50 ) {
-                // switch anyway if darkest color is very close to black
-                iColorB = iColorA;
-                iColorA = iLightest;
+            if ( iDistanceOfDarkest2Black != null ) {
+                if ( (iDistanceOfDarkest2Black < iDistanceOfMiddlest2Darkest) && (iDistanceOfLightest2Middlest > iDistanceOfMiddlest2Darkest)) {
+                    // switch over to make lines a little lighter but still have reasonable contrast
+                    iColorB = iColorA;
+                    iColorA = iLightest;
+                } else if ( iDistanceOfDarkest2Black < 50 ) {
+                    // switch anyway if darkest color is very close to black
+                    iColorB = iColorA;
+                    iColorA = iLightest;
+                }
+            }
+
+            if ( iColorA == iColorB ) {
+                // e.g. for monochrome
+                if ( iColorA != iTxtColor ) {
+                    iColorA = iTxtColor;
+                }
             }
         }
     }

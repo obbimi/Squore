@@ -1,3 +1,9 @@
+## 4.10 (march 2018)
+
+- Configurable 'transparency' of the serve button of receiver
+    - this makes the serve button of the server stand out a little more
+- Improvements for using deviation color palette
+
 ## 4.09 (march 2018)
 
 - optionally use a simpler dialog for manually starting a new match
