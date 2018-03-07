@@ -898,11 +898,11 @@
     </PreferenceScreen>
 
     <PreferenceScreen android:key="statistics"
-                      android:icon="@drawable/dummy"
+                      android:icon="@drawable/statistics"
                       android:title="@string/pref_Statistics"
                       android:summary="@string/pref_Statistics_summary">
         <com.doubleyellow.prefs.EnumListPreference
-            android:icon="@drawable/dummy"
+            android:icon="@drawable/statistics"
                 android:key="recordRallyEndStatsAfterEachScore"
                 android:title="@string/pref_recordRallyEndStatsAfterEachScore"
                 android:summary="@string/pref_recordRallyEndStatsAfterEachScore_summary"
@@ -1260,7 +1260,7 @@
                 />
 
         <com.doubleyellow.scoreboard.prefs.ResetPrefs
-                android:icon="@drawable/dummy"
+                android:icon="@drawable/settings_reset"
                 android:key="resetPrefs"
                 android:title="@string/pref_reset_title"
                 android:dialogMessage="@string/pref_reset_message"

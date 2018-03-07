@@ -38,6 +38,7 @@ public class ResetPrefs extends DialogPreference
         super(context, attrs);
 
         this.context = context;
+	super.setDialogIcon(R.drawable.settings_reset);
     }
 
     @Override public void onClick(DialogInterface dialog, int iPressed)
