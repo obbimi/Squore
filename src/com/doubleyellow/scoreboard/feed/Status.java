@@ -19,7 +19,9 @@ package com.doubleyellow.scoreboard.feed;
 
 enum Status {
     LoadingTypes,
+    /** Select e.g. PSA, TournamentSoftware, RankedIn ... */
     SelectType,
+    /** Loading all feeds of a certain type (e.g. all tournaments for PSA */
     LoadingFeeds,
     SelectFeed,
 }

@@ -248,7 +248,11 @@ public class Handicap extends BaseAlertDialog {
                     String sB = lTexts.get(id + p.ordinal()).getText().toString();
                     int iOffset = 0;
                     if ( StringUtil.isNotEmpty(sB) ) {
-                        iOffset = Integer.parseInt(sB);
+                        try {
+                            iOffset = Integer.parseInt(sB);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
                     }
                     if ( iOffset >= iNrOfPointsToWinGame ) {
                         Toast.makeText(context, String.format("Handicap 'head start' must be smaller than %s", iNrOfPointsToWinGame), Toast.LENGTH_LONG).show();

@@ -90,6 +90,16 @@ class ShowFeedsAdapter extends SimpleELAdapter {
                 JSONObject joFeed = null;
                 try {
                     joFeed = m_feeds.getJSONObject(f);
+
+                    // add country if only countrycode is specified
+                    if ( JsonUtil.isNotEmpty(joFeed) && joFeed.has(URLsKeys.CountryCode.toString()) ) {
+                        String sCountryCode = joFeed.getString(URLsKeys.CountryCode.toString());
+                        String sLang  = PreferenceValues.officialAnnouncementsLanguage(context).toString(); // RWValues.getDeviceLanguage(ctx)
+                        String sCountryName = CountryUtil.addFullCountry("%s%s", ""  , sCountryCode, sLang);
+                        if ( StringUtil.isNotEmpty(sCountryName) ) {
+                            joFeed.put(URLsKeys.Country.toString(), sCountryName);
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     continue;

@@ -37,6 +37,7 @@ public enum URLsKeys {
     Authentication,
     Organization,
     Country,
+        CountryCode,
     Region,
 
     /* Json config feed keys */
