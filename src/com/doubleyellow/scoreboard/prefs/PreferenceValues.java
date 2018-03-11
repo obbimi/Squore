@@ -1257,7 +1257,8 @@ public class PreferenceValues extends RWValues
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < urlsList.size(); i++) {
             Map<URLsKeys, String> existing = urlsList.get(i);
-            if ( existing.get(URLsKeys.Name).equals(sName2Delete)) {
+            String sNameTmp = existing.get(URLsKeys.Name);
+            if ( sNameTmp != null && sNameTmp.equals(sName2Delete)) {
                 // do not add it to the new string
                 if ( i < iActive ) {
                     iActive--;
@@ -1525,26 +1526,37 @@ public class PreferenceValues extends RWValues
         Map<URLsKeys, String> entry = null;
         for (int i = 0; i < sa.length; i++) {
             String sLine = sa[i].trim();
-            if ( StringUtil.isEmpty(sLine) ) continue;
+            if ( StringUtil.isEmpty(sLine) ) {
+                // assume starting a new entry
+                entry = new HashMap<URLsKeys, String>();
+                entries.add(entry);
+                continue;
+            }
+            if ( entry == null ) {
+                entry = new HashMap<URLsKeys, String>();
+                entries.add(entry);
+            }
 
-            // (name|feed|post)=.... like lines
+            // (Name|FeedMatches|post)=.... like lines
             if ( sLine.toLowerCase().matches(sLineMatch) ) {
                 int    iIndex = sLine.trim().indexOf("=");
                 String sKey   = sLine.substring(0, iIndex).trim().toLowerCase();
                 String sValue = sLine.substring(iIndex+1).trim();
-                for ( URLsKeys isKey: URLsKeys.values() ) {
-                    if ( isKey.toString().toLowerCase().equals(sKey) ) {
-                        if ( isKey.equals(URLsKeys.Name) ) {
+                for ( URLsKeys eKey: URLsKeys.values() ) {
+                    if ( eKey.toString().toLowerCase().equals(sKey) ) {
+                        if ( eKey.equals(URLsKeys.Name) && entry.containsKey(eKey) ) {
+                            // blank lines between entries deleted manually? Assume that a Name=... line represents start of a new entry
                             entry = new HashMap<URLsKeys, String>();
                             entries.add(entry);
-                        } else if (isKey.equals(URLsKeys.FeedMatches) ) {
+                        }
+                        if ( eKey.equals(URLsKeys.FeedMatches) || eKey.equals(URLsKeys.FeedPlayers) ) {
                             sValue = URLFeedTask.prefixWithBaseIfRequired(sValue);
                         }
-                        entry.put(isKey, sValue);
+                        entry.put(eKey, sValue);
                     }
                 }
             } else {
-                // assume name line is specified without key= prefix
+                // assume name line is specified without key= prefix and feedmatches url is given as only value
                 if ( sLine.startsWith("http") && MapUtil.isNotEmpty(entry) ) {
                     entry.put(URLsKeys.FeedMatches, sLine);
                 } else {

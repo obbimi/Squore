@@ -14,3 +14,10 @@ soon.
 
 ![Logo](http://squore.double-yellow.be/images/google.play.high.res.logo.png)
 
+<https://jekyllrb.com/docs/quickstart/>
+
+<https://jekyllrb.com/docs/datafiles/>
+
+ln -s /osshare/doc/squash/squore.double-yellow.be/help/img .
+
+<https://shopify.github.io/liquid/basics/operators/>

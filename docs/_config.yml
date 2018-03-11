@@ -12,6 +12,7 @@ baseurl:        "/Squore"
 plugins:
   - jekyll-toc
   - jekyll-redirect-from
+#  - replace_regex
 
 
 toc:
