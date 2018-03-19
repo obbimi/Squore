@@ -189,7 +189,22 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
 
     public void dismiss() {
         if ( isShowing() ) {
-            if (dialog != null) { dialog.dismiss(); }
+            if ( dialog != null ) {
+                try {
+                    dialog.dismiss();
+                } catch (Exception e) {
+/*
+                // try catch is for this reported error in play store (API 27)
+                    at android.view.WindowManagerGlobal.findViewLocked (WindowManagerGlobal.java:473)
+                    at android.view.WindowManagerGlobal.removeView (WindowManagerGlobal.java:382)
+                    at android.view.WindowManagerImpl.removeViewImmediate (WindowManagerImpl.java:126)
+                    at android.app.Dialog.dismissDialog (Dialog.java:370)
+                    at android.app.Dialog.dismiss (Dialog.java:353)
+                    at com.doubleyellow.scoreboard.dialog.BaseAlertDialog.dismiss (BaseAlertDialog.java:192)
+*/
+                    e.printStackTrace();
+                }
+            }
         }
     }
     public boolean isShowing() {

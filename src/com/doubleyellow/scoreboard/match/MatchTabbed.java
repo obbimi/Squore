@@ -358,17 +358,19 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
             case R.id.show_matches_from_feed: {
                 if ( (getFragment(defaultTab) != null) && (getFragment(defaultTab) instanceof ExpandableMatchSelector) ) {
                     ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(defaultTab);
-                    FeedMatchSelector       fms           = (FeedMatchSelector      ) matchSelector;
-                    SimpleELAdapter         listAdapter   = fms.getListAdapter(null);
-                    if ( menuItemId == R.id.show_players_from_feed ) {
-                        if ( fms.getFeedStatus().equals(FeedMatchSelector.FeedStatus.showingPlayers) == false ) {
-                            listAdapter.load(true);
+                    if ( matchSelector instanceof FeedMatchSelector ) {
+                        FeedMatchSelector       fms           = (FeedMatchSelector) matchSelector;
+                        SimpleELAdapter         listAdapter   = fms.getListAdapter(null);
+                        if ( menuItemId == R.id.show_players_from_feed ) {
+                            if ( fms.getFeedStatus().equals(FeedMatchSelector.FeedStatus.showingPlayers) == false ) {
+                                listAdapter.load(true);
+                            }
                         }
-                    }
-                    if ( menuItemId == R.id.show_matches_from_feed ) {
-                        if ( fms.getFeedStatus().equals(FeedMatchSelector.FeedStatus.showingPlayers) ) {
-                            fms.resetFeedStatus();
-                            listAdapter.load(true);
+                        if ( menuItemId == R.id.show_matches_from_feed ) {
+                            if ( fms.getFeedStatus().equals(FeedMatchSelector.FeedStatus.showingPlayers) ) {
+                                fms.resetFeedStatus();
+                                listAdapter.load(true);
+                            }
                         }
                     }
                 }
