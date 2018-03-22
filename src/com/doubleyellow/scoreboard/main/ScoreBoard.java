@@ -4015,7 +4015,26 @@ touch -t 01030000 LAST.sb
         public AlertDialog show(DialogInterface.OnShowListener onShowListener) {
             AlertDialog dialog = super.create();
             dialog.setOnShowListener(onShowListener);
-            dialog.show();
+            try {
+                dialog.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+/* IH 20180322: try catch to prevent crash for following exception (reported for apk 183 on android 5.0 and 7.0)
+                android.view.WindowManager$BadTokenException:
+                at android.view.ViewRootImpl.setView (ViewRootImpl.java:922)
+                at android.view.WindowManagerGlobal.addView (WindowManagerGlobal.java:377)
+                at android.view.WindowManagerImpl.addView (WindowManagerImpl.java:105)
+                at android.app.Dialog.show (Dialog.java:404)
+                at com.doubleyellow.scoreboard.main.ScoreBoard$MyDialogBuilder.show (ScoreBoard.java:4018)
+                at com.doubleyellow.scoreboard.main.ScoreBoard$MyDialogBuilder.show (ScoreBoard.java:4012)
+                at com.doubleyellow.scoreboard.dialog.EditFormat.show (EditFormat.java:128)
+                at com.doubleyellow.scoreboard.main.DialogManager.showNextDialog (DialogManager.java:116)
+                at com.doubleyellow.scoreboard.main.ScoreBoard.showNextDialog (ScoreBoard.java:4061)
+                at com.doubleyellow.scoreboard.main.ScoreBoard.triggerEvent (ScoreBoard.java:2812)
+                at com.doubleyellow.scoreboard.timer.Timer$SBCountDownTimer.onFinish (Timer.java:242)            }
+                at android.os.CountDownTimer$1.handleMessage (CountDownTimer.java:127)
+*/
+            }
             return dialog;
         }
     }
