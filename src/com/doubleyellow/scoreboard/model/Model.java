@@ -2071,7 +2071,9 @@ public abstract class Model
                 JSONArray timings = joMatch.optJSONArray(JSONKey.timing.toString());
                 if ( JsonUtil.isNotEmpty(timings) ) {
                     for ( int g=0; g < timings.length(); g++ ) {
-                        JSONObject timing = timings.getJSONObject(g);
+                        Object oTiming = timings.get(g);
+                        if ( oTiming instanceof JSONObject == false ) { continue; } // should not happen normally
+                        JSONObject timing = (JSONObject) oTiming;
                         if ( JsonUtil.isEmpty(timing) ) { continue; }
                         Object oStart = timing.opt(JSONKey.start.toString());
                         Object oEnd   = timing.opt(JSONKey.end  .toString());

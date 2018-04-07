@@ -2319,6 +2319,7 @@ touch -t 01030000 LAST.sb
         if ( matchModel == null ) { return; }
         if ( bInitializedModelListeners ) { return; }
         bInitializingModelListeners = true;
+        GameHistoryView.dontShowForToManyPoints(matchModel.getMaxScore() + matchModel.getMinScore());
         matchModel.clearListeners(".*" + this.getClass().getSimpleName() + ".*"); // remove listeners e.g. from this activity instance that was created for another orientation
         matchModel.registerListener(new ScoreChangeListener());
         matchModel.registerListener(new PlayerChangeListener());

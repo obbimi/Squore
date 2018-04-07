@@ -20,12 +20,16 @@ package com.doubleyellow.scoreboard.view;
 import android.content.Context;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import com.doubleyellow.scoreboard.history.MatchGameScoresView;
 import com.doubleyellow.scoreboard.model.*;
+import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.ScorelineLayout;
 import com.doubleyellow.util.DateUtil;
@@ -41,11 +45,18 @@ import java.util.*;
  * - the main view to show the history of the game in progress
  * - instantiated multiple times in the MatchHistory scoreBoard to give the scoring history of an entire match.
  *
- * @See MatchGameScoresView
+ * @see MatchGameScoresView
  */
 public class GameHistoryView extends ScrollView
 {
     private static final String TAG = "SB." + GameHistoryView.class.getSimpleName();
+
+    public static void dontShowForToManyPoints(int iPoints) {
+        if ( iPoints > 40 ) {
+            PreferenceValues.setOverwrite(PreferenceKeys.showScoringHistoryInMainScreenOn, ""); // prevent OutOfMemoryError in GameHistoryView.update()
+            Log.w(TAG, "Disabled GameHistoryView for to many points in a single game " + iPoints);
+        }
+    }
 
     /** constructor used by android platform (if defined in xml?) */
     public GameHistoryView(Context context, AttributeSet attrs) {

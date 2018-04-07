@@ -36,6 +36,7 @@ import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+import com.doubleyellow.scoreboard.view.GameHistoryView;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
 
@@ -228,6 +229,7 @@ public class AdjustScore extends BaseAlertDialog {
                     } catch (NumberFormatException e) {
                     }
                     if ( iPointsA + iPointsB == 0 ) { continue; }
+                    GameHistoryView.dontShowForToManyPoints(iPointsA + iPointsB);
                     matchModel.setGameScore_Json(s-1, iPointsA, iPointsB, 0);
                 }
                 scoreBoard.persist(false);
