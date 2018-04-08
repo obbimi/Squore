@@ -101,10 +101,11 @@ public class GameGraphView extends LineGraphView
             super.setVerticalLabels  (lYLabels.toArray(new String[0]));
             super.setHorizontalLabels(lXLabels.toArray(new String[0]));
 
-            super.getGraphViewStyle().setGridColor(Color.BLUE);
-            super.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
+            graphViewStyle.setGridColor(Color.BLUE);
+            graphViewStyle.setVerticalLabelsColor(Color.RED);
         }
     }
+    /** Only use in edit mode */
     private void addPointFor(Player p, Map<Player, List<GraphViewData>> mGraphData) {
         List<GraphViewData> graphViewDatas = mGraphData.get(p);
         List<GraphViewData> graphViewDatasOther = mGraphData.get(p.getOther());
@@ -119,8 +120,8 @@ public class GameGraphView extends LineGraphView
     private void setGraphDataSeries(Map<Player, List<GraphViewData>> mGraphData, Map<Player, String> mLegendLabels) {
         super.removeAllSeries();
 
-        Player[] players = {winner, loser}; // iterate over the players with winner first so that he appears as first in the 'legend'
-        for(Player pl: players) {
+        Player[] winnerAndLoser = {winner, loser}; // iterate over the players with winner first so that he appears as first in the 'legend'
+        for(Player pl: winnerAndLoser) {
             List<GraphView.GraphViewData> graphViewDatas = mGraphData.get(pl);
             if ( ListUtil.isEmpty(graphViewDatas) ) { continue; }
             GraphView.GraphViewData[] objects = graphViewDatas.toArray(new GraphView.GraphViewData[] {});
@@ -151,12 +152,31 @@ public class GameGraphView extends LineGraphView
             }
         }
 
+        // set styles based on last game winner
+        int iColorWinner = winner.equals(Player.A)?iColorA:iColorB;
+        int iColorLoser  = loser .equals(Player.A)?iColorA:iColorB;
+        graphViewStyle.setGridColor(iColorLoser);
+        graphViewStyle.setVerticalLabelsColor(iColorWinner);
+
         List<List<ScoreLine>> lGamesScoreHistory = model.getGameScoreHistory();
         if ( ListUtil.size(lGamesScoreHistory) < iShowGame || (iShowGame < 1) ) {
             return;
         }
-
         List<ScoreLine> lGameScoreHistory = lGamesScoreHistory.get(iShowGame - 1);
+        if ( ListUtil.size(lGameScoreHistory) > 50) {
+            // enlarging labelswidth here does not work... to late?
+            //int verticalLabelsWidth = ViewUtil.getScreenWidth(getContext()) / 15;
+            //graphViewStyle.setVerticalLabelsWidth(verticalLabelsWidth); // to allow for 3 digits
+
+            // reduce font size to allow for displaying bigger digits
+            int   iNrOfDigits = ("" + ListUtil.size(lGameScoreHistory)).length();
+            float textSize    = graphViewStyle.getTextSize();
+            float newTextSize = textSize * 2 / iNrOfDigits;
+            graphViewStyle.setTextSize(newTextSize);
+
+            graphViewStyle.setGridStyle(GraphViewStyle.GridStyle.NONE);
+        }
+
         Map<Player, List<GraphView.GraphViewData>> mGraphData = populateGraphData(model, lGameScoreHistory, iShowGame);
 
         List<Map<Player, Integer>> endScoreOfGames = model.getEndScoreOfGames();
@@ -176,13 +196,6 @@ public class GameGraphView extends LineGraphView
         List<String> lXLabels = constructXLabels(dataWinner, dataLoser);
         super.setVerticalLabels  (lYLabels.toArray(new String[0]));
         super.setHorizontalLabels(lXLabels.toArray(new String[0]));
-
-        // set styles based on last game winner
-        int iColorWinner = winner.equals(Player.A)?iColorA:iColorB;
-        int iColorLoser  = loser .equals(Player.A)?iColorA:iColorB;
-
-        super.getGraphViewStyle().setGridColor(iColorLoser);
-        super.getGraphViewStyle().setVerticalLabelsColor(iColorWinner);
     }
 
     @Override protected void onAttachedToWindow() {
@@ -195,27 +208,29 @@ public class GameGraphView extends LineGraphView
         super.setLegendAlign(GraphView.LegendAlign.BOTTOM);
         super.setShowHorizontalLabels(false); // e.g. from 0 to 22 if the final score was 12-10: not very interesting
 
-        super.getGraphViewStyle().setHorizontalLabelsColor(iTxtColor);
+        graphViewStyle.setHorizontalLabelsColor(iTxtColor);
         float txtSize = getResources().getDimension(R.dimen.txt_medium);
-        super.getGraphViewStyle().setTextSize(txtSize);
-        //super.getGraphViewStyle().setTextSize(getResources().getInteger(R.integer.TextSizeTabStrip) );
-        //graphView.getGraphViewStyle().setNumHorizontalLabels(5);
-        //graphView.getGraphViewStyle().setNumVerticalLabels(4);
+        graphViewStyle.setTextSize(txtSize);
+        //graphViewStyle.setTextSize(getResources().getInteger(R.integer.TextSizeTabStrip) );
+        //graphViewStyle.setNumHorizontalLabels(5);
+        //graphViewStyle.setNumVerticalLabels(4);
         setDisplayDependentProps();
     }
 
     private void setDisplayDependentProps() {
         int screenWidth = ViewUtil.getScreenWidth(getContext());
         int screenHWMax = ViewUtil.getScreenHeightWidthMaximum(getContext());
+
         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 ) {
+            // value calculated here is different if display is e.g. a presentation screen (chromecast)
             Display display = getDisplay();
             if ( display != null ) {
                 screenWidth = ViewUtil.getScreenWidth(display, getContext());
                 screenHWMax = ViewUtil.getScreenHeightWidthMaximum(display);
             }
         }
-        GraphViewStyle graphViewStyle = super.getGraphViewStyle();
-        graphViewStyle.setVerticalLabelsWidth(screenWidth / 20);
+        int verticalLabelsWidth = screenWidth / 20;
+        graphViewStyle.setVerticalLabelsWidth(verticalLabelsWidth);
         graphViewStyle.setLegendWidth        (screenHWMax / 3); // a third of the screen width
     }
 
@@ -311,6 +326,18 @@ public class GameGraphView extends LineGraphView
         if ( ListUtil.size(dataLoser) > 0 ) {
             iMin = Math.min (iMin, (int) dataLoser.get(0).valueY);
         }
+
+        // determine stepsize based on number of scorelines
+        int iStepSize = 1;
+        int iNrOfSteps = (iMax - iMin) / iStepSize;
+        while ( iNrOfSteps > 40 ) {
+            switch (iStepSize ) {
+                case 1:  iStepSize  = 2; break;
+                case 2:  iStepSize  = 5; break;
+                default: iStepSize *= 2; break;
+            }
+            iNrOfSteps = (iMax - iMin) / iStepSize;
+        }
         List<String> lYLabels = new ArrayList<String>();
         for(int i=iMax; i>=iMin; i-=1) {
             if ( i == iMax ) {
@@ -322,8 +349,8 @@ public class GameGraphView extends LineGraphView
                 lYLabels.add(String.valueOf(i));
                 continue;
             }
-            if ((i % 2 == 0) || (i == iMax-1)) { // TODO: adjust the modulo if max-min is very large
-                lYLabels.add(""); // no 'even' labels, and no label for 'max minus one'
+            if ( ( i % iStepSize != 0 ) || ( i == iMax - 1 ) ) { // TODO: adjust the modulo if max-min is very large
+                lYLabels.add(""); // no labels if not modulo stepsize, and no label for 'max minus one'
                 continue;
             }
             lYLabels.add(String.valueOf(i));
