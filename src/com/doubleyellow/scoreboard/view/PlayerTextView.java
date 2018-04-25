@@ -147,8 +147,10 @@ public class PlayerTextView extends AppCompatAutoCompleteTextView implements Con
 
         this.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long rowId) {
-                String sName = parent.getItemAtPosition(position).toString().trim();
-                for(Listener l : listeners) {
+		Object oItem = parent.getItemAtPosition(position);
+		if ( oItem == null ) { return; }
+                String sName = oItem.toString().trim();
+                for ( Listener l : listeners ) {
                     l.onSelected(sName, PlayerTextView.this);
                 }
             }
