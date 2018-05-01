@@ -1176,38 +1176,12 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         int keyCode = event.getKeyCode();
         int action  = event.getAction();
 
-        boolean bUseVolumebuttonsForScoring = false;
         if ( keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            VolumeKeysBehaviour volumeKeysBehaviour = PreferenceValues.volumeKeysBehaviour(this);
-            switch (volumeKeysBehaviour) {
-                case None:
-                    break;
-                case AdjustScore:
-                    bUseVolumebuttonsForScoring = true;
-                    break;
-                case AdjustScore__ForPortraitOnly:
-                    bUseVolumebuttonsForScoring = isPortrait();
-                    break;
+            if ( onVolumePressHandler == null ) {
+                onVolumePressHandler = new OnVolumeButtonPressHandler();
             }
-        }
-        if ( bUseVolumebuttonsForScoring ) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_VOLUME_UP:
-                    if (action == KeyEvent.ACTION_UP) {
-                        changeScore(Player.A);
-                        return true;
-                    }
-                    break;
-                case KeyEvent.KEYCODE_VOLUME_DOWN:
-                    if (action == KeyEvent.ACTION_UP) {
-                        changeScore(Player.B);
-                        return true;
-                    }
-                    break;
-                default:
-                    return super.dispatchKeyEvent(event);
-            }
-            return true;
+            boolean bHandled = onVolumePressHandler.handle(this, keyCode == KeyEvent.KEYCODE_VOLUME_UP, action == KeyEvent.ACTION_UP);
+            return bHandled;
         } else {
             switch (keyCode) {
                 case KeyEvent.KEYCODE_BACK:
@@ -1229,8 +1203,70 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 */
             }
         }
+
         return super.dispatchKeyEvent(event);
     }
+
+    private OnVolumeButtonPressHandler onVolumePressHandler = null;
+    private class OnVolumeButtonPressHandler {
+        //private long lastPress = 0L;
+        private int iDialogPresentedCnt = 0;
+
+        private boolean handle(final Context context, boolean bVolumeTrueIsUpFalseIsDown, boolean bActionTrueIsUpFalseIsDown) {
+
+            boolean bUseVolumeButtonsForScoring = false;
+            VolumeKeysBehaviour volumeKeysBehaviour = PreferenceValues.volumeKeysBehaviour(context);
+            switch (volumeKeysBehaviour) {
+                case None:
+                    break;
+                case AdjustScore:
+                    bUseVolumeButtonsForScoring = true;
+                    break;
+                case AdjustScore__ForPortraitOnly:
+                    bUseVolumeButtonsForScoring = isPortrait();
+                    break;
+            }
+
+            if ( bActionTrueIsUpFalseIsDown ) {
+                // we only do something for 'up' action. If a user long presses a volume key a lot of 'down' events are triggered
+                if ( bUseVolumeButtonsForScoring ) {
+                    changeScore(bVolumeTrueIsUpFalseIsDown ? Player.A : Player.B);
+                } else {
+                    showActivateDialog(context);
+                }
+            }
+            return bUseVolumeButtonsForScoring;
+        }
+
+        private void showActivateDialog(final Context context) {
+            if ( iDialogPresentedCnt > 1 ) { return; }
+            if ( ViewUtil.isLandscapeOrientation(context) ) { return; }
+
+            //long currentTime = System.currentTimeMillis();
+            //long lInterval = currentTime - this.lastPress;
+            //this.lastPress = currentTime;
+            //if ( lInterval > 1500L ) { return; }
+
+            // user pressed dialog button short after one another: present choice to turn on entering score using volume buttons
+            AlertDialog.Builder choose = getAlertDialogBuilder(context);
+            choose.setMessage(R.string.pref_VolumeKeysBehaviour_question)
+                    .setIcon(R.drawable.dummy)
+                    .setPositiveButton(R.string.cmd_yes, new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            PreferenceValues.setEnum(PreferenceKeys.VolumeKeysBehaviour, context, VolumeKeysBehaviour.AdjustScore__ForPortraitOnly);
+                        }
+                    })
+                    .setNeutralButton(R.string.cmd_no, new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            iDialogPresentedCnt += 100; // ensure it is not presented again
+                        }
+                    })
+                    .show();
+
+            iDialogPresentedCnt++;
+        }
+    }
+
     /** e.g. when match details is closed */
     @Override protected void onRestart() {
         super.onRestart();    //e.g. after preferences change or match selection
@@ -1412,25 +1448,20 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     PreferenceValues.setOverwrite(PreferenceKeys.useOfficialAnnouncementsFeature, Feature.DoNotUse.toString());
                     matchModel.setNrOfPointsToWinGame(21);
                     matchModel.setNrOfGamesToWinMatch(0);
+                    matchModel.setPlayerNames("Ricky", "Lonny");
                 } else if ( Brand.isTabletennis() ) {
                     PreferenceValues.setOverwrite(PreferenceKeys.useOfficialAnnouncementsFeature, Feature.DoNotUse.toString());
                     matchModel.setNrOfPointsToWinGame(11);
                     matchModel.setNrOfGamesToWinMatch(4);
+                    matchModel.setPlayerNames("Tabby", "Tenny");
                 } else {
                     PreferenceValues.setOverwrite(PreferenceKeys.useOfficialAnnouncementsFeature, Feature.Suggest.toString());
                     matchModel.setNrOfPointsToWinGame(11);
                     matchModel.setNrOfGamesToWinMatch(3);
+                    matchModel.setPlayerNames("Shaun", "Casey");
                 }
-                if ( Brand.isRacketlon() ) {
-                    matchModel.setPlayerName(Player.A, "Ricky");
-                    matchModel.setPlayerName(Player.B, "Lonny");
-                } else if ( Brand.isTabletennis() ) {
-                    matchModel.setPlayerName(Player.A, "Tabby");
-                    matchModel.setPlayerName(Player.B, "Tenny");
-                } else {
-                    matchModel.setPlayerName(Player.A, "Shaun");
-                    matchModel.setPlayerName(Player.B, "Casey");
-                }
+                matchModel.setPlayerAvatar(Player.A, null);
+                matchModel.setPlayerAvatar(Player.B, null);
             }
             if ( position == 0 ) {
                 PreferenceValues.setOverwrite(PreferenceKeys.showMatchDurationChronoOn   , ShowOnScreen.OnChromeCast.toString());

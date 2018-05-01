@@ -121,6 +121,7 @@
     <string name="pref_BackKeyBehaviour">\'Back Key\' gedrag</string>
     <string name="pref_VolumeKeysBehaviour">\'Volume Knoppen\' gedrag</string>
     <string name="pref_VolumeKeysBehaviour_summary">\'Volume Up\' scoort een punt voor speler A, \'Volume Down\' voor B</string>
+    <string name="pref_VolumeKeysBehaviour_question">Wil je de volume knoppen gebruiken om de score in te geven als het toestal in portret orientatie is?\n(Optie kan weer uit gezet worden via \'Instellingen/Gedrag\')</string>
     <string name="pref_StartupAction">Startup Actie</string>
     <string name="pref_StartupAction_summary">De actie die wordt uitgevoerd als de app wordt gestart</string>
     <string name="pref_changeSides">Wisselen van kant/Flip spelers</string>

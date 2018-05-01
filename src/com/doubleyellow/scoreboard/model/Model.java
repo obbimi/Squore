@@ -37,9 +37,16 @@ import java.util.*;
 
 /**
  * The model holding
- * - holding the scoring history
+ * - the scoring history
  * - appeals and decisions made
+ * - the format of the match being played
+ *
  * For each change in the model several listeners are registered and will be 'notified'.
+ *
+ * Sub-classes exist for
+ * - Squash
+ * - Tabletennis
+ * - Racketlon
  */
 public abstract class Model
 {
@@ -1478,6 +1485,10 @@ public abstract class Model
         String[] saNames = sName.split(REGEXP_SPLIT_DOUBLES_NAMES);
         Arrays.sort(saNames);
         return saNames;
+    }
+    public void setPlayerNames(String sNameA, String sNameB) {
+        setPlayerName(Player.A, sNameA);
+        setPlayerName(Player.B, sNameB);
     }
     public boolean setPlayerName(Player p, String sName) {
         if ( sName == null ) {

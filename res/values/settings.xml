@@ -126,6 +126,7 @@
     <string name="pref_BackKeyBehaviour">\'Back Key\' behaviour</string>
     <string name="pref_VolumeKeysBehaviour">\'Volume Keys\' behaviour</string>
     <string name="pref_VolumeKeysBehaviour_summary">\'Volume Up\' scores a point for player A, \'Volume Down\' for B</string>
+    <string name="pref_VolumeKeysBehaviour_question">Do you want to use the volume buttons for entering the score with device in portrait orientation?\n(Option can be turned off again in \'Settings/Behaviour\')</string>
     <string name="pref_StartupAction">Startup Action</string>
     <string name="pref_StartupAction_summary">The action that will be performed automatically when the app is started</string>
     <string name="pref_changeSides">Changing Sides/Flipping players</string>
