@@ -38,19 +38,20 @@ public class Timer
 {
     private static final String TAG = "SB." + Timer.class.getSimpleName();
 
-            static SBCountDownTimer   countDownTimer  = null;
-    private static int        iSecondsInitial = 0;
-    private static int        iReminderAtSecs = 0;
-    private static String     sReminderText   = null;
-    public  static Type       timerType       = Type.UntillStartOfNextGame;
-    private static ScoreBoard scoreBoard;
-    private boolean           autoTriggered   = false;
+            static SBCountDownTimer countDownTimer  = null;
+    private static int              iSecondsInitial = 0;
+    private static int              iReminderAtSecs = 0;
+    private static String           sReminderText   = null;
+    public  static Type             timerType       = Type.UntillStartOfNextGame;
+    private static ScoreBoard       scoreBoard;
+    private boolean                 autoTriggered   = false;
 
     public int getSecondsLeft() {
         return countDownTimer.secsLeft;
     }
 
-    private static boolean isAtOrPassedWarning() {
+    private static synchronized boolean isAtOrPassedWarning() {
+        if ( countDownTimer == null ) { return true; }
         return countDownTimer.secsLeft <= iReminderAtSecs;
     }
     boolean isAutoTriggered() {
@@ -165,7 +166,7 @@ public class Timer
     }
 */
 
-    public void cancel() {
+    public synchronized void cancel() {
         countDownTimer.stop();
         if ( timerViews != null ) {
             for(TimerView timerView: Timer.timerViews.values()) {
