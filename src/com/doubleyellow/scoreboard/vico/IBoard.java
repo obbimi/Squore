@@ -523,10 +523,25 @@ public class IBoard implements TimerViewContainer
         }
         MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
         if ( matchGameScores != null ) {
-            matchGameScores.setProperties( mColors.get(ColorPrefs.ColorTarget.scoreButtonTextColor       )
-                                         , mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor )
-                                         , mColors.get(ColorPrefs.ColorTarget.serveButtonBackgroundColor )
-                                         , mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor)
+            Integer iBgColorLoser  = mColors.get(ColorPrefs.ColorTarget.scoreButtonTextColor);
+            Integer iBgColorWinner = mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
+            Integer ibgColorTimes  = mColors.get(ColorPrefs.ColorTarget.serveButtonBackgroundColor);
+            Integer iBgColorPlayer = mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
+
+            // if main bg color is closer to bgColorWinner than to bgColorLoser, let winner stand out more by switching colors
+            Integer iBgMain = mColors.get(ColorPrefs.ColorTarget.backgroundColor);
+            long iDeltaW = ColorPrefs.getColorDistance(iBgColorWinner, iBgMain);
+            long iDeltaL = ColorPrefs.getColorDistance(iBgColorLoser , iBgMain);
+            if ( iDeltaL > iDeltaW ) {
+                Integer iTmp = iBgColorLoser;
+                               iBgColorLoser = iBgColorWinner;
+                                               iBgColorWinner = iTmp;
+            }
+
+            matchGameScores.setProperties( iBgColorLoser
+                                         , iBgColorWinner
+                                         , ibgColorTimes
+                                         , iBgColorPlayer
                                          );
         }
         int[] iIds = new int[] {R.id.sb_match_duration, R.id.sb_game_duration};

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.scoreboard"
-          android:versionCode="183"
+          android:versionCode="187"
           android:versionName="4.10">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
@@ -109,6 +109,8 @@
             <intent-filter> <data android:scheme="https" android:host="www.toernooi.nl"                 android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="http"  android:host="vsf.toernooi.nl"                 android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="https" android:host="vsf.toernooi.nl"                 android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="www.competitions.be"             android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="www.competitions.be"             android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="http"  android:host="esf.tournamentsoftware.com"      android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="https" android:host="esf.tournamentsoftware.com"      android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="http"  android:host="wsf.tournamentsoftware.com"      android:pathPattern="/sport/events.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>

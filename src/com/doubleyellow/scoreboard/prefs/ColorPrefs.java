@@ -131,7 +131,7 @@ public class ColorPrefs
         mColor2Distance2White = new SparseArray<Long>();
         mTarget2Color         = new HashMap<ColorTarget, Integer>();
 
-        long iDeltaBW = ColorUtil.getDistance2White("#000000");
+        final long iDeltaBW = ColorUtil.getDistance2White("#000000");
         mColor2Distance2Black.put(COLOR_BLACK, 0L);
         mColor2Distance2Black.put(COLOR_WHITE, iDeltaBW);
         mColor2Distance2White.put(COLOR_WHITE, 0L);
@@ -315,6 +315,14 @@ public class ColorPrefs
         mTarget2Color.put(ColorTarget.actionBarBackgroundColor, clActionBar);
 
         return mTarget2Color;
+    }
+
+    /** TODO: to ColorUtil class */
+    public static long getColorDistance(Integer iColorA, Integer iColorB) {
+        if ( iColorA == null || iColorB == null) { return 0; }
+        String sColorA = ColorUtil.getRGBString(iColorA);
+        String sColorB = ColorUtil.getRGBString(iColorB);
+        return ColorUtil.getColorDistance(sColorA, sColorB);
     }
 
     public static void initDefaultColors(Map<ColorPrefs.ColorTarget, Integer> mColors) {
