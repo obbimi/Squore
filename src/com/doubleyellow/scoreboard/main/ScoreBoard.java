@@ -4017,13 +4017,16 @@ touch -t 01030000 LAST.sb
         }
 
         @Override public AlertDialog.Builder setTitle(CharSequence sTitle) {
-            String sColor = ColorUtil.getRGBString(target2colorMapping.get(ColorPrefs.ColorTarget.middlest));
-            long iDistanceToBlack = ColorUtil.getDistance2Black(sColor);
-            if ( iDistanceToBlack < 50 ) {
-                // e.g. when using monochrome black
-                sColor = "#FFFFFF";
+            if ( target2colorMapping != null ) {
+                Integer newColor = target2colorMapping.get(ColorPrefs.ColorTarget.middlest);
+                String  sColor   = ColorUtil.getRGBString(newColor);
+                long iDistanceToBlack = ColorUtil.getDistance2Black(sColor);
+                if ( iDistanceToBlack < 50 ) {
+                    // e.g. when using monochrome black
+                    sColor = "#FFFFFF";
+                }
+                sTitle = Html.fromHtml("<font color='" + sColor + "'>" + sTitle + "</font>");
             }
-            sTitle = Html.fromHtml("<font color='" + sColor + "'>" + sTitle + "</font>");
             AlertDialog.Builder builder = super.setTitle(sTitle);
             return builder;
         }
