@@ -1,0 +1,51 @@
+Slovníček pro konzistentní terminologii napříč aplikací
+========================================================
+Používat nedokonavý infinitiv (např.: Zobrazovat, Používat)
+========================================================
+
+Action bar - Tlačítková lišta
+All - všichni
+Announcements - hlášení
+Appeal - žádost/odvolání
+Behaviour - chování / přizpůsobení
+Call - rozhodnutí
+country - země
+default - výchozí
+detail - podrobnost
+division - divize (?kontext?)
+don't show - nezobrazovat
+dissent - odmlouvání
+edit - upravit
+event - soutěž
+Feed - Feed
+Game - set
+Gameball - setbol (přejít na Gameball)
+Halftime - poločas
+Handicap - hendikep
+handout - ztráta
+Intro - Stručný úvod
+Live score - skóre živě
+Marker - marker
+Matchball - mečbol
+menu - nabídka
+misconduct - prohřešek
+Quick Intro - Stručný úvod
+Receiver - Přijímající
+Restart score - vynulovat skóre
+Retired - vzdal
+score history - vývoj skóre (průběh, historie ?)
+Score sheet - zápis utkání
+scoreboard - panel
+second - vteřina (15 vteřin)
+Sequence - pořadí
+Site - web
+Timer - stopky / měření času / časomíra
+warmup - zahřívání
+winners/errors - Vítězné/Chyby
+
+předvolby
+přizpůsobit
+doba
+klepnutí na tlačítko
+„chyba“, „dolů“, „out“, „not up“ nebo „stop“,
+Balónkové / bublinové

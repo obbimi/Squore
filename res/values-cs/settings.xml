@@ -18,6 +18,46 @@
 */
 -->
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="pref_ColorTargets_Background">Pozadí</string>
+    <string name="pref_ColorTargets_Player_Button_Background">Tlačítko hráče</string>
+    <string name="pref_ColorTargets_Score_Button_Background">Tlačítko skóre</string>
+    <string name="pref_ColorTargets_Serve_Button_Background">Tlačítko strany podání</string>
+    <string name="pref_ColorTargets_History_Background">Historie</string>
+
+    <string name="pref_ColorTargets_Main_Text">Běžný text</string>
+    <string name="pref_ColorTargets_Player_Button_Text">Text tlačítka hráče</string>
+    <string name="pref_ColorTargets_Score_Button_Text">Text tlačítka skóre</string>
+    <string name="pref_ColorTargets_Serve_Button_Text">Text tlačítka podání</string>
+    <string name="pref_ColorTargets_History_Text">Text historie</string>
+
+    <string name="pref_Category_Layout">Rozložení</string>
+    <string name="pref_Category_Brand">Značka</string>
+    <string name="pref_Category_Technical">Technické</string>
+    <string name="pref_Category_End_of_Game">Konec setu</string>
+    <string name="pref_Category_Others">Ostatní</string>
+    <string name="pref_Category_Live_Score__ChromeCast">Skóre živě/ChromeCast</string>
+    <string name="pref_Category_ChromeCast">ChromeCast</string>
+    <string name="pref_Category_Directory_for_import_export">Složka pro import/export</string>
+    <string name="pref_Category_Contacts">Kontakty</string>
+    <string name="pref_Category_Event">Soutěže</string>
+    <string name="pref_Category_Feeds">Feedy</string>
+    <string name="pref_Category_Import_Export_Settings">Nastavení Import/Export</string>
+    <string name="pref_Make_your_choice">Vyberte</string>
+
+    <string name="pref_feedFeedsURL">FeedsURL</string>
+    <string name="pref_feedFeedsURL_summary">Jen pro vývojáře..</string>
+    <string name="pref_MaximumCacheAgeFeeds">Doba uložení feedů v cache</string>
+    <string name="pref_MaximumCacheAgeFeeds_summary">v minutách</string>
+    <string name="pref_feedReadTimeout">Timeout pro načtení feedu</string>
+    <string name="pref_feedReadTimeout_summary">V sekundách. Automatické ukončení pokusu načíst feed</string>
+    <string name="pref_maximumCacheAgeFlags">Doba uložení vlaječek v cache</string>
+    <string name="pref_maximumCacheAgeFlags_summary">v minutách</string>
+
+    <string name="pref_Show_logo_on_scoreboard">Zobrazit logo na panelu</string>
+    <string name="pref_Hide_logo_when_game_in_progress">Schovat logo během zápasu</string>
+    <string name="pref_Hide_division_field_when_game_in_progress">Schovat divizi během zápasu</string>
+
     <string name="pref_x_changed_to_y">Nastavení
         \n %1$s
         \n změněno na
@@ -33,10 +73,10 @@
     <string name="pref_Appearance_summary">Barvy. Velikost textu. Tlačítková lišta</string>
     <string name="pref_Colors">Barvy</string>
     <string name="pref_Colors_summary">Nastavení barev panelu zobrazení</string>
-    <string name="pref_Avatars">Players avatar</string><!-- TODO -->
-    <string name="pref_Avatars_summary">Small player image specified in feed</string><!-- TODO -->
-    <string name="pref_showAvatarOn">Show image on</string><!-- TODO -->
-    <string name="pref_hideAvatarForSameImage">Hide avatar if identical</string><!-- TODO -->
+    <string name="pref_Avatars">Avatary hráčů</string>
+    <string name="pref_Avatars_summary">Malý obrázek hráče do Feedu</string>
+    <string name="pref_showAvatarOn">Zobrazovat avatar</string>
+    <string name="pref_hideAvatarForSameImage">Skrýt stejný avatar</string>
     <string name="pref_CountryFlags">Země/vlaječky</string>
     <string name="pref_CountryFlags_summary">Zobrazení země a vlaječek</string>
     <string name="pref_showCountryAs">Zobrazovat zemi jako</string>
@@ -55,8 +95,8 @@
     <string name="pref_PlayerColor">Podbarvení hráče</string>
     <string name="pref_showPlayerColorOn">Podbarvovat hráče</string>
     <string name="pref_showPlayerColorOn_summary">Určit, pro které vizuální prvky použít podbarvení hráče</string>
-    <string name="pref_serveButtonTransparencyNonServer">Transparency of serve button</string> <!-- TODO -->
-    <string name="pref_serveButtonTransparencyNonServer_summary">High values (max 100) make the button of the receiver less visible</string> <!-- TODO -->
+    <string name="pref_serveButtonTransparencyNonServer">Průhlednost tlačítka podání</string>
+    <string name="pref_serveButtonTransparencyNonServer_summary">Vyšší hodnota (max 100) znamená větší průhlednost tlačítka přijímajícího hráče</string>
     <!--
         <string name="pref_Colors_TextDynamically">Text Color Dynamically</string>
         <string name="pref_Colors_TextDynamically_summary">Automatic black or white depending on the chosen background color</string>
@@ -74,7 +114,7 @@
     <string name="pref_showTextInActionBar">Zobrazovat texty na tlačítkách v tlačítkové liště</string>
     <string name="pref_showFullScreen">Na celou obrazovku</string>
     <string name="pref_showScoringHistoryInMainScreen">Zobrazovat průběh zápasu na panelu</string>
-    <string name="pref_scorelineLayout">Scoreline Layout</string> <!-- TODO -->
+    <string name="pref_scorelineLayout">Rozložení vývoje skóre</string>
     <string name="pref_showSideButtonsWithinScoreButtons">Side buttons within Score buttons</string>
     <string name="pref_showSideButtonsWithinScoreButtons_summary">Umožnit mít tlačítka skótre ještě větší</string>
     <string name="pref_AppealHandGestureIconSize">Velikost ikonky v dialogu "Odvolání"</string>
@@ -117,7 +157,7 @@
     <string name="pref_officialAnnouncementsLanguage">Jazyk hlášení</string>
     <string name="pref_officialAnnouncementsLanguage_summary">V jakém jazyce nabízet hlášení rozhodčího</string>
     <string name="pref_useTimersFeature">Používání časomíry</string>
-    <string name="pref_MatchGameDuration">Délku setu/zápasu</string> <!-- TODO -->
+    <string name="pref_MatchGameDuration">Délka setu/zápasu</string>
     <string name="pref_showMatchDurationChronoOn">Zobrazovat délku zápasu</string>
     <string name="pref_showLastGameDurationChronoOn">Zobrazovat délku setu</string>
     <string name="pref_showFieldDivisionOn">Zobrazovat divizi</string>
@@ -136,7 +176,7 @@
     <string name="pref_showNewMatchFloatButton_summary">Zobrazovat plovoucí tlačítko pro nový zápas (ve vhodných situacích)</string>
     <string name="pref_keepScreenOn">Nezhasínat displej</string>
     <string name="pref_keepScreenOn_summary">Zabránit zhasínání displeje během zápasu</string>
-    <string name="pref_TimerDialog">Časomíra Dialog</string> <!-- TODO -->
+    <string name="pref_TimerDialog">Dialog časomíry</string>
     <string name="pref_Timers">Časomíra</string>
     <string name="pref_Timers_summary">Zobrazovat automaticky. Trvání. Zahrát zvuk a/nebo zavibrovat při vypršení času</string>
     <string name="pref_Players">Hráči</string>
@@ -260,7 +300,7 @@
     <string name="pref_refereeName_summary">Jméno rozhodčího jak se objeví v zápise utkání</string>
     <string name="pref_refereeList">Seznam rozhodčích</string>
     <string name="pref_refereeList_summary">Používá se k našeptávání jména rozhodčího/markera</string>
-    <string name="pref_Mail">Emailem</string> <!-- TODO -->
+    <string name="pref_Mail">Emailem</string>
     <string name="pref_mailResultTo">Výchozí emailová adresa pro akci \'Odeslat výsledek emailem\'</string>
     <string name="pref_mailResultTo_summary">Emailová adresa bude předvyplněna při volbě \'Odeslat výsledek emailem\'</string>
     <string name="pref_mailFullScoringSheet">Emailovat celý zápis</string>
