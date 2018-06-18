@@ -1,3 +1,8 @@
+## 4.11 (june 2018)
+
+- added 'Serve' as possible option when app is in 'record statistics' mode
+- added Czech translations for new features/preferences
+
 ## 4.10 (march 2018)
 
 - Configurable 'transparency' of the serve button of receiver

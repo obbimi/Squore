@@ -60,6 +60,9 @@ import java.util.regex.Pattern;
  * feedPostUrls/feedPostUrl preferences.
  *
  * Used within MatchTabbed activity.
+ *
+ *
+ * If no matches are in the feed, and a 'players' feed is available it allows the user browse the list of players and to select the first player of a match.
  */
 public class FeedMatchSelector extends ExpandableMatchSelector
 {
@@ -146,7 +149,9 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
             if ( (m_joFeedConfig != null) && m_joFeedConfig.optBoolean(URLsKeys.skipMatchSettings.toString(), false) ) {
                 // typically a JSON feed with all appropriate settings in the feed, no need to change settings
-                Match.dontShow();
+                if ( FeedStatus.showingPlayers.equals(getFeedStatus()) == false ) {
+                    Match.dontShow();
+                }
             }
 
             Intent intent = new Intent();
@@ -217,7 +222,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 if ( PreferenceValues.removeSeedingAfterMatchSelection(context) ) {
                     sPlayer1 = Util.removeSeeding(sPlayer1);
                 }
-                if ( StringUtil.isEmpty(CountryUtil.getIso2(sCountry1)) && StringUtil.isNotEmpty(CountryUtil.getIso2(sClub1))) {
+                if ( StringUtil.isEmpty(CountryUtil.getIso2(sCountry1)) && StringUtil.isNotEmpty( CountryUtil.getIso2(sClub1)) ) {
                     // swap country and club
                     String sTmp = sClub1; sClub1 = sCountry1; sCountry1 = sTmp;
                 }

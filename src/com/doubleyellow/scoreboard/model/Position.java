@@ -18,7 +18,10 @@
 package com.doubleyellow.scoreboard.model;
 
 public enum Position {
-    Front,
+    Front ,
     Volley,
-    Back,
+    Back  ,
+
+    /** not often used for statistics, but a trainer may use it to record number of serve errors/winners */
+    Serve ,
 }
