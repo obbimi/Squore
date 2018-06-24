@@ -126,7 +126,7 @@ public class EndGame extends BaseAlertDialog
             adb.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override public void onDismiss(DialogInterface dialog) {
                     scoreBoard.triggerEvent(ScoreBoard.SBEvent.endGameDialogEnded, EndGame.this);
-                    scoreBoard.enableScoreButton(m_winner);
+                    scoreBoard.enableScoreButtons();
                 }
             });
         }
@@ -264,10 +264,10 @@ public class EndGame extends BaseAlertDialog
                 }
                 break;
         }
-        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 /* 17 */ ) {
+        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 /* 17 */ /*|| ( which == DialogInterface.BUTTON_POSITIVE) */ /* Pressing the Positive dialog button does NOT trigger dismiss listeners */ ) {
             // ondismiss not yet supported on current (OLD) device
             scoreBoard.triggerEvent(ScoreBoard.SBEvent.endGameDialogEnded, this);
-            scoreBoard.enableScoreButton(m_winner);
+            scoreBoard.enableScoreButtons();
         }
     }
 }

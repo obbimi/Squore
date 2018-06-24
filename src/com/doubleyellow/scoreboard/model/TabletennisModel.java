@@ -74,8 +74,8 @@ public class TabletennisModel extends Model
         super.determineServerAndSide_Racketlon_Tabletennis(true, getSport());
     }
 
-    @Override Player determineServerForNextGame(int iSetZB, int iScoreA, int iScoreB) {
-        return determineServerForNextGame_Racketlon_Tabletennis(iSetZB, true);
+    @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {
+        return determineServerForNextGame_Racketlon_Tabletennis(iGameZB, true);
     }
 
     /** LR and Handout parameters are totally ignored. Returns character to indicate number of serves left */

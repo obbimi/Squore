@@ -1,3 +1,8 @@
+## 4.11 (june 2018)
+
+- Fix issue with unresponsive score button at start of new game
+- Other minor improvements
+
 ## 4.10 (march 2018)
 
 - Configurable 'transparency' of the serve button of receiver

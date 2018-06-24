@@ -86,7 +86,7 @@ public class IBoard implements TimerViewContainer
     public static Player togglePlayer2ScreenElements() {
         return initPlayer2ScreenElements(m_firstPlayerOnScreen.getOther());
     }
-    public static Player initPlayer2ScreenElements(Player pFirst) {
+    private static Player initPlayer2ScreenElements(Player pFirst) {
         m_firstPlayerOnScreen = pFirst;
 
         m_player2scoreId     .put(pFirst           , R.id.btn_score1);

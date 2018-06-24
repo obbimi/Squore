@@ -351,7 +351,13 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     //-------------------------------------------------------------------------
     // Helper methods to prevent score change while EndGame dialog was in about/in progress to be presented (fast double click on scorebutton on gameball)
     //-------------------------------------------------------------------------
-    public void enableScoreButton(Player player) {
+
+    public void enableScoreButtons() {
+        for ( Player p: Player.values() ){
+           enableScoreButton(p);
+        }
+    }
+    private void enableScoreButton(Player player) {
         View view = findViewById(IBoard.m_player2scoreId.get(player));
         if ( view == null ) { return; }
         if ( view.isEnabled() ) { return; }
@@ -412,8 +418,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             if ( matchModel.isDoubles() && player.equals( matchModel.getServer() ) ) {
                 DoublesServe inOutClickedOn = getInOrOut(view);
                 DoublesServe inOut = matchModel.getNextDoubleServe(player);
-                if ( inOutClickedOn != null && inOutClickedOn.equals(DoublesServe.NA) == false && inOutClickedOn.equals(inOut) == false ) {
-                    // clicked on serve side button of non-serving doulbe player of the same team
+                if ( (inOutClickedOn != null) && inOutClickedOn.equals(DoublesServe.NA) == false && inOutClickedOn.equals(inOut) == false ) {
+                    // clicked on serve side button of non-serving doubles player of the same team
                     matchModel.changeDoubleServe(player);
                 } else {
                     matchModel.changeSide(player);
@@ -443,7 +449,11 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         //PreferenceValues.setNumber (PreferenceKeys.viewedChangelogVersion, ScoreBoard.this, PreferenceValues.getAppVersionCode(ScoreBoard.this)-1);
                     }
                 }
-                matchModel.changeSide(player);
+                if ( Brand.isTabletennis() || Brand.isRacketlon() ) {
+                    // Who will serve at what score is totally determined by who started serving the first point
+                } else {
+                    matchModel.changeSide(player);
+                }
             }
         }
 
@@ -2879,6 +2889,7 @@ touch -t 01030000 LAST.sb
                     // but if that happens the EndGame dialog itself is already dismissed, so the new dialog will be opened anyway
                 }
 
+                //enableScoreButton();
                 break;
             }
 /*
@@ -3816,6 +3827,9 @@ touch -t 01030000 LAST.sb
                     }
                     if ( Brand.isTabletennis() ) {
                         ServeButton.setMaxForCountDown(m.getNrOfServesPerPlayer());
+                        if ( Player.B.equals(IBoard.m_firstPlayerOnScreen) ) {
+                            IBoard.togglePlayer2ScreenElements();
+                        }
                     }
                     if ( MapUtil.isNotEmpty(RWValues.getOverwritten() ) ) {
                         Log.w(TAG, "remaining overwrites " + RWValues.getOverwritten());
