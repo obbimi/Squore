@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.doubleyellow.prefs;
 
 import android.app.AlertDialog;
@@ -22,11 +38,11 @@ import java.util.*;
 
 /**
  * To be able to have a preference with list options that can be extended by the user.
- * Used e.g. for the ColorPalette
+ * Used only for the ColorPalette (for now)
  */
 public class DynamicListPreference extends ListPreference {
 
-  //private static final String SELECTED_INDEX = "selectedIndex";
+  //private static final String SELECTED_INDEX = "m_selectedIndex";
     private static final String TAG = "SB." + DynamicListPreference.class.getSimpleName();
 
     public DynamicListPreference(Context context, AttributeSet attrs) {
@@ -37,10 +53,12 @@ public class DynamicListPreference extends ListPreference {
         super(context);
     }
 
-    private int selectedIndex = 0;
-    private boolean bAllowNew = true;
+    private int     m_selectedIndex = 0;
+    private boolean m_bAllowNew     = true;
+    private int     m_iNewIndex     = 0;
+
     public void setAllowNew(boolean b) {
-        this.bAllowNew = b;
+        m_bAllowNew = b;
     }
     public static boolean deleteCacheFile(Context context, String sPrefKey) {
         File f = getOptionsJsonFile(context, sPrefKey);
@@ -58,13 +76,13 @@ public class DynamicListPreference extends ListPreference {
 
         String sValue = super.getValue();
         try {
-            selectedIndex = Integer.parseInt(sValue);
+            m_selectedIndex = Integer.parseInt(sValue);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
 
         CharSequence[] entriesFromJson = getEntries();
-        builder.setSingleChoiceItems(entriesFromJson, selectedIndex, singleChoiceListener);
+        builder.setSingleChoiceItems(entriesFromJson, m_selectedIndex, singleChoiceListener);
 
         builder.setOnItemSelectedListener(onItemSelectedListener);
     }
@@ -74,56 +92,60 @@ public class DynamicListPreference extends ListPreference {
         @Override public void onNothingSelected(AdapterView<?> adapterView) { }
     };
 
-    private LinkedHashMap<CharSequence, EditText> lTexts;
-    private DialogInterface listDialogInterface = null;
+    private LinkedHashMap<CharSequence, EditText> m_lTexts;
+    private DialogInterface m_dialogInterface = null;
 
     private DialogInterface.OnClickListener singleChoiceListener = new DialogInterface.OnClickListener()
     {
         @Override public void onClick(final DialogInterface dialogInterface, int i) {
-            listDialogInterface = dialogInterface;
+            m_dialogInterface = dialogInterface;
 
-            if (i == iNewIndex) {
+            if ( m_iNewIndex == i ) {
                 // user selected item labeled 'New...'
 
-                // build the dialog where user can specify new values
-                final LinearLayout ll = new LinearLayout(getContext());
-                ll.setOrientation(LinearLayout.VERTICAL);
-                lTexts = new LinkedHashMap<CharSequence, EditText>();
-                for (CharSequence s : m_persistedListOfMaps.getEntryProperties()) {
-                    LinearLayout llLabelText = new LinearLayout(getContext());
-                    llLabelText.setOrientation(LinearLayout.HORIZONTAL);
+                if ( m_persistedListOfMaps != null ) { // safety precaution... should not happen
+                    // build the dialog where user can specify new values
+                    final LinearLayout ll = new LinearLayout(getContext());
+                    ll.setOrientation(LinearLayout.VERTICAL);
+                    m_lTexts = new LinkedHashMap<CharSequence, EditText>();
+                    for (CharSequence s : m_persistedListOfMaps.getEntryProperties()) {
+                        LinearLayout llLabelText = new LinearLayout(getContext());
+                        llLabelText.setOrientation(LinearLayout.HORIZONTAL);
 
-                    TextView lbl = new TextView(getContext());
-                    lbl.setText(StringUtil.capitalize(s.toString(), false));
-                    llLabelText.addView(lbl);
+                        TextView lbl = new TextView(getContext());
+                        lbl.setText(StringUtil.capitalize(s.toString(), false));
+                        llLabelText.addView(lbl);
 
-                    EditText p = new EditText(getContext());
-                    ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    p.setLayoutParams(layoutParams);
-                    p.setSingleLine();
-                    llLabelText.addView(p);
+                        EditText p = new EditText(getContext());
+                        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        p.setLayoutParams(layoutParams);
+                        p.setSingleLine();
+                        llLabelText.addView(p);
 
-                    ll.addView(llLabelText);
+                        ll.addView(llLabelText);
 
-                    // for when user is finished
-                    lTexts.put(s, p);
+                        // for when user is finished
+                        m_lTexts.put(s, p);
+                    }
+
+
+                    AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
+                    CharSequence title = getTitle();
+                    if (StringUtil.isNotEmpty(title)) {
+                        title = title.toString().replaceAll("\\([^\\)]*\\)$", "").trim();
+                    }
+                    adb.setTitle(R.string.uc_new)
+                            .setMessage(getContext().getString(R.string.sb_new_item, title))
+                            .setView(ll)
+                            .setIcon(android.R.drawable.ic_menu_add)
+                            .setPositiveButton(R.string.cmd_ok    , onClickCreateOrCancelListener)
+                            .setNegativeButton(R.string.cmd_cancel, onClickCreateOrCancelListener);
+                    AlertDialog dialog = adb.show();
+                } else {
+                    Log.w(TAG, "m_persistedListOfMaps is empty");
                 }
-
-
-                AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
-                CharSequence title = getTitle();
-                if (StringUtil.isNotEmpty(title)) {
-                    title = title.toString().replaceAll("\\([^\\)]*\\)$", "").trim();
-                }
-                adb.setTitle(R.string.uc_new)
-                        .setMessage(getContext().getString(R.string.sb_new_item, title))
-                        .setView(ll)
-                        .setIcon(android.R.drawable.ic_menu_add)
-                        .setPositiveButton(getContext().getString(R.string.cmd_ok), onClickCreateOrCancelListener)
-                        .setNegativeButton(getContext().getString(R.string.cmd_cancel), onClickCreateOrCancelListener);
-                AlertDialog dialog = adb.show();
             } else {
-                if (selectedIndex == i) {
+                if (m_selectedIndex == i) {
                     // was already selected: present user with option edit/delete?
 
                     boolean bAllowEdit = false;
@@ -137,7 +159,7 @@ public class DynamicListPreference extends ListPreference {
                         iconId  = android.R.drawable.ic_menu_edit;
                     }
                     adb.setTitle(titleId)
-                            .setMessage(getContext().getString(msgId, getSelectedName(selectedIndex)))
+                            .setMessage(getContext().getString(msgId, getSelectedName(m_selectedIndex)))
                             .setIcon(iconId)
                             .setPositiveButton(getContext().getString(R.string.cmd_ok    ), deleteDialogClickListener)
                             .setNegativeButton(getContext().getString(R.string.cmd_cancel), deleteDialogClickListener);
@@ -146,8 +168,8 @@ public class DynamicListPreference extends ListPreference {
                     }
                     AlertDialog dialog = adb.show();
                 } else {
-                    selectedIndex = i;
-                    DynamicListPreference.super.setValue(String.valueOf(selectedIndex));
+                    m_selectedIndex = i;
+                    DynamicListPreference.super.setValue(String.valueOf(m_selectedIndex));
 
                     dialogInterface.cancel();
                 }
@@ -160,13 +182,13 @@ public class DynamicListPreference extends ListPreference {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
                     // do the delete
-                    m_persistedListOfMaps.delete(selectedIndex);
+                    m_persistedListOfMaps.delete(m_selectedIndex);
 
-                    selectedIndex = Math.max(selectedIndex - 1, 0);
-                    DynamicListPreference.super.setValue(String.valueOf(selectedIndex));
+                    m_selectedIndex = Math.max(m_selectedIndex - 1, 0);
+                    DynamicListPreference.super.setValue(String.valueOf(m_selectedIndex));
                     setOptionsFromJson(m_persistedListOfMaps);
 
-                    listDialogInterface.cancel();
+                    m_dialogInterface.cancel();
                     break;
                 case DialogInterface.BUTTON_NEUTRAL:
                     // edit the entry: TODO
@@ -186,8 +208,8 @@ public class DynamicListPreference extends ListPreference {
 
                     // first do some validation of the provided values
                     Map<String, String> mNewEntry = new HashMap<String, String>();
-                    for (CharSequence n : lTexts.keySet()) {
-                        EditText e = lTexts.get(n);
+                    for (CharSequence n : m_lTexts.keySet()) {
+                        EditText e = m_lTexts.get(n);
                         String sEnteredValue = e.getText().toString();
                         if ( StringUtil.isEmpty(sEnteredValue)) continue;
                         mNewEntry.put(n.toString(), sEnteredValue);
@@ -202,12 +224,12 @@ public class DynamicListPreference extends ListPreference {
                         return;
                     }
 
-                    selectedIndex = m_persistedListOfMaps.add(mNewEntry);
-                    DynamicListPreference.super.setValue     (String.valueOf(selectedIndex));
-                    DynamicListPreference.super.setValueIndex(               selectedIndex);
+                    m_selectedIndex = m_persistedListOfMaps.add(mNewEntry);
+                    DynamicListPreference.super.setValue     (String.valueOf(m_selectedIndex));
+                    DynamicListPreference.super.setValueIndex(m_selectedIndex);
                     setOptionsFromJson(m_persistedListOfMaps);
 
-                    listDialogInterface.cancel();
+                    m_dialogInterface.cancel();
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
                     // Do nothing.
@@ -216,10 +238,8 @@ public class DynamicListPreference extends ListPreference {
         }
     };
 
-    private int iNewIndex = 0;
-
     @Override public String getValue() {
-        return String.valueOf(selectedIndex);
+        return String.valueOf(m_selectedIndex);
     }
 
     @Override public void setEntries(CharSequence[] sequence) {
@@ -239,23 +259,23 @@ public class DynamicListPreference extends ListPreference {
         InitilizationFromFileFailed,
     }
 
-    private Status iInterpretationDone = Status.Uninitilized;
+    private Status m_status = Status.Uninitilized;
 
     /** Populates m_persistedListOfMaps */
     private boolean interpretEntries() {
 
-        if ( iInterpretationDone.equals(Status.InitilizedFromFile) ) return true;
+        if ( m_status.equals(Status.InitilizedFromFile) ) return true;
 
         File file = getOptionsJsonFile(getContext(), this.getKey());
 
         m_persistedListOfMaps = new PersistedListOfMaps(file, null);
         if ( m_persistedListOfMaps.read() ) {
-            iInterpretationDone = Status.InitilizedFromFile;
+            m_status = Status.InitilizedFromFile;
         } else {
-            iInterpretationDone = Status.InitilizationFromFileFailed;
+            m_status = Status.InitilizationFromFileFailed;
             Log.w(TAG, "Could not read data for " + this.getKey() + " from " + file.getPath());
         }
-        return (iInterpretationDone.equals(Status.InitilizedFromFile));
+        return (m_status.equals(Status.InitilizedFromFile));
     }
 
     private static File getOptionsJsonFile(Context context, String sPrefKey) {
@@ -268,7 +288,7 @@ public class DynamicListPreference extends ListPreference {
     }
 
     @Override protected Parcelable onSaveInstanceState() {
-        iInterpretationDone = Status.Uninitilized;
+        m_status = Status.Uninitilized;
         return super.onSaveInstanceState();
     }
 
@@ -281,12 +301,12 @@ public class DynamicListPreference extends ListPreference {
         List<Map<String, String>> content = persistedListOfMaps.getContent();
         List<String> lLetUserSelectFrom = MapUtil.listOfMaps2List(content, entryProperties.get(0));
 
-        if ( this.bAllowNew ) {
-            iNewIndex = lLetUserSelectFrom.size();
+        if ( m_bAllowNew ) {
+            m_iNewIndex = lLetUserSelectFrom.size();
             String sLabel = getContext().getString(R.string.uc_new);
             lLetUserSelectFrom.add(sLabel);
         } else {
-            iNewIndex = -1;
+            m_iNewIndex = -1;
         }
 
         CharSequence[] entryValues = lLetUserSelectFrom.toArray(new CharSequence[0]);
@@ -295,9 +315,9 @@ public class DynamicListPreference extends ListPreference {
         super.setEntries    (entryValues);
     }
 
-    private String sDefault = "{}";
+    private String m_sDefault = "{}";
     @Override public void setDefaultValue(Object defaultValue) {
-        sDefault = defaultValue!=null?defaultValue.toString():sDefault;
+        m_sDefault = defaultValue!=null ? defaultValue.toString() : m_sDefault;
     }
 
     @Override public CharSequence getEntry() {
@@ -308,10 +328,10 @@ public class DynamicListPreference extends ListPreference {
         return entry;
     }
 
-    public CharSequence getSelectedName(Object oValue) {
+    private CharSequence getSelectedName(Object oValue) {
         String sValue = String.valueOf(oValue);
         try {
-            selectedIndex = Integer.parseInt(sValue);
+            m_selectedIndex = Integer.parseInt(sValue);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -323,11 +343,11 @@ public class DynamicListPreference extends ListPreference {
             if (ListUtil.isEmpty(entryProperties)) { return null; }
             String oValueColumn = entryProperties.get(0);
             List<String> lLetUserSelectFrom = MapUtil.listOfMaps2List(content, oValueColumn);
-            if ( (selectedIndex < 0) || (selectedIndex >= ListUtil.size(lLetUserSelectFrom))) {
-                selectedIndex = Math.max(0, ListUtil.size(lLetUserSelectFrom)-1);
+            if ( (m_selectedIndex < 0) || (m_selectedIndex >= ListUtil.size(lLetUserSelectFrom))) {
+                m_selectedIndex = Math.max(0, ListUtil.size(lLetUserSelectFrom)-1);
             }
-            if ( selectedIndex < ListUtil.size(lLetUserSelectFrom) ) {
-                return lLetUserSelectFrom.get(selectedIndex);
+            if ( m_selectedIndex < ListUtil.size(lLetUserSelectFrom) ) {
+                return lLetUserSelectFrom.get(m_selectedIndex);
             }
         }
         return null;
