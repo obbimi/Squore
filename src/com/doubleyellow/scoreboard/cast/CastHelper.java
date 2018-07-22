@@ -227,6 +227,10 @@ public class CastHelper
             @Override public void onServiceCreated(CastRemoteDisplayLocalService castRemoteDisplayLocalService) {
                 //Log.d(TAG, "onServiceCreated " + castRemoteDisplayLocalService);
             }
+
+            @Override public void onRemoteDisplaySessionEnded(CastRemoteDisplayLocalService castRemoteDisplayLocalService) {
+                //Log.d(TAG, "onRemoteDisplaySessionEnded " + castRemoteDisplayLocalService);
+            }
         };
         CastRemoteDisplayLocalService.startService(context, PresentationService.class, APP_ID, selectedDevice, settings, callbacks);
     }

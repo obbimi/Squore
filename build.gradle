@@ -2,7 +2,7 @@
 apply plugin: 'com.android.application'
 repositories {
     //mavenCentral()
-
+    google()
     // required to work with aar file in libs dir
     flatDir {
         dirs 'libs'
@@ -35,8 +35,8 @@ android {
         compile 'com.android.support:support-v13:25.3.1'
 
         // ChromeCast
-        //compile 'com.google.android.gms:play-services-cast:11.6.0' // not found using jcenter
-        compile 'com.google.android.gms:play-services-cast:11.0.4'
+        //compile 'com.google.android.gms:play-services-cast:11.0.4'
+        compile 'com.google.android.gms:play-services-cast:15.0.1' // repository google(), not found using jcenter
 
         //compile 'com.android.support:recyclerview-v7:25.3.1'
     }
@@ -45,8 +45,7 @@ android {
     //compileSdkVersion 25
     compileSdkVersion 27
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
-    //buildToolsVersion '25.0.2'
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.3'
 
     useLibrary 'org.apache.http.legacy'
     lintOptions {
