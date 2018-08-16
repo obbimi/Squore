@@ -69,7 +69,7 @@
     <string name="pref_Sharing_summary">Via Facebook, SMS of Email</string>
     <string name="pref_Other">Overige</string>
     <string name="pref_Appearance">Aanzicht</string>
-    <string name="pref_Appearance_summary">Kleur. Text grootte. Actie bar.</string>
+    <string name="pref_Appearance_summary">Kleur. Vlaggen. Actie bar.</string>
     <string name="pref_Colors">Kleuren</string>
     <string name="pref_Colors_summary">Controleer de kleuren van alle squore board elementen</string>
     <string name="pref_Avatars">Spelers avatar</string>
@@ -97,8 +97,8 @@
     <!--
         <string name="pref_Colors_TextDynamically">Tekst kleur dynamisch</string>
         <string name="pref_Colors_TextDynamically_summary">Automatisch wit of zwart afhankelijk van achtergrond kleur</string>
-    -->
     <string name="pref_TextSize">Text Grootte</string>
+    -->
     <string name="pref_TextSizePlayerName">Naam van de spelers</string>
     <string name="pref_TextSizeServeSide">Kant van opslag</string>
     <string name="pref_TextSizeScore">Score buttons</string>

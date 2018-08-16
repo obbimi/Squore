@@ -70,7 +70,7 @@
     <string name="pref_Sharing_summary">Na Facebooku, SMS nebo Email</string>
     <string name="pref_Other">Různé</string>
     <string name="pref_Appearance">Vzhled</string>
-    <string name="pref_Appearance_summary">Barvy. Velikost textu. Tlačítková lišta</string>
+    <string name="pref_Appearance_summary">Barvy. Vlaječky. Tlačítková lišta</string>
     <string name="pref_Colors">Barvy</string>
     <string name="pref_Colors_summary">Nastavení barev panelu zobrazení</string>
     <string name="pref_Avatars">Avatary hráčů</string>
@@ -100,8 +100,8 @@
     <!--
         <string name="pref_Colors_TextDynamically">Text Color Dynamically</string>
         <string name="pref_Colors_TextDynamically_summary">Automatic black or white depending on the chosen background color</string>
-    -->
     <string name="pref_TextSize">Velikost textu</string>
+    -->
     <string name="pref_TextSizePlayerName">Jména hráčů</string>
     <string name="pref_TextSizeServeSide">Strana podání</string>
     <string name="pref_TextSizeScore">Tlačítka skóre</string>

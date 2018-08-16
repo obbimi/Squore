@@ -69,7 +69,7 @@
     <string name="pref_Sharing_summary">Par Facebook, par SMS ou courriel</string>
     <string name="pref_Other">Divers</string>
     <string name="pref_Appearance">Apparence</string>
-    <string name="pref_Appearance_summary">Couleurs. Taille du texte. Barre d\'action.</string>
+    <string name="pref_Appearance_summary">Couleurs. Drapeaux. Barre d\'action.</string>
     <string name="pref_Colors">Couleurs</string>
     <string name="pref_Colors_summary">Contrôler les couleurs des éléments</string>
     <string name="pref_Avatars">Image des joueurs</string>
@@ -99,8 +99,8 @@
     <!--
         <string name="pref_Colors_TextDynamically">Couleur de texte dynamique</string>
         <string name="pref_Colors_TextDynamically_summary">Automatiquement noir ou blanch selon la couleur de fond choisie</string>
-    -->
     <string name="pref_TextSize">Taille du texte</string>
+    -->
     <string name="pref_TextSizePlayerName">Noms des joueurs</string>
     <string name="pref_TextSizeServeSide">Côté de serice</string>
     <string name="pref_TextSizeScore">Boutons de score</string>
