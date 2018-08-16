@@ -4735,7 +4735,11 @@ touch -t 01030000 LAST.sb
 
     private void onNFCPause() {
         if ( B_ONE_INSTANCE_FROM_NFC && (mNfcAdapter != null) ) {
-            mNfcAdapter.disableForegroundDispatch(this);
+            try {
+                mNfcAdapter.disableForegroundDispatch(this); // added try-catch because of crash reported in PlayStore (Android 8 on 20180804)
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
         }
     }
 
