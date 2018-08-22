@@ -1,41 +1,58 @@
 #!/usr/bin/env bash
 
-tobranded=${1:-Squore}
+function showHelp {
+cat <<!
 
-echo "Change to '${tobranded}'"
+Usage:
+
+	$0 '(Squore|Racketlon|Tabletennis|CourtCare|UniOfNotthingham)'
+
+!
+}
+tobranded=${1:-Squore}
+if [ "${tobranded}" = "-h" ]; then
+	showHelp
+	exit
+fi
 
 cd src
 if [ "$tobranded" = "ASB" ]; then
+    echo "Change to '${tobranded}'"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
         echo "File $f"
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.asbsquore.R\1~' ${f}
         #exit 1
     done
 elif [ "$tobranded" = "Racketlon" ]; then
+    echo "Change to '${tobranded}'"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
         echo "File $f"
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.racketlon.R\1~' ${f}
         #exit 1
     done
 elif [ "$tobranded" = "Tabletennis" ]; then
+    echo "Change to '${tobranded}'"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
         echo "File $f"
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.tabletennis.R\1~' ${f}
         #exit 1
     done
 elif [ "$tobranded" = "CourtCare" ]; then
+    echo "Change to '${tobranded}'"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
         echo "File $f"
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.courtcaresquore.R\1~' ${f}
         #exit 1
     done
 elif [ "$tobranded" = "UniOfNotthingham" ]; then
+    echo "Change to '${tobranded}'"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
         echo "File $f"
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.courtscore_uon.R\1~' ${f}
         #exit 1
     done
-else
+elif [ "$tobranded" = "Squore" ]; then
+    echo "Change to '${tobranded}'"
     for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis).R" *); do
         echo "File $f back to normal"
         sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\).R\([^a-z]\)~com.doubleyellow.scoreboard.R\2~' ${f}
@@ -45,6 +62,8 @@ else
     sed -i 's~^\(\s*\)\(\w\+\s*(\s*SportType\.\)~\1//\2~'      com/doubleyellow/scoreboard/Brand.java
     # ... and uncomment Squore
     sed -i "s~^\(\s\+\)//\(Squore.\+R.string.app_name\)~\1\2~" com/doubleyellow/scoreboard/Brand.java
+else
+	showHelp
 fi
 
 # simply actually set the active brand like Brand.brand = Brand.Squore
