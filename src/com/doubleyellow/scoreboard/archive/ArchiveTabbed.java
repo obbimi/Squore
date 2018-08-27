@@ -34,6 +34,9 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.XActivity;
@@ -189,6 +192,10 @@ public class ArchiveTabbed extends XActivity implements NfcAdapter.CreateNdefMes
 */
 
     public boolean handleMenuItem(int menuItemId, Object... ctx) {
+        if ( (menuItemId != R.id.close) && (menuItemId != R.id.sb_overflow_submenu) && ListUtil.isEmpty(actualTabsToShow) ) {
+            showDisabledInSettingsMessage();
+            return false;
+        }
         switch (menuItemId) {
             case R.id.filter:
             case R.id.refresh:
@@ -266,7 +273,8 @@ public class ArchiveTabbed extends XActivity implements NfcAdapter.CreateNdefMes
         if ( PreferenceValues.saveMatchesForLaterUsage(this) == false ) {
             actualTabsToShow.remove(SelectTab.Previous);
             actualTabsToShow.remove(SelectTab.PreviousMultiSelect);
-            // TODO: show some message or prevent this activity from being able to be called
+            // TODO: prevent this activity from being able to be called
+            showDisabledInSettingsMessage();
         }
 
         if ( defaultTab == null ) {
@@ -307,6 +315,10 @@ public class ArchiveTabbed extends XActivity implements NfcAdapter.CreateNdefMes
         //ViewUtil.fixCurrentOrientationAndRotation(this);
 
         ScoreBoard.updateDemoThread(this);
+    }
+
+    private void showDisabledInSettingsMessage() {
+        Toast.makeText(this, "In your preferences/settings you have selected NOT to store/archive finished matches", Toast.LENGTH_LONG).show();
     }
 
 /*
@@ -400,6 +412,10 @@ public class ArchiveTabbed extends XActivity implements NfcAdapter.CreateNdefMes
         /** This all is only invoked once, even when screen rotates */
         @Override public Fragment getItem(int index) {
             //Log.w(TAG, "getItem(" + index + ")");
+            if ( index >= ListUtil.size(actualTabsToShow) ) {
+                // prevent NPE
+                return null;
+            }
             SelectTab selectTab = actualTabsToShow.get(index);
             Fragment fragment = Fragment.instantiate(ArchiveTabbed.this, selectTab.clazz.getName());
             if ( fragment instanceof ExpandableMatchSelector) {
