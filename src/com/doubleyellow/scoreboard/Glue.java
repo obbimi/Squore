@@ -225,7 +225,7 @@ public class Glue
         }
 
         // Behaviour
-        extraInfo.put(PreferenceKeys.autoSuggestToPostResult, "true");
+      //extraInfo.put(PreferenceKeys.autoSuggestToPostResult, "true"); // should be overwritten in matches feed
       //extraInfo.put(PreferenceKeys.showLastGameInfoInTimer, "false");
       //extraInfo.put(PreferenceKeys.keepScreenOn           , "true");
 

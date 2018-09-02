@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="Score">Score</string>
     <string name="Game">Game</string>
 
     <string name="left_serveside_single_char">L</string>
     <string name="right_serveside_single_char">R</string>
-<!--
+
     <string name="no_let_abbreviation">NL</string>
     <string name="yes_let_abbreviation">YL</string>
     <string name="stroke_abbreviation">ST</string>
@@ -12,7 +13,7 @@
     <string name="conduct_stroke_abbreviation">CS</string>
     <string name="conduct_game_abbreviation">CG</string>
     <string name="conduct_match_abbreviation">CM</string>
--->
+
     <string name="broken_string_abbreviation">KS</string>
     <string name="broken_ball_abbreviation">KB</string>
     <string name="broken_racket_abbreviation">KR</string>
@@ -21,7 +22,6 @@
     <string name="lbl_all_games">Alle Games</string>
     <!--<string name="lbl_game">Game</string>-->
     <string name="lbl_players">Spelers</string>
-    <string name="lbl_countries">Landen</string>
     <string name="lbl_event_and_players">Event en Spelers</string>
     <string name="lbl_player">Speler</string>
     <string name="lbl_player_A">Speler A</string>
@@ -31,6 +31,7 @@
     <string name="lbl_playerB1">Speler B1</string>
     <string name="lbl_playerB2">Speler B2</string>
     <string name="lbl_player_x">Speler %s</string>
+    <string name="lbl_countries">Landen</string>
     <string name="lbl_country_A">Land A</string>
     <string name="lbl_country_B">Land B</string>
     <string name="lbl_clubs">Clubs</string>
