@@ -7,6 +7,7 @@ Usage:
 
 	$0 '(Squore|Racketlon|Tabletennis|CourtCare|UniOfNotthingham)'
 
+Always change back to Squore before change to another 'Brand'
 !
 }
 tobranded=${1:-Squore}
