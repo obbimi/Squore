@@ -1,3 +1,7 @@
+## 4.12 (aug 2018)
+
+- upgraded to use new google-play library to improve ChromeCast for e.g. Android 8
+
 ## 4.07 (31 jul 2017)
 
 - improvements for live scoring

@@ -1,3 +1,7 @@
+## 4.12 (aug 2018)
+
+- upgraded to use new google-play library to improve ChromeCast for e.g. Android 8
+
 ## 4.11 (june 2018)
 
 - Fix issue with unresponsive score button at start of new game

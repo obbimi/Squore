@@ -4,6 +4,7 @@
     <string name="oa_set_ball">Set ball</string>
     <string name="oa_gummiarm_point">Gummiarm point</string>
     <string name="end_game_Racketlon">End set</string>
+    <string name="lbl_court_Racketlon">Court</string>
 
     <string name="scv_side_buttons_Racketlon">The __serve side buttons__ indicate
         \n
@@ -85,5 +86,6 @@
 ]]></string>
 
     <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Racketlon">true</bool>
+    <integer name="serveButtonTransparencyNonServer_default_Racketlon">90</integer> <!-- between 0 and 100 -->
 
 </resources>
