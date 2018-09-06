@@ -24,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,7 +80,11 @@ public class TabletennisModel extends Model
     }
 
     /** LR and Handout parameters are totally ignored. Returns character to indicate number of serves left */
-    @Override public Integer convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar) {
+    @Override public Object convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar) {
+        if ( isInExpedite() ) {
+            // TODO: special char for when in expedite
+            return "X";
+        }
         boolean inTieBreak = isInTieBreak_Racketlon_Tabletennis();
         if ( m_iNrOfServesPerPlayer > 2 ) {
             // not the default for tabletennis, but possible
@@ -105,6 +110,33 @@ public class TabletennisModel extends Model
             return true;
         }
         return false;
+    }
+
+    //-------------------------------
+    // Expedite system
+    //-------------------------------
+
+    private Object m_dExpediteActivatedAt = null;
+    public void activateExpedite(boolean bActivate) {
+        if ( bActivate ) {
+            m_dExpediteActivatedAt = new Date();
+        } else {
+            m_dExpediteActivatedAt = null;
+        }
+        // notify listeners to e.g. display different 'serve side' symbol
+        triggerListeners();
+    }
+    public boolean isInExpedite() {
+        return (m_dExpediteActivatedAt != null);
+    }
+
+    @Override void determineServerAndSide_Racketlon_Tabletennis(boolean bForUndo, SportType sportType) {
+        if ( isInExpedite() ) {
+            Player server = getServer();
+            setServerAndSide(server.getOther(), ServeSide.L, null);
+        } else {
+            super.determineServerAndSide_Racketlon_Tabletennis(bForUndo, sportType);
+        }
     }
 
     //-------------------------------

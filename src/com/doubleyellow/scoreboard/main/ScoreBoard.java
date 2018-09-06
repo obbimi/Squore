@@ -449,7 +449,14 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         //PreferenceValues.setNumber (PreferenceKeys.viewedChangelogVersion, ScoreBoard.this, PreferenceValues.getAppVersionCode(ScoreBoard.this)-1);
                     }
                 }
-                if ( Brand.isTabletennis() || Brand.isRacketlon() ) {
+                if ( Brand.isTabletennis() ) {
+                    TabletennisModel ttModel = (TabletennisModel) matchModel;
+                    if ( ttModel.isInExpedite() ) {
+                        matchModel.changeSide(player);
+                    } else {
+                        // Who will serve at what score is totally determined by who started serving the first point
+                    }
+                } else if ( Brand.isRacketlon() ) {
                     // Who will serve at what score is totally determined by who started serving the first point
                 } else {
                     matchModel.changeSide(player);
@@ -3036,6 +3043,11 @@ touch -t 01030000 LAST.sb
             setMenuItemVisibility(R.id.sb_possible_conductsB   , false);
           //setMenuItemVisibility(R.id.sb_swap_double_players  , false);
         }
+        if ( Brand.isTabletennis() ) {
+            TabletennisModel tt = (TabletennisModel) matchModel;
+            setMenuItemVisibility(R.id.tt_activate_expedite  , tt.isInExpedite() == false);
+            setMenuItemVisibility(R.id.tt_deactivate_expedite, tt.isInExpedite() == true);
+        }
 
         return true;
     }
@@ -3355,6 +3367,26 @@ touch -t 01030000 LAST.sb
                 return true;
             case R.id.sb_injury_timer:
                 _showInjuryTypeChooser();
+                return true;
+            case R.id.tt_activate_expedite: // fall through
+            case R.id.tt_deactivate_expedite:
+                if ( Brand.isTabletennis() ) {
+                    TabletennisModel ttModel = (TabletennisModel) matchModel;
+                    boolean bActivate = id == R.id.tt_activate_expedite;
+                    ttModel.activateExpedite(bActivate);
+
+                    // hide just clicked menu item
+                    setMenuItemVisibility(id, false);
+                    // make 'counter-part' menu visible
+                    setMenuItemVisibility(bActivate ? R.id.tt_deactivate_expedite : R.id.tt_activate_expedite, true);
+
+                    if ( bActivate ) {
+                        // we will no respond to clicks on the serve side button
+                        PreferenceValues.setOverwrite(PreferenceKeys.serveButtonTransparencyNonServer, "0");
+                    } else {
+                        PreferenceValues.removeOverwrite(PreferenceKeys.serveButtonTransparencyNonServer);
+                    }
+                }
                 return true;
             case R.id.sb_toss:
             case R.id.float_toss:
