@@ -22,7 +22,8 @@ buildscript {
 android {
     dependencies {
         //compile project(':AndroidBase')
-        compile 'com.doubleyellow:AndroidBase@aar' // uncommenting this while in Android Studio create a subdir AndroidBase with an .iml file in it
+        compile 'com.doubleyellow:AndroidBase@aar'
+        // uncommenting this while in Android Studio create a subdir AndroidBase with an .iml file in it
 
         compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -37,7 +38,8 @@ android {
 
         // ChromeCast
         //compile 'com.google.android.gms:play-services-cast:11.0.4'
-        compile 'com.google.android.gms:play-services-cast:16.0.1' // repository google(), not found using jcenter
+        compile 'com.google.android.gms:play-services-cast:16.0.1'
+        // repository google(), not found using jcenter
 
         //compile 'com.android.support:recyclerview-v7:25.3.1'
     }
@@ -48,7 +50,6 @@ android {
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
     buildToolsVersion '28.0.1'
 
-    // useLibrary 'org.apache.http.legacy' // web page that sayd remove this for android 8
     lintOptions {
         disable 'MissingTranslation'
         checkReleaseBuilds true

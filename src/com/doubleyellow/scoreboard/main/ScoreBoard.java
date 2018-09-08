@@ -4011,7 +4011,7 @@ touch -t 01030000 LAST.sb
             super(iMilliSeconds, 600);
         }
         @Override public void onTick(long millisUntilFinished) {
-            Log.d(TAG, "Waiting ... " + millisUntilFinished);
+            //Log.d(TAG, "Waiting ... " + millisUntilFinished);
         }
         @Override public void onFinish() {
             Log.d(TAG, "Posting ... ");
