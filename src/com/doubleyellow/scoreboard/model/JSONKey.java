@@ -32,6 +32,7 @@ public enum JSONKey {
 	format,
 		numberOfPointsToWinGame,
 		numberOfGamesToWinMatch,
+		mode,
 		// tabletennis specific key
 		nrOfServersPerPlayer,
     	handicapFormat,

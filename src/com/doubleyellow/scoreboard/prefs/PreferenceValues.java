@@ -115,7 +115,7 @@ public class PreferenceValues extends RWValues
     static EnumSet<ShowOnScreen> showMatchDurationChronoOn(Context context) {
         return getEnumSet(PreferenceKeys.showMatchDurationChronoOn, context, ShowOnScreen.class, EnumSet.allOf(ShowOnScreen.class));
     }
-    static EnumSet<ShowOnScreen> showLastGameDurationChronoOn(Context context) {
+    public static EnumSet<ShowOnScreen> showLastGameDurationChronoOn(Context context) {
         return getEnumSet(PreferenceKeys.showLastGameDurationChronoOn, context, ShowOnScreen.class, EnumSet.allOf(ShowOnScreen.class));
     }
     static EnumSet<ShowOnScreen> showFieldDivisionOn(Context context) {
@@ -415,7 +415,7 @@ public class PreferenceValues extends RWValues
                 String sNewResName = sResName.replaceAll(suffix, "_" + Brand.getSport());
                 int iNewResId = context.getResources().getIdentifier(sNewResName, "string", context.getPackageName());
                 if ( iNewResId == 0 ) {
-                    Log.w(TAG, "======================= No specific resource for " + sResName);
+                    Log.w(TAG, "======================= No specific " + Brand.getSport() + " resource for " + sResName);
                 }
                 return iNewResId; // still return 0 if no specific resource was found: showcase e.g. decides to skip a step if 0 is returned
             }
@@ -692,6 +692,10 @@ public class PreferenceValues extends RWValues
     /** for tabletennis, not squash or racketlon */
     public static boolean swapPlayersBetweenGames(Context context) {
         return getBoolean(PreferenceKeys.swapPlayersBetweenGames, context, R.bool.swapPlayersBetweenGames_default);
+    }
+    public static int showModeDialogAfterXMins(Context context) {
+        int iResDefault = getSportTypeSpecificResId(context, R.integer.showModeDialogAfterXMins_default_Squash);
+        return getIntegerR(PreferenceKeys.showModeDialogAfterXMins, context, iResDefault);
     }
     /** not for squash, for racketlon (all but squash, except for doubles), for tabletennis in last game */
     public static Feature swapPlayersHalfwayGame(Context context) {
@@ -1064,7 +1068,16 @@ public class PreferenceValues extends RWValues
         }
         int    iFlagMaxCacheAgeInMin = PreferenceValues.getMaxCacheAgeFlags(context) * iMaxCacheAgeMultiplier;
         String sIso2                 = CountryUtil.getIso2(sCountryCode);
-        String sURL                  = String.format(sFlagURL, sIso2, sCountryCode);
+        String sURL                  = null;
+        try {
+            sURL = String.format(sFlagURL, sIso2, sCountryCode);
+        } catch (java.util.UnknownFormatConversionException e) {
+            Toast.makeText(context, "Unable to construct URL with " + sFlagURL, Toast.LENGTH_SHORT).show();
+            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
         String sCacheName            = "flag." + sCountryCode + "." + sURL.replaceAll(".*[\\./]", "") + ".png";
         File   fCache                = new File(context.getCacheDir(), sCacheName);
         DownloadImageTask imageTask = null;

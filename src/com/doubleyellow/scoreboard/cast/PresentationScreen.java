@@ -90,7 +90,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         matchModel = ScoreBoard.matchModel;
         Context context = getContext();
 
-        iBoard = new IBoard(matchModel, context, getDisplay(), vRoot);
+        iBoard = new IBoard(matchModel, context, getDisplay(), vRoot, null);
         updateViewWithColorAndScore(context);
 
         matchModel.registerListener(new ScoreChangeListener());

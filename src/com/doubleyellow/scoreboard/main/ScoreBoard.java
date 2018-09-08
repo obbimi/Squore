@@ -450,8 +450,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     }
                 }
                 if ( Brand.isTabletennis() ) {
-                    TabletennisModel ttModel = (TabletennisModel) matchModel;
-                    if ( ttModel.isInExpedite() ) {
+                    if ( matchModel.isInMode(TabletennisModel.Mode.Expedite) ) {
                         matchModel.changeSide(player);
                     } else {
                         // Who will serve at what score is totally determined by who started serving the first point
@@ -897,12 +896,14 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             }
         }
 
-        Display display = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        iBoard = new IBoard(matchModel, this, display, (ViewGroup) findViewById(android.R.id.content));
-        Timer.addTimerView(true, getCastTimerView());
+        Chronometer.OnChronometerTickListener gameDurationTickListener = null;
+        if ( Brand.isTabletennis() && ListUtil.isNotEmpty(PreferenceValues.showLastGameDurationChronoOn(this) )  ) {
+            gameDurationTickListener = new TTGameDurationTickListener(PreferenceValues.showModeDialogAfterXMins(this));
+        }
 
-        // Setting the touch listener
-        //mPaintSurface.setOnTouchListener(mPaintSurface);
+        Display display = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        iBoard = new IBoard(matchModel, this, display, (ViewGroup) findViewById(android.R.id.content), gameDurationTickListener);
+        Timer.addTimerView(true, getCastTimerView());
 
         ViewGroup tlGameScores = (ViewGroup) findViewById(R.id.gamescores);
         if ( tlGameScores != null ) {
@@ -925,8 +926,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( (layout != null) && (layout instanceof SBRelativeLayout) ) {
             layout.setOnTouchListener(new TouchBothListener(clickBothListener, longClickBothListener));
         }
-        //findViewById(R.id.txt_player1).setDuplicateParentStateEnabled(true);// to allow events to propage to parent
-        //findViewById(R.id.txt_player2).setDuplicateParentStateEnabled(true);
 
         bHapticFeedbackPerPoint  = PreferenceValues.hapticFeedbackPerPoint(ScoreBoard.this);
         bHapticFeedbackOnGameEnd = PreferenceValues.hapticFeedbackOnGameEnd(ScoreBoard.this);
@@ -1353,10 +1352,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( m_orientationListener != null ) { return; }
 
         m_orientationListener = new SwapPlayersOn180Listener(this);
-        Log.i(TAG, "Created " + m_orientationListener);
+        //Log.d(TAG, "Created " + m_orientationListener);
 
         if ( m_orientationListener.canDetectOrientation() == true ) {
-            Log.i(TAG, "Can detect orientation");
+            //Log.d(TAG, "Can detect orientation");
             m_orientationListener.enable(); // registers the listener
         } else {
             Log.w(TAG, "Cannot detect orientation");
@@ -2763,6 +2762,51 @@ touch -t 01030000 LAST.sb
         }
     }
 
+    private class TTGameDurationTickListener implements Chronometer.OnChronometerTickListener {
+
+        private       int     m_lElapsedMin = -1;
+        private final int     m_ShowDialogAfter;
+        private       boolean m_bHasBeenPresented = false;
+
+        TTGameDurationTickListener(int iShowAfter) {
+            m_ShowDialogAfter = iShowAfter;
+        }
+
+        /** will be called approximately every second */
+        @Override public void onChronometerTick(Chronometer chronometer) {
+            if ( m_bHasBeenPresented || (m_ShowDialogAfter < 1) ) {
+                return;
+            }
+            if ( matchModel.isInMode(TabletennisModel.Mode.Expedite) ) {
+                return;
+            }
+            long lElapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
+            int  lElapsedMin    = Math.round(lElapsedMillis / 1000 / 60);
+            if ( lElapsedMin > m_lElapsedMin ) {
+                //Log.d(TAG, "Elapsed ms  : " + lElapsedMillis);
+                m_lElapsedMin = lElapsedMin;
+                if ( m_lElapsedMin < m_ShowDialogAfter ) {
+                    Log.d(TAG, "Elapsed min : " + lElapsedMin + " ( <" + m_ShowDialogAfter + ")");
+                } else {
+                    if ( matchModel.getTotalGamePoints() < 18 ) {
+                        m_bHasBeenPresented = true;
+
+                        // let device vibrate anyways, to notify user
+                        if ( PreferenceValues.useVibrationNotificationInTimer(ScoreBoard.this) ) {
+                            SystemUtil.doVibrate(ScoreBoard.this, 1000);
+                        }
+
+                        // show dialog (or toast if another dialog is already showing)
+                        if ( isDialogShowing() ) {
+                            Toast.makeText(ScoreBoard.this, R.string.activate_mode_Tabletennis, Toast.LENGTH_LONG).show();
+                        } else {
+                            showActivateMode(TabletennisModel.Mode.Expedite.toString());
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     // ----------------------------------------------------
     // ------------------------- events -------------------
@@ -3044,9 +3088,9 @@ touch -t 01030000 LAST.sb
           //setMenuItemVisibility(R.id.sb_swap_double_players  , false);
         }
         if ( Brand.isTabletennis() ) {
-            TabletennisModel tt = (TabletennisModel) matchModel;
-            setMenuItemVisibility(R.id.tt_activate_expedite  , tt.isInExpedite() == false);
-            setMenuItemVisibility(R.id.tt_deactivate_expedite, tt.isInExpedite() == true);
+            boolean bIsInNormalMode = matchModel.isInNormalMode();
+            setMenuItemVisibility(R.id.tt_activate_mode  , bIsInNormalMode == true );
+            setMenuItemVisibility(R.id.tt_deactivate_mode, bIsInNormalMode == false);
         }
 
         return true;
@@ -3368,17 +3412,16 @@ touch -t 01030000 LAST.sb
             case R.id.sb_injury_timer:
                 _showInjuryTypeChooser();
                 return true;
-            case R.id.tt_activate_expedite: // fall through
-            case R.id.tt_deactivate_expedite:
+            case R.id.tt_activate_mode: // fall through
+            case R.id.tt_deactivate_mode:
                 if ( Brand.isTabletennis() ) {
-                    TabletennisModel ttModel = (TabletennisModel) matchModel;
-                    boolean bActivate = id == R.id.tt_activate_expedite;
-                    ttModel.activateExpedite(bActivate);
+                    boolean bActivate = id == R.id.tt_activate_mode;
+                    matchModel.setMode(bActivate ? TabletennisModel.Mode.Expedite : null);
 
                     // hide just clicked menu item
                     setMenuItemVisibility(id, false);
                     // make 'counter-part' menu visible
-                    setMenuItemVisibility(bActivate ? R.id.tt_deactivate_expedite : R.id.tt_activate_expedite, true);
+                    setMenuItemVisibility(bActivate ? R.id.tt_deactivate_mode : R.id.tt_activate_mode, true);
 
                     if ( bActivate ) {
                         // we will no respond to clicks on the serve side button
@@ -3517,6 +3560,12 @@ touch -t 01030000 LAST.sb
         RallyEndStats rallyEndStats = new RallyEndStats(this, matchModel, this);
         rallyEndStats.init(scoringPlayer, call);
         addToDialogStack(rallyEndStats);
+    }
+
+    private void showActivateMode(String sMode) {
+        ActivateMode activateMode = new ActivateMode(this, matchModel, this);
+        //activateMode.init(sMode);
+        addToDialogStack(activateMode);
     }
 
     private void showConduct(Player misbehavingPlayer) {

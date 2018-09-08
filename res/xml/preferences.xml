@@ -809,6 +809,13 @@
                 android:defaultValue="@bool/showTimeIsAlreadyUpFor_Chrono_default"
                 />
 
+            <EditTextPreference android:key="showModeDialogAfterXMins"
+                android:icon="@drawable/timer"
+                android:title="@string/activate_mode_Squash"
+                android:summary="@string/pref_activate_mode_summary_Squash"
+                android:inputType="number"
+                android:defaultValue="@integer/showModeDialogAfterXMins_default_Squash"
+                />
             <!--
             <EditTextPreference android:key="timerInjury"
                 android:title="@string/pref_timerInjury"

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="activate_expedite">Activate expedite</string>
-    <string name="deactivate_expedite">De-activate expedite</string>
+    <string name="pref_activate_mode_summary_Tabletennis">Show \'Activate expedite\' dialog after X mins</string>
+    <string name="activate_mode_Tabletennis">Activate expedite</string>
+    <string name="deactivate_mode_Tabletennis">De-activate expedite</string>
+    <integer name="showModeDialogAfterXMins_default_Tabletennis">10</integer>
 
     <string name="number_of_serves_per_player">Number of serves per player</string>
     <string name="end_game_Tabletennis">End game</string>

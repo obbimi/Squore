@@ -1990,6 +1990,9 @@ public abstract class Model
                         }
                     }
                 }
+                if ( joFormat.has(JSONKey.mode.toString())) {
+                    m_sMode = joFormat.optString(JSONKey.mode.toString());
+                }
             } catch (Exception e) {
                 // not really an error, most likely last match stored did not use these keys
                 e.printStackTrace();
@@ -2348,6 +2351,9 @@ public abstract class Model
         joFormat.put(JSONKey.numberOfPointsToWinGame.toString(), m_iNrOfPointsToWinGame);
         if ( EnumSet.of(SportType.Racketlon).contains(getSport()) == false ) {
             joFormat.put(JSONKey.numberOfGamesToWinMatch    .toString(), m_iNrOfGamesToWinMatch);
+        }
+        if ( m_sMode != null ) {
+            joFormat.put(JSONKey.mode.toString(), m_sMode);
         }
 
         if ( EnumSet.of(SportType.Squash, SportType.Racquetball).contains(getSport()) ) {
@@ -3073,7 +3079,7 @@ public abstract class Model
             return DoublesServe.I;
         }
         boolean              bIsInTieBreak = isInTieBreak_Racketlon_Tabletennis();
-        int                  iTotalPoints  = getMaxScore() + getMinScore();
+        int                  iTotalPoints  = getTotalGamePoints();
         if ( bIsInTieBreak ) {
             if ( iTotalPoints % 4 >= 2 ) {
                 return DoublesServe.O;
@@ -3087,6 +3093,10 @@ public abstract class Model
                 return DoublesServe.I;
             }
         }
+    }
+
+    public int getTotalGamePoints() {
+        return getMaxScore() + getMinScore();
     }
 
     boolean isInTieBreak_Racketlon_Tabletennis()
@@ -3456,6 +3466,23 @@ public abstract class Model
     private List<Player> getPlayersAsList(Player[] gameballForOld) {
         if ( gameballForOld == null ) { return null; }
         return Arrays.asList(gameballForOld);
+    }
+
+    //-------------------------------
+    // Mode (introduced for Expedite - TT)
+    //-------------------------------
+
+    private String m_sMode = null;
+    public void setMode(Object oMode) {
+        m_sMode = (oMode!=null) ? String.valueOf(oMode) : null;
+        // notify listeners to e.g. display different 'serve side' symbol
+        triggerListeners();
+    }
+    public boolean isInMode(Object oMode) {
+        return oMode.toString().equals(m_sMode);
+    }
+    public boolean isInNormalMode() {
+        return (m_sMode == null);
     }
 
 }

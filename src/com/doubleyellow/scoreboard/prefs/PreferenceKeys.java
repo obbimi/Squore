@@ -51,7 +51,7 @@ public enum PreferenceKeys {
             swapPlayersBetweenGames,
             swapPlayersHalfwayGame,
             swapPlayersOn180DegreesRotationOfDeviceInLandscape,
-
+        showModeDialogAfterXMins,
     statistics,
         recordRallyEndStatsAfterEachScore,
         recordRallyEndStatsDetails,

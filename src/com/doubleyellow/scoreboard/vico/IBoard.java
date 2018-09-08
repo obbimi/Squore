@@ -112,11 +112,13 @@ public class IBoard implements TimerViewContainer
     private ViewGroup m_vRoot    = null;
     private Context   context    = null;
     private Display   display    = null;
-    public IBoard(Model model, Context ctx, Display dsply, ViewGroup root) {
+    private Chronometer.OnChronometerTickListener m_gameTimerTickListener;
+    public IBoard(Model model, Context ctx, Display dsply, ViewGroup root, Chronometer.OnChronometerTickListener gameTimerTickListener) {
         m_vRoot    = root;
         matchModel = model;
         context    = ctx;
         display    = dsply;
+        m_gameTimerTickListener = gameTimerTickListener;
     }
     public void setModel(Model model) {
         matchModel = model;
@@ -266,6 +268,10 @@ public class IBoard implements TimerViewContainer
             } else {
                 tvGameTime.setBase(Math.max(0, calculatedBase));
                 tvGameTime.start();
+            }
+
+            if ( m_gameTimerTickListener != null ) {
+                tvGameTime.setOnChronometerTickListener(m_gameTimerTickListener);
             }
         }
     }

@@ -116,18 +116,11 @@ public class TabletennisModel extends Model
     // Expedite system
     //-------------------------------
 
-    private Object m_dExpediteActivatedAt = null;
-    public void activateExpedite(boolean bActivate) {
-        if ( bActivate ) {
-            m_dExpediteActivatedAt = new Date();
-        } else {
-            m_dExpediteActivatedAt = null;
-        }
-        // notify listeners to e.g. display different 'serve side' symbol
-        triggerListeners();
+    public enum Mode {
+        Expedite,
     }
-    public boolean isInExpedite() {
-        return (m_dExpediteActivatedAt != null);
+    private boolean isInExpedite() {
+        return isInMode(Mode.Expedite);
     }
 
     @Override void determineServerAndSide_Racketlon_Tabletennis(boolean bForUndo, SportType sportType) {

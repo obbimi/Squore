@@ -22,7 +22,7 @@ buildscript {
 android {
     dependencies {
         //compile project(':AndroidBase')
-        compile 'com.doubleyellow:AndroidBase@aar'
+        compile 'com.doubleyellow:AndroidBase@aar' // uncommenting this while in Android Studio create a subdir AndroidBase with an .iml file in it
 
         compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -48,7 +48,7 @@ android {
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
     buildToolsVersion '28.0.1'
 
-    useLibrary 'org.apache.http.legacy'
+    // useLibrary 'org.apache.http.legacy' // web page that sayd remove this for android 8
     lintOptions {
         disable 'MissingTranslation'
         checkReleaseBuilds true

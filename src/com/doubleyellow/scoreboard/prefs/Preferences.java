@@ -538,6 +538,9 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             if ( Brand.isSquash() ) {
                 hideRemovePreference(psgBeh, PreferenceKeys.changeSides); // only for racketlon and tabletennis
             }
+            if ( Brand.isTabletennis() == false ) {
+                hideRemovePreference(ps, PreferenceKeys.showModeDialogAfterXMins);
+            }
 
             // initialize for downloading flags and setting correct dimensions
 

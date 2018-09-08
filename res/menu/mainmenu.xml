@@ -71,8 +71,8 @@
                     app:showAsAction="never">
                 <menu>
                     <!-- table tennis only -->
-                    <item android:id="@+id/tt_activate_expedite"   app:showAsAction="never" android:icon="@drawable/timer" android:title="@string/activate_expedite" android:visible="false"/>
-                    <item android:id="@+id/tt_deactivate_expedite" app:showAsAction="never" android:icon="@drawable/timer" android:title="@string/deactivate_expedite" android:visible="false"/>
+                    <item android:id="@+id/tt_activate_mode"        app:showAsAction="never" android:icon="@drawable/timer" android:title="@string/activate_mode_Squash" android:visible="false"/>
+                    <item android:id="@+id/tt_deactivate_mode"      app:showAsAction="never" android:icon="@drawable/timer" android:title="@string/deactivate_mode_Squash" android:visible="false"/>
 
                     <item android:id="@id/sb_clear_score"           app:showAsAction="never" android:icon="@drawable/ic_action_refresh"    android:title="@string/sb_clear_score" />
                     <item android:id="@+id/change_match_format"     app:showAsAction="never" android:icon="@drawable/ic_action_mouse"      android:title="@string/pref_MatchFormat"/>
