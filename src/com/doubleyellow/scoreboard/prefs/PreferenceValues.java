@@ -693,10 +693,22 @@ public class PreferenceValues extends RWValues
     public static boolean swapPlayersBetweenGames(Context context) {
         return getBoolean(PreferenceKeys.swapPlayersBetweenGames, context, R.bool.swapPlayersBetweenGames_default);
     }
+    /** for tabletennis, not squash or racketlon */
+    public static Feature showGamePausedDialog(Context context) {
+        return getEnum(PreferenceKeys.showGamePausedDialog, context, Feature.class, Feature.Suggest);
+    }
+    public static int autoShowGamePausedDialogAfterXPoints(Context context) {
+        int iResDefault = getSportTypeSpecificResId(context, R.integer.autoShowGamePausedDialogAfterXPoints_default);
+        return getIntegerR(PreferenceKeys.autoShowGamePausedDialogAfterXPoints, context, iResDefault);
+    }
+    public static boolean autoShowModeActivationDialog(Context context) {
+        return getBoolean(PreferenceKeys.autoShowModeActivationDialog, context, false);
+    }
     public static int showModeDialogAfterXMins(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.integer.showModeDialogAfterXMins_default_Squash);
         return getIntegerR(PreferenceKeys.showModeDialogAfterXMins, context, iResDefault);
     }
+
     /** not for squash, for racketlon (all but squash, except for doubles), for tabletennis in last game */
     public static Feature swapPlayersHalfwayGame(Context context) {
         return getEnum(PreferenceKeys.swapPlayersHalfwayGame, context, Feature.class, Feature.Suggest);

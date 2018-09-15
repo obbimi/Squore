@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="pref_activate_mode_summary_Squash"><!--Activate xxx--></string>
     <string name="activate_mode_Squash"><!--Activate xxx--></string>
     <string name="deactivate_mode_Squash"><!--De-activate xxx--></string>
     <integer name="showModeDialogAfterXMins_default_Squash">-1</integer>

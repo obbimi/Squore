@@ -897,8 +897,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
 
         Chronometer.OnChronometerTickListener gameDurationTickListener = null;
-        if ( Brand.isTabletennis() && ListUtil.isNotEmpty(PreferenceValues.showLastGameDurationChronoOn(this) )  ) {
-            gameDurationTickListener = new TTGameDurationTickListener(PreferenceValues.showModeDialogAfterXMins(this));
+        if ( PreferenceValues.autoShowModeActivationDialog(this) ) {
+            if ( Brand.isTabletennis() ) {
+                gameDurationTickListener = new TTGameDurationTickListener(PreferenceValues.showModeDialogAfterXMins(this));
+            }
         }
 
         Display display = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -2542,6 +2544,26 @@ touch -t 01030000 LAST.sb
                 // start timer to post in e.g. 2 seconds. Restart this timer as soon as another point is scored
                 shareScoreSheetDelayed(2000);
             }
+
+            // for table tennis only
+            if ( (iDelta == 1) && Brand.isTabletennis() ) {
+                int iEachX = PreferenceValues.autoShowGamePausedDialogAfterXPoints(ScoreBoard.this);
+                if ( (iEachX > 0) && (matchModel.getTotalGamePoints() % iEachX == 0) && (matchModel.isPossibleGameVictory() == false)) {
+                    Feature showGamePausedDialog = PreferenceValues.showGamePausedDialog(ScoreBoard.this);
+                    switch (showGamePausedDialog) {
+                        case Automatic: {
+                            // show pause dialog
+                            _showTimer(Type.TowelingDown, true);
+                        }
+                        case Suggest: {
+                            // show timer floating button
+                            showTimerFloatButton(true);
+                        }
+                    }
+                } else {
+                    showTimerFloatButton(false);
+                }
+            }
         }
     }
     private class CallChangeListener implements Model.OnCallChangeListener {
@@ -2888,7 +2910,7 @@ touch -t 01030000 LAST.sb
             case timerCancelled: {
                 timerType = (Type) ctx;
                 //viewType  = (ViewType) ctx2;
-                if ( Type.UntillStartOfNextGame.equals(timerType) || Type.Warmup.equals(timerType) /* 20161228 added warmup */ ) {
+                if ( EnumSet.of(Type.UntillStartOfNextGame, Type.Warmup).contains(timerType) ) {
                     if ( matchModel.gameHasStarted() == false ) {
                         matchModel.timestampStartOfGame(GameTiming.ChangedBy.TimerEnded);
                     }
@@ -2903,6 +2925,10 @@ touch -t 01030000 LAST.sb
                 showTossFloatButton (Type.Warmup.equals(timerType) && (matchModel.hasStarted()     == false));
                 updateMicrophoneFloatButton();
                 showNextDialog();
+
+                if ( Brand.isTabletennis() && EnumSet.of(Type.TowelingDown, Type.Timeout).contains(timerType) ) {
+                    iBoard.resumeGameDurationChrono();
+                }
                 return false;
             }
             case officialAnnouncementClosed: {
@@ -3403,6 +3429,14 @@ touch -t 01030000 LAST.sb
                 cancelTimer();
                 if ( matchModel.hasStarted() ) {
                     lastTimerType = Type.UntillStartOfNextGame;
+                    if ( Brand.isTabletennis() ) {
+                        int iScore = matchModel.getTotalGamePoints();
+                        if ( matchModel.gameHasStarted() && (matchModel.isPossibleGameVictory() == false) ) {
+                            if ( iScore % PreferenceValues.autoShowGamePausedDialogAfterXPoints(this) == 0 ) {
+                                lastTimerType = Type.TowelingDown;
+                            }
+                        }
+                    }
                 } else {
                     // toggle between the 2 with Warmup first
                     lastTimerType = Type.Warmup.equals(lastTimerType)?Type.UntillStartOfNextGame:Type.Warmup;
@@ -3649,6 +3683,10 @@ touch -t 01030000 LAST.sb
             case Warmup:
                 twoTimerView = new WarmupTimerView(this,matchModel);
                 break;
+            case Timeout:
+            case TowelingDown:
+                twoTimerView = new GamePausedTimerView(this, matchModel);
+                break;
             case UntillStartOfNextGame:
                 twoTimerView = new PauseTimerView(this, matchModel);
                 break;
@@ -3704,6 +3742,12 @@ touch -t 01030000 LAST.sb
                 case OpponentInflictedInjury:
                     // injury
                     timer = new Timer(this, timerType, iInitialSecs, iResumeAt, 15 /*Math.max(15,iInitialSecs/6)*/, bAutoTriggered);
+                    break;
+                case Timeout:  // fall through
+                case TowelingDown:
+                    // injury
+                    timer = new Timer(this, timerType, iInitialSecs, iResumeAt, 0 /*Math.max(15,iInitialSecs/6)*/, bAutoTriggered);
+                    iBoard.stopGameDurationChrono();
                     break;
             }
         }
@@ -3807,7 +3851,7 @@ touch -t 01030000 LAST.sb
                 break;
             default:
                 if ( bManuallyRequested ) {
-                    startEndAnnouncement = new StartEndAnnouncement(this, matchModel, this); // TODO: also instanciate the proper subclass here in make base class abstract
+                    startEndAnnouncement = new StartEndAnnouncement(this, matchModel, this); // TODO: also instantiate the proper subclass here in make base class abstract
                 } else {
                     // should not happen
                     return;
@@ -4400,7 +4444,7 @@ touch -t 01030000 LAST.sb
 
     // ------------------------------------------------------
     // demo modus
-    // - todo: no rotate during demo modus? or ensure new activity is passed on to demo thread
+    // - TODO: no rotate during demo modus? or ensure new activity is passed on to demo thread
     // ------------------------------------------------------
     public enum Mode {
         Normal,
@@ -4867,7 +4911,7 @@ touch -t 01030000 LAST.sb
                         );
                     } else {
                         JSONObject joSetting = new JSONObject(sMessage);
-                        // TODO: handle settings being transfered
+                        // TODO: handle settings being transferred
 /*
                         Log.w(TAG, joSetting.toString(4));
                         if ( joSetting.has(PreferenceKeys.feedPostUrls.toString())) {

@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="pref_activate_mode_summary_Tabletennis">Show \'Activate expedite\' dialog after X mins</string>
+    <string name="Resume_game">Resume game</string>
+
+    <string name="pref_category_expediteSystem">Expedite system</string>
+    <string name="pref_autoShow_activeExpediteSystem_dialog">Auto-show \'Activate Expedite mode\' dialog</string>
+    <string name="pref_autoShow_activeExpediteSystem_dialog_after_X_mins">Show \'Activate expedite\' dialog after X mins</string>
+
+    <string name="pref_category_towelingDown">Toweling down</string>
+    <string name="pref_autoShow_towelingDown_timer">Auto-show \'Toweling down\' timer</string>
+    <string name="pref_autoShow_towelingDown_timer_after_X_points">Show \'Toweling down\' timer after X points</string>
+    <string name="toweling_down">Towelling</string>
+    <string name="timeout">Timeout</string>
+    <integer name="autoShowGamePausedDialogAfterXPoints_default">6</integer>
+    <integer name="timerTowelingDown_default">60</integer>
+
     <string name="activate_mode_Tabletennis">Activate expedite</string>
     <string name="deactivate_mode_Tabletennis">De-activate expedite</string>
     <integer name="showModeDialogAfterXMins_default_Tabletennis">10</integer>

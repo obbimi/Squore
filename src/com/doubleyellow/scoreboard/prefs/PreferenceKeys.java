@@ -51,7 +51,14 @@ public enum PreferenceKeys {
             swapPlayersBetweenGames,
             swapPlayersHalfwayGame,
             swapPlayersOn180DegreesRotationOfDeviceInLandscape,
-        showModeDialogAfterXMins,
+        /* Tabletennis: Expedite system */
+        modeUsageCategory,
+            autoShowModeActivationDialog,
+            showModeDialogAfterXMins,
+        /* Tabletennis: toweling down */
+        pauseGame,
+            showGamePausedDialog,
+            autoShowGamePausedDialogAfterXPoints,
     statistics,
         recordRallyEndStatsAfterEachScore,
         recordRallyEndStatsDetails,
@@ -149,6 +156,9 @@ public enum PreferenceKeys {
             timerSelfInflictedInjury,
             timerContributedInjury,
             timerOpponentInflictedInjury,
+            // mid-game timers (tabletennis)
+            timerTowelingDown,
+            timerTimeout,
         useSoundNotificationInTimer,
         useVibrationNotificationInTimer,
         showAdjustTimeButtonsInTimer,

@@ -40,6 +40,7 @@ import com.doubleyellow.scoreboard.vico.IBoard;
 import com.doubleyellow.util.StringUtil;
 import com.doubleyellow.android.view.CircularProgressBar;
 
+import java.util.EnumSet;
 import java.util.Map;
 
 /**
@@ -265,6 +266,8 @@ public class DialogTimerView implements TimerView
         int iResIDCancelCaption = R.string.cmd_cancel;
         if ( Type.UntillStartOfNextGame.equals(Timer.timerType) ) {
             iResIDCancelCaption = R.string.Start_game;
+        } else if (EnumSet.of(Type.TowelingDown, Type.Timeout).contains(Timer.timerType) ) {
+            iResIDCancelCaption = R.string.Resume_game;
         }
                                          db.setPositiveButton(PreferenceValues.getGameOrSetString(scoreBoard, iResIDCancelCaption), onCancelListener);
         if ( bShowPauseButtonOnTimer ) { db.setNeutralButton (R.string.cmd_pause , null); }

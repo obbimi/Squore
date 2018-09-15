@@ -144,6 +144,22 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         }
                         setModelDirty();
                         break;
+                    case autoShowModeActivationDialog:
+                        final Preference psShowModeDialogAfterXMins = settingsFragment.findPreference(PreferenceKeys.showModeDialogAfterXMins);
+                        if ( psShowModeDialogAfterXMins != null ) {
+                            psShowModeDialogAfterXMins.setEnabled(PreferenceValues.autoShowModeActivationDialog(Preferences.this));
+                        }
+                        break;
+                    case showGamePausedDialog:
+                        Feature f = PreferenceValues.showGamePausedDialog(Preferences.this);
+                        final Preference psAutoShowGamePausedDialogAfterXPoints = settingsFragment.findPreference(PreferenceKeys.autoShowGamePausedDialogAfterXPoints);
+                        if ( psAutoShowGamePausedDialogAfterXPoints != null ) {
+                            psAutoShowGamePausedDialogAfterXPoints.setEnabled(f.equals(Feature.DoNotUse) == false);
+                        }
+                        final Preference pTimerTowelingDown = settingsFragment.findPreference(PreferenceKeys.timerTowelingDown);
+                        if ( pTimerTowelingDown != null ) {
+                            pTimerTowelingDown.setEnabled(f.equals(Feature.DoNotUse) == false);
+                        }
                     case hideBrandLogoWhenGameInProgress:
                         setModelDirty();
                         break;
@@ -538,8 +554,26 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             if ( Brand.isSquash() ) {
                 hideRemovePreference(psgBeh, PreferenceKeys.changeSides); // only for racketlon and tabletennis
             }
-            if ( Brand.isTabletennis() == false ) {
-                hideRemovePreference(ps, PreferenceKeys.showModeDialogAfterXMins);
+            if ( Brand.isTabletennis() ) {
+                boolean bAutoShow = PreferenceValues.autoShowModeActivationDialog(getActivity());
+                final Preference pShowModeDialogAfterXMins = this.findPreference(PreferenceKeys.showModeDialogAfterXMins);
+                if ( pShowModeDialogAfterXMins != null ) {
+                    pShowModeDialogAfterXMins.setEnabled(bAutoShow);
+                }
+
+                final Preference pShowGamePausedDialogAfterXPoints = this.findPreference(PreferenceKeys.autoShowGamePausedDialogAfterXPoints);
+                Feature fShowGamePausedDialog = PreferenceValues.showGamePausedDialog(getActivity());
+                if ( pShowGamePausedDialogAfterXPoints != null ) {
+                    pShowGamePausedDialogAfterXPoints.setEnabled(fShowGamePausedDialog.equals(Feature.DoNotUse) == false);
+                }
+
+                final Preference pTimerTowelingDown = this.findPreference(PreferenceKeys.timerTowelingDown);
+                if ( pTimerTowelingDown != null ) {
+                    pTimerTowelingDown.setEnabled(fShowGamePausedDialog.equals(Feature.DoNotUse) == false);
+                }
+            } else {
+                hideRemovePreference(ps, PreferenceKeys.modeUsageCategory);
+                hideRemovePreference(ps, PreferenceKeys.pauseGame);
             }
 
             // initialize for downloading flags and setting correct dimensions

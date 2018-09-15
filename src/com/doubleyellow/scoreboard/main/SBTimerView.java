@@ -37,11 +37,14 @@ import com.doubleyellow.util.Direction;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
 
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Used when the dialog box is made 'hidden' by the user
+ * Simple timer that is on ScoreBoard having similar look as player buttons.
+ *
+ * Used e.g. when the dialog box is made 'hidden' by the user.
  **/
 public class SBTimerView implements TimerView
 {
@@ -57,6 +60,7 @@ public class SBTimerView implements TimerView
         this.txtView  = textView;
         this.cmToLate = cmToLate;
         if ( context instanceof ScoreBoard ) {
+            // allow user to tap it to start the game
             ClickListener clickListener = new ClickListener((ScoreBoard) context);
             //txtView.setOnClickListener    (clickListener);
             //txtView.setOnLongClickListener(clickListener);
@@ -105,9 +109,12 @@ public class SBTimerView implements TimerView
         String sTime = context.getString(R.string.oa_time);
         showToast(sTime, 3, Direction.None); // not to long for now, can not be easily dismissed yet (floating message can)
         if ( context instanceof ScoreBoard ) {
-            // allow user to tap it to start the game
-            txtView.setText(PreferenceValues.getGameOrSetString(context, R.string.Start_game));
-            if ( (cmToLate != null) && (ScoreBoard.timer != null) && Type.UntillStartOfNextGame.equals(Timer.timerType) ) {
+            if ( EnumSet.of(Type.Warmup, Type.UntillStartOfNextGame).contains(Timer.timerType) ) {
+                txtView.setText(PreferenceValues.getGameOrSetString(context, R.string.Start_game));
+            } else {
+                txtView.setText(PreferenceValues.getGameOrSetString(context, R.string.oa_time));
+            }
+            if ( (cmToLate != null) && (ScoreBoard.timer != null) && EnumSet.of(Type.UntillStartOfNextGame, Type.TowelingDown, Type.Timeout).contains(Timer.timerType) ) {
                 cmToLate.setVisibility(View.VISIBLE);
                 cmToLate.setBase(ScoreBoard.timer.getToLateBase());
                 cmToLate.start();

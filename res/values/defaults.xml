@@ -153,6 +153,7 @@ http://developer.android.com/guide/practices/screens_support.html
 \nClubmatch
 ]]></string>
     <string translatable="false" name="emptyList_default"/>
+    <string translatable="false" name="emptyString"/>
     <string name="divisionList_default"><![CDATA[Boys
 \nGirls
 \nMen A

@@ -676,14 +676,14 @@
                             android:title="@string/pref_refereeName"
                             android:summary="@string/pref_refereeName_summary"
                             android:inputType="textCapWords"
-                            android:defaultValue=""
+                            android:defaultValue="@string/emptyString"
         />
         <EditTextPreference android:key="smsResultToNr"
             android:icon="@drawable/dummy"
                             android:title="@string/pref_smsResultToNr"
                             android:summary="@string/pref_smsResultToNr_summary"
                             android:inputType="phone"
-                            android:defaultValue=""
+                            android:defaultValue="@string/emptyString"
         />
         <PreferenceCategory android:title="@string/pref_Mail">
             <EditTextPreference android:key="mailResultTo"
@@ -691,7 +691,7 @@
                 android:title="@string/pref_mailResultTo"
                 android:summary="@string/pref_mailResultTo_summary"
                 android:inputType="textEmailAddress"
-                android:defaultValue=""
+                android:defaultValue="@string/emptyString"
             />
             <CheckBoxPreference android:key="mailFullScoringSheet"
                 android:icon="@drawable/dummy"
@@ -809,13 +809,6 @@
                 android:defaultValue="@bool/showTimeIsAlreadyUpFor_Chrono_default"
                 />
 
-            <EditTextPreference android:key="showModeDialogAfterXMins"
-                android:icon="@drawable/timer"
-                android:title="@string/activate_mode_Squash"
-                android:summary="@string/pref_activate_mode_summary_Squash"
-                android:inputType="number"
-                android:defaultValue="@integer/showModeDialogAfterXMins_default_Squash"
-                />
             <!--
             <EditTextPreference android:key="timerInjury"
                 android:title="@string/pref_timerInjury"
@@ -867,6 +860,46 @@
                             android:icon="@drawable/dummy"
                             android:title="@string/pref_cancelTimerWhenTimeIsUp"
                             android:defaultValue="@bool/cancelTimerWhenTimeIsUp_default"
+                />
+        </PreferenceCategory>
+
+        <PreferenceCategory android:key="modeUsageCategory"
+            android:title="@string/pref_category_expediteSystem">
+            <CheckBoxPreference android:key="autoShowModeActivationDialog"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_autoShow_activeExpediteSystem_dialog"
+                android:defaultValue="false"
+                />
+            <EditTextPreference android:key="showModeDialogAfterXMins"
+                android:icon="@drawable/timer"
+                android:title="@string/activate_mode_Squash"
+                android:summary="@string/pref_autoShow_activeExpediteSystem_dialog_after_X_mins"
+                android:inputType="number"
+                android:defaultValue="@integer/showModeDialogAfterXMins_default_Squash"
+                />
+        </PreferenceCategory>
+
+        <PreferenceCategory android:key="pauseGame"
+            android:title="@string/pref_category_towelingDown">
+            <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/dummy"
+                android:key="showGamePausedDialog"
+                android:title="@string/pref_autoShow_towelingDown_timer"
+                android:defaultValue="Suggest"
+                dy:displayValues="@array/FeatureDisplayValues"
+                dy:enumClass="com.doubleyellow.util.Feature"
+                />
+            <EditTextPreference android:key="autoShowGamePausedDialogAfterXPoints"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_autoShow_towelingDown_timer_after_X_points"
+                android:inputType="number"
+                android:defaultValue="@integer/autoShowGamePausedDialogAfterXPoints_default"
+                />
+            <EditTextPreference android:key="timerTowelingDown"
+                android:icon="@drawable/timer"
+                android:title="@string/toweling_down"
+                android:inputType="number"
+                android:defaultValue="@integer/timerTowelingDown_default"
                 />
         </PreferenceCategory>
 

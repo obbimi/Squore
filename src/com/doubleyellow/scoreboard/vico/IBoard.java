@@ -133,6 +133,9 @@ public class IBoard implements TimerViewContainer
         if ( btnScore == null ) { return; }
         String sScore = ("" + iScore).trim();
         btnScore.setText(sScore);
+        if ( Player.A.equals(player) && Brand.isTabletennis() && matchModel.getMaxScore()==0 ) {
+            m_lGameWasPausedDuration = 0;
+        }
     }
     public boolean updatePlayerName(Player p, String sName, boolean bIsDoubles) {
         if ( m_player2nameId == null ) {
@@ -236,10 +239,31 @@ public class IBoard implements TimerViewContainer
         }
     }
 
+    public void resumeGameDurationChrono() {
+        Chronometer tvGameTime = (Chronometer) findViewById(R.id.sb_game_duration);
+        if ( tvGameTime == null ) { return; }
+        if ( Brand.isTabletennis() && (m_lStoppedAt != 0L) ) {
+            // adjust so no jump in time is visible and e.g. Expedite is not triggered to early.
+            // TODO: this adjustment will not be visible in e.g. match overview. There timestamp of start and end of game are used to calculate game duration
+            long lPaused = System.currentTimeMillis() - m_lStoppedAt;
+            m_lGameWasPausedDuration += lPaused;
+            Log.d(TAG, "Total time paused " + m_lGameWasPausedDuration + " " + DateUtil.convertDurationToHHMMSS_Colon(m_lGameWasPausedDuration));
+            m_lStoppedAt = 0L;
+            updateGameDurationChrono();
+            //tvGameTime.setBase(tvGameTime.getBase() + lPaused);
+        }
+        //tvGameTime.start();
+    }
+    private static long m_lStoppedAt             = 0L;
+    private static long m_lGameWasPausedDuration = 0L;
     public void stopGameDurationChrono() {
         Chronometer tvGameTime = (Chronometer) findViewById(R.id.sb_game_duration);
         if ( tvGameTime == null ) { return; }
         tvGameTime.stop();
+        if ( Brand.isTabletennis() ) {
+            m_lStoppedAt = System.currentTimeMillis();
+            Log.d(TAG, "Stopped at " + m_lStoppedAt + " " + new Date(m_lStoppedAt).toString());
+        }
         if ( matchModel.matchHasEnded() ) {
             showDurationOfLastGame(tvGameTime);
         }
@@ -256,18 +280,35 @@ public class IBoard implements TimerViewContainer
             String sFormat = getGameDurationFormat(iGameNrZeroBased);
             tvGameTime.setFormat(sFormat);
 
-            long elapsedRealtime = SystemClock.elapsedRealtime();
-            long lBootTime       = System.currentTimeMillis() - elapsedRealtime;
-            long lStartTime      = matchModel.getLastGameStart();
-            long calculatedBase  = lStartTime - lBootTime;
+            if ( matchModel.hasStarted() == false ) {
+                m_lStoppedAt = 0L;
+                m_lGameWasPausedDuration = 0L;
+            }
+
             if ( matchModel.matchHasEnded() || matchModel.isLocked() ) {
                 showDurationOfLastGame(tvGameTime);
-            } else if ( ScoreBoard.timer != null && ScoreBoard.timer.isShowing() ) {
+            } else if ( (ScoreBoard.timer != null) && ScoreBoard.timer.isShowing() && (Type.TowelingDown.equals(ScoreBoard.timer.timerType)==false)) {
                 // show duration of last finished game
                 showDurationOfLastGame(tvGameTime);
             } else {
+                long lElapsedSinceBoot = SystemClock.elapsedRealtime();
+                long lBootTime         = System.currentTimeMillis() - lElapsedSinceBoot;
+                Log.d(TAG, "lBootTime at " + lBootTime + " " + new Date(lBootTime).toString());
+                long lStartTime        = matchModel.getLastGameStart();
+                long lPauseInProgress = 0;
+                if ( m_lStoppedAt != 0 ) {
+                    // if e.g. screen rotates while toweling down timer was running
+                    lPauseInProgress  = System.currentTimeMillis() - m_lStoppedAt;
+                    Log.d(TAG, "Pause In Progress " + lPauseInProgress + " " + DateUtil.convertDurationToHHMMSS_Colon(lPauseInProgress));
+                }
+                long calculatedBase    = lStartTime - lBootTime + m_lGameWasPausedDuration + lPauseInProgress ;
+                if ( calculatedBase < 0 ) {
+                    Log.w(TAG, "calculatedBase < 0 (" + calculatedBase + "). Using 0 ...");
+                }
                 tvGameTime.setBase(Math.max(0, calculatedBase));
-                tvGameTime.start();
+                if ( lPauseInProgress == 0 ) {
+                    tvGameTime.start();
+                }
             }
 
             if ( m_gameTimerTickListener != null ) {
@@ -276,6 +317,7 @@ public class IBoard implements TimerViewContainer
         }
     }
 
+    /** sets game duration to static value using model data, not Chrono data */
     private void showDurationOfLastGame(Chronometer tvGameTime) {
         List<GameTiming>           lTimes        = matchModel.getTimes();
         int iGameNrZeroBased = Math.max(0, matchModel.getNrOfFinishedGames() - 1); // Math.max for in case no games where finished yet
@@ -959,7 +1001,7 @@ public class IBoard implements TimerViewContainer
             }
 
             int iWidthPx = getScreenHeightWidthMinimumFraction(R.fraction.pt_gameball_msg_width);
-            Log.d(TAG, String.format("GBM width: %s, (is presentation: %s)", iWidthPx, isPresentation()));
+          //Log.d(TAG, String.format("GBM width: %s, (is presentation: %s)", iWidthPx, isPresentation()));
             FloatingMessage.Builder builder = new FloatingMessage.Builder(context, iWidthPx);
             if ( mColors != null ) {
                 builder.withButtonColors(mColors.get(bgColor), mColors.get(txtColor));
