@@ -1,3 +1,9 @@
+## 4.13 (sept 2018)
+
+- upgraded to use new google-play library to improve ChromeCast for e.g. Android 8
+- added 'Serve' as possible option when app is in 'record statistics' mode
+- several minor stability improvements
+
 ## 4.10 (march 2018)
 
 - Configurable 'transparency' of the serve button of receiver
