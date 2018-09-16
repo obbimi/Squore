@@ -51,7 +51,7 @@ import com.doubleyellow.util.*;
 
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.history.MatchGameScoresView;
-import com.doubleyellow.scoreboard.main.SBTimerView;
+import com.doubleyellow.scoreboard.timer.SBTimerView;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.timer.TimerView;
 import com.doubleyellow.scoreboard.util.SBToast;
@@ -448,7 +448,16 @@ public class IBoard implements TimerViewContainer
     private Object getServeSideCharacter(ServeSide serveSide, boolean bIsHandout) {
         String sChar   = PreferenceValues.getOAString(context, serveSide.getSingleCharResourceId());
         String sHOChar = (bIsHandout?"?":"");
-        return matchModel.convertServeSideCharacter(sChar, serveSide, sHOChar);
+        Object o = matchModel.convertServeSideCharacter(sChar, serveSide, sHOChar);
+        if ( Brand.isNotSquash() && (o instanceof Integer) ) {
+            DownUp downUp = PreferenceValues.numberOfServiceCountUpOrDown(context);
+            if ( downUp.equals(DownUp.Up) && (matchModel.isInTieBreak_Racketlon_Tabletennis() == false) ) {
+                int iCountDownValue = (int) o;
+                int iCountUpValue = matchModel.getNrOfServesPerPlayer() - iCountDownValue + 1;
+                o = iCountUpValue;
+            }
+        }
+        return o;
     }
 
     public boolean undoGameBallColorSwitch() {

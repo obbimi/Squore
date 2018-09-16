@@ -3099,7 +3099,7 @@ public abstract class Model
         return getMaxScore() + getMinScore();
     }
 
-    boolean isInTieBreak_Racketlon_Tabletennis()
+    public boolean isInTieBreak_Racketlon_Tabletennis()
     {
         return getMinScore() >= getNrOfPointsToWinGame() - 1;
     }

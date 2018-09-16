@@ -713,6 +713,9 @@ public class PreferenceValues extends RWValues
     public static Feature swapPlayersHalfwayGame(Context context) {
         return getEnum(PreferenceKeys.swapPlayersHalfwayGame, context, Feature.class, Feature.Suggest);
     }
+    public static DownUp numberOfServiceCountUpOrDown(Context context) {
+        return getEnum(PreferenceKeys.numberOfServiceCountUpOrDown, context, DownUp.class, DownUp.Down);
+    }
     public static Feature continueRecentMatch(Context context) {
         return getEnum(PreferenceKeys.continueRecentMatch, context, Feature.class, Feature.Automatic);
     }

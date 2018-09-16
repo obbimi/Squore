@@ -59,6 +59,8 @@ public enum PreferenceKeys {
         pauseGame,
             showGamePausedDialog,
             autoShowGamePausedDialogAfterXPoints,
+        /* Tabletennis, Racketlon */
+        numberOfServiceCountUpOrDown,
     statistics,
         recordRallyEndStatsAfterEachScore,
         recordRallyEndStatsDetails,

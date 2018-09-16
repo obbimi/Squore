@@ -4406,7 +4406,7 @@ touch -t 01030000 LAST.sb
     public static Timer timer = null;
 
     private DialogTimerView dialogTimerView;
-    DialogTimerView getDialogTimerView() {
+    public DialogTimerView getDialogTimerView() {
         if ( dialogTimerView == null ) {
             dialogTimerView = new DialogTimerView(this);
         }
@@ -5140,7 +5140,7 @@ touch -t 01030000 LAST.sb
     private void castColors(Map<ColorPrefs.ColorTarget, Integer> mColors) {
         castHelper.castColors(mColors);
     }
-    void castDurationChronos() {
+    public void castDurationChronos() {
         castHelper.castDurationChronos();
     }
     private void startCast() {

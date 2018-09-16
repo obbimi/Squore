@@ -160,8 +160,8 @@ public class DialogTimerView implements TimerView
         LayoutInflater myLayout = LayoutInflater.from(scoreBoard);
         ViewGroup ll = (ViewGroup) myLayout.inflate(R.layout.timer, null);
 
-        txtTimerMessage = (TextView) ll.findViewById(R.id.timerMessage);
-        chronometer  = (Chronometer) ll.findViewById(R.id.to_late_timer);
+        txtTimerMessage = (TextView   ) ll.findViewById(R.id.timerMessage);
+        chronometer     = (Chronometer) ll.findViewById(R.id.to_late_timer);
         if ( chronometer != null ) {
             chronometer.setVisibility(View.GONE);
         }

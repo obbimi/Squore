@@ -626,6 +626,16 @@
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_Category_Others">
             <com.doubleyellow.prefs.EnumListPreference
+                android:key="numberOfServiceCountUpOrDown"
+                android:title="@string/pref_numberOfServiceCountUpOrDown"
+                android:summary="@string/pref_numberOfServiceCountUpOrDown_summary"
+                android:icon="@drawable/dummy"
+                android:defaultValue="Down"
+                dy:displayValues="@array/DownUp_NrOfServes_DisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.DownUp"
+                />
+
+            <com.doubleyellow.prefs.EnumListPreference
                     android:key="useTossFeature"
                     android:title="@string/pref_useTossFeature"
                     android:summary="@string/pref_useTossFeature_summary"
@@ -645,6 +655,7 @@
                                 android:title="@string/pref_showTips"
                                 android:defaultValue="@bool/showTips_default"
                     />
+
         </PreferenceCategory>
 
     </PreferenceScreen>

@@ -21,6 +21,11 @@
 
     <!-- display values for java enumeration values -->
 
+    <string-array name="DownUp_NrOfServes_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.DownUp -->
+        <item>Down</item>
+        <item>Up</item>
+    </string-array>
     <string-array name="EndMatchManuallyBecause_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.model.EndMatchManuallyBecause -->
         <item>Retired because of injury</item>

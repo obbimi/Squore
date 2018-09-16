@@ -144,6 +144,8 @@
     <string name="pref_recordRallyEndStatsDetails_summary">BH/FH, Front/Volley/Back, Ball Direction, Ball Trajectory</string>
     <string name="pref_showTips_no_more">Don\'t show \'Tips\' anymore</string>
     <string name="pref_useTossFeature">Use \'Toss\' feature</string>
+    <string name="pref_numberOfServiceCountUpOrDown">Number of serves. Count</string>
+    <string name="pref_numberOfServiceCountUpOrDown_summary">Down: number of servers left. Up: consecutive serve to be performed</string>
     <string name="pref_useTossFeature_summary">Either \'Suggest\' to show floating button, \'Automatic\' to show directly at start of match, or \'Do not use\'</string>
     <string name="pref_useShareFeature">Use \'Share\' feature</string>
     <string name="pref_useShareFeature_summary">Either \'Suggest\' to show floating button, \'Automatic\' to share directly at end of match, or \'Do not use\'</string>

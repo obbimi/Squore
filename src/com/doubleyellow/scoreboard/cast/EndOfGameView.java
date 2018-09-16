@@ -30,7 +30,7 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.history.GameGraphView;
 import com.doubleyellow.scoreboard.history.MatchGameScoresView;
-import com.doubleyellow.scoreboard.main.SBTimerView;
+import com.doubleyellow.scoreboard.timer.SBTimerView;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
