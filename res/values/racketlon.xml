@@ -10,6 +10,8 @@
     <string name="end_game_Racketlon">End set</string>
     <string name="lbl_court_Racketlon">Court</string>
 
+    <string name="pref_swapPlayersHalfwayGame_Racketlon">Swap players halfway a game (for TT, BM and TN, not SQ)</string>
+
     <string name="scv_side_buttons_Racketlon">The __serve side buttons__ indicate
         \n
         \n- who should serve

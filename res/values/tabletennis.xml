@@ -7,12 +7,14 @@
     <string name="pref_autoShow_activeExpediteSystem_dialog_after_X_mins">Show \'Activate expedite\' dialog after X mins</string>
 
     <string name="pref_category_towelingDown">Toweling down</string>
-    <string name="pref_autoShow_towelingDown_timer">Auto-show \'Toweling down\' timer</string>
-    <string name="pref_autoShow_towelingDown_timer_after_X_points">Show \'Toweling down\' timer after X points</string>
-    <string name="toweling_down">Towelling</string>
+    <string name="pref_towelingDown_timer">\'Toweling down\' timer</string>
+    <string name="pref_autoShow_towelingDown_timer_after_X_points">Show \'Toweling down\' timer after each X points</string>
+    <string name="toweling_down">Toweling</string>
     <string name="timeout">Timeout</string>
     <integer name="autoShowGamePausedDialogAfterXPoints_default">6</integer>
     <integer name="timerTowelingDown_default">60</integer>
+
+    <string name="pref_swapPlayersHalfwayGame_Tabletennis">Swap players halfway the deciding game</string>
 
     <string name="activate_mode_Tabletennis">Activate expedite</string>
     <string name="deactivate_mode_Tabletennis">De-activate expedite</string>

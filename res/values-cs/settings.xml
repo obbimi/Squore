@@ -131,7 +131,7 @@
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape">Prohodit hráče při otočení zařízení vzhůru nohama (o 180 stupňů)</string>
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary">Umožní prohození hráčů na obrazovce otočením zařízení nebo zobrazení skóre hráčům otočením zařízení směrem k hráčům</string>
     <string name="pref_swapPlayersBetweenGames">Prohodit hráče na začátku dalšího setu</string>
-    <string name="pref_swapPlayersHalfwayGame">Prohodit hráče v půlce setu (?)</string>
+    <string name="pref_swapPlayersHalfwayGame_Squash">Prohodit hráče v půlce setu (?)</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically">Automaticky zobrazovat podrobnosti setu</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically_summary">Po ukončení setu zobrazovat graf průběhu</string>
     <string name="pref_showTips">Zobrazovat tipy</string>

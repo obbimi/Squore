@@ -362,7 +362,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( view == null ) { return; }
         if ( view.isEnabled() ) { return; }
         view.setEnabled(true);
-        Log.d(TAG, "Re-enabling score button for player " + player);
+        Log.d(TAG, "Re-enabled score button for player " + player);
     }
     void disableScoreButton(View view) {
         view.setEnabled(false);
@@ -561,7 +561,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     // Swap (double) players
     //-------------------------------------------------------------------------
 
-    /** might present a dialog to the user, depending on user preference. Returns true if a dialog was presented to the user. */
+    /** might present a dialog to the user, 'Based-On-Preference'. Returns true if a dialog was presented to the user. */
     private boolean swapPlayers_BOP() {
         Feature swapPlayersFeature = PreferenceValues.swapPlayersHalfwayGame(ScoreBoard.this);
         switch(swapPlayersFeature) {
@@ -2564,6 +2564,9 @@ touch -t 01030000 LAST.sb
                     showTimerFloatButton(false);
                 }
             }
+            if ( matchModel.getMaxScore()==0 ) {
+                enableScoreButton(p);
+            }
         }
     }
     private class CallChangeListener implements Model.OnCallChangeListener {
@@ -4383,7 +4386,7 @@ touch -t 01030000 LAST.sb
         sheetAvailableChoice.init(sURL);
         addToDialogStack(sheetAvailableChoice);
     }
-
+    /** Delete 'Based-On-Preference' */
     private void deleteFromMyList_BOP() {
         if ( MatchTabbed.SelectTab.Mine.equals(MatchTabbed.getDefaultTab() ) == false ) {
             return;

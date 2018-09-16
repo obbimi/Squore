@@ -172,7 +172,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         }
 
         @Override public void OnGameIsHalfwayChange(int iGameZB, int iScoreA, int iScoreB, Halfway hwStatus) {
-            if ( hwStatus.isHalfway() && hwStatus.changeSidesFor(matchModel.getSport()) ) {
+            if ( matchModel.showChangeSidesMessageInGame(iGameZB) && hwStatus.isHalfway() && hwStatus.changeSidesFor(matchModel.getSport()) ) {
                 iBoard.showMessage(getContext().getString(R.string.oa_change_sides), 5);
             } else {
                 iBoard.hideMessage();

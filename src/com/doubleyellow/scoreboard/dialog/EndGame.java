@@ -69,9 +69,10 @@ public class EndGame extends BaseAlertDialog
 
         bAllowFormatChange = matchModel.getEndScoreOfGames().size() == 1 && matchModel.getNrOfPointsToWinGame() < 15;
 
-        boolean matchHasEnded = matchModel.matchHasEnded();
+        boolean matchHasEnded                     = matchModel.matchHasEnded();
 //      boolean bShowWithTimerPrefCheckbox        = false && (matchModel.matchHasEnded() == false); // TODO: decide what looks best: a checkbox or an extra button
-        boolean bShowWithNeutralButtonToShowTimer = (matchHasEnded == false) && PreferenceValues.useTimersFeature(context).equals(Feature.Suggest);
+        Feature useTimersFeature                  = PreferenceValues.useTimersFeature(context);
+        boolean bShowWithNeutralButtonToShowTimer = (matchHasEnded == false) && useTimersFeature.equals(Feature.Suggest);
         boolean bDrawTimerImageOnButton           = bShowWithNeutralButtonToShowTimer;
 
         int iResIdNeg = R.string.cmd_cancel;
@@ -83,7 +84,7 @@ public class EndGame extends BaseAlertDialog
            .setNegativeButton(iResIdNeg      , dialogClickListener);
 
         if ( bShowWithNeutralButtonToShowTimer ) {
-            boolean bAutoShowTimer = PreferenceValues.useTimersFeature(context).equals(Feature.Automatic);
+            boolean bAutoShowTimer = useTimersFeature.equals(Feature.Automatic);
             int neutralCaptionResId = bAutoShowTimer ? R.string.sb_cmd_ok_and_skip_timer : R.string.sb_cmd_ok_and_start_timer;
             if ( bAutoShowTimer == false ) {
                 if ( bDrawTimerImageOnButton ) {
@@ -253,7 +254,7 @@ public class EndGame extends BaseAlertDialog
                 //boolean bAutoShowTimer = PreferenceValues.showTimersAutomatically(context);
                 PreferenceValues.setOverwrite(PreferenceKeys.useTimersFeature, Feature.Automatic.toString());
                 setNextRacketlonDiscipline();
-                matchModel.endGame(); // this might possibly already start the timer
+                matchModel.endGame(); // this might possibly already start the timer, with temporary setting it to Automatic it WILL start the timer
                 PreferenceValues.removeOverwrite(PreferenceKeys.useTimersFeature);
                 break;
             case BTN_CHANGE_MATCH_FORMAT:

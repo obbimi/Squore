@@ -134,7 +134,6 @@
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape">Swap players when device is rotated 180 degrees</string>
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary">Allows to swap players on screen by rotating the device, or showing score to players by flipping device forward towards players</string>
     <string name="pref_swapPlayersBetweenGames">Swap players at the start of a new game</string>
-    <string name="pref_swapPlayersHalfwayGame">Swap players halfway a game</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically">Auto show details of game</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically_summary">When a game ends automatically open the screen to show graphical representation</string>
     <string name="pref_showTips">Show \'Tips\'</string>

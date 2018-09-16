@@ -4,6 +4,8 @@
     <string name="deactivate_mode_Squash"><!--De-activate xxx--></string>
     <integer name="showModeDialogAfterXMins_default_Squash">-1</integer>
 
+    <string name="pref_swapPlayersHalfwayGame_Squash"><!--Not used in squash version of the app --></string>
+
     <string name="Score">Score</string>
     <string name="Game">Game</string>
 

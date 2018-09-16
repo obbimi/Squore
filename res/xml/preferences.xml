@@ -546,7 +546,7 @@
                     />
             <com.doubleyellow.prefs.EnumListPreference
                     android:key="swapPlayersHalfwayGame"
-                    android:title="@string/pref_swapPlayersHalfwayGame"
+                    android:title="@string/pref_swapPlayersHalfwayGame_Squash"
                     android:icon="@drawable/change_sides"
                     android:defaultValue="Suggest"
                     dy:displayValues="@array/FeatureDisplayValues"
@@ -895,7 +895,7 @@
             <com.doubleyellow.prefs.EnumListPreference
                 android:icon="@drawable/dummy"
                 android:key="showGamePausedDialog"
-                android:title="@string/pref_autoShow_towelingDown_timer"
+                android:title="@string/pref_towelingDown_timer"
                 android:defaultValue="Suggest"
                 dy:displayValues="@array/FeatureDisplayValues"
                 dy:enumClass="com.doubleyellow.util.Feature"
