@@ -1,5 +1,18 @@
-## 4.12 (aug 2018)
+## 4.13 (sep 2018)
 
+- add support for 'Expedite system', activating the setting under `Timers/Expedite System` it will
+    - make server switch after each point
+    - server is indicated by an 'X' (X-pedite)
+    - clicking on the serve side button without the 'X' allows to make correction on who is about to serve  
+- add support for 'Toweling down' (setting under `Timers/Toweling Down`)
+    - every 6 points (configurable) a count down timer of 60 seconds (configurable) will appear, stopping the game timer
+        - the dialog will have a 'Resume game' button, to be pressed when play is resumed
+        - if you are not using the dialog, the timer element can be long pressed to trigger the 'Resume Game'
+    - should be typically 'activated' if also using the 'Expedite system' to have an accurate game duration
+- new preference under Behaviour/Other to choose 
+    - if number of serves is counting 
+        - down (default, number of serves left) or,
+        - up    
 - upgraded to use new google-play library to improve ChromeCast for e.g. Android 8
 
 ## 4.11 (june 2018)
@@ -53,6 +66,19 @@
 
 __EOF__
 
+Per Section 2.15 of the ITTF Laws of Table Tennis, 
+The Expedite System shall come into operation after 10 minutes’ play in a game or 
+at any time requested by both players or pairs.  However, the system shall not be 
+introduced in a game if at least 18 points have been scored.  During a game, the 
+umpire (or assistant umpire) keeps track of total play time.  When 10 minutes play 
+time in a game is reached, the umpire institutes The Expedite System.  If the ball 
+is in play when the 10 minutes is reached, the umpire shall interrupt play and 
+restart the point under the rules of The Expedite System.  The Expedite System 
+requires each player to alternate one serve (instead of two) at a time until 
+the end of the game.  If the receiving player makes 13 correct returns in a rally, 
+the point is awarded to the receiver.  Once introduced, The Expedite System shall 
+remain in operation until the end of the match.
+
 - TODO
     - when sharing matches: do not show L and R in score sequence
     - adapt to support doubles the tabletennis way 
@@ -75,3 +101,8 @@ Another plus is that this app is completely free and ad-free.
 <https://play.google.com/store/apps/details?id=com.doubleyellow.tabletennis>
 
 Suggestions are welcome.
+
+<https://www.ittf.com/?media-alias=2018_ITTF_Handbook>
+2.15 Expedite
+3.4.4.1.2 Toweling down
+
