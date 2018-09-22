@@ -24,6 +24,8 @@ import android.os.Bundle;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+
 /** Introduced for the Expedite system */
 public class ActivateMode extends BaseAlertDialog
 {
@@ -45,7 +47,9 @@ public class ActivateMode extends BaseAlertDialog
 
     @Override public void show() {
         String sTitle = getString(R.string.activate_mode_Tabletennis);
+        String sDesc  = getString(R.string.activate_mode_description_Tabletennis, PreferenceValues.showModeDialogAfterXMins(context));
         adb.setTitle(sTitle + "?")
+           .setMessage(sDesc)
            .setIcon   (R.drawable.microphone)
            .setPositiveButton(R.string.cmd_yes, listener)
            .setNegativeButton(R.string.cmd_no , listener);

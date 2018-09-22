@@ -2239,6 +2239,12 @@ touch -t 01030000 LAST.sb
         if ( shareButton == null ) {
             float fMargin = 1.25f; // same as 'Timer' button (not over toss button, because than it may hide the score)
             shareButton = getFloatingActionButton(R.id.float_match_share, fMargin, android.R.drawable.ic_menu_share, ColorPrefs.ColorTarget.shareButtonBackgroundColor);
+            // ic_menu_share
+            //   mdpi = 32x32
+            //   ldpi = 36x36
+            //   hdpi = 48x48
+            //  xhdpi = 64x64 // on android 9 for floating buttons at least this resolution should be available
+            // xxhdpi = 96x96
         }
         ShareMatchPrefs prefs = PreferenceValues.getShareAction(this);
         boolean bVisible = bMatchHasEnded || (bGameHasEnded && prefs.alsoBeforeMatchEnd());
@@ -2277,8 +2283,9 @@ touch -t 01030000 LAST.sb
             newMatchButton.setActionId(iActionId);
             newMatchButton.setDrawable(this.getResources().getDrawable(iDrawableId), getFloatingButtonSizePx(this));
         }
-
-        newMatchButton.setHidden(bVisible == false);
+        if ( newMatchButton != null ) {
+            newMatchButton.setHidden(bVisible == false);
+        }
     }
 
     /** might present a dialog to the user, Based-On-Preference. Returns true if dialog will be shown */
@@ -2802,7 +2809,7 @@ touch -t 01030000 LAST.sb
             if ( m_bHasBeenPresented || (m_ShowDialogAfter < 1) ) {
                 return;
             }
-            if ( matchModel.isInMode(TabletennisModel.Mode.Expedite) ) {
+            if ( matchModel.isInMode(TabletennisModel.Mode.Expedite) || matchModel.matchHasEnded() || matchModel.isLocked() ) {
                 return;
             }
             long lElapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
@@ -2810,8 +2817,8 @@ touch -t 01030000 LAST.sb
             if ( lElapsedMin > m_lElapsedMin ) {
                 //Log.d(TAG, "Elapsed ms  : " + lElapsedMillis);
                 m_lElapsedMin = lElapsedMin;
-                if ( m_lElapsedMin < m_ShowDialogAfter ) {
-                    Log.d(TAG, "Elapsed min : " + lElapsedMin + " ( <" + m_ShowDialogAfter + ")");
+                if ( m_lElapsedMin != m_ShowDialogAfter ) {
+                    Log.d(TAG, "Elapsed min : " + lElapsedMin + " ( != " + m_ShowDialogAfter + ")");
                 } else {
                     if ( matchModel.getTotalGamePoints() < 18 ) {
                         m_bHasBeenPresented = true;

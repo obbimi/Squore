@@ -20,6 +20,7 @@ package com.doubleyellow.scoreboard.dialog;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.KeyEvent;
@@ -80,6 +81,14 @@ public class ServerToss extends BaseAlertDialog
                 return false;
             }
         });
+
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 /* 17 */ ) {
+            adb.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override public void onDismiss(DialogInterface dialog) {
+                    scoreBoard.triggerEvent(ScoreBoard.SBEvent.tossDialogEnded, ServerToss.this);
+                }
+            });
+        }
         try {
             OnShowListener listener = new OnShowListener(context, ButtonUpdater.iaColorNeutral);
             dialog = adb.show(listener); // have had report that this throws android.view.WindowManager$BadTokenException, everything automated?: warmup timer+toss dialog

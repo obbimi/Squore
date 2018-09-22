@@ -17,6 +17,7 @@
     <string name="pref_swapPlayersHalfwayGame_Tabletennis">Swap players halfway the deciding game</string>
 
     <string name="activate_mode_Tabletennis">Activate expedite</string>
+    <string name="activate_mode_description_Tabletennis">More than %s minutes passed since the start of the game. Activate the expedite system?</string>
     <string name="deactivate_mode_Tabletennis">De-activate expedite</string>
     <integer name="showModeDialogAfterXMins_default_Tabletennis">10</integer>
 

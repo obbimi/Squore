@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"
+    fill="#111111" stroke="#111111">
+    <!--
+    This svg are not used as such, but converted to png files:
+
+    fill and stroke colors: #D3D3D3, #111111
+
+    convert -background none -size 64x64 microphone.svg microphone.png
+    convert -background none -size 64x64 microphone.svg microphone_black.png
+    -->
+    <rect id="top"  stroke="yellow" stroke-width="0"
+        x="55"     y="0"
+        width="50" height="100"
+        rx="25"    ry="25"/>
+
+    <path id="bowl"  stroke-width="10" fill="none" stroke-linecap="round"
+        d="M40,67 c -5,64
+                          85,64
+                          80,0"
+        />
+
+    <path id="foot" stroke="yellow" stroke-width="0"
+        d="M80,160 h+40 q  0,-15 -15,-15 h-15 v-26 h-20
+                                                    v+26
+                                               h-15
+                              q-15,  0 -15,+15
+                         h+40"/>
+</svg>

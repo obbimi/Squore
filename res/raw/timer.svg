@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520"
+    fill="#D3D3D3" stroke="#D3D3D3">
+    <!--
+    This svg are not used as such, but converted to png files:
+
+    fill and stroke colors: #D3D3D3, #111111
+
+    convert -background none -size 64x64 timer.svg timer.png
+    convert -background none -size 64x64 timer.svg timer_black.png
+    -->
+
+    <circle id="disc" cx="260" cy="300" r="200" stroke-width="35" fill="none"/>
+    <polyline id="hands" stroke-linecap="round" points="260,170 260,300 370,370" stroke-width="25" fill="none"/>
+
+    <!-- https://css-tricks.com/svg-path-syntax-illustrated-guide/ -->
+    <path id="top-button" stroke="yellow" stroke-width="0"
+        d="M260,0  h+43 q+10, 0 +10,+10 v+32 h-20 v+30 q-33,-5
+                                                              -66, 0
+                                                        v-30
+                                                   h-20
+                                              v-32
+                              q  0,10 +10,-10
+                         h+43
+                "/>
+
+    <path id="side-button" stroke="yellow" stroke-width="0" transform='rotate(30 260 300)'
+        d="M260,30 h+23 q+10, 0 +10,+10 v+32  q-33,-5
+                                                     -66, 0
+                                              v-32
+                              q  0,10 +10,-10
+                         h+23
+                "/>
+
+</svg>
