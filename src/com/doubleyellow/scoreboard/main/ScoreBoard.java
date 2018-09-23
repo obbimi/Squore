@@ -897,10 +897,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
 
         Chronometer.OnChronometerTickListener gameDurationTickListener = null;
-        if ( PreferenceValues.autoShowModeActivationDialog(this) ) {
-            if ( Brand.isTabletennis() ) {
-                gameDurationTickListener = new TTGameDurationTickListener(PreferenceValues.showModeDialogAfterXMins(this));
-            }
+        if ( Brand.isTabletennis() ) {
+            gameDurationTickListener = new TTGameDurationTickListener();
         }
 
         Display display = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -1247,8 +1245,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
             if ( bActionTrueIsUpFalseIsDown ) {
                 // we only do something for 'up' action. If a user long presses a volume key a lot of 'down' events are triggered
+                Player first = IBoard.m_firstPlayerOnScreen;
                 if ( bUseVolumeButtonsForScoring ) {
-                    changeScore(bVolumeTrueIsUpFalseIsDown ? Player.A : Player.B);
+                    changeScore(bVolumeTrueIsUpFalseIsDown ? first : first.getOther());
                 } else {
                     showActivateDialog(context);
                 }
@@ -2561,10 +2560,12 @@ touch -t 01030000 LAST.sb
                         case Automatic: {
                             // show pause dialog
                             _showTimer(Type.TowelingDown, true);
+                            break;
                         }
                         case Suggest: {
                             // show timer floating button
                             showTimerFloatButton(true);
+                            break;
                         }
                     }
                 } else {
@@ -2797,16 +2798,13 @@ touch -t 01030000 LAST.sb
     private class TTGameDurationTickListener implements Chronometer.OnChronometerTickListener {
 
         private       int     m_lElapsedMin = -1;
-        private final int     m_ShowDialogAfter;
         private       boolean m_bHasBeenPresented = false;
 
-        TTGameDurationTickListener(int iShowAfter) {
-            m_ShowDialogAfter = iShowAfter;
-        }
+        TTGameDurationTickListener() { }
 
         /** will be called approximately every second */
         @Override public void onChronometerTick(Chronometer chronometer) {
-            if ( m_bHasBeenPresented || (m_ShowDialogAfter < 1) ) {
+            if ( m_bHasBeenPresented ) {
                 return;
             }
             if ( matchModel.isInMode(TabletennisModel.Mode.Expedite) || matchModel.matchHasEnded() || matchModel.isLocked() ) {
@@ -2814,9 +2812,16 @@ touch -t 01030000 LAST.sb
             }
             long lElapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
             int  lElapsedMin    = Math.round(lElapsedMillis / 1000 / 60);
-            if ( lElapsedMin > m_lElapsedMin ) {
+            if ( lElapsedMin != m_lElapsedMin ) {
                 //Log.d(TAG, "Elapsed ms  : " + lElapsedMillis);
                 m_lElapsedMin = lElapsedMin;
+                int m_ShowDialogAfter = PreferenceValues.showModeDialogAfterXMins(ScoreBoard.this);
+                if ( m_ShowDialogAfter < 1 ) {
+                    return;
+                }
+                if ( PreferenceValues.autoShowModeActivationDialog(ScoreBoard.this) == false ) {
+                    return;
+                }
                 if ( m_lElapsedMin != m_ShowDialogAfter ) {
                     Log.d(TAG, "Elapsed min : " + lElapsedMin + " ( != " + m_ShowDialogAfter + ")");
                 } else {
@@ -2829,11 +2834,14 @@ touch -t 01030000 LAST.sb
                         }
 
                         // show dialog (or toast if another dialog is already showing)
+                        showActivateMode(TabletennisModel.Mode.Expedite.toString());
+/*
                         if ( isDialogShowing() ) {
                             Toast.makeText(ScoreBoard.this, R.string.activate_mode_Tabletennis, Toast.LENGTH_LONG).show();
                         } else {
                             showActivateMode(TabletennisModel.Mode.Expedite.toString());
                         }
+*/
                     }
                 }
             }

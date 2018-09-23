@@ -19,6 +19,8 @@ package com.doubleyellow.scoreboard.dialog;
 
 import android.content.Context;
 import android.os.Bundle;
+
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.android.view.MarkDownView;
 
@@ -38,7 +40,7 @@ public class Credits extends BaseAlertDialog
 
     @Override public void show() {
         MarkDownView webView = new MarkDownView(context, null);
-        webView.init(R.raw.credits);
+        webView.init(Brand.isTabletennis() ? R.raw.credits_tabletennis : R.raw.credits);
 
         dialog = adb
                 .setTitle("Credits")
