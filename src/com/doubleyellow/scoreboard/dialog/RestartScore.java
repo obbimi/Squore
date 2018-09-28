@@ -80,6 +80,8 @@ public class RestartScore extends BaseAlertDialog
                 m.setPlayerCountry(Player.B, matchModel.getCountry(Player.B) );
                 m.setPlayerClub(Player.A, matchModel.getClub   (Player.A) );
                 m.setPlayerClub(Player.B, matchModel.getClub   (Player.B) );
+                m.setPlayerColor(Player.A, matchModel.getColor (Player.A) );
+                m.setPlayerColor(Player.B, matchModel.getColor (Player.B) );
                 m.setSource(matchModel.getSource(), matchModel.getSourceID() );
                 nm.putExtra(Model.class.getSimpleName(), m.toJsonString(null));
 /*

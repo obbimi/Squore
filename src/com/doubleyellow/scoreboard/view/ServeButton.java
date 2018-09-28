@@ -70,7 +70,7 @@ public class ServeButton extends /*SBRelativeLayout*/ AutoResizeTextView
             int i2 = R.id.btn_side2;
         }
     }
-    public String setServeString(Object o) {
+    public String setServeString(Object o, int iTransparencyNonServer) {
         String sValue = String.valueOf(o);
         if ( o instanceof Integer ) {
             int iNrOneBased = (Integer) o;
@@ -90,8 +90,7 @@ public class ServeButton extends /*SBRelativeLayout*/ AutoResizeTextView
         }
 
         // set transparency: if something is displayed: non transparent, if nothing is displayed semi-transparent (user preference)
-        int iTransparancyNonServer = PreferenceValues.getServeButtonTransparencyNonServer(getContext());
-        int iTransparency = StringUtil.isEmpty(sValue)? iTransparancyNonServer : 0;
+        int iTransparency = StringUtil.isEmpty(sValue)? iTransparencyNonServer : 0;
         Drawable drawable = this.getBackground();
         if ( drawable instanceof GradientDrawable ) {
             GradientDrawable gd = (GradientDrawable) drawable;

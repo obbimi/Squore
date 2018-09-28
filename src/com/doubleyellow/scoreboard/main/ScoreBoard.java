@@ -1760,6 +1760,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 matchModel.setPlayerCountry(player, previous.getCountry(player));
                 matchModel.setPlayerClub   (player, previous.getClub   (player));
                 matchModel.setPlayerAvatar (player, previous.getAvatar (player));
+                matchModel.setPlayerColor  (player, previous.getColor  (player));
             }
             // use event from previous
             matchModel.setEvent               (previous.getEventName(), previous.getEventDivision(), previous.getEventRound(), previous.getEventLocation());

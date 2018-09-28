@@ -429,8 +429,14 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
     }
 
     public static String getText(View v) {
-        ViewHolder viewHolder = (ViewHolder) v.getTag();
-        return viewHolder.matchDesc.getText().toString();
+        Object tag = v.getTag();
+        if ( tag instanceof ViewHolder ) {
+            ViewHolder viewHolder = (ViewHolder) tag;
+            return viewHolder.matchDesc.getText().toString();
+        } else {
+            Log.w(TAG, "v.getTag() did not return a ViewHolder but " + (tag==null?null:tag.getClass().getName()));
+            return "";
+        }
     }
 
     public static class ViewHolder {

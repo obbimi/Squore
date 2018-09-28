@@ -197,11 +197,13 @@ public class ResultMailer {
                 sbGamesScores.append(finalizeForFixedWidthTableCell(iGame, sPoints));
                 sbGameCount  .append(finalizeForFixedWidthTableCell(iGame, sGames));
 
-                GameTiming timing = times.get(iGame);
-                int iValue = timing.getDurationMM();
-                iValue = Math.abs(iValue); // if game was less than a minute, time is/was in seconds but negative
-                String sValuePadded = finalizeForFixedWidthTableCell(iGame, "T " + iValue + "'");
-                sbGamesTimes.append(sValuePadded);
+                if ( iGame < ListUtil.size(times) ) {
+                    GameTiming timing = times.get(iGame);
+                    int iValue = timing.getDurationMM();
+                    iValue = Math.abs(iValue); // if game was less than a minute, time is/was in seconds but negative
+                    String sValuePadded = finalizeForFixedWidthTableCell(iGame, "T " + iValue + "'");
+                    sbGamesTimes.append(sValuePadded);
+                }
             }
             // add a row with the final score of each game
             lLines.add(sbGamesScores.toString().trim());

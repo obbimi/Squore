@@ -373,8 +373,16 @@ public class IBoard implements TimerViewContainer
         int iServeId = m_player2serverSideId.get(player);
         ServeButton btnSide = ( ServeButton ) findViewById(iServeId);
         if ( btnSide == null ) { return; }
+        int iTransparencyNonServer = PreferenceValues.getServeButtonTransparencyNonServer(context);
+        EnumSet<ShowPlayerColorOn> showPlayerColorOn = PreferenceValues.showPlayerColorOn(context);
+        if ( showPlayerColorOn.contains(ShowPlayerColorOn.ServeSideButton) ) {
+            if ( StringUtil.hasNonEmpty(matchModel.getColor(Player.A), matchModel.getColor(Player.B)) ) {
+                iTransparencyNonServer = 0;
+            }
+        }
+
         Object oDisplayValueOverwrite = serverSideDisplayValue(nextServeSide, bIsHandout);
-        String sDisplayValueOverwrite = btnSide.setServeString(oDisplayValueOverwrite);
+        String sDisplayValueOverwrite = btnSide.setServeString(oDisplayValueOverwrite, iTransparencyNonServer);
         btnSide.setEnabled(true || bIsHandout);
 
         int iNameId = m_player2nameId.get(player);
