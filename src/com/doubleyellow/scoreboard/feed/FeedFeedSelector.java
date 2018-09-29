@@ -292,16 +292,18 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
             JSONArray jsonArray = loadTypesAdapter.joRoot.optJSONArray(sName);
             AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(FeedFeedSelector.this);
             StringBuilder sb = new StringBuilder();
-            sb.append(sName).append(" (").append(jsonArray.length()).append(")").append("\n\n");
+            sb.append(sName).append(" (").append(JsonUtil.size(jsonArray)).append(")").append("\n\n");
 
             JSONObject joType = loadTypesAdapter.joMetaData.optJSONObject(sName);
-            for( FeedKeys key: FeedKeys.values() ) {
-                if ( key.equals(FeedKeys.Image    ) ) { continue; }
-                if ( key.equals(FeedKeys.BGColor  ) ) { continue; }
-                if ( key.equals(FeedKeys.TextColor) ) { continue; }
-                String sValue = joType.optString(key.toString());
-                if ( StringUtil.isNotEmpty(sValue) ) {
-                    sb.append(key).append(": ").append(sValue).append("\n\n");
+            if ( joType != null ) {
+                for( FeedKeys key: FeedKeys.values() ) {
+                    if ( key.equals(FeedKeys.Image    ) ) { continue; }
+                    if ( key.equals(FeedKeys.BGColor  ) ) { continue; }
+                    if ( key.equals(FeedKeys.TextColor) ) { continue; }
+                    String sValue = joType.optString(key.toString());
+                    if ( StringUtil.isNotEmpty(sValue) ) {
+                        sb.append(key).append(": ").append(sValue).append("\n\n");
+                    }
                 }
             }
             ab.setMessage(sb.toString())
