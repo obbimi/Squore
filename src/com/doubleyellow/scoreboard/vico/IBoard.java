@@ -39,6 +39,7 @@ import android.widget.TextView;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.AutoResizeTextView;
 import com.doubleyellow.android.view.FloatingMessage;
+import com.doubleyellow.android.view.Orientation;
 import com.doubleyellow.android.view.ViewUtil;
 
 import com.doubleyellow.scoreboard.Brand;
@@ -47,6 +48,7 @@ import com.doubleyellow.scoreboard.prefs.*;
 import com.doubleyellow.scoreboard.timer.Timer;
 import com.doubleyellow.scoreboard.timer.TimerViewContainer;
 import com.doubleyellow.scoreboard.timer.Type;
+import com.doubleyellow.scoreboard.view.GamesWonButton;
 import com.doubleyellow.util.*;
 
 import com.doubleyellow.scoreboard.R;
@@ -73,11 +75,13 @@ public class IBoard implements TimerViewContainer
     public static Map<Player, Integer> m_player2scoreId;
     public static Map<Player, Integer> m_player2serverSideId;
     public static Map<Player, Integer> m_player2nameId;
+    public static Map<Player, Integer> m_player2gamesWonId;
     public static SparseArray<Player>  m_id2player;
     static {
         m_player2scoreId      = new HashMap<Player , Integer>();
         m_player2serverSideId = new HashMap<Player , Integer>();
         m_player2nameId       = new HashMap<Player , Integer>();
+        m_player2gamesWonId   = new HashMap<Player , Integer>();
         m_id2player           = new SparseArray<Player>();
 
         initPlayer2ScreenElements(Player.A);
@@ -97,6 +101,9 @@ public class IBoard implements TimerViewContainer
 
         m_player2nameId      .put(pFirst           , R.id.txt_player1);
         m_player2nameId      .put(pFirst.getOther(), R.id.txt_player2);
+
+        m_player2gamesWonId  .put(pFirst           , R.id.btn_gameswon1);
+        m_player2gamesWonId  .put(pFirst.getOther(), R.id.btn_gameswon2);
 
         m_id2player          .put(R.id.txt_player1 , pFirst);
         m_id2player          .put(R.id.btn_score1  , pFirst);
@@ -425,16 +432,89 @@ public class IBoard implements TimerViewContainer
         currentGameScoreLines.update(bOnlyAddLast);
     }
 
+    /** if false, only nr of games won is shown */
+    public static boolean showGamesWon(Context context, boolean bIsPresentation) {
+        return m_o2gameScoresAppearance.get(ViewUtil.getCurrentOrientation(context)).showGamesWon(bIsPresentation);
+    }
+
+    private static Map<Orientation,GameScoresAppearance> m_o2gameScoresAppearance = new HashMap<>();
+    public boolean toggleGameScoreView() {
+        GameScoresAppearance appearance = m_o2gameScoresAppearance.get(ViewUtil.getCurrentOrientation(context));
+        if ( appearance == null ) {
+            appearance = PreferenceValues.getGameScoresAppearance(context);
+        } else {
+            appearance = ListUtil.getNextEnum(appearance);
+        }
+        return setGameScoreView(appearance);
+    }
+    public void initGameScoreView() {
+        GameScoresAppearance appearance = m_o2gameScoresAppearance.get(ViewUtil.getCurrentOrientation(context));
+        if ( appearance == null ) {
+            appearance = PreferenceValues.getGameScoresAppearance(context);
+        }
+        setGameScoreView(appearance);
+    }
+    private boolean setGameScoreView(GameScoresAppearance appearance) {
+        boolean bSuccess = true;
+        for (Player player : Player.values()) {
+            int iNameId = m_player2gamesWonId.get(player);
+            View vGamesWon = findViewById(iNameId);
+            if ( vGamesWon == null ) {
+                // no GamesWonButton in the layout
+                while ( appearance.showGamesWon(isPresentation()) ) {
+                    appearance = ListUtil.getNextEnum(appearance);
+                    bSuccess = false;
+                }
+                Log.w(TAG, "No GamesWon buttons to work with in orientation " + ViewUtil.getCurrentOrientation(context));
+                break;
+            }
+            boolean showGamesWon = appearance.showGamesWon(isPresentation());
+            vGamesWon.setVisibility(showGamesWon ?View.VISIBLE:View.INVISIBLE);
+        }
+
+        m_o2gameScoresAppearance.put(ViewUtil.getCurrentOrientation(context), appearance);
+
+        MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
+        if ( appearance.showGamesWon(isPresentation()) ) {
+            matchGameScores.setVisibility(View.INVISIBLE);
+        } else {
+            matchGameScores.setVisibility(View.VISIBLE);
+        }
+        if ( bSuccess ) {
+            PreferenceValues.setEnum(PreferenceKeys.gameScoresAppearance, context, appearance);
+        }
+
+        return bSuccess;
+    }
+
     public void updateGameScores() {
         MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
-        if ( matchGameScores == null) { return; }
+        if ( matchGameScores != null) {
 
-        matchGameScores.setOnTextResizeListener(matchGamesScoreSizeListener);
+            matchGameScores.setOnTextResizeListener(matchGamesScoreSizeListener);
 
-        //int textSize = PreferenceValues.getHistoryTextSize(this);
-        //matchGameScores.setTextSizeDp(textSize);
+            //int textSize = PreferenceValues.getHistoryTextSize(this);
+            //matchGameScores.setTextSizeDp(textSize);
 
-        matchGameScores.update(matchModel, m_firstPlayerOnScreen);
+            matchGameScores.update(matchModel, m_firstPlayerOnScreen, this.isPresentation());
+        }
+
+        if ( (m_player2gamesWonId != null) && (matchModel != null) ) {
+            Map<Player, Integer> gamesWon = matchModel.getGamesWon();
+            if ( MapUtil.isNotEmpty(gamesWon) ) {
+                for(Player player: Player.values() ) {
+                    int iNameId = m_player2gamesWonId.get(player);
+                    View view = findViewById(iNameId);
+                    if ( view instanceof GamesWonButton) {
+                        GamesWonButton v = (GamesWonButton) view;
+                        v.setGamesWon(gamesWon.get(player));
+                    }
+                }
+            } else {
+                // set both to zero?
+                Log.d(TAG, "Games won is empty map");
+            }
+        }
     }
     private static int iTxtSizePx_FinishedGameScores = 0;
     public  static int iTxtSizePx_PaperScoringSheet  = 0;
@@ -556,18 +636,37 @@ public class IBoard implements TimerViewContainer
                 }
             }
 
+            Integer scoreBgColor  = mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
+            Integer scoreTxtColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonTextColor);
             if ( m_player2scoreId != null ) {
                 int id = m_player2scoreId.get(player);
                 TextView txtView = (TextView) findViewById(id);
                 if ( txtView != null ) {
-                    Integer scoreBgColor  = mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
-                    Integer scoreTxtColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonTextColor);
                     txtView.setTextColor(scoreTxtColor);
                     if ( (scoreBgColor != null) && scoreBgColor.equals(mainBgColor) ) {
                         setBackgroundAndBorder(txtView, scoreBgColor, scoreTxtColor);
                     } else {
                         setBackgroundColor(txtView, scoreBgColor);
                     }
+                }
+            }
+
+            if ( m_player2gamesWonId != null ) {
+                Map<Player, Integer> gamesWon = matchModel !=null ? matchModel.getGamesWon() : new HashMap<Player, Integer>();
+                int iNameId = m_player2gamesWonId.get(player);
+                View view = findViewById(iNameId);
+                if ( view instanceof GamesWonButton) {
+                    GamesWonButton txtView = (GamesWonButton) view;
+                    txtView.setTextColor(scoreTxtColor);
+                    if ( (scoreBgColor != null) && scoreBgColor.equals(mainBgColor) ) {
+                        setBackgroundAndBorder(txtView, scoreBgColor, scoreTxtColor);
+                    } else {
+                        setBackgroundColor(txtView, scoreBgColor);
+                    }
+/*
+                    int iGamesWon = MapUtil.getInt(gamesWon, player, 0);
+                    v.setGamesWon(iGamesWon);
+*/
                 }
             }
 
@@ -802,7 +901,7 @@ public class IBoard implements TimerViewContainer
         if ( tvToLate != null ) {
             tvToLate.setVisibility(View.INVISIBLE);
         }
-        // because the little chronometer is not an AutoresizeTextView we 'emulate' this by installing a onresizelistener on its 'parent': the actual timer
+        // because the little chronometer is not an AutoResizeTextView we 'emulate' this by installing a onResizeListener on its 'parent': the actual timer
         if ( btnTimer instanceof AutoResizeTextView ) {
             AutoResizeTextView arTimer = (AutoResizeTextView) btnTimer;
             arTimer.addOnResizeListener(new AutoResizeTextView.OnTextResizeListener() {

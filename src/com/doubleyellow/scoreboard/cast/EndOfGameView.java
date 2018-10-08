@@ -49,7 +49,7 @@ import java.util.Map;
  */
 public class EndOfGameView implements TimerViewContainer
 {
-            ViewGroup          root;
+    private ViewGroup          root;
     private Context            context     = null;
     private IBoard             iBoard      = null;
     private TextView           txtTimer    = null;
@@ -118,7 +118,7 @@ public class EndOfGameView implements TimerViewContainer
                               , mColors.get(ColorPrefs.ColorTarget.serveButtonBackgroundColor )
                               , mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor)
             );
-            mgsv.update(matchModel, Player.A);
+            mgsv.update(matchModel, Player.A, this.iBoard.isPresentation());
         }
         if ( txtTimer !=null ) {
             if ( matchModel.matchHasEnded() ) {

@@ -222,6 +222,7 @@ public enum PreferenceKeys {
         scorelineLayout,
         newMatchLayout,
         serveButtonTransparencyNonServer,
+        gameScoresAppearance,
     Colors,
         colorSchema,
         /** grouping **/

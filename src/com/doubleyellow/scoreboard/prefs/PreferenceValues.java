@@ -273,6 +273,9 @@ public class PreferenceValues extends RWValues
     public static NewMatchLayout getNewMatchLayout(Context context) {
         return getEnum(PreferenceKeys.newMatchLayout, context, NewMatchLayout.class, NewMatchLayout.AllFields);
     }
+    public static GameScoresAppearance getGameScoresAppearance(Context context) {
+        return getEnum(PreferenceKeys.gameScoresAppearance, context, GameScoresAppearance.class, GameScoresAppearance.ShowGamesWon);
+    }
     public static DoublesServeSequence getDoublesServeSequence(Context context) {
         return getEnum(PreferenceKeys.doublesServeSequence, context, DoublesServeSequence.class, DoublesServeSequence.values()[0], Model.mOldDSS2New);
     }

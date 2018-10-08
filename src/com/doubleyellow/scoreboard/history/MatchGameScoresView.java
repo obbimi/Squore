@@ -40,6 +40,7 @@ import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.ShowCountryAs;
+import com.doubleyellow.scoreboard.vico.IBoard;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
@@ -80,9 +81,11 @@ public class MatchGameScoresView extends LinearLayout
     private String                     m_eventDivision = null;
     private Map<Player, Integer>       m_pointsDiff    = null;
     private Player[]                   m_players       = Player.values(); // must be initialized with a value in order to let setProperties() succeed
+    private boolean                    m_bIsPresentation = false;
 
-    public void update(Model matchModel, Player pFirst) {
+    public void update(Model matchModel, Player pFirst, boolean bIsPresentation) {
         m_players = new Player[] { pFirst, pFirst.getOther() };
+        m_bIsPresentation = bIsPresentation;
         this.update( m_players
                    , matchModel.getEndScoreOfPreviousGames()
                    , matchModel.getPlayerNames(true, true, m_players)
@@ -164,14 +167,22 @@ public class MatchGameScoresView extends LinearLayout
         return iToManyLinesCnt;
     }
 
+/*
+    @Override public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+    }
+*/
+
     private class CheckLayoutCountDownTimer extends CountDownTimer {
-        private MatchGameScoresView view = null;
-        private int m_iLayoutOKCount = 0;
+        private MatchGameScoresView view   = null;
+        private int m_iLayoutOKCount       = 0;
+        private int m_iRestoreVisibilityTo = 0;
         private CheckLayoutCountDownTimer(MatchGameScoresView view) {
             //super(640, 320); // in racketlon is sometimes does not show...
             super(2000, 300);
             this.view = view;
-            this.view.setVisibility(INVISIBLE);
+            this.view.setVisibility(View.INVISIBLE);
+            this.m_iRestoreVisibilityTo = IBoard.showGamesWon(getContext(), m_bIsPresentation)?View.INVISIBLE:View.VISIBLE;
         }
         @Override public void onTick(long millisUntilFinished) {
             int iNotLayoutOutOk = checkAutoResizeTextViews(MatchGameScoresView.this);
@@ -182,14 +193,14 @@ public class MatchGameScoresView extends LinearLayout
             } else {
                 m_iLayoutOKCount++;
                 if ( m_iLayoutOKCount > 1 ) {
-                    this.view.setVisibility(VISIBLE); // still makes the 'recalculations' period visible to the eye
+                    this.view.setVisibility(m_iRestoreVisibilityTo); // still makes the 'recalculations' period visible to the eye
                     this.cancel();
                 }
             };
         }
         @Override public void onFinish() {
             if ( this.view != null ) {
-                this.view.setVisibility(VISIBLE);
+                this.view.setVisibility(m_iRestoreVisibilityTo);
             }
         }
     };

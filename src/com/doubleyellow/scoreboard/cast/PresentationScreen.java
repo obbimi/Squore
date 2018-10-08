@@ -104,6 +104,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         matchModel.registerListener(new BrokenEquipmentListener());
         matchModel.registerListener(new TimingChangedListener());
 
+        iBoard.initGameScoreView();
         iBoard.initBranded();
         iBoard.initFieldDivision();
 
@@ -144,6 +145,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         updateViewWithColorAndScore(getContext());
         iBoard.initBranded();
         iBoard.initFieldDivision();
+        iBoard.initGameScoreView();
 
         if ( endOfGameView != null ) {
             Timer.removeTimerView(true, endOfGameView);

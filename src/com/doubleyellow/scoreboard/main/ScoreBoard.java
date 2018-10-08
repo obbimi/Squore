@@ -492,18 +492,24 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     }
 
     private class GameScoresListener implements View.OnLongClickListener, View.OnClickListener {
-        private long lActionBarToggled = 0L;
+        private long lActionBarToggledAt = 0L;
         @Override public void onClick(View view) {
-            long currentTime = System.currentTimeMillis();
-            if ( currentTime - lActionBarToggled > 1500 ) {
-                showScoreHistory();
+            if ( iBoard.toggleGameScoreView() == false ) {
+                long currentTime = System.currentTimeMillis();
+                if ( currentTime - lActionBarToggledAt > 1500 ) {
+                    // prevent single click show history being triggered after a long click
+                    showScoreHistory();
+                } else {
+                    Log.d(TAG, "Skip single click for now... ");
+                }
             }
         }
+
         @Override public boolean onLongClick(View view) {
             ActionBar actionBar = getXActionBar();
             if ( (actionBar != null) /*&& (PreferenceValues.showActionBar(ScoreBoard.this) == false)*/ ) {
                 toggleActionBar(actionBar);
-                lActionBarToggled = System.currentTimeMillis();
+                lActionBarToggledAt = System.currentTimeMillis();
             } else {
                 this.onClick(view);
             }
@@ -909,11 +915,18 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( tlGameScores != null ) {
             tlGameScores.setOnTouchListener    (gamesScoresGestureListener);
         }
+        for(Player p: Player.values() ) {
+            View v = findViewById(IBoard.m_player2gamesWonId.get(p));
+            if ( v != null ) {
+                v.setOnTouchListener(gamesScoresGestureListener);
+            }
+        }
 
         initScoreButtons();
 
         initServeSideButtons();
         initServeSideButtonListeners();
+        iBoard.initGameScoreView();
         iBoard.initTimerButton();
         iBoard.initBranded();
         iBoard.initFieldDivision();
@@ -1304,6 +1317,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             initScoreButtons();
             initServeSideButtonListeners();
             initServeSideButtons();
+            iBoard.initGameScoreView();
             iBoard.initTimerButton();
             iBoard.initBranded();
             iBoard.initFieldDivision();
@@ -2537,6 +2551,7 @@ touch -t 01030000 LAST.sb
                 iBoard.updateBrandLogoBasedOnScore();
                 iBoard.updateFieldDivisionBasedOnScore();
                 iBoard.updateGameAndMatchDurationChronos();
+                iBoard.updateGameScores();
             } else {
                 // normal score
                 if ( PreferenceValues.recordRallyEndStatsAfterEachScore(ScoreBoard.this).equals(Feature.Automatic)

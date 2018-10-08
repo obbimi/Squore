@@ -288,7 +288,7 @@ public class DialogTimerView implements TimerView
         if ( matchGameScores != null ) {
             if ( bShowPastGameAndDuration ) {
                 matchGameScores.setVisibility(View.VISIBLE);
-                matchGameScores.update(matchModel, Player.A);
+                matchGameScores.update(matchModel, Player.A, false);
                 matchGameScores.setProperties(colors.get(ColorPrefs.ColorTarget.scoreButtonTextColor       )
                                             , colors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor )
                                             , colors.get(ColorPrefs.ColorTarget.serveButtonBackgroundColor )
