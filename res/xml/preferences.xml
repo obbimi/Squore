@@ -287,6 +287,14 @@
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
             <com.doubleyellow.prefs.EnumListPreference
+                android:key="gameScoresAppearance"
+                android:title="@string/pref_gameScoresAppearance"
+                android:summary="@string/pref_gameScoresAppearance_summary"
+                android:defaultValue="ShowGamesWon"
+                dy:displayValues="@array/GameScoresAppearance_DisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.GameScoresAppearance"
+                />
+            <com.doubleyellow.prefs.EnumListPreference
                 android:icon="@drawable/dummy"
                 android:key="scorelineLayout"
                 android:title="@string/pref_scorelineLayout"

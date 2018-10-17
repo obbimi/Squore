@@ -93,4 +93,11 @@ public class PresentationService extends CastRemoteDisplayLocalService
         }
         return false;
     }
+    static boolean refreshGamesWonAppearance() {
+        if ( mPresentation != null ) {
+            mPresentation.refreshGamesWonAppearance();
+            return true;
+        }
+        return false;
+    }
 }

@@ -1,3 +1,12 @@
+## 4.13 (okt 2018)
+
+- to have a less 'busy' screen:
+    - results of previous games or only show as 'number of games won' (e.g. first 1-0, then 2-0 etc)
+    - To toggle (back) to the old 'full games scores' (e.g first only 11-9, then 11-9 and 11-7 etc)
+        - tap the games scores, or
+        - change the appropriate option in Appearance section of the apps settings screen
+- Improvements for showing stored matches
+
 ## 4.12 (aug 2018)
 
 - upgraded to use new google-play library to improve ChromeCast for e.g. Android 8

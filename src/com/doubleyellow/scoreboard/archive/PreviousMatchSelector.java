@@ -207,7 +207,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
 
             setGuiDefaults(null);
 
-            // start separated task to ensure loading message is actually shown
+            // start separate task to ensure loading message is actually shown
             ReadStoredMatches rsmTask = new ReadStoredMatches(PreviousMatchSelector.this, this, bUseCacheIfPresent);
             if ( bAsync ) {
                 rsmTask.execute(); // doing this in background works initially with nice progress message, but sorting no longer works
@@ -331,92 +331,6 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         return true;
     }
 
-/*
-    public static int moveFileFromCacheDir_Temp(Context context) {
-        List<File> lAllMatchFiles = new MultiSelectList<File>(ContentUtil.getFilesRecursive(context.getCacheDir(), ".*\\.sb", null));
-        File fNewParent = getArchiveDir(context);
-        List<File> lAllFromOldImportFiles = new MultiSelectList<File>(ContentUtil.getFilesRecursive(new File(fNewParent, "cache"), ".*\\.sb", null));
-        if ( ListUtil.isNotEmpty(lAllFromOldImportFiles) ) {
-            lAllMatchFiles.addAll(lAllFromOldImportFiles);
-        }
-        int iMoved = 0;
-        for(File f: lAllMatchFiles) {
-            if (  f.renameTo(new File(fNewParent, f.getName()))  ) {
-                iMoved++;
-            };
-        }
-        return iMoved;
-    }
-*/
-    /** Returns map with [PlayerA-PlayerB]=[File] for recent matches */
-    private static final String S_FORMAT_NAMES = "%s-%s";
-    public static Map<String, File> getLastFewHoursMatchesAsMap(Context context, int iHoursBack) {
-        Map<String, File> mReturn = new HashMap<>();
-
-        List<File> lAllMatchFiles = PreviousMatchSelector.getLastFewHoursMatches(context, iHoursBack);
-        if ( lAllMatchFiles == null ) { return mReturn; }
-
-        for(File fStored: lAllMatchFiles ) {
-            Model mTmp = Brand.getModel();
-            try {
-                if ( mTmp.fromJsonString(fStored) ) {
-                    String sA = mTmp.getName(Player.A);
-                    String sB = mTmp.getName(Player.B);
-                    mReturn.put(getKeyFromNames(sA, sB), fStored);
-                };
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return mReturn;
-    }
-
-    public static String getKeyFromNames(String sA, String sB) {
-        if ( StringUtil.areAllEmpty(sA, sB) ) { return null; }
-        return String.format(S_FORMAT_NAMES, sA,sB);
-    }
-
-    public static List<File> getLastFewHoursMatches(Context context, int iHoursBack) {
-        Date d3HoursAgo = DateUtil.getCurrent_addHours(-1 * iHoursBack, null, false);
-        return getPreviousMatchFiles(context, d3HoursAgo);
-    }
-    public static List<File> getPreviousMatchFiles(Context context) {
-        return getPreviousMatchFiles(context, null);
-    }
-    public static List<File> getPreviousMatchFiles(Context context, Date dNewerThan) {
-        List<File> files = ContentUtil.getFilesRecursive(getArchiveDir(context), ".*\\.(sb|json)", null, dNewerThan);
-        List<File> lAllMatchFiles = new MultiSelectList<File>(files);
-        lAllMatchFiles.remove(ScoreBoard.getLastMatchFile(context)); // TODO: for multisports version remove possible multiple LAST.xxx.sb files
-        lAllMatchFiles.remove(ColorPrefs.getFile(context));
-        return lAllMatchFiles;
-    }
-
-    public static File getArchiveDir(Context context) {
-        return context.getFilesDir();
-    }
-
-    public static void confirmDeleteAllPrevious(final Context context) {
-        AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
-        ab.setIcon          (android.R.drawable.ic_menu_delete)
-          .setTitle         (R.string.hms_delete_all )
-          .setNegativeButton(R.string.cmd_cancel, null)
-          .setPositiveButton(R.string.cmd_delete, new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
-                        List<File> lAllMatchFiles = PreviousMatchSelector.getPreviousMatchFiles(context);
-                        if ( ListUtil.isNotEmpty(lAllMatchFiles) ) {
-                            for ( File f : lAllMatchFiles ) {
-                                f.delete();
-                            }
-                            if ( context instanceof MenuHandler) {
-                                MenuHandler tabbed = (MenuHandler) context;
-                                tabbed.handleMenuItem(R.id.refresh);
-                                tabbed.handleMenuItem(R.id.close); // TODO: do not invoke close: for now we do this because refresh does not seem to do the job
-                            }
-                        }
-                    }
-                }).show();
-    }
-
     private boolean shareScoreSheet(File fMatchModel) {
         Model match = Brand.getModel();
         try {
@@ -462,4 +376,100 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         ContentUtil.placeOnClipboard(context, "squore summary", ResultSender.getMatchSummary(activity, match));
         return true;
     }
+
+/*
+    public static int moveFileFromCacheDir_Temp(Context context) {
+        List<File> lAllMatchFiles = new MultiSelectList<File>(ContentUtil.getFilesRecursive(context.getCacheDir(), ".*\\.sb", null));
+        File fNewParent = getArchiveDir(context);
+        List<File> lAllFromOldImportFiles = new MultiSelectList<File>(ContentUtil.getFilesRecursive(new File(fNewParent, "cache"), ".*\\.sb", null));
+        if ( ListUtil.isNotEmpty(lAllFromOldImportFiles) ) {
+            lAllMatchFiles.addAll(lAllFromOldImportFiles);
+        }
+        int iMoved = 0;
+        for(File f: lAllMatchFiles) {
+            if (  f.renameTo(new File(fNewParent, f.getName()))  ) {
+                iMoved++;
+            };
+        }
+        return iMoved;
+    }
+*/
+
+    //--------------------------------------------------------
+    // STATIC METHODS
+    //--------------------------------------------------------
+
+    private static final String S_FORMAT_NAMES = "%s-%s";
+    /**
+     * Used by StaticMatchSelector.
+     *
+     * Returns map with [PlayerA-PlayerB]=[File] for recent matches
+     **/
+    public static Map<String, File> getLastFewHoursMatchesAsMap(Context context, int iHoursBack) {
+        Map<String, File> mReturn = new HashMap<>();
+
+        List<File> lAllMatchFiles = getLastFewHoursMatches(context, iHoursBack);
+        if ( lAllMatchFiles == null ) { return mReturn; }
+
+        for(File fStored: lAllMatchFiles ) {
+            Model mTmp = Brand.getModel();
+            try {
+                if ( mTmp.fromJsonString(fStored) ) {
+                    String sA = mTmp.getName(Player.A);
+                    String sB = mTmp.getName(Player.B);
+                    mReturn.put(getKeyFromNames(sA, sB), fStored);
+                };
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return mReturn;
+    }
+
+    public static String getKeyFromNames(String sA, String sB) {
+        if ( StringUtil.areAllEmpty(sA, sB) ) { return null; }
+        return String.format(S_FORMAT_NAMES, sA,sB);
+    }
+
+    private static List<File> getLastFewHoursMatches(Context context, int iHoursBack) {
+        Date d3HoursAgo = DateUtil.getCurrent_addHours(-1 * iHoursBack, null, false);
+        return getPreviousMatchFiles(context, d3HoursAgo);
+    }
+    public static List<File> getAllPreviousMatchFiles(Context context) {
+        return getPreviousMatchFiles(context, null);
+    }
+    public static List<File> getPreviousMatchFiles(Context context, Date dNewerThan) {
+        List<File> files = ContentUtil.getFilesRecursive(getArchiveDir(context), ".*\\.(sb|json)", null, dNewerThan);
+        List<File> lAllMatchFiles = new MultiSelectList<File>(files);
+        lAllMatchFiles.remove(ScoreBoard.getLastMatchFile(context)); // TODO: for multisports version remove possible multiple LAST.xxx.sb files
+        lAllMatchFiles.remove(ColorPrefs.getFile(context));
+        return lAllMatchFiles;
+    }
+
+    public static File getArchiveDir(Context context) {
+        return context.getFilesDir();
+    }
+
+    public static void confirmDeleteAllPrevious(final Context context) {
+        AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
+        ab.setIcon          (android.R.drawable.ic_menu_delete)
+          .setTitle         (R.string.hms_delete_all )
+          .setNegativeButton(R.string.cmd_cancel, null)
+          .setPositiveButton(R.string.cmd_delete, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        List<File> lAllMatchFiles = PreviousMatchSelector.getAllPreviousMatchFiles(context);
+                        if ( ListUtil.isNotEmpty(lAllMatchFiles) ) {
+                            for ( File f : lAllMatchFiles ) {
+                                f.delete();
+                            }
+                            if ( context instanceof MenuHandler) {
+                                MenuHandler tabbed = (MenuHandler) context;
+                                tabbed.handleMenuItem(R.id.refresh);
+                                tabbed.handleMenuItem(R.id.close); // TODO: do not invoke close: for now we do this because refresh does not seem to do the job
+                            }
+                        }
+                    }
+                }).show();
+    }
+
 }

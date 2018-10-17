@@ -494,7 +494,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     private class GameScoresListener implements View.OnLongClickListener, View.OnClickListener {
         private long lActionBarToggledAt = 0L;
         @Override public void onClick(View view) {
-            if ( iBoard.toggleGameScoreView() == false ) {
+            if ( true ) {
+                iBoard.toggleGameScoreView();
+                castGamesWonAppearance();
+            } else {
                 long currentTime = System.currentTimeMillis();
                 if ( currentTime - lActionBarToggledAt > 1500 ) {
                     // prevent single click show history being triggered after a long click
@@ -1633,7 +1636,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             case QuickIntro: // fall through
             case ChangeLog:
                 // first install or upgrade
-                List<File> lAllMatchFiles = PreviousMatchSelector.getPreviousMatchFiles(this);
+                List<File> lAllMatchFiles = PreviousMatchSelector.getAllPreviousMatchFiles(this);
                 if ( ListUtil.size(lAllMatchFiles) == 0 ) {
                     createPreviousMatchesFromRaw();
                 }
@@ -5176,6 +5179,9 @@ touch -t 01030000 LAST.sb
     }
     public void castDurationChronos() {
         castHelper.castDurationChronos();
+    }
+    public void castGamesWonAppearance() {
+        castHelper.castGamesWonAppearance();
     }
     private void startCast() {
         castHelper.startCast();

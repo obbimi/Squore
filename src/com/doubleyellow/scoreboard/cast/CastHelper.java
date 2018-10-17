@@ -160,6 +160,10 @@ public class CastHelper
         if (NOT_SUPPORTED_IN_SDK) { return; }
         PresentationService.refreshDurationChronos();
     }
+    public void castGamesWonAppearance() {
+        if (NOT_SUPPORTED_IN_SDK) { return; }
+        PresentationService.refreshGamesWonAppearance();
+    }
 
     private static class MediaRouterCallback extends android.support.v7.media.MediaRouter.Callback
     {

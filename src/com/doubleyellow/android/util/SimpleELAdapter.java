@@ -617,7 +617,7 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
     }
 
     public File getCacheFile(Context context) {
-        return new File(context.getCacheDir(), this.getClass().getName() + ".cache");
+        return new File(context.getCacheDir(), this.getClass().getName() + "." + getChildrenCount() + ".cache");
     }
 /*
     protected boolean deleteCacheFile(Context context) {

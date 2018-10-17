@@ -75,6 +75,9 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
     void refreshDurationChronos() {
         iBoard.updateGameAndMatchDurationChronos();
     }
+    void refreshGamesWonAppearance() {
+        iBoard.initGameScoreView();
+    }
     @Override public void dismiss() {
         super.dismiss();
         Timer.removeTimerView(true, iBoard);

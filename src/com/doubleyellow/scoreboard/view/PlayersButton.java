@@ -51,7 +51,8 @@ import java.util.Set;
  * Class to display player name (or player names for doubles)
  * For doubles this view includes the serve side button
  *
- * If countries are specified this class can also display flags
+ * If countries are specified this class can also display flags.
+ * If avatars are specified this class can also display an avatar.
  */
 public class PlayersButton extends SBRelativeLayout implements DrawTouch
 {
@@ -266,6 +267,8 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
                 b.setId(iNameButtonId);
                 b.setTag(this.getId() + SUBBUTTON + n); // used to calculate parent id from within ScoreBoard listeners
                 b.setTypeface(null, Typeface.BOLD); // TODO: not four doubles?
+                //b.setSingleLine();
+                b.setMaxLines(1);
                 super.addView(b, rlp);
                 nameButtons.add(b);
 

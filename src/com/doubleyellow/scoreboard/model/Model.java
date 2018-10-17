@@ -1161,6 +1161,9 @@ public abstract class Model
     }
 
     public Map<Player, Integer> getGamesWon() {
+        return getGamesWon(true);
+    }
+    public Map<Player, Integer> getGamesWon(boolean bIncludeGameInprogress) {
         Map<Player, Integer> mGamesWon = new HashMap<Player, Integer>();
         mGamesWon.put(Player.A, 0);
         mGamesWon.put(Player.B, 0);
@@ -1172,9 +1175,11 @@ public abstract class Model
             }
         }
         // 20141025: added this logic for better display value in historical games
-        Player gameVictoryFor = isPossibleGameVictoryFor();
-        if ( gameVictoryFor != null) {
-            MapUtil.increaseCounter(mGamesWon, gameVictoryFor);
+        if ( bIncludeGameInprogress ) {
+            Player gameVictoryFor = isPossibleGameVictoryFor();
+            if ( gameVictoryFor != null) {
+                MapUtil.increaseCounter(mGamesWon, gameVictoryFor);
+            }
         }
         return mGamesWon;
     }
@@ -1892,7 +1897,7 @@ public abstract class Model
 
             // if only name date and time of the match will be consulted (historical games)
             if ( bStopAfterEventNamesDateTimeResult ) {
-                return null;
+                return joMatch;
             }
 
             boolean bMatchFormatIsSet = false;

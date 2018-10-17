@@ -38,6 +38,7 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.android.util.ColorUtil;
+import com.doubleyellow.scoreboard.prefs.GameScoresAppearance;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.ShowCountryAs;
 import com.doubleyellow.scoreboard.vico.IBoard;
@@ -182,7 +183,15 @@ public class MatchGameScoresView extends LinearLayout
             super(2000, 300);
             this.view = view;
             this.view.setVisibility(View.INVISIBLE);
-            this.m_iRestoreVisibilityTo = IBoard.showGamesWon(getContext(), m_bIsPresentation)?View.INVISIBLE:View.VISIBLE;
+            ViewGroup parent = (ViewGroup) view.getParent();
+            Log.d(TAG, "MGSV parent :" + parent);
+            View sbRootView = parent.findViewById(R.id.squoreboard_root_view);
+            Log.d(TAG, "MGSV parent :" + sbRootView);
+            this.m_iRestoreVisibilityTo = View.VISIBLE;
+            GameScoresAppearance gameScoresAppearance = PreferenceValues.getGameScoresAppearance(getContext());
+            if ( (sbRootView != null) && gameScoresAppearance.showGamesWon(isPresentation()) ) {
+                this.m_iRestoreVisibilityTo = View.INVISIBLE;
+            }
         }
         @Override public void onTick(long millisUntilFinished) {
             int iNotLayoutOutOk = checkAutoResizeTextViews(MatchGameScoresView.this);
@@ -419,6 +428,9 @@ public class MatchGameScoresView extends LinearLayout
             if ( time != null ) {
                 if ( StringUtil.isNotEmpty(m_eventDivision) && PreferenceValues.showFieldDivision(getContext(), isPresentation()) && m_showTimes ) {
                     float fScaleDownField = 0.7f;
+                    if ( StringUtil.size(m_eventDivision) <= 2 ) {
+                        m_eventDivision = getResources().getString(R.string.lbl_division) + " " + m_eventDivision;
+                    }
                     time.setText(m_eventDivision);
                     setSizeAndColors(time, true, iTxtSizeForInstanceAndOrientation * fScaleDownField, instanceKey);
                 } else {

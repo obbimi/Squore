@@ -130,7 +130,7 @@ public class RecentMatchesMultiSelect extends Fragment {
         Date dAfter = DateUtil.getCurrent_addDays(-14, false);
         List<File> lMatches = PreviousMatchSelector.getPreviousMatchFiles(getActivity(), dAfter);
         if ( ListUtil.size(lMatches) < 2 ) {
-            lMatches = PreviousMatchSelector.getPreviousMatchFiles(getActivity());
+            lMatches = PreviousMatchSelector.getAllPreviousMatchFiles(getActivity());
         }
         final Map<String, File> mMatches = new TreeMap<>();
         if ( ListUtil.isNotEmpty(lMatches) ) {

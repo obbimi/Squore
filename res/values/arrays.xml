@@ -197,6 +197,13 @@
         <item>On Device</item>
         <item>On ChromeCast</item>
     </string-array>
+    <string-array name="GameScoresAppearance_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.GameScoresAppearance -->
+        <item>Show Games Won (on Device and Chromecast)</item>
+        <item>Show Full Score (on Device and Chromecast)</item>
+        <item>Show Games Won on Device, Full Score on Chromecast</item>
+        <item>Show Full Score on Device, Full Score on Chromecast</item>
+    </string-array>
     <string-array name="ScorelineLayout_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ScorelineLayout -->
         <item>Digits on the right</item>

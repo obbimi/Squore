@@ -41,7 +41,7 @@ import java.util.*;
 /**
  * Used by PreviousMatchSelector to populate the list
  */
-public class ReadStoredMatches extends AsyncTask<String, Void, String> {
+class ReadStoredMatches extends AsyncTask<String, Void, String> {
     public static final String TAG = "SB." + ReadStoredMatches.class.getSimpleName();
 
     private SimpleELAdapter         adapter            = null;
@@ -73,7 +73,7 @@ public class ReadStoredMatches extends AsyncTask<String, Void, String> {
                 // happens on android 4.1. (my tablet API 17?) when returning from matchdetails
                 return "";
             }
-            List<File> lAllMatchFiles = PreviousMatchSelector.getPreviousMatchFiles(activity);
+            List<File> lAllMatchFiles = PreviousMatchSelector.getAllPreviousMatchFiles(activity);
             long lLastModified = FileUtil.getMaxLastModified(lAllMatchFiles);
 
             if ( lAllMatchFiles.size() == 0 ) {
@@ -86,7 +86,7 @@ public class ReadStoredMatches extends AsyncTask<String, Void, String> {
                     fCache.delete();
                 }
                 if ( bUseCacheIfPresent && fCache.exists() ) {
-                    if (tmpAdapter.createFromCache(fCache) == false) {
+                    if ( tmpAdapter.createFromCache(fCache) == false ) {
                         populate(lAllMatchFiles, tmpAdapter);
                         bRefreshed = true;
                     }

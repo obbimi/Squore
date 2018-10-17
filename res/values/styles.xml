@@ -87,9 +87,9 @@
 -->
     <style name="SBButton" parent="@android:style/Widget.Holo.Button">
         <item name="android:background">@drawable/button_dark_rc</item>
-        <item name="android:layout_margin">@dimen/sb_button_padding</item>
         <item name="android:padding">0px</item>
         <item name="android:gravity">center_vertical|center_horizontal</item>
+    <!--<item name="android:layout_margin">@dimen/sb_button_padding</item>-->
 <!--
         <item name="android:minHeight">@dimen/sb_button_minheight</item>
         <item name="android:minWidth">@dimen/sb_button_minheight</item>

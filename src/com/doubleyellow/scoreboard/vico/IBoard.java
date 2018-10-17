@@ -432,39 +432,48 @@ public class IBoard implements TimerViewContainer
         currentGameScoreLines.update(bOnlyAddLast);
     }
 
-    /** if false, only nr of games won is shown */
+    /** if true, only nr of games won is shown */
+/*
     public static boolean showGamesWon(Context context, boolean bIsPresentation) {
-        return m_o2gameScoresAppearance.get(ViewUtil.getCurrentOrientation(context)).showGamesWon(bIsPresentation);
+        //return m_o2gameScoresAppearance.get(ViewUtil.getCurrentOrientation(context)).showGamesWon(bIsPresentation);
+        return PreferenceValues.getGameScoresAppearance(context).showGamesWon(bIsPresentation);
     }
+*/
 
-    private static Map<Orientation,GameScoresAppearance> m_o2gameScoresAppearance = new HashMap<>();
-    public boolean toggleGameScoreView() {
-        GameScoresAppearance appearance = m_o2gameScoresAppearance.get(ViewUtil.getCurrentOrientation(context));
-        if ( appearance == null ) {
-            appearance = PreferenceValues.getGameScoresAppearance(context);
-        } else {
+    //private static Map<Orientation,GameScoresAppearance> m_o2gameScoresAppearance = new HashMap<>();
+    public void toggleGameScoreView() {
+        GameScoresAppearance appearance = PreferenceValues.getGameScoresAppearance(context);
+      //GameScoresAppearance appearance = m_o2gameScoresAppearance.get(ViewUtil.getCurrentOrientation(context));
+      //if ( appearance == null ) {
+      //    appearance = PreferenceValues.getGameScoresAppearance(context);
+      //} else {
             appearance = ListUtil.getNextEnum(appearance);
-        }
-        return setGameScoreView(appearance);
+        PreferenceValues.setEnum(PreferenceKeys.gameScoresAppearance, context, appearance);
+      //}
+        /*return*/ setGameScoreView(appearance);
     }
     public void initGameScoreView() {
+        GameScoresAppearance appearance = PreferenceValues.getGameScoresAppearance(context);
+/*
         GameScoresAppearance appearance = m_o2gameScoresAppearance.get(ViewUtil.getCurrentOrientation(context));
         if ( appearance == null ) {
             appearance = PreferenceValues.getGameScoresAppearance(context);
         }
+*/
         setGameScoreView(appearance);
     }
-    private boolean setGameScoreView(GameScoresAppearance appearance) {
-        boolean bSuccess = true;
+    private void setGameScoreView(GameScoresAppearance appearance) {
         for (Player player : Player.values()) {
             int iNameId = m_player2gamesWonId.get(player);
             View vGamesWon = findViewById(iNameId);
             if ( vGamesWon == null ) {
+/*
                 // no GamesWonButton in the layout
                 while ( appearance.showGamesWon(isPresentation()) ) {
                     appearance = ListUtil.getNextEnum(appearance);
-                    bSuccess = false;
+                    bChanged = false;
                 }
+*/
                 Log.w(TAG, "No GamesWon buttons to work with in orientation " + ViewUtil.getCurrentOrientation(context));
                 break;
             }
@@ -472,7 +481,7 @@ public class IBoard implements TimerViewContainer
             vGamesWon.setVisibility(showGamesWon ?View.VISIBLE:View.INVISIBLE);
         }
 
-        m_o2gameScoresAppearance.put(ViewUtil.getCurrentOrientation(context), appearance);
+        //m_o2gameScoresAppearance.put(ViewUtil.getCurrentOrientation(context), appearance);
 
         MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
         if ( appearance.showGamesWon(isPresentation()) ) {
@@ -480,11 +489,13 @@ public class IBoard implements TimerViewContainer
         } else {
             matchGameScores.setVisibility(View.VISIBLE);
         }
-        if ( bSuccess ) {
+/*
+        if ( bChanged ) {
             PreferenceValues.setEnum(PreferenceKeys.gameScoresAppearance, context, appearance);
         }
 
-        return bSuccess;
+        return bChanged;
+*/
     }
 
     public void updateGameScores() {
@@ -500,7 +511,7 @@ public class IBoard implements TimerViewContainer
         }
 
         if ( (m_player2gamesWonId != null) && (matchModel != null) ) {
-            Map<Player, Integer> gamesWon = matchModel.getGamesWon();
+            Map<Player, Integer> gamesWon = matchModel.getGamesWon(false);
             if ( MapUtil.isNotEmpty(gamesWon) ) {
                 for(Player player: Player.values() ) {
                     int iNameId = m_player2gamesWonId.get(player);
