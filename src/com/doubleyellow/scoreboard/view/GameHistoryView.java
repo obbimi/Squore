@@ -139,7 +139,7 @@ public class GameHistoryView extends ScrollView
             tr.setLayoutParams(vgLayoutParams);
 
             List<String> saScore = line.toStringList(getContext());
-            if ( m_scorelineLayout.swap34() ) {
+            if ( (m_scorelineLayout != null) && m_scorelineLayout.swap34() ) {
                 ScoreLine.swap(saScore, 3);
             }
             for(String sValue: saScore) {

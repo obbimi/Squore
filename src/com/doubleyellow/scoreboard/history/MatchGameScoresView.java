@@ -41,7 +41,6 @@ import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.scoreboard.prefs.GameScoresAppearance;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.ShowCountryAs;
-import com.doubleyellow.scoreboard.vico.IBoard;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
@@ -64,15 +63,24 @@ public class MatchGameScoresView extends LinearLayout
 {
     private static final String TAG = "SB." + MatchGameScoresView.class.getSimpleName();
 
-    /** constructor used by android platform (if defined in xml?) */
+/*
+    public MatchGameScoresView(Context context, AttributeSet attrs, int defStyleAttr) {
+        this(context, attrs);
+    }
+
+    public MatchGameScoresView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        this(context, attrs);
+    }
+*/
+
+    /** constructor used by android platform (if defined in xml) */
     public MatchGameScoresView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
     public MatchGameScoresView(Context context) {
-        super(context);
-        init(context, null);
+        this(context, null);
     }
 
     private List<GameTiming>           m_gameTimes     = null;
@@ -82,11 +90,9 @@ public class MatchGameScoresView extends LinearLayout
     private String                     m_eventDivision = null;
     private Map<Player, Integer>       m_pointsDiff    = null;
     private Player[]                   m_players       = Player.values(); // must be initialized with a value in order to let setProperties() succeed
-    private boolean                    m_bIsPresentation = false;
 
-    public void update(Model matchModel, Player pFirst, boolean bIsPresentation) {
+    public void update(Model matchModel, Player pFirst) {
         m_players = new Player[] { pFirst, pFirst.getOther() };
-        m_bIsPresentation = bIsPresentation;
         this.update( m_players
                    , matchModel.getEndScoreOfPreviousGames()
                    , matchModel.getPlayerNames(true, true, m_players)
@@ -142,8 +148,13 @@ public class MatchGameScoresView extends LinearLayout
             }
         });
 */
-        CheckLayoutCountDownTimer checkLayoutCountDownTimer = new CheckLayoutCountDownTimer(this);
-        checkLayoutCountDownTimer.start();
+        if ( super.isInEditMode() ) {
+            // no layout checking?
+            this.setVisibility(VISIBLE);
+        } else {
+            CheckLayoutCountDownTimer checkLayoutCountDownTimer = new CheckLayoutCountDownTimer(this);
+            checkLayoutCountDownTimer.start();
+        }
     }
 
     private static int checkAutoResizeTextViews(View v) {
@@ -250,11 +261,10 @@ public class MatchGameScoresView extends LinearLayout
 
         int iTxtSizeForInstanceAndOrientation = mInstanceOrientation2TextSize.get(instanceKey);
         boolean bOrientationFirstTime = (iTxtSizeForInstanceAndOrientation == 0);
-/*
-        if ( isInEditMode() ) {
+        if ( isInEditMode() && iTxtSizeForInstanceAndOrientation == 0 ) {
+            iTxtSizeForInstanceAndOrientation = 20;
             bOrientationFirstTime = false;
         }
-*/
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         super.setOrientation(VERTICAL);
@@ -302,7 +312,11 @@ public class MatchGameScoresView extends LinearLayout
                 });
                 txtMax.addOnResizeListener(onTextResizeListener);
             } else {
-                lpT2B_wmp_hwc.height = mInstanceOrientation2RowHeight.get(instanceKey);
+                int height = mInstanceOrientation2RowHeight.get(instanceKey);
+                if ( height == 0 && isInEditMode() ) {
+                    height = 20;
+                }
+                lpT2B_wmp_hwc.height = height;
             }
 
             //Log.d(TAG, sMethod + String.format("lpT2B_wmp_hwc width,height: %s %s", lpT2B_wmp_hwc.width, lpT2B_wmp_hwc.height));
@@ -354,11 +368,10 @@ public class MatchGameScoresView extends LinearLayout
 
         int iTxtSizeForInstanceAndOrientation = mInstanceOrientation2TextSize.get(instanceKey);
         boolean bOrientationFirstTime = iTxtSizeForInstanceAndOrientation == 0;
-/*
-        if ( isInEditMode() ) {
+        if ( isInEditMode() && iTxtSizeForInstanceAndOrientation == 0 ) {
+            iTxtSizeForInstanceAndOrientation = 20;
             bOrientationFirstTime = false;
         }
-*/
 
         int iResIdImages  = 0;
         int iResIdInflate = R.layout.scores_vertical;
@@ -455,17 +468,19 @@ public class MatchGameScoresView extends LinearLayout
             col.setBackgroundColor(bgColorLoser);
 
             AutoResizeTextView txtMax = null;
-            for(Player p: players) {
-                boolean  bTopRow = p.equals(players[0]);
-                int      iResId  = bTopRow ? R.id.score_player_1 : R.id.score_player_2;
-                TextView txt     = (TextView) col.findViewById(iResId);
-                setSizeAndColors(txt, p.equals(gameWinner), iTxtSizeForInstanceAndOrientation, instanceKey);
-                //txt.setText(StringUtil.pad(String.valueOf(scores.get(p)), ' ', 2, bLeftColumn) );
-                //txt.setText(" " + scores.get(p) + " "); // add a space just for spacing (on both sides for centering)
-                txt.setText(String.valueOf(scores.get(p)));
+            if ( m_showNames ) {
+                for(Player p: players) {
+                    boolean  bTopRow = p.equals(players[0]);
+                    int      iResId  = bTopRow ? R.id.score_player_1 : R.id.score_player_2;
+                    TextView txt     = (TextView) col.findViewById(iResId);
+                    setSizeAndColors(txt, p.equals(gameWinner), iTxtSizeForInstanceAndOrientation, instanceKey);
+                    //txt.setText(StringUtil.pad(String.valueOf(scores.get(p)), ' ', 2, bLeftColumn) );
+                    //txt.setText(" " + scores.get(p) + " "); // add a space just for spacing (on both sides for centering)
+                    txt.setText(String.valueOf(scores.get(p)));
 
-                if ( txtMax == null || scores.get(p) > scores.get(p.getOther()) ) {
-                    txtMax = (AutoResizeTextView) txt;
+                    if ( txtMax == null || scores.get(p) > scores.get(p.getOther()) ) {
+                        txtMax = (AutoResizeTextView) txt;
+                    }
                 }
             }
 
@@ -498,7 +513,11 @@ public class MatchGameScoresView extends LinearLayout
                 });
                 txtMax.addOnResizeListener(onTextResizeListener);
             } else {
-                lpL2R_wwc_hmp.width = mInstanceOrientation2ColWidth.get(instanceKey);
+                Integer width = mInstanceOrientation2ColWidth.get(instanceKey);
+                if ( width == 0 && isInEditMode() ) {
+                    width = 20;
+                }
+                lpL2R_wwc_hmp.width = width;
             }
 
             //Log.d(TAG, sMethod + String.format("lpL2R_wwc_hmp width,height: %s %s", lpL2R_wwc_hmp.width, lpL2R_wwc_hmp.height));
@@ -622,7 +641,7 @@ public class MatchGameScoresView extends LinearLayout
             bgColorLoser  = attrs.getAttributeResourceValue(APPLICATION_NS, "bgColorLoser" , bgColorLoser);
             bgColorWinner = attrs.getAttributeResourceValue(APPLICATION_NS, "bgColorWinner", bgColorWinner);
 
-            if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+            if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M /* 23 */ ) {
                 bgColorLoser  = getResources().getColor(bgColorLoser, null);
                 bgColorWinner = getResources().getColor(bgColorWinner, null);
             }
@@ -641,9 +660,7 @@ public class MatchGameScoresView extends LinearLayout
     private int     bgColorTimes  = -11754535;
     @ColorInt
     private int     txtColorTimes = Color.WHITE;
-    @ColorInt
     private int     bgColorLoser  = -15197410;
-    @ColorInt
     private int     bgColorWinner = -137216;
 
 /*
@@ -682,7 +699,7 @@ public class MatchGameScoresView extends LinearLayout
             gameScores.add(pi);
 
             update(Player.values(), gameScores, new String[] { "Squash", "Referee" }, new String[] {"ENG", "EGY"}, Arrays.asList(new GameTiming(0, 0,7), new GameTiming(1, 0,6)), "Field 2", null);
-            //throw new RuntimeException("Test only " + history.toString());
+            //throw new RuntimeException("Test only " + gameScores.toString());
             //throw new RuntimeException("Using " + com.doubleyellow.R.color.dy_yellow + " and " + com.doubleyellow.R.color.dy_dark);
         }
     }

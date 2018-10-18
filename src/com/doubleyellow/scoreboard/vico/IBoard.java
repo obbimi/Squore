@@ -484,10 +484,12 @@ public class IBoard implements TimerViewContainer
         //m_o2gameScoresAppearance.put(ViewUtil.getCurrentOrientation(context), appearance);
 
         MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
-        if ( appearance.showGamesWon(isPresentation()) ) {
-            matchGameScores.setVisibility(View.INVISIBLE);
-        } else {
-            matchGameScores.setVisibility(View.VISIBLE);
+        if ( matchGameScores != null ) {
+            if ( appearance.showGamesWon(isPresentation()) ) {
+                matchGameScores.setVisibility(View.INVISIBLE);
+            } else {
+                matchGameScores.setVisibility(View.VISIBLE);
+            }
         }
 /*
         if ( bChanged ) {
@@ -507,7 +509,7 @@ public class IBoard implements TimerViewContainer
             //int textSize = PreferenceValues.getHistoryTextSize(this);
             //matchGameScores.setTextSizeDp(textSize);
 
-            matchGameScores.update(matchModel, m_firstPlayerOnScreen, this.isPresentation());
+            matchGameScores.update(matchModel, m_firstPlayerOnScreen);
         }
 
         if ( (m_player2gamesWonId != null) && (matchModel != null) ) {

@@ -5,11 +5,11 @@
     <!-- these 3 must sum to 100% -->
     <fraction name="ls_vertical_margin_3x">1.0%</fraction>
     <fraction name="ls_name_height">17.0%</fraction>
-    <!--<fraction name="ls_score_height">80%</fraction>-->
+    <fraction name="ls_score_height">80%</fraction>
 
     <!-- these 3 must sum to less than 100% -->
     <fraction name="ls_horizontal_margin_4x">0.5%</fraction>
-    <!--<fraction name="ls_name_width_2x">44%</fraction>-->
+    <fraction name="ls_name_width_2x">44%</fraction>
     <fraction name="ls_gamescores_width">10%</fraction>
 
     <!--<fraction name="ls_gamescores_height">60%</fraction>-->
@@ -41,7 +41,7 @@
     <fraction name="ls_side_margin_V">2.5%</fraction> <!-- double of ls_vertical_margin_3x -->
     <fraction name="ls_side_margin_H">1.5%</fraction> <!-- double of ls_horizontal_margin_4x -->
 
-    <!--<fraction name="ls_score_width_2x">44%</fraction>-->
+    <fraction name="ls_score_width_2x">44%</fraction>
     <fraction name="ls_scorehistorytable">50%</fraction>
 
     <fraction name="ls_gamehistory">10%</fraction>
@@ -53,7 +53,7 @@
     <!-- these 4 must sum to 100% -->
     <fraction name="pt_vertical_margin_6x">0.5%</fraction>
     <fraction name="pt_name_height_2x">10%</fraction>
-    <!--<fraction name="pt_score_height_2x">33%</fraction>-->
+    <fraction name="pt_score_height_2x">33%</fraction>
     <!--<fraction name="pt_timer_height">10%</fraction>-->
     <fraction name="pt_to_late_height">3%</fraction>
     <fraction name="pt_gamescores_height">10%</fraction>
@@ -66,11 +66,11 @@
     <fraction name="pt_gameswon_margin_V">0.0%</fraction>
 
     <!-- these 2 must sum to 100% -->
-    <!--<fraction name="pt_name_width">99%</fraction>-->
+    <fraction name="pt_name_width">99%</fraction>
     <fraction name="pt_horizontal_margin_2x">0.5%</fraction>
 
     <!-- these 2 must sum to 100 - 3 x value of pt_horizontal_margin_2x -->
-    <!--<fraction name="pt_score_width">81.5%</fraction>-->
+    <fraction name="pt_score_width">81.5%</fraction>
     <!--<fraction name="pt_side_width">16.5%</fraction>-->
 
     <fraction name="pt_gamehistory_width">19%</fraction>

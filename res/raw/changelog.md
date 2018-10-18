@@ -1,4 +1,4 @@
-## 4.13 (okt 2018)
+## 4.14 (okt 2018)
 
 - to have a less 'busy' screen:
     - results of previous games or only show as 'number of games won' (e.g. first 1-0, then 2-0 etc)

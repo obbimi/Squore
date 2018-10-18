@@ -118,7 +118,7 @@ public class EndOfGameView implements TimerViewContainer
                               , mColors.get(ColorPrefs.ColorTarget.serveButtonBackgroundColor )
                               , mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor)
             );
-            mgsv.update(matchModel, Player.A, this.iBoard.isPresentation());
+            mgsv.update(matchModel, Player.A);
         }
         if ( txtTimer !=null ) {
             if ( matchModel.matchHasEnded() ) {
