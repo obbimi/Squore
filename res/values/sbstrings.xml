@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="Poule">Poule - Multiple matches per player</string>
+    <string name="TeamVsTeam_OneMatchPerPlayer">Team vs Team - One match per team player</string>
+    <string name="TeamVsTeam_XMatchesPlayer">Team vs Team - Multiple matches per team player</string>
+
 <!-- <string name="facebook_app_id">504690753001960</string> -->
     <string name="msg_enter_both_player_names">Please enter both player names</string>
     <string name="msg_enter_all_player_names">Please enter all player names</string>

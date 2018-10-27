@@ -810,11 +810,44 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
             sDisplayFormat = canonicalizeJsonKeys(sDisplayFormat);
 
-            int iEntriesCnt = 0;
+            int    iEntriesCnt         = 0;
+            String sActualNameFromFeed = null;
+
             Iterator<String> itSections = joRoot.keys(); // Field names and or round names?
             while ( itSections.hasNext() ) {
                 String sSection = itSections.next();
-                if ( sSection.equals("config") ) { continue; }
+
+                boolean bNameOrConfig = false;
+                if ( sSection.equalsIgnoreCase(URLsKeys.name.toString()) ) {
+                    bNameOrConfig = true;
+                    sActualNameFromFeed = joRoot.getString(sSection);
+                } else if ( sSection.equalsIgnoreCase(URLsKeys.config.toString()) ) {
+                    bNameOrConfig = true;
+                    JSONObject joConfig = (JSONObject) joRoot.get(sSection);
+                    sActualNameFromFeed = joConfig.optString(URLsKeys.name.toString());
+                }
+
+                if ( StringUtil.isNotEmpty(sActualNameFromFeed) ) {
+                    // read the name of the feed
+                    Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
+                    String sCurrentName = feedPostDetail.get(URLsKeys.Name);
+                    if ( (sActualNameFromFeed.equals(sCurrentName) == false) && (sActualNameFromFeed.trim().length() > 0) ) {
+                        feedPostDetail.put(URLsKeys.Name, sActualNameFromFeed);
+                        PreferenceValues.addOrReplaceNewFeedURL(context, feedPostDetail, true, true);
+
+                        //emsAdapter.notifyDataSetChanged();
+                        //notifyDataSetChanged();
+                        if ( getActivity() instanceof MatchTabbed ) {
+                            MatchTabbed tabbed = (MatchTabbed) getActivity();
+                            tabbed.mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                    sActualNameFromFeed = null;
+                }
+
+                if ( bNameOrConfig ) {
+                    continue;
+                }
 
                 Object values = joRoot.get(sSection);
                 JSONArray entries = null;

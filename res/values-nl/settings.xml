@@ -239,7 +239,7 @@
     <string name="pref_numberOfCharactersBeforeAutocomplete_summary">Het aantal karakters dat je in moet typen voordat autocomplete passende speler namen begint voor te stellen</string>
     <string name="pref_numberOfCharactersBeforeAutocompleteCountry">Aantal karakters voor autocomplete voor landen</string>
     <string name="pref_numberOfCharactersBeforeAutocompleteCountry_summary">Het aantal karakters dat je in moet typen voordat autocomplete passende landen begint voor te stellen</string>
-    <string name="pref_maxNumberOfPlayersInGroup">Aantal spelers in een groep</string>
+    <string name="pref_maxNumberOfPlayersInGroup">Aantal spelers in een groep/team</string>
     <string name="pref_maxNumberOfPlayersInGroup_summary">Het maximum aantal spelers in een groep. Om e.g. voor groep van 4 mensen alle 6 wedstrijden in \'My list\' toe te voegen.</string>
     <string name="pref_removeMatchFromMyListWhenSelected">Verwijder wedstrijd van \'Mijn Lijst\'</string>
     <string name="pref_removeMatchFromMyListWhenSelected_summary">Wanneer een wedstrijd, geselecteerd van \'Mijn Lijst\' is beeindigd, de app kan je de keuze geven de wedstrijd uit de lijst te verwijderen</string>

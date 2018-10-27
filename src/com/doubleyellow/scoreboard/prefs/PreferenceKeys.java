@@ -36,7 +36,8 @@ public enum PreferenceKeys {
         hapticFeedbackOnGameEnd,
         numberOfCharactersBeforeAutocomplete,
         numberOfCharactersBeforeAutocompleteCountry,
-        maxNumberOfPlayersInGroup,
+        NewMatchesType,
+            maxNumberOfPlayersInGroup,
         showTips,
         /** @deprecated */
         lockMatch,

@@ -34,7 +34,6 @@
     <integer name="TextSizeTabStrip">32</integer>
     <integer name="TextSizeShowCase">32</integer>
     <integer name="maxNumberOfLinesToUseForGameEndScores">9</integer>
-    <integer name="maxNumberOfPlayersInGroup_default">8</integer>
 
     <bool name="showFullScreen_default">false</bool>
 

@@ -672,6 +672,10 @@ public class PreferenceValues extends RWValues
     public static int numberOfMinutesAfterWhichToLockMatch(Context context) {
         return getIntegerR(PreferenceKeys.numberOfMinutesAfterWhichToLockMatch, context, R.integer.numberOfMinutesAfterWhichToLockMatch_default);
     }
+    public static NewMatchesType getNewMatchesType(Context context) {
+        int iResDefault = getSportTypeSpecificResId(context, R.string.NewMatchesType_default_Squash);
+        return getEnum(PreferenceKeys.NewMatchesType, context, NewMatchesType.class, iResDefault);
+    }
     public static int maxNumberOfPlayersInGroup(Context context) {
         return getIntegerR(PreferenceKeys.maxNumberOfPlayersInGroup, context, R.integer.maxNumberOfPlayersInGroup_default);
     }

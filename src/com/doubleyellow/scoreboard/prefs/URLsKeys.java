@@ -46,4 +46,5 @@ public enum URLsKeys {
         expandGroup,
         Format,
         skipMatchSettings,
+        name,
 }

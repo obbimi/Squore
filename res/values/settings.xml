@@ -248,7 +248,7 @@
     <string name="pref_numberOfCharactersBeforeAutocomplete_summary">The number of characters you need to type before autocomplete kicks in to suggest possible player names</string>
     <string name="pref_numberOfCharactersBeforeAutocompleteCountry">Number of characters for autocomplete country</string>
     <string name="pref_numberOfCharactersBeforeAutocompleteCountry_summary">The number of characters you need to type before autocomplete kicks in to suggest possible country names</string>
-    <string name="pref_maxNumberOfPlayersInGroup">Number of players in a group</string>
+    <string name="pref_maxNumberOfPlayersInGroup">Number of players in a group/team</string>
     <string name="pref_maxNumberOfPlayersInGroup_summary">Maximum number of players in a group. E.g. to add all 6 matches for a group of 4 players into \'My list\'</string>
     <string name="pref_removeMatchFromMyListWhenSelected">Remove match from My List</string>
     <string name="pref_removeMatchFromMyListWhenSelected_summary">When a match selected from the list is finished, the app may suggest to remove it from \'My list\'</string>

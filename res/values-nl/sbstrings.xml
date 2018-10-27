@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="Poule">Poule - Meerdere wedstrijden per speler</string>
+    <string name="TeamVsTeam_OneMatchPerPlayer">Team vs Team - Eén wedstrijd per team speler</string>
+    <string name="TeamVsTeam_XMatchesPlayer">Team vs Team - Meerdere wedstrijden per team speler</string>
+
     <string name="msg_enter_both_player_names">Geef beide spelers in, a.u.b</string>
     <string name="msg_enter_all_player_names">Geef alle spelers in, a.u.b</string>
     <string name="msg_enter_authentication_details">Geef authenticatie details in</string>

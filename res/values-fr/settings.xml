@@ -235,7 +235,7 @@
     <string name="pref_numberOfCharactersBeforeAutocomplete_summary">Le nombre de caractères, que vous devez taper avant que la saisie semi-automatique ne commence à suggérer des noms de joueur possibles</string>
     <string name="pref_numberOfCharactersBeforeAutocompleteCountry">Nombre de caractères pour la saisie semi-automatique (pays)</string> <!-- TODO -->
     <string name="pref_numberOfCharactersBeforeAutocompleteCountry_summary">Le nombre de caractères, que vous devez taper avant que la saisie semi-automatique ne commence à suggérer des noms de pays possibles</string> <!-- TODO -->
-    <string name="pref_maxNumberOfPlayersInGroup">Nombre de joueurs dans un groupe</string>
+    <string name="pref_maxNumberOfPlayersInGroup">Nombre de joueurs dans un groupe/team</string>
     <string name="pref_maxNumberOfPlayersInGroup_summary">Nombre maximum de joueur par groupe. Par ex: pour ajouter les 6 matchs d\'un groupe de 4 joueurs dans \'Ma liste\'</string>
     <string name="pref_removeMatchFromMyListWhenSelected">Retirer match de \'Ma liste\' dès que fini</string>
     <string name="pref_removeMatchFromMyListWhenSelected_summary">Dès qu\'un match sélectionné dans la liste est terminé, proposer de le retirer de la liste</string>

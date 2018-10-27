@@ -34,7 +34,6 @@
     <integer name="TextSizeTabStrip">24</integer>
     <integer name="TextSizeShowCase">18</integer> <!-- 20 was to big for Samsung S5, but OK for S4: caused by personal setting to use 85% as text size overall in android -->
     <integer name="maxNumberOfLinesToUseForGameEndScores">7</integer>
-    <integer name="maxNumberOfPlayersInGroup_default">6</integer>
 
     <bool name="showFullScreen_default">false</bool>
 

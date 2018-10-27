@@ -19,6 +19,7 @@
     <string name="activate_mode_Tabletennis">Activate expedite</string>
     <string name="activate_mode_description_Tabletennis">More than %s minutes passed since the start of the game. Activate the expedite system?</string>
     <string name="deactivate_mode_Tabletennis">De-activate expedite</string>
+    <string name="NewMatchesType_default_Tabletennis">TeamVsTeam_XMatchesPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
     <integer name="showModeDialogAfterXMins_default_Tabletennis">10</integer>
 
     <string name="number_of_serves_per_player">Number of serves per player</string>
