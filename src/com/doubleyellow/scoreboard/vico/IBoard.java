@@ -39,7 +39,6 @@ import android.widget.TextView;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.AutoResizeTextView;
 import com.doubleyellow.android.view.FloatingMessage;
-import com.doubleyellow.android.view.Orientation;
 import com.doubleyellow.android.view.ViewUtil;
 
 import com.doubleyellow.scoreboard.Brand;
@@ -535,6 +534,7 @@ public class IBoard implements TimerViewContainer
     private AutoResizeTextView.OnTextResizeListener matchGamesScoreSizeListener = new AutoResizeTextView.OnTextResizeListener() {
         @Override public void onTextResize(AutoResizeTextView textView, float oldSize, float newSize, float requiredWidth, float requiredHeight) {
 
+          //Log.d(TAG, String.format("Ols size %f, New size %f, Required width: %f, Required height, %f", oldSize, newSize, requiredWidth, requiredHeight));
             boolean landscapeOrientation = ViewUtil.isLandscapeOrientation(context);
 
             float fReducePS = landscapeOrientation?0.60f:0.70f;
@@ -547,7 +547,7 @@ public class IBoard implements TimerViewContainer
             int iChronoTextSize = (int) (newSize * fReduceCM);
 
             if ( isPresentation() == false ) {
-                //store size for usage is child activities
+                // store size for usage is child activities
                 iTxtSizePx_PaperScoringSheet = iPaperScoreTextSize;
                 iTxtSizePx_FinishedGameScores = (int) newSize;
             }
@@ -559,7 +559,7 @@ public class IBoard implements TimerViewContainer
             int[] iIds = new int[] {R.id.sb_match_duration, R.id.sb_game_duration};
             for(int iResId: iIds) {
                 Chronometer cm = (Chronometer) findViewById(iResId);
-                if (cm != null) {
+                if ( cm != null ) {
                     cm.setTextSize(TypedValue.COMPLEX_UNIT_PX, iChronoTextSize);
                 }
             }

@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright (C) 2018  Iddo Hoeve
+**
+** Squore is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
 <com.doubleyellow.view.SBRelativeLayout
         android:id="@+id/squoreboard_root_view"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -7,24 +25,49 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <com.doubleyellow.scoreboard.history.MatchGameScoresView
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/gamescores_container"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
+        app:layout_widthPercent="@fraction/ls_gamescores_width" app:layout_aspectRatio="40%"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        >
+        <com.doubleyellow.scoreboard.history.MatchGameScoresView
             android:id="@+id/gamescores"
-            android:layout_centerInParent="true"
-            android:layout_alignParentTop="true"
             dy:backgroundColor="@color/dy_yellow"
             dy:textColor="@color/dy_dark"
             dy:leftToRight="false"
-            app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
-            app:layout_widthPercent="@fraction/ls_gamescores_width" app:layout_aspectRatio="40%"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-    />
-<!--
-    Using this would cause the 'showcase' to draw to big a circle
-    app:layout_heightPercent="@fraction/ls_gamescores_height"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
 
-            android:minHeight="40dp"
--->
+        <com.doubleyellow.scoreboard.view.GamesWonButton
+            style="@style/SBButton"
+            android:id="@+id/btn_gameswon1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+            app:layout_widthPercent="@fraction/ls_gameswon_width" app:layout_aspectRatio="100%"
+            app:layout_marginTopPercent="@fraction/ls_gameswon_margin_V"
+            app:layout_marginLeftPercent="@fraction/ls_gameswon_margin_H"
+            android:text="1"
+            android:clickable="true"
+            android:textStyle="bold"
+             />
+        <com.doubleyellow.scoreboard.view.GamesWonButton
+            style="@style/SBButton"
+            android:id="@+id/btn_gameswon2"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+            app:layout_widthPercent="@fraction/ls_gameswon_width" app:layout_aspectRatio="100%"
+            app:layout_marginTopPercent="@fraction/ls_gameswon_margin_V"
+            app:layout_marginRightPercent="@fraction/ls_gameswon_margin_H"
+            android:text="2"
+            android:clickable="true"
+            android:textStyle="bold"
+            />
+    </android.support.percent.PercentRelativeLayout>
 
     <!-- playernames: one on each side of previous game scores -->
     <com.doubleyellow.scoreboard.view.PlayersButton
@@ -56,31 +99,13 @@
             android:layout_height="0dp"
     />
 
-<!--
-    <com.doubleyellow.android.view.AutoResizeTextView
-            style="@style/SBButton"
-            android:id="@+id/txt_player2"
-            app:layout_widthPercent="@fraction/ls_name_width_2x"
-            app:layout_heightPercent="@fraction/ls_name_height"
-            app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
-            app:layout_marginLeftPercent="@fraction/ls_horizontal_margin_4x"
-            app:layout_marginRightPercent="@fraction/ls_horizontal_margin_4x"
-            android:layout_alignParentRight="true"
-            android:text="Player 2"
-            android:textStyle="bold"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:gravity="center"
-    />
--->
-
     <!-- score buttons underneath names -->
     <com.doubleyellow.android.view.AutoResizeTextView
             style="@style/SBButton"
             android:id="@+id/btn_score1"
             android:layout_below="@id/txt_player1"
-        app:layout_widthPercent="@fraction/ls_score_width_2x"
-        app:layout_heightPercent="@fraction/ls_score_height"
+            app:layout_widthPercent="@fraction/ls_score_width_2x"
+            app:layout_heightPercent="@fraction/ls_score_height"
             android:layout_alignRight="@id/txt_player1" android:layout_alignEnd="@id/txt_player1"
             app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
             app:layout_marginBottomPercent="@fraction/ls_vertical_margin_3x"
@@ -96,8 +121,8 @@
             style="@style/SBButton"
             android:id="@+id/btn_score2"
             android:layout_below="@id/txt_player2"
-        app:layout_widthPercent="@fraction/ls_score_width_2x"
-        app:layout_heightPercent="@fraction/ls_score_height"
+            app:layout_widthPercent="@fraction/ls_score_width_2x"
+            app:layout_heightPercent="@fraction/ls_score_height"
             android:layout_alignLeft="@id/txt_player2"
             android:layout_alignStart="@id/txt_player2"
             app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
@@ -139,32 +164,6 @@
             android:textStyle="bold"
             />
 
-    <com.doubleyellow.scoreboard.view.GamesWonButton
-        style="@style/SBButton"
-        android:id="@+id/btn_gameswon1"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        app:layout_widthPercent="@fraction/ls_gameswon_width" app:layout_aspectRatio="100%"
-        app:layout_marginTopPercent="@fraction/ls_gameswon_margin_V"
-        app:layout_marginLeftPercent="@fraction/ls_gameswon_margin_H"
-        android:text="1"
-        android:clickable="true"
-        android:textStyle="bold"
-        />
-    <com.doubleyellow.scoreboard.view.GamesWonButton
-        style="@style/SBButton"
-        android:id="@+id/btn_gameswon2"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        app:layout_widthPercent="@fraction/ls_gameswon_width" app:layout_aspectRatio="100%"
-        app:layout_marginTopPercent="@fraction/ls_gameswon_margin_V"
-        app:layout_marginRightPercent="@fraction/ls_gameswon_margin_H"
-        android:text="2"
-        android:clickable="true"
-        android:textStyle="bold"
-        />
 
     <!--
                 app:layout_widthPercent="@fraction/ls_gamehistory"

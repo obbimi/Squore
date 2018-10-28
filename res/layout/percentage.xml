@@ -24,18 +24,48 @@
         xmlns:dy="http://double-yellow.be"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <com.doubleyellow.scoreboard.history.MatchGameScoresView
+
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/gamescores_container"
+        android:layout_centerInParent="true"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        app:layout_marginLeftPercent="@fraction/pt_horizontal_margin_2x"
+        app:layout_heightPercent="@fraction/pt_gamescores_height" app:layout_aspectRatio="@fraction/pt_gamescores_widthratio"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        >
+        <com.doubleyellow.scoreboard.history.MatchGameScoresView
             android:id="@+id/gamescores"
-            android:layout_centerInParent="true"
-            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
             dy:backgroundColor="@color/dy_yellow"
             dy:textColor="@color/dy_dark"
             dy:leftToRight="true"
-            app:layout_marginLeftPercent="@fraction/pt_horizontal_margin_2x"
-            app:layout_heightPercent="@fraction/pt_gamescores_height" app:layout_aspectRatio="@fraction/pt_gamescores_widthratio"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-    />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <com.doubleyellow.scoreboard.view.GamesWonButton
+            style="@style/SBButton"
+            android:id="@+id/btn_gameswon1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+            app:layout_heightPercent="@fraction/pt_gameswon_height" app:layout_aspectRatio="100%"
+            app:layout_marginTopPercent="@fraction/pt_gameswon_margin_V"
+            android:text="1"
+            android:clickable="true"
+            android:textStyle="bold"
+            />
+        <com.doubleyellow.scoreboard.view.GamesWonButton
+            style="@style/SBButton"
+            android:id="@+id/btn_gameswon2"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+            app:layout_heightPercent="@fraction/pt_gameswon_height" app:layout_aspectRatio="100%"
+            app:layout_marginBottomPercent="@fraction/pt_gameswon_margin_V"
+            android:text="2"
+            android:clickable="true"
+            android:textStyle="bold"
+            />
+    </android.support.percent.PercentRelativeLayout>
 
     <!-- playernames: one on each side of previous game scores -->
     <com.doubleyellow.scoreboard.view.PlayersButton
@@ -51,8 +81,7 @@
             android:text="@string/lbl_player_A"
             android:layout_width="0dp"
             android:layout_height="0dp"
-             />
-
+    />
     <com.doubleyellow.scoreboard.view.PlayersButton
             android:id="@+id/txt_player2"
             app:layout_widthPercent="@fraction/pt_name_width"
@@ -66,8 +95,7 @@
             android:text="@string/lbl_player_B"
             android:layout_width="0dp"
             android:layout_height="0dp"
-             />
-
+    />
 
     <!-- side buttons underneath names towards the right -->
     <com.doubleyellow.scoreboard.view.ServeButton style="@style/SBButton"
@@ -131,35 +159,6 @@
         app:layout_marginBottomPercent="@fraction/pt_vertical_margin_6x"
         />
 
-    <com.doubleyellow.scoreboard.view.GamesWonButton
-        style="@style/SBButton"
-        android:id="@+id/btn_gameswon1"
-        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-        android:layout_below="@id/btn_score1"
-        app:layout_heightPercent="@fraction/pt_gameswon_height" app:layout_aspectRatio="100%"
-        app:layout_marginTopPercent="@fraction/pt_gameswon_margin_V"
-        app:layout_marginLeftPercent="@fraction/pt_horizontal_margin_2x"
-        android:text="1"
-        android:clickable="true"
-        android:textStyle="bold"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        />
-    <com.doubleyellow.scoreboard.view.GamesWonButton
-        style="@style/SBButton"
-        android:id="@+id/btn_gameswon2"
-        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-        android:layout_above="@id/btn_score2"
-        app:layout_heightPercent="@fraction/pt_gameswon_height" app:layout_aspectRatio="100%"
-        app:layout_marginBottomPercent="@fraction/pt_gameswon_margin_V"
-        app:layout_marginLeftPercent="@fraction/pt_horizontal_margin_2x"
-        android:text="2"
-        android:clickable="true"
-        android:textStyle="bold"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        />
-
     <com.doubleyellow.scoreboard.view.GameHistoryView
             android:id="@+id/scorehistorytable"
             android:layout_below="@id/btn_side1"
@@ -169,9 +168,9 @@
             dy:backgroundColor="@color/dy_yellow"
             dy:textColor="@color/dy_dark"
             app:layout_marginTopPercent="@fraction/pt_vertical_margin_6x"
-            app:layout_marginRightPercent="0%"
-            app:layout_widthPercent="@fraction/pt_gamehistory_width" app:layout_aspectRatio="40%"
-            android:layout_width="0dp"
+            app:layout_marginRightPercent="@fraction/pt_horizontal_margin_2x"
+            app:layout_aspectRatio="40%"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
     />
 

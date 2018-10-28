@@ -179,48 +179,46 @@ public class MatchGameScoresView extends LinearLayout
         return iToManyLinesCnt;
     }
 
-/*
     @Override public void setVisibility(int visibility) {
         super.setVisibility(visibility);
     }
-*/
 
     private class CheckLayoutCountDownTimer extends CountDownTimer {
-        private MatchGameScoresView view   = null;
+        private MatchGameScoresView gsv    = null;
         private int m_iLayoutOKCount       = 0;
         private int m_iRestoreVisibilityTo = 0;
-        private CheckLayoutCountDownTimer(MatchGameScoresView view) {
+        private CheckLayoutCountDownTimer(MatchGameScoresView gsv) {
             //super(640, 320); // in racketlon is sometimes does not show...
             super(2000, 300);
-            this.view = view;
-            this.view.setVisibility(View.INVISIBLE);
-            ViewGroup parent = (ViewGroup) view.getParent();
+            this.gsv = gsv;
+            this.gsv.setVisibility(View.INVISIBLE);
+            ViewGroup parent = (ViewGroup) gsv.getParent();
             Log.d(TAG, "MGSV parent :" + parent);
             View sbRootView = parent.findViewById(R.id.squoreboard_root_view);
             Log.d(TAG, "MGSV parent :" + sbRootView);
             this.m_iRestoreVisibilityTo = View.VISIBLE;
             GameScoresAppearance gameScoresAppearance = PreferenceValues.getGameScoresAppearance(getContext());
-            if ( (sbRootView != null) && gameScoresAppearance.showGamesWon(isPresentation()) ) {
+            if ( (sbRootView != null) && gameScoresAppearance.showGamesWon(MatchGameScoresView.this.isPresentation()) ) {
                 this.m_iRestoreVisibilityTo = View.INVISIBLE;
             }
         }
         @Override public void onTick(long millisUntilFinished) {
             int iNotLayoutOutOk = checkAutoResizeTextViews(MatchGameScoresView.this);
             if ( iNotLayoutOutOk > 0 ) {
-              //Log.d(TAG, String.format("Trigger update, resize textview not all properly layed out : %s (ms left: %d)", iNotLayoutOutOk, millisUntilFinished));
-                view.update(m_players, view.m_gamesScores, view.m_playerNames, m_countries, view.m_gameTimes, m_eventDivision, m_pointsDiff);
+                Log.d(TAG, String.format("Trigger update, resize textview not all properly layed out : %s (ms left: %d)", iNotLayoutOutOk, millisUntilFinished));
+                gsv.update(m_players, gsv.m_gamesScores, gsv.m_playerNames, m_countries, gsv.m_gameTimes, m_eventDivision, m_pointsDiff);
                 this.cancel();
             } else {
                 m_iLayoutOKCount++;
                 if ( m_iLayoutOKCount > 1 ) {
-                    this.view.setVisibility(m_iRestoreVisibilityTo); // still makes the 'recalculations' period visible to the eye
+                    this.gsv.setVisibility(m_iRestoreVisibilityTo); // still makes the 'recalculations' period visible to the eye
                     this.cancel();
                 }
             };
         }
         @Override public void onFinish() {
-            if ( this.view != null ) {
-                this.view.setVisibility(m_iRestoreVisibilityTo);
+            if ( this.gsv != null ) {
+                this.gsv.setVisibility(m_iRestoreVisibilityTo);
             }
         }
     };
@@ -468,19 +466,17 @@ public class MatchGameScoresView extends LinearLayout
             col.setBackgroundColor(bgColorLoser);
 
             AutoResizeTextView txtMax = null;
-            if ( m_showNames ) {
-                for(Player p: players) {
-                    boolean  bTopRow = p.equals(players[0]);
-                    int      iResId  = bTopRow ? R.id.score_player_1 : R.id.score_player_2;
-                    TextView txt     = (TextView) col.findViewById(iResId);
-                    setSizeAndColors(txt, p.equals(gameWinner), iTxtSizeForInstanceAndOrientation, instanceKey);
-                    //txt.setText(StringUtil.pad(String.valueOf(scores.get(p)), ' ', 2, bLeftColumn) );
-                    //txt.setText(" " + scores.get(p) + " "); // add a space just for spacing (on both sides for centering)
-                    txt.setText(String.valueOf(scores.get(p)));
+            for(Player p: players) {
+                boolean  bTopRow = p.equals(players[0]);
+                int      iResId  = bTopRow ? R.id.score_player_1 : R.id.score_player_2;
+                TextView txt     = (TextView) col.findViewById(iResId);
+                setSizeAndColors(txt, p.equals(gameWinner), iTxtSizeForInstanceAndOrientation, instanceKey);
+                //txt.setText(StringUtil.pad(String.valueOf(scores.get(p)), ' ', 2, bLeftColumn) );
+                //txt.setText(" " + scores.get(p) + " "); // add a space just for spacing (on both sides for centering)
+                txt.setText(String.valueOf(scores.get(p)));
 
-                    if ( txtMax == null || scores.get(p) > scores.get(p.getOther()) ) {
-                        txtMax = (AutoResizeTextView) txt;
-                    }
+                if ( txtMax == null || scores.get(p) > scores.get(p.getOther()) ) {
+                    txtMax = (AutoResizeTextView) txt;
                 }
             }
 
