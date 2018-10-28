@@ -5,8 +5,10 @@
 
     fill and stroke colors: #D3D3D3, #111111
 
-    convert -background none -size 64x64 timer.svg timer.png
-    convert -background none -size 64x64 timer.svg timer_black.png
+    convert -background none -size  72x72  timer.svg ../drawable-hdpi/timer.png
+    convert -background none -size  96x96  timer.svg ../drawable-xhdpi/timer.png
+    convert -background none -size 144x144 timer.svg ../drawable-xxhdpi/timer.png
+    convert -background none -size 192x192 timer.svg ../drawable-xxxhdpi/timer.png
     -->
 
     <circle id="disc" cx="260" cy="300" r="200" stroke-width="35" fill="none"/>

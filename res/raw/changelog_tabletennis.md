@@ -1,3 +1,11 @@
+## 4.15 (nov 2018)
+
+- more flexibility when manually entering upcoming matches to ref ('My Matches')
+    - choose between poule matches, or
+    - matches between teams, where
+        - each team member plays one match against one team member of the other team
+        - each team member plays matches against all team members of the other team
+
 ## 4.14 (okt 2018)
 
 - to have a less 'busy' screen:
