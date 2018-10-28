@@ -611,7 +611,7 @@
                     android:key="useTimersFeature"
                     android:title="@string/pref_useTimersFeature"
                     android:summary="@string/pref_useTimersFeature_summary"
-                    android:icon="@drawable/timer"
+                    android:icon="@drawable/timer_4settings4buttons"
                     android:defaultValue="Suggest"
                     dy:displayValues="@array/FeatureDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
@@ -755,7 +755,7 @@
     </PreferenceScreen>
 
     <PreferenceScreen android:key="Timers"
-                      android:icon="@drawable/timer"
+                      android:icon="@drawable/timer_4settings4buttons"
                       android:title="@string/pref_Timers"
                       android:summary="@string/pref_Timers_summary"
             >
@@ -779,7 +779,7 @@
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_Timers">
             <com.doubleyellow.prefs.EnumListPreference
-                android:icon="@drawable/timer"
+                android:icon="@drawable/timer_4settings4buttons"
                 android:key="useTimersFeature"
                 android:title="@string/pref_useTimersFeature"
                 android:defaultValue="Suggest"
@@ -890,7 +890,7 @@
                 android:defaultValue="false"
                 />
             <EditTextPreference android:key="showModeDialogAfterXMins"
-                android:icon="@drawable/timer"
+                android:icon="@drawable/timer_4settings4buttons"
                 android:title="@string/activate_mode_Squash"
                 android:summary="@string/pref_autoShow_activeExpediteSystem_dialog_after_X_mins"
                 android:inputType="number"
@@ -915,7 +915,7 @@
                 android:defaultValue="@integer/autoShowGamePausedDialogAfterXPoints_default"
                 />
             <EditTextPreference android:key="timerTowelingDown"
-                android:icon="@drawable/timer"
+                android:icon="@drawable/timer_4settings4buttons"
                 android:title="@string/toweling_down"
                 android:inputType="number"
                 android:defaultValue="@integer/timerTowelingDown_default"
