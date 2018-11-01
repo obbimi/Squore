@@ -179,9 +179,14 @@ public class MatchGameScoresView extends LinearLayout
         return iToManyLinesCnt;
     }
 
+/*
     @Override public void setVisibility(int visibility) {
+        if ( visibility == View.VISIBLE ) {
+            Log.d(TAG, "Back to visible");
+        }
         super.setVisibility(visibility);
     }
+*/
 
     private class CheckLayoutCountDownTimer extends CountDownTimer {
         private MatchGameScoresView gsv    = null;
@@ -192,13 +197,19 @@ public class MatchGameScoresView extends LinearLayout
             super(2000, 300);
             this.gsv = gsv;
             this.gsv.setVisibility(View.INVISIBLE);
-            ViewGroup parent = (ViewGroup) gsv.getParent();
+            View parent = (View) gsv.getParent();
+            while( parent.getParent() instanceof View ) {
+                parent = (View) parent.getParent();
+            }
             Log.d(TAG, "MGSV parent :" + parent);
             View sbRootView = parent.findViewById(R.id.squoreboard_root_view);
             Log.d(TAG, "MGSV parent :" + sbRootView);
             this.m_iRestoreVisibilityTo = View.VISIBLE;
             GameScoresAppearance gameScoresAppearance = PreferenceValues.getGameScoresAppearance(getContext());
-            if ( (sbRootView != null) && gameScoresAppearance.showGamesWon(MatchGameScoresView.this.isPresentation()) ) {
+            if ( sbRootView == null ) {
+                // not on main scoreboard
+                this.m_iRestoreVisibilityTo = View.VISIBLE;
+            } else if ( gameScoresAppearance.showGamesWon(isPresentation()) ) {
                 this.m_iRestoreVisibilityTo = View.INVISIBLE;
             }
         }

@@ -59,7 +59,8 @@ public class ScoreSheetOnline extends AppCompatActivity {
         settings.setDomStorageEnabled(true);
 
         // specifically adding the 'Android' string for jquery framework
-        settings.setUserAgentString("Android WebView " + URLTask.getMyUserAgentString(this));
+        String myUserAgentString = URLTask.getMyUserAgentString(this);
+        settings.setUserAgentString("Android WebView " + myUserAgentString);
 /*
         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ) {
             settings.setAllowUniversalAccessFromFileURLs(true);

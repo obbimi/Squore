@@ -274,6 +274,9 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.newMatchLayout, context, NewMatchLayout.class, NewMatchLayout.AllFields);
     }
     public static GameScoresAppearance getGameScoresAppearance(Context context) {
+        if ( Brand.isRacketlon() ) {
+            return GameScoresAppearance.ShowFullScore;
+        }
         return getEnum(PreferenceKeys.gameScoresAppearance, context, GameScoresAppearance.class, GameScoresAppearance.ShowGamesWon);
     }
     public static DoublesServeSequence getDoublesServeSequence(Context context) {

@@ -4,13 +4,13 @@
 
     <!-- these 3 must sum to 100% -->
     <fraction name="ls_vertical_margin_3x">1.0%</fraction>
-    <fraction name="ls_name_height">17.0%</fraction>
-    <fraction name="ls_score_height">80%</fraction>
+    <fraction name="ls_name_height">18.0%</fraction>
+    <fraction name="ls_score_height">79%</fraction>
 
     <!-- these 3 must sum to less than 100% -->
     <fraction name="ls_horizontal_margin_4x">0.5%</fraction>
-    <fraction name="ls_name_width_2x">44%</fraction>
-    <fraction name="ls_gamescores_width">10%</fraction>
+    <fraction name="ls_name_width_2x">43%</fraction>
+    <fraction name="ls_gamescores_width">12%</fraction>
 
     <!--<fraction name="ls_gamescores_height">60%</fraction>-->
 
@@ -25,7 +25,7 @@
     <fraction name="ls_side_height">17%</fraction>
     <fraction name="ls_side_width_ratio">100%</fraction>
 -->
-    <fraction name="ls_side_height">19%</fraction> <!-- close to name-height -->
+    <fraction name="ls_side_height">18%</fraction> <!-- for nice visuals, close to ls_name_height -->
     <!--<fraction name="ls_side_height_ratio">100%</fraction>-->
 
 
@@ -54,9 +54,9 @@
     <fraction name="pt_vertical_margin_6x">0.5%</fraction>
     <fraction name="pt_name_height_2x">10%</fraction>
     <fraction name="pt_score_height_2x">33%</fraction>
-    <!--<fraction name="pt_timer_height">10%</fraction>-->
+    <fraction name="pt_gamescores_height">11%</fraction>
+
     <fraction name="pt_to_late_height">3%</fraction>
-    <fraction name="pt_gamescores_height">10%</fraction>
     <fraction name="pt_gamescores_widthratio">300%</fraction>
     <fraction name="pt_match_timer_height">3%</fraction> <!-- game and match chronos -->
     <fraction name="pt_match_timer_width">30%</fraction>

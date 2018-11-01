@@ -494,7 +494,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     private class GameScoresListener implements View.OnLongClickListener, View.OnClickListener {
         private long lActionBarToggledAt = 0L;
         @Override public void onClick(View view) {
-            if ( true ) {
+            if ( Brand.isRacketlon() == false ) {
                 iBoard.toggleGameScoreView();
                 castGamesWonAppearance();
             } else {
@@ -5068,24 +5068,17 @@ touch -t 01030000 LAST.sb
                 return;
             }
 
-            String localFilePath = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME)); // deprecated in anroid 7
             List<String> lMessages = new ArrayList<String>();
-            lMessages.add("Download complete: " + localFilePath + " (download id:" + downloadId + ")");
-
-            File f = new File(localFilePath);
 
             // clean previous file before copying over it
             File dir = PreferenceValues.targetDirForImportExport(context, false);
             final File fMyFile = new File(dir, String.format("%s.downloaded.zip", ztDownLoadShortname));
             if ( fMyFile.exists() ) {
-                if ( fMyFile.length() == f.length() && (ztDownLoadShortname == ZipType.SquoreAll) ) {
-                    lMessages.add(String.format("File %s has same size (%s) as previous download for %s", fMyFile.getAbsolutePath(), f.length(), ztDownLoadShortname));
-                }
                 fMyFile.delete();
             }
 
             String sError = null;
-            if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.M ) {
+            if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.M /* 23 */ ) {
                 String uriLocal      = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)); // not the original but uri on device
               //lMessages.add("local uri:" + uriLocal);
                 ContentResolver cs   = getContentResolver();
@@ -5099,6 +5092,10 @@ touch -t 01030000 LAST.sb
                     sError = e.getMessage();
                 }
             } else {
+                String localFilePath = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME)); // deprecated in android 7
+                lMessages.add("Download complete: " + localFilePath + " (download id:" + downloadId + ")");
+
+                File f = new File(localFilePath);
                 Log.i(TAG, "Handling " + localFilePath);
 
                 sError = FileUtil.copyFile(f, fMyFile);

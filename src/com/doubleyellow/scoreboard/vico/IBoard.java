@@ -431,34 +431,14 @@ public class IBoard implements TimerViewContainer
         currentGameScoreLines.update(bOnlyAddLast);
     }
 
-    /** if true, only nr of games won is shown */
-/*
-    public static boolean showGamesWon(Context context, boolean bIsPresentation) {
-        //return m_o2gameScoresAppearance.get(ViewUtil.getCurrentOrientation(context)).showGamesWon(bIsPresentation);
-        return PreferenceValues.getGameScoresAppearance(context).showGamesWon(bIsPresentation);
-    }
-*/
-
-    //private static Map<Orientation,GameScoresAppearance> m_o2gameScoresAppearance = new HashMap<>();
     public void toggleGameScoreView() {
         GameScoresAppearance appearance = PreferenceValues.getGameScoresAppearance(context);
-      //GameScoresAppearance appearance = m_o2gameScoresAppearance.get(ViewUtil.getCurrentOrientation(context));
-      //if ( appearance == null ) {
-      //    appearance = PreferenceValues.getGameScoresAppearance(context);
-      //} else {
-            appearance = ListUtil.getNextEnum(appearance);
+                             appearance = ListUtil.getNextEnum(appearance);
         PreferenceValues.setEnum(PreferenceKeys.gameScoresAppearance, context, appearance);
-      //}
-        /*return*/ setGameScoreView(appearance);
+        setGameScoreView(appearance);
     }
     public void initGameScoreView() {
         GameScoresAppearance appearance = PreferenceValues.getGameScoresAppearance(context);
-/*
-        GameScoresAppearance appearance = m_o2gameScoresAppearance.get(ViewUtil.getCurrentOrientation(context));
-        if ( appearance == null ) {
-            appearance = PreferenceValues.getGameScoresAppearance(context);
-        }
-*/
         setGameScoreView(appearance);
     }
     private void setGameScoreView(GameScoresAppearance appearance) {
@@ -466,21 +446,12 @@ public class IBoard implements TimerViewContainer
             int iNameId = m_player2gamesWonId.get(player);
             View vGamesWon = findViewById(iNameId);
             if ( vGamesWon == null ) {
-/*
-                // no GamesWonButton in the layout
-                while ( appearance.showGamesWon(isPresentation()) ) {
-                    appearance = ListUtil.getNextEnum(appearance);
-                    bChanged = false;
-                }
-*/
-                Log.w(TAG, "No GamesWon buttons to work with in orientation " + ViewUtil.getCurrentOrientation(context));
+                Log.w(TAG, "No GamesWon buttons to work with in orientation/view " + ViewUtil.getCurrentOrientation(context));
                 break;
             }
             boolean showGamesWon = appearance.showGamesWon(isPresentation());
-            vGamesWon.setVisibility(showGamesWon ?View.VISIBLE:View.INVISIBLE);
+            vGamesWon.setVisibility(showGamesWon ? View.VISIBLE : View.INVISIBLE);
         }
-
-        //m_o2gameScoresAppearance.put(ViewUtil.getCurrentOrientation(context), appearance);
 
         MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
         if ( matchGameScores != null ) {
@@ -490,13 +461,6 @@ public class IBoard implements TimerViewContainer
                 matchGameScores.setVisibility(View.VISIBLE);
             }
         }
-/*
-        if ( bChanged ) {
-            PreferenceValues.setEnum(PreferenceKeys.gameScoresAppearance, context, appearance);
-        }
-
-        return bChanged;
-*/
     }
 
     public void updateGameScores() {
