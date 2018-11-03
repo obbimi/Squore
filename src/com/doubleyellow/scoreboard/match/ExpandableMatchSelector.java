@@ -44,8 +44,8 @@ import java.util.List;
  */
 public abstract class ExpandableMatchSelector extends Fragment
 {
-    static final String HEADER_PREFIX = "-";
-    static final String NAMES_SPLITTER = " - ";
+    public static final String HEADER_PREFIX = "-";
+    public static final String NAMES_SPLITTER = " - ";
 
     protected static final String TAG = "SB." + ExpandableMatchSelector.class.getSimpleName();
 
@@ -214,9 +214,14 @@ public abstract class ExpandableMatchSelector extends Fragment
      */
     @Override public void onDetach() {
         super.onDetach();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1 /* 17 */) {
             activity = null; // MUST be done or e.g. StaticMatchSelector can not be used twice (causes problems since the 'MatchHistory' activity can be started from the PreviousMatchSelector)
         }
+    }
+
+    @Override public Context getContext() {
+        //return super.getContext();
+        return context;
     }
 
     protected boolean bAutoLoad = false;

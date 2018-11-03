@@ -296,20 +296,22 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             Log.w(TAG, "Could not determine details:");
             Log.w(TAG, "String: " + sText);
             Log.w(TAG, "RegExp: " + sRegExpMatch);
-            String[] saRetry = { ""
-                , "^" + sRegExpDateTime + "[\\s:]*" + sRegExpPlayer + sPlayerSplitter + sRegExpPlayer + "[\\s:]*+" + sRegExpResult + "(.*?)" + "$"
-                , "^" + sRegExpDateTime + "[\\s:]*" + sRegExpPlayer + sPlayerSplitter + sRegExpPlayer + "[\\s:]*+"
-                , "^" + sRegExpDateTime + "[\\s:]*" + sRegExpPlayer + sPlayerSplitter
-                , "^" + sRegExpDateTime
-            };
-            for(String sRetryRE: saRetry) {
-                if ( StringUtil.isEmpty(sRetryRE) ) { continue; }
-                m = Pattern.compile(sRetryRE).matcher(sText);
-                if ( m.find() ) {
-                    Log.d(TAG, "Did find something for RegExp: " + sRetryRE);
-                    break;
-                } else {
-                    Log.d(TAG, "Found nothing for RegExp: " + sRetryRE);
+            if ( false ) {
+                String[] saRetry = { ""
+                        , "^" + sRegExpDateTime + "[\\s:]*" + sRegExpPlayer + sPlayerSplitter + sRegExpPlayer + "[\\s:]*+" + sRegExpResult + "(.*?)" + "$"
+                        , "^" + sRegExpDateTime + "[\\s:]*" + sRegExpPlayer + sPlayerSplitter + sRegExpPlayer + "[\\s:]*+"
+                        , "^" + sRegExpDateTime + "[\\s:]*" + sRegExpPlayer + sPlayerSplitter
+                        , "^" + sRegExpDateTime
+                };
+                for(String sRetryRE: saRetry) {
+                    if ( StringUtil.isEmpty(sRetryRE) ) { continue; }
+                    m = Pattern.compile(sRetryRE).matcher(sText);
+                    if ( m.find() ) {
+                        Log.d(TAG, "Did find something for RegExp: " + sRetryRE);
+                        break;
+                    } else {
+                        Log.d(TAG, "Found nothing for RegExp: " + sRetryRE);
+                    }
                 }
             }
         }

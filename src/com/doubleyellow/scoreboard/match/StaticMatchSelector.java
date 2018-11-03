@@ -39,6 +39,7 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.archive.PreviousMatchSelector;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.match.fixed.DialogOnClickListener;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.ModelFactory;
 import com.doubleyellow.scoreboard.model.Player;
@@ -85,7 +86,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
     private void editMatch(final String sToHeader, final String sMatch, final boolean bIsReplace, final NewMatchesType newMatchesType, final int iNrOfTxtBoxes ) {
         LayoutInflater myLayout = LayoutInflater.from(context);
 
-        final int iNrOfGroups = newMatchesType.getNumberOfGroups();
+        final int iNrOfGroups = newMatchesType==null?1:newMatchesType.getNumberOfGroups();
 
         final List<List<TextView>> llTextViews = new ArrayList<List<TextView>>();
         llTextViews.add(new ArrayList<TextView>());
@@ -110,132 +111,10 @@ public class StaticMatchSelector extends ExpandableMatchSelector
             }
         }
 
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        switch (newMatchesType) {
-                            case Poule: {
-                                List<TextView> lTextViews = llTextViews.get(0);
-                                int nrOfTxts = lTextViews.size();
-                                for (int a = 0; a < nrOfTxts; a++) {
-                                    TextView txt1 = lTextViews.get(a);
-                                    if (txt1 == null) {
-                                        continue;
-                                    }
-
-                                    String sPlayer = txt1.getText().toString().trim();
-                                    if (StringUtil.isEmpty(sPlayer)) {
-                                        continue;
-                                    }
-                                    PreferenceValues.addPlayerToList(context, sPlayer);
-                                    for (int b = a + 1; b < nrOfTxts; b++) {
-                                        TextView txt2 = lTextViews.get(b);
-                                        if (txt2 == null) {
-                                            continue;
-                                        }
-
-                                        String sPlayer2 = txt2.getText().toString().trim();
-                                        if (StringUtil.isEmpty(sPlayer2)) {
-                                            continue;
-                                        }
-                                        if (sPlayer.equals(sPlayer2)) {
-                                            continue;
-                                        }
-                                        String sNewMatch = sPlayer + NAMES_SPLITTER + sPlayer2;
-                                        _replaceMatch(sToHeader, bIsReplace ? sMatch : null, sNewMatch);
-                                    }
-                                }
-                                break;
-                            }
-                            case TeamVsTeam_OneMatchPerPlayer: {
-                                List<String> lMatches = new ArrayList<>();
-
-                                List<TextView> lTextViewsA = llTextViews.get(0);
-                                List<TextView> lTextViewsB = llTextViews.get(1);
-                                int nrOfTxts = Math.min(lTextViewsA.size(), lTextViewsB.size());
-                                for (int i = 0; i < nrOfTxts; i++) {
-                                    TextView txtA = lTextViewsA.get(i);
-                                    TextView txtB = lTextViewsB.get(i);
-                                    if (txtA == null || txtB == null) {
-                                        continue;
-                                    }
-                                    String sPlayerA = txtA.getText().toString().trim();
-                                    String sPlayerB = txtB.getText().toString().trim();
-                                    if (StringUtil.hasEmpty(sPlayerA, sPlayerB)) {
-                                        continue;
-                                    }
-                                    String sNewMatch = sPlayerA + NAMES_SPLITTER + sPlayerB;
-                                    lMatches.add(sNewMatch);
-                                }
-                                addGroupWithMatches(sToHeader, lMatches);
-                                break;
-                            }
-                            case TeamVsTeam_XMatchesPlayer: {
-                                List<TextView> lTextViewsA = llTextViews.get(0);
-                                List<TextView> lTextViewsB = llTextViews.get(1);
-                                int nrOfTxtsA = lTextViewsA.size();
-                                int nrOfTxtsB = lTextViewsA.size();
-
-                                // add matches so that same player is not (less likely) playing in 2 subsequent matches
-                                List<String> lMatches = new ArrayList<>();
-                                for (int iOffset = 0; iOffset < nrOfTxtsB; iOffset++) {
-                                    for (int iA = 0; iA < nrOfTxtsA; iA++) {
-                                        TextView txtA = lTextViewsA.get(iA);
-                                        if (txtA == null) {
-                                            continue;
-                                        }
-                                        String sPlayerA = txtA.getText().toString().trim();
-                                        TextView txtB = lTextViewsB.get((iA + iOffset) % lTextViewsB.size());
-                                        if (txtB == null) {
-                                            continue;
-                                        }
-                                        String sPlayerB = txtB.getText().toString().trim();
-                                        if (StringUtil.hasEmpty(sPlayerA, sPlayerB)) {
-                                            continue;
-                                        }
-                                        String sNewMatch = sPlayerA + NAMES_SPLITTER + sPlayerB;
-                                        lMatches.add(sNewMatch);
-                                    }
-                                }
-/*
-                                // add matches 'group by' players from team A
-                                for (int iA = 0; iA < nrOfTxtsA; iA++) {
-                                    TextView txtA = lTextViewsA.get(iA);
-                                    if (txtA == null) {
-                                        continue;
-                                    }
-                                    String sPlayerA = txtA.getText().toString().trim();
-                                    for (int iB = 0; iB < nrOfTxtsB; iB++) {
-                                        TextView txtB = lTextViewsB.get(iB);
-                                        if (txtB == null) {
-                                            continue;
-                                        }
-                                        String sPlayerB = txtB.getText().toString().trim();
-                                        if (StringUtil.hasEmpty(sPlayerA, sPlayerB)) {
-                                            continue;
-                                        }
-                                        String sNewMatch = sPlayerA + NAMES_SPLITTER + sPlayerB;
-                                        lMatches.add(Math.min(iA + 2 * iB,lMatches.size()), sNewMatch);
-                                    }
-                                }
-*/
-                                addGroupWithMatches(sToHeader, lMatches);
-                                break;
-                            }
-                        }
-
-                        // ensure the new match is displayed
-                        //emsAdapter.load(); // already invoked from _replaceMatch()
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            }
-        };
+        DialogInterface.OnClickListener dialogClickListener = new DialogOnClickListener(newMatchesType, sToHeader, sMatch, bIsReplace, llTextViews, this);
 
         int orientation = LinearLayout.VERTICAL;
-        if ( newMatchesType.getNumberOfGroups() > 1 && ViewUtil.isLandscapeOrientation(context) ) {
+        if ( (newMatchesType != null) && (newMatchesType.getNumberOfGroups() > 1) && ViewUtil.isLandscapeOrientation(context) ) {
             orientation = LinearLayout.HORIZONTAL;
         }
 
@@ -355,31 +234,35 @@ public class StaticMatchSelector extends ExpandableMatchSelector
         }
         btnOk.setEnabled(iMinNonEmpty >= 2);
 
-        switch (newMatchesType) {
-            case Poule:
-                int iNrOfNonEmpty = iMinNonEmpty;
-                if ( iNrOfNonEmpty > 2 ) {
-                    int iTotal = 0;
-                    for(int i=1;i<iNrOfNonEmpty;i++) {
-                        iTotal+=i;
+        if ( newMatchesType == null ) {
+            btnOk.setText(R.string.cmd_ok);
+        } else {
+            switch (newMatchesType) {
+                case TeamVsTeam_OneMatchPerPlayer:
+                    btnOk.setText(getString(R.string.add_x_matches, iMinNonEmpty));
+                    break;
+                case TeamVsTeam_XMatchesPlayer:
+                    btnOk.setText(getString(R.string.add_x_matches, iMinNonEmpty * iMaxNonEmpty));
+                    break;
+                case Poule:
+                    int iNrOfNonEmpty = iMinNonEmpty;
+                    if (iNrOfNonEmpty > 2) {
+                        int iTotal = 0;
+                        for (int i = 1; i < iNrOfNonEmpty; i++) {
+                            iTotal += i;
+                        }
+                        btnOk.setText(getString(R.string.add_x_matches, iTotal));
+                    } else {
+                        btnOk.setText(R.string.cmd_ok);
                     }
-                    btnOk.setText(getString(R.string.add_x_matches, iTotal));
-                } else {
-                    btnOk.setText(R.string.cmd_ok);
-                }
-                break;
-            case TeamVsTeam_OneMatchPerPlayer:
-                btnOk.setText(getString(R.string.add_x_matches, iMinNonEmpty));
-                break;
-            case TeamVsTeam_XMatchesPlayer:
-                btnOk.setText(getString(R.string.add_x_matches, iMinNonEmpty * iMaxNonEmpty));
-                break;
+                    break;
+            }
         }
     }
 
     /** To rename or enter a new header */
     void editHeader(final String sHeader) {
-        final boolean bIsEditExistingGroup = StringUtil.isNotEmpty(sHeader);
+        final boolean bIsEditExistingGroupName = StringUtil.isNotEmpty(sHeader);
 
         final LinearLayout ll = new LinearLayout(context);
         ll.setOrientation(LinearLayout.VERTICAL);
@@ -401,7 +284,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 
         // allow to choose between 'poule' vs 'team vs team'
         final SelectEnumView sevType;
-        if ( bIsEditExistingGroup ) {
+        if ( bIsEditExistingGroupName ) {
             sevType = null;
         } else {
             NewMatchesType newMatchesTypeDefault = PreferenceValues.getNewMatchesType(context);
@@ -412,15 +295,15 @@ public class StaticMatchSelector extends ExpandableMatchSelector
         }
 
         AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
-        ab.setMessage(bIsEditExistingGroup ?R.string.cmd_edit:R.string.cmd_new_group)
-                .setIcon(bIsEditExistingGroup ? android.R.drawable.ic_menu_edit : android.R.drawable.ic_menu_add)
+        ab.setMessage(bIsEditExistingGroupName ?R.string.cmd_edit:R.string.cmd_new_group)
+                .setIcon(bIsEditExistingGroupName ? android.R.drawable.ic_menu_edit : android.R.drawable.ic_menu_add)
                 .setPositiveButton(R.string.cmd_ok, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialogInterface, int i) {
                         String sNewHeader = txtName.getText().toString().trim();
-                        if ( StringUtil.isNotEmpty(sNewHeader)) {
+                        if ( StringUtil.isNotEmpty(sNewHeader) ) {
                             List<String> lFixedMatches = PreferenceValues.getMatchList(context);
-                            if ( bIsEditExistingGroup ) {
-                                String sCorrespondingConfiguredHeader = determineConfiguredHeader(sHeader, lFixedMatches);
+                            if ( bIsEditExistingGroupName ) {
+                                String sCorrespondingConfiguredHeader = determineConfiguredHeader(sHeader, lFixedMatches, true);
                                 List<String> lFixedValuesNew = ListUtil.translateValues(lFixedMatches, "\\Q" + sCorrespondingConfiguredHeader + "\\E", HEADER_PREFIX + sNewHeader);
                                 storeAndRefresh(lFixedValuesNew);
                             } else {
@@ -428,8 +311,10 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                                 if ( sevType != null ) {
                                     newMatchesType = (NewMatchesType) sevType.getChecked();
                                 }
-                                lFixedMatches.add(0, HEADER_PREFIX + sNewHeader);
-                                storeAndRefresh(lFixedMatches);
+                                if ( NewMatchesType.Poule.equals(newMatchesType) ) {
+                                    lFixedMatches.add(0, HEADER_PREFIX + sNewHeader);
+                                    storeAndRefresh(lFixedMatches);
+                                }
 
                                 // after adding a new group assume at least a match will be added
                                 String sNrOfMatches = txtNrOfPlayers.getText().toString();
@@ -507,7 +392,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 
     private void _deleteHeader(String sHeader) {
         List<String> lFixedMatches = PreferenceValues.getMatchList(context);
-        String sCorrespondingConfiguredHeader = determineConfiguredHeader(sHeader, lFixedMatches);
+        String sCorrespondingConfiguredHeader = determineConfiguredHeader(sHeader, lFixedMatches, true);
 
         List<String> lFixedNew = new ArrayList<String>();
         boolean bInConfiguredSection = sHeader.contains(getString(R.string.lbl_fixed));
@@ -549,9 +434,9 @@ public class StaticMatchSelector extends ExpandableMatchSelector
     }
 
     /** for adding, replacing and deleting a match */
-    private void _replaceMatch(String sHeader, String sMatchOld, String sMatchNew) {
+    public void _replaceMatch(String sHeader, String sMatchOld, String sMatchNew) {
         List<String> lFixedMatches = PreferenceValues.getMatchList(context);
-        String sCorrespondingConfiguredHeader = determineConfiguredHeader(sHeader, lFixedMatches);
+        String sCorrespondingConfiguredHeader = determineConfiguredHeader(sHeader, lFixedMatches, true);
 
         List<String> lFixedNew = new ArrayList<String>();
         boolean bInConfiguredSection = false;
@@ -587,14 +472,16 @@ public class StaticMatchSelector extends ExpandableMatchSelector
         storeAndRefresh(lFixedNew);
     }
 
+/*
     private void addGroupWithMatches(final String sHeader, List<String> lMatches) {
         List<String> lFixedMatches = PreferenceValues.getMatchList(context);
 
         String sHeaderToAdd = sHeader;
-        String sCorrespondingConfiguredHeader = determineConfiguredHeader(sHeader, lFixedMatches);
+        String sCorrespondingConfiguredHeader = determineConfiguredHeader(sHeaderToAdd, lFixedMatches);
         int i = 0;
         while ( sCorrespondingConfiguredHeader != null ) {
             sHeaderToAdd = sHeader + " " + (++i);
+            sCorrespondingConfiguredHeader = determineConfiguredHeader(sHeaderToAdd, lFixedMatches);
         }
 
         List<String> lFixedNew = new ArrayList<String>();
@@ -605,8 +492,9 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 
         storeAndRefresh(lFixedNew);
     }
+*/
 
-    private void storeAndRefresh(List<String> lFixedNew) {
+    public void storeAndRefresh(List<String> lFixedNew) {
         store(lFixedNew);
 
         emsAdapter.load(false);
@@ -628,14 +516,14 @@ public class StaticMatchSelector extends ExpandableMatchSelector
         };
     }
 
-    private String determineConfiguredHeader(String sHeader, List<String> lFixedMatches) {
+    public String determineConfiguredHeader(String sHeader, List<String> lFixedMatches, boolean bReturnIfOnlyOneHeaderConfigured) {
         if ( ListUtil.isEmpty(lFixedMatches) ) {
             lFixedMatches = PreferenceValues.getMatchList(context);
         }
         if ( ListUtil.isEmpty(lFixedMatches) ) { return null; }
 
         List<String> lHeaders = ListUtil.filter(lFixedMatches, "^" + HEADER_PREFIX + ".*", Enums.Match.Keep);
-        if ( ListUtil.size(lHeaders) == 1 ) {
+        if ( (ListUtil.size(lHeaders)) == 1 && bReturnIfOnlyOneHeaderConfigured ) {
             return lHeaders.get(0).trim();
         }
         String sRegExp = "^\\Q" + HEADER_PREFIX + "\\E\\s*\\Q" + sHeader.trim() + "\\E$";
@@ -846,6 +734,26 @@ public class StaticMatchSelector extends ExpandableMatchSelector
             }
 
             List<String> lFixedMatches = PreferenceValues.getMatchList(context);
+
+            // remove headers with no matches
+            if ( ListUtil.isNotEmpty(lFixedMatches) ) {
+                boolean bHeadersRemoved = false;
+                boolean bPreviousWasHeader = true;
+                for (int i = ListUtil.size(lFixedMatches)-1; i >= 0; i-- ) {
+                    String sItem = lFixedMatches.get(i);
+                    boolean bIsHeader = sItem.startsWith(ExpandableMatchSelector.HEADER_PREFIX);
+                    if ( bIsHeader && bPreviousWasHeader ) {
+                        // header with no matches underneath
+                        lFixedMatches.remove(i);
+                        bHeadersRemoved = true;
+                    }
+                    bPreviousWasHeader = bIsHeader;
+                }
+                if ( bHeadersRemoved ) {
+                    store(lFixedMatches);
+                }
+            }
+
           //Log.d(TAG, "read list of matches: \n" + ListUtil.toNice(lFixedMatches, false));
             if ( ListUtil.isNotEmpty(lFixedMatches) ) {
                 String sHeader = context.getString(R.string.lbl_fixed); // for if configured/stored text does not contain a header as the first line
@@ -945,10 +853,10 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                             _replaceMatch(sHeader, sMatch, null);
                             break;
                         case R.id.smi_item_edit:
-                            editMatch(sHeader, sMatch, true, NewMatchesType.Poule, 2);
+                            editMatch(sHeader, sMatch, true, null, 2);
                             break;
                         case R.id.smi_item_copy:
-                            editMatch(sHeader, sMatch, false, NewMatchesType.Poule, 2);
+                            editMatch(sHeader, sMatch, false, null, 2);
                             break;
                     }
                     return false;
@@ -1006,7 +914,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                             confirmDeleteHeader(sHeader);
                             break;
                         case R.id.smi_group_add_match:
-                            editMatch(sHeader, "", false, NewMatchesType.Poule, 2);
+                            editMatch(sHeader, "", false, null, 2);
                             break;
                         case R.id.smi_group_edit:
                             editHeader(sHeader);
