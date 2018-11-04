@@ -46,5 +46,5 @@ public enum URLsKeys {
         expandGroup,
         Format,
         skipMatchSettings,
-        name,
+        name, /* Duplicate key.. carefull, may be causing problems */
 }

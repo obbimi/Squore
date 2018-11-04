@@ -33,6 +33,9 @@ import com.doubleyellow.util.MenuHandler;
 
 import java.util.*;
 
+/**
+ * Dialog for switching feeds.
+ */
 public class SelectFeed extends BaseAlertDialog
 {
     private String sNone = null;
@@ -120,7 +123,7 @@ public class SelectFeed extends BaseAlertDialog
                     if (sCheckedValue.equals(sNone)) {
                         checkedIndex = -1;
                     }
-                    PreferenceValues.setNumber(PreferenceKeys.feedPostUrl, context, checkedIndex);
+                    PreferenceValues.setActiveFeedNr(context, checkedIndex);
                     if (context instanceof MatchTabbed) {
                         MenuHandler menuHandler = (MenuHandler) context;
                         final Boolean useCache = Boolean.TRUE;

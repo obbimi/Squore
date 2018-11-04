@@ -1651,21 +1651,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
     }
 
-    private void addRecentFeedURLs() {
-        final boolean bMakeActive = PreferenceValues.getMatchesFeedURLUnchanged();
-        // TODO: trigger this code e.g. weekly somehow
-        for(int i=1; i<=3; i++ ) {
-            if ( Brand.isSquash() ) {
-                PreferenceValues.addOrReplaceNewFeedURL(this, "Demo PSA Matches " + i, "feed/psa.php?nr=" + i, null, null, false, bMakeActive);
-            }
-            if ( Brand.isRacketlon() ) {
-                PreferenceValues.addOrReplaceNewFeedURL(this, "FIR Tournament " + i  , "feed/fir.tournamentsoftware.php?nr=" + i, "feed/fir.tournamentsoftware.php?pm=players&nr=" + i, null, false, bMakeActive);
-            }
-            // Squash, racketlon and Table Tennis. URL itself knows what sport based on subdomain
-            PreferenceValues.addOrReplaceNewFeedURL(this, "TS " + Brand.getSport() + " " + i, "feed/tournamentsoftware.php?nr=" + i, "feed/tournamentsoftware.php?pm=players&nr=" + i, null, false, bMakeActive);
-        }
-    }
-
     // ------------------------------------------------------
     // Colors
     // ------------------------------------------------------
@@ -3436,7 +3421,6 @@ touch -t 01030000 LAST.sb
                 startShowCase(bFromMenu);
                 return false;
             case R.id.sb_change_log:
-                addRecentFeedURLs();
                 showChangeLog();
                 return false;
             case R.id.sb_credits:

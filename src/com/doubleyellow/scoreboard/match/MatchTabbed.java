@@ -517,7 +517,12 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         //Log.w(TAG, "onCreate");
-        super.onCreate(savedInstanceState); // when rotating this already re-instanciates several fragments
+        super.onCreate(savedInstanceState); // when rotating this already re-instantiates several fragments
+
+        int runCount = PreferenceValues.getRunCount(this, MatchTabbed.class.getSimpleName());
+        if ( runCount < 2 ) {
+            PreferenceValues.addRecentFeedURLsForDemo(this);
+        }
 
         ScoreBoard.initAllowedOrientation(this);
 

@@ -1163,13 +1163,13 @@ public class PreferenceValues extends RWValues
     public static int getFeedReadTimeout(Context context) {
         return getInteger(PreferenceKeys.feedReadTimeout, context, R.integer.feedReadTimeout_default); // in seconds
     }
-    public static String getMatchesFeedURL(Context context) {
-        String sUrl = getFeedPostDetail(context, URLsKeys.FeedMatches);
+    public static String getWebConfigURL(Context context) {
+        String sUrl = "config.php";
         sUrl = URLFeedTask.prefixWithBaseIfRequired(sUrl);
         return sUrl;
     }
-    public static String getWebConfigURL(Context context) {
-        String sUrl = "config.php";
+    public static String getMatchesFeedURL(Context context) {
+        String sUrl = getFeedPostDetail(context, URLsKeys.FeedMatches);
         sUrl = URLFeedTask.prefixWithBaseIfRequired(sUrl);
         return sUrl;
     }
@@ -1270,17 +1270,23 @@ public class PreferenceValues extends RWValues
         }
 
         // create new value to store in preferences
+        _storeFeedURLsConfig(context, urlsList);
+        if ( bMakeActive ) {
+            //setString(PreferenceKeys.feedPostUrl, context, sNewName);
+            setActiveFeedNr(context, iNewActiveFeedIndex);
+        }
+    }
+
+    private static int _storeFeedURLsConfig(Context context, List<Map<URLsKeys, String>> urlsList) {
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < urlsList.size(); i++) {
             Map<URLsKeys, String> existing = urlsList.get(i);
             sb.append(feedMap2String(existing)).append("\n");
         }
-        if ( bMakeActive ) {
-            //setString(PreferenceKeys.feedPostUrl, context, sNewName);
-            setNumber(PreferenceKeys.feedPostUrl, context, iNewActiveFeedIndex);
-        }
         setString(PreferenceKeys.feedPostUrls, context, sb.toString().trim());
+        return sb.toString().length();
     }
+
     public static boolean deleteFeedURL(Context context, String sName2Delete) {
         boolean bDeleted = false;
 
@@ -1300,7 +1306,7 @@ public class PreferenceValues extends RWValues
                 // do not add it to the new string
                 if ( i < iActive ) {
                     iActive--;
-                    setNumber(PreferenceKeys.feedPostUrl, context, iActive);
+                    setActiveFeedNr(context, iActive);
                 }
                 bDeleted = true;
                 continue;
@@ -1366,7 +1372,18 @@ public class PreferenceValues extends RWValues
         return eReturn;
     }
 
+    public static void setActiveFeedNr(Context context, int iNr) {
+        mActiveFeedValues = null;
+        PreferenceValues.setNumber(PreferenceKeys.feedPostUrl, context, iNr);
+    }
+
+    private static Map<URLsKeys, String> mActiveFeedValues = null;
+
     public static Map<URLsKeys, String> getFeedPostDetail(Context context) {
+        if ( mActiveFeedValues != null && mActiveFeedValues.size() > 2 ) {
+            return mActiveFeedValues;
+        }
+
         Map<URLsKeys, String> entry = null;
         if ( context == null ) {
             Log.w(TAG, "Could not get preference for feed. No context");
@@ -1382,12 +1399,35 @@ public class PreferenceValues extends RWValues
         String sUrls = getString(PreferenceKeys.feedPostUrls, "", context);
         List<Map<URLsKeys, String>> urlsList = getUrlsList(sUrls);
 
+        int iStringSize = StringUtil.size(sUrls);
+        if ( iStringSize > 110 * ListUtil.size(urlsList) ) {
+            // clean up a little
+            int iNewStringSize = _storeFeedURLsConfig(context, urlsList);
+        }
+
         int iIndex = getInteger(PreferenceKeys.feedPostUrl, context, 0);
         if ( (iIndex >= 0) && ListUtil.size(urlsList) > iIndex ) {
             entry = urlsList.get(iIndex);
         }
+        mActiveFeedValues = entry;
         return entry;
     }
+
+    public static void addRecentFeedURLsForDemo(Context context) {
+        final boolean bMakeActive = PreferenceValues.getMatchesFeedURLUnchanged();
+        // TODO: trigger this code e.g. weekly somehow
+        for(int i=1; i<=3; i++ ) {
+            if ( Brand.isSquash() ) {
+                PreferenceValues.addOrReplaceNewFeedURL(context, "Demo PSA Matches " + i, "feed/psa.php?nr=" + i, null, null, false, bMakeActive);
+            }
+            if ( Brand.isRacketlon() ) {
+                PreferenceValues.addOrReplaceNewFeedURL(context, "FIR Tournament " + i  , "feed/fir.tournamentsoftware.php?nr=" + i, "feed/fir.tournamentsoftware.php?pm=players&nr=" + i, null, false, bMakeActive);
+            }
+            // Squash, racketlon and Table Tennis. URL itself knows what sport based on subdomain
+            PreferenceValues.addOrReplaceNewFeedURL(context, "TS " + Brand.getSport() + " " + i, "feed/tournamentsoftware.php?nr=" + i, "feed/tournamentsoftware.php?pm=players&nr=" + i, null, false, bMakeActive);
+        }
+    }
+
     private static String getFeedPostDetail(Context context, URLsKeys key/*, PreferenceKeys pKey*/) {
         Map<URLsKeys, String> entry = getFeedPostDetail(context);
 
@@ -1565,33 +1605,37 @@ public class PreferenceValues extends RWValues
         for (int i = 0; i < sa.length; i++) {
             String sLine = sa[i].trim();
             if ( StringUtil.isEmpty(sLine) ) {
-                // assume starting a new entry
+                // assume starting a new entry after an empty line
+                addEntryToList(entry, entries);
                 entry = new HashMap<URLsKeys, String>();
-                entries.add(entry);
                 continue;
             }
             if ( entry == null ) {
+                addEntryToList(entry, entries);
                 entry = new HashMap<URLsKeys, String>();
-                entries.add(entry);
             }
 
             // (Name|FeedMatches|post)=.... like lines
             if ( sLine.toLowerCase().matches(sLineMatch) ) {
                 int    iIndex = sLine.trim().indexOf("=");
-                String sKey   = sLine.substring(0, iIndex).trim().toLowerCase();
+                String sKey   = sLine.substring(0, iIndex).trim();
                 String sValue = sLine.substring(iIndex+1).trim();
-                for ( URLsKeys eKey: URLsKeys.values() ) {
-                    if ( eKey.toString().toLowerCase().equals(sKey) ) {
-                        if ( eKey.equals(URLsKeys.Name) && entry.containsKey(eKey) ) {
-                            // blank lines between entries deleted manually? Assume that a Name=... line represents start of a new entry
-                            entry = new HashMap<URLsKeys, String>();
-                            entries.add(entry);
-                        }
-                        if ( eKey.equals(URLsKeys.FeedMatches) || eKey.equals(URLsKeys.FeedPlayers) ) {
-                            sValue = URLFeedTask.prefixWithBaseIfRequired(sValue);
-                        }
-                        entry.put(eKey, sValue);
+                URLsKeys eKey = null;
+                try {
+                    eKey = URLsKeys.valueOf(sKey);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+                if ( eKey != null ) {
+                    if (eKey.equals(URLsKeys.Name) && entry.containsKey(eKey)) {
+                        // blank lines between entries deleted manually? Assume that a Name=... line represents start of a new entry
+                        addEntryToList(entry, entries);
+                        entry = new HashMap<URLsKeys, String>();
                     }
+                    if (eKey.equals(URLsKeys.FeedMatches) || eKey.equals(URLsKeys.FeedPlayers)) {
+                        sValue = URLFeedTask.prefixWithBaseIfRequired(sValue);
+                    }
+                    entry.put(eKey, sValue);
                 }
             } else {
                 // assume name line is specified without key= prefix and feedmatches url is given as only value
@@ -1600,11 +1644,25 @@ public class PreferenceValues extends RWValues
                 } else {
                     entry = new HashMap<URLsKeys, String>();
                     entry.put(URLsKeys.Name, sLine);
-                    entries.add(entry);
+                    //entries.add(entry);
                 }
             }
         }
+        addEntryToList(entry, entries);
+
         return entries;
+    }
+    private static boolean addEntryToList(Map<URLsKeys, String> entry, List<Map<URLsKeys, String>> entries) {
+        if ( entry == null ) { return false; }
+        if ( entry.containsKey(URLsKeys.Name) ) {
+            entry.remove(URLsKeys.name); // remove optional lowercase name
+        }
+        if ( entry.size() < 1 ) { return false; }
+        if ( entry.containsKey(URLsKeys.FeedPlayers) == false && entry.containsKey(URLsKeys.FeedMatches) == false ) {
+            return false;
+        }
+        entries.add(entry);
+        return true;
     }
 
     public static boolean showTip(Context context, PreferenceKeys preferenceKey, String sMessage, boolean bAsToast) {

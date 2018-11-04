@@ -194,7 +194,7 @@ public class Preloader extends AsyncTask implements ContentReceiver
                         final int iFeedPostUrlIdx = PreferenceValues.getInteger(PreferenceKeys.feedPostUrl, m_context, 0);
                         if ( iFeedPostUrlIdx == 0) {
                             if ( PreferenceValues.getMatchesFeedURLUnchanged() ) {
-                                PreferenceValues.setNumber(PreferenceKeys.feedPostUrl, m_context, 1);
+                                PreferenceValues.setActiveFeedNr(m_context, 1);
                                 doNext(0);
                                 break;
                             }
