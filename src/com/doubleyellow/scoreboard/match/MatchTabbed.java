@@ -154,7 +154,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
                 case Feed:
                     int iUrlIndex = PreferenceValues.getInteger(PreferenceKeys.feedPostUrl, context, 0);
                     String sUrls = PreferenceValues.getString(PreferenceKeys.feedPostUrls, "", context);
-                    List<Map<URLsKeys, String>> urlsList = PreferenceValues.getUrlsList(sUrls);
+                    List<Map<URLsKeys, String>> urlsList = PreferenceValues.getUrlsList(sUrls, context);
                     if ( urlsList.size() > iUrlIndex ) {
                         Map<URLsKeys, String> mCommunicate = urlsList.get(iUrlIndex);
                         //JSONObject oFeed = new JSONObject(mCommunicate);

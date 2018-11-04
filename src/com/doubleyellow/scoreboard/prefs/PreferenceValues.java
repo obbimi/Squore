@@ -1191,7 +1191,7 @@ public class PreferenceValues extends RWValues
         if ( mOverwrite == null ) { return; }
         if ( mOverwrite.containsKey(PreferenceKeys.feedPostUrls.toString()) ) {
             String sFeedUrlsEntryNew = mOverwrite.remove(PreferenceKeys.feedPostUrls.toString());
-            List<Map<URLsKeys, String>> urlsNew = getUrlsList(sFeedUrlsEntryNew);
+            List<Map<URLsKeys, String>> urlsNew = getUrlsList(sFeedUrlsEntryNew, context);
             for( Map<URLsKeys, String> newEntry: urlsNew ) {
                 boolean bAllowReplace = true;
                 boolean bMakeActive   = true;
@@ -1236,7 +1236,7 @@ public class PreferenceValues extends RWValues
     }
     public static void addOrReplaceNewFeedURL(Context context, Map<URLsKeys, String> newEntry, boolean bAllowReplace, boolean bMakeActive) {
         String sCurrentURLs = getString(PreferenceKeys.feedPostUrls, "", context);
-        List<Map<URLsKeys, String>> urlsList = getUrlsList(sCurrentURLs);
+        List<Map<URLsKeys, String>> urlsList = getUrlsList(sCurrentURLs, context);
         if ( urlsList == null ) {
             urlsList = new ArrayList<Map<URLsKeys, String>>();
         }
@@ -1291,7 +1291,7 @@ public class PreferenceValues extends RWValues
         boolean bDeleted = false;
 
         String sCurrentURLs = getString(PreferenceKeys.feedPostUrls, "", context);
-        List<Map<URLsKeys, String>> urlsList = getUrlsList(sCurrentURLs);
+        List<Map<URLsKeys, String>> urlsList = getUrlsList(sCurrentURLs, context);
         if ( urlsList == null ) {
             urlsList = new ArrayList<Map<URLsKeys, String>>();
         }
@@ -1397,12 +1397,13 @@ public class PreferenceValues extends RWValues
 */
 
         String sUrls = getString(PreferenceKeys.feedPostUrls, "", context);
-        List<Map<URLsKeys, String>> urlsList = getUrlsList(sUrls);
+        List<Map<URLsKeys, String>> urlsList = getUrlsList(sUrls, context);
 
         int iStringSize = StringUtil.size(sUrls);
-        if ( iStringSize > 110 * ListUtil.size(urlsList) ) {
+        if ( iStringSize > 200 * ListUtil.size(urlsList) ) {
             // clean up a little
             int iNewStringSize = _storeFeedURLsConfig(context, urlsList);
+            Log.d(TAG, "Refreshing config for feeds. From size " + iStringSize + " to " + iNewStringSize);
         }
 
         int iIndex = getInteger(PreferenceKeys.feedPostUrl, context, 0);
@@ -1440,7 +1441,7 @@ public class PreferenceValues extends RWValues
             int iResDefault = getSportTypeSpecificResId(context, R.string.pref_feedPostUrls_default_Squash);
             if ( iResDefault != 0 ) {
                 String sDefaultUrls = context.getString(iResDefault);
-                List<Map<URLsKeys, String>> urlsListDefault = getUrlsList(sDefaultUrls);
+                List<Map<URLsKeys, String>> urlsListDefault = getUrlsList(sDefaultUrls, context);
                 String sDefaultUrl1 = urlsListDefault.get(0).get(key);
                 String sDefaultUrl2 = urlsListDefault.get(1).get(key);
                 bFeedsAreUnChanged = (sUrl!=null) && ( (sDefaultUrl1!=null) && sDefaultUrl1.equals(sUrl)
@@ -1457,7 +1458,7 @@ public class PreferenceValues extends RWValues
     public static Map<String,String> getFeedPostDetailMap(Context context, URLsKeys key, URLsKeys value, boolean bSortKey) {
 
         String sUrls = getString(PreferenceKeys.feedPostUrls, "", context);
-        List<Map<URLsKeys, String>> urlsList = getUrlsList(sUrls);
+        List<Map<URLsKeys, String>> urlsList = getUrlsList(sUrls, context);
 
         Class<? extends Map> c = LinkedHashMap.class;
         if ( bSortKey ) {
@@ -1594,11 +1595,12 @@ public class PreferenceValues extends RWValues
         textColors.setEnabled(bEnable);
     }
 
-    public static List<Map<URLsKeys, String>> getUrlsList(String s) {
+    public static List<Map<URLsKeys, String>> getUrlsList(String s, Context context) {
         if ( StringUtil.isEmpty(s) || "-".equals(s.trim())) { return null; }
 
         String[] sa = s.split("[\r\n]"); // remove the comma from the splitter regexp because feed values may contain a comma (e.g. 'Malaysia, Kuala Lumpur')
 
+        final Map<String, Integer> mName2SizeOfStoredAlready = new HashMap<>();
         final String sLineMatch = "^(" + ListUtil.join(Arrays.asList(URLsKeys.values()), "|").toLowerCase() + ")\\s*=.*";
         List<Map<URLsKeys, String>> entries = new ArrayList<Map<URLsKeys, String>>();
         Map<URLsKeys, String> entry = null;
@@ -1606,12 +1608,12 @@ public class PreferenceValues extends RWValues
             String sLine = sa[i].trim();
             if ( StringUtil.isEmpty(sLine) ) {
                 // assume starting a new entry after an empty line
-                addEntryToList(entry, entries);
+                addEntryToList(entry, entries, mName2SizeOfStoredAlready);
                 entry = new HashMap<URLsKeys, String>();
                 continue;
             }
             if ( entry == null ) {
-                addEntryToList(entry, entries);
+                addEntryToList(entry, entries, mName2SizeOfStoredAlready);
                 entry = new HashMap<URLsKeys, String>();
             }
 
@@ -1629,7 +1631,7 @@ public class PreferenceValues extends RWValues
                 if ( eKey != null ) {
                     if (eKey.equals(URLsKeys.Name) && entry.containsKey(eKey)) {
                         // blank lines between entries deleted manually? Assume that a Name=... line represents start of a new entry
-                        addEntryToList(entry, entries);
+                        addEntryToList(entry, entries, mName2SizeOfStoredAlready);
                         entry = new HashMap<URLsKeys, String>();
                     }
                     if (eKey.equals(URLsKeys.FeedMatches) || eKey.equals(URLsKeys.FeedPlayers)) {
@@ -1648,18 +1650,38 @@ public class PreferenceValues extends RWValues
                 }
             }
         }
-        addEntryToList(entry, entries);
+        addEntryToList(entry, entries, mName2SizeOfStoredAlready);
+
+        if ( mName2SizeOfStoredAlready.containsKey(__REFUSED__) ) {
+            _storeFeedURLsConfig(context, entries);
+        }
 
         return entries;
     }
-    private static boolean addEntryToList(Map<URLsKeys, String> entry, List<Map<URLsKeys, String>> entries) {
+
+    private static final String __REFUSED__ = "__REFUSED__";
+
+    private static boolean addEntryToList(Map<URLsKeys, String> entry, List<Map<URLsKeys, String>> entries, Map<String, Integer> mName2SizeOfStoredAlready) {
         if ( entry == null ) { return false; }
         if ( entry.containsKey(URLsKeys.Name) ) {
             entry.remove(URLsKeys.name); // remove optional lowercase name
         }
-        if ( entry.size() < 1 ) { return false; }
-        if ( entry.containsKey(URLsKeys.FeedPlayers) == false && entry.containsKey(URLsKeys.FeedMatches) == false ) {
+        if ( entry.size() < 1 ) {
+            MapUtil.increaseCounter(mName2SizeOfStoredAlready, __REFUSED__);
             return false;
+        }
+        if ( entry.containsKey(URLsKeys.FeedPlayers) == false && entry.containsKey(URLsKeys.FeedMatches) == false ) {
+            MapUtil.increaseCounter(mName2SizeOfStoredAlready, __REFUSED__);
+            return false;
+        }
+        String sName = entry.get(URLsKeys.Name);
+        if ( StringUtil.isNotEmpty(sName) ) {
+            if ( mName2SizeOfStoredAlready.containsKey(sName) ) {
+                MapUtil.increaseCounter(mName2SizeOfStoredAlready, __REFUSED__);
+                return false;
+            } else {
+                mName2SizeOfStoredAlready.put(sName, MapUtil.size(entry));
+            }
         }
         entries.add(entry);
         return true;

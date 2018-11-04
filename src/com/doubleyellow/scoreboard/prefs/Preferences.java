@@ -284,7 +284,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     case feedPostUrls:
                         String sURLs = prefs.getString(key, "");
                         //LinkedHashMap<String, String> entries = getUrlsMap(sURLs);
-                        List<Map<URLsKeys, String>> urlsList = PreferenceValues.getUrlsList(sURLs);
+                        List<Map<URLsKeys, String>> urlsList = PreferenceValues.getUrlsList(sURLs, Preferences.this);
 
                         ListPreference matchesFeedUrl = (ListPreference) settingsFragment.findPreference(PreferenceKeys.feedPostUrl);
                         settingsFragment.initFeedURLs(matchesFeedUrl, sURLs);
@@ -823,7 +823,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             listPreference.setEnabled(bURLsAreEntered);
             if (bURLsAreEntered) {
 
-                List<Map<URLsKeys, String>> urlsList = PreferenceValues.getUrlsList(sURLs);
+                List<Map<URLsKeys, String>> urlsList = PreferenceValues.getUrlsList(sURLs, getActivity());
                 List<String> entries = new ArrayList<String>();
                 List<String> keys    = new ArrayList<String>();
                 for(Map<URLsKeys, String> urlEntry: urlsList) {
