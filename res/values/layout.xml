@@ -55,6 +55,7 @@
     <fraction name="pt_name_height_2x">10%</fraction>
     <fraction name="pt_score_height_2x">33%</fraction>
     <fraction name="pt_gamescores_height">11%</fraction>
+    <fraction name="pt_timer_widthratio">45%</fraction>
 
     <fraction name="pt_to_late_height">3%</fraction>
     <fraction name="pt_gamescores_widthratio">300%</fraction>
