@@ -621,6 +621,7 @@ public class IBoard implements TimerViewContainer
                 if ( txtView != null ) {
                     txtView.setTextColor(scoreTxtColor);
                     if ( (scoreBgColor != null) && scoreBgColor.equals(mainBgColor) ) {
+                        // set border equal to text color if score bg color is to close to main bgcolor (monochrome)
                         setBackgroundAndBorder(txtView, scoreBgColor, scoreTxtColor);
                     } else {
                         setBackgroundColor(txtView, scoreBgColor);
@@ -629,21 +630,12 @@ public class IBoard implements TimerViewContainer
             }
 
             if ( m_player2gamesWonId != null ) {
-                Map<Player, Integer> gamesWon = matchModel !=null ? matchModel.getGamesWon() : new HashMap<Player, Integer>();
                 int iNameId = m_player2gamesWonId.get(player);
                 View view = findViewById(iNameId);
-                if ( view instanceof GamesWonButton) {
+                if ( view instanceof GamesWonButton ) {
                     GamesWonButton txtView = (GamesWonButton) view;
                     txtView.setTextColor(scoreTxtColor);
-                    if ( (scoreBgColor != null) && scoreBgColor.equals(mainBgColor) ) {
-                        setBackgroundAndBorder(txtView, scoreBgColor, scoreTxtColor);
-                    } else {
-                        setBackgroundColor(txtView, scoreBgColor);
-                    }
-/*
-                    int iGamesWon = MapUtil.getInt(gamesWon, player, 0);
-                    v.setGamesWon(iGamesWon);
-*/
+                    setBackgroundColor(txtView, scoreBgColor);
                 }
             }
 
@@ -655,6 +647,7 @@ public class IBoard implements TimerViewContainer
                 if ( view instanceof TextView ) {
                     ((TextView) view).setTextColor(pbTxtColor);
                     if ( (pbBgColor != null) && pbBgColor.equals(mainBgColor) ) {
+                        // set border color equal to text color if name bg color is to close to main bgcolor (monochrome)
                         setBackgroundAndBorder(view, pbBgColor, pbTxtColor);
                     } else {
                         setBackgroundColor(view, pbBgColor);

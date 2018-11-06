@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="7 7 146 146"
+    fill="#111111" stroke="#111111">
+    <!--
+    This svg is not used as such, but converted to png files:
+
+    fill and stroke colors: #D3D3D3, #111111
+
+    convert -background none -size  72x72  toss.svg ../drawable-hdpi/toss_black.png
+    convert -background none -size  96x96  toss.svg ../drawable-xhdpi/toss_black.png
+    convert -background none -size 144x144 toss.svg ../drawable-xxhdpi/toss_black.png
+    convert -background none -size 192x192 toss.svg ../drawable-xxxhdpi/toss_black.png
+    -->
+
+    <rect id="sleave" stroke-width="1"
+        x="23"     y="86"
+        width="19" height="66"
+        rx="5"     ry="5"/>
+
+    <!-- hand starting right of top-right corner of sleave -->
+    <path id="hand" stroke-width="1"
+        d="M50,86 q  20, -0     25,-33
+                  q   6,-12     15,  5
+                  q   4, 14      0, 28
+                  h  35
+                  q   8,  0      8,  8
+                  q   0, 30     -5, 45
+                  q  -5,  8    -15, 10
+                  q -20,  7    -47, -7
+                  q  -3, -3    -16, -3
+          "/>
+
+    <!-- top circle, half bottom circle, than the stripes -->
+    <path id="coin" stroke-width="3" fill="none"
+        d="M100,36
+                   q  11, -2     18,-20
+                   q   1, -7     -5,-5
+                   q  -11, 2    -18, 20
+                   q   -1,  7      5, 5
+           M96,36
+                   l  6,  5
+                   q 12, -2     20,-24
+                   q -0, -2     -5, -6
+           m 1,5
+                   l 3,4
+           m -5,0  l 3,4
+           m -5,0  l 3,4
+           m -5,0  l 3,3
+           m -6,0  l 4,4
+           m -7,-1 l 4,4
+           m -8,-2 l 4,4
+
+          "/>
+
+</svg>

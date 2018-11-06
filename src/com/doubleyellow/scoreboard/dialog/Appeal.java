@@ -88,6 +88,20 @@ public class Appeal extends BaseAlertDialog
         }
         ll.setOrientation(iOrientation);
 
+        int iResId_Stroke = R.drawable.appeal_stroke_front_256; // R.drawable.appeal_stroke72;
+        int iResId_YesLet = R.drawable.appeal_yeslet_front_256; // R.drawable.appeal_yeslet72;
+        int iResId_NoLet  = R.drawable.appeal_nolet_flat_256  ; // R.drawable.appeal_nolet72 ;
+        Integer iBG = ColorPrefs.getTarget2colorMapping(context).get(ColorPrefs.ColorTarget.backgroundColor);
+        if ( iBG != null ) {
+            // if we use a dark background ... switch to the light gesture icons
+            int blackOrWhiteFor = ColorUtil.getBlackOrWhiteFor(iBG);
+            if ( blackOrWhiteFor == Color.WHITE ) {
+                iResId_Stroke = R.drawable.appeal_stroke_front_white;
+                iResId_YesLet = R.drawable.appeal_yeslet_front_white;
+                iResId_NoLet  = R.drawable.appeal_nolet_flat_white  ;
+            }
+        }
+
         final TextView vStroke = getActionView(getOAString(R.string.oa_stroke ), BTN_STROKE , iResId_Stroke, iIconSize, dIconPosition);
         final TextView vYesLet = getActionView(getOAString(R.string.oa_yes_let), BTN_YES_LET, iResId_YesLet, iIconSize, dIconPosition);
         final TextView vNoLet  = getActionView(getOAString(R.string.oa_no_let ), BTN_NO_LET , iResId_NoLet , iIconSize, dIconPosition);
@@ -116,10 +130,6 @@ public class Appeal extends BaseAlertDialog
         dialog = adb.show();
     }
 
-    private static final int iResId_Stroke = R.drawable.appeal_stroke_front_256; // R.drawable.appeal_stroke72;
-    private static final int iResId_YesLet = R.drawable.appeal_yeslet_front_256; // R.drawable.appeal_yeslet72;
-    private static final int iResId_NoLet  = R.drawable.appeal_nolet_flat_256  ; // R.drawable.appeal_nolet72 ;
-    
     private String getOAString(int iResId) {
         return PreferenceValues.getOAString(context, iResId );
     }

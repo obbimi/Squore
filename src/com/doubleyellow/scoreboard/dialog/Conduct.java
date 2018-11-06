@@ -19,18 +19,25 @@ package com.doubleyellow.scoreboard.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import com.doubleyellow.android.view.SelectEnumView;
+import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.main.*;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Call;
 import com.doubleyellow.scoreboard.model.ConductType;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.util.ColorUtil;
+
+import java.util.Map;
 
 public class Conduct extends BaseAlertDialog
 {
@@ -58,7 +65,7 @@ public class Conduct extends BaseAlertDialog
            .setIcon   (R.drawable.microphone)
            .setMessage(PreferenceValues.getOAString(context, R.string.oa_decision_colon));
 
-        // show one or three buttons depending on where what stage of the match we are
+        // show one or three buttons depending on where/what stage of the match we are
         if ( true ) {
             adb.setPositiveButton(getOAString(Call.CW.getResourceIdLabel()), listener);
         }
@@ -70,6 +77,14 @@ public class Conduct extends BaseAlertDialog
         LayoutInflater myLayout = LayoutInflater.from(context);
         final View view = myLayout.inflate(R.layout.conduct, null);
         sv = (SelectEnumView<ConductType>) view.findViewById(R.id.selectConductType);
+
+        if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT /*19 */ ) {
+            // radiobutton has dark edge... on dark background ... hard to see
+            // set background color to 'middlest' so that dark circles and white text are visible
+            Map<ColorPrefs.ColorTarget, Integer> target2colorMapping = ColorPrefs.getTarget2colorMapping(context);
+            Integer color = target2colorMapping.get(ColorPrefs.ColorTarget.middlest);
+            sv.setBackgroundColor(color);
+        }
 
         // add a view with all possible Conducts and let user choose one
         //sv = new SelectEnumView(context, ConductType.class);

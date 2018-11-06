@@ -18,6 +18,7 @@
 package com.doubleyellow.scoreboard.timer;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -41,7 +42,7 @@ public class NotificationTimerView implements TimerView
 {
     private static final String TAG = "SB." + NotificationTimerView.class.getSimpleName();
 
-    private static int m_iNotificationId = "Squore".hashCode();
+    private static int m_iNotificationId;
     private        Context ctx = null;
     private Notification.Builder builder;
 
@@ -60,7 +61,12 @@ public class NotificationTimerView implements TimerView
         Intent intent = new Intent(ctx, ScoreBoard.class);
         PendingIntent pIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
 
-        builder = new Notification.Builder(ctx);
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O /*26 */ ) {
+            createNotificationChannel(ctx);
+            builder = new Notification.Builder(ctx, CHANNEL_ID);
+        } else {
+            builder = new Notification.Builder(ctx);
+        }
         builder.setSmallIcon(R.drawable.timer)
                .setContentIntent(pIntent);
 
@@ -113,19 +119,47 @@ public class NotificationTimerView implements TimerView
         }
         // Hide the notification after its selected
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
-      //notification.flags |= Notification.FLAG_LOCAL_ONLY; // from API>=20 only
-        notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE; // e.g. for apk 19... else big notification show on every update
-        notification.flags |= Notification.FLAG_ONGOING_EVENT; // e.g. for apk 19... else big notification show on every update
+      //notification.flags |= Notification.FLAG_LOCAL_ONLY;      // from API>=20 only
+        notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE; // e.g. for API 19... else big notification show on every update
+        notification.flags |= Notification.FLAG_ONGOING_EVENT;   // e.g. for API 19... else big notification show on every update
 
         NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(m_iNotificationId, notification);
+        if ( notificationManager != null ) {
+            notificationManager.notify(m_iNotificationId, notification);
+        }
 
         //Log.i(TAG, "Notification created");
     }
 
     public static void cancelNotification(Context ctx) {
         NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(m_iNotificationId);
-        notificationManager.cancelAll();
+        if ( notificationManager != null ) {
+            notificationManager.cancel(m_iNotificationId);
+            notificationManager.cancelAll();
+        }
+    }
+
+    // ----------------------------------------------------
+    // --------------------- Android 8 Notifications ------
+    // ----------------------------------------------------
+    private final String CHANNEL_ID = ScoreBoard.class.getName();
+    private void createNotificationChannel(Context ctx) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O /*26 */ ) {
+            NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
+            NotificationChannel chDefault = new NotificationChannel(CHANNEL_ID, ctx.getString(R.string.app_name_short_brand_Squash), NotificationManager.IMPORTANCE_LOW);
+            //chDefault.setDescription(getString(R.string.channel_description));
+            //chDefault.enableLights(true);
+            //chDefault.setLightColor(Color.RED);
+            //chDefault.setShowBadge(false);
+
+            //chDefault.enableVibration(true);
+            //chDefault.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            notificationManager.createNotificationChannel(chDefault);
+        }
     }
 }

@@ -112,11 +112,11 @@ public class ColorPrefs
     }
 
     public static void clearColorCache() {
-	if ( mTarget2Color == null ) {
+	    if ( mTarget2Color == null ) {
             mTarget2Color = new HashMap<ColorTarget, Integer>();
-	} else {
+	    } else {
             mTarget2Color.clear();
-	}
+	    }
     }
 
     /** reconstruct both mColorScheme, and mTarget2Color */
