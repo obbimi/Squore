@@ -276,8 +276,8 @@ public abstract class Model
     private Map<Player, String>                 m_player2Country        = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Club           = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Avatar         = new HashMap<Player, String>();
-    private String                              m_matchDate             = DateUtil.getCurrentYYYYMMDD();
-    private String                              m_matchTime             = DateUtil.getCurrentHHMMSS();
+    private String                              m_matchDate             = DateUtil.getCurrentYYYY_MM_DD();   // up to apk 202 DateUtil.getCurrentYYYYMMDD()
+    private String                              m_matchTime             = DateUtil.getCurrentHHMMSS_Colon(); // up to apk 202 DateUtil.getCurrentHHMMSS()
 
     //------------------------
     // Serve side statistics
@@ -1289,7 +1289,7 @@ public abstract class Model
     // Date/Time
     //-------------------------------
 
-    public String getMatchDateYYYYMMDD() {
+    public String getMatchDateYYYYMMDD_DASH() {
         return m_matchDate;
     }
     public long getDuration() {
@@ -1314,18 +1314,19 @@ public abstract class Model
         GameTiming gameTiming = new GameTiming(-1, lStart, lStart + lDuration, onTimingChangedListeners);
         return gameTiming.getDurationMM();
     }
-    public String getMatchStartTimeHHMMSS() {
+    public String getMatchStartTimeHHMMSSXXX() {
         return m_matchTime;
     }
     public String getMatchStartTimeHH_Colon_MM() {
-        return getMatchStartTimeHHMMSS().replaceAll("^([0-2][0-9])([0-5][0-9]).*", "$1:$2");
+        String sTimeHHMMSSXXX = getMatchStartTimeHHMMSSXXX().replaceAll("^([0-2][0-9])(:)?([0-5][0-9]).*", "$1:$2");
+        return removeTimezone(sTimeHHMMSSXXX);
     }
     public long getMatchStart() {
         if ( ListUtil.size(m_lGameTimings) == 0 ) {
             // fall back
-            Date d = DateUtil.parseString2Date(m_matchDate + m_matchTime, DateUtil.YYYYMMDDHHMMSS);
+            Date d = DateUtil.parseString2Date(m_matchDate + "T" + m_matchTime, DateUtil.YYYYMMDD_HHMMSSXXX_DASH_T_COLON);
             if ( d == null ) {
-                d = DateUtil.parseString2Date(m_matchDate, DateUtil.YYYYMMDD);
+                d = DateUtil.parseString2Date(m_matchDate, DateUtil.YYYY_MM_DD);
             }
             if ( d == null ) {
                 Log.w(TAG, "Could not parse to a date " + m_matchDate + m_matchTime);
@@ -1349,9 +1350,9 @@ public abstract class Model
     }
     public Date getMatchDate() {
         if ( StringUtil.isNotEmpty(m_matchTime) ) {
-            return DateUtil.parseString2Date(m_matchDate + "-" + m_matchTime, DateUtil.YYYYMMDD_HHMMSS);
+            return DateUtil.parseString2Date(m_matchDate + "T" + m_matchTime, DateUtil.YYYYMMDD_HHMMSSXXX_DASH_T_COLON);
         } else {
-            return DateUtil.parseString2Date(m_matchDate, DateUtil.YYYYMMDD);
+            return DateUtil.parseString2Date(m_matchDate, DateUtil.YYYY_MM_DD);
         }
     }
 
@@ -1363,9 +1364,9 @@ public abstract class Model
         int  iMinutesPassed    = DateUtil.convertToMinutes(System.currentTimeMillis() - lModelInitialized);
         if ( iMinutesPassed > 2 ) {
             // match was selected/set up long before actual start
-            m_matchDate = DateUtil.getCurrentYYYYMMDD();
+            m_matchDate = DateUtil.getCurrentYYYY_MM_DD();
             long lStart = m_gameTimingCurrent.updateStart(-1 * I_NR_OF_SECS_CORRECTION, changedBy); // act as if the match started 30 seconds ago
-            m_matchTime = DateUtil.formatDate2String(lStart, DateUtil.HHMMSS);
+            m_matchTime = DateUtil.formatDate2String(lStart, DateUtil.HHMMSSXXX_COLON);
         }
     }
 
@@ -1656,7 +1657,8 @@ public abstract class Model
     // JSON
     //-------------------------------
 
-    private static String jsonTimeFormat = DateUtil.YYYYMMDD_HHMMSS;
+    private static String jsonTimeFormat_Old = DateUtil.YYYYMMDD_HHMMSS; /* up to apk 202 */
+    private static String jsonTimeFormat = "yyyy-MM-dd'T'HH:mm:ssXXX";
 
     /** hold timestamp that we compare to, to see if match is unchanged for x minutes */
     private long m_tsLastJsonOperation = 0L;
@@ -1670,10 +1672,19 @@ public abstract class Model
     }
 
     public File getStoreAs(File fParentDir) {
-        String sTime = getMatchStartTimeHHMMSS();
-        String sDateName = getMatchDateYYYYMMDD() + "." + (StringUtil.isNotEmpty(sTime)?(sTime + "."):"") + getName(Player.A) + "-" + getName(Player.B);
+        String matchStartTimeHHMMSSXXX = getMatchStartTimeHHMMSSXXX();
+        String sTimeHHMMSS =null;
+        if (matchStartTimeHHMMSSXXX != null) {
+            sTimeHHMMSS = removeTimezone(matchStartTimeHHMMSSXXX);
+        }
+        String sDateName = m_matchDate.replace("-", "") + "." + (StringUtil.isNotEmpty(sTimeHHMMSS)?(sTimeHHMMSS + "."):"") + getName(Player.A) + "-" + getName(Player.B);
         sDateName = sDateName.replaceAll("[^A-za-z0-9\\-\\.]", "");
         return new File(fParentDir, sDateName + ".sb");
+    }
+
+    private String removeTimezone(String sTimeHHMMSSXXX) {
+        if ( sTimeHHMMSSXXX == null ) { return null; }
+        return sTimeHHMMSSXXX.replaceAll("[+-]\\d\\d:\\d\\d$", "");
     }
 
     public boolean fromJsonString(File f) throws IOException {
@@ -1872,10 +1883,19 @@ public abstract class Model
                 joWhen = joMatch.getJSONObject(JSONKey.when.toString());
             }
             m_matchDate = joWhen.optString(JSONKey.date.toString(), m_matchDate);
+            if ( StringUtil.size(m_matchDate) == 8) {
+                // up to 202
+                m_matchDate = m_matchDate.substring(0,2) + "-" + m_matchDate.substring(2,4) + "-" + m_matchDate.substring(4,6);
+            }
             if ( joWhen.has(JSONKey.time.toString()) ) {
                 m_matchTime = joWhen.getString(JSONKey.time.toString());
                 if ( StringUtil.size(m_matchTime) == 4) {
-                    m_matchTime += "00"; // add seconds 3.19 uses HHMMSS format
+                    m_matchTime += "00"; // add seconds 3.19-4.15 uses HHMMSS format
+                }
+                if ( StringUtil.size(m_matchTime) == 6) {
+                    // up to 202 it was HHMMSS
+                    m_matchTime = m_matchTime.substring(0,2) + ":" + m_matchTime.substring(2,4) + ":" + m_matchTime.substring(4,6);
+                    m_matchTime = m_matchTime + DateUtil.getTimezoneXXX();
                 }
             } else {
                 m_matchTime = "";
@@ -2113,7 +2133,11 @@ public abstract class Model
                             String sEnd   = (String) oEnd;
                             Date dStart   = DateUtil.parseString2Date(sStart, jsonTimeFormat);
                             Date dEnd     = DateUtil.parseString2Date(sEnd  , jsonTimeFormat);
-                            if ( ( dStart == null ) && ( StringUtil.size(sStart)== DateUtil.YYYYMMDD_HHMMSS_SLASH_DASH_COLON.length() ) ) {
+                            if ( ( dStart == null ) && ( StringUtil.size(sStart)== jsonTimeFormat_Old.length() /* 15 */ ) ) {
+                                dStart   = DateUtil.parseString2Date(sStart, jsonTimeFormat_Old);
+                                dEnd     = DateUtil.parseString2Date(sEnd  , jsonTimeFormat_Old);
+                            }
+                            if ( ( dStart == null ) && ( StringUtil.size(sStart)== DateUtil.YYYYMMDD_HHMMSS_SLASH_DASH_COLON.length() /* 19 */ ) ) {
                                 dStart   = DateUtil.parseString2Date(sStart, DateUtil.YYYYMMDD_HHMMSS_SLASH_DASH_COLON);
                                 dEnd     = DateUtil.parseString2Date(sEnd  , DateUtil.YYYYMMDD_HHMMSS_SLASH_DASH_COLON);
                             }

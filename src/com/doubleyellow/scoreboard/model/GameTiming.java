@@ -64,8 +64,8 @@ public class GameTiming
         this(iGameNrZeroBased, s,e, null);
     }
     GameTiming(int iGameNrZeroBased, long s, long e, List<OnTimingChangedListener> onTimingChangedListeners) {
-        this.start   = s; //convertIfHumanReadable(s);
-        this.end     = e; //convertIfHumanReadable(e);
+        this.start   = s;
+        this.end     = e;
         scoreTimings = new ArrayList<Integer>();
         setTimingListeners(onTimingChangedListeners);
         this.iGameNrZeroBased = iGameNrZeroBased;
