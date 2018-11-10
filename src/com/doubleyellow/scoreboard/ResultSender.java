@@ -299,7 +299,7 @@ public class ResultSender {
                     }
                 }
             }
-            mMatchDates    .put(m.getMatchDateYYYYMMDD(), "1");
+            mMatchDates    .put(m.getMatchDateYYYYMMDD_DASH(), "1");
             mMatchEvents   .put(m.getEventName()    .toLowerCase(), m.getEventName());
             mMatchDivisions.put(m.getEventDivision().toLowerCase(), m.getEventDivision());
         }

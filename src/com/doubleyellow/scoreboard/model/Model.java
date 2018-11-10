@@ -1318,7 +1318,11 @@ public abstract class Model
         return m_matchTime;
     }
     public String getMatchStartTimeHH_Colon_MM() {
-        String sTimeHHMMSSXXX = getMatchStartTimeHHMMSSXXX().replaceAll("^([0-2][0-9])(:)?([0-5][0-9]).*", "$1:$2");
+        String matchStartTimeHHMMSSXXX = getMatchStartTimeHHMMSSXXX();
+        if ( StringUtil.isEmpty(matchStartTimeHHMMSSXXX) ) {
+            return "";
+        }
+        String sTimeHHMMSSXXX = matchStartTimeHHMMSSXXX.replaceFirst("^([0-2][0-9])(:)?([0-5][0-9]).*", "$1:$3");
         return removeTimezone(sTimeHHMMSSXXX);
     }
     public long getMatchStart() {
@@ -1883,9 +1887,9 @@ public abstract class Model
                 joWhen = joMatch.getJSONObject(JSONKey.when.toString());
             }
             m_matchDate = joWhen.optString(JSONKey.date.toString(), m_matchDate);
-            if ( StringUtil.size(m_matchDate) == 8) {
+            if ( StringUtil.size(m_matchDate) == 8 && m_matchDate.matches("^\\d{8}$")) {
                 // up to 202
-                m_matchDate = m_matchDate.substring(0,2) + "-" + m_matchDate.substring(2,4) + "-" + m_matchDate.substring(4,6);
+                m_matchDate = m_matchDate.substring(0,4) + "-" + m_matchDate.substring(4,6) + "-" + m_matchDate.substring(6,8);
             }
             if ( joWhen.has(JSONKey.time.toString()) ) {
                 m_matchTime = joWhen.getString(JSONKey.time.toString());
