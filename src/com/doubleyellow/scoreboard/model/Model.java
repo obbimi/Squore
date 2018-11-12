@@ -277,7 +277,7 @@ public abstract class Model
     private Map<Player, String>                 m_player2Club           = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Avatar         = new HashMap<Player, String>();
     private String                              m_matchDate             = DateUtil.getCurrentYYYY_MM_DD();   // up to apk 202 DateUtil.getCurrentYYYYMMDD()
-    private String                              m_matchTime             = DateUtil.getCurrentHHMMSS_Colon(); // up to apk 202 DateUtil.getCurrentHHMMSS()
+    private String                              m_matchTime             = DateUtil.getCurrentHHMMSS_Colon() + DateUtil.getTimezoneXXX(); // up to apk 202 DateUtil.getCurrentHHMMSS()
 
     //------------------------
     // Serve side statistics
@@ -1353,11 +1353,22 @@ public abstract class Model
         return last.getEnd();
     }
     public Date getMatchDate() {
-        if ( StringUtil.isNotEmpty(m_matchTime) ) {
-            return DateUtil.parseString2Date(m_matchDate + "T" + m_matchTime, DateUtil.YYYYMMDD_HHMMSSXXX_DASH_T_COLON);
-        } else {
-            return DateUtil.parseString2Date(m_matchDate, DateUtil.YYYY_MM_DD);
+        Date dReturn = null;
+        try {
+            if ( StringUtil.isNotEmpty(m_matchTime) ) {
+                dReturn = DateUtil.parseString2Date(m_matchDate + "T" + m_matchTime, DateUtil.YYYYMMDD_HHMMSSXXX_DASH_T_COLON);
+            } else {
+                dReturn = DateUtil.parseString2Date(m_matchDate, DateUtil.YYYY_MM_DD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        if ( dReturn == null ) {
+            Log.w("Could not parse date and time : " + m_matchDate + " " + m_matchTime);
+            // prevent returning null
+            return new Date();
+        }
+        return dReturn;
     }
 
     private int I_NR_OF_SECS_CORRECTION = 30; // TODO: dynamically based on stats of match in progress and/or previous matches?
@@ -1893,12 +1904,15 @@ public abstract class Model
             }
             if ( joWhen.has(JSONKey.time.toString()) ) {
                 m_matchTime = joWhen.getString(JSONKey.time.toString());
-                if ( StringUtil.size(m_matchTime) == 4) {
+                if ( StringUtil.size(m_matchTime) == 4 ) {
                     m_matchTime += "00"; // add seconds 3.19-4.15 uses HHMMSS format
                 }
-                if ( StringUtil.size(m_matchTime) == 6) {
-                    // up to 202 it was HHMMSS
+                if ( StringUtil.size(m_matchTime) == 6 ) {
+                    // up to 202 it was HHMMSS, now add colons
                     m_matchTime = m_matchTime.substring(0,2) + ":" + m_matchTime.substring(2,4) + ":" + m_matchTime.substring(4,6);
+                }
+                if ( StringUtil.size(m_matchTime) == 8 ) {
+                    // add time zone if missing
                     m_matchTime = m_matchTime + DateUtil.getTimezoneXXX();
                 }
             } else {
