@@ -1,11 +1,118 @@
-{"result":"0-3","colors":{}
-,"event":{"round":"Semi Final","name":"World Championship 2014"}
-,"players":{"A":"Nick Matthew","B":"Mohamed Elshorbagy"}
-,"score":[["-1R-","R2--","YL--","--YL","L3--","R--1","-4R-","YL--","R5--","L--2","YL--","--R3","--L4","--YL","-6R-","YL--","R--5","--ST","--R6","--L7","-7R-","ST--","R8--","L--8","-9R-","NL--","R--9","--YL","--R10","--L11"],["YL--","--R1","--L2","-1R-","R2--","L--3","--R4","-3L-","R4--","L--5","--R6","--L7","--R8","-5L-","R--9","--R10","--L11"],["--R1","-1L-","ST--","R2--","L--2","-3R-","R4--","L5--","--YL","R6--","ST--","L7--","R--3","--R4","--L5","--R6","--YL","--L7","--R8","--YL","--L9","-8R-","R--10","--YL","--R11"],[]]
-,"conductCalls":[]
-,"format":{"useHandInHandOutScoring":false,"nrOfGamesToWinMatch":3,"tiebreakFormat":"TwoClearPoints","numberOfPointsToWinGame":11}
-,"timing":[{"start":0,"end":25},{"start":0,"end":9},{"start":0,"end":18}]
-,"when":{"date":"20141120"
-  ,"time":""
+{
+  "result": "0-3",
+  "colors": {},
+  "event": {
+    "round": "Semi Final",
+    "name": "World Championship 2014"
+  },
+  "players": {
+    "A": "Nick Matthew",
+    "B": "Mohamed Elshorbagy"
+  },
+  "score": [
+    [
+      "-1R-",
+      "R2--",
+      "YL--",
+      "--YL",
+      "L3--",
+      "R--1",
+      "-4R-",
+      "YL--",
+      "R5--",
+      "L--2",
+      "YL--",
+      "--R3",
+      "--L4",
+      "--YL",
+      "-6R-",
+      "YL--",
+      "R--5",
+      "--ST",
+      "--R6",
+      "--L7",
+      "-7R-",
+      "ST--",
+      "R8--",
+      "L--8",
+      "-9R-",
+      "NL--",
+      "R--9",
+      "--YL",
+      "--R10",
+      "--L11"
+    ],
+    [
+      "YL--",
+      "--R1",
+      "--L2",
+      "-1R-",
+      "R2--",
+      "L--3",
+      "--R4",
+      "-3L-",
+      "R4--",
+      "L--5",
+      "--R6",
+      "--L7",
+      "--R8",
+      "-5L-",
+      "R--9",
+      "--R10",
+      "--L11"
+    ],
+    [
+      "--R1",
+      "-1L-",
+      "ST--",
+      "R2--",
+      "L--2",
+      "-3R-",
+      "R4--",
+      "L5--",
+      "--YL",
+      "R6--",
+      "ST--",
+      "L7--",
+      "R--3",
+      "--R4",
+      "--L5",
+      "--R6",
+      "--YL",
+      "--L7",
+      "--R8",
+      "--YL",
+      "--L9",
+      "-8R-",
+      "R--10",
+      "--YL",
+      "--R11"
+    ],
+    []
+  ],
+  "conductCalls": [],
+  "format": {
+    "useHandInHandOutScoring": false,
+    "nrOfGamesToWinMatch": 3,
+    "tiebreakFormat": "TwoClearPoints",
+    "numberOfPointsToWinGame": 11
+  },
+  "timing": [
+    {
+      "start": 0,
+      "end": 25
+    },
+    {
+      "start": 0,
+      "end": 9
+    },
+    {
+      "start": 0,
+      "end": 18
+    }
+  ],
+  "when": {
+    "date": "20141120",
+    "time": "1910"
   }
 }

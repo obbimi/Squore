@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.tabletennis"
-          android:versionCode="203"
+          android:versionCode="204"
           android:versionName="4.15">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
