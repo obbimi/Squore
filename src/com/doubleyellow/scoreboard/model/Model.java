@@ -1328,7 +1328,7 @@ public abstract class Model
     public long getMatchStart() {
         if ( ListUtil.size(m_lGameTimings) == 0 ) {
             // fall back
-            Date d = DateUtil.parseString2Date(m_matchDate + "T" + m_matchTime, DateUtil.YYYYMMDD_HHMMSSXXX_DASH_T_COLON);
+            Date d = DateUtil.parseString2Date(m_matchDate + "T" + m_matchTime, jsonTimeFormat);
             if ( d == null ) {
                 d = DateUtil.parseString2Date(m_matchDate, DateUtil.YYYY_MM_DD);
             }
@@ -1356,7 +1356,7 @@ public abstract class Model
         Date dReturn = null;
         try {
             if ( StringUtil.isNotEmpty(m_matchTime) ) {
-                dReturn = DateUtil.parseString2Date(m_matchDate + "T" + m_matchTime, DateUtil.YYYYMMDD_HHMMSSXXX_DASH_T_COLON);
+                dReturn = DateUtil.parseString2Date(m_matchDate + "T" + m_matchTime, jsonTimeFormat);
             } else {
                 dReturn = DateUtil.parseString2Date(m_matchDate, DateUtil.YYYY_MM_DD);
             }
@@ -1364,7 +1364,7 @@ public abstract class Model
             e.printStackTrace();
         }
         if ( dReturn == null ) {
-            Log.w("Could not parse date and time : " + m_matchDate + " " + m_matchTime);
+            Log.w(TAG, "Could not parse date and time : " + m_matchDate + " " + m_matchTime);
             // prevent returning null
             return new Date();
         }
@@ -1673,7 +1673,7 @@ public abstract class Model
     //-------------------------------
 
     private static String jsonTimeFormat_Old = DateUtil.YYYYMMDD_HHMMSS; /* up to apk 202 */
-    private static String jsonTimeFormat = "yyyy-MM-dd'T'HH:mm:ssXXX";
+    private static String jsonTimeFormat = DateUtil.YYYYMMDD_HHMMSSXXX_DASH_T_COLON;
 
     /** hold timestamp that we compare to, to see if match is unchanged for x minutes */
     private long m_tsLastJsonOperation = 0L;
@@ -1892,6 +1892,7 @@ public abstract class Model
                 setPlayerName(p, sPlayer); // just for trimming (and setting it to dirty if if trimming was required)
             }
             // read date
+            int iDeviatingDateFormat = 0;
             JSONObject joWhen = joMatch; // old
             if ( joMatch.has(JSONKey.when.toString() ) ) {
                 // new in 3.17
@@ -1906,14 +1907,21 @@ public abstract class Model
                 m_matchTime = joWhen.getString(JSONKey.time.toString());
                 if ( StringUtil.size(m_matchTime) == 4 ) {
                     m_matchTime += "00"; // add seconds 3.19-4.15 uses HHMMSS format
+                    iDeviatingDateFormat+=1;
                 }
-                if ( StringUtil.size(m_matchTime) == 6 ) {
+                if ( StringUtil.size(m_matchTime) == 5 && m_matchTime.matches("^\\d{2}:\\d{2}$") ) {
+                    m_matchTime += ":00";
+                    iDeviatingDateFormat+=2;
+                }
+                if ( StringUtil.size(m_matchTime) == 6  && m_matchTime.matches("^\\d{6}$") ) {
                     // up to 202 it was HHMMSS, now add colons
                     m_matchTime = m_matchTime.substring(0,2) + ":" + m_matchTime.substring(2,4) + ":" + m_matchTime.substring(4,6);
+                    iDeviatingDateFormat+=4;
                 }
                 if ( StringUtil.size(m_matchTime) == 8 ) {
                     // add time zone if missing
                     m_matchTime = m_matchTime + DateUtil.getTimezoneXXX();
+                    iDeviatingDateFormat+=8;
                 }
             } else {
                 m_matchTime = "";
@@ -2121,7 +2129,6 @@ public abstract class Model
                 String conductCall = conductCalls.getString(g);
                 lConductCalls.add(conductCall);
             }
-
             m_lGameTimings = new ArrayList<GameTiming>();
             m_gameTimingCurrent = null;
             try {
@@ -2149,18 +2156,25 @@ public abstract class Model
                             // since 3.19
                             String sStart = (String) oStart;
                             String sEnd   = (String) oEnd;
-                            Date dStart   = DateUtil.parseString2Date(sStart, jsonTimeFormat);
-                            Date dEnd     = DateUtil.parseString2Date(sEnd  , jsonTimeFormat);
+                            Date dStart   = DateUtil.parseString2Date(sStart, jsonTimeFormat, true);
+                            Date dEnd     = DateUtil.parseString2Date(sEnd  , jsonTimeFormat, true);
+                            if ( ( dStart == null ) && ( StringUtil.size(sStart)== DateUtil.YYYYMMDD_HHMMSS_DASH_T_COLON.length() - 2 /* 21 - 2 single quotes =  19 */ ) ) {
+                                iDeviatingDateFormat+=1000;
+                                dStart   = DateUtil.parseString2Date(sStart, DateUtil.YYYYMMDD_HHMMSS_DASH_T_COLON, true);
+                                dEnd     = DateUtil.parseString2Date(sEnd  , DateUtil.YYYYMMDD_HHMMSS_DASH_T_COLON, true);
+                            }
                             if ( ( dStart == null ) && ( StringUtil.size(sStart)== jsonTimeFormat_Old.length() /* 15 */ ) ) {
-                                dStart   = DateUtil.parseString2Date(sStart, jsonTimeFormat_Old);
-                                dEnd     = DateUtil.parseString2Date(sEnd  , jsonTimeFormat_Old);
+                                dStart   = DateUtil.parseString2Date(sStart, jsonTimeFormat_Old, true);
+                                dEnd     = DateUtil.parseString2Date(sEnd  , jsonTimeFormat_Old, true);
                             }
                             if ( ( dStart == null ) && ( StringUtil.size(sStart)== DateUtil.YYYYMMDD_HHMMSS_SLASH_DASH_COLON.length() /* 19 */ ) ) {
-                                dStart   = DateUtil.parseString2Date(sStart, DateUtil.YYYYMMDD_HHMMSS_SLASH_DASH_COLON);
-                                dEnd     = DateUtil.parseString2Date(sEnd  , DateUtil.YYYYMMDD_HHMMSS_SLASH_DASH_COLON);
+                                dStart   = DateUtil.parseString2Date(sStart, DateUtil.YYYYMMDD_HHMMSS_SLASH_DASH_COLON, true);
+                                dEnd     = DateUtil.parseString2Date(sEnd  , DateUtil.YYYYMMDD_HHMMSS_SLASH_DASH_COLON, true);
                             }
                             if ( dStart != null && dEnd != null ) {
                                 m_gameTimingCurrent = new GameTiming(g, dStart.getTime(), dEnd.getTime(), onTimingChangedListeners);
+                            } else {
+                                Log.w(TAG, "Could not parse dates : " + sStart + " to " + sEnd);
                             }
                         }
                         if ( m_gameTimingCurrent != null ) {
@@ -2245,6 +2259,10 @@ public abstract class Model
             }
 
             setClean();
+            if ( iDeviatingDateFormat > 0 ) {
+                // deviating date format. Ensure it is stored with correct date format
+                setDirty();
+            }
 
             return joMatch;
         } catch (Exception e) {

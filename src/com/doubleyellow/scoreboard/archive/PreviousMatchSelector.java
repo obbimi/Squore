@@ -439,7 +439,11 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         return getPreviousMatchFiles(context, null);
     }
     public static List<File> getPreviousMatchFiles(Context context, Date dNewerThan) {
-        List<File> files = ContentUtil.getFilesRecursive(getArchiveDir(context), ".*\\.(sb|json)", null, dNewerThan);
+        String sYear     = ".*";
+        if ( dNewerThan != null ) {
+            sYear = DateUtil.formatDate2String(dNewerThan, "YYYY");
+        }
+        List<File> files = ContentUtil.getFilesRecursive(getArchiveDir(context), "^(" + sYear + ").*\\.(sb|json)", null, dNewerThan);
         List<File> lAllMatchFiles = new MultiSelectList<File>(files);
         lAllMatchFiles.remove(ScoreBoard.getLastMatchFile(context)); // TODO: for multisports version remove possible multiple LAST.xxx.sb files
         lAllMatchFiles.remove(ColorPrefs.getFile(context));

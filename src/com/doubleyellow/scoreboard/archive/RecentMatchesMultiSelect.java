@@ -99,7 +99,7 @@ public class RecentMatchesMultiSelect extends Fragment {
         if ( MapUtil.isEmpty(mMatches) ) {
             // no matches
             TextView tvNoMatches = new TextView(getActivity());
-            tvNoMatches.setText(PreviousMatchSelector.sNoMatchesStored);
+            tvNoMatches.setText(R.string.sb_no_recent_matches_stored);
             ll.addView(tvNoMatches);
         }
 
@@ -129,7 +129,7 @@ public class RecentMatchesMultiSelect extends Fragment {
     private Map<String, File> getMatches() {
         Date dAfter = DateUtil.getCurrent_addDays(-14, false);
         List<File> lMatches = PreviousMatchSelector.getPreviousMatchFiles(getActivity(), dAfter);
-        if ( ListUtil.size(lMatches) < 2 ) {
+        if ( false && ListUtil.size(lMatches) < 2 ) {
             lMatches = PreviousMatchSelector.getAllPreviousMatchFiles(getActivity());
         }
         final Map<String, File> mMatches = new TreeMap<>();

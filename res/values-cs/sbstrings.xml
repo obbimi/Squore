@@ -103,6 +103,7 @@
     <string name="sb_recent_matches">Poslední zápasy</string>
     <string name="sb_preferences">Nastavení aplikace</string>
     <string name="sb_no_matches_stored">Nemáte uložené žádné zápasy</string>
+    <string name="sb_no_recent_matches_stored">Nemáte uložené žádné zápasy</string> <!-- TODO -->
     <string name="match_has_finished">Zápas dohrán</string>
     <string name="press_again_to_undo_last_score">Pro odstranění posledního bodu stiskněte znovu vývoj zápasu</string>
     <string name="unable_to_interpret_entered_text_as_2_names">Zadaný text nelze rozpoznat jako dvě jména</string>

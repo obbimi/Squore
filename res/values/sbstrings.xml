@@ -107,6 +107,7 @@
     <string name="sb_recent_matches">Recent matches</string>
     <string name="sb_preferences">Squore Settings</string>
     <string name="sb_no_matches_stored">No stored matches found</string>
+    <string name="sb_no_recent_matches_stored">No recent stored matches found</string>
     <string name="match_has_finished">Match has finished</string>
     <string name="press_again_to_undo_last_score">Press score history again to undo last score</string>
     <string name="unable_to_interpret_entered_text_as_2_names">Sorry, I was unable the interpret the entered text as 2 separate names</string>

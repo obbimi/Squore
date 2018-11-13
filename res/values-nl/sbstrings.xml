@@ -103,6 +103,7 @@
     <string name="sb_recent_matches">Recente wedstrijden</string>
     <string name="sb_preferences">Squore Instellingen</string>
     <string name="sb_no_matches_stored">Geen opgeslagen matches aanwezig</string>
+    <string name="sb_no_recent_matches_stored">Geen recent opgeslagen matches aanwezig</string>
     <string name="match_has_finished">Wedstrijd is afgelopen</string>
     <string name="press_again_to_undo_last_score">Druk nogmaals op score verloop om laatste score ongedaan te maken</string>
     <string name="unable_to_interpret_entered_text_as_2_names">Sorry, de ingegeven text kon niet eenduidig als 2 namen worden geinterpreteerd</string>

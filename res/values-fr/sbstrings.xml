@@ -103,6 +103,7 @@
     <string name="sb_recent_matches">Matchs derniers</string> <!-- TODO -->
     <string name="sb_preferences">Paramètres</string>
     <string name="sb_no_matches_stored">Aucun match stocké trouvé</string>
+    <string name="sb_no_recent_matches_stored">Aucun match recente stocké trouvé</string> <!-- TODO -->
     <string name="match_has_finished">Le match est fini</string>
     <string name="press_again_to_undo_last_score">Appuyez sur l\'historique du score pour annuler le dernièr score</string>
     <string name="unable_to_interpret_entered_text_as_2_names">Désolé, je n\'ai pas pu interpréter le texte saisi comme étant 2 noms distincts</string>
