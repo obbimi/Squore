@@ -292,7 +292,11 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 }
             }
             if ( lIds.containsAll(Arrays.asList(R.id.btn_score1, R.id.btn_score2)) ) {
-                return handleMenuItem(R.id.sb_match_format);
+                if ( matchModel.hasStarted() ) {
+                    return handleMenuItem(R.id.sb_match_format);
+                } else {
+                    return handleMenuItem(R.id.change_match_format);
+                }
             }
             if ( lIds.containsAll(Arrays.asList(R.id.btn_side1, R.id.btn_side2)) ) {
                 // Nothing for end user yet
@@ -1620,7 +1624,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     private void handleStartupAction() {
 
         startupActionCounter++;
-        if ( startupActionCounter > 1 ) return;
+        if ( startupActionCounter > 1 ) { return; }
         StartupAction startupAction = PreferenceValues.getStartupAction(this);
         switch (startupAction) {
           //case SelectMatch    :

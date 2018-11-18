@@ -44,8 +44,8 @@ public class SquashModel extends Model {
     // serve side/sequence
     //-------------------------------
 
-    public void setDoublesServeSequence(DoublesServeSequence dsq) {
-        super._setDoublesServeSequence(dsq);
+    public boolean setDoublesServeSequence(DoublesServeSequence dsq) {
+        return super._setDoublesServeSequence(dsq);
     }
 
     @Override public DoublesServeSequence getDoubleServeSequence(int iGameZB) {

@@ -505,15 +505,18 @@ public abstract class Model
         }
     }
 
-    final void _setDoublesServeSequence(DoublesServeSequence dsq) {
+    final boolean _setDoublesServeSequence(DoublesServeSequence dsq) {
+        boolean bChanged = dsq.equals(m_doubleServeSequence) == false;
+        DoublesServe new_i_o = m_in_out;
         if ( dsq.equals(DoublesServeSequence.NA) ) {
             m_doubleServeSequence = DoublesServeSequence.NA;
-            m_in_out              = DoublesServe.NA;
+            new_i_o              = DoublesServe.NA;
         } else {
             m_doubleServeSequence = dsq;
-            //m_in_out              = dsq.toString().matches("^[AB][XY][ABXY]+")? DoublesServe.Out:DoublesServe.In;
-            m_in_out              = dsq.playerToServe(DoublesServe.NA, true);
+            new_i_o              = dsq.playerToServe(DoublesServe.NA, true, m_iHandoutCountDoubles);
         }
+        setServerAndSide(m_pServer, m_nextServeSide, new_i_o);
+        return bChanged;
     }
     public DoublesServeSequence getDoubleServeSequence() {
         int iGameZB = getGameNrInProgress() - 1;
@@ -865,24 +868,12 @@ public abstract class Model
                     for (OnScoreChangeListener l : onScoreChangeListeners) {
                         l.OnScoreChange(removeScoringPlayer, iReducedScore, iDelta, null);
                     }
-/*
-                    if ( slRemoved.getServeSide() != null ) {
-                        m_nextServeSide = slRemoved.getServeSide();
-                    }
-*/
                 } else if ( slRemoved.isBrokenEquipment() ) {
                     for (OnBrokenEquipmentListener l : onBrokenEquipmentListeners) {
                         l.OnBrokenEquipmentChanged(slRemoved.getBrokenEquipment(), null);
                     }
                 }
 
-                // determine new server
-                //determineServerAndSideForUndoFromPreviousScoreLine(null, slRemoved);
-/*
-                if ( removedServingPlayer != null ) {
-                    m_pServer = removedServingPlayer;
-                }
-*/
                 if ( m_lScoreHistory.size() != 0 ) {
                     ScoreLine lastValid = getLastScoreLine();
                     if ( lastValid.isCall() ) {
@@ -895,54 +886,20 @@ public abstract class Model
                             lastValid = m_lScoreHistory.get(Math.max(0, m_lScoreHistory.size() - 2));
                         }
                         determineServerAndSideForUndoFromPreviousScoreLine(lastValid, slRemoved);
-/*
-                        if ( isDoubles() ) {
-                            if ( getSport().equals(SportType.Squash) ) {
-                                if ( slRemoved.isHandout(getSport()) ) {
-                                    m_in_out = m_in_out.getOther();
-                                    iHandoutCount--;
-                                }
-                            } else {
-                                m_in_out = determineDoublesInOut_Racketlon_Tabletennis();
-                            }
-                        } else {
-                            determineServerAndSideForUndoFromPreviousScoreLine(lastValid, slRemoved);
+                        if ( isDoubles() && getSport().equals(SportType.Squash)) {
+                            m_iHandoutCountDoubles--;
                         }
-*/
                     }
                 } else {
                     // last scoreline was removed
                     determineServerAndSideForUndoFromPreviousScoreLine(null, slRemoved);
-                    iHandoutCount = -1;
+                    m_iHandoutCountDoubles = -1;
                 }
-
-                // inform listeners of model changes
-/*
-                for(OnServeSideChangeListener l:onServeSideChangeListener) {
-                    l.OnServeSideChange(m_pServer, m_in_out, m_nextServeSide, false );
-                }
-*/
 
                 Player[] gameBallFor = isPossibleGameBallFor();
                 //setGameVictoryFor(gameBallFor);
-/*
-                if ( gameBallFor != null || wasGameBallFor != null ) {
-                    boolean bHasGameBall = gameBallFor!=null;
-                    if ( bHasGameBall == false ) {
-                        gameBallFor = wasGameBallFor;
-                    }
-                    for(OnSpecialScoreChangeListener l: onSpecialScoreChangeListeners) {
-                        l.OnGameBallChange(gameBallFor, bHasGameBall);
-                    }
-                }
-*/
             }
         }
-/*
-        for(OnComplexChangeListener l:onComplexChangeListener) {
-            l.OnChanged();
-        }
-*/
     }
 
     public Player getLastScorer() {
@@ -2853,16 +2810,16 @@ public abstract class Model
         return isPossibleMatchVictoryFor()!=null;
     }
 
-    private int iHandoutCount = -1;
+    private int m_iHandoutCountDoubles = -1;
     private void handout(Player scorer, boolean bScoreChangeTrue_bNewGameFalse) {
         if ( this.isDoubles() ) {
             // doubles
             if ( bScoreChangeTrue_bNewGameFalse ) {
-                iHandoutCount++;
+                m_iHandoutCountDoubles++;
 
-                boolean      bFirstHandout = iHandoutCount == 0;
+                boolean      bFirstHandout = m_iHandoutCountDoubles == 0;
                 DoublesServe in_out_prev   = m_in_out;
-                DoublesServe doubleSS      = m_doubleServeSequence.playerToServe(m_in_out, bFirstHandout);
+                DoublesServe doubleSS      = m_doubleServeSequence.playerToServe(m_in_out, bFirstHandout, m_iHandoutCountDoubles);
 
                 if ( m_doubleServeSequence.switchTeam(in_out_prev, bFirstHandout) ) {
                     setServerAndSide(scorer, m_player2LastServeSide.get(scorer), doubleSS);
@@ -2881,8 +2838,8 @@ public abstract class Model
                     setServerAndSide(null, serveSide, doubleSS);
                 }
             } else {
-                iHandoutCount = -1;
-                DoublesServe ds = m_doubleServeSequence.playerToServe(DoublesServe.NA, true);
+                m_iHandoutCountDoubles = -1;
+                DoublesServe ds = m_doubleServeSequence.playerToServe(DoublesServe.NA, true, m_iHandoutCountDoubles);
                 setServerAndSide(scorer, null, ds); // TODO: option to handle 'looser of previous game starts serving'
             }
         } else {

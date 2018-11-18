@@ -21,16 +21,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.EnumSpinner;
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.match.MatchView;
+import com.doubleyellow.scoreboard.model.DoublesServeSequence;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.model.SquashModel;
 import com.doubleyellow.scoreboard.model.TieBreakFormat;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
@@ -59,11 +63,12 @@ public class EditFormat extends BaseAlertDialog {
         return true;
     }
 
-    private Spinner                     spNumberOfGamesToWin;
-    private Spinner                     spGameEndScore;
-    private Spinner                     spPauseDuration;
-    private EnumSpinner<TieBreakFormat> spTieBreakFormat;
-    private CheckBox                    cbUseEnglishScoring;
+    private Spinner                           spNumberOfGamesToWin;
+    private Spinner                           spGameEndScore;
+    private Spinner                           spPauseDuration;
+    private EnumSpinner<TieBreakFormat>       spTieBreakFormat;
+    private EnumSpinner<DoublesServeSequence> spDoublesServeSequence;
+    private CheckBox                          cbUseEnglishScoring;
 
     @Override public void show() {
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
@@ -105,8 +110,20 @@ public class EditFormat extends BaseAlertDialog {
         TieBreakFormat tbfPref = PreferenceValues.getTiebreakFormat(context);
         spTieBreakFormat = (EnumSpinner<TieBreakFormat>) vg.findViewById(R.id.spTieBreakFormat);
         spTieBreakFormat.setSelected(tbfPref);
-        spTieBreakFormat.setEnabled(true); // TODO: set to false if there has already been a tiebreak format
+        spTieBreakFormat.setEnabled(true); // TODO: set to false if there has already been a tiebreak
 
+        if ( matchModel.isDoubles() && Brand.isSquash() ) {
+            spDoublesServeSequence = (EnumSpinner<DoublesServeSequence>) vg.findViewById(R.id.spDoublesServeSequence);
+            DoublesServeSequence dssPref = PreferenceValues.getDoublesServeSequence(context);
+            spDoublesServeSequence.setSelected(dssPref);
+            spDoublesServeSequence.setEnabled(true);
+            spDoublesServeSequence.setVisibility(View.VISIBLE);
+        } else {
+            View llDoublesServeSequence= vg.findViewById(R.id.llDoublesServeSequence);
+            if ( llDoublesServeSequence != null ) {
+                llDoublesServeSequence.setVisibility(View.GONE);
+            }
+        }
         spPauseDuration = (Spinner) vg.findViewById(R.id.spPauseDuration);
         MatchView.initPauseDuration(context, spPauseDuration, null);
 
@@ -144,6 +161,13 @@ public class EditFormat extends BaseAlertDialog {
 
                 TieBreakFormat tbf = TieBreakFormat.values()[spTieBreakFormat.getSelectedItemPosition()];
                 bChanged = matchModel.setTiebreakFormat(tbf) || bChanged;
+
+                if ( matchModel.isDoubles() && Brand.isSquash() ) {
+                    DoublesServeSequence dss = DoublesServeSequence.values()[spDoublesServeSequence.getSelectedItemPosition()];
+                    SquashModel squashMatchModel = (SquashModel) matchModel;
+                    bChanged = squashMatchModel.setDoublesServeSequence(dss) || bChanged;
+                    PreferenceValues.setEnum(PreferenceKeys.doublesServeSequence, context, dss); // make it the default for next matches
+                }
 
                 String sDuration = (String) spPauseDuration.getSelectedItem();
                 if ( StringUtil.isNotEmpty(sDuration) ) {

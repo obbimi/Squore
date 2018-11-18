@@ -189,7 +189,4 @@
         <item>Specifieer aan begin van wedstrijd</item>
         <item>Specifieer aan begin elke game</item>
     </string-array>
-    <string-array name="doublesServeSequence">
-        <item>BXYA (officieel)</item>
-    </string-array>
 </resources>

@@ -441,7 +441,11 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
     public static List<File> getPreviousMatchFiles(Context context, Date dNewerThan) {
         String sYear     = ".*";
         if ( dNewerThan != null ) {
-            sYear = DateUtil.formatDate2String(dNewerThan, "YYYY");
+            //sYear = DateUtil.formatDate2String(dNewerThan, "YYYY"); // Fails in android 6 (apk <= 23)??
+            Calendar instance = Calendar.getInstance();
+            sYear = "" + instance.get(Calendar.YEAR);
+            instance.setTime(dNewerThan);
+            sYear += "|" + instance.get(Calendar.YEAR);
         }
         List<File> files = ContentUtil.getFilesRecursive(getArchiveDir(context), "^(" + sYear + ").*\\.(sb|json)", null, dNewerThan);
         List<File> lAllMatchFiles = new MultiSelectList<File>(files);

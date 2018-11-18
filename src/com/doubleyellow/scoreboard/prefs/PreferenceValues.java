@@ -1557,7 +1557,22 @@ public class PreferenceValues extends RWValues
         if ( viewedChangelogVersion < versionCodeForChangeLogCheck ) {
             setNumber(PreferenceKeys.viewedChangelogVersion, context, versionCodeForChangeLogCheck);
             if ( viewedChangelogVersion == 0 ) {
+                // very first install/run
+
+                int appVersionCode = RWValues.getAppVersionCode(context);
+                final int    NO_SHOWCASE_FOR_VERSION        = 205;
+                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2018-11-22";
+                if ( appVersionCode > NO_SHOWCASE_FOR_VERSION ) {
+                    // need to adjust the datecheck below
+                    Log.w(TAG, "[getStartupAction] Adjust version code check!!");
+                    //throw new RuntimeException("[getStartupAction] Adjust version code check!!");
+                }
+                if ( appVersionCode == NO_SHOWCASE_FOR_VERSION && DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0 ) {
+                    // to allow google play store to run the app and monkey test it without the showcase/quickintro coming into the way
+                    return StartupAction.None;
+                }
                 return StartupAction.QuickIntro;
+
             }
             //setNumber(PreferenceKeys.viewedChangelogVersion, context, packageInfo.versionCode);
             return StartupAction.ChangeLog;

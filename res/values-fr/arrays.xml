@@ -175,7 +175,4 @@
         <item>Spécifier au début du match</item>
         <item>Spécifier au début de chaque jeu</item>
     </string-array>
-    <string-array name="doublesServeSequence">
-        <item>BXYA (officielle)</item>
-    </string-array>
 </resources>

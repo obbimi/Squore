@@ -234,16 +234,11 @@
         <item>Specify at start of match</item>
         <item>Specify at start of each game</item>
     </string-array>
-<!--
     <string-array name="doublesServeSequence">
-        <item>BXYA (official)</item>
-    </string-array>
--->
-    <string-array name="doublesServeSequence">
+        <item>A1/B1/A2/B2</item>               <!-- DSS_1_1_2_2__8 -->
         <item>A2/B1/B2 then A1/A2/B1/B2</item> <!-- DSS_2_12_12__6 -->
         <item>A1/B1/B2 then A1/A2/B1/B2</item> <!-- DSS_1_12_12__6 -->
         <item>A1/A2/B1/B2</item>               <!-- DSS___12_12__6 -->
         <item>A1/B1/A1/B1</item>               <!-- DSS___1_1____4 -->
-        <item>A1/B1/A2/B2</item>               <!-- DSS_1_1_2_2__8 -->
     </string-array>
 </resources>
