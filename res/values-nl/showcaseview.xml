@@ -32,7 +32,7 @@
         \n
         \nEen andere mogelijk om de score te herstellen is door te swipen over de score knop welke je per ongeluk had verhoogd.
     </string>
-    <string name="scv_player_buttons_appeall_Squash">Het bijhouden van __Stroke/Yes Let/No let__ beslissingen kan door kort op de naam van een speler te drukken.
+    <string name="scv_player_buttons_appeal_Squash">Het bijhouden van __Stroke/Yes Let/No let__ beslissingen kan door kort op de naam van een speler te drukken.
         \nIn de dialoog die verschijnt kan je je beslissing ingeven.
     </string>
 <!--
@@ -57,8 +57,9 @@
     <string name="scv_shirt_color_Squash">Als je 2 spelers moet reffen die je (nog) niet bij naam kent,
         kan je per speler __een kleur ingeven__.
         \n\nHoud hiervoor de __opslag kant knop__ even ingedrukt.</string>
-    <string name="scv_game_scores_Squash">De eindstand van __vorige games__ van een wedstrijd zijn hier te zien.
-        \n\nDruk er op om alle details van reeds gespeelde games te zien.</string>
+    <string name="scv_game_scores_Squash">Het aantal gewonnen games is hier te zien.
+        \n
+        \nDruk er op om de eindstand van __vorige games__ te zien.</string>
     <string name="scv_timer_button_Squash">Deze knop laat het je toe een __timer__ te starten.
         \n\nHij verschijnt alleen als een timer toepasselijk is:
         \n

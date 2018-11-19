@@ -33,7 +33,7 @@
         \n
         \nAnother way to undo the last score is by swiping your finger over the score button you accidentally increased.
     </string>
-    <string name="scv_player_buttons_appeall_Squash">Keep track of __Stroke/Yes Let/No let__ decisions by tapping the name of the player requesting a let.
+    <string name="scv_player_buttons_appeal_Squash">Keep track of __Stroke/Yes Let/No let__ decisions by tapping the name of the player requesting a let.
         \nEnter your decision in the dialog that appears.
     </string>
 <!--
@@ -57,8 +57,9 @@
     <string name="scv_shirt_color_Squash">If you are about to ref two players you never met before, and have a hard time remembering their names,
         you can __enter a color__ for both of them.
         \n\nLong click the serve side button to select a color.</string>
-    <string name="scv_game_scores_Squash">The scores of __previous games__ are visible here.
-        \n\nTap it to see all details of previous games.</string>
+    <string name="scv_game_scores_Squash">The number of games already won by each player are visible here.
+        \n
+        \nTap it to see the exact scores of previous games.</string>
     <string name="scv_timer_button_Squash">This button will allow you to start a __timer__.
         \n\nIt will only appear when appropriate
         \n

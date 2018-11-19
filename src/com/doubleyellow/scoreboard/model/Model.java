@@ -1443,7 +1443,9 @@ public abstract class Model
     }
 
     public String getName_no_nbsp(Player player, boolean bKeepCountry) {
-        return getName(player, false, bKeepCountry).replace(" ", "\u00A0");
+        String name = getName(player, false, bKeepCountry);
+        if ( name == null ) { return null; }
+        return name.replace(" ", "\u00A0");
     }
     public String[] getPlayerNames(boolean bKeepSeeding, boolean bKeepCountry) {
         return getPlayerNames(bKeepSeeding, bKeepCountry, getPlayers());

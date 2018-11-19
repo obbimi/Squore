@@ -1434,8 +1434,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         addSequenceItemOval(R.id.sb_official_announcement, R.string.scv_announcement_button_Squash); // not for Racketlon
         }
         addSequenceItemOval(R.id.btn_side2               , R.string.scv_shirt_color_Squash              );
-        addSequenceItemOval(R.id.gamescores              , R.string.scv_game_scores_Squash              );
-        addSequenceItemRect(R.id.txt_player1             , R.string.scv_player_buttons_appeall_Squash   );// not for Racketlon
+        addSequenceItemOval(R.id.gamescores_container    , R.string.scv_game_scores_Squash              );
+        addSequenceItemRect(R.id.txt_player1             , R.string.scv_player_buttons_appeal_Squash   );// not for Racketlon
         addSequenceItemRect(R.id.txt_player2             , R.string.scv_player_buttons_misconduct_Squash);// not for Racketlon
         addSequenceItemRect(R.id.scorehistorytable       , R.string.scv_old_fashioned_scoring_Squash    );// not for Racketlon
 
@@ -1443,7 +1443,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         addSequenceItemOval(R.id.float_match_share       , R.string.scv_share_button); //.setDelay(1000); // a little extra delay to allow share button to appear
 
         addSequenceItemOval(R.id.sb_overflow_submenu     , R.string.scv_overflow_submenu_Squash);
-        addSequenceItemOval(R.id.gamescores              , R.string.scv_toggle_action_bar);
+        addSequenceItemOval(R.id.gamescores_container    , R.string.scv_toggle_action_bar);
         if ( bFromMenu ) {
             addSequenceItemOval(iSomeActionBarId, R.string.scv_few_more_gui_hints_Squash);
         }

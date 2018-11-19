@@ -33,7 +33,7 @@
         \n
         \nUne autre façon d\'annuler la dernière saisie : balayer votre doigt le long du bouton que vous avez accidentellement utilisé.
     </string>
-    <string name="scv_player_buttons_appeall_Squash">Conserver l\'historique de vos décisions de __Stroke/Let/No let__ en appuyant sur le nom du joueur qui fait appel.
+    <string name="scv_player_buttons_appeal_Squash">Conserver l\'historique de vos décisions de __Stroke/Let/No let__ en appuyant sur le nom du joueur qui fait appel.
         \nSélectionnez votre décision dans la boîte de dialogue qui s\'affiche alors.
     </string>
 <!--
