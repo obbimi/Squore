@@ -26,6 +26,9 @@
             <item android:id="@+id/cmd_export"     app:showAsAction="never" android:title="@string/Export_elipses" />
             <item android:id="@+id/cmd_import"     app:showAsAction="never" android:title="@string/Import_elipses" />
 
+            <item android:id="@+id/expand_all"   app:showAsAction="never" android:icon="@android:drawable/arrow_down_float" android:title="@string/expand_all" />
+            <item android:id="@+id/collapse_all" app:showAsAction="never" android:icon="@android:drawable/arrow_up_float"   android:title="@string/collapse_all" />
+
             <!-- for all: never show close button in action bar: user should be accustomed to using the back button -->
             <item android:id="@+id/close"     app:showAsAction="never" android:icon="@android:drawable/ic_menu_close_clear_cancel"      android:title="@string/cmd_close" />
 

@@ -1,3 +1,10 @@
+## 4.16 (dec 2018)
+
+- allow 'undo' for both players by swiping left-to-right or right-to-left
+    - for player who score last this was already possible
+    - for other player a dialog will pop-up to confirm the undo last score made for this player
+- fix bug in serve sequence for doubles
+
 ## 4.15 (nov 2018)
 
 - more flexibility when manually entering upcoming matches to ref ('My Matches')

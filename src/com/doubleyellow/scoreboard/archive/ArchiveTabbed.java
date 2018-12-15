@@ -36,6 +36,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.doubleyellow.scoreboard.view.ExpandableListUtil;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
@@ -168,6 +169,11 @@ public class ArchiveTabbed extends XActivity implements NfcAdapter.CreateNdefMes
         MenuItem miExport = menu.findItem(R.id.cmd_export);
         miExport.setVisible(SelectTab.Previous.equals(iDefaultTab));
 
+        MenuItem miExpandAll = menu.findItem(R.id.expand_all);
+        miExpandAll.setVisible(SelectTab.Previous.equals(iDefaultTab));
+        MenuItem miCollapseAll = menu.findItem(R.id.expand_all);
+        miCollapseAll.setVisible(SelectTab.Previous.equals(iDefaultTab));
+
         MenuItem miShareSelected = menu.findItem(R.id.cmd_share_selected);
         miShareSelected.setVisible(SelectTab.PreviousMultiSelect.equals(iDefaultTab));
 
@@ -197,7 +203,7 @@ public class ArchiveTabbed extends XActivity implements NfcAdapter.CreateNdefMes
             return false;
         }
         switch (menuItemId) {
-            case R.id.filter:
+            case R.id.filter:  case R.id.mt_filter:
             case R.id.refresh:
                 if ( getFragment(SelectTab.Previous) instanceof ExpandableMatchSelector ) {
                     ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(SelectTab.Previous);
@@ -224,6 +230,18 @@ public class ArchiveTabbed extends XActivity implements NfcAdapter.CreateNdefMes
             case R.id.cmd_import:
                 PreviousMatchSelector.selectFilenameForImport(this);
                 return true;
+            case R.id.expand_all:
+            case R.id.collapse_all: {
+                if ( (getFragment(defaultTab) != null) && (getFragment(defaultTab) instanceof ExpandableMatchSelector) ) {
+                    ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(defaultTab);
+                    if ( menuItemId == R.id.expand_all ) {
+                        ExpandableListUtil.expandAll(matchSelector.expandableListView);
+                    } else if ( menuItemId == R.id.collapse_all ) {
+                        ExpandableListUtil.collapseAll(matchSelector.expandableListView);
+                    }
+                }
+                return true;
+            }
             case R.id.cmd_delete_all:
                 PreviousMatchSelector.confirmDeleteAllPrevious(this);
                 return true;

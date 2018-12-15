@@ -64,7 +64,7 @@ public abstract class ExpandableMatchSelector extends Fragment
     /** not inflated, just constructed */
               String             m_sLastMessage = null;
     private   SwipeRefreshLayout swipeRefreshLayout; // should only contain a single listview/gridview
-    protected ExpandableListView expandableListView;
+    public    ExpandableListView expandableListView;
 
     //---------------------------------------------------------
     // Round/Division/Date analysis

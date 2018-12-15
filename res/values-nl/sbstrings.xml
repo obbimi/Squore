@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="sb_remove_last_score_for_x">Laatst ingegeven score van %s verwijderen?</string>
+
     <string name="Poule">Poule - Meerdere wedstrijden per speler</string>
     <string name="TeamVsTeam_OneMatchPerPlayer">Team vs Team - Eén wedstrijd per team speler</string>
     <string name="TeamVsTeam_XMatchesPlayer">Team vs Team - Meerdere wedstrijden per team speler</string>

@@ -57,7 +57,7 @@ public class SBTimerView implements TimerView
     public SBTimerView(TextView textView, Chronometer cmToLate, Context context, IBoard iBoard) {
         this.txtView  = textView;
         this.cmToLate = cmToLate;
-        if ( context instanceof ScoreBoard) {
+        if ( context instanceof ScoreBoard ) {
             // allow user to tap it to start the game
             ClickListener clickListener = new ClickListener((ScoreBoard) context);
             //txtView.setOnClickListener    (clickListener);
@@ -164,6 +164,7 @@ public class SBTimerView implements TimerView
             this.scoreBoard = scoreBoard;
         }
 
+        /** Toggle visibility of timers */
         @Override public boolean onTwoFingerClick(View v) {
             Set<ShowOnScreen> newPrefValue = PreferenceValues.toggleMatchGameDurationChronoVisibility(context);
             String sSetting = context.getString(R.string.pref_showLastGameDurationChronoOn);

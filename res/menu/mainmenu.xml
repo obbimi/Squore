@@ -79,6 +79,7 @@
                     <item android:id="@+id/sb_adjust_score"         app:showAsAction="never" android:icon="@android:drawable/ic_menu_edit" android:title="@string/sb_adjust_score" />
                     <item android:id="@+id/sb_edit_event_or_player" app:showAsAction="never" android:icon="@android:drawable/ic_menu_edit" android:title="@string/sb_edit_event_or_player" />
                     <item android:id="@+id/sb_undo_last"            app:showAsAction="never" android:icon="@drawable/ic_action_undo"       android:title="@string/uc_undo" />
+                    <item android:id="@+id/sb_undo_last_for_non_scorer" app:showAsAction="never" android:icon="@drawable/ic_action_undo"   android:title="@string/sb_remove_last_score_for_x" android:visible="false"/>
                     <item android:id="@+id/sb_swap_double_players"  app:showAsAction="never" android:icon="@drawable/ic_action_refresh"    android:title="@string/sb_swap_double_players" android:visible="false" />
                     <item android:id="@+id/sb_swap_players"         app:showAsAction="never" android:icon="@drawable/change_sides"         android:title="@string/sb_swap_players" android:visible="true" />
 

@@ -193,7 +193,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 case R.id.txt_player2:
                     if ( Brand.isSquash() ) {
                         // TODO: for doubles, switch in/out in such a way that touched player becomes the server
-                        Log.d(TAG, String.format("Two finger click on player %s", player)); // TODO: start broken ball/racket dialog
+                        Log.d(TAG, String.format("Two finger click on player %s", player));
                         showBrokenEquipment(player);
                         break;
                     } else {
@@ -215,13 +215,18 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 case R.id.btn_score2:
                     if ( EnumSet.of(Direction.E, Direction.W).contains(direction) ) {
                         if ( Brand.isSquash() && isServer ) {
-                            // perform undo if swiped horizontally over server score button (= person who scored last) TODO: only true for Squash!!
+                            // perform undo if swiped horizontally over server score button (= person who scored last)
                             handleMenuItem(R.id.sb_undo_last);
                         } else {
                             Player pLastScorer = matchModel.getLastScorer();
                             if ( player.equals(pLastScorer) ) {
                                 // perform undo if swiped horizontally over last scorer
                                 handleMenuItem(R.id.sb_undo_last);
+                            } else {
+                                if ( matchModel.getScore(player) > 0 ) {
+                                    // present user with dialog to remove last scoreline for other than latest scorer ...
+                                    confirmUndoLastForNonScorer(player);
+                                }
                             }
                         }
                         return true;
@@ -392,6 +397,25 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( warnModelIsLocked() ) { return; }
       //Log.d(TAG, "Changing score for for model " + matchModel);
         matchModel.changeScore(player);
+    }
+
+    private void confirmUndoLastForNonScorer(final Player p) {
+        AlertDialog.Builder cfunls = getAlertDialogBuilder(this);
+        cfunls.setTitle(R.string.uc_undo)
+                .setIcon(R.drawable.ic_action_undo)
+                .setTitle(getString(R.string.sb_remove_last_score_for_x, matchModel.getName(p) ))
+                .setPositiveButton(R.string.cmd_yes, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        handleMenuItem(R.id.sb_undo_last_for_non_scorer, p);
+                    }
+                })
+                .setNegativeButton(R.string.sb_adjust_score, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        handleMenuItem(R.id.sb_adjust_score, p);
+                    }
+                })
+                .setNeutralButton(R.string.cmd_no, null)
+                .show();
     }
 
     private ToggleResult toggleActionBar(ActionBar actionBar) {
@@ -3315,6 +3339,17 @@ touch -t 01030000 LAST.sb
                 enableScoreButton(matchModel.getServer());
                 matchModel.undoLast();
                 bGameEndingHasBeenCancelledThisGame = false;
+                return true;
+            case R.id.sb_undo_last_for_non_scorer:
+                Player nonScorer = null;
+                if ( ctx != null && ctx.length==1 && ctx[0] instanceof Player) {
+                    nonScorer = (Player) ctx[0];
+                } else {
+                    nonScorer = matchModel.getLastScorer().getOther();
+                }
+                if ( matchModel.undoLastForScorer(nonScorer) ) {
+                    Toast.makeText(ScoreBoard.this, "Removed last scoreline for " + matchModel.getName(nonScorer), Toast.LENGTH_LONG).show();
+                }
                 return true;
             case R.id.sb_edit_event_or_player:
                 editEventAndPlayers();
