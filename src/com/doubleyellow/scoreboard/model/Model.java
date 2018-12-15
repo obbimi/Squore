@@ -780,6 +780,41 @@ public abstract class Model
         m_halfwayStatus = hwStatus;
     }
 
+    /** special undo. Might remove a scoreline that has already followed by a scoreline where the other player scored. Basic implementation for tabletennis. E.g. will not work with conduct calls for Squash */
+    public synchronized boolean undoLastForScorer(Player p) {
+        if ( m_lScoreHistory.size() == 0 ) {
+            return false;
+        }
+
+        // find last scoreline that increase the score for the specified player
+        ScoreLine lastValidWithScoring = getLastWithValidScorerEquals(p);
+        if ( lastValidWithScoring == null ) {
+            return false;
+        }
+        int iIDX = m_lScoreHistory.indexOf(lastValidWithScoring);
+
+        // remove that specific line from ...
+        m_lScoreHistory.remove(iIDX);
+        m_gameTimingCurrent.removeTimings(iIDX);
+
+        if ( ListUtil.size(m_lScoreHistory) < JsonUtil.size(m_rallyEndStatsGIP) ) {
+            // TODO: for now I only remove statistics if the number of statistics is simply to large: this can be improved
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
+                m_rallyEndStatsGIP.remove(m_rallyEndStatsGIP.length() - 1);
+            }
+        }
+
+        // inform listeners
+        int iReducedScore = MapUtil.increaseCounter(m_scoreOfGameInProgress, p, -1);
+        for (OnScoreChangeListener l : onScoreChangeListeners) {
+            l.OnScoreChange(p, iReducedScore, -1, null);
+        }
+        for(OnComplexChangeListener l:onComplexChangeListeners) {
+            l.OnChanged();
+        }
+
+        return true;
+    }
     public synchronized void undoLast() {
         setDirty(true);
 
@@ -842,7 +877,7 @@ public abstract class Model
                 }
 
                 if ( slRemoved.call.getScoreAffect().equals(Call.ScoreAffect.LoseGame) ) {
-                    // we are undo-ing a conduct game
+                    // we are undo-ing a conduct-game (CG)
                     Player adjustScoreFor = slRemoved.getCallTargetPlayer().getOther();
                     for(ScoreLine l: m_lScoreHistory) {
                         if ( adjustScoreFor.equals(l.getScoringPlayer()) ) {
@@ -858,7 +893,7 @@ public abstract class Model
                 int iDelta = -1;
                 Player removeScoringPlayer  = slRemoved.getScoringPlayer();
                 Player removedServingPlayer = slRemoved.getServingPlayer();
-                if (removeScoringPlayer != null) {
+                if ( removeScoringPlayer != null ) {
                     if ( m_bEnglishScoring ) {
                         if (removeScoringPlayer.equals(removedServingPlayer) == false) {
                             iDelta = 0;
@@ -930,6 +965,13 @@ public abstract class Model
     private ScoreLine getLastWithValidServer() {
         int iIdx = m_lScoreHistory.size()-1;
         while ( iIdx>=0 && m_lScoreHistory.get(iIdx).getServingPlayer()==null ) {
+            iIdx--;
+        }
+        return iIdx>=0?m_lScoreHistory.get(iIdx):null;
+    }
+    private ScoreLine getLastWithValidScorerEquals(Player p) {
+        int iIdx = m_lScoreHistory.size()-1;
+        while ( iIdx>=0 && p.equals(m_lScoreHistory.get(iIdx).getScoringPlayer()) ==false ) {
             iIdx--;
         }
         return iIdx>=0?m_lScoreHistory.get(iIdx):null;
@@ -3077,7 +3119,7 @@ public abstract class Model
                     if ( nextServeSide.equals(ServeSide.L) && (bForUndo) ) {
                         server = server.getOther();
                     }
-                    setServerAndSide(server, nextServeSide, null);
+                    setServerAndSide(server, nextServeSide, ds);
                     break;
                 }
                 case Tabletennis:
@@ -3090,7 +3132,7 @@ public abstract class Model
                     for( int i = 0; i < iServerSwitches; i++ ) {
                         server = server.getOther();
                     }
-                    setServerAndSide(server, m_nextServeSide.getOther() /* dirty trick to always ensure listeners are triggered to */, null);
+                    setServerAndSide(server, m_nextServeSide.getOther() /* dirty trick to always ensure listeners are triggered to */, ds);
                     break;
             }
         }
@@ -3099,24 +3141,21 @@ public abstract class Model
     DoublesServe determineDoublesInOut_Racketlon_Tabletennis() {
         DoublesServeSequence dss           = getDoubleServeSequence();
         if ( dss.equals(DoublesServeSequence.A1B1A1B1) ) {
-            // squash: only in: only one player on court
+            // serve sequence for squash part of racketlon only: only one player on court
             return DoublesServe.I;
         }
         boolean              bIsInTieBreak = isInTieBreak_Racketlon_Tabletennis();
         int                  iTotalPoints  = getTotalGamePoints();
+        int nrOfServesPerPlayer = getNrOfServesPerPlayer();
         if ( bIsInTieBreak ) {
-            if ( iTotalPoints % 4 >= 2 ) {
-                return DoublesServe.O;
-            } else {
-                return DoublesServe.I;
-            }
-        } else {
-            if ( iTotalPoints % 8 >= 4 ) {
-                return DoublesServe.O;
-            } else {
-                return DoublesServe.I;
-            }
+            nrOfServesPerPlayer = 1;
         }
+        DoublesServe ds = ( iTotalPoints % (nrOfServesPerPlayer * 4) >= nrOfServesPerPlayer * 2 ) ? DoublesServe.O : DoublesServe.I;
+        if ( bIsInTieBreak && (getNrOfPointsToWinGame() * 2) % (getNrOfServesPerPlayer() * 4 ) > 0 ) {
+            // server of first point in tie-break player is NOT player that started serving in the game
+            ds = ds .getOther();
+        }
+        return ds;
     }
 
     public int getTotalGamePoints() {
