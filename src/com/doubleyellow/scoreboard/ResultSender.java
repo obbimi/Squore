@@ -360,7 +360,7 @@ public class ResultSender {
             Date       date      = DateUtil.parseString2Date(sYYYYMMDD, DateUtil.YYYYMMDD);
             DateFormat sdf       = android.text.format.DateFormat.getDateFormat(context);
             sbCommonData.append(PreferenceValues.getOAString(context, R.string.date)).append(": ");
-            if ( sdf != null ) {
+            if ( (sdf != null) && (date != null) ) {
                 sbCommonData.append(sdf.format(date));
             } else {
                 sbCommonData.append(sYYYYMMDD);
