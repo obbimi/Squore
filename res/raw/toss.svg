@@ -1,14 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="7 7 146 146"
-    fill="#111111" stroke="#111111">
+    fill="#D3D3D3" stroke="#D3D3D3">
     <!--
     This svg is not used as such, but converted to png files:
 
     fill and stroke colors: #D3D3D3, #111111
 
-    convert -background none -size  72x72  toss.svg ../drawable-hdpi/toss_black.png
-    convert -background none -size  96x96  toss.svg ../drawable-xhdpi/toss_black.png
-    convert -background none -size 144x144 toss.svg ../drawable-xxhdpi/toss_black.png
-    convert -background none -size 192x192 toss.svg ../drawable-xxxhdpi/toss_black.png
+    # guidelines: mine
+    #convert -background none -size  32x32  toss.svg ../drawable-mdpi/toss.png
+    #convert -background none -size  36x36  toss.svg ../drawable-ldpi/toss.png
+    export suffix='_black'
+    export suffix='_white'
+    convert -background none -size  48x48  toss.svg ../drawable-hdpi/toss${suffix}.png
+    convert -background none -size  64x64  toss.svg ../drawable-xhdpi/toss${suffix}.png
+    convert -background none -size  96x96  toss.svg ../drawable-xxhdpi/toss${suffix}.png
+    convert -background none -size  96x96  toss.svg ../drawable-xxxhdpi/toss${suffix}.png
+
+    # guidelines: https://developer.android.com/training/multiscreen/screendensities
+    convert -background none -size  72x72  toss.svg ../drawable-hdpi/toss${suffix}.png
+    convert -background none -size  96x96  toss.svg ../drawable-xhdpi/toss${suffix}.png
+    convert -background none -size 144x144 toss.svg ../drawable-xxhdpi/toss${suffix}.png
+    convert -background none -size 192x192 toss.svg ../drawable-xxxhdpi/toss${suffix}.png
     -->
 
     <rect id="sleave" stroke-width="1"

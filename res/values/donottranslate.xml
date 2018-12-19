@@ -116,7 +116,7 @@
     <!-- https://developers.google.com/cast/docs/registration#RegisterDevice (To enable a newly bought Chrome Cast to be used for development ) -->
     <string name="REMOTE_DISPLAY_APP_ID_brand_squore">35BA3487</string>
     <string name="REMOTE_DISPLAY_APP_ID_brand_racketlon">590DBED9</string>
-    <string name="REMOTE_DISPLAY_APP_ID_brand_tabletennis">DD0036E8</string> <!-- TODO: publish  -->
+    <string name="REMOTE_DISPLAY_APP_ID_brand_tabletennis">DD0036E8</string>
     <string name="REMOTE_DISPLAY_APP_ID_brand_asb">BF2E4D1B</string> <!-- not a real brand, was brand of the initial brand tests -->
     <string name="REMOTE_DISPLAY_APP_ID_brand_courtcare">BF2E4D1B</string>
     <string name="REMOTE_DISPLAY_APP_ID_brand_uniofnotthingham">E6F9858F</string>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520"
+    fill="#111111" stroke="#111111">
+    <!--
+    Replaces the resource image: android.R.drawable.ic_menu_add
+
+    This svg is not used as such, but converted to png files:
+
+    fill and stroke colors: #D3D3D3, #111111
+
+    # guidelines: mine
+    #convert -background none -size  32x32  circled_plus.svg ../drawable-mdpi/circled_plus.png
+    #convert -background none -size  36x36  circled_plus.svg ../drawable-ldpi/circled_plus.png
+    export suffix='_black'
+    export suffix=''
+    convert -background none -size  48x48  circled_plus.svg ../drawable-hdpi/circled_plus${suffix}.png
+    convert -background none -size  64x64  circled_plus.svg ../drawable-xhdpi/circled_plus${suffix}.png
+    convert -background none -size  96x96  circled_plus.svg ../drawable-xxhdpi/circled_plus${suffix}.png
+    convert -background none -size  96x96  circled_plus.svg ../drawable-xxxhdpi/circled_plus${suffix}.png
+
+    # guidelines: https://developer.android.com/training/multiscreen/screendensities
+    convert -background none -size  72x72  circled_plus.svg ../drawable-hdpi/circled_plus${suffix}.png
+    convert -background none -size  96x96  circled_plus.svg ../drawable-xhdpi/circled_plus${suffix}.png
+    convert -background none -size 144x144 circled_plus.svg ../drawable-xxhdpi/circled_plus${suffix}.png
+    convert -background none -size 192x192 circled_plus.svg ../drawable-xxxhdpi/circled_plus${suffix}.png
+    -->
+
+    <circle id="disc" cx="260" cy="260" r="220" stroke-width="35" fill="none"/>
+
+    <polyline id="hands" stroke-linecap="round" points="260,130 260,390" stroke-width="35" fill="none"/>
+    <polyline id="hands" stroke-linecap="round" points="130,260 390,260" stroke-width="35" fill="none"/>
+
+
+</svg>

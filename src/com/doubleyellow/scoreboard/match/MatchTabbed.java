@@ -74,8 +74,8 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         //Previous (PreviousMatchSelector.class, R.string.sb_stored_matches     , android.R.drawable.ic_menu_save),
         Feed     (FeedMatchSelector    .class, R.string.sb_feed               ,         R.drawable.ic_action_web_site),
         Mine     (StaticMatchSelector  .class, R.string.sb_static_match       ,         R.drawable.ic_action_view_as_list),
-        Manual   (MatchFragment        .class, R.string.sb_new_singles_match  , android.R.drawable.ic_menu_add),
-        ManualDbl(MatchFragmentDoubles .class, R.string.sb_new_doubles_match  , android.R.drawable.ic_menu_add),
+        Manual   (MatchFragment        .class, R.string.sb_new_singles_match  , R.drawable.circled_plus),
+        ManualDbl(MatchFragmentDoubles .class, R.string.sb_new_doubles_match  , R.drawable.circled_plus),
         ;
         private Class clazz;
         private int iIcon;

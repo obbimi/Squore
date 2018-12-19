@@ -5,7 +5,7 @@
 >
 
     <item android:id="@+id/smi_group_edit"      app:showAsAction="always" android:icon="@android:drawable/ic_menu_edit"   android:title="@string/cmd_edit" />
-    <item android:id="@+id/smi_group_add_match" app:showAsAction="always" android:icon="@android:drawable/ic_menu_add"    android:title="@string/cmd_new_matches" />
+    <item android:id="@+id/smi_group_add_match" app:showAsAction="always" android:icon="@drawable/circled_plus"    android:title="@string/cmd_new_matches" />
     <item android:id="@+id/smi_group_delete"    app:showAsAction="always" android:icon="@android:drawable/ic_menu_delete" android:title="@string/sb_delete_group" />
 
 </menu>

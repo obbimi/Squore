@@ -21,7 +21,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
 >
     <!-- only for static -->
-    <item android:id="@+id/new_group"        app:showAsAction="always" android:icon="@android:drawable/ic_menu_add"  android:title="@string/cmd_new_group" />
+    <item android:id="@+id/new_group"        app:showAsAction="always" android:icon="@drawable/circled_plus"  android:title="@string/cmd_new_group" />
 
     <!-- only for manual -->
     <item android:id="@+id/mt_cmd_ok" app:showAsAction="always" android:icon="@drawable/ic_action_accept"  android:title="@string/cmd_ok" />
@@ -61,7 +61,7 @@
             <item android:id="@+id/sort_group_names" app:showAsAction="never"                                               android:title="@string/cmd_sort" />
 
             <!-- only for feed -->
-            <item android:id="@+id/uc_add_new_feed" app:showAsAction="never" android:title="@string/add_new_feed" />
+            <item android:id="@+id/uc_add_new_feed" app:showAsAction="never" android:icon="@drawable/circled_plus" android:title="@string/add_new_feed" />
 
             <!-- only for previous/stored -->
             <item android:id="@+id/cmd_delete_all" app:showAsAction="never" android:icon="@android:drawable/ic_menu_delete"  android:title="@string/cmd_delete_all" android:visible="false"/>

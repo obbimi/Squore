@@ -705,24 +705,24 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 */
 
         startSection(R.string.uc_new   );
-            addItem(R.id.sb_enter_singles_match , R.string.sb_new_singles_match    , android.R.drawable.ic_menu_add           );
+            addItem(R.id.sb_enter_singles_match , R.string.sb_new_singles_match    ,         R.drawable.circled_plus          );
             addItem(R.id.sb_select_static_match , R.string.sb_select_static_match  ,         R.drawable.ic_action_view_as_list);
             addItem(R.id.sb_select_feed_match   , R.string.sb_select_feed_match    ,         R.drawable.ic_action_web_site    );
-            addItem(R.id.sb_enter_doubles_match , R.string.sb_new_doubles_match    , android.R.drawable.ic_menu_add           );
+            addItem(R.id.sb_enter_doubles_match , R.string.sb_new_doubles_match    ,         R.drawable.circled_plus          );
         startSection(R.string.uc_edit   );
-            addItem(R.id.sb_clear_score         , R.string.sb_clear_score          ,         R.drawable.ic_action_refresh);
-            addItem(R.id.sb_adjust_score        , R.string.sb_adjust_score         , android.R.drawable.ic_menu_edit     );
-            addItem(R.id.sb_edit_event_or_player, R.string.sb_edit_event_or_player , android.R.drawable.ic_menu_edit     );
-            addItem(R.id.change_match_format    , R.string.pref_MatchFormat        ,         R.drawable.ic_action_mouse  );
+            addItem(R.id.sb_clear_score         , R.string.sb_clear_score          ,         R.drawable.ic_action_refresh   );
+            addItem(R.id.sb_adjust_score        , R.string.sb_adjust_score         , android.R.drawable.ic_menu_edit        );
+            addItem(R.id.sb_edit_event_or_player, R.string.sb_edit_event_or_player , android.R.drawable.ic_menu_edit        );
+            addItem(R.id.change_match_format    , R.string.pref_MatchFormat        ,         R.drawable.ic_action_mouse     );
         startSection(R.string.uc_show   );
-            addItem(R.id.sb_toss                , R.string.sb_cmd_toss             , R.drawable.toss_white          );
-            addItem(R.id.sb_timer               , R.string.sb_timer                , R.drawable.timer               );
-            addItem(R.id.sb_injury_timer        , R.string.sb_injury_timer         , R.drawable.timer               );
-            addItem(R.id.sb_score_details       , R.string.sb_score_details        , R.drawable.ic_action_chart_line);
+            addItem(R.id.sb_toss                , R.string.sb_cmd_toss             ,         R.drawable.toss_white          );
+            addItem(R.id.sb_timer               , R.string.sb_timer                ,         R.drawable.timer               );
+            addItem(R.id.sb_injury_timer        , R.string.sb_injury_timer         ,         R.drawable.timer               );
+            addItem(R.id.sb_score_details       , R.string.sb_score_details        ,         R.drawable.ic_action_chart_line);
         startSection(R.string.goto_help );
             addItem(R.id.sb_quick_intro         , R.string.Quick_intro             , android.R.drawable.ic_dialog_info         );
             addItem(R.id.sb_help                , R.string.goto_help               , android.R.drawable.ic_menu_help           );
-            addItem(R.id.sb_official_rules      , R.string.sb_official_rules_Squash,android.R.drawable.ic_menu_search          );
+            addItem(R.id.sb_official_rules      , R.string.sb_official_rules_Squash, android.R.drawable.ic_menu_search         );
             addItem(R.id.sb_live_score          , R.string.Live_Score              ,         R.drawable.ic_action_web_site     );
             addItem(R.id.sb_feedback            , R.string.cmd_feedback            ,         R.drawable.ic_action_import_export);
         startSection(R.string.pref_Other );
@@ -2300,15 +2300,24 @@ touch -t 01030000 LAST.sb
         }
 
         int iActionId   = R.id.float_new_match;
-        int iDrawableId = android.R.drawable.ic_menu_add;
+        int iDrawableId = R.drawable.circled_plus;
+
         if ( matchModel.getLockState().equals(LockState.LockedManualGUI) ) {
             iActionId   = R.id.sb_unlock;
             iDrawableId = android.R.drawable.ic_lock_lock;
         }
+        ColorPrefs.ColorTarget colorKey = isLandscape()? ColorPrefs.ColorTarget.playerButtonBackgroundColor : ColorPrefs.ColorTarget.scoreButtonBackgroundColor;
+        Integer iBG = mColors.get(colorKey);
+        if ( iBG != null ) {
+            // if we use a light background for the player/plus button... switch to the black icon version
+            int blackOrWhiteFor = ColorUtil.getBlackOrWhiteFor(iBG);
+            if ( blackOrWhiteFor == Color.BLACK ) {
+                iDrawableId = R.drawable.circled_plus_black;
+            }
+        }
         if ( newMatchButton == null ) {
             final float fMargin = isPortrait()?0.25f:0.25f; // TODO: simply within score button of player B?
-            ColorPrefs.ColorTarget color = isLandscape()? ColorPrefs.ColorTarget.playerButtonBackgroundColor : ColorPrefs.ColorTarget.scoreButtonBackgroundColor;
-            newMatchButton = getFloatingActionButton(iActionId, fMargin, iDrawableId, color, Direction.SE);
+            newMatchButton = getFloatingActionButton(iActionId, fMargin, iDrawableId, colorKey, Direction.SE);
         } else {
             newMatchButton.setActionId(iActionId);
             newMatchButton.setDrawable(this.getResources().getDrawable(iDrawableId), getFloatingButtonSizePx(this));

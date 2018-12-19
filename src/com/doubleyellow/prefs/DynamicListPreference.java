@@ -137,7 +137,7 @@ public class DynamicListPreference extends ListPreference {
                     adb.setTitle(R.string.uc_new)
                             .setMessage(getContext().getString(R.string.sb_new_item, title))
                             .setView(ll)
-                            .setIcon(android.R.drawable.ic_menu_add)
+                            .setIcon(R.drawable.circled_plus)
                             .setPositiveButton(R.string.cmd_ok    , onClickCreateOrCancelListener)
                             .setNegativeButton(R.string.cmd_cancel, onClickCreateOrCancelListener);
                     AlertDialog dialog = adb.show();

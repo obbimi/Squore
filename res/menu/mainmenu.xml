@@ -36,7 +36,7 @@
     <item android:id="@+id/dyn_end_game"      app:showAsAction="ifRoom" android:icon="@drawable/ic_menu_forward"                android:visible="false" android:title="@string/end_game_Squash" />
     <item android:id="@+id/dyn_timer"         app:showAsAction="ifRoom" android:icon="@drawable/timer"                          android:visible="false" android:title="@string/sb_nbsp_timer"/>
     <item android:id="@+id/dyn_score_details" app:showAsAction="ifRoom" android:icon="@drawable/ic_action_chart_line"           android:visible="false" android:title="@string/sb_score_details" />
-    <item android:id="@+id/dyn_new_match"     app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_add"            android:visible="false" android:title="@string/sb_new_match" />
+    <item android:id="@+id/dyn_new_match"     app:showAsAction="ifRoom" android:icon="@drawable/circled_plus"            android:visible="false" android:title="@string/sb_new_match" />
     <item android:id="@+id/dyn_match_share"   app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_share"          android:visible="false" android:title="@string/sb_share_score_sheet" />
 
     <item
@@ -48,17 +48,17 @@
         <menu xmlns:android="http://schemas.android.com/apk/res/android">
             <item
                     android:id="@+id/uc_new"
-                    android:icon="@android:drawable/ic_menu_add"
+                    android:icon="@drawable/circled_plus"
                     android:title="@string/uc_new"
                     app:showAsAction="never">
                 <menu>
 
                     <item android:id="@+id/sb_select_feed_match"   app:showAsAction="never" android:icon="@drawable/ic_action_web_site"     android:visible="true"  android:title="@string/sb_select_feed_match"   />
                     <item android:id="@+id/sb_select_static_match" app:showAsAction="never" android:icon="@drawable/ic_action_view_as_list" android:visible="true"  android:title="@string/sb_select_static_match" />
-                    <item android:id="@+id/sb_enter_singles_match" app:showAsAction="never" android:icon="@android:drawable/ic_menu_add"    android:visible="true"  android:title="@string/sb_new_singles_match"   />
-                    <item android:id="@+id/sb_enter_doubles_match" app:showAsAction="never" android:icon="@android:drawable/ic_menu_add"    android:visible="true"  android:title="@string/sb_new_doubles_match"   />
+                    <item android:id="@+id/sb_enter_singles_match" app:showAsAction="never" android:icon="@drawable/circled_plus"    android:visible="true"  android:title="@string/sb_new_singles_match"   />
+                    <item android:id="@+id/sb_enter_doubles_match" app:showAsAction="never" android:icon="@drawable/circled_plus"    android:visible="true"  android:title="@string/sb_new_doubles_match"   />
 
-                    <item android:id="@+id/sb_new_match"           app:showAsAction="never" android:icon="@android:drawable/ic_menu_add"    android:visible="false" android:title="@string/sb_new_match"           />
+                    <item android:id="@+id/sb_new_match"           app:showAsAction="never" android:icon="@drawable/circled_plus"    android:visible="false" android:title="@string/sb_new_match"           />
 
                     <item android:id="@+id/sb_clear_score"         app:showAsAction="never" android:icon="@drawable/ic_action_refresh"      android:title="@string/sb_clear_score" />
                 </menu>

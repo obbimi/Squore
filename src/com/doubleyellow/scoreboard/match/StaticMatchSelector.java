@@ -170,7 +170,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 
         AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
         ab.setMessage       (saPlayers.length<2?R.string.cmd_new_matches_with:R.string.sb_edit_players)
-          .setIcon          (android.R.drawable.ic_menu_add)
+          .setIcon          (R.drawable.circled_plus)
           .setPositiveButton(R.string.cmd_ok    , dialogClickListener)
           .setNegativeButton(R.string.cmd_cancel, dialogClickListener);
         final AlertDialog dialog = ab.create();
@@ -296,7 +296,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 
         AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
         ab.setMessage(bIsEditExistingGroupName ?R.string.cmd_edit:R.string.cmd_new_group)
-                .setIcon(bIsEditExistingGroupName ? android.R.drawable.ic_menu_edit : android.R.drawable.ic_menu_add)
+                .setIcon(bIsEditExistingGroupName ? android.R.drawable.ic_menu_edit : R.drawable.circled_plus)
                 .setPositiveButton(R.string.cmd_ok, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialogInterface, int i) {
                         String sNewHeader = txtName.getText().toString().trim();
