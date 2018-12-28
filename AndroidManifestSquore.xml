@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.scoreboard"
-          android:versionCode="206"
+          android:versionCode="207"
           android:versionName="4.16">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
@@ -161,7 +161,7 @@
             <!--<data android:scheme="http" android:host="esf.tournamentsoftware.com" android:pathPattern=".*sport/tournament.aspx.*"/> OK-->
             <!--<data android:scheme="http" android:host="esf.tournamentsoftware.com" android:pathPattern="/sport/tournament.aspx.*"/> OK-->
 
-            <!-- TODO: psa and sporthq -->
+            <!-- TODO: psa, rankedin and sporthq -->
 
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>

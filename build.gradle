@@ -23,7 +23,7 @@ android {
     dependencies {
         //compile project(':AndroidBase')
         compile 'com.doubleyellow:AndroidBase@aar'
-        // uncommenting this while in Android Studio create a subdir AndroidBase with an .iml file in it
+        // uncommenting this while in Android Studio creates a subdir AndroidBase with an .iml file in it
 
         compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -38,7 +38,7 @@ android {
 
         // ChromeCast
         //compile 'com.google.android.gms:play-services-cast:11.0.4'
-        compile 'com.google.android.gms:play-services-cast:16.0.1'
+        compile 'com.google.android.gms:play-services-cast:16.1.2'
         // repository google(), not found using jcenter
 
         //compile 'com.android.support:recyclerview-v7:25.3.1'
@@ -59,7 +59,10 @@ android {
     }
     defaultConfig {
         // must match (or be larger than) minSdkVersion of AndroidBase
-        minSdkVersion 14
+        //minSdkVersion 14 // 4.0: ICE_CREAM_SANDWICH = 14, JELLY_BEAN = 16, JELLY_BEAN_MR1 = 17, JELLY_BEAN_MR2 = 18
+        // https://www.androidpolice.com/2018/10/28/android-platform-distribution-numbers-updated-october-pie-still-missing/
+        // https://en.wikipedia.org/wiki/Android_version_history
+        minSdkVersion 19 // 4.4 android.os.Build.VERSION_CODES.KITKAT
         // next property is not required for building... but should be specified for publishing in play-store
         targetSdkVersion 28
     }
@@ -109,4 +112,8 @@ android {
     aaptOptions {
         ignoreAssetsPattern '_gh_pages'
     }
+}
+
+dependencies {
+    compile project(':AndroidBase')
 }
