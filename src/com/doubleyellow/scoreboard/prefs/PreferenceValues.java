@@ -1035,6 +1035,9 @@ public class PreferenceValues extends RWValues
     public static String ow_captionForPostMatchResultToSite(Context context) {
         return getString(PreferenceKeys.captionForPostMatchResultToSite, R.string.sb_post_match_result, context);
     }
+    public static String ow_iconForPostMatchResultToSite(Context context) {
+        return getString(PreferenceKeys.iconForPostMatchResultToSite, null, context);
+    }
     public static String ow_captionForEmailMatchResult(Context context) {
         return getString(PreferenceKeys.captionForEmailMatchResult, R.string.sb_email_match_result, context);
     }
@@ -1315,6 +1318,7 @@ public class PreferenceValues extends RWValues
         }
         if ( bDeleted ) {
             setString(PreferenceKeys.feedPostUrls, context, sb.toString().trim());
+            mActiveFeedValues = null;
         }
         return bDeleted;
     }
@@ -1417,7 +1421,7 @@ public class PreferenceValues extends RWValues
     public static void addRecentFeedURLsForDemo(Context context) {
         final boolean bMakeActive = PreferenceValues.getMatchesFeedURLUnchanged();
         // TODO: trigger this code e.g. weekly somehow
-        for(int i=1; i<=3; i++ ) {
+        for ( int i=1; i<=3; i++ ) {
             if ( Brand.isSquash() ) {
                 PreferenceValues.addOrReplaceNewFeedURL(context, "Demo PSA Matches " + i, "feed/psa.php?nr=" + i, null, null, false, bMakeActive);
             }
@@ -1560,8 +1564,8 @@ public class PreferenceValues extends RWValues
                 // very first install/run
 
                 int appVersionCode = RWValues.getAppVersionCode(context);
-                final int    NO_SHOWCASE_FOR_VERSION        = 206;
-                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2018-12-18";
+                final int    NO_SHOWCASE_FOR_VERSION        = 207;
+                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2018-12-31";
                 if ( appVersionCode > NO_SHOWCASE_FOR_VERSION ) {
                     // need to adjust the datecheck below
                     Log.w(TAG, "[getStartupAction] Adjust version code check!!");

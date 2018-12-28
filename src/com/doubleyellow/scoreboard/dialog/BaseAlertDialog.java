@@ -21,6 +21,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -31,6 +32,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,6 +43,7 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.Direction;
+import com.doubleyellow.util.StringUtil;
 
 public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*/ {
 
@@ -152,6 +155,7 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
 
         return txt;
     }
+    /** For demo purposes only */
     public void drawTouch(int iAction, int iColor) {
         if ( dialog == null ) {
             return;
@@ -166,6 +170,40 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
             }
         }
     }
+
+    /** in Android 9 - API 28, buttons in dialog are left aligned initially. By just setting the layout parameters the get correctly aligned */
+    protected void triggerButtonLayoutAPI28(DialogInterface dialogInterface, int iButton) {
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ) {
+            Button btnMiddle = ((AlertDialog)dialogInterface).getButton(iButton);
+            if ( btnMiddle == null ) {
+                // even if 'neutral' button is specified, it usually is still there but invisible
+                return;
+            }
+            ViewParent parent = btnMiddle.getParent(); // LinearLayout
+            if ( parent instanceof LinearLayout ) {
+                ViewGroup.LayoutParams layoutParams = btnMiddle.getLayoutParams();
+                if ( layoutParams instanceof LinearLayout.LayoutParams ) {
+                    LinearLayout.LayoutParams llp = (LinearLayout.LayoutParams) layoutParams;
+                    //llp.weight = llp.weight;
+                    btnMiddle.setLayoutParams(llp);
+                }
+            }
+
+        }
+    }
+    protected void setIconToPackage(Context ctx, AlertDialog.Builder builder, String packageName, int iResId) {
+        if ( StringUtil.isEmpty(packageName) ) {
+            builder.setIcon(iResId);
+            return;
+        }
+        try {
+            Drawable drawable = ctx.getPackageManager().getApplicationIcon(packageName);
+            builder.setIcon(drawable);
+        } catch (PackageManager.NameNotFoundException var6) {
+            builder.setIcon(iResId);
+        }
+    }
+
     public void handleButtonClick(int which){
         this.dismiss();
     }

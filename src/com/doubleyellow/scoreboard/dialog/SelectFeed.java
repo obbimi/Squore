@@ -17,9 +17,13 @@
 
 package com.doubleyellow.scoreboard.dialog;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.RadioGroup;
+
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.match.MatchTabbed;
@@ -29,6 +33,7 @@ import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.URLsKeys;
 import com.doubleyellow.android.view.SelectObjectView;
+import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MenuHandler;
 
 import java.util.*;
@@ -75,11 +80,27 @@ public class SelectFeed extends BaseAlertDialog
         }
 */
 
+        final ArrayList<String> alNames = new ArrayList<>(lNames);
         String sCurrentFeedName = PreferenceValues.getMatchesFeedName(context);
-        sv = new SelectObjectView<String>(context, new ArrayList<String>(lNames), sCurrentFeedName);
+        int iIndexPref = PreferenceValues.getInteger(PreferenceKeys.feedPostUrl, context, 0);
+        int iIndexList = alNames.indexOf(sCurrentFeedName);
+        if ( (iIndexList == -1) && (iIndexPref != -1) ) {
+            sCurrentFeedName = ListUtil.size(alNames) > iIndexPref ? alNames.get(iIndexPref): sCurrentFeedName;
+        }
+
+        sv = new SelectObjectView<String>(context, alNames, sCurrentFeedName);
         ColorPrefs.setColors(sv, ColorPrefs.Tags.item);
-        dialog = adb.setView(sv)
-                    .show();
+        dialog = adb.setView(sv).create();
+
+        sv.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // disable 'Delete' button if 'None' is selected
+                Button btnDelete = dialog.getButton(DELETE);
+                btnDelete.setEnabled(checkedId < ListUtil.size(alNames) - 1);
+            }
+        });
+
+        dialog.show();
     }
 
     private Set<String> getFeedNames(boolean bSortNames) {

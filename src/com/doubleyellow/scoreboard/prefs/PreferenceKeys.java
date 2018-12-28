@@ -250,6 +250,7 @@ public enum PreferenceKeys {
         //captionForSelectNewMatch,
         captionForMessageMatchResult,
         captionForPostMatchResultToSite,
+        iconForPostMatchResultToSite,
         captionForEmailMatchResult,
 
     MatchTabbed_defaultTab,

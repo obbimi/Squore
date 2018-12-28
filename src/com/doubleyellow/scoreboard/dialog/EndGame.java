@@ -114,12 +114,18 @@ public class EndGame extends BaseAlertDialog
             }
         }
 
-        ButtonUpdater listener = null;
+        DialogInterface.OnShowListener listener = null;
         if ( bDrawTimerImageOnButton ) {
             listener = new ButtonUpdater(context, false
                     , AlertDialog.BUTTON_NEUTRAL, R.drawable.timer_4settings4buttons
                     //,AlertDialog.BUTTON_NEGATIVE, android.R.drawable.ic_menu_close_clear_cancel
             );
+        } else {
+            listener = new DialogInterface.OnShowListener() {
+                @Override public void onShow(DialogInterface dialog) {
+                    triggerButtonLayoutAPI28(dialog, DialogInterface.BUTTON_NEUTRAL);
+                }
+            };
         }
 
         adb.setOnKeyListener(getOnBackKeyListener(/*BTN_END_GAME*/));

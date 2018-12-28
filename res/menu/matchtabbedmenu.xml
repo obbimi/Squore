@@ -28,6 +28,7 @@
 
     <!-- only for feed -->
     <item android:id="@+id/uc_switch_feed"  app:showAsAction="always" android:icon="@drawable/ic_action_web_site" android:title="@string/Switch_feed_elipses" />
+    <item android:id="@+id/uc_add_new_feed" app:showAsAction="ifRoom" android:icon="@drawable/circled_plus" android:title="@string/add_new_feed" />
     <item android:id="@+id/mt_filter"       app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_search"   android:title="@string/filter" android:visible="false" />
 
     <!-- for android 4.4.2 -->
@@ -61,7 +62,9 @@
             <item android:id="@+id/sort_group_names" app:showAsAction="never"                                               android:title="@string/cmd_sort" />
 
             <!-- only for feed -->
+<!--
             <item android:id="@+id/uc_add_new_feed" app:showAsAction="never" android:icon="@drawable/circled_plus" android:title="@string/add_new_feed" />
+-->
 
             <!-- only for previous/stored -->
             <item android:id="@+id/cmd_delete_all" app:showAsAction="never" android:icon="@android:drawable/ic_menu_delete"  android:title="@string/cmd_delete_all" android:visible="false"/>

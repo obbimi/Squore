@@ -151,6 +151,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 // typically a JSON feed with all appropriate settings in the feed, no need to change settings
                 if ( FeedStatus.showingPlayers.equals(getFeedStatus()) == false ) {
                     Match.dontShow();
+                    PreferenceValues.setOverwrites(mFeedPrefOverwrites);
                 }
             }
 
@@ -769,7 +770,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             return sFormat;
         }
 
-        final AndroidPlaceholder placeholder = new AndroidPlaceholder(TAG);
+        private final AndroidPlaceholder placeholder = new AndroidPlaceholder(TAG);
         final String m_sDisplayFormat = "${" + JSONKey.date + "} ${" + JSONKey.time + "} : ${FirstOfList:~${" + Player.A + "}~${A.name}~} [${A.country}] [${A.club}] - " +
                                                                                           "${FirstOfList:~${" + Player.B + "}~${B.name}~} [${B.country}] [${B.club}] : ${" + JSONKey.result + "} (${" + JSONKey.id + "})";
 

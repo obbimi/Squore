@@ -3159,6 +3159,9 @@ touch -t 01030000 LAST.sb
         setMenuItemTitle(menu, R.id.sb_email_match_result, PreferenceValues.ow_captionForEmailMatchResult     (this));
         setMenuItemTitle(menu, R.id.sb_send_match_result , PreferenceValues.ow_captionForMessageMatchResult   (this));
         setMenuItemTitle(menu, R.id.sb_post_match_result , PreferenceValues.ow_captionForPostMatchResultToSite(this));
+
+        setMenuIconToPackage(this, menu, R.id.sb_post_match_result, PreferenceValues.ow_iconForPostMatchResultToSite(this));
+        setMenuIconToPackage(this, menu, R.id.sb_email_match_result, "com.google.android.gm");
         }
 
         ViewUtil.setPackageIconOrHide(this, menu, R.id.sb_whatsapp_match_summary, "com.whatsapp");
@@ -3179,6 +3182,17 @@ touch -t 01030000 LAST.sb
         }
 
         return true;
+    }
+
+    private void setMenuIconToPackage(Context ctx, Menu menu, int menuId, String packageName) {
+        if ( StringUtil.isEmpty(packageName) ) { return; }
+        MenuItem menuItem = menu.findItem(menuId);
+        if ( (menuItem == null) || (menuItem.isVisible() == false) ) { return; }
+        try {
+            Drawable drawable = ctx.getPackageManager().getApplicationIcon(packageName);
+            menuItem.setIcon(drawable);
+        } catch (PackageManager.NameNotFoundException var6) {
+        }
     }
 
     private void setMenuItemTitle(Menu menu, int iId, String s) {
@@ -4440,7 +4454,8 @@ touch -t 01030000 LAST.sb
             }
         }
         int iShowPostToSiteDialogCnt = PreferenceValues.getRunCount(this, PreferenceKeys.autoSuggestToPostResult);
-        boolean bShowWithNoMoreCheckBox = PreferenceValues.autoSuggestToPostResult(this) && (iShowPostToSiteDialogCnt < 5);
+        boolean bIsOverwritten = PreferenceValues.getOverwritten(PreferenceKeys.autoSuggestToPostResult)!=null;
+        boolean bShowWithNoMoreCheckBox = PreferenceValues.autoSuggestToPostResult(this) && (iShowPostToSiteDialogCnt < 5) && (bIsOverwritten == false);
 
         PostMatchResult postMatchResult = new PostMatchResult(this, matchModel, this);
         postMatchResult.init(bShowWithNoMoreCheckBox);

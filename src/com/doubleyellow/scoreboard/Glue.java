@@ -155,6 +155,7 @@ public class Glue
                 , null
                 , null
                 , null
+                , null
                 , announcementLanguage
                 , startupAction);
     }
@@ -173,6 +174,7 @@ public class Glue
                                    , String  sCaptionForEmailMatchResult
                                    , String  sCaptionForMessageMatchResult
                                    , String  sCaptionForPostMatchResultToSite
+                                   , String  sIconForPostMatchResultToSite
                                    , String  sMessageToNr            // default telephone number to text the result of a message to
                                    , String  sEmailTo
                                    , AnnouncementLanguage announcementLanguage
@@ -238,6 +240,9 @@ public class Glue
         }
         if ( StringUtil.isNotEmpty(sCaptionForPostMatchResultToSite) ) {
             extraInfo.put(PreferenceKeys.captionForPostMatchResultToSite, sCaptionForPostMatchResultToSite);
+        }
+        if ( StringUtil.isNotEmpty(sIconForPostMatchResultToSite) ) {
+            extraInfo.put(PreferenceKeys.iconForPostMatchResultToSite, sIconForPostMatchResultToSite);
         }
 
         // sharing

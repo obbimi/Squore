@@ -25,7 +25,10 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Model;
@@ -66,10 +69,10 @@ public class ServerToss extends BaseAlertDialog
                     AlertDialog dialog = (AlertDialog) dialogI;
                     final Button btnA = dialog.getButton(BTN_A_STARTS);
                     final Button btnB = dialog.getButton(BTN_B_STARTS);
-                    if (btnA.isEnabled() == false) {
+                    if ( btnA.isEnabled() == false ) {
                         // toss is performed and B was selected
                         handleButtonClick(BTN_B_STARTS);
-                    } else if (btnB.isEnabled() == false) {
+                    } else if ( btnB.isEnabled() == false ) {
                         // toss is performed and B was selected
                         handleButtonClick(BTN_A_STARTS);
                     } else {
@@ -142,6 +145,18 @@ public class ServerToss extends BaseAlertDialog
             if (btnToss == null) {
                 return;
             }
+            ViewParent parent = btnToss.getParent(); // LinearLayout
+            if ( parent instanceof LinearLayout ) {
+                ViewGroup.LayoutParams layoutParams = btnToss.getLayoutParams();
+                //LinearLayout ll = (LinearLayout) parent;
+                //ViewGroup.LayoutParams layoutParams = ll.getLayoutParams();
+                if ( layoutParams instanceof LinearLayout.LayoutParams ) {
+                    LinearLayout.LayoutParams llp = (LinearLayout.LayoutParams) layoutParams;
+                    llp.weight = 0.8f;
+                    btnToss.setLayoutParams(llp);
+                }
+            }
+
             // ensure that when toss button is clicked player buttons are toggled a couple of times then only one remains enabled
             btnToss.setOnClickListener(onClickTossListener);
         }
@@ -172,20 +187,20 @@ public class ServerToss extends BaseAlertDialog
         final Button btnA    = dialog.getButton(BTN_A_STARTS);
         final Button btnB    = dialog.getButton(BTN_B_STARTS);
         btnToss.setEnabled(false);
-        if (btnA == null || btnB == null) return;
+        if ( (btnA == null) || (btnB == null) ) return;
 
         boolean bInitialEnabledA = Math.round(Math.random()) == 0;
         btnA.setEnabled(  bInitialEnabledA );
         btnB.setEnabled( !bInitialEnabledA );
         CountDownTimer countDownTimer = new CountDownTimer(2400, (80 + Math.abs(System.currentTimeMillis() % 40))) {
             @Override public void onTick(long l) {
-                btnA.setEnabled(!btnA.isEnabled());
-                btnB.setEnabled(!btnB.isEnabled());
+                btnA.setEnabled( btnA.isEnabled() == false );
+                btnB.setEnabled( btnB.isEnabled() == false );
             }
 
             @Override public void onFinish() {
                 btnToss.setEnabled(true);
-                if ( matchModel != null && matchModel.hasStarted() == false ) {
+                if ( (matchModel != null) && (matchModel.hasStarted() == false) ) {
                     // automatically change the serve side in the model already, but without closing the dialog
                     if ( btnA.isEnabled() && matchModel.getServer().equals(Player.B) ) {
                         matchModel.changeSide(Player.A);

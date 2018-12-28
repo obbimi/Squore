@@ -75,7 +75,7 @@
     <string name="sb_choose_player">For which player?</string>
     <string name="sb_choose_team">For which team?</string>
     <string name="sb_edit_event_or_player">Edit event/player</string>
-    <string name="sb_new_match">Start new match</string>
+    <string name="sb_new_match">New match</string>
     <string name="sb_matches">Matches</string>
     <string name="sb_new_singles_match">New singles match</string>
     <string name="sb_new_doubles_match">New doubles match</string>

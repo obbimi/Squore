@@ -69,12 +69,13 @@ public class PostMatchResult extends BaseAlertDialog
 
         String postResultToURL = PreferenceValues.getPostResultToURL(context);
                postResultToURL = URLFeedTask.prefixWithBaseIfRequired(postResultToURL);
-        adb.setIcon   (R.drawable.ic_action_send_now)
-           .setTitle(sTitle)
+        adb.setTitle(sTitle)
            .setMessage(postResultToURL)
            .setPositiveButton(R.string.cmd_ok    , dialogClickListener)
            .setNegativeButton(R.string.cmd_cancel, dialogClickListener)
            .setOnKeyListener(getOnBackKeyListener());
+
+        setIconToPackage(context, adb, PreferenceValues.ow_iconForPostMatchResultToSite(context), R.drawable.ic_action_send_now);
 
         if ( ll != null ) {
             adb.setView(ll);

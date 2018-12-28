@@ -200,6 +200,7 @@ public class AdjustScore extends BaseAlertDialog {
                     break;
                 }
             }
+            triggerButtonLayoutAPI28(dialogInterface, DialogInterface.BUTTON_NEUTRAL);
         }
     }
 
