@@ -414,12 +414,6 @@ public abstract class Model
             l.OnScoreChange(Player.A, iInitialScoreA, 0, null);
             l.OnScoreChange(Player.B, iInitialScoreB, 0, null);
         }
-/*
-        // not necc: is invoked when handout(...) was called
-        for(OnServeSideChangeListener l:onServeSideChangeListener) {
-            l.OnServeSideChange(m_pServer, m_in_out, m_nextServeSide, true);
-        }
-*/
 
         m_iTieBreakPlusX = 0; // reset value that might have been set for tie-break
         m_halfwayStatus = Halfway.Before;
@@ -686,13 +680,12 @@ public abstract class Model
             l.OnScoreChange(player, iNewScore, iDelta, call);
         }
         if ( bTriggerServeSideChange ) {
-            boolean bIsHandout = (m_pServer.equals(previousServer) == false) || (m_in_out.equals(previousDS) == false);
-            setLastPointWasHandout(bIsHandout);
-/*
-            for (OnServeSideChangeListener l : onServeSideChangeListener) {
-                l.OnServeSideChange(m_pServer, m_in_out, m_nextServeSide, bIsHandout);
+            if ( isDoubles() ) {
+                // calculated earlier and set by calling setLastPointWasHandout(). depends in DoubleServe=In or Out
+            } else {
+                boolean bIsHandout = (m_pServer.equals(previousServer) == false) || (m_in_out.equals(previousDS) == false);
+                setLastPointWasHandout(bIsHandout);
             }
-*/
         }
         triggerSpecialScoreListenersIfApplicable(player);
     }
@@ -2884,7 +2877,8 @@ public abstract class Model
             } else {
                 m_iHandoutCountDoubles = -1;
                 DoublesServe ds = m_doubleServeSequence.playerToServe(DoublesServe.NA, true, m_iHandoutCountDoubles);
-                setServerAndSide(scorer, null, ds); // TODO: option to handle 'looser of previous game starts serving'
+                setServerAndSide(scorer, m_player2LastServeSide.get(scorer), ds); // TODO: option to handle 'looser of previous game starts serving'
+                setLastPointWasHandout(true);
             }
         } else {
             // singles
@@ -3312,7 +3306,7 @@ public abstract class Model
         }
     }
 
-    /** only appealed for racketlon in case of appeal or conduct decision */
+    /** also called for racketlon/squash in case of appeal or conduct decision */
     void changeScore_Squash_Racketlon(Player player, boolean bTriggerServeSideChange, Call call)
     {
         boolean bConductGame = (call != null) && call.getScoreAffect().equals(Call.ScoreAffect.LoseGame);
@@ -3343,7 +3337,7 @@ public abstract class Model
         }
 
         ScoreLine scoreLine = getScoreLine(player, iNewScore, sCurrentSide);
-        if ( player.equals(getServer()) ) {
+        if ( player.equals( this.getServer() ) ) {
             // score for the server
             if ( bTriggerServeSideChange ) {
                 setServerAndSide(null, m_nextServeSide.getOther(), null);
@@ -3352,7 +3346,7 @@ public abstract class Model
         } else {
             // hand-out: score for receiver
             if ( bTriggerServeSideChange ) {
-                handout(player, true);
+                handout(player, true); // will invoke setLastPointWasHandout()
             }
         }
         if ( m_gameTimingCurrent == null ) {

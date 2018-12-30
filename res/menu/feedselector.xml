@@ -31,7 +31,7 @@
 
         <!-- move menu items below here if you want to simulate overflow even for devices that do normally do not have it (because the have a hardware menu button) -->
         <menu>
-            <item android:id="@+id/close"     app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_close_clear_cancel"  android:title="@string/cmd_close" />
+            <item android:id="@+id/close"     app:showAsAction="never" android:icon="@android:drawable/ic_menu_close_clear_cancel"  android:title="@string/cmd_close" />
 
             <item android:id="@+id/expand_all"   app:showAsAction="never" android:icon="@android:drawable/arrow_down_float" android:title="@string/expand_all" />
             <item android:id="@+id/collapse_all" app:showAsAction="never" android:icon="@android:drawable/arrow_up_float"   android:title="@string/collapse_all" />

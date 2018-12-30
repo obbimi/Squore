@@ -882,7 +882,9 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
     }
 
     public static List<String> syncAndClean_pauseBetweenGamesValues(Context ctx) {
-        String sValues = PreferenceValues.getString(PreferenceKeys.timerPauseBetweenGames_values, R.string.timerPauseBetweenGames_values_default, ctx);
+        int iResDefault = PreferenceValues.getSportTypeSpecificResId(ctx, R.string.timerPauseBetweenGames_values_default_Squash);
+
+        String sValues = PreferenceValues.getString(PreferenceKeys.timerPauseBetweenGames_values, iResDefault, ctx);
         sValues = sValues.replaceAll("[^0-9,;]", "");
         List<String> lValues = new ArrayList<String>(Arrays.asList(sValues.split("[,;]")));
         int iCurrentValue   = PreferenceValues.getPauseDuration(ctx);

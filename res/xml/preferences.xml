@@ -820,7 +820,7 @@
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_timerPauseBetweenGames_values"
                 android:summary="@string/pref_timerPauseBetweenGames_values_summary"
-                android:defaultValue="@string/timerPauseBetweenGames_values_default"
+                android:defaultValue="@string/timerPauseBetweenGames_values_default_Squash"
                 />
             <CheckBoxPreference android:key="showTimeIsAlreadyUpFor_Chrono"
                 android:icon="@drawable/dummy"

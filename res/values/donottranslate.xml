@@ -44,7 +44,6 @@
     <string name="VolumeKeysBehaviour_default">None</string>
 
     <string name="handicapFormat_default">None</string>
-    <string name="timerPauseBetweenGames_values_default">60,90,120,180,300</string> <!-- last 2 more aimed at racketlon ;-) -->
     <string name="feedFeedsURL_default">/feed/feeds.php</string>
     <string name="FlagsURLs_default"><![CDATA[/img/flag/%1$s
 \nhttp://www.geognos.com/api/en/countries/flag/%1$s.png]]>

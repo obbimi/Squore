@@ -63,6 +63,12 @@ http://developer.android.com/guide/practices/screens_support.html
 
 -->
 
+    <string name="timerPauseBetweenGames_values_default_Squash">60,90,120,180</string>
+    <string name="timerPauseBetweenGames_values_default_Tabletennis">60,90,120,180</string>
+    <string name="timerPauseBetweenGames_values_default_Racketlon">90,120,180,300</string>
+    <integer name="timerWarmup_default">240</integer> <!-- change from 300 to 240 according to new PSA rules -->
+    <integer name="timerPauseBetweenGames_default">90</integer>
+    <integer name="timerInjury_default">180</integer>
 
     <integer name="serveButtonTransparencyNonServer_default_Squash">60</integer> <!-- between 0 and 100 -->
     <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Squash">false</bool>
@@ -130,9 +136,6 @@ http://developer.android.com/guide/practices/screens_support.html
     <integer name="gameEndScore_default">11</integer>
     <integer name="numberOfGamesToWin_default">3</integer>
     <integer name="numberOfServesPerPlayer_default">2</integer>
-    <integer name="timerWarmup_default">300</integer>
-    <integer name="timerPauseBetweenGames_default">90</integer>
-    <integer name="timerInjury_default">180</integer>
     <integer name="readContactsForAutoCompletion_max_default">500</integer>
     <integer name="numberOfCharactersBeforeAutocomplete_default">2</integer>
     <integer name="numberOfCharactersBeforeAutocompleteCountry_default">1</integer> <!-- as low as possible so user realizes directly he can pick the country -->
@@ -267,6 +270,8 @@ http://developer.android.com/guide/practices/screens_support.html
 ]]></string>
     <string name="OfficialRulesURLs_default_Squash"><![CDATA[/help/rules.of.singles.squash.php
 \nhttp://www.worldsquash.org/ws/rules/rules-of-squash-2
+\nhttp://www.worldsquash.org/ws/wp-content/uploads/2018/11/190101_Rules-of-Singles-Squash-2019-V1-1.pdf
+\nhttp://www.worldsquash.org/ws/wp-content/uploads/2014/11/150101_Doubles-Rules-Final.pdf
 \nhttp://www.worldsquash.org/ws/wp-content/uploads/2014/01/131023_Rules-of-Singles-Squash-2014.pdf
 \nhttp://www.worldsquash.org/ws/wp-content/uploads/2016/05/160503_Injury-Bleeding-Flowchart.pdf
 \nhttp://dsqv.de/downloads/doc_download/95-squash-spielregeln-einzel-2014
