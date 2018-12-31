@@ -25,7 +25,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.android.util.AutoSuggestAdapter;
@@ -164,8 +163,8 @@ public class PlayerTextView extends AppCompatAutoCompleteTextView implements Con
 
         this.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long rowId) {
-		Object oItem = parent.getItemAtPosition(position);
-		if ( oItem == null ) { return; }
+		        Object oItem = parent.getItemAtPosition(position);
+		        if ( oItem == null ) { return; }
                 String sName = oItem.toString().trim();
                 for ( Listener l : listeners ) {
                     l.onSelected(sName, PlayerTextView.this);

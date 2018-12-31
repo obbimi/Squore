@@ -484,6 +484,15 @@ public class MatchView extends SBRelativeLayout
             txtPlayerA2 = (EditText) findViewById(R.id.match_playerA2);
             txtPlayerB  = (EditText) findViewById(R.id.match_playerB1);
             txtPlayerB2 = (EditText) findViewById(R.id.match_playerB2);
+
+            if ( txtPlayerA instanceof PlayerTextView) {
+                PlayerTextView ptvA = (PlayerTextView) txtPlayerA;
+                ptvA.addListener(new DoublesNameCopier(txtPlayerA2));
+            }
+            if ( txtPlayerB instanceof PlayerTextView) {
+                PlayerTextView ptvB = (PlayerTextView) txtPlayerB;
+                ptvB.addListener(new DoublesNameCopier(txtPlayerB2));
+            }
             tvsPlayers  = new TextView[]{txtPlayerA,txtPlayerA2,txtPlayerB,txtPlayerB2};
             clearPlayerFields();
         } else {
@@ -775,6 +784,23 @@ public class MatchView extends SBRelativeLayout
                 if ( ViewUtil.areAllEmpty(ac) && StringUtil.isNotEmpty(sCountryCode) ) {
                     ac.setCountryCode(sCountryCode);
                     ptv.setText(sName.replaceAll(CountryTextView.S_EXTRACT_COUNTRYCODE_REGEXP, "$1"));
+                }
+            }
+        }
+    }
+    /** if for the first player of a doubles team a name like Player A1/Player A2 is choosen, split it and 'prepop' the second player */
+    private static class DoublesNameCopier implements PlayerTextView.Listener {
+        private EditText etOther = null;
+        DoublesNameCopier(EditText etOther) {
+            this.etOther = etOther;
+        }
+        @Override public void onSelected(String sName, PlayerTextView ptv) {
+            String[] saNames = sName.split(Model.REGEXP_SPLIT_DOUBLES_NAMES);
+            if ( saNames.length == 2 ) {
+                ptv.setText(saNames[0]);
+                if ( ViewUtil.areAllEmpty(etOther) ) {
+                    // only copy if empty
+                    etOther.setText(saNames[1]);
                 }
             }
         }
