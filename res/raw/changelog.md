@@ -1,3 +1,11 @@
+## 4.17 (jan 2019)
+
+- bugfix in serveside/hand-out indication for doubles
+- improve autocomplete for double player names
+    - if you start typing a name in 'Player A1' and select e.g. 'Carlos/Diego' from the suggested list
+        - field 'Player A1' is filled with 'Carlos' and 
+        - field 'Player A2' is filled with 'Diego'
+
 ## 4.16 (dec 2018)
 
 - allow 'undo' for both players by swiping left-to-right or right-to-left

@@ -446,7 +446,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             if ( matchModel.isDoubles() && player.equals( matchModel.getServer() ) ) {
                 DoublesServe inOutClickedOn = getInOrOut(view);
                 DoublesServe inOut = matchModel.getNextDoubleServe(player);
-                if ( (inOutClickedOn != null) && inOutClickedOn.equals(DoublesServe.NA) == false && inOutClickedOn.equals(inOut) == false ) {
+                if ( (inOutClickedOn                         != null)
+                  && (inOutClickedOn.equals(DoublesServe.NA) == false)
+                  && (inOutClickedOn.equals(inOut)           == false)
+                   ) {
                     // clicked on serve side button of non-serving doubles player of the same team
                     matchModel.changeDoubleServe(player);
                 } else {
