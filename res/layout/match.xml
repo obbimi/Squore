@@ -31,7 +31,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <TextView
+        <TextView android:inputType="none"
                 android:id="@+id/lblPlayersS"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -47,7 +47,6 @@
                     android:hint="@string/lbl_player_A"
                     android:textSize="@dimen/txt_small"
                     android:textCursorDrawable="@null"
-                    android:paddingLeft="@dimen/sb_playername_leftpadding"
                     android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:background="@drawable/button_dark"
                     android:tag="item"
@@ -58,14 +57,12 @@
                     android:maxLines="1"
                     android:nextFocusDown="@+id/match_playerB"
                     android:imeOptions="actionNext"
-                    android:text="Player A"
                     android:layout_gravity="center_horizontal"/>
             <com.doubleyellow.scoreboard.view.PlayerTextView
                     android:id="@id/match_playerB"
                     android:hint="@string/lbl_player_B"
                     android:textSize="@dimen/txt_small"
                     android:textCursorDrawable="@null"
-                    android:paddingLeft="@dimen/sb_playername_leftpadding"
                     android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:background="@drawable/button_dark"
                     android:tag="item"
@@ -74,8 +71,8 @@
                     android:layout_margin="@dimen/sb_playername_leftpadding"
                     android:singleLine="true"
                     android:maxLines="1"
-                    android:imeOptions="actionDone"
-                    android:text="Player B"
+                    android:nextFocusDown="@+id/match_countryA"
+                    android:imeOptions="actionNext"
                     android:layout_gravity="center_horizontal"/>
         </LinearLayout>
     </LinearLayout>
@@ -85,12 +82,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <TextView
+                android:id="@+id/lblPlayersD"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/lbl_players"
                 android:textSize="@dimen/txt_medium"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/lblPlayersD"/>
+                />
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -99,6 +97,9 @@
             <com.doubleyellow.scoreboard.view.PlayerTextView
                     android:id="@+id/match_playerA1"
                     android:hint="@string/lbl_playerA1"
+                    android:textSize="@dimen/txt_small"
+                    android:textCursorDrawable="@null"
+                    android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:background="@drawable/button_dark"
                     android:tag="item"
                     android:layout_width="match_parent"
@@ -108,15 +109,13 @@
                     android:maxLines="1"
                     android:nextFocusDown="@+id/match_playerA2"
                     android:imeOptions="actionNext"
-                    android:text="Player A"
-                    android:textSize="@dimen/txt_small"
-                    android:textCursorDrawable="@null"
-                    android:paddingLeft="@dimen/sb_playername_leftpadding"
-                    android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:layout_gravity="center_horizontal"/>
             <com.doubleyellow.scoreboard.view.PlayerTextView
                     android:id="@+id/match_playerA2"
                     android:hint="@string/lbl_playerA2"
+                    android:textSize="@dimen/txt_small"
+                    android:textCursorDrawable="@null"
+                    android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:background="@drawable/button_dark"
                     android:tag="item"
                     android:layout_width="match_parent"
@@ -126,11 +125,6 @@
                     android:maxLines="1"
                     android:nextFocusDown="@+id/match_playerB1"
                     android:imeOptions="actionNext"
-                    android:text="Player B"
-                    android:textSize="@dimen/txt_small"
-                    android:textCursorDrawable="@null"
-                    android:paddingLeft="@dimen/sb_playername_leftpadding"
-                    android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:layout_gravity="center_horizontal"/>
             <LinearLayout
                     android:id="@+id/match_splitterD"
@@ -142,6 +136,9 @@
             <com.doubleyellow.scoreboard.view.PlayerTextView
                     android:id="@+id/match_playerB1"
                     android:hint="@string/lbl_playerB1"
+                    android:textSize="@dimen/txt_small"
+                    android:textCursorDrawable="@null"
+                    android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:background="@drawable/button_dark"
                     android:tag="item"
                     android:layout_width="match_parent"
@@ -151,15 +148,13 @@
                     android:maxLines="1"
                     android:nextFocusDown="@+id/match_playerB2"
                     android:imeOptions="actionNext"
-                    android:text="Player X"
-                    android:textSize="@dimen/txt_small"
-                    android:textCursorDrawable="@null"
-                    android:paddingLeft="@dimen/sb_playername_leftpadding"
-                    android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:layout_gravity="center_horizontal"/>
             <com.doubleyellow.scoreboard.view.PlayerTextView
                     android:id="@+id/match_playerB2"
                     android:hint="@string/lbl_playerB2"
+                    android:textSize="@dimen/txt_small"
+                    android:textCursorDrawable="@null"
+                    android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:background="@drawable/button_dark"
                     android:tag="item"
                     android:layout_width="match_parent"
@@ -168,12 +163,7 @@
                     android:singleLine="true"
                     android:maxLines="1"
                     android:nextFocusDown="@+id/match_countryA"
-                    android:imeOptions="actionDone"
-                    android:text="Player Y"
-                    android:textSize="@dimen/txt_small"
-                    android:textCursorDrawable="@null"
-                    android:paddingLeft="@dimen/sb_playername_leftpadding"
-                    android:paddingStart="@dimen/sb_playername_leftpadding"
+                    android:imeOptions="actionNext"
                     android:layout_gravity="center_horizontal"/>
         </LinearLayout>
     </LinearLayout>
@@ -200,7 +190,6 @@
                     android:hint="@string/lbl_club_A"
                     android:textSize="@dimen/txt_small"
                     android:textCursorDrawable="@null"
-                    android:paddingLeft="@dimen/sb_playername_leftpadding"
                     android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:background="@drawable/button_dark"
                     android:tag="item"
@@ -212,14 +201,13 @@
                     android:nextFocusDown="@+id/match_clubB"
                     android:imeOptions="actionNext"
                     android:layout_gravity="center_horizontal"
-                    dy:PreferenceKeys="clubList,clubListLastA"
+                    dy:PreferenceKeys="clubList,clubListLastX"
                     dy:defaultACValues="@string/emptyList_default"/>
             <com.doubleyellow.scoreboard.view.PreferenceACTextView
                     android:id="@+id/match_clubB"
                     android:hint="@string/lbl_club_B"
                     android:textSize="@dimen/txt_small"
                     android:textCursorDrawable="@null"
-                    android:paddingLeft="@dimen/sb_playername_leftpadding"
                     android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:background="@drawable/button_dark"
                     android:tag="item"
@@ -229,7 +217,7 @@
                     android:singleLine="true"
                     android:maxLines="1"
                     android:nextFocusDown="@+id/spNumberOfGamesToWin"
-                    android:imeOptions="actionDone"
+                    android:imeOptions="actionNext"
                     android:layout_gravity="center_horizontal"
                     dy:PreferenceKeys="clubList,clubListLastX"
                     dy:defaultACValues="@string/emptyList_default"/>
@@ -275,7 +263,6 @@
             android:hint="@string/lbl_country_B"
             android:textSize="@dimen/txt_small"
             android:textCursorDrawable="@null"
-            android:paddingLeft="@dimen/sb_playername_leftpadding"
             android:paddingStart="@dimen/sb_playername_leftpadding"
             android:background="@drawable/button_dark"
             android:tag="item"
@@ -285,7 +272,7 @@
             android:singleLine="true"
             android:maxLines="1"
             android:nextFocusDown="@+id/spNumberOfGamesToWin"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionNext"
             android:layout_gravity="center_horizontal"/>
         </LinearLayout>
     </LinearLayout>
@@ -616,7 +603,6 @@
                             android:id="@+id/match_event"
                             android:background="@drawable/button_dark"
                             android:textCursorDrawable="@null"
-                            android:paddingLeft="@dimen/sb_playername_leftpadding"
                             android:paddingStart="@dimen/sb_playername_leftpadding"
                             android:hint="@string/name"
                             android:textSize="@dimen/txt_small"
@@ -635,7 +621,6 @@
                             android:id="@+id/match_division"
                             android:background="@drawable/button_dark"
                             android:textCursorDrawable="@null"
-                            android:paddingLeft="@dimen/sb_playername_leftpadding"
                             android:paddingStart="@dimen/sb_playername_leftpadding"
                             android:hint="@string/lbl_division"
                             android:textSize="@dimen/txt_small"
@@ -654,7 +639,6 @@
                             android:id="@+id/match_round"
                             android:background="@drawable/button_dark"
                             android:textCursorDrawable="@null"
-                            android:paddingLeft="@dimen/sb_playername_leftpadding"
                             android:paddingStart="@dimen/sb_playername_leftpadding"
                             android:hint="@string/lbl_round"
                             android:textSize="@dimen/txt_small"
@@ -673,7 +657,6 @@
                             android:id="@+id/match_location"
                             android:background="@drawable/button_dark"
                             android:textCursorDrawable="@null"
-                            android:paddingLeft="@dimen/sb_playername_leftpadding"
                             android:paddingStart="@dimen/sb_playername_leftpadding"
                             android:hint="@string/lbl_location"
                             android:textSize="@dimen/txt_small"
@@ -693,7 +676,6 @@
                     android:id="@+id/match_court"
                     android:background="@drawable/button_dark"
                     android:textCursorDrawable="@null"
-                    android:paddingLeft="@dimen/sb_playername_leftpadding"
                     android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:hint="@string/lbl_court_Squash"
                     android:textSize="@dimen/txt_small"
@@ -746,8 +728,8 @@
                     android:layout_margin="@dimen/sb_playername_leftpadding"
                     android:singleLine="true"
                     android:maxLines="1"
-                    android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/match_marker"
+                    android:imeOptions="actionNext"
                     android:layout_gravity="center_horizontal"
                     dy:PreferenceKeys="refereeList,refereeName"
                     dy:defaultACValues=""/>
@@ -755,7 +737,6 @@
                     android:id="@+id/match_marker"
                     android:background="@drawable/button_dark"
                     android:textCursorDrawable="@null"
-                    android:paddingLeft="@dimen/sb_playername_leftpadding"
                     android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:hint="@string/lbl_marker"
                     android:textSize="@dimen/txt_small"

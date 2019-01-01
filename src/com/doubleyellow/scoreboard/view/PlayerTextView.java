@@ -87,6 +87,7 @@ public class PlayerTextView extends AppCompatAutoCompleteTextView implements Con
             initializeAdapter();
         }
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        Log.d(TAG, String.format("Focus changed: %s %d : focused %s, nextdown %d, nextforward %d", this.getHint(), this.getId(), focused, this.getNextFocusDownId(), this.getNextFocusForwardId()));
     }
 
     public interface Listener {
