@@ -20,7 +20,7 @@ package com.doubleyellow.scoreboard.match;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.TypedValue;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +53,8 @@ import java.util.List;
  */
 public class MatchView extends SBRelativeLayout
 {
+    private static final String TAG = MatchView.class.getSimpleName();
+
     private NewMatchLayout m_layout = NewMatchLayout.AllFields;
 
     public MatchView(Context context, boolean bIsDoubles, Model model, NewMatchLayout layout) {
@@ -69,7 +71,7 @@ public class MatchView extends SBRelativeLayout
         txtMarkerName .setText(sMarker);
     }
 
-    /** introduced to be able to quickly turn it off during development */
+    /** wrapper introduced to be able to quickly turn it off during development */
     private boolean requestFocusFor(View v) {
         //if ( true ) { return false; }
         if ( v == null ) {
@@ -286,7 +288,7 @@ public class MatchView extends SBRelativeLayout
             }
         }
 
-        if ( (txtClubA != null) && (txtClubB!=null) ) {
+        if ( (txtClubA != null) && (txtClubB != null) ) {
             if ( StringUtil.areAllEmpty(sClubA, sClubB) == false ) {
                 if ( StringUtil.isNotEmpty(sClubA) ) {
                     txtClubA.setText(sClubA);
@@ -384,6 +386,11 @@ public class MatchView extends SBRelativeLayout
         return true;
     }
     boolean clearPlayerFields() {
+/*
+        for (TextView tv: tvsPlayers ) {
+            Log.d(TAG, String.format("%s %d .nfd : %d", tv.getHint(), tv.getId(), tv.getNextFocusDownId()));
+        }
+*/
         return clearFields(tvsPlayers);
     }
 
@@ -515,7 +522,7 @@ public class MatchView extends SBRelativeLayout
         txtClubA     = (PreferenceACTextView) findViewById(R.id.match_clubA);
         txtClubB     = (PreferenceACTextView) findViewById(R.id.match_clubB);
         tvsCountries = new TextView[]{txtCountryA,txtCountryB};
-        tvsClubs     = new TextView[]{txtClubA,txtClubB};
+        tvsClubs     = new TextView[]{txtClubA   ,txtClubB   };
         initCountries(context, txtCountryA, txtPlayerA, bIsDoubles);
         initCountries(context, txtCountryB, txtPlayerB, bIsDoubles);
         initClubs(context, txtClubA, txtPlayerA);

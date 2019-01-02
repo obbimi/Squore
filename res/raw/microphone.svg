@@ -35,23 +35,23 @@ There are several density buckets available for use in your apps. Table 1 descri
 
 Table 1. Configuration qualifiers for different pixel densities.
 Density qualifier 	Description
-ldpi 	Resources for low-density (ldpi) screens (~120dpi).
-mdpi 	Resources for medium-density (mdpi) screens (~160dpi). (This is the baseline density.)
-hdpi 	Resources for high-density (hdpi) screens (~240dpi).
-xhdpi 	Resources for extra-high-density (xhdpi) screens (~320dpi).
-xxhdpi 	Resources for extra-extra-high-density (xxhdpi) screens (~480dpi).
-xxxhdpi 	Resources for extra-extra-extra-high-density (xxxhdpi) uses (~640dpi).
+ldpi 	Resources for low-density                    (ldpi   ) screens (~120dpi).
+mdpi 	Resources for medium-density                 (mdpi   ) screens (~160dpi). (This is the baseline density.)
+hdpi 	Resources for high-density                   (hdpi   ) screens (~240dpi).
+xhdpi 	Resources for extra-high-density             (xhdpi  ) screens (~320dpi).
+xxhdpi 	Resources for extra-extra-high-density       (xxhdpi ) screens (~480dpi).
+xxxhdpi Resources for extra-extra-extra-high-density (xxxhdpi) uses    (~640dpi).
 nodpi 	Resources for all densities. These are density-independent resources. The system does not scale resources tagged with this qualifier, regardless of the current screen's density.
 tvdpi 	Resources for screens somewhere between mdpi and hdpi; approximately 213dpi. This is not considered a "primary" density group. It is mostly intended for televisions and most apps shouldn't need it—providing mdpi and hdpi resources is sufficient for most apps and the system will scale them as appropriate. If you find it necessary to provide tvdpi resources, you should size them at a factor of 1.33*mdpi. For example, a 100px x 100px image for mdpi screens should be 133px x 133px for tvdpi.
 
 To create alternative bitmap drawables for different densities, you should follow the 3:4:6:8:12:16 scaling ratio between the six primary densities. For example, if you have a bitmap drawable that's 48x48 pixels for medium-density screens, all the different sizes should be:
 
-    36x36 (0.75x) for low-density (ldpi)
-    48x48 (1.0x baseline) for medium-density (mdpi)
-    72x72 (1.5x) for high-density (hdpi)
-    96x96 (2.0x) for extra-high-density (xhdpi)
-    144x144 (3.0x) for extra-extra-high-density (xxhdpi)
-    192x192 (4.0x) for extra-extra-extra-high-density (xxxhdpi)
+    36x36   (0.75x)         for low-density (ldpi)
+    48x48   (1.0x baseline) for medium-density (mdpi)
+    72x72   (1.5x)          for high-density (hdpi)
+    96x96   (2.0x)          for extra-high-density (xhdpi)
+    144x144 (3.0x)          for extra-extra-high-density (xxhdpi)
+    192x192 (4.0x)          for extra-extra-extra-high-density (xxxhdpi)
 
 Then, place the generated image files in the appropriate subdirectory under res/ and the system will pick the correct one automatically based on the pixel density of the device your app is running on:
 

@@ -4893,7 +4893,7 @@ touch -t 01030000 LAST.sb
                     fetchMatch.execute();
                 } else {
                     // assume it is a feed url like
-                    String sFeedURL = sURL.replaceAll("(?:https?)://(?:www\\.|esf\\.|vsf\\.|fir\\.|rfa\\.|squashcanada\\.|wsf\\.|squashse\\.)?(?:toernooi|competitions|tournamentsoftware|europeansquash|squash)(?:\\.\\w{2,3}).*id=([A-Za-z0-9-]+).*?$"
+                    String sFeedURL = sURL.replaceAll("(?:https?)://(?:www\\.|esf\\.|vsf\\.|dsqv\\.|squashvlaanderen\\.|fir\\.|rfa\\.|squashcanada\\.|wsf\\.|squashse\\.)?(?:toernooi|turnier|competitions|tournamentsoftware|europeansquash|squash)(?:\\.\\w{2,3}).*id=([A-Za-z0-9-]+).*?$"
                                                      , Brand.getBaseURL() + "/tournamentsoftware/$1");
                     Log.i(TAG, String.format("Feed URL : %s", sFeedURL));
                     PreferenceValues.addOrReplaceNewFeedURL(this, "tournamentsoftware url", sFeedURL + "/matches"
