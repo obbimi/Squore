@@ -1,3 +1,8 @@
+## 4.17 (jan 2019)
+
+- improve autocomplete for double player names
+- Other minor improvements
+
 ## 4.12 (aug 2018)
 
 - upgraded to use new google-play library to improve ChromeCast for e.g. Android 8

@@ -1,28 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.racketlon"
-          android:versionCode="206"
-          android:versionName="4.12">
-    <!-- 4.08 (19) = revision 790 -->              <!-- nov 02: minor improvements -->
-    <!-- 4.08 (18) = revision 779 -->              <!-- okt 21: better handling of dialogs/network timeouts -->
-    <!-- 4.08 (17) = revision 771 -->              <!-- sep 25: color for checkbox in matchview -->
-    <!-- 4.08 (17) = revision 771 -->              <!-- sep 25: color in dialogs + minor bug fixes -->
-    <!-- 4.08 (17) = revision 771 -->              <!-- sep 25: allow starting a match from feeds player list -->
-    <!-- 4.08 (16) = revision 759 -->              <!-- aug 04: copy country code when selecting player fix -->
-    <!-- 4.08 (15) = revision 758 -->              <!-- jul 31: improvements for live scoring -->
-    <!-- 4.07 (14) = revision 747 -->              <!-- jul 18: easily change sides/flip players -->
-    <!-- 4.06 (13) = revision 741 -->              <!-- jul 16: download fix for android 7 + improved sharing for Doubles -->
-    <!-- 4.05 (12) = revision 735 -->              <!-- jul 11: improved match(ball) 'calculation' in last set + add missing Dutch translations -->
-    <!-- 4.04 (11) = revision 728 -->              <!-- jul 09: allow different sequence + double improvements -->
-    <!-- 4.03 (10) = revision 725 -->              <!-- jul 07: minor bugfixes -->
-    <!-- 4.02 ( 9) = revision 718 -->              <!-- jul 04: minor fixes: end game incorrect warning 'not allowed' after rotation -->
-    <!-- 4.01 ( 7) = revision 704 -->              <!-- jun 28: static match selection did not remember country because of faulty getTemp() model -->
-    <!-- 4.01 ( 6) = revision 703 -->              <!-- jun 27: refresh select list by means of swipe down-->
-    <!-- 4.01 ( 5) = revision 701 -->              <!-- jun 24: fix the AdjustScore dialog for racketlon-->
-    <!-- 4.01 ( 4) = revision 699 -->              <!-- jun 19: match result summary should be something like A+24 or B+15, usage of separate racketlon.dy.be subdomain -->
-    <!-- 4.00 ( 3) = revision 694 -->              <!-- jun 18: added missing dutch translations -->
-    <!-- 4.00 ( 2) = revision 692 -->              <!-- jun 17: few fixes -->
-    <!-- 4.00 ( 1) = revision 691 -->              <!-- jun 16: first racketlon version -->
+          android:versionCode="209"
+          android:versionName="4.17">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
     <uses-feature android:name="android.permission.INTERNET" android:required="true" />

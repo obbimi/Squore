@@ -1564,14 +1564,14 @@ public class PreferenceValues extends RWValues
                 // very first install/run
 
                 int appVersionCode = RWValues.getAppVersionCode(context);
-                final int    NO_SHOWCASE_FOR_VERSION        = 208;
-                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-01-02";
+                final int    NO_SHOWCASE_FOR_VERSION        = 209;
+                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-01-05";
                 if ( appVersionCode > NO_SHOWCASE_FOR_VERSION ) {
                     // need to adjust the datecheck below
                     Log.w(TAG, "[getStartupAction] Adjust version code check!!");
                     //throw new RuntimeException("[getStartupAction] Adjust version code check!!");
                 }
-                if ( appVersionCode == NO_SHOWCASE_FOR_VERSION && DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0 ) {
+                if ( appVersionCode >= NO_SHOWCASE_FOR_VERSION && DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0 ) {
                     // to allow google play store to run the app and monkey test it without the showcase/quickintro coming into the way
                     return StartupAction.None;
                 }
