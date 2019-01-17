@@ -1,3 +1,8 @@
+## 4.18 (jan 2019)
+
+- improvement for casting with Android 9
+- other minor improvements
+
 ## 4.17 (jan 2019)
 
 - improve autocomplete for double player names

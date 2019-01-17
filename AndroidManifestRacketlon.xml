@@ -19,9 +19,13 @@
     <!-- for import/export functionality -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<!--
+
+    <!-- android 9 casting -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <!--
     <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
--->
+    -->
     <uses-sdk/>
 
     <supports-screens
