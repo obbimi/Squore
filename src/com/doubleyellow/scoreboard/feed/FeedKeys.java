@@ -19,6 +19,8 @@ package com.doubleyellow.scoreboard.feed;
 
 import com.doubleyellow.scoreboard.Brand;
 
+import java.util.Locale;
+
 enum FeedKeys {
     FeedMetaData,
         /** array with sequence in with to present the feed types */
@@ -37,5 +39,8 @@ enum FeedKeys {
     }
     public String getLangSuffixed(String sLang) {
         return this.toString() + "-" + sLang;
+    }
+    public String getLocalSuffixed(Locale locale) {
+        return this.toString() + "-" + locale.toString();
     }
 }

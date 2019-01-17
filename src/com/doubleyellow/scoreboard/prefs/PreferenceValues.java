@@ -26,6 +26,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.*;
 import android.provider.ContactsContract;
@@ -1564,8 +1565,8 @@ public class PreferenceValues extends RWValues
                 // very first install/run
 
                 int appVersionCode = RWValues.getAppVersionCode(context);
-                final int    NO_SHOWCASE_FOR_VERSION        = 209;
-                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-01-05";
+                final int    NO_SHOWCASE_FOR_VERSION        = 210;
+                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-01-19";
                 if ( appVersionCode > NO_SHOWCASE_FOR_VERSION ) {
                     // need to adjust the datecheck below
                     Log.w(TAG, "[getStartupAction] Adjust version code check!!");
@@ -1919,6 +1920,19 @@ public class PreferenceValues extends RWValues
     // Permissions
     //-------------------------------------------------------------
 
+    public static Permission doesUserHavePermissionToCast(Context context, String sCastDeviceName, boolean bRequestIfRequired) {
+        Permission permission;
+        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.P /* = 28 */ ) {
+            permission = Permission.Granted;
+        } else {
+            permission = requestPermission(context, PreferenceKeys.Cast_ShowGraphDuringTimer, Manifest.permission.FOREGROUND_SERVICE, bRequestIfRequired);
+        }
+
+        if ( RWValues.Permission.Granted.equals(permission) == false ) {
+            Toast.makeText(context, "Need foreground permission for casting to work on " + sCastDeviceName, Toast.LENGTH_LONG).show();
+        }
+        return permission;
+    }
     static Permission doesUserHavePermissionToReadContacts(Context context, boolean bRequestIfRequired) {
         return requestPermission(context, PreferenceKeys.readContactsForAutoCompletion, Manifest.permission.READ_CONTACTS, bRequestIfRequired);
     }

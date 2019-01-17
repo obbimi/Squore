@@ -104,6 +104,7 @@ public class CastHelper
 
     private static String APP_ID = null;
 
+    /** Always called by the app */
     public void initCasting(Activity context) {
         if (NOT_SUPPORTED_IN_SDK) { return; }
 
@@ -129,6 +130,17 @@ public class CastHelper
         mediaRouteMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
         mediaRouteActionProvider.setRouteSelector(mediaRouteSelector);
+/*
+        mediaRouteMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override public boolean onMenuItemActionExpand(MenuItem item) {
+                return false;
+            }
+
+            @Override public boolean onMenuItemActionCollapse(MenuItem item) {
+                return false;
+            }
+        });
+*/
     }
     public void startCast() {
         if (NOT_SUPPORTED_IN_SDK) { return; }
@@ -171,9 +183,12 @@ public class CastHelper
         private MediaRouterCallback(Activity context) {
             this.context = context;
         }
-
+        /** Invoked as soon as a cast device is selected from the menu */
         @Override public void onRouteSelected(MediaRouter router, MediaRouter.RouteInfo route) {
             Log.d(TAG, "Route selected :" + route.getName());
+            if ( RWValues.Permission.Granted.equals(PreferenceValues.doesUserHavePermissionToCast(context, route.getName(), true)) == false ) {
+                return;
+            }
             GoogleApiAvailability instance = GoogleApiAvailability.getInstance(); // e.g. Living or Court 1. If e.g. Netflix is playing on the device: mDescription=Netflix
             int iResult = instance.isGooglePlayServicesAvailable(context);
             switch (iResult) {

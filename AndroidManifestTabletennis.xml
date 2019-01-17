@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.tabletennis"
-          android:versionCode="209"
-          android:versionName="4.17">
+          android:versionCode="210"
+          android:versionName="4.18">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
     <uses-feature android:name="android.permission.INTERNET" android:required="true" />
@@ -20,9 +20,12 @@
     <!-- for import/export functionality -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<!--
-    <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
--->
+
+    <!-- android 9 casting -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!--
+        <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
+    -->
     <uses-sdk/>
 
     <supports-screens

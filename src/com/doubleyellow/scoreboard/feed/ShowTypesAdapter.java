@@ -18,9 +18,13 @@
 package com.doubleyellow.scoreboard.feed;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.LocaleList;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +51,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
 {
@@ -298,8 +303,39 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
             }
         }
 
-        // for earlier selected 'Types', place them on top of the list
-        List<String> lMyFeedTypes =  PreferenceValues.getUsedFeedTypes(context);
+        // if defined for users locale, add certain types to top
+        List<String> lLocaleFeedTypes =  new ArrayList<>();
+        {
+            List<Locale> lLocales = new ArrayList<>(); // most important FIRST
+            {
+                Resources res    = context.getResources();
+                Configuration resCfg = res.getConfiguration();
+                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.N /* 24 */ ) {
+                    LocaleList locales = resCfg.getLocales();
+                    if ( locales.isEmpty() == false ) {
+                        for(int i=0; i<locales.size();i++) {
+                            lLocales.add(locales.get(i));
+                        }
+                    }
+                } else {
+                    Locale deviceLocale = RWValues.getDeviceLocale(context);
+                    lLocales.add(deviceLocale);
+                }
+            }
+            if ( ListUtil.isNotEmpty(lLocales) ) {
+                for ( Locale locale : lLocales ) {
+                    String[] saKeys = new String[] { FeedKeys.Sequence.getLocalSuffixed(locale), FeedKeys.Sequence.getLangSuffixed(locale.getLanguage()), FeedKeys.Sequence.getLangSuffixed(locale.getCountry()) };
+                    for( String sKey :saKeys ) {
+                        JSONArray typesLocale = joMetaData.optJSONArray(sKey);
+                        if ( JsonUtil.isNotEmpty(typesLocale) ) {
+                            List<String> lTmp = JsonUtil.asListOfStrings(typesLocale);
+                            lTmp.removeAll(lLocaleFeedTypes);
+                            lLocaleFeedTypes.addAll(lTmp);
+                        }
+                    }
+                }
+            }
+        }
 
         try {
             for ( int i=0; i < JsonUtil.size(types); i++ ) {
@@ -311,6 +347,14 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
                 String sUrl = PreferenceValues.getFeedsFeedURL(context);
                 //TODO: show some message about the url that does not work
             }
+            // if, based on device locale, some feeds are more useful to the user, add them to the top
+            if ( ListUtil.isNotEmpty(lLocaleFeedTypes) ) {
+                lLocaleFeedTypes.retainAll(lKeys);
+                lKeys.removeAll(lLocaleFeedTypes);
+                lKeys.addAll(0, lLocaleFeedTypes);
+            }
+            // for earlier selected 'Types', place them on top of the list
+            List<String> lMyFeedTypes =  PreferenceValues.getUsedFeedTypes(context);
             if ( ListUtil.isNotEmpty(lMyFeedTypes) ) {
                 lMyFeedTypes.retainAll(lKeys);
                 lKeys.removeAll(lMyFeedTypes);

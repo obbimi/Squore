@@ -834,8 +834,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 	//-------------------------------------------------------------------------
 
     public static   ToggleResult  bUseActionBar   = ToggleResult.nothing;
-    private boolean bHapticFeedbackPerPoint  = false;
-    private boolean bHapticFeedbackOnGameEnd = false;
+    private boolean m_bHapticFeedbackPerPoint  = false;
+    private boolean m_bHapticFeedbackOnGameEnd = false;
 
     /** onCreate() is followed by onstart() onresume(). Also called after orientation change */
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -974,8 +974,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             layout.setOnTouchListener(new TouchBothListener(clickBothListener, longClickBothListener));
         }
 
-        bHapticFeedbackPerPoint  = PreferenceValues.hapticFeedbackPerPoint(ScoreBoard.this);
-        bHapticFeedbackOnGameEnd = PreferenceValues.hapticFeedbackOnGameEnd(ScoreBoard.this);
+        m_bHapticFeedbackPerPoint  = PreferenceValues.hapticFeedbackPerPoint(ScoreBoard.this);
+        m_bHapticFeedbackOnGameEnd = PreferenceValues.hapticFeedbackOnGameEnd(ScoreBoard.this);
 
         initColors();
         initCountries();
@@ -1030,9 +1030,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         updateDemoThread(this);
 
-        bHapticFeedbackPerPoint  = PreferenceValues.hapticFeedbackPerPoint(this);
-        bHapticFeedbackOnGameEnd = PreferenceValues.hapticFeedbackOnGameEnd(this);
-        m_liveScoreShare         = PreferenceValues.isConfiguredForLiveScore(this);
+        m_bHapticFeedbackPerPoint  = PreferenceValues.hapticFeedbackPerPoint(this);
+        m_bHapticFeedbackOnGameEnd = PreferenceValues.hapticFeedbackOnGameEnd(this);
+        m_liveScoreShare           = PreferenceValues.isConfiguredForLiveScore(this);
 
         updateMicrophoneFloatButton();
         updateTimerFloatButton();
@@ -2459,7 +2459,7 @@ touch -t 01030000 LAST.sb
         }
         @Override public void OnGameEndReached(Player leadingPlayer) {
             if ( bInitializingModelListeners ) { return; }
-            if ( bHapticFeedbackOnGameEnd ) {
+            if ( m_bHapticFeedbackOnGameEnd ) {
                 SystemUtil.doVibrate(ScoreBoard.this, 800);
             }
             updateMicrophoneFloatButton();
@@ -2531,8 +2531,7 @@ touch -t 01030000 LAST.sb
         }
 
         @Override public void OnFirstPointOfGame() {
-            ShareMatchPrefs liveScoreShare = PreferenceValues.isConfiguredForLiveScore(ScoreBoard.this);
-            if ( matchModel.getGameNrInProgress()==1 && ShareMatchPrefs.LinkWithFullDetailsEachHalf.equals(liveScoreShare) ) {
+            if ( matchModel.getGameNrInProgress()==1 && ShareMatchPrefs.LinkWithFullDetailsEachHalf.equals(m_liveScoreShare) ) {
                 // share if livescoring is 'Semi-On' to let the match appear in the list a.s.a.p.
                 shareScoreSheet(ScoreBoard.this, matchModel, false);
             }
@@ -2560,7 +2559,7 @@ touch -t 01030000 LAST.sb
     private class ScoreChangeListener implements Model.OnScoreChangeListener
     {
         @Override public void OnScoreChange(Player p, int iTotal, int iDelta, Call call) {
-            if ( bHapticFeedbackPerPoint ) {
+            if ( m_bHapticFeedbackPerPoint ) {
                 int lDuration = iDelta == 1 ? 200 : 500;
                 SystemUtil.doVibrate(ScoreBoard.this, lDuration);
             }
@@ -2588,8 +2587,7 @@ touch -t 01030000 LAST.sb
                 }
             }
 
-            ShareMatchPrefs liveScoreShare = PreferenceValues.isConfiguredForLiveScore(ScoreBoard.this);
-            if ( (bInitializingModelListeners == false) && (iTotal != 0) && ShareMatchPrefs.LinkWithFullDetailsEachPoint.equals(liveScoreShare) && (matchModel.isLocked() == false) ) {
+            if ( (bInitializingModelListeners == false) && (iTotal != 0) && ShareMatchPrefs.LinkWithFullDetailsEachPoint.equals(m_liveScoreShare) && (matchModel.isLocked() == false) ) {
                 //shareScoreSheet(ScoreBoard.this, matchModel, false);
                 // start timer to post in e.g. 2 seconds. Restart this timer as soon as another point is scored
                 shareScoreSheetDelayed(2000);
@@ -2676,7 +2674,7 @@ touch -t 01030000 LAST.sb
 
     private class GameEndListener implements Model.OnGameEndListener {
         @Override public void OnGameEnded(Player winningPlayer) {
-            if ( bHapticFeedbackOnGameEnd ) {
+            if ( m_bHapticFeedbackOnGameEnd ) {
                 SystemUtil.doVibrate(ScoreBoard.this, 200);
             }
             if ( EnumSet.of(ShareMatchPrefs.LinkWithFullDetailsEachGame, ShareMatchPrefs.LinkWithFullDetailsEachHalf).contains(m_liveScoreShare) ) {
@@ -3794,8 +3792,7 @@ touch -t 01030000 LAST.sb
         addToDialogStack(twoTimerView);
 
         // ensure the match shows up in the list of live score a.s.a.p. so e.g. when warmup timer is started
-        ShareMatchPrefs liveScoreShare = PreferenceValues.isConfiguredForLiveScore(ScoreBoard.this);
-        if ( ( matchModel.hasStarted() == false ) && ShareMatchPrefs.LinkWithFullDetailsEachPoint.equals(liveScoreShare) && (matchModel.isLocked() == false) ) {
+        if ( ( matchModel.hasStarted() == false ) && ShareMatchPrefs.LinkWithFullDetailsEachPoint.equals(m_liveScoreShare) && (matchModel.isLocked() == false) ) {
             shareScoreSheetDelayed(1000);
         }
     }
@@ -3882,6 +3879,12 @@ touch -t 01030000 LAST.sb
     private boolean _showWhoServesDialog() {
         ServerToss serverToss = new ServerToss(this, matchModel, this);
         addToDialogStack(serverToss);
+
+        // ensure the match shows up in the list of live score a.s.a.p. so e.g. when toss dialog is started
+        if ( ( matchModel.hasStarted() == false ) && ShareMatchPrefs.LinkWithFullDetailsEachPoint.equals(m_liveScoreShare) && (matchModel.isLocked() == false) ) {
+            shareScoreSheetDelayed(1000);
+        }
+
         return true;
     }
 
@@ -5214,6 +5217,7 @@ touch -t 01030000 LAST.sb
     }
     private void initCastMenu(Menu menu) {
         castHelper.initCastMenu(menu);
+        PreferenceValues.doesUserHavePermissionToCast(this, "Any device", true);
     }
     private void setModelForCast(Model matchModel) {
         castHelper.setModelForCast(matchModel);
