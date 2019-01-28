@@ -148,6 +148,6 @@ public class Appeal extends BaseAlertDialog
             case BTN_YES_LET : call = Call.YL; break;
             case BTN_NO_LET  : call = Call.NL; break;
         }
-        matchModel.recordAppealAndCall(appealingPlayer, call);
+        scoreBoard.recordAppealAndCall(appealingPlayer, call);
     }
 }

@@ -18,6 +18,8 @@
 package com.doubleyellow.scoreboard.main;
 
 import android.app.*;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.*;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -55,6 +57,10 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.*;
 import com.doubleyellow.scoreboard.archive.ArchiveTabbed;
 import com.doubleyellow.scoreboard.archive.PreviousMatchSelector;
+import com.doubleyellow.scoreboard.bluetooth.BTMessage;
+import com.doubleyellow.scoreboard.bluetooth.BTState;
+import com.doubleyellow.scoreboard.bluetooth.BluetoothControlService;
+import com.doubleyellow.scoreboard.bluetooth.DeviceListActivity;
 import com.doubleyellow.scoreboard.cast.EndOfGameView;
 import com.doubleyellow.scoreboard.demo.*;
 import com.doubleyellow.demo.*;
@@ -187,7 +193,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 case R.id.btn_score1:
                 case R.id.btn_score2:
                     // on tablet, the buttons are so big that two finger touch/click may be performed without user thinking about it
-                    matchModel.changeScore(player);
+                    changeScore(player);
                     return true;
                 case R.id.txt_player1:
                 case R.id.txt_player2:
@@ -239,11 +245,11 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     if ( matchModel.isLastPointHandout() && isServer) {
                         if (nextServeSide.equals(ServeSide.L) && direction.equals(Direction.E)) {
                             // change from left to right
-                            matchModel.changeSide(player);
+                            changeSide(player);
                             return true;
                         } else if (nextServeSide.equals(ServeSide.R) && direction.equals(Direction.W)) {
                             // change from right to left
-                            matchModel.changeSide(player);
+                            changeSide(player);
                             return true;
                         }
                     }
@@ -393,12 +399,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
     }
 
-    private void changeScore(Player player) {
-        if ( warnModelIsLocked() ) { return; }
-      //Log.d(TAG, "Changing score for for model " + matchModel);
-        matchModel.changeScore(player);
-    }
-
     private void confirmUndoLastForNonScorer(final Player p) {
         AlertDialog.Builder cfunls = getAlertDialogBuilder(this);
         cfunls.setTitle(R.string.uc_undo)
@@ -453,7 +453,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     // clicked on serve side button of non-serving doubles player of the same team
                     matchModel.changeDoubleServe(player);
                 } else {
-                    matchModel.changeSide(player);
+                    changeSide(player);
                 }
             } else {
                 if ( onClickXTimesHandler == null ) {
@@ -482,14 +482,14 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 }
                 if ( Brand.isTabletennis() ) {
                     if ( matchModel.isInMode(TabletennisModel.Mode.Expedite) ) {
-                        matchModel.changeSide(player);
+                        changeSide(player);
                     } else {
                         // Who will serve at what score is totally determined by who started serving the first point
                     }
                 } else if ( Brand.isRacketlon() ) {
                     // Who will serve at what score is totally determined by who started serving the first point
                 } else {
-                    matchModel.changeSide(player);
+                    changeSide(player);
                 }
             }
         }
@@ -896,6 +896,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
 
         initCasting(this);
+        initBlueTooth();
 
         dialogManager = DialogManager.getInstance();
 
@@ -1205,7 +1206,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     break;
                 }
                 case ToggleServeSide: {
-                    matchModel.changeSide(matchModel.getServer());
+                    changeSide(matchModel.getServer());
                     break;
                 }
             }
@@ -1558,12 +1559,12 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     PreferenceValues.setOverwrite(PreferenceKeys.showHideButtonOnTimer, false);
                     if ( matchModel.isPossibleGameVictory() == false ) {
                         matchModel.setGameScore_Json(0, nrOfPointsToWinGame, nrOfPointsToWinGame - 4, 5);
-                        matchModel.endGame();
+                        endGame();
                     }
                     break;
                 case R.id.sb_official_announcement:
                     matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6);
-                    matchModel.endGame();
+                    endGame();
                     break;
                 case R.id.gamescores:
                     break;
@@ -1583,7 +1584,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     if ( Brand.isNotSquash() ) {
                         // trigger model changes that are not triggered by user step (sb_official_announcement), because some show case screens are skipped for e.g. Racketlon
                         matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6);
-                        matchModel.endGame();
+                        endGame();
                     }
                     if ( matchModel.matchHasEnded() == false) {
                         IBoard.setBlockToasts(true);
@@ -1598,7 +1599,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         } else {
                             matchModel.setGameScore_Json(3, nrOfPointsToWinGame +2, nrOfPointsToWinGame, 8);
                         }
-                        matchModel.endGame();
+                        endGame();
                         showShareFloatButton(true, true);
                         IBoard.setBlockToasts(false);
                         matchModel.setLockState(LockState.LockedEndOfMatch);
@@ -1775,6 +1776,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
      * - clearScore(null) / restartScore(null)
      * - onActivityResult(null) (for newly constructed match)
      * - onActivityResult(fFile) (for stored matches)
+     * - MatchReceivedUtil (nfc match)
+     * - recieve match via bluetooth
      */
     void initScoreBoard(File fJson) {
         Model previous = matchModel;
@@ -2004,7 +2007,7 @@ touch -t 01030000 LAST.sb
         if ( (matchModel != null) && matchModel.hasStarted() == false ) {
             int iMatchStartedXSecsAgo = DateUtil.convertTo(System.currentTimeMillis() - matchModel.getMatchStart(), Calendar.SECOND);
             if (iMatchStartedXSecsAgo > 120 ) {
-                matchModel.timestampStartOfGame(GameTiming.ChangedBy.StartAndEndStillEqual);
+                timestampStartOfGame(GameTiming.ChangedBy.StartAndEndStillEqual);
             }
         }
     }
@@ -2342,7 +2345,7 @@ touch -t 01030000 LAST.sb
                 break;
             case Automatic:
                 //nonIntrusiveGameEnding(leadingPlayer);// TODO: only enable if no automatic dialog follows (no official, no timer...)
-                matchModel.endGame();
+                endGame();
                 break;
         }
         return bShowDialog;
@@ -2933,7 +2936,7 @@ touch -t 01030000 LAST.sb
             case tossDialogEnded:
                 showTossFloatButton(false);
                 if ( matchModel.hasStarted() == false ) {
-                    matchModel.timestampStartOfGame(GameTiming.ChangedBy.DialogClosed);
+                    timestampStartOfGame(GameTiming.ChangedBy.DialogClosed);
                 }
                 showNextDialog();
                 break;
@@ -2950,7 +2953,7 @@ touch -t 01030000 LAST.sb
                     showTossFloatButton(false);
                 }
                 if ( matchModel.gameHasStarted() == false ) {
-                    matchModel.timestampStartOfGame(GameTiming.ChangedBy.TimerStarted);
+                    timestampStartOfGame(GameTiming.ChangedBy.TimerStarted);
                 }
                 return true;
             }
@@ -2964,7 +2967,7 @@ touch -t 01030000 LAST.sb
                 //ViewType viewType  = (ViewType) ctx2;
                 doTimerFeedback(timerType, true);
                 if ( timerType.equals(Type.UntillStartOfNextGame) && matchModel.isPossibleGameVictory() ) {
-                    matchModel.endGame();
+                    endGame();
                 }
                 // fall through!!
             case timerCancelled: {
@@ -2972,7 +2975,7 @@ touch -t 01030000 LAST.sb
                 //viewType  = (ViewType) ctx2;
                 if ( EnumSet.of(Type.UntillStartOfNextGame, Type.Warmup).contains(timerType) ) {
                     if ( matchModel.gameHasStarted() == false ) {
-                        matchModel.timestampStartOfGame(GameTiming.ChangedBy.TimerEnded);
+                        timestampStartOfGame(GameTiming.ChangedBy.TimerEnded);
                     }
                 }
                 boolean pEndOfGameViewShowing = (m_endOfGameView != null);
@@ -2993,7 +2996,7 @@ touch -t 01030000 LAST.sb
             }
             case officialAnnouncementClosed: {
                 if ( matchModel.gameHasStarted() == false ) {
-                    matchModel.timestampStartOfGame(GameTiming.ChangedBy.DialogClosed);
+                    timestampStartOfGame(GameTiming.ChangedBy.DialogClosed);
                     cancelTimer();
                 }
                 showMicrophoneFloatButton(false);
@@ -3310,7 +3313,7 @@ touch -t 01030000 LAST.sb
             case R.id.end_game:
                 if ( warnModelIsLocked() ) { return false; }
                 if ( matchModel.isPossibleGameVictory() ) {
-                    matchModel.endGame();
+                    endGame();
                 } else {
                     areYouSureGameEnding();
                 }
@@ -3357,13 +3360,12 @@ touch -t 01030000 LAST.sb
                 }
                 matchModel.setLockState(lsNew);
                 return true;
+            case R.id.sb_bluetooth:
+                setupBluetoothControl();
+                break;
             case R.id.dyn_undo_last:
             case R.id.sb_undo_last:
-                if ( warnModelIsLocked() ) { return false; }
-                enableScoreButton(matchModel.getServer());
-                matchModel.undoLast();
-                bGameEndingHasBeenCancelledThisGame = false;
-                return true;
+                return undoLast();
             case R.id.sb_undo_last_for_non_scorer:
                 Player nonScorer = null;
                 if ( ctx != null && ctx.length==1 && ctx[0] instanceof Player) {
@@ -3985,6 +3987,21 @@ touch -t 01030000 LAST.sb
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        // Check which request we're responding to
+/*
+        if ( requestCode == REQUEST_ENABLE_BT ) {
+            // Make sure the request was successful
+            Toast.makeText(this, "Bluetooth " + ((resultCode == RESULT_OK)?"Enabled":"Disabled"), Toast.LENGTH_SHORT).show();
+        }
+*/
+        if ( requestCode == REQUEST_CONNECT_DEVICE_INSECURE ) {
+            // When DeviceListActivity returns with a device to connect
+            if (resultCode == Activity.RESULT_OK) {
+                String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+                connectBluetoothDevice(address);
+            }
+        }
 
         //fbOnActivityResult(requestCode, resultCode, data);
         if ( data == null) { return; }
@@ -5206,6 +5223,290 @@ touch -t 01030000 LAST.sb
         } else {
             Log.d(TAG, sMsg);
         }
+    }
+
+    // ----------------------------------------------------
+    // --------------------- bluetooth ----------------------
+    // ----------------------------------------------------
+
+    // Intent request codes
+    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 82;
+
+    // Get the default adapter
+    private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+    private void initBlueTooth() {
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if ( mBluetoothAdapter != null ) {
+            if ( mBluetoothAdapter.isEnabled() ) {
+                mBluetoothControlService = new BluetoothControlService(mBluetoothHandler);
+            } else {
+                Log.d(TAG, "Bluetooth not turned on");
+            }
+        }
+
+/*
+        // Get paired devices.
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        if ( ListUtil.isNotEmpty(pairedDevices) ) {
+            // There are paired devices. Get the name and address of each paired device.
+            for (BluetoothDevice device : pairedDevices) {
+                String deviceName = device.getName();
+                String deviceHardwareAddress = device.getAddress(); // MAC address, required to request a connection
+                BluetoothClass bluetoothClass = device.getBluetoothClass();
+                String sClass = bluetoothClass.toString();
+                Log.d(TAG, "BLUETOOTH : Paired device: " + deviceName + " : " + sClass + " - " + deviceHardwareAddress);
+                int[] btServices = new int[] {
+                        BluetoothClass.Service.AUDIO,                   // headphone
+                        BluetoothClass.Service.CAPTURE,                 // pc, S4
+                        BluetoothClass.Service.INFORMATION,             // ??
+                        BluetoothClass.Service.LIMITED_DISCOVERABILITY, // ??
+                        BluetoothClass.Service.NETWORKING,              // S4
+                        BluetoothClass.Service.OBJECT_TRANSFER,         // pc, S4
+                        BluetoothClass.Service.RENDER,                  // headphone ?
+                        BluetoothClass.Service.TELEPHONY                // S4
+                };
+                for(int i: btServices) {
+                    Log.d(TAG, deviceName + " has service " + i + ":" + bluetoothClass.hasService(i));
+                }
+            }
+        }
+        if ( MapUtil.isNotEmpty(mBtName2HwAddress) ) {
+            int iChanged = ViewUtil.setMenuItemsVisibility(mainMenu, new int[] {R.id.dyn_bluetooth}, true);
+        }
+*/
+    }
+
+    //----------------------------------------------------
+    // WRAPPER methods to be able to intercept method call to model and communicate it to connected BT device
+    //----------------------------------------------------
+    private void changeScore(Player player) {
+        if ( warnModelIsLocked() ) { return; }
+        //Log.d(TAG, "Changing score for for model " + matchModel);
+        matchModel.changeScore(player);
+
+        if ( mBluetoothControlService != null) {
+            mBluetoothControlService.write(BTMethods.changeScore + "(" + player + ")");
+        }
+    }
+
+    public void setPlayerColor(Player player, String sColor) {
+        matchModel.setPlayerColor( player, sColor);
+
+        if ( mBluetoothControlService != null) {
+            mBluetoothControlService.write(BTMethods.changeColor + "(" + player + "," + (sColor==null?"":sColor) + ")");
+        }
+    }
+
+    private void changeSide(Player player) {
+        matchModel.changeSide(player);
+
+        if ( mBluetoothControlService != null) {
+            mBluetoothControlService.write(BTMethods.changeSide + "(" + player + ")");
+        }
+    }
+
+    private boolean undoLast() {
+        if ( warnModelIsLocked() ) { return false; }
+        enableScoreButton(matchModel.getServer());
+        matchModel.undoLast();
+        bGameEndingHasBeenCancelledThisGame = false;
+
+        if ( mBluetoothControlService != null) {
+            mBluetoothControlService.write(BTMethods.undoLast + "(" + ")");
+        }
+        return true;
+    }
+    public boolean endGame() {
+        if ( warnModelIsLocked() ) { return false; }
+        matchModel.endGame();
+        if ( mBluetoothControlService != null) {
+            mBluetoothControlService.write(BTMethods.endGame + "(" + ")");
+        }
+        return true;
+    }
+    public void recordAppealAndCall(Player appealingPlayer, Call call) {
+        if ( warnModelIsLocked() ) { return; }
+        matchModel.recordAppealAndCall(appealingPlayer, call);
+
+        if ( mBluetoothControlService != null) {
+            mBluetoothControlService.write(BTMethods.recordAppealAndCall + "(" + appealingPlayer + "," + call + ")");
+        }
+    }
+    public void timestampStartOfGame(GameTiming.ChangedBy changedBy) {
+        matchModel.timestampStartOfGame(changedBy);
+
+        if ( mBluetoothControlService != null) {
+            mBluetoothControlService.write(BTMethods.timestampStartOfGame + "(" + changedBy + ")");
+        }
+    }
+
+    /**
+     * The Handler that gets information back from the BluetoothControlService
+     */
+    private final Handler mBluetoothHandler = new Handler() {
+        @Override public void handleMessage(Message msg) {
+            BTMessage btMessage = BTMessage.values()[msg.what];
+            switch (btMessage) {
+                case STATE_CHANGE:
+                    BTState btState = (BTState) msg.obj;
+                    switch (btState) {
+                        case CONNECTED:
+                            if ( bIsBlueToothMaster ) {
+                                // TODO: show dialog to request to pull in match on other device, or push match on this device to other
+                                String sJson = matchModel.toJsonString(ScoreBoard.this);
+                                mBluetoothControlService.write( sJson.length() + ":" + sJson );
+                            } else {
+
+                            }
+                            break;
+                        case CONNECTING:
+                            break;
+                        case LISTEN:
+                        case NONE:
+                            bIsBlueToothMaster = false;
+                            break;
+                    }
+                    break;
+                case WRITE:
+                    byte[] writeBuf = (byte[]) msg.obj;
+                    // construct a string from the buffer
+                    String writeMessage = new String(writeBuf);
+                    Log.d(TAG, "writeMessage: " + writeMessage);
+                    break;
+                case READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+                    // construct a string from the valid bytes in the buffer
+                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    Log.d(TAG, "readMessage: " + readMessage);
+
+                    interpretReceivedMessage(readMessage);
+                    break;
+                case TOAST:
+                    String sMsg = msg.getData().getString(btMessage.toString());
+                    Toast.makeText(ScoreBoard.this, sMsg, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+
+    private int           iReceivingBTFileLength = 0;
+    private StringBuilder sbReceivingBTFile = new StringBuilder();
+    private void interpretReceivedMessage(String readMessage) {
+
+        if ( (iReceivingBTFileLength <= 0) && readMessage.matches("^\\d+:.*") ) {
+            String sLength = readMessage.replaceFirst(":.*", "");
+            iReceivingBTFileLength = Integer.parseInt(sLength);
+            readMessage = readMessage.substring(sLength.length() + 1);
+        }
+        if ( iReceivingBTFileLength > 0 ) {
+            sbReceivingBTFile.append(readMessage);
+            if (sbReceivingBTFile.length() >= iReceivingBTFileLength ) {
+                iReceivingBTFileLength = 0;
+                // whole json received
+                try {
+                    File fJson = getLastMatchFile(this);
+                    FileUtil.writeTo(fJson, sbReceivingBTFile.toString());
+                    matchModel = null;
+                    this.initScoreBoard(fJson);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return;
+        }
+        String[] sMethodNArgs = readMessage.split("[\\(\\),]");
+        String sMethod = sMethodNArgs[0];
+        BTMethods btMethod = null;
+        try {
+            btMethod = BTMethods.valueOf(sMethod);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        if ( btMethod != null ) {
+            switch (btMethod) {
+                case changeScore: {
+                    Player player = Player.valueOf(sMethodNArgs[1]);
+                    matchModel.changeScore(player);
+                    break;
+                }
+                case changeSide: {
+                    Player player = Player.valueOf(sMethodNArgs[1]);
+                    matchModel.changeSide(player);
+                    break;
+                }
+                case changeColor: {
+                    Player player = Player.valueOf(sMethodNArgs[1]);
+                    matchModel.setPlayerColor(player, sMethodNArgs.length>2?sMethodNArgs[2]:null);
+                    break;
+                }
+                case undoLast: {
+                    matchModel.undoLast();break;
+                }
+                case endGame: {
+                    matchModel.endGame();break;
+                }
+                case timestampStartOfGame: {
+                    GameTiming.ChangedBy changedBy = GameTiming.ChangedBy.valueOf(sMethodNArgs[1]);
+                    matchModel.timestampStartOfGame(changedBy);
+                    break;
+                }
+                case recordAppealAndCall: {
+                    Player player = Player.valueOf(sMethodNArgs[1]);
+                    Call call   = Call.valueOf(sMethodNArgs[2]);
+                    matchModel.recordAppealAndCall(player, call);
+                    break;
+                }
+                default:
+                    Log.w(TAG, "Not handling method " + btMethod);
+                    break;
+            }
+        } else {
+            Log.w(TAG, "Unable to interpret incoming BT message " + readMessage);
+        }
+    }
+
+    private enum BTMethods {
+        changeScore,
+        changeSide,
+        changeColor,
+        undoLast,
+        endGame,
+        timestampStartOfGame,
+        recordAppealAndCall,
+    }
+
+    private void setupBluetoothControl() {
+        if ( (mBluetoothControlService != null) && mBluetoothControlService.getState().equals(BTState.CONNECTED) ) {
+            mBluetoothControlService.stop();
+        }
+        Intent nm = new Intent(this, DeviceListActivity.class);
+        startActivityForResult(nm, REQUEST_CONNECT_DEVICE_INSECURE); // see onActivityResult()
+        // Ask for location permission if not already allowed
+/*
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
+*/
+    }
+
+    private BluetoothControlService mBluetoothControlService;
+    private boolean bIsBlueToothMaster = false; // if true, assume this one is 'controller' and other is 'just displaying'
+    /**
+     * Establish connection with other device
+     */
+    private void connectBluetoothDevice(String address) {
+        // Get the BluetoothDevice object
+        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+        // Attempt to connect to the device
+        if ( mBluetoothControlService == null ) {
+            Log.d(TAG, "Blue tooth control service not instantiated");
+            return;
+            //mBluetoothControlService = new BluetoothControlService(this, mBluetoothHandler);
+        }
+        mBluetoothControlService.connect(device);
+        bIsBlueToothMaster = true;
     }
 
     // ----------------------------------------------------

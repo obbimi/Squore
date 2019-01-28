@@ -124,10 +124,10 @@ public class ColorPicker extends BaseAlertDialog
                 case DialogInterface.BUTTON_NEGATIVE:
                     break;
                 case DialogInterface.BUTTON_NEUTRAL:
-                    matchModel.setPlayerColor(targetPlayer, null);
+                    scoreBoard.setPlayerColor(targetPlayer, null);
                     break;
                 case DialogInterface.BUTTON_POSITIVE:
-                    matchModel.setPlayerColor(targetPlayer, sColor);
+                    scoreBoard.setPlayerColor(targetPlayer, sColor);
                     break;
             }
         }

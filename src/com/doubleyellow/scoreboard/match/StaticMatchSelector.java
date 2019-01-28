@@ -801,7 +801,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                                     e.printStackTrace();
                                 }
                             }
-                            if ( sKeyCurrent.equals(sKey) ) {
+                            if ( (sKeyCurrent != null) && sKeyCurrent.equals(sKey) ) {
                                 sMatch = "* " + sMatch;
                             }
                       //}

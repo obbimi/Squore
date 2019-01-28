@@ -254,13 +254,13 @@ public class EndGame extends BaseAlertDialog
         switch ( which ) {
             case BTN_END_GAME:
                 setNextRacketlonDiscipline();
-                matchModel.endGame();
+                scoreBoard.endGame();
                 break;
             case BTN_END_GAME_PLUS_TIMER:
                 //boolean bAutoShowTimer = PreferenceValues.showTimersAutomatically(context);
                 PreferenceValues.setOverwrite(PreferenceKeys.useTimersFeature, Feature.Automatic.toString());
                 setNextRacketlonDiscipline();
-                matchModel.endGame(); // this might possibly already start the timer, with temporary setting it to Automatic it WILL start the timer
+                scoreBoard.endGame(); // this might possibly already start the timer, with temporary setting it to Automatic it WILL start the timer
                 PreferenceValues.removeOverwrite(PreferenceKeys.useTimersFeature);
                 break;
             case BTN_CHANGE_MATCH_FORMAT:

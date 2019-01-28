@@ -237,7 +237,7 @@ public class AdjustScore extends BaseAlertDialog {
 
                 // if last game entered was also a victory for someone: end the game
                 if ( matchModel.isPossibleGameVictory() ) {
-                    matchModel.endGame();
+                    scoreBoard.endGame();
                 }
 
                 break;
