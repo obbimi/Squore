@@ -1046,6 +1046,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         initScoreHistory();
 
         onResumeNFC();
+        onResumeBlueTooth();
 
         onResumeURL();
 
@@ -2032,6 +2033,7 @@ touch -t 01030000 LAST.sb
             m_notificationTimerView = new NotificationTimerView(this);
             timer.addTimerView(false, m_notificationTimerView);
         }
+        stopBlueTooth();
     }
 
     private NotificationTimerView m_notificationTimerView = null;
@@ -5233,14 +5235,16 @@ touch -t 01030000 LAST.sb
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 82;
 
     // Get the default adapter
-    private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    private static BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     private void initBlueTooth() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if ( mBluetoothAdapter != null ) {
             if ( mBluetoothAdapter.isEnabled() ) {
-                mBluetoothControlService = new BluetoothControlService(mBluetoothHandler);
+                if ( mBluetoothControlService == null ) {
+                    mBluetoothControlService = new BluetoothControlService(mBluetoothHandler);
+                }
             } else {
                 Log.d(TAG, "Bluetooth not turned on");
             }
@@ -5277,7 +5281,18 @@ touch -t 01030000 LAST.sb
         }
 */
     }
-
+    private void onResumeBlueTooth() {
+        if ( mBluetoothControlService != null ) {
+            if ( mBluetoothControlService.getState().equals(BTState.NONE) ) {
+                mBluetoothControlService.breakConnectionAndListenForNew();
+            }
+        }
+    }
+    private void stopBlueTooth() {
+        if ( mBluetoothControlService != null ) {
+            //mBluetoothControlService.stop();
+        }
+    }
     //----------------------------------------------------
     // WRAPPER methods to be able to intercept method call to model and communicate it to connected BT device
     //----------------------------------------------------
@@ -5478,9 +5493,6 @@ touch -t 01030000 LAST.sb
     }
 
     private void setupBluetoothControl() {
-        if ( (mBluetoothControlService != null) && mBluetoothControlService.getState().equals(BTState.CONNECTED) ) {
-            mBluetoothControlService.stop();
-        }
         Intent nm = new Intent(this, DeviceListActivity.class);
         startActivityForResult(nm, REQUEST_CONNECT_DEVICE_INSECURE); // see onActivityResult()
         // Ask for location permission if not already allowed
@@ -5491,12 +5503,16 @@ touch -t 01030000 LAST.sb
 */
     }
 
-    private BluetoothControlService mBluetoothControlService;
+    private static BluetoothControlService mBluetoothControlService;
     private boolean bIsBlueToothMaster = false; // if true, assume this one is 'controller' and other is 'just displaying'
     /**
      * Establish connection with other device
      */
     private void connectBluetoothDevice(String address) {
+        if ( (mBluetoothControlService != null) && mBluetoothControlService.getState().equals(BTState.CONNECTED) ) {
+            // TODO: not if same device was selected and still connected
+            mBluetoothControlService.stop();
+        }
         // Get the BluetoothDevice object
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         // Attempt to connect to the device

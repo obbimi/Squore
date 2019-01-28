@@ -34,8 +34,10 @@ import java.util.UUID;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  */
-public class BluetoothControlService {
+public class BluetoothControlService
+{
     private final String TAG = "SB." + this.getClass().getSimpleName();
+
     // Name for the SDP record when creating server socket
     private static final String NAME = "BluetoothControlService";
 
@@ -48,7 +50,7 @@ public class BluetoothControlService {
     private       AcceptThread     mAcceptThread;
     private       ConnectThread    mConnectThread;
     private       ConnectedThread  mConnectedThread;
-    private       BTState          mState;
+    private       BTState          mState = BTState.NONE;
 
     /**
      * Constructor. Prepares a new BluetoothControlService session.
@@ -83,7 +85,7 @@ public class BluetoothControlService {
      * Start the chat service. Specifically start AcceptThread to begin a
      * session in listening (server) mode. Called by the Activity onResume()
      */
-    public synchronized void start() {
+    public synchronized void breakConnectionAndListenForNew() {
         // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {
             mConnectThread.cancel();
@@ -109,7 +111,7 @@ public class BluetoothControlService {
      */
     public synchronized void connect(BluetoothDevice device) {
         // Cancel any thread attempting to make a connection
-        if (mState.equals(BTState.CONNECTING)) {
+        if ( mState.equals(BTState.CONNECTING) ) {
             if (mConnectThread != null) {
                 mConnectThread.cancel();
                 mConnectThread = null;
@@ -259,7 +261,7 @@ public class BluetoothControlService {
                             case LISTEN:
                             case CONNECTING:
                                 // Situation normal. Start the connected thread.
-                                connected(socket, socket.getRemoteDevice());
+                                connected(socket, socket.getRemoteDevice()); // set state to CONNECTED
                                 break;
                             case NONE:
                             case CONNECTED:
@@ -319,7 +321,7 @@ public class BluetoothControlService {
                 } catch (IOException e2) {
                 }
                 // Start the service over to restart listening mode
-                BluetoothControlService.this.start();
+                BluetoothControlService.this.breakConnectionAndListenForNew();
                 return;
             }
             // Reset the ConnectThread because we're done
@@ -374,6 +376,7 @@ public class BluetoothControlService {
                             .sendToTarget();
                 } catch (IOException e) {
                     connectionLost();
+                    BluetoothControlService.this.breakConnectionAndListenForNew();
                     break;
                 }
             }

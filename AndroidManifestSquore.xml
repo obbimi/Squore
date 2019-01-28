@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.scoreboard"
-          android:versionCode="210"
-          android:versionName="4.18">
+          android:versionCode="211"
+          android:versionName="4.19">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
     <uses-feature android:name="android.permission.INTERNET" android:required="true" />
@@ -20,6 +20,11 @@
     <!-- for import/export functionality -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- bluetooth -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />   <!-- for initiating and cancelling device discovery, and initiating connections -->
+    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
 
     <!-- android 9 casting -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- FOREGROUND_SERVICE is a normal permission, so the system automatically grants it to the requesting app. -->
@@ -229,6 +234,10 @@
         </activity>
 
         <activity android:name="com.doubleyellow.scoreboard.activity.Feedback" android:label="@string/cmd_feedback">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.bluetooth.DeviceListActivity" android:label="Bluetooth Control">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
         </activity>
 
