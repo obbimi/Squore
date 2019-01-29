@@ -175,5 +175,6 @@ public class SelectDeviceDialog extends BaseAlertDialog
                 adb.setView(ll);
                 break;
         }
+        scoreBoard.triggerEvent(ScoreBoard.SBEvent.bluetoothDeviceSelectionClosed, this);
     }
 }

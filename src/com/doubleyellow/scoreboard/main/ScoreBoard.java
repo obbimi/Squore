@@ -2914,6 +2914,7 @@ touch -t 01030000 LAST.sb
         restartScoreDialogEnded,
         officialAnnouncementClosed,
         injuryTypeClosed,
+        bluetoothDeviceSelectionClosed,
         //rallyEndStatsClosed,
         //specifyHandicapClosed,
         //dialogClosed,
@@ -3019,6 +3020,7 @@ touch -t 01030000 LAST.sb
                 }
                 break;
             }
+            case bluetoothDeviceSelectionClosed:
             case restartScoreDialogEnded:
             case endMatchDialogEnded: // fall through
             case endGameDialogEnded: {
@@ -4425,7 +4427,9 @@ touch -t 01030000 LAST.sb
         initScoreBoard(null);
         matchModel.setDirty();
 
-        writeMethodToBluetooth(BTMethods.restartScore);
+        if ( BTRole.Master.equals(m_blueToothRole) ) {
+            writeMethodToBluetooth(BTMethods.restartScore);
+        }
     }
 
     /** If it has been cancelled and no 'undo' has been done, assume that match format 'end score' was accidentally chosen to low */
@@ -5487,7 +5491,8 @@ touch -t 01030000 LAST.sb
         try {
             btMethod = BTMethods.valueOf(sMethod);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            // might happen if connection is broken unexpectedly
+            //e.printStackTrace();
         }
         if ( btMethod != null ) {
             switch (btMethod) {
