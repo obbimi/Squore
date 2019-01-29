@@ -124,7 +124,7 @@ public class ServerToss extends BaseAlertDialog
                 break;
         }
         if ( (server != null) && (server.equals(matchModel.getServer()) == false) ) {
-            matchModel.changeSide(server);
+            scoreBoard.changeSide(server);
         }
         if ( server != null ) {
             this.dismiss();
@@ -203,9 +203,9 @@ public class ServerToss extends BaseAlertDialog
                 if ( (matchModel != null) && (matchModel.hasStarted() == false) ) {
                     // automatically change the serve side in the model already, but without closing the dialog
                     if ( btnA.isEnabled() && matchModel.getServer().equals(Player.B) ) {
-                        matchModel.changeSide(Player.A);
+                        scoreBoard.changeSide(Player.A);
                     } else if (btnB.isEnabled() && matchModel.getServer().equals(Player.A) ) {
-                        matchModel.changeSide(Player.B);
+                        scoreBoard.changeSide(Player.B);
                     }
                 }
             }

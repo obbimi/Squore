@@ -237,10 +237,6 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
         </activity>
 
-        <activity android:name="com.doubleyellow.scoreboard.bluetooth.DeviceListActivity" android:label="Bluetooth Control">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
-        </activity>
-
         <activity android:name="com.doubleyellow.scoreboard.prefs.Preferences" android:label="@string/sb_preferences" android:theme="@style/SBPreferencesTheme">
             <!--<meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />-->
         </activity>

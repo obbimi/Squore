@@ -263,4 +263,6 @@ public enum PreferenceKeys {
 
     Cast_ShowGraphDuringTimer,
     //showGraphDuringTimerOn,
+
+    enableScoringByBluetoothConnection,
 }

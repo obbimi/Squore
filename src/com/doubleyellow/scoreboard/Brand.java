@@ -28,12 +28,13 @@ import com.doubleyellow.scoreboard.prefs.*;
 import com.doubleyellow.util.Feature;
 
 import java.util.EnumSet;
+import java.util.UUID;
 
 public enum Brand
 {
-    Squore          (SportType.Squash     , R.string.app_name_short_brand_Squash          , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_squore_bg_color          , R.string.REMOTE_DISPLAY_APP_ID_brand_squore          , R.array.colorSchema            , 0                                            , 3000, "http://squore.double-yellow.be"   , R.raw.changelog),
-  //Tabletennis     (SportType.Tabletennis, R.string.app_name_short_brand_Tabletennis     , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_tabletennis_bg_color     , R.string.REMOTE_DISPLAY_APP_ID_brand_tabletennis     , R.array.colorSchema_Tabletennis, 0                                            , 3000, "http://tabletennis.double-yellow.be", R.raw.changelog_tabletennis),
-  //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand_Racketlon       , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_racketlon       , R.array.colorSchema_Racketlon  , 0                                            , 3000, "http://racketlon.double-yellow.be", R.raw.changelog_racketlon),
+    Squore          (SportType.Squash     , R.string.app_name_short_brand_Squash          , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_squore_bg_color          , R.string.REMOTE_DISPLAY_APP_ID_brand_squore          , R.array.colorSchema            , 0                                            , 3000, "http://squore.double-yellow.be"   , "8da78f9d-f7dd-437c-8b7d-d5bc231f92ec", R.raw.changelog),
+  //Tabletennis     (SportType.Tabletennis, R.string.app_name_short_brand_Tabletennis     , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_tabletennis_bg_color     , R.string.REMOTE_DISPLAY_APP_ID_brand_tabletennis     , R.array.colorSchema_Tabletennis, 0                                            , 3000, "http://tabletennis.double-yellow.be", "e35d8fcb-a7c0-4c2a-9c74-cc3f6e1e6a41", R.raw.changelog_tabletennis),
+  //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand_Racketlon       , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_racketlon       , R.array.colorSchema_Racketlon  , 0                                            , 3000, "http://racketlon.double-yellow.be", "6ffc7128-6fd5-46d1-b79c-46e4c613cba5", R.raw.changelog_racketlon),
   //Racquetball     (SportType.Racquetball, R.string.app_name_short_brand_Racquetball     , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, 0                                      , R.string.REMOTE_DISPLAY_APP_ID_brand_Racquetball     , R.array.colorSchema_Racquetball, 0                                            , 3000, "http://racquetball.double-yellow.be", R.raw.changelog),
   //ASB             (SportType.Squash     , R.string.app_name_short_brand_asb             , R.drawable.brand_asb_squash_court_logo_black_on_transparent, R.id.sb_branded_logo_ar150, R.color.brand_asb_bg_color             , R.string.REMOTE_DISPLAY_APP_ID_brand_asb             , R.array.colorSchema            , R.string.brand_asb_color_name_re             , 2000, "http://squore.double-yellow.be", R.raw.changelog),
   //CourtCare       (SportType.Squash     , R.string.app_name_short_brand_courtcare       , R.drawable.brand_courtcare                                 , R.id.sb_branded_logo_ar400, R.color.brand_courtcare_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_courtcare       , R.array.colorSchema_CourtCare  , R.string.brand_courtcare_color_name_re       , 4000, "http://squore.double-yellow.be", R.raw.changelog_courtcare),
@@ -50,6 +51,7 @@ public enum Brand
          , int iREColorPalette
          , int iSplashDuration
          , String sBaseURL
+         , String sUUID
          , int iChangeLogResId
          ) {
         this.eSport                   = sport;
@@ -62,6 +64,7 @@ public enum Brand
       //this.iREColorPalette          = iREColorPalette;
         this.iSplashDuration          = iSplashDuration;
         this.sBaseURL                 = sBaseURL;
+        this.uuid                     = UUID.fromString(sUUID);
         this.iChangeLogResId          = iChangeLogResId;
     };
 
@@ -76,6 +79,7 @@ public enum Brand
     private int iRemoteDisplayAppIdResId;
     private int iChangeLogResId;
     private String sBaseURL;
+    private UUID uuid;
 
     public SportType getSportType()         { return eSport; }
   //public int getREColorPalette()          { return iREColorPalette;}
@@ -189,6 +193,7 @@ public enum Brand
     public static String[] getColorsArray(Context ctx)  { return ctx.getResources().getStringArray(brand.iColorsResId) ;}
 
     public static String getBaseURL()              { return brand.sBaseURL;}
+    public static UUID   getUUID()                 { return brand.uuid;}
 
     public static int getImageViewResId()          { return brand.imageViewResId;}
     public static int getLogoResId()               { return brand.iLogoResId;}

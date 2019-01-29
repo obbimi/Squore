@@ -42,7 +42,7 @@ public class BluetoothControlService
     private static final String NAME = "BluetoothControlService";
 
     // Unique UUID for this bluetooth between to instances of this application
-    private static final UUID MY_UUID = UUID.fromString("8da78f9d-f7dd-437c-8b7d-d5bc231f92ec"); // https://www.uuidgenerator.net/version4
+    private UUID MY_UUID = null; // https://www.uuidgenerator.net/version4
 
     // Member fields
     private final BluetoothAdapter mAdapter;
@@ -57,10 +57,11 @@ public class BluetoothControlService
      *
      * @param handler A Handler to send messages back to the UI Activity
      */
-    public BluetoothControlService(Handler handler) {
+    public BluetoothControlService(Handler handler, UUID uuid) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState   = BTState.NONE;
         mHandler = handler;
+        MY_UUID  = uuid;
     }
 
     /**
