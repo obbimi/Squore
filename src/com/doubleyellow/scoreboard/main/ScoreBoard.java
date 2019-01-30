@@ -3068,6 +3068,10 @@ touch -t 01030000 LAST.sb
             Timer.removeTimerView(false, dialogTimerView);
             dialogTimerView = null;
             this.triggerEvent(SBEvent.timerCancelled, type);
+
+            if ( m_blueToothRole.equals(BTRole.Master) ) {
+                writeMethodToBluetooth(BTMethods.cancelTimer);
+            }
         }
     }
 
@@ -3378,7 +3382,7 @@ touch -t 01030000 LAST.sb
                 } else {
                     nonScorer = matchModel.getLastScorer().getOther();
                 }
-                if ( matchModel.undoLastForScorer(nonScorer) ) {
+                if ( undoLastForScorer(nonScorer) ) {
                     Toast.makeText(ScoreBoard.this, "Removed last scoreline for " + matchModel.getName(nonScorer), Toast.LENGTH_LONG).show();
                 }
                 return true;
@@ -4075,6 +4079,8 @@ touch -t 01030000 LAST.sb
                     setPlayerNames(new String[] { matchModel.getName(Player.A), matchModel.getName(Player.B) });
 
                     initScoreBoard(null);
+
+                    sendMatchToOtherBluetoothDevice();
                 }
             }
             {
@@ -4088,6 +4094,8 @@ touch -t 01030000 LAST.sb
 
                     // ensure selected match is also LAST_MATCH file
                     FileUtil.copyFile(f, getLastMatchFile(this));
+
+                    sendMatchToOtherBluetoothDevice();
                 }
             }
         }
@@ -5317,7 +5325,7 @@ touch -t 01030000 LAST.sb
             }
         }
 
-        sb.append(")");
+        sb.append(")\n");
         mBluetoothControlService.write(sb.toString());
     }
     //----------------------------------------------------
@@ -5352,6 +5360,13 @@ touch -t 01030000 LAST.sb
         writeMethodToBluetooth(BTMethods.undoLast);
         return true;
     }
+    private boolean undoLastForScorer(Player nonScorer) {
+        boolean bOK = matchModel.undoLastForScorer(nonScorer);
+        if ( bOK ) {
+            writeMethodToBluetooth(BTMethods.undoLastForScorer, nonScorer);
+        }
+        return bOK;
+    }
     public boolean endGame() {
         if ( warnModelIsLocked() ) { return false; }
         matchModel.endGame();
@@ -5370,6 +5385,11 @@ touch -t 01030000 LAST.sb
 
         writeMethodToBluetooth(BTMethods.timestampStartOfGame, changedBy);
     }
+    public void restartTimerWithSecondsLeft(int iSecs) {
+        DialogTimerView.restartTimerWithSecondsLeft(iSecs);
+
+        writeMethodToBluetooth(BTMethods.restartTimerWithSecondsLeft, iSecs);
+    }
 
     /**
      * The Handler that gets information back from the BluetoothControlService
@@ -5384,8 +5404,7 @@ touch -t 01030000 LAST.sb
                         case CONNECTED:
                             if ( m_blueToothRole.equals(BTRole.Master) ) {
                                 // TODO: show dialog to request to pull in match on other device, or push match on this device to other
-                                String sJson = matchModel.toJsonString(ScoreBoard.this);
-                                mBluetoothControlService.write( sJson.length() + ":" + sJson );
+                                sendMatchToOtherBluetoothDevice();
                             } else {
                                 setBluetoothRole(BTRole.Slave);
                             }
@@ -5402,18 +5421,17 @@ touch -t 01030000 LAST.sb
                     byte[] writeBuf = (byte[]) msg.obj;
                     String writeMessage = new String(writeBuf);
                     Log.d(TAG, "writeMessage: " + writeMessage);
-                    if ( m_blueToothRole.equals(BTRole.Slave) ) {
+                    if ( m_blueToothRole.equals(BTRole.Slave) && writeMessage.startsWith(BTMethods.Toast.toString()) == false ) {
                         // become master
                         setBluetoothRole(BTRole.Master);
                     }
                     break;
                 case READ:
                     byte[] readBuf = (byte[]) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    String readMessage = new String(readBuf, 0, msg.arg1); // msg.arg1 contains number of bytes actually having valid info
                     Log.d(TAG, "readMessage: " + readMessage);
-                    if ( m_blueToothRole.equals(BTRole.Master) ) {
-                        // become master
+                    if ( m_blueToothRole.equals(BTRole.Master) && readMessage.startsWith(BTMethods.Toast.toString()) == false ) {
+                        // become slave
                         setBluetoothRole(BTRole.Slave);
                     }
 
@@ -5450,8 +5468,18 @@ touch -t 01030000 LAST.sb
         }
     }
 
+    public void sendMatchToOtherBluetoothDevice() {
+        if ( (mBluetoothControlService != null)
+          && mBluetoothControlService.getState().equals(BTState.CONNECTED)
+          && m_blueToothRole.equals(BTRole.Master)
+           ) {
+            String sJson = matchModel.toJsonString(ScoreBoard.this);
+            mBluetoothControlService.write( sJson.length() + ":" + sJson );
+        }
+    }
+
     private int           iReceivingBTFileLength = 0;
-    private StringBuilder sbReceivingBTFile = new StringBuilder();
+    private StringBuilder sbReceivingBTFile      = new StringBuilder();
     private void interpretReceivedMessage(String readMessage) {
 
         // read file if json is being sent (identified by first sending the length of the json string)
@@ -5467,7 +5495,8 @@ touch -t 01030000 LAST.sb
                     iReceivingBTFileLength = 0;
                     // whole json received
                     try {
-                        persist(true);
+                        storeAsPrevious(this, matchModel, false);
+                        //persist(true);
                         File fJson = getLastMatchFile(this);
                         FileUtil.writeTo(fJson, sbReceivingBTFile.toString());
                         sbReceivingBTFile.setLength(0);
@@ -5514,6 +5543,11 @@ touch -t 01030000 LAST.sb
                 case undoLast: {
                     matchModel.undoLast();break;
                 }
+                case undoLastForScorer: {
+                    Player nonScorer = Player.valueOf(sMethodNArgs[1]);
+                    matchModel.undoLastForScorer(nonScorer);
+                    break;
+                }
                 case endGame: {
                     matchModel.endGame();break;
                 }
@@ -5521,6 +5555,12 @@ touch -t 01030000 LAST.sb
                     GameTiming.ChangedBy changedBy = GameTiming.ChangedBy.valueOf(sMethodNArgs[1]);
                     matchModel.timestampStartOfGame(changedBy);
                     break;
+                }
+                case cancelTimer: {
+                    cancelTimer(); break;
+                }
+                case restartTimerWithSecondsLeft: {
+                    DialogTimerView.restartTimerWithSecondsLeft(Integer.parseInt(sMethodNArgs[1])); break;
                 }
                 case recordAppealAndCall: {
                     Player player = Player.valueOf(sMethodNArgs[1]);
@@ -5550,11 +5590,16 @@ touch -t 01030000 LAST.sb
 
         changeScore,
         changeSide,
-        changeColor,
         undoLast,
+        undoLastForScorer,
         endGame,
-        timestampStartOfGame,
         recordAppealAndCall,
+
+        timestampStartOfGame,
+        restartTimerWithSecondsLeft,
+        cancelTimer,
+
+        changeColor,
 
         restartScore,
     }
@@ -5576,8 +5621,8 @@ touch -t 01030000 LAST.sb
 */
     }
 
-    private static BluetoothControlService mBluetoothControlService;
-    private static BTRole m_blueToothRole = BTRole.Equal;
+    private static BluetoothControlService mBluetoothControlService = null;
+    private static BTRole                  m_blueToothRole          = BTRole.Equal;
     /**
      * Establish connection with other device
      */

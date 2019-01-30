@@ -152,10 +152,13 @@ public class MatchGameScoresView extends LinearLayout
             // no layout checking?
             this.setVisibility(VISIBLE);
         } else {
-            CheckLayoutCountDownTimer checkLayoutCountDownTimer = new CheckLayoutCountDownTimer(this);
-            checkLayoutCountDownTimer.start();
+            if ( checkLayoutCountDownTimer == null ) {
+                checkLayoutCountDownTimer = new CheckLayoutCountDownTimer(this);
+                checkLayoutCountDownTimer.start();
+            }
         }
     }
+    private CheckLayoutCountDownTimer checkLayoutCountDownTimer = null;
 
     private static int checkAutoResizeTextViews(View v) {
         ViewGroup vg = (ViewGroup) v;
@@ -195,6 +198,7 @@ public class MatchGameScoresView extends LinearLayout
         private CheckLayoutCountDownTimer(MatchGameScoresView gsv) {
             //super(640, 320); // in racketlon is sometimes does not show...
             super(2000, 300);
+            Log.d(TAG, "MGSV new CheckLayoutCountDownTimer :" + this);
             this.gsv = gsv;
             this.gsv.setVisibility(View.INVISIBLE);
             View parent = (View) gsv.getParent();

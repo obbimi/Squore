@@ -356,17 +356,24 @@ public class DialogTimerView implements TimerView
                 iAmount = Timer.countDownTimer.secsLeft / 2;
             }
             int iSecsInFuture = Timer.countDownTimer.secsLeft + iAddOrSubtract * iAmount;
-            if ( iSecsInFuture > 0 ) {
-                // replace the countdown time with a new one
-                if ( Timer.countDownTimer != null ) {
-                    Timer.countDownTimer.stop();
-                }
-                Timer.countDownTimer = Timer.countDownTimer.restart(iSecsInFuture);
-            }
+            scoreBoard.restartTimerWithSecondsLeft(iSecsInFuture);
             // do not disable the button, simply substract less
             bRemove.setEnabled(true || (iSecsInFuture > iAmount));
         }
     };
+
+    public static void restartTimerWithSecondsLeft(int iSecsInFuture) {
+        if ( Timer.countDownTimer == null ) {
+            return;
+        }
+        if ( iSecsInFuture > 0 ) {
+            // replace the countdown time with a new one
+            if ( Timer.countDownTimer != null ) {
+                Timer.countDownTimer.stop();
+            }
+            Timer.countDownTimer = Timer.countDownTimer.restart(iSecsInFuture);
+        }
+    }
 
     private final DialogInterface.OnClickListener onHideListener = new DialogInterface.OnClickListener() {
         @Override public void onClick(DialogInterface dialog, int which) {

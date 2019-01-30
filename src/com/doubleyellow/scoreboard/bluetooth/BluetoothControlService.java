@@ -243,7 +243,7 @@ public class BluetoothControlService
             mmServerSocket = tmp;
         }
 
-        public void run() {
+        @Override public void run() {
             setName("AcceptThread");
             BluetoothSocket socket = null;
             // Listen to the server socket if we're not connected
@@ -278,7 +278,7 @@ public class BluetoothControlService
             }
         }
 
-        public void cancel() {
+        void cancel() {
             try {
                 mmServerSocket.close();
             } catch (IOException e) {
@@ -306,7 +306,7 @@ public class BluetoothControlService
             mmSocket = tmp;
         }
 
-        public void run() {
+        @Override public void run() {
             setName("ConnectThread");
             // Always cancel discovery because it will slow down a connection
             mAdapter.cancelDiscovery();
@@ -333,7 +333,7 @@ public class BluetoothControlService
             connected(mmSocket, mmDevice);
         }
 
-        public void cancel() {
+        void cancel() {
             try {
                 mmSocket.close();
             } catch (IOException e) {
@@ -364,7 +364,7 @@ public class BluetoothControlService
             mmOutStream = tmpOut;
         }
 
-        public void run() {
+        @Override public void run() {
             byte[] buffer = new byte[1024];
             int bytes;
             // Keep listening to the InputStream while connected
@@ -388,9 +388,10 @@ public class BluetoothControlService
          *
          * @param buffer The bytes to write
          */
-        public void write(byte[] buffer) {
+        void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
+                mmOutStream.flush();
                 // Share the sent message back to the UI Activity
                 mHandler.obtainMessage(BTMessage.WRITE.ordinal(), buffer)
                         .sendToTarget();
@@ -398,7 +399,7 @@ public class BluetoothControlService
             }
         }
 
-        public void cancel() {
+        void cancel() {
             try {
                 mmSocket.close();
             } catch (IOException e) {
