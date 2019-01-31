@@ -23,6 +23,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import com.doubleyellow.scoreboard.R;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -155,10 +157,7 @@ public class BluetoothControlService
         mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
         // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal());
-        Bundle bundle = new Bundle();
-        bundle.putString(BTMessage.TOAST.toString(), "Connected to " + device.getName());
-        msg.setData(bundle);
+        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal(), R.string.bt_device_connected_to_X, 0);
         mHandler.sendMessage(msg);
         setState(BTState.CONNECTED);
     }
@@ -205,10 +204,12 @@ public class BluetoothControlService
      */
     private void connectionFailed() {
         setState(BTState.LISTEN);
-        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal());
+        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal(), R.string.bt_unable_to_connect_device_X, R.string.bt_unable_to_connect_device_info);
+/*
         Bundle bundle = new Bundle();
-        bundle.putString(BTMessage.TOAST.toString(), "Unable to connect device");
+        bundle.putString(BTMessage.TOAST.toString(), String.valueOf(R.string.bt_unable_to_connect_device) );
         msg.setData(bundle);
+*/
         mHandler.sendMessage(msg);
     }
 
@@ -217,10 +218,12 @@ public class BluetoothControlService
      */
     private void connectionLost() {
         setState(BTState.LISTEN);
-        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal());
+        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal(), R.string.bt_device_connection_to_X_was_lost, 0);
+/*
         Bundle bundle = new Bundle();
-        bundle.putString(BTMessage.TOAST.toString(), "Device connection was lost");
+        bundle.putString(BTMessage.TOAST.toString(), String.valueOf(R.string.bt_device_connection_to_X_was_lost) );
         msg.setData(bundle);
+*/
         mHandler.sendMessage(msg);
     }
 

@@ -4333,6 +4333,9 @@ touch -t 01030000 LAST.sb
     public static AlertDialog dialogWithOkOnly(Context context, String sMsg) {
         return dialogWithOkOnly(context, null, sMsg, false);
     }
+    private static AlertDialog dialogWithOkOnly(Context context, int iResTitle, int iResMsg, boolean bAlert) {
+        return dialogWithOkOnly(context, context.getString(iResTitle), context.getString(iResMsg, Brand.getShortName(context)), bAlert);
+    }
     public static AlertDialog dialogWithOkOnly(Context context, String sTitle, String sMsg, boolean bAlert) {
         AlertDialog.Builder ab = getAlertDialogBuilder(context);
         ab.setPositiveButton(android.R.string.ok, null);
@@ -5438,8 +5441,19 @@ touch -t 01030000 LAST.sb
                     interpretReceivedMessage(readMessage);
                     break;
                 case TOAST:
-                    String sMsg = msg.getData().getString(btMessage.toString());
-                    Toast.makeText(ScoreBoard.this, sMsg, Toast.LENGTH_SHORT).show();
+                    //String sMsg = msg.getData().getString(BTMessage.TOAST.toString());
+ /*                   String sMsg = String.valueOf(msg.obj);
+                    if ( StringUtil.isInteger(sMsg) ) {
+                        sMsg = ScoreBoard.this.getString(Integer.parseInt(sMsg), device!=null?device.getName():"");
+                    }
+ */
+                    String sMsg = ScoreBoard.this.getString(msg.arg1, device.getName(), Brand.getShortName(ScoreBoard.this));
+                    if ( msg.arg2 != 0 ) {
+                        String sInfo = ScoreBoard.this.getString(msg.arg2, device.getName(), Brand.getShortName(ScoreBoard.this));
+                        ScoreBoard.dialogWithOkOnly(ScoreBoard.this, sMsg, sInfo, true);
+                    } else {
+                        Toast.makeText(ScoreBoard.this, sMsg, Toast.LENGTH_SHORT).show();
+                    }
                     break;
             }
         }
@@ -5606,8 +5620,12 @@ touch -t 01030000 LAST.sb
 
     private void setupBluetoothControl() {
         SelectDeviceDialog selectDevice = new SelectDeviceDialog(this, matchModel, this);
-        if ( ListUtil.isNotEmpty(selectDevice.getBluetoothDevices())  ) {
+        int[] iResIds = selectDevice.getBluetoothDevices(true);
+        if ( iResIds == null ) {
             addToDialogStack(selectDevice);
+        } else {
+            // show dialog with info about how to solve/help/why
+            dialogWithOkOnly(this, iResIds[0], iResIds[1], false);
         }
 /*
         Intent nm = new Intent(this, DeviceListActivity.class);
@@ -5621,6 +5639,7 @@ touch -t 01030000 LAST.sb
 */
     }
 
+    private static BluetoothDevice         device                   = null;
     private static BluetoothControlService mBluetoothControlService = null;
     private static BTRole                  m_blueToothRole          = BTRole.Equal;
     /**
@@ -5632,7 +5651,7 @@ touch -t 01030000 LAST.sb
             mBluetoothControlService.stop();
         }
         // Get the BluetoothDevice object
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+        device = mBluetoothAdapter.getRemoteDevice(address);
         // Attempt to connect to the device
         if ( mBluetoothControlService == null ) {
             Log.d(TAG, "Blue tooth control service not instantiated");

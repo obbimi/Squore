@@ -32,6 +32,7 @@
 
     <item android:id="@+id/media_route_menu_item" app:showAsAction="never" android:title="@string/media_route_menu_title" android:visible="false" app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"/>
 
+    <!--<item android:id="@+id/dyn_bluetooth"     app:showAsAction="ifRoom" android:icon="@android:drawable/stat_sys_data_bluetooth" android:visible="false" android:title="Bluetooth" />-->
     <item android:id="@+id/dyn_undo_last"     app:showAsAction="ifRoom" android:icon="@drawable/ic_action_undo"                 android:visible="false" android:title="@string/uc_undo" />
     <item android:id="@+id/dyn_end_game"      app:showAsAction="ifRoom" android:icon="@drawable/ic_menu_forward"                android:visible="false" android:title="@string/end_game_Squash" />
     <item android:id="@+id/dyn_timer"         app:showAsAction="ifRoom" android:icon="@drawable/timer"                          android:visible="false" android:title="@string/sb_nbsp_timer"/>
@@ -110,6 +111,7 @@
                 </menu>
             </item>
 
+            <item android:id="@+id/sb_bluetooth"                      app:showAsAction="never" android:icon="@android:drawable/stat_sys_data_bluetooth" android:title="@string/bt_bluetooth_mirror" />
             <item
                     android:id="@+id/sb_sub_share_match"
                     android:icon="@android:drawable/ic_menu_share"

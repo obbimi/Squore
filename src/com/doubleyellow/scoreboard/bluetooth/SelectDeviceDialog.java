@@ -58,10 +58,11 @@ public class SelectDeviceDialog extends BaseAlertDialog
     @Override public void show() {
         adb     .setTitle  (        getString(R.string.bt_select_device) )
                 .setIcon   (android.R.drawable.stat_sys_data_bluetooth)
-                //.setMessage(sMsg)
+                .setMessage(R.string.bt_select_device_for_scoreboard_mirroring)
                 .setPositiveButton(android.R.string.ok    , listener)
                 .setNeutralButton (android.R.string.cancel, listener)
-                .setNegativeButton(R.string.refresh       , listener);
+              //.setNegativeButton(R.string.refresh       , listener)
+                ;
 
         // add a view with all possible devices and let user choose one
         // Get the local Bluetooth adapter
@@ -83,26 +84,26 @@ public class SelectDeviceDialog extends BaseAlertDialog
     private List<BluetoothDevice> m_lPairedDevicesChecked = null;
 
     /** called from main activity before adding dialog to stack */
-    public List<BluetoothDevice> getBluetoothDevices() {
+    public int[] getBluetoothDevices(boolean bRefresh) {
+        if ( bRefresh ) {
+            m_lPairedDevicesChecked = null;
+        }
         if ( m_lPairedDevicesChecked != null ) {
-            return m_lPairedDevicesChecked;
+            return null;
         }
 
         BluetoothAdapter mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         if ( mBtAdapter == null ) {
-            Toast.makeText(context, R.string.bt_no_bluetooth_on_device, Toast.LENGTH_LONG).show();
-            return null;
+            return new int[] { R.string.bt_no_bluetooth_on_device, R.string.bt_no_bluetooth_on_device_info };
         }
         if ( mBtAdapter.isEnabled() == false ) {
-            Toast.makeText(context, R.string.bt_bluetooth_turned_off, Toast.LENGTH_LONG).show();
-            return null;
+            return new int[] { R.string.bt_bluetooth_turned_off, R.string.bt_bluetooth_turned_off_info };
         }
 
         // Get a set of currently paired devices
         Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
         if ( ListUtil.isEmpty(pairedDevices) ) {
-            Toast.makeText(context, R.string.bt_no_paired, Toast.LENGTH_LONG).show();
-            return null;
+            return new int[] { R.string.bt_no_paired, R.string.bt_no_paired_info };
         }
 
         List<BluetoothDevice> lPairedDevicesFilteredOnNWService = new ArrayList<>();
@@ -115,8 +116,7 @@ public class SelectDeviceDialog extends BaseAlertDialog
             }
         }
         if ( ListUtil.isEmpty(lPairedDevicesFilteredOnNWService) ) {
-            Toast.makeText(context, R.string.bt_no_appropriate_paired_devices_found, Toast.LENGTH_LONG).show();
-            return null;
+            return new int[] { R.string.bt_no_appropriate_paired_devices_found, R.string.bt_no_appropriate_paired_devices_found_info };
         }
 
         // to check for GUID
@@ -139,12 +139,10 @@ public class SelectDeviceDialog extends BaseAlertDialog
             //Toast.makeText(context, getString(R.string.bt_no_paired_devices_with_x_running_found, Brand.getShortName(context)), Toast.LENGTH_LONG).show();
             if ( ListUtil.isNotEmpty(lPairedDevicesFilteredOnNWService)  ) {
                 lPairedDevicesChecked.addAll(lPairedDevicesFilteredOnNWService);
-            } else {
-                return null;
             }
         }
         m_lPairedDevicesChecked = lPairedDevicesChecked;
-        return m_lPairedDevicesChecked;
+        return null;
     }
 
     private DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -167,8 +165,7 @@ public class SelectDeviceDialog extends BaseAlertDialog
             case DialogInterface.BUTTON_NEUTRAL:
                 break;
             case BNT_REFRESH:
-                m_lPairedDevicesChecked = null;
-                getBluetoothDevices();
+                getBluetoothDevices(true);
 
                 LinearLayout ll = refreshSelectList(m_lPairedDevicesChecked);
                 if (ll == null) return;
