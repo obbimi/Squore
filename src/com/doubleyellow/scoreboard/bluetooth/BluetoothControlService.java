@@ -19,7 +19,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
@@ -40,8 +39,7 @@ public class BluetoothControlService
 {
     private final String TAG = "SB." + this.getClass().getSimpleName();
 
-    // Name for the SDP record when creating server socket
-    private static final String NAME = "BluetoothControlService";
+    private String NAME  = null;
 
     // Unique UUID for this bluetooth between to instances of this application
     private UUID MY_UUID = null; // https://www.uuidgenerator.net/version4
@@ -59,11 +57,12 @@ public class BluetoothControlService
      *
      * @param handler A Handler to send messages back to the UI Activity
      */
-    public BluetoothControlService(Handler handler, UUID uuid) {
+    public BluetoothControlService(Handler handler, UUID uuid, String sName) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState   = BTState.NONE;
         mHandler = handler;
         MY_UUID  = uuid;
+        NAME     = "BluetoothControlService" + sName;
     }
 
     /**
@@ -71,10 +70,10 @@ public class BluetoothControlService
      *
      * @param state An integer defining the current connection state
      */
-    private synchronized void setState(BTState state) {
+    private synchronized void setState(BTState state, BluetoothDevice device) {
         mState = state;
         // Give the new state to the Handler so the UI Activity can update
-        mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), state).sendToTarget();
+        mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), state.ordinal(), 0, device).sendToTarget();
     }
 
     /**
@@ -104,7 +103,7 @@ public class BluetoothControlService
             mAcceptThread = new AcceptThread();
             mAcceptThread.start();
         }
-        setState(BTState.LISTEN);
+        setState(BTState.LISTEN, null);
     }
 
     /**
@@ -128,7 +127,7 @@ public class BluetoothControlService
         // Start the thread to connect with the given device
         mConnectThread = new ConnectThread(device);
         mConnectThread.start();
-        setState(BTState.CONNECTING);
+        setState(BTState.CONNECTING, null);
     }
 
     /**
@@ -156,10 +155,7 @@ public class BluetoothControlService
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
-        // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal(), R.string.bt_device_connected_to_X, 0, device);
-        mHandler.sendMessage(msg);
-        setState(BTState.CONNECTED);
+        connectionSucceeded(device);
     }
 
     /**
@@ -178,7 +174,7 @@ public class BluetoothControlService
             mAcceptThread.cancel();
             mAcceptThread = null;
         }
-        setState(BTState.NONE);
+        setState(BTState.NONE, null);
     }
 
     /**
@@ -200,16 +196,20 @@ public class BluetoothControlService
     }
 
     /**
+     * Indicate that the connection attempt was successful.
+     */
+    private void connectionSucceeded(BluetoothDevice device) {
+        setState(BTState.CONNECTED, device);
+        // Send the name of the connected device back to the UI Activity
+        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal(), R.string.bt_device_connected_to_X, 0, device);
+        mHandler.sendMessage(msg);
+    }
+    /**
      * Indicate that the connection attempt failed and notify the UI Activity.
      */
     private void connectionFailed() {
-        setState(BTState.LISTEN);
+        setState(BTState.LISTEN, null);
         Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal(), R.string.bt_unable_to_connect_device_X, R.string.bt_unable_to_connect_device_info);
-/*
-        Bundle bundle = new Bundle();
-        bundle.putString(BTMessage.TOAST.toString(), String.valueOf(R.string.bt_unable_to_connect_device) );
-        msg.setData(bundle);
-*/
         mHandler.sendMessage(msg);
     }
 
@@ -217,13 +217,8 @@ public class BluetoothControlService
      * Indicate that the connection was lost and notify the UI Activity.
      */
     private void connectionLost() {
-        setState(BTState.LISTEN);
+        setState(BTState.LISTEN, null);
         Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal(), R.string.bt_device_connection_to_X_was_lost, 0);
-/*
-        Bundle bundle = new Bundle();
-        bundle.putString(BTMessage.TOAST.toString(), String.valueOf(R.string.bt_device_connection_to_X_was_lost) );
-        msg.setData(bundle);
-*/
         mHandler.sendMessage(msg);
     }
 
@@ -314,7 +309,7 @@ public class BluetoothControlService
         @Override public void run() {
             setName("ConnectThread");
             // Always cancel discovery because it will slow down a connection
-            mAdapter.cancelDiscovery();
+            mAdapter.cancelDiscovery(); // requires permission BLUETOOTH_ADMIN
             // Make a connection to the BluetoothSocket
             try {
                 // This is a blocking call and will only return on a successful connection or an exception

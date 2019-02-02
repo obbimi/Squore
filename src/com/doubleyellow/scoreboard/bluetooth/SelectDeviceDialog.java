@@ -32,7 +32,10 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.BaseAlertDialog;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
+import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.ListUtil;
+import com.doubleyellow.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +79,22 @@ public class SelectDeviceDialog extends BaseAlertDialog
     private LinearLayout refreshSelectList(List<BluetoothDevice> lPairedDevicesChecked) {
         LinearLayout ll = new LinearLayout(context);
         ll.setOrientation(LinearLayout.VERTICAL);
-        sfv = new SelectDeviceView(context, lPairedDevicesChecked, lPairedDevicesChecked.get(0));
+
+        // pre-select
+        // - first device, or
+        // - previously selected device
+        BluetoothDevice fChecked = lPairedDevicesChecked.get(0);
+        String sPreviouslyConnected = PreferenceValues.getString(PreferenceKeys.lastConnectedBluetoothDevice, null, context);
+        if ( StringUtil.isNotEmpty(sPreviouslyConnected) ) {
+            for( BluetoothDevice btd: lPairedDevicesChecked ) {
+                if ( sPreviouslyConnected.equals(btd.getName()) ) {
+                    fChecked = btd;
+                    break;
+                }
+            }
+        }
+
+        sfv = new SelectDeviceView(context, lPairedDevicesChecked, fChecked);
         ll.addView(sfv);
         return ll;
     }
@@ -103,7 +121,7 @@ public class SelectDeviceDialog extends BaseAlertDialog
         // Get a set of currently paired devices
         Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
         if ( ListUtil.isEmpty(pairedDevices) ) {
-            return new int[] { R.string.bt_no_paired, R.string.bt_no_paired_info };
+            return new int[] { R.string.bt_no_paired, R.string.bt_how_to_pair_info };
         }
 
         List<BluetoothDevice> lPairedDevicesFilteredOnNWService = new ArrayList<>();
@@ -116,7 +134,7 @@ public class SelectDeviceDialog extends BaseAlertDialog
             }
         }
         if ( ListUtil.isEmpty(lPairedDevicesFilteredOnNWService) ) {
-            return new int[] { R.string.bt_no_appropriate_paired_devices_found, R.string.bt_no_appropriate_paired_devices_found_info };
+            return new int[] { R.string.bt_no_appropriate_paired_devices_found, R.string.bt_how_to_pair_info };
         }
 
         // to check for GUID

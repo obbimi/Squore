@@ -308,7 +308,7 @@ public class IBoard implements TimerViewContainer
             } else {
                 long lElapsedSinceBoot = SystemClock.elapsedRealtime();
                 long lBootTime         = System.currentTimeMillis() - lElapsedSinceBoot;
-                Log.d(TAG, "lBootTime at " + lBootTime + " " + new Date(lBootTime).toString());
+              //Log.d(TAG, "lBootTime at " + lBootTime + " " + new Date(lBootTime).toString());
                 long lStartTime        = matchModel.getLastGameStart();
                 long lPauseInProgress = 0L;
                 if ( m_lStoppedAt != 0L ) {

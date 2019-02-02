@@ -769,7 +769,7 @@ public abstract class Model
         for(OnSpecialScoreChangeListener l: onSpecialScoreChangeListeners) {
             l.OnGameIsHalfwayChange(iGameZB, scoreA, scoreB, hwStatus);
         }
-        Log.d(TAG, String.format("hwStats from %s to %s", m_halfwayStatus, hwStatus));
+      //Log.d(TAG, String.format("hwStats from %s to %s", m_halfwayStatus, hwStatus));
         m_halfwayStatus = hwStatus;
     }
 

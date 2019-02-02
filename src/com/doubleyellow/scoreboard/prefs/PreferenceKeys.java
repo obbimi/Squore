@@ -265,4 +265,5 @@ public enum PreferenceKeys {
     //showGraphDuringTimerOn,
 
     enableScoringByBluetoothConnection,
+        lastConnectedBluetoothDevice,
 }
