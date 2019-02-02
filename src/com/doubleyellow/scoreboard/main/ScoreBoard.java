@@ -5447,9 +5447,13 @@ touch -t 01030000 LAST.sb
                         sMsg = ScoreBoard.this.getString(Integer.parseInt(sMsg), device!=null?device.getName():"");
                     }
  */
-                    String sMsg = ScoreBoard.this.getString(msg.arg1, device.getName(), Brand.getShortName(ScoreBoard.this));
+                    if ( msg.obj instanceof BluetoothDevice) {
+                        device = (BluetoothDevice) msg.obj;
+                    }
+                    String sDeviceName = device!=null?device.getName():"";
+                    String sMsg = ScoreBoard.this.getString(msg.arg1, sDeviceName, Brand.getShortName(ScoreBoard.this));
                     if ( msg.arg2 != 0 ) {
-                        String sInfo = ScoreBoard.this.getString(msg.arg2, device.getName(), Brand.getShortName(ScoreBoard.this));
+                        String sInfo = ScoreBoard.this.getString(msg.arg2, sDeviceName, Brand.getShortName(ScoreBoard.this));
                         ScoreBoard.dialogWithOkOnly(ScoreBoard.this, sMsg, sInfo, true);
                     } else {
                         Toast.makeText(ScoreBoard.this, sMsg, Toast.LENGTH_SHORT).show();
@@ -5650,14 +5654,19 @@ touch -t 01030000 LAST.sb
             // TODO: not if same device was selected and still connected
             mBluetoothControlService.stop();
         }
+        if ( mBluetoothControlService == null ) {
+            mBluetoothControlService = new BluetoothControlService(mBluetoothHandler, Brand.getUUID());
+        }
         // Get the BluetoothDevice object
         device = mBluetoothAdapter.getRemoteDevice(address);
         // Attempt to connect to the device
+/*
         if ( mBluetoothControlService == null ) {
             Log.d(TAG, "Blue tooth control service not instantiated");
             return;
             //mBluetoothControlService = new BluetoothControlService(this, mBluetoothHandler);
         }
+*/
         mBluetoothControlService.connect(device);
         m_blueToothRole = BTRole.Master;
     }

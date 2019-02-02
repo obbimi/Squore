@@ -157,7 +157,7 @@ public class BluetoothControlService
         mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
         // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal(), R.string.bt_device_connected_to_X, 0);
+        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal(), R.string.bt_device_connected_to_X, 0, device);
         mHandler.sendMessage(msg);
         setState(BTState.CONNECTED);
     }
@@ -250,7 +250,7 @@ public class BluetoothControlService
             setName("AcceptThread");
             BluetoothSocket socket = null;
             // Listen to the server socket if we're not connected
-            while (mState.equals(BTState.CONNECTED)== false) {
+            while (mState.equals(BTState.CONNECTED)== false && (mmServerSocket != null)) {
                 try {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
