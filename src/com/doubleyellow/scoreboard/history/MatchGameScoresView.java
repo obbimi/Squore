@@ -152,7 +152,7 @@ public class MatchGameScoresView extends LinearLayout
             // no layout checking?
             this.setVisibility(VISIBLE);
         } else {
-            if ( checkLayoutCountDownTimer == null ) {
+            if ( (checkLayoutCountDownTimer == null) || (checkLayoutCountDownTimer.m_iLayoutOKCount > 0) ) {
                 checkLayoutCountDownTimer = new CheckLayoutCountDownTimer(this);
                 checkLayoutCountDownTimer.start();
             }
@@ -196,7 +196,7 @@ public class MatchGameScoresView extends LinearLayout
         private int m_iLayoutOKCount       = 0;
         private int m_iRestoreVisibilityTo = 0;
         private CheckLayoutCountDownTimer(MatchGameScoresView gsv) {
-            //super(640, 320); // in racketlon is sometimes does not show...
+            //super(640, 320); // in racketlon it sometimes does not show...
             super(2000, 300);
             Log.d(TAG, "MGSV new CheckLayoutCountDownTimer :" + this);
             this.gsv = gsv;
@@ -222,7 +222,7 @@ public class MatchGameScoresView extends LinearLayout
             if ( iNotLayoutOutOk > 0 ) {
                 Log.d(TAG, String.format("Trigger update, resize textview not all properly layed out : %s (ms left: %d)", iNotLayoutOutOk, millisUntilFinished));
                 gsv.update(m_players, gsv.m_gamesScores, gsv.m_playerNames, m_countries, gsv.m_gameTimes, m_eventDivision, m_pointsDiff);
-                this.cancel();
+                //this.cancel();
             } else {
                 m_iLayoutOKCount++;
                 if ( m_iLayoutOKCount > 1 ) {
