@@ -4,5 +4,5 @@ public enum BTMessage {
     STATE_CHANGE ,
     READ         ,
     WRITE        ,
-    TOAST        ,
+    INFO         ,
 }

@@ -730,6 +730,15 @@ public class IBoard implements TimerViewContainer
         }
     }
 
+    public void setBluetoothIconVisibility(int visibility) {
+        View vIcon = m_vRoot.findViewById(R.id.sb_bluetooth_icon);
+        if ( vIcon != null ) {
+            vIcon.setVisibility(visibility);
+        } else {
+            Log.w(TAG, "No bluetooticon view found ...");
+        }
+    }
+
     private SBTimerView sbTimerView = null;
     @Override public TimerView getTimerView() {
         boolean presentation = isPresentation();

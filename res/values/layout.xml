@@ -18,7 +18,7 @@
     <fraction name="ls_timer_margin_from_side_button">16%</fraction>   <!-- not TOO big so tiny chrono to be readable while not full screen AND action bar visible -->
     <fraction name="ls_timer_height">20%</fraction>   <!-- for tiny chrono to be readable 20, else 16 may be better -->
     <fraction name="ls_to_late_height">5%</fraction>
-    <fraction name="ls_match_timer_height">5%</fraction>
+    <fraction name="ls_bluetooth_icon_height">5%</fraction>
     <fraction name="ls_match_timer_width">17%</fraction>
     <fraction name="ls_timer_bottom_margin">2%</fraction>
 <!--
@@ -58,6 +58,7 @@
     <fraction name="pt_timer_widthratio">45%</fraction>
 
     <fraction name="pt_to_late_height">3%</fraction>
+    <fraction name="pt_bluetooth_icon_height">3%</fraction>
     <fraction name="pt_gamescores_widthratio">300%</fraction>
     <fraction name="pt_match_timer_height">3%</fraction> <!-- game and match chronos -->
     <fraction name="pt_match_timer_width">30%</fraction>

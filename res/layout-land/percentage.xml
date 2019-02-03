@@ -269,9 +269,6 @@
                  android:layout_width="0dp"
                  android:layout_height="0dp"
     />
-<!--
-    app:layout_heightPercent="@fraction/ls_match_timer_height"
--->
     <Chronometer android:id="@+id/sb_game_duration"
                  android:layout_alignBottom="@id/btn_score2"
                  android:layout_alignRight="@id/btn_score2"
@@ -285,4 +282,15 @@
                  android:layout_width="0dp"
                  android:layout_height="0dp"
     />
+    <ImageView android:id="@+id/sb_bluetooth_icon"
+        android:layout_alignTop="@id/btn_side2"
+        android:layout_alignRight="@id/btn_score2"
+        app:layout_marginRightPercent="@fraction/ls_side_margin_H"
+        android:visibility="invisible"
+        app:layout_heightPercent="@fraction/ls_bluetooth_icon_height"
+        app:layout_aspectRatio="100%"
+        android:src="@android:drawable/stat_sys_data_bluetooth"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
 </com.doubleyellow.view.SBRelativeLayout>

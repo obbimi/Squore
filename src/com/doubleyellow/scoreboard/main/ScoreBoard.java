@@ -897,7 +897,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
 
         initCasting(this);
-        initBlueTooth();
 
         dialogManager = DialogManager.getInstance();
 
@@ -991,6 +990,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         rateMeMaybe_init();
 
         registerNfc();
+        onCreateInitBluetooth();
     }
 
     private void initCountryList() {
@@ -4273,7 +4273,8 @@ touch -t 01030000 LAST.sb
         }
 
         @Override public AlertDialog.Builder setTitle(int titleId) {
-            return this.setTitle(getContext().getString(titleId));
+            Context context = getContext();
+            return this.setTitle(context.getString(titleId));
         }
 
         @Override public AlertDialog.Builder setTitle(CharSequence sTitle) {
@@ -5137,7 +5138,7 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
     // --------------------- download a zip with matches --
     // ----------------------------------------------------
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private BroadcastReceiver m_downloadComleted = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ( DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action) == false ) {
@@ -5220,7 +5221,7 @@ touch -t 01030000 LAST.sb
         if ( dm == null ) {
             dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 
-            registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+            registerReceiver(m_downloadComleted, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
             iMenuToRepeatOnPermissionGranted = R.id.sb_download_zip;
             oaMenuCtxForRepeat = new Object[] { sURL, ztDownLoadShortname };
         }
@@ -5254,21 +5255,25 @@ touch -t 01030000 LAST.sb
     // Get the default adapter
     private static BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    private void initBlueTooth() {
+    private void onCreateInitBluetooth() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if ( mBluetoothAdapter != null ) {
             ViewUtil.setMenuItemsVisibility(mainMenu, new int[] { R.id.sb_bluetooth }, mBluetoothAdapter.isEnabled());
             if ( mBluetoothAdapter.isEnabled() ) {
                 if ( mBluetoothControlService == null ) {
-                    mBluetoothControlService = new BluetoothControlService(mBluetoothHandler, Brand.getUUID(), Brand.getShortName(this));
+                    mBluetoothControlService = new BluetoothControlService(Brand.getUUID(), Brand.getShortName(this));
                 }
+                mBluetoothControlService.setHandler(mBluetoothHandler);
+                setBluetoothIconVisibility(mBluetoothControlService.getState().equals(BTState.CONNECTED)?View.VISIBLE:View.INVISIBLE);
             } else {
                 Log.d(TAG, "Bluetooth not turned on");
+                setBluetoothIconVisibility(View.INVISIBLE);
             }
         } else {
             // no bluetooth: hide menu option
             ViewUtil.hideMenuItemForEver(mainMenu, R.id.sb_bluetooth);
+            setBluetoothIconVisibility(View.INVISIBLE);
         }
 
 /*
@@ -5302,17 +5307,49 @@ touch -t 01030000 LAST.sb
         }
 */
     }
+
+    /** Listens to state changes in Bluetooth setting of device ON/OFF */
+    private final BroadcastReceiver mBTStateChangeReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                switch (state) {
+                    case BluetoothAdapter.STATE_OFF:
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        if ( mBluetoothControlService != null ) {
+                            mBluetoothControlService = null;
+                        }
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        mBluetoothControlService = new BluetoothControlService(Brand.getUUID(), Brand.getShortName(ScoreBoard.this));
+                        mBluetoothControlService.setHandler(mBluetoothHandler);
+                        mBluetoothControlService.breakConnectionAndListenForNew();
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        break;
+                }
+            }
+        }
+    };
+
     private void onResumeBlueTooth() {
+        if ( mBluetoothAdapter == null ) {
+            return; // no bluetooth on device
+        }
         if ( mBluetoothControlService != null ) {
             if ( mBluetoothControlService.getState().equals(BTState.NONE) ) {
                 mBluetoothControlService.breakConnectionAndListenForNew();
             }
         }
+        registerReceiver(mBTStateChangeReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
     }
     private void stopBlueTooth() {
         if ( mBluetoothControlService != null ) {
             //mBluetoothControlService.stop();
         }
+        unregisterReceiver(mBTStateChangeReceiver);
     }
     //----------------------------------------------------
     // WRAPPER methods to be able to intercept method call to model and communicate it to connected BT device
@@ -5403,7 +5440,8 @@ touch -t 01030000 LAST.sb
     /**
      * The Handler that gets information back from the BluetoothControlService
      */
-    private final Handler mBluetoothHandler = new Handler() {
+    private final Handler mBluetoothHandler = new BluetoothHandler();
+    private class BluetoothHandler extends Handler {
         @Override public void handleMessage(Message msg) {
             BTMessage btMessage = BTMessage.values()[msg.what];
             switch (btMessage) {
@@ -5418,12 +5456,14 @@ touch -t 01030000 LAST.sb
                             } else {
                                 setBluetoothRole(BTRole.Slave, btState);
                             }
+                            setBluetoothIconVisibility(View.VISIBLE);
                             break;
                         case CONNECTING:
                             break;
                         case LISTEN:
                         case NONE:
                             setBluetoothRole(BTRole.Equal, btState);
+                            setBluetoothIconVisibility(View.INVISIBLE);
                             break;
                     }
                     break;
@@ -5447,18 +5487,11 @@ touch -t 01030000 LAST.sb
 
                     interpretReceivedMessage(readMessage);
                     break;
-                case TOAST:
-                    //String sMsg = msg.getData().getString(BTMessage.TOAST.toString());
- /*                   String sMsg = String.valueOf(msg.obj);
-                    if ( StringUtil.isInteger(sMsg) ) {
-                        sMsg = ScoreBoard.this.getString(Integer.parseInt(sMsg), device!=null?device.getName():"");
-                    }
- */
-                    storeBTDeviceConnectedTo(msg.obj);
-                    String sDeviceName = m_btDeviceOther!=null?m_btDeviceOther.getName():"";
-                    String sMsg = ScoreBoard.this.getString(msg.arg1, sDeviceName, Brand.getShortName(ScoreBoard.this));
+                case INFO:
+                    storeBTDeviceConnectedTo(msg.obj); // normally correct device is already stored in 'case STATE_CHANGE'
+                    String sMsg = ScoreBoard.this.getString(msg.arg1, m_sDeviceNameLastConnected, Brand.getShortName(ScoreBoard.this));
                     if ( msg.arg2 != 0 ) {
-                        String sInfo = ScoreBoard.this.getString(msg.arg2, sDeviceName, Brand.getShortName(ScoreBoard.this));
+                        String sInfo = ScoreBoard.this.getString(msg.arg2, m_sDeviceNameLastConnected, Brand.getShortName(ScoreBoard.this));
                         ScoreBoard.dialogWithOkOnly(ScoreBoard.this, sMsg, sInfo, true);
                     } else {
                         Toast.makeText(ScoreBoard.this, sMsg, Toast.LENGTH_SHORT).show();
@@ -5466,11 +5499,20 @@ touch -t 01030000 LAST.sb
                     break;
             }
         }
-    };
+    }
+
+    public void setBluetoothIconVisibility(int visibility) {
+        if ( iBoard == null ) {
+            return;
+        }
+
+        iBoard.setBluetoothIconVisibility(visibility);
+    }
 
     private void storeBTDeviceConnectedTo(Object o) {
         if ( o instanceof BluetoothDevice) {
             m_btDeviceOther = (BluetoothDevice) o;
+            m_sDeviceNameLastConnected = m_btDeviceOther.getName();
             PreferenceValues.setString(PreferenceKeys.lastConnectedBluetoothDevice, ScoreBoard.this, m_btDeviceOther.getName());
         } else {
             m_btDeviceOther = null;
@@ -5722,9 +5764,10 @@ touch -t 01030000 LAST.sb
 */
     }
 
-    private static BluetoothDevice         m_btDeviceOther          = null;
-    private static BluetoothControlService mBluetoothControlService = null;
-    private static BTRole                  m_blueToothRole          = BTRole.Equal;
+    private static BluetoothDevice         m_btDeviceOther            = null;
+    private static String                  m_sDeviceNameLastConnected = null;
+    private static BluetoothControlService mBluetoothControlService   = null;
+    private static BTRole                  m_blueToothRole            = BTRole.Equal;
     /**
      * Establish connection with other device
      */
@@ -5739,7 +5782,9 @@ touch -t 01030000 LAST.sb
             }
         }
         if ( mBluetoothControlService == null ) {
-            mBluetoothControlService = new BluetoothControlService(mBluetoothHandler, Brand.getUUID(), Brand.getShortName(this));
+            Log.w(TAG, "mBluetoothControlService = null");
+            return;
+            //mBluetoothControlService = new BluetoothControlService(mBluetoothHandler, Brand.getUUID(), Brand.getShortName(this));
         }
         // Get the BluetoothDevice object
         BluetoothDevice btDeviceOther = mBluetoothAdapter.getRemoteDevice(address);

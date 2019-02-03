@@ -46,7 +46,7 @@ public class BluetoothControlService
 
     // Member fields
     private final BluetoothAdapter mAdapter;
-    private final Handler          mHandler;
+    private       Handler          mHandler;
     private       AcceptThread     mAcceptThread;
     private       ConnectThread    mConnectThread;
     private       ConnectedThread  mConnectedThread;
@@ -57,16 +57,18 @@ public class BluetoothControlService
      *
      * @param handler A Handler to send messages back to the UI Activity
      */
-    public BluetoothControlService(Handler handler, UUID uuid, String sName) {
+    public BluetoothControlService(UUID uuid, String sName) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState   = BTState.NONE;
-        mHandler = handler;
         MY_UUID  = uuid;
         NAME     = "BluetoothControlService" + sName;
     }
+    public void setHandler(Handler handler) {
+        this.mHandler = handler;
+    }
 
     /**
-     * Set the current state of the chat connection
+     * Set the current state of the connection
      *
      * @param state An integer defining the current connection state
      */
@@ -84,7 +86,7 @@ public class BluetoothControlService
     }
 
     /**
-     * Start the chat service. Specifically start AcceptThread to begin a
+     * Start the service. Specifically start AcceptThread to begin a
      * session in listening (server) mode. Called by the Activity onResume()
      */
     public synchronized void breakConnectionAndListenForNew() {
@@ -201,15 +203,15 @@ public class BluetoothControlService
     private void connectionSucceeded(BluetoothDevice device) {
         setState(BTState.CONNECTED, device);
         // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal(), R.string.bt_device_connected_to_X, 0, device);
+        Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.bt_device_connected_to_X, 0, device);
         mHandler.sendMessage(msg);
     }
     /**
      * Indicate that the connection attempt failed and notify the UI Activity.
      */
-    private void connectionFailed() {
+    private void connectionFailed(BluetoothDevice device) {
         setState(BTState.LISTEN, null);
-        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal(), R.string.bt_unable_to_connect_device_X, R.string.bt_unable_to_connect_device_info);
+        Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.bt_unable_to_connect_device_X, R.string.bt_unable_to_connect_device_info, device);
         mHandler.sendMessage(msg);
     }
 
@@ -218,7 +220,7 @@ public class BluetoothControlService
      */
     private void connectionLost() {
         setState(BTState.LISTEN, null);
-        Message msg = mHandler.obtainMessage(BTMessage.TOAST.ordinal(), R.string.bt_device_connection_to_X_was_lost, 0);
+        Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.bt_device_connection_to_X_was_lost, 0);
         mHandler.sendMessage(msg);
     }
 
@@ -315,7 +317,7 @@ public class BluetoothControlService
                 // This is a blocking call and will only return on a successful connection or an exception
                 mmSocket.connect();
             } catch (IOException e) {
-                connectionFailed();
+                connectionFailed(mmDevice);
                 // Close the socket
                 try {
                     mmSocket.close();
