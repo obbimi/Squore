@@ -1565,8 +1565,8 @@ public class PreferenceValues extends RWValues
                 // very first install/run
 
                 int appVersionCode = RWValues.getAppVersionCode(context);
-                final int    NO_SHOWCASE_FOR_VERSION        = 210;
-                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-01-19";
+                final int    NO_SHOWCASE_FOR_VERSION        = 211;
+                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-02-07";
                 if ( appVersionCode > NO_SHOWCASE_FOR_VERSION ) {
                     // need to adjust the datecheck below
                     Log.w(TAG, "[getStartupAction] Adjust version code check!!");

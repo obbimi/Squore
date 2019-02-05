@@ -1,3 +1,10 @@
+## 4.19 (feb 2019)
+
+- allow bluetooth-connection between two (already paired) devices each running the scoreboard
+    - keeping the score on one device while the other device mirrors the same score
+    - useful for mirroring score on second (larger) screen if no ChromeCast and/or internet available
+    - can also be used to simply transfer the score from one device to another (once connection is lost, score remains on mirrored device)
+
 ## 4.17 (jan 2019)
 
 - improve autocomplete for double player names

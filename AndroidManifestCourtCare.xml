@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.courtcaresquore"
-          android:versionCode="210"
-          android:versionName="4.18">
+          android:versionCode="211"
+          android:versionName="4.19">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <!-- to autocomplete player names from contact list -->
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+    <!-- for import/export functionality -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+    <!-- bluetooth -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />   <!-- for initiating and cancelling device discovery, and initiating connections -->
+    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+
+    <!-- android 9 casting -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- FOREGROUND_SERVICE is a normal permission, so the system automatically grants it to the requesting app. -->
+<!--
+    <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
+-->
     <uses-sdk/>
 
     <supports-screens
@@ -25,6 +39,7 @@
     <application
             android:theme="@style/SBTheme"
             android:allowBackup="true"
+            android:usesCleartextTraffic="true"
             android:label="@string/app_name_short_brand_courtcare"
             android:icon="@drawable/logo_brand_courtcare">
 

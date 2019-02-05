@@ -7,18 +7,19 @@
     <string name="bt_pull_in_match_from_device_x_or_push_to">Pull match from device %1$s in (to display on this device), or
         push match from this device to %1$s (to display there) ?</string>
 
+    <string name="bt_match_received_by_X">Match received by %1$s</string>
     <string name="bt_bluetooth_mirror">Mirror score (Bluetooth)</string>
 
-    <string name="bt_device_connection_to_X_was_lost">Device connection to %s was lost</string>
-    <string name="bt_device_connected_to_X">Device connected to %s</string>
+    <string name="bt_connection_to_device_X_was_lost">Bluetooth connection to %s was lost</string>
+    <string name="bt_connected_to_device_X">Connected to device %s</string>
     <string name="bt_already_connected_to_X">Already connected to %s</string>
 
     <string name="bt_unable_to_connect_device_X">Unable to connect device %s</string>
     <string name="bt_unable_to_connect_device_info"><![CDATA[<html>Ensure that on selected target device %1$s
     <ul>
     <li>bluetooth is turned on</li>
-    <li>this device is (still) listed as paired with this device</li>
-    <li>%2$s is running , and</li>
+    <li>this device is (still) listed as paired device</li>
+    <li>%2$s is running</li>
     </ul>
 </html>]]></string>
 

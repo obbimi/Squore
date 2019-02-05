@@ -203,7 +203,7 @@ public class BluetoothControlService
     private void connectionSucceeded(BluetoothDevice device) {
         setState(BTState.CONNECTED, device);
         // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.bt_device_connected_to_X, 0, device);
+        Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.bt_connected_to_device_X, 0, device);
         mHandler.sendMessage(msg);
     }
     /**
@@ -220,7 +220,7 @@ public class BluetoothControlService
      */
     private void connectionLost() {
         setState(BTState.LISTEN, null);
-        Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.bt_device_connection_to_X_was_lost, 0);
+        Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.bt_connection_to_device_X_was_lost, 0);
         mHandler.sendMessage(msg);
     }
 

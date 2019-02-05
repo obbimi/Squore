@@ -113,7 +113,12 @@ public class DialogManager {
         }
         if ( ListUtil.isNotEmpty(baseDialogs) ) {
             baseDialog = baseDialogs.get(0);
-            baseDialog.show();
+            try {
+                baseDialog.show();
+            } catch (Exception e) {
+                Log.e(TAG, "Could not show " + baseDialog + " for unknown reason"); // Crashes in app store happened once when a EndGameChoice dialog somehow received context=null when constructed and added to the stack. In this case '.show()' will fail
+                e.printStackTrace();
+            }
             if ( baseDialog.isModal() == false ) {
                 showNextDialog();
             }

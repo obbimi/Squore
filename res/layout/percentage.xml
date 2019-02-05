@@ -231,7 +231,7 @@
     <ImageView android:id="@+id/sb_bluetooth_icon"
         android:layout_alignTop="@id/btn_side1"
         android:layout_alignEnd="@id/btn_score1"
-        app:layout_marginTopPercent="@fraction/pt_bluetooth_icon_height"
+        app:layout_marginTopPercent="@fraction/ls_side_margin_H"
         app:layout_marginRightPercent="@fraction/pt_bluetooth_icon_height"
         android:visibility="invisible"
         app:layout_heightPercent="@fraction/pt_bluetooth_icon_height"

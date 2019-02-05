@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="bt_pull_or_push">Kies</string>
+    <string name="bt_pull">Pull</string>
+    <string name="bt_push">Push</string>
+    <string name="bt_pull_in_match_from_device_x_or_push_to">\'Pull\': Trek wedstrijd van apparaat %1$s binnen (om weer te geven op dit apparaat), of
+        \'Push\': Duw wedstrijd van dit apparaat naar %1$s (om daar weer te geven) ?</string>
+
+    <string name="bt_match_received_by_X">Wedstrijd ontvangen door %1$s</string>
+    <string name="bt_bluetooth_mirror">Weerspiegel score (Bluetooth)</string>
+
+    <string name="bt_connection_to_device_X_was_lost">Bluetooth verbinding naar %s is verbroken</string>
+    <string name="bt_connected_to_device_X">Apparaat verbonden met %s</string>
+    <string name="bt_already_connected_to_X">Reeds verbonden met %s</string>
+
+    <string name="bt_unable_to_connect_device_X">Verbinding maken met %s niet mogelijk</string>
+    <string name="bt_unable_to_connect_device_info"><![CDATA[<html>Verifieer dat op het doel apparaat %1$s
+    <ul>
+    <li>bluetooth aan staat</li>
+    <li>dit apparaat is (nog steeds) opgelijst als \'gekoppeld\' </li>
+    <li>%2$s is opgestart</li>
+    </ul>
+</html>]]></string>
+
+    <string name="bt_select_device">Selecteer apparaat</string>
+    <string name="bt_select_device_for_scoreboard_mirroring">Selecteer apparaat om scorebord op te \'weerspiegelen\'</string>
+
+    <string name="bt_no_bluetooth_on_device">Geen bluetooth op dit apparaat</string>
+    <string name="bt_no_bluetooth_on_device_info">Weerspiegelen van de score op dit apparaat op een ander apparaat via bluetooth niet mogelijk.</string>
+
+    <string name="bt_bluetooth_turned_off">Bluetooth staat uit</string>
+    <string name="bt_bluetooth_turned_off_info">Bluetooth moet aan staan om de score op een andere apparaat te weerspiegelen.</string>
+
+    <string name="bt_no_paired">Geen bluetooth \'ge-koppelde\' apparaten </string>
+    <string name="bt_how_to_pair_info"><![CDATA[<html>Je moet dit apparaat via bluetooth met een ander apparaat (met %1$s) \'koppelen\' om het scorebord te kunnen weerspiegelen.
+    Dit kan worden bereikt door stappen gelijkaardig aan de volgende uit te voeren:
+<ul>
+    <li>op beide apparaten, open de \'bluetooth instellingen\'</li>
+    <li>verifieer dat op het doel apparaat
+        <ul>
+            <li>bluetooth aan staat</li>
+            <li>het apparaat is (tijdelijk) zichtbaar voor andere apparaten om te koppelen</li>
+        </ul>
+    </li>
+    <li>op dit apparaat selecteer \'Apparaten zoeken\'</li>
+    <li>het doel apparaat zou moeten verschijnen onder \'Beschikbare apparaten\': selecteer het apparaat</li>
+    <li>Bevestig de koppeling op beide apparaten</li>
+</ul>
+</html>]]></string>
+
+    <string name="bt_no_appropriate_paired_devices_found">Geen geschikte bluetooth-gekoppelde apparaten gevonden</string>
+
+</resources>

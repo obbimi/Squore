@@ -5615,7 +5615,7 @@ touch -t 01030000 LAST.sb
                         this.initScoreBoard(fJson);
                         matchModel.triggerListeners();
                         if ( m_blueToothRole.equals(BTRole.Slave) ) {
-                            mBluetoothControlService.write(BTMethods.Toast + "(Received and displaying match)");
+                            mBluetoothControlService.write(BTMethods.Toast + "(" + R.string.bt_match_received_by_X + ")");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -5690,7 +5690,16 @@ touch -t 01030000 LAST.sb
                     break;
                 }
                 case Toast: {
-                    Toast.makeText(this, sMethodNArgs[1], Toast.LENGTH_LONG).show();
+                    String sMsg = sMethodNArgs[1];
+                    if ( StringUtil.isInteger(sMsg) ) {
+                        // a resource id was send
+                        try {
+                            sMsg = getString(Integer.parseInt(sMsg), (m_btDeviceOther==null?"":m_btDeviceOther.getName()) );
+                        } catch (Exception e) {
+                            //e.printStackTrace();
+                        }
+                    }
+                    Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                     break;
                 }
                 default:
