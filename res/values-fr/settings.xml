@@ -200,7 +200,7 @@
     <string name="pref_useVibrationNotificationInTimer">Utiliser les vibrations</string>
     <string name="pref_useVibrationNotificationInTimer_summary">Laissez l\'appareil vibrer lorsque les annonces \'Time\', \'15 secondes\' ou \'2 minutes 30\' doivent être prononcées</string>
     <string name="pref_timerWarmup">Combien de secondes pour l\'échauffement</string>
-    <string name="pref_timerWarmup_summary">Temps (en secondes) disponible pour les joueurs pour l\'échauffement (Officiellement 5 minutes, soit 300 secondes).</string>
+    <string name="pref_timerWarmup_summary">Temps (en secondes) disponible pour les joueurs pour l\'échauffement (Officiellement 4 minutes, soit 240 secondes).</string>
     <string name="pref_timerPauseBetweenGames">Le nombre de secondes entre les jeux</string>
     <string name="pref_timerPauseBetweenGames_summary">Le nombre de secondes avant le prochain jeu doit commencer (Officiellement 90 secondes / PSA: 120).</string>
     <string name="pref_timerPauseBetweenGames_values">Valeurs possibles pour le temps entre les jeux</string>
