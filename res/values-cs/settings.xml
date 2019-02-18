@@ -206,7 +206,7 @@
     <string name="pref_useVibrationNotificationInTimer">Použít vibraci pro upozornění</string>
     <string name="pref_useVibrationNotificationInTimer_summary">Zavibrovat při vypršení času (a když zbývá 15 vteřin do konce přestávky, a v půlce zahřívání)</string>
     <string name="pref_timerWarmup">Doba zahřívání (s)</string>
-    <string name="pref_timerWarmup_summary">Doba určená hráčům pro zahřívání na kurtu. Oficiálně 5 minut: 2,5 minuty na každé straně</string>
+    <string name="pref_timerWarmup_summary">Doba určená hráčům pro zahřívání na kurtu. Oficiálně 4 minut: 2 minuty na každé straně</string>
     <string name="pref_timerPauseBetweenGames">Doba mezi sety (s)</string>
     <string name="pref_timerPauseBetweenGames_summary">Doba do kdy musí začít další set (ve vteřinách). Oficiálně 90 vteřin. (PSA: 120)</string>
     <string name="pref_timerPauseBetweenGames_values">Přednastavené hodnoty pro dobu mezi sety</string>

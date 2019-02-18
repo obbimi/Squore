@@ -213,7 +213,7 @@
     <string name="pref_useVibrationNotificationInTimer">Use vibration notifications</string>
     <string name="pref_useVibrationNotificationInTimer_summary">Let device vibrate when timer ends (and when 15 seconds are left of pause, and at half time of warm-up)</string>
     <string name="pref_timerWarmup">Number of seconds for warmup</string>
-    <string name="pref_timerWarmup_summary">The number of seconds players get for a warm-up on court. Officially 5 minutes: 2.5 minutes per side</string>
+    <string name="pref_timerWarmup_summary">The number of seconds players get for a warm-up on court. Officially 4 minutes: 2 minutes per side</string>
     <string name="pref_timerPauseBetweenGames">The number of seconds between games</string>
     <string name="pref_timerPauseBetweenGames_summary">The number of seconds before the next game must start. Officially 90 seconds. (PSA: 120)</string>
     <string name="pref_timerPauseBetweenGames_values">Selectable values for time between games</string>
