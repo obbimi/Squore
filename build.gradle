@@ -113,7 +113,3 @@ android {
         ignoreAssetsPattern '_gh_pages'
     }
 }
-
-dependencies {
-    compile project(':AndroidBase')
-}

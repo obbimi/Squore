@@ -1,3 +1,8 @@
+## 4.19 (april 2019)
+
+- android 9 chromecast improvements
+- minor improvement for player buttons for long names
+
 ## 4.19 (feb 2019)
 
 - allow bluetooth-connection between two (already paired) devices each running the scoreboard
