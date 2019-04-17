@@ -517,7 +517,7 @@
                     android:key="endGameSuggestion"
                     android:title="@string/pref_endGameSuggestion"
                     android:summary="@string/pref_endGameSuggestion_summary"
-                    android:icon="@drawable/ic_menu_forward"
+                    android:icon="@drawable/arrow_right"
                     android:defaultValue="Suggest"
                     dy:displayValues="@array/EndGameDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"

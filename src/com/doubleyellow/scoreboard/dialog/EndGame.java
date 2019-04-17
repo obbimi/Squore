@@ -106,7 +106,7 @@ public class EndGame extends BaseAlertDialog
                    .setMessage(ListUtil.join(messages, "\n\n"));
             }
         } else {
-            adb.setIcon          (R.drawable.ic_menu_forward)
+            adb.setIcon          (R.drawable.arrow_right)
                .setTitle(getGameOrSetString(iEndGameMsgResId));
 
             if ( Brand.isRacketlon() ) {

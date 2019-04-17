@@ -18,8 +18,11 @@
 package com.doubleyellow.scoreboard.cast;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.ViewGroup;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -84,6 +87,13 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         Timer.removeTimerView(true, endOfGameView);
     }
 
+    @Override public boolean dispatchKeyEvent(KeyEvent event) {
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.P /* 28 */ ) {
+            return false;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -113,7 +123,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
 
         TimerView timerView = iBoard.getTimerView();
         Timer.addTimerView(true, timerView);
-        if ( (ScoreBoard.timer == null) || ScoreBoard.timer.isShowing() == false ) {
+        if ( (ScoreBoard.timer == null) || (ScoreBoard.timer.isShowing() == false) ) {
             if ( timerView != null ) {
                 timerView.cancel();
             }

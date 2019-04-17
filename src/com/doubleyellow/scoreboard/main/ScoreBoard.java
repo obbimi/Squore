@@ -2289,7 +2289,17 @@ touch -t 01030000 LAST.sb
         boolean bVisible = bMatchHasEnded || (bGameHasEnded && prefs.alsoBeforeMatchEnd());
         shareButton.setHidden(bVisible == false);
         shareButton.setActionId(prefs.getMenuId());
-        shareButton.setDrawable(this.getResources().getDrawable(prefs.getDrawableId()), getFloatingButtonSizePx(this));
+        int iDrawableId = prefs.getDrawableId();
+
+        Integer iBG = mColors.get(ColorPrefs.ColorTarget.shareButtonBackgroundColor);
+        if ( iBG != null ) {
+            // if we use a light background for the player/plus button... switch to the black icon version
+            int blackOrWhiteFor = ColorUtil.getBlackOrWhiteFor(iBG);
+            if ( blackOrWhiteFor == Color.BLACK ) {
+                iDrawableId = prefs.getDrawableIdBlack();
+            }
+        }
+        shareButton.setDrawable(this.getResources().getDrawable(iDrawableId), getFloatingButtonSizePx(this));
     }
 
     // ----------------------------------------------------

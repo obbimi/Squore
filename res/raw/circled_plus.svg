@@ -26,8 +26,8 @@
 
     <circle id="disc" cx="260" cy="260" r="220" stroke-width="35" fill="none"/>
 
-    <polyline id="hands" stroke-linecap="round" points="260,130 260,390" stroke-width="35" fill="none"/>
-    <polyline id="hands" stroke-linecap="round" points="130,260 390,260" stroke-width="35" fill="none"/>
+    <polyline id="vertical"   stroke-linecap="round" points="260,130 260,390" stroke-width="35" fill="none"/>
+    <polyline id="horizontal" stroke-linecap="round" points="130,260 390,260" stroke-width="35" fill="none"/>
 
 
 </svg>

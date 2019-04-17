@@ -35,7 +35,7 @@ public enum ShareMatchPrefs {
     Summary                    (R.id.sb_share_match_summary           , android.R.drawable.ic_menu_share     , false),
     SummaryMultiple            (R.id.sb_share_matches_summary         , android.R.drawable.ic_menu_share     , false),
     SummaryToDefault           (R.id.sb_send_match_result             ,         R.drawable.ic_action_send_now, false), // only if default sms recipient specified
-    PostResult                 (R.id.sb_post_match_result             ,         R.drawable.ic_menu_forward   , false), // only if post url specified
+    PostResult                 (R.id.sb_post_match_result             ,         R.drawable.arrow_right       , false), // only if post url specified
     SheetInEmail               (R.id.sb_email_match_result            , android.R.drawable.ic_dialog_email   , false),
     //SummaryToClipboard       (R.id.sb_put_match_summary_on_clipboard, android.R.drawable.ic_menu_share   , false),
     //SummaryToWhatsApp        (R.id.sb_whatsapp_match_summary        , android.R.drawable.ic_menu_share   , false),
@@ -53,6 +53,12 @@ public enum ShareMatchPrefs {
         return iMenuOption;
     }
     public int getDrawableId() {
+        return iDrawableId;
+    }
+    public int getDrawableIdBlack() {
+        if ( iDrawableId == R.drawable.arrow_right ) {
+            return R.drawable.arrow_right_black;
+        }
         return iDrawableId;
     }
     public boolean alsoBeforeMatchEnd() {

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520"
+    fill="#D3D3D3" stroke="#D3D3D3">
+    <!--
+    Replaces the resource image: R.drawable.ic_menu_forward
+
+    This svg is not used as such, but converted to png files:
+
+    fill and stroke colors: #D3D3D3, #111111
+
+    # guidelines: mine
+    export suffix='_black' #111111
+    export suffix=''       #D3D3D3
+    convert -background none -size  48x48  arrow_right.svg ../drawable-hdpi/arrow_right${suffix}.png
+    convert -background none -size  64x64  arrow_right.svg ../drawable-xhdpi/arrow_right${suffix}.png
+    convert -background none -size  96x96  arrow_right.svg ../drawable-xxhdpi/arrow_right${suffix}.png
+    convert -background none -size  96x96  arrow_right.svg ../drawable-xxxhdpi/arrow_right${suffix}.png
+
+    # guidelines: https://developer.android.com/training/multiscreen/screendensities
+    convert -background none -size  72x72  arrow_right.svg ../drawable-hdpi/arrow_right${suffix}.png
+    convert -background none -size  96x96  arrow_right.svg ../drawable-xhdpi/arrow_right${suffix}.png
+    convert -background none -size 144x144 arrow_right.svg ../drawable-xxhdpi/arrow_right${suffix}.png
+    convert -background none -size 192x192 arrow_right.svg ../drawable-xxxhdpi/arrow_right${suffix}.png
+    -->
+
+    <polyline id="horizontal" stroke-linecap="round" points="070,260 450,260"         stroke-width="35" fill="none"/>
+    <polyline id="point"      stroke-linecap="round" points="320,100 450,260 320,420" stroke-width="35" fill="none"/>
+
+</svg>
