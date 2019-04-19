@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.courtcaresquore"
-          android:versionCode="211"
+          android:versionCode="212"
           android:versionName="4.19">
 
     <uses-permission android:name="android.permission.INTERNET" />
