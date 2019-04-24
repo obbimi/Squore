@@ -68,6 +68,7 @@
     <string name="sb_swap_double_players">Inverser les joueurs du match de double</string>
     <string name="sb_swap_players">Inverser les joueurs du match</string>
     <string name="sb_choose_player">Pour quel joueur ?</string>
+    <string name="sb_choose_players">Quelles joueurs</string> <!-- TODO -->
     <string name="sb_choose_team">Pour quelle équipe ?</string>
     <string name="sb_edit_event_or_player">Editer événement/joueur</string>
     <string name="sb_new_match">Nouveau match:</string>

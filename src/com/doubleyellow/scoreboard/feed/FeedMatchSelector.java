@@ -29,6 +29,7 @@ import android.widget.*;
 import com.doubleyellow.android.util.AndroidPlaceholder;
 import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.android.util.SimpleELAdapter;
+import com.doubleyellow.android.view.SelectObjectView;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.URLFeedTask;
@@ -86,8 +87,9 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     public static Map<PreferenceKeys, String> mFeedPrefOverwrites = new HashMap<PreferenceKeys, String>();
 
-    private String m_sNoMatchesInFeed = null;
-    private JSONObject m_joFeedConfig = null;
+    private String     m_sNoMatchesInFeed = null;
+    private JSONObject m_joFeedConfig     = null;
+    private JSONObject m_joTeamPlayers    = null;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,45 +128,98 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     private ChildClickListener onChildClickListener = new ChildClickListener();
 
-    private class ChildClickListener implements ExpandableListView.OnChildClickListener {
+    private class ChildClickListener implements ExpandableListView.OnChildClickListener
+    {
         @Override public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
             if ( bDisabled ){
                 return false;
             }
-            Model model = Brand.getModel();
+            final Model model = Brand.getModel();
 
             SimpleELAdapter listAdapter  = getListAdapter(null);
             String          sGroup       = (String) listAdapter.getGroup(groupPosition);
             Object          oMatch       = emsAdapter.getObject(groupPosition, childPosition);
             String          feedPostName = PreferenceValues.getFeedPostName(context);
+            boolean bNamesPopulated = false;
             if ( oMatch instanceof JSONObject ) {
                 JSONObject joMatch = (JSONObject) oMatch;
-                populateModelFromJSON(model, joMatch, sGroup, feedPostName);
+                bNamesPopulated = populateModelFromJSON(model, joMatch, sGroup, feedPostName);
             } else {
                 String sText = SimpleELAdapter.getText(v);
                 if ( populateModelFromString(model, sText, sGroup, feedPostName) ) {
                     return false;
                 }
+                bNamesPopulated = true;
             }
+            if ( bNamesPopulated || ListUtil.isEmpty(model.getTeamPlayers(Player.A)) ) {
+                // complete or no player names to select
+                finishWithPopulatedModel(model);
+            } else {
+                // only clubs names were specified, player names specified to select from
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                layoutParams.weight = 1;
 
-            if ( (m_joFeedConfig != null) && m_joFeedConfig.optBoolean(URLsKeys.skipMatchSettings.toString(), false) ) {
-                // typically a JSON feed with all appropriate settings in the feed, no need to change settings
-                if ( FeedStatus.showingPlayers.equals(getFeedStatus()) == false ) {
-                    Match.dontShow();
-                    PreferenceValues.setOverwrites(mFeedPrefOverwrites);
+                // assume user must select player for each team and that list of players is stored in the model
+                final Map<Player, SelectObjectView<String>> m_p2select = new HashMap<>();
+                LinearLayout ll = new LinearLayout(context);
+                ll.setOrientation(LinearLayout.HORIZONTAL);
+                for ( Player p: Player.values() ) {
+                    LinearLayout llTeam = new LinearLayout(context);
+                    llTeam.setOrientation(LinearLayout.VERTICAL);
+                    llTeam.setLayoutParams(layoutParams);
+
+                    TextView txtTeam = new TextView(context);
+                    txtTeam.setText(model.getClub(p));
+                    llTeam.addView(txtTeam);
+
+                    List<String> teamPlayers = model.getTeamPlayers(p);
+                    SelectObjectView<String> msPlayers = new SelectObjectView<String>(context, teamPlayers, null);
+                    llTeam.addView(msPlayers);
+                    m_p2select.put(p, msPlayers);
+
+                    ll.addView(llTeam);
                 }
-            }
 
-            Intent intent = new Intent();
-            intent.putExtra(Model.class.getSimpleName(), model.toJsonString(null)); // this is read by ScoreBoard.onActivityResult
-            activity.setResult(Activity.RESULT_OK, intent);
-            activity.finish();
+                AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
+                ab.setTitle(R.string.sb_choose_players)
+                  .setView(ll)
+                  .setNeutralButton (R.string.cmd_cancel, null)
+                  .setPositiveButton(R.string.cmd_ok, new DialogInterface.OnClickListener() {
+                      @Override public void onClick(DialogInterface dialog, int which) {
+                          int iPlayersSelected = 0;
+                          for(Player p: Player.values()) {
+                              String sName  = m_p2select.get(p).getChecked();
+                              model.setPlayerName(p, sName);
+                              if ( StringUtil.isNotEmpty(sName) ) {
+                                  iPlayersSelected++;
+                              }
+                          }
+                          finishWithPopulatedModel(model);
+                      }
+                  })
+                  .show();
+            }
             return true;
         }
         private boolean bDisabled = false;
         void setDisabled(boolean b) {
             this.bDisabled = b;
         }
+    }
+
+    private void finishWithPopulatedModel(Model model) {
+        if ( (m_joFeedConfig != null) && m_joFeedConfig.optBoolean(URLsKeys.skipMatchSettings.toString(), false) ) {
+            // typically a JSON feed with all appropriate settings in the feed, no need to change settings
+            if ( FeedStatus.showingPlayers.equals(getFeedStatus()) == false ) {
+                Match.dontShow();
+                PreferenceValues.setOverwrites(mFeedPrefOverwrites);
+            }
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(Model.class.getSimpleName(), model.toJsonString(null)); // this is read by ScoreBoard.onActivityResult
+        activity.setResult(Activity.RESULT_OK, intent);
+        activity.finish();
     }
 
     public static void switchFeed(Context context) {
@@ -331,20 +386,37 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     }
 
     /* for when a match is selected from a JSON feed */
-    private void populateModelFromJSON(Model model, JSONObject joMatch, String sGroup, String feedPostName) {
+    private boolean populateModelFromJSON(Model model, JSONObject joMatch, String sGroup, String feedPostName) {
+        boolean bNamesPopulated = true;
         try {
             for(Player p: Player.values() ) {
                 Object oPlayer = joMatch.get(p.toString());
                 String sName = String.valueOf(oPlayer);
                 if ( oPlayer instanceof JSONObject ) {
                     JSONObject jsonObject = (JSONObject) oPlayer;
-                    sName = jsonObject.getString(JSONKey.name.toString());
+                    sName = jsonObject.optString(JSONKey.name.toString());
+                    if ( StringUtil.isEmpty(sName) ) {
+                        bNamesPopulated = false;
+
+                        // check of list of names of players is available
+                        JSONArray aPlayers = jsonObject.optJSONArray(JSONKey.team_players.toString());
+                        if ( aPlayers == null ) {
+                            String sTeamId = jsonObject.optString(JSONKey.teamid.toString());
+                            if ( StringUtil.isNotEmpty(sTeamId) ) {
+                                // get teams from global part of feed config
+                                if ( m_joTeamPlayers != null ) {
+                                    aPlayers = m_joTeamPlayers.optJSONArray(sTeamId);
+                                }
+                            }
+                        }
+                        model.setTeamPlayers(p, JsonUtil.asListOfStrings(aPlayers)); // to show dialog where ref can select players of both teams
+                    }
                     model.setPlayerClub   (p, jsonObject.optString(JSONKey.club   .toString()));
                     model.setPlayerCountry(p, jsonObject.optString(JSONKey.country.toString()));
                     String sAvatar = jsonObject.optString(JSONKey.avatar.toString());
 
                     // avatars in one feed are often retrieved from the same server
-                    if ( StringUtil.isNotEmpty(sAvatar) && (sAvatar.startsWith("http") == false) && m_joFeedConfig != null ) {
+                    if ( StringUtil.isNotEmpty(sAvatar) && (sAvatar.startsWith("http") == false) && (m_joFeedConfig != null) ) {
                         String sAvatarBaseURL = m_joFeedConfig.optString(URLsKeys.avatarBaseURL.toString());
                         if ( StringUtil.isNotEmpty(sAvatarBaseURL) ) {
                             sAvatar = sAvatarBaseURL + sAvatar;
@@ -375,6 +447,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                        , joMatch.optString(JSONKey.division.toString(), sGroup)
                        , null, null);
 */
+        return bNamesPopulated;
     }
 
     private void setMatchFormat(Model model, JSONObject joMatch) throws JSONException {
@@ -453,7 +526,9 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         model.setEvent(sEventName, sFieldDivision, sEventRound, sLocation);
     }
 
-    @Override public AdapterView.OnItemLongClickListener getOnItemLongClickListener() {
+    /** will trigger a popup showing the Model data. More for troubleshooting */
+    @Override public AdapterView.OnItemLongClickListener getOnItemLongClickListener()
+    {
         return new AdapterView.OnItemLongClickListener() {
             @Override public boolean onItemLongClick(AdapterView<?> adapterView, final View view, int iPos, final long id) {
                 Object itemAtPosition = adapterView.getItemAtPosition(iPos);
@@ -470,7 +545,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
                 Model mDetails = Brand.getModel();
                 if (itemAtPosition instanceof JSONObject) {
-                    populateModelFromJSON(mDetails, (JSONObject) itemAtPosition, null, PreferenceValues.getFeedPostName(context));
+                    boolean bNamesPopulated = populateModelFromJSON(mDetails, (JSONObject) itemAtPosition, null, PreferenceValues.getFeedPostName(context));
                 } else if (itemAtPosition instanceof String) {
                     getMatchDetailsFromMatchString(mDetails, (String) itemAtPosition, context, feedStatus.isShowingPlayers());
                 }
@@ -484,7 +559,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
                     String sMessage = /*MapUtil.toNiceString(mDetails)*/ joModel.toString(); // TODO: improve
                     ab.setMessage(sMessage)
-                            .setIcon(R.drawable.ic_action_web_site);
+                      .setIcon   (R.drawable.ic_action_web_site);
                     if ( StringUtil.isNotEmpty(sResultShort) && (sResultShort.equals("0-0") == false) ) {
                         ab.setPositiveButton(android.R.string.cancel, null);
                     } else {
@@ -778,6 +853,9 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             List<String> lExpandedGroups = new ArrayList<>();
             String     sDisplayFormat = getFormat();
             mFeedPrefOverwrites.clear();
+
+            // for feeds where matches between teams are listed, for each team a list of players may be specified
+            m_joTeamPlayers = joRoot.optJSONObject(JSONKey.team_players.toString());
 
             // if there is a config section, use it
             m_joFeedConfig = joRoot.optJSONObject(URLsKeys.config.toString());

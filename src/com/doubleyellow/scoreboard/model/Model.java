@@ -275,6 +275,7 @@ public abstract class Model
     private Map<Player, String>                 m_player2Color          = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Country        = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Club           = new HashMap<Player, String>();
+    private Map<Player, List<String>>           m_team2Players          = new HashMap<Player, List<String>>();
     private Map<Player, String>                 m_player2Avatar         = new HashMap<Player, String>();
     private String                              m_matchDate             = DateUtil.getCurrentYYYY_MM_DD();   // up to apk 202 DateUtil.getCurrentYYYYMMDD()
     private String                              m_matchTime             = DateUtil.getCurrentHHMMSS_Colon() + DateUtil.getTimezoneXXX(); // up to apk 202 DateUtil.getCurrentHHMMSS()
@@ -1541,6 +1542,36 @@ public abstract class Model
         }
         return false;
     }
+    public List<String> getTeamPlayers(Player team) {
+        List<String> players = m_team2Players.get(team);
+        if ( players == null ) {
+            return null;
+        }
+
+        // parse optionally formatted data to only return names
+        LinkedHashMap<String, String> mPlayersParsed = new LinkedHashMap<>();
+        for ( String s: players) {
+            String[] sNr_Id_Name = s.split(":");
+            switch ( sNr_Id_Name.length ) {
+                case 1:
+                    mPlayersParsed.put(sNr_Id_Name[0], sNr_Id_Name[0]);
+                    break;
+                case 2:
+                    mPlayersParsed.put(sNr_Id_Name[0], sNr_Id_Name[1]);
+                    break;
+                default:
+                    mPlayersParsed.put(sNr_Id_Name[1], sNr_Id_Name[2]); // assume that [0] just contains position in the list
+                    break;
+            }
+        }
+
+        return new ArrayList<>(mPlayersParsed.values());
+    }
+    public void setTeamPlayers(Player team, List<String> lPlayers) {
+
+        m_team2Players.put(team, lPlayers);
+        setDirty(false);
+    }
     public boolean setPlayerClub(Player player, String sClub) {
         if ( StringUtil.isNotEmpty(sClub) ) {
             sClub = sClub.trim();
@@ -2035,6 +2066,16 @@ public abstract class Model
                         }
                     }
                 }
+                // read team players
+                JSONObject joTeamPlayers = joMatch.optJSONObject(JSONKey.team_players.toString());
+                if ( JsonUtil.isNotEmpty(joTeamPlayers) ) {
+                    for (Player p : getPlayers()) {
+                        if ( joTeamPlayers.has(p.toString()) ) {
+                            JSONArray players = joTeamPlayers.optJSONArray(p.toString());
+                            m_team2Players.put(p, JsonUtil.asListOfStrings(players));
+                        }
+                    }
+                }
                 if ( joFormat.has(JSONKey.mode.toString())) {
                     m_sMode = joFormat.optString(JSONKey.mode.toString());
                 }
@@ -2336,11 +2377,12 @@ public abstract class Model
         }
 
         // players
-        JSONObject joPlayers   = new JSONObject();
-        JSONObject joColors    = new JSONObject();
-        JSONObject joCountries = new JSONObject();
-        JSONObject joClubs     = new JSONObject();
-        JSONObject joAvatars   = new JSONObject();
+        JSONObject joPlayers     = new JSONObject();
+        JSONObject joColors      = new JSONObject();
+        JSONObject joCountries   = new JSONObject();
+        JSONObject joClubs       = new JSONObject();
+        JSONObject joAvatars     = new JSONObject();
+        JSONObject joTeamPlayers = new JSONObject();
         for(Player p : getPlayers() ) {
             joPlayers.put(p.toString(), m_player2Name.get(p));
             String sColor = m_player2Color.get(p);
@@ -2359,6 +2401,10 @@ public abstract class Model
             if ( StringUtil.isNotEmpty(sAvatar) ) {
                 joAvatars.put(p.toString(), sAvatar);
             }
+            List<String> players = m_team2Players.get(p);
+            if ( ListUtil.isNotEmpty(players) ) {
+                joTeamPlayers.put(p.toString(), new JSONArray(players));
+            }
         }
         jsonObject.put(JSONKey.players.toString(), joPlayers);
         if ( JsonUtil.isNotEmpty(joColors) ) {
@@ -2372,6 +2418,9 @@ public abstract class Model
         }
         if ( JsonUtil.isNotEmpty(joAvatars) ) {
             jsonObject.put(JSONKey.avatars.toString(), joAvatars);
+        }
+        if ( JsonUtil.isNotEmpty(joTeamPlayers) ) {
+            jsonObject.put(JSONKey.team_players.toString(), joTeamPlayers);
         }
 
         // referee

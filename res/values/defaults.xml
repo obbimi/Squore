@@ -145,7 +145,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <integer name="numberOfMinutesAfterWhichToLockMatch_default">30</integer>
     <integer name="tournamentWasBusy_DaysBack_default">2</integer>
     <integer name="tournamentWillStartIn_DaysAhead_default">61</integer> <!-- to be able to follow players list/tournament participants -->
-    <integer name="tournamentMaxDuration_InDays_default">42</integer> <!-- BK teams is e.g. 3 weeks in a row -->
+    <integer name="tournamentMaxDuration_InDays_default">365</integer> <!-- BK teams is e.g. 3 weeks in a row -->
 
     <!--
     http://www.psaworldtour.com/page/WorldRankings

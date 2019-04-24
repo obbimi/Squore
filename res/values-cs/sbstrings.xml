@@ -67,6 +67,7 @@
     <string name="sb_swap_double_players">Prohodit dvojice hráčů</string>
     <string name="sb_swap_players">Prohodit hráče</string>
     <string name="sb_choose_player">Pro kterého hráče?</string>
+    <string name="sb_choose_players">Choose players</string> <!-- TODO -->
     <string name="sb_choose_team">Pro který tým?</string>
     <string name="sb_edit_event_or_player">Upravit soutěž/hráče</string>
     <string name="sb_new_match">Začít nový zápas</string>

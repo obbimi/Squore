@@ -37,6 +37,8 @@ import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.MenuHandler;
 import com.doubleyellow.util.StringUtil;
 
+import java.util.List;
+
 /**
  * Activity where the user can provided
  * - the names of the players
@@ -89,6 +91,8 @@ public class Match extends XActivity implements MenuHandler
         String sClubB      = null;
         String sAvatarA    = null;
         String sAvatarB    = null;
+        List<String> lTeamPlayersA = null;
+        List<String> lTeamPlayersB = null;
       //Bundle bundleExtra = null;
         Model  model       = null;
         {
@@ -104,14 +108,16 @@ public class Match extends XActivity implements MenuHandler
         }
 
         if ( model != null ) {
-            sA         = model.getName   (Player.A);
-            sB         = model.getName   (Player.B);
-            sCountryA  = model.getCountry(Player.A);
-            sCountryB  = model.getCountry(Player.B);
-            sClubA     = model.getClub   (Player.A);
-            sClubB     = model.getClub   (Player.B);
-            sAvatarA   = model.getAvatar (Player.A);
-            sAvatarB   = model.getAvatar (Player.B);
+            sA            = model.getName       (Player.A);
+            sB            = model.getName       (Player.B);
+            sCountryA     = model.getCountry    (Player.A);
+            sCountryB     = model.getCountry    (Player.B);
+            sClubA        = model.getClub       (Player.A);
+            sClubB        = model.getClub       (Player.B);
+            sAvatarA      = model.getAvatar     (Player.A);
+            sAvatarB      = model.getAvatar     (Player.B);
+            lTeamPlayersA = model.getTeamPlayers(Player.A);
+            lTeamPlayersB = model.getTeamPlayers(Player.B);
 
             bIsDoubles = model.isDoubles();
             if ( bIsDoubles ) {
@@ -130,8 +136,7 @@ public class Match extends XActivity implements MenuHandler
         ColorPrefs.setColors(this, vMatchView);
 
         if ( model != null ) {
-            vMatchView.setPlayers(sA, sB, sCountryA, sCountryB, sAvatarA, sAvatarB, sClubA, sClubB);
-            // if the names came from selecting a match from another place, do not auto set focus to the player names
+            vMatchView.setPlayers(sA, sB, sCountryA, sCountryB, sAvatarA, sAvatarB, sClubA, sClubB, lTeamPlayersA, lTeamPlayersB);
 
             String sEN     = model.getEventName();
             String sED     = model.getEventDivision();

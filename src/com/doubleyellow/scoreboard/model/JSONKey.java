@@ -77,7 +77,9 @@ public enum JSONKey {
 
   //player,    // duplicate
 	  //name,  // duplicate
-	    club,
+	    club,  // club (tournament) or team (league)
+			teamid,
+			team_players,
 	    country,
 	    seed,
 	    avatar,

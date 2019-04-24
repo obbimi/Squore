@@ -73,6 +73,7 @@
     <string name="sb_swap_double_players">Swap double players</string>
     <string name="sb_swap_players">Swap players</string>
     <string name="sb_choose_player">For which player?</string>
+    <string name="sb_choose_players">Choose players</string>
     <string name="sb_choose_team">For which team?</string>
     <string name="sb_edit_event_or_player">Edit event/player</string>
     <string name="sb_new_match">New match</string>

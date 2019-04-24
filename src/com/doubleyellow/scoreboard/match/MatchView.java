@@ -222,7 +222,8 @@ public class MatchView extends SBRelativeLayout
         return false;
     }
 
-    void setPlayers(String sA, String sB, String sCountryA, String sCountryB, String sAvatarA, String sAvatarB, String sClubA, String sClubB) {
+    /** invoked from com.doubleyellow.scoreboard.match.Match */
+    void setPlayers(String sA, String sB, String sCountryA, String sCountryB, String sAvatarA, String sAvatarB, String sClubA, String sClubB, List<String> lTeamPlayersA, List<String> lTeamPlayersB) {
         int iNames = 0;
         if ( StringUtil.isNotEmpty(sA) ) {
             if ( m_bIsDoubles ) {
@@ -235,6 +236,12 @@ public class MatchView extends SBRelativeLayout
                 txtPlayerA.setText(sA);
             }
             iNames++;
+        } else {
+            if ( ListUtil.isNotEmpty(lTeamPlayersA) && txtPlayerA instanceof AutoCompleteTextView ) {
+                AutoCompleteTextView actv = (AutoCompleteTextView) txtPlayerA;
+                actv.setAdapter(getStringArrayAdapter(getContext(), lTeamPlayersA, null));
+                actv.setThreshold(0);
+            }
         }
         if ( StringUtil.isNotEmpty(sB) ) {
             if ( m_bIsDoubles ) {
@@ -247,6 +254,12 @@ public class MatchView extends SBRelativeLayout
                 txtPlayerB.setText(sB);
             }
             iNames++;
+        } else {
+            if ( ListUtil.isNotEmpty(lTeamPlayersB) && txtPlayerB instanceof AutoCompleteTextView ) {
+                AutoCompleteTextView actv = (AutoCompleteTextView) txtPlayerB;
+                actv.setAdapter(getStringArrayAdapter(getContext(), lTeamPlayersB, null));
+                actv.setThreshold(0);
+            }
         }
 
         if ( (txtCountryA != null) && (txtCountryB != null) ) {

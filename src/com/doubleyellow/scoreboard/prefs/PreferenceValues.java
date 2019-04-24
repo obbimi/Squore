@@ -1095,6 +1095,9 @@ public class PreferenceValues extends RWValues
         if ( StringUtil.isEmpty(sCountryCode) ) {
             return 0;
         }
+        if ( StringUtil.length(sCountryCode) <= 1 ) {
+            return 0;
+        }
         int    iFlagMaxCacheAgeInMin = PreferenceValues.getMaxCacheAgeFlags(context) * iMaxCacheAgeMultiplier;
         String sIso2                 = CountryUtil.getIso2(sCountryCode);
         String sURL                  = null;
@@ -1153,12 +1156,12 @@ public class PreferenceValues extends RWValues
         }
     }
 
-    public static String getFlagsURL(Context context) {
+    private static String getFlagsURL(Context context) {
         String sUrl = getFirstOfList(PreferenceKeys.FlagsURLs, R.string.FlagsURLs_default, context);
         sUrl = URLFeedTask.prefixWithBaseIfRequired(sUrl);
         return sUrl;
     }
-    public static int getMaxCacheAgeFlags(Context context) {
+    private static int getMaxCacheAgeFlags(Context context) {
         return getInteger(PreferenceKeys.maximumCacheAgeFlags, context, R.integer.maximumCacheAgeFlags_default);
     }
     public static int getMaxCacheAgeFeeds(Context context) {
