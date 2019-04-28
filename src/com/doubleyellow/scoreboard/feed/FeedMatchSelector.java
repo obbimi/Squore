@@ -29,6 +29,7 @@ import android.widget.*;
 import com.doubleyellow.android.util.AndroidPlaceholder;
 import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.android.util.SimpleELAdapter;
+import com.doubleyellow.android.view.SelectEnumView;
 import com.doubleyellow.android.view.SelectObjectView;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
@@ -41,6 +42,7 @@ import com.doubleyellow.scoreboard.match.Match;
 import com.doubleyellow.scoreboard.match.MatchTabbed;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
+import com.doubleyellow.scoreboard.prefs.NamePart;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.android.task.URLTask;
@@ -159,10 +161,13 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 layoutParams.weight = 1;
 
+
+                boolean bAllowSplitOnComma = true;
+
                 // assume user must select player for each team and that list of players is stored in the model
                 final Map<Player, SelectObjectView<String>> m_p2select = new HashMap<>();
-                LinearLayout ll = new LinearLayout(context);
-                ll.setOrientation(LinearLayout.HORIZONTAL);
+                LinearLayout llTeams = new LinearLayout(context);
+                llTeams.setOrientation(LinearLayout.HORIZONTAL);
                 for ( Player p: Player.values() ) {
                     LinearLayout llTeam = new LinearLayout(context);
                     llTeam.setOrientation(LinearLayout.VERTICAL);
@@ -173,12 +178,31 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     llTeam.addView(txtTeam);
 
                     List<String> teamPlayers = model.getTeamPlayers(p);
-                    SelectObjectView<String> msPlayers = new SelectObjectView<String>(context, teamPlayers, null);
+                    SelectObjectView<String> msPlayers = new SelectObjectView<String>(context, teamPlayers, teamPlayers.get(0));
                     llTeam.addView(msPlayers);
                     m_p2select.put(p, msPlayers);
 
-                    ll.addView(llTeam);
+                    llTeams.addView(llTeam);
+
+                    bAllowSplitOnComma = bAllowSplitOnComma && teamPlayers.get(0).contains(",");
                 }
+
+                final SelectEnumView<NamePart> evNamePart;
+                LinearLayout ll = null;
+                if ( bAllowSplitOnComma ) {
+                    ll = new LinearLayout(context);
+                    ll.setOrientation(LinearLayout.VERTICAL);
+
+                    evNamePart = new SelectEnumView(context, NamePart.class, NamePart.Full, 3);
+                    ll.addView(evNamePart);
+
+                    ll.addView(llTeams);
+                } else {
+                    evNamePart = null;
+                    ll = llTeams;
+                }
+
+                // TODO: allow to use fullname or only firstname or only lastname
 
                 AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
                 ab.setTitle(R.string.sb_choose_players)
@@ -189,6 +213,17 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                           int iPlayersSelected = 0;
                           for(Player p: Player.values()) {
                               String sName  = m_p2select.get(p).getChecked();
+                              if ( evNamePart != null ) {
+                                  NamePart namePart = evNamePart.getChecked();
+                                  switch (namePart) {
+                                      case First:
+                                          sName = sName.replaceFirst("^.*,\\s*", "");
+                                          break;
+                                      case Last:
+                                          sName = sName.replaceFirst("\\s*,.*$", "");
+                                          break;
+                                  }
+                              }
                               model.setPlayerName(p, sName);
                               if ( StringUtil.isNotEmpty(sName) ) {
                                   iPlayersSelected++;

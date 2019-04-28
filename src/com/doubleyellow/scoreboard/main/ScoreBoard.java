@@ -527,8 +527,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         private long lActionBarToggledAt = 0L;
         @Override public void onClick(View view) {
             if ( Brand.isRacketlon() == false ) {
-                iBoard.toggleGameScoreView();
-                castGamesWonAppearance();
+                toggleGameScoreView();
             } else {
                 long currentTime = System.currentTimeMillis();
                 if ( currentTime - lActionBarToggledAt > 1500 ) {
@@ -667,6 +666,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         matchModel.setPlayerName(pl, saNames[1] + "/" + saNames[0]);
         String sMsg = getString(R.string.double_player_names_swapped, pl);
         Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
+
+        if ( BTRole.Master.equals(m_blueToothRole) ) {
+            writeMethodToBluetooth(BTMethods.swapDoublePlayers, pl);
+        }
     }
 
 	//-------------------------------------------------------------------------
@@ -5428,6 +5431,15 @@ touch -t 01030000 LAST.sb
         writeMethodToBluetooth(BTMethods.restartTimerWithSecondsLeft, iSecs);
     }
 
+    private void toggleGameScoreView() {
+        iBoard.toggleGameScoreView();
+        castGamesWonAppearance();
+
+        if ( BTRole.Master.equals(m_blueToothRole) ) {
+            writeMethodToBluetooth(BTMethods.toggleGameScoreView);
+        }
+    }
+
     private void pullOrPushMatchOverBluetooth(String sDeviceName) {
         AlertDialog.Builder cfunls = getAlertDialogBuilder(this);
         cfunls.setTitle(R.string.bt_pull_or_push)
@@ -5699,6 +5711,15 @@ touch -t 01030000 LAST.sb
                     sendMatchToOtherBluetoothDevice(this, false);
                     break;
                 }
+                case swapDoublePlayers: {
+                    Player player = Player.valueOf(sMethodNArgs[1]);
+                    _swapDoublePlayers(player);
+                    break;
+                }
+                case toggleGameScoreView: {
+                    toggleGameScoreView();
+                    break;
+                }
                 case Toast: {
                     String sMsg = sMethodNArgs[1];
                     if ( StringUtil.isInteger(sMsg) ) {
@@ -5740,6 +5761,7 @@ touch -t 01030000 LAST.sb
         undoLast           (true),
         undoLastForScorer  (true),
         changeSide         (false),
+        swapDoublePlayers  (false),
         endGame            (false),
 
         timestampStartOfGame       (false),
@@ -5749,6 +5771,7 @@ touch -t 01030000 LAST.sb
         changeColor (false),
 
         restartScore(false),
+        toggleGameScoreView(false),
 
         requestCompleteJsonOfMatch(false),
         ;

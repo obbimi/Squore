@@ -349,11 +349,13 @@ public class ResultSender {
             Date       date1      = DateUtil.parseString2Date(sYYYYMMDD1, DateUtil.YYYYMMDD);
             String     sYYYYMMDD2 = iterator.next();
             Date       date2      = DateUtil.parseString2Date(sYYYYMMDD2, DateUtil.YYYYMMDD);
-            int iDaysDiff = DateUtil.convertToDays(date1.getTime() - date2.getTime());
-            if ( Math.abs(iDaysDiff) == 1 ) {
-                mMatchDates.remove(iDaysDiff<0 ? sYYYYMMDD1 : sYYYYMMDD2);
-                Log.d(TAG, "== mMatchDates Corrected : \n" + MapUtil.toNiceString(mMatchDates));
-            };
+            if ( (date1 != null) && (date2 != null) ) {
+                int iDaysDiff = DateUtil.convertToDays(date1.getTime() - date2.getTime());
+                if ( Math.abs(iDaysDiff) == 1 ) {
+                    mMatchDates.remove(iDaysDiff<0 ? sYYYYMMDD1 : sYYYYMMDD2);
+                    Log.d(TAG, "== mMatchDates Corrected : \n" + MapUtil.toNiceString(mMatchDates));
+                }
+            }
         }
         if ( MapUtil.size(mMatchDates) == 1 ) {
             String     sYYYYMMDD = mMatchDates.keySet().iterator().next();

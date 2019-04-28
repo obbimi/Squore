@@ -187,8 +187,9 @@ public abstract class Model
         if ( changedListener instanceof OnPlayerChangeListener ) {
             final OnPlayerChangeListener playerChangeListener = (OnPlayerChangeListener) changedListener;
             onPlayerChangeListeners.add(playerChangeListener);
+            boolean doubles = isDoubles();
             for(Player p: getPlayers() ) {
-                playerChangeListener.OnNameChange   (p, getName   (p, true, false), getCountry(p), getAvatar(p), getClub(p), isDoubles());
+                playerChangeListener.OnNameChange   (p, getName   (p, true, false), getCountry(p), getAvatar(p), getClub(p), doubles);
                 playerChangeListener.OnColorChange  (p, getColor  (p), null);
                 playerChangeListener.OnCountryChange(p, getCountry(p));
                 playerChangeListener.OnClubChange   (p, getClub   (p));
@@ -300,6 +301,7 @@ public abstract class Model
     //------------------------
     // Double Serve side/sequence
     //------------------------
+    private boolean                             m_bIsDouble             = false;
     private DoublesServe                        m_in_out                = DoublesServe.NA;
     // fixed per match in e.g. squash, might vary per set in e.g. racketlon
             DoublesServeSequence                m_doubleServeSequence   = DoublesServeSequence.NA;
@@ -459,7 +461,7 @@ public abstract class Model
             m_nextServeSide = side;
             bChanged = true;
         }
-        if ( doublesServe != null && doublesServe.equals(m_in_out) == false ) {
+        if ( (doublesServe != null) && doublesServe.equals(m_in_out) == false ) {
             m_in_out = doublesServe;
             bChanged = true;
         }
@@ -481,7 +483,8 @@ public abstract class Model
     }
 
     public boolean isDoubles() {
-        return (m_in_out.equals(DoublesServe.NA) == false);
+        return m_bIsDouble;
+        //return (m_in_out.equals(DoublesServe.NA) == false);
     }
     public DoublesServe getNextDoubleServe(Player p) {
         if ( p.equals(m_pServer) == false ) {
@@ -1511,7 +1514,8 @@ public abstract class Model
             sName = "";
         }
         String[] saNames = sName.split(REGEXP_SPLIT_DOUBLES_NAMES);
-        if ( saNames.length == 2 && m_doubleServeSequence.equals(DoublesServeSequence.NA) ) {
+        m_bIsDouble = saNames.length == 2;
+        if ( isDoubles() && m_doubleServeSequence.equals(DoublesServeSequence.NA) ) {
             DoublesServeSequence dssDefault = getDoubleServeSequence(0);
             _setDoublesServeSequence(dssDefault);
         }
@@ -1542,6 +1546,27 @@ public abstract class Model
         }
         return false;
     }
+    /**
+     * Will only return something if it was e.g. a team match was selected from a feed, and ref did select actual players from a list of team_players.
+     * This will 'fail' if player name was modified afterwards...
+     */
+    public String getPlayerId(Player team) {
+        List<String> players = m_team2Players.get(team);
+        if ( players == null ) {
+            return "";
+        }
+
+        // parse optionally formatted data to only return names
+        LinkedHashMap<String, String> mId2Name = getId2PlayerName(players);
+        Map<String, String> mName2Id = MapUtil.mirror(mId2Name);
+
+        String sName = this.getName(team);
+        String sId   = mName2Id.get(sName);
+        if ( sId == null ) {
+            sId = "";
+        }
+        return sId;
+    }
     public List<String> getTeamPlayers(Player team) {
         List<String> players = m_team2Players.get(team);
         if ( players == null ) {
@@ -1549,6 +1574,12 @@ public abstract class Model
         }
 
         // parse optionally formatted data to only return names
+        LinkedHashMap<String, String> mPlayersParsed = getId2PlayerName(players);
+
+        return new ArrayList<>(mPlayersParsed.values());
+    }
+
+    private LinkedHashMap<String, String> getId2PlayerName(List<String> players) {
         LinkedHashMap<String, String> mPlayersParsed = new LinkedHashMap<>();
         for ( String s: players) {
             String[] sNr_Id_Name = s.split(":");
@@ -1564,9 +1595,9 @@ public abstract class Model
                     break;
             }
         }
-
-        return new ArrayList<>(mPlayersParsed.values());
+        return mPlayersParsed;
     }
+
     public void setTeamPlayers(Player team, List<String> lPlayers) {
 
         m_team2Players.put(team, lPlayers);
@@ -2000,7 +2031,6 @@ public abstract class Model
                         Log.w(TAG, String.format("Translated old %s to new %s", ss, dsq));
                     } else {
                         dsq = DoublesServeSequence.valueOf(ss);
-
                     }
                     _setDoublesServeSequence(dsq);
                 }
@@ -2471,8 +2501,10 @@ public abstract class Model
             if ( (m_TieBreakFormat != null) && m_TieBreakFormat.equals(TieBreakFormat.TwoClearPoints) == false ) {
                 joFormat.put(JSONKey.tiebreakFormat.toString(), m_TieBreakFormat.toString());
             }
-            if ( (m_doubleServeSequence != null) && (m_doubleServeSequence.equals(DoublesServeSequence.NA) == false) ) {
-                joFormat.put(JSONKey.doublesServeSequence.toString(), m_doubleServeSequence.toString());
+            if ( isDoubles() ) {
+                if ( (m_doubleServeSequence != null) && (m_doubleServeSequence.equals(DoublesServeSequence.NA) == false) ) {
+                    joFormat.put(JSONKey.doublesServeSequence.toString(), m_doubleServeSequence.toString());
+                }
             }
         }
         if ( isUsingHandicap() ) {
@@ -3075,6 +3107,7 @@ public abstract class Model
         m_sResultFast         = null;
         setSource(null, null);
       //m_doubleServeSequence = DoublesServeSequence.NA;
+        m_bIsDouble           = false;
         m_in_out              = DoublesServe.NA;
         setDirty(true);
         m_iDirty              = 0;
