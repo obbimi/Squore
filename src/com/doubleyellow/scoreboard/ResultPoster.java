@@ -139,6 +139,8 @@ public class ResultPoster implements ContentReceiver
                         , "whentime"           , matchModel.getMatchStartTimeHHMMSSXXX()
                         , "player1"            , matchModel.getName(Player.A)
                         , "player2"            , matchModel.getName(Player.B)
+                        , "player1id"          , matchModel.getPlayerId(Player.A)
+                        , "player2id"          , matchModel.getPlayerId(Player.B)
                         , "country1"           , matchModel.getCountry(Player.A)
                         , "country2"           , matchModel.getCountry(Player.B)
                         , "club1"              , matchModel.getClub(Player.A)

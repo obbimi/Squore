@@ -5351,6 +5351,11 @@ touch -t 01030000 LAST.sb
         if ( mBluetoothAdapter == null ) {
             return; // no bluetooth on device
         }
+        PreferenceValues.Permission hasPermission = PreferenceValues.doesUserHavePermissionToBluetooth(this, true);
+        if ( PreferenceValues.Permission.Granted.equals(hasPermission) == false ) {
+            return;
+        }
+
         if ( mBluetoothControlService != null ) {
             if ( mBluetoothControlService.getState().equals(BTState.NONE) ) {
                 mBluetoothControlService.breakConnectionAndListenForNew();

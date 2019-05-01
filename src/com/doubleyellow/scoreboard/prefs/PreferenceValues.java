@@ -1942,5 +1942,9 @@ public class PreferenceValues extends RWValues
     public static Permission doesUserHavePermissionToWriteExternalStorage(Context context, boolean bRequestIfRequired) {
         return requestPermission(context, PreferenceKeys.targetDirForImportExport, Manifest.permission.WRITE_EXTERNAL_STORAGE, bRequestIfRequired);
     }
+    /** should automatically be granted according to documentation, but I have seen cases with SecurityException being thrown */
+    public static Permission doesUserHavePermissionToBluetooth(Context context, boolean bRequestIfRequired) {
+        return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH, bRequestIfRequired);
+    }
 
 }

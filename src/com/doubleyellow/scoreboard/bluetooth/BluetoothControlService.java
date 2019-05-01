@@ -54,8 +54,6 @@ public class BluetoothControlService
 
     /**
      * Constructor. Prepares a new BluetoothControlService session.
-     *
-     * @param handler A Handler to send messages back to the UI Activity
      */
     public BluetoothControlService(UUID uuid, String sName) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -63,6 +61,9 @@ public class BluetoothControlService
         MY_UUID  = uuid;
         NAME     = "BluetoothControlService" + sName;
     }
+    /*
+     * @param handler A Handler to send messages back to the UI Activity
+     */
     public void setHandler(Handler handler) {
         this.mHandler = handler;
     }
@@ -102,10 +103,20 @@ public class BluetoothControlService
         }
         // Start the thread to listen on a BluetoothServerSocket
         if (mAcceptThread == null) {
-            mAcceptThread = new AcceptThread();
-            mAcceptThread.start();
+            try {
+                mAcceptThread = new AcceptThread();
+                mAcceptThread.start();
+            } catch (SecurityException e) {
+                // seen this in playstore only for android 9 (moto g device), but can not reproduce ?!
+                e.printStackTrace();
+            }
         }
-        setState(BTState.LISTEN, null);
+        if ( mAcceptThread == null ) {
+            // somehow initialization failed
+            setState(BTState.NONE, null);
+        } else {
+            setState(BTState.LISTEN, null);
+        }
     }
 
     /**
