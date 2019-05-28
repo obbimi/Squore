@@ -3540,8 +3540,13 @@ public abstract class Model
                 }
                 if ( m_bEnglishScoring ) {
                     if ( diff == 0 ) {
-                        // score for both is high enough to win game on next point. Only server can score
-                        return new Player[]{ getServer() };
+                        if ( m_TieBreakFormat.needsTwoClearPoints() ) {
+                            // strange combo: english scoring but tie-break needs to clear points
+                            return getNoneOfPlayers();
+                        } else {
+                            // score for both is high enough to win game on next point. Only server can score
+                            return new Player[]{ getServer() }; // IH
+                        }
                     } else {
                         // there is a leader with enough points. Only if he is serving there is game ball
                         Player pLeader = (iScoreA > iScoreB) ? Player.A : Player.B;

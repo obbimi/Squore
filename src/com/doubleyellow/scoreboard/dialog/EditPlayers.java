@@ -31,6 +31,7 @@ import android.widget.*;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.android.view.EnumSpinner;
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.archive.PreviousMatchSelector;
 import com.doubleyellow.scoreboard.model.JSONKey;
@@ -298,16 +299,18 @@ public class EditPlayers extends BaseAlertDialog
             //text.setPadding(0,0,0,10);
         }
 
-        if ( PreferenceValues.useOfficialAnnouncementsFeature(context).equals(Feature.DoNotUse) ) {
-            // nothing to do
-        } else {
-            if (scoreBoard != null) {
-                // invoked from main scoreboard
-                esAnnouncementLang = new EnumSpinner<AnnouncementLanguage>(context);
-                esAnnouncementLang = new Spinner(context);
-                AnnouncementLanguage language = PreferenceValues.officialAnnouncementsLanguage(context);
-                EnumSpinner.init(esAnnouncementLang, context, AnnouncementLanguage.class, language, null, 0);
-                ll.addView(esAnnouncementLang);
+        if ( Brand.isSquash() ) {
+            if ( PreferenceValues.useOfficialAnnouncementsFeature(context).equals(Feature.DoNotUse) ) {
+                // nothing to do
+            } else {
+                if (scoreBoard != null) {
+                    // invoked from main scoreboard
+                    esAnnouncementLang = new EnumSpinner<AnnouncementLanguage>(context);
+                    esAnnouncementLang = new Spinner(context);
+                    AnnouncementLanguage language = PreferenceValues.officialAnnouncementsLanguage(context);
+                    EnumSpinner.init(esAnnouncementLang, context, AnnouncementLanguage.class, language, null, 0);
+                    ll.addView(esAnnouncementLang);
+                }
             }
         }
 
