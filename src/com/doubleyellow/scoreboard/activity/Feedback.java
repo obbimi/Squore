@@ -181,7 +181,7 @@ public class Feedback extends XActivity implements View.OnClickListener, View.On
                     sbMsg.append("\n|").append(key).append(":").append(val);
                 }
                 sbMsg.append("\n");
-                sbMsg.append("Become a tester: https://play.google.com/apps/testing/com.doubleyellow.scoreboard");
+                sbMsg.append("Become a tester: https://play.google.com/apps/testing/").append(getPackageName());
                 sbMsg.append("\n");
                 sbMsg.append("===============================================\n");
 
