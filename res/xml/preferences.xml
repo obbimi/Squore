@@ -807,14 +807,14 @@
                 android:title="@string/pref_timerWarmup"
                 android:summary="@string/pref_timerWarmup_summary"
                 android:inputType="number"
-                android:defaultValue="@integer/timerWarmup_default"
+                android:defaultValue="@integer/timerWarmup_default_Squash"
                 />
             <EditTextPreference android:key="timerPauseBetweenGames"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_timerPauseBetweenGames"
                 android:summary="@string/pref_timerPauseBetweenGames_summary"
                 android:inputType="number"
-                android:defaultValue="@integer/timerPauseBetweenGames_default"
+                android:defaultValue="@integer/timerPauseBetweenGames_default_Squash"
                 />
             <EditTextPreference android:key="timerPauseBetweenGames_values"
                 android:icon="@drawable/dummy"
@@ -1273,13 +1273,13 @@
                             android:title="@string/pref_gameEndScore"
                             android:summary="@string/pref_gameEndScore_summary"
                             android:inputType="number"
-                            android:defaultValue="@integer/gameEndScore_default"
+                            android:defaultValue="@integer/gameEndScore_default_Squash"
         />
         <EditTextPreference android:key="numberOfGamesToWinMatch"
                             android:title="@string/pref_numberOfGamesToWin"
                             android:summary="@string/pref_numberOfGamesToWin_summary"
                             android:inputType="number"
-                            android:defaultValue="@integer/numberOfGamesToWin_default"
+                            android:defaultValue="@integer/numberOfGamesToWin_default_Squash"
         />
         <com.doubleyellow.prefs.EnumListPreference
             android:key="tieBreakFormat"

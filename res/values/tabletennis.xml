@@ -6,11 +6,11 @@
     <string name="pref_autoShow_activeExpediteSystem_dialog">Auto-show \'Activate Expedite mode\' dialog</string>
     <string name="pref_autoShow_activeExpediteSystem_dialog_after_X_mins">Show \'Activate expedite\' dialog after X mins</string>
 
-    <string name="pref_category_towelingDown">Toweling down</string>
+    <string name="pref_category_towelingDown">Toweling down</string><!-- 3.4.4.1.2 brief intervals for towelling after every 6 points from the start of each game and at the change of ends in the last possible game of an individual match. -->
     <string name="pref_towelingDown_timer">\'Toweling down\' timer</string>
     <string name="pref_autoShow_towelingDown_timer_after_X_points">Show \'Toweling down\' timer after each X points</string>
     <string name="toweling_down">Toweling</string>
-    <string name="timeout">Timeout</string>
+    <string name="timeout">Timeout</string> <!-- 3.4.4.2.4 On receiving a valid request for a time-out the umpire shall suspend play and shall hold up a white card with the hand on the side of the player or pair who requested it; the white card or another appropriate marker shall be placed on the court of that player or pair. -->
     <integer name="autoShowGamePausedDialogAfterXPoints_default">6</integer>
     <integer name="timerTowelingDown_default">60</integer>
 

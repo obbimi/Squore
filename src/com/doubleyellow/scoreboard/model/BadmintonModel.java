@@ -30,6 +30,7 @@ public class BadmintonModel extends Model
         super();
         setTiebreakFormat(TieBreakFormat.TwoClearPoints);
         setNrOfGamesToWinMatch(2);
+        setNrOfPointsToWinGame(21);
         setEnglishScoring(false);
     }
 
@@ -39,6 +40,14 @@ public class BadmintonModel extends Model
 
     @Override public Sport getSportForGame(int iGame1B) {
         return Sport.Badminton;
+    }
+
+    //-------------------------------
+    // Toweling
+    //-------------------------------
+
+    public boolean isTowelingDownScore(int iEveryXpoints, int iIfHighestScoreEquals) {
+        return getMaxScore() == iIfHighestScoreEquals && getNrOfPointsToWinGame() == 21;
     }
 
     //-------------------------------

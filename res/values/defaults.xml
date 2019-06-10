@@ -62,13 +62,31 @@ xxxhdpi: Extra-extra-extra-high-density uses (launcher icon only, see the note i
 http://developer.android.com/guide/practices/screens_support.html
 
 -->
+    <integer name="gameEndScore_default_Squash">11</integer>
+    <integer name="gameEndScore_default_Tabletennis">11</integer>
+    <integer name="gameEndScore_default_Racquetball">15</integer>
+    <integer name="gameEndScore_default_Badminton">21</integer>
+    <integer name="gameEndScore_default_Racketlon">21</integer>
+
+    <integer name="numberOfGamesToWin_default_Squash">3</integer>
+    <integer name="numberOfGamesToWin_default_Tabletennis">4</integer>
+    <integer name="numberOfGamesToWin_default_Badminton">2</integer>
+    <integer name="numberOfGamesToWin_default_Racquetball">2</integer>
+    <integer name="numberOfGamesToWin_default_Racketlon">-1</integer>
+
+    <integer name="timerPauseBetweenGames_default_Squash">90</integer> <!-- PSA: 120 -->
+    <integer name="timerPauseBetweenGames_default_Badminton">120</integer> <!-- 16.2.2 not exceeding 120 seconds between the first and second game, and between the second and third game shall be allowed in all matches.  -->
+    <integer name="timerPauseBetweenGames_default_Racketlon">180</integer>
+    <integer name="timerPauseBetweenGames_default_Tabletennis">60</integer><!-- 3.4.4.1.1 an interval of up to 1 minute between successive games of an individual match; -->
 
     <string name="timerPauseBetweenGames_values_default_Squash">60,90,120,180</string>
     <string name="timerPauseBetweenGames_values_default_Tabletennis">60,90,120,180</string>
     <string name="timerPauseBetweenGames_values_default_Badminton">60,90,120,180</string>
     <string name="timerPauseBetweenGames_values_default_Racketlon">90,120,180,300</string>
-    <integer name="timerWarmup_default">240</integer> <!-- change from 300 to 240 according to new PSA rules -->
-    <integer name="timerPauseBetweenGames_default">90</integer>
+    <integer name="timerWarmup_default_Squash">240</integer> <!-- change from 300 to 240 according to new PSA rules -->
+    <integer name="timerWarmup_default_Badminton">300</integer> <!-- not specified in rules -->
+    <integer name="timerWarmup_default_Tabletennis">120</integer> <!-- two minutes according to rule 3.4.3.1 -->
+    <integer name="timerWarmup_default_Racketlon">180</integer> <!-- not specified in rules -->
     <integer name="timerInjury_default">180</integer>
 
     <integer name="serveButtonTransparencyNonServer_default_Squash">60</integer> <!-- between 0 and 100 -->
@@ -134,8 +152,6 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="hideBrandLogoWhenGameInProgress_default">true</bool>
     <bool name="hideFieldDivisionWhenGameInProgress_default">true</bool>
 
-    <integer name="gameEndScore_default">11</integer>
-    <integer name="numberOfGamesToWin_default">3</integer>
     <integer name="numberOfServesPerPlayer_default">2</integer>
     <integer name="readContactsForAutoCompletion_max_default">500</integer>
     <integer name="numberOfCharactersBeforeAutocomplete_default">2</integer>

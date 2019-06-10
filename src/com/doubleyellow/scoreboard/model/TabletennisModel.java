@@ -133,6 +133,15 @@ public class TabletennisModel extends Model
     }
 
     //-------------------------------
+    // Toweling
+    //-------------------------------
+
+    public boolean isTowelingDownScore(int iEveryXpoints, int iIfHighestScoreEquals) {
+        if (iEveryXpoints <= 0) { return false; }
+        return getTotalGamePoints() % iEveryXpoints == 0;
+    }
+
+    //-------------------------------
     // game/match ball
     //-------------------------------
 

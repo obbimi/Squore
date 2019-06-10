@@ -1055,13 +1055,13 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.handicapFormat, context, HandicapFormat.class, R.string.handicapFormat_default);
     }
     public static int numberOfGamesToWinMatch(Context context) {
-        return getIntegerR(PreferenceKeys.numberOfGamesToWinMatch, context, R.integer.numberOfGamesToWin_default);
+        return getIntegerR(PreferenceKeys.numberOfGamesToWinMatch, context, R.integer.numberOfGamesToWin_default_Squash);
     }
     public static int numberOfServesPerPlayer(Context context) {
         return getIntegerR(PreferenceKeys.numberOfServesPerPlayer, context, R.integer.numberOfServesPerPlayer_default);
     }
     public static int numberOfPointsToWinGame(Context context) {
-        return getIntegerR(PreferenceKeys.numberOfPointsToWinGame, context, R.integer.gameEndScore_default);
+        return getIntegerR(PreferenceKeys.numberOfPointsToWinGame, context, R.integer.gameEndScore_default_Squash);
     }
     public static int numberOfCharactersBeforeAutocomplete(Context context) {
         return getIntegerR(PreferenceKeys.numberOfCharactersBeforeAutocomplete, context, R.integer.numberOfCharactersBeforeAutocomplete_default);
@@ -1070,7 +1070,7 @@ public class PreferenceValues extends RWValues
         return getIntegerR(PreferenceKeys.numberOfCharactersBeforeAutocompleteCountry, context, R.integer.numberOfCharactersBeforeAutocompleteCountry_default);
     }
     public static int getPauseDuration(Context context) {
-        return getIntegerR(PreferenceKeys.timerPauseBetweenGames, context, R.integer.timerPauseBetweenGames_default);
+        return getIntegerR(PreferenceKeys.timerPauseBetweenGames, context, R.integer.timerPauseBetweenGames_default_Squash);
     }
 
     private static boolean bFixedMatchesAreUnChanged = true;

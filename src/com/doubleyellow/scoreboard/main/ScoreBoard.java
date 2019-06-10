@@ -2622,10 +2622,10 @@ touch -t 01030000 LAST.sb
                 shareScoreSheetDelayed(2000);
             }
 
-            // for table tennis only
-            if ( (iDelta == 1) && Brand.isTabletennis() ) {
+            if ( (iDelta == 1) ) {
+                // for table tennis and badminton
                 int iEachX = PreferenceValues.autoShowGamePausedDialogAfterXPoints(ScoreBoard.this);
-                if ( (iEachX > 0) && (matchModel.getTotalGamePoints() % iEachX == 0) && (matchModel.isPossibleGameVictory() == false)) {
+                if ( matchModel.isTowelingDownScore(iEachX, 11) && (matchModel.isPossibleGameVictory() == false)) {
                     Feature showGamePausedDialog = PreferenceValues.showGamePausedDialog(ScoreBoard.this);
                     switch (showGamePausedDialog) {
                         case Automatic: {
@@ -2648,6 +2648,7 @@ touch -t 01030000 LAST.sb
             }
         }
     }
+
     private class CallChangeListener implements Model.OnCallChangeListener {
         @Override public void OnCallChanged(Call call, Player appealingOrMisbehaving, Player pointAwardedTo, ConductType conductType) {
             iBoard.updateScoreHistory(true);
@@ -3012,7 +3013,7 @@ touch -t 01030000 LAST.sb
                 updateMicrophoneFloatButton();
                 showNextDialog();
 
-                if ( Brand.isTabletennis() && EnumSet.of(Type.TowelingDown, Type.Timeout).contains(timerType) ) {
+                if ( Brand.supportsTimeout() && EnumSet.of(Type.TowelingDown, Type.Timeout).contains(timerType) ) {
                     iBoard.resumeGameDurationChrono();
                 }
                 return false;
@@ -3543,12 +3544,10 @@ touch -t 01030000 LAST.sb
                 cancelTimer();
                 if ( matchModel.hasStarted() ) {
                     lastTimerType = Type.UntillStartOfNextGame;
-                    if ( Brand.isTabletennis() ) {
-                        int iScore = matchModel.getTotalGamePoints();
-                        if ( matchModel.gameHasStarted() && (matchModel.isPossibleGameVictory() == false) ) {
-                            if ( iScore % PreferenceValues.autoShowGamePausedDialogAfterXPoints(this) == 0 ) {
-                                lastTimerType = Type.TowelingDown;
-                            }
+                    if ( Brand.supportsTimeout() ) {
+                        int iEachX = PreferenceValues.autoShowGamePausedDialogAfterXPoints(ScoreBoard.this);
+                        if ( matchModel.isTowelingDownScore(iEachX, 11) ) {
+                            lastTimerType = Type.TowelingDown;
                         }
                     }
                 } else {
@@ -4570,8 +4569,8 @@ touch -t 01030000 LAST.sb
     // promo modus
     // ------------------------------------------------------
     private void initPreferencesForPromoDemoThread() {
-        PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch, this, 3);
-        PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame, this, 11);
+        PreferenceValues.setNumberR  (PreferenceKeys.numberOfGamesToWinMatch, this, R.integer.numberOfGamesToWin_default_Squash);
+        PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame, this, R.integer.gameEndScore_default_Squash);
         PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat, this, TieBreakFormat.TwoClearPoints);
         PreferenceValues.setEnum     (PreferenceKeys.recordRallyEndStatsAfterEachScore, this, Feature.DoNotUse);
         PreferenceValues.setEnum     (PreferenceKeys.useTimersFeature, this, Feature.Suggest);

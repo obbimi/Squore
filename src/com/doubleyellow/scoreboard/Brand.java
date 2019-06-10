@@ -122,7 +122,7 @@ public enum Brand
     public static void setSportPrefs(Context ctx) {
         if ( isRacketlon() ) {
             PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, 4); // TODO: not applicable. only total number of points matter
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, 21);
+            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Racketlon);
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
             PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 180);
@@ -131,8 +131,8 @@ public enum Brand
             PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring         , ctx, false);
         }
         if ( isTabletennis() ) {
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, 4);
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, 11);
+            PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default_Tabletennis);
+            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Tabletennis);
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
             PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 60);
@@ -142,8 +142,8 @@ public enum Brand
             PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring         , ctx, false);
         }
         if ( isBadminton() ) {
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, 2);
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, 21);
+            PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default_Badminton);
+            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Badminton);
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
             PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 60);
@@ -153,8 +153,8 @@ public enum Brand
             PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring         , ctx, false);
         }
         if ( isRacquetball() ) {
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, 2);
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, 15); // last decisive game to 11
+            PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default_Racquetball);
+            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Racquetball); // last decisive game to 11
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.SuddenDeath);
             //PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 60);
@@ -164,12 +164,12 @@ public enum Brand
             PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring         , ctx, true);
         }
         if ( isSquash() ) {
-            PreferenceValues.setNumberR  (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default);
-            PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default);
+            PreferenceValues.setNumberR  (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default_Squash);
+            PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Squash);
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.Suggest);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
-            PreferenceValues.setNumberR  (PreferenceKeys.timerPauseBetweenGames          , ctx, R.integer.timerPauseBetweenGames_default);
-            PreferenceValues.setNumberR  (PreferenceKeys.timerWarmup                     , ctx, R.integer.timerWarmup_default);
+            PreferenceValues.setNumberR  (PreferenceKeys.timerPauseBetweenGames          , ctx, R.integer.timerPauseBetweenGames_default_Squash);
+            PreferenceValues.setNumberR  (PreferenceKeys.timerWarmup                     , ctx, R.integer.timerWarmup_default_Squash);
             PreferenceValues.setStringSet(PreferenceKeys.showScoringHistoryInMainScreenOn, EnumSet.of(ShowOnScreen.OnDevice), ctx); // show the scoring history
             PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring         , ctx, false);
         }
@@ -190,7 +190,9 @@ public enum Brand
         return getSport().equals(SportType.Badminton);
     }
     public static boolean supportsTimeout() {
-        return isTabletennis() || isBadminton();
+        return isTabletennis() /* toweling down after each 6 points */
+            || isBadminton()   /* short interval at 11 points in game to 21: TODO: implement */
+        ;
     }
     public static boolean changeSidesBetweenGames() {
         return isTabletennis() || isBadminton();

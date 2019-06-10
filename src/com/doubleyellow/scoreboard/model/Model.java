@@ -2895,6 +2895,11 @@ public abstract class Model
         }
     }
 
+    /** Typically overwritten in tabletennis and Badminton */
+    public boolean isTowelingDownScore(int iEveryXpoints, int iIfHighestScoreEquals) {
+        return false;
+    }
+
     public Player isPossibleMatchVictoryFor() {
         Player[] players = _isPossibleMatchVictoryFor(When.Now, null);
         return ListUtil.length(players)==1?players[0]:null;
