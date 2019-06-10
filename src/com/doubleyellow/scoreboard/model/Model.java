@@ -3150,12 +3150,20 @@ public abstract class Model
         return lReturn.toArray(new Player[]{});
     }
 
-    String getResultShort_Squash_TableTennis() {
+    String getResultShort_Squash_TableTennis() { /* and Badminton*/
         Map<Player, Integer> gamesWon  = this.getGamesWon();
         String sResult = MapUtil.getInt(gamesWon, Player.A, 0) + "-" + MapUtil.getInt(gamesWon, Player.B, 0);
         return sResult;
     }
 
+    void determineServerAndSide_Badminton(boolean bForUndo, Player pScorer) {
+        if ( pScorer == null ) {
+            pScorer = getServer();
+        }
+        int       iPointsServer = getScore(pScorer);
+        ServeSide serveSide     = ServeSide.values()[iPointsServer % 2];
+        setServerAndSide(pScorer, serveSide, null);
+    }
     void determineServerAndSide_Racketlon_Tabletennis(boolean bForUndo, SportType sportType) {
         DoublesServe ds = m_in_out;
         if ( isDoubles() ) {
@@ -3337,7 +3345,7 @@ public abstract class Model
             changeScore_Squash_Racketlon (pointOrGameAwardedTo, false, call);
         }
     }
-
+    /** Note: Also badminton */
     void changeScore_Racketlon_Tabletennis(Player player, SportType sportType)
     {
 /*
@@ -3355,7 +3363,11 @@ public abstract class Model
         Integer iNewScore = determineNewScoreForPlayer(player, iDelta, false);
 
         ScoreLine scoreLine = getScoreLine(player, iNewScore, m_nextServeSide);
-        determineServerAndSide_Racketlon_Tabletennis(false, sportType);
+        if ( sportType.equals(SportType.Badminton) ) {
+            determineServerAndSide_Badminton(false, player);
+        } else {
+            determineServerAndSide_Racketlon_Tabletennis(false, sportType);
+        }
 
         if ( m_gameTimingCurrent == null ) {
             m_gameTimingCurrent = new GameTiming(m_lGameTimings.size(), System.currentTimeMillis(), System.currentTimeMillis(), onTimingChangedListeners);
@@ -3379,7 +3391,7 @@ public abstract class Model
         changeScoreInformListeners(player, true, call, iDelta, previousServer, previousDS, iNewScore);
 
         if ( (ListUtil.singleElementEquals(wasMatchBallFor, player) ) /* was match ball for scoring player */
-           || ListUtil.length(wasMatchBallFor)==2 /* was match ball for both players: gummiarm */
+           || ListUtil.length(wasMatchBallFor)==2 /* was match ball for both players: e.g. gummiarm */
            ) {
             Player winner = player;
             m_possibleMatchFor.put(When.Now, new Player[] {winner});
@@ -3493,7 +3505,7 @@ public abstract class Model
             return new Player[] { leader };
         }
     }
-
+    /** Squash and badminton */
     Player determineServerForNextGame_Squash(int iScoreA, int iScoreB) {
         Player player = (iScoreA > iScoreB) ? Player.A : Player.B;
         setServerAndSide(player, null, null);

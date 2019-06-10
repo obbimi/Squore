@@ -65,6 +65,7 @@ http://developer.android.com/guide/practices/screens_support.html
 
     <string name="timerPauseBetweenGames_values_default_Squash">60,90,120,180</string>
     <string name="timerPauseBetweenGames_values_default_Tabletennis">60,90,120,180</string>
+    <string name="timerPauseBetweenGames_values_default_Badminton">60,90,120,180</string>
     <string name="timerPauseBetweenGames_values_default_Racketlon">90,120,180,300</string>
     <integer name="timerWarmup_default">240</integer> <!-- change from 300 to 240 according to new PSA rules -->
     <integer name="timerPauseBetweenGames_default">90</integer>

@@ -5,58 +5,65 @@ cat <<!
 
 Usage:
 
-	$0 '(Squore|Racketlon|Tabletennis|CourtCare|UniOfNotthingham)'
+	$0 '(Squore|Badminton|Racketlon|Tabletennis|CourtCare|UniOfNotthingham)'
 
 Always change back to Squore before change to another 'Brand'
 !
 }
 tobranded=${1:-Squore}
-if [ "${tobranded}" = "-h" ]; then
+if [[ "${tobranded}" = "-h" ]]; then
 	showHelp
 	exit
 fi
 
 cd src
-if [ "$tobranded" = "ASB" ]; then
+if [[ "$tobranded" = "ASB" ]]; then
     echo "Change to '${tobranded}'"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
         echo "File $f"
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.asbsquore.R\1~' ${f}
         #exit 1
     done
-elif [ "$tobranded" = "Racketlon" ]; then
+elif [[ "$tobranded" = "Racketlon" ]]; then
     echo "Change to '${tobranded}'"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
         echo "File $f"
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.racketlon.R\1~' ${f}
         #exit 1
     done
-elif [ "$tobranded" = "Tabletennis" ]; then
+elif [[ "$tobranded" = "Tabletennis" ]]; then
     echo "Change to '${tobranded}'"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
         echo "File $f"
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.tabletennis.R\1~' ${f}
         #exit 1
     done
-elif [ "$tobranded" = "CourtCare" ]; then
+elif [[ "$tobranded" = "Badminton" ]]; then
+    echo "Change to '${tobranded}'"
+    for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
+        echo "File $f"
+        sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.badminton.R\1~' ${f}
+        #exit 1
+    done
+elif [[ "$tobranded" = "CourtCare" ]]; then
     echo "Change to '${tobranded}'"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
         echo "File $f"
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.courtcaresquore.R\1~' ${f}
         #exit 1
     done
-elif [ "$tobranded" = "UniOfNotthingham" ]; then
+elif [[ "$tobranded" = "UniOfNotthingham" ]]; then
     echo "Change to '${tobranded}'"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
         echo "File $f"
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.courtscore_uon.R\1~' ${f}
         #exit 1
     done
-elif [ "$tobranded" = "Squore" ]; then
+elif [[ "$tobranded" = "Squore" ]]; then
     echo "Change to '${tobranded}'"
-    for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis).R" *); do
+    for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton).R" *); do
         echo "File $f back to normal"
-        sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\).R\([^a-z]\)~com.doubleyellow.scoreboard.R\2~' ${f}
+        sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\|badminton\).R\([^a-z]\)~com.doubleyellow.scoreboard.R\2~' ${f}
         #exit 1
     done
     # comment out all brands ...
@@ -76,20 +83,25 @@ sed -i "s~^\(\s\+\)//\(${tobranded}.\+R.string.app_name\)~\1\2~" com/doubleyello
 
 # change some defaults in xml files (in java is/should be taken care of by means of code)
 cd ../res
-if [ "$tobranded" = "Racketlon" ]; then
+if [[ "$tobranded" = "Racketlon" ]]; then
     for f in $(egrep -rl '@string.*_(Squash|Tabletennis)"'); do
         echo "File $f to Racketlon strings"
-        sed -i 's~_\(Squash\|Tabletennis\)"~_Racketlon"~' ${f}
+        sed -i 's~_\(Squash\|Tabletennis\|Badminton\)"~_Racketlon"~' ${f}
     done
-elif [ "$tobranded" = "Tabletennis" ]; then
+elif [[ "$tobranded" = "Tabletennis" ]]; then
     for f in $(egrep -rl '@string.*_(Squash|Racketlon)"'); do
         echo "File $f to Tabletennis strings"
-        sed -i 's~_\(Squash\|Racketlon\)"~_Tabletennis"~' ${f}
+        sed -i 's~_\(Squash\|Racketlon\|Badminton\)"~_Tabletennis"~' ${f}
+    done
+elif [[ "$tobranded" = "Badminton" ]]; then
+    for f in $(egrep -rl '@string.*_(Squash|Racketlon)"'); do
+        echo "File $f to Badminton strings"
+        sed -i 's~_\(Squash\|Racketlon\|Tabletennis\)"~_Badminton"~' ${f}
     done
 else
-    for f in $(egrep -rl '@string.*_(Racketlon|Tabletennis)"'); do
+    for f in $(egrep -rl '@string.*_(Racketlon|Tabletennis|Badminton)"'); do
         echo "File $f back to Squash strings"
-        sed -i 's~_\(Racketlon\|Tabletennis\)"~_Squash"~' ${f}
+        sed -i 's~_\(Racketlon\|Tabletennis\|Badminton\)"~_Squash"~' ${f}
     done
 fi
 

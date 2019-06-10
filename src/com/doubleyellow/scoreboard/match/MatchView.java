@@ -164,6 +164,9 @@ public class MatchView extends SBRelativeLayout
                 lToggleFormatViews.add(R.id.llDisciplineStart);
                 lToggleFormatViews.remove(R.id.llTieBreakFormat);
                 break;
+            case Badminton:
+                lToggleFormatViews.remove(R.id.llTieBreakFormat);
+                break;
             case Squash:
                 lToggleFormatViews.add(R.id.useHandInHandOutScoring);
                 lToggleFormatViews.add(R.id.llHandicapFormat);
@@ -183,9 +186,19 @@ public class MatchView extends SBRelativeLayout
         SportType sportType = Brand.getSport();
         boolean bTrueGoneFalseInvisible = ViewUtil.isPortraitOrientation(getContext()) || m_layout.equals(NewMatchLayout.Simple); // in portrait each element is on a single line, layout is not screwed up when GONE is used. In landscape layout IS screwed up
         switch (sportType) {
+            case Badminton:
+                ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
+                        , R.id.llTieBreakFormat
+                        , R.id.llDisciplineStart
+                        , R.id.llScoringType /* hand-in/hand-out */
+                        , R.id.match_marker
+                        , R.id.ll_AnnouncementLanguage
+                        , R.id.llNumberOfServesPerPlayer
+                );
+                return true;
             case Tabletennis:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
-                        , R.id.llHandicapFormat
+                        , R.id.llTieBreakFormat
                         , R.id.llDisciplineStart
                         , R.id.llScoringType
                         , R.id.match_marker

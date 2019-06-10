@@ -38,7 +38,7 @@ android {
 
         // ChromeCast
         //compile 'com.google.android.gms:play-services-cast:11.0.4'
-        compile 'com.google.android.gms:play-services-cast:16.1.2'
+        compile 'com.google.android.gms:play-services-cast:16.2.0'
         // repository google(), not found using jcenter
 
         //compile 'com.android.support:recyclerview-v7:25.3.1'
@@ -71,6 +71,7 @@ android {
             manifest {
                 srcFile 'AndroidManifestSquore.xml'
                 //srcFile 'AndroidManifestRacketlon.xml'
+                //srcFile 'AndroidManifestBadminton.xml'
                 //srcFile 'AndroidManifestTabletennis.xml'
                 //srcFile 'AndroidManifestCourtCare.xml'
                 //srcFile 'AndroidManifestUniOfNotthingham.xml'

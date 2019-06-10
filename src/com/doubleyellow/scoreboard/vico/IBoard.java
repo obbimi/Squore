@@ -139,7 +139,7 @@ public class IBoard implements TimerViewContainer
         if ( btnScore == null ) { return; }
         String sScore = ("" + iScore).trim();
         btnScore.setText(sScore);
-        if ( Player.A.equals(player) && Brand.isTabletennis() && matchModel.getMaxScore()==0 ) {
+        if ( Player.A.equals(player) && Brand.supportsTimeout() && matchModel.getMaxScore()==0 ) {
             m_lGameXWasPausedDuration.put(matchModel.getGameNrInProgress(), 0L);
         }
     }
@@ -248,7 +248,7 @@ public class IBoard implements TimerViewContainer
     public void resumeGameDurationChrono() {
         Chronometer tvGameTime = (Chronometer) findViewById(R.id.sb_game_duration);
         if ( tvGameTime == null ) { return; }
-        if ( Brand.isTabletennis() && (m_lStoppedAt != 0L) ) {
+        if ( Brand.supportsTimeout() && (m_lStoppedAt != 0L) ) {
             // adjust so no jump in time is visible and e.g. Expedite is not triggered to early.
             // TODO: this adjustment will not be visible in e.g. match overview. There timestamp of start and end of game are used to calculate game duration
             long lPaused                = System.currentTimeMillis() - m_lStoppedAt;
@@ -273,7 +273,7 @@ public class IBoard implements TimerViewContainer
         Chronometer tvGameTime = (Chronometer) findViewById(R.id.sb_game_duration);
         if ( tvGameTime == null ) { return; }
         tvGameTime.stop();
-        if ( Brand.isTabletennis() ) {
+        if ( Brand.supportsTimeout() ) {
             m_lStoppedAt = System.currentTimeMillis();
             Log.d(TAG, "Stopped at " + m_lStoppedAt + " " + new Date(m_lStoppedAt).toString());
         }

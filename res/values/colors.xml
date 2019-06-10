@@ -33,6 +33,13 @@
         <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
         <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
+    <string-array name="colorSchema_Badminton" translatable="false">
+                                <!-- scorebtn|name  |serveside|backgrn -->
+        <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
+        <item>|BWF                   |#000001|#DF2027|#333333|#FFFFFF|</item><!-- black|red|dark grey ... -->
+        <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
+        <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
+    </string-array>
     <string-array name="colorSchema_CourtCare" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
@@ -93,6 +100,7 @@
     <color name="brand_squore_bg_color">#ffffffff</color>
     <color name="brand_racketlon_bg_color">#ff004071</color>
     <color name="brand_tabletennis_bg_color">#ffffff00</color>
+    <color name="brand_badminton_bg_color">#ffffff00</color>
 
     <color name="brand_asb_bg_color">#ffffffff</color> <!-- first 2 determine 'transparency' ff is not, 00 is completely transparent -->
     <color name="brand_courtcare_bg_color">#ffff0000</color>

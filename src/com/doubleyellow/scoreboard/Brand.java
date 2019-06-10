@@ -33,7 +33,8 @@ import java.util.UUID;
 public enum Brand
 {
     Squore          (SportType.Squash     , R.string.app_name_short_brand_Squash          , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_squore_bg_color          , R.string.REMOTE_DISPLAY_APP_ID_brand_squore          , R.array.colorSchema            , 0                                            , 3000, "http://squore.double-yellow.be"   , "8da78f9d-f7dd-437c-8b7d-d5bc231f92ec", R.raw.changelog),
-  //Tabletennis     (SportType.Tabletennis, R.string.app_name_short_brand_Tabletennis     , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_tabletennis_bg_color     , R.string.REMOTE_DISPLAY_APP_ID_brand_tabletennis     , R.array.colorSchema_Tabletennis, 0                                            , 3000, "http://tabletennis.double-yellow.be", "e35d8fcb-a7c0-4c2a-9c74-cc3f6e1e6a41", R.raw.changelog_tabletennis),
+    //Tabletennis     (SportType.Tabletennis, R.string.app_name_short_brand_Tabletennis     , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_tabletennis_bg_color     , R.string.REMOTE_DISPLAY_APP_ID_brand_tabletennis     , R.array.colorSchema_Tabletennis, 0                                            , 3000, "http://tabletennis.double-yellow.be", "e35d8fcb-a7c0-4c2a-9c74-cc3f6e1e6a41", R.raw.changelog_tabletennis),
+    //Badminton       (SportType.Badminton  , R.string.app_name_short_brand_Badminton       , 0/*R.drawable.brand_squore*/                     , R.id.sb_branded_logo_ar150, R.color.brand_badminton_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_badminton       , R.array.colorSchema_Badminton  , 0                                            , 3000, "http://badminton.double-yellow.be", "18be497c-ddfa-4851-9b43-0a5866605252", R.raw.changelog_badminton),
   //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand_Racketlon       , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_racketlon       , R.array.colorSchema_Racketlon  , 0                                            , 3000, "http://racketlon.double-yellow.be", "6ffc7128-6fd5-46d1-b79c-46e4c613cba5", R.raw.changelog_racketlon),
   //Racquetball     (SportType.Racquetball, R.string.app_name_short_brand_Racquetball     , 0/*R.drawable.brand_squore*/                               , R.id.sb_branded_logo_ar150, 0                                      , R.string.REMOTE_DISPLAY_APP_ID_brand_Racquetball     , R.array.colorSchema_Racquetball, 0                                            , 3000, "http://racquetball.double-yellow.be", R.raw.changelog),
   //ASB             (SportType.Squash     , R.string.app_name_short_brand_asb             , R.drawable.brand_asb_squash_court_logo_black_on_transparent, R.id.sb_branded_logo_ar150, R.color.brand_asb_bg_color             , R.string.REMOTE_DISPLAY_APP_ID_brand_asb             , R.array.colorSchema            , R.string.brand_asb_color_name_re             , 2000, "http://squore.double-yellow.be", R.raw.changelog),
@@ -64,7 +65,7 @@ public enum Brand
       //this.iREColorPalette          = iREColorPalette;
         this.iSplashDuration          = iSplashDuration;
         this.sBaseURL                 = sBaseURL;
-        this.uuid                     = UUID.fromString(sUUID);
+        this.uuid                     = UUID.fromString(sUUID); // https://www.uuidgenerator.net/version4
         this.iChangeLogResId          = iChangeLogResId;
     };
 
@@ -140,9 +141,20 @@ public enum Brand
             PreferenceValues.setStringSet(PreferenceKeys.showScoringHistoryInMainScreenOn, EnumSet.noneOf(ShowOnScreen.class), ctx); // do not show the scoring history
             PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring         , ctx, false);
         }
+        if ( isBadminton() ) {
+            PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, 2);
+            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, 21);
+            PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
+            PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
+            PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 60);
+            PreferenceValues.setNumber   (PreferenceKeys.timerWarmup                     , ctx, 120);
+            PreferenceValues.setBoolean  (PreferenceKeys.showTips                        , ctx, false);
+            PreferenceValues.setStringSet(PreferenceKeys.showScoringHistoryInMainScreenOn, EnumSet.noneOf(ShowOnScreen.class), ctx); // do not show the scoring history
+            PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring         , ctx, false);
+        }
         if ( isRacquetball() ) {
             PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, 2);
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, 15); // last deicisive game to 11
+            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, 15); // last decisive game to 11
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.SuddenDeath);
             //PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 60);
@@ -173,6 +185,15 @@ public enum Brand
     }
     public static boolean isTabletennis() {
         return getSport().equals(SportType.Tabletennis);
+    }
+    public static boolean isBadminton() {
+        return getSport().equals(SportType.Badminton);
+    }
+    public static boolean supportsTimeout() {
+        return isTabletennis() || isBadminton();
+    }
+    public static boolean changeSidesBetweenGames() {
+        return isTabletennis() || isBadminton();
     }
 
     public static SportType getSport() {

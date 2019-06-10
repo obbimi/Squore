@@ -487,6 +487,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     } else {
                         // Who will serve at what score is totally determined by who started serving the first point
                     }
+                } else if ( Brand.isBadminton() ) {
+                    // Who will serve at what score is totally determined by the score: TODO: check
                 } else if ( Brand.isRacketlon() ) {
                     // Who will serve at what score is totally determined by who started serving the first point
                 } else {
@@ -1525,6 +1527,11 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     matchModel.setNrOfPointsToWinGame(11);
                     matchModel.setNrOfGamesToWinMatch(4);
                     matchModel.setPlayerNames("Tabby", "Tenny");
+                } else if ( Brand.isBadminton() ) {
+                    PreferenceValues.setOverwrite(PreferenceKeys.useOfficialAnnouncementsFeature, Feature.DoNotUse.toString());
+                    matchModel.setNrOfPointsToWinGame(21);
+                    matchModel.setNrOfGamesToWinMatch(2);
+                    matchModel.setPlayerNames("Baddy", "Tonny");
                 } else {
                     PreferenceValues.setOverwrite(PreferenceKeys.useOfficialAnnouncementsFeature, Feature.Suggest.toString());
                     matchModel.setNrOfPointsToWinGame(11);
@@ -1601,6 +1608,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                             // add a score that ends the tabletennis match
                             matchModel.setGameScore_Json(3, nrOfPointsToWinGame+2, nrOfPointsToWinGame, 8);
                             matchModel.setGameScore_Json(4, nrOfPointsToWinGame, nrOfPointsToWinGame-4, 7);
+                        } else if ( Brand.isBadminton() ) {
+                            // add a score that ends the badminton match
+                            // best of 3, nothing to do
                         } else {
                             matchModel.setGameScore_Json(3, nrOfPointsToWinGame +2, nrOfPointsToWinGame, 8);
                         }
@@ -2702,7 +2712,7 @@ touch -t 01030000 LAST.sb
 
             showAppropriateMenuItemInActionBar();
 
-            if ( Brand.isTabletennis() && (matchModel.matchHasEnded() == false) && PreferenceValues.swapPlayersBetweenGames(ScoreBoard.this) ) {
+            if ( Brand.changeSidesBetweenGames() && (matchModel.matchHasEnded() == false) && PreferenceValues.swapPlayersBetweenGames(ScoreBoard.this) ) {
                 swapPlayers(Toast.LENGTH_LONG);
             }
 

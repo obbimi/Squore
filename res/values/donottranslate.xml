@@ -23,6 +23,7 @@
     <string name="app_name_short_brand_Squash">Squore</string>
     <string name="app_name_short_brand_Racketlon">Score Racketlon</string>
     <string name="app_name_short_brand_Tabletennis">Score Table Tennis</string>
+    <string name="app_name_short_brand_Badminton">Score Badminton</string>
     <string name="app_name_short_brand_asb">ASB Squore</string>
     <string name="app_name_short_brand_courtcare">CourtScore</string>
     <string name="app_name_short_brand_uniofnotthingham">CourtScore UoN</string>
@@ -116,6 +117,7 @@
     <string name="REMOTE_DISPLAY_APP_ID_brand_squore">35BA3487</string>
     <string name="REMOTE_DISPLAY_APP_ID_brand_racketlon">590DBED9</string>
     <string name="REMOTE_DISPLAY_APP_ID_brand_tabletennis">DD0036E8</string>
+    <string name="REMOTE_DISPLAY_APP_ID_brand_badminton">TODO</string>
     <string name="REMOTE_DISPLAY_APP_ID_brand_asb">BF2E4D1B</string> <!-- not a real brand, was brand of the initial brand tests -->
     <string name="REMOTE_DISPLAY_APP_ID_brand_courtcare">BF2E4D1B</string>
     <string name="REMOTE_DISPLAY_APP_ID_brand_uniofnotthingham">E6F9858F</string>
