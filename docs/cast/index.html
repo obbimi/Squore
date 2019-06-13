@@ -1,8 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- https://raw.githubusercontent.com/obbimi/Squore/master/docs/cast/index.html -->
+    <!-- https://obbimi.github.io/Squore/cast/index.html -->
+    <!-- https://developers.google.com/cast/docs/caf_receiver/advanced#creating-a-customized-receiver-app -->
+    <!-- https://codelabs.developers.google.com/codelabs/cast-receiver/#0 -->
+    <!--
+    npm install -g http-server
+    npm install -g ngrok
+    -->
     <meta charset="utf-8" />
     <title>Score Test</title>
+    <script type="text/javascript"
+            src="//www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js">
+    </script>
+    <script type="text/javascript" src="cast_dummy.js"></script>
+
     <script
             src="https://code.jquery.com/jquery-3.3.1.js"
             integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -15,10 +28,10 @@
     <button value="send" onclick="sendDummyMessages()">Send</button>
 </div>
 <div id="board">
-    <div class="gui_element namebutton"      id="txt_player1" player="A">
+    <div class="gui_element namebutton"      id="txt_player1">
         <span class="name">Shawn</span>
     </div>
-    <div class="gui_element namebutton"      id="txt_player2" player="B">
+    <div class="gui_element namebutton"      id="txt_player2">
         <span class="name">Casey</span>
     </div>
     <table id="gamescores">
@@ -27,15 +40,15 @@
             <td>0</td>
         </tr>
     </table>
-    <div class="gui_element scorebutton"     id="btn_score1" player="A">
+    <div class="gui_element scorebutton"     id="btn_score1">
         <span class="digits">11</span>
-        <div class="gui_element sidebutton"  id="btn_side1"  player="A">
+        <div class="gui_element sidebutton"  id="btn_side1">
             <span class="side">L</span>
         </div>
     </div>
-    <div class="gui_element scorebutton"     id="btn_score2" player="B">
+    <div class="gui_element scorebutton"     id="btn_score2">
         <span class="digits">9</span>
-        <div class="gui_element sidebutton"  id="btn_side2"  player="B">
+        <div class="gui_element sidebutton"  id="btn_side2">
             <span class="side">R?</span>
         </div>
     </div>
@@ -43,29 +56,32 @@
 </div>
 
 
-<script src="//www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
-<script src="cast_dummy.js"></script>
 <script type="text/javascript">
         window.onload = function () {
             var ctx     = cast.framework.CastReceiverContext.getInstance();
+console.log('ctx:' + ctx);
             var options = new cast.framework.CastReceiverOptions();           // https://developers.google.com/cast/docs/reference/caf_receiver/cast.framework.CastReceiverOptions
-            var CHANNEL = 'urn:x-cast:com.doubleyellow.badminton/324DF0DC';
+            var CHANNEL_B = 'urn:x-cast:com.doubleyellow.badminton';
 
             // This is used to send data back to the senders apps.
             options.customNamespaces = Object.assign({});
-            options.customNamespaces[CHANNEL] = cast.framework.system.MessageType.JSON;
+            options.customNamespaces[CHANNEL_B] = cast.framework.system.MessageType.JSON;
+console.log('options:' + options);
+console.log(options);
 
-            ctx.addCustomMessageListener(CHANNEL, function(customEvent) {
-                var message = customEvent.data
-                console.log("Message received"
-                            + " [Channel:"  + CHANNEL              + "]"
-                            + " [SenderId:" + customEvent.senderId + "]"
-                            + " : " + message);
+            ctx.addCustomMessageListener(CHANNEL_B, function(customEvent) {
+console.log(customEvent);
+                var message = customEvent.data;
+console.log("Message received"
+            + " [Channel:"  + CHANNEL_B            + "]"
+            + " [SenderId:" + customEvent.senderId + "]"
+            + " : " + message);
                 var kv = message.split(/:/);
-                console.log('kv:' + kv);
+console.log('kv:' + kv);
+console.log(kv);
                 kv[0] = kv[0].replace(/R.id./, '');
                 //document.getElementById(kv[0]).innerHTML = kv[1];
-                $('#' + kv[0]).html(kv[1]);
+                $('#' + kv[0] + ' span').html(kv[1]);
             });
 
             ctx.start(options);
