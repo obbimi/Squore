@@ -901,7 +901,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             Preloader preloader = Preloader.getInstance(this);
         }
 
-        initCasting(this);
+        initCasting();
 
         dialogManager = DialogManager.getInstance();
 
@@ -1053,6 +1053,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         onResumeNFC();
         onResumeBlueTooth();
+        resumeCast();
 
         onResumeURL();
 
@@ -2007,6 +2008,7 @@ touch -t 01030000 LAST.sb
         super.onPause(); // onstop, ondestroy oncontentchanged
         persist(false);
         onNFCPause();
+        pauseCast();
 /*
         if ( baseDialog instanceof TwoTimerView ) {
             Log.w(TAG, "onPause: A timer is running");
@@ -5853,12 +5855,21 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
     // --------------------- casting ----------------------
     // ----------------------------------------------------
-    private com.doubleyellow.scoreboard.cast.CastHelper castHelper = new com.doubleyellow.scoreboard.cast.CastHelper();
-    private void initCasting(Activity context) {
-        castHelper.initCasting(context);
+    private com.doubleyellow.scoreboard.cast.ICastHelper castHelper = null;
+    private void initCasting() {
+        if ( castHelper == null ) {
+            String sResName = getResources().getResourceName(Brand.brand.getRemoteDisplayAppIdResId());
+            if ( sResName.contains("REMOTE_DISPLAY") ) { // e.g com.doubleyellow.scoreboard:string/REMOTE_DISPLAY_APP_ID_brand_squore
+                castHelper = new com.doubleyellow.scoreboard.cast.CastHelper(); // old
+            } else {
+                // R.string.CUSTOM_RECEIVER_xxxx
+                castHelper = new com.doubleyellow.scoreboard.cast.framework.CastHelper(); // new
+            }
+        }
+        castHelper.initCasting(this);
     }
     private void initCastMenu(Menu menu) {
-        castHelper.initCastMenu(menu);
+        castHelper.initCastMenu(this, menu, R.id.media_route_menu_item);
         PreferenceValues.doesUserHavePermissionToCast(this, "Any device", true);
     }
     private void setModelForCast(Model matchModel) {
@@ -5881,5 +5892,11 @@ touch -t 01030000 LAST.sb
     }
     private void stopCast() {
         castHelper.stopCast();
+    }
+    private void resumeCast() {
+        castHelper.resumeCast();
+    }
+    private void pauseCast() {
+        castHelper.pauseCast();
     }
 }

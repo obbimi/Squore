@@ -43,6 +43,7 @@ import com.doubleyellow.android.view.ViewUtil;
 
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.prefs.*;
 import com.doubleyellow.scoreboard.timer.Timer;
 import com.doubleyellow.scoreboard.timer.TimerViewContainer;
@@ -387,7 +388,7 @@ public class IBoard implements TimerViewContainer
             }
         }
 
-        Object oDisplayValueOverwrite = serverSideDisplayValue(nextServeSide, bIsHandout);
+        Object oDisplayValueOverwrite = Util.getServeSideCharacter(context, matchModel, nextServeSide, bIsHandout);
         String sDisplayValueOverwrite = btnSide.setServeString(oDisplayValueOverwrite, iTransparencyNonServer);
         btnSide.setEnabled(true || bIsHandout);
 
@@ -530,25 +531,6 @@ public class IBoard implements TimerViewContainer
         }
     };
 
-
-    private Object serverSideDisplayValue(ServeSide serveSide, boolean bIsHandout) {
-        if ( serveSide == null) { return ""; }
-        return getServeSideCharacter(serveSide, bIsHandout);
-    }
-    private Object getServeSideCharacter(ServeSide serveSide, boolean bIsHandout) {
-        String sChar   = PreferenceValues.getOAString(context, serveSide.getSingleCharResourceId());
-        String sHOChar = (bIsHandout?"?":"");
-        Object o = matchModel.convertServeSideCharacter(sChar, serveSide, sHOChar);
-        if ( Brand.isNotSquash() && (o instanceof Integer) ) {
-            DownUp downUp = PreferenceValues.numberOfServiceCountUpOrDown(context);
-            if ( downUp.equals(DownUp.Up) && (matchModel.isInTieBreak_Racketlon_Tabletennis() == false) ) {
-                int iCountDownValue = (int) o;
-                int iCountUpValue = matchModel.getNrOfServesPerPlayer() - iCountDownValue + 1;
-                o = iCountUpValue;
-            }
-        }
-        return o;
-    }
 
     public boolean undoGameBallColorSwitch() {
         return doGameBallColorSwitch(Player.values(), false);

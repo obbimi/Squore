@@ -33,7 +33,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
-import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -93,7 +92,7 @@ import java.util.Map;
  * https://developers.google.com/android/guides/setup#ensure_devices_have_the_google_play_services_apk
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-public class CastHelper
+public class CastHelper implements ICastHelper
 {
     private static final String TAG = CastHelper.class.getSimpleName();
 
@@ -106,27 +105,27 @@ public class CastHelper
     private static String APP_ID = null;
 
     /** Always called by the app */
-    public void initCasting(Activity context) {
+    @Override public void initCasting(Activity activity) {
         if (NOT_SUPPORTED_IN_SDK) { return; }
 
-        CastHelper.APP_ID = context.getString(Brand.brand.getRemoteDisplayAppIdResId());
-        if ( PreferenceValues.isUnbrandedExecutable(context) ) {
+        CastHelper.APP_ID = activity.getString(Brand.brand.getRemoteDisplayAppIdResId());
+        if ( PreferenceValues.isUnbrandedExecutable(activity) ) {
             // to be able to test the branded layout with the 'unbranded' version
-            CastHelper.APP_ID = context.getString(Brand.Squore.getRemoteDisplayAppIdResId());
+            CastHelper.APP_ID = activity.getString(Brand.Squore.getRemoteDisplayAppIdResId());
         }
 
-        mediaRouterCallback = new MediaRouterCallback(context);
+        mediaRouterCallback = new MediaRouterCallback(activity);
 
-        mediaRouter = MediaRouter.getInstance(context);
+        mediaRouter = MediaRouter.getInstance(activity);
         mediaRouteSelector = new MediaRouteSelector.Builder()
                 .addControlCategory(CastMediaControlIntent.categoryForCast(CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID))
                 .build();
     }
 
-    public void initCastMenu(Menu menu) {
+    @Override public void initCastMenu(Activity activity, Menu menu, int iResIdMenuItem) {
         if (NOT_SUPPORTED_IN_SDK) { return; }
 
-        MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
+        MenuItem mediaRouteMenuItem = menu.findItem(iResIdMenuItem);
         mediaRouteMenuItem.setVisible(true);
         mediaRouteMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
@@ -143,62 +142,71 @@ public class CastHelper
         });
 */
     }
-    public void startCast() {
+
+    @Override public void pauseCast() {
+
+    }
+
+    @Override public void resumeCast() {
+
+    }
+
+    @Override public void startCast() {
         if (NOT_SUPPORTED_IN_SDK) { return; }
 
         mediaRouter.addCallback(mediaRouteSelector, mediaRouterCallback, MediaRouter.CALLBACK_FLAG_PERFORM_ACTIVE_SCAN);
     }
 
-    public boolean isCasting() {
-        if (NOT_SUPPORTED_IN_SDK) { return false; }
-        return PresentationService.isCasting();
-    }
-    public void stopCast() {
+    @Override public void stopCast() {
         if (NOT_SUPPORTED_IN_SDK) { return; }
         mediaRouter.removeCallback(mediaRouterCallback);
     }
-    public void setModelForCast(Model matchModel) {
+    @Override public boolean isCasting() {
+        if (NOT_SUPPORTED_IN_SDK) { return false; }
+        return PresentationService.isCasting();
+    }
+    @Override public void setModelForCast(Model matchModel) {
         if (NOT_SUPPORTED_IN_SDK) { return; }
         PresentationService.setModel(matchModel);
     }
-    public TimerView getTimerView() {
+    @Override public TimerView getTimerView() {
         if (NOT_SUPPORTED_IN_SDK) { return null; }
         return PresentationService.getTimerView();
     }
-    public void castColors(Map<ColorPrefs.ColorTarget, Integer> mColors) {
+    @Override public void castColors(Map<ColorPrefs.ColorTarget, Integer> mColors) {
         if (NOT_SUPPORTED_IN_SDK) { return; }
         PresentationService.refreshColors(mColors);
     }
-    public void castDurationChronos() {
+    @Override public void castDurationChronos() {
         if (NOT_SUPPORTED_IN_SDK) { return; }
         PresentationService.refreshDurationChronos();
     }
-    public void castGamesWonAppearance() {
+    @Override public void castGamesWonAppearance() {
         if (NOT_SUPPORTED_IN_SDK) { return; }
         PresentationService.refreshGamesWonAppearance();
     }
 
     private static class MediaRouterCallback extends android.support.v7.media.MediaRouter.Callback
     {
-        private Activity context = null;
-        private MediaRouterCallback(Activity context) {
-            this.context = context;
+        private Activity activity = null;
+        private MediaRouterCallback(Activity activity) {
+            this.activity = activity;
         }
         /** Invoked as soon as a cast device is selected from the menu */
         @Override public void onRouteSelected(MediaRouter router, MediaRouter.RouteInfo route) {
             Log.d(TAG, "Route selected :" + route.getName());
-            if ( RWValues.Permission.Granted.equals(PreferenceValues.doesUserHavePermissionToCast(context, route.getName(), true)) == false ) {
+            if ( RWValues.Permission.Granted.equals(PreferenceValues.doesUserHavePermissionToCast(activity, route.getName(), true)) == false ) {
                 return;
             }
             GoogleApiAvailability instance = GoogleApiAvailability.getInstance(); // e.g. Living or Court 1. If e.g. Netflix is playing on the device: mDescription=Netflix
-            int iResult = instance.isGooglePlayServicesAvailable(context);
+            int iResult = instance.isGooglePlayServicesAvailable(activity);
             switch (iResult) {
                 case com.google.android.gms.common.ConnectionResult.SUCCESS:
                     CastDevice device = CastDevice.getFromBundle(route.getExtras());
-                    runRemoteDisplayService(context, device);
+                    runRemoteDisplayService(activity, device);
                     break;
                 default:
-                    Dialog errorDialog = instance.getErrorDialog(context, iResult, 0);
+                    Dialog errorDialog = instance.getErrorDialog(activity, iResult, 0);
                     errorDialog.show(); // TODO: message is not appropriate
                     //errorDialog.mAlert.mMessage;
                     break;
@@ -226,6 +234,10 @@ public class CastHelper
     }
 
     private static void runRemoteDisplayService(Context context, CastDevice selectedDevice) {
+        if ( Brand.isBadminton() ) {
+            // new casting
+            return;
+        }
         Intent intent = new Intent(context, context.getClass());
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent notificationPendingIntent = PendingIntent.getActivity(context, 0, intent, 0);

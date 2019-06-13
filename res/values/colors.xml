@@ -36,7 +36,7 @@
     <string-array name="colorSchema_Badminton" translatable="false">
                                 <!-- scorebtn|name  |serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
-        <item>|BWF                   |#000001|#DF2027|#333333|#FFFFFF|</item><!-- black|red|dark grey ... -->
+        <item>|BWF                   |#000001|#DF2027|#DDDDDD|#FFFFFF|</item><!-- black|red|grey ... -->
         <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
         <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>

@@ -26,6 +26,8 @@ import android.content.Context;
 import android.os.Build;
 import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.prefs.DownUp;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.ShowOnScreen;
 import com.doubleyellow.util.StringUtil;
 
@@ -109,4 +111,20 @@ public class Util {
         return "02:00:00:00:00:00";
     }
 
+    public static Object getServeSideCharacter(Context context, Model matchModel, ServeSide serveSide, boolean bIsHandout) {
+        if ( serveSide == null) { return ""; }
+
+        String sChar   = PreferenceValues.getOAString(context, serveSide.getSingleCharResourceId());
+        String sHOChar = (bIsHandout?"?":"");
+        Object o = matchModel.convertServeSideCharacter(sChar, serveSide, sHOChar);
+        if ( Brand.isNotSquash() && (o instanceof Integer) ) {
+            DownUp downUp = PreferenceValues.numberOfServiceCountUpOrDown(context);
+            if ( downUp.equals(DownUp.Up) && (matchModel.isInTieBreak_Racketlon_Tabletennis() == false) ) {
+                int iCountDownValue = (int) o;
+                int iCountUpValue = matchModel.getNrOfServesPerPlayer() - iCountDownValue + 1;
+                o = iCountUpValue;
+            }
+        }
+        return o;
+    }
 }
