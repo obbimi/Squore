@@ -57,35 +57,36 @@
 
 
 <script type="text/javascript">
-        window.onload = function () {
-            var ctx     = cast.framework.CastReceiverContext.getInstance();
-console.log('ctx:' + ctx);
-            var options = new cast.framework.CastReceiverOptions();           // https://developers.google.com/cast/docs/reference/caf_receiver/cast.framework.CastReceiverOptions
-            var CHANNEL_B = 'urn:x-cast:com.doubleyellow.badminton';
-
-            // This is used to send data back to the senders apps.
-            options.customNamespaces = Object.assign({});
-            options.customNamespaces[CHANNEL_B] = cast.framework.system.MessageType.JSON;
-console.log('options:' + options);
-console.log(options);
-
-            ctx.addCustomMessageListener(CHANNEL_B, function(customEvent) {
+var CHANNEL_B = 'urn:x-cast:com.doubleyellow.badminton';
+function handleMessage(customEvent)
+{
 console.log(customEvent);
-                var message = customEvent.data;
-console.log("Message received"
-            + " [Channel:"  + CHANNEL_B            + "]"
-            + " [SenderId:" + customEvent.senderId + "]"
-            + " : " + message);
-                var kv = message.split(/:/);
-console.log('kv:' + kv);
-console.log(kv);
-                kv[0] = kv[0].replace(/R.id./, '');
-                //document.getElementById(kv[0]).innerHTML = kv[1];
-                $('#' + kv[0] + ' span').html(kv[1]);
-            });
-
-            ctx.start(options);
+    var data = customEvent.data;
+    if ( data.id ) {
+        if ( (! data.property) || data.property == 'text' ) {
+            $('#' + data.id + ' > span').html(data.value);
+        } else {
+            $('#' + data.id ).css(data.property, data.value);
         }
+    }
+}
+
+window.onload = function ()
+{
+    var ctx     = cast.framework.CastReceiverContext.getInstance();
+//console.log('ctx:' + ctx);
+    var options = new cast.framework.CastReceiverOptions();           // https://developers.google.com/cast/docs/reference/caf_receiver/cast.framework.CastReceiverOptions
+
+    // This is used to send data back to the senders apps.
+    options.customNamespaces = Object.assign({});
+    options.customNamespaces[CHANNEL_B] = cast.framework.system.MessageType.JSON;
+//console.log('options:' + options);
+//console.log(options);
+
+    ctx.addCustomMessageListener(CHANNEL_B, handleMessage);
+
+    ctx.start(options);
+}
     </script>
 </body>
 </html>
