@@ -82,10 +82,23 @@
         <item>Landscape</item>
         <item>Portrait</item>
     </string-array>
-    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues">
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_Squash">
         <item>OnDevice</item>
         <!--<item>OnChromeCast</item>-->
     </string-array>
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_Racketlon">
+        <!--<item>OnDevice</item>-->
+        <!--<item>OnChromeCast</item>-->
+    </string-array>
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_Tabletennis">
+        <!--<item>OnDevice</item>-->
+        <!--<item>OnChromeCast</item>-->
+    </string-array>
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_Badminton">
+        <!--<item>OnDevice</item>-->
+        <!--<item>OnChromeCast</item>-->
+    </string-array>
+
     <string-array name="showMatchDurationChronoOn_DefaultValues">
         <item>OnDevice</item>
         <item>OnChromeCast</item>
@@ -112,15 +125,18 @@
     <string name="baseurl_racketlon">http://racketlon.double-yellow.be</string>
     <string name="baseurl_tabletennis">http://tabletennis.double-yellow.be</string>
 -->
-    <!-- https://cast.google.com/publish/#/applications/new/remote_display (Remote Display Receiver for e.g. branded app)-->
+    <!-- https://cast.google.com/publish/#/applications/new/remote_display (Remote Display Receiver for e.g. branded app)
+         https://cast.google.com/publish/#/applications
+    -->
     <!-- https://developers.google.com/cast/docs/registration#RegisterDevice (To enable a newly bought Chrome Cast to be used for development ) -->
     <string name="REMOTE_DISPLAY_APP_ID_brand_squore">35BA3487</string>
     <string name="REMOTE_DISPLAY_APP_ID_brand_racketlon">590DBED9</string>
     <string name="REMOTE_DISPLAY_APP_ID_brand_tabletennis">DD0036E8</string>
-    <string name="REMOTE_DISPLAY_APP_ID_brand_badminton">TODO</string>
-    <string name="REMOTE_DISPLAY_APP_ID_brand_asb">BF2E4D1B</string> <!-- not a real brand, was brand of the initial brand tests -->
     <string name="REMOTE_DISPLAY_APP_ID_brand_courtcare">BF2E4D1B</string>
-    <string name="REMOTE_DISPLAY_APP_ID_brand_uniofnotthingham">E6F9858F</string>
+    <!--<string name="REMOTE_DISPLAY_APP_ID_brand_uniofnotthingham">E6F9858F</string> Accidentally Unregistered-->
 
+    <string name="CUSTOM_RECEIVER_APP_ID_brand_badminton">55B51DEF</string> <!-- new:  -->
+    <string name="CUSTOM_RECEIVER_APP_ID_brand_test">775E79BC</string> <!-- new -->
+<!--  https:/cast-tse-demo.firebaseapp.com/sender/?appid=775E79BC -->
     <string name="media_route_menu_title">Route</string>
 </resources>

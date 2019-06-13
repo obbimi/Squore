@@ -282,7 +282,7 @@
                 android:icon="@drawable/dummy"
                 android:key="showScoringHistoryInMainScreenOn"
                 android:title="@string/pref_showScoringHistoryInMainScreen"
-                android:defaultValue="@array/showScoringHistoryInMainScreenOn_DefaultValues"
+                android:defaultValue="@array/showScoringHistoryInMainScreenOn_DefaultValues_Squash"
                 dy:displayValues="@array/ShowOnScreen_DisplayValues"
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
