@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Score Test</title>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="board.css" />
+</head>
+<body>
+<div id="dummy_messages" style="display: none">
+    <input id="dummy_message" type="text" value=""/>
+    <button value="send" onclick="sendDummyMessages()">Send</button>
+</div>
+<div id="board">
+    <div class="gui_element namebutton"      id="txt_player1" player="A">
+        <span class="name">Shawn</span>
+    </div>
+    <div class="gui_element namebutton"      id="txt_player2" player="B">
+        <span class="name">Casey</span>
+    </div>
+    <table id="gamescores">
+        <tr>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+    </table>
+    <div class="gui_element scorebutton"     id="btn_score1" player="A">
+        <span class="digits">11</span>
+        <div class="gui_element sidebutton"  id="btn_side1"  player="A">
+            <span class="side">L</span>
+        </div>
+    </div>
+    <div class="gui_element scorebutton"     id="btn_score2" player="B">
+        <span class="digits">9</span>
+        <div class="gui_element sidebutton"  id="btn_side2"  player="B">
+            <span class="side">R?</span>
+        </div>
+    </div>
+    <div id="gameBallMessage" class="gui_element">Game/match ball</div>
+</div>
+
+
+<script src="//www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
+<script src="cast_dummy.js"></script>
+<script type="text/javascript">
+        window.onload = function () {
+            var ctx     = cast.framework.CastReceiverContext.getInstance();
+            var options = new cast.framework.CastReceiverOptions();           // https://developers.google.com/cast/docs/reference/caf_receiver/cast.framework.CastReceiverOptions
+            var CHANNEL = 'urn:x-cast:com.doubleyellow.badminton/324DF0DC';
+
+            // This is used to send data back to the senders apps.
+            options.customNamespaces = Object.assign({});
+            options.customNamespaces[CHANNEL] = cast.framework.system.MessageType.JSON;
+
+            ctx.addCustomMessageListener(CHANNEL, function(customEvent) {
+                var message = customEvent.data
+                console.log("Message received"
+                            + " [Channel:"  + CHANNEL              + "]"
+                            + " [SenderId:" + customEvent.senderId + "]"
+                            + " : " + message);
+                var kv = message.split(/:/);
+                console.log('kv:' + kv);
+                kv[0] = kv[0].replace(/R.id./, '');
+                //document.getElementById(kv[0]).innerHTML = kv[1];
+                $('#' + kv[0]).html(kv[1]);
+            });
+
+            ctx.start(options);
+        }
+    </script>
+</body>
+</html>

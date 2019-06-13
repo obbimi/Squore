@@ -1,0 +1,181 @@
+html, body{
+    height:100%;
+    background-color: white;
+}
+.gui_element {
+    position: absolute;
+    text-align: center;
+/*
+    vertical-align: top;
+    vertical-align: bottom;
+    vertical-align: text-bottom;
+*/
+    border: 1px solid black;
+    border-radius: 10vh;
+
+    /*
+    */
+}
+.gui_element span {
+    display: block;
+    position: relative;
+    /*
+    width: 100%;
+    height: 100%;
+    border: 1px solid red;
+    */
+
+    top: 42%; /* attempt to center text vertically in its element */
+    -webkit-transform: translateY(-50%);
+    -o-transform: translateY(-45%);
+    transform: translateY(-45%);
+    /*
+    margin-top: 50%;
+    margin-bottom: 50%;
+    display: table;
+    box-sizing: border-box; // or content-box
+    -moz-box-sizing: border-box; // or content-box
+    -webkit-box-sizing: border-box; // or content-box
+
+    */
+}
+.digits {
+/*
+    top: 50%;
+*/
+}
+.side {
+/*
+    top: 50%;
+    vertical-align: -10%;
+*/
+    font-weight: bold;
+}
+.name {
+/*
+    display:inline-block;
+    display: table-cell;
+    vertical-align: -10%;
+*/
+    font-weight: bold;
+}
+#board {
+    height: 85vh;
+    width : 100%;
+    bottom: 0px;
+}
+#actionbar {
+    top: 0;
+    height: 10vh;
+    width : 100%;
+    border: 0px solid blue;
+}
+#actionbar a {
+    float: right;
+    font-size: 2vh;
+}
+.ui-icon {
+    zoom: 1.5;
+}
+.ui-menu {
+    width: 20vw;
+    font-size: 2vh;
+}
+#menu {
+    position: absolute;
+    top:3vh;
+    right: 1vw;
+    font-size: 2vh;
+}
+
+.namebutton {
+    top: 8vh;
+    height: 15vh;
+    width: 44vw;
+    font-size: 10vh;
+    background-color: #4CA3D9;
+}
+#txt_player1 {
+    left: 1vw;
+
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    box-sizing: border-box;
+}
+#txt_player2 {
+    right: 1vw;
+}
+#timer-time-left {
+    font-size: 10vh;
+}
+
+#gamescores {
+    text-align: center;
+    position: absolute;
+    top: 1vh;
+    left: 46vw;
+    font-size: 6vh;
+}
+#timer-dialog, #tiebreak-dialog, #appeal-dialog, #conduct-dialog {
+    min-width:480px;
+}
+#gamescores td {
+    padding: 1vw;
+}
+.winner {
+    background-color: #141414;
+    color: white;
+}
+.loser {
+    background-color: white;
+    color: #141414;
+}
+.scorebutton {
+    top: 25vh; /** 1 + 8 (actionbar) + 15 (namebutton) + 1 */
+    height: 74vh;
+    width: 44vw;
+    font-size: 55vh;
+    background-color: #141414;
+    color: white;
+}
+#btn_score1 {
+    left: 1vw;
+}
+#btn_score2 {
+    right: 1vw;
+}
+.sidebutton {
+    height: 17vh;
+    width: 17vh;
+    font-size: 10vh;
+    background-color: #D3D3D3;
+    color: #141414;
+    /**
+    top: 22vh;  1 + 17 + 1 + 3
+    */
+}
+#btn_side1 {
+    top: 1vw;
+    right: 1vw;
+/*
+    right: 4vw;
+    left: 33vw;
+*/
+}
+#btn_side2 {
+    top: 1vw;
+    left: 1vw;
+/*
+    right: 33vw;
+*/
+}
+#gameBallMessage {
+    height: 15vh;
+    font-size: 10vh;
+    background-color: #D3D3D3;
+    color: #141414;
+    bottom: 1vh;
+    left: 30vw;
+    right: 30vw;
+}
