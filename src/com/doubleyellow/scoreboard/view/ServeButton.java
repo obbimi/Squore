@@ -100,6 +100,7 @@ public class ServeButton extends /*SBRelativeLayout*/ AutoResizeTextView
     }
 
     /** For now this is equal to setting color of the text */
+/*
     public void setForegroundColor(int iFGColor) {
         View v = this;
         if ( v instanceof TextView ) {
@@ -109,4 +110,5 @@ public class ServeButton extends /*SBRelativeLayout*/ AutoResizeTextView
             Toast.makeText(getContext(), "TODO: ServeButton FGColor " + this.getId() + " : " + iFGColor, Toast.LENGTH_LONG).show();
         }
     }
+*/
 }

@@ -33,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -105,7 +106,7 @@ public class CastHelper implements ICastHelper
     private static String APP_ID = null;
 
     /** Always called by the app */
-    @Override public void initCasting(Activity activity) {
+    @Override public void initCasting(ScoreBoard activity) {
         if (NOT_SUPPORTED_IN_SDK) { return; }
 
         CastHelper.APP_ID = activity.getString(Brand.brand.getRemoteDisplayAppIdResId());

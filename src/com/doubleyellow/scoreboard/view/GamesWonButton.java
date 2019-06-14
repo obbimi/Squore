@@ -48,9 +48,4 @@ public class GamesWonButton extends /*SBRelativeLayout*/ AutoResizeTextView
 
         return sValue;
     }
-
-    /** For now this is equal to setting color of the text */
-    public void setForegroundColor(int iFGColor) {
-        this.setTextColor(iFGColor);
-    }
 }

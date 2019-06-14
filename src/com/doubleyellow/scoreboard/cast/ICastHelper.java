@@ -3,6 +3,7 @@ package com.doubleyellow.scoreboard.cast;
 import android.app.Activity;
 import android.view.Menu;
 
+import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.timer.TimerView;
@@ -10,7 +11,7 @@ import com.doubleyellow.scoreboard.timer.TimerView;
 import java.util.Map;
 
 public interface ICastHelper {
-    void initCasting(Activity activity);
+    void initCasting(ScoreBoard activity);
 
     void initCastMenu(Activity activity, Menu menu, int iResIdMenuItem);
 

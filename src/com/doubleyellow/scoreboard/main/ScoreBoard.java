@@ -63,6 +63,7 @@ import com.doubleyellow.scoreboard.bluetooth.BTState;
 import com.doubleyellow.scoreboard.bluetooth.BluetoothControlService;
 import com.doubleyellow.scoreboard.bluetooth.SelectDeviceDialog;
 import com.doubleyellow.scoreboard.cast.EndOfGameView;
+import com.doubleyellow.scoreboard.cast.framework.CastHelper;
 import com.doubleyellow.scoreboard.demo.*;
 import com.doubleyellow.demo.*;
 import com.doubleyellow.scoreboard.dialog.Handicap;
@@ -901,8 +902,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             Preloader preloader = Preloader.getInstance(this);
         }
 
-        initCasting();
-
         dialogManager = DialogManager.getInstance();
 
         handleStartedFromOtherApp();
@@ -949,7 +948,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         Display display = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         iBoard = new IBoard(matchModel, this, display, (ViewGroup) findViewById(android.R.id.content), gameDurationTickListener);
-        Timer.addTimerView(true, getCastTimerView());
 
         ViewGroup tlGameScores = (ViewGroup) findViewById(R.id.gamescores);
         if ( tlGameScores != null ) {
@@ -985,6 +983,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         initColors();
         initCountries();
+
+        initCasting(iBoard);
+        Timer.addTimerView(true, getCastTimerView());
 
         initScoreBoard(getLastMatchFile(this));
 
@@ -5856,15 +5857,18 @@ touch -t 01030000 LAST.sb
     // --------------------- casting ----------------------
     // ----------------------------------------------------
     private com.doubleyellow.scoreboard.cast.ICastHelper castHelper = null;
-    private void initCasting() {
+    private void initCasting(IBoard iBoard) {
         if ( castHelper == null ) {
             String sResName = getResources().getResourceName(Brand.brand.getRemoteDisplayAppIdResId());
             if ( sResName.contains("REMOTE_DISPLAY") ) { // e.g com.doubleyellow.scoreboard:string/REMOTE_DISPLAY_APP_ID_brand_squore
                 castHelper = new com.doubleyellow.scoreboard.cast.CastHelper(); // old
             } else {
                 // R.string.CUSTOM_RECEIVER_xxxx
-                castHelper = new com.doubleyellow.scoreboard.cast.framework.CastHelper(); // new
+                castHelper = new CastHelper(); // new
             }
+        }
+        if ( (iBoard != null) && (castHelper instanceof CastHelper) ) {
+            iBoard.setCastHelper( (CastHelper) castHelper);
         }
         castHelper.initCasting(this);
     }
@@ -5873,9 +5877,11 @@ touch -t 01030000 LAST.sb
         PreferenceValues.doesUserHavePermissionToCast(this, "Any device", true);
     }
     private void setModelForCast(Model matchModel) {
+        if ( castHelper == null ) { return; }
         castHelper.setModelForCast(matchModel);
     }
     private TimerView getCastTimerView() {
+        if ( castHelper == null ) { return null; }
         return castHelper.getTimerView();
     }
     private void castColors(Map<ColorPrefs.ColorTarget, Integer> mColors) {
