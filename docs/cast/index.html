@@ -62,8 +62,9 @@
 var CHANNEL_B = 'urn:x-cast:com.doubleyellow.badminton';
 function handleMessage(customEvent)
 {
-console.log(customEvent);
+//console.log(customEvent);
     var data = customEvent.data;
+console.log(data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
     if ( data.id ) {
         if ( (! data.property) || data.property == 'text' ) {
             $('#' + data.id + ' > span').html(data.value);
