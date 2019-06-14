@@ -23,23 +23,22 @@
     <link rel="stylesheet" type="text/css" href="board.css" />
 </head>
 <body>
-<div id="dummy_messages" style="display: none">
-    <input id="dummy_message" type="text" value=""/>
-    <button value="send" onclick="sendDummyMessages()">Send</button>
+<div id="dummy_messages" style="display: none; position: absolute;">
+    <button value="send" onclick="sendDummyMessages()">Dummy</button>
 </div>
-<div id="board">
+<div id="squoreboard_root_view">
     <div class="gui_element namebutton"      id="txt_player1">
         <span class="name">Shawn</span>
     </div>
     <div class="gui_element namebutton"      id="txt_player2">
         <span class="name">Casey</span>
     </div>
-    <table id="gamescores">
-        <tr>
-            <td>0</td>
-            <td>0</td>
-        </tr>
-    </table>
+    <div class="gui_element gameswonbutton"  id="btn_gameswon1">
+        <span class="name">0</span>
+    </div>
+    <div class="gui_element gameswonbutton"  id="btn_gameswon2">
+        <span class="name">o</span>
+    </div>
     <div class="gui_element scorebutton"     id="btn_score1">
         <span class="digits">11</span>
         <div class="gui_element sidebutton"  id="btn_side1">
@@ -53,7 +52,7 @@
         </div>
     </div>
     <div id="gameBallMessage" class="gui_element">
-        <span>Game/match ball</span>
+        <span>Game ball</span>
     </div>
 </div>
 

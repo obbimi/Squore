@@ -1,6 +1,10 @@
-html, body{
+html, body
+{
     height:100%;
     background-color: white;
+    font-family: sans-serif;
+    padding: 0px;
+    margin: 0px;
 }
 .gui_element {
     position: absolute;
@@ -10,7 +14,9 @@ html, body{
     vertical-align: bottom;
     vertical-align: text-bottom;
 */
-    border: 1px solid black;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
     border-radius: 10vh;
 
     /*
@@ -25,10 +31,13 @@ html, body{
     border: 1px solid red;
     */
 
-    top: 42%; /* attempt to center text vertically in its element */
+    /* attempt to center text vertically in its element */
+    top: 42%;
     -webkit-transform: translateY(-50%);
-    -o-transform: translateY(-45%);
     transform: translateY(-45%);
+/*
+    -o-transform: translateY(-45%);
+*/
     /*
     margin-top: 50%;
     margin-bottom: 50%;
@@ -48,8 +57,8 @@ html, body{
 /*
     top: 50%;
     vertical-align: -10%;
-*/
     font-weight: bold;
+*/
 }
 .name {
 /*
@@ -59,39 +68,15 @@ html, body{
 */
     font-weight: bold;
 }
-#board {
-    height: 85vh;
+#squoreboard_root_view {
+    height: 100vh;
     width : 100%;
     bottom: 0px;
 }
-#actionbar {
-    top: 0;
-    height: 10vh;
-    width : 100%;
-    border: 0px solid blue;
-}
-#actionbar a {
-    float: right;
-    font-size: 2vh;
-}
-.ui-icon {
-    zoom: 1.5;
-}
-.ui-menu {
-    width: 20vw;
-    font-size: 2vh;
-}
-#menu {
-    position: absolute;
-    top:3vh;
-    right: 1vw;
-    font-size: 2vh;
-}
-
 .namebutton {
-    top: 8vh;
+    top: 1vh;
     height: 15vh;
-    width: 44vw;
+    width: 42vw;
     font-size: 10vh;
     background-color: #4CA3D9;
 }
@@ -106,35 +91,25 @@ html, body{
 #txt_player2 {
     right: 1vw;
 }
-#timer-time-left {
-    font-size: 10vh;
+.gameswonbutton {
+    top: 3vh;
+    height: 9vh;
+    width: 9vh;
+    font-size: 8vh;
+    background-color: #000000;
+    color: #FFFFFF;
+}
+#btn_gameswon1 {
+    left: 44vw;
+}
+#btn_gameswon2 {
+    right: 44vw;
 }
 
-#gamescores {
-    text-align: center;
-    position: absolute;
-    top: 1vh;
-    left: 46vw;
-    font-size: 6vh;
-}
-#timer-dialog, #tiebreak-dialog, #appeal-dialog, #conduct-dialog {
-    min-width:480px;
-}
-#gamescores td {
-    padding: 1vw;
-}
-.winner {
-    background-color: #141414;
-    color: white;
-}
-.loser {
-    background-color: white;
-    color: #141414;
-}
 .scorebutton {
-    top: 25vh; /** 1 + 8 (actionbar) + 15 (namebutton) + 1 */
-    height: 74vh;
-    width: 44vw;
+    top: 18vh;
+    bottom: 2vh;
+    width: 42vw;
     font-size: 55vh;
     background-color: #141414;
     color: white;
@@ -149,7 +124,8 @@ html, body{
     height: 17vh;
     width: 17vh;
     font-size: 10vh;
-    background-color: #D3D3D3;
+    /*background-color: #D3D3D3;*/
+    background-color: rgba(227, 227, 227, 1.0);
     color: #141414;
     /**
     top: 22vh;  1 + 17 + 1 + 3
@@ -175,7 +151,27 @@ html, body{
     font-size: 10vh;
     background-color: #D3D3D3;
     color: #141414;
-    bottom: 1vh;
+    bottom: 3vh;
     left: 30vw;
     right: 30vw;
 }
+
+/*
+#timer-dialog, #tiebreak-dialog, #appeal-dialog, #conduct-dialog {
+    min-width:480px;
+}
+#timer-time-left {
+    font-size: 10vh;
+}
+#gamescores td {
+    padding: 1vw;
+}
+.winner {
+    background-color: #141414;
+    color: white;
+}
+.loser {
+    background-color: white;
+    color: #141414;
+}
+*/
