@@ -79,47 +79,34 @@ html, body
     width: 42vw;
     font-size: 10vh;
     background-color: #4CA3D9;
+    border-width: 0px;
 }
-#txt_player1 {
-    left: 1vw;
+#txt_player1 { left: 1vw; }
+#txt_player2 { right: 1vw; }
 
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-    box-sizing: border-box;
-}
-#txt_player2 {
-    right: 1vw;
-}
 .gameswonbutton {
     top: 3vh;
-    height: 9vh;
-    width: 9vh;
-    font-size: 8vh;
+    height: 5vw; width: 5vw;
+    font-size: 4vw;
     background-color: #000000;
     color: #FFFFFF;
 }
-#btn_gameswon1 {
-    left: 44vw;
-}
-#btn_gameswon2 {
-    right: 44vw;
-}
+#btn_gameswon1 { left: 44vw; }
+#btn_gameswon2 { right: 44vw; }
 
 .scorebutton {
     top: 18vh;
     bottom: 2vh;
     width: 42vw;
-    font-size: 55vh;
-    background-color: #141414;
+    font-size: 60vh;
     color: white;
+    background-color: #141414;
+    border-color: #141414;
+    border-width: 2vh;
 }
-#btn_score1 {
-    left: 1vw;
-}
-#btn_score2 {
-    right: 1vw;
-}
+#btn_score1 { left: 1vw; }
+#btn_score2 { right: 1vw; }
+
 .sidebutton {
     height: 17vh;
     width: 17vh;
@@ -130,32 +117,43 @@ html, body
     /**
     top: 22vh;  1 + 17 + 1 + 3
     */
-}
-#btn_side1 {
     top: 1vw;
-    right: 1vw;
-/*
-    right: 4vw;
-    left: 33vw;
-*/
 }
-#btn_side2 {
-    top: 1vw;
-    left: 1vw;
-/*
-    right: 33vw;
-*/
-}
-#gameBallMessage {
+#btn_side1 { right: 1vw; }
+#btn_side2 { left: 1vw; }
+
+.message {
     height: 15vh;
     font-size: 10vh;
     background-color: #D3D3D3;
+    border-width: 0px;
     color: #141414;
+}
+#gameBallMessage {
     bottom: 3vh;
     left: 30vw;
     right: 30vw;
 }
+#btn_timer {
+    top: 50vh;
+    left: 38vw;
+    width: 24vw;
+    height: 20vh;
+    font-size: 15vh;
+}
 
+/* SQUASH ONLY */
+.callDecisionMessage {
+    top: 50vh;
+    width: 30vw;
+    display: none;
+}
+#callDecisionMessage1{
+    left: 9vw;
+}
+#callDecisionMessage2{
+    right: 9vw;
+}
 /*
 #timer-dialog, #tiebreak-dialog, #appeal-dialog, #conduct-dialog {
     min-width:480px;

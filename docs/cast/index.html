@@ -37,7 +37,7 @@
         <span class="name">0</span>
     </div>
     <div class="gui_element gameswonbutton"  id="btn_gameswon2">
-        <span class="name">o</span>
+        <span class="name">0</span>
     </div>
     <div class="gui_element scorebutton"     id="btn_score1">
         <span class="digits">11</span>
@@ -51,25 +51,64 @@
             <span class="side">R?</span>
         </div>
     </div>
-    <div id="gameBallMessage" class="gui_element">
+    <div id="gameBallMessage" class="gui_element message">
         <span>Game ball</span>
+    </div>
+    <div id="btn_timer" class="gui_element message">
+        <span>01:30</span>
+    </div>
+    <div id="callDecisionMessage1" class="gui_element message callDecisionMessage">
+        <span>Stroke</span>
+    </div>
+    <div id="callDecisionMessage2" class="gui_element message callDecisionMessage">
+        <span>No let</span>
     </div>
 </div>
 
 
 <script type="text/javascript">
+var CountDownTimer = {
+    m_iSecondsLeft : 0,
+    m_iInterval    : null,
+    show : function(iStartAt) {
+        clearInterval(CountDownTimer.m_iInterval);
+        $('#btn_timer').show();
+        this.m_iSecondsLeft = iStartAt;
+        this.m_iInterval    = setInterval(function() {
+          CountDownTimer.m_iSecondsLeft--;
+          $('#btn_timer').html(CountDownTimer.m_iSecondsLeft); // TODO: min:sec format
+
+          // If the count down is finished, write some text
+          if (CountDownTimer.m_iSecondsLeft <= 0) {
+            clearInterval(CountDownTimer.m_iInterval);
+            $('#btn_timer').html("Time!"); // TODO: from message from app
+          }
+        }, 1000);
+    },
+    cancel : function() {
+        clearInterval(CountDownTimer.m_iInterval);
+        $('#btn_timer').hide();
+    }
+}
+
+
 var CHANNEL_B = 'urn:x-cast:com.doubleyellow.badminton';
 function handleMessage(customEvent)
 {
 //console.log(customEvent);
     var data = customEvent.data;
-console.log(data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
     if ( data.id ) {
+console.log(data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
         if ( (! data.property) || data.property == 'text' ) {
             $('#' + data.id + ' > span').html(data.value);
         } else {
             $('#' + data.id ).css(data.property, data.value);
         }
+    }
+    if ( data.func ) {
+console.log(data.func);
+        eval(data.func);
+        //Helper[data.func].call(Helper, data.arg1);
     }
 }
 
@@ -88,6 +127,8 @@ window.onload = function ()
     ctx.addCustomMessageListener(CHANNEL_B, handleMessage);
 
     ctx.start(options);
+
+    CountDownTimer.cancel();
 }
     </script>
 </body>
