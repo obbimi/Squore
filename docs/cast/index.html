@@ -10,7 +10,7 @@
     npm install -g ngrok
     -->
     <meta charset="utf-8" />
-    <title>Score Test</title>
+    <title>Score Cast</title>
     <script type="text/javascript"
             src="//www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js">
     </script>
@@ -51,16 +51,16 @@
             <span class="side">R?</span>
         </div>
     </div>
-    <div id="gameBallMessage" class="gui_element message">
+    <div class="gui_element message" id="gameBallMessage">
         <span>Game ball</span>
     </div>
-    <div id="btn_timer" class="gui_element message">
+    <div class="gui_element message" id="btn_timer">
         <span>01:30</span>
     </div>
-    <div id="callDecisionMessage1" class="gui_element message callDecisionMessage">
+    <div class="gui_element message calldecisionmessage" id="callDecisionMessage1" >
         <span>Stroke</span>
     </div>
-    <div id="callDecisionMessage2" class="gui_element message callDecisionMessage">
+    <div class="gui_element message calldecisionmessage" id="callDecisionMessage2" >
         <span>No let</span>
     </div>
 </div>
@@ -98,6 +98,20 @@ var CountDownTimer = {
     cancel : function() {
         clearInterval(CountDownTimer.m_iInterval);
         $('#btn_timer').fadeOut(1000);
+    }
+};
+var Call = {
+    showDecision : function(sMsg, iIndxP, sCall, bIsConduct) {
+        var oMsg = $('#callDecisionMessage' + (iIndxP+1));
+        oMsg.find('span').html(sMsg);
+        oMsg.fadeIn(1000);
+        setTimeout(function() {
+            Call.hideDecision(iIndxP);
+        }, 5000);
+    },
+    hideDecision : function(iIndxP) {
+        var oMsg = $('#callDecisionMessage' + (iIndxP+1));
+        oMsg.fadeOut(1000);
     }
 };
 

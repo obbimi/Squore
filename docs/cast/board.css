@@ -46,6 +46,7 @@ html, body
     -moz-box-sizing: border-box; // or content-box
     -webkit-box-sizing: border-box; // or content-box
 
+    border: 1px dotted yellow;
     */
 }
 .digits {
@@ -123,8 +124,8 @@ html, body
 .message {
     height: 15vh;
     font-size: 10vh;
-    background-color: #D3D3D3;
     border-width: 0px;
+    background-color: #D3D3D3;
     color: #141414;
 }
 #gameBallMessage {
@@ -141,16 +142,17 @@ html, body
 }
 
 /* SQUASH ONLY */
-.callDecisionMessage {
+.calldecisionmessage {
     top: 50vh;
-    width: 30vw;
+    width: 35vw;
     display: none;
+    font-size: 7vh;
 }
 #callDecisionMessage1{
-    left: 9vw;
+    left: 5vw;
 }
 #callDecisionMessage2{
-    right: 9vw;
+    right: 5vw;
 }
 /*
 #timer-dialog, #tiebreak-dialog, #appeal-dialog, #conduct-dialog {
