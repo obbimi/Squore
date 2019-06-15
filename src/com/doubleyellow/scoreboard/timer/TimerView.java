@@ -27,8 +27,12 @@ package com.doubleyellow.scoreboard.timer;
 public interface TimerView
 {
     void setTitle(String s);
+    /** Invoked virtually every second */
     void setTime(String s);
+    /** Invoked virtually every second */
     void setTime(int iStartedCountDownAtSecs, int iSecsLeft, int iReminderAtSecs);
+
+    /** Invoked virtually every second once the warn threshold is passed */
     void setWarnMessage(String s);
     void setPausedMessage(String s);
     /** mainly to close the timer */

@@ -985,6 +985,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         initCountries();
 
         initCasting(iBoard);
+        setModelForCast(matchModel);
+
         Timer.addTimerView(true, getCastTimerView());
 
         initScoreBoard(getLastMatchFile(this));
@@ -5877,7 +5879,7 @@ touch -t 01030000 LAST.sb
         PreferenceValues.doesUserHavePermissionToCast(this, "Any device", true);
     }
     private void setModelForCast(Model matchModel) {
-        if ( castHelper == null ) { return; }
+        if ( castHelper == null || matchModel == null ) { return; }
         castHelper.setModelForCast(matchModel);
     }
     private TimerView getCastTimerView() {

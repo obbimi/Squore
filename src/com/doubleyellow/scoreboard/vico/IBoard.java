@@ -989,6 +989,7 @@ public class IBoard implements TimerViewContainer
                 }
                 if ( iPlayerColor == null ) {
                     setBackgroundColor(view, iScoreButtonBgColor);
+                    sendMessage(view.getId(), iScoreButtonBgColor, "border-color");
                 } else {
                     setBackgroundAndBorder(view, iScoreButtonBgColor, iPlayerColor);
                 }
@@ -1055,8 +1056,9 @@ public class IBoard implements TimerViewContainer
         view.invalidate();
 
         sendMessage(view.getId(), iBgColor, "background-color");
+        sendMessage(view.getId(), iBorderColor, "border-color"); // TODO: thickness
     }
-
+    /** invoked several times for different elements */
     private void initPerPlayerViewWithColors(Player p, Map<Player, Integer> mPlayer2ViewId, Integer iBgColor, Integer iTxtColor, ColorPrefs.ColorTarget bgColorDefKey, ColorPrefs.ColorTarget txtColorDefKey) {
         if (mPlayer2ViewId == null) { return; }
 
@@ -1172,7 +1174,9 @@ public class IBoard implements TimerViewContainer
                 gameBallMessage.setText(sMsg);
             }
         }
-        sendMessage("gameBallMessage", sMsg, "text");
+        if ( bVisible ) {
+            sendMessage("gameBallMessage", sMsg, "text");
+        }
 
         EnumSet<ShowPlayerColorOn> colorOns = PreferenceValues.showPlayerColorOn(context);
         if ( colorOns.contains(ShowPlayerColorOn.GameBallMessage) ) {
@@ -1184,7 +1188,7 @@ public class IBoard implements TimerViewContainer
                     int iTxtColor = ColorUtil.getBlackOrWhiteFor(sColor);
                     gameBallMessage.setColors(iBgColor, iTxtColor);
                     sendMessage("gameBallMessage", iTxtColor, "color");
-                    sendMessage("gameBallMessage", iBgColor, "background-color");
+                    sendMessage("gameBallMessage", iBgColor , "background-color");
                 }
             }
         }
@@ -1248,6 +1252,10 @@ public class IBoard implements TimerViewContainer
                     decisionMessages[fmIdx].setColors(iBgColor, iTxtColor);
                 }
             }
+        }
+        if ( bHide == false ) {
+            // cast should take care of hiding the message itself
+            castHelper.sendMessage("Call.showDecision('" + sMsg + "'," + fmIdx + ",'" + call + "'," + call.isConduct() + ")");
         }
 
         decisionMessages[fmIdx].setHidden(bHide);

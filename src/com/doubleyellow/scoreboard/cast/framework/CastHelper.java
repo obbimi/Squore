@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 
 import com.doubleyellow.android.util.ColorUtil;
+import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
@@ -37,7 +38,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     @Override public void initCasting(ScoreBoard activity) {
         m_activity = activity;
         if ( castContext == null ) {
-            castContext = CastContext.getSharedInstance(activity);
+            castContext = CastContext.getSharedInstance(activity); // requires com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME to be specified in Manifest.xml
         }
         sPackageName = m_activity.getPackageName();
     }
@@ -73,7 +74,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
     private Model m_matchModel = null;
     @Override public void setModelForCast(Model matchModel) {
-        if ( matchModel != m_matchModel ) {
+        if ( (matchModel != m_matchModel) || matchModel.isDirty() ) {
             m_matchModel = matchModel;
 
             updateViewWithColorAndScore(m_activity, m_matchModel);
@@ -111,10 +112,48 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         Log.d(TAG, "sendMessage: " + sMsg);
         castSession.sendMessage("urn:x-cast:" + sPackageName, sMsg);
     }
+    public void sendMessage(String sFunction) {
+        if ( isCasting() == false ) { return; }
+        Map map = MapUtil.getMap("func", sFunction);
+        JSONObject jsonObject = new JSONObject(map);
+        String sMsg = jsonObject.toString();
+        Log.d(TAG, "sendMessage: " + sMsg);
+        castSession.sendMessage("urn:x-cast:" + sPackageName, sMsg);
+    }
 
 
     @Override public TimerView getTimerView() {
-        return null;
+        // return a timerview that just sends messages at certain times to update Cast screen
+        return new TimerView() {
+            private int iStartAt = 0;
+            private boolean bIsShowing = false;
+            @Override public void setTitle(String s) { }
+            @Override public void setTime(String s) { /* not used. Cast will do it's own countdown */ }
+            @Override public void setTime(int iStartedCountDownAtSecs, int iSecsLeft, int iReminderAtSecs) {
+                if ( (bIsShowing == false)
+                   || ( Math.abs(this.iStartAt - iSecsLeft) > 5 && (iSecsLeft > 0)) ) {
+                    this.iStartAt = iSecsLeft;
+                    show();
+                }
+            }
+            @Override public void setWarnMessage(String s) { }
+            @Override public void setPausedMessage(String s) { }
+            @Override public void cancel() {
+                sendMessage("CountDownTimer.cancel()");
+                bIsShowing = false;
+            }
+            @Override public void timeIsUp() {
+                String sTime = m_activity.getString(R.string.oa_time);
+                sendMessage(R.id.btn_timer, sTime);
+            }
+            @Override public void show() {
+                if ( iStartAt > 0 ) {
+                    sendMessage("CountDownTimer.show(" + this.iStartAt + ")");
+                    bIsShowing = true;
+                }
+            }
+            @Override public boolean isShowing() { return bIsShowing; }
+        };
     }
 
     @Override public void castColors(Map<ColorPrefs.ColorTarget, Integer> mColors) {
@@ -153,6 +192,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         @Override public void onSessionStarting(Session session) { }
         @Override public void onSessionStartFailed(Session session, int i) { }
         @Override public void onSessionStarted(Session session, String s) {
+            Log.d(TAG, "Cast session started");
             castSession = (CastSession) session;
 
             updateViewWithColorAndScore(m_activity, m_matchModel);
@@ -166,6 +206,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         @Override public void onSessionResuming(Session session, String s) { }
         @Override public void onSessionResumeFailed(Session session, int i) { }
         @Override public void onSessionResumed(Session session, boolean b) {
+            Log.d(TAG, "Cast session resumed");
             castSession = (CastSession) session;
 
             updateViewWithColorAndScore(m_activity, m_matchModel);
@@ -176,6 +217,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
     private void updateViewWithColorAndScore(Context context, Model matchModel) {
         if ( iBoard == null || matchModel == null ) {
+            Log.w(TAG, "Not updating colors (iBoard=" + iBoard + ", model=" + matchModel + ")");
             return;
         }
 
@@ -197,5 +239,6 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             iBoard.updatePlayerClub   (p, matchModel.getClub   (p));
         }
         iBoard.updateGameScores();
+        iBoard.updateGameBallMessage();
     }
 }
