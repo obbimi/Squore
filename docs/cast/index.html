@@ -67,32 +67,40 @@
 
 
 <script type="text/javascript">
+String.prototype.padLeft = function padLeft(length, leadingChar) {
+    if (leadingChar === undefined) leadingChar = "0";
+    return this.length < length ? (leadingChar + this).padLeft(length, leadingChar) : this;
+};
+
 var CountDownTimer = {
     m_iSecondsLeft : 0,
     m_iInterval    : null,
     show : function(iStartAt) {
         clearInterval(CountDownTimer.m_iInterval);
-        $('#btn_timer').show();
         this.m_iSecondsLeft = iStartAt;
+        this.setTime();
+        $('#btn_timer').fadeIn(1000);
         this.m_iInterval    = setInterval(function() {
-          CountDownTimer.m_iSecondsLeft--;
-          $('#btn_timer').html(CountDownTimer.m_iSecondsLeft); // TODO: min:sec format
-
-          // If the count down is finished, write some text
-          if (CountDownTimer.m_iSecondsLeft <= 0) {
-            clearInterval(CountDownTimer.m_iInterval);
-            $('#btn_timer').html("Time!"); // TODO: from message from app
-          }
+            CountDownTimer.m_iSecondsLeft--;
+            CountDownTimer.setTime();
+            // If the count down is finished, write some text
+            if (CountDownTimer.m_iSecondsLeft <= 0) {
+                clearInterval(CountDownTimer.m_iInterval);
+                $('#btn_timer').html("Time!"); // TODO: from message from app
+            }
         }, 1000);
+    },
+    setTime : function() {
+        var sSec = ("" + CountDownTimer.m_iSecondsLeft % 60).padLeft(2, '0');
+        var sMin = "" + (CountDownTimer.m_iSecondsLeft - sSec)/60;
+        $('#btn_timer').html(sMin + ':' + sSec);
     },
     cancel : function() {
         clearInterval(CountDownTimer.m_iInterval);
-        $('#btn_timer').hide();
+        $('#btn_timer').fadeOut(1000);
     }
-}
+};
 
-
-var CHANNEL_B = 'urn:x-cast:com.doubleyellow.badminton';
 function handleMessage(customEvent)
 {
 //console.log(customEvent);
@@ -101,6 +109,12 @@ function handleMessage(customEvent)
 console.log(data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
         if ( (! data.property) || data.property == 'text' ) {
             $('#' + data.id + ' > span').html(data.value);
+        } else if ( data.property === 'display' ) {
+            if ( data.value === 'none' ) {
+                $('#' + data.id ).fadeOut(1000);
+            } else {
+                $('#' + data.id ).fadeIn(1000);
+            }
         } else {
             $('#' + data.id ).css(data.property, data.value);
         }
@@ -108,10 +122,11 @@ console.log(data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
     if ( data.func ) {
 console.log(data.func);
         eval(data.func);
-        //Helper[data.func].call(Helper, data.arg1);
     }
 }
 
+var CHANNEL_B = 'urn:x-cast:com.doubleyellow.badminton';
+var CHANNEL_S = 'urn:x-cast:com.doubleyellow.scoreboard';
 window.onload = function ()
 {
     var ctx     = cast.framework.CastReceiverContext.getInstance();
@@ -125,6 +140,7 @@ window.onload = function ()
 //console.log(options);
 
     ctx.addCustomMessageListener(CHANNEL_B, handleMessage);
+    ctx.addCustomMessageListener(CHANNEL_S, handleMessage);
 
     ctx.start(options);
 

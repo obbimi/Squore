@@ -57,8 +57,8 @@ html, body
 /*
     top: 50%;
     vertical-align: -10%;
-    font-weight: bold;
 */
+    font-weight: bold;
 }
 .name {
 /*
@@ -70,8 +70,8 @@ html, body
 }
 #squoreboard_root_view {
     height: 100vh;
-    width : 100%;
-    bottom: 0px;
+    width : 100vw;
+    bottom: 0;
 }
 .namebutton {
     top: 1vh;
@@ -79,7 +79,7 @@ html, body
     width: 42vw;
     font-size: 10vh;
     background-color: #4CA3D9;
-    border-width: 0px;
+    border-width: 0;
 }
 #txt_player1 { left: 1vw; }
 #txt_player2 { right: 1vw; }
@@ -97,12 +97,10 @@ html, body
 .scorebutton {
     top: 18vh;
     bottom: 2vh;
-    width: 42vw;
-    font-size: 60vh;
-    color: white;
+    font-size: 60vh; color: white;
+    width: 40vw; border-width: 2vh;
     background-color: #141414;
     border-color: #141414;
-    border-width: 2vh;
 }
 #btn_score1 { left: 1vw; }
 #btn_score2 { right: 1vw; }
@@ -136,8 +134,8 @@ html, body
 }
 #btn_timer {
     top: 50vh;
-    left: 38vw;
-    width: 24vw;
+    left: 36vw;
+    width: 28vw;
     height: 20vh;
     font-size: 15vh;
 }
