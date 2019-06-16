@@ -22,6 +22,15 @@ html, body
     /*
     */
 }
+.center_vertically {
+    /* attempt to center text vertically in its element */
+    top: 42%;
+    transform: translateY(-45%);
+    /*
+        -webkit-transform: translateY(-50%);
+        -o-transform: translateY(-45%);
+    */
+}
 .gui_element span {
     display: block;
     position: relative;
@@ -31,13 +40,6 @@ html, body
     border: 1px solid red;
     */
 
-    /* attempt to center text vertically in its element */
-    top: 42%;
-    -webkit-transform: translateY(-50%);
-    transform: translateY(-45%);
-/*
-    -o-transform: translateY(-45%);
-*/
     /*
     margin-top: 50%;
     margin-bottom: 50%;
@@ -46,28 +48,8 @@ html, body
     -moz-box-sizing: border-box; // or content-box
     -webkit-box-sizing: border-box; // or content-box
 
-    border: 1px dotted yellow;
     */
-}
-.digits {
-/*
-    top: 50%;
-*/
-}
-.side {
-/*
-    top: 50%;
-    vertical-align: -10%;
-*/
-    font-weight: bold;
-}
-.name {
-/*
-    display:inline-block;
-    display: table-cell;
-    vertical-align: -10%;
-*/
-    font-weight: bold;
+    border: 0px dotted yellow;
 }
 #squoreboard_root_view {
     height: 100vh;
@@ -79,14 +61,34 @@ html, body
     height: 15vh;
     width: 42vw;
     font-size: 10vh;
+    font-weight: bold;
     background-color: #4CA3D9;
-    border-width: 0;
+    border-width: 0px;
 }
+.namebutton span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 #txt_player1 { left: 1vw; }
 #txt_player2 { right: 1vw; }
 
+.flag {
+    position: absolute;
+    top: 4vh;
+    height: 5vw; width: 6vw;
+    border : 0px solid yellow;
+    background-size: 100% 100%;
+    /*background-size: cover;*/
+    /*
+    background-color: yellow;
+    */
+}
+#img_flag1 { left: 43.5vw; }
+#img_flag2 { right: 43.5vw; }
+
 .gameswonbutton {
-    top: 3vh;
+    top: 24vh;
     height: 5vw; width: 5vw;
     font-size: 4vw;
     background-color: #000000;
@@ -107,9 +109,10 @@ html, body
 #btn_score2 { right: 1vw; }
 
 .sidebutton {
-    height: 17vh;
-    width: 17vh;
+    height: 16vh;
+    width : 16vh;
     font-size: 10vh;
+    font-weight: bold;
     /*background-color: #D3D3D3;*/
     background-color: rgba(227, 227, 227, 1.0);
     color: #141414;
@@ -118,9 +121,14 @@ html, body
     */
     top: 1vw;
 }
+.sidebutton span {
+    display: inline-block;
+    vertical-align: middle;
+}
 #btn_side1 { right: 1vw; }
 #btn_side2 { left: 1vw; }
 
+/** gameball, timer, appealdecision */
 .message {
     height: 15vh;
     font-size: 10vh;
@@ -128,6 +136,7 @@ html, body
     background-color: #D3D3D3;
     color: #141414;
 }
+
 #gameBallMessage {
     bottom: 3vh;
     left: 30vw;
@@ -154,22 +163,3 @@ html, body
 #callDecisionMessage2{
     right: 5vw;
 }
-/*
-#timer-dialog, #tiebreak-dialog, #appeal-dialog, #conduct-dialog {
-    min-width:480px;
-}
-#timer-time-left {
-    font-size: 10vh;
-}
-#gamescores td {
-    padding: 1vw;
-}
-.winner {
-    background-color: #141414;
-    color: white;
-}
-.loser {
-    background-color: white;
-    color: #141414;
-}
-*/

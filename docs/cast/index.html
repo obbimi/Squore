@@ -16,6 +16,11 @@
     </script>
     <script type="text/javascript" src="cast_dummy.js"></script>
 
+<!--
+    <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css" />
+-->
+
     <script
             src="https://code.jquery.com/jquery-3.3.1.js"
             integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -28,40 +33,46 @@
 </div>
 <div id="squoreboard_root_view">
     <div class="gui_element namebutton"      id="txt_player1">
-        <span class="name">Shawn</span>
+        <span>Shawn</span>
     </div>
     <div class="gui_element namebutton"      id="txt_player2">
-        <span class="name">Casey</span>
+        <span>Casey</span>
     </div>
+    <div id="img_flag1" class="flag" style="background-image: url(http://squore.double-yellow.be/img/flag/BE);">&nbsp;</div>
+    <div id="img_flag2" class="flag">&nbsp;</div>
+<!--
+    <img id="img_flag1" class="flag" src="http://squore.double-yellow.be/img/flag/BE"/>
+    <img id="img_flag2" class="flag" src="data:image/png;base64,R0lGODlhFAAUAIAAAP///wAAACH5BAEAAAAALAAAAAAUABQAAAIRhI+py+0Po5y02ouz3rz7rxUAOw=="/>
+-->
     <div class="gui_element gameswonbutton"  id="btn_gameswon1">
-        <span class="name">0</span>
+        <span>0</span>
     </div>
     <div class="gui_element gameswonbutton"  id="btn_gameswon2">
-        <span class="name">0</span>
+        <span>0</span>
     </div>
     <div class="gui_element scorebutton"     id="btn_score1">
-        <span class="digits">11</span>
+        <span class="center_vertically">11</span>
         <div class="gui_element sidebutton"  id="btn_side1">
-            <span class="side">L</span>
+            <span class="center_vertically">L</span>
         </div>
     </div>
     <div class="gui_element scorebutton"     id="btn_score2">
-        <span class="digits">9</span>
+        <span>9</span>
         <div class="gui_element sidebutton"  id="btn_side2">
-            <span class="side">R?</span>
+            <span class="center_vertically">R?</span>
         </div>
     </div>
     <div class="gui_element message" id="gameBallMessage">
-        <span>Game ball</span>
+        <span class="center_vertically">Game ball</span>
     </div>
     <div class="gui_element message" id="btn_timer">
-        <span>01:30</span>
+        <span class="center_vertically">01:30</span>
     </div>
     <div class="gui_element message calldecisionmessage" id="callDecisionMessage1" >
-        <span>Stroke</span>
+        <span class="center_vertically">Stroke</span>
     </div>
     <div class="gui_element message calldecisionmessage" id="callDecisionMessage2" >
-        <span>No let</span>
+        <span class="center_vertically">No let</span>
     </div>
 </div>
 
@@ -123,6 +134,8 @@ function handleMessage(customEvent)
 console.log(data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
         if ( (! data.property) || data.property == 'text' ) {
             $('#' + data.id + ' > span').html(data.value);
+        } else if ( data.property === 'src' ) {
+            $('#' + data.id).attr(data.property, data.value);
         } else if ( data.property === 'display' ) {
             if ( data.value === 'none' ) {
                 $('#' + data.id ).fadeOut(1000);
