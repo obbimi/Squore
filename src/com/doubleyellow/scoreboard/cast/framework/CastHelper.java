@@ -47,25 +47,29 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         CastButtonFactory.setUpMediaRouteButton(activity, menu, iResIdMenuItem); // TODO: set to visible always in new cast framework?
     }
 
-    @Override public void startCast() {
+    @Override public void onActivityStart_Cast() {
 
     }
-    @Override public void stopCast() {
-        cleanup();
+    @Override public void onActivityStop_Cast() {
+        //cleanup();
     }
-    @Override public void pauseCast() {
+    @Override public void onActivityPause_Cast() {
         castContext.getSessionManager()
-                .removeSessionManagerListener(sessionManagerListener, CastSession.class);
+                   .removeSessionManagerListener(sessionManagerListener, CastSession.class);
 
     }
-    @Override public void resumeCast() {
+    @Override public void onActivityResume_Cast() {
         castContext.getSessionManager()
                    .addSessionManagerListener(sessionManagerListener, CastSession.class);
 
+/*
         if (castSession == null) {
             // Get the current session if there is one
             castSession = castContext.getSessionManager().getCurrentCastSession();
+
+            updateViewWithColorAndScore(m_activity, m_matchModel);
         }
+*/
     }
 
     @Override public boolean isCasting() {
@@ -76,9 +80,8 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     @Override public void setModelForCast(Model matchModel) {
         if ( (matchModel != m_matchModel) || matchModel.isDirty() ) {
             m_matchModel = matchModel;
-
-            updateViewWithColorAndScore(m_activity, m_matchModel);
         }
+        updateViewWithColorAndScore(m_activity, m_matchModel);
     }
 
     public void sendMessage(Integer iBoardResId, Object oValue) {
@@ -216,10 +219,12 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     };
 
     private void updateViewWithColorAndScore(Context context, Model matchModel) {
+        if ( isCasting() == false ) { return; }
         if ( iBoard == null || matchModel == null ) {
-            Log.w(TAG, "Not updating colors (iBoard=" + iBoard + ", model=" + matchModel + ")");
+            Log.w(TAG, "Not updating (iBoard=" + iBoard + ", model=" + matchModel + ")");
             return;
         }
+        Log.w(TAG, "Updating cast (NEW)");
 
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
         iBoard.initColors(mColors);

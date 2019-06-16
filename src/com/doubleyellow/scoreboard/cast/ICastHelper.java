@@ -15,10 +15,10 @@ public interface ICastHelper {
 
     void initCastMenu(Activity activity, Menu menu, int iResIdMenuItem);
 
-    void startCast();
-    void stopCast();
-    void pauseCast();
-    void resumeCast();
+    void onActivityStart_Cast();
+    void onActivityStop_Cast();
+    void onActivityPause_Cast();
+    void onActivityResume_Cast();
 
     boolean isCasting();
 

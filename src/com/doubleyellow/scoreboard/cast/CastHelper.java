@@ -91,6 +91,8 @@ import java.util.Map;
  * http://www.androidpolice.com/2016/03/16/cyanogenmod-bug-broke-chromecast-video-streaming-finally-fixed/
  *
  * https://developers.google.com/android/guides/setup#ensure_devices_have_the_google_play_services_apk
+ *
+ * @deprecated
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class CastHelper implements ICastHelper
@@ -144,21 +146,21 @@ public class CastHelper implements ICastHelper
 */
     }
 
-    @Override public void pauseCast() {
+    @Override public void onActivityPause_Cast() {
 
     }
 
-    @Override public void resumeCast() {
+    @Override public void onActivityResume_Cast() {
 
     }
 
-    @Override public void startCast() {
+    @Override public void onActivityStart_Cast() {
         if (NOT_SUPPORTED_IN_SDK) { return; }
 
         mediaRouter.addCallback(mediaRouteSelector, mediaRouterCallback, MediaRouter.CALLBACK_FLAG_PERFORM_ACTIVE_SCAN);
     }
 
-    @Override public void stopCast() {
+    @Override public void onActivityStop_Cast() {
         if (NOT_SUPPORTED_IN_SDK) { return; }
         mediaRouter.removeCallback(mediaRouterCallback);
     }

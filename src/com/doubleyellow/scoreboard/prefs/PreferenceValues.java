@@ -1087,29 +1087,37 @@ public class PreferenceValues extends RWValues
     public static int downloadImage(Context context, Object imageViewOrPreference, String sCountryCode) {
         return downloadImage(context, imageViewOrPreference, sCountryCode, 1);
     }
-    public static int downloadImage(Context context, Object imageViewOrPreference, String sCountryCode, int iMaxCacheAgeMultiplier) {
+    public static String getFlagURL(String sCountryCode, Context context) {
         String sFlagURL              = PreferenceValues.getFlagsURL(context);
         if ( StringUtil.isEmpty(sFlagURL) ) {
-            return 0;
+            return null;
         }
         if ( StringUtil.isEmpty(sCountryCode) ) {
-            return 0;
+            return null;
         }
         if ( StringUtil.length(sCountryCode) <= 1 ) {
-            return 0;
+            return null;
         }
-        int    iFlagMaxCacheAgeInMin = PreferenceValues.getMaxCacheAgeFlags(context) * iMaxCacheAgeMultiplier;
         String sIso2                 = CountryUtil.getIso2(sCountryCode);
         String sURL                  = null;
         try {
             sURL = String.format(sFlagURL, sIso2, sCountryCode);
         } catch (java.util.UnknownFormatConversionException e) {
             Toast.makeText(context, "Unable to construct URL with " + sFlagURL, Toast.LENGTH_SHORT).show();
-            return 0;
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+        return sURL;
+    }
+    public static int downloadImage(Context context, Object imageViewOrPreference, String sCountryCode, int iMaxCacheAgeMultiplier) {
+        String sURL                  = getFlagURL(sCountryCode, context);
+        if ( StringUtil.isEmpty(sURL) ) {
             return 0;
         }
+
+        int    iFlagMaxCacheAgeInMin = PreferenceValues.getMaxCacheAgeFlags(context) * iMaxCacheAgeMultiplier;
         String sCacheName            = "flag." + sCountryCode + "." + sURL.replaceAll(".*[\\./]", "") + ".png";
         File   fCache                = new File(context.getCacheDir(), sCacheName);
         DownloadImageTask imageTask = null;

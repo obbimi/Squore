@@ -935,25 +935,36 @@ public class IBoard implements TimerViewContainer
     public void updatePlayerCountry(Player p, String sCountry) {
         EnumSet<ShowCountryAs> countryPref = PreferenceValues.showCountryAs(context);
         View view = findViewById(m_player2nameId.get(p));
+
+        boolean bShowAsTextAbbr = countryPref.contains(ShowCountryAs.AbbreviationAfterName);
+        boolean bShowOnCast     = countryPref.contains(ShowCountryAs.FlagNextToNameChromeCast) && (isPresentation() == true);
+        boolean bShowOnDevice   = countryPref.contains(ShowCountryAs.FlagNextToNameOnDevice  ) && (isPresentation() == false);
+        boolean bShowAsFlagPref = bShowOnCast || bShowOnDevice;
+        boolean bHideBecauseSameCountry = false;
+        if ( PreferenceValues.hideFlagForSameCountry(context) && StringUtil.isNotEmpty(sCountry) ) {
+            String sOtherCountry = matchModel.getCountry(p.getOther());
+            bHideBecauseSameCountry = sCountry.equalsIgnoreCase(sOtherCountry);
+        }
+
+        boolean bShowFlag = bShowAsFlagPref && (bHideBecauseSameCountry == false);
         if (view instanceof PlayersButton) {
             PlayersButton button = (PlayersButton) view;
 
-            boolean bHideBecauseSameCountry = false;
-            if (PreferenceValues.hideFlagForSameCountry(context) && StringUtil.isNotEmpty(sCountry) ) {
-                String sOtherCountry = matchModel.getCountry(p.getOther());
-                bHideBecauseSameCountry = sCountry.equalsIgnoreCase(sOtherCountry);
-            }
-            boolean bShowAsTextAbbr = countryPref.contains(ShowCountryAs.AbbreviationAfterName);
-            boolean bShowAsFlagPref = (countryPref.contains(ShowCountryAs.FlagNextToNameChromeCast) && (isPresentation() == true))
-                                   || (countryPref.contains(ShowCountryAs.FlagNextToNameOnDevice  ) && (isPresentation() == false));
-
-            button.setCountry(sCountry, bShowAsTextAbbr, bShowAsFlagPref && (bHideBecauseSameCountry == false));
+            button.setCountry(sCountry, bShowAsTextAbbr, bShowFlag);
+        }
+        if ( countryPref.contains(ShowCountryAs.FlagNextToNameChromeCast) && (bHideBecauseSameCountry == false) ) {
+            String sFlagURL = PreferenceValues.getFlagURL(sCountry, context);
+            //sendMessage("img_flag" + (p.ordinal()+1),                          sFlagURL , "src");
+            sendMessage("img_flag" + (p.ordinal()+1), String.format("url(%s)", sFlagURL), "background-image");
+        } else {
+            sendMessage("img_flag" + (p.ordinal()+1), String.format("url(%s)", ""      ), "background-image");
         }
     }
     public void updatePlayerAvatar(Player p, String sAvatar) {
         EnumSet<ShowAvatarOn> avatarPref = PreferenceValues.showAvatarOn(context);
-        boolean bShowAvatar = (avatarPref.contains(ShowAvatarOn.OnChromeCast) && (isPresentation() == true))
-                           || (avatarPref.contains(ShowAvatarOn.OnDevice    ) && (isPresentation() == false));
+        boolean bShowOnCast   = avatarPref.contains(ShowAvatarOn.OnChromeCast) && (isPresentation() == true);
+        boolean bShowOnDevice = avatarPref.contains(ShowAvatarOn.OnDevice    ) && (isPresentation() == false);
+        boolean bShowAvatar   = bShowOnCast || bShowOnDevice;
 
         if ( bShowAvatar ) {
             View view = findViewById(m_player2nameId.get(p));
@@ -961,6 +972,11 @@ public class IBoard implements TimerViewContainer
                 PlayersButton button = (PlayersButton) view;
                 button.setAvatar(sAvatar);
             }
+        }
+        if ( avatarPref.contains(ShowAvatarOn.OnChromeCast) ) {
+            sendMessage("img_avatar" + (p.ordinal()+1), String.format("url(%s)", sAvatar), "background-image");
+        } else {
+            sendMessage("img_avatar" + (p.ordinal()+1), String.format("url(%s)", ""     ), "background-image");
         }
     }
 

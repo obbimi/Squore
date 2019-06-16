@@ -1056,7 +1056,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         onResumeNFC();
         onResumeBlueTooth();
-        resumeCast();
+        onActivityResume_Cast();
 
         onResumeURL();
 
@@ -2011,7 +2011,7 @@ touch -t 01030000 LAST.sb
         super.onPause(); // onstop, ondestroy oncontentchanged
         persist(false);
         onNFCPause();
-        pauseCast();
+        onActivityPause_Cast();
 /*
         if ( baseDialog instanceof TwoTimerView ) {
             Log.w(TAG, "onPause: A timer is running");
@@ -2023,7 +2023,7 @@ touch -t 01030000 LAST.sb
     /** also called after rotation */
     @Override protected void onStart() {
         super.onStart();
-        startCast();
+        onActivityStart_Cast();
         if ( (matchModel != null) && matchModel.hasStarted() == false ) {
             int iMatchStartedXSecsAgo = DateUtil.convertTo(System.currentTimeMillis() - matchModel.getMatchStart(), Calendar.SECOND);
             if (iMatchStartedXSecsAgo > 120 ) {
@@ -2034,7 +2034,7 @@ touch -t 01030000 LAST.sb
 
     /** also invoked if child scoreBoard is activated */
     @Override protected void onStop() {
-        stopCast();
+        onActivityStop_Cast();
         super.onStop();
         persist(false);
     }
@@ -4110,6 +4110,8 @@ touch -t 01030000 LAST.sb
 
                     initScoreBoard(null);
 
+                    //setModelForCast(matchModel);
+
                     sendMatchToOtherBluetoothDevice(this, true);
                 }
             }
@@ -5895,16 +5897,17 @@ touch -t 01030000 LAST.sb
     public void castGamesWonAppearance() {
         castHelper.castGamesWonAppearance();
     }
-    private void startCast() {
-        castHelper.startCast();
+
+    private void onActivityStart_Cast() {
+        castHelper.onActivityStart_Cast();
     }
-    private void stopCast() {
-        castHelper.stopCast();
+    private void onActivityStop_Cast() {
+        castHelper.onActivityStop_Cast();
     }
-    private void resumeCast() {
-        castHelper.resumeCast();
+    private void onActivityResume_Cast() {
+        castHelper.onActivityResume_Cast();
     }
-    private void pauseCast() {
-        castHelper.pauseCast();
+    private void onActivityPause_Cast() {
+        castHelper.onActivityPause_Cast();
     }
 }
