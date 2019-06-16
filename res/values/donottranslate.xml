@@ -136,6 +136,7 @@
     <!--<string name="REMOTE_DISPLAY_APP_ID_brand_uniofnotthingham">E6F9858F</string> Accidentally Unregistered-->
 
     <string name="CUSTOM_RECEIVER_APP_ID_brand_badminton">55B51DEF</string> <!-- new:  -->
+    <string name="CUSTOM_RECEIVER_APP_ID_brand_shared">55B51DEF</string> <!-- new:  -->
     <string name="CUSTOM_RECEIVER_APP_ID_brand_test">775E79BC</string> <!-- new -->
 <!--  https:/cast-tse-demo.firebaseapp.com/sender/?appid=775E79BC -->
     <string name="media_route_menu_title">Route</string>

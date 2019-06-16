@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.tabletennis"
-          android:versionCode="215"
+          android:versionCode="216"
           android:versionName="4.19">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
@@ -47,10 +47,18 @@
             android:icon="@drawable/logo_brand_tabletennis">
 
 <!--
-    For ChromeCast
+    For ChromeCast (old)
 -->
+<!--
         <service android:name="com.doubleyellow.scoreboard.cast.PresentationService" android:exported="false" />
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+-->
+
+<!--
+    For ChromeCast (new)
+-->
+        <meta-data android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+                   android:value="com.doubleyellow.scoreboard.cast.framework.CastOptionsProvider" />
 
         <!-- only for shared libraries, mine is not -->
         <!--<uses-library android:name="com.doubleyellow.android"/>-->

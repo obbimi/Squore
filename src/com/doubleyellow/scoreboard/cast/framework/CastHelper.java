@@ -78,7 +78,8 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
     private Model m_matchModel = null;
     @Override public void setModelForCast(Model matchModel) {
-        if ( (matchModel != m_matchModel) || matchModel.isDirty() ) {
+        Log.d(TAG, "New model for cast passed in : " + matchModel);
+        if ( matchModel != m_matchModel && (matchModel != null)) {
             m_matchModel = matchModel;
         }
         updateViewWithColorAndScore(m_activity, m_matchModel);
@@ -219,9 +220,8 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     };
 
     private void updateViewWithColorAndScore(Context context, Model matchModel) {
-        if ( isCasting() == false ) { return; }
-        if ( iBoard == null || matchModel == null ) {
-            Log.w(TAG, "Not updating (iBoard=" + iBoard + ", model=" + matchModel + ")");
+        if ( isCasting() == false || iBoard == null || matchModel == null ) {
+            Log.w(TAG, "Not updating (isCasting=" + isCasting() + ", iBoard=" + iBoard + ", model=" + matchModel + ")");
             return;
         }
         Log.w(TAG, "Updating cast (NEW)");
