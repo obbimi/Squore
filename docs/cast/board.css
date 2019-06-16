@@ -92,8 +92,9 @@ html, body
 
 .gameswonbutton {
     top: 24vh;
-    height: 5vw; width: 5vw;
+    height: 5.5vw; width: 5.5vw;
     font-size: 4vw;
+    font-weight: bold;
     background-color: #000000;
     color: #FFFFFF;
 }

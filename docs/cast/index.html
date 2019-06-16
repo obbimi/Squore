@@ -46,10 +46,10 @@
     <img id="img_flag2" class="flag" src="data:image/png;base64,R0lGODlhFAAUAIAAAP///wAAACH5BAEAAAAALAAAAAAUABQAAAIRhI+py+0Po5y02ouz3rz7rxUAOw=="/>
 -->
     <div class="gui_element gameswonbutton"  id="btn_gameswon1">
-        <span>0</span>
+        <span class="center_vertically">0</span>
     </div>
     <div class="gui_element gameswonbutton"  id="btn_gameswon2">
-        <span>0</span>
+        <span class="center_vertically">0</span>
     </div>
     <div class="gui_element scorebutton"     id="btn_score1">
         <span class="center_vertically">11</span>
@@ -168,8 +168,9 @@ console.log(data.func);
     }
 }
 
-var CHANNEL_B = 'urn:x-cast:com.doubleyellow.badminton';
 var CHANNEL_S = 'urn:x-cast:com.doubleyellow.scoreboard';
+var CHANNEL_T = 'urn:x-cast:com.doubleyellow.tabletennis';
+var CHANNEL_B = 'urn:x-cast:com.doubleyellow.badminton';
 window.onload = function ()
 {
     var ctx     = cast.framework.CastReceiverContext.getInstance();
@@ -184,6 +185,7 @@ window.onload = function ()
 
     ctx.addCustomMessageListener(CHANNEL_B, handleMessage);
     ctx.addCustomMessageListener(CHANNEL_S, handleMessage);
+    ctx.addCustomMessageListener(CHANNEL_T, handleMessage);
 
     ctx.start(options);
 
