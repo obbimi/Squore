@@ -16,7 +16,7 @@ html, body
 */
     border-style: solid;
     border-color: black;
-    border-width: 1px;
+    border-width: 0px;
     border-radius: 10vh;
 
     /*
@@ -68,6 +68,9 @@ html, body
 .namebutton span {
     display: inline-block;
     vertical-align: middle;
+    white-space: nowrap;
+    /*width: 100%; This will cause textfill() to NOT work*/
+    border: 0px solid yellow;
 }
 
 #txt_player1 { left: 1vw; }

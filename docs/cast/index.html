@@ -25,6 +25,7 @@
             src="https://code.jquery.com/jquery-3.3.1.js"
             integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
             crossorigin="anonymous"></script>
+    <script type="text/javascript" src="jquery.textfill.js"></script>
     <link rel="stylesheet" type="text/css" href="board.css" />
 </head>
 <body>
@@ -134,6 +135,21 @@ function handleMessage(customEvent)
 console.log(data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
         if ( (! data.property) || data.property == 'text' ) {
             $('#' + data.id + ' > span').html(data.value);
+            if ( data.id.indexOf('txt_player')===0 ) {
+                var iTextLength = data.value.length;
+                var sIdOther = data.id==='txt_player1'?'txt_player2':'txt_player1';
+                var iTextLengthOther = $('#' + sIdOther + ' > span').html().length;
+                var sIdToResize = iTextLength > iTextLengthOther ? data.id : sIdOther;
+              //console.log('Resize to fit ' + sIdToResize);
+                //$('#' + data.id + ' > span').fitText(0.75); // does not work if there is a slash in the text
+                $('#' + sIdToResize).textfill({ success: function(o, fontSizeFinal) {
+                      //console.log('Resized to fit - success : ' + fontSizeFinal);
+                        fontSizeFinal = fontSizeFinal * 0.9; // little spacing
+                        $('#' + data.id  + ' > span').css('font-size', fontSizeFinal);
+                        $('#' + sIdOther + ' > span').css('font-size', fontSizeFinal);
+                    }
+                });
+            }
         } else if ( data.property === 'src' ) {
             $('#' + data.id).attr(data.property, data.value);
         } else if ( data.property === 'display' ) {
