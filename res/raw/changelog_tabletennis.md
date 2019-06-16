@@ -1,3 +1,7 @@
+## 4.20 (june 2019)
+
+- chromecast improvements
+
 ## 4.19 (april 2019)
 
 - android 9 chromecast improvements
