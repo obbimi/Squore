@@ -32,6 +32,11 @@
 <div id="dummy_messages" style="display: none; position: absolute;">
     <button value="send" onclick="sendDummyMessages()">Dummy</button>
 </div>
+<div id="squoreboard_loading">
+    <div class="gui_element message" id="loading_message">
+        <span class="center_vertically">Loading...</span>
+    </div>
+</div>
 <div id="squoreboard_root_view">
     <div class="gui_element namebutton"      id="txt_player1">
         <span>Shawn</span>
@@ -127,6 +132,7 @@ var Call = {
     }
 };
 
+var iTxtPlayerCount = 0;
 function handleMessage(customEvent)
 {
 //console.log(customEvent);
@@ -144,11 +150,16 @@ console.log(data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
                 //$('#' + data.id + ' > span').fitText(0.75); // does not work if there is a slash in the text
                 $('#' + sIdToResize).textfill({ success: function(o, fontSizeFinal) {
                       //console.log('Resized to fit - success : ' + fontSizeFinal);
-                        fontSizeFinal = fontSizeFinal * 0.9; // little spacing
+                        fontSizeFinal = fontSizeFinal * 0.9; // to have a little spacing
                         $('#' + data.id  + ' > span').css('font-size', fontSizeFinal);
                         $('#' + sIdOther + ' > span').css('font-size', fontSizeFinal);
                     }
                 });
+                iTxtPlayerCount++;
+                if ( iTxtPlayerCount === 2) {
+                    $('#squoreboard_loading').fadeOut(1000);
+                    $('#squoreboard_root_view').fadeIn(1000);
+                }
             }
         } else if ( data.property === 'src' ) {
             $('#' + data.id).attr(data.property, data.value);
@@ -187,9 +198,14 @@ window.onload = function ()
     ctx.addCustomMessageListener(CHANNEL_S, handleMessage);
     ctx.addCustomMessageListener(CHANNEL_T, handleMessage);
 
-    ctx.start(options);
-
     CountDownTimer.cancel();
+    Call.hideDecision(0);
+    Call.hideDecision(1);
+    $('#gameBallMessage').hide();
+    $('#squoreboard_root_view').hide();
+    $('#squoreboard_root_view').find('span').html('');
+
+    ctx.start(options);
 }
     </script>
 </body>

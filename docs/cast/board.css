@@ -51,6 +51,21 @@ html, body
     */
     border: 0px dotted yellow;
 }
+#squoreboard_loading {
+    height: 100vh;
+    width : 100vw;
+    background-color: grey;
+    /*
+    opacity: 100%;
+    z-index: -1;
+    */
+}
+#loading_message {
+    left: 25vw;
+    width: 50vw;
+    top: 40vh;
+    height: 20vh;
+}
 #squoreboard_root_view {
     height: 100vh;
     width : 100vw;
