@@ -984,7 +984,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         initColors();
         initCountries();
 
-        initCasting(iBoard);
+        initCasting(iBoard); // also onresume!!
         setModelForCast(matchModel);
 
         Timer.addTimerView(true, getCastTimerView());
@@ -3862,7 +3862,7 @@ touch -t 01030000 LAST.sb
                     break;
                 case Timeout:  // fall through
                 case TowelingDown:
-                    // injury
+                    // toweling
                     timer = new Timer(this, timerType, iInitialSecs, iResumeAt, 0 /*Math.max(15,iInitialSecs/6)*/, bAutoTriggered);
                     iBoard.stopGameDurationChrono();
                     break;
@@ -5863,7 +5863,11 @@ touch -t 01030000 LAST.sb
     private com.doubleyellow.scoreboard.cast.ICastHelper castHelper = null;
     private void initCasting(IBoard iBoard) {
         if ( castHelper == null ) {
-            String sResName = getResources().getResourceName(Brand.brand.getRemoteDisplayAppIdResId());
+            int remoteDisplayAppIdResId = Brand.brand.getRemoteDisplayAppIdResId();
+            if ( PreferenceValues.isBrandTesting(this) ) {
+                remoteDisplayAppIdResId = R.string.CUSTOM_RECEIVER_APP_ID_brand_test;
+            }
+            String sResName = getResources().getResourceName(remoteDisplayAppIdResId);
             if ( sResName.contains("REMOTE_DISPLAY") ) { // e.g com.doubleyellow.scoreboard:string/REMOTE_DISPLAY_APP_ID_brand_squore
                 castHelper = new com.doubleyellow.scoreboard.cast.CastHelper(); // old
             } else {
@@ -5874,7 +5878,6 @@ touch -t 01030000 LAST.sb
         if ( (iBoard != null) && (castHelper instanceof CastHelper) ) {
             iBoard.setCastHelper( (CastHelper) castHelper);
         }
-        castHelper.initCasting(this);
     }
     private void initCastMenu(Menu menu) {
         castHelper.initCastMenu(this, menu, R.id.media_route_menu_item);
@@ -5905,6 +5908,8 @@ touch -t 01030000 LAST.sb
         castHelper.onActivityStop_Cast();
     }
     private void onActivityResume_Cast() {
+        if ( castHelper == null || matchModel == null ) { return; }
+        castHelper.initCasting(this);
         castHelper.onActivityResume_Cast();
     }
     private void onActivityPause_Cast() {

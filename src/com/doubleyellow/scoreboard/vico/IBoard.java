@@ -63,6 +63,9 @@ import com.doubleyellow.scoreboard.view.PlayersButton;
 import com.doubleyellow.scoreboard.view.ServeButton;
 import com.doubleyellow.view.SBRelativeLayout;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.*;
 
 /**
@@ -175,6 +178,11 @@ public class IBoard implements TimerViewContainer
     private void sendMessage(Integer iBoardResId, Object oValue) {
         sendMessage(iBoardResId, oValue, "text");
     }
+    private void sendFunction(String s) {
+        if ( castHelper == null ) { return; }
+        castHelper.sendFunction(s);
+    }
+
     // sProperty = background-color
     private void sendMessage(Integer iBoardResId, Object oValue, String sProperty) {
         if ( castHelper == null ) { return; }
@@ -425,7 +433,7 @@ public class IBoard implements TimerViewContainer
             PlayersButton v = (PlayersButton) view;
             v.setServer(doublesServe, nextServeSide, bIsHandout, sDisplayValueOverwrite);
         }
-        sendMessage(iServeId, oDisplayValueOverwrite);
+        sendMessage(iServeId, sDisplayValueOverwrite);
 /*
         if ( matchModel.getDoubleServeSequence().equals(DoublesServeSequence.ABXY) ) {
             String sSSFilename = Util.filenameForAutomaticScreenshot(context, matchModel, showOnScreen, -1, -1, null);
@@ -471,7 +479,7 @@ public class IBoard implements TimerViewContainer
         setGameScoreView(appearance);
     }
     private void setGameScoreView(GameScoresAppearance appearance) {
-        for (Player player : Player.values()) {
+        for ( Player player : Player.values() ) {
             int iNameId = m_player2gamesWonId.get(player);
             View vGamesWon = findViewById(iNameId);
             if ( vGamesWon == null ) {
@@ -481,6 +489,10 @@ public class IBoard implements TimerViewContainer
             boolean showGamesWon = appearance.showGamesWon(isPresentation());
             vGamesWon.setVisibility(showGamesWon ? View.VISIBLE : View.INVISIBLE);
         }
+
+        // update casting screen
+        boolean bShowGameScores = appearance.showGamesWon(true) == false;
+        sendFunction("GameScores.display(" + bShowGameScores + ")");
 
         MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
         if ( matchGameScores != null ) {
@@ -504,13 +516,21 @@ public class IBoard implements TimerViewContainer
             matchGameScores.update(matchModel, m_firstPlayerOnScreen);
         }
 
+        // update casting screen
+        List<Map<Player, Integer>> endScoreOfPreviousGames = matchModel.getEndScoreOfPreviousGames();
+        JSONArray jsonArray = new JSONArray();
+        for(Map<Player, Integer> m: endScoreOfPreviousGames) {
+            jsonArray.put(new JSONObject(MapUtil.keysToString(m)));
+        }
+        sendFunction("GameScores.update(" + jsonArray.toString() + ", " + Player.B.equals(m_firstPlayerOnScreen)  + ")");
+
         if ( (m_player2gamesWonId != null) && (matchModel != null) ) {
             Map<Player, Integer> gamesWon = matchModel.getGamesWon(false);
             if ( MapUtil.isNotEmpty(gamesWon) ) {
                 for(Player player: Player.values() ) {
                     int iNameId = m_player2gamesWonId.get(player);
                     View view = findViewById(iNameId);
-                    if ( view instanceof GamesWonButton) {
+                    if ( view instanceof GamesWonButton ) {
                         GamesWonButton v = (GamesWonButton) view;
                         v.setGamesWon(gamesWon.get(player));
                     }
@@ -952,12 +972,14 @@ public class IBoard implements TimerViewContainer
 
             button.setCountry(sCountry, bShowAsTextAbbr, bShowFlag);
         }
+
+        // send message to update cast screen
+        int iNrOnCast = (p.ordinal() + m_firstPlayerOnScreen.ordinal()) % 2 + 1;
         if ( countryPref.contains(ShowCountryAs.FlagNextToNameChromeCast) && (bHideBecauseSameCountry == false) ) {
             String sFlagURL = PreferenceValues.getFlagURL(sCountry, context);
-            //sendMessage("img_flag" + (p.ordinal()+1),                          sFlagURL , "src");
-            sendMessage("img_flag" + (p.ordinal()+1), String.format("url(%s)", sFlagURL), "background-image");
+            sendMessage("img_flag" + iNrOnCast, String.format("url(%s)", sFlagURL), "background-image");
         } else {
-            sendMessage("img_flag" + (p.ordinal()+1), String.format("url(%s)", ""      ), "background-image");
+            sendMessage("img_flag" + iNrOnCast, String.format("url(%s)", ""      ), "background-image");
         }
     }
     public void updatePlayerAvatar(Player p, String sAvatar) {
@@ -973,10 +995,13 @@ public class IBoard implements TimerViewContainer
                 button.setAvatar(sAvatar);
             }
         }
+
+        // send message to update cast screen
+        int iNrOnCast = (p.ordinal() + m_firstPlayerOnScreen.ordinal()) % 2 + 1;
         if ( avatarPref.contains(ShowAvatarOn.OnChromeCast) ) {
-            sendMessage("img_avatar" + (p.ordinal()+1), String.format("url(%s)", sAvatar), "background-image");
+            sendMessage("img_avatar" + iNrOnCast, String.format("url(%s)", sAvatar), "background-image");
         } else {
-            sendMessage("img_avatar" + (p.ordinal()+1), String.format("url(%s)", ""     ), "background-image");
+            sendMessage("img_avatar" + iNrOnCast, String.format("url(%s)", ""     ), "background-image");
         }
     }
 
@@ -1271,7 +1296,7 @@ public class IBoard implements TimerViewContainer
         }
         if ( bHide == false ) {
             // cast should take care of hiding the message itself
-            castHelper.sendMessage("Call.showDecision('" + sMsg + "'," + fmIdx + ",'" + call + "'," + call.isConduct() + ")");
+            sendFunction("Call.showDecision('" + sMsg + "'," + fmIdx + ",'" + call + "'," + call.isConduct() + ")");
         }
 
         decisionMessages[fmIdx].setHidden(bHide);

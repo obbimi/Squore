@@ -30,9 +30,9 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 {
     private static final String TAG = "SB." + CastHelper.class.getSimpleName();
 
-    private ScoreBoard  m_activity = null;
-    private CastContext castContext = null; /* has nothing to do with android.content.Context */
-    private CastSession castSession = null;
+    private ScoreBoard  m_activity   = null;
+    private CastContext castContext  = null; /* has nothing to do with android.content.Context */
+    private CastSession castSession  = null;
     private String      sPackageName = null; /* serves as Namespace */
 
     @Override public void initCasting(ScoreBoard activity) {
@@ -62,14 +62,13 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         castContext.getSessionManager()
                    .addSessionManagerListener(sessionManagerListener, CastSession.class);
 
-/*
+        // e.g. after screen rotation
         if (castSession == null) {
             // Get the current session if there is one
             castSession = castContext.getSessionManager().getCurrentCastSession();
 
             updateViewWithColorAndScore(m_activity, m_matchModel);
         }
-*/
     }
 
     @Override public boolean isCasting() {
@@ -111,20 +110,25 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             oValue = ColorUtil.getRGBString((Integer) oValue);
         }
         Map map = MapUtil.getMap("id", sResName, "property", sProperty, "value", oValue);
-        JSONObject jsonObject = new JSONObject(map);
-        String sMsg = jsonObject.toString();
-        Log.d(TAG, "sendMessage: " + sMsg);
-        castSession.sendMessage("urn:x-cast:" + sPackageName, sMsg);
-    }
-    public void sendMessage(String sFunction) {
-        if ( isCasting() == false ) { return; }
-        Map map = MapUtil.getMap("func", sFunction);
-        JSONObject jsonObject = new JSONObject(map);
-        String sMsg = jsonObject.toString();
-        Log.d(TAG, "sendMessage: " + sMsg);
-        castSession.sendMessage("urn:x-cast:" + sPackageName, sMsg);
+        sendMapAsJsonMessage(map);
     }
 
+    public void sendFunction(String sFunction) {
+        if ( isCasting() == false ) { return; }
+        Map map = MapUtil.getMap("func", sFunction);
+        sendMapAsJsonMessage(map);
+    }
+
+    private void sendMapAsJsonMessage(Map map) {
+        JSONObject jsonObject = new JSONObject(map);
+        String sMsg = jsonObject.toString();
+        sendJsonMessage(sMsg);
+    }
+
+    public void sendJsonMessage(String sMsg) {
+        Log.d(TAG, "sendMessage: " + sMsg);
+        castSession.sendMessage("urn:x-cast:" + sPackageName, sMsg);
+    }
 
     @Override public TimerView getTimerView() {
         // return a timerview that just sends messages at certain times to update Cast screen
@@ -143,7 +147,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             @Override public void setWarnMessage(String s) { }
             @Override public void setPausedMessage(String s) { }
             @Override public void cancel() {
-                sendMessage("CountDownTimer.cancel()");
+                sendFunction("CountDownTimer.cancel()");
                 bIsShowing = false;
             }
             @Override public void timeIsUp() {
@@ -152,7 +156,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             }
             @Override public void show() {
                 if ( iStartAt > 0 ) {
-                    sendMessage("CountDownTimer.show(" + this.iStartAt + ")");
+                    sendFunction("CountDownTimer.show(" + this.iStartAt + ")");
                     bIsShowing = true;
                 }
             }
@@ -224,7 +228,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             Log.w(TAG, "Not updating (isCasting=" + isCasting() + ", iBoard=" + iBoard + ", model=" + matchModel + ")");
             return;
         }
-        Log.w(TAG, "Updating cast (NEW)");
+        Log.d(TAG, "Updating cast (NEW)");
 
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
         iBoard.initColors(mColors);
@@ -234,16 +238,16 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             iBoard.getTimerView().cancel();
         }
 */
+        iBoard.updateGameScores();
+        iBoard.updateGameBallMessage();
 
         for(Player p: Model.getPlayers()) {
             iBoard.updateScore(p, matchModel.getScore(p));
             iBoard.updateServeSide    (p, matchModel.getNextDoubleServe(p), matchModel.getNextServeSide(p), matchModel.isLastPointHandout());
-            iBoard.updatePlayerName   (p, matchModel.getName   (p), matchModel.isDoubles());
             iBoard.updatePlayerAvatar (p, matchModel.getAvatar (p));
             iBoard.updatePlayerCountry(p, matchModel.getCountry(p));
             iBoard.updatePlayerClub   (p, matchModel.getClub   (p));
+            iBoard.updatePlayerName   (p, matchModel.getName   (p), matchModel.isDoubles()); // player name last... if both are communicate cast screen will display screen elements
         }
-        iBoard.updateGameScores();
-        iBoard.updateGameBallMessage();
     }
 }

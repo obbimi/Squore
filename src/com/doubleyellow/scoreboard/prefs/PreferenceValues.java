@@ -1055,13 +1055,23 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.handicapFormat, context, HandicapFormat.class, R.string.handicapFormat_default);
     }
     public static int numberOfGamesToWinMatch(Context context) {
-        return getIntegerR(PreferenceKeys.numberOfGamesToWinMatch, context, R.integer.numberOfGamesToWin_default_Squash);
+        int iMax = getIntegerR(PreferenceKeys.numberOfGamesToWinMatch, context, R.integer.numberOfGamesToWin_default_Squash);
+        if ( iMax > 999 || iMax < 1 ) {
+            iMax = 999;
+            setNumber(PreferenceKeys.numberOfGamesToWinMatch, context, iMax);
+        }
+        return iMax;
     }
     public static int numberOfServesPerPlayer(Context context) {
         return getIntegerR(PreferenceKeys.numberOfServesPerPlayer, context, R.integer.numberOfServesPerPlayer_default);
     }
     public static int numberOfPointsToWinGame(Context context) {
-        return getIntegerR(PreferenceKeys.numberOfPointsToWinGame, context, R.integer.gameEndScore_default_Squash);
+        int iMax = getIntegerR(PreferenceKeys.numberOfPointsToWinGame, context, R.integer.gameEndScore_default_Squash);
+        if ( iMax > 9999 || iMax < 1 ) {
+            iMax = 9999;
+            setNumber(PreferenceKeys.numberOfPointsToWinGame, context, iMax);
+        }
+        return iMax;
     }
     public static int numberOfCharactersBeforeAutocomplete(Context context) {
         return getIntegerR(PreferenceKeys.numberOfCharactersBeforeAutocomplete, context, R.integer.numberOfCharactersBeforeAutocomplete_default);

@@ -121,7 +121,7 @@ public enum Brand
     public static void setSportPrefs(Context ctx) {
         if ( isRacketlon() ) {
             PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, 4); // TODO: not applicable. only total number of points matter
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Racketlon);
+            PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Racketlon);
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
             PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 180);
@@ -130,8 +130,8 @@ public enum Brand
             PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring         , ctx, false);
         }
         if ( isTabletennis() ) {
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default_Tabletennis);
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Tabletennis);
+            PreferenceValues.setNumberR  (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default_Tabletennis);
+            PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Tabletennis);
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
             PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 60);
@@ -141,8 +141,8 @@ public enum Brand
             PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring         , ctx, false);
         }
         if ( isBadminton() ) {
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default_Badminton);
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Badminton);
+            PreferenceValues.setNumberR  (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default_Badminton);
+            PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Badminton);
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
             PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 60);
@@ -152,8 +152,8 @@ public enum Brand
             PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring         , ctx, false);
         }
         if ( isRacquetball() ) {
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default_Racquetball);
-            PreferenceValues.setNumber   (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Racquetball); // last decisive game to 11
+            PreferenceValues.setNumberR  (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default_Racquetball);
+            PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Racquetball); // last decisive game to 11
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.SuddenDeath);
             //PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 60);
