@@ -116,6 +116,33 @@ html, body
 #btn_gameswon1 { left: 44vw; }
 #btn_gameswon2 { right: 44vw; }
 
+#gameScores {
+    position: absolute;
+    top: 24vh;
+    left: 44.5vw;
+}
+#gameScores tr {
+    border: 1px solid black;
+}
+#gameScores tr td {
+    font-size: 4vw;
+    text-align: center;
+    background-color: #000000;
+    color: #FFFFFF;
+}
+#gameScores td.digit {
+    width: 5vw;
+}
+#gameScores td .splitter {
+    width: 1vw !important;
+}
+.is_winner_true {
+    /*
+    background-color: black;
+    color: white;
+    */
+    font-weight: bold;
+}
 .scorebutton {
     top: 18vh;
     bottom: 2vh;

@@ -37,7 +37,7 @@
         <span class="center_vertically">Loading...</span>
     </div>
 </div>
-<div id="squoreboard_root_view">
+<div id="squoreboard_root_view" style="display: none">
     <div class="gui_element namebutton"      id="txt_player1">
         <span>Shawn</span>
     </div>
@@ -55,6 +55,13 @@
     </div>
     <div class="gui_element gameswonbutton"  id="btn_gameswon2">
         <span class="center_vertically">0</span>
+    </div>
+    <div id="gameScores">
+        <table cellspacing="0">
+            <tbody>
+                <tr><td class="digit is_winner_true">11</td><td class="splitter">-</td><td class="digit">1</td></tr>
+            </tbody>
+        </table>
     </div>
     <div class="gui_element scorebutton"     id="btn_score1">
         <span class="center_vertically">11</span>
@@ -87,6 +94,13 @@
 String.prototype.padLeft = function padLeft(length, leadingChar) {
     if (leadingChar === undefined) leadingChar = "0";
     return this.length < length ? (leadingChar + this).padLeft(length, leadingChar) : this;
+};
+String.prototype.format = function () {
+    var args = arguments;
+    if ( (args.length === 1) && (args[0].constructor === Array) ) {
+        args = args[0];
+    }
+    return this.replace(/\{(\d+)\}/g, function (m, n) { return args[n] || ''; });
 };
 
 var CountDownTimer = {
@@ -131,7 +145,32 @@ var Call = {
         oMsg.fadeOut(1000);
     }
 };
-
+var GameScores = {
+    update : function(lomPlayer2Score, bSwapAAndB) {
+        console.log(lomPlayer2Score);
+        $('#gameScores > table > tbody').empty();
+        lomPlayer2Score.forEach(function (item, index) {
+            console.log(index);
+            console.log(item);
+            var sA = '<td class="digit is_winner_{1}">{0}</td>'.format(item.A, item.A > item.B);
+            var sB = '<td class="digit is_winner_{1}">{0}</td>'.format(item.B, item.B > item.A);
+            var sTR = '<tr>{0}<td class="splitter">-</td>{1}</tr>'.format(sA, sB);
+            if ( bSwapAAndB ) {
+                var sTR = '<tr>{0}<td class="splitter">-</td>{1}</tr>'.format(sB, sA);
+            }
+            $('#gameScores > table > tbody').append(sTR);
+        });
+    },
+    display : function(bShow) {
+        if ( bShow ) {
+            $('#gameScores').show();
+            $('.gameswonbutton').hide();
+        } else {
+            $('#gameScores').hide();
+            $('.gameswonbutton').show();
+        }
+    }
+};
 var iTxtPlayerCount = 0;
 function handleMessage(customEvent)
 {
@@ -139,7 +178,7 @@ function handleMessage(customEvent)
     var data = customEvent.data;
     if ( data.id ) {
 console.log(data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
-        if ( (! data.property) || data.property == 'text' ) {
+        if ( (! data.property) || data.property === 'text' ) {
             $('#' + data.id + ' > span').html(data.value);
             if ( data.id.indexOf('txt_player')===0 ) {
                 var iTextLength = data.value.length;
@@ -184,6 +223,14 @@ var CHANNEL_T = 'urn:x-cast:com.doubleyellow.tabletennis';
 var CHANNEL_B = 'urn:x-cast:com.doubleyellow.badminton';
 window.onload = function ()
 {
+    $('#squoreboard_root_view').hide();
+    $('#squoreboard_root_view').find('span').html('');
+    CountDownTimer.cancel();
+    Call.hideDecision(0);
+    Call.hideDecision(1);
+    GameScores.display(false);
+    $('#gameBallMessage').hide();
+
     var ctx     = cast.framework.CastReceiverContext.getInstance();
 //console.log('ctx:' + ctx);
     var options = new cast.framework.CastReceiverOptions();           // https://developers.google.com/cast/docs/reference/caf_receiver/cast.framework.CastReceiverOptions
@@ -197,13 +244,6 @@ window.onload = function ()
     ctx.addCustomMessageListener(CHANNEL_B, handleMessage);
     ctx.addCustomMessageListener(CHANNEL_S, handleMessage);
     ctx.addCustomMessageListener(CHANNEL_T, handleMessage);
-
-    CountDownTimer.cancel();
-    Call.hideDecision(0);
-    Call.hideDecision(1);
-    $('#gameBallMessage').hide();
-    $('#squoreboard_root_view').hide();
-    $('#squoreboard_root_view').find('span').html('');
 
     ctx.start(options);
 }
