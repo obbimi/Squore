@@ -61,7 +61,7 @@ import com.doubleyellow.scoreboard.util.SBToast;
 import com.doubleyellow.scoreboard.view.GameHistoryView;
 import com.doubleyellow.scoreboard.view.PlayersButton;
 import com.doubleyellow.scoreboard.view.ServeButton;
-import com.doubleyellow.view.SBRelativeLayout;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
