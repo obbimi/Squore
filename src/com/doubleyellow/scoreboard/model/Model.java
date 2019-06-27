@@ -1295,9 +1295,19 @@ public abstract class Model
         if ( lStart == 0 ) {
             // manually entered game durations
             for(GameTiming gt: m_lGameTimings) {
-                lEnd += gt.getEnd();
+                long lDuration = gt.getEnd() - gt.getStart();
+                if ( gt.getStart() > 0 || lDuration > 100 || lDuration == 0 ) {
+                    // mixup of gametimings: actual gametimings after demo game timing
+                    lDuration = 6;
+                    int gameNrZeroBased = gt.getGameNrZeroBased();
+                    gt = new GameTiming(gameNrZeroBased, 0, lDuration);
+                    m_lGameTimings.set(gameNrZeroBased, gt);
+                }
+                lEnd += lDuration;
             }
             lEnd += 2 * (m_lGameTimings.size() - 1); // pauses between games (guess 2 minutes)
+            // lEnd is now in minutes in demo mode, return in milliseconds
+            lEnd = (lEnd * 1000 * 60) + (5 * 1000 /* add 5 seconds to NOT have a nicely rounded nr of minutes */ );
         } else {
             lEnd = ListUtil.getLast(m_lGameTimings).getEnd();
         }
@@ -2210,7 +2220,7 @@ public abstract class Model
                             // pre 3.19
                             m_gameTimingCurrent = new GameTiming(g,(Long) oStart, (Long) oEnd, onTimingChangedListeners);
                         } else if ( oStart instanceof Integer ) {
-                            // pre 3.19: start is usually 0
+                            // pre 3.19: start is usually 0: but also for demo matches
                             int iStart = (Integer) oStart;
                             int iEnd   = iStart;
                             if ( oEnd instanceof Integer ) {
