@@ -18,51 +18,51 @@ fi
 
 cd src
 if [[ "$tobranded" = "ASB" ]]; then
-    echo "Change to '${tobranded}'"
+    printf "Change to '${tobranded}'\n"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
-        echo "File $f"
+        printf "File %-72s to %s \n" $f $tobranded
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.asbsquore.R\1~' ${f}
         #exit 1
     done
 elif [[ "$tobranded" = "Racketlon" ]]; then
-    echo "Change to '${tobranded}'"
+    printf "Change to '${tobranded}'\n"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
-        echo "File $f"
+        printf "File %-72s to %s \n" $f $tobranded
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.racketlon.R\1~' ${f}
         #exit 1
     done
 elif [[ "$tobranded" = "Tabletennis" ]]; then
-    echo "Change to '${tobranded}'"
+    printf "Change to '${tobranded}'\n"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
-        echo "File $f"
+        printf "File %-72s to %s \n" $f $tobranded
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.tabletennis.R\1~' ${f}
         #exit 1
     done
 elif [[ "$tobranded" = "Badminton" ]]; then
-    echo "Change to '${tobranded}'"
+    printf "Change to '${tobranded}'\n"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
-        echo "File $f"
+        printf "File %-72s to %s \n" $f $tobranded
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.badminton.R\1~' ${f}
         #exit 1
     done
 elif [[ "$tobranded" = "CourtCare" ]]; then
-    echo "Change to '${tobranded}'"
+    printf "Change to '${tobranded}'\n"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
-        echo "File $f"
+        printf "File %-72s to %s \n" $f $tobranded
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.courtcaresquore.R\1~' ${f}
         #exit 1
     done
 elif [[ "$tobranded" = "UniOfNotthingham" ]]; then
-    echo "Change to '${tobranded}'"
+    printf "Change to '${tobranded}'\n"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
-        echo "File $f"
+        printf "File %-72s to %s \n" $f $tobranded
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.courtscore_uon.R\1~' ${f}
         #exit 1
     done
 elif [[ "$tobranded" = "Squore" ]]; then
-    echo "Change to '${tobranded}'"
+    printf "Change to '${tobranded}'\n"
     for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton).R" *); do
-        echo "File $f back to normal"
+        printf "File %-72s back to %s normal\n" $f $tobranded
         sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\|badminton\).R\([^a-z]\)~com.doubleyellow.scoreboard.R\2~' ${f}
         #exit 1
     done
@@ -85,22 +85,22 @@ sed -i "s~^\(\s\+\)//\(${tobranded}.\+R.string.app_name\)~\1\2~" com/doubleyello
 cd ../res
 if [[ "$tobranded" = "Racketlon" ]]; then
     for f in $(egrep -rl '@string.*_(Squash|Tabletennis)"'); do
-        echo "File $f to Racketlon strings"
+        printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_\(Squash\|Tabletennis\|Badminton\)"~_Racketlon"~' ${f}
     done
 elif [[ "$tobranded" = "Tabletennis" ]]; then
     for f in $(egrep -rl '@string.*_(Squash|Racketlon)"'); do
-        echo "File $f to Tabletennis strings"
+        printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_\(Squash\|Racketlon\|Badminton\)"~_Tabletennis"~' ${f}
     done
 elif [[ "$tobranded" = "Badminton" ]]; then
     for f in $(egrep -rl '@string.*_(Squash|Racketlon)"'); do
-        echo "File $f to Badminton strings"
+        printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_\(Squash\|Racketlon\|Tabletennis\)"~_Badminton"~' ${f}
     done
 else
     for f in $(egrep -rl '@string.*_(Racketlon|Tabletennis|Badminton)"'); do
-        echo "File $f back to Squash strings"
+        printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_\(Racketlon\|Tabletennis\|Badminton\)"~_Squash"~' ${f}
     done
 fi
@@ -110,9 +110,4 @@ cd ..
 sed -i 's~^\(\s\+\)srcFile~\1//srcFile~' build.gradle
 sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifest${tobranded}\)~\1\2~" build.gradle
 #vi +/Manifest${tobranded} build.gradle
-
-exit
-rm AndroidManifest.xml
-ln -s AndroidManifest${tobranded}.xml AndroidManifest.xml
-exit
 

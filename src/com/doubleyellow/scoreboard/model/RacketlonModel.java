@@ -36,6 +36,7 @@ public class RacketlonModel extends Model {
         super();
         setTiebreakFormat(TieBreakFormat.TwoClearPoints);
         setEnglishScoring(false);
+        setNrOfPointsToWinGame(21);
         //setNrOfGamesToWinMatch(3);
     }
 

@@ -5383,7 +5383,11 @@ touch -t 01030000 LAST.sb
         if ( mBluetoothControlService != null ) {
             //mBluetoothControlService.stop();
         }
-        unregisterReceiver(mBTStateChangeReceiver);
+        try {
+            unregisterReceiver(mBTStateChangeReceiver);
+        } catch (Exception e) { //have seen java.lang.IllegalArgumentException: Receiver not registered: com.doubleyellow.scoreboard.main.ScoreBoard$13@7a3594b
+            e.printStackTrace();
+        }
     }
     //----------------------------------------------------
     // WRAPPER methods to be able to intercept method call to model and communicate it to connected BT device

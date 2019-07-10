@@ -156,6 +156,7 @@ public class CastHelper implements ICastHelper
 
     @Override public void onActivityStart_Cast() {
         if (NOT_SUPPORTED_IN_SDK) { return; }
+        if (mediaRouter == null) { return; }
 
         mediaRouter.addCallback(mediaRouteSelector, mediaRouterCallback, MediaRouter.CALLBACK_FLAG_PERFORM_ACTIVE_SCAN);
     }

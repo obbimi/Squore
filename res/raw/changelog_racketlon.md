@@ -1,3 +1,10 @@
+## 4.20 (july 2019)
+
+- improvement for Android 9
+- minor improvements
+    - for player buttons for long names
+    - for bluetooth mirroring
+
 ## 4.19 (feb 2019)
 
 - allow bluetooth-connection between two (already paired) devices each running the scoreboard
