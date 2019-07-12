@@ -95,7 +95,7 @@ public class EndGame extends BaseAlertDialog
         }
 
         boolean bUseAnnouncements = PreferenceValues.useOfficialAnnouncementsFeature(context).equals(Feature.DoNotUse) == false;
-        if ( bUseAnnouncements ) {
+        if ( bUseAnnouncements && (Brand.isRacketlon() == false) ) {
             // using official announcements, ensure that 'question' belonging to the buttons is presented last:
             boolean bIncludeGameScores = matchModel.isPossibleMatchVictoryFor()!=null;
             List<String> messages = StartEndAnnouncement.getOfficialMessage(context, matchModel, bIncludeGameScores, false, false, false, true);
