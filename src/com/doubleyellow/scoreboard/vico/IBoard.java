@@ -269,7 +269,8 @@ public class IBoard implements TimerViewContainer
             long lStartTime      = matchModel.getMatchStart();
             long calculatedBase  = lStartTime - lBootTime;
             if ( matchModel.matchHasEnded() /*|| matchModel.isLocked()*/ ) {
-                String sDuration = DateUtil.convertDurationToHHMMSS_Colon(matchModel.getDuration());
+                long duration = matchModel.getDuration();
+                String sDuration = DateUtil.convertDurationToHHMMSS_Colon(duration);
                 tvMatchTime.setText(String.format(sFormat, sDuration));
                 tvMatchTime.stop();
             } else if ( ScoreBoard.timer != null && ScoreBoard.timer.isShowing() && (ScoreBoard.timer.timerType == Type.Warmup) ) {
@@ -500,6 +501,7 @@ public class IBoard implements TimerViewContainer
                 matchGameScores.setVisibility(View.INVISIBLE);
             } else {
                 matchGameScores.setVisibility(View.VISIBLE);
+                matchGameScores.refreshDrawableState();
             }
         }
     }
@@ -1175,11 +1177,14 @@ public class IBoard implements TimerViewContainer
             //return false;
         }
 
-        int iResId = Brand.isRacketlon()? R.string.oa_set_ball : R.string.oa_gameball;
+        int iResId = Brand.isRacketlon()? R.string.oa_set_ball : ( Brand.isBadminton()? R.string.oa_gamepoint : R.string.oa_gameball );
         Player[] possibleMatchBallFor = matchModel.isPossibleMatchBallFor();
         if ( ListUtil.isNotEmpty(possibleMatchBallFor) ) {
             iResId = R.string.oa_matchball;
 
+            if ( Brand.isBadminton() && bVisible ) {
+                iResId = R.string.oa_matchpoint;
+            }
             if ( Brand.isRacketlon() && bVisible ) {
                 // it can be matchball for the OTHER player
                 pGameBallFor = possibleMatchBallFor;

@@ -298,7 +298,7 @@
                 android:icon="@drawable/dummy"
                 android:key="scorelineLayout"
                 android:title="@string/pref_scorelineLayout"
-                android:defaultValue="@string/scorelineLayout_default"
+                android:defaultValue="@string/scorelineLayout_default_Squash"
                 dy:displayValues="@array/ScorelineLayout_DisplayValues"
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.ScorelineLayout"
                 />

@@ -29,6 +29,10 @@
     <string name="oa_gameball">Game bal</string>
     <string name="oa_matchball">Match bal</string>
 
+    <!-- badminton -->
+    <string name="oa_matchpoint">Match punt</string>
+    <string name="oa_gamepoint">Game punt</string>
+
     <string name="oa_n_all">%s Gelijk</string>
     <string name="oa_player_needs_2_clear_points">Een speler moet winnen met twee punten verschil</string>
 

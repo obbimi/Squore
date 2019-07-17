@@ -28,19 +28,27 @@ package com.doubleyellow.scoreboard.prefs;
  * - 'R-1-'
  * - '--2R'
  * - '-1-L'
+ *
+ * For Badminton and Tabletennis the serve side is less interesting (or not applicable). They can/should use the HideServeSide
  */
 public enum ScorelineLayout {
-    DigitsRight (false, false),
-    DigitsInside(false, true ),
+    DigitsRight  (false, false, false),
+    DigitsInside (false, true , false),
+    HideServeSide(false, false, true ),
     ;
 
     private boolean m_bSwap12 = false;
     private boolean m_bSwap34 = false;
-    ScorelineLayout(boolean bSwap12, boolean bSwap34) {
+    private boolean m_bHideLR = false;
+    ScorelineLayout(boolean bSwap12, boolean bSwap34, boolean bHideLR) {
         m_bSwap12 = bSwap12;
         m_bSwap34 = bSwap34;
+        m_bHideLR = bHideLR;
     }
     public boolean swap34() {
         return m_bSwap34;
+    }
+    public boolean hideServeSide() {
+        return m_bHideLR;
     }
 }

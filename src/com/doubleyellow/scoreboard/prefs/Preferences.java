@@ -546,14 +546,16 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 PreferenceGroup psgApp = (PreferenceGroup) ps.findPreference(PreferenceKeys.Appearance.toString());
               //hideRemovePreference(psgApp, PreferenceKeys.showScoringHistoryInMainScreenOn); // not really for racketlon and tabletennis
                 hideRemovePreference(psgApp, PreferenceKeys.AppealHandGestureIconSize       ); // not really for racketlon and tabletennis
-                hideRemovePreference(psgApp, PreferenceKeys.scorelineLayout);                  // not for racketlon and tabletennis
+                hideRemovePreference(psgApp, PreferenceKeys.scorelineLayout);                  // not interesting enough for racketlon, badminton and tabletennis
 
                 hideRemovePreference(psgBeh, PreferenceKeys.useOfficialAnnouncementsFeature); // not really for racketlon and tabletennis
                 hideRemovePreference(psgBeh, PreferenceKeys.officialAnnouncementsLanguage);   // not really for racketlon and tabletennis
                 hideRemovePreference(psgBeh, PreferenceKeys.showChoosenDecisionShortly);      // not really for racketlon and tabletennis
             }
             if ( Brand.isSquash() ) {
-                hideRemovePreference(psgBeh, PreferenceKeys.changeSides);                     // only for racketlon and tabletennis
+                hideRemovePreference(psgBeh, PreferenceKeys.changeSides);                     // only for racketlon badminton and tabletennis
+            }
+            if ( Brand.isSquash() || Brand.isBadminton() ) {
                 hideRemovePreference(psgBeh, PreferenceKeys.numberOfServiceCountUpOrDown);    // only for racketlon and tabletennis
             }
             if ( Brand.isTabletennis() ) {

@@ -3175,9 +3175,24 @@ public abstract class Model
         if ( pScorer == null ) {
             pScorer = getServer();
         }
+
+        DoublesServe ds = m_in_out;
+        if ( isDoubles() ) {
+            DoublesServeSequence dss = getDoubleServeSequence();
+            if ( dss.equals(DoublesServeSequence.A1B1A1B1) ) {
+                ds = DoublesServe.I;
+            } else {
+                if ( pScorer.equals(getServer()) == false ) {
+                    ScoreLine slFirst = ListUtil.isNotEmpty(m_lScoreHistory)?m_lScoreHistory.get(0):null;
+                    if ( slFirst != null && pScorer.equals(slFirst.getServingPlayer())) {
+                        ds = m_in_out.getOther();
+                    }
+                }
+            }
+        }
         int       iPointsServer = getScore(pScorer);
         ServeSide serveSide     = ServeSide.values()[iPointsServer % 2];
-        setServerAndSide(pScorer, serveSide, null);
+        setServerAndSide(pScorer, serveSide, ds);
     }
     void determineServerAndSide_Racketlon_Tabletennis(boolean bForUndo, SportType sportType) {
         DoublesServe ds = m_in_out;

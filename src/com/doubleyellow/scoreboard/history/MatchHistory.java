@@ -208,10 +208,16 @@ public class MatchHistory extends XActivity implements MenuHandler
     }
 
     private static List<PreGraphTabs> preGraphTabsToShow() {
-        if ( Brand.isNotSquash() ) {
-            return new ArrayList<PreGraphTabs>(EnumSet.noneOf(PreGraphTabs.class));
-        } else {
+        if ( Brand.isSquash() ) {
             return new ArrayList<PreGraphTabs>(EnumSet.allOf(PreGraphTabs.class));
+        } else if ( Brand.isBadminton() ) {
+            return new ArrayList<PreGraphTabs>(EnumSet.of(PreGraphTabs.MatchHistoryViewTab));
+        } else if ( Brand.isTabletennis() ) {
+            return new ArrayList<PreGraphTabs>(EnumSet.of(PreGraphTabs.MatchHistoryViewTab));
+        } else if ( Brand.isRacketlon() ) {
+            return new ArrayList<PreGraphTabs>(EnumSet.of(PreGraphTabs.MatchHistoryViewTab));
+        } else {
+            return new ArrayList<PreGraphTabs>(EnumSet.noneOf(PreGraphTabs.class));
         }
     }
 

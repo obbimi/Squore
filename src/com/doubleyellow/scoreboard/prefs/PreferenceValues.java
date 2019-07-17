@@ -614,7 +614,8 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.groupArchivedMatchesBy, context, GroupMatchesBy.class, R.string.groupArchivedMatchesBy_default);
     }
     public static ScorelineLayout getScorelineLayout(Context context) {
-        return getEnum(PreferenceKeys.scorelineLayout, context, ScorelineLayout.class, R.string.scorelineLayout_default);
+        int iResDefault = getSportTypeSpecificResId(context, R.string.scorelineLayout_default_Squash);
+        return getEnum(PreferenceKeys.scorelineLayout, context, ScorelineLayout.class, iResDefault);
     }
     // TODO: add to preferences.xml
     public static boolean useFeedAndPostFunctionality(Context context) {
@@ -1056,7 +1057,7 @@ public class PreferenceValues extends RWValues
     }
     public static int numberOfGamesToWinMatch(Context context) {
         int iMax = getIntegerR(PreferenceKeys.numberOfGamesToWinMatch, context, R.integer.numberOfGamesToWin_default_Squash);
-        if ( iMax > 999 || iMax < 1 ) {
+        if ( iMax > 999 || (iMax < 1 /*&& iMax != -1*/ ) ) { // -1 means not used, like in racketlon
             iMax = 999;
             setNumber(PreferenceKeys.numberOfGamesToWinMatch, context, iMax);
         }
@@ -1587,7 +1588,7 @@ public class PreferenceValues extends RWValues
 
                 int appVersionCode = RWValues.getAppVersionCode(context);
                 final int    NO_SHOWCASE_FOR_VERSION        = 211;
-                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-02-07";
+                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-07-18"; // auto adjusted by shell script 'clean.and.assemble.sh'
                 if ( appVersionCode > NO_SHOWCASE_FOR_VERSION ) {
                     // need to adjust the datecheck below
                     Log.w(TAG, "[getStartupAction] Adjust version code check!!");

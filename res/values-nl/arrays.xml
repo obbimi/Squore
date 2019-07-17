@@ -156,6 +156,7 @@
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ScorelineLayout -->
         <item>Cijfers rechts</item>
         <item>Cijfers in het midden</item>
+        <item>Verberg opslagkant</item>
     </string-array>
     <string-array name="ShowAvatarOnDisplayValues">
         <item>Op toestel</item>

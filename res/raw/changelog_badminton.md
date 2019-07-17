@@ -1,3 +1,9 @@
+## 4.21 (july 2019)
+
+- improvement for doubles
+- improvement in terminology
+- show scoring history in additional tab (next to graphs)
+
 ## 4.20 (june 2019)
 
 - android 9 chromecast improvements
