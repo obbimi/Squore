@@ -6,6 +6,10 @@
     <string name="pref_autoShow_activeExpediteSystem_dialog">Auto-show \'Activate Expedite mode\' dialog</string>
     <string name="pref_autoShow_activeExpediteSystem_dialog_after_X_mins">Show \'Activate expedite\' dialog after X mins</string>
 
+    <!-- tabletennis/racketlon -->
+    <string name="pref_numberOfServiceCountUpOrDown">Number of serves. Count</string>
+    <string name="pref_numberOfServiceCountUpOrDown_summary">Down: number of servers left. Up: consecutive serve to be performed</string>
+
     <string name="pref_category_towelingDown">Toweling down</string><!-- 3.4.4.1.2 brief intervals for towelling after every 6 points from the start of each game and at the change of ends in the last possible game of an individual match. -->
     <string name="pref_towelingDown_timer">\'Toweling down\' timer</string>
     <string name="pref_autoShow_towelingDown_timer_after_X_points">Show \'Toweling down\' timer after each X points</string>
@@ -20,7 +24,6 @@
     <string name="activate_mode_description_Tabletennis">More than %s minutes passed since the start of the game. Activate the expedite system?</string>
     <string name="deactivate_mode_Tabletennis">De-activate expedite</string>
     <string name="NewMatchesType_default_Tabletennis">TeamVsTeam_XMatchesPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
-    <integer name="showModeDialogAfterXMins_default_Tabletennis">10</integer>
 
     <string name="number_of_serves_per_player">Number of serves per player</string>
     <string name="end_game_Tabletennis">End game</string>

@@ -32,6 +32,22 @@
     <string name="app_scoreboard">Squore Board</string>
 -->
 
+    <string name="activate_mode_Squash"><!--Activate xxx--></string>
+    <string name="deactivate_mode_Squash"><!--De-activate xxx--></string>
+    <string name="activate_mode_Racketlon"><!--Activate xxx--></string>
+    <string name="deactivate_mode_Racketlon"><!--De-activate xxx--></string>
+    <string name="activate_mode_Badminton"><!--Activate xxx--></string>
+    <string name="deactivate_mode_Badminton"><!--De-activate xxx--></string>
+
+    <integer name="showModeDialogAfterXMins_default_Squash">-1</integer>
+    <integer name="showModeDialogAfterXMins_default_Racketlon">-1</integer>
+    <integer name="showModeDialogAfterXMins_default_Tabletennis">10</integer>
+    <integer name="showModeDialogAfterXMins_default_Badminton">-1</integer>
+
+    <string name="pref_swapPlayersHalfwayGame_Squash"><!--Not used in squash version of the app --></string>
+    <string name="NewMatchesType_default_Squash">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
+
+
     <!-- TODO: use this in e.g. feedback pages -->
     <string name="supported_languages">en,nl,fr,cs</string>
     <string name="soon_to_come_languages">de,es,pt</string>

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="sb_remove_last_score_for_x">Remove last score marked for %s ?</string> <!-- TODO -->
+
+    <string name="Poule">Poule - Multiple matches per player</string> <!-- TODO -->
+    <string name="TeamVsTeam_OneMatchPerPlayer">Team vs Team - One match per team player</string> <!-- TODO -->
+    <string name="TeamVsTeam_XMatchesPlayer">Team vs Team - Multiple matches per team player</string> <!-- TODO -->
+
 <!-- <string name="facebook_app_id">504690753001960</string> -->
     <string name="msg_enter_both_player_names">Zadejte prosím jména obou hráčů</string>
     <string name="msg_enter_all_player_names">Zadejte prosím jména všech hráčů</string>

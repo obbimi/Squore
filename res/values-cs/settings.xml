@@ -114,16 +114,21 @@
     <string name="pref_showTextInActionBar">Zobrazovat texty na tlačítkách v tlačítkové liště</string>
     <string name="pref_showFullScreen">Na celou obrazovku</string>
     <string name="pref_showScoringHistoryInMainScreen">Zobrazovat průběh zápasu na panelu</string>
+    <string name="pref_gameScoresAppearance">How to show game scores on scoreboard</string> <!-- TODO -->
+    <string name="pref_gameScoresAppearance_summary">Choose between \'short\' like 1-0, 2-0, 2-1 vs \'full games scores\' like 11-8, 11-7, 5-11</string> <!-- TODO -->
     <string name="pref_scorelineLayout">Rozložení vývoje skóre</string>
     <string name="pref_showSideButtonsWithinScoreButtons">Side buttons within Score buttons</string>
     <string name="pref_showSideButtonsWithinScoreButtons_summary">Umožnit mít tlačítka skótre ještě větší</string>
     <string name="pref_AppealHandGestureIconSize">Velikost ikonky v dialogu "Odvolání"</string>
     <string name="pref_AppealHandGestureIconSize_summary">Zadejte 0 pokud nechcete zobrazovat ikonky</string>
+    <string name="pref_newMatchLayout">New match layout</string><!-- TODO -->
+    <string name="pref_newMatchLayout_summary">To have just a limited number of fields to fill, choose \'Simple\'</string><!-- TODO -->
     <string name="pref_showChoosenDecisionShortly">Zobrazovat rozhodnutí jako zprávu</string>
     <string name="pref_showChoosenDecisionShortly_summary">Zobrazovat krátkou zprávu s hlášením rozhodnutí rozhodčího (po odvolání nebo prohřešku hráče)</string>
     <string name="pref_BackKeyBehaviour">Systémové tlačítko \'Zpět\'</string>
     <string name="pref_VolumeKeysBehaviour">Přizpůsobit tlačítka hlasitosti</string>
     <string name="pref_VolumeKeysBehaviour_summary">\'Zesílit\' přidá bod hráči A, \'Zeslabit\' hráči B</string>
+    <string name="pref_VolumeKeysBehaviour_question">Do you want to use the volume buttons for entering the score with device in portrait orientation?\n(Option can be turned off again in \'Settings/Behaviour\')</string> <!-- TODO -->
     <string name="pref_StartupAction">Akce po spuštění aplikace</string>
     <string name="pref_StartupAction_summary">Výběr akce, která bude provedena po spuštění aplikace</string>
     <string name="pref_changeSides">Změna stran/Prohození hráčů</string>
@@ -131,7 +136,6 @@
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape">Prohodit hráče při otočení zařízení vzhůru nohama (o 180 stupňů)</string>
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary">Umožní prohození hráčů na obrazovce otočením zařízení nebo zobrazení skóre hráčům otočením zařízení směrem k hráčům</string>
     <string name="pref_swapPlayersBetweenGames">Prohodit hráče na začátku dalšího setu</string>
-    <string name="pref_swapPlayersHalfwayGame_Squash">Prohodit hráče v půlce setu (?)</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically">Automaticky zobrazovat podrobnosti setu</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically_summary">Po ukončení setu zobrazovat graf průběhu</string>
     <string name="pref_showTips">Zobrazovat tipy</string>
@@ -176,8 +180,8 @@
     <string name="pref_showNewMatchFloatButton_summary">Zobrazovat plovoucí tlačítko pro nový zápas (ve vhodných situacích)</string>
     <string name="pref_keepScreenOn">Nezhasínat displej</string>
     <string name="pref_keepScreenOn_summary">Zabránit zhasínání displeje během zápasu</string>
-    <string name="pref_TimerDialog">Dialog časomíry</string>
     <string name="pref_Timers">Časomíra</string>
+    <string name="pref_TimerDialog">Dialog časomíry</string>
     <string name="pref_Timers_summary">Zobrazovat automaticky. Trvání. Zahrát zvuk a/nebo zavibrovat při vypršení času</string>
     <string name="pref_Players">Hráči</string>
     <string name="pref_Players_summary">Nastavení automatického doplňování políček při zadávání údajů pomocí klávesnice</string>
@@ -192,6 +196,7 @@
     <string name="pref_AutomateAsMuchAsPossible_dialog">Losování, časomíra, hlášení rozhodčího, konce setů</string>
     <string name="pref_ScreenLayoutPrefs">Přizpůsobit zobrazení</string>
     <string name="pref_ScreenLayoutPrefs_dialog">Volba \'Maximalizovat\' nastaví: strana podání vevnitř tlačítka skóre; zobrazení na celou obrazovku; schování tlačítkové lišty</string>
+
     <string name="pref_useSoundNotificationInTimer">Zvuk upozornění</string>
     <string name="pref_useAudioNotifications">Používat zvuk upozornění</string>
     <string name="pref_useSoundNotificationInTimer_summary">Zahrát zvuk upozornění po vypršení času (a když zbývá 15 vteřin do konce přestávky a v půlce zahřívání)</string>

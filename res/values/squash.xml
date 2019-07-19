@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="activate_mode_Squash"><!--Activate xxx--></string>
-    <string name="deactivate_mode_Squash"><!--De-activate xxx--></string>
-    <integer name="showModeDialogAfterXMins_default_Squash">-1</integer>
-
-    <string name="pref_swapPlayersHalfwayGame_Squash"><!--Not used in squash version of the app --></string>
-    <string name="NewMatchesType_default_Squash">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
-
     <string name="Score">Score</string>
     <string name="Game">Game</string>
 

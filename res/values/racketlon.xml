@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="activate_mode_Racketlon"><!--Activate xxx--></string>
-    <string name="deactivate_mode_Racketlon"><!--De-activate xxx--></string>
-    <integer name="showModeDialogAfterXMins_default_Racketlon">-1</integer>
-
     <string name="oa_set">set</string>
     <string name="oa_set_ball">Set ball</string>
     <string name="oa_gummiarm_point">Gummiarm point</string>

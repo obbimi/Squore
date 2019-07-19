@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="activate_mode_Badminton"><!--Activate xxx--></string>
-    <string name="deactivate_mode_Badminton"><!--De-activate xxx--></string>
-    <integer name="showModeDialogAfterXMins_default_Badminton">-1</integer>
-
     <string name="pref_swapPlayersHalfwayGame_Badminton">Swap players halfway the deciding game</string>
+
+    <!-- badminton -->
+    <string name="oa_matchpoint">Match point</string>
+    <string name="oa_gamepoint">Game point</string>
 
 <!--
     <string name="activate_mode_Badminton">Activate expedite</string>
     <string name="activate_mode_description_Badminton">More than %s minutes passed since the start of the game. Activate the expedite system?</string>
     <string name="deactivate_mode_Badminton">De-activate expedite</string>
     <string name="NewMatchesType_default_Badminton">TeamVsTeam_XMatchesPlayer</string>
-    <integer name="showModeDialogAfterXMins_default_Badminton">10</integer>
 
     <string name="number_of_serves_per_player">Number of serves per player</string>
 -->

@@ -32,10 +32,6 @@
     <string name="oa_gameball">Game ball</string>
     <string name="oa_matchball">Match ball</string>
 
-    <!-- badminton -->
-    <string name="oa_matchpoint">Match point</string>
-    <string name="oa_gamepoint">Game point</string>
-
     <string name="oa_n_all">%s All</string>
     <string name="oa_player_needs_2_clear_points">A player must win by two points</string>
 

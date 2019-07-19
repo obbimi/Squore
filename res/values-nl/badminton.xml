@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- badminton -->
+    <string name="oa_matchpoint">Match punt</string>
+    <string name="oa_gamepoint">Game punt</string>
+</resources>

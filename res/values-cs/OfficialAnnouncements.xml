@@ -22,8 +22,11 @@
     <string name="oa_x_th_game">%s set</string>
     <string name="oa_x_to_serve">Podává %s</string>
     <string name="oa_love">0</string>
+
+    <!-- tiny timers/chronos -->
     <string name="oa_match_firstletter">Z</string>
     <string name="oa_game_firstletter">S</string>
+
     <string name="oa_game">:</string>
     <string name="oa_games">:</string>
     <string name="oa_gameball">Setbol</string>
