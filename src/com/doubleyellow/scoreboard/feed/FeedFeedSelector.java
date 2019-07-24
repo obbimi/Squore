@@ -24,9 +24,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
+import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.android.util.SearchEL;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
@@ -39,6 +41,7 @@ import com.doubleyellow.scoreboard.prefs.URLsKeys;
 import com.doubleyellow.scoreboard.view.ExpandableListUtil;
 import com.doubleyellow.util.*;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.*;
@@ -272,12 +275,72 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
             this.bDisabled = b;
         }
 
+        private void fetchUrls(final JSONArray aUrls, final String sName, final JSONArray arrayMerged, final JSONArray arrayBackup) {
+            String sURL = (String) aUrls.remove(0);
+            URLFeedTask task = new URLFeedTask(FeedFeedSelector.this, sURL);
+            task.setContentReceiver(new ContentReceiver() {
+                @Override public void receive(String sJson, FetchResult fetchResult, long lCacheAge, String sLastSuccessfulContent) {
+                    try {
+                        Log.d(TAG, "Fetchresult :" + fetchResult + " (" + aUrls.length() + ")" );
+                        if ( fetchResult.equals(FetchResult.OK) == false ) {
+                            if ( JsonUtil.isNotEmpty(arrayBackup) ) {
+                                mergeJsonArrays(arrayMerged, arrayBackup);
+                            }
+                        } else {
+                            JSONArray arrayExt = new JSONArray(sJson);
+                            mergeJsonArrays(arrayMerged, arrayExt);
+                        }
+
+                        if ( aUrls.length() > 0 ) {
+                            fetchUrls(aUrls, sName, arrayMerged, arrayBackup);
+                        } else {
+                            PreferenceValues.addFeedTypeToMyList(FeedFeedSelector.this, sName);
+                            changeStatus(Status.LoadingFeeds);
+                            showFeedsAdapter = new ShowFeedsAdapter(FeedFeedSelector.this, FeedFeedSelector.this.getLayoutInflater(), arrayMerged, sName);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            task.execute();
+        }
+
+        /** TODO as static method in JsonUtil */
+        public void mergeJsonArrays(JSONArray aToExtend, JSONArray aToRead) {
+            for (int i = 0; i < aToRead.length(); i++) {
+                try {
+                    aToExtend.put(aToRead.get(i)); // put() is append at end of array
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         @Override public void onClick(View v) {
           //Log.d(TAG, "Implement onClick");
-            String sName = (String) v.getTag();
+            final String sName = (String) v.getTag();
 
-            JSONArray array = loadTypesAdapter.joRoot.optJSONArray(sName);
-            if ( JsonUtil.isNotEmpty(array) ) {
+            final JSONArray array = loadTypesAdapter.joRoot.optJSONArray(sName);
+            if ( loadTypesAdapter.joRoot.has(sName + "." + FeedKeys.URL) ) {
+                final Object oUrls = loadTypesAdapter.joRoot.opt(sName + "." + FeedKeys.URL);
+                JSONArray aUrls = new JSONArray();
+                if ( oUrls instanceof String ) {
+                    aUrls.put(oUrls);
+                } else if ( oUrls instanceof JSONArray ) {
+                    // clone the array
+                    String json = ((JSONArray) oUrls).toString();
+                    try {
+                        aUrls = new JSONArray(json);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if ( JsonUtil.isNotEmpty(aUrls) ) {
+                    final JSONArray arrayMerged = new JSONArray();
+                    fetchUrls(aUrls, sName, arrayMerged, array);
+                }
+            } else if ( JsonUtil.isNotEmpty(array) ) {
                 PreferenceValues.addFeedTypeToMyList(FeedFeedSelector.this, sName);
                 changeStatus(Status.LoadingFeeds);
                 showFeedsAdapter = new ShowFeedsAdapter(FeedFeedSelector.this, FeedFeedSelector.this.getLayoutInflater(), array, sName);

@@ -21,15 +21,21 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.doubleyellow.android.view.ViewUtil;
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.Preferences;
 import com.doubleyellow.scoreboard.vico.IBoard;
 import com.doubleyellow.scoreboard.view.GameHistoryView;
+import com.doubleyellow.scoreboard.view.GameHistoryViewH;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
@@ -44,7 +50,6 @@ import java.util.Map;
  */
 public class MatchHistoryView extends LinearLayout
 {
-    final private LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
     private Model matchModel = null;
     private int   textSize;
@@ -125,46 +130,92 @@ public class MatchHistoryView extends LinearLayout
 
         ColorPrefs.setColor(this);
 
+        final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
         // draw 'game history' for all games
-        layoutParams.setMargins(2,0,2,0);
         List<List<ScoreLine>>      gameScoreHistory       = matchModel.getGameScoreHistory(); // including one in progress
         List<Map<Player, Integer>> gameCountHistory       = matchModel.getGameCountHistory();
-
-        LinearLayout llGames = new LinearLayout(context);
-        llGames.setOrientation(HORIZONTAL);
-        llGames.setPadding(2, 2, 2, 2);
-        this.addView(llGames);
 
         Map<ColorPrefs.ColorTarget, Integer> colorSchema = ColorPrefs.getTarget2colorMapping(context);
         Integer iBgColor  = colorSchema.get(ColorPrefs.ColorTarget.historyBackgroundColor);
         Integer iTxtColor = colorSchema.get(ColorPrefs.ColorTarget.historyTextColor);
 
         HandicapFormat handicapFormat = matchModel.getHandicapFormat();
-        int iGame = -1;
-        for ( List<ScoreLine> gameHistory: gameScoreHistory ) {
-            iGame++;
 
-            GameHistoryView vGameHistory = new GameHistoryView(context, null);
-            vGameHistory.setProperties(iBgColor, iTxtColor, textSize);
-            llGames.addView(vGameHistory, layoutParams);
+        if ( ( Brand.isBadminton() || PreferenceValues.isBrandTesting(context) ) && ViewUtil.isLandscapeOrientation(context) ) {
 
-            vGameHistory.setScoreLines(gameHistory, handicapFormat, matchModel.getGameStartScoreOffset(Player.A, iGame), matchModel.getGameStartScoreOffset(Player.B, iGame));
-            vGameHistory.setAutoScrollDown(false);
+            layoutParams.setMargins(0,20,0,20);
 
-            // update game score
-            if ( iGame < ListUtil.size(gameCountHistory) ) {
-                vGameHistory.setGameStandingBefore(gameCountHistory.get(iGame));
+            // use GameHistoryViewH
+            ScrollView svGamesH = new ScrollView(context);
+            this.addView(svGamesH);
+
+            LinearLayout llGamesH = new LinearLayout(context);
+            llGamesH.setOrientation(VERTICAL);
+            llGamesH.setPadding(2, 2, 2, 2);
+            svGamesH.addView(llGamesH);
+
+            int iGame = -1;
+            for ( List<ScoreLine> gameHistory: gameScoreHistory ) {
+                iGame++;
+
+                GameHistoryViewH vGameHistoryHz = new GameHistoryViewH(context, null);
+                vGameHistoryHz.setProperties(iBgColor, iTxtColor, textSize);
+                llGamesH.addView(vGameHistoryHz, layoutParams);
+
+                vGameHistoryHz.setScoreLines(gameHistory, handicapFormat, matchModel.getGameStartScoreOffset(Player.A, iGame), matchModel.getGameStartScoreOffset(Player.B, iGame));
+
+                // update game score
+/*
+                if ( iGame     < ListUtil.size(gameCountHistory) ) {
+                    vGameHistoryHz.setGameStandingBefore(gameCountHistory.get(iGame    ));
+                }
+*/
+                if ( iGame + 1 < ListUtil.size(gameCountHistory) ) {
+                    vGameHistoryHz.setGameStandingAfter (gameCountHistory.get(iGame + 1));
+                }
+                if ( iGame < ListUtil.size(previousGamesEndScores) ) {
+                    vGameHistoryHz.setGameEndScore(previousGamesEndScores.get(iGame));
+                }
+                if ( (times != null) && ( iGame < ListUtil.size(times) )) {
+                    vGameHistoryHz.setTiming(times.get(iGame));
+                }
+                vGameHistoryHz.update(false);
             }
-            if ( iGame + 1 < ListUtil.size(gameCountHistory) ) {
-                vGameHistory.setGameStandingAfter(gameCountHistory.get(iGame + 1));
+        } else {
+            layoutParams.setMargins(2,0,2,0);
+
+            LinearLayout llGamesV = new LinearLayout(context);
+            llGamesV.setOrientation(HORIZONTAL);
+            llGamesV.setPadding(2, 2, 2, 2);
+            this.addView(llGamesV);
+
+            int iGame = -1;
+            for ( List<ScoreLine> gameHistory: gameScoreHistory ) {
+                iGame++;
+
+                GameHistoryView vGameHistory = new GameHistoryView(context, null);
+                vGameHistory.setProperties(iBgColor, iTxtColor, textSize);
+                llGamesV.addView(vGameHistory, layoutParams);
+
+                vGameHistory.setScoreLines(gameHistory, handicapFormat, matchModel.getGameStartScoreOffset(Player.A, iGame), matchModel.getGameStartScoreOffset(Player.B, iGame));
+                vGameHistory.setAutoScrollDown(false);
+
+                // update game score
+                if ( iGame     < ListUtil.size(gameCountHistory) ) {
+                    vGameHistory.setGameStandingBefore(gameCountHistory.get(iGame    ));
+                }
+                if ( iGame + 1 < ListUtil.size(gameCountHistory) ) {
+                    vGameHistory.setGameStandingAfter (gameCountHistory.get(iGame + 1));
+                }
+                if ( iGame < ListUtil.size(previousGamesEndScores) ) {
+                    vGameHistory.setGameEndScore(previousGamesEndScores.get(iGame));
+                }
+                if ( (times != null) && ( iGame < ListUtil.size(times) )) {
+                    vGameHistory.setTiming(times.get(iGame));
+                }
+                vGameHistory.update(false);
             }
-            if ( iGame < ListUtil.size(previousGamesEndScores) ) {
-                vGameHistory.setGameEndScore(previousGamesEndScores.get(iGame));
-            }
-            if ( (times != null) && ( iGame < ListUtil.size(times) )) {
-                vGameHistory.setTiming(times.get(iGame));
-            }
-            vGameHistory.update(false);
         }
     }
 

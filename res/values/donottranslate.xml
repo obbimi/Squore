@@ -147,6 +147,8 @@
 -->
     <!-- https://cast.google.com/publish/#/applications/new/remote_display (Remote Display Receiver for e.g. branded app)
          https://cast.google.com/publish/#/applications
+
+         https://youtu.be/g-MdVxoXGkg
     -->
     <!-- https://developers.google.com/cast/docs/registration#RegisterDevice (To enable a newly bought Chrome Cast to be used for development ) -->
     <string name="REMOTE_DISPLAY_APP_ID_brand_squore">35BA3487</string>

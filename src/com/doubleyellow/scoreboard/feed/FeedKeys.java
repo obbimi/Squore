@@ -31,6 +31,8 @@ enum FeedKeys {
             ImageURL,
         BGColor,
         TextColor,
+        /* if no array with feeds is configured, an URL should be configured to fetch the json array elsewhere */
+        URL,
         //DisplayFormat,
 
     ;

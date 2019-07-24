@@ -1769,7 +1769,13 @@ public abstract class Model
     }
 
     public boolean fromJsonString(File f) throws IOException {
-        String     sJson = FileUtil.readFileAsString(f);
+        String     sJson = null;
+        try {
+            sJson = FileUtil.readFileAsString(f);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
         JSONObject jo    = fromJsonString(sJson, false);
         m_tsLastJsonOperation = f.lastModified();
         return jo != null;

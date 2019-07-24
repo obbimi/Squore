@@ -21,16 +21,19 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
+import android.widget.TextView;
 
 import com.doubleyellow.scoreboard.history.MatchGameScoresView;
-import com.doubleyellow.scoreboard.model.*;
-import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
+import com.doubleyellow.scoreboard.model.GameTiming;
+import com.doubleyellow.scoreboard.model.HandicapFormat;
+import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.model.ScoreLine;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.ScorelineLayout;
 import com.doubleyellow.util.DateUtil;
@@ -38,53 +41,41 @@ import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * View that may display the scoring history of a single game. (Old fashioned paper sheet score)
- * This view is used in both
- * - the main view to show the history of the game in progress
- * - instantiated multiple times in the MatchHistory scoreBoard to give the scoring history of an entire match.
+ * View that may display the scoring history of a single game. (In horizontal way for badminton)
  *
  * @see MatchGameScoresView
  */
-public class GameHistoryView extends ScrollView
+public class GameHistoryViewH extends HorizontalScrollView
 {
-    private static final String TAG = "SB." + GameHistoryView.class.getSimpleName();
+    private static final String TAG = "SB." + GameHistoryViewH.class.getSimpleName();
 
     private List<ScoreLine> history           = new ArrayList<ScoreLine>();
     private HandicapFormat  handicapFormat    = HandicapFormat.None;
     private GameTiming      timing            = null;
     private ScorelineLayout m_scorelineLayout = ScorelineLayout.DigitsInside;
 
-    public static void dontShowForToManyPoints(int iPoints) {
-        if ( iPoints > 60 ) {
-            PreferenceValues.setOverwrite(PreferenceKeys.showScoringHistoryInMainScreenOn, ""); // prevent OutOfMemoryError in GameHistoryView.update()
-            Log.w(TAG, "Disabled GameHistoryView for to many points in a single game " + iPoints);
-        }
-    }
-
     /** constructor used by android platform (if defined in xml?) */
-    public GameHistoryView(Context context, AttributeSet attrs) {
+    public GameHistoryViewH(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public GameHistoryView(Context context, AttributeSet attrs, int defStyle) {
+    public GameHistoryViewH(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs);
-    }
-
-    @Override public void setOnClickListener(OnClickListener l) {
-        super.setOnClickListener(l);
-        tableLayout.setOnClickListener(l);
     }
 
     public void setScoreLines(List<ScoreLine> lScorelines, HandicapFormat handicapFormat, int iStartScoreA, int iStartScoreB) {
         this.handicapFormat = handicapFormat;
 
         // add line with the initial score of a game if it has a handicap (not 0-0)
-        if ( handicapFormat.equals(HandicapFormat.None) == false && ListUtil.size(lScorelines) != 0) {
+        if ( (handicapFormat.equals(HandicapFormat.None) == false) && (ListUtil.size(lScorelines) != 0) ) {
             lScorelines = new ArrayList<ScoreLine>(lScorelines);
             lScorelines.add(0, new ScoreLine( null, iStartScoreA, null, iStartScoreB));
         }
@@ -94,11 +85,12 @@ public class GameHistoryView extends ScrollView
     public void setTiming(GameTiming s) {
         this.timing = s;
     }
-
+/*
     private Map<Player,Integer> mGameStandingBefore = null;
     public void setGameStandingBefore(Map<Player, Integer> mGameStanding) {
         this.mGameStandingBefore = new HashMap<Player, Integer>(mGameStanding);
     }
+*/
 
     private Map<Player,Integer> mGameStandingAfter = null;
     public void setGameStandingAfter(Map<Player, Integer> mGameStanding) {
@@ -108,14 +100,6 @@ public class GameHistoryView extends ScrollView
     private Map<Player,Integer> mGameEndScore = null;
     public void setGameEndScore(Map<Player, Integer> mGameEndScore) {
         this.mGameEndScore = new HashMap<Player, Integer>(mGameEndScore);
-    }
-
-    private final TableRow.LayoutParams  trLayoutParams = new TableRow .LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow   .LayoutParams.WRAP_CONTENT);
-    private final ViewGroup.LayoutParams vgLayoutParams = new ViewGroup.LayoutParams(LayoutParams         .WRAP_CONTENT,             LayoutParams.WRAP_CONTENT);
-
-    private boolean bAutoScrollDown = true;
-    public void setAutoScrollDown(boolean b) {
-        this.bAutoScrollDown = b;
     }
 
     public void update(boolean bOnlyAddLast)
@@ -133,11 +117,12 @@ public class GameHistoryView extends ScrollView
             addRowInversedColors(sValue, Gravity.LEFT);
         }
 */
-        for (ScoreLine line: history)
-        {
-            TableRow tr = new TableRow(getContext());
-            tr.setBackgroundColor(backgroundColor);
-            tr.setLayoutParams(vgLayoutParams);
+        tableLayout.setColumnCount(ListUtil.size(history) + 2); // + 1 for total score of game, +1 for number of games won
+        tableLayout.setRowCount   (m_scorelineLayout.equals(ScorelineLayout.HideServeSide)?2:4);
+
+        int c = -1;
+        for (ScoreLine line: history) {
+            c++;
 
             List<String> saScore = line.toStringList(getContext());
             if ( (m_scorelineLayout != null) ) {
@@ -148,7 +133,11 @@ public class GameHistoryView extends ScrollView
                     ScoreLine.swap(saScore, 3);
                 }
             }
+
+            int r = -1;
             for(String sValue: saScore) {
+                r++;
+
                 TextView tv = new TextView(getContext());
                 if ( line.isCall() || line.isBrokenEquipment() ) {
                     // little smaller because call is double letters YL, NL, ST, CW, CS, CG, CM
@@ -162,25 +151,58 @@ public class GameHistoryView extends ScrollView
                         sValue = " " + sValue + " "; // single digit or dash: add spaces
                     }
                 }
+
+                GridLayout.LayoutParams param =new GridLayout.LayoutParams();
+                param.height = LayoutParams.WRAP_CONTENT;
+                param.width  = (int) (textSizePx * 1.5);
+                param.rightMargin = 2; // to have vertical lines
+                param.topMargin   = 1;
+                param.setGravity(Gravity.CENTER);
+                param.columnSpec = GridLayout.spec(c);
+                param.rowSpec    = GridLayout.spec(r);
+
+                tv.setLayoutParams (param);
+                tableLayout.addView(tv, param);
+
                 tv.setTextColor(textColor);
                 tv.setText(sValue);
-                tv.setGravity(Gravity.CENTER);
-              //tv.setLayoutParams(vgLayoutParams);
-                tv.setLayoutParams(trLayoutParams);
-                tr.addView(tv, trLayoutParams);
+                tv.setBackgroundColor(backgroundColor);
+              //tv.setGravity(Gravity.CENTER);
             }
-
-            tableLayout.addView(tr, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         }
 
         if ( MapUtil.isNotEmpty(this.mGameEndScore) ) {
-            String sValue = MapUtil.getInt(this.mGameEndScore, Player.A, 0) + " - " + MapUtil.getInt(this.mGameEndScore, Player.B, 0);
-            addRowInversedColors(sValue, Gravity.START);
+            for(Player p : Player.values()) {
+                GridLayout.LayoutParams param = new GridLayout.LayoutParams();
+                param.height = LayoutParams.WRAP_CONTENT;
+                param.width = (int) (textSizePx * 3);
+                param.rightMargin = 2; // to have vertical lines
+                param.topMargin   = 1;
+                param.setGravity(Gravity.CENTER);
+                param.columnSpec = GridLayout.spec(ListUtil.size(history) + 1);
+                if ( m_scorelineLayout.equals(ScorelineLayout.HideServeSide) ) {
+                    param.rowSpec    = GridLayout.spec(p.ordinal() * 1, 1);
+                } else {
+                    param.rowSpec    = GridLayout.spec(p.ordinal() * 2, 2);
+                }
+
+                TextView tv = new TextView(getContext());
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx * 3 / 2);
+                tv.setLayoutParams(param);
+
+                tv.setTextColor(backgroundColor);
+                tv.setText(" " + MapUtil.getInt(this.mGameEndScore, p, 0) + " ");
+                tv.setBackgroundColor(textColor);
+                tableLayout.addView(tv, param);
+            }
         }
 
+        if ( true ) {
+            return; // TODO: temp
+        }
         if ( MapUtil.isNotEmpty(this.mGameStandingAfter) ) {
             String sValue = MapUtil.getInt(this.mGameStandingAfter, Player.A, 0) + " - " + MapUtil.getInt(this.mGameStandingAfter, Player.B, 0);
-            addRowInversedColors(sValue, Gravity.END);
+            addColumnInversedColors(sValue, Gravity.END);
         }
 
         // add timing
@@ -188,9 +210,9 @@ public class GameHistoryView extends ScrollView
             // game start time - end time
             String sValue  = timing.getStartHHMM();
             if ( StringUtil.isNotEmpty(sValue) ) {
-                addRow(sValue, Gravity.START);
+                addColumn(sValue, Gravity.START);
                 sValue = timing.getEndHHMM();
-                addRow(sValue, Gravity.END);
+                addColumn(sValue, Gravity.END);
             }
         }
 
@@ -204,29 +226,28 @@ public class GameHistoryView extends ScrollView
             } else {
                 sTime = durationMM + "'";
             }
-            addRowInversedColors(sTime, Gravity.END);
+            addColumnInversedColors(sTime, Gravity.END);
         }
-
-        if ( this.bAutoScrollDown ) {
-            scrollDown();
+        if ( this.bAutoScrollRight ) {
+            scrollRight();
         }
     }
 
-    public void scrollDown() {
+    private boolean bAutoScrollRight = true;
+
+    public void scrollRight() {
         this.post(new Runnable() {
             @Override public void run() {
-                GameHistoryView.this.fullScroll(View.FOCUS_DOWN);
+                GameHistoryViewH.this.fullScroll(View.FOCUS_RIGHT);
             }
         });
     }
 
-    private final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-    private void addRow(String sValue, int iGravity) {
-        addRow(sValue, iGravity, backgroundColor, textColor);
+    private void addColumn(String sValue, int iGravity) {
+        //addColumn(sValue, iGravity, backgroundColor, textColor);
     }
-    private void addRowInversedColors(String sValue, int iGravity) {
-        addRow(sValue, iGravity, textColor, backgroundColor);
+    private void addColumnInversedColors(String sValue, int iGravity) {
+        //addColumn(sValue, iGravity, textColor, backgroundColor);
     }
 
     /**
@@ -234,33 +255,34 @@ public class GameHistoryView extends ScrollView
      * - duration of game
      * - final game score
      */
-    private void addRow(String sValue, int iGravity, int iBgColor, int iTxtColor) {
-        TableRow.LayoutParams trTimingLayoutParams = new TableRow .LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow   .LayoutParams.WRAP_CONTENT);
-        trTimingLayoutParams.span = 4;
+/*
+    private void addColumn(String sValue, int iGravity, int iBgColor, int iTxtColor) {
+        GridLayout.LayoutParams param = new GridLayout .LayoutParams();
+        param.columnSpec = GridLayout.spec(0);
+        param.set
+        param.rowSpec    = GridLayout.spec(r);
 
-        TableRow tr = new TableRow(getContext());
-        tr.setBackgroundColor(iBgColor);
-        tr.setLayoutParams(vgLayoutParams);
+        //trTimingLayoutParams.span = 4;
 
         TextView tv = new TextView(getContext());
         tv.setTextColor(iTxtColor);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
         tv.setText(sValue);
         tv.setGravity(iGravity);
-        tv.setLayoutParams(trTimingLayoutParams);
-        tr.addView(tv, trTimingLayoutParams);
+        //tv.setLayoutParams(trTimingLayoutParams);
+        //tr.addView(tv, trTimingLayoutParams);
 
-        tableLayout.addView(tr, layoutParams);
+        tableLayout.addView(tv, layoutParams);
     }
+*/
 
-    private TableLayout tableLayout = null;
+    private GridLayout tableLayout = null;
     private void init(Context context, AttributeSet attrs) {
         setValuesFromXml(attrs);
         m_scorelineLayout = PreferenceValues.getScorelineLayout(context);
 
         super.setScrollBarStyle(SCROLLBARS_INSIDE_OVERLAY);
-        tableLayout = new TableLayout(context);
-        tableLayout.setGravity(Gravity.CENTER);
+        tableLayout = new GridLayout(context);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         this.addView(tableLayout, layoutParams);
     }
@@ -286,12 +308,14 @@ public class GameHistoryView extends ScrollView
     private int textColor       = -137216;
 
     private int textSizePx = 20;
+/*
     public void setTextSizePx(int i) {
         if ( i != textSizePx) {
             textSizePx = i;
             this.update(false);
         }
     }
+*/
 
     public void setProperties(int iBgColor, int iColor, int iTextSize) {
         backgroundColor = iBgColor;  // -15197410
@@ -306,8 +330,7 @@ public class GameHistoryView extends ScrollView
 
         super.addView(child, params); // invoke second if a child is defined in the xml layout file
         if ( child.isInEditMode() ) {
-            setAutoScrollDown(false);
-            tableLayout = (TableLayout) child;
+            tableLayout = (GridLayout) child;
             history = new ArrayList<ScoreLine>();
             history.add(new ScoreLine("R1--"));
             history.add(new ScoreLine("L--1"));
@@ -316,9 +339,5 @@ public class GameHistoryView extends ScrollView
 
             update(false);
         }
-    }
-
-    public void setStretchAllColumns(boolean bValue) {
-        tableLayout.setStretchAllColumns(bValue); // not good for MatchHistory
     }
 }

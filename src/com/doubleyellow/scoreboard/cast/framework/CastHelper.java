@@ -38,7 +38,11 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     @Override public void initCasting(ScoreBoard activity) {
         m_activity = activity;
         if ( castContext == null ) {
-            castContext = CastContext.getSharedInstance(activity); // requires com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME to be specified in Manifest.xml
+            try {
+                castContext = CastContext.getSharedInstance(activity); // requires com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME to be specified in Manifest.xml
+            } catch (Exception e) {
+                e.printStackTrace(); // com.google.android.gms.dynamite.DynamiteModule$LoadingException: No acceptable module found. Local version is 0 and remote version is 0 (Samsung S4 with custom ROM 8.1)
+            }
         }
         sPackageName = m_activity.getPackageName();
     }
@@ -54,16 +58,18 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         //cleanup();
     }
     @Override public void onActivityPause_Cast() {
+        if ( castContext == null ) { return; }
         castContext.getSessionManager()
                    .removeSessionManagerListener(sessionManagerListener, CastSession.class);
 
     }
     @Override public void onActivityResume_Cast() {
+        if ( castContext == null ) { return; }
         castContext.getSessionManager()
                    .addSessionManagerListener(sessionManagerListener, CastSession.class);
 
         // e.g. after screen rotation
-        if (castSession == null) {
+        if ( (castSession == null) && (castContext != null) ) {
             // Get the current session if there is one
             castSession = castContext.getSessionManager().getCurrentCastSession();
 

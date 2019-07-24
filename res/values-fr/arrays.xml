@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- display values for java enumeration values -->
+
+    <string-array name="DownUp_NrOfServes_DisplayValues">
+        <!-- TODO -->
+        <item>Down</item>
+        <item>Up</item>
+    </string-array>
     <string-array name="EndMatchManuallyBecause_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.model.EndMatchManuallyBecause -->
         <item>Abandon sur blessure</item>
@@ -155,6 +163,24 @@
     <string-array name="ShowOnScreen_DisplayValues">
         <item>Appareil mobile</item>
         <item>ChromeCast</item>
+    </string-array>
+    <string-array name="GameScoresAppearance_DisplayValues">
+        <!-- TODO -->
+        <item>Show Games Won (on Device and Chromecast)</item>
+        <item>Show Full Score (on Device and Chromecast)</item>
+        <item>Show Games Won on Device, Full Score on Chromecast</item>
+        <item>Show Full Score on Device, Full Score on Chromecast</item>
+    </string-array>
+    <string-array name="ScorelineLayout_DisplayValues">
+        <!-- TODO -->
+        <item>Digits on the right</item>
+        <item>Digits in the middle</item>
+        <item>Hide serve side</item>
+    </string-array>
+    <string-array name="NewMatchLayout_DisplayValues">
+        <!-- TODO -->
+        <item>All fields (incl. country, club, event, referee)</item>
+        <item>Minimal (Player names, format). Bigger font</item>
     </string-array>
     <string-array name="ShowAvatarOnDisplayValues">
         <item>Appareil mobile</item>
