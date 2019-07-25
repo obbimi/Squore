@@ -2510,7 +2510,7 @@ public abstract class Model
             joFormat.put(JSONKey.mode.toString(), m_sMode);
         }
 
-        if ( EnumSet.of(SportType.Squash, SportType.Racquetball).contains(getSport()) ) {
+        if ( EnumSet.of(SportType.Squash, SportType.Racquetball, SportType.Badminton).contains(getSport()) ) {
             if ( m_bEnglishScoring ) {
                 joFormat.put(JSONKey.useHandInHandOutScoring.toString(), m_bEnglishScoring);
             }
@@ -3501,6 +3501,7 @@ public abstract class Model
         changeScoreInformListeners(player, bTriggerServeSideChange, call, iDelta, previousServer, previousDS, iNewScore);
     }
 
+/*
     Player[] isPossibleGameBallFor_Squash_TableTennis() {
         int iScoreA = MapUtil.getInt(m_scoreOfGameInProgress, Player.A, 0);
         int iScoreB = MapUtil.getInt(m_scoreOfGameInProgress, Player.B, 0);
@@ -3541,6 +3542,7 @@ public abstract class Model
             return new Player[] { leader };
         }
     }
+*/
     /** Squash and badminton */
     Player determineServerForNextGame_Squash(int iScoreA, int iScoreB) {
         Player player = (iScoreA > iScoreB) ? Player.A : Player.B;

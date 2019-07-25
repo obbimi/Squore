@@ -242,9 +242,46 @@
                     android:id="@+id/spDoublesServeSequence"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nextFocusDown="@+id/useHandInHandOutScoring"
+                    android:nextFocusDown="@+id/spTieBreakFormat"
                     android:layoutMode="opticalBounds"
                     android:orientation="vertical"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llTieBreakFormat"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/lblTieBreakFormat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sb_tiebreak"
+                android:textSize="@dimen/txt_small"
+                android:layout_margin="2dp"
+                />
+            <Spinner
+                android:id="@+id/spTieBreakFormat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/useHandInHandOutScoring"
+                android:layoutMode="opticalBounds"
+                android:orientation="vertical"/>
+            <!--
+                        <com.doubleyellow.android.view.EnumSpinner
+                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:id="@+id/spTieBreakFormat"
+                                app:enum_class="com.doubleyellow.scoreboard.model.TieBreakFormat"
+                                app:enum_display_values="@array/tiebreakFormatDisplayValues"
+                                android:nextFocusDown="@+id/useHandInHandOutScoring"
+                                android:layoutMode="opticalBounds"
+                                android:orientation="vertical"
+                                android:spinnerMode="dropdown"
+                                android:popupBackground="@color/dy_dark"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+            -->
         </LinearLayout>
         <LinearLayout
             android:id="@+id/llPauseDuration"

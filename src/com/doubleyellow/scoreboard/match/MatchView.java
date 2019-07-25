@@ -165,7 +165,7 @@ public class MatchView extends SBRelativeLayout
                 lToggleFormatViews.remove(R.id.llTieBreakFormat);
                 break;
             case Badminton:
-                lToggleFormatViews.remove(R.id.llTieBreakFormat);
+                //lToggleFormatViews.remove(R.id.llTieBreakFormat); // TODO: at 20 sudden death, or 2 points difference until 29-all and then sudden death
                 break;
             case Squash:
                 lToggleFormatViews.add(R.id.useHandInHandOutScoring);
@@ -188,7 +188,7 @@ public class MatchView extends SBRelativeLayout
         switch (sportType) {
             case Badminton:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
-                        , R.id.llTieBreakFormat
+                      //, R.id.llTieBreakFormat
                         , R.id.llDisciplineStart
                         , R.id.llScoringType /* hand-in/hand-out */
                         , R.id.match_marker
@@ -429,13 +429,19 @@ public class MatchView extends SBRelativeLayout
 
     private static int iForceTextSize = 0;
     private static ArrayAdapter<String> getStringArrayAdapter(Context context, List<String> list, TextView tvRefTxtSize) {
+        return getStringArrayAdapter(context, list, tvRefTxtSize, null);
+    }
+    private static ArrayAdapter<String> getStringArrayAdapter(Context context, List<String> list, TextView tvRefTxtSize, int[] iaDisabled) {
         if ( tvRefTxtSize != null ) {
             iForceTextSize = (int) tvRefTxtSize.getTextSize();
         }
-        return EnumSpinner.getStringArrayAdapter(context, list, iForceTextSize);
+        return EnumSpinner.getStringArrayAdapter(context, list, iForceTextSize, iaDisabled);
     }
     private <T extends Enum<T>> void initEnumSpinner(Spinner spinner, Class<T> clazz, T value, T excludeValue, int iResourceDisplayValues) {
-        EnumSpinner.init(spinner, getContext(), clazz, value, excludeValue, iResourceDisplayValues, iForceTextSize);
+        initEnumSpinner(spinner, clazz, value, excludeValue, iResourceDisplayValues, null);
+    }
+    private <T extends Enum<T>> void initEnumSpinner(Spinner spinner, Class<T> clazz, T value, T excludeValue, int iResourceDisplayValues, int[] iaDisabled) {
+        EnumSpinner.init(spinner, getContext(), clazz, value, excludeValue, iResourceDisplayValues, iForceTextSize, iaDisabled);
     }
     private static void setTextSizeFromBoard(View v) {
 /*
@@ -616,29 +622,17 @@ public class MatchView extends SBRelativeLayout
             TieBreakFormat tbfPref = PreferenceValues.getTiebreakFormat(context);
             spTieBreakFormat = (Spinner) findViewById(R.id.spTieBreakFormat);
             if ( spTieBreakFormat != null ) {
+                // Currently instanceof Spinner, not EnumSpinner
                 if ( spTieBreakFormat instanceof EnumSpinner ) {
                     EnumSpinner<TieBreakFormat> sp = (EnumSpinner<TieBreakFormat>) spTieBreakFormat;
                     sp.setSelected(tbfPref);
                 } else {
-                    initEnumSpinner(spTieBreakFormat, TieBreakFormat.class, tbfPref, null, R.array.tiebreakFormatDisplayValues);
-/*
-                    String[] sDisplayValues = getResources().getStringArray(R.array.tiebreakFormatDisplayValues);
-                    List<String> list = new ArrayList<String>();
-                    int iSelectedIndex = 0;
-                    int iIdx = -1;
-                    for (TieBreakFormat tbf : TieBreakFormat.values()) {
-                        iIdx++;
-                        if (tbf.equals(tbfPref)) {
-                            iSelectedIndex = iIdx;
-                        }
-                        String sDisplayValue = sDisplayValues.length > iIdx ? sDisplayValues[iIdx] : StringUtil.capitalize(tbf);
-                        list.add(sDisplayValue);
+                    int[] iaDisabled = null;
+                    if ( Brand.isBadminton() ) {
+                        // remove options that are not for badminton
+                        iaDisabled = new int[] { TieBreakFormat.SelectOneOrTwo.ordinal(), TieBreakFormat.SelectOneOrThree.ordinal(), TieBreakFormat.SelectOneTwoOrThree.ordinal()  };
                     }
-                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context, R.layout.spinner_item, list);
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spTieBreakFormat.setAdapter(dataAdapter);
-                    spTieBreakFormat.setSelection(iSelectedIndex);
-*/
+                    initEnumSpinner(spTieBreakFormat, TieBreakFormat.class, tbfPref, null, R.array.tiebreakFormatDisplayValues, iaDisabled);
                 }
             }
         }
