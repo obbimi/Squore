@@ -92,9 +92,9 @@ class ShowFeedsAdapter extends SimpleELAdapter {
                     joFeed = m_feeds.getJSONObject(f);
 
                     // add country if only countrycode is specified
-                    if ( JsonUtil.isNotEmpty(joFeed) && joFeed.has(URLsKeys.CountryCode.toString()) ) {
+                    if ( JsonUtil.isNotEmpty(joFeed) && joFeed.has( URLsKeys.CountryCode.toString() ) ) {
                         String sCountryCode = joFeed.getString(URLsKeys.CountryCode.toString());
-                        String sLang  = PreferenceValues.officialAnnouncementsLanguage(context).toString(); // RWValues.getDeviceLanguage(ctx)
+                        String sLang        = PreferenceValues.officialAnnouncementsLanguage(context).toString(); // RWValues.getDeviceLanguage(ctx)
                         String sCountryName = CountryUtil.addFullCountry("%s%s", ""  , sCountryCode, sLang);
                         if ( StringUtil.isNotEmpty(sCountryName) ) {
                             joFeed.put(URLsKeys.Country.toString(), sCountryName);
@@ -140,6 +140,14 @@ class ShowFeedsAdapter extends SimpleELAdapter {
 
                     String sDisplayName = placeholder.translate(sDisplayFormat, joFeed);
                            sDisplayName = placeholder.removeUntranslated(sDisplayName);
+
+                    if ( sDisplayName.startsWith(sHeader.trim()) && sDisplayName.length() > sHeader.trim().length() ) {
+                        // if display name starts with same string as header, remove the header from the display name
+                        sDisplayName = sDisplayName.substring(sHeader.trim().length());
+                    }
+                    sDisplayName = sDisplayName.replaceFirst("^[\\s-:]+", ""); // remove characters from start
+                    sDisplayName = sDisplayName.replaceFirst("[\\s-:]+$", ""); // remove characters from end
+
                     if ( range.isIn(0) ) {
                         // in progress: also make them appear first in alphabetically sorted list
                         sDisplayName = "* " + sDisplayName;

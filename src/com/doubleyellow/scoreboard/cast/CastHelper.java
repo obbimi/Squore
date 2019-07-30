@@ -163,6 +163,7 @@ public class CastHelper implements ICastHelper
 
     @Override public void onActivityStop_Cast() {
         if (NOT_SUPPORTED_IN_SDK) { return; }
+        if (mediaRouter == null) { return; }
         mediaRouter.removeCallback(mediaRouterCallback);
     }
     @Override public boolean isCasting() {
@@ -268,7 +269,13 @@ public class CastHelper implements ICastHelper
                 //Log.d(TAG, "onRemoteDisplaySessionEnded " + castRemoteDisplayLocalService);
             }
         };
-        CastRemoteDisplayLocalService.startService(context, PresentationService.class, APP_ID, selectedDevice, settings, callbacks);
+
+        try {
+            CastRemoteDisplayLocalService.startService(context, PresentationService.class, APP_ID, selectedDevice, settings, callbacks);
+        } catch (java.lang.IllegalStateException e) {
+            // play console reported this error on 20190728 for app version 217 (android 6 AND 9)
+            e.printStackTrace();
+        }
     }
 
 /*
