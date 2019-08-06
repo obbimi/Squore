@@ -321,10 +321,15 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                                 if ( StringUtil.isEmpty(sNrOfMatches) ) {
                                     sNrOfMatches = String.valueOf(PreferenceValues.maxNumberOfPlayersInGroup(context));
                                 }
-                                Integer iNrOfNamesToEnter = Integer.valueOf(sNrOfMatches);
+                                Integer iNrOfNamesToEnter = 4;
+                                if ( StringUtil.isInteger(sNrOfMatches) ) {
+                                    iNrOfNamesToEnter = Integer.valueOf(sNrOfMatches);
+                                }
+                                iNrOfNamesToEnter = Math.max(iNrOfNamesToEnter, 2);
+
                                 PreferenceValues.setEnum(PreferenceKeys.NewMatchesType, context, newMatchesType);
                                 PreferenceValues.setNumber(PreferenceKeys.maxNumberOfPlayersInGroup, context, iNrOfNamesToEnter);
-                                editMatch(sNewHeader, "", false, newMatchesType, Math.max(iNrOfNamesToEnter, 2) );
+                                editMatch(sNewHeader, "", false, newMatchesType, iNrOfNamesToEnter );
                             }
                         }
                     }

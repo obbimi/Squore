@@ -32,6 +32,9 @@ import java.util.List;
 import static com.doubleyellow.scoreboard.match.ExpandableMatchSelector.HEADER_PREFIX;
 import static com.doubleyellow.scoreboard.match.ExpandableMatchSelector.NAMES_SPLITTER;
 
+/**
+ * Controls the flow when defining new static matches.
+ */
 public class DialogOnClickListener implements DialogInterface.OnClickListener
 {
     NewMatchesType       m_newMatchesType = null; /* if null, add single match to existing group, or edit match of existing group */

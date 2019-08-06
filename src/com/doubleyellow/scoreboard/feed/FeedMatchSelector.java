@@ -926,8 +926,9 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
             sDisplayFormat = canonicalizeJsonKeys(sDisplayFormat);
 
-            int    iEntriesCnt         = 0;
-            String sActualNameFromFeed = null;
+            int    iEntriesCnt             = 0;
+            String sActualNameFromFeed     = null;
+            String sAuthenticationFromFeed = null;
 
             Iterator<String> itSections = joRoot.keys(); // Field names and or round names?
             while ( itSections.hasNext() ) {
@@ -940,25 +941,41 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 } else if ( sSection.equalsIgnoreCase(URLsKeys.config.toString()) ) {
                     bNameOrConfig = true;
                     JSONObject joConfig = (JSONObject) joRoot.get(sSection);
-                    sActualNameFromFeed = joConfig.optString(URLsKeys.name.toString());
+                    sActualNameFromFeed     = joConfig.optString(URLsKeys.name.toString());
+                    sAuthenticationFromFeed = joConfig.optString(URLsKeys.Authentication.toString());
                 }
 
-                if ( StringUtil.isNotEmpty(sActualNameFromFeed) ) {
+                if ( StringUtil.isNotEmpty(sActualNameFromFeed) || StringUtil.isNotEmpty(sAuthenticationFromFeed) ) {
                     // read the name of the feed
                     Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
-                    String sCurrentName = feedPostDetail.get(URLsKeys.Name);
-                    if ( (sActualNameFromFeed.equals(sCurrentName) == false) && (sActualNameFromFeed.trim().length() > 0) ) {
-                        feedPostDetail.put(URLsKeys.Name, sActualNameFromFeed);
+                    String sCurrentName           = feedPostDetail.get(URLsKeys.Name);
+                    String sCurrentAuthentication = feedPostDetail.get(URLsKeys.Authentication);
+
+                    boolean bFeedPropertiesChanged = false;
+
+                    if ( StringUtil.isNotEmpty(sActualNameFromFeed) ) {
+                        if ( sActualNameFromFeed.equals(sCurrentName) == false ) {
+                            feedPostDetail.put(URLsKeys.Name, sActualNameFromFeed);
+                            bFeedPropertiesChanged = true;
+                        }
+                    }
+                    if ( StringUtil.isNotEmpty(sAuthenticationFromFeed) ) {
+                        if ( sAuthenticationFromFeed.equals(sCurrentAuthentication) == false ) {
+                            feedPostDetail.put(URLsKeys.Authentication, sAuthenticationFromFeed);
+                            bFeedPropertiesChanged = true;
+                        }
+                    }
+
+                    if ( bFeedPropertiesChanged ) {
                         PreferenceValues.addOrReplaceNewFeedURL(context, feedPostDetail, true, true);
 
-                        //emsAdapter.notifyDataSetChanged();
-                        //notifyDataSetChanged();
                         if ( getActivity() instanceof MatchTabbed ) {
                             MatchTabbed tabbed = (MatchTabbed) getActivity();
                             tabbed.mAdapter.notifyDataSetChanged();
                         }
                     }
-                    sActualNameFromFeed = null;
+                    sActualNameFromFeed     = null;
+                    sAuthenticationFromFeed = null;
                 }
 
                 if ( bNameOrConfig ) {

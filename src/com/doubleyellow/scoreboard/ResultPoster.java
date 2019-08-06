@@ -184,6 +184,20 @@ public class ResultPoster implements ContentReceiver
                 sTitle    = jo.optString("title"  , sTitle);
                 sMessage  = jo.optString("message", sMessage);
                 bResultOK = jo.optString("result" , "OK").equalsIgnoreCase("OK");
+
+/*
+{
+  "result": "OK",
+  "title": "Dunham server says",
+  "message": "The result for match xxx was stored."
+}
+
+{
+  "result": "NOK",
+  "title": "Dunham server warning",
+  "message": "A result for match X was already stored. Keeping initial result"
+}
+*/
             } catch (JSONException e) {
                 e.printStackTrace();
             }
