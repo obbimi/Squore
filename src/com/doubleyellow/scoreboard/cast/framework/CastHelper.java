@@ -131,9 +131,14 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         sendJsonMessage(sMsg);
     }
 
-    public void sendJsonMessage(String sMsg) {
+    private void sendJsonMessage(String sMsg) {
         Log.d(TAG, "sendMessage: " + sMsg);
-        castSession.sendMessage("urn:x-cast:" + sPackageName, sMsg);
+        try {
+            castSession.sendMessage("urn:x-cast:" + sPackageName, sMsg);
+        } catch (Exception e) {
+            // seen IllegalStateException crashing the app reported in PlayStore
+            e.printStackTrace();
+        }
     }
 
     @Override public TimerView getTimerView() {

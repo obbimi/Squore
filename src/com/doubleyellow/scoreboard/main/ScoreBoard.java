@@ -626,13 +626,20 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         addToDialogStack(changeSides);
     }
 
-    private void swapPlayers(Integer iToastLength) {
-        Player pFirst = IBoard.togglePlayer2ScreenElements();
+    private void swapPlayers(Integer iToastLength, Player pFirst) {
+        if ( pFirst == null ) {
+            pFirst = IBoard.togglePlayer2ScreenElements();
+        } else {
+            pFirst = IBoard.initPlayer2ScreenElements(pFirst);
+        }
         matchModel.triggerListeners();
 
         if ( (iToastLength != null) && ( iToastLength == Toast.LENGTH_LONG || iToastLength == Toast.LENGTH_SHORT ) ) {
             String sMsg = getString(R.string.player_names_swapped); // + " (" + pFirst + ")";
             Toast.makeText(this, sMsg, iToastLength).show();
+        }
+        if ( BTRole.Master.equals(m_blueToothRole) ) {
+            writeMethodToBluetooth(BTMethods.swapPlayers, pFirst);
         }
     }
 
@@ -1399,7 +1406,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     // - from 0 to 2 or back, or
                     // - from 1 to 3 or back
                     Log.i(TAG, "Swap because going from " + iPrev + " to " + i0To4);
-                    swapPlayers(null /*Toast.LENGTH_SHORT*/);
+                    swapPlayers(null /*Toast.LENGTH_SHORT*/, null);
                     m_previousDegrees = i0To4;
                 }
             } else {
@@ -2719,7 +2726,11 @@ touch -t 01030000 LAST.sb
             showAppropriateMenuItemInActionBar();
 
             if ( Brand.changeSidesBetweenGames() && (matchModel.matchHasEnded() == false) && PreferenceValues.swapPlayersBetweenGames(ScoreBoard.this) ) {
-                swapPlayers(Toast.LENGTH_LONG);
+                if ( BTRole.Slave.equals(m_blueToothRole) ) {
+                    // swap players only if requested by master
+                } else {
+                    swapPlayers(Toast.LENGTH_LONG, null);
+                }
             }
 
             if ( matchModel.matchHasEnded() == false ) {
@@ -3367,7 +3378,7 @@ touch -t 01030000 LAST.sb
                 toggleDemoMode(demoMessage);
                 return true;
             case R.id.sb_swap_players:
-                swapPlayers(Toast.LENGTH_LONG);
+                swapPlayers(Toast.LENGTH_LONG, null);
                 return true;
             case R.id.sb_swap_double_players:
                 swapDoublePlayers();
@@ -5466,8 +5477,8 @@ touch -t 01030000 LAST.sb
     }
 
     private void pullOrPushMatchOverBluetooth(String sDeviceName) {
-        AlertDialog.Builder cfunls = getAlertDialogBuilder(this);
-        cfunls.setTitle(R.string.bt_pull_or_push)
+        AlertDialog.Builder cfpop = getAlertDialogBuilder(this);
+        cfpop.setTitle(R.string.bt_pull_or_push)
                 .setMessage(getString(R.string.bt_pull_in_match_from_device_x_or_push_to, sDeviceName ))
                 .setIcon(android.R.drawable.stat_sys_data_bluetooth)
                 .setPositiveButton(R.string.bt_pull, new DialogInterface.OnClickListener() {
@@ -5478,6 +5489,9 @@ touch -t 01030000 LAST.sb
                 .setNegativeButton(R.string.bt_push, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         sendMatchToOtherBluetoothDevice(ScoreBoard.this, false);
+
+                        // sync 'first player on screen'
+                        //writeMethodToBluetooth(BTMethods.swapPlayers, iBoard.m_firstPlayerOnScreen);
                     }
                 })
                 .setNeutralButton(R.string.cmd_cancel, null)
@@ -5681,6 +5695,7 @@ touch -t 01030000 LAST.sb
             btMethod = BTMethods.valueOf(sMethod);
         } catch (IllegalArgumentException e) {
             // might happen if connection is broken unexpectedly
+            // or old version communicating with new version with new method
             //e.printStackTrace();
         }
         if ( btMethod != null ) {
@@ -5736,6 +5751,11 @@ touch -t 01030000 LAST.sb
                     sendMatchToOtherBluetoothDevice(this, false);
                     break;
                 }
+                case swapPlayers: {
+                    Player pFirst = Player.valueOf(sMethodNArgs[1]);
+                    swapPlayers(Toast.LENGTH_LONG, pFirst);
+                    break;
+                }
                 case swapDoublePlayers: {
                     Player player = Player.valueOf(sMethodNArgs[1]);
                     _swapDoublePlayers(player);
@@ -5787,6 +5807,7 @@ touch -t 01030000 LAST.sb
         undoLastForScorer  (true),
         changeSide         (false),
         swapDoublePlayers  (false),
+        swapPlayers        (false),
         endGame            (false),
 
         timestampStartOfGame       (false),
