@@ -234,6 +234,7 @@ window.onload = function ()
     var ctx     = cast.framework.CastReceiverContext.getInstance();
 //console.log('ctx:' + ctx);
     var options = new cast.framework.CastReceiverOptions();           // https://developers.google.com/cast/docs/reference/caf_receiver/cast.framework.CastReceiverOptions
+    options.disableIdleTimeout = true;                                // With this set to true, the receiver no longer times out after 5 minutes
 
     // This is used to send data back to the senders apps.
     options.customNamespaces = Object.assign({});
