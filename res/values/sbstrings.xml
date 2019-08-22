@@ -67,6 +67,7 @@
     <string name="score_sheet">Score sheet</string>
     <string name="graph_game_x">Graph game %d</string>
     <string name="graph_x">Graph %s</string>
+    <string name="Summary">Summary</string>
     <string name="sb_share_match_summary">Share score summary</string>
     <string name="sb_share_matches_summary">Share summary of matches</string>
     <string name="sb_edit_players">Edit player names</string>

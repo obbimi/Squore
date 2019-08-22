@@ -54,6 +54,7 @@
     <string name="sb_post_match_result_no_more">Toon deze dialoog niet meer automatisch</string>
     <string name="sb_email_match_result">E-mail uitslag</string>
     <string name="sb_share_score_sheet">Deel score blad</string>
+    <string name="Summary">Samenvatting</string>
     <string name="sb_share_match_summary">Deel score samenvatting</string>
     <string name="sb_share_matches_summary">Deel samenvatting meerdere...</string>
     <string name="Conduct">Conduct</string>

@@ -47,6 +47,7 @@ import java.util.*;
  * - Squash
  * - Tabletennis
  * - Racketlon
+ * - Badminton
  */
 public abstract class Model
 {
@@ -1749,6 +1750,11 @@ public abstract class Model
         return m_shareUrl;
     }
     public void setShareURL(String url) {
+        if ( StringUtil.isNotEmpty(url) ) {
+            Log.d(TAG, "Share URL         : " + url);
+        } else if (StringUtil.isNotEmpty(m_shareUrl)) {
+            Log.w(TAG, "Share URL emptied : " + url);
+        }
         m_shareUrl = url;
     }
 
@@ -2003,14 +2009,6 @@ public abstract class Model
             if ( sSport.equals(getSport().toString()) == false ) {
                 // model was not created for/with current sport. Better not open it. Might screw up the data
                 return null;
-            }
-
-            if ( joMatch.has(JSONKey.metadata.toString()) ) {
-                JSONObject joMetadata = joMatch.getJSONObject(JSONKey.metadata.toString());
-
-                String sSource   = joMetadata.optString(JSONKey.source.toString(), "");
-                String sSourceID = joMetadata.optString(JSONKey.sourceID.toString(), "");
-                setSource(sSource, sSourceID);
             }
 
             // if only name date and time of the match will be consulted (historical games)
@@ -2345,6 +2343,19 @@ public abstract class Model
                 setDirty();
             }
 
+            if ( joMatch.has(JSONKey.metadata.toString()) ) {
+                JSONObject joMetadata = joMatch.getJSONObject(JSONKey.metadata.toString());
+
+                String sSource   = joMetadata.optString(JSONKey.source.toString(), "");
+                String sSourceID = joMetadata.optString(JSONKey.sourceID.toString(), "");
+                setSource(sSource, sSourceID);
+
+                String sShareURL = joMetadata.optString(JSONKey.shareURL.toString());
+                if ( StringUtil.isNotEmpty(sShareURL) ) {
+                    setShareURL(sShareURL);
+                }
+            }
+
             return joMatch;
         } catch (Exception e) {
             e.printStackTrace();
@@ -2611,6 +2622,9 @@ public abstract class Model
         JSONObject metaData = new JSONObject();
         metaData.put(JSONKey.source  .toString(), m_sSource);
         metaData.put(JSONKey.sourceID.toString(), m_sSourceID);
+        if ( StringUtil.isNotEmpty(m_shareUrl) ) {
+            metaData.put(JSONKey.shareURL.toString(), m_shareUrl);
+        }
         if ( context != null ) {
             try {
                 String packageName = context.getPackageName();

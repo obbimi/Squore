@@ -140,9 +140,6 @@ public class MatchModelPoster implements ContentReceiver
                 this.sName = mReturnValues.getOptionalString(NAME, this.sName);
             }
             sShowURL = Brand.getBaseURL() + "/" + this.sName;
-            if ( ScoreBoard.isInPromoMode() ) {
-                sShowURL += (sShowURL.contains("?")?"&":"?") + "noemail=1";
-            }
             m_model.setShareURL(sShowURL);
             Log.i(TAG, "Match shared. " + sShowURL);
             presentChoice(sShowURL);

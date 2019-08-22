@@ -73,6 +73,7 @@ public enum JSONKey {
 	metadata,
 		source,
 		sourceID, id,
+		shareURL,
 	wifi,
 
   //player,    // duplicate

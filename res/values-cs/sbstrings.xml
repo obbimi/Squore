@@ -67,6 +67,7 @@
     <string name="score_sheet">Zápis utkání</string>
     <string name="graph_game_x">Graf setu %d</string>
     <string name="graph_x">Graf %s</string>
+    <string name="Summary">Zápasu</string>
     <string name="sb_share_match_summary">Sdílet výsledek zápasu</string>
     <string name="sb_share_matches_summary">Sdílet výsledky zápasuů</string>
     <string name="sb_edit_players">Upravit jména hráčů</string>

@@ -17,14 +17,17 @@
 
 package com.doubleyellow.scoreboard;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.widget.Toast;
-import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.ModelFactory;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.Model;
@@ -55,6 +58,9 @@ public class ResultSender {
         send(context, sMsg, sPackageName, sDefaultRecipient);
     }
 
+    private static boolean bHtmlEmailPossible = false;
+    private static int m_iRoundRobin = 0;
+
     private void send(Context context, String sMsg, String sPackageName, String sDefaultRecipient)
     {
         //String sendMatchResultTo   = PreferenceValues.getDefaultSMSTo(context);
@@ -79,7 +85,7 @@ public class ResultSender {
             intent.putExtra(Intent.EXTRA_TEXT, sMsg);
         }
         if ( false ) {
-            // lists sms-capable apps (excluding Messages+). Possitive: sms_body and address are being picked up!!
+            // lists sms-capable apps (excluding Messages+). Positive: sms_body and address are being picked up!!
             intent = new Intent(Intent.ACTION_VIEW);
             intent.setType("vnd.android-dir/mms-sms");
             intent.putExtra("sms_body", sMsg);
@@ -88,6 +94,8 @@ public class ResultSender {
             sendToPackage(context, sPackageName, sMsg);
             return;
         }
+
+        String sSubject = Brand.getShortName(context) + " - " + context.getString(R.string.Summary);
         if ( true ) {
             // TODO: best one so far
             if ( StringUtil.isNotEmpty(sDefaultRecipient) ) {
@@ -98,8 +106,40 @@ public class ResultSender {
                 intent.putExtra("address" , sDefaultRecipient);
             } else {
                 intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, sMsg); // for whatsapp
+                intent.putExtra(Intent.EXTRA_SUBJECT, sSubject);
+                if ( bHtmlEmailPossible && sMsg.indexOf("<") > 0 && sMsg.indexOf(">") > 0 ) {
+                    Spanned spanned;
+                    //sMsg = "<html><body><b>Iddo<b><i>Hoeve</i><a href='http://squore.double-yellow.be/'>link</a></body></html>";
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ) {
+                        spanned = Html.fromHtml(sMsg, Html.FROM_HTML_MODE_COMPACT);
+                    } else {
+                        spanned = Html.fromHtml(sMsg);
+                        // deprecated
+                    }
+                    switch (m_iRoundRobin) {
+                        case 0:
+                            intent.setType("text/html"); // must send spanned element, not String
+                            intent.putExtra(Intent.EXTRA_TEXT     , spanned); // for whatsapp
+                            intent.putExtra(Intent.EXTRA_HTML_TEXT, spanned);
+                            intent.putExtra(Intent.EXTRA_STREAM   , spanned);
+                            break;
+                        case 1:
+                            intent.setType("text/plain");
+                            intent.putExtra(Intent.EXTRA_TEXT, sMsg); // for whatsapp
+                            intent.putExtra(Intent.EXTRA_HTML_TEXT, spanned);
+                            break;
+                        case 2:
+                            String sPlain = sMsg.replaceAll("<[a-z/]", "");
+                            intent.setClipData(ClipData.newHtmlText(sSubject, sPlain, sMsg));
+                            break;
+                        default:
+                            m_iRoundRobin = -1; // back to 0
+                    }
+                    m_iRoundRobin++;
+                } else {
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_TEXT, sMsg); // for whatsapp
+                }
             }
         }
         //intent.putExtra("sms_body", sbMsg.toString());
@@ -111,7 +151,8 @@ public class ResultSender {
         }
 */
         try {
-            context.startActivity(intent);
+            //context.startActivity(intent);
+            context.startActivity(Intent.createChooser(intent,  sSubject + ":")); // This actually becomes the title of the chooser
         } catch (Exception e) {
           //Log.e(TAG, "Starting sms or call failed");
             e.printStackTrace();
@@ -119,9 +160,9 @@ public class ResultSender {
     }
 
     public static String getMatchSummary(Context context, Model matchModel) {
-        return getMatchSummary(context, matchModel, " - ", "\n", true);
+        return getMatchSummary(context, matchModel, " - ", "\n", true, true);
     }
-    public static String getMatchSummary(Context context, Model matchModel, String sPointsSeparator, String sGameScoreSeparator, boolean bIncludeTimeStamp) {
+    private static String getMatchSummary(Context context, Model matchModel, String sPointsSeparator, String sGameScoreSeparator, boolean bIncludeTimeStamp, boolean bIncludeSharedURL) {
         StringBuilder sbMsg = new StringBuilder();
         Map<Player, Integer> gameCount = matchModel.getGamesWon();
         List<Map<Player, Integer>> lGameScores = matchModel.getGameScoresIncludingInProgress();
@@ -150,11 +191,28 @@ public class ResultSender {
             String sTime = sdf.format(matchDate);
             sbMsg.append(context.getString(R.string.time)).append(" : ").append(sTime);
         }
+        if ( bIncludeSharedURL ) {
+            String shareURL = matchModel.getShareURL();
+            if ( StringUtil.isNotEmpty(shareURL) ) {
+                if ( bHtmlEmailPossible ) {
+                    sbMsg.append("<hr><hr/><a href='");
+                    sbMsg.append(shareURL);
+                    sbMsg.append("'><b>");
+                    sbMsg.append(matchModel.getName(Player.A)).append(" - ").append(matchModel.getName(Player.B));
+                    sbMsg.append("</b></a><br/>\n");
+                } else {
+                    sbMsg.append("\n");
+                    sbMsg.append(shareURL);
+                }
+            }
+        }
+/*
         String sendMatchResultFrom = "";
         if ( StringUtil.isNotEmpty(sendMatchResultFrom)) {
             sbMsg.append("\n");
             sbMsg.append(sendMatchResultFrom);
         }
+*/
         return sbMsg.toString().replaceAll("(\\n)\\s+", "$1");
     }
 
@@ -261,6 +319,7 @@ public class ResultSender {
         Map<String, String> mMatchDates           = new HashMap<>();
         Map<String, String> mMatchEvents          = new HashMap<>();
         Map<String, String> mMatchDivisions       = new HashMap<>();
+        StringBuilder       sbMatchLinks          = new StringBuilder();
         StringBuilder sb = new StringBuilder();
         for(File fS: lSelected) {
             if ( fS == null  || fS.exists() == false ) {
@@ -272,7 +331,7 @@ public class ResultSender {
             } catch (Exception e) {
                 continue;
             }
-            String s = getMatchSummary(context, m, "/", " ", false);
+            String s = getMatchSummary(context, m, "/", " ", false, true);
             sb.append(s);
             sb.append("\n");
 
@@ -305,11 +364,27 @@ public class ResultSender {
             mMatchDates    .put(m.getMatchDateYYYYMMDD_DASH(), "1");
             mMatchEvents   .put(m.getEventName()    .toLowerCase(), m.getEventName());
             mMatchDivisions.put(m.getEventDivision().toLowerCase(), m.getEventDivision());
+
+            String shareURL = m.getShareURL();
+            if ( false && StringUtil.isNotEmpty(shareURL) ) {
+                if ( bHtmlEmailPossible ) {
+                    sbMatchLinks.append("<hr><hr/><a href='");
+                    sbMatchLinks.append(shareURL);
+                    sbMatchLinks.append("'><b>");
+                    sbMatchLinks.append(m.getName(Player.A)).append(" - ").append(m.getName(Player.B));
+                    sbMatchLinks.append("</b></a><br/>\n");
+                } else {
+                    sbMatchLinks.append("\n");
+                    sbMatchLinks.append(shareURL);
+                    sbMatchLinks.append("\n");
+                }
+            }
         }
         Log.d(TAG, "== clubCorrections: \n" + clubCorrections.toString());
         Log.d(TAG, "== mMatchDates    : \n" + MapUtil.toNiceString(mMatchDates));
         Log.d(TAG, "== mMatchEvents   : \n" + MapUtil.toNiceString(mMatchEvents));
         Log.d(TAG, "== mMatchDivisions: \n" + MapUtil.toNiceString(mMatchDivisions));
+        Log.d(TAG, "== sbMatchLinks   : \n" + sbMatchLinks);
 
         StringBuilder sbClubResult = new StringBuilder();
         if ( ListUtil.isNotEmpty(lClubs) ) {
@@ -371,9 +446,9 @@ public class ResultSender {
                 sbCommonData.append(sYYYYMMDD);
             }
         }
-        String sResult = (sbCommonData.append("\n\n").toString() + sb.toString() + "\n" + sbClubResult.toString()).trim();
+        String sResult = (sbCommonData.append("\n\n").toString() + sb.toString() + "\n" + sbClubResult.toString()).trim() + "\n" + sbMatchLinks;
         Log.d(TAG, "sResult : \n" + sResult);
-        return sResult;
+        return sResult.trim();
     }
 
     private static String joinPoints(List<String> lClubs, TreeMap<String, Integer> mClubToNumber) {

@@ -52,6 +52,7 @@
     <string name="sb_post_match_result_no_more">Ne pas afficher automatiquement la fenêtre de dialogue \'Poster le résultat du match\'</string>
     <string name="sb_email_match_result">Partager le résultat du match par courriel</string>
     <string name="sb_share_score_sheet">Partager la feuille de match</string>
+    <string name="Summary">Résumé</string>
     <string name="sb_share_match_summary">Partager le résumé du match</string>
     <string name="sb_share_matches_summary">Partager le résumé des plusieurs matches</string> <!-- TODO -->
     <string name="Conduct">Comportement</string>
