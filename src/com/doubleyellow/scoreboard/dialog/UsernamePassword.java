@@ -154,8 +154,9 @@ public class UsernamePassword extends BaseAlertDialog {
     private View.OnClickListener onClickOkListener = new View.OnClickListener() {
         @Override public void onClick(View view) {
             switch (m_authentication) {
+                case BodyParameters:
                 case Basic:
-                    if (areAuthenticationFieldsSpecified()) {
+                    if ( areAuthenticationFieldsSpecified() ) {
                         PreferenceValues.setString(getUsernamePrefKey(m_sName), etUsername.getText().toString(), context);
                         String passwordPrefKey = getPasswordPrefKey(m_sName);
                         if ( PreferenceValues.savePasswords(context) ) {

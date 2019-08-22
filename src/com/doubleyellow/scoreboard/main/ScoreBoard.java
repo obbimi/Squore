@@ -4190,6 +4190,7 @@ touch -t 01030000 LAST.sb
         final Authentication authentication = PreferenceValues.getFeedPostAuthentication(this);
         if ( authentication != null ) {
             switch (authentication) {
+                case BodyParameters:
                 case Basic:
                     UsernamePassword usernamePassword = new UsernamePassword(this, this);
                     usernamePassword.init(feedPostName, authentication);

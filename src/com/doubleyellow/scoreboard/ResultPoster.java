@@ -77,6 +77,8 @@ public class ResultPoster implements ContentReceiver
         return sUrlName;
     }
 
+    private String sSplitter = "!";
+
     public void post(ScoreBoard scoreBoard, Model matchModel, Authentication authentication, String sUserName, String sPassword)
     {
         PostTask postTask = new PostTask(scoreBoard, sPostURL);
@@ -96,10 +98,14 @@ public class ResultPoster implements ContentReceiver
             sHandicapScores = sbHandicaps.toString();
         }
 
+        String sBodyAuthentication = "";
         if ( authentication != null ) {
             switch (authentication) {
                 case Basic:
                     postTask.setHeader("Authorization", "Basic " + Base64Util.encode((sUserName + ":" + sPassword).getBytes()));
+                    break;
+                case BodyParameters:
+                    sBodyAuthentication = "Username=" + sUserName + sSplitter + "Password=" + sPassword;
                     break;
                 case None:
                     break;
@@ -158,7 +164,7 @@ public class ResultPoster implements ContentReceiver
                         , "handinhandout"      , String.valueOf(matchModel.isEnglishScoring())
                         , "handicaps"          , sHandicapScores
                         , "json"               , sJson
-                        , sAdditional
+                        , sSplitter + sAdditional + sSplitter + sBodyAuthentication + sSplitter
                 );
                 break;
         }
