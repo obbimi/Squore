@@ -334,6 +334,7 @@ public class ResultSender {
             String s = getMatchSummary(context, m, "/", " ", false, true);
             sb.append(s);
             sb.append("\n");
+            sb.append("\n");
 
             Player winner      = m.isPossibleMatchVictoryFor();
             if ( winner != null ) {

@@ -1,3 +1,8 @@
+## 4.20 (august 2019)
+
+- if matches have been shared, the 'Summary' of multiple matches will include the URLs
+- additional 'Authentication' method for secured integrating with third party web sites
+
 ## 4.19 (april 2019)
 
 - android 9 chromecast improvements
