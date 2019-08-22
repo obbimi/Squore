@@ -173,7 +173,20 @@ public class IBoard implements TimerViewContainer
     }
 
     //-------------------------------------------
-    // if casting is ON
+    // if casting is ON (old way of casting)
+    //-------------------------------------------
+
+    private ShowOnScreen showOnScreen = null;
+    public boolean isPresentation() {
+        if ( showOnScreen == null ) {
+            // Presentation.class here since it was only introducted in API 17 JELLY_BEAN_MR1
+            showOnScreen = context.getClass().getName().contains("android.app.Presentation") ? ShowOnScreen.OnChromeCast : ShowOnScreen.OnDevice;
+        }
+        return showOnScreen.equals(ShowOnScreen.OnChromeCast);
+    }
+
+    //-------------------------------------------
+    // if casting is ON (new way of casting)
     //-------------------------------------------
     private void sendMessage(Integer iBoardResId, Object oValue) {
         sendMessage(iBoardResId, oValue, "text");
@@ -1421,15 +1434,6 @@ public class IBoard implements TimerViewContainer
             SBToast toast = new SBToast(context, sMessage, direction.getGravity(), bgColor, txtColor, m_vRoot, null, iSize);
             toast.show(iDuration);
         }
-    }
-
-    private ShowOnScreen showOnScreen = null;
-    public boolean isPresentation() {
-        if ( showOnScreen == null ) {
-            // Presentation.class here since it was only introducted in API 17 JELLY_BEAN_MR1
-            showOnScreen = context.getClass().getName().contains("android.app.Presentation") ? ShowOnScreen.OnChromeCast : ShowOnScreen.OnDevice;
-        }
-        return showOnScreen.equals(ShowOnScreen.OnChromeCast);
     }
 
     private int getScreenHeightWidthMinimumFraction(int iResIdFraction) {

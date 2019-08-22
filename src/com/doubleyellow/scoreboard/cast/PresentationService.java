@@ -29,6 +29,13 @@ import com.google.android.gms.cast.CastRemoteDisplayLocalService;
 
 import java.util.Map;
 
+/**
+ * Used for the OLD way of casting using a Remote Display.
+ * Google has made this deprecated.
+ *
+ * Used by Squash and Racketlon version.
+ * Badminton and Tabletennis use new way of casting
+ */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class PresentationService extends CastRemoteDisplayLocalService
 {

@@ -26,6 +26,13 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
+/**
+ * Takes care of sending JSON messages to the 'webpage' loaded by the chromecast device.
+ * - Setting names of players and optionally flags
+ * - Setting score
+ * - Setting serve side button text
+ * - Starting timers (actual countdown implemented on web page itself in javascript)
+ */
 public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 {
     private static final String TAG = "SB." + CastHelper.class.getSimpleName();
@@ -184,7 +191,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     }
 
     @Override public void castGamesWonAppearance() {
-
+        // already taken care of by updateViewWithColorAndScore()
     }
 
     private void cleanup() {
