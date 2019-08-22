@@ -43,16 +43,19 @@ public class ResultSender {
 
     public static final String TAG = "SB." + ResultSender.class.getSimpleName();
 
+    /** Invoked from RecentMatchesMultiSelect */
     public void send(Context context, List<File> lMatches, String sPackageName, String sDefaultRecipient) {
         String sMsg = getMatchesSummary(lMatches, context);
         send(context, sMsg, sPackageName, sDefaultRecipient);
     }
+
+    /** Invoked from ScoreBoard */
     public void send(Context context, Model matchModel, String sPackageName, String sDefaultRecipient) {
         String sMsg = getMatchSummary(context, matchModel);
         send(context, sMsg, sPackageName, sDefaultRecipient);
     }
 
-    public void send(Context context, String sMsg, String sPackageName, String sDefaultRecipient)
+    private void send(Context context, String sMsg, String sPackageName, String sDefaultRecipient)
     {
         //String sendMatchResultTo   = PreferenceValues.getDefaultSMSTo(context);
 

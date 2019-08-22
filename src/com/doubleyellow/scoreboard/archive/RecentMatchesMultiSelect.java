@@ -49,6 +49,7 @@ public class RecentMatchesMultiSelect extends Fragment {
 
     private static final String TAG = "SB." + RecentMatchesMultiSelect.class.getSimpleName();
 
+    /** Invoked from ArchiveTabbed */
     boolean shareSelected(final Context context) {
         if ( ListUtil.isEmpty(lSelected) ) {
             Toast.makeText(context, R.string.no_matches_selected, Toast.LENGTH_SHORT).show();
