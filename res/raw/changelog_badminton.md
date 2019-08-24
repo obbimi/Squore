@@ -1,3 +1,9 @@
+## 4.22 (aug 2019)
+
+- buf fix doubles servesequence
+- allow hand-in/hand-out scoring (only server can score, pre 2012 rules)
+- if matches have been shared, the 'Summary' of multiple matches will include the URLs
+
 ## 4.21 (july 2019)
 
 - improvement for doubles
