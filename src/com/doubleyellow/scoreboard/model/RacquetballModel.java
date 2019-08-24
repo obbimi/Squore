@@ -62,7 +62,7 @@ public class RacquetballModel extends Model
     }
 
     @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {
-        return determineServerForNextGame_Squash(iScoreA, iScoreB);
+        return determineServerForNextGame_SQ_BM(iScoreA, iScoreB);
     }
 
     @Override public boolean showChangeSidesMessageInGame(int iGameZB) {
@@ -82,11 +82,11 @@ public class RacquetballModel extends Model
     //-------------------------------
 
     @Override Player[] calculatePossibleMatchVictoryFor(When when, Player[] paGameVictoryFor) {
-        return super.isPossibleMatchBallFor_Squash_TableTennis(when, paGameVictoryFor);
+        return super.isPossibleMatchBallFor_SQ_TT_BM(when, paGameVictoryFor);
     }
 
     @Override Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom) {
-        return super.calculateIsPossibleGameVictoryFor_Squash_Tabletennis(when, gameScore);
+        return super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore);
     }
 
     //-------------------------------
@@ -94,11 +94,11 @@ public class RacquetballModel extends Model
     //-------------------------------
 
     @Override public void changeScore(Player player) {
-        super.changeScore_Squash_Racketlon(player, true, null);
+        super.changeScore_SQ_RB(player, true, null);
     }
 
     @Override public String getResultShort() {
-        return super.getResultShort_Squash_TableTennis();
+        return super.getResultShort_SQ_TT_BM();
     }
 
     //-------------------------------
@@ -110,10 +110,10 @@ public class RacquetballModel extends Model
     //-------------------------------
 
     @Override public void recordAppealAndCall(Player appealing, Call call) {
-        super.recordAppealAndCall_Squash_Racketlon(appealing, call);
+        super.recordAppealAndCall_SQ_RL_RB(appealing, call);
     }
 
     @Override public void recordConduct(Player pMisbehaving, Call call, ConductType conductType) {
-        super.recordConduct_Squash_Racketlon(pMisbehaving, call, conductType);
+        super.recordConduct_SQ_RL_RB(pMisbehaving, call, conductType);
     }
 }

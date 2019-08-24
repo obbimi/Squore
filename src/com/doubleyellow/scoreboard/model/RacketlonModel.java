@@ -183,9 +183,9 @@ public class RacketlonModel extends Model {
     }
 
     @Override Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom) {
-        Player[] pVictoryFor = super.calculateIsPossibleGameVictoryFor_Squash_Tabletennis(when, gameScore);
+        Player[] pVictoryFor = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore);
         if ( ListUtil.isEmpty(pVictoryFor) && getGameNrInProgress() >= 3 && when.equals(When.ScoreOneMorePoint) && (bFromIsMatchBallFrom == false) ) {
-            // in the 3th and last game in racketlon, it can be a match ball while it is not game ball just looking at the points of the current game
+            // in both the 3th and 4th (last) game in racketlon, it can be a match ball while it is not game ball just looking at the points of the current game
             // if it is, interpret it as game ball as well
             pVictoryFor = _isPossibleMatchVictoryFor(when, pVictoryFor);
         }
@@ -334,12 +334,12 @@ public class RacketlonModel extends Model {
     //-------------------------------
 
     @Override public void recordConduct(Player pMisbehaving, Call call, ConductType conductType) {
-        super.recordConduct_Squash_Racketlon(pMisbehaving, call, conductType);
+        super.recordConduct_SQ_RL_RB(pMisbehaving, call, conductType);
     }
 
     @Override public void recordAppealAndCall(Player appealing, Call call) {
         if ( getSportForSetInProgress().equals(Sport.Squash) == false ) { return; }
-        super.recordAppealAndCall_Squash_Racketlon(appealing, call);
+        super.recordAppealAndCall_SQ_RL_RB(appealing, call);
     }
 
 

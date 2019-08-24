@@ -1260,7 +1260,7 @@ public abstract class Model
     // English scoring/Hand-in-hand-out/HIHO
     // -----------------------------------------
 
-    /** used for both Squash and Racquetball */
+    /** used for both Squash and Racquetball and Badminton */
     public void setEnglishScoring(boolean b) {
         m_bEnglishScoring = b;
     }
@@ -2719,7 +2719,7 @@ public abstract class Model
                 possibleMatchVictoryFor = MapUtil.getMaxKey(gamesWon, null);
             } else {
                 // each player has the same nr of games won
-                possibleMatchVictoryFor = isPossibleMatchVictoryFor_Squash_Tabletennis(true); // TODO: this call should not be here
+                possibleMatchVictoryFor = isPossibleMatchVictoryFor_SQ_TT(true); // TODO: this call should not be here
             }
         }
         if ( possibleMatchVictoryFor != null ) {
@@ -3155,7 +3155,7 @@ public abstract class Model
     //-- methods used by several sub classes
     //-------------------------------------------
 
-    Player[] isPossibleMatchBallFor_Squash_TableTennis(When when, Player[] pGameVictoryFor)
+    Player[] isPossibleMatchBallFor_SQ_TT_BM(When when, Player[] pGameVictoryFor)
     {
         Map<Player, Integer> gameInProgressFor = new HashMap<>();
         Player[] possible = null;
@@ -3185,7 +3185,7 @@ public abstract class Model
         return lReturn.toArray(new Player[]{});
     }
 
-    String getResultShort_Squash_TableTennis() { /* and Badminton*/
+    String getResultShort_SQ_TT_BM() {
         Map<Player, Integer> gamesWon  = this.getGamesWon();
         String sResult = MapUtil.getInt(gamesWon, Player.A, 0) + "-" + MapUtil.getInt(gamesWon, Player.B, 0);
         return sResult;
@@ -3319,7 +3319,7 @@ public abstract class Model
         return server;
     }
 
-    void recordAppealAndCall_Squash_Racketlon(Player appealing, Call call) {
+    void recordAppealAndCall_SQ_RL_RB(Player appealing, Call call) {
         if ( ( gameHasStarted() == false ) && (ListUtil.size(m_lGameCountHistory) <= 1)) {
             // first thing in the match is a call for a let: adjust date and time if appropriate
             adjustTheWhenObjectIfAppropriate(GameTiming.ChangedBy.FirstScoreOfGameEntered);
@@ -3349,13 +3349,13 @@ public abstract class Model
             l.OnCallChanged(call, appealing, pointAwardedTo, null);
         }
         if ( pointAwardedTo != null ) {
-            changeScore_Squash_Racketlon(pointAwardedTo, true, call);
+            changeScore_SQ_RB(pointAwardedTo, true, call);
         } else {
             triggerSpecialScoreListenersIfApplicable(null);
         }
     }
 
-    void recordConduct_Squash_Racketlon(Player pMisbehaving, Call call, ConductType conductType) {
+    void recordConduct_SQ_RL_RB(Player pMisbehaving, Call call, ConductType conductType) {
         if ( (gameHasStarted() == false) && ListUtil.size(m_lGameCountHistory) <= 1) {
             // first thing in the match is a conduct: adjust date and time if appropriate
             adjustTheWhenObjectIfAppropriate(GameTiming.ChangedBy.FirstScoreOfGameEntered);
@@ -3392,7 +3392,7 @@ public abstract class Model
             l.OnCallChanged(call, pMisbehaving, pointOrGameAwardedTo, conductType);
         }
         if ( pointOrGameAwardedTo != null ) {
-            changeScore_Squash_Racketlon (pointOrGameAwardedTo, false, call);
+            changeScore_SQ_RB (pointOrGameAwardedTo, false, call);
         }
     }
     /** Note: Also badminton */
@@ -3451,7 +3451,7 @@ public abstract class Model
     }
 
     /** also called for racketlon/squash in case of appeal or conduct decision */
-    void changeScore_Squash_Racketlon(Player player, boolean bTriggerServeSideChange, Call call)
+    void changeScore_SQ_RB(Player player, boolean bTriggerServeSideChange, Call call)
     {
         boolean bConductGame = (call != null) && call.getScoreAffect().equals(Call.ScoreAffect.LoseGame);
         int iConductGamePoints = 0;
@@ -3516,7 +3516,7 @@ public abstract class Model
     }
 
 /*
-    Player[] isPossibleGameBallFor_Squash_TableTennis() {
+    Player[] isPossibleGameBallFor_SQ_TT() {
         int iScoreA = MapUtil.getInt(m_scoreOfGameInProgress, Player.A, 0);
         int iScoreB = MapUtil.getInt(m_scoreOfGameInProgress, Player.B, 0);
         int max     = Math.max(iScoreA, iScoreB);
@@ -3557,14 +3557,13 @@ public abstract class Model
         }
     }
 */
-    /** Squash and badminton */
-    Player determineServerForNextGame_Squash(int iScoreA, int iScoreB) {
+    Player determineServerForNextGame_SQ_BM(int iScoreA, int iScoreB) {
         Player player = (iScoreA > iScoreB) ? Player.A : Player.B;
         setServerAndSide(player, null, null);
         return player;
     }
 
-    Player[] calculateIsPossibleGameVictoryFor_Squash_Tabletennis(When when, Map<Player, Integer> gameScore)
+    Player[] calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(When when, Map<Player, Integer> gameScore)
     {
         int iScoreA = MapUtil.getInt(gameScore, Player.A, 0);
         int iScoreB = MapUtil.getInt(gameScore, Player.B, 0);
@@ -3643,8 +3642,8 @@ public abstract class Model
         return getNoneOfPlayers();
     }
 
-    /** @deprecated Use isPossibleMatchBallFor_Squash_TableTennis() in stead */
-    private Player isPossibleMatchVictoryFor_Squash_Tabletennis(boolean bCheckTotalPointsIfGamesAreEqual)
+    /** @deprecated Use isPossibleMatchBallFor_SQ_TT_BM() in stead */
+    private Player isPossibleMatchVictoryFor_SQ_TT(boolean bCheckTotalPointsIfGamesAreEqual)
     {
         Map<Player, Integer> gameCount = getGamesWon(); // getGameCount()
         int iGamesA = MapUtil.getInt(gameCount, Player.A, 0);

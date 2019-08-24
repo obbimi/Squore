@@ -63,7 +63,7 @@ public class BadmintonModel extends Model
     }
 
     @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {
-        return determineServerForNextGame_Squash(iScoreA, iScoreB);
+        return determineServerForNextGame_SQ_BM(iScoreA, iScoreB);
     }
 
     @Override public String convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar) {
@@ -99,11 +99,11 @@ public class BadmintonModel extends Model
                     break;
             }
         }
-        return super.calculateIsPossibleGameVictoryFor_Squash_Tabletennis(when, gameScore);
+        return super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore);
     }
 
     @Override Player[] calculatePossibleMatchVictoryFor(When when, Player[] pGameVictoryFor) {
-        return super.isPossibleMatchBallFor_Squash_TableTennis(when, pGameVictoryFor);
+        return super.isPossibleMatchBallFor_SQ_TT_BM(when, pGameVictoryFor);
     }
 
     //-------------------------------
@@ -111,7 +111,7 @@ public class BadmintonModel extends Model
     //-------------------------------
 
     @Override public String getResultShort() {
-        return super.getResultShort_Squash_TableTennis();
+        return super.getResultShort_SQ_TT_BM();
     }
 
     @Override public void changeScore(Player player) {

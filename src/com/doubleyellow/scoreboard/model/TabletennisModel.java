@@ -146,11 +146,11 @@ public class TabletennisModel extends Model
     //-------------------------------
 
     @Override Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom) {
-        return super.calculateIsPossibleGameVictoryFor_Squash_Tabletennis(when, gameScore);
+        return super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore);
     }
 
     @Override Player[] calculatePossibleMatchVictoryFor(When when, Player[] pGameVictoryFor) {
-        return super.isPossibleMatchBallFor_Squash_TableTennis(when, pGameVictoryFor);
+        return super.isPossibleMatchBallFor_SQ_TT_BM(when, pGameVictoryFor);
     }
 
     //-------------------------------
@@ -158,7 +158,7 @@ public class TabletennisModel extends Model
     //-------------------------------
 
     @Override public String getResultShort() {
-        return super.getResultShort_Squash_TableTennis();
+        return super.getResultShort_SQ_TT_BM();
     }
 
     @Override public void changeScore(Player player) {
