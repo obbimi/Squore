@@ -69,6 +69,9 @@ public class RacquetballModel extends Model
         return false;
     }
 
+    @Override public boolean setDoublesServeSequence(DoublesServeSequence dsq) {
+        return super._setDoublesServeSequence(dsq);
+    }
     @Override DoublesServeSequence getDoubleServeSequence(int iGameZB) {
         return m_doubleServeSequence;
     }

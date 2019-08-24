@@ -34,7 +34,6 @@ import com.doubleyellow.scoreboard.match.MatchView;
 import com.doubleyellow.scoreboard.model.DoublesServeSequence;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
-import com.doubleyellow.scoreboard.model.SquashModel;
 import com.doubleyellow.scoreboard.model.TieBreakFormat;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
@@ -112,16 +111,16 @@ public class EditFormat extends BaseAlertDialog {
         spTieBreakFormat.setSelected(tbfPref);
         spTieBreakFormat.setEnabled(true); // TODO: set to false if there has already been a tiebreak
 
-        if ( matchModel.isDoubles() && Brand.isSquash() ) {
+        if ( matchModel.isDoubles() && Brand.supportsDoubleServeSequence() ) {
             spDoublesServeSequence = (EnumSpinner<DoublesServeSequence>) vg.findViewById(R.id.spDoublesServeSequence);
             DoublesServeSequence dssPref = PreferenceValues.getDoublesServeSequence(context);
             spDoublesServeSequence.setSelected(dssPref);
             spDoublesServeSequence.setEnabled(true);
             spDoublesServeSequence.setVisibility(View.VISIBLE);
         } else {
-            View llDoublesServeSequence= vg.findViewById(R.id.llDoublesServeSequence);
-            if ( llDoublesServeSequence != null ) {
-                llDoublesServeSequence.setVisibility(View.GONE);
+            View ll_doubleServeSequence= vg.findViewById(R.id.ll_doubleServeSequence);
+            if ( ll_doubleServeSequence != null ) {
+                ll_doubleServeSequence.setVisibility(View.GONE);
             }
         }
         spPauseDuration = (Spinner) vg.findViewById(R.id.spPauseDuration);
@@ -155,17 +154,21 @@ public class EditFormat extends BaseAlertDialog {
                 bChanged = matchModel.setNrOfPointsToWinGame(iNrOfPoints2Win) || bChanged;
 
 /*
-                int iNrOfServesPerPlayer = Integer.parseInt(spNrOfServees.getSelectedItem().toString().trim());
+                int iNrOfServesPerPlayer = Integer.parseInt(spNrOfServes.getSelectedItem().toString().trim());
                 bChanged = matchModel.setNrOfServesPerPlayer(iNrOfServesPerPlayer) || bChanged;
 */
+
+                if ( cbUseEnglishScoring != null && cbUseEnglishScoring.isEnabled() ) {
+                    boolean bUseEnglishScoring = cbUseEnglishScoring.isChecked();
+                    matchModel.setEnglishScoring(bUseEnglishScoring);
+                }
 
                 TieBreakFormat tbf = TieBreakFormat.values()[spTieBreakFormat.getSelectedItemPosition()];
                 bChanged = matchModel.setTiebreakFormat(tbf) || bChanged;
 
-                if ( matchModel.isDoubles() && Brand.isSquash() ) {
+                if ( matchModel.isDoubles() && Brand.supportsDoubleServeSequence() ) {
                     DoublesServeSequence dss = DoublesServeSequence.values()[spDoublesServeSequence.getSelectedItemPosition()];
-                    SquashModel squashMatchModel = (SquashModel) matchModel;
-                    bChanged = squashMatchModel.setDoublesServeSequence(dss) || bChanged;
+                    bChanged = matchModel.setDoublesServeSequence(dss) || bChanged;
                     PreferenceValues.setEnum(PreferenceKeys.doublesServeSequence, context, dss); // make it the default for next matches
                 }
 

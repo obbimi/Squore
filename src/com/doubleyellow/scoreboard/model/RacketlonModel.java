@@ -102,6 +102,10 @@ public class RacketlonModel extends Model {
     // serve side/sequence
     //-------------------------------
 
+    @Override public boolean setDoublesServeSequence(DoublesServeSequence dsq) {
+        return false; // can not be changed, determines on discipline
+    }
+
     @Override public DoublesServeSequence getDoubleServeSequence(int iSetZB) {
         Sport disicpline = getSportForGame(iSetZB+1);
         DoublesServeSequence ds = null;

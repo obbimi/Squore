@@ -146,6 +146,7 @@ public class MatchView extends SBRelativeLayout
         int iInitialState = bRefTxtsAreEmpty && (bLanguageDeviates == false) ? GONE : VISIBLE;
         ViewUtil.installExpandCollapse(this, R.id.lblReferee, iToggleRefViews, iInitialState, sExpandedCollapsed);
 
+        // make list (brand depandant) of what elements to toggle when lblFormat is expanded collapsed
         List<Integer> lToggleFormatViews = new ArrayList<>();
         lToggleFormatViews.add(R.id.llPoints);
         lToggleFormatViews.add(R.id.llTieBreakFormat);
@@ -162,7 +163,6 @@ public class MatchView extends SBRelativeLayout
                 break;
             case Racketlon:
                 lToggleFormatViews.add(R.id.llDisciplineStart);
-                lToggleFormatViews.remove(R.id.llTieBreakFormat);
                 break;
             case Badminton:
                 //lToggleFormatViews.remove(R.id.llTieBreakFormat); // TODO: at 20 sudden death, or 2 points difference until 29-all and then sudden death
@@ -172,6 +172,13 @@ public class MatchView extends SBRelativeLayout
                 lToggleFormatViews.add(R.id.llHandicapFormat);
                 break;
         }
+        if ( Brand.supportsDoubleServeSequence() == false ) {
+            lToggleFormatViews.remove(R.id.ll_doubleServeSequence);
+        }
+        if ( Brand.supportsTiebreakFormat() == false ) {
+            lToggleFormatViews.remove(R.id.llTieBreakFormat);
+        }
+
 /*
         int[] iToggleFormatViews = new int[] {R.id.llPoints, R.id.llTieBreakFormat, R.id.llHandicapFormat, R.id.useHandInHandOutScoring, R.id.llPauseDuration, R.id.llDisciplineStart, R.id.llNumberOfServesPerPlayer, R.id.llScoringType, R.id.llLiveScore};
         if ( m_bIsDoubles ) {
@@ -188,9 +195,8 @@ public class MatchView extends SBRelativeLayout
         switch (sportType) {
             case Badminton:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
-                      //, R.id.llTieBreakFormat
                         , R.id.llDisciplineStart
-                        , R.id.llScoringType /* hand-in/hand-out */
+                      //, R.id.llScoringType /* hand-in/hand-out was actually used in badminton in the past as well */
                         , R.id.match_marker
                         , R.id.ll_AnnouncementLanguage
                         , R.id.llNumberOfServesPerPlayer
@@ -198,7 +204,6 @@ public class MatchView extends SBRelativeLayout
                 return true;
             case Tabletennis:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
-                        , R.id.llTieBreakFormat
                         , R.id.llDisciplineStart
                         , R.id.llScoringType
                         , R.id.match_marker
@@ -209,10 +214,8 @@ public class MatchView extends SBRelativeLayout
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
                         , R.id.lblMatch_BestOf, R.id.spNumberOfGamesToWin
                         , R.id.llHandicapFormat
-                        , R.id.llTieBreakFormat
                         , R.id.llScoringType
                         , R.id.llNumberOfServesPerPlayer
-                        , R.id.ll_doubleServeSequence
                         , R.id.match_marker
                         , R.id.ll_AnnouncementLanguage
                 );
@@ -231,6 +234,12 @@ public class MatchView extends SBRelativeLayout
                       //, R.id.llScoringType
                 );
                 return false;
+        }
+        if ( Brand.supportsDoubleServeSequence() == false ) {
+            ViewUtil.hideViewsForEver(this, R.id.ll_doubleServeSequence);
+        }
+        if ( Brand.supportsTiebreakFormat() == false ) {
+            ViewUtil.hideViewsForEver(this, R.id.llTieBreakFormat);
         }
         return false;
     }
@@ -683,35 +692,21 @@ public class MatchView extends SBRelativeLayout
         }
 
         if ( bIsDoubles ) {
-            DoublesServeSequence dssPref = PreferenceValues.getDoublesServeSequence(context);
-            spDoublesServeSequence = (Spinner) findViewById(R.id.spDoublesServeSequence);
-            if ( spDoublesServeSequence != null ) {
-                if ( spDoublesServeSequence instanceof EnumSpinner ) {
-                    EnumSpinner<DoublesServeSequence> sp = (EnumSpinner<DoublesServeSequence>) spDoublesServeSequence;
-                    sp.setSelected(dssPref); // TODO: set selected
-                } else {
-                    initEnumSpinner(spDoublesServeSequence, DoublesServeSequence.class, dssPref, DoublesServeSequence.NA, R.array.doublesServeSequence);
-/*
-                    String[] sDisplayValues = getResources().getStringArray(R.array.doublesServeSequence);
-                    List<String> list = new ArrayList<String>();
-                    int iSelectedIndex = 0;
-                    int iIdx = -1;
-                    for (DoublesServeSequence dss : DoublesServeSequence.values()) {
-                        if (dss.equals(DoublesServeSequence.NA)) {
-                            continue;
-                        } // NA must be the last in the enumeration
-                        iIdx++;
-                        if (dss.equals(dssPref)) {
-                            iSelectedIndex = iIdx;
+            if ( Brand.supportsDoubleServeSequence() ) {
+                DoublesServeSequence dssPref = PreferenceValues.getDoublesServeSequence(context);
+                spDoublesServeSequence = (Spinner) findViewById(R.id.spDoublesServeSequence);
+                if ( spDoublesServeSequence != null ) {
+                    if ( spDoublesServeSequence instanceof EnumSpinner ) {
+                        EnumSpinner<DoublesServeSequence> sp = (EnumSpinner<DoublesServeSequence>) spDoublesServeSequence;
+                        sp.setSelected(dssPref); // TODO: set selected
+                    } else {
+                        int[] iaDisabled = null;
+                        if ( false && Brand.isBadminton() ) {
+                            // remove options that are not for badminton
+                            iaDisabled = new int[] { DoublesServeSequence.A2B1B2_then_A1A2B1B2.ordinal(), DoublesServeSequence.A1A2B1B2.ordinal(), DoublesServeSequence.A1B1A1B1.ordinal()  };
                         }
-                        String sDisplayValue = sDisplayValues.length > iIdx ? sDisplayValues[iIdx] : dss.toString();
-                        list.add(sDisplayValue);
+                        initEnumSpinner(spDoublesServeSequence, DoublesServeSequence.class, dssPref, DoublesServeSequence.NA, R.array.doublesServeSequence, iaDisabled);
                     }
-                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context, R.layout.spinner_item, list);
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spDoublesServeSequence.setAdapter(dataAdapter);
-                    spDoublesServeSequence.setSelection(iSelectedIndex);
-*/
                 }
             }
         }
@@ -1117,10 +1112,11 @@ public class MatchView extends SBRelativeLayout
 
         // for doubles
         if ( m_bIsDoubles ) {
-            if ( (spDoublesServeSequence != null) && (spDoublesServeSequence.getVisibility() != View.GONE) && Brand.isSquash() ) {
-                DoublesServeSequence dss = DoublesServeSequence.values()[spDoublesServeSequence.getSelectedItemPosition()];
-                SquashModel squashModel = (SquashModel) m;
-                squashModel.setDoublesServeSequence(dss);
+            if ( (spDoublesServeSequence != null) && (spDoublesServeSequence.getVisibility() != View.GONE) ) {
+                if ( Brand.supportsDoubleServeSequence() ) {
+                    DoublesServeSequence dss = DoublesServeSequence.values()[spDoublesServeSequence.getSelectedItemPosition()];
+                    m.setDoublesServeSequence(dss);
+                }
             }
             if ( (txtPlayerA2 != null) && (txtPlayerB2 != null) ) {
                 m.setPlayerName(Player.A, txtPlayerA.getText() + "/" + txtPlayerA2.getText());

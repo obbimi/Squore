@@ -489,7 +489,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         // Who will serve at what score is totally determined by who started serving the first point
                     }
                 } else if ( Brand.isBadminton() ) {
-                    // Who will serve at what score is totally determined by the score: TODO: check
+                    // Who will serve at what score is totally determined by the score: TODO: not in 'old' rules (double only?)
                 } else if ( Brand.isRacketlon() ) {
                     // Who will serve at what score is totally determined by who started serving the first point
                 } else {
@@ -1841,8 +1841,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 matchModel.setGameStartScoreOffset(p, matchModel.getGameStartScoreOffset(p));
             }
 */
-            if ( Brand.isSquash() ) {
-                ((SquashModel)matchModel).setDoublesServeSequence(((SquashModel)previous).getDoubleServeSequence());
+            if ( Brand.supportsDoubleServeSequence() ) {
+                matchModel.setDoublesServeSequence(previous.getDoubleServeSequence());
             } else if (Brand.isRacketlon() ) {
                 ((RacketlonModel)matchModel).setDisciplines(((RacketlonModel)previous).getDisciplines());
             }

@@ -435,6 +435,7 @@ public abstract class Model
         mOldDSS2New.put("AXAX", DoublesServeSequence.A1B1A1B1);
     }
 
+    public abstract boolean setDoublesServeSequence(DoublesServeSequence dsq);
     abstract DoublesServeSequence getDoubleServeSequence(int iGameZB);
 
     /** for now this method MUST invoke the setServerAndSide method: TODO: improve */
@@ -2972,10 +2973,10 @@ public abstract class Model
 
                 boolean      bFirstHandout = m_iHandoutCountDoubles == 0;
                 DoublesServe in_out_prev   = m_in_out;
-                DoublesServe doubleSS      = m_doubleServeSequence.playerToServe(m_in_out, bFirstHandout, m_iHandoutCountDoubles);
+                DoublesServe doubleIO      = m_doubleServeSequence.playerToServe(m_in_out, bFirstHandout, m_iHandoutCountDoubles);
 
                 if ( m_doubleServeSequence.switchTeam(in_out_prev, bFirstHandout) ) {
-                    setServerAndSide(scorer, m_player2LastServeSide.get(scorer), doubleSS);
+                    setServerAndSide(scorer, m_player2LastServeSide.get(scorer), doubleIO);
                     setLastPointWasHandout(true);
                 } else {
                     // serve stayed within the same team
@@ -2988,7 +2989,7 @@ public abstract class Model
                         setLastPointWasHandout(true);
                         serveSide = m_player2LastServeSide.get(scorer);
                     }
-                    setServerAndSide(null, serveSide, doubleSS);
+                    setServerAndSide(null, serveSide, doubleIO);
                 }
             } else {
                 m_iHandoutCountDoubles = -1;
@@ -3191,28 +3192,72 @@ public abstract class Model
         return sResult;
     }
 
-    void determineServerAndSide_BM(boolean bForUndo, Player pScorer) {
+    void deterimineServeAndSideFromPrevious_SQ_BT(ScoreLine lastValidWithServer, ScoreLine slRemoved) {
+        // TODO: improve for doubles
+
+        if ( lastValidWithServer != null ) {
+            Player    pServer              = lastValidWithServer.getScoringPlayer();
+            ServeSide serversPreferredSide = MapUtil.getMaxKey(m_player2ServeSideCount.get(pServer), ServeSide.R);
+            Player    lastServer           = lastValidWithServer.getServingPlayer();
+            ServeSide lastServeSide        = lastValidWithServer.getServeSide();
+            // savety precaution... should not occur
+            if ( lastServeSide == null ) {
+                lastServeSide = ServeSide.R;
+            }
+            ServeSide nextServeSide        = pServer.equals(lastServer)? lastServeSide.getOther(): serversPreferredSide;
+
+            setServerAndSide(pServer, nextServeSide, null);
+        } else if (slRemoved != null ) {
+            Player    removedServingPlayer = slRemoved.getServingPlayer();
+            ServeSide removedServeSide     = slRemoved.getServeSide();
+            if ( removedServingPlayer != null ) {
+                setServerAndSide(removedServingPlayer, null, null);
+            }
+            if ( removedServeSide != null ) {
+                setServerAndSide(null, removedServeSide, null);
+            }
+        }
+        setLastPointWasHandout(false);
+    }
+    void determineServerAndSide_BM(final Player pScorer) {
+
+        Player    nextServer    = pScorer;
         if ( pScorer == null ) {
-            pScorer = getServer();
+            nextServer = getServer();
         }
 
-        DoublesServe ds = m_in_out;
+        DoublesServe serveIO = m_in_out;
+
+        int       iPointsServer = getScore(pScorer);
+        ServeSide serveSide     = ServeSide.values()[iPointsServer % 2];
+
         if ( isDoubles() ) {
             DoublesServeSequence dss = getDoubleServeSequence();
             if ( dss.equals(DoublesServeSequence.A1B1A1B1) ) {
-                ds = DoublesServe.I;
+                serveIO = DoublesServe.I;
             } else {
                 if ( pScorer.equals(getServer()) == false ) {
-                    ScoreLine slFirst = ListUtil.isNotEmpty(m_lScoreHistory)?m_lScoreHistory.get(0):null;
-                    if ( slFirst != null && pScorer.equals(slFirst.getServingPlayer())) {
-                        ds = m_in_out.getOther();
+                    // hand-out: score for receiver
+                    m_iHandoutCountDoubles++;
+
+                    boolean      bFirstHandout = m_iHandoutCountDoubles == 0;
+                    DoublesServe in_out_prev   = m_in_out;
+                                 serveIO       = m_doubleServeSequence.playerToServe(m_in_out, bFirstHandout, m_iHandoutCountDoubles);
+
+                    if ( m_doubleServeSequence.switchTeam(in_out_prev, bFirstHandout) ) {
+                        //setServerAndSide(pScorer, m_player2LastServeSide.get(pScorer), ds);
+                        setLastPointWasHandout(true);
+                    } else {
+                        nextServer = getServer();
+
+                        // serve stayed within the same team
+                        setLastPointWasHandout(false);
+                        //serveSide = m_nextServeSide.getOther();
                     }
                 }
             }
         }
-        int       iPointsServer = getScore(pScorer);
-        ServeSide serveSide     = ServeSide.values()[iPointsServer % 2];
-        setServerAndSide(pScorer, serveSide, ds);
+        setServerAndSide(nextServer, serveSide, serveIO);
     }
     void determineServerAndSide_TT_RL(boolean bForUndo, SportType sportType) {
         DoublesServe ds = m_in_out;
@@ -3409,11 +3454,11 @@ public abstract class Model
         final Player[]     wasMatchBallFor = _isPossibleMatchVictoryFor(When.ScoreOneMorePoint, null);
 
         // determine the new score
-        Integer iNewScore = determineNewScoreForPlayer(player, iDelta, false);
+        Integer iNewScore = determineNewScoreForPlayer(player, iDelta,(SportType.Badminton.equals(sportType)) ? m_bEnglishScoring: false);
 
         ScoreLine scoreLine = getScoreLine(player, iNewScore, m_nextServeSide);
         if ( sportType.equals(SportType.Badminton) ) {
-            determineServerAndSide_BM(false, player);
+            determineServerAndSide_BM(player);
         } else {
             determineServerAndSide_TT_RL(false, sportType);
         }
@@ -3449,7 +3494,7 @@ public abstract class Model
         }
     }
 
-    /** also called for racketlon/squash in case of appeal or conduct decision */
+    /** also called for racketlon/squash in case of appeal or conduct decision. In that case bTriggerServeSideChange=false */
     void changeScore_SQ_RB(Player player, boolean bTriggerServeSideChange, Call call)
     {
         boolean bConductGame = (call != null) && call.getScoreAffect().equals(Call.ScoreAffect.LoseGame);

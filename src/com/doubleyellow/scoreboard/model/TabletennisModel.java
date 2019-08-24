@@ -67,6 +67,10 @@ public class TabletennisModel extends Model
     // serve side/sequence
     //-------------------------------
 
+    @Override public boolean setDoublesServeSequence(DoublesServeSequence dsq) {
+        return false; // can not be changed
+    }
+
     @Override public DoublesServeSequence getDoubleServeSequence(int iGameZB) {
         return DoublesServeSequence.A1B1A2B2;
     }

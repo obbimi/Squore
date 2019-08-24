@@ -23,6 +23,9 @@ import java.util.Map;
 
 /**
  * http://www.worldbadminton.com/rules/
+ *
+ * http://www.worldbadminton.com/rules/history.htm
+ * http://www.worldbadminton.com/ibf_laws_200208.htm
  */
 public class BadmintonModel extends Model
 {
@@ -31,7 +34,7 @@ public class BadmintonModel extends Model
         setTiebreakFormat(TieBreakFormat.TwoClearPoints);
         setNrOfGamesToWinMatch(2);
         setNrOfPointsToWinGame(21);
-        setEnglishScoring(false);
+        setEnglishScoring(false); // default, but may be true
     }
 
     @Override public SportType getSport() {
@@ -54,12 +57,17 @@ public class BadmintonModel extends Model
     // serve side/sequence
     //-------------------------------
 
+    public boolean setDoublesServeSequence(DoublesServeSequence dsq) {
+        return super._setDoublesServeSequence(dsq);
+    }
+
     @Override public DoublesServeSequence getDoubleServeSequence(int iGameZB) {
-        return DoublesServeSequence.A1B1A2B2;
+        return m_doubleServeSequence; // default DoublesServeSequence.A1B1A2B2
     }
 
     @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) {
-        super.determineServerAndSide_BM(true, slRemoved.getServingPlayer());
+        super.deterimineServeAndSideFromPrevious_SQ_BT(lastValidWithServer, slRemoved);
+        //super.determineServerAndSide_BM(slRemoved.getServingPlayer());
     }
 
     @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {

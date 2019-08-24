@@ -62,29 +62,7 @@ public class SquashModel extends Model {
     }
 
     @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) {
-        if ( lastValidWithServer != null ) {
-            Player    pServer              = lastValidWithServer.getScoringPlayer();
-            ServeSide serversPreferredSide = MapUtil.getMaxKey(m_player2ServeSideCount.get(pServer), ServeSide.R);
-            Player    lastServer           = lastValidWithServer.getServingPlayer();
-            ServeSide lastServeSide        = lastValidWithServer.getServeSide();
-            // savety precaution... should not occur
-            if ( lastServeSide == null ) {
-                lastServeSide = ServeSide.R;
-            }
-            ServeSide nextServeSide        = pServer.equals(lastServer)? lastServeSide.getOther(): serversPreferredSide;
-
-            setServerAndSide(pServer, nextServeSide, null);
-        } else if (slRemoved != null ) {
-            Player    removedServingPlayer = slRemoved.getServingPlayer();
-            ServeSide removedServeSide     = slRemoved.getServeSide();
-            if ( removedServingPlayer != null ) {
-                setServerAndSide(removedServingPlayer, null, null);
-            }
-            if ( removedServeSide != null ) {
-                setServerAndSide(null, removedServeSide, null);
-            }
-        }
-        setLastPointWasHandout(false);
+        deterimineServeAndSideFromPrevious_SQ_BT(lastValidWithServer, slRemoved);
     }
 
     //-------------------------------

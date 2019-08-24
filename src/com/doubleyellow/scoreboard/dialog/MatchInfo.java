@@ -103,17 +103,18 @@ public class MatchInfo extends BaseAlertDialog {
         if ( matchModel.isEnglishScoring() ) {
             sb.append(getString(R.string.pref_useEnglishScoring));
             sb.append("\n");
+        } else {
+            // point a rally: so common, don't even state it
         }
-        if ( Brand.isSquash() || Brand.isRacquetball() ) {
+        if ( Brand.supportsTiebreakFormat() ) {
             sb.append("\n");
             sb.append(getString(R.string.pref_tiebreakFormat)).append(" : ").append(tieBreakValues[ matchModel.getTiebreakFormat().ordinal()]);
             sb.append("\n");
-
-            if ( matchModel.isDoubles() ) {
-                sb.append("\n");
-                sb.append(getString(R.string.sb_doublesServeSequence)).append(" : ").append(matchModel.getDoubleServeSequence());
-                sb.append("\n");
-            }
+        }
+        if ( matchModel.isDoubles() && Brand.supportsDoubleServeSequence() ) {
+            sb.append("\n");
+            sb.append(getString(R.string.sb_doublesServeSequence)).append(" : ").append(matchModel.getDoubleServeSequence());
+            sb.append("\n");
         }
 
         if ( matchModel.isUsingHandicap() ) {
