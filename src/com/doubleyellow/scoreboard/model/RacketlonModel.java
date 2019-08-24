@@ -128,12 +128,12 @@ public class RacketlonModel extends Model {
         Sport sport = getSportForSetInProgress();
         String s1or2_forRorL = String.valueOf(serveSide.ordinal() + 1);
         if ( sport.equals(Sport.Tabletennis) ) {
-            if ( isInTieBreak_Racketlon_Tabletennis() ) {
+            if ( isInTieBreak_TT_RL() ) {
                 return 1; // single serve only
             }
             return 2 - serveSide.ordinal(); // R means 2 serves left, L means 1 left
         } else {
-            if ( isInTieBreak_Racketlon_Tabletennis() ) {
+            if ( isInTieBreak_TT_RL() ) {
                 sRLInternational = s1or2_forRorL + sRLInternational;
             }
         }
@@ -153,11 +153,11 @@ public class RacketlonModel extends Model {
     //@Override public boolean isLastPointHandout() { return false; }
 
     @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) {
-        super.determineServerAndSide_Racketlon_Tabletennis(true, getSport());
+        super.determineServerAndSide_TT_RL(true, getSport());
     }
 
     @Override Player determineServerForNextGame(int iSetZB, int iScoreA, int iScoreB) {
-        return determineServerForNextGame_Racketlon_Tabletennis(iSetZB, true);
+        return determineServerForNextGame_TT_RL(iSetZB, true);
     }
 
     @Override public void changeSide(Player player) {
@@ -283,7 +283,7 @@ public class RacketlonModel extends Model {
     //-------------------------------
 
     @Override public void changeScore(Player player) {
-        super.changeScore_Racketlon_Tabletennis(player, getSport());
+        super.changeScore_TT_BM_RL(player, getSport());
     }
 
     @Override public String getResultShort() {
@@ -323,7 +323,7 @@ public class RacketlonModel extends Model {
             }
             if ( isDoubles() ) {
                 // initialize
-                setServerAndSide(null, null, determineDoublesInOut_Racketlon_Tabletennis());
+                setServerAndSide(null, null, determineDoublesInOut_TT_RL());
             }
         }
         return joMatch;

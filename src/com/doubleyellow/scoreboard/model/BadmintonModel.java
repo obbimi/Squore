@@ -59,7 +59,7 @@ public class BadmintonModel extends Model
     }
 
     @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) {
-        super.determineServerAndSide_Badminton(true, slRemoved.getServingPlayer());
+        super.determineServerAndSide_BM(true, slRemoved.getServingPlayer());
     }
 
     @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {
@@ -115,7 +115,7 @@ public class BadmintonModel extends Model
     }
 
     @Override public void changeScore(Player player) {
-        super.changeScore_Racketlon_Tabletennis(player, getSport());
+        super.changeScore_TT_BM_RL(player, getSport());
     }
 
     //-------------------------------

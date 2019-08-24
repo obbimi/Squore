@@ -3191,7 +3191,7 @@ public abstract class Model
         return sResult;
     }
 
-    void determineServerAndSide_Badminton(boolean bForUndo, Player pScorer) {
+    void determineServerAndSide_BM(boolean bForUndo, Player pScorer) {
         if ( pScorer == null ) {
             pScorer = getServer();
         }
@@ -3214,12 +3214,12 @@ public abstract class Model
         ServeSide serveSide     = ServeSide.values()[iPointsServer % 2];
         setServerAndSide(pScorer, serveSide, ds);
     }
-    void determineServerAndSide_Racketlon_Tabletennis(boolean bForUndo, SportType sportType) {
+    void determineServerAndSide_TT_RL(boolean bForUndo, SportType sportType) {
         DoublesServe ds = m_in_out;
         if ( isDoubles() ) {
-            ds = determineDoublesInOut_Racketlon_Tabletennis();
+            ds = determineDoublesInOut_TT_RL();
         }
-        if ( isInTieBreak_Racketlon_Tabletennis() ) {
+        if ( isInTieBreak_TT_RL() ) {
             int    iMaxScore               = getMaxScore();
             int    iDiffScore              = getDiffScore();
             Player serverAtStartOfSet      = determineServerForNextGame(ListUtil.size(m_endScoreOfPreviousGames), iMaxScore, iMaxScore);
@@ -3261,7 +3261,7 @@ public abstract class Model
                     int iB = getScore(Player.B);
                     int iTotalInGame = iA + iB;
                     int iSetZB = ListUtil.size(m_endScoreOfPreviousGames);
-                    Player server = determineServerForNextGame_Racketlon_Tabletennis(iSetZB, false);
+                    Player server = determineServerForNextGame_TT_RL(iSetZB, false);
                     int iServerSwitches = iTotalInGame / m_iNrOfServesPerPlayer;
                     for( int i = 0; i < iServerSwitches; i++ ) {
                         server = server.getOther();
@@ -3272,13 +3272,13 @@ public abstract class Model
         }
     }
 
-    DoublesServe determineDoublesInOut_Racketlon_Tabletennis() {
+    DoublesServe determineDoublesInOut_TT_RL() {
         DoublesServeSequence dss           = getDoubleServeSequence();
         if ( dss.equals(DoublesServeSequence.A1B1A1B1) ) {
             // serve sequence for squash part of racketlon only: only one player on court
             return DoublesServe.I;
         }
-        boolean              bIsInTieBreak = isInTieBreak_Racketlon_Tabletennis();
+        boolean              bIsInTieBreak = isInTieBreak_TT_RL();
         int                  iTotalPoints  = getTotalGamePoints();
         int nrOfServesPerPlayer = getNrOfServesPerPlayer();
         if ( bIsInTieBreak ) {
@@ -3296,12 +3296,12 @@ public abstract class Model
         return getMaxScore() + getMinScore();
     }
 
-    public boolean isInTieBreak_Racketlon_Tabletennis()
+    boolean isInTieBreak_TT_RL()
     {
         return getMinScore() >= getNrOfPointsToWinGame() - 1;
     }
 
-    Player determineServerForNextGame_Racketlon_Tabletennis(int iSetZB, boolean bSetServer) {
+    Player determineServerForNextGame_TT_RL(int iSetZB, boolean bSetServer) {
         Player server      = this.getServer();
         Player serverOfSet = null;
         for ( int iSetZBTmp=0; iSetZBTmp < ListUtil.size (m_lGameScoreHistory); iSetZBTmp++ ) {
@@ -3395,8 +3395,7 @@ public abstract class Model
             changeScore_SQ_RB (pointOrGameAwardedTo, false, call);
         }
     }
-    /** Note: Also badminton */
-    void changeScore_Racketlon_Tabletennis(Player player, SportType sportType)
+    void changeScore_TT_BM_RL(Player player, SportType sportType)
     {
 /*
         if ( this.getPlayerNames()[0].equals("Crash") && this.getPlayerNames()[1].equals("Me") && call!=null && call.isConduct() ) {
@@ -3414,9 +3413,9 @@ public abstract class Model
 
         ScoreLine scoreLine = getScoreLine(player, iNewScore, m_nextServeSide);
         if ( sportType.equals(SportType.Badminton) ) {
-            determineServerAndSide_Badminton(false, player);
+            determineServerAndSide_BM(false, player);
         } else {
-            determineServerAndSide_Racketlon_Tabletennis(false, sportType);
+            determineServerAndSide_TT_RL(false, sportType);
         }
 
         if ( m_gameTimingCurrent == null ) {

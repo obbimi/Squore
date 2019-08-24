@@ -119,7 +119,7 @@ public class Util {
         Object o = matchModel.convertServeSideCharacter(sChar, serveSide, sHOChar);
         if ( Brand.isNotSquash() && (o instanceof Integer) ) {
             DownUp downUp = PreferenceValues.numberOfServiceCountUpOrDown(context);
-            if ( downUp.equals(DownUp.Up) && (matchModel.isInTieBreak_Racketlon_Tabletennis() == false) ) {
+            if ( downUp.equals(DownUp.Up) && (matchModel.isInTieBreak_TT_RL() == false) ) {
                 int iCountDownValue = (int) o;
                 int iCountUpValue = matchModel.getNrOfServesPerPlayer() - iCountDownValue + 1;
                 o = iCountUpValue;

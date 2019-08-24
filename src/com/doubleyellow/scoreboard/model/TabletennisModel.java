@@ -72,11 +72,11 @@ public class TabletennisModel extends Model
     }
 
     @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) {
-        super.determineServerAndSide_Racketlon_Tabletennis(true, getSport());
+        super.determineServerAndSide_TT_RL(true, getSport());
     }
 
     @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {
-        return determineServerForNextGame_Racketlon_Tabletennis(iGameZB, true);
+        return determineServerForNextGame_TT_RL(iGameZB, true);
     }
 
     /** LR and Handout parameters are totally ignored. Returns character to indicate number of serves left */
@@ -85,7 +85,7 @@ public class TabletennisModel extends Model
             // TODO: special char for when in expedite
             return "X";
         }
-        boolean inTieBreak = isInTieBreak_Racketlon_Tabletennis();
+        boolean inTieBreak = isInTieBreak_TT_RL();
         if ( m_iNrOfServesPerPlayer > 2 ) {
             // not the default for tabletennis, but possible
             if ( inTieBreak ) {
@@ -123,12 +123,12 @@ public class TabletennisModel extends Model
         return isInMode(Mode.Expedite);
     }
 
-    @Override void determineServerAndSide_Racketlon_Tabletennis(boolean bForUndo, SportType sportType) {
+    @Override void determineServerAndSide_TT_RL(boolean bForUndo, SportType sportType) {
         if ( isInExpedite() ) {
             Player server = getServer();
             setServerAndSide(server.getOther(), ServeSide.L, null);
         } else {
-            super.determineServerAndSide_Racketlon_Tabletennis(bForUndo, sportType);
+            super.determineServerAndSide_TT_RL(bForUndo, sportType);
         }
     }
 
@@ -162,7 +162,7 @@ public class TabletennisModel extends Model
     }
 
     @Override public void changeScore(Player player) {
-        super.changeScore_Racketlon_Tabletennis(player, getSport());
+        super.changeScore_TT_BM_RL(player, getSport());
     }
 
     //-------------------------------
