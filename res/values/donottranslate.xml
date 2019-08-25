@@ -46,6 +46,8 @@
 
     <string name="pref_swapPlayersHalfwayGame_Squash"><!--Not used in squash version of the app --></string>
     <string name="NewMatchesType_default_Squash">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
+    <string name="lbl_Scoring_PointWhenServing_Tabletennis">Score when serving</string> <!-- not used -->
+    <string name="lbl_Scoring_PointWhenServing_Racketlon">Score when serving</string>   <!-- not used -->
 
 
     <!-- TODO: use this in e.g. feedback pages -->

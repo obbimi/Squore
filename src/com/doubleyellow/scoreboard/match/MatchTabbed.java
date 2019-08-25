@@ -43,6 +43,7 @@ import com.doubleyellow.scoreboard.feed.FeedFeedSelector;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+import com.doubleyellow.scoreboard.prefs.NewMatchLayout;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.URLsKeys;
@@ -224,6 +225,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         ViewUtil.setMenuItemsVisibility(menu, new int[] {R.id.uc_switch_feed, R.id.uc_hide_matches_with_result, R.id.uc_add_new_feed}, SelectTab.Feed.equals(forTab));
         boolean bChecked = PreferenceValues.hideCompletedMatchesFromFeed(this);
         ViewUtil.checkMenuItem(menu, R.id.uc_hide_matches_with_result, bChecked);
+
 /*
         MenuItem miSwitchFeed = menu.findItem(R.id.uc_switch_feed);
         miSwitchFeed.setVisible(SelectTab.Feed.equals(forTab));
@@ -239,11 +241,29 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         //int iNewResId = bChecked?R.string.pref_showCompletedMatchesFromFeed:R.string.pref_hideCompletedMatchesFromFeed;
         //miHideShowFinished.setTitle(iNewResId); // we do this because checking/unchecking is not visible?!
 
-        ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.mt_cmd_ok, R.id.mt_clear_event_fields, R.id.mt_clear_player_fields, R.id.mt_clear_referee_fields, R.id.mt_clear_club_fields, R.id.mt_clear_country_fields, R.id.mt_clear_all_fields}, manualTabs.contains(forTab));
-        ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.mt_refresh, R.id.expand_all, R.id.collapse_all}, manualTabs.contains(forTab) == false);
-        ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.show_players_from_feed                     }, SelectTab.Feed.equals(forTab) && StringUtil.isNotEmpty(PreferenceValues.getPlayersFeedURL(this)));
-        ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.show_matches_from_feed                     }, SelectTab.Feed.equals(forTab) && StringUtil.isNotEmpty(PreferenceValues.getMatchesFeedURL(this)));
-        ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.mt_filter}, SelectTab.Feed.equals(forTab));
+        ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.mt_cmd_ok
+                                                       , R.id.mt_clear_event_fields
+                                                       , R.id.mt_clear_player_fields
+                                                       , R.id.mt_clear_referee_fields
+                                                       , R.id.mt_clear_club_fields
+                                                       , R.id.mt_clear_country_fields
+                                                       , R.id.mt_clear_all_fields
+                                                       , R.id.mt_matchlayout_all
+                                                       , R.id.mt_matchlayout_simple
+                                                       }, manualTabs.contains(forTab));
+        ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.mt_refresh
+                                                       , R.id.expand_all
+                                                       , R.id.collapse_all
+                                                       }, manualTabs.contains(forTab) == false);
+        ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.show_players_from_feed }, SelectTab.Feed.equals(forTab) && StringUtil.isNotEmpty(PreferenceValues.getPlayersFeedURL(this)));
+        ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.show_matches_from_feed }, SelectTab.Feed.equals(forTab) && StringUtil.isNotEmpty(PreferenceValues.getMatchesFeedURL(this)));
+        ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.mt_filter              }, SelectTab.Feed.equals(forTab));
+
+        if ( manualTabs.contains(forTab) ) {
+            NewMatchLayout newMatchLayout = PreferenceValues.getNewMatchLayout(this);
+            ViewUtil.setMenuItemVisibility(menu, R.id.mt_matchlayout_simple, NewMatchLayout.AllFields.equals(newMatchLayout));
+            ViewUtil.setMenuItemVisibility(menu, R.id.mt_matchlayout_all, NewMatchLayout.Simple.equals(newMatchLayout));
+        }
 /*
         MenuItem miOK = menu.findItem(R.id.mt_cmd_ok);
         miOK.setVisible(manualTabs.contains(forTab));
@@ -300,6 +320,14 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
                 return true;
             case R.id.cmd_ok: case R.id.mt_cmd_ok:
                 return _startMatch();
+            case R.id.mt_matchlayout_all: {
+                PreferenceValues.setEnum(PreferenceKeys.newMatchLayout, this, NewMatchLayout.AllFields);
+                return _restart(R.id.dyn_new_match);
+            }
+            case R.id.mt_matchlayout_simple: {
+                PreferenceValues.setEnum(PreferenceKeys.newMatchLayout, this, NewMatchLayout.Simple);
+                return _restart(R.id.dyn_new_match);
+            }
             case R.id.uc_clear_all_fields: case R.id.mt_clear_all_fields: {
                 if (matchView == null) return false;
                 return matchView.clearAllFields();
@@ -459,6 +487,15 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
             tryShowToast("No intent from singles or doubles...");
             return false;
         }
+        setResult(RESULT_OK, intent);
+
+        finish();
+        return true;
+    }
+
+    private boolean _restart(int iAction) {
+        Intent intent = new Intent();
+        intent.setAction(String.valueOf(iAction));
         setResult(RESULT_OK, intent);
 
         finish();

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="lbl_Scoring_PointWhenServing_Squash">Hand-in/hand-out</string>
+
     <string name="Score">Score</string>
     <string name="Game">Game</string>
 

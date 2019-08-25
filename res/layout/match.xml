@@ -536,25 +536,53 @@
         </LinearLayout>
         <LinearLayout
                 android:id="@+id/llScoringType"
-                android:orientation="vertical"
-                android:gravity="right"
+                android:orientation="horizontal"
                 android:visibility="visible"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-            <CheckBox
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/useHandInHandOutScoring"
-                    android:layout_gravity="center_horizontal"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:text="@string/pref_useEnglishScoring"
-                    android:textSize="@dimen/txt_small"
-                    />
+            <TextView android:inputType="none"
+                android:id="@+id/lblUseHandInHandOutScoring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_Scoring"
+                android:textSize="@dimen/txt_small"
+                android:layout_margin="2dp"
+                />
+            <ToggleButton
+                android:id="@+id/useHandInHandOutScoring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="@string/lbl_Scoring_PointPerRally"
+                android:textOn="@string/lbl_Scoring_PointWhenServing_Squash"
+                android:textSize="@dimen/txt_small"
+                android:layoutMode="opticalBounds"
+                />
+            <!--
+            <Switch
+                android:id="@+id/useHandInHandOutScoring2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="@string/lbl_Scoring_PointPerRally"
+                android:textOn="@string/lbl_Scoring_PointWhenServing_Squash"
+                android:showText="true"
+                android:textSize="@dimen/txt_small"
+                android:layoutMode="opticalBounds"
+                />
+                        <CheckBox
+                                android:id="@+id/useHandInHandOutScoring"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:maxLines="1"
+                                android:text="@string/pref_useEnglishScoring"
+                                android:textSize="@dimen/txt_small"
+                                />
+            -->
         </LinearLayout>
         <LinearLayout
                 android:id="@+id/llLiveScore"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:gravity="right"
                 android:visibility="visible"
                 android:layout_alignParentRight="true"

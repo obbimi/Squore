@@ -361,7 +361,7 @@ public class MatchView extends SBRelativeLayout
     private Spinner              spPauseDuration;
     private Spinner              spAnnouncementLanguage;
     private Spinner              spDoublesServeSequence;
-    private CheckBox             cbUseEnglishScoring;
+    private CompoundButton       cbUseEnglishScoring;
     private CheckBox             cbUseLiveScoring;
     private PreferenceACTextView txtRefereeName;
     private PreferenceACTextView txtMarkerName;
@@ -717,7 +717,7 @@ public class MatchView extends SBRelativeLayout
             cbUseLiveScoring.setChecked(forLiveScore!=null);
         }
 
-        cbUseEnglishScoring = (CheckBox) findViewById(R.id.useHandInHandOutScoring);
+        cbUseEnglishScoring = (CompoundButton) findViewById(R.id.useHandInHandOutScoring);
         cbUseEnglishScoring.setChecked(PreferenceValues.useHandInHandOutScoring(context));
     }
 

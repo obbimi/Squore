@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.badminton"
-          android:versionCode="223"
+          android:versionCode="224"
           android:versionName="4.21">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />

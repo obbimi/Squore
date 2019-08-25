@@ -51,6 +51,8 @@
             <item android:id="@+id/collapse_all" app:showAsAction="never" android:icon="@android:drawable/arrow_up_float"   android:title="@string/collapse_all" />
 
             <!-- only for 'manual' -->
+            <item android:id="@+id/mt_matchlayout_all"                                                               android:title="@string/uc_matchlayout_all_small_font" />
+            <item android:id="@+id/mt_matchlayout_simple"                                                            android:title="@string/uc_matchlayout_simple_large_font" />
             <item android:id="@+id/mt_clear_player_fields"                                                           android:title="@string/uc_clear_player_fields" />
             <item android:id="@+id/mt_clear_club_fields"                                                             android:title="@string/uc_clear_club_fields" />
             <item android:id="@+id/mt_clear_country_fields"                                                          android:title="@string/uc_clear_country_fields" />

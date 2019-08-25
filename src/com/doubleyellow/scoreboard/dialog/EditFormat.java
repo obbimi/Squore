@@ -23,7 +23,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.EnumSpinner;
@@ -67,7 +67,7 @@ public class EditFormat extends BaseAlertDialog {
     private Spinner                           spPauseDuration;
     private EnumSpinner<TieBreakFormat>       spTieBreakFormat;
     private EnumSpinner<DoublesServeSequence> spDoublesServeSequence;
-    private CheckBox                          cbUseEnglishScoring;
+    private CompoundButton                    cbUseEnglishScoring;
 
     @Override public void show() {
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
@@ -126,8 +126,9 @@ public class EditFormat extends BaseAlertDialog {
         spPauseDuration = (Spinner) vg.findViewById(R.id.spPauseDuration);
         MatchView.initPauseDuration(context, spPauseDuration, null);
 
-        cbUseEnglishScoring = (CheckBox) vg.findViewById(R.id.useHandInHandOutScoring);
-        cbUseEnglishScoring.setChecked(PreferenceValues.useHandInHandOutScoring(context));
+        cbUseEnglishScoring = (CompoundButton) vg.findViewById(R.id.useHandInHandOutScoring);
+        boolean bHandInHandOut = PreferenceValues.useHandInHandOutScoring(context);
+        cbUseEnglishScoring.setChecked(bHandInHandOut);
         cbUseEnglishScoring.setEnabled(iNewNrOfPointsToWinGame==0);
 
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -158,9 +159,10 @@ public class EditFormat extends BaseAlertDialog {
                 bChanged = matchModel.setNrOfServesPerPlayer(iNrOfServesPerPlayer) || bChanged;
 */
 
-                if ( cbUseEnglishScoring != null && cbUseEnglishScoring.isEnabled() ) {
+                if ( (cbUseEnglishScoring != null) && cbUseEnglishScoring.isEnabled() ) {
                     boolean bUseEnglishScoring = cbUseEnglishScoring.isChecked();
                     matchModel.setEnglishScoring(bUseEnglishScoring);
+                    PreferenceValues.setBoolean(PreferenceKeys.useHandInHandOutScoring, context, bUseEnglishScoring);
                 }
 
                 TieBreakFormat tbf = TieBreakFormat.values()[spTieBreakFormat.getSelectedItemPosition()];

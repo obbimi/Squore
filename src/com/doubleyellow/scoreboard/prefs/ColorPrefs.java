@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.res.ColorStateList;
 import android.graphics.*;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -643,11 +644,40 @@ public class ColorPrefs
                     if ( textView instanceof EditText ) {
                         setBackground(textView, mTarget2Color.get(ColorTarget.playerButtonBackgroundColor), tag);
                         textView.setTextColor(mTarget2Color.get(ColorTarget.playerButtonTextColor));
-                    } else if (v instanceof Button && (v instanceof CheckBox == false)) {
+                    } else if (v instanceof Button && (v instanceof CompoundButton == false)) {
                         Button button = (Button) v;
                         setBackground(button, mTarget2Color.get(ColorTarget.scoreButtonBackgroundColor), tag);
                         button.setTextColor(mTarget2Color.get(ColorTarget.scoreButtonTextColor));
-                    } else if (v instanceof CheckBox) {
+                    } else if (v instanceof ToggleButton) {
+                        ToggleButton toggleButton = (ToggleButton) v;
+                        setBackground(toggleButton, mTarget2Color.get(ColorTarget.playerButtonBackgroundColor), tag);
+                        toggleButton.setTextColor(mTarget2Color.get(ColorTarget.playerButtonTextColor));
+                        //toggleButton.setVisibility(View.GONE);
+                    } else if (v instanceof Switch) {
+                        Switch aSwitch = (Switch) v;
+                        //setBackground(aSwitch, mTarget2Color.get(ColorTarget.playerButtonBackgroundColor), tag);
+                        //aSwitch.setTextColor(mTarget2Color.get(ColorTarget.playerButtonTextColor));
+                        ColorStateList buttonStates = new ColorStateList(
+                                new int[][]{
+                                        new int[]{-android.R.attr.state_enabled}, // = disabled
+                                        new int[]{android.R.attr.state_checked},
+                                        new int[]{} // unchecked
+                                },
+                                new int[]{
+                                        Color.GRAY,
+                                        mTarget2Color.get(ColorTarget.playerButtonBackgroundColor),
+                                        mTarget2Color.get(ColorTarget.playerButtonBackgroundColor)
+                                }
+                        );
+                        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+                            aSwitch.getThumbDrawable().setTintList(buttonStates);
+                            aSwitch.getTrackDrawable().setTintList(buttonStates);
+                        }
+/*
+                        aSwitch.setSwitchTextAppearance();
+                        aSwitch.setTextAppearance();
+*/
+                    } else if (v instanceof CheckBox) { // TODO: CompoundButton --> Switch / ToggleButton
                         CheckBox button = (CheckBox) v;
                         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
                             // make only the border of the checkbox a different color (mainly to prevent white on white)

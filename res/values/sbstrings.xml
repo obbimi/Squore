@@ -37,6 +37,9 @@
     <string name="sb_cmd_ok_and_start_timer">OK (start timer)</string>
     <string name="sb_cmd_ok_plus">OK +</string>
 
+    <string name="uc_matchlayout_all_small_font">Smaller font (All fields)</string>
+    <string name="uc_matchlayout_simple_large_font">Larger font (Common fields)</string>
+
     <string name="uc_clear_all_fields">Clear all fields</string>
     <string name="uc_clear_player_fields">Clear player fields</string>
     <string name="uc_clear_country_fields">Clear country fields</string>
