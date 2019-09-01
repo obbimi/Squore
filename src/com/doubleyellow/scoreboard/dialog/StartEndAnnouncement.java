@@ -20,10 +20,13 @@ package com.doubleyellow.scoreboard.dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
+import android.widget.Button;
 
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.dialog.announcement.EndGameAnnouncement;
 import com.doubleyellow.scoreboard.model.Call;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
@@ -33,8 +36,11 @@ import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.*;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+
+import static com.doubleyellow.scoreboard.main.ScoreBoard.AnnouncementTrigger;
 
 public class StartEndAnnouncement extends BaseAlertDialog
 {
@@ -45,24 +51,27 @@ public class StartEndAnnouncement extends BaseAlertDialog
     }
 
     @Override public boolean storeState(Bundle outState) {
-        outState.putSerializable(ScoreBoard.AnnouncementTrigger.class.getSimpleName(), triggeredBy);
+        outState.putSerializable(AnnouncementTrigger.class.getSimpleName(), triggeredBy);
         return true;
     }
 
     @Override public boolean init(Bundle outState) {
-        ScoreBoard.AnnouncementTrigger announcementTrigger = (ScoreBoard.AnnouncementTrigger) outState.getSerializable(ScoreBoard.AnnouncementTrigger.class.getSimpleName());
+        AnnouncementTrigger announcementTrigger = (AnnouncementTrigger) outState.getSerializable(AnnouncementTrigger.class.getSimpleName());
         init(announcementTrigger);
         return true;
     }
 
-    private ScoreBoard.AnnouncementTrigger triggeredBy = null;
+    private AnnouncementTrigger triggeredBy = null;
     @Override public void show() {
 
         boolean autoEndGame = PreferenceValues.endGameSuggestion(context).equals(Feature.Automatic);
 
-        boolean bIncludeReceiver = matchModel.hasStarted()  == false;
-        boolean bIncludeToServe  =                                     (matchModel.gameHasStarted() == false)               && (this.triggeredBy.equals(ScoreBoard.AnnouncementTrigger.StartOfGame) || this.triggeredBy.equals(ScoreBoard.AnnouncementTrigger.Manual));
-        boolean bIncludeGameTo   = matchModel.hasStarted()          && (matchModel.gameHasStarted() == true || autoEndGame) && (this.triggeredBy.equals(ScoreBoard.AnnouncementTrigger.EndOfGame)   || this.triggeredBy.equals(ScoreBoard.AnnouncementTrigger.Manual));
+        boolean bMatchStarted    = matchModel.hasStarted();
+        boolean bIncludeReceiver = bMatchStarted == false;
+        boolean bGameHasStarted  = matchModel.gameHasStarted();
+
+        boolean bIncludeToServe  =                  (bGameHasStarted == false)               && (EnumSet.of(AnnouncementTrigger.StartOfGame, AnnouncementTrigger.Manual).contains(triggeredBy));
+        boolean bIncludeGameTo   = bMatchStarted && (bGameHasStarted == true || autoEndGame) && (EnumSet.of(AnnouncementTrigger.EndOfGame, AnnouncementTrigger.EndOfMatch, AnnouncementTrigger.Manual).contains(triggeredBy));
         List<String> messages = getOfficialMessage(context, matchModel, true, bIncludeToServe, bIncludeReceiver, true, bIncludeGameTo);
 
         // should never be the case... but to prevent strange dialogs
@@ -75,6 +84,27 @@ public class StartEndAnnouncement extends BaseAlertDialog
            .setPositiveButton(iResIdCaption, onClickListener)
            .setOnKeyListener(getOnBackKeyListener(DialogInterface.BUTTON_POSITIVE)); // 20161228 change from NEUTRAL to POSITIVE so that start of game gets 'set' no mather how dialog is dismissed
 
+        Feature featureUseTimers = PreferenceValues.useTimersFeature(context);
+        boolean bAutoShowTimer   = featureUseTimers.equals(Feature.Automatic);
+        if ( bAutoShowTimer && (this instanceof EndGameAnnouncement) ) {
+            // start a timer to autoclose this dialog
+            int iAutoCloseInXToStartTimer = 16;
+            CountDownTimer countDownTimer = new CountDownTimer(iAutoCloseInXToStartTimer * 1000, 1000) {
+                @Override public void onTick(long millisUntilFinished) {
+                    // give some feedback
+                    Button btnOK = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    String sCaption = btnOK.getText().toString().replaceFirst("\\(\\d+\\)", "").trim();
+                    sCaption += " (" + Integer.toString((int)(millisUntilFinished/1000))  + ")";
+                    btnOK.setText(sCaption);
+                }
+
+                @Override public void onFinish() {
+                    handleButtonClick(DialogInterface.BUTTON_POSITIVE);
+                }
+            };
+            countDownTimer.start();
+        }
+
         // in a try catch to prevent crashing if somehow scoreBoard is not showing any longer
         try {
             dialog = adb.show();
@@ -84,7 +114,7 @@ public class StartEndAnnouncement extends BaseAlertDialog
         }
     }
 
-    public void init(ScoreBoard.AnnouncementTrigger trigger) {
+    public void init(AnnouncementTrigger trigger) {
         triggeredBy = trigger;
     }
 

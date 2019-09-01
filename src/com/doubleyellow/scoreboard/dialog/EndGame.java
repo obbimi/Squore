@@ -17,12 +17,14 @@
 
 package com.doubleyellow.scoreboard.dialog;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.CountDownTimer;
+import android.util.Log;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -49,6 +51,8 @@ import java.util.Map;
  */
 public class EndGame extends BaseAlertDialog
 {
+    private static final String TAG = "SB." + EndGame.class.getSimpleName();
+
     private Player  m_winner           = null;
     private boolean bAllowFormatChange = false;
 
@@ -71,8 +75,8 @@ public class EndGame extends BaseAlertDialog
 
         boolean matchHasEnded                     = matchModel.matchHasEnded();
 //      boolean bShowWithTimerPrefCheckbox        = false && (matchModel.matchHasEnded() == false); // TODO: decide what looks best: a checkbox or an extra button
-        Feature useTimersFeature                  = PreferenceValues.useTimersFeature(context);
-        boolean bShowWithNeutralButtonToShowTimer = (matchHasEnded == false) && useTimersFeature.equals(Feature.Suggest);
+        Feature featureUseTimers                  = PreferenceValues.useTimersFeature(context);
+        boolean bShowWithNeutralButtonToShowTimer = (matchHasEnded == false) && featureUseTimers.equals(Feature.Suggest);
         boolean bDrawTimerImageOnButton           = bShowWithNeutralButtonToShowTimer;
 
         int iResIdNeg = R.string.cmd_cancel;
@@ -83,14 +87,34 @@ public class EndGame extends BaseAlertDialog
         adb.setPositiveButton(R.string.cmd_ok, dialogClickListener)
            .setNegativeButton(iResIdNeg      , dialogClickListener);
 
+        boolean bAutoShowTimer = featureUseTimers.equals(Feature.Automatic);
         if ( bShowWithNeutralButtonToShowTimer ) {
-            boolean bAutoShowTimer = useTimersFeature.equals(Feature.Automatic);
             int neutralCaptionResId = bAutoShowTimer ? R.string.sb_cmd_ok_and_skip_timer : R.string.sb_cmd_ok_and_start_timer;
             if ( bAutoShowTimer == false ) {
                 if ( bDrawTimerImageOnButton ) {
                     neutralCaptionResId = R.string.sb_cmd_ok_plus;
                 }
                 adb.setNeutralButton(neutralCaptionResId, dialogClickListener);
+            }
+        } else {
+            if ( bAutoShowTimer ) {
+                // start a timer to autoclose this dialog
+                int iAutoCloseInXToStartTimer = 16;
+                CountDownTimer countDownTimer = new CountDownTimer(iAutoCloseInXToStartTimer * 1000, 1000) {
+                    @Override public void onTick(long millisUntilFinished) {
+                        // give some feedback
+                        Button btnOK = dialog.getButton(BTN_END_GAME);
+                        String sCaption = btnOK.getText().toString().replaceFirst("\\(\\d+\\)", "").trim();
+                        sCaption += " (" + Integer.toString((int)(millisUntilFinished/1000))  + ")";
+                        btnOK.setText(sCaption);
+                        Log.d(TAG, "Auto close in " + millisUntilFinished);
+                    }
+
+                    @Override public void onFinish() {
+                        handleButtonClick(BTN_END_GAME_PLUS_TIMER);
+                    }
+                };
+                countDownTimer.start();
             }
         }
 
@@ -114,16 +138,16 @@ public class EndGame extends BaseAlertDialog
             }
         }
 
-        DialogInterface.OnShowListener listener = null;
+        DialogInterface.OnShowListener onShowListener = null;
         if ( bDrawTimerImageOnButton ) {
-            listener = new ButtonUpdater(context, false
-                    , AlertDialog.BUTTON_NEUTRAL, R.drawable.timer_4settings4buttons
-                    //,AlertDialog.BUTTON_NEGATIVE, android.R.drawable.ic_menu_close_clear_cancel
+            onShowListener = new ButtonUpdater(context, false
+                    , BTN_END_GAME_PLUS_TIMER, R.drawable.timer_4settings4buttons
+                    //,BTN_CHANGE_MATCH_FORMAT, android.R.drawable.ic_menu_close_clear_cancel
             );
         } else {
-            listener = new DialogInterface.OnShowListener() {
+            onShowListener = new DialogInterface.OnShowListener() {
                 @Override public void onShow(DialogInterface dialog) {
-                    triggerButtonLayoutAPI28(dialog, DialogInterface.BUTTON_NEUTRAL);
+                    triggerButtonLayoutAPI28(dialog, BTN_END_GAME_PLUS_TIMER);
                 }
             };
         }
@@ -137,7 +161,7 @@ public class EndGame extends BaseAlertDialog
                 }
             });
         }
-        dialog = adb.show(listener);
+        dialog = adb.show(onShowListener);
     }
 
     private List<String> getRacketlonMessages(boolean bMatchEnded) {
