@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.doubleyellow.view.SBRelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:dy="http://double-yellow.be"
               android:id="@+id/ll_match"
               android:layout_margin="5dp"
               android:orientation="vertical"
@@ -184,70 +183,68 @@
                 android:id="@+id/lblFormat"/>
 -->
         <LinearLayout
-                android:id="@+id/llPoints"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:visibility="visible"
+            android:id="@+id/llPoints"
+            android:layout_marginBottom="2dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/lblMatch_BestOf"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                        android:id="@+id/lblMatch_BestOf"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:text="@string/best_of_x_games_to_y_1"
-                        android:textSize="@dimen/txt_medium"
-                        />
-                <Spinner
-                        android:id="@+id/spNumberOfGamesToWin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:nextFocusDown="@+id/spGameEndScore"
-                        android:orientation="vertical"
-                    />
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:text="@string/best_of_x_games_to_y_1"
+                android:textSize="@dimen/txt_medium" />
+            <Spinner
+                android:id="@+id/spNumberOfGamesToWin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/spGameEndScore"
+                android:orientation="vertical" />
 
-                <TextView
-                        android:id="@+id/lblMatch_GamesTo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/best_of_x_games_to_y_2_Squash"
-                        android:textSize="@dimen/txt_medium"
-                        android:layout_margin="2dp"
-                        />
-                <Spinner
-                        android:id="@+id/spGameEndScore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:nextFocusDown="@+id/useHandInHandOutScoring"
-                        android:orientation="vertical"
-                        />
+            <TextView
+                android:id="@+id/lblMatch_GamesTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/best_of_x_games_to_y_2_Squash"
+                android:textSize="@dimen/txt_medium"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp" />
+            <Spinner
+                android:id="@+id/spGameEndScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/useHandInHandOutScoring"
+                android:orientation="vertical" />
         </LinearLayout>
         <LinearLayout
-                android:id="@+id/ll_doubleServeSequence"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:visibility="visible"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                        android:id="@+id/lblDoublesServeSequence"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/sb_doublesServeSequence"
-                        android:textSize="@dimen/txt_medium"
-                        android:layout_margin="2dp"
-                        />
+            android:id="@+id/ll_doubleServeSequence"
+            android:layout_marginBottom="2dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/lblDoublesServeSequence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sb_doublesServeSequence"
+                android:textSize="@dimen/txt_medium"
+                android:layout_margin="2dp" />
             <Spinner
-                    android:id="@+id/spDoublesServeSequence"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nextFocusDown="@+id/spTieBreakFormat"
-                    android:layoutMode="opticalBounds"
-                    android:orientation="vertical"/>
+                android:id="@+id/spDoublesServeSequence"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/spTieBreakFormat"
+                android:layoutMode="opticalBounds"
+                android:orientation="vertical"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/llTieBreakFormat"
+            android:layout_marginBottom="2dp"
             android:orientation="horizontal"
             android:gravity="center"
             android:visibility="visible"
@@ -268,23 +265,10 @@
                 android:nextFocusDown="@+id/useHandInHandOutScoring"
                 android:layoutMode="opticalBounds"
                 android:orientation="vertical"/>
-            <!--
-                        <com.doubleyellow.android.view.EnumSpinner
-                                xmlns:app="http://schemas.android.com/apk/res-auto"
-                                android:id="@+id/spTieBreakFormat"
-                                app:enum_class="com.doubleyellow.scoreboard.model.TieBreakFormat"
-                                app:enum_display_values="@array/tiebreakFormatDisplayValues"
-                                android:nextFocusDown="@+id/useHandInHandOutScoring"
-                                android:layoutMode="opticalBounds"
-                                android:orientation="vertical"
-                                android:spinnerMode="dropdown"
-                                android:popupBackground="@color/dy_dark"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-            -->
         </LinearLayout>
         <LinearLayout
             android:id="@+id/llPauseDuration"
+            android:layout_marginBottom="2dp"
             android:orientation="horizontal"
             android:gravity="center"
             android:visibility="visible"
@@ -294,9 +278,35 @@
                 android:id="@+id/lblPauseDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/lblPauseDuration"
+                android:text="@string/sb_Duration_Warmup"
                 android:textSize="@dimen/txt_medium"
-                android:layout_margin="2dp"
+                android:layout_marginEnd="2dp"
+                />
+            <Spinner
+                android:id="@+id/spWarmupDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/spPauseDuration"
+                android:layoutMode="opticalBounds"
+                android:layout_marginEnd="6dp"
+                android:orientation="vertical"/>
+            <ToggleButton
+                android:id="@+id/cbWarmupDuration"
+                android:nextFocusDown="@+id/spPauseDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textOff="241"
+                android:textOn="301"
+                android:textSize="@dimen/txt_large"
+                />
+            <TextView android:inputType="none"
+                android:id="@+id/lblPauseDuration2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sb_Duration__and_Pauses"
+                android:textSize="@dimen/txt_small"
+                android:layout_marginEnd="1dp"
                 />
             <Spinner
                 android:id="@+id/spPauseDuration"
@@ -304,58 +314,69 @@
                 android:layout_height="wrap_content"
                 android:layoutMode="opticalBounds"
                 android:orientation="vertical"/>
-        </LinearLayout>
-        <LinearLayout
-                android:id="@+id/llDisciplineStart"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:visibility="visible"
+            <ToggleButton
+                android:id="@+id/cbPauseDuration"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView android:inputType="none"
-                          android:id="@+id/lblDisciplineStart"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="@string/start_with_discipline"
-                          android:textSize="@dimen/txt_medium"
-                          android:layout_margin="2dp"
-                        />
-                <Spinner
-                        android:id="@+id/spDisciplineStart"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layoutMode="opticalBounds"
-                        android:orientation="vertical"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textOff="91"
+                android:textOn="121"
+                android:textSize="@dimen/txt_large" />
         </LinearLayout>
         <LinearLayout
-                android:id="@+id/llNumberOfServesPerPlayer"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:visibility="visible"
+            android:id="@+id/llDisciplineStart"
+            android:layout_marginBottom="2dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:inputType="none"
+                android:id="@+id/lblDisciplineStart"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView android:inputType="none"
-                          android:id="@+id/lblNumberOfServesPerPlayer"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="@string/number_of_serves_per_player"
-                          android:textSize="@dimen/txt_medium"
-                          android:layout_margin="2dp"
-                        />
-                <Spinner
-                        android:id="@+id/spNumberOfServesPerPlayer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layoutMode="opticalBounds"
-                        android:orientation="vertical"/>
+                android:layout_height="wrap_content"
+                android:text="@string/start_with_discipline"
+                android:textSize="@dimen/txt_medium"
+                android:layout_margin="2dp" />
+            <Spinner
+                android:id="@+id/spDisciplineStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layoutMode="opticalBounds"
+                android:orientation="vertical"/>
         </LinearLayout>
         <LinearLayout
-                android:id="@+id/llScoringType"
-                android:orientation="horizontal"
-                android:gravity="left"
-                android:visibility="visible"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            android:id="@+id/llNumberOfServesPerPlayer"
+            android:layout_marginBottom="2dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:inputType="none"
+                android:id="@+id/lblNumberOfServesPerPlayer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/number_of_serves_per_player"
+                android:textSize="@dimen/txt_medium"
+                android:layout_margin="2dp" />
+            <Spinner
+                android:id="@+id/spNumberOfServesPerPlayer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layoutMode="opticalBounds"
+                android:orientation="vertical"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llScoringType"
+            android:layout_marginBottom="2dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <TextView android:inputType="none"
                 android:id="@+id/lblUseHandInHandOutScoring"
                 android:layout_width="wrap_content"
@@ -376,15 +397,14 @@
                 />
 <!--
             <CheckBox
-                    android:id="@+id/useHandInHandOutScoring"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:text="@string/pref_useEnglishScoring"
-                    android:textSize="@dimen/txt_large"
-                    />
+                android:id="@+id/useHandInHandOutScoring"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:text="@string/pref_useEnglishScoring"
+                android:textSize="@dimen/txt_large" />
 -->
         </LinearLayout>
     </LinearLayout>

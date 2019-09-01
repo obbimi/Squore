@@ -153,6 +153,7 @@ public enum PreferenceKeys {
         showCircularCountdownInTimer,
         cancelTimerWhenTimeIsUp,
         timerWarmup,
+        timerWarmup_values,
         timerPauseBetweenGames,
         timerPauseBetweenGames_values,
       //timerInjury,

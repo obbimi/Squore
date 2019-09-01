@@ -307,7 +307,6 @@
                             android:id="@+id/lblMatch_BestOf"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="2dp"
                             android:layout_marginEnd="2dp"
                             android:text="@string/best_of_x_games_to_y_1"
                             android:textSize="@dimen/txt_small"
@@ -445,27 +444,59 @@
 -->
         </LinearLayout>
         <LinearLayout
-                android:id="@+id/llPauseDuration"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:visibility="visible"
+            android:id="@+id/llPauseDuration"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:inputType="none"
+                android:id="@+id/lblPauseDuration"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView android:inputType="none"
-                          android:id="@+id/lblPauseDuration"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="@string/lblPauseDuration"
-                          android:textSize="@dimen/txt_small"
-                          android:layout_margin="2dp"
-                        />
-                <Spinner
-                        android:id="@+id/spPauseDuration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:nextFocusDown="@+id/spHandicapFormat"
-                        android:layoutMode="opticalBounds"
-                        android:orientation="vertical"/>
+                android:layout_height="wrap_content"
+                android:text="@string/sb_Duration_Warmup"
+                android:textSize="@dimen/txt_small"
+                android:layout_margin="1dp" />
+            <Spinner
+                android:id="@+id/spWarmupDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/spPauseDuration"
+                android:layoutMode="opticalBounds"
+                android:layout_marginEnd="1dp"
+                android:orientation="vertical"/>
+            <ToggleButton
+                android:id="@+id/cbWarmupDuration"
+                android:nextFocusDown="@+id/spPauseDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textOff="241"
+                android:textOn="301"
+                android:textSize="@dimen/txt_small" />
+            <TextView android:inputType="none"
+                android:id="@+id/lblPauseDuration2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sb_Duration__and_Pauses"
+                android:textSize="@dimen/txt_small"
+                android:layout_margin="1dp" />
+            <Spinner
+                android:id="@+id/spPauseDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/spHandicapFormat"
+                android:layoutMode="opticalBounds"
+                android:orientation="vertical"/>
+            <ToggleButton
+                android:id="@+id/cbPauseDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textOff="91"
+                android:textOn="121"
+                android:textSize="@dimen/txt_small" />
         </LinearLayout>
         <LinearLayout
                 android:id="@+id/llHandicapFormat"
@@ -540,7 +571,8 @@
                 android:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-            <TextView android:inputType="none"
+            <TextView
+                android:inputType="none"
                 android:id="@+id/lblUseHandInHandOutScoring"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -20,7 +20,9 @@
     <string name="sb_online_sheet_updated">Feuille de match en ligne mise à jour</string> <!-- TODO -->
     <string name="sb_injury_type">Type de blessure</string>
     <string name="sb_doublesServeSequence">Séquence de service</string>
-    <string name="lblPauseDuration">Durée d\'interruption</string>
+    <string name="sb_Duration_Warmup_and_Pauses">Durée d\'échauffement &amp; interruption (s)</string>
+    <string name="sb_Duration_Warmup">Durée d\'échauffement:</string>
+    <string name="sb_Duration__and_Pauses">Interruption:</string>
     <string name="sb_tiebreak">Tie break</string>
     <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-partout - Le receveur %2$s choisit de jouer en %3$s ou à %4$s</string>
     <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-partout - Le receveur %2$s choisit le point gagnant</string>

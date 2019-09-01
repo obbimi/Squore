@@ -22,7 +22,9 @@
     <string name="sb_online_sheet_updated">Online scoreblad bijgewerkt</string>
     <string name="sb_injury_type">Oorzaak van Blessure</string>
     <string name="sb_doublesServeSequence">Opslag volgorde</string>
-    <string name="lblPauseDuration">Pause Duur</string>
+    <string name="sb_Duration_Warmup_and_Pauses">Duur Warmup &amp; Pause (s)</string>
+    <string name="sb_Duration_Warmup">Duur Warmup</string>
+    <string name="sb_Duration__and_Pauses">Pause (s)</string>
     <string name="sb_tiebreak">Tie Break</string>
     <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s Gelijk - Ontvanger %2$s kiest om tot %3$s of tot %4$s te spelen</string>
     <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s Gelijk - Ontvanger %2$s kiest winnende score</string>

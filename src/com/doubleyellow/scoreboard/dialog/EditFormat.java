@@ -25,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.ToggleButton;
+
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.EnumSpinner;
 import com.doubleyellow.scoreboard.Brand;
@@ -38,6 +40,7 @@ import com.doubleyellow.scoreboard.model.TieBreakFormat;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.prefs.Preferences;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
@@ -64,7 +67,10 @@ public class EditFormat extends BaseAlertDialog {
 
     private Spinner                           spNumberOfGamesToWin;
     private Spinner                           spGameEndScore;
+    private Spinner                           spWarmpupDuration;
+    private ToggleButton                      cbWarmpupDuration;
     private Spinner                           spPauseDuration;
+    private ToggleButton                      cbPauseDuration;
     private EnumSpinner<TieBreakFormat>       spTieBreakFormat;
     private EnumSpinner<DoublesServeSequence> spDoublesServeSequence;
     private CompoundButton                    cbUseEnglishScoring;
@@ -123,8 +129,13 @@ public class EditFormat extends BaseAlertDialog {
                 ll_doubleServeSequence.setVisibility(View.GONE);
             }
         }
-        spPauseDuration = (Spinner) vg.findViewById(R.id.spPauseDuration);
-        MatchView.initPauseDuration(context, spPauseDuration, null);
+        spWarmpupDuration = (Spinner)      vg.findViewById(R.id.spWarmupDuration);
+        cbWarmpupDuration = (ToggleButton) vg.findViewById(R.id.cbWarmupDuration);
+        MatchView.initDuration(context, cbWarmpupDuration, spWarmpupDuration, null, Preferences.syncAndClean_warmupValues(context), PreferenceValues.getWarmupDuration(context));
+
+        spPauseDuration = (Spinner)      vg.findViewById(R.id.spPauseDuration);
+        cbPauseDuration = (ToggleButton) vg.findViewById(R.id.cbPauseDuration);
+        MatchView.initDuration(context, cbPauseDuration, spPauseDuration, null, Preferences.syncAndClean_pauseBetweenGamesValues(context), PreferenceValues.getPauseDuration(context));
 
         cbUseEnglishScoring = (CompoundButton) vg.findViewById(R.id.useHandInHandOutScoring);
         boolean bHandInHandOut = PreferenceValues.useHandInHandOutScoring(context);
@@ -174,11 +185,7 @@ public class EditFormat extends BaseAlertDialog {
                     PreferenceValues.setEnum(PreferenceKeys.doublesServeSequence, context, dss); // make it the default for next matches
                 }
 
-                String sDuration = (String) spPauseDuration.getSelectedItem();
-                if ( StringUtil.isNotEmpty(sDuration) ) {
-                    int iDuration = Integer.parseInt(sDuration);
-                    PreferenceValues.setNumber(PreferenceKeys.timerPauseBetweenGames, context, iDuration);
-                }
+                MatchView.getValueFromSelectListOrToggleAndStoreAsPref(context, cbPauseDuration, spPauseDuration, PreferenceKeys.timerPauseBetweenGames, PreferenceValues.getPauseDuration(context));
 
                 break;
             case DialogInterface.BUTTON_NEGATIVE:

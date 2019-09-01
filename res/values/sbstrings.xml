@@ -25,7 +25,9 @@
     <string name="sb_online_sheet_updated">Online scoresheet updated</string>
     <string name="sb_injury_type">Injury Type</string>
     <string name="sb_doublesServeSequence">Serve Sequence</string>
-    <string name="lblPauseDuration">Pause Duration</string>
+    <string name="sb_Duration_Warmup_and_Pauses">Duration Warmup &amp; Pause (s)</string>
+    <string name="sb_Duration_Warmup">Duration Warmup</string>
+    <string name="sb_Duration__and_Pauses">Pause</string>
     <string name="sb_tiebreak">Tie Break</string>
     <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-All - Receiver %2$s chooses to play to %3$s or to %4$s</string>
     <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-All - Receiver %2$s chooses winning score</string>

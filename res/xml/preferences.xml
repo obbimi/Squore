@@ -809,6 +809,12 @@
                 android:inputType="number"
                 android:defaultValue="@integer/timerWarmup_default_Squash"
                 />
+            <EditTextPreference android:key="timerWarmup_values"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_timerWarmup_values"
+                android:summary="@string/pref_timerWarmup_values_summary"
+                android:defaultValue="@string/timerWarmup_values_default_Squash"
+                />
             <EditTextPreference android:key="timerPauseBetweenGames"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_timerPauseBetweenGames"

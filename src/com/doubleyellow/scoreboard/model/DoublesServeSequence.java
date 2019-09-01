@@ -63,6 +63,9 @@ public enum DoublesServeSequence {
         return sFirstChar.equals(sFirstChar.toLowerCase());
     }
     DoublesServe playerToServe(DoublesServe io, boolean bUseStart, int iHandoutCountZB) {
+        if ( this.equals(NA) ) {
+            return io;
+        }
         if ( this.equals(A1B1A2B2) ) {
             int i = iHandoutCountZB % 4;
             if ( i == 1 || i == 2 ) {
@@ -83,12 +86,12 @@ public enum DoublesServeSequence {
     }
 
     private String get2SequentialChars(DoublesServe io, boolean bUseStart) {
-        String sCars = (bUseStart?sStart:"") + sRepeat + sRepeat;
+        String sCars = (bUseStart?sStart:"") + sRepeat + sRepeat; // to get something at least 2 chars long
         int iIdx = sCars.toUpperCase().indexOf(io.toString());
         if ( iIdx >= 0 ) {
             return sCars.substring(iIdx, iIdx+2);
         } else {
-            return "_" + sCars.substring(0,1);
+            return "_" + sCars.substring(0,1); // java.lang.StringIndexOutOfBoundsException?
         }
     }
 /*

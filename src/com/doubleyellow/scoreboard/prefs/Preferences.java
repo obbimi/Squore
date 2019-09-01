@@ -307,6 +307,10 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     case showLastGameInfoInTimer:
                         break;
                     case timerWarmup:
+                        syncAndClean_warmupValues(Preferences.this);
+                        break;
+                    case timerWarmup_values:
+                        syncAndClean_warmupValues(Preferences.this);
                         break;
                     case timerPauseBetweenGames:
                         syncAndClean_pauseBetweenGamesValues(Preferences.this);
@@ -883,13 +887,21 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
         }
     }
 
+    public static List<String> syncAndClean_warmupValues(Context ctx) {
+        return syncAndClean_durationValues(ctx, PreferenceKeys.timerWarmup       , R.integer.timerWarmup_default_Squash
+                                              , PreferenceKeys.timerWarmup_values, R.string.timerWarmup_values_default_Squash);
+    }
     public static List<String> syncAndClean_pauseBetweenGamesValues(Context ctx) {
-        int iResDefault = PreferenceValues.getSportTypeSpecificResId(ctx, R.string.timerPauseBetweenGames_values_default_Squash);
+        return syncAndClean_durationValues(ctx, PreferenceKeys.timerPauseBetweenGames       , R.integer.timerPauseBetweenGames_default_Squash
+                                              , PreferenceKeys.timerPauseBetweenGames_values, R.string.timerPauseBetweenGames_values_default_Squash);
+    }
+    private static List<String> syncAndClean_durationValues(Context ctx, PreferenceKeys pref, int iResDefaultValue, PreferenceKeys prefMV, int iResDefaultValues) {
+        int iResDefault = PreferenceValues.getSportTypeSpecificResId(ctx, iResDefaultValues);
 
-        String sValues = PreferenceValues.getString(PreferenceKeys.timerPauseBetweenGames_values, iResDefault, ctx);
+        String sValues = PreferenceValues.getString(prefMV, iResDefault, ctx);
         sValues = sValues.replaceAll("[^0-9,;]", "");
         List<String> lValues = new ArrayList<String>(Arrays.asList(sValues.split("[,;]")));
-        int iCurrentValue   = PreferenceValues.getPauseDuration(ctx);
+        int iCurrentValue   = PreferenceValues.getIntegerR(pref, ctx, iResDefaultValue); //
         String sIntValue = String.valueOf(iCurrentValue);
         if ( (lValues != null) && (lValues.contains(sIntValue) == false) ) {
             lValues.add(sIntValue);
@@ -910,7 +922,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
         });
         String sNewValue = ListUtil.join(lValues, ",");
         if ( sValues.equals(sNewValue) == false ) {
-            PreferenceValues.setString(PreferenceKeys.timerPauseBetweenGames_values, ctx, sNewValue);
+            PreferenceValues.setString(prefMV, ctx, sNewValue);
         }
         return lValues;
     }

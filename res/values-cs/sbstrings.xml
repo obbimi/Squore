@@ -25,7 +25,9 @@
     <string name="sb_online_sheet_updated">Online tabulka výsledků aktualizována</string>
     <string name="sb_injury_type">Druh zranění</string>
     <string name="sb_doublesServeSequence">Pořadí podání</string>
-    <string name="lblPauseDuration">Délka přestávky (s)</string>
+    <string name="sb_Duration_Warmup_and_Pauses">Délka zahřívání &amp; přestávky (s)</string> <!-- Length warmup/break -->
+    <string name="sb_Duration_Warmup">Délka zahřívání</string> <!-- Length warmup/break -->
+    <string name="sb_Duration__and_Pauses">Přestávky</string> <!-- Length warmup/break -->
     <string name="sb_tiebreak">Zkrácená hra</string>
     <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-všichni - Přijímající %2$s volí, zda se hraje do %3$s nebo do %4$s</string>
     <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-všichni - Přijímající %2$s volí vítězné skóre</string>

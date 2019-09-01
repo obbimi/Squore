@@ -1083,6 +1083,9 @@ public class PreferenceValues extends RWValues
     public static int getPauseDuration(Context context) {
         return getIntegerR(PreferenceKeys.timerPauseBetweenGames, context, R.integer.timerPauseBetweenGames_default_Squash);
     }
+    public static int getWarmupDuration(Context context) {
+        return getIntegerR(PreferenceKeys.timerWarmup, context, R.integer.timerWarmup_default_Squash);
+    }
 
     private static boolean bFixedMatchesAreUnChanged = true;
     private static boolean bFeedsAreUnChanged        = true;
@@ -1588,7 +1591,7 @@ public class PreferenceValues extends RWValues
 
                 int appVersionCode = RWValues.getAppVersionCode(context);
                 final int    NO_SHOWCASE_FOR_VERSION        = 211;
-                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-07-18"; // auto adjusted by shell script 'clean.and.assemble.sh'
+                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-08-26"; // auto adjusted by shell script 'clean.and.assemble.sh'
                 if ( appVersionCode > NO_SHOWCASE_FOR_VERSION ) {
                     // need to adjust the datecheck below
                     Log.w(TAG, "[getStartupAction] Adjust version code check!!");

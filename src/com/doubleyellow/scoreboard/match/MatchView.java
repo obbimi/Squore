@@ -20,7 +20,6 @@ package com.doubleyellow.scoreboard.match;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +48,11 @@ import java.util.List;
 
 /**
  * MatchView used by both the Match activity and the MatchFragment (MatchTabbed).
- * Used to define the match format.
+ * Used to define the
+ * - players
+ * - match format
+ * - event details
+ * - referee details
  */
 public class MatchView extends SBRelativeLayout
 {
@@ -136,7 +139,7 @@ public class MatchView extends SBRelativeLayout
         bCountriesCollapsed = (ViewUtil.editTextsAreAllEmpty(this, iToggleCountries));
         ViewUtil.installExpandCollapse(this, R.id.lblCountries, iToggleCountries, (bCountriesCollapsed ? GONE : VISIBLE), sExpandedCollapsed);
 
-        final int[] iToggleEventViews = {R.id.ll_match_event_texts, R.id.ll_match_event_texts1, R.id.ll_match_event_texts2};
+        final int[] iToggleEventViews = {R.id.ll_match_event_texts, R.id.ll_match_event_texts1, R.id.ll_match_event_texts2, R.id.ll_match_event_texts3};
         bEventCollapsed = (ViewUtil.editTextsAreAllEmpty(this, iToggleEventViews));
         ViewUtil.installExpandCollapse(this, R.id.lblEvent, iToggleEventViews, (bEventCollapsed ? GONE : VISIBLE), sExpandedCollapsed);
 
@@ -358,7 +361,10 @@ public class MatchView extends SBRelativeLayout
     private Spinner              spTieBreakFormat;
     private Spinner              spHandicap;
     private Spinner              spDisciplineStart;
+    private Spinner              spWarmupDuration;
+    private ToggleButton         cbWarmupDuration; /* If only 2 options available */
     private Spinner              spPauseDuration;
+    private ToggleButton         cbPauseDuration; /* If only 2 options available */
     private Spinner              spAnnouncementLanguage;
     private Spinner              spDoublesServeSequence;
     private CompoundButton       cbUseEnglishScoring;
@@ -436,7 +442,7 @@ public class MatchView extends SBRelativeLayout
         return clearFields(tvsClubs);
     }
 
-    private static int iForceTextSize = 0;
+    private static int iForceTextSize = 0; // only used for enum spinners for now
     private static ArrayAdapter<String> getStringArrayAdapter(Context context, List<String> list, TextView tvRefTxtSize) {
         return getStringArrayAdapter(context, list, tvRefTxtSize, null);
     }
@@ -452,21 +458,10 @@ public class MatchView extends SBRelativeLayout
     private <T extends Enum<T>> void initEnumSpinner(Spinner spinner, Class<T> clazz, T value, T excludeValue, int iResourceDisplayValues, int[] iaDisabled) {
         EnumSpinner.init(spinner, getContext(), clazz, value, excludeValue, iResourceDisplayValues, iForceTextSize, iaDisabled);
     }
-    private static void setTextSizeFromBoard(View v) {
-/*
-        if ( (v instanceof TextView) && (iForceTextSize > 0) ) {
-            TextView tv = (TextView) v;
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, iForceTextSize);
-        }
-*/
-    }
-
     private void initTextViews(View[] tvs) {
         for ( View v:tvs ) {
             NextFocusDownListener.mimicPreSdk19(this, v);
             //v.setOnEditorActionListener(onEditorActionListener);
-
-            setTextSizeFromBoard(v);
         }
     }
 
@@ -645,10 +640,31 @@ public class MatchView extends SBRelativeLayout
                 }
             }
         }
+
+        int iTotNrOfValuesToSelectFrom = 0;
         {
-            spPauseDuration = (Spinner) findViewById(R.id.spPauseDuration);
-            initPauseDuration(context, spPauseDuration, txtPlayerA);
+            List<String> lValues = Preferences.syncAndClean_warmupValues(context);
+            int iDuration = PreferenceValues.getWarmupDuration(context);
+
+            cbWarmupDuration = (ToggleButton) findViewById(R.id.cbWarmupDuration);
+            spWarmupDuration = (Spinner)      findViewById(R.id.spWarmupDuration);
+            iTotNrOfValuesToSelectFrom += initDuration(context, cbWarmupDuration, spWarmupDuration, txtPlayerA, lValues, iDuration);
         }
+        {
+            List<String> lValues = Preferences.syncAndClean_pauseBetweenGamesValues(context);
+            int iDuration = PreferenceValues.getPauseDuration(context);
+
+            cbPauseDuration = (ToggleButton) findViewById(R.id.cbPauseDuration);
+            spPauseDuration = (Spinner)      findViewById(R.id.spPauseDuration);
+            iTotNrOfValuesToSelectFrom += initDuration(context, cbPauseDuration, spPauseDuration, txtPlayerA, lValues, iDuration);
+        }
+        if ( iTotNrOfValuesToSelectFrom <= 2 ) {
+            ViewParent parent = spPauseDuration.getParent();
+            if ( parent instanceof ViewGroup) {
+                ((ViewGroup) parent).setVisibility(GONE);
+            }
+        }
+
         {
             if ( PreferenceValues.useOfficialAnnouncementsFeature(context).equals(Feature.DoNotUse) ) {
                 ViewUtil.hideViewsForEver(this, R.id.ll_AnnouncementLanguage);
@@ -721,24 +737,31 @@ public class MatchView extends SBRelativeLayout
         cbUseEnglishScoring.setChecked(PreferenceValues.useHandInHandOutScoring(context));
     }
 
-    public static void initPauseDuration(Context context, Spinner spPauseDuration, TextView tvRefTxtSize) {
-        if ( spPauseDuration == null ) { return; }
 
-        List<String> lValues = Preferences.syncAndClean_pauseBetweenGamesValues(context);
-        if ( ListUtil.size(lValues) <= 1 ) {
-            // do not show if there is only one value to select
-            ViewParent parent = spPauseDuration.getParent();
-            if ( parent instanceof ViewGroup) {
-                ((ViewGroup) parent).setVisibility(GONE);
+    public static int initDuration(Context context, ToggleButton cbDuration, Spinner spDuration, TextView tvRefTxtSize, List<String> lValues, int iDuration) {
+        if ( (cbDuration != null) && ListUtil.size(lValues) == 2 ) {
+            cbDuration.setVisibility(VISIBLE);
+            if ( spDuration != null ) {
+                spDuration.setVisibility(GONE); // assume a related spinner will allow user to set more than 2 values
             }
-            //findViewById(R.id.llPauseDuration).setVisibility(GONE);
-        } else {
-            int iPauseDuration = PreferenceValues.getPauseDuration(context);
-            ArrayAdapter<String> dataAdapter = getStringArrayAdapter(context, lValues, tvRefTxtSize);
-            spPauseDuration.setAdapter(dataAdapter);
-            spPauseDuration.setSelection(lValues.indexOf(String.valueOf(iPauseDuration)));
-            setTextSizeFromBoard(spPauseDuration);
+            cbDuration.setTextOff(lValues.get(0));
+            cbDuration.setTextOn(lValues.get(1));
+            cbDuration.setChecked(lValues.get(1).equals(String.valueOf(iDuration)));
+            return 2;
         }
+
+        if ( spDuration != null ) {
+            spDuration.setVisibility(VISIBLE);
+            if ( cbDuration != null ) {
+                cbDuration.setVisibility(GONE); // assume a related spinner will allow user to set more than 2 values
+            }
+
+            ArrayAdapter<String> dataAdapter = getStringArrayAdapter(context, lValues, tvRefTxtSize);
+            spDuration.setAdapter(dataAdapter);
+            spDuration.setSelection(lValues.indexOf(String.valueOf(iDuration)));
+            return ListUtil.size(lValues);
+        }
+        return 0;
     }
 
     private static void initClubs(final Context context, final PreferenceACTextView spClub, final TextView txtPlayer) {
@@ -862,7 +885,6 @@ public class MatchView extends SBRelativeLayout
 
             @Override public void onNothingSelected(AdapterView<?> parent) { }
         });
-        setTextSizeFromBoard(spGameEndScore);
     }
 
     /** Invoked from EditFormat as well */
@@ -881,7 +903,6 @@ public class MatchView extends SBRelativeLayout
         ArrayAdapter<String> dataAdapter = getStringArrayAdapter(context, list, refTxtSize);
         spNumberOfGamesToWin.setAdapter(dataAdapter);
         spNumberOfGamesToWin.setSelection(iSelectedIndex);
-        setTextSizeFromBoard(spNumberOfGamesToWin);
     }
 
     public static void initNumberOfServesPerPlayer(Context context, Spinner sp, int iCurrent, int iMin, int max, TextView txtRefTxtSize) {
@@ -897,7 +918,6 @@ public class MatchView extends SBRelativeLayout
         ArrayAdapter<String> dataAdapter = getStringArrayAdapter(context, list, txtRefTxtSize);
         sp.setAdapter(dataAdapter);
         sp.setSelection(iSelectedIndex);
-        setTextSizeFromBoard(sp);
     }
 
     private void initForEasyClearingFields() {
@@ -1093,16 +1113,10 @@ public class MatchView extends SBRelativeLayout
             AnnouncementLanguage languageNew = AnnouncementLanguage.values()[spAnnouncementLanguage.getSelectedItemPosition()];
             PreferenceValues.setAnnouncementLanguage(languageNew, getContext());
         }
-        if ( (spPauseDuration != null) && (spPauseDuration.getVisibility() != View.GONE) ) {
-            String sDuration = (String) spPauseDuration.getSelectedItem();
-            if ( StringUtil.isNotEmpty(sDuration) ) {
-                int iDuration = Integer.parseInt(sDuration);
-                int iCurrentPrefValue = PreferenceValues.getPauseDuration(getContext());
-                if ( iDuration != iCurrentPrefValue) {
-                    PreferenceValues.setNumber(PreferenceKeys.timerPauseBetweenGames, getContext(), iDuration);
-                }
-            }
-        }
+
+        getValueFromSelectListOrToggleAndStoreAsPref(getContext(), cbWarmupDuration, spWarmupDuration, PreferenceKeys.timerWarmup           , PreferenceValues.getWarmupDuration(getContext()));
+        getValueFromSelectListOrToggleAndStoreAsPref(getContext(), cbPauseDuration, spPauseDuration  , PreferenceKeys.timerPauseBetweenGames, PreferenceValues.getPauseDuration (getContext()));
+
         m.setEnglishScoring((cbUseEnglishScoring != null) && cbUseEnglishScoring.isChecked());
         if ( (cbUseLiveScoring != null) && cbUseLiveScoring.isChecked() ) {
             PreferenceValues.initForLiveScoring(getContext(), false);
@@ -1124,5 +1138,26 @@ public class MatchView extends SBRelativeLayout
             }
         }
         return m;
+    }
+
+    public static void getValueFromSelectListOrToggleAndStoreAsPref(Context ctx, ToggleButton cbDuration, Spinner spDuration, PreferenceKeys prefKey, int iCurrentPrefValue) {
+        if ( (spDuration != null) && (spDuration.getVisibility() != View.GONE) ) {
+            String sDuration = (String) spDuration.getSelectedItem();
+            if ( StringUtil.isNotEmpty(sDuration) ) {
+                int iDuration = Integer.parseInt(sDuration);
+                if ( iDuration != iCurrentPrefValue) {
+                    PreferenceValues.setNumber(prefKey, ctx, iDuration);
+                }
+            }
+        }
+        if ((cbDuration != null) && (cbDuration.getVisibility() != View.GONE)) {
+            CharSequence sDuration = cbDuration.isChecked() ? cbDuration.getTextOn() : cbDuration.getTextOff();
+            if (StringUtil.isNotEmpty(sDuration)) {
+                int iDuration = Integer.parseInt(sDuration.toString());
+                if (iDuration != iCurrentPrefValue) {
+                    PreferenceValues.setNumber(prefKey, ctx, iDuration);
+                }
+            }
+        }
     }
 }
