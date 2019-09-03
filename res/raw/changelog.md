@@ -1,3 +1,7 @@
+## 4.21 (sept 2019)
+
+- at start of match allow to adjust warmup duration ( e.g. to switch from 4 minutes (official) to 5 minutes (previous official value))
+
 ## 4.20 (august 2019)
 
 - if matches have been shared, the 'Summary' of multiple matches will include the URLs

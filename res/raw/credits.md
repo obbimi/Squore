@@ -37,8 +37,8 @@ The transformation to HTML is done by using
 
 When a match is shared, the score sheet and game graphs in the target page are made by using
 
--   JQuery: <http://jquery.com/>
--   DYGraphs: <http://dygraphs.com/>
+- JQuery: <http://jquery.com/>
+- DYGraphs: <http://dygraphs.com/>
 
 ### Showcase 
 
@@ -57,7 +57,7 @@ Licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0)
 The following people were so kind to volunteer to translate Squore into their preferred language:
 
 - Sébastien Lepley (French)
-- Filip Hurta (Czech) 
+- Filip Hurta (Czech)
 
 ## User Help and Suggestions
 
@@ -70,3 +70,4 @@ The following users of Squore have made valuable suggestions/help:
 - Andrés Orozco
 - Brian T. French
 - Jean-Marie Evrard from [Squash Romandie](http://squashromandie.ch)
+- Lior Lotem

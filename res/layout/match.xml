@@ -304,13 +304,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <TextView
-                            android:id="@+id/lblMatch_BestOf"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="2dp"
-                            android:text="@string/best_of_x_games_to_y_1"
-                            android:textSize="@dimen/txt_small"
-                            />
+                        android:id="@+id/lblMatch_BestOf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="2dp"
+                        android:text="@string/best_of_x_games_to_y_1"
+                        android:textSize="@dimen/txt_small" />
                     <Spinner
                             android:id="@+id/spNumberOfGamesToWin"
                             android:layout_width="wrap_content"
@@ -486,7 +485,7 @@
                 android:id="@+id/spPauseDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:nextFocusDown="@+id/spHandicapFormat"
+                android:nextFocusDown="@+id/useHandInHandOutScoring"
                 android:layoutMode="opticalBounds"
                 android:orientation="vertical"/>
             <ToggleButton
@@ -497,29 +496,6 @@
                 android:textOff="91"
                 android:textOn="121"
                 android:textSize="@dimen/txt_small" />
-        </LinearLayout>
-        <LinearLayout
-                android:id="@+id/llHandicapFormat"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:visibility="visible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView android:inputType="none"
-                          android:id="@+id/lblHandicapFormat"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="@string/handicap"
-                          android:textSize="@dimen/txt_small"
-                          android:layout_margin="2dp"
-                        />
-                <Spinner
-                        android:id="@+id/spHandicapFormat"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:nextFocusDown="@+id/useHandInHandOutScoring"
-                        android:layoutMode="opticalBounds"
-                        android:orientation="vertical"/>
         </LinearLayout>
         <LinearLayout
                 android:id="@+id/llDisciplineStart"
@@ -611,6 +587,29 @@
                                 android:textSize="@dimen/txt_small"
                                 />
             -->
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llHandicapFormat"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView android:inputType="none"
+                android:id="@+id/lblHandicapFormat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/handicap"
+                android:textSize="@dimen/txt_small"
+                android:layout_margin="2dp"
+                />
+            <Spinner
+                android:id="@+id/spHandicapFormat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/llLiveScore"
+                android:layoutMode="opticalBounds"
+                android:orientation="vertical"/>
         </LinearLayout>
         <LinearLayout
                 android:id="@+id/llLiveScore"
