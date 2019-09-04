@@ -8,11 +8,14 @@ Supports you in scoring/sharing a badminton match.
 &bull; option to see scoring history of each game in a <b>graph</b>
 &bull; possibility of using <b>timers</b> (with optional sound/vibration notifications)
 &bull; possibility of casting the score on to a TV using <b>ChromeCast</b>
+&bull; possibility of <b>mirroring</b> the score on another android device using <b>Bluetooth</b>
 &bull; has the possibility to recall the entire score sequences of all games of a match
+&bull; support for referee-ing doubles matches
 &bull; <b>import/export</b> functionality for previously reffed matches
 &bull; transfer 'in progress' match to another device using <b>NFC</b> (a.k.a. S-Beam)
 &bull; can be used in landscape and portrait orientation
 &bull; option to <b>share</b> the entire scoring history on e.g. Facebook
+&bull; option to <b>share</b> a summary of several related matches (e.g. club against club)
 &bull; option to send the result of a match by text message or email e.g. to a fellow club/team mate
 &bull; when sharing by means of email it is possible to include the complete scoring history
 &bull; tries to auto-complete player names from your contact list (enable in settings)
@@ -21,6 +24,7 @@ Supports you in scoring/sharing a badminton match.
 &bull; specify a color per player (e.g. of the shirt they play in)
 &bull; select matches listed on e.g. tournamentsoftware.com
 &bull; define matches up front for easy selection later
+&bull; option to use different <b>tie-break formats</b>
 &bull; <b>customize colors</b> of the app (e.g. to match your club colors)
 &bull; <b>official badminton rules</b> link in menu (configurable)
 &bull; post a result to a configurable website (ask the web-master of your club)
@@ -30,6 +34,7 @@ You may check with your web-master if it is possible to have one or both of thes
 &bull; Read Contacts: for auto-completing player names when setting up a match
 &bull; Read/Write storage:for backing up details of each match you refereed with the app
 &bull; Network Access: for reading matches/player names from a feed
+&bull; Pair with Bluetooth devices: for mirroring score
 &bull; Vibration Control: mainly to notify you that a timer has (or is nearly) finished
 
 <b>Online Help:</b>
