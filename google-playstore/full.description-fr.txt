@@ -9,6 +9,7 @@ Par son ouverture, elle permet d’arbitrer les matchs de vos tournois disponibl
 &bull; Option pour voir l'historique du score dans un <b>graphique</b>
 &bull; <b>Minuteurs</b> «Echauffement» et «Entre deux jeux» (notifications sonores et vibrations en option)
 &bull; Diffusion du score sur un téléviseur avec <b>ChromeCast</b>
+&bull; Diffusion du score sur un autre appareil Android avec <b>Bluetooth</b>
 &bull; Minuteur de «blessure»
 &bull; Gestion des matchs avec <b>handicap</b>
 &bull; <b>Annonces</b> officielles (début, fin de partie, fin de match, « tie-break »)

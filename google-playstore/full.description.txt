@@ -8,6 +8,7 @@ Supports you in referee-ing a squash match.
 &bull; option to see scoring history of each game in a <b>graph</b>
 &bull; possibility of using 'warm up' and 'between games' <b>timers</b> (with optional sound/vibration notifications)
 &bull; possibility of casting the score on to a TV using <b>ChromeCast</b>
+&bull; possibility of <b>mirroring</b> the score on another android device using <b>Bluetooth</b>
 &bull; possibility of showing <b>'injury' timers</b>
 &bull; possibility to start with a <b>'handicap score'</b>
 &bull; option to show 'official' match <b>announcements</b> (begin/end of game, end of match, tie-break)
