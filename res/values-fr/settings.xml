@@ -18,6 +18,7 @@
 */
 -->
 <resources>
+
     <string name="pref_ColorTargets_Background">Background</string>                                 <!-- TODO -->
     <string name="pref_ColorTargets_Player_Button_Background">Player Button Background</string>     <!-- TODO -->
     <string name="pref_ColorTargets_Score_Button_Background">Score Button Background</string>       <!-- TODO -->
@@ -113,16 +114,21 @@
     <string name="pref_showTextInActionBar">Afficher du texte dans les boutons de la barre d\'action</string>
     <string name="pref_showFullScreen">Affichage plein écran</string>
     <string name="pref_showScoringHistoryInMainScreen">Afficher l\'historique du score</string>
+    <string name="pref_gameScoresAppearance">How to show game scores on scoreboard</string> <!-- TODO -->
+    <string name="pref_gameScoresAppearance_summary">Choose between \'short\' like 1-0, 2-0, 2-1 vs \'full games scores\' like 11-8, 11-7, 5-11</string> <!-- TODO -->
     <string name="pref_scorelineLayout">Scoreline Layout</string> <!-- TODO -->
     <string name="pref_showSideButtonsWithinScoreButtons">Boutons de changement de côté à l\'intérieur des boutons de Score</string>
     <string name="pref_showSideButtonsWithinScoreButtons_summary">Pour afficher en plus gros les boutons de Score</string>
     <string name="pref_AppealHandGestureIconSize">Taille d\'icônes dans la fenêtre \'Appel\'</string>
     <string name="pref_AppealHandGestureIconSize_summary">Taille d\'icône dans la fenêtre \'Appel\'. Mettre zéro si vous ne souhaitez pas les afficher.</string>
+    <string name="pref_newMatchLayout">New match layout</string><!-- TODO -->
+    <string name="pref_newMatchLayout_summary">To have just a limited number of fields to fill, choose \'Simple\'</string><!-- TODO -->
     <string name="pref_showChoosenDecisionShortly">Afficher le message de décision</string>
     <string name="pref_showChoosenDecisionShortly_summary">Afficher un court message avec l\'annonce officielle de la décision (après un appel ou une pénalité).</string>
     <string name="pref_BackKeyBehaviour">Comportement du bouton \'Retour\'</string>
     <string name="pref_VolumeKeysBehaviour">Comportement du bouton \'Volume\'</string>
     <string name="pref_VolumeKeysBehaviour_summary">\'Volume Haut\' marque un point pour le jouer A, \'Volume Bas\' pour B</string>
+    <string name="pref_VolumeKeysBehaviour_question">Do you want to use the volume buttons for entering the score with device in portrait orientation?\n(Option can be turned off again in \'Settings/Behaviour\')</string> <!-- TODO -->
     <string name="pref_StartupAction">Action au démarrage</string>
     <string name="pref_StartupAction_summary">L\'action qui sera effectuée automatiquement lors du démarrage de l\'application</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically">Afficher automatiquement les détails du jeu</string>
@@ -221,7 +227,9 @@
     <string name="pref_numberOfGamesToWin_summary">Nombre de jeux pour gagner le match (Officiellement : 2 ou 3).</string>
     <string name="pref_handicapFormat">Permet de spécifier un handicap</string>
     <string name="pref_handicapFormat_summary">Pour démarrer un jeu avec un score autre que 0–0</string>
-    <string name="pref_useEnglishScoring">Score en points indirects</string> 
+    <string name="pref_playAllGames">Jou tous les jeux</string> <!-- TODO -->
+    <string name="pref_playAllGames_summary">Jou \'Total-of-x-games\' au lieu de \'Best-of-x-games\'</string> <!-- TODO -->
+    <string name="pref_useEnglishScoring">Score en points indirects</string>
     <string name="pref_useEnglishScoring_summary">\'Ancien\' format de score. Le joueur ne marque que sur son service.</string>
 	<string name="pref_tiebreakFormat">Format de tie-break</string>
     <string name="pref_tiebreakFormat_summary">Quelle règle suivre en cas de tie-break ?</string>

@@ -234,6 +234,8 @@
     <string name="pref_numberOfGamesToWin_summary">Number of games to win match. Officially this is 3.</string>
     <string name="pref_handicapFormat">Allow specifying a handicap</string>
     <string name="pref_handicapFormat_summary">To start a score other than 0–0</string>
+    <string name="pref_playAllGames">Play all games</string>
+    <string name="pref_playAllGames_summary">Play \'Total-of-x-games\' in stead of \'Best-of-x-games\'</string>
     <string name="pref_useEnglishScoring">Hand-in/hand-out scoring</string>
     <string name="pref_useEnglishScoring_summary">\'Old\' scoring format. Player can only score if he served.</string>
     <string name="pref_tiebreakFormat">Tie-break format</string>

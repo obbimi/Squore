@@ -303,35 +303,42 @@
                     android:visibility="visible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
-                    <TextView
-                        android:id="@+id/lblMatch_BestOf"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="2dp"
-                        android:text="@string/best_of_x_games_to_y_1"
-                        android:textSize="@dimen/txt_small" />
-                    <Spinner
-                            android:id="@+id/spNumberOfGamesToWin"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:nextFocusDown="@+id/spGameEndScore"
-                            android:orientation="vertical"/>
-
-                    <TextView
-                            android:id="@+id/lblMatch_GamesTo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/best_of_x_games_to_y_2_Squash"
-                            android:textSize="@dimen/txt_small"
-                            android:layout_margin="2dp"
-                            />
-                    <Spinner
-                            android:id="@+id/spGameEndScore"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:nextFocusDown="@+id/useHandInHandOutScoring"
-                            android:orientation="vertical"
-                            />
+                <ToggleButton
+                    android:id="@+id/tbBestOf_or_TotalOf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textOff="@string/best_of_x_games_to_y_1"
+                    android:textOn="@string/total_of_x_games_to_y_1"
+                    android:textSize="@dimen/txt_small" />
+<!--
+                <TextView
+                    android:id="@+id/lblMatch_BestOf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="2dp"
+                    android:text="@string/best_of_x_games_to_y_1"
+                    android:textSize="@dimen/txt_small" />
+-->
+                <Spinner
+                    android:id="@+id/spNumberOfGamesToWin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:nextFocusDown="@+id/spGameEndScore"
+                    android:orientation="vertical"/>
+                <TextView
+                    android:id="@+id/lblMatch_GamesTo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/best_of_x_games_to_y_2_Squash"
+                    android:textSize="@dimen/txt_small"
+                    android:layout_margin="2dp" />
+                <Spinner
+                    android:id="@+id/spGameEndScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:nextFocusDown="@+id/useHandInHandOutScoring"
+                    android:orientation="vertical" />
             </LinearLayout>
 <!--
         <LinearLayout

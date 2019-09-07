@@ -216,6 +216,8 @@
     <string name="pref_timerPauseBetweenGames_summary">Doba do kdy musí začít další set (ve vteřinách). Oficiálně 90 vteřin. (PSA: 120)</string>
     <string name="pref_timerPauseBetweenGames_values">Přednastavené hodnoty pro dobu mezi sety</string>
     <string name="pref_timerPauseBetweenGames_values_summary">Přednastavené hodnoty dob mezi sety na začátku zápasu (jen pro tento zápas), typicky 90 nebo 120</string>
+    <string name="pref_timerWarmup_values">Selectable values for warmup</string> <!-- TODO -->
+    <string name="pref_timerWarmup_values_summary">Selectable values for warmup at the start of a new match</string> <!-- TODO -->
     <string name="pref_timerInjury">Doba na zotavenou ze zranění (ve vteřinách)</string>
     <string name="pref_timerInjury_summary">Doba po zranění, za kterou musí hráč nastoupit k pokračování. Oficiálně 180 vteřin</string>
 <!--
@@ -232,6 +234,8 @@
     <string name="pref_numberOfGamesToWin_summary">Oficiálně 3</string>
     <string name="pref_handicapFormat">Nastavení hendikepu</string>
     <string name="pref_handicapFormat_summary">Umožnit na začátku zápasu skóre jiné než 0–0</string>
+    <string name="pref_playAllGames">Play all games</string> <!-- TODO -->
+    <string name="pref_playAllGames_summary">Play \'Total-of-x-games\' in stead of \'Best-of-x-games\'</string> <!-- TODO -->
     <string name="pref_useEnglishScoring">Počítání na ztráty</string>
     <string name="pref_useEnglishScoring_summary">Zastaralý typ počítání. Hráč může získat bod pouze pokud podával</string>
     <string name="pref_tiebreakFormat">Formát zkrácené hry</string>

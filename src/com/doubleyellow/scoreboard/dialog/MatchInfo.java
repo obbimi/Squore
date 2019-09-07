@@ -96,11 +96,15 @@ public class MatchInfo extends BaseAlertDialog {
 
         int iNrOfGamesToWin      = matchModel.getNrOfGamesToWinMatch();
         int iNrOfPointsToWinGame = matchModel.getNrOfPointsToWinGame();
-        if ( iNrOfPointsToWinGame == 11 && Brand.isSquash() ) {
-            // default is 11. If current format is also 11 do NOT make it part of the announcement
-            sb.append(getString(R.string.oa_best_of_x_games     , (iNrOfGamesToWin * 2 - 1)));
+        if ( matchModel.playAllGames() ) {
+            sb.append(getString(R.string.total_of_x_games_to_y, (iNrOfGamesToWin * 2 - 1), iNrOfPointsToWinGame));
         } else {
-            sb.append(getString(R.string.oa_best_of_x_games_to_y, (iNrOfGamesToWin * 2 - 1), iNrOfPointsToWinGame));
+            if ( iNrOfPointsToWinGame == 11 && Brand.isSquash() ) {
+                // default is 11. If current format is also 11 do NOT make it part of the announcement
+                sb.append(getString(R.string.oa_best_of_x_games     , (iNrOfGamesToWin * 2 - 1)));
+            } else {
+                sb.append(getString(R.string.oa_best_of_x_games_to_y, (iNrOfGamesToWin * 2 - 1), iNrOfPointsToWinGame));
+            }
         }
         sb.append("\n");
         if ( matchModel.isEnglishScoring() ) {

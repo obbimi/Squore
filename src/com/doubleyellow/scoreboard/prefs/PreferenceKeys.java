@@ -187,6 +187,8 @@ public enum PreferenceKeys {
 
     MatchFormat,
         numberOfGamesToWinMatch,
+            /** special case: not best-of-x, but total-of-x games */
+            playAllGames,
         numberOfPointsToWinGame,
         /** tabletennis specific */
         numberOfServesPerPlayer,

@@ -17,6 +17,15 @@
             android:visibility="visible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+        <ToggleButton
+            android:id="@+id/tbBestOf_or_TotalOf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textOff="@string/best_of_x_games_to_y_1"
+            android:textOn="@string/total_of_x_games_to_y_1"
+            android:textSize="@dimen/txt_small" />
+<!--
         <TextView
                 android:id="@+id/lblMatch_BestOf"
                 android:layout_width="wrap_content"
@@ -24,6 +33,7 @@
                 android:text="@string/best_of_x_games_to_y_1"
                 android:textSize="@dimen/txt_small"
                 />
+-->
         <Spinner
                 android:id="@+id/spNumberOfGamesToWin"
                 android:layout_width="wrap_content"

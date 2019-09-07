@@ -631,8 +631,9 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                 mTmp.fromJsonString(f);
                 m.setNrOfPointsToWinGame(mTmp.getNrOfPointsToWinGame());
                 m.setNrOfGamesToWinMatch(mTmp.getNrOfGamesToWinMatch());
-                m.setTiebreakFormat(mTmp.getTiebreakFormat());
-                m.setEnglishScoring(mTmp.isEnglishScoring());
+                m.setTiebreakFormat     (mTmp.getTiebreakFormat     ());
+                m.setEnglishScoring     (mTmp.isEnglishScoring      ());
+                m.setPlayAllGames       (mTmp.playAllGames          ());
 
                 m.setPlayerClub(Player.A, mTmp.getClub(Player.A));
                 m.setPlayerClub(Player.B, mTmp.getClub(Player.B));

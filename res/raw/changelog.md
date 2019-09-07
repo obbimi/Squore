@@ -1,3 +1,7 @@
+## 4.23 (sept 2019)
+
+- allow to play 'Total of X games' match format (as opposed to 'Best of X games')
+
 ## 4.21 (sept 2019)
 
 - at start of match allow to adjust warmup duration ( e.g. to switch from 4 minutes (official) to 5 minutes (previous official value))

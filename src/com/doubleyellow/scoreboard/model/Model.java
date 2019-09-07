@@ -268,6 +268,9 @@ public abstract class Model
     private int                                 m_iNrOfPointsToWinGame  = 11;
     /** nr of games needed to win a match */
     private int                                 m_iNrOfGamesToWinMatch  = 3;
+    /** If true, in 'best of 5' all 5 games will be played */
+    private int m_iTotalNrOfGamesToFinishForMatchToEnd = UNDEFINED_VALUE;
+
     /** if true: point only if serving (english). If false: rally point (American) */
     private boolean                             m_bEnglishScoring       = false;
     private TieBreakFormat                      m_TieBreakFormat        = TieBreakFormat.TwoClearPoints;
@@ -1034,6 +1037,9 @@ public abstract class Model
     public boolean setNrOfGamesToWinMatch(int i) {
         if ( (i != m_iNrOfGamesToWinMatch) && (i != 0) ) {
             m_iNrOfGamesToWinMatch = i;
+            if ( m_iTotalNrOfGamesToFinishForMatchToEnd != UNDEFINED_VALUE ) {
+                m_iTotalNrOfGamesToFinishForMatchToEnd = 2 * m_iNrOfGamesToWinMatch - 1;
+            }
             setDirty(true);
             return true;
         }
@@ -1257,6 +1263,21 @@ public abstract class Model
         return m_iNrOfServesPerPlayer;
     }
 
+    // -----------------------------------------
+    // Best of  vs Total of
+    // -----------------------------------------
+
+    /** used for both Squash and Racquetball and Badminton */
+    public void setPlayAllGames(boolean b) {
+        if ( b ) {
+            m_iTotalNrOfGamesToFinishForMatchToEnd = m_iNrOfGamesToWinMatch * 2 - 1;
+        } else {
+            m_iTotalNrOfGamesToFinishForMatchToEnd = UNDEFINED_VALUE;
+        }
+    }
+    public boolean playAllGames() {
+        return m_iTotalNrOfGamesToFinishForMatchToEnd != UNDEFINED_VALUE;
+    }
     // -----------------------------------------
     // English scoring/Hand-in-hand-out/HIHO
     // -----------------------------------------
@@ -1776,6 +1797,11 @@ public abstract class Model
     }
 
     public boolean fromJsonString(File f) throws IOException {
+        if ( f == null || f.exists() == false ) {
+            // normally only when switching brand in DEMO mode
+            Log.w(TAG, "Not an existing file : " + f);
+            return false;
+        }
         String     sJson = null;
         try {
             sJson = FileUtil.readFileAsString(f);
@@ -2028,6 +2054,10 @@ public abstract class Model
                 if ( nrOfGamesToWinMatch > 0 ) {
                     setNrOfGamesToWinMatch(nrOfGamesToWinMatch);
                 }
+                if ( joFormat.optBoolean(JSONKey.playAllGames.toString()) ) {
+                    setPlayAllGames(true);
+                }
+
                 bMatchFormatIsSet = true;
                 if ( joFormat.has(JSONKey.useHandInHandOutScoring.toString()) ) {
                     // if not specified it may still default to true e.g. for Racquetball. So do not shorten this with using optBoolean()
@@ -2518,6 +2548,9 @@ public abstract class Model
         if ( EnumSet.of(SportType.Racketlon).contains(getSport()) == false ) {
             joFormat.put(JSONKey.numberOfGamesToWinMatch    .toString(), m_iNrOfGamesToWinMatch);
         }
+        if ( m_iTotalNrOfGamesToFinishForMatchToEnd != UNDEFINED_VALUE ) {
+            joFormat.put(JSONKey.playAllGames.toString(), true);
+        }
         if ( m_sMode != null ) {
             joFormat.put(JSONKey.mode.toString(), m_sMode);
         }
@@ -2765,8 +2798,8 @@ public abstract class Model
             for (OnGameEndListener l : onGameEndListeners) {
                 l.OnGameEnded(m_pServer);
             }
-            Player possibleMatchVictoryFor = isPossibleMatchVictoryFor();
-            if ( possibleMatchVictoryFor != null ) {
+            if ( matchHasEnded() ) {
+                Player possibleMatchVictoryFor = isPossibleMatchVictoryFor();
                 for (OnMatchEndListener l : onMatchEndListeners) {
                     l.OnMatchEnded(possibleMatchVictoryFor, null);
                 }
@@ -2961,7 +2994,11 @@ public abstract class Model
     }
 
     public boolean matchHasEnded() {
-        return isPossibleMatchVictoryFor()!=null;
+        if ( m_iTotalNrOfGamesToFinishForMatchToEnd > 0 ) {
+            return m_iTotalNrOfGamesToFinishForMatchToEnd == this.getNrOfFinishedGames();
+        } else {
+            return isPossibleMatchVictoryFor()!=null;
+        }
     }
 
     private int m_iHandoutCountDoubles = -1;
@@ -3139,6 +3176,7 @@ public abstract class Model
 
         m_iNrOfGamesToWinMatch = UNDEFINED_VALUE;
         m_iNrOfPointsToWinGame = UNDEFINED_VALUE;
+        m_iTotalNrOfGamesToFinishForMatchToEnd = UNDEFINED_VALUE;
         m_sUnparsedDate       = null;
         m_sResultFast         = null;
         setSource(null, null);

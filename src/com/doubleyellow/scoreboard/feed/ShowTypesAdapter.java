@@ -53,13 +53,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Adapter used to show all categories of feeds (TournamentSoftware, SportyHQ, RankedIn).
+ *
+ * Used by {@link FeedFeedSelector}
+ */
 class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
 {
     private static final String TAG = "SB." + ShowTypesAdapter.class.getSimpleName();
 
     private static LayoutInflater inflater = null;
-
-    //private ContactClickListener contactClickListener = null;
 
     private Context                  context           = null;
     private FeedFeedSelector         feedFeedSelector  = null;

@@ -71,6 +71,7 @@ public class EditFormat extends BaseAlertDialog {
     private ToggleButton                      cbWarmpupDuration;
     private Spinner                           spPauseDuration;
     private ToggleButton                      cbPauseDuration;
+    private ToggleButton                      tbBestOf_or_TotalOf;
     private EnumSpinner<TieBreakFormat>       spTieBreakFormat;
     private EnumSpinner<DoublesServeSequence> spDoublesServeSequence;
     private CompoundButton                    cbUseEnglishScoring;
@@ -137,6 +138,11 @@ public class EditFormat extends BaseAlertDialog {
         cbPauseDuration = (ToggleButton) vg.findViewById(R.id.cbPauseDuration);
         MatchView.initDuration(context, cbPauseDuration, spPauseDuration, null, Preferences.syncAndClean_pauseBetweenGamesValues(context), PreferenceValues.getPauseDuration(context));
 
+        tbBestOf_or_TotalOf = (ToggleButton) vg.findViewById(R.id.tbBestOf_or_TotalOf);
+        if ( tbBestOf_or_TotalOf != null ) {
+            tbBestOf_or_TotalOf.setChecked(matchModel.playAllGames());
+        }
+
         cbUseEnglishScoring = (CompoundButton) vg.findViewById(R.id.useHandInHandOutScoring);
         boolean bHandInHandOut = PreferenceValues.useHandInHandOutScoring(context);
         cbUseEnglishScoring.setChecked(bHandInHandOut);
@@ -186,6 +192,10 @@ public class EditFormat extends BaseAlertDialog {
                 }
 
                 MatchView.getValueFromSelectListOrToggleAndStoreAsPref(context, cbPauseDuration, spPauseDuration, PreferenceKeys.timerPauseBetweenGames, PreferenceValues.getPauseDuration(context));
+
+                if ( tbBestOf_or_TotalOf != null ) {
+                    matchModel.setPlayAllGames(tbBestOf_or_TotalOf.isChecked());
+                }
 
                 break;
             case DialogInterface.BUTTON_NEGATIVE:

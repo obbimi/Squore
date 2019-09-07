@@ -225,6 +225,8 @@
     <string name="pref_numberOfGamesToWin_summary">Aantal games dat moet worden gewonnen om de match te winnen. Officieel is dit 3</string>
     <string name="pref_handicapFormat">Geef handicap in</string>
     <string name="pref_handicapFormat_summary">Om met een afwijkende score te beginnen</string>
+    <string name="pref_playAllGames">Speel alle games</string>
+    <string name="pref_playAllGames_summary">Speel \'Totaal-van-x-games\' in plaats van \'Best-of-x-games\'</string>
     <string name="pref_useEnglishScoring">Hand-in/hand-out scoring</string>
     <string name="pref_useEnglishScoring_summary">\'Oude\' telling waarbij alleen gescoord kan worden als men opslag heeft</string>
     <string name="pref_tiebreakFormat">Tie-break regel</string>

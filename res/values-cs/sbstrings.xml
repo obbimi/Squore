@@ -39,29 +39,32 @@
     <string name="sb_cmd_ok_and_start_timer">OK (spustit stopky)</string>
     <string name="sb_cmd_ok_plus">OK +</string>
 
-    <string name="uc_clear_all_fields">Smazat všechno</string>
-    <string name="uc_clear_player_fields">Smazat hráče</string>
-    <string name="uc_clear_country_fields">Smazat země</string>
-    <string name="uc_clear_club_fields">Smazat kluby</string>
-    <string name="uc_clear_event_fields">Smazat soutěž</string>
-    <string name="uc_clear_referee_fields">Smazat rozhodčího</string>
-    <string name="sb_clear_score_confirm_message">Vynulovat skóre? Pozor, přijdete o historii bodů tohoto zápasu</string>
-    <string name="cmd_change_format">Změnit formát</string>
-    <string name="sb_select_match">Vybrat zápas</string>
-    <string name="sb_static_match">Můj seznam</string>
-    <string name="sb_select_static_match">Vybrat z Mého seznamu</string>
-    <string name="sb_whatsapp_match_summary">Sdílet výsledek zápasu přes WhatsApp</string>
-    <string name="sb_twitter_match_summary">Sdílet výsledek zápasu na Twitteru</string>
-    <string name="sb_put_match_summary_on_clipboard">Kopírovat výsledek zápasu do schránky</string>
-    <string name="sb_send_match_result">Poslat výsledek zápasu</string>
-    <string name="sb_post_match_result">Odeslat výsledek zápasu na web</string>
-    <string name="sb_post_match_result_q">Odeslat výsledek zápasu na web \'%s\'?</string>
-    <string name="sb_post_match_result_no_more">Nezobrazovat automaticky dialog \'Poslat výsledek zápasu\'</string>
-    <string name="sb_email_match_result">Poslat výsledek zápasu emailem</string>
-    <string name="sb_share_score_sheet">Sdílet tabulku skóre</string>
-    <string name="Conduct">Trest</string>
-    <string name="Appeal">Odvolání</string>
-    <string name="Call">Rozhodnutí</string>
+    <string name="uc_matchlayout_all_small_font">Smaller font (All fields)</string> <!-- TODO -->
+    <string name="uc_matchlayout_simple_large_font">Larger font (Common fields)</string> <!-- TODO -->
+
+    <string name="uc_clear_all_fields">Clear all fields</string>
+    <string name="uc_clear_player_fields">Clear player fields</string>
+    <string name="uc_clear_country_fields">Clear country fields</string>
+    <string name="uc_clear_club_fields">Clear club fields</string>
+    <string name="uc_clear_event_fields">Clear event fields</string>
+    <string name="uc_clear_referee_fields">Clear referee fields</string>
+    <string name="sb_clear_score_confirm_message">Do you want to restart the score? The score history of the current match will be lost.</string>
+    <string name="cmd_change_format">Change format</string>
+    <string name="sb_select_match">Select match</string>
+    <string name="sb_static_match">My List</string>
+    <string name="sb_select_static_match">Select from My List</string>
+    <string name="sb_whatsapp_match_summary">Share match result via WhatsApp</string>
+    <string name="sb_twitter_match_summary">Share match result via Twitter</string>
+    <string name="sb_put_match_summary_on_clipboard">Copy match result onto clipboard</string>
+    <string name="sb_send_match_result">Message match result</string>
+    <string name="sb_post_match_result">Post match result to site</string>
+    <string name="sb_post_match_result_q">Post the match result to site \'%s\'?</string>
+    <string name="sb_post_match_result_no_more">Don\'t show \'Post Match Result\' dialog automatically</string>
+    <string name="sb_email_match_result">Email match result</string>
+    <string name="sb_share_score_sheet">Share score sheet</string>
+    <string name="Conduct">Conduct</string>
+    <string name="Appeal">Appeal</string>
+    <string name="Call">Call</string>
     <string name="Type">Type</string>
     <string name="Detail">Podrobnosti</string>
     <string name="Home">Domů</string>
@@ -117,6 +120,12 @@
     <string name="match_has_finished">Zápas dohrán</string>
     <string name="press_again_to_undo_last_score">Pro odstranění posledního bodu stiskněte znovu vývoj zápasu</string>
     <string name="unable_to_interpret_entered_text_as_2_names">Zadaný text nelze rozpoznat jako dvě jména</string>
+
+    <string name="total_of_x_games__play_remaining_y_games">Because we play \'Total of %1$d games\' the remaining %2$d games will also be played.</string><!-- TODO -->
+    <string name="total_of_x_games__play_remaining_last_game">Because we play \'Total of %1$d games\' the last game will also be played.</string><!-- TODO -->
+    <string name="total_of_x_games_to_y">Total of %1$s games to %2$s</string><!-- TODO -->
+    <string name="total_of_x_games_to_y_1">Total of</string><!-- TODO -->
+
     <string name="best_of_x_games_to_y_1">Nejvýše</string>
     <string name="best_of_x_games_to_y_2_Squash">sety(ů) do</string>
 

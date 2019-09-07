@@ -129,13 +129,15 @@ public class StartEndAnnouncement extends BaseAlertDialog
         scoreBoard.triggerEvent(ScoreBoard.SBEvent.officialAnnouncementClosed, this);
     }
 
+    /** returns a list of messages to be display. 1st one is typically used as the title of the dialog */
     static List<String> getOfficialMessage(Context ctx, Model matchModel
                                                  , boolean bIncludeGameScores
                                                  , boolean bIncludeToServe
                                                  , boolean bIncludeReceiver
                                                  , boolean bIncludeMatchFormat
                                                  , boolean bIncludeWinnerOfLastGame) {
-        List<String> lMsgs = new ArrayList<String>();
+        List<String> lMsgs     = new ArrayList<String>();
+        List<String> lInfoMsgs = new ArrayList<String>(); // informative message (non official). To be display last
 
         Map<Player, Integer> gameCount = matchModel.getGamesWon();
         int iGamesA = MapUtil.getInt(gameCount, Player.A, 0);
@@ -160,9 +162,45 @@ public class StartEndAnnouncement extends BaseAlertDialog
             if ( last != null ) {
                 String sPrefix = last.get(winnerOfLastGame) + "-" + last.get(winnerOfLastGame.getOther()) + ", ";
                 if ( matchModel.matchHasEnded() ) {
-                    lMsgs.add(sPrefix + PreferenceValues.getOAString(ctx, R.string.oa_match_to_x, matchModel.getName_no_nbsp(winnerOfLastGame, false)));
+                    if ( matchModel.playAllGames() ) {
+                        // winner of last game is not by definition winner of match
+                        Player winnerOfMatch = MapUtil.getMaxKey(gameCount, winnerOfLastGame);
+                        if ( iGamesA == iGamesB ) {
+                            // TODO: when playing even number of games, determine winner by counting points
+                        }
+                        lMsgs.add(sPrefix + PreferenceValues.getOAString(ctx, R.string.oa_game_to_x , matchModel.getName_no_nbsp(winnerOfLastGame, false)));
+                        lMsgs.add(          PreferenceValues.getOAString(ctx, R.string.oa_match_to_x, matchModel.getName_no_nbsp(winnerOfMatch, false)));
+
+                        // sometimes in 'total-of' matches the number of points scored matters
+                        Map<Player, Integer> pointsWon = matchModel.getTotalNumberOfPointsScored();
+                        StringBuilder sbPoints = new StringBuilder();
+                        sbPoints.append(ctx.getString(R.string.points) + ": ");
+                        for(Player p: Player.values() ) {
+                            if ( p.equals(Player.B) ) { sbPoints.append(", "); }
+                            sbPoints.append(matchModel.getName(p) + " : " +  pointsWon.get(p));
+                        }
+                        lInfoMsgs.add(sbPoints.toString());
+                    } else {
+                        lMsgs.add(sPrefix + PreferenceValues.getOAString(ctx, R.string.oa_match_to_x, matchModel.getName_no_nbsp(winnerOfLastGame, false)));
+                    }
                 } else {
                     lMsgs.add(sPrefix + PreferenceValues.getOAString(ctx, R.string.oa_game_to_x , matchModel.getName_no_nbsp(winnerOfLastGame, false)));
+                    if ( (matchModel.isPossibleMatchVictoryFor() != null) && matchModel.playAllGames() ) {
+                        int iTotNrOfGames = matchModel.getNrOfGamesToWinMatch() * 2 - 1;
+                        int iNrOfFinished = matchModel.getNrOfFinishedGames();
+
+                        // add reminder that 'best-of' we have a winner, but we are playing 'total-of'
+                        int iGamesToPlay = iTotNrOfGames - iNrOfFinished;
+                        switch (iGamesToPlay) {
+                            case 0: break;
+                            case 1:
+                                lInfoMsgs.add("(" + ctx.getString(R.string.total_of_x_games__play_remaining_last_game, iTotNrOfGames) + ")");
+                            break;
+                            default:
+                                lInfoMsgs.add("(" + ctx.getString(R.string.total_of_x_games__play_remaining_y_games  , iTotNrOfGames, iGamesToPlay) + ")");
+                                break;
+                        }
+                    }
                 }
             }
         }
@@ -289,6 +327,9 @@ public class StartEndAnnouncement extends BaseAlertDialog
             newResources(res, localeRestore);
         }
 */
+        if ( ListUtil.isNotEmpty(lInfoMsgs) ) {
+            lMsgs.addAll(lInfoMsgs);
+        }
 
         return lMsgs;
     }

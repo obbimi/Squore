@@ -36,7 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Adapter use to present available feeds in FeedFeedSelector.
+ * Adapter used to present available feeds in FeedFeedSelector.
+ *
+ * Used by {@link FeedFeedSelector}
  */
 class ShowFeedsAdapter extends SimpleELAdapter {
     private String           m_sName          = null;
@@ -54,10 +56,17 @@ class ShowFeedsAdapter extends SimpleELAdapter {
     private int m_iNrAlreadyFinished = 0;
     private int m_iNrRunningToLong   = 0;
     private int m_iNrOfItemsToSelect = 0;
+    private boolean m_bFilterOutBasedOnDuration = true;
 
     ShowFeedsAdapter(FeedFeedSelector feedFeedSelector, LayoutInflater inflater, JSONArray array, String sName) {
         super(inflater, R.layout.expandable_match_selector_group, R.layout.expandable_match_selector_item, null, false);
         m_sName = sName;
+
+        if ( sName.toLowerCase().contains("league") ) {
+            // assume long running
+            Log.i(TAG, "Not filtering based on duration for " + sName); // done because old default value 42 might still be set, before league feeds existed
+            m_bFilterOutBasedOnDuration = false;
+        }
         m_feeds = array;
         this.context = feedFeedSelector;
         this.feedFeedSelector = feedFeedSelector;
@@ -77,9 +86,10 @@ class ShowFeedsAdapter extends SimpleELAdapter {
 
     private /*static*/ class ShowFeedsTask extends AsyncTask<String, Void, List<String>> {
         @Override protected List<String> doInBackground(String[] sName) {
-            int iEndWasDaysBackMax   = PreferenceValues.getTournamentWasBusy_DaysBack     (context);
-            int iStartIsDaysAheadMax = PreferenceValues.getTournamentWillStartIn_DaysAhead(context);
-            int iDurationInDaysMax   = PreferenceValues.getTournamentMaxDuration_InDays   (context);
+            int iEndWasDaysBackMax     = PreferenceValues.getTournamentWasBusy_DaysBack     (context);
+            int iStartIsDaysAheadMax   = PreferenceValues.getTournamentWillStartIn_DaysAhead(context);
+            int iDurationInDaysMaxPref = PreferenceValues.getTournamentMaxDuration_InDays   (context);
+         // Range minMaxDurationInDaysFeeds = new Range(0,0);
 
             List<String> lGroupsWithActive = new ArrayList<String>();
 
@@ -125,10 +135,12 @@ class ShowFeedsAdapter extends SimpleELAdapter {
                         //Log.d(TAG, String.format("Skipping not starting within %s ", iStartIsDaysAheadMax) + joFeed);
                         continue;
                     }
-                    if ( iDurationInDaysMax > 0 && range.getSize() > iDurationInDaysMax ) {
-                        m_iNrRunningToLong++;
-                        //Log.d(TAG, String.format("Skipping running longer than %s ", iDurationInDaysMax) + joFeed);
-                        continue;
+                    if ( m_bFilterOutBasedOnDuration ) {
+                        if ( (iDurationInDaysMaxPref > 0) && (range.getSize() > iDurationInDaysMaxPref) ) {
+                            m_iNrRunningToLong++;
+                            //Log.d(TAG, String.format("Skipping running longer than %s ", iDurationInDaysMax) + joFeed);
+                            continue;
+                        }
                     }
                     String sHeader = placeholder.translate(sGroupByFormat, joFeed);
                            sHeader = placeholder.removeUntranslated(sHeader);
@@ -177,7 +189,7 @@ class ShowFeedsAdapter extends SimpleELAdapter {
                         sMsg += String.format("\n%s entries found starting in more than %s days.", m_iNrToFarInFuture, tournamentWillStartIn_daysAhead);
                     }
                     if ( m_iNrRunningToLong > 0 ) {
-                        int iDurationInDaysMax              = PreferenceValues.getTournamentMaxDuration_InDays   (context);
+                        int iDurationInDaysMax              = PreferenceValues.getTournamentMaxDuration_InDays(context);
                         sMsg += String.format("\n%s entries found running for more than %s days.", m_iNrRunningToLong, iDurationInDaysMax);
                     }
                     Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();

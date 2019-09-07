@@ -1300,6 +1300,11 @@
                             android:summary="@string/pref_useEnglishScoring_summary"
                             android:defaultValue="@bool/useEnglishScoring_default"
         />
+        <CheckBoxPreference android:key="playAllGames"
+                            android:title="@string/pref_playAllGames"
+                            android:summary="@string/pref_playAllGames_summary"
+                            android:defaultValue="@bool/playAllGames_default"
+        />
         <com.doubleyellow.prefs.EnumListPreference
             android:key="handicapFormat"
             android:title="@string/pref_handicapFormat"

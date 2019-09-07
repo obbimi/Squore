@@ -215,7 +215,9 @@ public class MatchView extends SBRelativeLayout
                 return true;
             case Racketlon:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
-                        , R.id.lblMatch_BestOf, R.id.spNumberOfGamesToWin
+                        //, R.id.lblMatch_BestOf
+                        , R.id.tbBestOf_or_TotalOf
+                        , R.id.spNumberOfGamesToWin
                         , R.id.llHandicapFormat
                         , R.id.llScoringType
                         , R.id.llNumberOfServesPerPlayer
@@ -365,6 +367,7 @@ public class MatchView extends SBRelativeLayout
     private ToggleButton         cbWarmupDuration; /* If only 2 options available */
     private Spinner              spPauseDuration;
     private ToggleButton         cbPauseDuration; /* If only 2 options available */
+    private ToggleButton         tbBestOf_or_TotalOf;
     private Spinner              spAnnouncementLanguage;
     private Spinner              spDoublesServeSequence;
     private CompoundButton       cbUseEnglishScoring;
@@ -662,6 +665,15 @@ public class MatchView extends SBRelativeLayout
             ViewParent parent = spPauseDuration.getParent();
             if ( parent instanceof ViewGroup) {
                 ((ViewGroup) parent).setVisibility(GONE);
+            }
+        }
+
+        tbBestOf_or_TotalOf = (ToggleButton) findViewById(R.id.tbBestOf_or_TotalOf);
+        if ( tbBestOf_or_TotalOf != null ) {
+            if ( m_model != null ) {
+                tbBestOf_or_TotalOf.setChecked(m_model.playAllGames());
+            } else {
+                tbBestOf_or_TotalOf.setChecked(PreferenceValues.getBoolean(PreferenceKeys.playAllGames, context, R.bool.playAllGames_default));
             }
         }
 
@@ -1116,6 +1128,10 @@ public class MatchView extends SBRelativeLayout
 
         getValueFromSelectListOrToggleAndStoreAsPref(getContext(), cbWarmupDuration, spWarmupDuration, PreferenceKeys.timerWarmup           , PreferenceValues.getWarmupDuration(getContext()));
         getValueFromSelectListOrToggleAndStoreAsPref(getContext(), cbPauseDuration, spPauseDuration  , PreferenceKeys.timerPauseBetweenGames, PreferenceValues.getPauseDuration (getContext()));
+
+        if ( tbBestOf_or_TotalOf != null ) {
+            m.setPlayAllGames(tbBestOf_or_TotalOf.isChecked());
+        }
 
         m.setEnglishScoring((cbUseEnglishScoring != null) && cbUseEnglishScoring.isChecked());
         if ( (cbUseLiveScoring != null) && cbUseLiveScoring.isChecked() ) {

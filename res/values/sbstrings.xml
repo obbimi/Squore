@@ -120,6 +120,12 @@
     <string name="match_has_finished">Match has finished</string>
     <string name="press_again_to_undo_last_score">Press score history again to undo last score</string>
     <string name="unable_to_interpret_entered_text_as_2_names">Sorry, I was unable the interpret the entered text as 2 separate names</string>
+
+    <string name="total_of_x_games__play_remaining_y_games">Because we play \'Total of %1$d games\' the remaining %2$d games will also be played.</string>
+    <string name="total_of_x_games__play_remaining_last_game">Because we play \'Total of %1$d games\' the last game will also be played.</string>
+    <string name="total_of_x_games_to_y">Total of %1$s games to %2$s</string>
+    <string name="total_of_x_games_to_y_1">Total of</string>
+
     <string name="best_of_x_games_to_y_1">Best of</string>
     <string name="best_of_x_games_to_y_2_Squash">games to</string>
 

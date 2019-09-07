@@ -32,6 +32,8 @@ public enum JSONKey {
 	format,
 		numberOfPointsToWinGame,
 		numberOfGamesToWinMatch,
+			/** total-of-x-games in stead of best-of-x-games */
+			playAllGames,
 		mode,
 		// tabletennis specific key
 		nrOfServersPerPlayer,

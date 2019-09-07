@@ -34,6 +34,9 @@
     <string name="sb_cmd_ok_and_start_timer">OK (démarrer le chronomètre)</string>
     <string name="sb_cmd_ok_plus">OK +</string>
 
+    <string name="uc_matchlayout_all_small_font">Smaller font (All fields)</string> <!-- TODO -->
+    <string name="uc_matchlayout_simple_large_font">Larger font (Common fields)</string> <!-- TODO -->
+
     <string name="uc_clear_all_fields">Effacer tous les champs</string> <!-- TODO -->
     <string name="uc_clear_player_fields">Effacer les champs du joueur</string>
     <string name="uc_clear_country_fields">Effacer les champs du pay</string> <!-- TODO -->
@@ -54,9 +57,6 @@
     <string name="sb_post_match_result_no_more">Ne pas afficher automatiquement la fenêtre de dialogue \'Poster le résultat du match\'</string>
     <string name="sb_email_match_result">Partager le résultat du match par courriel</string>
     <string name="sb_share_score_sheet">Partager la feuille de match</string>
-    <string name="Summary">Résumé</string>
-    <string name="sb_share_match_summary">Partager le résumé du match</string>
-    <string name="sb_share_matches_summary">Partager le résumé des plusieurs matches</string> <!-- TODO -->
     <string name="Conduct">Comportement</string>
     <string name="Appeal">Appel</string>
     <string name="Call">Décision</string> <!-- TODO -->
@@ -67,6 +67,9 @@
     <string name="score_sheet">Feuille de match</string>
     <string name="graph_game_x">Graphique jeu %d</string>
     <string name="graph_x">Graphique %s</string>
+    <string name="Summary">Résumé</string>
+    <string name="sb_share_match_summary">Partager le résumé du match</string>
+    <string name="sb_share_matches_summary">Partager le résumé des plusieurs matches</string> <!-- TODO -->
     <string name="sb_edit_players">Changer le nom des joueurs…</string>
     <string name="sb_swap_double_players">Inverser les joueurs du match de double</string>
     <string name="sb_swap_players">Inverser les joueurs du match</string>

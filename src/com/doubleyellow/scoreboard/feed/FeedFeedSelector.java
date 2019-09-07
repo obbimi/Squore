@@ -66,13 +66,13 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
     // Progress message
     //---------------------------------------------------------
     private ProgressDialog progressDialog = null;
-    private void showProgress(int iResId) {
+    private void showProgress(int iResId, Object... oArgs) {
         if ( progressDialog == null ) {
             progressDialog = new ProgressDialog(this);
         }
         progressDialog.setIndeterminate(true);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage(getString(iResId));
+        progressDialog.setMessage(getString(iResId, oArgs));
         try {
             progressDialog.show();
         } catch (Exception e) {
@@ -80,10 +80,9 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
         }
     }
     private void hideProgress() {
-        if ( m_bUseSwipeContainer ) {
-            m_srlListView   .setRefreshing(false);
-            m_srlExpListView.setRefreshing(false);
-        }
+        m_srlListView   .setRefreshing(false);
+        m_srlExpListView.setRefreshing(false);
+
         if ( progressDialog != null ) {
             try {
                 progressDialog.cancel(); // this fails after a rotate of orientation
@@ -95,7 +94,6 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
         }
     }
 
-    private static final boolean m_bUseSwipeContainer = true;
     private SwipeRefreshLayout m_srlListView    = null; // should only contain a single listview/gridview
     private SwipeRefreshLayout m_srlExpListView = null;
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -113,24 +111,21 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
         listView    = new ListView(this);
         expListView = new ExpandableListView(this);
         ll.addView(etFilter, 0);
-        if ( m_bUseSwipeContainer ) {
-            m_srlListView    = new SwipeRefreshLayout(this);
-            m_srlExpListView = new SwipeRefreshLayout(this);
-            m_srlListView   .addView(listView);
-            m_srlExpListView.addView(expListView);
-            final SwipeRefreshLayout.OnRefreshListener listener = new SwipeRefreshLayout.OnRefreshListener() {
-                @Override public void onRefresh() {
-                    FeedFeedSelector.this.handleMenuItem(R.id.refresh);
-                }
-            };
-            m_srlListView   .setOnRefreshListener(listener);
-            m_srlExpListView.setOnRefreshListener(listener);
-            ll.addView(m_srlListView);
-            ll.addView(m_srlExpListView);
-        } else {
-            ll.addView(expListView);
-            ll.addView(listView);
-        }
+
+        m_srlListView    = new SwipeRefreshLayout(this);
+        m_srlExpListView = new SwipeRefreshLayout(this);
+        m_srlListView   .addView(listView);
+        m_srlExpListView.addView(expListView);
+        final SwipeRefreshLayout.OnRefreshListener listener = new SwipeRefreshLayout.OnRefreshListener() {
+            @Override public void onRefresh() {
+                FeedFeedSelector.this.handleMenuItem(R.id.refresh);
+            }
+        };
+        m_srlListView   .setOnRefreshListener(listener);
+        m_srlExpListView.setOnRefreshListener(listener);
+        ll.addView(m_srlListView);
+        ll.addView(m_srlExpListView);
+
         changeStatus(Status.LoadingTypes);
 
         super.setContentView(ll);
@@ -196,24 +191,14 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
             case LoadingTypes:
                 showProgress(R.string.loading);
                 childClicker.setDisabled(true);
-                if ( m_bUseSwipeContainer ) {
-                    m_srlListView   .setVisibility(View.VISIBLE);
-                    m_srlExpListView.setVisibility(View.GONE);
-                } else {
-                    listView   .setVisibility(View.VISIBLE);
-                    expListView.setVisibility(View.GONE);
-                }
+                m_srlListView   .setVisibility(View.VISIBLE);
+                m_srlExpListView.setVisibility(View.GONE);
                 break;
             case LoadingFeeds:
                 showProgress(R.string.loading);
                 childClicker.setDisabled(true);
-                if ( m_bUseSwipeContainer ) {
-                    m_srlExpListView.setVisibility(View.VISIBLE);
-                    m_srlListView   .setVisibility(View.GONE);
-                } else {
-                    expListView  .setVisibility(View.VISIBLE);
-                    listView     .setVisibility(View.GONE);
-                }
+                m_srlExpListView.setVisibility(View.VISIBLE);
+                m_srlListView   .setVisibility(View.GONE);
                 break;
             case SelectFeed:
                 childClicker.setDisabled(false);
@@ -277,6 +262,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
 
         private void fetchUrls(final JSONArray aUrls, final String sName, final JSONArray arrayMerged, final JSONArray arrayBackup) {
             String sURL = (String) aUrls.remove(0);
+            showProgress(R.string.loading_of_x, sName, sURL);
             URLFeedTask task = new URLFeedTask(FeedFeedSelector.this, sURL);
             task.setContentReceiver(new ContentReceiver() {
                 @Override public void receive(String sJson, FetchResult fetchResult, long lCacheAge, String sLastSuccessfulContent) {
@@ -284,11 +270,11 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                         Log.d(TAG, "Fetchresult :" + fetchResult + " (" + aUrls.length() + ")" );
                         if ( fetchResult.equals(FetchResult.OK) == false ) {
                             if ( JsonUtil.isNotEmpty(arrayBackup) ) {
-                                mergeJsonArrays(arrayMerged, arrayBackup);
+                                JsonUtil.mergeJsonArrays(arrayMerged, arrayBackup);
                             }
                         } else {
                             JSONArray arrayExt = new JSONArray(sJson);
-                            mergeJsonArrays(arrayMerged, arrayExt);
+                            JsonUtil.mergeJsonArrays(arrayMerged, arrayExt);
                         }
 
                         if ( aUrls.length() > 0 ) {
@@ -306,20 +292,9 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
             task.execute();
         }
 
-        /** TODO as static method in JsonUtil */
-        public void mergeJsonArrays(JSONArray aToExtend, JSONArray aToRead) {
-            for (int i = 0; i < aToRead.length(); i++) {
-                try {
-                    aToExtend.put(aToRead.get(i)); // put() is append at end of array
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
         @Override public void onClick(View v) {
           //Log.d(TAG, "Implement onClick");
-            final String sName = (String) v.getTag();
+            final String sName = (String) v.getTag(); // this is the technical name like 'squashvlaanderen.toernooi.nl.leagues', not the display name
 
             final JSONArray array = loadTypesAdapter.joRoot.optJSONArray(sName);
             if ( loadTypesAdapter.joRoot.has(sName + "." + FeedKeys.URL) ) {
@@ -473,13 +448,9 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
             case SelectFeed:
                 changeStatus(Status.LoadingTypes);
 
-                if ( m_bUseSwipeContainer ) {
-                    m_srlListView   .setVisibility(View.VISIBLE);
-                    m_srlExpListView.setVisibility(View.GONE);
-                } else {
-                    listView   .setVisibility(View.VISIBLE);
-                    expListView.setVisibility(View.GONE);
-                }
+                m_srlListView   .setVisibility(View.VISIBLE);
+                m_srlExpListView.setVisibility(View.GONE);
+
                 listView.setAdapter(loadTypesAdapter);
                 loadTypesAdapter.notifyDataSetChanged();
 

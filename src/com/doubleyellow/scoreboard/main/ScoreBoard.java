@@ -1832,6 +1832,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             matchModel.setNrOfGamesToWinMatch (previous.getNrOfGamesToWinMatch());
             matchModel.setNrOfServesPerPlayer (previous.getNrOfServesPerPlayer());
             matchModel.setEnglishScoring      (previous.isEnglishScoring      ());
+            matchModel.setPlayAllGames        (previous.playAllGames          ());
             matchModel.setTiebreakFormat      (previous.getTiebreakFormat     ());
             matchModel.setHandicapFormat      (previous.getHandicapFormat     ());
             matchModel.setSource              (previous.getSource() , previous.getSourceID() );
@@ -4092,6 +4093,7 @@ touch -t 01030000 LAST.sb
                     PreferenceValues.setNumber  (PreferenceKeys.numberOfGamesToWinMatch, this, m.getNrOfGamesToWinMatch());
                     PreferenceValues.setNumber  (PreferenceKeys.numberOfServesPerPlayer, this, m.getNrOfServesPerPlayer());
                     PreferenceValues.setBoolean (PreferenceKeys.useHandInHandOutScoring, this, m.isEnglishScoring());
+                    PreferenceValues.setBoolean (PreferenceKeys.playAllGames           , this, m.playAllGames());
                     PreferenceValues.setEnum    (PreferenceKeys.tieBreakFormat         , this, m.getTiebreakFormat());
                     PreferenceValues.setString  (PreferenceKeys.eventLast              , this, m.getEventName());
                     PreferenceValues.setString  (PreferenceKeys.divisionLast           , this, m.getEventDivision());
