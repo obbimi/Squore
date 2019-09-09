@@ -83,10 +83,11 @@ public class SBRelativeLayout extends PercentRelativeLayout {
         }
     }
 
+    /** called e.g. by SBToast */
     public void drawArrow(int[] vRelatedGuiElements, int bgColor) {
         drawArrow(vRelatedGuiElements, null, bgColor);
     }
-
+    /** called e.g. by PromoThread */
     public void drawArrow(int[] vRelatedGuiElements, Direction[] arrowDirection, int bgColor)
     {
         if ( vRelatedGuiElements == null) { return; } // e.g. a menu id
@@ -98,7 +99,7 @@ public class SBRelativeLayout extends PercentRelativeLayout {
         }
 
         if ( vRelatedGuiElements.length == 5 ) {
-            // special case
+            // special case, e.g. used by NewMatch_FB_Announcement
             LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.addRule(vRelatedGuiElements[0]       , vRelatedGuiElements[1]);
             params.addRule(vRelatedGuiElements[2]       , vRelatedGuiElements[3]);
@@ -126,17 +127,17 @@ public class SBRelativeLayout extends PercentRelativeLayout {
             calculateQuarters(iQuarterScreenWidth, iQuarterScreenHeight, x, y, w, h, lXIsInQuarter, lYIsInQuarter);
 
             Direction direction = Direction.E;
-            Direction bHasXMirror = null;
-            Direction bHasYMirror = null;
+            Direction dHasXMirrorIn = null;
+            Direction dHasYMirrorIn = null;
             if ( arrowDirection == null ) {
                 EnumSet<Direction> directions = EnumSet.allOf(Direction.class);
 
-                if (lXIsInQuarter.size() > lYIsInQuarter.size()) {
-                    bHasXMirror = eliminateDirectionsBasedOnXQuarters(lXIsInQuarter, directions);
-                    bHasYMirror = eliminateDirectionsBasedOnYQuarters(lYIsInQuarter, directions);
+                if ( lXIsInQuarter.size() > lYIsInQuarter.size() ) {
+                    dHasXMirrorIn = eliminateDirectionsBasedOnXQuarters(lXIsInQuarter, directions);
+                    dHasYMirrorIn = eliminateDirectionsBasedOnYQuarters(lYIsInQuarter, directions);
                 } else {
-                    bHasYMirror = eliminateDirectionsBasedOnYQuarters(lYIsInQuarter, directions);
-                    bHasXMirror = eliminateDirectionsBasedOnXQuarters(lXIsInQuarter, directions);
+                    dHasYMirrorIn = eliminateDirectionsBasedOnYQuarters(lYIsInQuarter, directions);
+                    dHasXMirrorIn = eliminateDirectionsBasedOnXQuarters(lXIsInQuarter, directions); // e.g score buttons btn_score1 has mirror in E
                 }
 
                 //Log.w(TAG, "Possible arrow directions [" + a + "] " + directions);
@@ -155,7 +156,7 @@ public class SBRelativeLayout extends PercentRelativeLayout {
             } else {
                 direction = arrowDirection[a];
             }
-            LayoutParams params = calculateLayoutParams(vRelatedGuiElement, bHasXMirror, bHasYMirror, direction);
+            LayoutParams params = calculateLayoutParams(vRelatedGuiElement/*, dHasXMirrorIn, dHasYMirrorIn*/, direction);
             //params.leftMargin = 107;
             showArrow(a, params, direction, bgColor);
         }
@@ -169,6 +170,7 @@ public class SBRelativeLayout extends PercentRelativeLayout {
         }
         vArrow[a].setColor(bgColor);
         vArrow[a].setVisibility(View.VISIBLE);
+        vArrow[a].setSize(ViewUtil.getScreenHeightWidthMinimum() / 100);
 
         if ( true ) {
             vArrow[a].setDirection(direction);
@@ -179,7 +181,7 @@ public class SBRelativeLayout extends PercentRelativeLayout {
         }
     }
 
-    private LayoutParams calculateLayoutParams(View vRelatedGuiElement, Direction bHasXMirror, Direction bHasYMirror, Direction direction)
+    private LayoutParams calculateLayoutParams(View vRelatedGuiElement/*, Direction bHasXMirror, Direction bHasYMirror*/, Direction direction)
     {
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         switch(direction) {

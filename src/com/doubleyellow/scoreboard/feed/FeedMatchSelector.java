@@ -153,8 +153,18 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 }
                 bNamesPopulated = true;
             }
-            if ( bNamesPopulated || ListUtil.isEmpty(model.getTeamPlayers(Player.A)) ) {
-                // complete or no player names to select
+
+            final String NO_PLAYERS_FOR_TEAM_X = "Not presenting dialog to select players. No players found for %s";
+            if ( bNamesPopulated ) {
+                // player names already populated
+                finishWithPopulatedModel(model);
+            } else if ( ListUtil.isEmpty(model.getTeamPlayers(Player.A)) && ListUtil.isNotEmpty(model.getTeamPlayers(Player.B)) ) {
+                // player names not populated, but only 1 populated lists to select players from
+                Toast.makeText(context, String.format(NO_PLAYERS_FOR_TEAM_X, model.getClub(Player.A)), Toast.LENGTH_SHORT).show();
+                finishWithPopulatedModel(model);
+            } else if ( ListUtil.isEmpty(model.getTeamPlayers(Player.B)) && ListUtil.isNotEmpty(model.getTeamPlayers(Player.A)) ) {
+                // player names not populated, but only 1 populated lists to select players from
+                Toast.makeText(context, String.format(NO_PLAYERS_FOR_TEAM_X, model.getClub(Player.B)), Toast.LENGTH_SHORT).show();
                 finishWithPopulatedModel(model);
             } else {
                 // only clubs names were specified, player names specified to select from
@@ -201,8 +211,6 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     evNamePart = null;
                     ll = llTeams;
                 }
-
-                // TODO: allow to use fullname or only firstname or only lastname
 
                 AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
                 ab.setTitle(R.string.sb_choose_players)

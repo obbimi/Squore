@@ -60,9 +60,9 @@ public abstract class DemoThread extends Thread
         Intro_BigButtons {
             @Override public String   guidance()                    { return null; }
             @Override public String[] getMessages(Model m) { return new String[] { "The big buttons show the score of the game in progress"
-                                                                                 , "Click on one of them to record a scored point"}; }
+                                                                                 , "Tap on one of them to record a scored point"}; }
             @Override public boolean appliesTo(Model m, Activity a) { return true; }
-            @Override public int[] focusOn(Model m)                 { return new int[] { R.id.btn_score1, R.id.btn_score2 }; }
+            @Override public int[] focusOn(Model m)                 { return new int[] { R.id.btn_score1, R.id.btn_score2 }; } // TODO: default arrows showup 'under' FB buttons now...
         },
 /*
         Intro_Undo {
@@ -74,11 +74,11 @@ public abstract class DemoThread extends Thread
 */
         Intro_ServeSideButtons {
             @Override public String   guidance()                    { return null; }
-            @Override public String[] getMessages(Model m) { return new String[] { "Next to the 'Score' buttons there are small 'Serve Side' buttons"
+            @Override public String[] getMessages(Model m) { return new String[] { "'Inside' the Score buttons there are small 'Serve Side' buttons"
                                                                                  , "They indicate which player should serve and what side he/she serves (L or R)..."
                                                                                  , "... and whether or not the last point was a handout (question mark)"
                                                                                  , "After a scored point is recorded (by clicking on the score buttons), the 'Serve Side' buttons will be updated automatically"
-                                                                                 , "So although touching these buttons will change server and/or side, normally there is no need to use these buttons that often"
+                                                                                 , "So although touching these buttons will change server and/or side, normally there is no need to actually tap these buttons that often"
                                                                                  }; }
             @Override public boolean appliesTo(Model m, Activity a) { return true; }
             @Override public int[] focusOn(Model m)                 { return new int[] { R.id.btn_side1, R.id.btn_side2 }; }
@@ -103,7 +103,7 @@ public abstract class DemoThread extends Thread
             @Override public String   guidance()                    { return null; }
             @Override public String[] getMessages(Model m) { return new String[] { "The end score of previous games is shown at the top, between the player names"
                                                                                  , "The winner of each game is highlighted"
-                                                                                 , "To get more details about the entire scoring history of the match, you can click on it"
+                                                                                 , "To get more details about the entire scoring history of the match, you can tap on it"
                                                                                  }; }
             @Override public boolean appliesTo(Model m, Activity a) { return true; }
             @Override public int[] focusOn(Model m)                 { return new int[] {R.id.gamescores}; }
@@ -116,8 +116,7 @@ public abstract class DemoThread extends Thread
         },
         Intro_End_Leave_new {
             @Override public String   guidance()                    { return null; }
-            @Override public String[] getMessages(Model m) { return new String[] { "We are gonna leave this match for now, and start a new one"
-            }; }
+            @Override public String[] getMessages(Model m) { return new String[] { "We are gonna leave this match for now, and start a new one"}; }
             @Override public boolean appliesTo(Model m, Activity a) { return true; }
             @Override public int[] focusOn(Model m)                 { return null; }
         },
@@ -148,45 +147,45 @@ public abstract class DemoThread extends Thread
         },
         NewMatch_3 {
             @Override public String   guidance()                    { return null; }
-            @Override public String[] getMessages(Model m) { return new String[] { "But more easy is to simply click on the Squore logo on the top-left" }; }
+            @Override public String[] getMessages(Model m) { return new String[] { "But more easy is to simply click on the 'Plus' button at the bottom right, (not visible when a match is in progress)" }; }
             @Override public boolean appliesTo(Model m, Activity a) { return true; }
-            @Override public int[] focusOn(Model m)                 { return new int[] {RelativeLayout.ALIGN_TOP, R.id.txt_player1, RelativeLayout.ALIGN_PARENT_LEFT, R.id.btn_score1, Direction.N.ordinal() }; }
+            @Override public int[] focusOn(Model m)                 { return null; /*new int[] {RelativeLayout.ALIGN_TOP, R.id.txt_player1, RelativeLayout.ALIGN_PARENT_LEFT, R.id.btn_score1, Direction.N.ordinal() };*/ }
         },
-        NewMatch_FB_1 {
+        NewMatch_FB_All {
             @Override public String   guidance()                    { return null; }
-            @Override public String[] getMessages(Model m) { return new String[] { "When a new match is started the floating buttons in the middle offer you a few options"}; }
+            @Override public String[] getMessages(Model m) { return new String[] { "When a new match is started, the floating buttons in the middle offer you a few options"}; }
             @Override public boolean appliesTo(Model m, Activity a) { return true; }
             @Override public int[] focusOn(Model m)                 { return null; }
         },
-        NewMatch_FB_2 {
+        NewMatch_FB_Toss {
             @Override public String   guidance()                    { return null; }
             @Override public String[] getMessages(Model m) { return new String[] { "You can perform a toss"}; }
-            @Override public boolean appliesTo(Model m, Activity a) { return true; }
+            @Override public boolean appliesTo(Model m, Activity a) { return m.hasStarted() == false; }
             //@Override public int[] focusOn(Model m)                 { return new int[] {RelativeLayout.ALIGN_TOP, R.id.btn_side2, RelativeLayout.ALIGN_LEFT, R.id.txt_player2, Direction.SW.ordinal() }; }
             //@Override public int[] focusOn(Model m)                 { return new int[] {RelativeLayout.ALIGN_TOP, R.id.sb_toss, RelativeLayout.RIGHT_OF, R.id.sb_toss, Direction.W.ordinal() }; }
-            @Override public int[] focusOn(Model m)                 { return new int[] {RelativeLayout.ALIGN_TOP, R.id.scorehistorytable, RelativeLayout.RIGHT_OF, R.id.scorehistorytable, Direction.W.ordinal() }; }
+            @Override public int[] focusOn(Model m)                 { return new int[] {RelativeLayout.ALIGN_TOP, R.id.scorehistorytable, RelativeLayout.ALIGN_LEFT, R.id.btn_side2, Direction.W.ordinal() }; }
         },
-        NewMatch_FB_3 {
+        NewMatch_FB_Timer {
             @Override public String   guidance()                    { return null; }
             @Override public String[] getMessages(Model m) { return new String[] { "Start a timer"}; }
-            @Override public boolean appliesTo(Model m, Activity a) { return true; }
+            @Override public boolean appliesTo(Model m, Activity a) { return m.gameHasStarted() == false; }
             //@Override public int[] focusOn(Model m)                 { return new int[] {RelativeLayout.CENTER_VERTICAL, 0, RelativeLayout.ALIGN_LEFT, R.id.txt_player2, Direction.W.ordinal() }; }
-            @Override public int[] focusOn(Model m)                 { return new int[] {RelativeLayout.ALIGN_TOP, R.id.scorehistorytable, RelativeLayout.RIGHT_OF, R.id.scorehistorytable, Direction.SW.ordinal() }; }
+            @Override public int[] focusOn(Model m)                 { return new int[] {RelativeLayout.ALIGN_TOP, R.id.scorehistorytable, RelativeLayout.ALIGN_LEFT, R.id.btn_side2, Direction.SW.ordinal() }; }
         },
-        NewMatch_FB_4 {
+        NewMatch_FB_Announcement {
             @Override public String   guidance()                    { return null; }
             @Override public String[] getMessages(Model m) { return new String[] { "Show a dialog with the official announcement of a match"}; }
-            @Override public boolean appliesTo(Model m, Activity a) { return true; }
-            @Override public int[] focusOn(Model m)                 { return new int[] {RelativeLayout.ALIGN_BOTTOM, R.id.btn_score2, RelativeLayout.RIGHT_OF, R.id.scorehistorytable, Direction.NW.ordinal() }; }
+            @Override public boolean appliesTo(Model m, Activity a) { return m.gameHasStarted() == false; }
+            @Override public int[] focusOn(Model m)                 { return new int[] {RelativeLayout.ALIGN_BOTTOM, R.id.btn_score2, RelativeLayout.ALIGN_LEFT, R.id.btn_side2, Direction.NW.ordinal() }; }
         },
         NewMatch_EnterNames {
-            @Override public String   guidance()                    { return "Type 'Amr Shabana' vs 'Ramy Ashour'.\nDismiss demo message afterwards"; }
+            @Override public String   guidance()                    { return "NOT USED FOR NOW: Type 'Amr Shabana' vs 'Ramy Ashour'.\nDismiss demo message afterwards"; }
             @Override public String[] getMessages(Model m) { return new String[] { "Previously used player names will be used for easy autocompletion while you type" }; }
             @Override public boolean appliesTo(Model m, Activity a) { return true; }
             @Override public int[] focusOn(Model m)                 { return new int[] { R.id.match_playerA, R.id.match_playerB }; }
         },
         NewMatch_TimersAndAnnouncements_Off {
-            @Override public String   guidance()                    { return "Uncheck timers and official announcements after dismissing both messages"; }
+            @Override public String   guidance()                    { return "NOT USED FOR NOW: Uncheck timers and official announcements after dismissing both messages"; }
             @Override public String[] getMessages(Model m) { return new String[] { "For more official matches you have the option to start with usage of dialogs presenting you with timers and official announcements."
                                                                           , "For the purpose of this demo I'll turn them off for now"}; }
             @Override public boolean appliesTo(Model m, Activity a) { return true; }
@@ -381,7 +380,7 @@ public abstract class DemoThread extends Thread
     private int bgColor  = Color.WHITE;
     private int txtColor = Color.BLACK;
 
-    public DemoThread(ScoreBoard scoreBoard, Model model) {
+    DemoThread(ScoreBoard scoreBoard, Model model) {
         this.scoreBoard = scoreBoard;
         this.matchModel = model;
         setActivity(scoreBoard);
@@ -392,6 +391,7 @@ public abstract class DemoThread extends Thread
     public void setActivity(Activity activity) {
         this.activity = activity;
     }
+    /** Invoked from MatchTabbed and ScoreBoard */
     public void setMenu(Menu menu) {
         this.menu = menu;
     }
@@ -537,9 +537,11 @@ public abstract class DemoThread extends Thread
         handler.post( new Runnable(){
             public void run(){
                 String sMessage = sMessages[iMsgCnt];
-                demoToast = new SBToast(activity, sMessage, iGravityF, bgColor, txtColor, activity.findViewById(android.R.id.content), iRelatedResId, 18);
+                int iTextSize = ViewUtil.getScreenHeightWidthMinimum() / 20;
+                demoToast = new SBToast(activity, sMessage, iGravityF, bgColor, txtColor, activity.findViewById(android.R.id.content), iRelatedResId, iTextSize);
                 //Log.d(TAG, "Showing '" + sMessage + "' for " + iSecs + " secs [" + sMessage.length() + "]");
-                demoToast.show(iSeconds, iMsgCnt==0, iMsgCnt==sMessages.length-1);
+                boolean bDrawArrows = (iMsgCnt == 0); // draw arrows for the first of possible multiple text messages
+                demoToast.show(iSeconds, bDrawArrows, iMsgCnt==sMessages.length-1);
             }
         });
     }

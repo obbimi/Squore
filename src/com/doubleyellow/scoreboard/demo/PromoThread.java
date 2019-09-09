@@ -211,7 +211,7 @@ public class PromoThread extends Thread
         //Log.d(TAG, "Resumed");
     }
 
-    protected void drawArrow(final int[] iRelatedResId, final Direction[] directions) {
+    private void drawArrow(final int[] iRelatedResId, final Direction[] directions) {
         if ( this.activity == null) { return; }
 
         Handler handler = new Handler(activity.getMainLooper());
@@ -225,7 +225,7 @@ public class PromoThread extends Thread
             }
         });
     }
-    protected void hideArrow() {
+    private void hideArrow() {
         if ( this.activity == null) { return; }
 
         Handler handler = new Handler(activity.getMainLooper());

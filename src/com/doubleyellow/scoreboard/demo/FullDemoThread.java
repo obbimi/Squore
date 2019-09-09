@@ -29,7 +29,7 @@ import java.util.List;
  *
  * The goal is to be able to run it fully automatic.
  * Downsides
- * - is currently onlygives visual feedback about what is 'clicked' for scorebuttons and playernames.
+ * - is currently only gives visual feedback about what is 'clicked' for scorebuttons and playernames.
  * - performing swipes are not automated
  */
 public class FullDemoThread extends DemoThread {
@@ -90,32 +90,32 @@ public class FullDemoThread extends DemoThread {
         lView.add(new ListenerAndView(DemoMessage.Intro_BigButtons) );
         lView.add(new ListenerAndView(DemoMessage.Intro_ServeSideButtons));
         lView.add(new ListenerAndView(DemoMessage.Intro_PlayerNames));
-        lView.add(new ListenerAndView(DemoMessage.Intro_End_See_action, 4, 4));
-        lView.add(new ListenerAndView(DemoMessage.Intro_End_Leave_new, 4, 4));
-        lView.add(new ListenerAndView(DemoMessage.NewMatch_1, 4, 4));
-        lView.add(new ListenerAndView(DemoMessage.NewMatch_2, 4, 4));
-        lView.add(new ListenerAndView(DemoMessage.NewMatch_3, 4, 4));
-        lView.add(new ListenerAndView(DemoMessage.NewMatch_FB_1, 4, 4));
-        lView.add(new ListenerAndView(DemoMessage.NewMatch_FB_2, 4, 4));
-        lView.add(new ListenerAndView(DemoMessage.NewMatch_FB_3, 4, 4));
-        lView.add(new ListenerAndView(DemoMessage.NewMatch_FB_4, 4, 4));
+        lView.add(new ListenerAndView(DemoMessage.Intro_End_See_action    , 4, 4));
+        lView.add(new ListenerAndView(DemoMessage.Intro_End_Leave_new     , 4, 4));
+        lView.add(new ListenerAndView(DemoMessage.NewMatch_1              , 4, 4));
+        lView.add(new ListenerAndView(DemoMessage.NewMatch_2              , 4, 4));
+        lView.add(new ListenerAndView(DemoMessage.NewMatch_3              , 4, 4));
+        lView.add(new ListenerAndView(DemoMessage.NewMatch_FB_All         , 4, 4));
+        lView.add(new ListenerAndView(DemoMessage.NewMatch_FB_Toss        , 4, 4));
+        lView.add(new ListenerAndView(DemoMessage.NewMatch_FB_Timer       , 4, 4));
+        lView.add(new ListenerAndView(DemoMessage.NewMatch_FB_Announcement, 4, 4));
         lView.add(new ListenerAndView(R.id.float_new_match, 4));
         //lView.add(DemoMessage.NewMatch_2);
         //lView.add(R.id.sb_enter_singles_match);
         //lView.add(DemoMessage.NewMatch_EnterNames);
-        lView.add(new ListenerAndView(DemoMessage.First4PointsForA, 3, 3));
+        lView.add(new ListenerAndView(DemoMessage.First4PointsForA         , 3, 3));
         lView.add(scoreForA.setPauseDuration(3));
         lView.add(scoreForA.setPauseDuration(3));
-        lView.add(new ListenerAndView(DemoMessage.Game_ServeSideToggles, 8, 5));
+        lView.add(new ListenerAndView(DemoMessage.Game_ServeSideToggles    , 8, 5));
         lView.add(scoreForA.setPauseDuration(3));
         lView.add(scoreForA.setPauseDuration(3)); // 4-0
-        lView.add(new ListenerAndView(DemoMessage.FirstPointsForB, 3, 3));
+        lView.add(new ListenerAndView(DemoMessage.FirstPointsForB          , 3, 3));
         lView.add(new ListenerAndView(DemoMessage.Game_HandoutQuestionMarkB, 6, 4));
         lView.add(scoreForB.setPauseDuration(3));
         lView.add(scoreForB.setPauseDuration(2));
         lView.add(new ListenerAndView(DemoMessage.Game_HandoutQuestionMarkA, 4, 2));
         lView.add(scoreForA);
-        lView.add(new ListenerAndView(DemoMessage.Intro_GameHistory, 4, 2));
+        lView.add(new ListenerAndView(DemoMessage.Intro_GameHistory        , 4, 2));
         lView.add(scoreForB);
         lView.add(scoreForB);// 5-4
         if ( true ) {
@@ -197,18 +197,24 @@ public class FullDemoThread extends DemoThread {
         return MotionEvent.obtain(downTime, eventTime, iAction, x, y, metaState);
     }
 
-    private static DrawTouch prevDrawTouch = null;
-    private static BaseAlertDialog prevDialog = null;
-    private static MenuHandler prevMenuHandler = null;
-    //private static ActionBar prevActionbar = null;
-    private static int prevActionId = 0;
-    private static int iMessage = 0;
-    private static boolean bMoreMessages = false;
+    private static DrawTouch       prevDrawTouch   = null;
+    private static BaseAlertDialog prevDialog      = null;
+    private static MenuHandler     prevMenuHandler = null;
+  //private static ActionBar       prevActionbar   = null;
+    private static int             prevActionId    = 0;
+    private static int             iMessage        = 0;
+    private static boolean         bMoreMessages   = false;
     private void completeSimulate() {
 
         final Integer scoreButtonBgColor  = ColorPrefs.getTarget2colorMapping(activity).get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
         final Integer playerButtonBgColor = ColorPrefs.getTarget2colorMapping(activity).get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
         final List<ListenerAndView> lView = prepareCompleteSimulation();
+
+/* can not be called here: will touch views not created by this thread
+        if ( activity instanceof ScoreBoard ) {
+            ((MenuHandler) activity).handleMenuItem(R.id.sb_clear_score);
+        }
+*/
 
         int iStep = -1;
         while (iStep < ListUtil.size(lView)-1 && (bStopLoop == false)) {
@@ -254,16 +260,20 @@ public class FullDemoThread extends DemoThread {
                             prevDrawTouch = null;
                         }
                     }
+
+                    // close a dialog by simulating a button click
                     if ( prevDialog != null ){
                         prevDialog.handleButtonClick(prevActionId);
                         prevDialog.dismiss();
                         prevDialog = null;
                     }
+
                     if ( prevMenuHandler != null ) {
+                        // e.g. used to start child activity to start a new match
                         prevMenuHandler.handleMenuItem(prevActionId);
                         prevMenuHandler = null;
                     }
-                    if (lv.viewId != View.NO_ID) {
+                    if ( lv.viewId != View.NO_ID ) {
                         if ( viewById instanceof DrawTouch ) {
                             String sViewName = activity.getResources().getResourceName(lv.viewId);
                             DrawTouch artv = (DrawTouch) viewById;
@@ -282,12 +292,12 @@ public class FullDemoThread extends DemoThread {
                             }
 */
                         }
-                        if (viewById != null) {
-                            if (lv.ocl != null) {
+                        if ( viewById != null ) {
+                            if ( lv.ocl != null ) {
                                 //lv.ocl.onClick(viewById);
                                 test_touchEvent(viewById);
                             }
-                            if (lv.olcl != null) {
+                            if ( lv.olcl != null ) {
                                 lv.olcl.onLongClick(viewById);
                             }
                         }
@@ -321,6 +331,7 @@ public class FullDemoThread extends DemoThread {
                         //prevActionbar = activity.getActionBar();
                         if ( activity instanceof MenuHandler ) {
                             if ( activity instanceof DrawTouch ) {
+                                // only ScoreBoard for now
                                 prevDrawTouch = (DrawTouch) activity;
                                 prevActionId = lv.actionId;
                                 prevDrawTouch.drawTouch(null, lv.actionId, Color.BLUE);
