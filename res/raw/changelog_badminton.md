@@ -1,3 +1,7 @@
+## 4.23 (sept 2019)
+
+- allow to play 'Total of X games' match format (as opposed to 'Best of X games')
+
 ## 4.22 (aug 2019)
 
 - buf fix doubles servesequence

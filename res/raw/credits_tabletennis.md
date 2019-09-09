@@ -52,3 +52,5 @@ The quick intro, displayed when you first install the app (or if you choose 'Hel
 The following users of the app have made valuable suggestions/help:
 
 - Alexander Asyunkin 
+- Steve Smith
+- Baggio Milan
