@@ -462,22 +462,28 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     onClickXTimesHandler = new OnClickXTimesHandler(300, 10);
                 }
                 if ( onClickXTimesHandler.handle() ) {
-                    mainMenu.findItem(R.id.sb_demo                             ).setVisible(true);
-                    mainMenu.findItem(R.id.sb_toggle_demo_mode                 ).setVisible(true);
-                    mainMenu.findItem(R.id.sb_download_posted_to_squore_matches).setVisible(true);
-                    mainMenu.findItem(R.id.android_language                    ).setVisible(true);
-                    if ( toggleDemoMode(null).equals(Mode.ScreenShots) ) {
+                    int iMenuIds[] = new int[] { R.id.sb_demo
+                                               , R.id.sb_toggle_demo_mode
+                                               , R.id.sb_download_posted_to_squore_matches
+                                               , R.id.android_language
+                                               };
+                    int iToggled = ViewUtil.setMenuItemsVisibility(mainMenu, iMenuIds, true);
+                    if ( iToggled > 0 ) {
+                        Toast.makeText(ScoreBoard.this, String.format("Additional %d menu items made available", iToggled), Toast.LENGTH_LONG).show();
+                    }
+                    Mode newMode = toggleDemoMode(null);
+                    if ( newMode.equals(Mode.ScreenShots) ) {
                         PreferenceValues.setEnum   (PreferenceKeys.BackKeyBehaviour            , ScoreBoard.this, BackKeyBehaviour.UndoScoreNoConfirm); // for adb demo/screenshots script
-                        PreferenceValues.setBoolean(PreferenceKeys.showFullScreen              , ScoreBoard.this, true);                                // for adb demo/screenshots script
-                        PreferenceValues.setBoolean(PreferenceKeys.showActionBar               , ScoreBoard.this, false);                               // for adb demo/screenshots script
-                        PreferenceValues.setBoolean(PreferenceKeys.showAdjustTimeButtonsInTimer, ScoreBoard.this, false);                               // for cleaner screenshots
-                        PreferenceValues.setBoolean(PreferenceKeys.showUseAudioCheckboxInTimer , ScoreBoard.this, false);                               // for cleaner screenshots
+                        PreferenceValues.setBoolean(PreferenceKeys.showFullScreen              , ScoreBoard.this, true);                         // for adb demo/screenshots script
+                        PreferenceValues.setBoolean(PreferenceKeys.showActionBar               , ScoreBoard.this, false);                        // for adb demo/screenshots script
+                        PreferenceValues.setBoolean(PreferenceKeys.showAdjustTimeButtonsInTimer, ScoreBoard.this, false);                        // for cleaner screenshots
+                        PreferenceValues.setBoolean(PreferenceKeys.showUseAudioCheckboxInTimer , ScoreBoard.this, false);                        // for cleaner screenshots
                     } else {
                         PreferenceValues.setEnum   (PreferenceKeys.BackKeyBehaviour            , ScoreBoard.this, BackKeyBehaviour.PressTwiceToExit);
                         PreferenceValues.setBoolean(PreferenceKeys.showAdjustTimeButtonsInTimer, ScoreBoard.this, R.bool.showAdjustTimeButtonsInTimer_default);
                         PreferenceValues.setBoolean(PreferenceKeys.showUseAudioCheckboxInTimer , ScoreBoard.this, R.bool.showUseAudioCheckboxInTimer_default);
                     }
-                    if ( m_mode.equals(Mode.Debug) ) {
+                    if ( newMode.equals(Mode.Debug) ) {
                         PreferenceValues.setString(PreferenceKeys.FeedFeedsURL, ScoreBoard.this, getString(R.string.feedFeedsURL_default) + "?suffix=.new");
                         //PreferenceValues.setNumber (PreferenceKeys.viewedChangelogVersion, ScoreBoard.this, PreferenceValues.getAppVersionCode(ScoreBoard.this)-1);
                     }
@@ -2819,9 +2825,10 @@ touch -t 01030000 LAST.sb
             if ( PreferenceValues.keepScreenOnWhen(ScoreBoard.this).equals(KeepScreenOnWhen.MatchIsInProgress) ) {
                 keepScreenOn(lockStateNew.isLocked() == false);
             }
-            if ( lockStateNew.equals(LockState.LockedManualGUI) || lockStateOld.equals(LockState.LockedManualGUI) ) {
+            EnumSet<LockState> lShowToastFor = EnumSet.of(LockState.LockedManualGUI, LockState.LockedManual);
+            if ( lShowToastFor.contains(lockStateNew) || lShowToastFor.contains(lockStateOld) ) {
                 int iResId = locked ? R.string.match_is_now_locked : R.string.match_is_now_unlocked;
-                iBoard.showToast(iResId);
+                iBoard.showToast(getString(iResId), 5, Direction.None);
             }
             if ( lockStateNew.equals(LockState.LockedManualGUI) ) {
                 showNewMatchFloatButton(true); // show lock icon
@@ -4043,7 +4050,15 @@ touch -t 01030000 LAST.sb
         return true;
     }
 
+    boolean m_bChildActivityShowing = false;
+
+    @Override public void startActivityForResult(Intent intent, int requestCode) {
+        m_bChildActivityShowing = true;
+        super.startActivityForResult(intent, requestCode);
+    }
+
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        m_bChildActivityShowing = false;
         super.onActivityResult(requestCode, resultCode, data);
 
         // Check which request we're responding to
@@ -4424,6 +4439,9 @@ touch -t 01030000 LAST.sb
     public boolean isDialogShowing() {
         return dialogManager.isDialogShowing();
     }
+    public boolean isChildActivityShowing() {
+        return m_bChildActivityShowing;
+    }
     private synchronized boolean addToDialogStack(BaseAlertDialog dialog) {
         return dialogManager.addToDialogStack(dialog);
     }
@@ -4590,18 +4608,18 @@ touch -t 01030000 LAST.sb
     // promo modus
     // ------------------------------------------------------
     private void initPreferencesForPromoDemoThread() {
-        PreferenceValues.setNumberR  (PreferenceKeys.numberOfGamesToWinMatch, this, R.integer.numberOfGamesToWin_default_Squash);
-        PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame, this, R.integer.gameEndScore_default_Squash);
-        PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat, this, TieBreakFormat.TwoClearPoints);
+        PreferenceValues.setNumberR  (PreferenceKeys.numberOfGamesToWinMatch          , this, R.integer.numberOfGamesToWin_default_Squash);
+        PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame          , this, R.integer.gameEndScore_default_Squash);
+        PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                   , this, TieBreakFormat.TwoClearPoints);
         PreferenceValues.setEnum     (PreferenceKeys.recordRallyEndStatsAfterEachScore, this, Feature.DoNotUse);
-        PreferenceValues.setEnum     (PreferenceKeys.useTimersFeature, this, Feature.Suggest);
-        PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature, this, Feature.Suggest);
-        PreferenceValues.setEnum     (PreferenceKeys.endGameSuggestion, this, Feature.Suggest);
-        PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring, this, false);
-      //PreferenceValues.setBoolean  (PreferenceKeys.showScoringHistoryInMainScreen, this, true);
-        PreferenceValues.setStringSet(PreferenceKeys.showScoringHistoryInMainScreenOn, ShowOnScreen.OnDevice, this);
-        PreferenceValues.setStringSet(PreferenceKeys.showMatchDurationChronoOn       , ShowOnScreen.OnChromeCast, this);
-        PreferenceValues.setStringSet(PreferenceKeys.showLastGameDurationChronoOn    , ShowOnScreen.OnChromeCast, this);
+        PreferenceValues.setEnum     (PreferenceKeys.useTimersFeature                 , this, Feature.Suggest);
+        PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature  , this, Feature.Suggest);
+        PreferenceValues.setEnum     (PreferenceKeys.endGameSuggestion                , this, Feature.Suggest);
+        PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring          , this, false);
+      //PreferenceValues.setBoolean  (PreferenceKeys.showScoringHistoryInMainScreen   , this, true);
+        PreferenceValues.setStringSet(PreferenceKeys.showScoringHistoryInMainScreenOn , ShowOnScreen.OnDevice, this);
+        PreferenceValues.setStringSet(PreferenceKeys.showMatchDurationChronoOn        , ShowOnScreen.OnChromeCast, this);
+        PreferenceValues.setStringSet(PreferenceKeys.showLastGameDurationChronoOn     , ShowOnScreen.OnChromeCast, this);
 
         PreferenceValues.setBoolean  (PreferenceKeys.autoSuggestToPostResult, this, false);
         PreferenceValues.setBoolean  (PreferenceKeys.showTips, this, false);
@@ -4621,21 +4639,21 @@ touch -t 01030000 LAST.sb
     // ------------------------------------------------------
     public enum Mode {
         Normal,
-        ScreenShots,
-        Debug,
         FullAutomatedDemo,
+        ScreenShots,
         GuidedDemo,
         Promo,
+        Debug,
     }
     private Mode toggleDemoMode(DemoThread.DemoMessage demoMessage) {
-        m_mode = Mode.values()[(m_mode.ordinal()+1)%Mode.values().length];
+        Mode modeNew = Mode.values()[(m_mode.ordinal()+1)%Mode.values().length];
 
-        setModus(demoMessage, m_mode);
-        return m_mode;
+        setModus(demoMessage, modeNew);
+        return modeNew;
     }
 
     public void setModus(DemoThread.DemoMessage demoMessage, Mode mode) {
-        this.m_mode = mode;
+        ScoreBoard.m_mode = mode;
 
         stopDemoMode();
         stopPromoMode();
@@ -4683,6 +4701,7 @@ touch -t 01030000 LAST.sb
             DemoSupportingThread.startAt = demoMessage;
             demoThread = new DemoSupportingThread(this, matchModel);
         } else {
+            handleMenuItem(R.id.sb_clear_score);
             demoThread = new FullDemoThread(this, matchModel);
             Timer.iSpeedUpFactor = 5;
         }
@@ -4781,6 +4800,7 @@ touch -t 01030000 LAST.sb
         }
     }
 
+    /** Called from ScoreBoard and several Child activities from ScoreBoard */
     public static void updateDemoThread(Activity activity) {
         if ( isInDemoMode() ) {
             demoThread.setActivity(activity);

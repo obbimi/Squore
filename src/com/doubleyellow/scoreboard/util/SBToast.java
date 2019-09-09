@@ -20,11 +20,11 @@ package com.doubleyellow.scoreboard.util;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -40,7 +40,7 @@ import com.doubleyellow.android.view.SimpleGestureListener;
 /** Toast that matches more with look and feel of the Squore app */
 public class SBToast extends Toast {
 
-//  private final String TAG = SBToast.class.getSimpleName();
+    private final String TAG = SBToast.class.getSimpleName();
 
     private SBRelativeLayout sbRelativeLayout = null;
     private int bgColor = Color.BLACK;
@@ -92,12 +92,7 @@ public class SBToast extends Toast {
         paint.setColor(this.bgColor);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         //ll.setBackgroundDrawable(drawable);
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ) {
-            ll.setBackground(drawable);
-        } else {
-            ColorDrawable cd = new ColorDrawable(this.bgColor);
-            ll.setBackgroundDrawable(cd);
-        }
+        ll.setBackground(drawable);
 
         // Position you toast here toast position is 10 dp from border
         super.setGravity(iGravityF, 10, 10);
@@ -131,7 +126,16 @@ public class SBToast extends Toast {
             sbRelativeLayout.hideArrows();
         }
 
-        //super.show();
+        if ( bReanimateByCallingShow == false ) {
+            if ( iSecs > 4 ) {
+                super.setDuration(LENGTH_LONG); // LENGTH_LONG internally means 7 seconds, SHORT is 4 seconds
+            } else {
+                super.setDuration(LENGTH_SHORT); // LENGTH_LONG internally means 7 seconds, SHORT is 4 seconds
+            }
+            super.show();
+        } else {
+            // KeepAliveTimer will call show()
+        }
 
         // this will trigger the show as well
         this.keepAliveTimer = new KeepAliveTimer(1000 * iSecs, 1000);
@@ -146,6 +150,7 @@ public class SBToast extends Toast {
         return (this.keepAliveTimer != null);
     }
 
+    private static final boolean bReanimateByCallingShow = Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1 /* O=26, O_MR1=27, p=28 */;
     private KeepAliveTimer keepAliveTimer = null;
 
     private class KeepAliveTimer extends CountDownTimer {
@@ -156,8 +161,12 @@ public class SBToast extends Toast {
         }
 
         @Override public void onTick(long l) {
-            //Log.w(TAG, "Re-animate toast");
-            SBToast.super.show();
+            if ( bReanimateByCallingShow ) {
+              //Log.w(TAG, "Re-animate toast (ms left:" + l + ")");
+                SBToast.this.show(); // in android 9, repeatedly calling this method makes the app crash
+            } else {
+              //Log.w(TAG, "*** NOT Re-animate toast (ms left:" + l + ")");
+            }
         }
 
         @Override public void onFinish() {
