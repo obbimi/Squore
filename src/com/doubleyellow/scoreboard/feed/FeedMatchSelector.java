@@ -188,13 +188,14 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     llTeam.addView(txtTeam);
 
                     List<String> teamPlayers = model.getTeamPlayers(p);
-                    SelectObjectView<String> msPlayers = new SelectObjectView<String>(context, teamPlayers, teamPlayers.get(0));
+                    String sChecked = ListUtil.isNotEmpty(teamPlayers) ? teamPlayers.get(0): null;
+                    SelectObjectView<String> msPlayers = new SelectObjectView<String>(context, teamPlayers, sChecked);
                     llTeam.addView(msPlayers);
                     m_p2select.put(p, msPlayers);
 
                     llTeams.addView(llTeam);
 
-                    bAllowSplitOnComma = bAllowSplitOnComma && teamPlayers.get(0).contains(",");
+                    bAllowSplitOnComma = bAllowSplitOnComma && sChecked.contains(",");
                 }
 
                 final SelectEnumView<NamePart> evNamePart;

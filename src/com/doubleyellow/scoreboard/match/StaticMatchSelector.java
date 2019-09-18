@@ -641,7 +641,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 
                 // all relevant match format properties have been set (taken from other match): no need to present activity
                 Match.dontShow();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -803,7 +803,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                                     } else {
                                         fCorrespondingRecentMatch = null;
                                     }
-                                } catch (IOException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }

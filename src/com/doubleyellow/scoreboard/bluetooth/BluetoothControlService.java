@@ -191,7 +191,7 @@ public class BluetoothControlService
     }
 
     /**
-     * Write to the ConnectedThread in an unsynchronized manner
+     * Write to the ConnectedThread in an not-synchronized manner
      */
     public void write(String s) {
         write(s.getBytes());
@@ -365,15 +365,15 @@ public class BluetoothControlService
 
         ConnectedThread(BluetoothSocket socket) {
             mmSocket = socket;
-            InputStream tmpIn = null;
+            InputStream  tmpIn  = null;
             OutputStream tmpOut = null;
             // Get the BluetoothSocket input and output streams
             try {
-                tmpIn = socket.getInputStream();
+                tmpIn  = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
             } catch (IOException e) {
             }
-            mmInStream = tmpIn;
+            mmInStream  = tmpIn;
             mmOutStream = tmpOut;
         }
 

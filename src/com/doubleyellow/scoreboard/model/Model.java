@@ -1796,8 +1796,8 @@ public abstract class Model
         return sTimeHHMMSSXXX.replaceAll("[+-]\\d\\d:\\d\\d$", "");
     }
 
-    public boolean fromJsonString(File f) throws IOException {
-        if ( f == null || f.exists() == false ) {
+    public boolean fromJsonString(File f) {
+        if ( (f == null) || (f.exists() == false) ) {
             // normally only when switching brand in DEMO mode
             Log.w(TAG, "Not an existing file : " + f);
             return false;
@@ -1811,7 +1811,7 @@ public abstract class Model
         }
         JSONObject jo    = fromJsonString(sJson, false);
         m_tsLastJsonOperation = f.lastModified();
-        return jo != null;
+        return (jo != null);
     }
 
     /** used for 'adjusting' the score. E.g. starting halfway a match or for demo purposes */

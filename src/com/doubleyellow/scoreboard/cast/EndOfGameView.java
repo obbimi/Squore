@@ -19,9 +19,11 @@ package com.doubleyellow.scoreboard.cast;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.doubleyellow.android.util.ColorUtil;
@@ -30,7 +32,6 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.history.GameGraphView;
 import com.doubleyellow.scoreboard.history.MatchGameScoresView;
-import com.doubleyellow.scoreboard.timer.SBTimerView;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
@@ -49,6 +50,8 @@ import java.util.Map;
  */
 public class EndOfGameView implements TimerViewContainer
 {
+    private static final String TAG = "SB." + EndOfGameView.class.getSimpleName();
+
     private ViewGroup          root;
     private Context            context     = null;
     private IBoard             iBoard      = null;
@@ -66,10 +69,17 @@ public class EndOfGameView implements TimerViewContainer
         this.matchModel = model;
     }
 
+    private static class EOGTimerView extends com.doubleyellow.scoreboard.timer.SBTimerView {
+        EOGTimerView(TextView textView, Chronometer cmToLate, Context context, IBoard iBoard) {
+            super(textView, cmToLate, context, iBoard);
+        }
+    }
     @Override public TimerView getTimerView() {
         if ( timerView == null ) {
             if ( txtTimer != null ) {
-                timerView = new SBTimerView(txtTimer, null, context, iBoard);
+                timerView = new EOGTimerView(txtTimer, null, context, iBoard);
+            } else {
+                Log.w(TAG, "Can not create timerview yet.");
             }
         }
         return timerView;
@@ -125,7 +135,8 @@ public class EndOfGameView implements TimerViewContainer
                 txtTimer.setVisibility(View.INVISIBLE); // not GONE, so logo layout remains the same
             } else {
                 TimerView timerView = this.getTimerView();
-                Timer.addTimerView(iBoard.isPresentation(), timerView);
+                boolean bAdded = Timer.addTimerView(iBoard.isPresentation(), timerView);
+                //Log.d(TAG, "Timerview added : " + bAdded);
             }
         }
 

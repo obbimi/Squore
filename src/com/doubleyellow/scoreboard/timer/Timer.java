@@ -102,12 +102,13 @@ public class Timer
     }
 
     /** e.g. to be invoked from MatchHistory activity and cast.Presentation */
-    public static void addTimerView(boolean bIsPresentation, TimerViewContainer container) {
-        if ( container == null ) { return; }
-        addTimerView(bIsPresentation, container.getTimerView());
+    public static boolean addTimerView(boolean bIsPresentation, TimerViewContainer container) {
+        if ( container == null ) { return false; }
+        return addTimerView(bIsPresentation, container.getTimerView());
     }
-    public static void addTimerView(boolean bIsPresentation, TimerView view) {
-        if ( view == null ) { return; }
+    public static boolean addTimerView(boolean bIsPresentation, TimerView view) {
+        if ( view == null ) { return false; }
+        boolean bAdded = false;
         TimerView tvOld = Timer.timerViews.put(bIsPresentation + ":" + view.getClass().getName(), view);
         boolean bIsNew = tvOld == null;
         if ( bIsNew ) {
@@ -128,12 +129,15 @@ public class Timer
                 // timer not running: prevent that previous time or 'Time!' is still visible
                 view.setTime(formatTime(0L, false));
             }
+            bAdded = true;
         } else {
-            Log.d(TAG, "Already there " + view.toString());
+            //Log.d(TAG, "Already there " + view.toString());
+            bAdded = false;
         }
         if ( ScoreBoard.timer != null /*&& ScoreBoard.timer.isShowing()*/ ) {
             view.show();
         }
+        return bAdded;
     }
     public static boolean removeTimerView(boolean bIsPresentation, TimerViewContainer container) {
         if ( container == null ) { return false; }
