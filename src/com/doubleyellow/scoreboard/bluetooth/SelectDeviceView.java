@@ -30,16 +30,19 @@ public class SelectDeviceView extends SelectObjectView<BluetoothDevice> {
         super(context, devices, fChecked);
     }
 
-    @Override public void decorateGuiItem(BluetoothDevice device, RadioButton rb) {
-        String sName    = device.getName();
-        String sAddress = device.getAddress();
-        rb.setText(sName + " (" + sAddress + ")");
+    @Override protected RadioButtonDecorator<BluetoothDevice> getDefaultDecorator() {
+        return new RadioButtonDecorator<BluetoothDevice>() {
+            @Override public void decorateGuiItem(BluetoothDevice device, RadioButton rb) {
+                String sName    = device.getName();
+                String sAddress = device.getAddress();
+                rb.setText(sName + " (" + sAddress + ")");
 
-        try {
-            rb.setTag(device.getAddress());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+                try {
+                    rb.setTag(device.getAddress());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 }

@@ -45,6 +45,7 @@ public enum URLsKeys {
         avatarBaseURL,
         expandGroup,
         Format,
+        Format_TeamPlayer,
         skipMatchSettings,
         name, /* Duplicate key.. careful, may be causing problems */
 }

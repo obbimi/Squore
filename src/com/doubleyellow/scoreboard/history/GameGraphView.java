@@ -54,6 +54,8 @@ import java.util.*;
  */
 public class GameGraphView extends LineGraphView
 {
+    private static final String TAG = "SB." + GameGraphView.class.getSimpleName();
+
     private int iBgColor     = 0;
     private int iTxtColor    = 0;
     private int iColorA      = 0;
@@ -196,6 +198,8 @@ public class GameGraphView extends LineGraphView
         List<String> lXLabels = constructXLabels(dataWinner, dataLoser);
         super.setVerticalLabels  (lYLabels.toArray(new String[0]));
         super.setHorizontalLabels(lXLabels.toArray(new String[0]));
+
+        //graphViewStyle.setNumVerticalLabels(ListUtil.size(lYLabels)); // required ?
     }
 
     @Override protected void onAttachedToWindow() {
@@ -210,6 +214,7 @@ public class GameGraphView extends LineGraphView
 
         graphViewStyle.setHorizontalLabelsColor(iTxtColor);
         float txtSize = getResources().getDimension(R.dimen.txt_medium);
+              txtSize = ViewUtil.getScreenHeightWidthMinimum(getContext()) / 25;
         graphViewStyle.setTextSize(txtSize);
         //graphViewStyle.setTextSize(getResources().getInteger(R.integer.TextSizeTabStrip) );
         //graphViewStyle.setNumHorizontalLabels(5);
@@ -311,13 +316,14 @@ public class GameGraphView extends LineGraphView
         return mGraphData;
     }
 
+    // construct rang from 0-11 or 15 (or other maximum number of points scored) to be displayed on y-ax
     private List<String> constructYLabels(List<GraphView.GraphViewData> dataWinner, List<GraphView.GraphViewData> dataLoser) {
         final GraphViewData last = ListUtil.getLast(dataWinner);
         int iMax = 1;
         if ( last != null ) {
             iMax = (int) last.valueY;
         } else {
-            Log.w("SB.GameGraphView", "no last??");
+            Log.w(TAG, "no last??");
         }
         int iMin = 0;
         if ( ListUtil.size(dataWinner) > 0 ) {
@@ -330,12 +336,15 @@ public class GameGraphView extends LineGraphView
         // determine stepsize based on number of scorelines
         int iStepSize = 1;
         int iNrOfSteps = (iMax - iMin) / iStepSize;
-        while ( iNrOfSteps > 40 ) {
+        while ( iNrOfSteps > 12 ) {
+            iStepSize++;
+/*
             switch (iStepSize ) {
                 case 1:  iStepSize  = 2; break;
                 case 2:  iStepSize  = 5; break;
                 default: iStepSize *= 2; break;
             }
+*/
             iNrOfSteps = (iMax - iMin) / iStepSize;
         }
         List<String> lYLabels = new ArrayList<String>();
@@ -345,18 +354,24 @@ public class GameGraphView extends LineGraphView
                 lYLabels.add(String.valueOf(i));
                 continue;
             }
+/*
             if ( iMax < 8 ) {
                 lYLabels.add(String.valueOf(i));
                 continue;
             }
-            if ( ( i % iStepSize != 0 ) || ( i == iMax - 1 ) ) { // TODO: adjust the modulo if max-min is very large
-                lYLabels.add(""); // no labels if not modulo stepsize, and no label for 'max minus one'
+*/
+            if ( ( i % iStepSize != 0 ) || ( i == iMax - 1 ) ) {
+                //lYLabels.add(""); // no labels if not modulo stepsize, and no label for 'max minus one'
                 continue;
             }
             lYLabels.add(String.valueOf(i));
+
         }
+        //Log.d(TAG, "Labels to show on Y ax: " + lYLabels);
         return lYLabels;
     }
+
+
     private List<String> constructXLabels(List<GraphView.GraphViewData> dataWinner, List<GraphView.GraphViewData> dataLoser) {
         final GraphViewData last = ListUtil.getLast(dataWinner);
         int iMax = ListUtil.size(dataWinner);

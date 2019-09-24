@@ -37,10 +37,13 @@ import com.doubleyellow.scoreboard.prefs.*;
 import com.doubleyellow.scoreboard.view.PlayerTextView;
 import com.doubleyellow.scoreboard.view.PreferenceACTextView;
 import com.doubleyellow.util.Feature;
+import com.doubleyellow.util.JsonUtil;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
 import com.doubleyellow.view.NextFocusDownListener;
 import com.doubleyellow.view.SBRelativeLayout;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -250,7 +253,7 @@ public class MatchView extends SBRelativeLayout
     }
 
     /** invoked from com.doubleyellow.scoreboard.match.Match */
-    void setPlayers(String sA, String sB, String sCountryA, String sCountryB, String sAvatarA, String sAvatarB, String sClubA, String sClubB, List<String> lTeamPlayersA, List<String> lTeamPlayersB) {
+    void setPlayers(String sA, String sB, String sCountryA, String sCountryB, String sAvatarA, String sAvatarB, String sClubA, String sClubB, JSONArray lTeamPlayersA, JSONArray lTeamPlayersB) {
         int iNames = 0;
         if ( StringUtil.isNotEmpty(sA) ) {
             if ( m_bIsDoubles ) {
@@ -264,9 +267,9 @@ public class MatchView extends SBRelativeLayout
             }
             iNames++;
         } else {
-            if ( ListUtil.isNotEmpty(lTeamPlayersA) && txtPlayerA instanceof AutoCompleteTextView ) {
+            if ( JsonUtil.isNotEmpty(lTeamPlayersA) && txtPlayerA instanceof AutoCompleteTextView ) {
                 AutoCompleteTextView actv = (AutoCompleteTextView) txtPlayerA;
-                actv.setAdapter(getStringArrayAdapter(getContext(), lTeamPlayersA, null));
+                actv.setAdapter(getStringArrayAdapter(getContext(), JsonUtil.asListOfStrings(lTeamPlayersA), null));
                 actv.setThreshold(0);
             }
         }
@@ -282,9 +285,9 @@ public class MatchView extends SBRelativeLayout
             }
             iNames++;
         } else {
-            if ( ListUtil.isNotEmpty(lTeamPlayersB) && txtPlayerB instanceof AutoCompleteTextView ) {
+            if ( JsonUtil.isNotEmpty(lTeamPlayersB) && txtPlayerB instanceof AutoCompleteTextView ) {
                 AutoCompleteTextView actv = (AutoCompleteTextView) txtPlayerB;
-                actv.setAdapter(getStringArrayAdapter(getContext(), lTeamPlayersB, null));
+                actv.setAdapter(getStringArrayAdapter(getContext(), JsonUtil.asListOfStrings(lTeamPlayersB), null));
                 actv.setThreshold(0);
             }
         }

@@ -37,7 +37,7 @@ import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.MenuHandler;
 import com.doubleyellow.util.StringUtil;
 
-import java.util.List;
+import org.json.JSONArray;
 
 /**
  * Activity where the user can provided
@@ -91,8 +91,8 @@ public class Match extends XActivity implements MenuHandler
         String sClubB      = null;
         String sAvatarA    = null;
         String sAvatarB    = null;
-        List<String> lTeamPlayersA = null;
-        List<String> lTeamPlayersB = null;
+        JSONArray lTeamPlayersA = null;
+        JSONArray lTeamPlayersB = null;
       //Bundle bundleExtra = null;
         Model  model       = null;
         {
@@ -116,8 +116,8 @@ public class Match extends XActivity implements MenuHandler
             sClubB        = model.getClub       (Player.B);
             sAvatarA      = model.getAvatar     (Player.A);
             sAvatarB      = model.getAvatar     (Player.B);
-            lTeamPlayersA = model.getTeamPlayers(Player.A);
-            lTeamPlayersB = model.getTeamPlayers(Player.B);
+            lTeamPlayersA = FeedMatchSelector.getTeamPlayers(this, Player.A);
+            lTeamPlayersB = FeedMatchSelector.getTeamPlayers(this, Player.B);
 
             bIsDoubles = model.isDoubles();
             if ( bIsDoubles ) {

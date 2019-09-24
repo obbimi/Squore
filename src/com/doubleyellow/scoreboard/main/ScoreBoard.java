@@ -1811,13 +1811,15 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
      * - MatchReceivedUtil (nfc match)
      * - receive match via bluetooth
      */
-    void initScoreBoard(File fJson) {
+    boolean initScoreBoard(File fJson) {
+        boolean bReadFromJsonOK = false;
+
         Model previous = matchModel;
 
         if ( fJson == null || matchModel == null ) { // 20140315: invoked from onCreate() after e.g. a dialog or screen orientation switch
             matchModel = null;
 
-            initMatchModel(fJson);
+            bReadFromJsonOK = initMatchModel(fJson);
         }
 
         if ( (previous != null) && (fJson == null) ) {
@@ -1866,14 +1868,14 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
 
         updateDemoThread(this);
+
+        return bReadFromJsonOK;
     }
 
-    private void initMatchModel(File fJson) {
+    private boolean initMatchModel(File fJson) {
+        boolean bReadFromJsonOK = false;
         if ( matchModel == null ) {
             matchModel = Brand.getModel();
-            iBoard.setModel(matchModel);
-
-            setModelForCast(matchModel);
 
             matchModel.setNrOfPointsToWinGame(PreferenceValues.numberOfPointsToWinGame(this));
             matchModel.setNrOfGamesToWinMatch(PreferenceValues.numberOfGamesToWinMatch(this));
@@ -1885,7 +1887,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
             if ( fJson != null && fJson.exists() ) {
                 try {
-                    matchModel.fromJsonString(fJson);
+                    bReadFromJsonOK = matchModel.fromJsonString(fJson);
                     if ( PreferenceValues.lockMatchMV(this).contains(AutoLockContext.WhenMatchIsUnchangeForX_Minutes)) {
                         final int iMinutes = PreferenceValues.numberOfMinutesAfterWhichToLockMatch(this);
                         if ( iMinutes > 0 ) {
@@ -1897,17 +1899,25 @@ touch -t 01030000 LAST.sb
                             matchModel.lockIfUnchangedFor(iMinutes);
                         }
                     }
+                    iBoard.setModel(matchModel);
+
+                    setModelForCast(matchModel);
                 } catch (Exception e) {
                     Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
                     e.printStackTrace();
-                    return;
+                    bReadFromJsonOK = false;
                 }
             } else {
                 String[] saPlayers = { getString(R.string.lbl_player) + " A", getString(R.string.lbl_player) + " B"};
                 setPlayerNames(saPlayers);
+
+                iBoard.setModel(matchModel);
+
+                setModelForCast(matchModel);
             }
             bGameEndingHasBeenCancelledThisGame = false;
         }
+        return bReadFromJsonOK;
     }
 
     /** install listeners */
@@ -3113,7 +3123,7 @@ touch -t 01030000 LAST.sb
             dialogTimerView = null;
             this.triggerEvent(SBEvent.timerCancelled, type);
 
-            if ( m_blueToothRole.equals(BTRole.Master) ) {
+            if ( BTRole.Master.equals(m_blueToothRole) ) {
                 writeMethodToBluetooth(BTMethods.cancelTimer);
             }
         }
@@ -3894,7 +3904,7 @@ touch -t 01030000 LAST.sb
         }
 
         if ( isLandscape() && timerType.equals(Type.UntillStartOfNextGame) ) {
-            if ( matchModel.getName(Player.A).equals("Iddo T") /*|| m_blueToothRole.equals(BTRole.Slave)*/ ) {
+            if ( "Iddo T".equals(matchModel.getName(Player.A)) || BTRole.Slave.equals(m_blueToothRole) ) {
                 // for now this is just for me to be able to view the layout on the device while no chromecast available
                 showPresentationModeOfEndOfGame();
             }
@@ -3907,10 +3917,15 @@ touch -t 01030000 LAST.sb
         }
     }
 
+    private EndOfGameView endOfGameView = null;
+
     private void showPresentationModeOfEndOfGame() {
         getXActionBar().hide();
-        EndOfGameView endOfGameView = new EndOfGameView(this, iBoard, matchModel);
+
         ViewGroup presentationFrame = (ViewGroup) findViewById(R.id.presentation_frame);
+        presentationFrame.removeAllViews();
+
+        endOfGameView = new EndOfGameView(this, iBoard, matchModel);
         endOfGameView.show(presentationFrame);
         presentationFrame.setVisibility(View.VISIBLE);
         findViewById(R.id.content_frame).setVisibility(View.GONE);
@@ -3924,6 +3939,9 @@ touch -t 01030000 LAST.sb
         if ( pEndOfGameViewShowing ) {
             presentationFrame.setVisibility(View.GONE);
             findViewById(R.id.content_frame).setVisibility(View.VISIBLE);
+            if ( endOfGameView != null ) {
+                Timer.removeTimerView(iBoard.isPresentation(), endOfGameView.getTimerView());
+            }
         }
     }
 
@@ -5466,7 +5484,7 @@ touch -t 01030000 LAST.sb
         if ( warnModelIsLocked() ) { return false; }
         matchModel.endGame();
 
-        if ( m_blueToothRole.equals(BTRole.Master) ) {
+        if ( BTRole.Master.equals(m_blueToothRole) ) {
             writeMethodToBluetooth(BTMethods.endGame);
         }
         return true;
@@ -5480,7 +5498,7 @@ touch -t 01030000 LAST.sb
     public void timestampStartOfGame(GameTiming.ChangedBy changedBy) {
         matchModel.timestampStartOfGame(changedBy);
 
-        if ( m_blueToothRole.equals(BTRole.Master) ) {
+        if ( BTRole.Master.equals(m_blueToothRole) ) {
             writeMethodToBluetooth(BTMethods.timestampStartOfGame, changedBy);
         }
     }
@@ -5534,7 +5552,7 @@ touch -t 01030000 LAST.sb
                     storeBTDeviceConnectedTo(msg.obj);
                     switch (btState) {
                         case CONNECTED:
-                            if ( m_blueToothRole.equals(BTRole.Master) ) {
+                            if ( BTRole.Master.equals(m_blueToothRole) ) {
                                 // show dialog to request to pull in match from other device, or push match on this device to other
                                 pullOrPushMatchOverBluetooth(m_btDeviceOther.getName());
                             } else {
@@ -5555,7 +5573,7 @@ touch -t 01030000 LAST.sb
                     byte[] writeBuf = (byte[]) msg.obj;
                     String writeMessage = new String(writeBuf);
                     Log.d(TAG, "writeMessage: " + writeMessage);
-                    if ( m_blueToothRole.equals(BTRole.Slave) && writeMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + ").*") == false ) {
+                    if ( BTRole.Slave.equals(m_blueToothRole) && writeMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + ").*") == false ) {
                         // become master
                         setBluetoothRole(BTRole.Master, writeMessage.trim());
                     }
@@ -5563,8 +5581,8 @@ touch -t 01030000 LAST.sb
                 case READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     String readMessage = new String(readBuf, 0, msg.arg1); // msg.arg1 contains number of bytes actually having valid info
-                    Log.d(TAG, "readMessage: " + readMessage);
-                    if ( m_blueToothRole.equals(BTRole.Master) && readMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + ").*") == false ) {
+                    Log.d(TAG, "readMessage: (#" + msg.arg1 + "):" + readMessage);
+                    if ( BTRole.Master.equals(m_blueToothRole) && readMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + ").*") == false ) {
                         // become slave
                         setBluetoothRole(BTRole.Slave, readMessage.trim());
                     }
@@ -5637,7 +5655,7 @@ touch -t 01030000 LAST.sb
         }
 
         if  ( mBluetoothControlService.getState().equals(BTState.CONNECTED)
-         && ( (bOnlyAsMaster == false) || m_blueToothRole.equals(BTRole.Master) )
+         && ( (bOnlyAsMaster == false) || BTRole.Master.equals(m_blueToothRole) )
             ) {
             String sJson = matchModel.toJsonString(ctx);
             mBluetoothControlService.write( sJson.length() + ":" + sJson );
@@ -5694,17 +5712,28 @@ touch -t 01030000 LAST.sb
                         //persist(true);
                         File fJson = getLastMatchFile(this);
                         FileUtil.writeTo(fJson, sbReceivingBTFile.toString());
-                        sbReceivingBTFile.setLength(0);
+                        sbReceivingBTFile = new StringBuilder();
                         matchModel = null;
-                        this.initScoreBoard(fJson);
-                        matchModel.triggerListeners();
-                        if ( m_blueToothRole.equals(BTRole.Slave) ) {
-                            mBluetoothControlService.write(BTMethods.Toast + "(" + R.string.bt_match_received_by_X + ")");
+                        boolean bReadOK = this.initScoreBoard(fJson);
+                        if ( bReadOK ) {
+                            matchModel.triggerListeners();
+                            if ( BTRole.Slave.equals(m_blueToothRole) ) {
+                                mBluetoothControlService.write(BTMethods.Toast + "(" + R.string.bt_match_received_by_X + ")");
+                            }
+                        } else {
+                            mBluetoothControlService.write(BTMethods.Toast + "Receiver could not read json...");
+                            if ( BTRole.Slave.equals(m_blueToothRole) ) {
+                                writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                         mBluetoothControlService.write(BTMethods.Toast + "(Could not read json. Exception: " + e.getMessage() + ")");
+
+                        // re-requesting complete match if exception occured
                     }
+                } else {
+                    Log.d(TAG, String.format("Waiting for more json...(%d < %d)", sbReceivingBTFile.length(), iReceivingBTFileLength));
                 }
                 return;
             }
@@ -5721,7 +5750,9 @@ touch -t 01030000 LAST.sb
             // or old version communicating with new version with new method
             //e.printStackTrace();
         }
-        if ( btMethod != null ) {
+        if ( btMethod == null ) {
+            Log.w(TAG, String.format("Could not derive btMethod from message %s (%s)", sMethod, readMessage));
+        } else {
             switch (btMethod) {
                 case changeScore: {
                     Player player = Player.valueOf(sMethodNArgs[1]);
@@ -5805,7 +5836,7 @@ touch -t 01030000 LAST.sb
                     Log.w(TAG, "Not handling method " + btMethod);
                     break;
             }
-            if ( m_blueToothRole.equals(BTRole.Slave) && btMethod.verifyScore() ) {
+            if ( BTRole.Slave.equals(m_blueToothRole) && btMethod.verifyScore() ) {
                 // verify score of model against score received. If not equal request complete matchmodel to get in sync
                 String sScoreReceived = sMethodNArgs[sMethodNArgs.length - 1];
                 String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
@@ -5815,9 +5846,6 @@ touch -t 01030000 LAST.sb
                 }
                 //hidePresentationEndOfGame();
             }
-
-        } else {
-            Log.w(TAG, "Unable to interpret incoming BT message " + readMessage);
         }
     }
 
