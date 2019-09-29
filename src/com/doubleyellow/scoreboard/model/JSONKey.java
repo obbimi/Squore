@@ -29,6 +29,9 @@ public enum JSONKey {
 		countries,
 		clubs,
 		avatars,
+		playerids,
+		firstName,
+		lastName,
 	format,
 		numberOfPointsToWinGame,
 		numberOfGamesToWinMatch,
@@ -83,6 +86,7 @@ public enum JSONKey {
 	    club,  // club (tournament) or team (league)
 			teamid,
 			team_players,
+				seqNo,
 	    country,
 	    seed,
 	    avatar,

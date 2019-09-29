@@ -54,6 +54,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -91,6 +93,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     private String     m_sNoMatchesInFeed = null;
     private JSONObject m_joFeedConfig     = null;
+    /** global list of team players */
     private JSONObject m_joTeamPlayers    = null;
 
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -158,11 +161,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             if ( bNamesPopulated ) {
                 // player names already populated
                 finishWithPopulatedModel(model);
-            } else if ( ListUtil.isEmpty(model.getTeamPlayers(Player.A)) && ListUtil.isNotEmpty(model.getTeamPlayers(Player.B)) ) {
+            } else if ( JsonUtil.isEmpty(getTeamPlayers(context, Player.A)) && JsonUtil.isNotEmpty(getTeamPlayers(context,Player.B)) ) {
                 // player names not populated, but only 1 populated lists to select players from
                 Toast.makeText(context, String.format(NO_PLAYERS_FOR_TEAM_X, model.getClub(Player.A)), Toast.LENGTH_SHORT).show();
                 finishWithPopulatedModel(model);
-            } else if ( ListUtil.isEmpty(model.getTeamPlayers(Player.B)) && ListUtil.isNotEmpty(model.getTeamPlayers(Player.A)) ) {
+            } else if ( JsonUtil.isEmpty(getTeamPlayers(context,Player.B)) && JsonUtil.isNotEmpty(getTeamPlayers(context,Player.A)) ) {
                 // player names not populated, but only 1 populated lists to select players from
                 Toast.makeText(context, String.format(NO_PLAYERS_FOR_TEAM_X, model.getClub(Player.B)), Toast.LENGTH_SHORT).show();
                 finishWithPopulatedModel(model);
@@ -178,6 +181,15 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 final Map<Player, SelectObjectView<String>> m_p2select = new HashMap<>();
                 LinearLayout llTeams = new LinearLayout(context);
                 llTeams.setOrientation(LinearLayout.HORIZONTAL);
+
+                String sTeamPlayer_Format      = "%1$s. %3$s (%2$s)";
+                String sTeamPlayer_Placeholder = "${" + JSONKey.seqNo + "}. ${" + JSONKey.name + "} (${" + JSONKey.id + "})";
+                if ( m_joFeedConfig != null ) {
+                    sTeamPlayer_Format      = m_joFeedConfig.optString(URLsKeys.Format_TeamPlayer     .toString(), sTeamPlayer_Format);
+                    sTeamPlayer_Placeholder = m_joFeedConfig.optString(URLsKeys.Placeholder_TeamPlayer.toString(), sTeamPlayer_Placeholder);
+                }
+                SelectObjectView.RadioButtonDecorator radioButtonDecorator = null;
+                SelectObjectView msPlayers = null;
                 for ( Player p: Player.values() ) {
                     LinearLayout llTeam = new LinearLayout(context);
                     llTeam.setOrientation(LinearLayout.VERTICAL);
@@ -187,15 +199,38 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     txtTeam.setText(model.getClub(p));
                     llTeam.addView(txtTeam);
 
-                    List<String> teamPlayers = model.getTeamPlayers(p);
-                    String sChecked = ListUtil.isNotEmpty(teamPlayers) ? teamPlayers.get(0): null;
-                    SelectObjectView<String> msPlayers = new SelectObjectView<String>(context, teamPlayers, sChecked);
+                    // create view where user can select player from
+                    JSONArray aTeamPlayers = getTeamPlayers(context, p);
+                    if ( JsonUtil.isNotEmpty(aTeamPlayers) && aTeamPlayers.opt(0) instanceof JSONObject ) {
+                        // each player specified with a smal json object
+                        List<Map> teamPlayers = JsonUtil.toListOfMaps(aTeamPlayers);
+                        Map mChecked = teamPlayers.get(0);
+                        if ( radioButtonDecorator == null ) {
+                            radioButtonDecorator = new TeamPlayerRBJsonDecorator(sTeamPlayer_Placeholder, Placeholder.getInstance(TAG));
+                        }
+
+                        msPlayers = new SelectObjectView<Map>(context, teamPlayers, mChecked, radioButtonDecorator);
+
+                        JSONObject firstPlayer = (JSONObject) aTeamPlayers.opt(0);
+                        bAllowSplitOnComma = ( firstPlayer.has(JSONKey.firstName.toString()) && firstPlayer.has(JSONKey.lastName.toString()) )
+                                           || (firstPlayer.has(JSONKey.name.toString()) && firstPlayer.optString(JSONKey.name.toString()).contains(",") );
+                    } else {
+                        // each player specified with ':' separated data
+                        List<String> teamPlayers = JsonUtil.asListOfStrings(aTeamPlayers);
+                        String sChecked = ListUtil.isNotEmpty(teamPlayers) ? teamPlayers.get(0): null;
+                        if ( StringUtil.isNotEmpty(sChecked) && (radioButtonDecorator == null) && sChecked.contains(":") ) {
+                            radioButtonDecorator = new TeamPlayerRBDecorator(sTeamPlayer_Format, ":");
+                        }
+
+                        msPlayers = new SelectObjectView<String>(context, teamPlayers, sChecked, radioButtonDecorator);
+
+                        bAllowSplitOnComma = bAllowSplitOnComma && sChecked.contains(",");
+                    }
+
                     llTeam.addView(msPlayers);
                     m_p2select.put(p, msPlayers);
 
                     llTeams.addView(llTeam);
-
-                    bAllowSplitOnComma = bAllowSplitOnComma && sChecked.contains(",");
                 }
 
                 final SelectEnumView<NamePart> evNamePart;
@@ -221,7 +256,29 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                       @Override public void onClick(DialogInterface dialog, int which) {
                           int iPlayersSelected = 0;
                           for(Player p: Player.values()) {
-                              String sName  = m_p2select.get(p).getChecked();
+                              SelectObjectView selectObjectView = m_p2select.get(p);
+                              Object oData = selectObjectView.getChecked();
+                              String sName = null;
+                              String sId   = null;
+                              if ( oData instanceof String ) {
+                                  sName = (String) oData;
+                                  String[] split = sName.split(":");
+                                  if ( split.length == 3 ) {
+                                      String sSeqNo = split[0];
+                                      sId           = split[1];
+                                      sName         = split[2];
+                                  } else if ( split.length == 2 ) {
+                                      sId           = split[0];
+                                      sName         = split[1];
+                                  }
+                              } else if (oData instanceof Map ) {
+                                  Map mData = (Map) oData;
+                                  sName = (String) mData.get(JSONKey.name.toString());
+                                  sId   = (String) mData.get(JSONKey.id.toString());
+                                  if ( StringUtil.isEmpty(sName) ) {
+                                      sName = mData.get(JSONKey.lastName.toString()) + ", " + mData.get(JSONKey.firstName.toString());
+                                  }
+                              }
                               if ( evNamePart != null ) {
                                   NamePart namePart = evNamePart.getChecked();
                                   switch (namePart) {
@@ -234,6 +291,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                                   }
                               }
                               model.setPlayerName(p, sName);
+                              model.setPlayerId  (p, sId);
                               if ( StringUtil.isNotEmpty(sName) ) {
                                   iPlayersSelected++;
                               }
@@ -248,6 +306,63 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         private boolean bDisabled = false;
         void setDisabled(boolean b) {
             this.bDisabled = b;
+        }
+    }
+
+    private static class TeamPlayerRBDecorator implements SelectObjectView.RadioButtonDecorator<String>
+    {
+        private String perItemFormat = null;
+        private String splitBy       = null;
+
+        TeamPlayerRBDecorator(String perItemFormat, String splitBy) {
+            this.perItemFormat = perItemFormat;
+            this.splitBy = splitBy;
+        }
+        @Override public void decorateGuiItem(int iSeqNr_1Based, String sData, RadioButton radioButton) {
+            String[] saData = sData.split(splitBy);
+            String sText = null;
+            try {
+                switch(saData.length) {
+                    case 1:
+                        // assume only a name
+                        sText = String.format(perItemFormat, String.valueOf(iSeqNr_1Based),  ""      , saData[0]);
+                        break;
+                    case 2:
+                        // assume id and name (no seq no in from json)
+                        sText = String.format(perItemFormat, String.valueOf(iSeqNr_1Based), saData[0], saData[1]);
+                        break;
+                    case 3:
+                        // assume seqno, id and name
+                        sText = String.format(perItemFormat, saData[0]                    , saData[1], saData[2]);
+                        break;
+                    default:
+                        // ??
+                        sText = String.format(perItemFormat, saData);
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                sText = sData;
+            }
+            radioButton.setText(sText);
+        }
+    }
+    private static class TeamPlayerRBJsonDecorator implements SelectObjectView.RadioButtonDecorator<Map>
+    {
+        private String      perItemPlaceholder = null;
+        private Placeholder placeholder        = null;
+
+        TeamPlayerRBJsonDecorator(String perItemPlaceholder, Placeholder placeholder) {
+            this.perItemPlaceholder = perItemPlaceholder;
+            this.placeholder = placeholder;
+        }
+        @Override public void decorateGuiItem(int iSeqNr_1Based, Map mData, RadioButton radioButton) {
+            if ( mData.containsKey(JSONKey.seqNo.toString()) == false ) {
+                mData.put(JSONKey.seqNo.toString(), iSeqNr_1Based);
+            }
+            String sText = placeholder.translate(this.perItemPlaceholder, mData);
+                   sText = placeholder.removeUntranslated(sText);
+            radioButton.setText(sText);
         }
     }
 
@@ -453,7 +568,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                                 }
                             }
                         }
-                        model.setTeamPlayers(p, JsonUtil.asListOfStrings(aPlayers)); // to show dialog where ref can select players of both teams
+                        //model.setTeamPlayers(p, JsonUtil.asListOfStrings(aPlayers)); // to show dialog where ref can select players of both teams
+                        setTeamPlayers(context, p, aPlayers); // to show dialog where ref can select players of both teams
                     }
                     model.setPlayerClub   (p, jsonObject.optString(JSONKey.club   .toString()));
                     model.setPlayerCountry(p, jsonObject.optString(JSONKey.country.toString()));
@@ -492,6 +608,31 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                        , null, null);
 */
         return bNamesPopulated;
+    }
+
+    public static JSONArray getTeamPlayers(Context context, Player team) {
+        try {
+            File fCache = getTeamPlayersCacheFile(context, team);
+            if ( fCache.exists() ) {
+                JSONArray aPlayers = new JSONArray(FileUtil.readFileAsString(fCache));
+                return aPlayers;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static void setTeamPlayers(Context context, Player team, JSONArray aPlayers) {
+        try {
+            File fCache                = getTeamPlayersCacheFile(context, team);
+            FileUtil.writeTo(fCache, aPlayers.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static File getTeamPlayersCacheFile(Context context, Player team) {
+        return new File(context.getCacheDir(), "team_players." + team + ".json");
     }
 
     private void setMatchFormat(Model model, JSONObject joMatch) throws JSONException {
@@ -554,7 +695,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
         }
         if ( joMatch != null ) {
-            String sSourceID = joMatch.optString(JSONKey.sourceID.toString());
+            String sSourceID = joMatch.optString(JSONKey.sourceID.toString()); // not preferred, should be used internally for model only
                    sSourceID = joMatch.optString(JSONKey.id      .toString(), sSourceID);
             if ( sSourceID != null ) {
                 model.setSource(null, sSourceID);

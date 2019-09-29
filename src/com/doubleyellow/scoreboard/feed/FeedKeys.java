@@ -21,6 +21,9 @@ import com.doubleyellow.scoreboard.Brand;
 
 import java.util.Locale;
 
+/**
+ * Keys for (how to present) the list of feeds.
+ */
 enum FeedKeys {
     FeedMetaData,
         /** array with sequence in with to present the feed types */

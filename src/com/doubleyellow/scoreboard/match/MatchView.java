@@ -50,7 +50,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * MatchView used by both the Match activity and the MatchFragment (MatchTabbed).
+ * MatchView used by both the Match activity (post match selection from a list) and the MatchFragment (MatchTabbed).
+ *
  * Used to define the
  * - players
  * - match format
@@ -490,6 +491,10 @@ public class MatchView extends SBRelativeLayout
     }
 
     private boolean m_bIsDoubles = false;
+    /** is null for when entering match manually from match fragment, else it is used to
+     * - pass on 'uneditable' info
+     * - pre-set match format preferences passed on from feed
+     **/
     private Model   m_model      = null;
     public void init(boolean bIsDoubles, Model model) {
         Context context = getContext();
@@ -1049,13 +1054,16 @@ public class MatchView extends SBRelativeLayout
         }
         Intent intent = new Intent();
         //intent.putExtra(MatchDetails.class.getSimpleName(), getBundle(sSource, iNrOfPoints2Win, iNrOfGamesToWinMatch)); // this is read by ScoreBoard.onActivityResult
-        Model  model = getModel(sSource, sSourceID, iNrOfPoints2Win, iNrOfGamesToWinMatch);
+        Model  model = getModel(iNrOfPoints2Win, iNrOfGamesToWinMatch);
+        if ( StringUtil.isNotEmpty(sSource) ) {
+            model.setSource(sSource, sSourceID);
+        }
         String sJson = model.toJsonString(null);
         intent.putExtra(Model.class.getSimpleName(), sJson); // this is read by ScoreBoard.onActivityResult
         return intent;
     }
 
-    private Model getModel(String sSource, String sSourceID, int iNrOfPoints2Win, int iNrOfGamesToWinMatch) {
+    private Model getModel(int iNrOfPoints2Win, int iNrOfGamesToWinMatch) {
         Model m = ModelFactory.getTemp();
         if ( m_bIsDoubles == false ) {
             m.setPlayerName(Player.A, txtPlayerA.getText().toString());
@@ -1100,10 +1108,6 @@ public class MatchView extends SBRelativeLayout
         if ( txtCourt != null ) {
             m.setCourt(txtCourt.getTextAndPersist().toString());
         }
-        if ( StringUtil.isNotEmpty(sSource) ) {
-            m.setSource(sSource, sSourceID);
-        }
-
         if ( (spTieBreakFormat != null) && (spTieBreakFormat.getVisibility() != View.GONE) && ( spTieBreakFormat.getSelectedItemPosition() != -1) ) {
             TieBreakFormat tbf = TieBreakFormat.values()[spTieBreakFormat.getSelectedItemPosition()];
             m.setTiebreakFormat(tbf);
@@ -1156,6 +1160,13 @@ public class MatchView extends SBRelativeLayout
                 m.setPlayerName(Player.B, txtPlayerB.getText() + "/" + txtPlayerB2.getText());
             }
         }
+        if ( m_model != null ) {
+            m.setSource(m_model.getSource() , m_model.getSourceID() );
+            for(Player p: Player.values()) {
+                m.setPlayerId(p, m_model.getPlayerId(p));
+            }
+        }
+
         return m;
     }
 

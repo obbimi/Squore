@@ -32,7 +32,7 @@ public class SelectDeviceView extends SelectObjectView<BluetoothDevice> {
 
     @Override protected RadioButtonDecorator<BluetoothDevice> getDefaultDecorator() {
         return new RadioButtonDecorator<BluetoothDevice>() {
-            @Override public void decorateGuiItem(BluetoothDevice device, RadioButton rb) {
+            @Override public void decorateGuiItem(int iSeqNr_1Based, BluetoothDevice device, RadioButton rb) {
                 String sName    = device.getName();
                 String sAddress = device.getAddress();
                 rb.setText(sName + " (" + sAddress + ")");

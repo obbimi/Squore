@@ -46,6 +46,7 @@ public enum URLsKeys {
         expandGroup,
         Format,
         Format_TeamPlayer,
+        Placeholder_TeamPlayer,
         skipMatchSettings,
         name, /* Duplicate key.. careful, may be causing problems */
 }

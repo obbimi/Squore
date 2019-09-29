@@ -616,7 +616,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
         }
 
         if ( MapUtil.isNotEmpty(mHeadersWithRecentMatches) && mHeadersWithRecentMatches.containsKey(sGroup) ) {
-            // use the format
+            // use the format of a previously played matches
             Object oFiles = mHeadersWithRecentMatches.get(sGroup);
             Collection<File> files = null;
             if ( oFiles instanceof Collection ) {
@@ -638,6 +638,8 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                 m.setPlayerClub(Player.A, mTmp.getClub(Player.A));
                 m.setPlayerClub(Player.B, mTmp.getClub(Player.B));
                 m.setEvent     (mTmp.getEventName(), mTmp.getEventDivision(), mTmp.getEventRound(), mTmp.getEventLocation());
+
+                // don't copy playername and/or id, these should be unique to the new match
 
                 // all relevant match format properties have been set (taken from other match): no need to present activity
                 Match.dontShow();

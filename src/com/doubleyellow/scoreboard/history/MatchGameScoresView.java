@@ -57,7 +57,7 @@ import java.util.*;
  * The view has two different 'orientations'.
  * One is used in landscape mode of the ScoreBoard scoreBoard, one in portrait orientation.
  *
- * It is used both in the main scoreboard (without names) as well as in the timer (with player names and timing info)
+ * It is used both in the main scoreboard (without names) as well as in the timer popup (with player names and timing info) and 'End Of Game' view
  */
 public class MatchGameScoresView extends LinearLayout
 {
@@ -103,6 +103,33 @@ public class MatchGameScoresView extends LinearLayout
                    );
     }
 
+/*
+    @Override public void refreshDrawableState() {
+        startCheckLayoutTimer(); // required for decent layout in EndOfGameView ?!
+
+        super.refreshDrawableState();
+    }
+*/
+
+    private void startCheckLayoutTimer() {
+        Log.d(TAG, "Starting check layout timer...");
+        if (checkLayoutCountDownTimer == null ) {
+            Log.d(TAG, "Creating new layout timer...");
+            checkLayoutCountDownTimer = new CheckLayoutCountDownTimer(this);
+        }
+        checkLayoutCountDownTimer.start();
+    }
+
+    /*
+    @Override public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+
+        if ( checkLayoutCountDownTimer != null ) {
+            checkLayoutCountDownTimer.m_iLayoutOKCount = 0;
+        }
+    }
+*/
+
     private void update(Player[] players, List<Map<Player, Integer>> gamesScores, String[] playerNames, String[] countries, List<GameTiming> gameTimes, String sDivisionOrField, Map<Player, Integer> mPointsDiff)
     {
         m_gamesScores   = gamesScores;
@@ -122,7 +149,7 @@ public class MatchGameScoresView extends LinearLayout
 
         Orientation currentOrientation = ViewUtil.getCurrentOrientation(getContext());
         int instanceKey = this.getId() + (100 * currentOrientation.ordinal()) + (1 * 10000 * ListUtil.size(gamesScores)) + iMaxScore;
-        if ( gamesScores == null || gamesScores.size() == 0 ) {
+        if ( ListUtil.size(gamesScores) == 0 ) {
             // add dummy row if no previous games, to have layout be more as it will be after one or more sets
             gamesScores = new ArrayList<Map<Player, Integer>>();
 
@@ -153,33 +180,40 @@ public class MatchGameScoresView extends LinearLayout
             this.setVisibility(VISIBLE);
         } else {
             if ( (checkLayoutCountDownTimer == null) || (checkLayoutCountDownTimer.m_iLayoutOKCount > 0) ) {
-                checkLayoutCountDownTimer = new CheckLayoutCountDownTimer(this);
-                checkLayoutCountDownTimer.start();
+                startCheckLayoutTimer();
             }
         }
     }
     private CheckLayoutCountDownTimer checkLayoutCountDownTimer = null;
 
-    private static int checkAutoResizeTextViews(View v) {
-        ViewGroup vg = (ViewGroup) v;
-        int iToManyLinesCnt = 0;
+    private static int [] checkAutoResizeTextViews(ViewGroup vg) {
+        int[] iaTotal_OK_NOKCnt = new int[3];
         for(int c=0; c < vg.getChildCount(); c++) {
             View vc = vg.getChildAt(c);
             if ( vc instanceof ViewGroup == false ) {
+                Log.d(TAG, "Not counting for view 1 " + vc);
                 continue;
             }
             ViewGroup vgc = (ViewGroup) vc;
+            // e.g. 11-5, 11-7 score like may be hidden
             for ( int c2=0; c2 < vgc.getChildCount(); c2++) {
                 View vcc = vgc.getChildAt(c2);
                 if ( vcc instanceof AutoResizeTextView) {
                     AutoResizeTextView artv = (AutoResizeTextView) vcc;
-                    if ( artv.getLineCount() != 1 ) {
-                        iToManyLinesCnt++;
+                    int lineCount = artv.getLineCount();
+                    iaTotal_OK_NOKCnt[0]++;
+                    if ( lineCount != 1 ) {
+                        Log.d(TAG, "Not just 1 line: " + lineCount + " (" + artv + ")");
+                        iaTotal_OK_NOKCnt[2]++;
+                    } else {
+                        iaTotal_OK_NOKCnt[1]++;
                     }
+                } else {
+                    Log.d(TAG, "Not counting for view 2 " + vcc);
                 }
             }
         }
-        return iToManyLinesCnt;
+        return iaTotal_OK_NOKCnt;
     }
 
 /*
@@ -198,16 +232,16 @@ public class MatchGameScoresView extends LinearLayout
         private CheckLayoutCountDownTimer(MatchGameScoresView gsv) {
             //super(640, 320); // in racketlon it sometimes does not show...
             super(2000, 300);
-            Log.d(TAG, "MGSV new CheckLayoutCountDownTimer :" + this);
+          //Log.d(TAG, "MGSV new CheckLayoutCountDownTimer :" + this);
             this.gsv = gsv;
             this.gsv.setVisibility(View.INVISIBLE);
             View parent = (View) gsv.getParent();
             while( parent.getParent() instanceof View ) {
                 parent = (View) parent.getParent();
             }
-            Log.d(TAG, "MGSV parent :" + parent);
+          //Log.d(TAG, "MGSV parent :" + parent);
             View sbRootView = parent.findViewById(R.id.squoreboard_root_view);
-            Log.d(TAG, "MGSV parent :" + sbRootView);
+          //Log.d(TAG, "MGSV parent :" + sbRootView);
             this.m_iRestoreVisibilityTo = View.VISIBLE;
             GameScoresAppearance gameScoresAppearance = PreferenceValues.getGameScoresAppearance(getContext());
             if ( sbRootView == null ) {
@@ -218,13 +252,14 @@ public class MatchGameScoresView extends LinearLayout
             }
         }
         @Override public void onTick(long millisUntilFinished) {
-            int iNotLayoutOutOk = checkAutoResizeTextViews(MatchGameScoresView.this);
-            if ( iNotLayoutOutOk > 0 ) {
-                Log.d(TAG, String.format("Trigger update, resize textview not all properly layed out : %s (ms left: %d)", iNotLayoutOutOk, millisUntilFinished));
+            int[] iaTotal_OK_NOKCnt = checkAutoResizeTextViews(MatchGameScoresView.this);
+            if ( iaTotal_OK_NOKCnt[2] > 0 ) {
+                Log.w(TAG, String.format("Trigger update, resize textview not all properly layed out : %d are NOK, %d are OK of %d (ms left: %d)", iaTotal_OK_NOKCnt[2], iaTotal_OK_NOKCnt[1], iaTotal_OK_NOKCnt[0], millisUntilFinished));
                 gsv.update(m_players, gsv.m_gamesScores, gsv.m_playerNames, m_countries, gsv.m_gameTimes, m_eventDivision, m_pointsDiff);
                 //this.cancel();
             } else {
                 m_iLayoutOKCount++;
+                Log.d(TAG, String.format("No layout update required : %d OK of %d (ms left: %d)", iaTotal_OK_NOKCnt[1], iaTotal_OK_NOKCnt[0], millisUntilFinished));
                 if ( m_iLayoutOKCount > 1 ) {
                     this.gsv.setVisibility(m_iRestoreVisibilityTo); // still makes the 'recalculations' period visible to the eye
                     this.cancel();
@@ -232,8 +267,12 @@ public class MatchGameScoresView extends LinearLayout
             };
         }
         @Override public void onFinish() {
+            Log.d(TAG, String.format("Layout timer finished (%d)", m_iLayoutOKCount));
             if ( this.gsv != null ) {
                 this.gsv.setVisibility(m_iRestoreVisibilityTo);
+
+                Log.d(TAG, String.format("Invalidating gsv as a test "));
+                this.gsv.invalidate();
             }
         }
     };
@@ -256,6 +295,7 @@ public class MatchGameScoresView extends LinearLayout
 */
 
     private AutoResizeTextView.OnTextResizeListener onTextResizeListener = null;
+    /** iBoard may register a listener */
     public void setOnTextResizeListener(AutoResizeTextView.OnTextResizeListener l) {
         this.onTextResizeListener = l;
     }
@@ -364,15 +404,15 @@ public class MatchGameScoresView extends LinearLayout
     private final ViewGroup.LayoutParams lpL2R_wwc_hmp = new ViewGroup.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
 
     /**
-     * -----------
-     * | Field 2 |
-     * --------------------------
-     * | Harry   | 11 |  4 | 11 |
-     * --------------------------
-     * | Potter  |  9 | 11 |  8 |
-     * --------------------------
-     *           | '8 | '7 | '9 |
-     *           ----------------
+     * ------------
+     * | Field 2  |
+     * ---------------------------
+     * | Harry    | 11 |  4 | 11 |
+     * ---------------------------
+     * | Potter   |  9 | 11 |  8 |
+     * ---------------------------
+     * | Division | '8 | '7 | '9 |
+     * ---------------------------
      */
     private void updateLeft2Right(final Player[] players, final List<Map<Player, Integer>> gameScores, final int instanceKey, final int iMaxScore, final int iCounter) {
         final String sMethod = "updateLeft2Right: ";
@@ -517,7 +557,7 @@ public class MatchGameScoresView extends LinearLayout
 
                             // redraw all rows now knowing how 'wide' the column must be
                             //if ( isInEditMode() == false ) {
-                            MatchGameScoresView.this.updateLeft2Right(players, gameScores, instanceKey, iMaxScore, iCounter + 1);
+                            updateLeft2Right(players, gameScores, instanceKey, iMaxScore, iCounter + 1);
                             //}
                         //}
                     }

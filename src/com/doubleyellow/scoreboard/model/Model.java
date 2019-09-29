@@ -32,7 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -277,9 +276,11 @@ public abstract class Model
     private HandicapFormat                      m_HandicapFormat        = HandicapFormat.None;
 
     private Map<Player, String>                 m_player2Name           = new HashMap<Player, String>();
+    private Map<Player, String>                 m_player2Id             = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Color          = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Country        = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Club           = new HashMap<Player, String>();
+    /** Contains list of player names as the appeared in JSON. e.g. ${seq}:${id}:{LastName}, ${FirstName} */
     private Map<Player, List<String>>           m_team2Players          = new HashMap<Player, List<String>>();
     private Map<Player, String>                 m_player2Avatar         = new HashMap<Player, String>();
     private String                              m_matchDate             = DateUtil.getCurrentYYYY_MM_DD();   // up to apk 202 DateUtil.getCurrentYYYYMMDD()
@@ -1579,63 +1580,17 @@ public abstract class Model
         }
         return false;
     }
+    public void setPlayerId(Player player, String sId) {
+        m_player2Id.put(player, sId);
+    }
     /**
      * Will only return something if it was e.g. a team match was selected from a feed, and ref did select actual players from a list of team_players.
      * This will 'fail' if player name was modified afterwards...
      */
-    public String getPlayerId(Player team) {
-        List<String> players = m_team2Players.get(team);
-        if ( players == null ) {
-            return "";
-        }
-
-        // parse optionally formatted data to only return names
-        LinkedHashMap<String, String> mId2Name = getId2PlayerName(players);
-        Map<String, String> mName2Id = MapUtil.mirror(mId2Name);
-
-        String sName = this.getName(team);
-        String sId   = mName2Id.get(sName);
-        if ( sId == null ) {
-            sId = "";
-        }
-        return sId;
-    }
-    public List<String> getTeamPlayers(Player team) {
-        List<String> players = m_team2Players.get(team);
-        if ( players == null ) {
-            return null;
-        }
-
-        // parse optionally formatted data to only return names
-        LinkedHashMap<String, String> mPlayersParsed = getId2PlayerName(players);
-
-        return new ArrayList<>(mPlayersParsed.values());
+    public String getPlayerId(Player player) {
+        return m_player2Id.get(player);
     }
 
-    private LinkedHashMap<String, String> getId2PlayerName(List<String> players) {
-        LinkedHashMap<String, String> mPlayersParsed = new LinkedHashMap<>();
-        for ( String s: players) {
-            String[] sNr_Id_Name = s.split(":");
-            switch ( sNr_Id_Name.length ) {
-                case 1:
-                    mPlayersParsed.put(sNr_Id_Name[0], sNr_Id_Name[0]);
-                    break;
-                case 2:
-                    mPlayersParsed.put(sNr_Id_Name[0], sNr_Id_Name[1]);
-                    break;
-                default:
-                    mPlayersParsed.put(sNr_Id_Name[1], sNr_Id_Name[2]); // assume that [0] just contains position in the list
-                    break;
-            }
-        }
-        return mPlayersParsed;
-    }
-
-    public void setTeamPlayers(Player team, List<String> lPlayers) {
-
-        m_team2Players.put(team, lPlayers);
-        setDirty(false);
-    }
     public boolean setPlayerClub(Player player, String sClub) {
         if ( StringUtil.isNotEmpty(sClub) ) {
             sClub = sClub.trim();
@@ -2101,6 +2056,16 @@ public abstract class Model
                     }
                 }
 
+                // read ids
+                JSONObject joPlayerIds = joMatch.optJSONObject(JSONKey.playerids.toString());
+                if ( JsonUtil.isNotEmpty(joPlayerIds) ) {
+                    for (Player p : getPlayers()) {
+                        if ( joPlayerIds.has(p.toString()) ) {
+                            String sPlayerId = joPlayerIds.getString(p.toString());
+                            m_player2Id.put(p, sPlayerId);
+                        }
+                    }
+                }
                 // read colors
                 JSONObject joColors = joMatch.optJSONObject(JSONKey.colors.toString());
                 if ( JsonUtil.isNotEmpty(joColors) ) {
@@ -2121,7 +2086,7 @@ public abstract class Model
                         }
                     }
                 }
-                // read countries
+                // read clubs
                 JSONObject joClubs = joMatch.optJSONObject(JSONKey.clubs.toString());
                 if ( JsonUtil.isNotEmpty(joClubs) ) {
                     for (Player p : getPlayers()) {
@@ -2142,6 +2107,7 @@ public abstract class Model
                     }
                 }
                 // read team players
+/*
                 JSONObject joTeamPlayers = joMatch.optJSONObject(JSONKey.team_players.toString());
                 if ( JsonUtil.isNotEmpty(joTeamPlayers) ) {
                     for (Player p : getPlayers()) {
@@ -2151,6 +2117,7 @@ public abstract class Model
                         }
                     }
                 }
+*/
                 if ( joFormat.has(JSONKey.mode.toString())) {
                     m_sMode = joFormat.optString(JSONKey.mode.toString());
                 }
@@ -2466,13 +2433,18 @@ public abstract class Model
 
         // players
         JSONObject joPlayers     = new JSONObject();
+        JSONObject joPlayerIds   = new JSONObject();
         JSONObject joColors      = new JSONObject();
         JSONObject joCountries   = new JSONObject();
         JSONObject joClubs       = new JSONObject();
         JSONObject joAvatars     = new JSONObject();
         JSONObject joTeamPlayers = new JSONObject();
-        for(Player p : getPlayers() ) {
+        for ( Player p : getPlayers() ) {
             joPlayers.put(p.toString(), m_player2Name.get(p));
+            String sPlayerId = m_player2Id.get(p);
+            if ( StringUtil.isNotEmpty(sPlayerId) ) {
+                joPlayerIds.put(p.toString(), sPlayerId);
+            }
             String sColor = m_player2Color.get(p);
             if ( StringUtil.isNotEmpty(sColor) ) {
                 joColors.put(p.toString(), sColor);
@@ -2495,6 +2467,9 @@ public abstract class Model
             }
         }
         jsonObject.put(JSONKey.players.toString(), joPlayers);
+        if ( JsonUtil.isNotEmpty(joPlayerIds) ) {
+            jsonObject.put(JSONKey.playerids.toString(), joPlayerIds);
+        }
         if ( JsonUtil.isNotEmpty(joColors) ) {
             jsonObject.put(JSONKey.colors.toString(), joColors);
         }
@@ -2507,9 +2482,11 @@ public abstract class Model
         if ( JsonUtil.isNotEmpty(joAvatars) ) {
             jsonObject.put(JSONKey.avatars.toString(), joAvatars);
         }
+/*
         if ( JsonUtil.isNotEmpty(joTeamPlayers) ) {
             jsonObject.put(JSONKey.team_players.toString(), joTeamPlayers);
         }
+*/
 
         // referee
         if ( StringUtil.hasNonEmpty(m_sReferee, m_sMarker) ) {
