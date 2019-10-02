@@ -58,8 +58,8 @@ class ShowFeedsAdapter extends SimpleELAdapter {
     private int m_iNrOfItemsToSelect = 0;
     private boolean m_bFilterOutBasedOnDuration = true;
 
-    ShowFeedsAdapter(FeedFeedSelector feedFeedSelector, LayoutInflater inflater, JSONArray array, String sName) {
-        super(inflater, R.layout.expandable_match_selector_group, R.layout.expandable_match_selector_item, null, false);
+    ShowFeedsAdapter(FeedFeedSelector feedFeedSelector, JSONArray array, String sName, SortOrder sortOrder) {
+        super(feedFeedSelector.getLayoutInflater(), R.layout.expandable_match_selector_group, R.layout.expandable_match_selector_item, null, false);
         m_sName = sName;
 
         if ( sName.toLowerCase().contains("league") ) {
@@ -68,11 +68,13 @@ class ShowFeedsAdapter extends SimpleELAdapter {
             m_bFilterOutBasedOnDuration = false;
         }
         m_feeds = array;
-        this.context = feedFeedSelector;
+        this.context          = feedFeedSelector;
         this.feedFeedSelector = feedFeedSelector;
 
-        sortHeaders(SortOrder.Ascending);
-        sortItems  (SortOrder.Ascending);
+        if ( sortOrder != null ) {
+            sortHeaders(SortOrder.Ascending);
+            sortItems  (SortOrder.Ascending);
+        }
         load(true);
     }
 

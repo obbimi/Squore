@@ -132,15 +132,15 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
 
         ViewUtil.setFullScreen(getWindow(), PreferenceValues.showFullScreen(this));
 
-        loadTypesAdapter = new ShowTypesAdapter(this, childClicker, childClicker);
+        loadTypesAdapter = new ShowTypesAdapter(this, m_childClicker, m_childClicker);
         listView.setAdapter(loadTypesAdapter);
 
         //loadFeedAdapter = new LoadFeedAdapter(this, getString(R.string.fetching_data));
         //expListView.setAdapter(loadFeedAdapter);
-        expListView.setOnGroupExpandListener  (groupStatusRecaller);
-        expListView.setOnGroupCollapseListener(groupStatusRecaller);
-        expListView.setOnChildClickListener   (childClicker);
-        expListView.setOnItemLongClickListener(childClicker);
+        expListView.setOnGroupExpandListener  (m_groupStatusRecaller);
+        expListView.setOnGroupCollapseListener(m_groupStatusRecaller);
+        expListView.setOnChildClickListener   (m_childClicker);
+        expListView.setOnItemLongClickListener(m_childClicker);
         //expListView.setVisibility(View.GONE);
 
         ColorPrefs.setColors(this, expListView);
@@ -185,28 +185,28 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
     private Status m_status = Status.SelectType;
     void changeStatus(Status statusNew) {
         boolean bShowFilter = statusNew.equals(Status.SelectFeed);
-        ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.filter}, bShowFilter);
+        ViewUtil.setMenuItemsVisibility(m_menu, new int[]{R.id.filter}, bShowFilter);
 
         switch (statusNew) {
             case LoadingTypes:
                 showProgress(R.string.loading);
-                childClicker.setDisabled(true);
+                m_childClicker.setDisabled(true);
                 m_srlListView   .setVisibility(View.VISIBLE);
                 m_srlExpListView.setVisibility(View.GONE);
                 break;
             case LoadingFeeds:
                 showProgress(R.string.loading);
-                childClicker.setDisabled(true);
+                m_childClicker.setDisabled(true);
                 m_srlExpListView.setVisibility(View.VISIBLE);
                 m_srlListView   .setVisibility(View.GONE);
                 break;
             case SelectFeed:
-                childClicker.setDisabled(false);
+                m_childClicker.setDisabled(false);
                 hideProgress();
                 break;
             case SelectType:
                 ExpandableListUtil.expandAllOrFirst(expListView, 20);
-                childClicker.setDisabled(false);
+                m_childClicker.setDisabled(false);
                 hideProgress();
                 break;
         }
@@ -219,9 +219,9 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
         expListView.setAdapter(showFeedsAdapter);
         showFeedsAdapter.notifyDataSetChanged();
 
-        this.childClicker.setDisabled(false);
-        groupStatusRecaller.setMode(sRoot + "." + m_status);
-        int iExpandedAfterRestore = ExpandableListUtil.restoreStatus(expListView, groupStatusRecaller);
+        m_childClicker.setDisabled(false);
+        m_groupStatusRecaller.setMode(sRoot + "." + m_status);
+        int iExpandedAfterRestore = ExpandableListUtil.restoreStatus(expListView, m_groupStatusRecaller);
         if ( iExpandedAfterRestore <= 0 ) {
             ExpandableListUtil.collapseAll(expListView);
             if ( ListUtil.isNotEmpty(lGroupsWithActive) /*&& ListUtil.size(lGroupsWithActive) < 4*/ ) {
@@ -234,11 +234,11 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
         changeStatus(com.doubleyellow.scoreboard.feed.Status.SelectFeed);
     }
 
-    private Menu menu = null;
+    private Menu m_menu = null;
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.feedselector, menu);
-        this.menu = menu;
+        m_menu = menu;
 
         ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.filter}, m_status.equals(Status.SelectFeed));
 
@@ -250,8 +250,8 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
         return true;
     }
 
-    private GroupStatusRecaller groupStatusRecaller = GroupStatusRecaller.getInstance(FeedFeedSelector.class.getSimpleName());
-    private ChildClicker childClicker = new ChildClicker();
+    private GroupStatusRecaller m_groupStatusRecaller = GroupStatusRecaller.getInstance(FeedFeedSelector.class.getSimpleName());
+    private ChildClicker m_childClicker = new ChildClicker();
 
     private class ChildClicker implements ExpandableListView.OnChildClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener, View.OnLongClickListener
     {
@@ -282,7 +282,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                         } else {
                             PreferenceValues.addFeedTypeToMyList(FeedFeedSelector.this, sName);
                             changeStatus(Status.LoadingFeeds);
-                            showFeedsAdapter = new ShowFeedsAdapter(FeedFeedSelector.this, FeedFeedSelector.this.getLayoutInflater(), arrayMerged, sName);
+                            showFeedsAdapter = new ShowFeedsAdapter(FeedFeedSelector.this, arrayMerged, sName, m_sortOrder);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -292,9 +292,16 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
             task.execute();
         }
 
+        SortOrder m_sortOrder = SortOrder.Ascending;
+
         @Override public void onClick(View v) {
           //Log.d(TAG, "Implement onClick");
             final String sName = (String) v.getTag(); // this is the technical name like 'squashvlaanderen.toernooi.nl.leagues', not the display name
+
+            JSONObject joType = loadTypesAdapter.joMetaData.optJSONObject(sName);
+            if ( (joType != null) && "None".equalsIgnoreCase(joType.optString(FeedKeys.SortOrder.toString())) ) {
+                m_sortOrder = null;
+            }
 
             final JSONArray array = loadTypesAdapter.joRoot.optJSONArray(sName);
             if ( loadTypesAdapter.joRoot.has(sName + "." + FeedKeys.URL) ) {
@@ -318,7 +325,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
             } else if ( JsonUtil.isNotEmpty(array) ) {
                 PreferenceValues.addFeedTypeToMyList(FeedFeedSelector.this, sName);
                 changeStatus(Status.LoadingFeeds);
-                showFeedsAdapter = new ShowFeedsAdapter(FeedFeedSelector.this, FeedFeedSelector.this.getLayoutInflater(), array, sName);
+                showFeedsAdapter = new ShowFeedsAdapter(FeedFeedSelector.this, array, sName, m_sortOrder);
             } else {
                 Toast.makeText(FeedFeedSelector.this, "No feeds in " + sName + " ... yet...", Toast.LENGTH_SHORT).show();
             }
@@ -326,7 +333,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
 
         @Override public boolean onLongClick(View v) {
           //Log.d(TAG, "Implement onLongClick");
-            String sName = (String) v.getTag();
+            String    sName     = (String) v.getTag();
             JSONArray jsonArray = loadTypesAdapter.joRoot.optJSONArray(sName);
             AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(FeedFeedSelector.this);
             StringBuilder sb = new StringBuilder();
@@ -348,7 +355,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                     .setIcon(R.drawable.ic_action_web_site)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
-            return true; // so that onclick is not also triggered
+            return true; // so that onclick is not triggered as well
         }
 
         @Override public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -454,8 +461,8 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                 listView.setAdapter(loadTypesAdapter);
                 loadTypesAdapter.notifyDataSetChanged();
 
-                groupStatusRecaller.setMode(m_status.toString());
-                int iExpandedAfterRestore = ExpandableListUtil.restoreStatus(expListView, groupStatusRecaller);
+                m_groupStatusRecaller.setMode(m_status.toString());
+                int iExpandedAfterRestore = ExpandableListUtil.restoreStatus(expListView, m_groupStatusRecaller);
                 if ( iExpandedAfterRestore <= 0 ) {
                     ExpandableListUtil.collapseAll(expListView);
                 }

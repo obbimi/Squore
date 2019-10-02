@@ -3894,7 +3894,9 @@ touch -t 01030000 LAST.sb
                 case TowelingDown:
                     // toweling
                     timer = new Timer(this, timerType, iInitialSecs, iResumeAt, 0 /*Math.max(15,iInitialSecs/6)*/, bAutoTriggered);
-                    iBoard.stopGameDurationChrono();
+                    if ( iBoard != null ) {
+                        iBoard.stopGameDurationChrono();
+                    }
                     break;
             }
         }

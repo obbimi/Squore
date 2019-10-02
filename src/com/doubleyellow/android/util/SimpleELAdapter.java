@@ -68,9 +68,9 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
 
     public void copyContentFrom(SimpleELAdapter el) {
         this.clear();
-        this.m_lHeadersFull      .addAll(el.m_lHeadersFull      );
-        this.m_lHeader2ChildsFull.putAll(el.m_lHeader2ChildsFull);
-        this.m_mObjects          .putAll(el.m_mObjects          );
+        m_lHeadersFull      .addAll(el.m_lHeadersFull      );
+        m_lHeader2ChildsFull.putAll(el.m_lHeader2ChildsFull);
+        m_mObjects          .putAll(el.m_mObjects          );
     }
     private static final boolean B_DIFFERENT_TXT_SIZE_PER_ORIENTATION = true;
     private float iTxtSmall  = 0f;
@@ -78,13 +78,13 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
 
     public abstract void load(boolean bUseCacheIfPresent);
 
-    protected String sFetchingDataMessage = null;
+    protected String m_sFetchingDataMessage = null;
 
     protected SimpleELAdapter(LayoutInflater inflater, int iHeaderResId, int iItemResId, String sFetchingDataMessage, boolean bAutoLoad) {
-        this.m_iResId2inflateI    = iItemResId;
-        this.m_iResId2inflateH    = iHeaderResId;
-        this.sFetchingDataMessage = sFetchingDataMessage;
-        this.inflater             = inflater;
+        m_iResId2inflateI      = iItemResId;
+        m_iResId2inflateH      = iHeaderResId;
+        m_sFetchingDataMessage = sFetchingDataMessage;
+        this.inflater          = inflater;
         if ( bAutoLoad ) {
             load(true);
         }
@@ -93,11 +93,11 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
         }
     }
 
-    private   void setHeaderSorter(Comparator<String> headerSorter) {
-        this.m_headerSorter = headerSorter;
+    private void setHeaderSorter(Comparator<String> headerSorter) {
+        m_headerSorter = headerSorter;
     }
     private   void setItemSorter(Comparator<String> itemSorter) {
-        this.m_itemSorter = itemSorter;
+        m_itemSorter = itemSorter;
     }
     protected void sortHeaders(SortOrder sortOrder) {
         setHeaderSorter(new StringComparator<String>(sortOrder));
@@ -386,7 +386,7 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
 
         if ( view == null ) {
             if ( inflater == null ) { return null; }
-            view = inflater.inflate(this.m_iResId2inflateI, null);
+            view = inflater.inflate(m_iResId2inflateI, null);
 
             TextView txtView = ViewUtil.getFirstView(view, TextView.class);
             ColorPrefs.setColor(view);
@@ -466,7 +466,7 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
 
         m_sQuery = sQueryNew;
 
-        m_queryTypeDerived = this.m_queryType;
+        m_queryTypeDerived = m_queryType;
         if ( m_queryType.equals(QueryType.Dynamic) ) {
             m_queryTypeDerived = QueryType.Contains;
             if ( m_sQuery.contains("|") ) {
@@ -596,8 +596,8 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
                 return false;
             }
             List recovered = (List) FileUtil.readObjectFromFile(f);
-            this.m_lHeader2ChildsFull = (HashMap<String, List<String>>) recovered.get(0);
-            this.m_mObjects           = (Map<String, Object>) recovered.get(1);
+            m_lHeader2ChildsFull = (HashMap<String, List<String>>) recovered.get(0);
+            m_mObjects           = (Map<String, Object>) recovered.get(1);
             // to populate m_lHeadersFull
             for(String sHeader: m_lHeader2ChildsFull.keySet()) {
                 addHeader(sHeader);
@@ -612,7 +612,7 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
     }
 
     public boolean createCache(File f) {
-        List lObject = Arrays.asList(this.m_lHeader2ChildsFull, this.m_mObjects);
+        List lObject = Arrays.asList(m_lHeader2ChildsFull, m_mObjects);
         return FileUtil.writeObjectToFile(f, lObject);
     }
 

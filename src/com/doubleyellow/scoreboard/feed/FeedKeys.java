@@ -29,6 +29,8 @@ enum FeedKeys {
         /** array with sequence in with to present the feed types */
         Sequence,
         ShortDescription,
+            /** Default sorting of feeds is sorting both header and items alpahbetically. For leaguemaster it is overwritten to NOT sort */
+            SortOrder,
         DisplayName,
         Image,
             ImageURL,

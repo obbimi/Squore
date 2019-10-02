@@ -857,7 +857,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 }
             };
             showProgress(StringUtil.capitalize(feedStatus), onCancelListener); // TODO: use string array and translate
-            super.addItem(this.sFetchingDataMessage, sLastFetchedURL);
+            super.addItem(m_sFetchingDataMessage, sLastFetchedURL);
             FeedMatchSelector.this.onChildClickListener.setDisabled(true);
 
             this.notifyDataSetChanged();
@@ -894,7 +894,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
 
             // remove the 'fetching...' message
-            this.removeHeader(this.sFetchingDataMessage);
+            this.removeHeader(m_sFetchingDataMessage);
 
             if ( StringUtil.hasNonEmpty(sContent, sLastSuccessfulContent) ) {
                 switch (feedStatus) {
