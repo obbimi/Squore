@@ -92,6 +92,7 @@ public class MatchGameScoresView extends LinearLayout
     private Player[]                   m_players       = Player.values(); // must be initialized with a value in order to let setProperties() succeed
 
     public void update(Model matchModel, Player pFirst) {
+        m_checkLayoutCountDownTimer = null; // ensure it will be re-started
         m_players = new Player[] { pFirst, pFirst.getOther() };
         this.update( m_players
                    , matchModel.getEndScoreOfPreviousGames()
@@ -112,12 +113,12 @@ public class MatchGameScoresView extends LinearLayout
 */
 
     private void startCheckLayoutTimer() {
-        Log.d(TAG, "Starting check layout timer...");
-        if (checkLayoutCountDownTimer == null ) {
+        if ( m_checkLayoutCountDownTimer == null ) {
             Log.d(TAG, "Creating new layout timer...");
-            checkLayoutCountDownTimer = new CheckLayoutCountDownTimer(this);
+            m_checkLayoutCountDownTimer = new CheckLayoutCountDownTimer(this);
+            Log.d(TAG, "Starting check layout timer...");
+            m_checkLayoutCountDownTimer.start();
         }
-        checkLayoutCountDownTimer.start();
     }
 
     /*
@@ -179,15 +180,15 @@ public class MatchGameScoresView extends LinearLayout
             // no layout checking?
             this.setVisibility(VISIBLE);
         } else {
-            if ( (checkLayoutCountDownTimer == null) || (checkLayoutCountDownTimer.m_iLayoutOKCount > 0) ) {
+            if ( ( m_checkLayoutCountDownTimer == null) || ( m_checkLayoutCountDownTimer.m_iLayoutOKCount == 0) ) {
                 startCheckLayoutTimer();
             }
         }
     }
-    private CheckLayoutCountDownTimer checkLayoutCountDownTimer = null;
+    private CheckLayoutCountDownTimer m_checkLayoutCountDownTimer = null;
 
     private static int [] checkAutoResizeTextViews(ViewGroup vg) {
-        int[] iaTotal_OK_NOKCnt = new int[3];
+        int[] iaTotal_0NOK_1OK_2NOKCnt = new int[4];
         for(int c=0; c < vg.getChildCount(); c++) {
             View vc = vg.getChildAt(c);
             if ( vc instanceof ViewGroup == false ) {
@@ -201,19 +202,26 @@ public class MatchGameScoresView extends LinearLayout
                 if ( vcc instanceof AutoResizeTextView) {
                     AutoResizeTextView artv = (AutoResizeTextView) vcc;
                     int lineCount = artv.getLineCount();
-                    iaTotal_OK_NOKCnt[0]++;
-                    if ( lineCount != 1 ) {
-                        Log.d(TAG, "Not just 1 line: " + lineCount + " (" + artv + ")");
-                        iaTotal_OK_NOKCnt[2]++;
-                    } else {
-                        iaTotal_OK_NOKCnt[1]++;
+                    iaTotal_0NOK_1OK_2NOKCnt[0]++;
+                    switch(lineCount) {
+                        case 0:
+                            Log.d(TAG, "Not just 1 line: " + lineCount + " (" + artv + ")");
+                            iaTotal_0NOK_1OK_2NOKCnt[1]++;
+                            break;
+                        case 1:
+                            iaTotal_0NOK_1OK_2NOKCnt[2]++;
+                            break;
+                        default:
+                            Log.d(TAG, "Not just 1 line: " + lineCount + " (" + artv + ")");
+                            iaTotal_0NOK_1OK_2NOKCnt[3]++;
+                            break;
                     }
                 } else {
                     Log.d(TAG, "Not counting for view 2 " + vcc);
                 }
             }
         }
-        return iaTotal_OK_NOKCnt;
+        return iaTotal_0NOK_1OK_2NOKCnt;
     }
 
 /*
@@ -228,6 +236,7 @@ public class MatchGameScoresView extends LinearLayout
     private class CheckLayoutCountDownTimer extends CountDownTimer {
         private MatchGameScoresView gsv    = null;
         private int m_iLayoutOKCount       = 0;
+        private int m_iLayoutNOKCount      = 0;
         private int m_iRestoreVisibilityTo = 0;
         private CheckLayoutCountDownTimer(MatchGameScoresView gsv) {
             //super(640, 320); // in racketlon it sometimes does not show...
@@ -252,15 +261,16 @@ public class MatchGameScoresView extends LinearLayout
             }
         }
         @Override public void onTick(long millisUntilFinished) {
-            int[] iaTotal_OK_NOKCnt = checkAutoResizeTextViews(MatchGameScoresView.this);
-            if ( iaTotal_OK_NOKCnt[2] > 0 ) {
-                Log.w(TAG, String.format("Trigger update, resize textview not all properly layed out : %d are NOK, %d are OK of %d (ms left: %d)", iaTotal_OK_NOKCnt[2], iaTotal_OK_NOKCnt[1], iaTotal_OK_NOKCnt[0], millisUntilFinished));
+            int[] iaTotal_0NOK_1OK_2NOKCnt = checkAutoResizeTextViews(MatchGameScoresView.this);
+            if ( iaTotal_0NOK_1OK_2NOKCnt[1] + iaTotal_0NOK_1OK_2NOKCnt[3] > 0 ) {
+                m_iLayoutNOKCount++;
+                Log.w(TAG, String.format("Trigger update, resize textview not all properly layed out : %d are 0NOK, %d are OK, %d are 2NOK of %d (ms left: %d)", iaTotal_0NOK_1OK_2NOKCnt[1], iaTotal_0NOK_1OK_2NOKCnt[2], iaTotal_0NOK_1OK_2NOKCnt[3], iaTotal_0NOK_1OK_2NOKCnt[0], millisUntilFinished));
                 gsv.update(m_players, gsv.m_gamesScores, gsv.m_playerNames, m_countries, gsv.m_gameTimes, m_eventDivision, m_pointsDiff);
                 //this.cancel();
             } else {
                 m_iLayoutOKCount++;
-                Log.d(TAG, String.format("No layout update required : %d OK of %d (ms left: %d)", iaTotal_OK_NOKCnt[1], iaTotal_OK_NOKCnt[0], millisUntilFinished));
-                if ( m_iLayoutOKCount > 1 ) {
+                Log.d(TAG, String.format("No layout update required : %d are 0NOK, %d are OK, %d are 2NOK of %d (ms left: %d)", iaTotal_0NOK_1OK_2NOKCnt[1], iaTotal_0NOK_1OK_2NOKCnt[2], iaTotal_0NOK_1OK_2NOKCnt[3], iaTotal_0NOK_1OK_2NOKCnt[0], millisUntilFinished));
+                if ( m_iLayoutOKCount >= 1 ) {
                     this.gsv.setVisibility(m_iRestoreVisibilityTo); // still makes the 'recalculations' period visible to the eye
                     this.cancel();
                 }
