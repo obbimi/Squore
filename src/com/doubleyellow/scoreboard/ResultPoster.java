@@ -30,12 +30,15 @@ import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.android.task.URLTask;
 import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.util.Base64Util;
+import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -77,8 +80,6 @@ public class ResultPoster implements ContentReceiver
         return sUrlName;
     }
 
-    private String sSplitter = "!";
-
     public void post(ScoreBoard scoreBoard, Model matchModel, Authentication authentication, String sUserName, String sPassword)
     {
         PostTask postTask = new PostTask(scoreBoard, sPostURL);
@@ -98,14 +99,16 @@ public class ResultPoster implements ContentReceiver
             sHandicapScores = sbHandicaps.toString();
         }
 
-        String sBodyAuthentication = "";
+        String sBodyAuthentication1 = "";
+        String sBodyAuthentication2 = "";
         if ( authentication != null ) {
             switch (authentication) {
                 case Basic:
                     postTask.setHeader("Authorization", "Basic " + Base64Util.encode((sUserName + ":" + sPassword).getBytes()));
                     break;
                 case BodyParameters:
-                    sBodyAuthentication = "Username=" + sUserName + sSplitter + "Password=" + sPassword;
+                    sBodyAuthentication1 = "Username=" + sUserName;
+                    sBodyAuthentication2 = "Password=" + sPassword;
                     break;
                 case None:
                     break;
@@ -129,10 +132,32 @@ public class ResultPoster implements ContentReceiver
                 sJson = matchModel.toJsonString(scoreBoard);
                 // fall through
             case Basic:
-                String sPlayers      = matchModel.getName(Player.A)    + "_" + matchModel.getName(Player.B);
-                String sResult       = matchModel.getResultShort();
-                Player winner        = matchModel.isPossibleMatchVictoryFor();
-                String sAdditional   = PreferenceValues.getAdditionalPostKeyValuePairs(scoreBoard);
+                String sPlayers        = matchModel.getName(Player.A)    + "_" + matchModel.getName(Player.B);
+                String sResult         = matchModel.getResultShort();
+                Player winner          = matchModel.isPossibleMatchVictoryFor();
+                String sAdditionalModel= matchModel.getAdditionalPostParams(); // e.g. if match id is for an interclub match, subid can be for position 1 to 4 (or 5 like in leaguemaster)
+                String sAdditionalPref = PreferenceValues.getAdditionalPostKeyValuePairs(scoreBoard);
+
+                List<String> lAdditionalModel = new ArrayList<>();
+                if ( StringUtil.isNotEmpty(sAdditionalModel) ) {
+                    lAdditionalModel = Arrays.asList(StringUtil.singleCharacterSplit(sAdditionalModel, "|")) ;
+                    sAdditionalModel = ListUtil.join(lAdditionalModel, ""); // temporary use no splitter to determine splitter
+                }
+                String sParseToMapLater = "";
+                String[] sPossibleSplitters = {"!", "@", "#", "$", "%", "^","|", "^", "~"};
+                for(String sSplitter: sPossibleSplitters) {
+                    if ( (sAdditionalPref + sAdditionalModel + sBodyAuthentication1 + sBodyAuthentication2).contains(sSplitter) == false ) {
+                        sParseToMapLater = sSplitter + sAdditionalPref
+                                         + sSplitter + sAdditionalModel
+                                         + sSplitter + sBodyAuthentication1
+                                         + sSplitter + sBodyAuthentication2
+                                         + sSplitter + ListUtil.join(lAdditionalModel, sSplitter)
+                                         + sSplitter;
+                        break;
+                    }
+                }
+
+
                 int    durationInMin = Math.abs(matchModel.getDurationInMinutes());
                 final String sWinner = matchModel.getName(winner);
                 postTask.execute(sPlayers, sResult
@@ -164,7 +189,7 @@ public class ResultPoster implements ContentReceiver
                         , "handinhandout"      , String.valueOf(matchModel.isEnglishScoring())
                         , "handicaps"          , sHandicapScores
                         , "json"               , sJson
-                        , sSplitter + sAdditional + sSplitter + sBodyAuthentication + sSplitter
+                        , sParseToMapLater
                 );
                 break;
         }
