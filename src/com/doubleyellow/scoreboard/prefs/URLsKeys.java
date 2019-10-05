@@ -47,6 +47,12 @@ public enum URLsKeys {
         Format,
         Format_TeamPlayer,
         Placeholder_TeamPlayer,
+            AdditionalPostParams,
+                PostAs,
+                AllowedValues,
+                Caption,
+                /** RadioButton (small number of 'short' values) or SelectList, or ToggleButton (only two values) */
+                DisplayType,
         skipMatchSettings,
         name, /* Duplicate key.. careful, may be causing problems */
 }

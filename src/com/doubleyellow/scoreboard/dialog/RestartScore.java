@@ -83,6 +83,8 @@ public class RestartScore extends BaseAlertDialog
                 }
 
                 m.setSource(matchModel.getSource(), matchModel.getSourceID() );
+                m.setAdditionalPostParams(matchModel.getAdditionalPostParams());
+
                 nm.putExtra(Model.class.getSimpleName(), m.toJsonString(null));
 
                 scoreBoard.startActivityForResult(nm, 1);

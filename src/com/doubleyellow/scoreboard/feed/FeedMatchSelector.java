@@ -29,6 +29,7 @@ import android.widget.*;
 import com.doubleyellow.android.util.AndroidPlaceholder;
 import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.android.util.SimpleELAdapter;
+import com.doubleyellow.android.view.EnumSpinner;
 import com.doubleyellow.android.view.SelectEnumView;
 import com.doubleyellow.android.view.SelectObjectView;
 import com.doubleyellow.scoreboard.Brand;
@@ -233,24 +234,74 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     llTeams.addView(llTeam);
                 }
 
+                LinearLayout llRoot = new LinearLayout(context);
+                llRoot.setOrientation(LinearLayout.VERTICAL);
+
+                final View[] vaPostParams;
+                if ( (m_joFeedConfig != null) && m_joFeedConfig.has(URLsKeys.AdditionalPostParams.toString()) ) {
+                    JSONArray  additionalPostParams = m_joFeedConfig.optJSONArray(URLsKeys.AdditionalPostParams.toString());
+                    int iNrOfAdditionalPostParams = additionalPostParams.length();
+                    vaPostParams = new View[iNrOfAdditionalPostParams];
+                    for (int p = 0; p < iNrOfAdditionalPostParams; p++) {
+                        JSONObject   joPostParam = additionalPostParams.optJSONObject(p);
+                        JSONArray    ppValues    = joPostParam.optJSONArray(URLsKeys.AllowedValues.toString());
+                        String       ppCaption   = joPostParam.optString   (URLsKeys.Caption      .toString());
+                        String       ppType      = joPostParam.optString   (URLsKeys.DisplayType  .toString(), "RadioButton");
+                        String       ppPostAs    = joPostParam.optString   (URLsKeys.PostAs       .toString(), ppCaption.toLowerCase().replaceAll(" ", ""));
+                        List<String> lValues     = JsonUtil.asListOfStrings(ppValues);
+
+                        if ( "SelectList".equalsIgnoreCase(ppType) ) {
+                            // select list
+                            Spinner spinner = new Spinner(context);
+                            ArrayAdapter<String> dataAdapter = EnumSpinner.getStringArrayAdapter(context, lValues, 0, null);
+                            spinner.setAdapter(dataAdapter);
+                            vaPostParams[p] = spinner;
+                        } else if ( "RadioButton".equalsIgnoreCase(ppType) ) {
+                            // radio button
+                            vaPostParams[p] = new SelectObjectView<String>(context, lValues, lValues.get(0), null, HVD.Horizontal);
+                        } else if ( "ToggleButton".equalsIgnoreCase(ppType) ) {
+                            // toggle button
+                            ToggleButton toggleButton = new ToggleButton(context);
+                            if ( ListUtil.size(lValues) == 2 ) {
+                                toggleButton.setTextOff(lValues.get(0)); // default setting is off
+                                toggleButton.setTextOn (lValues.get(1));
+                                toggleButton.setText(lValues.get(0));
+                            }
+                            vaPostParams[p] = toggleButton;
+                        }
+
+                        TextView txtCaption = new TextView(context);
+                        txtCaption.setText(ppCaption);
+
+                        LinearLayout llPostParam = new LinearLayout(context);
+                        llPostParam.setOrientation(LinearLayout.HORIZONTAL); // caption and view
+
+                        llPostParam.addView(txtCaption);
+                        if ( vaPostParams[p] != null ) {
+                            vaPostParams[p].setTag(ppPostAs);
+                            llPostParam.addView(vaPostParams[p]);
+                        }
+
+                        llRoot.addView(llPostParam);
+                    }
+                } else {
+                    vaPostParams = null;
+                }
+
                 final SelectEnumView<NamePart> evNamePart;
-                LinearLayout ll = null;
                 if ( bAllowSplitOnComma ) {
-                    ll = new LinearLayout(context);
-                    ll.setOrientation(LinearLayout.VERTICAL);
-
                     evNamePart = new SelectEnumView(context, NamePart.class, NamePart.Full, 3);
-                    ll.addView(evNamePart);
-
-                    ll.addView(llTeams);
+                    llRoot.addView(evNamePart);
                 } else {
                     evNamePart = null;
-                    ll = llTeams;
                 }
+
+                // add the teams last because it may be a long list
+                llRoot.addView(llTeams);
 
                 AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
                 ab.setTitle(R.string.sb_choose_players)
-                  .setView(ll)
+                  .setView(llRoot)
                   .setNeutralButton (R.string.cmd_cancel, null)
                   .setPositiveButton(R.string.cmd_ok, new DialogInterface.OnClickListener() {
                       @Override public void onClick(DialogInterface dialog, int which) {
@@ -295,6 +346,37 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                               if ( StringUtil.isNotEmpty(sName) ) {
                                   iPlayersSelected++;
                               }
+                          }
+                          if ( vaPostParams != null ) {
+                              final String sSplitter = "|";
+                              StringBuffer sbAdditionalPP = new StringBuffer();
+                              for(int p=0; p < vaPostParams.length; p++) {
+                                  View v = vaPostParams[p];
+                                  String sPostAs = String.valueOf(v.getTag());
+                                  String sValue = null;
+                                  if ( v instanceof Spinner ) {
+                                      Spinner sp = (Spinner) v;
+                                      Object selectedItem = sp.getSelectedItem();
+                                      if ( selectedItem != null ) {
+                                          sValue = String.valueOf(selectedItem);
+                                      } else {
+                                          sValue = null;
+                                      }
+                                  } else if ( v instanceof ToggleButton ) {
+                                      ToggleButton tb = (ToggleButton) v;
+                                      sValue = tb.getText().toString();
+                                  } else if ( v instanceof SelectObjectView ) {
+                                      SelectObjectView<String> sov = (SelectObjectView<String>) v;
+                                      sValue = sov.getChecked(); // may be null, not an issue
+                                  }
+                                  if ( StringUtil.isNotEmpty(sValue) ) {
+                                      if ( sbAdditionalPP.length() != 0 ) {
+                                          sbAdditionalPP.append(sSplitter);
+                                      }
+                                      sbAdditionalPP.append(sPostAs).append("=").append(sValue);
+                                  }
+                              }
+                              model.setAdditionalPostParams(sSplitter + sbAdditionalPP + sSplitter);
                           }
                           finishWithPopulatedModel(model);
                       }

@@ -1421,6 +1421,7 @@ public abstract class Model
 
     private String m_sSource   = "";
     private String m_sSourceID = "";
+    private String m_sAdditionalPostParams = "";
 
     public String getSource() {
         return m_sSource;
@@ -1435,6 +1436,13 @@ public abstract class Model
         if ( sSourceID != null ) {
             m_sSourceID = sSourceID;
         }
+    }
+
+    public String getAdditionalPostParams() {
+        return m_sAdditionalPostParams;
+    }
+    public void setAdditionalPostParams(String s) {
+        m_sAdditionalPostParams = s;
     }
 
     //-------------------------------
@@ -2348,6 +2356,9 @@ public abstract class Model
                 String sSourceID = joMetadata.optString(JSONKey.sourceID.toString(), "");
                 setSource(sSource, sSourceID);
 
+                String sAdditionalPostParams = joMetadata.optString(JSONKey.additionalPostParams.toString(), "");
+                setAdditionalPostParams(sAdditionalPostParams);
+
                 String sShareURL = joMetadata.optString(JSONKey.shareURL.toString());
                 if ( StringUtil.isNotEmpty(sShareURL) ) {
                     setShareURL(sShareURL);
@@ -2633,6 +2644,7 @@ public abstract class Model
         JSONObject metaData = new JSONObject();
         metaData.put(JSONKey.source  .toString(), m_sSource);
         metaData.put(JSONKey.sourceID.toString(), m_sSourceID);
+        metaData.put(JSONKey.additionalPostParams.toString(), m_sAdditionalPostParams);
         if ( StringUtil.isNotEmpty(m_shareUrl) ) {
             metaData.put(JSONKey.shareURL.toString(), m_shareUrl);
         }
@@ -3157,6 +3169,7 @@ public abstract class Model
         m_sUnparsedDate       = null;
         m_sResultFast         = null;
         setSource(null, null);
+        setAdditionalPostParams(null);
       //m_doubleServeSequence = DoublesServeSequence.NA;
         m_bIsDouble           = false;
         m_in_out              = DoublesServe.NA;

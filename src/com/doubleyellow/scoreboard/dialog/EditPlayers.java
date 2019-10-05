@@ -305,7 +305,7 @@ public class EditPlayers extends BaseAlertDialog
             } else {
                 if (scoreBoard != null) {
                     // invoked from main scoreboard
-                    esAnnouncementLang = new EnumSpinner<AnnouncementLanguage>(context);
+                    //esAnnouncementLang = new EnumSpinner<AnnouncementLanguage>(context);
                     esAnnouncementLang = new Spinner(context);
                     AnnouncementLanguage language = PreferenceValues.officialAnnouncementsLanguage(context);
                     EnumSpinner.init(esAnnouncementLang, context, AnnouncementLanguage.class, language, null, 0);

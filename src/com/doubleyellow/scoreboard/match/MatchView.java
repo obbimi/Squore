@@ -1162,6 +1162,7 @@ public class MatchView extends SBRelativeLayout
         }
         if ( m_model != null ) {
             m.setSource(m_model.getSource() , m_model.getSourceID() );
+            m.setAdditionalPostParams (m_model.getAdditionalPostParams());
             for(Player p: Player.values()) {
                 m.setPlayerId(p, m_model.getPlayerId(p));
             }

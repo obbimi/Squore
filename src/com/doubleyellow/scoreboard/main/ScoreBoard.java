@@ -1845,6 +1845,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             matchModel.setTiebreakFormat      (previous.getTiebreakFormat     ());
             matchModel.setHandicapFormat      (previous.getHandicapFormat     ());
             matchModel.setSource              (previous.getSource() , previous.getSourceID() );
+            matchModel.setAdditionalPostParams(previous.getAdditionalPostParams());
             matchModel.setReferees            (previous.getReferee(), previous.getMarker());
 /*
             for ( Player p: Model.getPlayers() ) {
