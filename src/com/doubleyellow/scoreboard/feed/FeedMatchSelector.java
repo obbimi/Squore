@@ -162,6 +162,9 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             if ( bNamesPopulated ) {
                 // player names already populated
                 finishWithPopulatedModel(model);
+            } else if ( JsonUtil.isEmpty(getTeamPlayers(context, Player.A)) && JsonUtil.isEmpty(getTeamPlayers(context,Player.B)) ) {
+                // not all player names populated, but also no lists to select players from
+                finishWithPopulatedModel(model);
             } else if ( JsonUtil.isEmpty(getTeamPlayers(context, Player.A)) && JsonUtil.isNotEmpty(getTeamPlayers(context,Player.B)) ) {
                 // player names not populated, but only 1 populated lists to select players from
                 Toast.makeText(context, String.format(NO_PLAYERS_FOR_TEAM_X, model.getClub(Player.A)), Toast.LENGTH_SHORT).show();
@@ -707,8 +710,14 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     public static void setTeamPlayers(Context context, Player team, JSONArray aPlayers) {
         try {
             File fCache                = getTeamPlayersCacheFile(context, team);
-            FileUtil.writeTo(fCache, aPlayers.toString());
-        } catch (IOException e) {
+            if ( aPlayers != null ) {
+                FileUtil.writeTo(fCache, aPlayers.toString());
+            } else {
+                if ( fCache.exists() ) {
+                    fCache.delete();
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
