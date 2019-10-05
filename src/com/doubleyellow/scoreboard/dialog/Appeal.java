@@ -33,8 +33,11 @@ import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.prefs.ShowPlayerColorOn;
 import com.doubleyellow.util.Direction;
 import com.doubleyellow.util.StringUtil;
+
+import java.util.EnumSet;
 
 /**
  * Dialog that is displayed when user name is clicked.
@@ -113,17 +116,20 @@ public class Appeal extends BaseAlertDialog
         ColorPrefs.setColor(ll);
 
         // if player colors are set, use it
-        if ( StringUtil.areAllNonEmpty(matchModel.getColor(Player.A), matchModel.getColor(Player.B)) ) {
-            for( Player p: Model.getPlayers() ) {
-                final String sBgColor = matchModel.getColor(p);
-                int iBgColor  = Color.parseColor(sBgColor);
-                int iTxtColor = ColorUtil.getBlackOrWhiteFor(sBgColor);
-                if ( appealingPlayer.equals(p) ) {
-                    vStroke.setBackgroundColor(iBgColor);
-                    vStroke.setTextColor(iTxtColor);
-                } else {
-                    vNoLet.setBackgroundColor(iBgColor);
-                    vNoLet.setTextColor(iTxtColor);
+        EnumSet<ShowPlayerColorOn> colorOns = PreferenceValues.showPlayerColorOn(context);
+        if ( colorOns.contains(ShowPlayerColorOn.DecisionMessage) ) {
+            if ( StringUtil.areAllNonEmpty(matchModel.getColor(Player.A), matchModel.getColor(Player.B)) ) {
+                for( Player p: Model.getPlayers() ) {
+                    final String sBgColor = matchModel.getColor(p);
+                    int iBgColor  = Color.parseColor(sBgColor);
+                    int iTxtColor = ColorUtil.getBlackOrWhiteFor(sBgColor);
+                    if ( appealingPlayer.equals(p) ) {
+                        vStroke.setBackgroundColor(iBgColor);
+                        vStroke.setTextColor(iTxtColor);
+                    } else {
+                        vNoLet.setBackgroundColor(iBgColor);
+                        vNoLet.setTextColor(iTxtColor);
+                    }
                 }
             }
         }
