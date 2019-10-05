@@ -1,3 +1,7 @@
+## 4.25 (okt 2019)
+
+- further improvements for selecting teams (and team players in a popup) when working with feeds
+
 ## 4.24 (sept 2019)
 
 - improvements for selecting teams (and teamplayers in a popup) when working with feeds

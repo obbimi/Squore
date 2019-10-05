@@ -20,7 +20,6 @@ package com.doubleyellow.scoreboard.feed;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.widget.Toast;
 import com.doubleyellow.android.util.AndroidPlaceholder;
 import com.doubleyellow.android.util.SimpleELAdapter;
@@ -41,10 +40,10 @@ import java.util.List;
  * Used by {@link FeedFeedSelector}
  */
 class ShowFeedsAdapter extends SimpleELAdapter {
-    private String           m_sName          = null;
+    private String           m_sName            = null;
 
-    private FeedFeedSelector feedFeedSelector = null;
-    private Context          context          = null;
+    private FeedFeedSelector m_feedFeedSelector = null;
+    private Context          m_context          = null;
 
     private final AndroidPlaceholder placeholder = new AndroidPlaceholder(TAG);
 
@@ -67,9 +66,9 @@ class ShowFeedsAdapter extends SimpleELAdapter {
             Log.i(TAG, "Not filtering based on duration for " + sName); // done because old default value 42 might still be set, before league feeds existed
             m_bFilterOutBasedOnDuration = false;
         }
-        m_feeds = array;
-        this.context          = feedFeedSelector;
-        this.feedFeedSelector = feedFeedSelector;
+        m_feeds            = array;
+        m_context          = feedFeedSelector;
+        m_feedFeedSelector = feedFeedSelector;
 
         if ( sortOrder != null ) {
             sortHeaders(SortOrder.Ascending);
@@ -88,9 +87,9 @@ class ShowFeedsAdapter extends SimpleELAdapter {
 
     private /*static*/ class ShowFeedsTask extends AsyncTask<String, Void, List<String>> {
         @Override protected List<String> doInBackground(String[] sName) {
-            int iEndWasDaysBackMax     = PreferenceValues.getTournamentWasBusy_DaysBack     (context);
-            int iStartIsDaysAheadMax   = PreferenceValues.getTournamentWillStartIn_DaysAhead(context);
-            int iDurationInDaysMaxPref = PreferenceValues.getTournamentMaxDuration_InDays   (context);
+            int iEndWasDaysBackMax     = PreferenceValues.getTournamentWasBusy_DaysBack     (m_context);
+            int iStartIsDaysAheadMax   = PreferenceValues.getTournamentWillStartIn_DaysAhead(m_context);
+            int iDurationInDaysMaxPref = PreferenceValues.getTournamentMaxDuration_InDays   (m_context);
          // Range minMaxDurationInDaysFeeds = new Range(0,0);
 
             List<String> lGroupsWithActive = new ArrayList<String>();
@@ -106,7 +105,7 @@ class ShowFeedsAdapter extends SimpleELAdapter {
                     // add country if only countrycode is specified
                     if ( JsonUtil.isNotEmpty(joFeed) && joFeed.has( URLsKeys.CountryCode.toString() ) ) {
                         String sCountryCode = joFeed.getString(URLsKeys.CountryCode.toString());
-                        String sLang        = PreferenceValues.officialAnnouncementsLanguage(context).toString(); // RWValues.getDeviceLanguage(ctx)
+                        String sLang        = PreferenceValues.officialAnnouncementsLanguage(m_context).toString(); // RWValues.getDeviceLanguage(ctx)
                         String sCountryName = CountryUtil.addFullCountry("%s%s", ""  , sCountryCode, sLang);
                         if ( StringUtil.isNotEmpty(sCountryName) ) {
                             joFeed.put(URLsKeys.Country.toString(), sCountryName);
@@ -144,10 +143,14 @@ class ShowFeedsAdapter extends SimpleELAdapter {
                             continue;
                         }
                     }
+                    if ( (m_iNrOfItemsToSelect == 0) && joFeed.has(URLsKeys.Section.toString()) ) {
+                        // assume all entries will have Section specified
+                        sGroupByFormat = "${" + URLsKeys.Section + "}";
+                    }
                     String sHeader = placeholder.translate(sGroupByFormat, joFeed);
                            sHeader = placeholder.removeUntranslated(sHeader);
                     if ( StringUtil.isEmpty(sHeader) ) {
-                        sHeader = context.getString(R.string.pref_Other);
+                        sHeader = m_context.getString(R.string.pref_Other);
                     }
 
                     // TODO: filter out those the user has already selected??
@@ -179,7 +182,7 @@ class ShowFeedsAdapter extends SimpleELAdapter {
         }
 
         @Override protected void onPostExecute(List<String> lGroupsWithActive) {
-            ShowFeedsAdapter.this.feedFeedSelector.postLoad(m_sName, lGroupsWithActive);
+            ShowFeedsAdapter.this.m_feedFeedSelector.postLoad(m_sName, lGroupsWithActive);
             if ( m_iNrOfItemsToSelect == 0 ) {
                 if ( m_iNrAlreadyFinished + m_iNrToFarInFuture + m_iNrRunningToLong > 0 ) {
                     String sMsg = String.format("None of the %s entries presented for selection with your current preferences...", JsonUtil.size(m_feeds)); /*String.format("No entries found starting in %s days.", tournamentWillStartIn_daysAhead)*/;
@@ -187,14 +190,14 @@ class ShowFeedsAdapter extends SimpleELAdapter {
                         sMsg += String.format("\n%s entries found that are already finished.", m_iNrAlreadyFinished);
                     }
                     if ( m_iNrToFarInFuture > 0 ) {
-                        int tournamentWillStartIn_daysAhead = PreferenceValues.getTournamentWillStartIn_DaysAhead(context);
+                        int tournamentWillStartIn_daysAhead = PreferenceValues.getTournamentWillStartIn_DaysAhead(m_context);
                         sMsg += String.format("\n%s entries found starting in more than %s days.", m_iNrToFarInFuture, tournamentWillStartIn_daysAhead);
                     }
                     if ( m_iNrRunningToLong > 0 ) {
-                        int iDurationInDaysMax              = PreferenceValues.getTournamentMaxDuration_InDays(context);
+                        int iDurationInDaysMax              = PreferenceValues.getTournamentMaxDuration_InDays(m_context);
                         sMsg += String.format("\n%s entries found running for more than %s days.", m_iNrRunningToLong, iDurationInDaysMax);
                     }
-                    Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+                    Toast.makeText(m_context, sMsg, Toast.LENGTH_LONG).show();
                 }
             }
         }

@@ -1107,7 +1107,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         private String getFormat() {
             String sFormat = m_sDisplayFormat;
             if ( feedStatus.equals(FeedStatus.showingPlayers) ) {
-                sFormat = "${Name}";
+                sFormat = "${" + JSONKey.name + "}";
             }
             return sFormat;
         }
@@ -1127,7 +1127,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             // if there is a config section, use it
             m_joFeedConfig = joRoot.optJSONObject(URLsKeys.config.toString());
             if ( m_joFeedConfig != null ) {
-                sDisplayFormat = m_joFeedConfig.optString(URLsKeys.Format.toString(), getFormat());
+                sDisplayFormat = m_joFeedConfig.optString(URLsKeys.Placeholder_Match.toString(), getFormat());
 
                 String sExpandGroup = m_joFeedConfig.optString(URLsKeys.expandGroup.toString());
                 if ( StringUtil.isNotEmpty(sExpandGroup) ) {
@@ -1167,7 +1167,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 String sSection = itSections.next();
 
                 boolean bNameOrConfig = false;
-                if ( sSection.equalsIgnoreCase(URLsKeys.name.toString()) ) {
+                if ( sSection.equalsIgnoreCase(URLsKeys.name.toString()) ) { // old, do not promote this (name as root key) in documentation or so
                     bNameOrConfig = true;
                     sActualNameFromFeed = joRoot.getString(sSection);
                 } else if ( sSection.equalsIgnoreCase(URLsKeys.config.toString()) ) {

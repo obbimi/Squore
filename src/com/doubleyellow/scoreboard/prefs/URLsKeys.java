@@ -38,13 +38,17 @@ public enum URLsKeys {
     Organization,
     Country,
         CountryCode,
+    /** Typically used for tournaments */
     Region,
+    /** Typically used for leagues */
+    Section,
 
     /* Json config feed keys */
     config,
         avatarBaseURL,
         expandGroup,
-        Format,
+        Placeholder_Match,
+        /** @deprecated */
         Format_TeamPlayer,
         Placeholder_TeamPlayer,
             AdditionalPostParams,
