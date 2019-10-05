@@ -1,3 +1,8 @@
+## 4.25 (okt 2019)
+
+- further improvements for selecting teams (and team players in a popup) when working with feeds
+- some bug fixes
+
 ## 4.23 (sept 2019)
 
 - allow to play 'Total of X games' match format (as opposed to 'Best of X games')

@@ -149,12 +149,17 @@ public class StartEndAnnouncement extends BaseAlertDialog
             // assume it was an additional scoreline to represent score change for a earlier ConductCall
             lastScoreLine = matchModel.getLastCall();
         }
-        if ( ( lastScoreLine != null ) && lastScoreLine.isCall() ) {
-            Call call = lastScoreLine.getCall();
-            if ( call.equals(Call.CG) || call.equals(Call.CS) ) {
-                Player pMisbehaving = lastScoreLine.getCallTargetPlayer();
-                Log.w(TAG, "Last call was CG|CS with misbehaving player " + pMisbehaving);
-                winnerOfLastGame = pMisbehaving.getOther();
+        if (  lastScoreLine != null  ) {
+            if ( lastScoreLine.isCall() ) {
+                Call call = lastScoreLine.getCall();
+                if ( call.equals(Call.CG) || call.equals(Call.CS) ) {
+                    Player pMisbehaving = lastScoreLine.getCallTargetPlayer();
+                    Log.w(TAG, "Last call was CG|CS with misbehaving player " + pMisbehaving);
+                    winnerOfLastGame = pMisbehaving.getOther();
+                }
+            } else if ( Brand.isTabletennis() ) {
+                // it is not the server that is the winner of the last game, but simply the one who scored last
+                winnerOfLastGame = lastScoreLine.getScoringPlayer();
             }
         }
         if ( matchModel.hasStarted() && bIncludeWinnerOfLastGame ) {
