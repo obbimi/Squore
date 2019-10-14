@@ -1,3 +1,9 @@
+## 4.26 (okt 2019)
+
+- allow specifying a player color already in main match setup screen
+- fix 'changes sides' halfway last game
+
+
 ## 4.23 (sept 2019)
 
 - allow to play 'Total of X games' match format (as opposed to 'Best of X games')

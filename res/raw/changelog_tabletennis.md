@@ -1,3 +1,8 @@
+## 4.26 (okt 2019)
+
+- allow specifying a player color already in main match setup screen
+- bluetooth mirror improvements
+
 ## 4.25 (okt 2019)
 
 - further improvements for selecting teams (and team players in a popup) when working with feeds
