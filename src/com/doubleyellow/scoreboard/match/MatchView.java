@@ -1172,7 +1172,7 @@ public class MatchView extends SBRelativeLayout
             Button btnColor = btnsColor[p.ordinal()];
             if ( btnColor != null ) {
                 Integer iColor = (Integer) btnColor.getTag();
-                if ( (iColor != null) && (iColor.equals(m_iNoColor) ) ) {
+                if ( (iColor != null) && (iColor.equals(m_iNoColor) == false ) ) {
                     m.setPlayerColor(p, ColorUtil.getRGBString(iColor));
                 }
             }
