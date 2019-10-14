@@ -20,6 +20,7 @@
 <com.doubleyellow.view.SBRelativeLayout
               xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:dy="http://double-yellow.be"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:id="@+id/ll_match"
               android:layout_margin="5dp"
               android:orientation="vertical"
@@ -34,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"/>
 
-    <RelativeLayout
+    <android.support.percent.PercentRelativeLayout
         android:layout_below="@id/match_splitterP"
         android:id="@+id/ll_match_singles"
         android:layout_width="match_parent"
@@ -46,13 +47,41 @@
                 android:text="@string/lbl_players"
                 android:textSize="@dimen/txt_medium"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
-            <!-- just a layout that is center in the parent to allow aligning to -->
-    <LinearLayout
+
+        <!-- just a layout that is center in the parent to allow aligning to -->
+        <LinearLayout
             android:id="@+id/match_splitterPS"
             android:orientation="vertical"
             android:layout_centerInParent="true"
             android:layout_alignParentTop="true"
             android:layout_width="2dp"
+            android:layout_height="wrap_content"/>
+
+        <Button android:id="@+id/match_colorA"
+            android:layout_below="@id/lblPlayersS"
+            android:layout_alignEnd="@id/match_splitterPS"
+            android:layout_marginStart="@dimen/sb_playername_leftpadding"
+            android:layout_marginEnd="@dimen/sb_playername_leftpadding"
+            android:layout_alignTop="@id/match_playerA"
+            android:layout_alignBottom="@id/match_playerA"
+            android:hint="@string/lbl_color_A"
+            android:textSize="@dimen/txt_smaller"
+            app:layout_widthPercent="12%"
+            android:tag="item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button android:id="@+id/match_colorB"
+            android:layout_below="@id/lblPlayersS"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/sb_playername_leftpadding"
+            android:layout_marginEnd="@dimen/sb_playername_leftpadding"
+            android:layout_alignTop="@id/match_playerA"
+            android:layout_alignBottom="@id/match_playerA"
+            android:hint="@string/lbl_color_B"
+            android:textSize="@dimen/txt_smaller"
+            app:layout_widthPercent="12%"
+            android:tag="item"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <com.doubleyellow.scoreboard.view.PlayerTextView
                 android:id="@+id/match_playerA"
@@ -63,7 +92,7 @@
                 android:background="@drawable/button_dark"
                 android:tag="item"
                 android:layout_below="@id/lblPlayersS"
-                android:layout_toStartOf="@id/match_splitterPS"
+                android:layout_toStartOf="@id/match_colorA"
                 android:layout_alignParentStart="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -82,8 +111,8 @@
                 android:background="@drawable/button_dark"
                 android:tag="item"
                 android:layout_below="@id/lblPlayersS"
-                android:layout_toEndOf="@+id/match_playerA"
-                android:layout_alignParentEnd="true"
+                android:layout_alignStart="@+id/match_splitterPS"
+                android:layout_toStartOf="@id/match_colorB"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/sb_playername_leftpadding"
@@ -91,7 +120,7 @@
                 android:maxLines="1"
                 android:imeOptions="actionDone"
                 android:layout_gravity="center_horizontal"/>
-    </RelativeLayout>
+    </android.support.percent.PercentRelativeLayout>
     <RelativeLayout
         android:layout_below="@id/ll_match_singles"
         android:id="@+id/ll_match_doubles"

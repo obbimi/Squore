@@ -17,8 +17,11 @@
 
 package com.doubleyellow.scoreboard.match;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,12 +29,17 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.*;
 
+import com.doubleyellow.android.util.ColorUtil;
+import com.doubleyellow.android.view.ColorPickerView;
 import com.doubleyellow.android.view.CountryTextView;
+import com.doubleyellow.android.view.SatValHueColorPicker;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.android.view.EnumSpinner;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.dialog.ButtonUpdater;
+import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.prefs.*;
 import com.doubleyellow.scoreboard.view.PlayerTextView;
@@ -57,6 +65,7 @@ import java.util.List;
  * - match format
  * - event details
  * - referee details
+ * - optionally player colors
  */
 public class MatchView extends SBRelativeLayout
 {
@@ -416,6 +425,8 @@ public class MatchView extends SBRelativeLayout
     private TextView[] tvsClubs     = null;
     private View[]     tvsReferee   = null;
     private TextView[] tvsEvent     = null;
+    private Button[]   btnsColor    = null;
+    private Integer    m_iNoColor   = null;
 
     boolean clearEventFields() {
         return clearFields(tvsEvent);
@@ -491,13 +502,15 @@ public class MatchView extends SBRelativeLayout
     }
 
     private boolean m_bIsDoubles = false;
-    /** is null for when entering match manually from match fragment, else it is used to
+
+    /**
+     * Is null for when entering match manually from match fragment, else it is used to
      * - pass on 'uneditable' info
      * - pre-set match format preferences passed on from feed
      **/
     private Model   m_model      = null;
-    public void init(boolean bIsDoubles, Model model) {
-        Context context = getContext();
+    public void init(boolean bIsDoubles, final Model model) {
+        final Context context = getContext();
 
         //iForceTextSize = IBoard.iTxtSizePx_FinishedGameScores;
 
@@ -581,6 +594,18 @@ public class MatchView extends SBRelativeLayout
         //initTextViews(tvsCountries);
         //initTextViews(tvsClubs);
         initForEasyClearingFields();
+
+        btnsColor  = new Button[] { findViewById(R.id.match_colorA), findViewById(R.id.match_colorB) };
+        m_iNoColor = ColorPrefs.getTarget2colorMapping(context).get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
+        for(final Player p: Player.values() ) {
+            Button btnColor = btnsColor[p.ordinal()];
+            if ( btnColor == null ) { continue; }
+            btnColor.setTag(m_iNoColor);
+            btnColor.setTag(R.string.lbl_player, p);
+            ColorUtil.setBackground(btnColor, m_iNoColor); // todo: already coming from feed, e.g. a club color
+            btnColor.invalidate();
+            btnColor.setOnClickListener(m_onColorButtonClicker);
+        }
 
         // optionally get player names passed in from a match selection
         requestFocusFor(txtPlayerA); // does not work if focus was impossible (.e.g not the initial tab in MatchTabbed)
@@ -755,6 +780,80 @@ public class MatchView extends SBRelativeLayout
 
         cbUseEnglishScoring = (CompoundButton) findViewById(R.id.useHandInHandOutScoring);
         cbUseEnglishScoring.setChecked(PreferenceValues.useHandInHandOutScoring(context));
+    }
+
+    private OnClickListener m_onColorButtonClicker = new OnClickListener() {
+        private Player m_forPlayer = null;
+        private String m_sColor    = null;
+        private int    m_iColor    = 0;
+        private int    m_iNoColor  = 0;
+        @Override public void onClick(View btn) {
+            final Context context     = getContext();
+            final Button  colorButton = (Button) btn;
+            m_forPlayer = (Player) colorButton.getTag(R.string.lbl_player);
+            m_iColor    = (int) colorButton.getTag();
+            m_sColor    = ColorUtil.getRGBString(m_iColor);
+
+            // prepare the view, and if a color is chosen in the view
+            ColorPickerView cpv = getColorPickerView(context);
+            if ( m_sColor != null ) {
+                cpv.setColor(Color.parseColor(m_sColor));
+            }
+
+            // update clicked button when dialog is closed
+            DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            break;
+                        case DialogInterface.BUTTON_NEUTRAL:
+                            colorButton.setTag(m_iNoColor);
+                            ColorUtil.setBackground(colorButton, m_iNoColor);
+                            colorButton.setText(""); // hint text should still be showing
+                            colorButton.invalidate();
+                            break;
+                        case DialogInterface.BUTTON_POSITIVE:
+                            colorButton.setTag(m_iColor);
+                            ColorUtil.setBackground(colorButton, m_iColor);
+                            colorButton.invalidate();
+                            colorButton.setText(colorButton.getHint());
+                            colorButton.setTextColor(ColorUtil.getBlackOrWhiteFor(m_iColor));
+                            break;
+                    }
+                }
+            };
+            ScoreBoard.MyDialogBuilder adb = ScoreBoard.getAlertDialogBuilder(context);
+            String sTitle = context.getString(R.string.lbl_color) + ": " + tvsPlayers[m_forPlayer.ordinal()].getText();
+            adb.setTitle(sTitle)
+               .setPositiveButton(R.string.cmd_ok    , listener)
+               .setNeutralButton (R.string.cmd_none  , listener)
+               .setNegativeButton(R.string.cmd_cancel, listener)
+               .setView((View) cpv);
+
+            // ensure cancel button will have the current choosen color
+            ButtonUpdater buttonUpdater = new ButtonUpdater(context, AlertDialog.BUTTON_NEGATIVE, m_iColor, AlertDialog.BUTTON_POSITIVE, m_iColor);
+            final AlertDialog dialog = adb.show(buttonUpdater);
+
+            // update OK button when a color is selected
+            cpv.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
+                @Override public void onColorChanged(int newColor) {
+                    m_iColor = newColor;
+                    m_sColor = ColorUtil.getRGBString(m_iColor);
+                    Button btnOK = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    ColorUtil.setBackground(btnOK, Color.parseColor(m_sColor));
+                    btnOK.setTextColor(ColorUtil.getBlackOrWhiteFor(m_sColor));
+                }
+            });
+        }
+    };
+
+    private ColorPickerView getColorPickerView(Context context) {
+        ColorPickerView cpv = new SatValHueColorPicker(context);
+        //if ( false ) cpv = new LineColorPicker(context, null);
+
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ((View) cpv).setLayoutParams(layoutParams);
+        return cpv;
     }
 
 
@@ -1068,6 +1167,15 @@ public class MatchView extends SBRelativeLayout
         if ( m_bIsDoubles == false ) {
             m.setPlayerName(Player.A, txtPlayerA.getText().toString());
             m.setPlayerName(Player.B, txtPlayerB.getText().toString());
+        }
+        for(Player p : Player.values() ) {
+            Button btnColor = btnsColor[p.ordinal()];
+            if ( btnColor != null ) {
+                Integer iColor = (Integer) btnColor.getTag();
+                if ( (iColor != null) && (iColor.equals(m_iNoColor) ) ) {
+                    m.setPlayerColor(p, ColorUtil.getRGBString(iColor));
+                }
+            }
         }
         if ( (txtCountryA != null) && (txtCountryB != null) ) {
             String sCountryA = txtCountryA.getText().toString();

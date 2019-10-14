@@ -167,12 +167,14 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
                     sImageURL = sBitMap;
                 }
               //DownloadImageTask downloadImageTask = new DownloadImageTask(viewHolder.img, sBitMap, sType);
+                // this all works, but it seems it does slow down fetching JSON data later on when using URLFeedTask...
                 File fCache = new File(context.getCacheDir(), sType + sImageURL.replaceAll(".*(\\.\\w+)$", "$1"));
                 DownloadImageTask downloadImageTask = new DownloadImageTask(context.getResources(), viewHolder.img, sImageURL, sType, ImageView.ScaleType.FIT_CENTER, fCache, 3000);
                 downloadImageTask.execute();
                 bImageFromURL = true;
             } else {
                 Bitmap bitMapFromBase64 = ViewUtil.getBitMapFromBase64(sBitMap);
+                viewHolder.img.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 viewHolder.img.setImageBitmap(bitMapFromBase64);
             }
         } else {

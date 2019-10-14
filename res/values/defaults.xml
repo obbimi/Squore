@@ -7,6 +7,7 @@
     <dimen name="main_button_padding">5dp</dimen>
     <dimen name="main_button_margin">2dp</dimen>
 
+    <dimen name="txt_smaller">12sp</dimen>
     <dimen name="txt_small">15sp</dimen>
     <dimen name="txt_medium">18sp</dimen>
     <dimen name="txt_normal">22sp</dimen>
