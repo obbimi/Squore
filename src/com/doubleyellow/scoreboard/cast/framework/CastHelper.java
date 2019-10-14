@@ -97,7 +97,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         updateViewWithColorAndScore(m_activity, m_matchModel);
     }
 
-    public void sendMessage(Integer iBoardResId, Object oValue) {
+    private void sendMessage(Integer iBoardResId, Object oValue) {
         sendMessage(iBoardResId, oValue, "text");
     }
     // sProperty = background-color

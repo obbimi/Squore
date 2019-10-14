@@ -19,6 +19,9 @@ package com.doubleyellow.scoreboard.model;
 
 import java.util.EnumSet;
 
+/**
+ * Class to maintain when a change-of-sides is applicable for a certain sport. Typically not for Squash, but all other versions of this app.
+ */
 public enum Halfway
 {
     Before(false, null),
@@ -27,9 +30,10 @@ public enum Halfway
     JustBefore(true, EnumSet.of(SportType.Tabletennis)),
     /** 5-3 in game to 10 (even points)... less common */
     Exactly   (true, EnumSet.of(SportType.Tabletennis
-                              , SportType.Racketlon)),
+                              , SportType.Racketlon
+                              , SportType.Badminton)),
     /* 11-7 in a game to 21: racketlon -> switch sides */
-    JustAfter (true, EnumSet.of(SportType.Racketlon)),
+    JustAfter (true, EnumSet.of(SportType.Racketlon, SportType.Badminton)),
 
     After(false, null),
     ;
@@ -47,6 +51,6 @@ public enum Halfway
     }
 
     public boolean changeSidesFor(SportType sport) {
-        return this.forSports != null && this.forSports.contains(sport);
+        return (this.forSports != null) && this.forSports.contains(sport);
     }
 }

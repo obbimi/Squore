@@ -80,7 +80,7 @@ public class BadmintonModel extends Model
 
     @Override public boolean showChangeSidesMessageInGame(int iGameZB) {
         // only in the last game when 11 points are reached (in a game to 21)
-        if ( iGameZB + 1 == getNrOfGamesToWinMatch() * 2 + 1 ) {
+        if ( iGameZB + 1 == getNrOfGamesToWinMatch() * 2 - 1 ) {
             return true;
         }
         return false;
