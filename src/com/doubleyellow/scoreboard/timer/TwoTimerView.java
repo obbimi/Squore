@@ -30,7 +30,7 @@ import com.doubleyellow.scoreboard.model.Model;
 public abstract class TwoTimerView extends BaseAlertDialog
 {
     private static String TAG = "SB." + TwoTimerView.class.getSimpleName();
-    public TwoTimerView(ScoreBoard scoreBoard, Model matchModel) {
+    TwoTimerView(ScoreBoard scoreBoard, Model matchModel) {
         super(scoreBoard, matchModel, scoreBoard);
     }
 

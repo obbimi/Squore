@@ -3919,6 +3919,9 @@ touch -t 01030000 LAST.sb
         if ( bIsResume == false ) {
             triggerEvent(SBEvent.timerStarted, viewType);
         }
+        if ( BTRole.Master.equals(m_blueToothRole) ) {
+            writeMethodToBluetooth(BTMethods.startTimer, timerType, bAutoTriggered); // added to ensure Toweling and Injury timeouts show up on connected device
+        }
     }
 
     private EndOfGameView endOfGameView = null;
@@ -5506,6 +5509,11 @@ touch -t 01030000 LAST.sb
             writeMethodToBluetooth(BTMethods.timestampStartOfGame, changedBy);
         }
     }
+    /**
+     * Called from
+     * - dialog where 'amount of time' left can be changed
+     * - 'toweling down' timer is actually started for TT version of app
+     **/
     public void restartTimerWithSecondsLeft(int iSecs) {
         DialogTimerView.restartTimerWithSecondsLeft(iSecs);
 
@@ -5792,6 +5800,12 @@ touch -t 01030000 LAST.sb
                 case cancelTimer: {
                     cancelTimer(); break;
                 }
+                case startTimer: {
+                    Type timerType = Type.valueOf(sMethodNArgs[1]);
+                    boolean bAutoStarted = sMethodNArgs.length>2?Boolean.valueOf(sMethodNArgs[2]):false;
+                    _showTimer(timerType, bAutoStarted);
+                    break;
+                }
                 case restartTimerWithSecondsLeft: {
                     DialogTimerView.restartTimerWithSecondsLeft(Integer.parseInt(sMethodNArgs[1])); break;
                 }
@@ -5866,6 +5880,7 @@ touch -t 01030000 LAST.sb
         endGame            (false),
 
         timestampStartOfGame       (false),
+        startTimer                 (false),
         restartTimerWithSecondsLeft(false),
         cancelTimer                (false),
 
