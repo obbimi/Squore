@@ -32,6 +32,8 @@
     <string name="lbl_player_x">Joueur %s</string>
     <string name="lbl_country_A">Pays A</string> <!-- TODO -->
     <string name="lbl_country_B">Pays B</string> <!-- TODO -->
+    <string name="lbl_color_A">Couleur A</string>
+    <string name="lbl_color_B">Couleur B</string>
     <string name="lbl_clubs">Clubs</string> <!-- TODO -->
     <string name="lbl_club_A">Club A</string> <!-- TODO -->
     <string name="lbl_club_B">Club B</string> <!-- TODO -->

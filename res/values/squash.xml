@@ -36,6 +36,8 @@
     <string name="lbl_countries">Countries</string>
     <string name="lbl_country_A">Country A</string>
     <string name="lbl_country_B">Country B</string>
+    <string name="lbl_color_A">Color A</string>
+    <string name="lbl_color_B">Color B</string>
     <string name="lbl_clubs">Clubs</string>
     <string name="lbl_club_A">Club A</string>
     <string name="lbl_club_B">Club B</string>
