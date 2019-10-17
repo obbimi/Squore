@@ -595,7 +595,11 @@ public class MatchView extends SBRelativeLayout
         //initTextViews(tvsClubs);
         initForEasyClearingFields();
 
-        btnsColor  = new Button[] { findViewById(R.id.match_colorA), findViewById(R.id.match_colorB) };
+        if ( bIsDoubles ) {
+            btnsColor  = new Button[] { findViewById(R.id.match_colorA12), findViewById(R.id.match_colorB12) };
+        } else {
+            btnsColor  = new Button[] { findViewById(R.id.match_colorA  ), findViewById(R.id.match_colorB  ) };
+        }
         m_iNoColor = ColorPrefs.getTarget2colorMapping(context).get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
         for(final Player p: Player.values() ) {
             Button btnColor = btnsColor[p.ordinal()];
@@ -1173,7 +1177,8 @@ public class MatchView extends SBRelativeLayout
             if ( btnColor != null ) {
                 Integer iColor = (Integer) btnColor.getTag();
                 if ( (iColor != null) && (iColor.equals(m_iNoColor) == false ) ) {
-                    m.setPlayerColor(p, ColorUtil.getRGBString(iColor));
+                    String sColor = ColorUtil.getRGBString(iColor);
+                    m.setPlayerColor(p, sColor);
                 }
             }
         }

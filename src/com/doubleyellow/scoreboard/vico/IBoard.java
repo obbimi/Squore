@@ -1044,7 +1044,8 @@ public class IBoard implements TimerViewContainer
                     mViewId2BorderColor.remove(view.getId());
                 }
                 if ( iPlayerColor == null ) {
-                    setBackgroundColor(view, iScoreButtonBgColor);
+                    //setBackgroundColor(view, iScoreButtonBgColor);
+                    setBackgroundAndBorder(view, iScoreButtonBgColor, iScoreButtonBgColor);
                     sendMessage(view.getId(), iScoreButtonBgColor, "border-color");
                 } else {
                     setBackgroundAndBorder(view, iScoreButtonBgColor, iPlayerColor);
