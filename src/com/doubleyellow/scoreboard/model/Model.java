@@ -3160,6 +3160,7 @@ public abstract class Model
         m_player2Name   .clear();
         m_player2Country.clear();
         m_player2Club   .clear();
+        m_player2Color  .clear();
 
         this.setEvent(null, null, null, null);
 
