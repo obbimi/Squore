@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.racketlon"
-          android:versionCode="218"
+          android:versionCode="231"
           android:versionName="4.20">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
