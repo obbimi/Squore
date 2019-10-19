@@ -24,8 +24,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.ParcelUuid;
+import android.util.Log;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
@@ -44,6 +44,8 @@ import java.util.UUID;
 
 public class SelectDeviceDialog extends BaseAlertDialog
 {
+    private static final String TAG = "SB." + SelectDeviceDialog.class.getSimpleName();
+
     public SelectDeviceDialog(Context context, Model matchModel, ScoreBoard scoreBoard) {
         super(context, matchModel, scoreBoard);
     }
@@ -101,7 +103,7 @@ public class SelectDeviceDialog extends BaseAlertDialog
 
     private List<BluetoothDevice> m_lPairedDevicesChecked = null;
 
-    /** called from main activity before adding dialog to stack */
+    /** called from main activity before adding dialog to stack. Returns resource ids of messages to display if something went wrong */
     public int[] getBluetoothDevices(boolean bRefresh) {
         if ( bRefresh ) {
             m_lPairedDevicesChecked = null;
@@ -141,6 +143,10 @@ public class SelectDeviceDialog extends BaseAlertDialog
         List<BluetoothDevice> lPairedDevicesChecked = new ArrayList<>();
         for (BluetoothDevice device : lPairedDevicesFilteredOnNWService) {
             ParcelUuid[] uuids = device.getUuids();
+            if ( uuids == null ) {
+                Log.w(TAG, "No uuids found for device " + device);
+                continue;
+            }
             boolean bOK = false;
             for(ParcelUuid uuid: uuids ) {
                 UUID sUUUD = uuid.getUuid();
