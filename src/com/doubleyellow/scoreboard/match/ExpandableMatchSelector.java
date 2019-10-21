@@ -145,10 +145,16 @@ public abstract class ExpandableMatchSelector extends Fragment
             ll.setOrientation(LinearLayout.VERTICAL);
             llContainer = ll;
         }
-        if ( etFilter == null ) {
+
+        SearchManager searchManager = null;
+        try {
+            searchManager = (SearchManager) context.getSystemService(Context.SEARCH_SERVICE); // does not work on wearable? android.os.ServiceManager$ServiceNotFoundException: No service published for: search
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if ( (etFilter == null) && (searchManager != null) ) {
             etFilter = new SearchView(context);
             etFilter.setIconifiedByDefault(false);
-            SearchManager searchManager = (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
             etFilter.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
             llContainer.addView(etFilter);
             etFilter.setVisibility(View.GONE);

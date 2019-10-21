@@ -61,9 +61,11 @@ public class Conduct extends BaseAlertDialog
     @Override public void show() {
 
         String sTitle = getString(R.string.oal_misconduct_by, matchModel.getName_no_nbsp(appealingPlayer, false));
-        adb.setTitle(sTitle)
-           .setIcon   (R.drawable.microphone)
-           .setMessage(PreferenceValues.getOAString(context, R.string.oa_decision_colon));
+        if ( isWearable(context) == false ) {
+            adb.setTitle(sTitle);
+            adb.setIcon (R.drawable.microphone);
+        }
+        adb.setMessage(PreferenceValues.getOAString(context, R.string.oa_decision_colon));
 
         // show one or three buttons depending on where/what stage of the match we are
         if ( true ) {

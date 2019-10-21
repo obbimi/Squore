@@ -57,18 +57,18 @@ public class ColorPicker extends BaseAlertDialog
     private String sColor       = null;
     @Override public void show()
     {
-        String sTitle = getString(R.string.lbl_color) + ": " + matchModel.getName_no_nbsp(targetPlayer, false);
         View tl = getColorPickerView();
-        adb
-                .setTitle(sTitle)
-              //.setIcon(R.drawable.microphone) // TODO: a t-shirt maybe?
-              //.setMessage(R.string.oa_decision)
-                .setPositiveButton(R.string.cmd_ok, listener)
-                .setNeutralButton(R.string.cmd_none, listener)
-                .setNegativeButton(R.string.cmd_cancel, listener)
-                .setView(tl);
+        if ( isWearable(context) == false ) {
+            String sTitle = getString(R.string.lbl_color) + ": " + matchModel.getName_no_nbsp(targetPlayer, false);
+            adb.setTitle(sTitle);
+            //.setIcon(R.drawable.microphone) // TODO: a t-shirt maybe?
+        }
+        adb.setPositiveButton(R.string.cmd_ok    , listener)
+           .setNeutralButton (R.string.cmd_none  , listener)
+           .setNegativeButton(R.string.cmd_cancel, listener)
+           .setView(tl);
 
-        ButtonUpdater listener;
+        final ButtonUpdater listener;
         if ( sColor != null ) {
             int iColor = Color.parseColor(this.sColor);
             listener = new ButtonUpdater(context, AlertDialog.BUTTON_NEGATIVE, iColor, AlertDialog.BUTTON_POSITIVE, iColor);

@@ -518,7 +518,7 @@
                     android:title="@string/pref_endGameSuggestion"
                     android:summary="@string/pref_endGameSuggestion_summary"
                     android:icon="@drawable/arrow_right"
-                    android:defaultValue="Suggest"
+                    android:defaultValue="@string/endGameSuggestion_default"
                     dy:displayValues="@array/EndGameDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
                     />
@@ -556,7 +556,7 @@
                     android:key="swapPlayersHalfwayGame"
                     android:title="@string/pref_swapPlayersHalfwayGame_Squash"
                     android:icon="@drawable/change_sides"
-                    android:defaultValue="Suggest"
+                    android:defaultValue="@string/swapPlayersHalfwayGame_default"
                     dy:displayValues="@array/FeatureDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
             />
@@ -588,7 +588,7 @@
                     android:title="@string/pref_useOfficialAnnouncementsFeature"
                     android:summary="@string/pref_useOfficialAnnouncementsFeature_summary"
                     android:icon="@drawable/microphone"
-                    android:defaultValue="Suggest"
+                    android:defaultValue="@string/useOfficialAnnouncementsFeature_default"
                     dy:displayValues="@array/FeatureDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
                     />
@@ -611,8 +611,8 @@
                     android:key="useTimersFeature"
                     android:title="@string/pref_useTimersFeature"
                     android:summary="@string/pref_useTimersFeature_summary"
-                    android:icon="@drawable/timer_4settings4buttons"
-                    android:defaultValue="Suggest"
+                    android:icon="@drawable/timer"
+                    android:defaultValue="@string/useTimersFeature_default"
                     dy:displayValues="@array/FeatureDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
                     />
@@ -648,7 +648,7 @@
                     android:title="@string/pref_useTossFeature"
                     android:summary="@string/pref_useTossFeature_summary"
                     android:icon="@drawable/toss_white"
-                    android:defaultValue="Suggest"
+                    android:defaultValue="@string/useTossFeature_default"
                     dy:displayValues="@array/FeatureDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
                     />
@@ -677,7 +677,7 @@
             android:title="@string/pref_useShareFeature"
             android:summary="@string/pref_useShareFeature_summary"
             android:icon="@android:drawable/ic_menu_share"
-            android:defaultValue="Suggest"
+            android:defaultValue="@string/useShareFeature_default"
             dy:displayValues="@array/FeatureDisplayValues"
             dy:enumClass="com.doubleyellow.util.Feature"
         />
@@ -779,10 +779,10 @@
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_Timers">
             <com.doubleyellow.prefs.EnumListPreference
-                android:icon="@drawable/timer_4settings4buttons"
+                android:icon="@drawable/timer"
                 android:key="useTimersFeature"
                 android:title="@string/pref_useTimersFeature"
-                android:defaultValue="Suggest"
+                android:defaultValue="@string/useTimersFeature_default"
                 dy:displayValues="@array/FeatureDisplayValues"
                 dy:enumClass="com.doubleyellow.util.Feature"
                 />
@@ -910,7 +910,7 @@
                 android:icon="@drawable/dummy"
                 android:key="showGamePausedDialog"
                 android:title="@string/pref_towelingDown_timer"
-                android:defaultValue="Suggest"
+                android:defaultValue="@string/showGamePausedDialog_default"
                 dy:displayValues="@array/FeatureDisplayValues"
                 dy:enumClass="com.doubleyellow.util.Feature"
                 />
@@ -1224,7 +1224,7 @@
                     android:title="@string/pref_useShareFeature"
                     android:summary="@string/pref_useShareFeature_summary"
                     android:icon="@android:drawable/ic_menu_share"
-                    android:defaultValue="Suggest"
+                    android:defaultValue="@string/useShareFeature_default"
                     dy:displayValues="@array/FeatureDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
                     />

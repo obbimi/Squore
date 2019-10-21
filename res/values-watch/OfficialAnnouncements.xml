@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- just to have shorter strings in the dialog -->
+    <string name="oa_conduct_warning">CW</string>
+    <string name="oa_conduct_stroke">CS</string>
+    <string name="oa_conduct_game">CG</string>
+</resources>

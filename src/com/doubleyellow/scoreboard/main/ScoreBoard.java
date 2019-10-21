@@ -1641,8 +1641,11 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 case R.id.dyn_undo_last:
                 case android.R.id.home:
                     ActionBar actionBar = getXActionBar();
-                    if ( actionBar != null && actionBar.isShowing() == false ) {
-                        toggleActionBar(actionBar);
+                    if ( (actionBar != null) && (actionBar.isShowing() == false) ) {
+                        // show action bar
+                        if ( ViewUtil.isWearable(ScoreBoard.this) == false ) {
+                            toggleActionBar(actionBar);
+                        }
                     }
                     break;
                 case R.id.float_new_match:
@@ -3656,7 +3659,7 @@ touch -t 01030000 LAST.sb
                 return true;
             case android.R.id.home: {
                 if ( drawerLayout != null ) {
-                    if (drawerLayout.isDrawerOpen(drawerView)) {
+                    if ( drawerLayout.isDrawerOpen(drawerView) ) {
                         drawerLayout.closeDrawer(drawerView);
                     } else {
                         drawerLayout.openDrawer(drawerView);
@@ -5679,9 +5682,13 @@ touch -t 01030000 LAST.sb
     private void writeMethodToBluetooth(BTMethods method, Object... args) {
         if ( mBluetoothControlService == null) { return; }
         if ( mBluetoothControlService.getState().equals(BTState.CONNECTED) == false) { return; }
-        StringBuilder sb = new StringBuilder();
-        sb.append(method).append("(");
 
+        // construct function-call-like string
+        StringBuilder sb = new StringBuilder();
+        sb.append(method);
+        sb.append("(");
+
+        // comma separated arguments
         if ( args != null ) {
             for (int i = 0; i < args.length; i++) {
                 if (i > 0) {
@@ -5730,17 +5737,17 @@ touch -t 01030000 LAST.sb
                         if ( bReadOK ) {
                             matchModel.triggerListeners();
                             if ( BTRole.Slave.equals(m_blueToothRole) ) {
-                                mBluetoothControlService.write(BTMethods.Toast + "(" + R.string.bt_match_received_by_X + ")");
+                                writeMethodToBluetooth(BTMethods.Toast, R.string.bt_match_received_by_X);
                             }
                         } else {
-                            mBluetoothControlService.write(BTMethods.Toast + "Receiver could not read json...");
+                            writeMethodToBluetooth(BTMethods.Toast, "Receiver could not read json...");
                             if ( BTRole.Slave.equals(m_blueToothRole) ) {
                                 writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
                             }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        mBluetoothControlService.write(BTMethods.Toast + "(Could not read json. Exception: " + e.getMessage() + ")");
+                        writeMethodToBluetooth(BTMethods.Toast, "Could not read json. Exception: " + e.getMessage());
 
                         // re-requesting complete match if exception occured
                     }

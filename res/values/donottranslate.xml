@@ -63,6 +63,13 @@
     <string name="groupArchivedMatchesBy_default">Date</string>
     <string name="sortOrderOfArchivedMatches_default">Descending</string>
     <string name="BackKeyBehaviour_default">PressTwiceToExit</string>
+    <string name="useTimersFeature_default">Suggest</string>
+    <string name="endGameSuggestion_default">Suggest</string>
+    <string name="useOfficialAnnouncementsFeature_default">Suggest</string>
+    <string name="swapPlayersHalfwayGame_default">Suggest</string>
+    <string name="useTossFeature_default">Suggest</string>
+    <string name="useShareFeature_default">Suggest</string>
+    <string name="showGamePausedDialog_default">Suggest</string>
     <string name="KeepScreenOnWhen_default">MatchIsInProgress</string>
     <string name="VolumeKeysBehaviour_default">None</string>
 

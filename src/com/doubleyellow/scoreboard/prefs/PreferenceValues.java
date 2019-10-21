@@ -353,19 +353,19 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.timerViewType, context, ViewType.class, R.string.timerViewType_default);
     }
     public static Feature useTossFeature(Context context) {
-        return getEnum(PreferenceKeys.useTossFeature, context, Feature.class, Feature.Suggest);
+        return getEnum(PreferenceKeys.useTossFeature, context, Feature.class, R.string.useTossFeature_default);
     }
     public static Feature removeMatchFromMyListWhenSelected(Context context) {
         return getEnum(PreferenceKeys.removeMatchFromMyListWhenSelected, context, Feature.class, Feature.DoNotUse);
     }
     public static Feature useShareFeature(Context context) {
-        return getEnum(PreferenceKeys.useShareFeature, context, Feature.class, Feature.Suggest);
+        return getEnum(PreferenceKeys.useShareFeature, context, Feature.class, R.string.useShareFeature_default);
     }
     public static ShareMatchPrefs getShareAction(Context context) {
         return getEnum(PreferenceKeys.shareAction, context, ShareMatchPrefs.class, ShareMatchPrefs.LinkWithFullDetails);
     }
     public static Feature useOfficialAnnouncementsFeature(Context context) {
-        return getEnum(PreferenceKeys.useOfficialAnnouncementsFeature, context, Feature.class, Feature.Suggest);
+        return getEnum(PreferenceKeys.useOfficialAnnouncementsFeature, context, Feature.class, R.string.useOfficialAnnouncementsFeature_default);
     }
     public static void initForLiveScoring(Context ctx, boolean bTmp) {
         if ( bTmp ) {
@@ -571,7 +571,7 @@ public class PreferenceValues extends RWValues
     }
 
     public static Feature useTimersFeature(Context context) {
-        return getEnum(PreferenceKeys.useTimersFeature, context, Feature.class, Feature.Suggest);
+        return getEnum(PreferenceKeys.useTimersFeature, context, Feature.class, R.string.useTimersFeature_default);
     }
     public static BackKeyBehaviour backKeyBehaviour(Context context) {
         return getEnum(PreferenceKeys.BackKeyBehaviour, context, BackKeyBehaviour.class, R.string.BackKeyBehaviour_default);
@@ -639,7 +639,7 @@ public class PreferenceValues extends RWValues
         return getEnumSet(PreferenceKeys.lockMatchMV, context, AutoLockContext.class, EnumSet.allOf(AutoLockContext.class));
     }
     public static EnumSet<ShowPlayerColorOn> showPlayerColorOn(Context context) {
-        return getEnumSet(PreferenceKeys.showPlayerColorOn, context, ShowPlayerColorOn.class, EnumSet.allOf(ShowPlayerColorOn.class));
+        return getEnumSet(PreferenceKeys.showPlayerColorOn, context, ShowPlayerColorOn.class, EnumSet.allOf(ShowPlayerColorOn.class)); // ShowPlayerColorOn_DefaultValues
     }
     public static EnumSet<ShowCountryAs> showCountryAs(Context context) {
         return getEnumSet(PreferenceKeys.showCountryAs, context, ShowCountryAs.class, EnumSet.of(ShowCountryAs.FlagNextToNameOnDevice, ShowCountryAs.FlagNextToNameChromeCast));
@@ -694,7 +694,7 @@ public class PreferenceValues extends RWValues
         return getIntegerR(PreferenceKeys.tournamentMaxDuration_InDays, context, R.integer.tournamentMaxDuration_InDays_default);
     }
     public static Feature endGameSuggestion(Context context) {
-        return getEnum(PreferenceKeys.endGameSuggestion, context, Feature.class, Feature.Suggest);
+        return getEnum(PreferenceKeys.endGameSuggestion, context, Feature.class, R.string.endGameSuggestion_default);
     }
     /** for tabletennis and racketlon, not squash */
     public static boolean swapPlayersOn180DegreesRotationOfDeviceInLandscape(Context context) {
@@ -707,7 +707,7 @@ public class PreferenceValues extends RWValues
     }
     /** for tabletennis, not squash or racketlon */
     public static Feature showGamePausedDialog(Context context) {
-        return getEnum(PreferenceKeys.showGamePausedDialog, context, Feature.class, Feature.Suggest);
+        return getEnum(PreferenceKeys.showGamePausedDialog, context, Feature.class, R.string.showGamePausedDialog_default);
     }
     public static int autoShowGamePausedDialogAfterXPoints(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.integer.autoShowGamePausedDialogAfterXPoints_default);
@@ -723,7 +723,7 @@ public class PreferenceValues extends RWValues
 
     /** not for squash, for racketlon (all but squash, except for doubles), for tabletennis in last game */
     public static Feature swapPlayersHalfwayGame(Context context) {
-        return getEnum(PreferenceKeys.swapPlayersHalfwayGame, context, Feature.class, Feature.Suggest);
+        return getEnum(PreferenceKeys.swapPlayersHalfwayGame, context, Feature.class, R.string.swapPlayersHalfwayGame_default);
     }
     public static DownUp numberOfServiceCountUpOrDown(Context context) {
         return getEnum(PreferenceKeys.numberOfServiceCountUpOrDown, context, DownUp.class, DownUp.Down);
@@ -1378,9 +1378,11 @@ public class PreferenceValues extends RWValues
     public static String getFeedPostName(Context context) {
         return getFeedPostDetail(context, URLsKeys.Name);
     }
+/*
     public static String getFeedPostCountryRegion(Context context) {
         return getFeedPostDetail(context, URLsKeys.Region);
     }
+*/
     public static Authentication getFeedPostAuthentication(Context context) {
         final String sAuth = getFeedPostDetail(context, URLsKeys.Authentication);
         if ( StringUtil.isEmpty(sAuth)) { return Authentication.None; }
@@ -1591,7 +1593,7 @@ public class PreferenceValues extends RWValues
 
                 int appVersionCode = RWValues.getAppVersionCode(context);
                 final int    NO_SHOWCASE_FOR_VERSION        = 211;
-                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-08-26"; // auto adjusted by shell script 'clean.and.assemble.sh'
+                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-10-18"; // auto adjusted by shell script 'clean.and.assemble.sh'
                 if ( appVersionCode > NO_SHOWCASE_FOR_VERSION ) {
                     // need to adjust the datecheck below
                     Log.w(TAG, "[getStartupAction] Adjust version code check!!");

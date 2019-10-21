@@ -29,6 +29,11 @@ import android.widget.Button;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 
+/**
+ * Used to give a button
+ * - a color
+ * - an icon
+ */
 public class ButtonUpdater implements DialogInterface.OnShowListener {
 
     private static final String TAG = ButtonUpdater.class.getSimpleName();
