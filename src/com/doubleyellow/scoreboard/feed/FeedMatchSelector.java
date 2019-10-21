@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
 import com.doubleyellow.android.util.AndroidPlaceholder;
@@ -32,6 +33,7 @@ import com.doubleyellow.android.util.SimpleELAdapter;
 import com.doubleyellow.android.view.EnumSpinner;
 import com.doubleyellow.android.view.SelectEnumView;
 import com.doubleyellow.android.view.SelectObjectView;
+import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.URLFeedTask;
@@ -188,10 +190,18 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
                 String sTeamPlayer_Format      = "%1$s. %3$s (%2$s)";
                 String sTeamPlayer_Placeholder = "${" + JSONKey.seqNo + "}. ${" + JSONKey.name + "} (${" + JSONKey.id + "})";
+                int iTextSizePercentage = 4;
+                if ( ViewUtil.isLandscapeOrientation(context) ) {
+                    iTextSizePercentage = 3;
+                }
                 if ( m_joFeedConfig != null ) {
                     sTeamPlayer_Format      = m_joFeedConfig.optString(URLsKeys.Format_TeamPlayer     .toString(), sTeamPlayer_Format);
                     sTeamPlayer_Placeholder = m_joFeedConfig.optString(URLsKeys.Placeholder_TeamPlayer.toString(), sTeamPlayer_Placeholder);
+                    iTextSizePercentage     = m_joFeedConfig.optInt   (URLsKeys.TextSizePercentage    .toString(), iTextSizePercentage);
                 }
+                int iTextSizeInPx = ViewUtil.getScreenWidth(context) / 100 * iTextSizePercentage;
+
+
                 SelectObjectView.RadioButtonDecorator radioButtonDecorator = null;
                 SelectObjectView msPlayers = null;
                 for ( Player p: Player.values() ) {
@@ -201,6 +211,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
                     TextView txtTeam = new TextView(context);
                     txtTeam.setText(model.getClub(p));
+                    txtTeam.setTextSize(TypedValue.COMPLEX_UNIT_PX, iTextSizeInPx);
                     llTeam.addView(txtTeam);
 
                     // create view where user can select player from
@@ -216,8 +227,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         msPlayers = new SelectObjectView<Map>(context, teamPlayers, mChecked, radioButtonDecorator);
 
                         JSONObject firstPlayer = (JSONObject) aTeamPlayers.opt(0);
-                        bAllowSplitOnComma = ( firstPlayer.has(JSONKey.firstName.toString()) && firstPlayer.has(JSONKey.lastName.toString()) )
-                                           || (firstPlayer.has(JSONKey.name.toString()) && firstPlayer.optString(JSONKey.name.toString()).contains(",") );
+                        bAllowSplitOnComma = ( firstPlayer.has(JSONKey.firstName.toString()) && firstPlayer.has      (JSONKey.lastName.toString()) )
+                                           || (firstPlayer.has(JSONKey.name     .toString()) && firstPlayer.optString(JSONKey.name    .toString()).contains(",") );
                     } else {
                         // each player specified with ':' separated data
                         List<String> teamPlayers = JsonUtil.asListOfStrings(aTeamPlayers);
@@ -230,7 +241,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
                         bAllowSplitOnComma = bAllowSplitOnComma && sChecked.contains(",");
                     }
-
+                    msPlayers.setTextSize(TypedValue.COMPLEX_UNIT_PX, iTextSizeInPx);
                     llTeam.addView(msPlayers);
                     m_p2select.put(p, msPlayers);
 
@@ -240,6 +251,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 LinearLayout llRoot = new LinearLayout(context);
                 llRoot.setOrientation(LinearLayout.VERTICAL);
 
+                OKButtonActionForMandatoryPostParam eOKButtonAction = null;
                 final View[] vaPostParams;
                 if ( (m_joFeedConfig != null) && m_joFeedConfig.has(URLsKeys.AdditionalPostParams.toString()) ) {
                     JSONArray  additionalPostParams = m_joFeedConfig.optJSONArray(URLsKeys.AdditionalPostParams.toString());
@@ -248,6 +260,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     for (int p = 0; p < iNrOfAdditionalPostParams; p++) {
                         JSONObject   joPostParam = additionalPostParams.optJSONObject(p);
                         JSONArray    ppValues    = joPostParam.optJSONArray(URLsKeys.AllowedValues.toString());
+                        String       sDefaultVal = joPostParam.optString   (URLsKeys.DefaultValue .toString()); // no default only works for radio button for now
+                        boolean      bOptional   = joPostParam.optBoolean  (URLsKeys.Optional     .toString());
                         String       ppCaption   = joPostParam.optString   (URLsKeys.Caption      .toString());
                         String       ppType      = joPostParam.optString   (URLsKeys.DisplayType  .toString(), "RadioButton");
                         String       ppPostAs    = joPostParam.optString   (URLsKeys.PostAs       .toString(), ppCaption.toLowerCase().replaceAll(" ", ""));
@@ -256,12 +270,51 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         if ( "SelectList".equalsIgnoreCase(ppType) ) {
                             // select list
                             Spinner spinner = new Spinner(context);
-                            ArrayAdapter<String> dataAdapter = EnumSpinner.getStringArrayAdapter(context, lValues, 0, null);
+                            if ( StringUtil.isEmpty(sDefaultVal) ) {
+                                lValues.add(0, ""); // add empty first value, to enforce user to select another value
+                                if ( bOptional == false ) {
+                                    eOKButtonAction = OKButtonActionForMandatoryPostParam.Disable;
+                                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                        @Override public void onItemSelected(AdapterView<?> parent, View spinner, int iPositionZB, long id) {
+                                            Log.d(TAG, "Spinner value selected " + iPositionZB);
+                                            View v = spinner.getRootView();
+                                            if ( m_iViewIdOfButtonInSelectPlayersDialog != 0 ) {
+                                                View viewById = v.findViewById(m_iViewIdOfButtonInSelectPlayersDialog);
+                                                if ( viewById != null ) {
+                                                    viewById.setEnabled(iPositionZB > 0); // still disable if first empty value is re-selected
+                                                }
+                                            }
+                                        }
+                                        @Override public void onNothingSelected(AdapterView<?> parent) { }
+                                    });
+                                }
+                            }
+                            ArrayAdapter<String> dataAdapter = EnumSpinner.getStringArrayAdapter(context, lValues, iTextSizeInPx, null);
                             spinner.setAdapter(dataAdapter);
                             vaPostParams[p] = spinner;
                         } else if ( "RadioButton".equalsIgnoreCase(ppType) ) {
                             // radio button
-                            vaPostParams[p] = new SelectObjectView<String>(context, lValues, lValues.get(0), null, HVD.Horizontal);
+                            SelectObjectView<String> selectObjectView = new SelectObjectView<>(context, lValues, sDefaultVal, null, HVD.Horizontal);
+                            selectObjectView.setTextSize(TypedValue.COMPLEX_UNIT_PX, iTextSizeInPx);
+                            vaPostParams[p] = selectObjectView;
+                            if ( StringUtil.isEmpty(sDefaultVal) && (bOptional == false) ) {
+                                // ensure OK button is disabled until value is selected
+                                eOKButtonAction = OKButtonActionForMandatoryPostParam.Disable;
+
+                                // ensure OK button is enabled when value is selected
+                                selectObjectView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                    @Override public void onCheckedChanged(RadioGroup group, int checkedIdZB) {
+                                        Log.d(TAG, "Value selected " + checkedIdZB);
+                                        View v = group.getRootView();
+                                        if ( m_iViewIdOfButtonInSelectPlayersDialog != 0 ) {
+                                            View viewById = v.findViewById(m_iViewIdOfButtonInSelectPlayersDialog);
+                                            if ( viewById != null ) {
+                                                viewById.setEnabled(true);
+                                            }
+                                        }
+                                    }
+                                });
+                            }
                         } else if ( "ToggleButton".equalsIgnoreCase(ppType) ) {
                             // toggle button
                             ToggleButton toggleButton = new ToggleButton(context);
@@ -275,6 +328,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
                         TextView txtCaption = new TextView(context);
                         txtCaption.setText(ppCaption);
+                        txtCaption.setTextSize(TypedValue.COMPLEX_UNIT_PX, iTextSizeInPx);
 
                         LinearLayout llPostParam = new LinearLayout(context);
                         llPostParam.setOrientation(LinearLayout.HORIZONTAL); // caption and view
@@ -282,6 +336,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         llPostParam.addView(txtCaption);
                         if ( vaPostParams[p] != null ) {
                             vaPostParams[p].setTag(ppPostAs);
+                            vaPostParams[p].setTag(R.string.please_select_a_value_for_x, ppCaption);
                             llPostParam.addView(vaPostParams[p]);
                         }
 
@@ -383,8 +438,57 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                           }
                           finishWithPopulatedModel(model);
                       }
-                  })
-                  .show();
+                  });
+
+                final AlertDialog alertDialog = ab.create();
+                if ( eOKButtonAction != null ) {
+                    switch (eOKButtonAction) {
+                        case Disable:
+                            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                                @Override public void onShow(DialogInterface iDialog) {
+                                    final Button btnOk = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                                    m_iViewIdOfButtonInSelectPlayersDialog = btnOk.getId(); // 16908313
+                                    Log.d(TAG, "Ok button id " + btnOk.getId());
+                                    btnOk.setEnabled(false);
+                                }
+                            });
+                            break;
+                        case EnableWithValidation:
+                            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                                @Override public void onShow(DialogInterface iDialog) {
+                                    final Button btnOk = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                                    btnOk.setOnClickListener(new View.OnClickListener() {
+                                        @Override public void onClick(View v) {
+                                            List lNotSpecified = new ArrayList<>();
+                                            for ( View vPP : vaPostParams) {
+                                                if ( vPP instanceof SelectObjectView ) {
+                                                    SelectObjectView sov = (SelectObjectView) vPP;
+                                                    if ( sov.getCheckedIndex() == -1 ) {
+                                                        lNotSpecified.add(vPP.getTag(R.string.please_select_a_value_for_x));
+                                                    }
+                                                }
+                                                if ( vPP instanceof Spinner ) {
+                                                    Spinner spinner = (Spinner) vPP;
+                                                    if ( spinner.getSelectedItemPosition() <= 0 ) {
+                                                        lNotSpecified.add(vPP.getTag(R.string.please_select_a_value_for_x));
+                                                    }
+                                                }
+                                            }
+                                            if ( ListUtil.isEmpty(lNotSpecified) ) {
+                                                alertDialog.cancel();
+                                            } else {
+                                                String sMsg = context.getString(R.string.please_select_a_value_for_x, lNotSpecified.get(0));
+                                                Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                            break;
+                    }
+                }
+
+                alertDialog.show();
             }
             return true;
         }
@@ -392,6 +496,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         void setDisabled(boolean b) {
             this.bDisabled = b;
         }
+    }
+    private static int m_iViewIdOfButtonInSelectPlayersDialog = 0;
+    enum OKButtonActionForMandatoryPostParam {
+        Disable,
+        EnableWithValidation,
     }
 
     private static class TeamPlayerRBDecorator implements SelectObjectView.RadioButtonDecorator<String>
@@ -422,7 +531,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         break;
                     default:
                         // ??
-                        sText = String.format(perItemFormat, saData);
+                        sText = String.format(perItemFormat, (Object) saData);
                         break;
                 }
             } catch (Exception e) {

@@ -50,10 +50,13 @@ public enum URLsKeys {
         Placeholder_Match,
         /** @deprecated */
         Format_TeamPlayer,
+        TextSizePercentage,
         Placeholder_TeamPlayer,
             AdditionalPostParams,
                 PostAs,
                 AllowedValues,
+                DefaultValue,
+                Optional,
                 Caption,
                 /** RadioButton (small number of 'short' values) or SelectList, or ToggleButton (only two values) */
                 DisplayType,

@@ -1185,7 +1185,7 @@ public class MatchView extends SBRelativeLayout
         if ( (txtCountryA != null) && (txtCountryB != null) ) {
             String sCountryA = txtCountryA.getText().toString();
             String sCountryB = txtCountryB.getText().toString();
-            if ( txtCountryA instanceof CountryTextView && txtCountryB instanceof CountryTextView) {
+            if ( (txtCountryA instanceof CountryTextView) && (txtCountryB instanceof CountryTextView) ) {
                 String sCCA = ((CountryTextView)txtCountryA).getCountryCode();
                 String sCCB = ((CountryTextView)txtCountryB).getCountryCode();
                 if ( StringUtil.isNotEmpty(sCCA) ) {

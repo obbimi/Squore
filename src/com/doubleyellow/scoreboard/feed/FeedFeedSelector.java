@@ -286,6 +286,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        changeStatus(Status.SelectFeed);
                     }
                 }
             });
@@ -303,8 +304,9 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                 m_sortOrder = null;
             }
 
-            final JSONArray array = loadTypesAdapter.joRoot.optJSONArray(sName);
+            JSONArray array = loadTypesAdapter.joRoot.optJSONArray(sName);
             if ( loadTypesAdapter.joRoot.has(sName + "." + FeedKeys.URL) ) {
+                // URL's are specified. Fetch content to have most recent data
                 final Object oUrls = loadTypesAdapter.joRoot.opt(sName + "." + FeedKeys.URL);
                 JSONArray aUrls = new JSONArray();
                 if ( oUrls instanceof String ) {
