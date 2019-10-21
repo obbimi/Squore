@@ -281,4 +281,8 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
     protected void showNextDialog() {
         DialogManager.getInstance().showNextDialog();
     }
+
+    protected static boolean isWearable(Context ctx) {
+        return ViewUtil.isWearable(ctx);
+    }
 }

@@ -50,6 +50,7 @@
     <string name="uc_clear_referee_fields">Clear referee fields</string>
     <string name="sb_clear_score_confirm_message">Do you want to restart the score? The score history of the current match will be lost.</string>
     <string name="cmd_change_format">Change format</string>
+    <string name="please_select_a_value_for_x">Please select a value for \'%1$s\'</string>
     <string name="sb_select_match">Select match</string>
     <string name="sb_static_match">My List</string>
     <string name="sb_select_static_match">Select from My List</string>
