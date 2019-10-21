@@ -31,6 +31,11 @@
 <!--
     <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
 -->
+
+<!-- this can not be ON in default manifest, device must be a watch, so separate Manifest file required for wearables
+    <uses-feature android:name="android.hardware.type.watch" />
+-->
+
     <uses-sdk/>
 
     <supports-screens
@@ -69,6 +74,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+-->
+
+<!-- Recommended for wearables
+        <meta-data android:name="com.google.android.wearable.standalone" android:value="true" />
 -->
 
         <activity android:name="com.doubleyellow.scoreboard.main.ScoreBoard" android:label="@string/app_name_short_brand_Squash">
