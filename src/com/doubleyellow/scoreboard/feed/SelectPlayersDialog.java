@@ -69,29 +69,31 @@ public class SelectPlayersDialog extends BaseAlertDialog
 {
     protected static final String TAG = "SB." + SelectPlayersDialog.class.getSimpleName();
 
+    private JSONObject        m_joFeedConfig                         = null;
+    private FeedMatchSelector m_feedMatchSelector                    = null;
+    private int               m_iViewIdOfButtonInSelectPlayersDialog = 0;
+
     SelectPlayersDialog(FeedMatchSelector feedMatchSelector, Context context, Model matchModel, JSONObject joFeedConfig) {
         super(context, matchModel, null);
+
         m_joFeedConfig      = joFeedConfig;
         m_feedMatchSelector = feedMatchSelector;
     }
 
-    @Override public boolean storeState(Bundle outState) {
-        return false;
-    }
+    @Override public boolean storeState(Bundle outState) { return false; }
+    @Override public boolean init(Bundle outState) { return false; }
 
-    @Override public boolean init(Bundle outState) {
-        return false;
-    }
+    private OKButtonActionForMandatoryPostParam m_eOKButtonAction = OKButtonActionForMandatoryPostParam.EnableWithValidation;
+    //private OKButtonActionForMandatoryPostParam m_eOKButtonAction = OKButtonActionForMandatoryPostParam.Disable;
 
-    private JSONObject        m_joFeedConfig      = null;
-    private FeedMatchSelector m_feedMatchSelector = null;
-    private OKButtonActionForMandatoryPostParam m_eOKButtonAction = OKButtonActionForMandatoryPostParam.Disable;
-
-    private static int m_iViewIdOfButtonInSelectPlayersDialog = 0;
-    public enum OKButtonActionForMandatoryPostParam {
+    private enum OKButtonActionForMandatoryPostParam {
         Disable,
         EnableWithValidation,
     }
+    
+    private final Map<Player, SelectObjectView<String>> m_p2select     = new HashMap<>();
+    private       SelectEnumView<NamePart>              m_evNamePart   = null;
+    private       List<View>                            m_vaPostParams = new ArrayList<>();
 
     @Override public void show() {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -100,7 +102,6 @@ public class SelectPlayersDialog extends BaseAlertDialog
         boolean bAllowSplitOnComma = true;
 
         // assume user must select player for each team and that list of players is stored in the model
-        final Map<Player, SelectObjectView<String>> m_p2select = new HashMap<>();
         LinearLayout llTeams = new LinearLayout(context);
         llTeams.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -168,11 +169,9 @@ public class SelectPlayersDialog extends BaseAlertDialog
         llRoot.setOrientation(LinearLayout.VERTICAL);
 
         OKButtonActionForMandatoryPostParam eOKButtonAction = null;
-        final View[] vaPostParams;
         if ( (m_joFeedConfig != null) && m_joFeedConfig.has(URLsKeys.AdditionalPostParams.toString()) ) {
             JSONArray  additionalPostParams = m_joFeedConfig.optJSONArray(URLsKeys.AdditionalPostParams.toString());
             int iNrOfAdditionalPostParams = additionalPostParams.length();
-            vaPostParams = new View[iNrOfAdditionalPostParams];
             for (int p = 0; p < iNrOfAdditionalPostParams; p++) {
                 JSONObject   joPostParam = additionalPostParams.optJSONObject(p);
                 JSONArray    ppValues    = joPostParam.optJSONArray(URLsKeys.AllowedValues.toString());
@@ -207,12 +206,12 @@ public class SelectPlayersDialog extends BaseAlertDialog
                     }
                     ArrayAdapter<String> dataAdapter = EnumSpinner.getStringArrayAdapter(context, lValues, iTextSizeInPx, null);
                     spinner.setAdapter(dataAdapter);
-                    vaPostParams[p] = spinner;
+                    m_vaPostParams.add(spinner);
                 } else if ( "RadioButton".equalsIgnoreCase(ppType) ) {
                     // radio button
                     SelectObjectView<String> selectObjectView = new SelectObjectView<>(context, lValues, sDefaultVal, null, HVD.Horizontal);
                     selectObjectView.setTextSize(TypedValue.COMPLEX_UNIT_PX, iTextSizeInPx);
-                    vaPostParams[p] = selectObjectView;
+                    m_vaPostParams.add(selectObjectView);
                     if ( StringUtil.isEmpty(sDefaultVal) && (bOptional == false) ) {
                         // ensure OK button is disabled until value is selected
                         eOKButtonAction = m_eOKButtonAction;
@@ -239,7 +238,9 @@ public class SelectPlayersDialog extends BaseAlertDialog
                         toggleButton.setTextOn (lValues.get(1));
                         toggleButton.setText(lValues.get(0));
                     }
-                    vaPostParams[p] = toggleButton;
+                    m_vaPostParams.add(toggleButton);
+                } else {
+                    m_vaPostParams.add(null);
                 }
 
                 TextView txtCaption = new TextView(context);
@@ -250,24 +251,20 @@ public class SelectPlayersDialog extends BaseAlertDialog
                 llPostParam.setOrientation(LinearLayout.HORIZONTAL); // caption and view
 
                 llPostParam.addView(txtCaption);
-                if ( vaPostParams[p] != null ) {
-                    vaPostParams[p].setTag(ppPostAs);
-                    vaPostParams[p].setTag(R.string.please_select_a_value_for_x, ppCaption);
-                    llPostParam.addView(vaPostParams[p]);
+                View view = m_vaPostParams.get(p);
+                if ( view != null ) {
+                    view.setTag(ppPostAs);
+                    view.setTag(R.string.please_select_a_value_for_x, ppCaption);
+                    llPostParam.addView(view);
                 }
 
                 llRoot.addView(llPostParam);
             }
-        } else {
-            vaPostParams = null;
         }
 
-        final SelectEnumView<NamePart> evNamePart;
         if ( bAllowSplitOnComma ) {
-            evNamePart = new SelectEnumView(context, NamePart.class, NamePart.Full, 3);
-            llRoot.addView(evNamePart);
-        } else {
-            evNamePart = null;
+            m_evNamePart = new SelectEnumView(context, NamePart.class, NamePart.Full, 3);
+            llRoot.addView(m_evNamePart);
         }
 
         // add the teams last because it may be a long list
@@ -277,136 +274,118 @@ public class SelectPlayersDialog extends BaseAlertDialog
         ab.setTitle(R.string.sb_choose_players)
                 .setView(llRoot)
                 .setNeutralButton (R.string.cmd_cancel, null)
-                .setPositiveButton(R.string.cmd_ok, new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
-                        int iPlayersSelected = 0;
-                        for(Player p: Player.values()) {
-                            SelectObjectView selectObjectView = m_p2select.get(p);
-                            Object oData = selectObjectView.getChecked();
-                            String sName = null;
-                            String sId   = null;
-                            if ( oData instanceof String ) {
-                                sName = (String) oData;
-                                String[] split = sName.split(":");
-                                if ( split.length == 3 ) {
-                                    String sSeqNo = split[0];
-                                    sId           = split[1];
-                                    sName         = split[2];
-                                } else if ( split.length == 2 ) {
-                                    sId           = split[0];
-                                    sName         = split[1];
-                                }
-                            } else if (oData instanceof Map ) {
-                                Map mData = (Map) oData;
-                                sName = (String) mData.get(JSONKey.name.toString());
-                                sId   = (String) mData.get(JSONKey.id.toString());
-                                if ( StringUtil.isEmpty(sName) ) {
-                                    sName = mData.get(JSONKey.lastName.toString()) + ", " + mData.get(JSONKey.firstName.toString());
-                                }
-                            }
-                            if ( evNamePart != null ) {
-                                NamePart namePart = evNamePart.getChecked();
-                                switch (namePart) {
-                                    case First:
-                                        sName = sName.replaceFirst("^.*,\\s*", "");
-                                        break;
-                                    case Last:
-                                        sName = sName.replaceFirst("\\s*,.*$", "");
-                                        break;
-                                }
-                            }
-                            matchModel.setPlayerName(p, sName);
-                            matchModel.setPlayerId  (p, sId);
-                            if ( StringUtil.isNotEmpty(sName) ) {
-                                iPlayersSelected++;
-                            }
-                        }
-                        if ( vaPostParams != null ) {
-                            final String sSplitter = "|";
-                            StringBuffer sbAdditionalPP = new StringBuffer();
-                            for(int p=0; p < vaPostParams.length; p++) {
-                                View v = vaPostParams[p];
-                                String sPostAs = String.valueOf(v.getTag());
-                                String sValue = null;
-                                if ( v instanceof Spinner ) {
-                                    Spinner sp = (Spinner) v;
-                                    Object selectedItem = sp.getSelectedItem();
-                                    if ( selectedItem != null ) {
-                                        sValue = String.valueOf(selectedItem);
-                                    } else {
-                                        sValue = null;
-                                    }
-                                } else if ( v instanceof ToggleButton ) {
-                                    ToggleButton tb = (ToggleButton) v;
-                                    sValue = tb.getText().toString();
-                                } else if ( v instanceof SelectObjectView ) {
-                                    SelectObjectView<String> sov = (SelectObjectView<String>) v;
-                                    sValue = sov.getChecked(); // may be null, not an issue
-                                }
-                                if ( StringUtil.isNotEmpty(sValue) ) {
-                                    if ( sbAdditionalPP.length() != 0 ) {
-                                        sbAdditionalPP.append(sSplitter);
-                                    }
-                                    sbAdditionalPP.append(sPostAs).append("=").append(sValue);
-                                }
-                            }
-                            matchModel.setAdditionalPostParams(sSplitter + sbAdditionalPP + sSplitter);
-                        }
-                        m_feedMatchSelector.finishWithPopulatedModel(matchModel);
-                    }
-                });
+                .setPositiveButton(R.string.cmd_ok    , null);
 
-        final AlertDialog alertDialog = ab.create();
-        if ( eOKButtonAction != null ) {
-            switch (eOKButtonAction) {
-                case Disable:
-                    alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                        @Override public void onShow(DialogInterface iDialog) {
-                            final Button btnOk = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                            m_iViewIdOfButtonInSelectPlayersDialog = btnOk.getId(); // 16908313
-                            Log.d(TAG, "Ok button id " + btnOk.getId());
-                            btnOk.setEnabled(false);
-                        }
-                    });
-                    break;
-                case EnableWithValidation:
-                    alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                        @Override public void onShow(DialogInterface iDialog) {
-                            final Button btnOk = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                            btnOk.setOnClickListener(new View.OnClickListener() {
-                                @Override public void onClick(View v) {
-                                    List lNotSpecified = new ArrayList<>();
-                                    for ( View vPP : vaPostParams) {
-                                        if ( vPP instanceof SelectObjectView ) {
-                                            SelectObjectView sov = (SelectObjectView) vPP;
-                                            if ( sov.getCheckedIndex() == -1 ) {
-                                                lNotSpecified.add(vPP.getTag(R.string.please_select_a_value_for_x));
-                                            }
-                                        }
-                                        if ( vPP instanceof Spinner ) {
-                                            Spinner spinner = (Spinner) vPP;
-                                            if ( spinner.getSelectedItemPosition() <= 0 ) {
-                                                lNotSpecified.add(vPP.getTag(R.string.please_select_a_value_for_x));
-                                            }
-                                        }
-                                    }
-                                    if ( ListUtil.isEmpty(lNotSpecified) ) {
-                                        alertDialog.cancel();
-                                    } else {
-                                        String sMsg = context.getString(R.string.please_select_a_value_for_x, lNotSpecified.get(0));
-                                        Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-                        }
-                    });
-                    break;
-            }
+        dialog = ab.create();
+        dialog.show();
+        Button btnOK = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        btnOK.setOnClickListener(onClickListener);
+
+        if ( OKButtonActionForMandatoryPostParam.Disable.equals(eOKButtonAction) ) {
+            m_iViewIdOfButtonInSelectPlayersDialog = btnOK.getId();
+            btnOK.setEnabled(false);
         }
-
-        alertDialog.show();
-
     }
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override public void onClick(View vButtonOK) {
+            List lNotSpecified = new ArrayList<>();
+            for ( View vPP : m_vaPostParams) {
+                if ( vPP instanceof SelectObjectView ) {
+                    SelectObjectView sov = (SelectObjectView) vPP;
+                    if ( sov.getCheckedIndex() == -1 ) {
+                        lNotSpecified.add(vPP.getTag(R.string.please_select_a_value_for_x));
+                    }
+                }
+                if ( vPP instanceof Spinner ) {
+                    Spinner spinner = (Spinner) vPP;
+                    if ( spinner.getSelectedItemPosition() <= 0 ) {
+                        lNotSpecified.add(vPP.getTag(R.string.please_select_a_value_for_x));
+                    }
+                }
+            }
+            if ( ListUtil.isNotEmpty(lNotSpecified) ) {
+                String sMsg = context.getString(R.string.please_select_a_value_for_x, lNotSpecified.get(0));
+                Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            int iPlayersSelected = 0;
+            for(Player p: Player.values()) {
+                SelectObjectView selectObjectView = m_p2select.get(p);
+                Object oData = selectObjectView.getChecked();
+                String sName = null;
+                String sId   = null;
+                if ( oData instanceof String ) {
+                    sName = (String) oData;
+                    String[] split = sName.split(":");
+                    if ( split.length == 3 ) {
+                        String sSeqNo = split[0];
+                        sId           = split[1];
+                        sName         = split[2];
+                    } else if ( split.length == 2 ) {
+                        sId           = split[0];
+                        sName         = split[1];
+                    }
+                } else if (oData instanceof Map ) {
+                    Map mData = (Map) oData;
+                    sName = (String) mData.get(JSONKey.name.toString());
+                    sId   = (String) mData.get(JSONKey.id.toString());
+                    if ( StringUtil.isEmpty(sName) ) {
+                        sName = mData.get(JSONKey.lastName.toString()) + ", " + mData.get(JSONKey.firstName.toString());
+                    }
+                }
+                if ( m_evNamePart != null ) {
+                    NamePart namePart = m_evNamePart.getChecked();
+                    switch (namePart) {
+                        case First:
+                            sName = sName.replaceFirst("^.*,\\s*", "");
+                            break;
+                        case Last:
+                            sName = sName.replaceFirst("\\s*,.*$", "");
+                            break;
+                    }
+                }
+                matchModel.setPlayerName(p, sName);
+                matchModel.setPlayerId  (p, sId);
+                if ( StringUtil.isNotEmpty(sName) ) {
+                    iPlayersSelected++;
+                }
+            }
+
+            final String sSplitter = "|";
+            StringBuffer sbAdditionalPP = new StringBuffer();
+            for(int p=0; p < m_vaPostParams.size(); p++) {
+                View v = m_vaPostParams.get(p);
+                if ( v == null ) { continue; }
+                String sPostAs = String.valueOf(v.getTag());
+                String sValue = null;
+                if ( v instanceof Spinner ) {
+                    Spinner sp = (Spinner) v;
+                    Object selectedItem = sp.getSelectedItem();
+                    if ( selectedItem != null ) {
+                        sValue = String.valueOf(selectedItem);
+                    } else {
+                        sValue = null;
+                    }
+                } else if ( v instanceof ToggleButton ) {
+                    ToggleButton tb = (ToggleButton) v;
+                    sValue = tb.getText().toString();
+                } else if ( v instanceof SelectObjectView ) {
+                    SelectObjectView<String> sov = (SelectObjectView<String>) v;
+                    sValue = sov.getChecked(); // may be null, not an issue
+                }
+                if ( StringUtil.isNotEmpty(sValue) ) {
+                    if ( sbAdditionalPP.length() != 0 ) {
+                        sbAdditionalPP.append(sSplitter);
+                    }
+                    sbAdditionalPP.append(sPostAs).append("=").append(sValue);
+                }
+            }
+            matchModel.setAdditionalPostParams(sSplitter + sbAdditionalPP + sSplitter);
+            m_feedMatchSelector.finishWithPopulatedModel(matchModel);
+        }
+    };
 
     private static class TeamPlayerRBJsonDecorator implements SelectObjectView.RadioButtonDecorator<Map>
     {
