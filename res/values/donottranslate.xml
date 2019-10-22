@@ -17,7 +17,7 @@
 ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="developer">Iddo Hoeve</string>
 
     <string name="app_name_short_brand_Squash">Squore</string>
@@ -86,7 +86,7 @@
         <item>AtEndOfMatch</item>
         <item>WhenMatchIsUnchangeForX_Minutes</item>
     </string-array>
-    <string-array name="ShowPlayerColorOn_DefaultValues">
+    <string-array name="ShowPlayerColorOn_DefaultValues" tools:ignore="InconsistentArrays">
         <item>ScoreButtonBorder</item>
         <!--
                 <item>ServeSideButton</item>
