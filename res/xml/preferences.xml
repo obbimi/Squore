@@ -755,7 +755,7 @@
     </PreferenceScreen>
 
     <PreferenceScreen android:key="Timers"
-                      android:icon="@drawable/timer_4settings4buttons"
+                      android:icon="@drawable/timer"
                       android:title="@string/pref_Timers"
                       android:summary="@string/pref_Timers_summary"
             >
@@ -896,7 +896,7 @@
                 android:defaultValue="false"
                 />
             <EditTextPreference android:key="showModeDialogAfterXMins"
-                android:icon="@drawable/timer_4settings4buttons"
+                android:icon="@drawable/timer"
                 android:title="@string/activate_mode_Squash"
                 android:summary="@string/pref_autoShow_activeExpediteSystem_dialog_after_X_mins"
                 android:inputType="number"
@@ -921,7 +921,7 @@
                 android:defaultValue="@integer/autoShowGamePausedDialogAfterXPoints_default"
                 />
             <EditTextPreference android:key="timerTowelingDown"
-                android:icon="@drawable/timer_4settings4buttons"
+                android:icon="@drawable/timer"
                 android:title="@string/toweling_down"
                 android:inputType="number"
                 android:defaultValue="@integer/timerTowelingDown_default"

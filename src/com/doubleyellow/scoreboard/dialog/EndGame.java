@@ -141,7 +141,7 @@ public class EndGame extends BaseAlertDialog
         DialogInterface.OnShowListener onShowListener = null;
         if ( bDrawTimerImageOnButton ) {
             onShowListener = new ButtonUpdater(context, false
-                    , BTN_END_GAME_PLUS_TIMER, R.drawable.timer_4settings4buttons
+                    , BTN_END_GAME_PLUS_TIMER, R.drawable.timer
                     //,BTN_CHANGE_MATCH_FORMAT, android.R.drawable.ic_menu_close_clear_cancel
             );
         } else {
