@@ -114,9 +114,17 @@ public class PreferenceValues extends RWValues
     }
 
     static EnumSet<ShowOnScreen> showMatchDurationChronoOn(Context context) {
+        if ( currentDateIsTestDate() ) {
+            // to allow monkey testing via adb. on screen time prevents uiautomation to dump screen layout
+            return EnumSet.of(ShowOnScreen.OnChromeCast);
+        }
         return getEnumSet(PreferenceKeys.showMatchDurationChronoOn, context, ShowOnScreen.class, EnumSet.allOf(ShowOnScreen.class));
     }
     public static EnumSet<ShowOnScreen> showLastGameDurationChronoOn(Context context) {
+        if ( currentDateIsTestDate() ) {
+            // to allow monkey testing via adb. on screen time prevents uiautomation to dump screen layout
+            return EnumSet.of(ShowOnScreen.OnChromeCast);
+        }
         return getEnumSet(PreferenceKeys.showLastGameDurationChronoOn, context, ShowOnScreen.class, EnumSet.allOf(ShowOnScreen.class));
     }
     static EnumSet<ShowOnScreen> showFieldDivisionOn(Context context) {
@@ -1580,6 +1588,12 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-10-25"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static boolean currentDateIsTestDate() {
+        return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
+    }
+
+
     public static StartupAction getStartupAction(Context context) {
         //current version
         int versionCodeForChangeLogCheck = getVersionCodeForChangeLogCheck(context);
@@ -1591,16 +1605,8 @@ public class PreferenceValues extends RWValues
             if ( viewedChangelogVersion == 0 ) {
                 // very first install/run
 
-                int appVersionCode = RWValues.getAppVersionCode(context);
-                final int    NO_SHOWCASE_FOR_VERSION        = 211;
-                final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-10-18"; // auto adjusted by shell script 'clean.and.assemble.sh'
-                if ( appVersionCode > NO_SHOWCASE_FOR_VERSION ) {
-                    // need to adjust the datecheck below
-                    Log.w(TAG, "[getStartupAction] Adjust version code check!!");
-                    //throw new RuntimeException("[getStartupAction] Adjust version code check!!");
-                }
-                if ( appVersionCode >= NO_SHOWCASE_FOR_VERSION && DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0 ) {
-                    // to allow google play store to run the app and monkey test it without the showcase/quickintro coming into the way
+                if ( currentDateIsTestDate() ) {
+                    // to allow adb monkey test it without the showcase/quickintro coming into the way
                     return StartupAction.None;
                 }
                 return StartupAction.QuickIntro;
