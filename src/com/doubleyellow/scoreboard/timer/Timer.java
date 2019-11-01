@@ -171,13 +171,15 @@ public class Timer
 */
 
     public synchronized void cancel() {
-        countDownTimer.stop();
+        if ( countDownTimer != null ) {
+            countDownTimer.stop();
+        }
         if ( timerViews != null ) {
             for(TimerView timerView: Timer.timerViews.values()) {
                 timerView.cancel();
             }
         }
-        Timer.countDownTimer = null;
+        countDownTimer = null;
     }
 
     public boolean isShowing() {

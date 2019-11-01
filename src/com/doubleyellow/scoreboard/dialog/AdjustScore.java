@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.ViewUtil;
@@ -36,6 +37,7 @@ import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.view.GameHistoryView;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
@@ -230,6 +232,14 @@ public class AdjustScore extends BaseAlertDialog {
                     } catch (NumberFormatException e) {
                     }
                     if ( iPointsA + iPointsB == 0 ) { continue; }
+                    int iNrOfPointsToWinGame = PreferenceValues.numberOfPointsToWinGame(context);
+                    int iUpper = Math.max(iNrOfPointsToWinGame * 6, 60);
+                    iUpper = iUpper - (iUpper % 10); // rounding down to closes multiple of 10
+                    if ( iPointsA + iPointsB > iUpper) {
+                        // to prevent causing 'OutOfMemory' exceptions to easily by someone just testing the app
+                        Toast.makeText(context, "This does not look like a realistic score for game " + s + ". Skipping score (" + iUpper + ")", Toast.LENGTH_LONG).show();
+                        break;
+                    }
                     GameHistoryView.dontShowForToManyPoints(iPointsA + iPointsB);
                     matchModel.setGameScore_Json(s-1, iPointsA, iPointsB, 0);
                 }

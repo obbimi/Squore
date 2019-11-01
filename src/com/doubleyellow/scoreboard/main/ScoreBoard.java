@@ -1178,6 +1178,12 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 handleMenuItem(android.R.id.home); // will close the drawer
                 return;
             }
+            // 20191027: first cancel running timer if back is pressed
+            boolean bTimerIsShowing = (ScoreBoard.timer != null) && ScoreBoard.timer.isShowing();
+            if ( bTimerIsShowing ) {
+                ScoreBoard.timer.cancel();
+                return;
+            }
             BackKeyBehaviour backKeyBehaviour = PreferenceValues.backKeyBehaviour(this);
 
             // if there is nothing to undo, fall back to 'default'
