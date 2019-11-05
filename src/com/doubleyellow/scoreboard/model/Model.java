@@ -1318,12 +1318,12 @@ public abstract class Model
         long lEnd = 0;
         if ( lStart == 0 ) {
             // manually entered game durations
-            for(GameTiming gt: m_lGameTimings) {
+            for (int gameNrZeroBased = 0; gameNrZeroBased < ListUtil.size(m_lGameTimings); gameNrZeroBased++) {
+                GameTiming gt = m_lGameTimings.get(gameNrZeroBased);
                 long lDuration = gt.getEnd() - gt.getStart();
                 if ( gt.getStart() > 0 || lDuration > 100 || lDuration == 0 ) {
                     // mixup of gametimings: actual gametimings after demo game timing
                     lDuration = 6;
-                    int gameNrZeroBased = gt.getGameNrZeroBased();
                     gt = new GameTiming(gameNrZeroBased, 0, lDuration);
                     m_lGameTimings.set(gameNrZeroBased, gt);
                 }

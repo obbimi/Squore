@@ -63,7 +63,7 @@ public class GameTiming
     public GameTiming(int iGameNrZeroBased, long s, long e) {
         this(iGameNrZeroBased, s,e, null);
     }
-    public int getGameNrZeroBased() {
+    int getGameNrZeroBased() {
         return iGameNrZeroBased;
     }
     GameTiming(int iGameNrZeroBased, long s, long e, List<OnTimingChangedListener> onTimingChangedListeners) {
