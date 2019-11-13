@@ -55,6 +55,9 @@ public enum DoublesServeSequence {
      * return 2 for out (second player should serve)
      **/
     boolean switchTeam(DoublesServe io, boolean bUseStart) {
+        if ( this.equals(NA) ) {
+            return false;
+        }
         if ( this.equals(A1B1A2B2) ) {
             return true;
         }
@@ -91,7 +94,7 @@ public enum DoublesServeSequence {
         if ( iIdx >= 0 ) {
             return sCars.substring(iIdx, iIdx+2);
         } else {
-            return "_" + sCars.substring(0,1); // java.lang.StringIndexOutOfBoundsException?
+            return "_" + sCars.substring(0,1); // java.lang.StringIndexOutOfBoundsException for NA?
         }
     }
 /*

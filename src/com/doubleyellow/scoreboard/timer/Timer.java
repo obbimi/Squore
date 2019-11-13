@@ -47,6 +47,7 @@ public class Timer
     private boolean                 autoTriggered   = false;
 
     public int getSecondsLeft() {
+        if ( countDownTimer == null ) { return 0; }
         return countDownTimer.secsLeft;
     }
 
