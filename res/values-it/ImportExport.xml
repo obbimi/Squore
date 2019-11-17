@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="Export">Esporta</string>
+    <string name="Export_elipses">Esporta…</string>
+    <string name="Import">Importa</string>
+    <string name="Import_elipses">Importa…</string>
+    <string name="ImportExport_elipses">Importa/Esporta…</string>
+    <string name="Select_file">Seleziona File</string>
+    <string name="import_matches">Importa partite</string>
+    <string name="export_matches">Esporta partite</string>
+    <string name="upload_export_to_server">Carica esportazione sul server squore</string>
+    <string name="upload_to_server_failed__x">Caricamento sul server squore non riuscito: %s</string>
+    <string name="uploaded_to_server__x">Caricamento su squore OK:\n\n%s\n\n(URL è nei tuoi appunti)</string>
+
+    <string name="Exported_to_x">Esportato a %s</string>
+    <string name="File_x_has_been_imported__Cnt_y">Il file %1$s è stato importato (# %2$s)</string>
+    <string name="Source_x__Target_y">Origine: %1$s\nDestinazione: %2$s</string>
+    <string name="Source_x">Origine: %s</string>
+    <string name="Target_y">Destinazione: %s</string>
+    <string name="no_appropriate_zip_files_found_in_x">Nessun file zip idoneo trovato in %s</string>
+    <string name="no_read_rights_for_x">Nessun diritto di lettura per %s</string>
+    <string name="no_write_rights_for_x">Nessun diritto di scrittura per %s</string>
+    <string name="could_not_determine_external_storage_location">Impossibile determinare la posizione dell\'archiviazione esterna</string>
+
+    <string name="Archive">Archivio</string>
+    <string name="Delete_file">Elimina file</string>
+    <string name="Filename">Nome file</string>
+
+    <string name="x_stored_in_y">\'%1$s\' salvato in \'%2$s\'</string>
+    <string name="x_restored_from_y">\'%1$s\' recuperato da \'%2$s\'</string>
+    <string name="could_not_find_file_x">Impossibile trovare il file %s.</string>
+    <string name="did_you_already_perform_an_export_of_x">Hai già eseguito un\'esportazione di %s?</string>
+</resources>

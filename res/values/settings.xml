@@ -317,7 +317,7 @@
     <string name="pref_mailResultTo_not_set">You can set a default mail recipient in the \'%1$s\' screen of \'%2$s\'</string>
 
     <string name="pref_live_score_summary">Optimize for, and view Live Score</string>
-    <string name="pref_live_score_url">live</string>
+    <string name="pref_live_score_url">live?lang=en</string>
     <string name="pref_live_score_url_summary">Use this URL to have see all matches shared with this app, e.g. related to your event</string>
     <string name="pref_LiveScorePrefs">Support live scoring</string>
     <string name="pref_updateLiveScore">Update live score</string>

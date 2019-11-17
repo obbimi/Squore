@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="Score">Punteggio</string>
+    <string name="Game">Gioco</string>
+
+    <string name="left_serveside_single_char">S</string>
+    <string name="right_serveside_single_char">D</string>
+
+    <string name="no_let_abbreviation">NL</string>
+    <string name="yes_let_abbreviation">SL</string>
+    <string name="stroke_abbreviation">ST</string>
+    <string name="conduct_warning_abbreviation">AM</string>
+    <string name="conduct_stroke_abbreviation">PP</string>
+    <string name="conduct_game_abbreviation">GP</string>
+    <string name="conduct_match_abbreviation">IP</string>
+
+    <string name="broken_string_abbreviation">RC</string>
+    <string name="broken_ball_abbreviation">RP</string>
+    <string name="broken_racket_abbreviation">RR</string>
+
+    <string name="handout">Cambio</string>
+    <string name="lbl_all_games">Tutti i giochi</string>
+    <!--<string name="lbl_game">Game</string>-->
+    <string name="lbl_players">Giocatori</string>
+    <string name="lbl_event_and_players">Evento e Gioctori</string>
+    <string name="lbl_player">Giocatore</string>
+    <string name="lbl_player_A">Giocatore A</string>
+    <string name="lbl_playerA1">Giocatore A1</string>
+    <string name="lbl_playerA2">Giocatore A2</string>
+    <string name="lbl_player_B">Giocatore B</string>
+    <string name="lbl_playerB1">Giocatore B1</string>
+    <string name="lbl_playerB2">Giocatore B2</string>
+    <string name="lbl_player_x">Giocatore %s</string>
+    <string name="lbl_countries">Nazioni</string>
+    <string name="lbl_country_A">Nazione A</string>
+    <string name="lbl_country_B">Nazione B</string>
+    <string name="lbl_clubs">Club</string>
+    <string name="lbl_club_A">Club A</string>
+    <string name="lbl_club_B">Club B</string>
+    <string name="add_x_matches">Aggiungi %d incontri</string>
+    <string name="lbl_event">Evento</string>
+    <string name="lbl_division">Divisione</string>
+    <string name="lbl_round">Turno</string>
+    <string name="lbl_court_Squash">Campo</string>
+    <string name="lbl_location">Luogo</string>
+    <string name="lbl_referee">Arbitro</string>
+    <string name="lbl_marker">Segnapunti</string>
+    <string name="lbl_versus">vs</string>
+
+    <string name="lbl_broken_equipment">Attrezzatura rotta segnalata da %s</string>
+    <string name="point_awarded_to_p">Punto assegnato a %s</string>
+    <string name="point">Punto</string>
+    <string name="points">Punti</string>
+    <string name="lbl_warning">Richiamo</string>
+<!--
+    <string name="last_game__score_x_induration_y_z">Last game: %s in %s %s</string>
+    <string name="last_game__score_x_induration_y_z__2lines">Last game: %s\nin %s %s</string>
+-->
+    <string name="game_ended">Gioco terminato</string>
+    <string name="match_ended">Incontro terminato</string>
+
+    <!-- source: http://www.worldsquash.org/ws/coaching-development/referees/referees-info/conduct-on-court -->
+    <string name="conducts_guidelines_default"><![CDATA[
+\n- Abuso dell\'attrezzatura (racchetta, palla o altra attrezzatura):
+\nReato minore (es. lanciare la racchetta per terra dopo la perdita d\'un gioco; colpire fortemente la palla dopo che lo scambio è finito): Richiamo
+\nReato maggiore (es. rompere deliberatamente la racchetta; fracassare la racchetta contro il muro; colpire la palla o gettare la racchetta fuori del campo): Punto di penalità
+\n
+\n- Oscenitàverbali e gestuali:
+\nReato minore (es. borbottio espletivo; bestemmia): Richiamo
+\nReato maggiore (e.g. oscenità verbale): Punto di penalità
+\n
+\n- Perdita di tempo:
+\nReato minore (es. ritardo di qualche secondo nel rientro in campo; impiego di tempo eccessivo prima del servizio): Richiamo
+\nReato maggiore (es. ritardo notevole nel rientro in campo; discussione prolungata con un giudice di gara): Punto di penalità
+\n
+\n- Dissenso:
+\nReato minore (es. mettere in discussione una decisione): Richiamo
+\nReato maggiore (es. prolungato o ripetuto discussione o disaccordo con le decisioni): Punto di penalità
+\n
+\n- Abuso di ufficiale di gara:
+\nReato minore (es. commenti poco lusinghieri su ufficiale di gara o decisioni): Richiamo
+\nReato maggiore (es. commenti peggiorativi su ufficiale di gara o decisioni): Punto di penalità
+\nReato grave (es. colpire la palla verso l\'ufficiale di gara o verso gli spettatori; lanciare la racchetta verso l\'ufficiale di gara o verso gli spettatori): Gioco o incontro di penalità(a seconda della gravitàdell\'infrazione e del pericolo causato)
+\n
+\n- Contatto fisico eccessivo:
+\nReato minore (e.g. Spingere l\'avversario): Richiamo
+\nReato maggiore (e.g. abuso fisico dell\'avversario): Punto di penalità
+\nReato grave (e.g. ferire deliberatamente l\'avversario; gioco pericoloso che ferisce l\'avversario): Gioco o incontro di penalità(a seconda della gravitàdell\'infrazione e del grado della ferita ferita causata)
+\n
+\n- Condotta anti-sportiva:
+\nReato minore (e.g. Fare commenti negativi all\'avversario): Richiamo
+\nReato maggiore (e.g. ripetuti o peggiorativi commenti negativi repeated negative all\'avversario; qualsiasi tentativo di intimidire l\'avversario): Punto di penalità
+\nReato grave (e.g. comportamento estremo che porta discredito all\'incontro): Gioco o incontro di penalità(a seconda della gravitàdell\'infrazione)
+\n
+\n- Ricezione di consigli dell\'allenatore durante il gioco:
+\nPrima occorrenza: Richiamo
+\nSeconda occorrenza: Punto di penalità ed espulsione dell\'individuo reo dell\'infrazione
+\n
+\n- Ripetuta ed eccessiva cattiva condotta:
+\nQuando, a giudizio dell\'arbitro, un giocatore è colpevole di ripetuti atti di inaccettabile condotta in campo a seguito dell\'imposizione delle penalità di cui sopra, l\'arbitro può imporre per la successiva occorrenza dell\'infrazione la stessa penalità o una più severa di quella già imposta. Tuttavia, se è stato effettuato un richiamo (ammonizione) sia per la prima che per la seconda infrazione, alla terza occorrenza d\'infrazione di simile natura deve essere applicato un punto di penalità. (Esempio: se un giocatore è stato richiamato per dissenso, alla successiva occorrenza di tale infrazione, può essere effettuato un altro richiamo oppure applicato un punto di penalità. Alla terza occorrenza, però, l\'applicazione del punto di penalità è obbligatoria.)
+\n
+    ]]></string>
+</resources>

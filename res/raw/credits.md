@@ -4,6 +4,7 @@ The following people were so kind to volunteer to translate Squore into their pr
 
 - Sébastien Lepley (French)
 - Filip Hurta (Czech)
+- Lior Lotem (Italian) 
 
 ## User Help and Suggestions
 
@@ -77,4 +78,3 @@ __EOF__
 
 # TMP for squash
 
-- Lior Lotem (Italian) 

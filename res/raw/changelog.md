@@ -1,3 +1,7 @@
+## 4.27 (nov 2019)
+
+- Squore has been translated into Italian. Thank you very much Lior Lotem!
+
 ## 4.26 (okt 2019)
 
 - allow specifying a player color already in main match setup screen

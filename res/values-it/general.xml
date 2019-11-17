@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="fetching_data">Recuperando dati…</string>
+    <string name="loading">Caricamento in corso…</string>
+    <string name="loading_of_x">Caricamento di %1$s… (%2$s)</string>
+    <string name="posting">Pubblicando…</string>
+    <string name="possible_cause">Possibile causa: </string>
+    <string name="could_not_load_feed_x">Impossibile caricare Feed (%s)</string>
+    <string name="yesterday">Ieri</string>
+    <string name="today">Oggi</string>
+    <string name="tomorrow">Domani</string>
+    <string name="confirm">Conferma</string>
+
+    <!-- buttons -->
+    <string name="name">Nome</string>
+    <string name="date">Data</string>
+    <string name="time">Tempo</string>
+    <string name="timeunit">Unità Tempo</string>
+    <string name="minutes">minuti</string>
+    <string name="seconds">secondi</string>
+    <string name="filename">Nome File</string>
+    <string name="lock">Blocca</string>
+    <string name="locked">Bloccato</string>
+    <string name="unlock">Sblocca</string>
+    <string name="total">Totale</string>
+    <string name="overview">Panoramica</string>
+    <string name="statistics">Statistiche</string>
+    <string name="handicap">Handicap</string>
+    <string name="no_handicap">No Handicap</string>
+    <string name="cmd_yes">Sì</string>
+    <string name="cmd_no">No</string>
+    <string name="cmd_ok">OK</string>
+    <string name="cmd_start">Inizio</string>
+    <string name="cmd_automatic">Automatico</string>
+    <string name="cmd_suggest">Suggerisci</string>
+    <string name="cmd_maximize">Ingrandisci</string>
+    <string name="cmd_normal">Normale</string>
+    <string name="cmd_cancel">Cancella</string>
+    <string name="cmd_none">Nessuno</string>
+    <string name="cmd_add">Aggiungi</string>
+    <string name="cmd_previous">Precedente</string>
+    <string name="cmd_next">Prossimo</string>
+    <string name="cmd_add_x_seconds">Aggiungi %s secondi</string>
+    <string name="cmd_subtract_x_seconds">Sottrai %s secs</string>
+    <string name="cmd_keep">Mantieni</string>
+    <string name="cmd_delete">Elimina</string>
+    <string name="cmd_delete_all">Elimina tutto…</string>
+    <string name="cmd_edit">Modifica</string>
+    <string name="cmd_open">Apri</string>
+    <string name="cmd_hide">Nascondi</string>
+    <string name="cmd_sort">Ordina</string>
+    <string name="lbl_group_by">Raggruppa per</string>
+    <string name="cmd_pause">Metti in Pausa</string>
+    <string name="msg_paused">In Pausa</string>
+    <string name="cmd_resume">Riprendi</string>
+    <string name="cmd_save">Salva</string>
+    <string name="cmd_close">Chiudi</string>
+    <string name="cmd_new_group">Nuovo gruppo</string>
+    <string name="cmd_new_match">Nuovo incontro</string>
+    <string name="cmd_new_matches">Nuovi incontri</string>
+    <string name="cmd_new_matches_with">Nuovi incontri con</string>
+    <string name="cmd_rebuild">Ricostruisci</string>
+    <string name="uc_exit">Esci</string>
+    <string name="press_back_again_to_exit">Premi nuovamente sul tasto \'Indietro\' per uscire</string>
+    <string name="goto_help">Aiuto</string>
+    <string name="Help_elipses">Aiuto…</string>
+    <string name="privacy_and_terms">Privacy e Condizioni</string>
+    <string name="about">Info</string>
+    <string name="refresh">Rinfresca</string>
+    <string name="filter">Filtra</string>
+    <string name="expand_all">Espandi tutto</string>
+    <string name="collapse_all">Comprimi tutto</string>
+<!--
+    <string name="show_graph">Show Graph</string>
+-->
+    <string name="tip">Suggerimento</string>
+    <string name="settings">Impostazioni</string>
+    <string name="do_not_show_this_dialog_anymore">Non mostrare più questa finestra</string>
+    <string name="lbl_fixed">Fisso</string>
+    <string name="lbl_none">Nessuno</string>
+
+    <!-- network -->
+    <string name="no_fully_functional_connection_error">Nessuna rete completamente funzionale. Forse devi accedere al tuo provider?</string>
+    <string name="connection_error">Errore di connessione %1$s %2$s</string>
+    <string name="unknown_error">Errore sconosciuto %s</string>
+
+    <string name="uc_more">Altro…</string>
+    <string name="uc_sort">Ordina…</string>
+    <string name="uc_undo">Cancella</string>
+    <string name="uc_new">Nuovo…</string>
+    <string name="uc_edit">Modifica…</string>
+    <string name="uc_showing_x_elipses">Mostrando %s …</string>
+    <string name="uc_show_elipses">Mostra…</string>
+    <string name="uc_show">Mostra</string>
+    <string name="uc_delete">Elimina</string>
+    <string name="uc_email">Email</string>
+    <string name="uc_select">Seleziona</string>
+    <string name="uc_details">Dettagli</string>
+    <string name="uc_copy">Copia</string>
+    <string name="lbl_color">Colore</string>
+    <string name="username">Utente</string>
+    <string name="password">Password</string>
+    <string name="save_password">Salva password</string>
+
+</resources>

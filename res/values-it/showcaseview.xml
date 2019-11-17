@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="press_back_again_to_exit_intro">Premere nuovamente \'Indietro\' per uscire dal Intro</string>
+    <string name="scv_got_it">HO CAPITO</string>
+    <string name="scv_first_run">Vuoi un intro veloce per imparare le principali caratteristiche dell\'app?
+        \n
+        \nTi farà vedere It will show you how you can use the app in different situations during several stages of a match.
+        \n
+        \nPuoi interrompere l\'intro in qualsiasi momento premendo il tasto _indietro_ del tuo dispositivo.
+        \n
+        \nO riavviarlo dal menu _Aiuto/Intro_vreloce_.</string>
+    <string name="scv_toss">\nAll\'inizio d\'un incontro un __sorteggio__viene solitamente effettuato.
+        \n\nPremi questo tasto per:
+        \n
+        \n- inserire facilmente l\'esito del sorteggio
+        \n- lasciare all\'app di eseguire il sorteggio per te
+    </string>
+    <string name="scv_side_buttons_Squash">I __tasti del lato di servizio__ indicano
+        \n
+        \n- chi dovrebbe servire
+        \n- da quale lato (S/D)
+        \n- se è un cambio (?)
+        \n\nIl lato o il giocatore cambiano in automatico dopo l\'immissione d\'ogni punto.
+        \n\nSe necessario, puoi alternare lato/giocatore premendo il tasto.
+    </string>
+<!--
+    \n\nOn handout, the app will initially display the side the new server started serving last time (with a question mark).
+-->
+    <string name="scv_big_buttons">Premi i tasti grandi per tenere traccia dei punti segnati da ognuno dei giocatori.</string>
+    <string name="scv_undo_last">
+        \n
+        \nSe hai assegnato accidentalmente un punto al giocatore sbagliato puoi correggere il punteggio premendo il tasto __Annulla__.
+        \n
+        \nUn altro modo per annullare l\'ultimo punteggio è di scorrere (swipe) il dito sul tasto del punteggio accidentalmente incrementato.
+    </string>
+    <string name="scv_player_buttons_appeal_Squash">Tieni traccia delle decisioni __Stroke/Sì Let/No let__ premendo il nome del giocatore che sta chiedendo un let.
+        \nImmetti la tua decisione nella schermata di dialogo che compare.
+    </string>
+<!--
+    \n
+    \nIn case of _No let_ or _Stroke_, the awarded point is automatically reflected by the app. (No need to tap the big score button).
+-->
+    <string name="scv_player_buttons_misconduct_Squash">Puoi inoltre tenere traccia delle decisioni di condotta __Richiamo/Punto di penalità__.
+        \n
+        \nPremi a lungo sul tasto del giocatore per aprire il dialogo di _Cattiva condotta_.</string>
+    <string name="scv_old_fashioned_scoring_Squash">Uno \'tradizionale\' foglio di segnalazione del punteggio è visibile sullo schermo per tua comodità.
+        \n\nQuesto elemento può essere spento attraverso \'Impostazioni\'.</string>
+<!--
+    <string name="scv_home_button">At any time you can also start a new match by tapping the home button.</string>
+-->
+    <string name="scv_announcement_button_Squash">Questo tasto comparirà quando un __annuncio ufficiale__ è in ordine:
+        \n
+        \n - Inizio del gioco/incontro
+        \n - Fine del gioco/incontro
+        \n - Primo spareggio
+        \n\nPremilo per vedere l\'annuncio.</string>
+    <string name="scv_shirt_color_Squash">Se stai per arbitrare due giocatori che non avevi mai incontrato in precedenza, e hai difficoltà a ricordare i loro nomi,
+        puoi premere __assegna un colore__ per ciascuno dei due.
+        \n\nPremi a lungo il tasto del lato di servizio per segliere un colore.</string>
+    <string name="scv_game_scores_Squash">Il numero dei giochi già vinti da ciascuno dei giocatori è visibile qui.
+        \n
+        \nTocca per vedere il punteggio esatto dei giochi precedenti.</string>
+    <string name="scv_timer_button_Squash">Questo tasto ti permetterà di far partire un __cronometro__.
+        \n\nComparirà solamente quando opportuno
+        \n
+        \n- Riscaldamento
+        \n- Prima dell\'inizio del primo gioco
+        \n- Tra un gioco e l\'altro
+        \n
+        \nSe hai bisogno di far partire un cronometro d\'infortunio durante l\'incontro, puoi avviarne uno dal menu.
+      </string>
+<!--
+    <string name="scv_score_details">This button will allow you to review all details of a match.
+        \n
+        \n- Complete score sheet including timings
+        \n- Scoring sequence in a graph
+        \n- No let/Yes let/Stroke totals
+      </string>
+-->
+    <string name="scv_share_button">Questo tasto compare una volta che l\'incontro è terminato. Ti permette di condividere il risultato.
+        \n\nPuoi configurarlo a
+        \n
+        \n- Condividere un collegamento (link) con tutti i dettagli dell\'inconto
+        \n- Condividere un breve riassunto
+        \n- Pubblicare il risultato su un sito web
+        \n- Inviare il foglio di punteggio (score sheet) via email
+      </string>
+    <string name="scv_overflow_submenu_Squash">Ulteriori opzioni sono disponibili al menu. Puoi per esempio:
+        \n
+        \n- Personalizzare l\'aspetto ed il comportamento dell\'app tramite \'Impostazioni\'
+        \n- Visualizzare i dettagli di incontri arbitrati in precedenza
+        \n- Avviare un cronometro per infortunio
+        \n- Esportare/importare tutti i tuoi incontri arbitrati a/da un file zip
+        \n- Consultare una pagina d\'aiuto elaborata per questa app
+        \n- Consultare il regolamento ufficiale dello squash
+        \n- Abilitare delle impostazione per la facile registrazione delle statistiche di Diritto/Rovescio Vincente/Sbagliato (es. per allenatori/addestratori mentre osservano l\'incontro del loro allievo)
+          </string>
+    <string name="scv_toggle_action_bar">Se vuoi __nascondere la barra d\'azione__ (es. per massimizzare l\'utilizzo dello schermo, o per ragioni estetiche)
+        lo puoi fare facilmente: semplicemente premi a lungo su __punteggi giochi__. Un altro lungo click lo renderà nuovamente visibile.
+        \n
+        \nNota che nascondendo la barra d\'azione, la modalità \'Annulla scorrendo\' rimane disponibile!
+          </string>
+    <string name="scv_few_more_gui_hints_Squash">Alcuni altri suggerimenti riguardo l\'interfaccia grafica:
+        \n
+        \n__Tasti del giocatore__
+        \n
+        \n- Tocca con due dita per registrare l\'evento di rottura della palla/corde/racchetta
+        \n- Scorri avanti e indietro su uno dei tasti per modificare (o aggiungere) dettagli dell\'incontro
+        \n- Scorri a sinistra o a destra sul nome del giocatore che è al servizio per cambiare il lato di servizio a quello desiderato
+        \n
+        \n__Tasti del punteggio__
+        \n
+        \n- Premi su entrambi contemporaneamente per inserire un punteggio iniziale (arbitrando un incontro già iniziato)
+        \n- Premi a lungo su entrambi per verificare il formato dell\'incontro in corso
+        \n- Scorri in diagonale avanti e indietro su uno dei tasti del punteggio per riavviare il punteggio (es. dopo aver mostrato l\'app ad un membro del club)
+          </string>
+    <string name="scv_few_more_good_to_knows">Alcuni altri \'Buono a sapersi\':
+        \n
+        \n- Puoi facilmente proiettare il punteggio su un grande schermo TV usando Chrome Cast.
+        \n- Puoi specificare la nazione per ogni giocatore. Le bandiere delle nazioni scelte saranno esposte.
+        \n- Puoi usare i tasti di volume del tuo dipositivo da tasti di \'punteggio\' (questa opzione deve essere attivata dalle impostazioni).
+        \n- Puoi trasferire un incontro da un dispositivo android ad un altro usando NFC.
+          </string>
+    <string name="scv_new_match_button_Squash">__Tutto qui. Buon Squash, buon arbitraggio.__
+        \n\nInizia un nuovo incontro premendo questo tasto.</string>
+</resources>

@@ -419,7 +419,8 @@ public class PreferenceValues extends RWValues
     }
     public static boolean announcementLanguageDeviates(Context ctx) {
         AnnouncementLanguage language = officialAnnouncementsLanguage(ctx);
-        return language.toString().equals(RWValues.getDeviceLanguage(ctx)) == false;
+        String deviceLanguage = RWValues.getDeviceLanguage(ctx);
+        return language.toString().equals(deviceLanguage) == false;
     }
 
     public static int getSportTypeSpecificResId(Context context, int iResid) {
@@ -1588,7 +1589,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-10-25"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-11-18"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
@@ -1596,7 +1597,7 @@ public class PreferenceValues extends RWValues
 
     public static StartupAction getStartupAction(Context context) {
         //current version
-        int versionCodeForChangeLogCheck = getVersionCodeForChangeLogCheck(context);
+        int versionCodeForChangeLogCheck = getVersionCodeForChangeLogCheck(context); // actually uses version name with e.g. dots removed
         //version where changelog has been viewed
         int viewedChangelogVersion = getInteger(PreferenceKeys.viewedChangelogVersion, context, 0);
 
@@ -1612,6 +1613,15 @@ public class PreferenceValues extends RWValues
                 return StartupAction.QuickIntro;
 
             }
+            if ( versionCodeForChangeLogCheck == 427 ) {
+                // first time run after adding Italian translation
+                AnnouncementLanguage al = officialAnnouncementsLanguage(context);
+                String deviceLanguage = RWValues.getDeviceLanguage(context);
+                if ( AnnouncementLanguage.en.equals(al) && (deviceLanguage != null) && deviceLanguage.startsWith("it") ) {
+                    setAnnouncementLanguage(AnnouncementLanguage.it, context);
+                }
+            }
+
             //setNumber(PreferenceKeys.viewedChangelogVersion, context, packageInfo.versionCode);
             return StartupAction.ChangeLog;
         }

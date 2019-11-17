@@ -17,12 +17,16 @@
 
 package com.doubleyellow.scoreboard.prefs;
 
+/**
+ * Enum that is used to populate eg. spAnnouncementLanguage spinners (EditPlayers, MatchView)
+ */
 public enum AnnouncementLanguage {
     cs,
     de,
     en,
     es,
     fr,
+    it,
     nl,
     pt,
     ;
