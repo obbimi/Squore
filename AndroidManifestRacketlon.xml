@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.racketlon"
-          android:versionCode="234"
+          android:versionCode="235"
           android:versionName="4.20">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
@@ -80,7 +80,12 @@
             -->
 
             <intent-filter> <data android:scheme="http"  android:host="racketlon.double-yellow.be"      android:pathPattern="/.*20.*"               /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="http"  android:host="racketlon.double-yellow.be"      android:pathPattern="/show/.*20.*"          /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="http"  android:host="racketlon.double-yellow.be"      android:pathPattern="/uploads/.*.zip"       /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+
+            <intent-filter> <data android:scheme="https" android:host="racketlon.double-yellow.be"      android:pathPattern="/.*20.*"               /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="racketlon.double-yellow.be"      android:pathPattern="/show/.*20.*"          /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="racketlon.double-yellow.be"      android:pathPattern="/uploads/.*.zip"       /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
 
             <intent-filter> <data android:scheme="http"  android:host="www.tournamentsoftware.com"      android:pathPattern="/sport/tournament.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="https" android:host="www.tournamentsoftware.com"      android:pathPattern="/sport/tournament.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
