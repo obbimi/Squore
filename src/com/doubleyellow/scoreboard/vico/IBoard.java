@@ -905,9 +905,7 @@ public class IBoard implements TimerViewContainer
                 if ( rlParams != null ) {
                     if ( ViewUtil.isPortraitOrientation(context) ) {
                         rlParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 ) {
-                            rlParams.removeRule(RelativeLayout.ALIGN_RIGHT);
-                        }
+                        rlParams.removeRule(RelativeLayout.ALIGN_RIGHT);
                     }
                     view.requestLayout();
                 }

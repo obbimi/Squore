@@ -50,6 +50,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * @deprecated We will be editing a match with the MatchView in a Match activity
+ */
 public class EditPlayers extends BaseAlertDialog
 {
     public EditPlayers(Context context, Model matchModel, ScoreBoard scoreBoard) {
@@ -471,51 +474,3 @@ public class EditPlayers extends BaseAlertDialog
         }
     }
 }
-/*
-    private ViewGroup initUsingLayoutXml() {
-        LayoutInflater myLayout = LayoutInflater.from(context);
-        final ViewGroup view = (ViewGroup) myLayout.inflate(R.layout.editplayers, null);
-
-        PreferenceACTextView txtEvent = (PreferenceACTextView) view.findViewById(R.id.match_event);
-        txtEvent.setText(matchModel.getEventName());
-        PreferenceACTextView txtDivision = (PreferenceACTextView) view.findViewById(R.id.match_division);
-        txtDivision.setText(matchModel.getEventDivision());
-        PreferenceACTextView txtRound = (PreferenceACTextView) view.findViewById(R.id.match_round);
-        txtRound.setText(matchModel.getEventRound());
-        PreferenceACTextView txtLocation = (PreferenceACTextView) view.findViewById(R.id.match_location);
-        txtLocation.setText(matchModel.getEventLocation());
-        mEvent2Txt.put(MatchDetails.EventName    , txtEvent);
-        mEvent2Txt.put(MatchDetails.EventDivision, txtDivision);
-        mEvent2Txt.put(MatchDetails.EventRound   , txtRound);
-        mEvent2Txt.put(MatchDetails.EventLocation, txtLocation);
-        txtEvent   .setOnEditorActionListener(onEditorActionListener);
-        txtDivision.setOnEditorActionListener(onEditorActionListener);
-        txtRound   .setOnEditorActionListener(onEditorActionListener);
-        txtLocation.setOnEditorActionListener(onEditorActionListener);
-
-        PreferenceACTextView txtReferee = (PreferenceACTextView) view.findViewById(R.id.match_referee);
-        if ( txtReferee != null ) {
-            txtReferee.setText(matchModel.getReferee());
-            mReferee2Txt.put(MatchDetails.Referee, txtReferee);
-            txtReferee.setOnEditorActionListener(onEditorActionListener);
-        }
-
-        PreferenceACTextView txtMarker = (PreferenceACTextView) view.findViewById(R.id.match_marker);
-        if ( txtMarker != null ) {
-            txtMarker.setText(matchModel.getMarker());
-            mReferee2Txt.put(MatchDetails.Marker, txtMarker);
-            txtMarker.setOnEditorActionListener(onEditorActionListener);
-        }
-
-        EditText txtPlayerA = (EditText) view.findViewById(R.id.match_playerA);
-        txtPlayerA.setText(matchModel.getName(Player.A));
-        EditText txtPlayerB = (EditText) view.findViewById(R.id.match_playerB);
-        txtPlayerB.setText(matchModel.getName(Player.B));
-        mPlayer2Txt.put(Player.A, txtPlayerA);
-        mPlayer2Txt.put(Player.B, txtPlayerB);
-        txtPlayerA.setOnEditorActionListener(onEditorActionListener);
-        txtPlayerB.setOnEditorActionListener(onEditorActionListener);
-        ColorPrefs.setColors(view, null);
-        return view;
-    }
-*/

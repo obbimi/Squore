@@ -226,14 +226,13 @@ public class GameGraphView extends LineGraphView
         int screenWidth = ViewUtil.getScreenWidth(getContext());
         int screenHWMax = ViewUtil.getScreenHeightWidthMaximum(getContext());
 
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 ) {
-            // value calculated here is different if display is e.g. a presentation screen (chromecast)
-            Display display = getDisplay();
-            if ( display != null ) {
-                screenWidth = ViewUtil.getScreenWidth(display, getContext());
-                screenHWMax = ViewUtil.getScreenHeightWidthMaximum(display);
-            }
+        // value calculated here is different if display is e.g. a presentation screen (chromecast)
+        Display display = getDisplay();
+        if ( display != null ) {
+            screenWidth = ViewUtil.getScreenWidth(display, getContext());
+            screenHWMax = ViewUtil.getScreenHeightWidthMaximum(display);
         }
+
         int verticalLabelsWidth = screenWidth / 20;
         graphViewStyle.setVerticalLabelsWidth(verticalLabelsWidth);
         graphViewStyle.setLegendWidth        (screenHWMax / 3); // a third of the screen width

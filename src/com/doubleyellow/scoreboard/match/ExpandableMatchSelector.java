@@ -220,9 +220,7 @@ public abstract class ExpandableMatchSelector extends Fragment
      */
     @Override public void onDetach() {
         super.onDetach();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1 /* 17 */) {
-            activity = null; // MUST be done or e.g. StaticMatchSelector can not be used twice (causes problems since the 'MatchHistory' activity can be started from the PreviousMatchSelector)
-        }
+        activity = null; // MUST be done or e.g. StaticMatchSelector can not be used twice (causes problems since the 'MatchHistory' activity can be started from the PreviousMatchSelector)
     }
 
     @Override public Context getContext() {

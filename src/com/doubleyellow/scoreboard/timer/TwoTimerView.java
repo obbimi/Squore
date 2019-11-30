@@ -18,7 +18,6 @@
 package com.doubleyellow.scoreboard.timer;
 
 import android.os.Bundle;
-import android.util.Log;
 import com.doubleyellow.scoreboard.dialog.BaseAlertDialog;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
@@ -41,33 +40,18 @@ public abstract class TwoTimerView extends BaseAlertDialog
         if ( timer == null ) {
             return false;
         }
-      //outState.putSerializable(TimerView.TIMER_VIEW_TYPE      , timer.viewType);
-      //outState.putInt         (TimerView.TIMER_RESUME_AT      , timer.getSecondsLeft());
-      //outState.putLong        (TimerView.TIMER_STATE_STORED_AT, System.currentTimeMillis());
-      //outState.putBoolean     (TimerView.TIMER_PASSED_WARNING , timer.isPassedWarning());
         outState.putBoolean     (TimerView.TIMER_AUTO_TRIGGERED , timer.isAutoTriggered());
 
         return true;
     }
 
-    //private boolean m_bPastWarn       = false;
     private boolean m_bAutoTriggered  = false;
-    //private int     m_iSecondsInitial = -1;
-    //private int     m_iResumeAt       = -1;
     @Override public boolean init(Bundle bundle) {
         //show(false); // deliberately not triggered here: when 10-10 is reached and screen is rotated... it will show because onCreate will trigger it again
         Type           timerType = (Type)     bundle.getSerializable(TimerView.TIMER_SHOWN);
       //ViewType       viewType  = (ViewType) bundle.getSerializable(TimerView.TIMER_VIEW_TYPE);
         boolean bAutoTriggered   = bundle.getBoolean(TimerView.TIMER_AUTO_TRIGGERED, false);
         init(timerType, bAutoTriggered);
-
-      //int     secsLeft      = bundle.getInt    (TimerView.TIMER_RESUME_AT      , 0);
-      //long    stateStoredAt = bundle.getLong   (TimerView.TIMER_STATE_STORED_AT, 0);
-      //m_bPastWarn           = bundle.getBoolean(TimerView.TIMER_PASSED_WARNING , false);
-
-        // correct if e.g. user had opened other scoreBoard activity (Settings or MatchDetails)
-        //int iSubstractSecs = DateUtil.convertToSeconds(System.currentTimeMillis() - stateStoredAt);
-        //m_iResumeAt = secsLeft; // - iSubstractSecs;
 
         return true;
     }
@@ -98,27 +82,4 @@ public abstract class TwoTimerView extends BaseAlertDialog
     @Override public void dismiss() {
         scoreBoard.cancelTimer();
     }
-
-    //-------------------------------------------------
-    // methods for pausing and resuming
-    //-------------------------------------------------
-/*
-    private long lViewPausedAt = 0l;
-    public void markViewPaused() {
-        lViewPausedAt = System.currentTimeMillis();
-    }
-*/
-
-    /** only called by ScoreBoard.onResume() */
-/*
-    public boolean resume() {
-        int iSubstractSecs = DateUtil.convertToSeconds(System.currentTimeMillis() - lViewPausedAt);
-        if ( scoreBoard.timer != null ) {
-            //m_iSecondsInitial = scoreBoard.timer.iSecondsInitial;
-            m_iResumeAt       = scoreBoard.timer.getSecondsLeft() - iSubstractSecs;
-        }
-        return (m_iResumeAt > 0);
-    }
-*/
-
 }

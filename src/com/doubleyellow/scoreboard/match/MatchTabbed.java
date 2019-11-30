@@ -627,12 +627,6 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
 
         registerNfc();
 
-        // this is only because in the fragment activity... after rotate listeners are no longer working as expected... so do not allow orientation change
-        //initAllowedOrientation();
-        //if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-            //ViewUtil.fixCurrentOrientationAndRotation(this);
-        //}
-
         ScoreBoard.updateDemoThread(this);
     }
 
@@ -646,27 +640,6 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
     @Override public void onConfigurationChanged(Configuration newConfig) {
         Log.w(TAG, "New config: " + newConfig);
         //super.onConfigurationChanged(newConfig);
-    }
-*/
-
-/*
-    private boolean initAllowedOrientation() {
-        int orientation = this.getResources().getConfiguration().orientation;
-        try {
-            setRequestedOrientation(orientation);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            boolean bIsPortrait = isLandscape(this);
-            if (bIsPortrait) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 0
-            } else {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 1
-                //USER = 2
-            }
-        }
-        return true;
     }
 */
 

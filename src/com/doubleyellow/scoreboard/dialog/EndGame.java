@@ -153,14 +153,12 @@ public class EndGame extends BaseAlertDialog
         }
 
         adb.setOnKeyListener(getOnBackKeyListener(/*BTN_END_GAME*/));
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 /* 17 */ ) {
-            adb.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override public void onDismiss(DialogInterface dialog) {
-                    scoreBoard.triggerEvent(ScoreBoard.SBEvent.endGameDialogEnded, EndGame.this);
-                    scoreBoard.enableScoreButtons();
-                }
-            });
-        }
+        adb.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override public void onDismiss(DialogInterface dialog) {
+                scoreBoard.triggerEvent(ScoreBoard.SBEvent.endGameDialogEnded, EndGame.this);
+                scoreBoard.enableScoreButtons();
+            }
+        });
         dialog = adb.show(onShowListener);
     }
 
@@ -294,11 +292,6 @@ public class EndGame extends BaseAlertDialog
                     scoreBoard.bGameEndingHasBeenCancelledThisGame = true;
                 }
                 break;
-        }
-        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 /* 17 */ /*|| ( which == DialogInterface.BUTTON_POSITIVE) */ /* Pressing the Positive dialog button does NOT trigger dismiss listeners */ ) {
-            // ondismiss not yet supported on current (OLD) device
-            scoreBoard.triggerEvent(ScoreBoard.SBEvent.endGameDialogEnded, this);
-            scoreBoard.enableScoreButtons();
         }
     }
 }

@@ -111,12 +111,9 @@ public class NotificationTimerView implements TimerView
                .setContentText(sMess);
 
         Notification notification;
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN /* 16 */ ) {
-            notification = builder.build();
-            notification.priority = Notification.PRIORITY_DEFAULT;
-        } else {
-            notification = builder.getNotification();
-        }
+        notification = builder.build();
+        notification.priority = Notification.PRIORITY_DEFAULT;
+
         // Hide the notification after its selected
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
       //notification.flags |= Notification.FLAG_LOCAL_ONLY;      // from API>=20 only

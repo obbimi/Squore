@@ -20,7 +20,6 @@ package com.doubleyellow.scoreboard.main;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.widget.Toast;

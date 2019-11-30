@@ -32,11 +32,8 @@ import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 /**
  * To present {@link MatchView} in a fragment for {@link MatchTabbed}
  */
-public class MatchFragment extends Fragment {
-
-//  private MatchView rootView = null;
-//  private Context   context  = null;
-
+public class MatchFragment extends Fragment
+{
     /** Invoked just before it MAY come into view on the next slide and it was no longer a sibling of currently showing view  */
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //if (rootView == null) { // removed in attempt to fix 'after rotate' problem: does not work
@@ -51,38 +48,6 @@ public class MatchFragment extends Fragment {
 
         return rootView;
     }
-
-
-/*
-    public MatchFragment() {
-        super();
-    }
-    @Override public void onAttach(Context context) {
-        super.onAttach(context);
-        //this.context = context;
-    }
-
-    @Override public void onDestroyView() {
-        super.onDestroyView();
-        rootView = null;
-    }
-
-    @Override public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        rootView = (MatchView) view;
-    }
-
-    @Override public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-    }
-*/
-
-    /** For fragments in tabs only invoked when it is actually created for the first time. Triggered before onCreateView */
-/*
-    @Override public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-*/
 
     Intent getIntent(boolean bBackPressed) {
         View view = getView();
@@ -100,6 +65,6 @@ public class MatchFragment extends Fragment {
         }
         MatchView matchView = (MatchView) view;
         String sFeedKey = (this instanceof MatchFragmentDoubles) ? "ManualDoubles" : "Manual";
-        return matchView.getIntent(sFeedKey, null, bBackPressed);
+        return matchView.getIntent(sFeedKey, null, bBackPressed, false);
     }
 }
