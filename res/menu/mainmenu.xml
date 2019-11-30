@@ -46,7 +46,7 @@
             android:title="@string/uc_more"
             app:showAsAction="always">
 
-        <menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <menu>
             <item
                     android:id="@+id/uc_new"
                     android:icon="@drawable/circled_plus"

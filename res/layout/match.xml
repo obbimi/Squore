@@ -347,7 +347,7 @@
                     android:nextFocusDown="@+id/match_clubB"
                     android:imeOptions="actionNext"
                     android:layout_gravity="center_horizontal"
-                    dy:PreferenceKeys="clubList,clubListLastX"
+                    dy:PreferenceKeys="clubList,clubListLastA"
                     dy:defaultACValues="@string/emptyList_default"/>
             <com.doubleyellow.scoreboard.view.PreferenceACTextView
                     android:id="@+id/match_clubB"
