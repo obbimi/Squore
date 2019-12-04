@@ -65,7 +65,7 @@
     <string name="game_ended">Gioco terminato</string>
     <string name="match_ended">Incontro terminato</string>
 
-    <!-- source: http://www.worldsquash.org/ws/coaching-development/referees/referees-info/conduct-on-court -->
+    <!-- source: http://www.worldsquash.org/referees-info/conduct-on-court/ -->
     <string name="conducts_guidelines_default"><![CDATA[
 \n- Abuso dell\'attrezzatura (racchetta, palla o altra attrezzatura):
 \nReato minore (es. lanciare la racchetta per terra dopo la perdita d\'un gioco; colpire fortemente la palla dopo che lo scambio è finito): Richiamo

@@ -61,7 +61,7 @@
     <string name="game_ended">Set ukončen</string>
     <string name="match_ended">Zápas ukončen</string>
 
-    <!-- source: http://www.worldsquash.org/ws/coaching-development/referees/referees-info/conduct-on-court -->
+    <!-- source: http://www.worldsquash.org/referees-info/conduct-on-court/ -->
     <string name="conducts_guidelines_default"><![CDATA[
 \n- Poškození vybavení nebo kurtu (rakety, míčku nebo jiného):
 \Lehčí provinění (např. odhození rakety po prohraném setu, prudké odpálení míčku po skončení výměny): Varování

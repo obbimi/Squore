@@ -59,7 +59,7 @@
     <string name="game_ended">Fin de Jeu</string>
     <string name="match_ended">Fin de Match</string>
 
-    <!-- source: http://www.worldsquash.org/ws/coaching-development/referees/referees-info/conduct-on-court -->
+    <!-- source: http://www.worldsquash.org/referees-info/conduct-on-court/ -->
     <string name="conducts_guidelines_default"><![CDATA[
 \n- Abus d’équipement (raquette, balle ou autre équipement)
 \nInfraction mineure (par exemple jet de raquette au sol après la perte d’un jeu, frapper la balle fort à la fin de l’échange) : Avertissement

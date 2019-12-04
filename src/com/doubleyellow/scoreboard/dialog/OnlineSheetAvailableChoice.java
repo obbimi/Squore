@@ -25,8 +25,8 @@ import android.os.Bundle;
 import android.util.SparseArray;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.activity.ScoreSheetOnline;
-import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 
@@ -107,8 +107,8 @@ public class OnlineSheetAvailableChoice extends BaseAlertDialog
                 case Preview:
                     Intent nm = new Intent(context, ScoreSheetOnline.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString(ScoreSheetOnline.class.getSimpleName(), sShowURL );
-                    nm.putExtra(ScoreSheetOnline.class.getSimpleName(), bundle);
+                    bundle.putString(IntentKeys.ScoreSheetOnline.toString(), sShowURL );
+                    nm.putExtra(IntentKeys.ScoreSheetOnline.toString(), bundle);
                     context.startActivity(nm);
                     break;
                 case ViewInBrowser:

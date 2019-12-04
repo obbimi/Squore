@@ -23,6 +23,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.widget.Toast;
+
+import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.history.MatchHistory;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.util.FileUtil;
@@ -69,11 +71,9 @@ public class MatchReceivedUtil implements DialogInterface.OnClickListener
                     Intent matchHistory = new Intent(scoreBoard, MatchHistory.class);
                     Bundle b = new Bundle();
                     File fStoredAs = ScoreBoard.storeAsPrevious(scoreBoard, model, true);
-                    b.putSerializable(MatchHistory.class.getSimpleName(), fStoredAs);
-                    matchHistory.putExtra(MatchHistory.class.getSimpleName(), b);
-                    if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ) {
-                        scoreBoard.startActivity(matchHistory, b);
-                    }
+                    b.putSerializable(IntentKeys.MatchHistory.toString(), fStoredAs);
+                    matchHistory.putExtra(IntentKeys.MatchHistory.toString(), b);
+                    scoreBoard.startActivity(matchHistory, b);
                     break;
                 }
                 case SaveToStoredMatches: {

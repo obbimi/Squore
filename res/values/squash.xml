@@ -63,7 +63,7 @@
     <string name="game_ended">Game ended</string>
     <string name="match_ended">Match ended</string>
 
-    <!-- source: http://www.worldsquash.org/ws/coaching-development/referees/referees-info/conduct-on-court -->
+    <!-- source: http://www.worldsquash.org/referees-info/conduct-on-court/ -->
     <string name="conducts_guidelines_default"><![CDATA[
 \n- Abuse of equipment (racket, ball or other equipment):
 \nMinor offence (e.g. throwing the racket onto the floor after losing a game, hitting the ball hard after the rally is over): Conduct Warning

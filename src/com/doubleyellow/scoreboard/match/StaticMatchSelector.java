@@ -36,6 +36,7 @@ import com.doubleyellow.android.view.SelectEnumView;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.archive.PreviousMatchSelector;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -546,7 +547,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 
         File fCorrespondingRecent = (File) emsAdapter.getObject(sGroup, sText);
         if ( fCorrespondingRecent != null ) {
-            intent.putExtra(PreviousMatchSelector.class.getSimpleName(), fCorrespondingRecent);
+            intent.putExtra(IntentKeys.PreviousMatch.toString(), fCorrespondingRecent);
             activity.setResult(Activity.RESULT_OK, intent);
             activity.finish();
             return true;
@@ -562,10 +563,9 @@ public class StaticMatchSelector extends ExpandableMatchSelector
             return false;
         }
 
-        //intent.putExtra(MatchDetails.class.getSimpleName(), getBundle(sGroup, sText, saPlayers)); // this is read by ScoreBoard.onActivityResult
         Model  model = getModel(sGroup, sText, saPlayers);
         String sJson = model.toJsonString(null);
-        intent.putExtra(Model.class.getSimpleName(), sJson); // this is read by ScoreBoard.onActivityResult
+        intent.putExtra(IntentKeys.NewMatch.toString(), sJson); // this is read by ScoreBoard.onActivityResult
         activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
         return true;
@@ -576,10 +576,6 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 
         FeedMatchSelector.getMatchDetailsFromMatchString(m, sText, context, false);
         if ( m.isDirty() ) {
-            //m.setPlayerName   (Player.A, mDetails.get(MatchDetails.PlayerA));
-            //m.setPlayerName   (Player.B, mDetails.get(MatchDetails.PlayerB));
-            //m.setPlayerCountry(Player.A, mDetails.get(MatchDetails.CountryA));
-            //m.setPlayerCountry(Player.B, mDetails.get(MatchDetails.CountryB));
         } else {
             m.setPlayerName (Player.A, saPlayers[0].trim());
             m.setPlayerName (Player.B, saPlayers[1].trim());
@@ -649,64 +645,6 @@ public class StaticMatchSelector extends ExpandableMatchSelector
         }
         return m;
     }
-/*
-    private Bundle getBundle(String sGroup, String sText, String[] saPlayers) {
-        Bundle bundle = new Bundle();
-
-        Map<MatchDetails, String> mDetails = FeedMatchSelector.getMatchDetailsFromMatchString(sText, activity);
-        if ( MapUtil.isNotEmpty(mDetails) ) {
-            bundle.putString (MatchDetails.PlayerA .toString(), mDetails.get(MatchDetails.PlayerA));
-            bundle.putString (MatchDetails.PlayerB .toString(), mDetails.get(MatchDetails.PlayerB));
-            bundle.putString (MatchDetails.CountryA.toString(), mDetails.get(MatchDetails.CountryA));
-            bundle.putString (MatchDetails.CountryB.toString(), mDetails.get(MatchDetails.CountryB));
-        } else {
-            bundle.putString (MatchDetails.PlayerA.toString(), saPlayers[0].trim());
-            bundle.putString (MatchDetails.PlayerB.toString(), saPlayers[1].trim());
-        }
-
-        bundle.putString (MatchDetails.FeedKey.toString(), StaticMatchSelector.class.getSimpleName());
-
-        // use feed name and group name for event details
-        if ( PreferenceValues.useGroupNameAsEventData(activity) ) {
-            String[] sSplitChars = { ">", ":", "-" };
-            String[] saEvent = sGroup.split(sSplitChars[0]);
-            for(String sSplitChar: sSplitChars) {
-                String[] saEventTmp = sGroup.split(sSplitChar);
-                if ( (saEventTmp.length > saEvent.length) && (saEvent.length < 2) ) {
-                    saEvent = saEventTmp;
-                }
-            }
-            if ( saEvent.length >= 2) {
-                bundle.putString(MatchDetails.EventName .toString(), saEvent[0].trim());
-                if ( saEvent.length == 2 ) {
-                    MatchDetails roundOrDivision = MatchDetails.EventDivision;
-                    if (appearsToBeARound(saEvent[1])) {
-                        roundOrDivision = MatchDetails.EventRound;
-                    }
-                    bundle.putString(roundOrDivision.toString(), saEvent[1].trim());
-                } else {
-                    bundle.putString(MatchDetails.EventDivision.toString(), saEvent[1].trim());
-                    bundle.putString(MatchDetails.EventRound   .toString(), saEvent[2].trim());
-                }
-            }
-        }
-        if ( MapUtil.isNotEmpty(mHeadersWithRecentMatches) && mHeadersWithRecentMatches.containsKey(sGroup) ) {
-            // use the format
-            File f = mHeadersWithRecentMatches.get(sGroup).iterator().next();
-            Model mTmp = new Model();
-            try {
-                mTmp.fromJsonString(f);
-                bundle.putInt    (MatchDetails.NrOfPointsToWinGame.toString(), mTmp.getNrOfPointsToWinGame());
-                bundle.putInt    (MatchDetails.NrOfGamesToWinMatch.toString(), mTmp.getNrOfGamesToWinMatch());
-                bundle.putString (MatchDetails.TiebreakFormat     .toString(), mTmp.getTiebreakFormat().toString());
-                bundle.putBoolean(MatchDetails.UseEnglishScoring  .toString(), mTmp.isEnglishScoring());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return bundle;
-    }
-*/
 
     @Override public AdapterView.OnItemLongClickListener getOnItemLongClickListener() {
         return null;

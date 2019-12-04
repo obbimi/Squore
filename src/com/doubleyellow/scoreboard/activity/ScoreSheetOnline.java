@@ -41,8 +41,8 @@ public class ScoreSheetOnline extends AppCompatActivity {
         ViewUtil.setFullScreen(getWindow(), PreferenceValues.showFullScreen(this));
 
         Intent intent = getIntent();
-        Bundle bundleExtra = intent.getBundleExtra(ScoreSheetOnline.class.getSimpleName());
-        sShowURL = bundleExtra.getString(ScoreSheetOnline.class.getSimpleName());
+        Bundle bundleExtra = intent.getBundleExtra(IntentKeys.ScoreSheetOnline.toString());
+        sShowURL = bundleExtra.getString(IntentKeys.ScoreSheetOnline.toString());
 
         WebView wv = new WebView(this);
         setContentView(wv);

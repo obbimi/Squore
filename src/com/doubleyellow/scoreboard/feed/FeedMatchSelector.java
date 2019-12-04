@@ -32,6 +32,7 @@ import com.doubleyellow.android.util.SimpleELAdapter;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.URLFeedTask;
+import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.dialog.SelectFeed;
 import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -191,7 +192,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         }
 
         Intent intent = new Intent();
-        intent.putExtra(Model.class.getSimpleName(), model.toJsonString(null)); // this is read by ScoreBoard.onActivityResult
+        intent.putExtra(IntentKeys.NewMatch.toString(), model.toJsonString(null)); // this is read by ScoreBoard.onActivityResult
         activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
     }
@@ -559,7 +560,13 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 JSONObject joModel = null;
                 try {
                     joModel = mDetails.getJsonObject(null, null);
+
+                    // remove keys that have no value if match is not yet started
                     joModel.remove(JSONKey.when.toString());
+                    joModel.remove(JSONKey.server.toString());
+                    joModel.remove(JSONKey.serveSide.toString());
+                    joModel.remove(JSONKey.isHandOut.toString());
+
                     String sResultShort = (String) joModel.remove(JSONKey.result.toString());
 
                     AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
@@ -1137,14 +1144,6 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                             break;
                         }
                         case showingMatches: {
-/*
-                            if ( lExpanded.contains(sHeader) == false ) {
-                                Map<MatchDetails, String> matchDetailsFromMatchString = getMatchDetailsFromMatchString(sEntry);
-                                if ( matchDetailsFromMatchString.containsKey(MatchDetails.Result) == false ) {
-                                    lExpanded.add(sHeader);
-                                }
-                            }
-*/
                             super.addItem(sHeader, sEntry);
                             break;
                         }

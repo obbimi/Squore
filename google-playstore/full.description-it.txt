@@ -1,0 +1,51 @@
+Ti supporta nell'arbitraggio d'un incontro di squash.
+
+<b>Caratteristiche:</b>
+&bull; mostra chiaramente il punteggio corrente (consente di mostrarlo ai giocatori attraverso il vetro)
+&bull; mostra il <b>lato</b> dal quale un giocatore dovrebbe servire
+&bull; indica se l'ultimo punto segnato è stato un <b>cambio</b>
+&bull; include un semplice tasto <b>annulla</b> (commettiamo tutti degli errori...)
+&bull; opzione per visualizzare la cronologia del punteggio d'ogni gioco in un <b>grafico</b>
+&bull; possibilità di utilizzare <b>cronometri</b> di 'riscaldamento' e 'tra un gioco e l'altro' (con opzionali notifiche di suono/vibrazione)
+&bull; possibilità di trasmettere (casting) il punteggio su uno schermo TV attraverso <b>ChromeCast</b>
+&bull; possibilità di duplicare (<b>mirroring</b>) il punteggio su un altro dispositivo android attraverso <b>Bluetooth</b>
+&bull; possibilità di mostrare cornometri di <b>'infortunio'</b>
+&bull; possibilità di avviare un incontro con un <b>'punteggio handicap'</b>
+&bull; opzione per mostrare gli <b>annunci</b> 'ufficiali' (inzio/fine del gioco, fine dell'incontro, spareggio...)
+&bull; opzione di registrare gli <b>appelli</b> per un let nonché le varie condotte, e le relative decisioni arbitrali
+&bull; possibilità di registrare i dati di <b>Diritto/Rovescio, Vincente/Errore, Davanti/Dietro/Al volo</b> dei colpi e mostrarne un riassunto
+&bull; elenco intuitivo di possibili condotte e relative applicabili penalità <b>Richiamo/Punto/Gioco/Incontro</b>
+&bull; possibilità di richiamare le intere sequenze di punteggio di tutti i giochi d'un incontro
+&bull; supporto per l'arbitraggio di incontri di doppio
+&bull; funzionalità di <b>importa/esporta</b> per incontri arbitrati in precedenza
+&bull; trasferimento 'in progress' d'un incontro ad un altro dispositivo attraverso <b>NFC</b> (a.k.a. S-Beam)
+&bull; salvataggio del punteggio (e della cronologia di punteggio) all'uscita dall'app
+&bull; può essere utilizzato sia in orientamento orizzontale che verticale
+&bull; opzione per <b>condividere</b> l'intera <b>cronologia di punteggio</b> su, ad esempio, Facebook
+&bull; opzione per <b>condividere</b> un <b>riassunto di alcuni incontri correlati</b> (es. club/squadra vs club/squadra)
+&bull; opzione per l'invio del risultato d'un incontro via <b>SMS / email</b> (es. ad un membro del club/squadra)
+&bull; condivisione via email con possibilità di includere una completa cronologia del punteggio
+&bull; propone il <b>completamento automatico</b> dei nomi giocatore dalla lista dei contatti presente sul dispositivo (o solamente da un gruppo di contatti)
+&bull; ricorda i nomi dei giocatori precedentemente inseriti per il completaento automatico di futuri incontri
+&bull; ricorda tutti gli incontri da te arbitrati (per successivo consultazione, es. per trascrivere il punteggio degli incontri su documentazione ufficiale)
+&bull; possibilità di specifare un <b>colore<b> ad ognuno dei giocatori (es. corrispondente a quello della maglia con cui giocano)
+&bull; selezionare incontri elencati su <a href="http://www.tournamentsoftware.com">tournamentsoftware.com</a>
+&bull; definire incontri in anticipo per una facile selezione successiva
+&bull; opzione per utilizzare vari <b>formati di spareggio</b>
+&bull; <b>personalizzazione dei colori</b> dell'app (es. per corrispondere ai colori del proprio club/squadra)
+&bull; collegamento al <b>regolamento ufficiale WSF squash</b> nel menu (configurabile)
+&bull; specificare URLs di Feed per permettere la selezione di incontri/giocatori (anziché la digitazione manuale dei nomi)
+&bull; pubblicare un risultato ad un configurabile sito web (chiedi al web-master el tuo club)
+Puoi verificare con il tuo web-master se è possibile rendere una o entrambe di queste ultime opzioni disponibili
+
+__BELOW_NOT_COPIED__TEXT_TO_LONG__MAX_4000__
+
+<b>Autorizzazioni:</b>
+&bull; Lettura Contatti: per il completamento automatico dei nomi giocatore quando si imposta un incontro
+&bull; Lettura/Scrittura memoria: per il backup dei dettagli d'ogni incontro arbitrato usando l'app
+&bull; Accesso alla Rete: per la lettura degli incontri/nomi giocatore da un Feed
+&bull; Accoppiamento con dispositivi Bluetooth: per la duplicazione (mirroring) del punteggio
+&bull; Controllo Vibrazione: principalmente per avvisare che un cronometro è terminato (o sta per terminare).
+
+<b>Aiuto Online:</b>
+http://squore.double-yellow.be/help/

@@ -33,6 +33,7 @@ import com.doubleyellow.android.view.ToggleResult;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.activity.XActivity;
 import com.doubleyellow.scoreboard.cast.EndOfGameView;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -156,9 +157,9 @@ public class MatchHistory extends XActivity implements MenuHandler
         // get file from intent: if present it is started from 'PreviousMatchSelector'
         Intent intent = getIntent();
         if ( intent != null ) {
-            Bundle bundleExtra = intent.getBundleExtra(MatchHistory.class.getSimpleName());
+            Bundle bundleExtra = intent.getBundleExtra(IntentKeys.MatchHistory.toString());
             if ( bundleExtra != null ) {
-                Serializable serializable = bundleExtra.getSerializable(MatchHistory.class.getSimpleName());
+                Serializable serializable = bundleExtra.getSerializable(IntentKeys.MatchHistory.toString());
                 if ( serializable instanceof File ) {
                     file = (File) serializable;
                     bIsStoredMatch = true;

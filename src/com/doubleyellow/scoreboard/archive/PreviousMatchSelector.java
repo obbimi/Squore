@@ -22,7 +22,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
@@ -32,6 +31,7 @@ import com.doubleyellow.android.util.SimpleELAdapter;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.ResultSender;
+import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.dialog.*;
 import com.doubleyellow.scoreboard.history.MatchHistory;
 import com.doubleyellow.scoreboard.main.DialogManager;
@@ -153,7 +153,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         if ( f == null ) { return; }
 
         Intent intent = new Intent();
-        intent.putExtra(PreviousMatchSelector.class.getSimpleName(), f);
+        intent.putExtra(IntentKeys.PreviousMatch.toString(), f);
         activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
     }
@@ -170,11 +170,9 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
 
         Intent matchHistory = new Intent(context, MatchHistory.class);
         Bundle b = new Bundle();
-        b.putSerializable(MatchHistory.class.getSimpleName(), f);
-        matchHistory.putExtra(MatchHistory.class.getSimpleName(), b);
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ) {
-            context.startActivity(matchHistory, b);
-        }
+        b.putSerializable(IntentKeys.MatchHistory.toString(), f);
+        matchHistory.putExtra(IntentKeys.MatchHistory.toString(), b);
+        context.startActivity(matchHistory, b);
     }
 
     private EMSAdapter emsAdapter;
