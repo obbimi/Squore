@@ -26,6 +26,7 @@ import android.view.*;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.activity.XActivity;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -39,6 +40,8 @@ import com.doubleyellow.util.StringUtil;
 
 import org.json.JSONArray;
 
+import java.io.Serializable;
+
 /**
  * Activity where the user can provided
  * - the names of the players
@@ -51,6 +54,7 @@ import org.json.JSONArray;
  * - whether or not to use a handicap system
  *
  * Used after a match is selected from 'Feed' or 'My matches'
+ * Also used to 'edit' a match properties
  */
 public class Match extends XActivity implements MenuHandler
 {
@@ -70,6 +74,7 @@ public class Match extends XActivity implements MenuHandler
     /** where the current match is selected from (source) */
     private String    m_sSource;
     private String    m_sSourceID;
+    private boolean   m_bIsEditMatch = false;
 
     @Override public void onCreate(Bundle savedInstanceState)
     {
@@ -93,36 +98,39 @@ public class Match extends XActivity implements MenuHandler
         String sAvatarB    = null;
         JSONArray lTeamPlayersA = null;
         JSONArray lTeamPlayersB = null;
-      //Bundle bundleExtra = null;
         Model  model       = null;
         {
             Intent intent = getIntent();
-            if (intent != null) {
-              //bundleExtra = intent.getBundleExtra(MatchDetails.class.getSimpleName());
-                String sJson= intent.getStringExtra(Model.class.getSimpleName());
+            if ( intent != null ) {
+                String sJson = intent.getStringExtra(IntentKeys.NewMatch.toString());
                 if ( StringUtil.isNotEmpty(sJson) ) {
                     model = Brand.getModel();
                     model.fromJsonString(sJson);
+                } else {
+                    Serializable srlModel = intent.getSerializableExtra(IntentKeys.EditMatch.toString());
+                    if ( srlModel != null ) {
+                        model = (Model) srlModel;
+                        m_bIsEditMatch = true;
+                        this.setTitle(R.string.sb_edit_event_or_player); // TODO
+                    }
                 }
             }
         }
 
         if ( model != null ) {
-            sA            = model.getName       (Player.A);
-            sB            = model.getName       (Player.B);
-            sCountryA     = model.getCountry    (Player.A);
-            sCountryB     = model.getCountry    (Player.B);
-            sClubA        = model.getClub       (Player.A);
-            sClubB        = model.getClub       (Player.B);
-            sAvatarA      = model.getAvatar     (Player.A);
-            sAvatarB      = model.getAvatar     (Player.B);
+            sA            = model.getName   (Player.A);
+            sB            = model.getName   (Player.B);
+            sCountryA     = model.getCountry(Player.A);
+            sCountryB     = model.getCountry(Player.B);
+            sClubA        = model.getClub   (Player.A);
+            sClubB        = model.getClub   (Player.B);
+            sAvatarA      = model.getAvatar (Player.A);
+            sAvatarB      = model.getAvatar (Player.B);
             lTeamPlayersA = FeedMatchSelector.getTeamPlayers(this, Player.A);
             lTeamPlayersB = FeedMatchSelector.getTeamPlayers(this, Player.B);
 
             bIsDoubles = model.isDoubles();
             if ( bIsDoubles ) {
-                //sA += "/" + bundleExtra.getString(MatchDetails.PlayerA2.toString());
-                //sB += "/" + bundleExtra.getString(MatchDetails.PlayerB2.toString());
             } else {
                 // can still be a doubles from e.g. a feed
                 String sRegExp = ".*/[\\s]*[^0-9].*"; // contains forward slash NOT closely followed by a number
@@ -159,6 +167,7 @@ public class Match extends XActivity implements MenuHandler
                 }
             }
         }
+        vMatchView.initPlayerColors();
         ScoreBoard.updateDemoThread(this);
     }
 
@@ -175,7 +184,7 @@ public class Match extends XActivity implements MenuHandler
                 return true;
             }
             case R.id.cmd_ok:
-                Intent intent = vMatchView.getIntent(m_sSource, m_sSourceID, false);
+                Intent intent = vMatchView.getIntent(m_sSource, m_sSourceID, false, m_bIsEditMatch);
                 if (intent == null) return false;
                 setResult(RESULT_OK, intent);
                 Match.dontShow();
@@ -221,7 +230,7 @@ public class Match extends XActivity implements MenuHandler
             handleMenuItem(R.id.dyn_new_match);
             return;
         }
-        Intent intent = vMatchView.getIntent(m_sSource, m_sSourceID, true);
+        Intent intent = vMatchView.getIntent(m_sSource, m_sSourceID, true, m_bIsEditMatch);
         if ( intent == null ) {
             // not enough data entered... simply leave the activity
             super.onBackPressed();

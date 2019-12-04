@@ -93,7 +93,7 @@
     <string name="sb_sub_share_match">Condividi incontro…</string>
     <string name="sb_timer">Cronometro</string>
     <string name="sb_nbsp_timer">\u00A0Cronometro</string> <!-- added non-breaking space in front for action bar -->
-    <string name="sb_injury_timer">Cronometro d'infortunio</string>
+    <string name="sb_injury_timer">Cronometro d\'infortunio</string>
     <string name="sb_score_details">Dettagli di Punteggio</string>
     <string name="Live_Score">Punteggio in diretta</string>
     <string name="sb_official_announcement">Annuncio ufficiale</string>
@@ -123,7 +123,7 @@
     <string name="unable_to_interpret_entered_text_as_2_names">Spiacente, non sono stato in grado di interpretare il testo inserito come 2 nomi distinti</string>
 
     <string name="total_of_x_games__play_remaining_y_games">Giocando a \'Totale di %1$d giochi\' i rimanenti %2$d giochi saranno comunque disputati.</string>
-    <string name="total_of_x_games__play_remaining_last_game">Giocando a \'Totale di %1$d giochi\' l'ultimo gioco sarà comunque disputato.</string>
+    <string name="total_of_x_games__play_remaining_last_game">Giocando a \'Totale di %1$d giochi\' l\'ultimo gioco sarà comunque disputato.</string>
     <string name="total_of_x_games_to_y">Totale di %1$s giochi a %2$s</string>
     <string name="total_of_x_games_to_y_1">Totale di</string>
 

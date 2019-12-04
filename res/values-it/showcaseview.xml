@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="press_back_again_to_exit_intro">Premere nuovamente \'Indietro\' per uscire dall'Intro</string>
+    <string name="press_back_again_to_exit_intro">Premere nuovamente \'Indietro\' per uscire dall\'Intro</string>
     <string name="scv_got_it">HO CAPITO</string>
     <string name="scv_first_run">Vuoi un Intro veloce per imparare le principali caratteristiche dell\'app?
         \n

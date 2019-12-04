@@ -391,10 +391,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
           //Log.d(TAG, "Received click for model " + matchModel);
             Player player = IBoard.m_id2player.get(view.getId());
             if ( matchModel.isPossibleGameBallFor(player) && (bGameEndingHasBeenCancelledThisGame == false) ) {
-                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 /* 17 */ ) {
-                    // score will go to game-end, and most likely a dialog will be build and show. Prevent any accidental score changes while dialog is about to be shown
-                    disableScoreButton(view);
-                }
+                // score will go to game-end, and most likely a dialog will be build and show. Prevent any accidental score changes while dialog is about to be shown
+                disableScoreButton(view);
             }
             enableScoreButton(player.getOther());
             changeScore(player);
@@ -462,7 +460,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     onClickXTimesHandler = new OnClickXTimesHandler(300, 10);
                 }
                 if ( onClickXTimesHandler.handle() ) {
-                    int iMenuIds[] = new int[] { R.id.sb_demo
+                    int[] iMenuIds = new int[] { R.id.sb_demo
                                                , R.id.sb_toggle_demo_mode
                                                , R.id.sb_download_posted_to_squore_matches
                                                , R.id.android_language
@@ -987,7 +985,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         while ( (layout != null) &&  (layout instanceof SBRelativeLayout)==false ) {
             layout = (ViewGroup) layout.getChildAt(0);
         }
-        if ( (layout != null) && (layout instanceof SBRelativeLayout) ) {
+        if ( layout instanceof SBRelativeLayout ) {
             layout.setOnTouchListener(new TouchBothListener(clickBothListener, longClickBothListener));
         }
 
@@ -1078,7 +1076,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             // e.g. timer was showing before orientation change. Show it again
             Timer.addTimerView(iBoard.isPresentation(), iBoard);
         }
-        timer.removeTimerView(false, NotificationTimerView.class);
+        Timer.removeTimerView(false, NotificationTimerView.class);
         NotificationTimerView.cancelNotification(this); // notification is always just a timer. Just there for switching back to Squore. Use is switching back... so remove notification
 
         if ( scSequence != null ) {
@@ -1207,7 +1205,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         if ( xActionBar.isShowing() == false ) {
                             xActionBar.show();
                             return;
-                        };
+                        }
                     }
                     if (onBackPressHandler == null) {
                         onBackPressHandler = new OnBackPressExitHandler();
@@ -2658,8 +2656,8 @@ touch -t 01030000 LAST.sb
 
             if ( (bInitializingModelListeners == false) && (iTotal != 0) && ShareMatchPrefs.LinkWithFullDetailsEachPoint.equals(m_liveScoreShare) && (matchModel.isLocked() == false) ) {
                 //shareScoreSheet(ScoreBoard.this, matchModel, false);
-                // start timer to post in e.g. 2 seconds. Restart this timer as soon as another point is scored
-                shareScoreSheetDelayed(2000);
+                // start timer to post in e.g. x seconds. Restart this timer as soon as another point is scored
+                shareScoreSheetDelayed(1000);
             }
 
             if ( (iDelta == 1) ) {
@@ -3452,7 +3450,14 @@ touch -t 01030000 LAST.sb
                 }
                 return true;
             case R.id.sb_edit_event_or_player:
-                editEventAndPlayers();
+                if ( true ) {
+                    Intent nm = new Intent(this, Match.class);
+                    nm.putExtra(IntentKeys.EditMatch.toString(), matchModel);
+                    startActivityForResult(nm, 1);
+                    // XXStartAct
+                } else {
+                    editEventAndPlayers();
+                }
                 return true;
             case R.id.sb_stored_matches: {
                 ArchiveTabbed.SelectTab selectTab = ArchiveTabbed.SelectTab.Previous;
@@ -4115,29 +4120,38 @@ touch -t 01030000 LAST.sb
         Bundle extras = data.getExtras();
         if ( extras != null ) {
             {
-                // returning from MatchTabbed or Match
-                final String sNewMatch = Model.class.getSimpleName();
-                if ( extras.containsKey(sNewMatch) ) {
-                    String sJson = extras.getString(sNewMatch);
-                    Model m = Brand.getModel();
-                    m.fromJsonString(sJson);
-
-                    if ( Match.showAfterMatchSelection() ) {
-                        // match selected with single click from list of matches
-                        String sSource = m.getSource();
-                        if ( StringUtil.isNotEmpty(sSource) ) {
-                            if ( sSource.startsWith("http") || sSource.contains("tournamentsoftware") ) {
-                                // user is allowed to specify to turn this off in a section of MatchView
-                                PreferenceValues.initForLiveScoring(this, true);
+                final String sNewMatch  = IntentKeys.NewMatch.toString();
+                final String sEditMatch = IntentKeys.EditMatch.toString();
+                if ( extras.containsKey(sNewMatch) || extras.containsKey(sEditMatch) ) {
+                    final boolean bEditMatchInProgress;
+                    // returning from MatchTabbed or Match for new/edit match
+                    final Model m;
+                    if ( extras.containsKey(sNewMatch) ) {
+                        bEditMatchInProgress = false;
+                        String sJson = extras.getString(sNewMatch);
+                        m = Brand.getModel();
+                        m.fromJsonString(sJson);
+                        if ( Match.showAfterMatchSelection() ) {
+                            // match selected with single click from list of matches
+                            String sSource = m.getSource();
+                            if ( StringUtil.isNotEmpty(sSource) ) {
+                                if ( sSource.startsWith("http") || sSource.contains("tournamentsoftware") ) {
+                                    // user is allowed to specify to turn this off in a section of MatchView
+                                    PreferenceValues.initForLiveScoring(this, true);
+                                }
                             }
-                        }
 
-                        // now let user to specify match format
-                        Intent nm = new Intent(this, Match.class);
-                        nm.putExtra(Model.class.getSimpleName(), sJson);
-                        startActivityForResult(nm, 1);
-                        return;
+                            // now let user to specify match format
+                            Intent nm = new Intent(this, Match.class);
+                            nm.putExtra(IntentKeys.NewMatch.toString(), sJson);
+                            startActivityForResult(nm, 1);
+                            return;
+                        }
+                    } else /*if ( extras.containsKey(sEditMatch) )*/ {
+                        bEditMatchInProgress = true;
+                        m = (Model) extras.getSerializable(sEditMatch);
                     }
+
                     PreferenceValues.setNumber  (PreferenceKeys.numberOfPointsToWinGame, this, m.getNrOfPointsToWinGame());
                     PreferenceValues.setNumber  (PreferenceKeys.numberOfGamesToWinMatch, this, m.getNrOfGamesToWinMatch());
                     PreferenceValues.setNumber  (PreferenceKeys.numberOfServesPerPlayer, this, m.getNrOfServesPerPlayer());
@@ -4166,11 +4180,33 @@ touch -t 01030000 LAST.sb
                         Log.w(TAG, "remaining overwrites " + RWValues.getOverwritten());
                         //PreferenceValues.removeOverwrites(FeedMatchSelector.mFeedPrefOverwrites);
                     }
-                    m.registerListeners(matchModel);
-                    matchModel = m;
-                    setPlayerNames(new String[] { matchModel.getName(Player.A), matchModel.getName(Player.B) });
 
-                    initScoreBoard(null);
+                    if ( bEditMatchInProgress ) {
+                        boolean bChanged = false;
+
+                        // copy relevant properties to active matchmodel, but do not change score
+                        setPlayerNames( m.getPlayerNames(false, false));
+                        for ( Player p: Player.values() ) {
+                            bChanged = matchModel.setPlayerColor  (p, m.getColor  (p));
+                            bChanged = matchModel.setPlayerCountry(p, m.getCountry(p));
+                            bChanged = matchModel.setPlayerClub   (p, m.getClub   (p));
+
+                        }
+                        // TODO: announcement language
+                        bChanged = matchModel.setEvent(m.getEventName(), m.getEventDivision(), m.getEventRound(), m.getEventLocation());
+                        bChanged = matchModel.setCourt(m.getCourt());
+                        bChanged = matchModel.setReferees(m.getReferee(), m.getMarker());
+
+                        bChanged = matchModel.setNrOfPointsToWinGame(m.getNrOfPointsToWinGame());
+                        bChanged = matchModel.setNrOfGamesToWinMatch(m.getNrOfGamesToWinMatch());
+                        bChanged = matchModel.setTiebreakFormat(m.getTiebreakFormat());
+                    } else {
+                        m.registerListeners(matchModel);
+                        matchModel = m;
+                        setPlayerNames(new String[] { matchModel.getName(Player.A), matchModel.getName(Player.B) });
+
+                        initScoreBoard(null);
+                    }
 
                     //setModelForCast(matchModel);
 
@@ -4178,7 +4214,7 @@ touch -t 01030000 LAST.sb
                 }
             }
             {
-                final String sOldMatch = PreviousMatchSelector.class.getSimpleName();
+                final String sOldMatch = IntentKeys.PreviousMatch.toString();
                 if ( extras.containsKey( sOldMatch ) ) {
                     File f = (File) extras.get(sOldMatch);
                     if ( f == null ) { return; }
@@ -4194,7 +4230,7 @@ touch -t 01030000 LAST.sb
             }
         }
     }
-
+    /** only public because called from EditPlayers: TODO remove editplayers dialog */
     public boolean setPlayerNames(String[] saPlayers) {
         return setPlayerNames(saPlayers, true);
     }
@@ -4262,10 +4298,10 @@ touch -t 01030000 LAST.sb
             resultPoster.post(this, matchModel, authentication, sUserName, sPassword);
         }
     }
-
+    /** for livescore */
     private class DelayedModelPoster extends CountDownTimer {
         private DelayedModelPoster(long iMilliSeconds) {
-            super(iMilliSeconds, 600);
+            super(iMilliSeconds, 250);
         }
         @Override public void onTick(long millisUntilFinished) {
             //Log.d(TAG, "Waiting ... " + millisUntilFinished);
@@ -4284,7 +4320,7 @@ touch -t 01030000 LAST.sb
         m_delayedModelPoster.start();
     }
     private static boolean m_bShareStarted_DemoThread = false;
-    /** invoked on: GameEndReached, GameEnded, FirstPointChange, GameIsHalfway, ScoreChange */
+    /** invoked on: GameEndReached, GameEnded, FirstPointChange, GameIsHalfway, ScoreChange. Mainly for livescore */
     public static void shareScoreSheet(Context context, Model matchModel, boolean bAllowEndGameIfApplicable) {
         Player possibleMatchVictoryFor = matchModel.isPossibleMatchVictoryFor();
         if ( bAllowEndGameIfApplicable ) {
@@ -4298,11 +4334,12 @@ touch -t 01030000 LAST.sb
                 matchModel.endGame(false); // don't notify listeners: might popup a disturbing dialog like 'Post to site?'
             }
         }
+        JSONObject oSettings = null;
         MatchModelPoster matchModelPoster = new MatchModelPoster();
         m_bShareStarted_DemoThread = true;
         if ( possibleMatchVictoryFor != null ) {
             // only create settings if match is finished... ensure in between updates are just a little smaller/faster
-            JSONObject oSettings = new JSONObject();
+            oSettings = new JSONObject();
 
             // add colors section to the settings
             try {
@@ -4328,10 +4365,8 @@ touch -t 01030000 LAST.sb
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            matchModelPoster.post(context, matchModel, oSettings);
-        } else {
-            matchModelPoster.post(context, matchModel, null);
         }
+        matchModelPoster.post(context, matchModel, oSettings);
     }
 
     // ------------------------------------------------------

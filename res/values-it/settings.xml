@@ -217,7 +217,7 @@
     <string name="pref_timerPauseBetweenGames_values">Valori selezionabili per il tempo tra un gioco e l\'altro</string>
     <string name="pref_timerPauseBetweenGames_values_summary">Valori selezionabili all\'inizio d\'un nuovo incontro per il numero dei secondi tra un gioco e l\'altro di quel incontro (in genere 90 o 120)</string>
     <string name="pref_timerWarmup_values">Valori selezionabili per il riscaldamento</string>
-    <string name="pref_timerWarmup_values_summary">Valori selezionabili per il riscaldamento all\'inizio d'\un nuovo incontro</string>
+    <string name="pref_timerWarmup_values_summary">Valori selezionabili per il riscaldamento all\'inizio d\'un nuovo incontro</string>
     <string name="pref_timerInjury">Il numero di secondi per il recupero da inforunio</string>
     <string name="pref_timerInjury_summary">Il numero di secondi che un giocatore ha a disposizione per recuperare e riprendere il gioco dopo un infortunio. Ufficialmente 180 secondi.</string>
 <!--
