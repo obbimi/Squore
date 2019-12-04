@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
     <string name="sb_feed">Feed</string>
-    <string name="sb_select_feed_match">Seleziona da feed</string>
+    <string name="sb_select_feed_match">Seleziona da Feed</string>
     <string name="back_to_list_of_matches">Torna alla lista</string>
 
-    <string name="Switch_feed_elipses">Cambia feed…</string>
-    <string name="add_new_feed">Seleziona nuovo feed pubblico…</string>
-    <string name="feed_x_already_exist_with_name_y">Feed %1$s è già nella tua lista dei feed sotto il nome \'%2$s\'</string>
-    <string name="Could_not_read_feed_x__y__Using_cached_content_aged_z_minutes">Lettura feed non riuscita %1$s.\n\n%2$s\n\nSi sta usando contenuto da cache (%3$d minuti fa).</string>
+    <string name="Switch_feed_elipses">Cambia Feed…</string>
+    <string name="add_new_feed">Seleziona nuovo Feed pubblico…</string>
+    <string name="feed_x_already_exist_with_name_y">Feed %1$s è già nella tua lista dei Feed sotto il nome \'%2$s\'</string>
+    <string name="Could_not_read_feed_x__y__Using_cached_content_aged_z_minutes">Lettura Feed non riuscita %1$s.\n\n%2$s\n\nSi sta usando contenuto da cache (%3$d minuti fa).</string>
 
-    <string name="No_matches_in_feed">Nessun incontro nel feed</string>
-    <string name="Error_no_feeds_in_feed">Nessun feed in feed</string>
-    <string name="No_active_feed">Nessun feed attivo</string>
-    <string name="Select_one_by_pressing_the_globe_button">Seleziona uno premendo il tasto \'globo\'</string>
+    <string name="No_matches_in_feed">Nessun incontro nel Feed</string>
+    <string name="Error_no_feeds_in_feed">Nessun feed in Feed</string>
+    <string name="No_active_feed">Nessun Feed attivo</string>
+    <string name="Select_one_by_pressing_the_globe_button">Selezionane uno premendo il tasto \'globo\'</string>
 </resources>

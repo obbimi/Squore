@@ -46,7 +46,7 @@
     <string name="pref_Make_your_choice">Fa la tua scelta</string>
 
     <string name="pref_feedFeedsURL">feedFeedsURL</string>
-    <string name="pref_feedFeedsURL_summary">Solamente per sviluppatori</string>
+    <string name="pref_feedFeedsURL_summary">Riservato agli sviluppatori</string>
     <string name="pref_MaximumCacheAgeFeeds">Età Cache Massima per Feeds</string>
     <string name="pref_MaximumCacheAgeFeeds_summary">In minuti</string>
     <string name="pref_feedReadTimeout">Timeout di lettura per feeds</string>
@@ -56,7 +56,7 @@
 
     <string name="pref_Show_logo_on_scoreboard">Mostra logo sul tabellone segnapunti</string>
     <string name="pref_Hide_logo_when_game_in_progress">Nascondi logo quando il gioco è in corso</string>
-    <string name="pref_Hide_division_field_when_game_in_progress">Nascondi campo divisione quando il gioco è in corso</string>
+    <string name="pref_Hide_division_field_when_game_in_progress">Nascondi campo Divisione quando il gioco è in corso</string>
 
     <string name="pref_x_changed_to_y">Impostazioni
         \n %1$s
@@ -70,19 +70,19 @@
     <string name="pref_Sharing_summary">Via Facebook, SMS o Email</string>
     <string name="pref_Other">Varie</string>
     <string name="pref_Appearance">Aspetto</string>
-    <string name="pref_Appearance_summary">Colori. Bandiere. Barra dell\'azione.</string>
+    <string name="pref_Appearance_summary">Colori. Bandiere. Barra d\'azione.</string>
     <string name="pref_Colors">Colori</string>
     <string name="pref_Colors_summary">Controlla i colori degli elementi del tabellone di Squore</string>
     <string name="pref_Avatars">Avatar giocatori</string>
-    <string name="pref_Avatars_summary">Immagine piccola del giocatore secificata nel feed</string>
+    <string name="pref_Avatars_summary">Immagine piccola del giocatore specificata nel feed</string>
     <string name="pref_showAvatarOn">Mostra immagine su</string>
     <string name="pref_hideAvatarForSameImage">Nascondi avatar se identico</string>
     <string name="pref_CountryFlags">Nazioni/Bandiere</string>
-    <string name="pref_CountryFlags_summary">Controlla come nazioni/bandiere vengono visualizzate</string>
+    <string name="pref_CountryFlags_summary">Controlla come le nazioni/bandiere vengono visualizzate</string>
     <string name="pref_showCountryAs">Mostra nazione come</string>
     <string name="pref_hideFlagForSameCountry">Nascondi bandiere per la stessa nazionalità</string>
     <string name="pref_prefetchFlags">Caricamento anticipato delle immagini di bandiere</string>
-    <string name="pref_prefetchFlags_summary">Richiede da 2 a 3 MB di spazio di archiviazione</string>
+    <string name="pref_prefetchFlags_summary">Richiede da 2 a 3 MB di spazio d\'archiviazione</string>
     <string name="pref_TextSize_summary">Controlla la dimensione del carattere degli elementi del tabellone di Squore</string>
     <string name="pref_Statistics">Statistiche di palle Vincenti/Errori</string>
     <string name="pref_Statistics_summary">Comportamento dell\'app per la registrazione di Vincenti/Errori</string>
@@ -96,7 +96,7 @@
     <string name="pref_showPlayerColorOn">Mostra colore giocatore</string>
     <string name="pref_showPlayerColorOn_summary">Determina su quali elementi di interfaccia grafica il colore giocatore scelto verrà mostrato</string>
     <string name="pref_serveButtonTransparencyNonServer">Trasparenza del tasto di servizio</string>
-    <string name="pref_serveButtonTransparencyNonServer_summary">Valori alti (max 100) rendono il tasto del giocatore alla risposta meno visibile</string>
+    <string name="pref_serveButtonTransparencyNonServer_summary">Valori alti (max 100) rendono il tasto del giocatore che è alla risposta meno visibile</string>
     <!--
         <string name="pref_Colors_TextDynamically">Text Color Dynamically</string>
         <string name="pref_Colors_TextDynamically_summary">Automatic black or white depending on the chosen background color</string>
@@ -166,12 +166,12 @@
     <string name="pref_showLastGameDurationChronoOn">Mostra \'Durata gioco\' su</string>
     <string name="pref_showFieldDivisionOn">Mostra \'Campo o Divisione\' su</string>
     <string name="pref_timerViewType">Tipo di cronometro</string>
-    <string name="pref_hapticFeedbackPerPoint">Haptic feedback per point</string>
-    <string name="pref_hapticFeedbackPerPoint_summary">Vibrate shortly each time a point is added, game is ended or undo action is performed</string>
+    <string name="pref_hapticFeedbackPerPoint">Feedback tattile per ogni punto</string>
+    <string name="pref_hapticFeedbackPerPoint_summary">Vibra brevemente ogni volta che un punto è segnato, un gioco è finito o un\'azione viene annullata</string>
     <string name="pref_hapticFeedbackOnGameEnd">Feedback tattile al termine del gioco</string>
     <string name="pref_hapticFeedbackOnGameEnd_summary">Vibra brevemente se è stato raggiunto un punteggio di fine gioco</string>
     <string name="pref_numberOfMinutesAfterWhichToLockMatch">Numero di minuti prima di autoblocco</string>
-    <string name="pref_numberOfMinutesAfterWhichToLockMatch_summary">Se l\'incontro rimane invariato per questo nuero di minuti si bloccherà automaticamente</string>
+    <string name="pref_numberOfMinutesAfterWhichToLockMatch_summary">Se l\'incontro rimane invariato per questo numero di minuti si bloccherà automaticamente</string>
     <string name="pref_indicateGameBall">Indica \'palla del gioco\' nei tasti del punteggio</string>
     <string name="pref_indicateGameBall_summary">Da un feedback visivo nei tasti del punteggio riguardo il fatto che il prossimo scambio potrebbe portare alla vincita del gioco</string>
     <string name="pref_floatingMessageForGameBall">Mostra un messagio \'palla del gioco\'</string>
@@ -202,20 +202,22 @@
     <string name="pref_useSoundNotificationInTimer_summary">Riproduci suono di notifica al termine del cronometro (e quando rimangono 15 secondi di pausa, e a metà tempo del riscaldamento)</string>
     <string name="pref_showPauseButtonOnTimer">Mostra tasto per fermare il cronometro</string>
     <string name="pref_cancelTimerWhenTimeIsUp">Nascondi il cronometro quando il tempo scade</string>
-    <string name="pref_showTimeIsAlreadyUpFor_Chrono">Mostra un piccolo cronometro che fa vedere quanto \'Tempo!\' sta mostrando</string>
+    <string name="pref_showTimeIsAlreadyUpFor_Chrono">Mostra un minuscolo cronometro che fa vedere la durata in cui \'Tempo!\' rimarrà visibile</string>
     <string name="pref_showAdjustTimeButtonsInTimer">Mostra tasti di gestione del tempo rimanente</string>
     <string name="pref_showUseAudioCheckboxInTimer">Mostra casella di controllo audio nel cronometro</string>
     <string name="pref_archive_summary">Raggruppamento e ordinamento degli incontri archiviati</string>
     <string name="pref_groupArchivedMatchesBy">Raggruppa incontri archiviati per</string>
     <string name="pref_sortOrderOfArchivedMatches">Ordinamento degli incontri archiviati</string>
     <string name="pref_useVibrationNotificationInTimer">Usa notifiche di vibrazione</string>
-    <string name="pref_useVibrationNotificationInTimer_summary">Lascia il dispositivo vibrare al termine del cronometro e quando rimangono 15 secondi di pausa, e a metà tempo del riscaldamento)</string>
+    <string name="pref_useVibrationNotificationInTimer_summary">Lascia il dispositivo vibrare al termine del cronometro (e quando rimangono 15 secondi di pausa, e a metà tempo del riscaldamento)</string>
     <string name="pref_timerWarmup">Numero di secondi per il riscaldamento</string>
     <string name="pref_timerWarmup_summary">Il numero di secondi che i giocatori hanno per riscaldarsi in campo. Ufficialmente 4 minuti: 2 minuti per lato</string>
     <string name="pref_timerPauseBetweenGames">Il numero di secondi tra un gioco e l\'altro</string>
     <string name="pref_timerPauseBetweenGames_summary">Il numero di secondi prima che il prossimo gioco deve iniziare. Ufficialmente 90 secondi. (PSA: 120)</string>
     <string name="pref_timerPauseBetweenGames_values">Valori selezionabili per il tempo tra un gioco e l\'altro</string>
     <string name="pref_timerPauseBetweenGames_values_summary">Valori selezionabili all\'inizio d\'un nuovo incontro per il numero dei secondi tra un gioco e l\'altro di quel incontro (in genere 90 o 120)</string>
+    <string name="pref_timerWarmup_values">Valori selezionabili per il riscaldamento</string>
+    <string name="pref_timerWarmup_values_summary">Valori selezionabili per il riscaldamento all\'inizio d'\un nuovo incontro</string>
     <string name="pref_timerInjury">Il numero di secondi per il recupero da inforunio</string>
     <string name="pref_timerInjury_summary">Il numero di secondi che un giocatore ha a disposizione per recuperare e riprendere il gioco dopo un infortunio. Ufficialmente 180 secondi.</string>
 <!--
@@ -232,20 +234,22 @@
     <string name="pref_numberOfGamesToWin_summary">Numero dei giochi vinti che serve per vincere l\'incontro. Ufficialmente 3.</string>
     <string name="pref_handicapFormat">Permetti di specificare un handicap</string>
     <string name="pref_handicapFormat_summary">Per iniziare con un punteggio diverso da 0–0</string>
+    <string name="pref_playAllGames">Disputa tutti i giochi</string>
+    <string name="pref_playAllGames_summary">Giocare \'Totale-di-x-giochi\' anziché \'Al-meglio-di-x-giochi\'</string>
     <string name="pref_useEnglishScoring">Punteggio al cambio servizio</string>
-    <string name="pref_useEnglishScoring_summary">Formato \'vecchio\' di punteggio. Il giocatore guadagna un punto solo se era al servizio.</string>
+    <string name="pref_useEnglishScoring_summary">Formato \'vecchio\' di punteggio. Il giocatore guadagna un punto solamente se era al servizio dello scambio vinto.</string>
     <string name="pref_tiebreakFormat">Formato spareggio</string>
     <string name="pref_tiebreakFormat_summary">Che regola seguire in caso di spareggio</string>
     <string name="pref_web_integration">Internet</string>
     <string name="pref_web_integration_summary">Carica URLs per la selezione dell\'incontro. Pubblica risultato dell\'incontro su un sito web. Condividi risultato dell\'incontro.</string>
     <string name="pref_playerList">Lista giocatori</string>
     <string name="pref_playerList_summary">Per il completamento automatico durante la digitazione dei nomi giocatore</string>
-    <string name="pref_clubList">Lista dei club</string>
-    <string name="pref_clubList_summary">Per il completamento automatico durante la digitazione dei nomi club</string>
+    <string name="pref_clubList">Lista dei club/società</string>
+    <string name="pref_clubList_summary">Per il completamento automatico durante la digitazione dei nomi club/società</string>
     <string name="pref_numberOfCharactersBeforeAutocomplete">Numero di caratteri per il completamento automatico</string>
-    <string name="pref_numberOfCharactersBeforeAutocomplete_summary">Il numero minimo di caratteri che bisogna digitare prima che il completamento automatico si attiva suggerendo possibili nomi giocatore</string>
+    <string name="pref_numberOfCharactersBeforeAutocomplete_summary">Il numero minimo di caratteri che occorre digitare prima che il completamento automatico si attiva suggerendo possibili nomi giocatore</string>
     <string name="pref_numberOfCharactersBeforeAutocompleteCountry">Numero di caratteri per il completamento automatico della nazione</string>
-    <string name="pref_numberOfCharactersBeforeAutocompleteCountry_summary">Il numero minimo di caratteri che bisogna digitare prima che il completamento automatico si attiva suggerendo delle possibili nazioni</string>
+    <string name="pref_numberOfCharactersBeforeAutocompleteCountry_summary">Il numero minimo di caratteri che occorre digitare prima che il completamento automatico si attiva suggerendo delle possibili nazioni</string>
     <string name="pref_maxNumberOfPlayersInGroup">Numero dei giocatori in un gruppo/squadra</string>
     <string name="pref_maxNumberOfPlayersInGroup_summary">Numero massimo dei giocatori in un gruppo. Es. per aggiungere tutti i 6 incontri per un gruppo di 4 giocatori in \'La Mia Lista\'</string>
     <string name="pref_removeMatchFromMyListWhenSelected">Rimuovi incontro da \'La Mia Lista\'</string>
@@ -253,8 +257,8 @@
     <string name="pref_continueRecentMatch">Continua un incontro recente</string>
     <string name="pref_continueRecentMatch_summary">Se esiste un risultato recente per un incontro selezionato da \'La Mia Lista\', usa quel risultato come punto di partenza</string>
     <string name="pref_matchList">Lista Incontri</string>
-    <string name="pref_matchList_summary">Lista fissa di incontri per una facile selezione</string>
-    <string name="pref_matchList_not_set">Se devi arbitrare diversi incontri, puoi definirli qui in anticipo per una facile selezione successiva. Puoi anche controllare questa lista inserendo (copia/incolla) semplice testo nella sezione \'%1$s\' della schermata \'%2$s\'.</string>
+    <string name="pref_matchList_summary">Lista fissa d\'incontri per una facile selezione</string>
+    <string name="pref_matchList_not_set">Se devi arbitrare diversi incontri, puoi definirli qui in anticipo per una facile selezione successiva. Puoi anche controllare questa lista inserendo (copia/incolla) un semplice testo nella sezione \'%1$s\' della schermata \'%2$s\'.</string>
     <string name="pref_eventList">Lista Eventi</string>
     <string name="pref_eventList_summary">Lista di eventi per \'Completamento automtico\'</string>
     <string name="pref_roundList">Lista Turni</string>
@@ -264,11 +268,11 @@
     <string name="pref_feedPostUrl">URLs Attivi</string>
     <string name="pref_feedPostUrl_summary">URLs attualmente usati quando \'Seleziona nuovo incontro\' è scelto (e se un post URL per \'Pubblica risultato\')</string>
     <string name="pref_postDataPreference">Determina quali dati sono pubblicati</string>
-    <string name="pref_postDataPreference_summary">Pubblicando JSON saranno forniti più dettagli ma i dati esatti potrebbero cambiare con le nuove versioni dell\'app.</string>
+    <string name="pref_postDataPreference_summary">Pubblicando dati JSON saranno forniti più dettagli ma i dati esatti potrebbero cambiare con le nuove versioni dell\'app.</string>
     <string name="pref_useFeedNameAsEventName">Usa Nome Feed come Nome Evento</string>
-    <string name="pref_useFeedNameAsEventName_summary">Usa il nome del Feed dal quale selezioni un incontro come Nome Evento per quel incontro</string>
+    <string name="pref_useFeedNameAsEventName_summary">Usa il nome del Feed dal quale selezioni un incontro come Nome Evento per quell\'incontro</string>
     <string name="pref_useGroupNameAsEventData">Usa Nome Gruppo come Dati Evento</string>
-    <string name="pref_useGroupNameAsEventData_summary">Usa il nome del gruppo dal quale selezioni un incontro come Nome Evento e Turnoper quel incontro</string>
+    <string name="pref_useGroupNameAsEventData_summary">Usa il nome del gruppo dal quale selezioni un incontro come Nome Evento e Turnoper quell\'incontro</string>
     <string name="pref_feedPostUrl_not_set">Puoi controllare quali incontri compaiono qui cambiando il Feed premendo sul tasto \'Globo\'. Puoi inoltre aggiungere un tuo Feed fornendo uno o più URLs nela sezione \'%1$s\' della schermata \'%2$s\'. Consulta le pagine di aiuto per ulteriore informazione.</string>
     <string name="posturl_tip">Puoi specificare su quale sito web l\'incontro viene pubblicato. In colaborazione con, ad esempio, il webmaster del tuo squash club, risultati di incontri possono essere resi disponibili direttamente online. Consulta le pagine di aiuto per ulteriore informazione.</string>
     <string name="pref_readContactsForAutoCompletion">Usa contatti per il cmpletamento automatico</string>
@@ -277,11 +281,11 @@
     <string name="pref_readContactsForAutoCompletion_max_summary">Incrementa a tuo rischio se hai effettivamente più contatti di questo numero</string>
     <string name="if_you_have_a_lot_of_contacts_dot_dot_dot">
         Se il tuo dispositivo contiene molti contatti questa opzione può rendere lento il funzionamento di Squore
-        \n - Al\'avvio
+        \n - All\'avvio
         \n - Digitando manualmente i nomi giocatore.
         \n
         \nQuesto dispositivo contiene %1$d contatti</string>
-    <string name="pref_onlyForContactGroups">Usa solo gruppo di contatti</string>
+    <string name="pref_onlyForContactGroups">Usa solo un gruppo di contatti</string>
     <string name="pref_onlyForContactGroups_summary">Leggi solamente nomi di miei contatti che si trovano in questo \'Gruppo di contatti\'</string>
     <string name="pref_suggestToPostResult">Suggerisci di pubblicare il risultato dell\'incontro</string>
     <string name="pref_suggestToPostResult_summary">Suggerisci di pubblicare il risultato dell\'incontro quando è terminato. Se deselezionato puoi tuttavia pubblicare il risultato dell\'incontro mediante \'Pubblica risultato incontro al sito web\'</string>
@@ -296,9 +300,9 @@
     <string name="pref_hideCompletedMatchesFromFeed">Nascondi incontri completati</string>
     <string name="pref_hideCompletedMatchesFromFeed_summary">Un feed potrebbe contenere incontri già disputati (includendone il risultato). Se non vuoi visualizzare questi incontri, seleziona questa opzione</string>
     <string name="pref_removeSeedingAfterMatchSelection">Rimuovi piazzamento dai nomi giocatore</string>
-    <string name="pref_removeSeedingAfterMatchSelection_summary">Rimuove per es. la stringa di piazzamento [5/8] dopo la selezione d\'un incontro da un feed</string>
-    <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Passa alla lista dei giocatori se la lista degli incontri del feed è vuota</string>
-    <string name="pref_smsResultToNr">Numero di telefono predefinito per l\'zione \'Invia SMS risultato\'</string>
+    <string name="pref_removeSeedingAfterMatchSelection_summary">Rimuove per es. la stringa di piazzamento [5/8] dopo la selezione d\'un incontro da un Feed</string>
+    <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Passa alla lista dei giocatori se la lista degli incontri del Feed è vuota</string>
+    <string name="pref_smsResultToNr">Numero di telefono predefinito per l\'azione \'Invia SMS risultato\'</string>
     <string name="pref_smsResultToNr_summary">Il numero di telefono che sarà precompilato quando si sceglie l\'opzione dal menu \'Condividi/Messaggia Risultato Incontro\'</string>
     <!--<string name="pref_smsResultToNr_not_set">You can set a default recipient in the \'%1$s\' screen of \'%2$s\'</string>-->
     <string name="pref_refereeName">Nome arbitro</string>
@@ -307,7 +311,7 @@
     <string name="pref_refereeList_summary">Per il completamento automatico digitando i nomi di arbitro/segnapunti</string>
     <string name="pref_Mail">Email</string>
     <string name="pref_mailResultTo">Indirizzo email predefinito per l\'azione \'Invia Risultato via email\'</string>
-    <string name="pref_mailResultTo_summary">L\'indirizzo emamil che sarà precompilato quando si sceglie l\'opzione \'Invia Risultato via email\'</string>
+    <string name="pref_mailResultTo_summary">L\'indirizzo email che sarà precompilato quando si sceglie l\'opzione \'Invia Risultato via email\'</string>
     <string name="pref_mailFullScoringSheet">Invia foglio di punteggio completo via email</string>
     <string name="pref_mailFullScoringSheet_summary">Il messaggio email includerà un foglio di punteggio completo</string>
     <string name="pref_mailResultTo_not_set">Puoi impostare un destinatario email predefinito nella schermata \'%1$s\' di \'%2$s\'</string>
@@ -315,10 +319,10 @@
     <string name="pref_live_score_summary">Ottimizza per, e visualizza Punteggio in diretta</string>
     <string name="pref_live_score_url">In Diretta</string>
     <string name="pref_live_score_url_summary">Usa questo URL per visualizzare tutti gli incontri condivisi con questa app, es. relativamente al tuo evento</string>
-    <string name="pref_LiveScorePrefs">Supporta punteggio in diretta</string>
-    <string name="pref_updateLiveScore">Aggiorna punteggio in diretta</string>
+    <string name="pref_LiveScorePrefs">Supporta punteggio in diretta (Live Score)</string>
+    <string name="pref_updateLiveScore">Aggiorna punteggio in diretta (Live Score)</string>
     <string name="pref_LiveScorePrefs_dialog">Regola opzioni: Usa la funzione Condividi (su Automatico) e Azione per la Condivisione (su Dettagli dell\'incontro dopo ogni metà gioco) per ottimizzare il supporto del punteggio in diretta (Live Score)</string>
-    <string name="pref_Cast_ShowGraphDuringTimer">Mostra punteggio di giochi e grafico di punteggio dell\'ultimo gioco tra un gioco e l\'altro ed al termine dell\'incontro</string>
+    <string name="pref_Cast_ShowGraphDuringTimer">Mostra il punteggio dei giochi ed un grafico di punteggio dell\'ultimo gioco tra un gioco e l\'altro ed al termine dell\'incontro</string>
 
     <string name="for_this_to_take_effect_a_restart_is_required">Per rendere questa opzione attiva occorre un riavvio dell\'app</string>
     <string name="pref_reset_title">Ripristina predefiniti</string>

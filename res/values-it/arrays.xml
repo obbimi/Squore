@@ -44,7 +44,7 @@
     <string-array name="PostDataPreferenceDisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.PostDataPreference -->
         <item>Pubblica solo i dati più rilevanti</item>
-        <item>Pubblica dati più rilevanti + json={}</item>
+        <item>Pubblica i dati più rilevanti + json={}</item>
         <item>Pubblica solo dati json nel body</item>
     </string-array>
     <string-array name="LockState_DisplayValues">
@@ -57,7 +57,7 @@
         <item>Bloccato (Manuale)</item>
         <item>Bloccato (Fine Incontro)</item>
         <item>Bloccato (Incontro Terminato Manualmente)</item>
-        <item>Bloccato (Tempo di innatività)</item>
+        <item>Bloccato (Tempo di Innatività)</item>
         <item>Condiviso Incontro Terminato</item>
         <item>Bloccato (Ritiro)</item>
         <item>Bloccato (Incontro di Penalità)</item>
@@ -126,8 +126,8 @@
         <item>Dissenso</item>
         <item>Abuso verso l\'ufficiale di gara</item>
         <item>Contatto fisico</item>
-        <item>Antisportivo</item>
-        <item>Ricezione di consigli dell\'allenatore durante il gioco</item>
+        <item>Comportamento antisportivo</item>
+        <item>Consigli dell\'allenatore durante il gioco</item>
     </string-array>
     <string-array name="timerViewType_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.timer.ViewType -->
@@ -174,7 +174,7 @@
     <string-array name="EndGameDisplayValues">
         <item>Non suggerire</item>
         <item>Suggerisci</item>
-        <item>Finisci automaticamente</item>
+        <item>Termina automaticamente</item>
     </string-array>
     <string-array name="AutoLockContextDisplayValues">
         <item>Quando l\'incontro è finito</item>
@@ -182,13 +182,13 @@
     </string-array>
     <string-array name="ShowPlayerColorOnDisplayValues">
         <item>Bordo del tasto di punteggio</item>
-        <item>tasto del lato di servizio</item>
-        <item>tasto del giocatore</item>
-        <item>Mssaggio palla del gioco</item>
+        <item>Tasto del lato di servizio</item>
+        <item>Tasto del giocatore</item>
+        <item>Messaggio \'palla del gioco\'</item>
         <item>Grafico di punteggio del gioco</item>
     </string-array>
     <string-array name="ShowCountryAsDisplayValues">
-        <item>Abbreviazione nel Nome</item>
+        <item>Abbreviazione in Nome</item>
         <item>Bandiera accanto al Nome (Sul Dispositivo)</item>
         <item>Bandiera accanto al Nome (Chrome Cast)</item>
     </string-array>
@@ -228,7 +228,7 @@
         <item>Giocatore alla risposta sceglie 1 o 2</item>
         <item>Giocatore alla risposta sceglie 1,2 o 3</item>
         <item>Giocatore alla risposta sceglie 1 o 3</item> <!-- http://en.allexperts.com/q/Squash-Racquetball-1548/few-rules.htm : US Colleges and PSA old scoring -->
-        <item>Senza spareggio</item>
+        <item>Senza spareggio (punto secco)</item>
     </string-array>
     <string-array name="handicapFormatDisplayValues">
         <item>Nessuno</item>

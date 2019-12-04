@@ -26,7 +26,7 @@
     <string name="overview">Panoramica</string>
     <string name="statistics">Statistiche</string>
     <string name="handicap">Handicap</string>
-    <string name="no_handicap">No Handicap</string>
+    <string name="no_handicap">Senza Handicap</string>
     <string name="cmd_yes">Sì</string>
     <string name="cmd_no">No</string>
     <string name="cmd_ok">OK</string>
@@ -61,12 +61,12 @@
     <string name="cmd_new_matches_with">Nuovi incontri con</string>
     <string name="cmd_rebuild">Ricostruisci</string>
     <string name="uc_exit">Esci</string>
-    <string name="press_back_again_to_exit">Premi nuovamente sul tasto \'Indietro\' per uscire</string>
+    <string name="press_back_again_to_exit">Premi nuovamente il tasto \'Indietro\' per uscire</string>
     <string name="goto_help">Aiuto</string>
     <string name="Help_elipses">Aiuto…</string>
     <string name="privacy_and_terms">Privacy e Condizioni</string>
     <string name="about">Info</string>
-    <string name="refresh">Rinfresca</string>
+    <string name="refresh">Aggiorna</string>
     <string name="filter">Filtra</string>
     <string name="expand_all">Espandi tutto</string>
     <string name="collapse_all">Comprimi tutto</string>
@@ -75,12 +75,12 @@
 -->
     <string name="tip">Suggerimento</string>
     <string name="settings">Impostazioni</string>
-    <string name="do_not_show_this_dialog_anymore">Non mostrare più questa finestra</string>
+    <string name="do_not_show_this_dialog_anymore">Non mostrare più questo dialogo</string>
     <string name="lbl_fixed">Fisso</string>
     <string name="lbl_none">Nessuno</string>
 
     <!-- network -->
-    <string name="no_fully_functional_connection_error">Nessuna rete completamente funzionale. Forse devi accedere al tuo provider?</string>
+    <string name="no_fully_functional_connection_error">Nessuna rete completamente funzionale. Forse ti dovresti collegare al tuo provider?</string>
     <string name="connection_error">Errore di connessione %1$s %2$s</string>
     <string name="unknown_error">Errore sconosciuto %s</string>
 

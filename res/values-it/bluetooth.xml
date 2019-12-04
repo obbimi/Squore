@@ -15,10 +15,10 @@
     <string name="bt_already_connected_to_X">Già connesso a %s</string>
 
     <string name="bt_unable_to_connect_device_X">Impossibile connettersi al dispositivo %s</string>
-    <string name="bt_unable_to_connect_device_info"><![CDATA[<html>Assicura che sul dispositivo di destinazione %1$s
+    <string name="bt_unable_to_connect_device_info"><![CDATA[<html>Assicurarsi che sul dispositivo di destinazione %1$s
     <ul>
-    <li>bluetooth è attivo</li>
-    <li>questo dispositivo è (ancora) nell\'elenco dei dispositivi associati</li>
+    <li>Bluetooth è attivo</li>
+    <li>Questo dispositivo è (ancora) presente nell\'elenco dei dispositivi accoppiati</li>
     <li>%2$s è in esecuzione</li>
     </ul>
 </html>]]></string>
@@ -32,24 +32,24 @@
     <string name="bt_bluetooth_turned_off">Bluetooth è disattivato</string>
     <string name="bt_bluetooth_turned_off_info">Bluetooth deve essere attivato per poter effettuare il mirroring dello schermo su un altro dispositivo.</string>
 
-    <string name="bt_no_paired">Nessun dispositivo associato</string>
-    <string name="bt_how_to_pair_info"><![CDATA[<html>Questo dispositivo deve essere associato ad un altro dispositivo su cui %1$s è in esecuzione al fine di poter effettuare il mirroring della schermata del punteggio.
+    <string name="bt_no_paired">Nessun dispositivo accoppiato</string>
+    <string name="bt_how_to_pair_info"><![CDATA[<html>Questo dispositivo deve essere accoppiato ad un altro dispositivo su cui %1$s è in esecuzione al fine di poter effettuare la duplicazione (mirroring) della schermata del punteggio.
     In genere questo può essere ottenuto eseguendo i seguenti passaggi:
 <ul>
-    <li>su entrambi i dispositivi, apri la schermata delle impostazioni bluetooth</li>
-    <li>assicurati che sul dispositivo di destinazione
+    <li>Su entrambi i dispositivi, aprire la schermata delle impostazioni bluetooth</li>
+    <li>Assicurarsi che sul dispositivo di destinazione
         <ul>
-            <li>bluetooth è attivo</li>
-            <li>il dispositivo è (temporaneamente) visibile ad altri dispositivi</li>
+            <li>Bluetooth è attivo</li>
+            <li>Il dispositivo è (temporaneamente) visibile ad altri dispositivi</li>
         </ul>
     </li>
-    <li>su questo dispositivo seleziona \'Associa nuovo dispositivo\'</li>
-    <li>il dispositivo di destinazione dovrebbe comparire sotto \'Dispositivi disponibili\': selezionalo</li>
-    <li>Conferma l\'associazione su entrambi i dispositivi</li>
+    <li>Su questo dispositivo selezionare \'Accoppia nuovo dispositivo\'</li>
+    <li>Selezionare il dispositivo di destinazione che dovrebbe comparire sotto \'Dispositivi disponibili\'</li>
+    <li>Confermare l\'accoppiamento su entrambi i dispositivi</li>
 </ul>
 </html>]]></string>
 
-    <string name="bt_no_appropriate_paired_devices_found">Nessun dispositivo associato adeguato trovato</string>
+    <string name="bt_no_appropriate_paired_devices_found">Nessun dispositivo accoppiato adeguato trovato</string>
     <!--<string name="bt_no_appropriate_paired_devices_found_info">This device is only paired with devices that do not support mirroring screens. Please pair this devices with a phone or tablet.</string>-->
 
 </resources>

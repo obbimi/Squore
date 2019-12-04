@@ -10,6 +10,6 @@
     <string name="cmd_share">Condividi</string>
     <string name="cmd_share_with_friends">Condividi con amici</string>
     <string name="cmd_like_on_facebook">Metti un Like su facebook</string>
-    <string name="lbl_please_describe_the_problem">Descrivi per favore il problema nel modo più dettagliato possibile.</string>
-    <string name="cmd_email_the_developer">Manda una e-mail allo sviluppatore</string>
+    <string name="lbl_please_describe_the_problem">Per favore descrivi il problema nel modo più dettagliato possibile.</string>
+    <string name="cmd_email_the_developer">Manda un\'e-mail allo sviluppatore</string>
 </resources>

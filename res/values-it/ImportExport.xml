@@ -6,11 +6,11 @@
     <string name="Import_elipses">Importa…</string>
     <string name="ImportExport_elipses">Importa/Esporta…</string>
     <string name="Select_file">Seleziona File</string>
-    <string name="import_matches">Importa partite</string>
-    <string name="export_matches">Esporta partite</string>
-    <string name="upload_export_to_server">Carica esportazione sul server squore</string>
-    <string name="upload_to_server_failed__x">Caricamento sul server squore non riuscito: %s</string>
-    <string name="uploaded_to_server__x">Caricamento su squore OK:\n\n%s\n\n(URL è nei tuoi appunti)</string>
+    <string name="import_matches">Importa incontri</string>
+    <string name="export_matches">Esporta incontri</string>
+    <string name="upload_export_to_server">Carica esportazione sul server Squore</string>
+    <string name="upload_to_server_failed__x">Caricamento sul server Squore non riuscito: %s</string>
+    <string name="uploaded_to_server__x">Caricamento su Squore OK:\n\n%s\n\n(URL è nei tuoi appunti)</string>
 
     <string name="Exported_to_x">Esportato a %s</string>
     <string name="File_x_has_been_imported__Cnt_y">Il file %1$s è stato importato (# %2$s)</string>
@@ -26,7 +26,7 @@
     <string name="Delete_file">Elimina file</string>
     <string name="Filename">Nome file</string>
 
-    <string name="x_stored_in_y">\'%1$s\' salvato in \'%2$s\'</string>
+    <string name="x_stored_in_y">\'%1$s\' salvati in \'%2$s\'</string>
     <string name="x_restored_from_y">\'%1$s\' recuperato da \'%2$s\'</string>
     <string name="could_not_find_file_x">Impossibile trovare il file %s.</string>
     <string name="did_you_already_perform_an_export_of_x">Hai già eseguito un\'esportazione di %s?</string>
