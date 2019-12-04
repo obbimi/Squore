@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.match.Match;
 import com.doubleyellow.scoreboard.model.Model;
@@ -85,7 +86,7 @@ public class RestartScore extends BaseAlertDialog
                 m.setSource(matchModel.getSource(), matchModel.getSourceID() );
                 m.setAdditionalPostParams(matchModel.getAdditionalPostParams());
 
-                nm.putExtra(Model.class.getSimpleName(), m.toJsonString(null));
+                nm.putExtra(IntentKeys.NewMatch.toString(), m.toJsonString(null));
 
                 scoreBoard.startActivityForResult(nm, 1);
                 break;

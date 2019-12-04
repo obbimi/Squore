@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +37,7 @@ import com.doubleyellow.android.view.EnumSpinner;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.dialog.ButtonUpdater;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.*;
@@ -73,6 +73,9 @@ public class MatchView extends SBRelativeLayout
 
     private NewMatchLayout m_layout = NewMatchLayout.AllFields;
 
+    /**
+     * @param model is null when used in MatchFragment
+     */
     public MatchView(Context context, boolean bIsDoubles, Model model, NewMatchLayout layout) {
         super(context);
         m_layout = layout;
@@ -118,10 +121,8 @@ public class MatchView extends SBRelativeLayout
             requestFocusFor(txtPlayerA);
         }
         if ( (ViewUtil.areAllEmpty(txtEventName, txtEventDivision, txtEventRound, txtEventLocation) == false) && bEventCollapsed) {
-            if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 /* 15 */ ) {
-                findViewById(R.id.lblEvent).callOnClick(); // to expand the parent area by default
-                bEventCollapsed = true;
-            }
+            findViewById(R.id.lblEvent).callOnClick(); // to expand the parent area by default
+            bEventCollapsed = true;
         }
 
         if ( txtCourt != null ) {
@@ -324,11 +325,9 @@ public class MatchView extends SBRelativeLayout
                     ViewUtil.hideViews(this, R.id.ll_match_countries);
                 }
             } else {
-                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 /* 15 */ ) {
-                    if ( bCountriesCollapsed ) {
-                        findViewById(R.id.lblCountries).callOnClick(); // to expand the parent area by default
-                        bCountriesCollapsed = false;
-                    }
+                if ( bCountriesCollapsed ) {
+                    findViewById(R.id.lblCountries).callOnClick(); // to expand the parent area by default
+                    bCountriesCollapsed = false;
                 }
             }
         }
@@ -349,11 +348,9 @@ public class MatchView extends SBRelativeLayout
                 if ( StringUtil.isNotEmpty(sClubB) ) {
                     txtClubB.setText(sClubB);
                 }
-                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 /* 15 */ ) {
-                    if ( bClubsCollapsed ) {
-                        findViewById(R.id.lblClubs).callOnClick(); // to expand the parent area by default
-                        bClubsCollapsed = false;
-                    }
+                if ( bClubsCollapsed ) {
+                    findViewById(R.id.lblClubs).callOnClick(); // to expand the parent area by default
+                    bClubsCollapsed = false;
                 }
             }
         }
@@ -496,6 +493,10 @@ public class MatchView extends SBRelativeLayout
                     v1.useLastValueAsDefault(false);
                     v1.getTextAndPersist(true);
                 }
+                if ( v instanceof CountryTextView ) {
+                    CountryTextView ctv = (CountryTextView) v;
+                    ctv.setCountryCode("");
+                }
             }
         }
         return true;
@@ -509,6 +510,10 @@ public class MatchView extends SBRelativeLayout
      * - pre-set match format preferences passed on from feed
      **/
     private Model   m_model      = null;
+
+    /**
+     * @param model is null when used on MatchFragment
+     */
     public void init(boolean bIsDoubles, final Model model) {
         final Context context = getContext();
 
@@ -604,10 +609,6 @@ public class MatchView extends SBRelativeLayout
         for(final Player p: Player.values() ) {
             Button btnColor = btnsColor[p.ordinal()];
             if ( btnColor == null ) { continue; }
-            btnColor.setTag(m_iNoColor);
-            btnColor.setTag(R.string.lbl_player, p);
-            ColorUtil.setBackground(btnColor, m_iNoColor); // todo: already coming from feed, e.g. a club color
-            btnColor.invalidate();
             btnColor.setOnClickListener(m_onColorButtonClicker);
         }
 
@@ -786,11 +787,34 @@ public class MatchView extends SBRelativeLayout
         cbUseEnglishScoring.setChecked(PreferenceValues.useHandInHandOutScoring(context));
     }
 
+    /** must be invoked after the view is added to its parent, else the color of the button will not show up */
+    void initPlayerColors() {
+        for(final Player p: Player.values() ) {
+            Button btnColor = btnsColor[p.ordinal()];
+            if ( btnColor == null ) { continue; }
+            btnColor.setTag(R.string.lbl_player, p);
+
+            Integer iInitialColor = m_iNoColor;
+            if ( m_model != null ) {
+                // e.g. when editing a match in progress
+                String sPlayerColor = m_model.getColor(p);
+                if ( StringUtil.isNotEmpty(sPlayerColor) ) {
+                    iInitialColor = Color.parseColor(sPlayerColor);
+                }
+            }
+            btnColor.setTag(iInitialColor);
+            ColorUtil.setBackground(btnColor, iInitialColor); // todo: already coming from feed, e.g. a club color
+            int blackOrWhiteFor = ColorUtil.getBlackOrWhiteFor(iInitialColor);
+            btnColor.setTextColor(blackOrWhiteFor);
+            btnColor.invalidate();
+            btnColor.setText(btnColor.getHint());
+        }
+    }
+
     private OnClickListener m_onColorButtonClicker = new OnClickListener() {
         private Player m_forPlayer = null;
         private String m_sColor    = null;
         private int    m_iColor    = 0;
-        private int    m_iNoColor  = 0;
         @Override public void onClick(View btn) {
             final Context context     = getContext();
             final Button  colorButton = (Button) btn;
@@ -813,15 +837,18 @@ public class MatchView extends SBRelativeLayout
                         case DialogInterface.BUTTON_NEUTRAL:
                             colorButton.setTag(m_iNoColor);
                             ColorUtil.setBackground(colorButton, m_iNoColor);
-                            colorButton.setText(""); // hint text should still be showing
                             colorButton.invalidate();
+                            colorButton.setText(""); // hint text should still be showing
+                            int noColorTxt = ColorUtil.getBlackOrWhiteFor(m_iNoColor);
+                            colorButton.setTextColor(noColorTxt);
                             break;
                         case DialogInterface.BUTTON_POSITIVE:
                             colorButton.setTag(m_iColor);
                             ColorUtil.setBackground(colorButton, m_iColor);
                             colorButton.invalidate();
                             colorButton.setText(colorButton.getHint());
-                            colorButton.setTextColor(ColorUtil.getBlackOrWhiteFor(m_iColor));
+                            int colorTxt = ColorUtil.getBlackOrWhiteFor(m_iColor);
+                            colorButton.setTextColor(colorTxt);
                             break;
                     }
                 }
@@ -1107,8 +1134,8 @@ public class MatchView extends SBRelativeLayout
         return DoublesServeSequence.NA;
     }
 
-    /** uses Model instead of MatchDetails */
-    Intent getIntent(String sSource, String sSourceID, boolean bBackPressed) {
+    /** uses Model */
+    Intent getIntent(String sSource, String sSourceID, boolean bBackPressed, boolean bIsEditMatch) {
         TextView[] textViews = {txtPlayerA, txtPlayerB};
         int msg_enter_player_names = R.string.msg_enter_both_player_names;
         if ( m_bIsDoubles ) {
@@ -1156,13 +1183,17 @@ public class MatchView extends SBRelativeLayout
             iNrOfGamesToWinMatch = (Integer.parseInt(spNumberOfGamesToWin.getSelectedItem().toString()) + 1) / 2;
         }
         Intent intent = new Intent();
-        //intent.putExtra(MatchDetails.class.getSimpleName(), getBundle(sSource, iNrOfPoints2Win, iNrOfGamesToWinMatch)); // this is read by ScoreBoard.onActivityResult
         Model  model = getModel(iNrOfPoints2Win, iNrOfGamesToWinMatch);
         if ( StringUtil.isNotEmpty(sSource) ) {
             model.setSource(sSource, sSourceID);
         }
-        String sJson = model.toJsonString(null);
-        intent.putExtra(Model.class.getSimpleName(), sJson); // this is read by ScoreBoard.onActivityResult
+        if ( bIsEditMatch ) {
+            intent.putExtra(IntentKeys.EditMatch.toString(), model);
+        } else {
+            String sJson = model.toJsonString(null);
+            intent.putExtra(IntentKeys.NewMatch.toString(), sJson); // this is read by ScoreBoard.onActivityResult
+        }
+
         return intent;
     }
 

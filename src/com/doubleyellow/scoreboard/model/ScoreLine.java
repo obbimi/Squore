@@ -21,12 +21,13 @@ import android.content.Context;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ScoreLine
+public class ScoreLine implements Serializable
 {
     public static final String TAG = "SB." + ScoreLine.class.getSimpleName();
 

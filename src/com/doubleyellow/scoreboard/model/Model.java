@@ -32,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -48,7 +49,7 @@ import java.util.*;
  * - Racketlon
  * - Badminton
  */
-public abstract class Model
+public abstract class Model implements Serializable
 {
     final String TAG = "SB." + this.getClass().getSimpleName();
 
@@ -129,17 +130,17 @@ public abstract class Model
         void OnBrokenEquipmentChanged(BrokenEquipment equipment, Player affectedPlayer);
     }
 
-    private List<OnScoreChangeListener>        onScoreChangeListeners          = new ArrayList<OnScoreChangeListener>();
-    private List<OnPlayerChangeListener>       onPlayerChangeListeners         = new ArrayList<OnPlayerChangeListener>();
-    private List<OnServeSideChangeListener>    onServeSideChangeListener       = new ArrayList<OnServeSideChangeListener>();
-    private List<OnSpecialScoreChangeListener> onSpecialScoreChangeListeners   = new ArrayList<OnSpecialScoreChangeListener>();
-    private List<OnGameEndListener>            onGameEndListeners              = new ArrayList<OnGameEndListener>();
-    private List<OnMatchEndListener>           onMatchEndListeners             = new ArrayList<OnMatchEndListener>();
-    private List<OnCallChangeListener>         onCallChangeListeners           = new ArrayList<OnCallChangeListener>();
-    private List<OnComplexChangeListener>      onComplexChangeListeners        = new ArrayList<OnComplexChangeListener>();
-    private List<OnBrokenEquipmentListener>    onBrokenEquipmentListeners      = new ArrayList<OnBrokenEquipmentListener>();
-    private List<OnLockChangeListener>         onLockChangeListeners           = new ArrayList<OnLockChangeListener>();
-    private List<GameTiming.OnTimingChangedListener> onTimingChangedListeners  = new ArrayList<GameTiming.OnTimingChangedListener>();
+    transient private List<OnScoreChangeListener>        onScoreChangeListeners          = new ArrayList<OnScoreChangeListener>();
+    transient private List<OnPlayerChangeListener>       onPlayerChangeListeners         = new ArrayList<OnPlayerChangeListener>();
+    transient private List<OnServeSideChangeListener>    onServeSideChangeListener       = new ArrayList<OnServeSideChangeListener>();
+    transient private List<OnSpecialScoreChangeListener> onSpecialScoreChangeListeners   = new ArrayList<OnSpecialScoreChangeListener>();
+    transient private List<OnGameEndListener>            onGameEndListeners              = new ArrayList<OnGameEndListener>();
+    transient private List<OnMatchEndListener>           onMatchEndListeners             = new ArrayList<OnMatchEndListener>();
+    transient private List<OnCallChangeListener>         onCallChangeListeners           = new ArrayList<OnCallChangeListener>();
+    transient private List<OnComplexChangeListener>      onComplexChangeListeners        = new ArrayList<OnComplexChangeListener>();
+    transient private List<OnBrokenEquipmentListener>    onBrokenEquipmentListeners      = new ArrayList<OnBrokenEquipmentListener>();
+    transient private List<OnLockChangeListener>         onLockChangeListeners           = new ArrayList<OnLockChangeListener>();
+    transient private List<GameTiming.OnTimingChangedListener> onTimingChangedListeners  = new ArrayList<GameTiming.OnTimingChangedListener>();
 
     public int clearListeners(String sClassNameFilter) {
         int iCnt = 0;
@@ -342,9 +343,9 @@ public abstract class Model
     private List<Map<Player, Integer>>          m_lGameCountHistory     = null;
     private List<Player>                        m_lGameWinner           = null;
 
-    private GameTiming                          m_gameTimingCurrent     = null;
+    transient private GameTiming                          m_gameTimingCurrent     = null;
     /** game timing of all games including the one about to start/started */
-    private List<GameTiming>                    m_lGameTimings          = null;
+    transient private List<GameTiming>                    m_lGameTimings          = null;
 
     //------------------------
     // Match scores
@@ -1449,7 +1450,7 @@ public abstract class Model
     // Player/Color/Country/Club
     //-------------------------------
 
-    public void setPlayerColor(Player player, String sColor) {
+    public boolean setPlayerColor(Player player, String sColor) {
         String sPrevious = m_player2Color.put(player, sColor);
         if ( (sColor != null && sPrevious == null)
           || (sColor == null && sPrevious != null)
@@ -1459,7 +1460,9 @@ public abstract class Model
             for(OnPlayerChangeListener listener: onPlayerChangeListeners) {
                 listener.OnColorChange(player, sColor, sPrevious);
             }
+            return true;
         }
+        return false;
     }
     public String getColor(Player player) {
         String sColor = m_player2Color.get(player);
@@ -2114,18 +2117,6 @@ public abstract class Model
                         }
                     }
                 }
-                // read team players
-/*
-                JSONObject joTeamPlayers = joMatch.optJSONObject(JSONKey.team_players.toString());
-                if ( JsonUtil.isNotEmpty(joTeamPlayers) ) {
-                    for (Player p : getPlayers()) {
-                        if ( joTeamPlayers.has(p.toString()) ) {
-                            JSONArray players = joTeamPlayers.optJSONArray(p.toString());
-                            m_team2Players.put(p, JsonUtil.asListOfStrings(players));
-                        }
-                    }
-                }
-*/
                 if ( joFormat.has(JSONKey.mode.toString())) {
                     m_sMode = joFormat.optString(JSONKey.mode.toString());
                 }
@@ -2430,6 +2421,15 @@ public abstract class Model
         // just the result, mainly for sharing and fast re-read... does only need to be parsed for fast read
         jsonObject.put(JSONKey.result    .toString(), getResult());
         jsonObject.put(JSONKey.gamescores.toString(), getGameScores());
+
+        if ( oSettings == null ) {
+            // next few are only for 'livescore' to be able to show server, serveside and optionally handout. Not used when reading back in the model
+            jsonObject.put(JSONKey.server   .toString(), getServer());
+            jsonObject.put(JSONKey.serveSide.toString(), getNextServeSide(getServer()));
+            if ( this instanceof SquashModel ) {
+                jsonObject.put(JSONKey.isHandOut.toString(), isLastPointHandout());
+            }
+        }
         JsonUtil.removeEmpty(jsonObject);
 
         // conducts
@@ -3069,7 +3069,7 @@ public abstract class Model
         return ListUtil.isNotEmpty(m_lScoreHistory);
     }
     public boolean hasStarted() {
-        boolean bHasStarted = getNrOfFinishedGames() >0 || gameHasStarted();
+        boolean bHasStarted = getNrOfFinishedGames() > 0 || gameHasStarted();
         return bHasStarted;
     }
 
@@ -3124,9 +3124,9 @@ public abstract class Model
 
     //-- winnererror recording 'FH Volley Winner PlayerA--
     /** For keeping track of error/winners for presenting statistics. Contains all games including the one in progress */
-    private List<JSONArray> m_rallyEndStatistics     = new ArrayList<JSONArray>();
+    transient private List<JSONArray> m_rallyEndStatistics     = new ArrayList<JSONArray>();
     /** statistics of the game in progess */
-    private JSONArray m_rallyEndStatsGIP         = null;
+    transient private JSONArray m_rallyEndStatsGIP         = null;
     public void recordWinnerError( RallyEnd   winnerError
                                  , Player     player
                                  , RacketSide racket
@@ -3233,7 +3233,10 @@ public abstract class Model
             if ( lastServeSide == null ) {
                 lastServeSide = ServeSide.R;
             }
-            ServeSide nextServeSide        = pServer.equals(lastServer)? lastServeSide.getOther(): serversPreferredSide;
+            ServeSide nextServeSide        = serversPreferredSide;
+            if ( pServer.equals(lastServer) && (lastServeSide != null) ) {
+                nextServeSide = lastServeSide.getOther();
+            }
 
             setServerAndSide(pServer, nextServeSide, null);
         } else if (slRemoved != null ) {
