@@ -21,7 +21,8 @@ Supports you in referee-ing a squash match.
 &bull; transfer 'in progress' match to another device using <b>NFC</b> (a.k.a. S-Beam)
 &bull; saves the score (and scoring history) on exit
 &bull; can be used in landscape and portrait orientation
-&bull; option to <b>share</b> the entire scoring history on e.g. Facebook
+&bull; option to <b>share</b> the entire <b>scoring history</b> on e.g. Facebook
+&bull; option to <b>share</b> a <b>summary of several related matches</b> (e.g. club/team against club/team)
 &bull; option to send the result of a match by text message or email e.g. to a fellow club/team mate
 &bull; when sharing by means of email it is possible to include the complete scoring history
 &bull; tries to auto-complete player names from your contact list (or just one group of your contacts)
@@ -41,6 +42,7 @@ You may check with your web-master if it is possible to have one or both of thes
 &bull; Read Contacts: for auto-completing player names when setting up a match
 &bull; Read/Write storage:for backing up details of each match you refereed with the app
 &bull; Network Access: for reading matches/player names from a feed
+&bull; Pair with Bluetooth devices: for mirroring score
 &bull; Vibration Control: mainly to notify you that a timer has (or is nearly) finished
 
 <b>Online Help:</b>
