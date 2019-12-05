@@ -609,6 +609,8 @@ public class MatchView extends SBRelativeLayout
         for(final Player p: Player.values() ) {
             Button btnColor = btnsColor[p.ordinal()];
             if ( btnColor == null ) { continue; }
+            btnColor.setTag(m_iNoColor);
+            btnColor.setTag(R.string.lbl_player, p);
             btnColor.setOnClickListener(m_onColorButtonClicker);
         }
 
