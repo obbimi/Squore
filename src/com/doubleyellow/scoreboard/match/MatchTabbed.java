@@ -209,6 +209,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         final boolean bShowingMatches = fsNew.equals(FeedMatchSelector.FeedStatus.showingMatches) || fsNew.equals(FeedMatchSelector.FeedStatus.showingMatchesUncompleted);
         ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.show_players_from_feed     }, bShowingMatches);
         ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.uc_hide_matches_with_result}, bShowingMatches);
+        ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.uc_group_matches_by_court  }, bShowingMatches); // TODO: disable/hide option if NO courts in feed
     }
 
     /** Toggle visibility of certain menu items based on the active tab */
@@ -225,6 +226,9 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         ViewUtil.setMenuItemsVisibility(menu, new int[] {R.id.uc_switch_feed, R.id.uc_hide_matches_with_result, R.id.uc_add_new_feed}, SelectTab.Feed.equals(forTab));
         boolean bChecked = PreferenceValues.hideCompletedMatchesFromFeed(this);
         ViewUtil.checkMenuItem(menu, R.id.uc_hide_matches_with_result, bChecked);
+
+        boolean bChecked2 = PreferenceValues.groupMatchesInFeedByCourt(this);
+        ViewUtil.checkMenuItem(menu, R.id.uc_group_matches_by_court, bChecked2);
 
 /*
         MenuItem miSwitchFeed = menu.findItem(R.id.uc_switch_feed);
@@ -357,16 +361,19 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
                 startActivityForResult(ff, 1); // see onActivityResult
                 return true;
             }
+            case R.id.uc_group_matches_by_court: // fall through
             case R.id.uc_hide_matches_with_result: {
                 if ( item == null || item.length==0 || (item[0] instanceof MenuItem)==false ) { return false; }
                 final MenuItem menuItem = (MenuItem) item[0];
                 boolean bNewChecked = (menuItem.isChecked() == false);
-                //int iNewResId = bNewChecked?R.string.pref_showCompletedMatchesFromFeed:R.string.pref_hideCompletedMatchesFromFeed;
                 int iNewIconId= bNewChecked?android.R.drawable.checkbox_on_background:android.R.drawable.checkbox_off_background;
                 menuItem.setChecked(bNewChecked);
-                //menuItem.setTitle(iNewResId); // we do this because checking/unchecking is not visible?!
                 menuItem.setIcon(iNewIconId); // we do this because checking/unchecking is not visible?!
-                PreferenceValues.setBoolean(PreferenceKeys.hideCompletedMatchesFromFeed, this, bNewChecked);
+                PreferenceKeys prefKey = PreferenceKeys.hideCompletedMatchesFromFeed;
+                if ( menuItemId == R.id.uc_group_matches_by_court ) {
+                    prefKey = PreferenceKeys.groupMatchesInFeedByCourt;
+                }
+                PreferenceValues.setBoolean(prefKey, this, bNewChecked);
 
                 // now refresh: try without reloading data from the URL
                 if ( /*(listAdapter == null) &&*/ (getFragment(defaultTab) instanceof FeedMatchSelector)) {

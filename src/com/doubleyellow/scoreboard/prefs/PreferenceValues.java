@@ -1589,7 +1589,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-11-18"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-12-10"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
@@ -1644,6 +1644,9 @@ public class PreferenceValues extends RWValues
     }
     public static boolean useFeedNameAsEventName(Context context) {
         return getBoolean(PreferenceKeys.useFeedNameAsEventName, context, R.bool.useFeedNameAsEventName_default);
+    }
+    public static boolean groupMatchesInFeedByCourt(Context context) {
+        return getBoolean(PreferenceKeys.groupMatchesInFeedByCourt, context, R.bool.groupMatchesInFeedByCourt_default);
     }
     // TODO: in pref screen
     public static boolean useGroupNameAsEventData(Context context) {

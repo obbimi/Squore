@@ -47,6 +47,10 @@
                 <item android:id="@+id/uc_hide_matches_with_result"
                       android:checkable="@bool/hideCompletedMatchesFromFeed_default" app:showAsAction="never" android:title="@string/pref_hideCompletedMatchesFromFeed" android:icon="@android:drawable/checkbox_on_background" />
             </group>
+            <group android:id="@+id/group_by_court_group" android:checkableBehavior="all">
+                <item android:id="@+id/uc_group_matches_by_court"
+                      android:checkable="@bool/groupMatchesInFeedByCourt_default" app:showAsAction="never" android:title="@string/pref_groupMatchesInFeedByCourt" android:icon="@android:drawable/checkbox_on_background" />
+            </group>
             <item android:id="@+id/expand_all"   app:showAsAction="never" android:icon="@android:drawable/arrow_down_float" android:title="@string/expand_all" />
             <item android:id="@+id/collapse_all" app:showAsAction="never" android:icon="@android:drawable/arrow_up_float"   android:title="@string/collapse_all" />
 

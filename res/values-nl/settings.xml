@@ -283,6 +283,8 @@
     <string name="pref_showCompletedMatchesFromFeed">Toon reeds gespeelde wedstrijden</string>
     <string name="pref_hideCompletedMatchesFromFeed">Verberg reeds gespeelde wedstrijden</string>
     <string name="pref_hideCompletedMatchesFromFeed_summary">Een feed kan ook reeds gespeeld wedstrijden bevatten (door het resultaat te vermelden). Als je deze wedstrijden niet wilt zien vink dan deze optie aan.</string>
+    <string name="pref_groupMatchesInFeedByCourt">Groepeer bij court</string>
+    <string name="pref_groupMatchesInFeedByCourt_summary">In een feed kan per match worden aangegeven op welke court de wedstrijd gespeeld wordt. Als dit zo is, en deze optie is actief, zullen de matches per court gegroepeerd worden</string>
     <string name="pref_removeSeedingAfterMatchSelection">Verwijder plaatsing van spelers naam</string>
     <string name="pref_removeSeedingAfterMatchSelection_summary">Verwijder eg. de [5/8] plaatsing string na het selecteren van een match van een feed</string>
     <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Toon speler lijst als match lijst (nog) leeg is</string>

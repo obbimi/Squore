@@ -299,6 +299,8 @@
     <string name="pref_tournamentMaxDuration_InDays_summary">The tournament will last x days at most</string>
     <string name="pref_hideCompletedMatchesFromFeed">Hide completed matches</string>
     <string name="pref_hideCompletedMatchesFromFeed_summary">A feed may contain already played matches (by including the result). If you don\'t want to see these matches, check this option</string>
+    <string name="pref_groupMatchesInFeedByCourt">Group by court</string>
+    <string name="pref_groupMatchesInFeedByCourt_summary">A feed may specify on which court a match is (supposed to be) played. If so, and this option is active, matches will be grouped per court</string>
     <string name="pref_removeSeedingAfterMatchSelection">Remove seeding from player names</string>
     <string name="pref_removeSeedingAfterMatchSelection_summary">Remove eg. the [5/8] seeding string after selecting a match from a feed</string>
     <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Switch to player list if match list of feed is empty</string>

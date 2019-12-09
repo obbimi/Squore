@@ -292,6 +292,8 @@
     <string name="pref_tournamentMaxDuration_InDays_summary">Tournoi se déroulant durant x jours maximum</string>
     <string name="pref_hideCompletedMatchesFromFeed">Masquer les matchs terminés</string>
     <string name="pref_hideCompletedMatchesFromFeed_summary">Un flux peut contenir les matchs terminés (en incluant les résultats). Si vous ne souhaitez pas les voir, sélectionnez cette option.</string>
+    <string name="pref_groupMatchesInFeedByCourt">Grouper par cour</string> <!-- TODO -->
+    <string name="pref_groupMatchesInFeedByCourt_summary">A feed may specify on which court a match is (supposed to be) played. If so, and this option is active, matches will be grouped per court</string> <!-- TODO -->
     <string name="pref_removeSeedingAfterMatchSelection">Retirer le numéro de tête de série</string>
     <string name="pref_removeSeedingAfterMatchSelection_summary">Retirer le numéro de tête de série du nom du joueur après la sélection dans un flux</string>
     <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Montrer la liste des joueurs quand la liste de matches est vide</string> <!-- TODO -->

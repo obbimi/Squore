@@ -150,6 +150,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="hideCompletedMatchesFromFeed_default">false</bool>
     <bool name="removeSeedingAfterMatchSelection_default">false</bool>
     <bool name="useFeedNameAsEventName_default">true</bool>
+    <bool name="groupMatchesInFeedByCourt_default">false</bool>
     <bool name="useGroupNameAsEventData_default">true</bool>
     <bool name="savePasswords_default">false</bool>
     <bool name="readContactsForAutoCompletion_default">false</bool>

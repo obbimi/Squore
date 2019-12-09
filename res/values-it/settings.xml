@@ -299,6 +299,8 @@
     <string name="pref_tournamentMaxDuration_InDays_summary">Il torneo durerà al massimo x giorni</string>
     <string name="pref_hideCompletedMatchesFromFeed">Nascondi incontri completati</string>
     <string name="pref_hideCompletedMatchesFromFeed_summary">Un feed potrebbe contenere incontri già disputati (includendone il risultato). Se non vuoi visualizzare questi incontri, seleziona questa opzione</string>
+    <string name="pref_groupMatchesInFeedByCourt">Raggruppa per campo</string> <!-- TODO -->
+    <string name="pref_groupMatchesInFeedByCourt_summary">A feed may specify on which court a match is (supposed to be) played. If so, and this option is active, matches will be grouped per court</string> <!-- TODO -->
     <string name="pref_removeSeedingAfterMatchSelection">Rimuovi piazzamento dai nomi giocatore</string>
     <string name="pref_removeSeedingAfterMatchSelection_summary">Rimuove per es. la stringa di piazzamento [5/8] dopo la selezione d\'un incontro da un Feed</string>
     <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Passa alla lista dei giocatori se la lista degli incontri del Feed è vuota</string>

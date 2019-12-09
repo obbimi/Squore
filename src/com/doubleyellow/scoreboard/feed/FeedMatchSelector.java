@@ -351,7 +351,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     /* for when a match is selected from plain text feed */
     private boolean populateModelFromString(Model model, String sText, String sGroup, String feedPostName) {
-        boolean bIsOnePlayerOnly = feedStatus == null ? false : feedStatus.isShowingPlayers();
+        boolean bIsOnePlayerOnly = m_feedStatus == null ? false : m_feedStatus.isShowingPlayers();
         getMatchDetailsFromMatchString( model, sText, context, bIsOnePlayerOnly);
 
         // use feed name and group name for event details
@@ -539,7 +539,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         return new AdapterView.OnItemLongClickListener() {
             @Override public boolean onItemLongClick(AdapterView<?> adapterView, final View view, int iPos, final long id) {
                 Object itemAtPosition = adapterView.getItemAtPosition(iPos);
-                if ( feedStatus.equals(FeedStatus.showingPlayers) ) {
+                if ( m_feedStatus.equals(FeedStatus.showingPlayers) ) {
                     SimpleELAdapter listAdapter = getListAdapter(null);
                     if ( listAdapter != null ) {
                         List<String> lChilds = listAdapter.getChilds((String) itemAtPosition);
@@ -554,7 +554,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 if (itemAtPosition instanceof JSONObject) {
                     boolean bNamesPopulated = populateModelFromJSON(mDetails, (JSONObject) itemAtPosition, null, PreferenceValues.getFeedPostName(context));
                 } else if (itemAtPosition instanceof String) {
-                    getMatchDetailsFromMatchString(mDetails, (String) itemAtPosition, context, feedStatus.isShowingPlayers());
+                    getMatchDetailsFromMatchString(mDetails, (String) itemAtPosition, context, m_feedStatus.isShowingPlayers());
                 }
                 if ( mDetails.isDirty() == false ) { return false; }
                 JSONObject joModel = null;
@@ -626,11 +626,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             return this.toString().contains("Matches");
         }
     }
-    private FeedStatus feedStatus = FeedStatus.initializing;
-    private String     sLastFetchedURL = null;
+    private FeedStatus m_feedStatus      = FeedStatus.initializing;
+    private String     m_sLastFetchedURL = null;
 
     public FeedStatus getFeedStatus() {
-        return feedStatus;
+        return m_feedStatus;
     }
     public void resetFeedStatus() {
         changeAndNotify(FeedStatus.initializing);
@@ -643,9 +643,19 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             super(inflater, R.layout.expandable_match_selector_group, R.layout.expandable_match_selector_item, sFetchingMessage, bAutoLoad);
         }
 
-        URLTask task = null;
+        URLTask m_task              = null;
+        int     m_iMatchesWithCourt = 0;
+        boolean m_bGroupByCourt     = false;
+        int     m_iGroupByCourtMsg  = 0;
 
-        public void load(boolean bUseCacheIfPresent) {
+        @Override public void clear() {
+            super.clear();
+
+            m_iMatchesWithCourt = 0; // will be 're-increased' by 'receive()'
+            m_bGroupByCourt     = PreferenceValues.groupMatchesInFeedByCourt(context); // if set to true, matches must be sorted by date+time within the 'section', my feeds usually come in 'per field'
+        }
+
+        @Override public void load(boolean bUseCacheIfPresent) {
             this.clear();
 
             if ( context == null ) {
@@ -654,25 +664,25 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             String sURLMatches = PreferenceValues.getMatchesFeedURL(context);
             String sURLPlayers = PreferenceValues.getPlayersFeedURL(context);
             if ( bUseCacheIfPresent ) {
-                if (feedStatus.toString().startsWith(FeedStatus.showingMatches.toString()) && StringUtil.isNotEmpty(sURLPlayers)) {
+                if (m_feedStatus.toString().startsWith(FeedStatus.showingMatches.toString()) && StringUtil.isNotEmpty(sURLPlayers)) {
                     changeAndNotify(FeedStatus.loadingPlayers);
-                    sLastFetchedURL = sURLPlayers;
+                    m_sLastFetchedURL = sURLPlayers;
                 } else {
                     changeAndNotify(FeedStatus.loadingMatches);
-                    sLastFetchedURL = sURLMatches;
+                    m_sLastFetchedURL = sURLMatches;
                 }
             } else {
-                if (feedStatus.toString().startsWith(FeedStatus.showingMatches.toString()) || StringUtil.isEmpty(sURLPlayers) ) {
+                if (m_feedStatus.toString().startsWith(FeedStatus.showingMatches.toString()) || StringUtil.isEmpty(sURLPlayers) ) {
                     changeAndNotify(FeedStatus.loadingMatches);
-                    sLastFetchedURL = sURLMatches;
+                    m_sLastFetchedURL = sURLMatches;
                 } else {
                     changeAndNotify(FeedStatus.loadingPlayers);
-                    sLastFetchedURL = sURLPlayers;
+                    m_sLastFetchedURL = sURLPlayers;
                 }
             }
-            sLastFetchedURL = URLFeedTask.prefixWithBaseIfRequired(sLastFetchedURL);
+            m_sLastFetchedURL = URLFeedTask.prefixWithBaseIfRequired(m_sLastFetchedURL);
 
-            if ( StringUtil.isEmpty(sLastFetchedURL) ) {
+            if ( StringUtil.isEmpty(m_sLastFetchedURL) ) {
                 super.addItem(getString(R.string.No_active_feed), getString(R.string.Select_one_by_pressing_the_globe_button));
                 this.notifyDataSetChanged();
 
@@ -684,37 +694,37 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     emsAdapter.cancel(); // not only called if user cancelled the dialog e.g. by pressing back, but also on hideProgress
                 }
             };
-            showProgress(StringUtil.capitalize(feedStatus), onCancelListener); // TODO: use string array and translate
-            super.addItem(m_sFetchingDataMessage, sLastFetchedURL);
+            showProgress(StringUtil.capitalize(m_feedStatus), onCancelListener); // TODO: use string array and translate
+            super.addItem(m_sFetchingDataMessage, m_sLastFetchedURL);
             FeedMatchSelector.this.onChildClickListener.setDisabled(true);
 
             this.notifyDataSetChanged();
-            if ( StringUtil.isEmpty(sLastFetchedURL) ) {
+            if ( StringUtil.isEmpty(m_sLastFetchedURL) ) {
                 this.receive(null, FetchResult.UnexpectedContent, 0, null);
                 return;
             }
 
-            task = new URLFeedTask(context, sLastFetchedURL);
+            m_task = new URLFeedTask(context, m_sLastFetchedURL);
             if ( bUseCacheIfPresent == false ) {
-                task.setCacheFileToOld(true);
+                m_task.setCacheFileToOld(true);
             }
 
-            task.setContentReceiver(this);
-            task.execute();
+            m_task.setContentReceiver(this);
+            m_task.execute();
         }
 
         public void cancel() {
-            if ( task != null ) {
-                task.cancel(false);
-                task = null;
+            if ( m_task != null ) {
+                m_task.cancel(false);
+                m_task = null;
             }
         }
 
         @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent)
         {
             Log.i(TAG, String.format("Fetched (from cache %s)", lCacheAge));
-            if ( task != null ) {
-                task = null;
+            if ( m_task != null ) {
+                m_task = null;
             }
             if ( context == null ) {
                 // long running fetch and user closed activity ??
@@ -725,7 +735,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             this.removeHeader(m_sFetchingDataMessage);
 
             if ( StringUtil.hasNonEmpty(sContent, sLastSuccessfulContent) ) {
-                switch (feedStatus) {
+                switch (m_feedStatus) {
                     case loadingMatches:
                         if ( PreferenceValues.hideCompletedMatchesFromFeed(context) ) {
                             changeAndNotify(FeedStatus.showingMatchesUncompleted);
@@ -748,7 +758,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 if ( (sContent == null) || (result.equals(FetchResult.OK) == false)) {
                     if ( StringUtil.isNotEmpty(sLastSuccessfulContent) ) {
 
-                        String sMsg = getResources().getString(R.string.Could_not_read_feed_x__y__Using_cached_content_aged_z_minutes, sLastFetchedURL, result, DateUtil.convertToMinutes(lCacheAge));
+                        String sMsg = getResources().getString(R.string.Could_not_read_feed_x__y__Using_cached_content_aged_z_minutes, m_sLastFetchedURL, result, DateUtil.convertToMinutes(lCacheAge));
                         DialogManager dialogManager = DialogManager.getInstance();
                         dialogManager.showMessageDialog(context, "Internet", sMsg);
 
@@ -757,16 +767,16 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         // invalid feed url?
                         String sHeader = getResources().getString(R.string.could_not_load_feed_x, StringUtil.capitalize(result));
                         FeedMatchSelector.this.onChildClickListener.setDisabled(true);
-                        if ( StringUtil.isNotEmpty(sLastFetchedURL) ) {
-                            super.addItem(sHeader, sLastFetchedURL);
+                        if ( StringUtil.isNotEmpty(m_sLastFetchedURL) ) {
+                            super.addItem(sHeader, m_sLastFetchedURL);
                             if ( ScoreBoard.isInSpecialMode() ) {
-                                ContentUtil.placeOnClipboard(context, "squore feed", sLastFetchedURL, "copied feed URL onto clipboard");
+                                ContentUtil.placeOnClipboard(context, "squore feed", m_sLastFetchedURL, "copied feed URL onto clipboard");
                             }
                             if ( FetchResult.UnexpectedContent.equals(result) ) {
                                 super.addItem(sHeader, getString(R.string.possible_cause) + getString(R.string.no_fully_functional_connection_error));
                             }
                         } else {
-                            super.addItem(sHeader, "No URL defined for '" + PreferenceValues.getFeedPostName(getActivity()) + "' " + feedStatus);
+                            super.addItem(sHeader, "No URL defined for '" + PreferenceValues.getFeedPostName(getActivity()) + "' " + m_feedStatus);
                         }
                     }
                 } else {
@@ -774,7 +784,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 }
                 if ( sUseContent != null ) {
                     lExpandedGroups = fillList(sUseContent.trim());
-                    FeedMatchSelector.this.onChildClickListener.setDisabled( feedStatus.allowSelectionForMatch() == false );
+                    FeedMatchSelector.this.onChildClickListener.setDisabled( m_feedStatus.allowSelectionForMatch() == false );
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -790,7 +800,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 String sName = PreferenceValues.getMatchesFeedName(getActivity());
                 if ( StringUtil.isNotEmpty(sName) ) {
                     String sMsg = null;
-                    switch (feedStatus ) {
+                    switch ( m_feedStatus ) {
                         case showingMatches:
                             sMsg = m_sNoMatchesInFeed;
                             bSuggestToShowPlayerList = true;
@@ -819,6 +829,15 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 if ( bSuggestToShowPlayerList && StringUtil.isNotEmpty(sUseContent) ) {
                     suggestToShowPlayerList();
                 }
+            }
+
+            if ( m_iMatchesWithCourt == 0 ) {
+                if ( m_bGroupByCourt && (m_iGroupByCourtMsg < 3) ) {
+                    Toast.makeText(context, "None of the matches in this feed has a court specified", Toast.LENGTH_LONG).show();
+                    m_iGroupByCourtMsg++;
+                }
+            } else {
+                m_iGroupByCourtMsg = 0;
             }
 /*
             if ( showTip() == false ) {
@@ -852,7 +871,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
         private String getFormat() {
             String sFormat = m_sDisplayFormat;
-            if ( feedStatus.equals(FeedStatus.showingPlayers) ) {
+            if ( m_feedStatus.equals(FeedStatus.showingPlayers) ) {
                 sFormat = "${" + JSONKey.name + "}";
             }
             return sFormat;
@@ -966,7 +985,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     entries = (JSONArray) values;
                 } else if ( values instanceof JSONObject ) {
                     JSONObject joChild = (JSONObject) values;
-                    entries = joChild.optJSONArray("Matches");
+                    entries = joChild.optJSONArray("Matches"); // not required
                     sSection = joChild.optString("Field", sSection);
                     if ( entries == null ) {
                         Log.w(TAG, String.format("Not using %s with object %s as value", sSection, values));
@@ -982,7 +1001,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
 
             if ( iEntriesCnt == 0 ) {
-                super.addItem(m_sNoMatchesInFeed, sLastFetchedURL);
+                super.addItem(m_sNoMatchesInFeed, m_sLastFetchedURL);
 
                 // TODO: ask user if he wants to switch to list of players (only if there actually are players in the feed)
             }
@@ -997,8 +1016,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     lExpandedGroups.add(sSection);
                 }
             }
-            for(int f=0; f < matches.length(); f++) {
 
+            if ( m_bGroupByCourt ) {
+                super.sortItems(SortOrder.Ascending); // TODO: Improve. This only sorts on 'display', we want to sort more detailed on/by date/time
+            }
+            for ( int f=0; f < matches.length(); f++ ) {
                 JSONObject joMatch = matches.getJSONObject(f);
                 if ( joMatch.has(Player.A.toString()) == false ) {
                     JSONArray players = joMatch.optJSONArray(JSONKey.players.toString());
@@ -1015,6 +1037,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 if ( StringUtil.isEmpty(sRoundOrDivision) || sRoundOrDivision.equals(sSection) ) {
                     sRoundOrDivision = joMatch.optString(JSONKey.round.toString(), sSection);
                 }
+                if ( joMatch.has(JSONKey.court.toString() ) ) {
+                    m_iMatchesWithCourt++;
+                    if ( m_bGroupByCourt ) {
+                        sRoundOrDivision = joMatch.optString(JSONKey.court.toString(), sRoundOrDivision);
+                    }
+                }
 
                 String sDisplayName = placeholder.translate(sDisplayFormat, joMatch);
                        sDisplayName = placeholder.removeUntranslated(sDisplayName);
@@ -1022,7 +1050,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                        sDisplayName = sDisplayName.replaceAll("[:]\\s*$", "");   // remove splitter character(s) at end (there because certain values not provided)
                        sDisplayName = StringUtil.normalize(sDisplayName).trim();
 
-                switch (feedStatus) {
+                switch ( m_feedStatus ) {
                     case showingPlayers: {
                         //super.addItem(sHeader, sEntry);
                         // TODO
@@ -1048,7 +1076,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             ListUtil.removeEmpty(lInput);
 
             if ( ListUtil.isEmpty(lInput) ) {
-                super.addItem(m_sNoMatchesInFeed, sLastFetchedURL);
+                super.addItem(m_sNoMatchesInFeed, m_sLastFetchedURL);
                 //super.clearFilter();
 
                 // TODO: ask user if he wants to switch to list of players (only if there actually are players in the feed)
@@ -1074,7 +1102,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     }
                 }
                 List<String> lExpanded = new ArrayList<String>();
-                String sHeader = getString(feedStatus.equals(FeedStatus.showingPlayers)?R.string.lbl_players:R.string.sb_matches); // default if no header follows in the feed
+                String sHeader = getString(m_feedStatus.equals(FeedStatus.showingPlayers)?R.string.lbl_players:R.string.sb_matches); // default if no header follows in the feed
                 mFeedPrefOverwrites.clear();
                 Model mTmp = ModelFactory.getTemp();
                 for ( String sEntry : lInput ) {
@@ -1138,7 +1166,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         }
                         continue;
                     }
-                    switch (feedStatus) {
+                    switch ( m_feedStatus ) {
                         case showingPlayers: {
                             super.addItem(sHeader, sEntry);
                             break;
@@ -1228,10 +1256,10 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         lChangeListeners.add(l);
     }
     private void changeAndNotify(FeedStatus fsNew) {
-        FeedStatus fsOld = this.feedStatus;
-        this.feedStatus = fsNew;
+        FeedStatus fsOld = m_feedStatus;
+        m_feedStatus = fsNew;
         for(FeedStatusChangedListerer l: lChangeListeners) {
-            l.notify(fsOld, this.feedStatus);
+            l.notify(fsOld, m_feedStatus);
         }
     }
 }

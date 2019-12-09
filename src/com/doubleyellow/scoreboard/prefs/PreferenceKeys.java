@@ -105,6 +105,7 @@ public enum PreferenceKeys {
         autoSuggestToPostResult,
         savePasswords,
 
+        groupMatchesInFeedByCourt,
         hideCompletedMatchesFromFeed,
 
         refereeList,

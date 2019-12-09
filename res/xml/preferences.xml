@@ -1166,6 +1166,12 @@
                                 android:summary="@string/pref_hideCompletedMatchesFromFeed_summary"
                                 android:defaultValue="@bool/hideCompletedMatchesFromFeed_default"
                     />
+            <CheckBoxPreference android:key="groupMatchesInFeedByCourt"
+                android:icon="@drawable/dummy"
+                                android:title="@string/pref_groupMatchesInFeedByCourt"
+                                android:summary="@string/pref_groupMatchesInFeedByCourt_summary"
+                                android:defaultValue="@bool/groupMatchesInFeedByCourt_default"
+                    />
             <CheckBoxPreference android:key="removeSeedingAfterMatchSelection"
                 android:icon="@drawable/dummy"
                                 android:title="@string/pref_removeSeedingAfterMatchSelection"
