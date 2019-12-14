@@ -3433,7 +3433,7 @@ touch -t 01030000 LAST.sb
                 matchModel.setLockState(lsNew);
                 return true;
             case R.id.sb_bluetooth:
-                setupBluetoothControl();
+                setupBluetoothControl(true);
                 break;
             case R.id.dyn_undo_last:
             case R.id.sb_undo_last:
@@ -3666,6 +3666,7 @@ touch -t 01030000 LAST.sb
                 return true;
             case R.id.sb_exit:
                 persist(true);
+                turnOffBlueToothIfTurnedOnByApp();
                 System.exit(0);
                 return true;
             case android.R.id.home: {
@@ -5949,7 +5950,42 @@ touch -t 01030000 LAST.sb
         }
     }
 
-    private void setupBluetoothControl() {
+    private Boolean m_bAppTurnedOnBlueTooth = null;
+    private void setupBluetoothControl(boolean bStartTimer) {
+        // try to enable
+        try {
+            if ( mBluetoothAdapter.isEnabled() == false ) {
+                Toast.makeText(this, R.string.bt_bluetooth_turning_on_elipses, Toast.LENGTH_LONG).show();
+
+                // we actually do the turning of in a countdowntimer. If we don't the message above is not shown...
+                if ( bStartTimer ) {
+                    CountDownTimer ct = new CountDownTimer(300, 100) {
+                        @Override public void onTick(long millisUntilFinished) { }
+                        @Override public void onFinish() {
+                            setupBluetoothControl(false);
+                        }
+                    };
+                    ct.start();
+                    return;
+                } else {
+                    if ( mBluetoothAdapter.enable() ) {
+                        int iCountDown = 5;
+                        while ((mBluetoothAdapter.isEnabled() == false) && (iCountDown > 0) ) {
+                            Log.d(TAG, "Waiting for bluetooth to become available: " + iCountDown);
+                            synchronized (this) {
+                                wait(1000);
+                            }
+                            iCountDown--;
+                        }
+                        m_bAppTurnedOnBlueTooth = true;
+                        Toast.makeText(this, R.string.bt_bluetooth_has_been_turned_on, Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
         SelectDeviceDialog selectDevice = new SelectDeviceDialog(this, matchModel, this);
         int[] iResIds = selectDevice.getBluetoothDevices(true);
         if ( iResIds == null ) {
@@ -5968,6 +6004,29 @@ touch -t 01030000 LAST.sb
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
 */
+    }
+
+    private void turnOffBlueToothIfTurnedOnByApp() {
+        try {
+            if ( Boolean.TRUE.equals(m_bAppTurnedOnBlueTooth) && (mBluetoothAdapter != null) ) {
+                if ( mBluetoothAdapter.disable() ) {
+                    m_bAppTurnedOnBlueTooth = false;
+                    Toast.makeText(this, String.format(getString(R.string.bt_bluetooth_turning_off_elipses), Brand.getShortName(this)), Toast.LENGTH_LONG).show();
+/*
+                    int iCountDown = 5;
+                    while ((mBluetoothAdapter.isEnabled()) && (iCountDown > 0) ) {
+                        Log.d(TAG, "Waiting for bluetooth to be turned off: " + iCountDown);
+                        synchronized (this) {
+                            wait(1000);
+                        }
+                        iCountDown--;
+                    }
+*/
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static BluetoothDevice         m_btDeviceOther            = null;

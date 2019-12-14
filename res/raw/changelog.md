@@ -1,3 +1,8 @@
+## 4.28 (dec 2019)
+
+- allow group matches from a feed by 'court' (if 'court' is specified per match in the feed)
+- turn on bluetooth automatically if 'Mirror score (Bluetooth)' is chosen
+
 ## 4.27 (nov 2019)
 
 - Squore has been translated into Italian. Thank you very much Lior Lotem!

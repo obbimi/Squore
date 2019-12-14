@@ -48,6 +48,7 @@ public enum URLsKeys {
         avatarBaseURL,
         expandGroup,
         Placeholder_Match,
+        Placeholder_Player,
         /** @deprecated */
         Format_TeamPlayer,
         TextSizePercentage,

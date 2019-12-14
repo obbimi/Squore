@@ -29,6 +29,10 @@
     <string name="bt_no_bluetooth_on_device">No bluetooth on this device</string>
     <string name="bt_no_bluetooth_on_device_info">Mirroring score on this device to other device (or vice versa) via bluetooth not possible.</string>
 
+    <string name="bt_bluetooth_turning_on_elipses">Turning on Bluetooth …</string>
+    <string name="bt_bluetooth_has_been_turned_on">Bluetooth has been turned on</string>
+    <string name="bt_bluetooth_turning_off_elipses">App %s turned on bluetooth. Turning off bluetooth now…</string>
+
     <string name="bt_bluetooth_turned_off">Bluetooth is turned off</string>
     <string name="bt_bluetooth_turned_off_info">Bluetooth needs to be turned on to be able to mirror screen on other device.</string>
 

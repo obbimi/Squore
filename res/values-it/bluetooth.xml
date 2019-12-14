@@ -29,6 +29,10 @@
     <string name="bt_no_bluetooth_on_device">Bluetooth non presente su questo dispositivo</string>
     <string name="bt_no_bluetooth_on_device_info">Mirroring del punteggio via bluetooth da questo dispositivo ad un altro (o viceversa) non è possibile.</string>
 
+    <string name="bt_bluetooth_turning_on_elipses">Turning on Bluetooth …</string> <!-- TODO -->
+    <string name="bt_bluetooth_has_been_turned_on">Bluetooth has been turned on</string> <!-- TODO -->
+    <string name="bt_bluetooth_turning_off_elipses">App %s turned on bluetooth. Turning off bluetooth now…</string> <!-- TODO -->
+
     <string name="bt_bluetooth_turned_off">Bluetooth è disattivato</string>
     <string name="bt_bluetooth_turned_off_info">Bluetooth deve essere attivato per poter effettuare il mirroring dello schermo su un altro dispositivo.</string>
 

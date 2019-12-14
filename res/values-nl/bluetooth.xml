@@ -29,6 +29,10 @@
     <string name="bt_no_bluetooth_on_device">Geen bluetooth op dit apparaat</string>
     <string name="bt_no_bluetooth_on_device_info">Weerspiegelen van de score op dit apparaat op een ander apparaat via bluetooth niet mogelijk.</string>
 
+    <string name="bt_bluetooth_turning_on_elipses">Bluetooth wordt ingeschakeld…</string>
+    <string name="bt_bluetooth_has_been_turned_on">Bluetooth werd ingeschakeld</string>
+    <string name="bt_bluetooth_turning_off_elipses">App %s heeft bluetooth aangezet. De app set nu bluetooth weer uit…</string>
+
     <string name="bt_bluetooth_turned_off">Bluetooth staat uit</string>
     <string name="bt_bluetooth_turned_off_info">Bluetooth moet aan staan om de score op een andere apparaat te weerspiegelen.</string>
 

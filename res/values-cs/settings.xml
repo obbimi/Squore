@@ -299,6 +299,8 @@
     <string name="pref_tournamentMaxDuration_InDays_summary">Délka soutěže je nejvýše X dní</string>
     <string name="pref_hideCompletedMatchesFromFeed">Skrýt ukončené soutěže</string>
     <string name="pref_hideCompletedMatchesFromFeed_summary">Feed může obsahovat již dohrané zápasy (obsahuje výsledky). Pokud nechcete zobrazovat tyto zápasy, zaškrtněte tuto volbu</string>
+    <string name="pref_groupMatchesInFeedByCourt">Seskupit podle kurt</string> <!-- TODO -->
+    <string name="pref_groupMatchesInFeedByCourt_summary">A feed may specify on which court a match is (supposed to be) played. If so, and this option is active, matches will be grouped per court</string> <!-- TODO -->
     <string name="pref_removeSeedingAfterMatchSelection">Odstranit nasazení ze jmen hráčů</string>
     <string name="pref_removeSeedingAfterMatchSelection_summary">Odstraňovat nasazení, např. text [5/8], po vybrání zápasu z Feedu</string>
     <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Přepnout do seznamu hráčů je-li seznam zápasů prázdný</string>

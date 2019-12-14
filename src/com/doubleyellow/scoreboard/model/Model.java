@@ -888,6 +888,7 @@ public abstract class Model implements Serializable
                             m_scoreOfGameInProgress.put(adjustScoreFor, l.getScore());
                         }
                     }
+                    // TODO: does not work if score went from zero directly to 11 for scoring player
                 }
                 // inform listeners
                 for(OnComplexChangeListener l:onComplexChangeListeners) {
