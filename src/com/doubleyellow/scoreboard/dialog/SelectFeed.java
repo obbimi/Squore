@@ -146,7 +146,7 @@ public class SelectFeed extends BaseAlertDialog
                     PreferenceValues.setActiveFeedNr(context, checkedIndex);
                     if (context instanceof MatchTabbed) {
                         MenuHandler menuHandler = (MenuHandler) context;
-                        final Boolean useCache = Boolean.TRUE;
+                        final Boolean useCache        = Boolean.TRUE;
                         final Boolean resetFeedStatus = Boolean.TRUE;
                         menuHandler.handleMenuItem(R.id.refresh, useCache, resetFeedStatus);
                     }

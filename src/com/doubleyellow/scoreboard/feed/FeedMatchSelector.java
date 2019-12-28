@@ -89,9 +89,70 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     public static Map<PreferenceKeys, String> mFeedPrefOverwrites = new HashMap<PreferenceKeys, String>();
 
     private String     m_sNoMatchesInFeed = null;
-    private JSONObject m_joFeedConfig     = null;
     /** global list of team players */
     private JSONObject m_joTeamPlayers    = null;
+
+    //-------------------------------------------------------------------
+    // Feed Config
+    //-------------------------------------------------------------------
+
+    private JSONObject m_joFeedConfig           = null;
+    private String     m_sDisplayFormat_Players = null;
+    private String     m_sDisplayFormat_Matches = null;
+    private final String DisplayFormat_PlayerDefault = "${" + JSONKey.name + "}";
+    private final String DisplayFormat_MatchDefault  = "${" + JSONKey.date + "} ${" + JSONKey.time + "} : ${FirstOfList:~${" + Player.A + "}~${A.name}~} [${A.country}] [${A.club}] - " +
+            "${FirstOfList:~${" + Player.B + "}~${B.name}~} [${B.country}] [${B.club}] : ${" + JSONKey.result + "} (${" + JSONKey.id + "})";
+    private boolean    m_bHideCompletedMatches = false;
+
+    private int readFeedConfig(JSONObject joRoot) throws Exception {
+        if ( m_joFeedConfig != null ) {
+            // read config section only once per feed, not e.g. when user is refreshing the feed
+            return 0;
+        }
+
+        // if there is a config section, use it
+        m_joFeedConfig = joRoot.optJSONObject(URLsKeys.config.toString());
+        if ( m_joFeedConfig != null ) {
+            m_sDisplayFormat_Players = m_joFeedConfig.optString(URLsKeys.Placeholder_Player.toString(), DisplayFormat_PlayerDefault);
+            m_sDisplayFormat_Matches = m_joFeedConfig.optString(URLsKeys.Placeholder_Match .toString(), DisplayFormat_MatchDefault);
+            m_sDisplayFormat_Players = canonicalizeJsonKeys(m_sDisplayFormat_Players);
+            m_sDisplayFormat_Matches = canonicalizeJsonKeys(m_sDisplayFormat_Matches);
+
+            String sExpandGroup = m_joFeedConfig.optString(URLsKeys.expandGroup.toString());
+            if ( StringUtil.isNotEmpty(sExpandGroup) ) {
+                //lExpandedGroups.add(sExpandGroup); // TODO
+            }
+
+            Iterator<String> itPrefKeys = m_joFeedConfig.keys();
+            while ( itPrefKeys.hasNext() ) {
+                String sPref  = itPrefKeys.next();
+                String sValue = m_joFeedConfig.getString(sPref);
+                try {
+                    PreferenceKeys key = PreferenceKeys.valueOf(sPref);
+                    mFeedPrefOverwrites.put(key, sValue);
+                } catch (Exception e) {
+                    URLsKeys key = URLsKeys.PostResult;
+                    if ( sPref.equals( key.toString() ) ) {
+                        Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
+                        String sCurrent = feedPostDetail.get(key);
+                        if ( sValue.equals(sCurrent) == false ) {
+                            feedPostDetail.put(key, sValue);
+                            PreferenceValues.addOrReplaceNewFeedURL(context, feedPostDetail, true, true);
+                        }
+                    } else {
+                        //e.printStackTrace();
+                    }
+                }
+            }
+            if ( MapUtil.isNotEmpty(mFeedPrefOverwrites) ) {
+                PreferenceValues.setOverwrites(mFeedPrefOverwrites);
+                m_bHideCompletedMatches = PreferenceValues.hideCompletedMatchesFromFeed(context);
+            }
+        }
+        return MapUtil.size(mFeedPrefOverwrites);
+    }
+
+    //-------------------------------------------------------------------
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -459,7 +520,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     private void setMatchFormat(Model model, JSONObject joMatch) throws JSONException {
         // take match config from feed config (if it exists)
-        if ( m_joFeedConfig  != null ) {
+        if ( m_joFeedConfig != null ) {
             if ( m_joFeedConfig.has(JSONKey.numberOfPointsToWinGame.toString() ) ) {
                 model.setNrOfPointsToWinGame(m_joFeedConfig.getInt(JSONKey.numberOfPointsToWinGame.toString()));
             }
@@ -607,7 +668,6 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         initializing             (false),
         loadingMatches           (false),
         showingMatches           (true ),
-        showingMatchesUncompleted(true ),
         loadingPlayers           (false),
         showingPlayers           (true ),
         ;
@@ -626,14 +686,26 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             return this.toString().contains("Matches");
         }
     }
-    private FeedStatus m_feedStatus      = FeedStatus.initializing;
-    private String     m_sLastFetchedURL = null;
+    private FeedStatus m_feedStatus            = FeedStatus.initializing;
+    private String     m_sLastFetchedURL       = null;
 
     public FeedStatus getFeedStatus() {
         return m_feedStatus;
     }
-    public void resetFeedStatus() {
-        changeAndNotify(FeedStatus.initializing);
+    /** Called when switching feed, or switching from players to matches (or vice versa) */
+    public void resetFeedStatus(FeedStatus fsNew) {
+        if ( fsNew == null ) {
+            if ( m_feedStatus.isShowingPlayers() ) {
+                fsNew = FeedStatus.loadingPlayers;
+            } else {
+                fsNew = FeedStatus.loadingMatches;
+            }
+        }
+        changeAndNotify(fsNew);
+
+        m_joFeedConfig = null; // ensure feed config ( if present ) is re-read
+        m_sDisplayFormat_Matches = DisplayFormat_MatchDefault;
+        m_sDisplayFormat_Players = DisplayFormat_PlayerDefault;
     }
 
     private class EMSAdapter extends SimpleELAdapter implements ContentReceiver
@@ -663,6 +735,14 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
             String sURLMatches = PreferenceValues.getMatchesFeedURL(context);
             String sURLPlayers = PreferenceValues.getPlayersFeedURL(context);
+            if ( m_feedStatus.isShowingPlayers() ) {
+                changeAndNotify(FeedStatus.loadingPlayers);
+                m_sLastFetchedURL = sURLPlayers;
+            } else {
+                changeAndNotify(FeedStatus.loadingMatches);
+                m_sLastFetchedURL = sURLMatches;
+            }
+/*
             if ( bUseCacheIfPresent ) {
                 if (m_feedStatus.toString().startsWith(FeedStatus.showingMatches.toString()) && StringUtil.isNotEmpty(sURLPlayers)) {
                     changeAndNotify(FeedStatus.loadingPlayers);
@@ -680,6 +760,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     m_sLastFetchedURL = sURLPlayers;
                 }
             }
+*/
             m_sLastFetchedURL = URLFeedTask.prefixWithBaseIfRequired(m_sLastFetchedURL);
 
             if ( StringUtil.isEmpty(m_sLastFetchedURL) ) {
@@ -713,9 +794,10 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             m_task.execute();
         }
 
-        public void cancel() {
+        @Override public void cancel() {
             if ( m_task != null ) {
-                m_task.cancel(false);
+                Log.d(TAG, "Canceling download task ... ");
+                m_task.cancel(true);
                 m_task = null;
             }
         }
@@ -732,16 +814,13 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
 
             // remove the 'fetching...' message
-            this.removeHeader(m_sFetchingDataMessage);
+            boolean bRemoved = this.removeHeader(m_sFetchingDataMessage);
 
             if ( StringUtil.hasNonEmpty(sContent, sLastSuccessfulContent) ) {
                 switch (m_feedStatus) {
                     case loadingMatches:
-                        if ( PreferenceValues.hideCompletedMatchesFromFeed(context) ) {
-                            changeAndNotify(FeedStatus.showingMatchesUncompleted);
-                        } else {
-                            changeAndNotify(FeedStatus.showingMatches);
-                        }
+                        m_bHideCompletedMatches = PreferenceValues.hideCompletedMatchesFromFeed(context);
+                        changeAndNotify(FeedStatus.showingMatches);
                         break;
                     case loadingPlayers:
                         changeAndNotify(FeedStatus.showingPlayers);
@@ -797,6 +876,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
             boolean bSuggestToShowPlayerList = false;
             if ( this.getChildrenCount() == 0 ) {
+
+                if ( m_feedStatus.isShowingMatches() ) {
+                    super.addItem(m_sNoMatchesInFeed, m_sLastFetchedURL);
+                }
+
                 String sName = PreferenceValues.getMatchesFeedName(getActivity());
                 if ( StringUtil.isNotEmpty(sName) ) {
                     String sMsg = null;
@@ -804,9 +888,9 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         case showingMatches:
                             sMsg = m_sNoMatchesInFeed;
                             bSuggestToShowPlayerList = true;
-                            break;
-                        case showingMatchesUncompleted:
-                            sMsg = "Sorry, no uncompleted matches in this feed for the moment";
+                            if ( m_bHideCompletedMatches ) {
+                                sMsg = "Sorry, no uncompleted matches in this feed for the moment";
+                            }
                             break;
                         case showingPlayers:
                             sMsg = "Sorry, no players in this feed for the moment";
@@ -831,7 +915,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 }
             }
 
-            if ( m_iMatchesWithCourt == 0 ) {
+            if ( result.equals(FetchResult.OK) && (m_iMatchesWithCourt == 0) && m_feedStatus.isShowingMatches() ) {
                 if ( m_bGroupByCourt && (m_iGroupByCourtMsg < 3) ) {
                     Toast.makeText(context, "None of the matches in this feed has a court specified", Toast.LENGTH_LONG).show();
                     m_iGroupByCourtMsg++;
@@ -859,14 +943,15 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             if ( sContent.startsWith("{") && sContent.endsWith("}"))  {
                 sContent = canonicalizeJsonKeys(sContent);
                 JSONObject joRoot = new JSONObject(sContent);
+                readFeedConfig(joRoot);
                 lExpandedGroups = fillListJSON(joRoot);
             } else if ( sContent.startsWith("[") && sContent.endsWith("]") && sContent.contains("{") ) { // TODO: check json validity
                 sContent = canonicalizeJsonKeys(sContent);
                 JSONArray array = new JSONArray(sContent);
                 if ( m_feedStatus.isShowingPlayers() ) {
-                    fillPlayerListFromJSONArray(getFormat(), "All", lExpandedGroups, array);
+                    fillPlayerListFromJSONArray(getFormat(m_feedStatus), "All", array);
                 } else {
-                    fillMatchListFromJSONArray(getFormat(), "All", lExpandedGroups, array);
+                    fillMatchListFromJSONArray(getFormat(m_feedStatus), "All", lExpandedGroups, array);
                 }
             } else {
                 lExpandedGroups = fillListFlat(sContent);
@@ -874,61 +959,29 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             return lExpandedGroups;
         }
 
-        private String getFormat() {
-            String sFormat = m_sDisplayFormat;
-            if ( m_feedStatus.equals(FeedStatus.showingPlayers) ) {
-                sFormat = "${" + JSONKey.name + "}"; // TODO: country
+        private String getFormat(FeedStatus feedStatus) {
+            String sFormat = m_sDisplayFormat_Matches;
+            if ( feedStatus.equals(FeedStatus.showingPlayers) ) {
+                sFormat = m_sDisplayFormat_Players;
             }
             return sFormat;
         }
 
         private final AndroidPlaceholder placeholder = new AndroidPlaceholder(TAG);
-        private final String m_sDisplayFormat = "${" + JSONKey.date + "} ${" + JSONKey.time + "} : ${FirstOfList:~${" + Player.A + "}~${A.name}~} [${A.country}] [${A.club}] - " +
-                                                                                                  "${FirstOfList:~${" + Player.B + "}~${B.name}~} [${B.country}] [${B.club}] : ${" + JSONKey.result + "} (${" + JSONKey.id + "})";
 
         /** For matches and players */
         private List<String> fillListJSON(JSONObject joRoot) throws Exception {
             List<String> lExpandedGroups = new ArrayList<>();
-            String       sDisplayFormat  = getFormat();
+            String       sDisplayFormat  = getFormat(m_feedStatus);
             mFeedPrefOverwrites.clear();
+
+            if ( JsonUtil.size(joRoot) >= 1 && joRoot.has(JSONKey.Message.toString()) ) {
+                String sMessage = (String) joRoot.remove(JSONKey.Message.toString());
+                Toast.makeText(context, sMessage, Toast.LENGTH_LONG).show();
+            }
 
             // for feeds where matches between teams are listed, for each team a list of players may be specified
             m_joTeamPlayers = joRoot.optJSONObject(JSONKey.team_players.toString());
-
-            // if there is a config section, use it
-            m_joFeedConfig = joRoot.optJSONObject(URLsKeys.config.toString());
-            if ( m_joFeedConfig != null ) {
-                URLsKeys phKey = m_feedStatus.isShowingPlayers() ? URLsKeys.Placeholder_Player : URLsKeys.Placeholder_Match;
-                sDisplayFormat = m_joFeedConfig.optString(phKey.toString(), sDisplayFormat);
-
-                String sExpandGroup = m_joFeedConfig.optString(URLsKeys.expandGroup.toString());
-                if ( StringUtil.isNotEmpty(sExpandGroup) ) {
-                    lExpandedGroups.add(sExpandGroup);
-                }
-
-                Iterator<String> itPrefKeys = m_joFeedConfig.keys();
-                while ( itPrefKeys.hasNext() ) {
-                    String sPref  = itPrefKeys.next();
-                    String sValue = m_joFeedConfig.getString(sPref);
-                    try {
-                        PreferenceKeys key = PreferenceKeys.valueOf(sPref);
-                        mFeedPrefOverwrites.put(key, sValue);
-                    } catch (Exception e) {
-                        URLsKeys key = URLsKeys.PostResult;
-                        if ( sPref.equals( key.toString() ) ) {
-                            Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
-                            String sCurrent = feedPostDetail.get(key);
-                            if ( sValue.equals(sCurrent) == false ) {
-                                feedPostDetail.put(key, sValue);
-                                PreferenceValues.addOrReplaceNewFeedURL(context, feedPostDetail, true, true);
-                            }
-                        } else {
-                            //e.printStackTrace();
-                        }
-                    }
-                }
-            }
-            sDisplayFormat = canonicalizeJsonKeys(sDisplayFormat);
 
             int    iEntriesCnt             = 0;
             String sActualNameFromFeed     = null;
@@ -1003,7 +1056,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
                 if ( entries != null ) {
                     if ( m_feedStatus.isShowingPlayers() ) {
-                        fillPlayerListFromJSONArray(sDisplayFormat, sSection, lExpandedGroups, entries);
+                        fillPlayerListFromJSONArray(sDisplayFormat, sSection, entries);
                     } else {
                         fillMatchListFromJSONArray(sDisplayFormat, sSection, lExpandedGroups, entries);
                     }
@@ -1011,20 +1064,16 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 }
             }
 
-            if ( iEntriesCnt == 0 ) {
-                super.addItem(m_sNoMatchesInFeed, m_sLastFetchedURL);
-
-                // TODO: ask user if he wants to switch to list of players (only if there actually are players in the feed)
-            }
             return lExpandedGroups; // TODO: return list of headers that should be expanded
         }
 
         /** Players only */
-        private void fillPlayerListFromJSONArray(final String sDisplayFormat, String sSection, List<String> lExpandedGroups, JSONArray players) throws JSONException {
+        private void fillPlayerListFromJSONArray(final String sDisplayFormat, String sSection, JSONArray players) throws JSONException {
             // TODO: to allow list of strings
             for ( int f=0; f < players.length(); f++ ) {
                 JSONObject joPlayer = players.getJSONObject(f);
                 String sDisplayName = placeholder.translate(sDisplayFormat, joPlayer);
+                       sDisplayName = placeholder.removeUntranslated(sDisplayName);
                        sDisplayName = sDisplayName.replaceAll("[^\\w\\s]{2}", ""); // remove brackets around values that are not provided (), [], <>
                 //String sName    = joPlayer.getString(JSONKey.name   .toString());
                 //String sCountry = joPlayer.getString(JSONKey.country.toString());
@@ -1077,12 +1126,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
                 switch ( m_feedStatus ) {
                     case showingMatches: {
-                        super.addItem(sRoundOrDivision, sDisplayName, joMatch);
-                        break;
-                    }
-                    case showingMatchesUncompleted: {
-                        String sResult = joMatch.optString(JSONKey.result.toString());
-                        if ( StringUtil.isEmpty(sResult) ) {
+                        if ( m_bHideCompletedMatches ) {
+                            String sResult = joMatch.optString(JSONKey.result.toString());
+                            if ( StringUtil.isEmpty(sResult) ) {
+                                super.addItem(sRoundOrDivision, sDisplayName, joMatch);
+                            }
+                        } else {
                             super.addItem(sRoundOrDivision, sDisplayName, joMatch);
                         }
                         break;
@@ -1193,12 +1242,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                             break;
                         }
                         case showingMatches: {
-                            super.addItem(sHeader, sEntry);
-                            break;
-                        }
-                        case showingMatchesUncompleted: {
-                            String sResult = getMatchDetailsFromMatchString(mTmp, sEntry, context, false);
-                            if ( StringUtil.isEmpty(sResult) ) {
+                            if ( m_bHideCompletedMatches ) {
+                                String sResult = getMatchDetailsFromMatchString(mTmp, sEntry, context, false);
+                                if ( StringUtil.isEmpty(sResult) ) {
+                                    super.addItem(sHeader, sEntry);
+                                }
+                            } else {
                                 super.addItem(sHeader, sEntry);
                             }
                             break;
@@ -1281,7 +1330,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     private void changeAndNotify(FeedStatus fsNew) {
         FeedStatus fsOld = m_feedStatus;
         m_feedStatus = fsNew;
-        for(FeedStatusChangedListerer l: lChangeListeners) {
+        for ( FeedStatusChangedListerer l: lChangeListeners ) {
             l.notify(fsOld, m_feedStatus);
         }
     }

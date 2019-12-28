@@ -206,7 +206,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
     @Override public void notify(FeedMatchSelector.FeedStatus fsOld, FeedMatchSelector.FeedStatus fsNew) {
         ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.show_matches_from_feed}, fsNew.equals(FeedMatchSelector.FeedStatus.showingPlayers));
 
-        final boolean bShowingMatches = fsNew.equals(FeedMatchSelector.FeedStatus.showingMatches) || fsNew.equals(FeedMatchSelector.FeedStatus.showingMatchesUncompleted);
+        final boolean bShowingMatches = fsNew.equals(FeedMatchSelector.FeedStatus.showingMatches);
         ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.show_players_from_feed     }, bShowingMatches);
         ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.uc_hide_matches_with_result}, bShowingMatches);
         ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.uc_group_matches_by_court  }, bShowingMatches); // TODO: disable/hide option if NO courts in feed
@@ -304,7 +304,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
                 ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(defaultTab);
                 if ( matchSelector instanceof FeedMatchSelector ) {
                     FeedMatchSelector fms = (FeedMatchSelector) matchSelector;
-                    fms.resetFeedStatus();
+                    fms.resetFeedStatus(FeedMatchSelector.FeedStatus.loadingMatches);
                 }
             }
 
@@ -357,6 +357,15 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
                 return matchView.clearRefereeFields();
             }
             case R.id.uc_add_new_feed: {
+                // cancel possible fetching of matches/players
+                if ( getFragment(defaultTab) instanceof FeedMatchSelector ) {
+                    FeedMatchSelector fms = (FeedMatchSelector) getFragment(defaultTab);
+                    SimpleELAdapter listAdapter = fms.getListAdapter(getLayoutInflater());
+                    if ( listAdapter != null ) {
+                        listAdapter.cancel();
+                    }
+                }
+
                 Intent ff = new Intent(this, FeedFeedSelector.class);
                 startActivityForResult(ff, 1); // see onActivityResult
                 return true;
@@ -378,7 +387,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
                 // now refresh: try without reloading data from the URL
                 if ( /*(listAdapter == null) &&*/ (getFragment(defaultTab) instanceof FeedMatchSelector)) {
                     FeedMatchSelector fms = (FeedMatchSelector) getFragment(defaultTab);
-                    fms.resetFeedStatus();
+                    //fms.resetFeedStatus();
                     SimpleELAdapter listAdapter = fms.getListAdapter(null);
                     listAdapter.load(true);
                 }
@@ -391,19 +400,21 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
             }
             case R.id.show_players_from_feed:
             case R.id.show_matches_from_feed: {
-                if ( (getFragment(defaultTab) != null) && (getFragment(defaultTab) instanceof ExpandableMatchSelector) ) {
-                    ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(defaultTab);
+                Fragment fragment = getFragment(defaultTab);
+                if ( fragment instanceof ExpandableMatchSelector ) {
+                    ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) fragment;
                     if ( matchSelector instanceof FeedMatchSelector ) {
                         FeedMatchSelector       fms           = (FeedMatchSelector) matchSelector;
                         SimpleELAdapter         listAdapter   = fms.getListAdapter(null);
                         if ( menuItemId == R.id.show_players_from_feed ) {
-                            if ( fms.getFeedStatus().equals(FeedMatchSelector.FeedStatus.showingPlayers) == false ) {
+                            if ( fms.getFeedStatus().isShowingMatches() ) {
+                                fms.resetFeedStatus(FeedMatchSelector.FeedStatus.loadingPlayers);
                                 listAdapter.load(true);
                             }
                         }
                         if ( menuItemId == R.id.show_matches_from_feed ) {
-                            if ( fms.getFeedStatus().equals(FeedMatchSelector.FeedStatus.showingPlayers) ) {
-                                fms.resetFeedStatus();
+                            if ( fms.getFeedStatus().isShowingPlayers() ) {
+                                fms.resetFeedStatus(FeedMatchSelector.FeedStatus.loadingMatches);
                                 listAdapter.load(true);
                             }
                         }
@@ -414,7 +425,8 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
             case R.id.filter: case R.id.mt_filter:
             case R.id.expand_all:
             case R.id.collapse_all: {
-                if ( (getFragment(defaultTab) != null) && (getFragment(defaultTab) instanceof ExpandableMatchSelector) ) {
+                Fragment fragment = getFragment(defaultTab);
+                if ( fragment instanceof ExpandableMatchSelector ) {
                     ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(defaultTab);
                     if ( menuItemId == R.id.expand_all ) {
                         ExpandableListUtil.expandAll(matchSelector.expandableListView);
@@ -451,9 +463,10 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
                 }
                 if ( listAdapter != null ) {
                     boolean bUseCacheIfPresent = (item.length > 0 && (item[0] instanceof Boolean) && (Boolean) item[0]);
-                    if ( item.length > 1 && ((Boolean) item[1]) && defaultTab.equals(SelectTab.Feed) ) {
+                    boolean resetFeedStatus    = (item.length > 1 && (item[1] instanceof Boolean) && (Boolean) item[1]);
+                    if ( resetFeedStatus && defaultTab.equals(SelectTab.Feed) ) {
                         FeedMatchSelector fms = (FeedMatchSelector) getFragment(defaultTab);
-                        fms.resetFeedStatus();
+                        fms.resetFeedStatus(null);
                     }
                     listAdapter.load(bUseCacheIfPresent);
                 }

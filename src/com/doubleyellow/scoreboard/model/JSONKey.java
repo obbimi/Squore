@@ -94,5 +94,7 @@ public enum JSONKey {
 	    country,
 	    seed,
 	    avatar,
+
+	Message,
 }
 
