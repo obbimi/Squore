@@ -138,6 +138,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="showTimeIsAlreadyUpFor_Chrono_default">true</bool>
     <bool name="saveMatchesForLaterUsage_default">true</bool>
     <bool name="useFeedAndPostFunctionality_default">true</bool>
+    <bool name="allowTrustAllCertificatesAndHosts_default">false</bool>
     <bool name="sortMatchesByEvent_default">true</bool>
     <bool name="TextSizeScoreAsBigAsPossible_default">true</bool>
     <bool name="mailFullScoringSheet_default">true</bool>

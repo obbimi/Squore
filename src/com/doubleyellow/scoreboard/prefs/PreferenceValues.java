@@ -630,6 +630,9 @@ public class PreferenceValues extends RWValues
     public static boolean useFeedAndPostFunctionality(Context context) {
         return getBoolean(PreferenceKeys.useFeedAndPostFunctionality, context, R.bool.useFeedAndPostFunctionality_default);
     }
+    public static boolean allowTrustAllCertificatesAndHosts(Context context) {
+        return getBoolean(PreferenceKeys.allowTrustAllCertificatesAndHosts, context, R.bool.allowTrustAllCertificatesAndHosts_default);
+    }
     public static Feature recordRallyEndStatsAfterEachScore(Context context) {
         return getEnum(PreferenceKeys.recordRallyEndStatsAfterEachScore, context, Feature.class, Feature.DoNotUse);
     }
@@ -1589,7 +1592,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-12-10"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-12-28"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

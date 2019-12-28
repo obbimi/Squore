@@ -20,9 +20,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -53,6 +55,8 @@ import java.util.Map;
  * - just enter a score halfway or at the end of each game just to have the score noted down and possible shared for live scoring
  */
 public class AdjustScore extends BaseAlertDialog {
+
+    private static final String TAG = "SB." + AdjustScore.class.getSimpleName();
 
     public AdjustScore(Context context, Model matchModel, ScoreBoard scoreBoard) {
         super(context, matchModel, scoreBoard);
@@ -137,6 +141,7 @@ public class AdjustScore extends BaseAlertDialog {
                 //n.setPadding(5, 5, 0, 0);
                 txtPoints.setSelectAllOnFocus(true);
                 txtPoints.setOnKeyListener(onKeyListener);
+                txtPoints.setOnFocusChangeListener(onFocusChangeListener);
                 ColorUtil.setBackground(txtPoints, iInputBgColor);
                 txtPoints.setTextColor(iInputTxtColor);
                 txtPoints.setHighlightColor(iSelectTxt);
@@ -183,6 +188,55 @@ public class AdjustScore extends BaseAlertDialog {
         ViewUtil.showKeyboard(dialog);
     }
 
+    private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+        private int m_lastLoosingFocus = 0;
+
+        @Override public void onFocusChange(View v, boolean hasFocus) {
+            Log.d(TAG, "Focus changed for view with id " + v.getId() + " hasFocus:" + hasFocus);
+            if ( hasFocus == false ) {
+                m_lastLoosingFocus = v.getId();
+                return;
+            }
+
+            // receiving focus
+            if ( v instanceof EditText ) {
+                EditText tvFocus = (EditText) v;
+                int iGameNr_Zero_0or1 = tvFocus.getId();
+                int i0or1 = iGameNr_Zero_0or1 % 100;
+                int iGameNr1Based = (iGameNr_Zero_0or1 - i0or1) / 100;
+
+                ViewParent parentView = v.getParent();
+                if ( parentView instanceof ViewGroup ) {
+                    ViewGroup vg = (ViewGroup) parentView;
+                    int iOtherViewId = iGameNr1Based * 100 + (1 - i0or1);
+                    if ( iOtherViewId == m_lastLoosingFocus ) {
+                        TextView tvOther = vg.findViewById(iOtherViewId);
+
+                        String scoreFocus = tvFocus.getText().toString();
+                        String scoreOther = tvOther.getText().toString();
+                        if (  ( StringUtil.isEmpty (scoreFocus) || scoreFocus.equals("0"))
+                                && StringUtil.isNotEmpty(scoreOther)
+                                && StringUtil.isInteger (scoreOther)
+                        ) {
+                            int iScoreOther = Integer.parseInt(scoreOther);
+
+                            int iNrOfPointsToWinGame = matchModel.getNrOfPointsToWinGame();
+                            int iFocusValue = 0;
+                            if ( iScoreOther < iNrOfPointsToWinGame ) {
+                                // assume focused player won game
+                                iFocusValue = Math.max(iNrOfPointsToWinGame, iScoreOther + 2);
+                            } else {
+                                // assume other won game
+                                iFocusValue = Math.min(iNrOfPointsToWinGame, iScoreOther - 2) ;
+                            }
+                            tvFocus.setText(String.valueOf(iFocusValue));
+                            tvFocus.selectAll();
+                        }
+                    }
+                }
+            }
+        }
+    };
     private View.OnKeyListener onKeyListener = new View.OnKeyListener() {
         @Override public boolean onKey(View view, int i, KeyEvent keyEvent) {
             m_lModified.put(view.getId(), true);

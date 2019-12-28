@@ -1272,6 +1272,11 @@
                                 android:inputType="number"
                                 android:defaultValue="@integer/maximumCacheAgeFlags_default"
             />
+            <CheckBoxPreference android:key="allowTrustAllCertificatesAndHosts"
+                android:icon="@drawable/dummy"
+                android:title="allow Trust All Certificates And Hosts"
+                android:defaultValue="@bool/allowTrustAllCertificatesAndHosts_default"
+                />
         </PreferenceCategory>
     </PreferenceScreen>
 

@@ -38,6 +38,7 @@ import com.doubleyellow.android.SystemUtil;
 import com.doubleyellow.android.task.DownloadImageTask;
 import com.doubleyellow.android.util.ExportImport;
 import com.doubleyellow.android.util.SimpleELAdapter;
+import com.doubleyellow.android.util.KeyStoreUtil;
 import com.doubleyellow.prefs.DynamicListPreference;
 import com.doubleyellow.prefs.EnumListPreference;
 import com.doubleyellow.prefs.EnumMultiSelectPreference;
@@ -297,6 +298,19 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         // TODO: ensure selected value is still valid
                         break;
                     case feedPostUrl:
+                        break;
+                    case allowTrustAllCertificatesAndHosts:
+                        boolean bAllowTrustAllCertificatesAndHosts = PreferenceValues.getBoolean(prefs, eKey, false);
+                        if ( bAllowTrustAllCertificatesAndHosts ) {
+                            try {
+                                KeyStoreUtil.trustAllHttpsCertificates();
+                                KeyStoreUtil.trustAllHostnames();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            // TODO: undo
+                        }
                         break;
                     case hideCompletedMatchesFromFeed:
                         break;

@@ -93,6 +93,7 @@ public enum PreferenceKeys {
         maximumCacheAgeFeeds,
         /** in seconds */
         feedReadTimeout,
+        allowTrustAllCertificatesAndHosts,
         FlagsURLs,
             prefetchFlags,
 /*

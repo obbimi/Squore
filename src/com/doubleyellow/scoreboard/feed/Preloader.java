@@ -21,6 +21,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.doubleyellow.android.util.ContentReceiver;
+import com.doubleyellow.android.util.KeyStoreUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -208,6 +209,21 @@ public class Preloader extends AsyncTask implements ContentReceiver
                 break;
             case LoginToNetworkFirst:
             case NoCacheAndNetwork:
+            case TimeoutError:
+            case SSLHandshakeError: {
+                    if ( PreferenceValues.allowTrustAllCertificatesAndHosts(m_context) ) {
+                        try {
+                            KeyStoreUtil.trustAllHttpsCertificates();
+                            KeyStoreUtil.trustAllHostnames();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+
+                    }
+                    doNext(0);
+                    break;
+                }
             case NoNetwork:
             case UnexpectedContent:
             case UnexpectedError:
@@ -234,7 +250,6 @@ public class Preloader extends AsyncTask implements ContentReceiver
             if ( MapUtil.isEmpty(xxx3ToName) ) { return; }
             List<String> lCountryCodesToFetch = new ArrayList(xxx3ToName.keySet());
             ListUtil.removeEmpty(lCountryCodesToFetch);
-            int iDownloads = 0;
             while ( ListUtil.isNotEmpty(lCountryCodesToFetch) ) {
                 String sCountryCode = lCountryCodesToFetch.remove(0);
                 PreferenceValues.downloadImage(m_context, null, sCountryCode, 100);
