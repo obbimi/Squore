@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <fraction name="ls_gamescores_width">20%</fraction>
+    <fraction name="ls_score_width_2x">48%</fraction>
+</resources>

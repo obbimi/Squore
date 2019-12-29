@@ -44,7 +44,7 @@ public class ScoreSheetOnline extends AppCompatActivity {
         Bundle bundleExtra = intent.getBundleExtra(IntentKeys.ScoreSheetOnline.toString());
         sShowURL = bundleExtra.getString(IntentKeys.ScoreSheetOnline.toString());
 
-        WebView wv = new WebView(this);
+        WebView wv = new WebView(this); // throws UnsupportedOperationException on wearable
         setContentView(wv);
 
         WebSettings settings = wv.getSettings();

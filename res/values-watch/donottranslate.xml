@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="ShowPlayerColorOn_DefaultValues" tools:ignore="InconsistentArrays">
+        <item>ServeSideButton</item>
+        <item>PlayerButton</item>
+        <item>GameBallMessage</item>
+    </string-array>
+
+    <!--    <string name="BackKeyBehaviour_default">UndoScore</string>-->
+    <string name="BackKeyBehaviour_default">UndoScoreNoConfirm</string>
+
+    <string name="useTimersFeature_default">Automatic</string>
+    <string name="endGameSuggestion_default">Automatic</string>
+    <string name="useOfficialAnnouncementsFeature_default">DoNotUse</string>
+
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_Squash">
+        <!--        <item>OnDevice</item>-->
+        <item>OnChromeCast</item>
+    </string-array>
+
+</resources>

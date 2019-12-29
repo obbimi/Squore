@@ -204,7 +204,7 @@ public class SBTimerView implements TimerView
                 return;
             }
             int secondsLeft = ScoreBoard.timer.getSecondsLeft();
-            if ( secondsLeft > 0 ) {
+            if ( ( secondsLeft > 0 ) && (ViewUtil.isWearable(context) == false) ) {
                 ScoreBoard.timer.addTimerView(false, scoreBoard.getDialogTimerView());
             } else {
                 SBTimerView.this.cancel();

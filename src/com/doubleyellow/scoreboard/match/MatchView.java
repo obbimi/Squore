@@ -856,9 +856,11 @@ public class MatchView extends SBRelativeLayout
                 }
             };
             ScoreBoard.MyDialogBuilder adb = ScoreBoard.getAlertDialogBuilder(context);
-            String sTitle = context.getString(R.string.lbl_color) + ": " + tvsPlayers[m_forPlayer.ordinal()].getText();
-            adb.setTitle(sTitle)
-               .setPositiveButton(R.string.cmd_ok    , listener)
+            if ( ViewUtil.isWearable(context) == false ) {
+                String sTitle = context.getString(R.string.lbl_color) + ": " + tvsPlayers[m_forPlayer.ordinal()].getText(); // not for wearable
+                adb.setTitle(sTitle);
+            }
+            adb.setPositiveButton(R.string.cmd_ok    , listener)
                .setNeutralButton (R.string.cmd_none  , listener)
                .setNegativeButton(R.string.cmd_cancel, listener)
                .setView((View) cpv);

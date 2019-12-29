@@ -1592,7 +1592,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-12-28"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-12-29"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
@@ -1758,7 +1758,8 @@ public class PreferenceValues extends RWValues
 
     public static boolean showTip(Context context, PreferenceKeys preferenceKey, String sMessage, boolean bAsToast) {
         // do not show popup tips while we are in demo mode
-        if ( ScoreBoard.isInDemoMode() ) { return false; }
+        if ( ViewUtil.isWearable(context) ) { return false; }
+        if ( ScoreBoard.isInDemoMode()    ) { return false; }
         if ( StringUtil.isEmpty(sMessage) ) { return false; } // should not happen but maybe a translation is missing/empty
 
         if ( getBoolean(PreferenceKeys.showTips, context, R.bool.showTips_default) == false ) {

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <!-- just to have shorter strings in the dialog -->
+    <string name="sb_who_will_start_to_serve">Server?</string>
+</resources>

@@ -278,7 +278,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 case R.id.txt_player1:
                 case R.id.txt_player2:
                     if ( ViewUtil.getScreenHeightWidthMinimum(ScoreBoard.this) < 320 ) {
-                        // just to have a way to get to the settings of no actionbar is visible on android wear
+                        // just to have a way to get to the settings if no actionbar is visible on android wear
                         return handleMenuItem(R.id.sb_settings);
                     } else {
                         return handleMenuItem(R.id.sb_edit_event_or_player);
