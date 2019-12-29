@@ -5,7 +5,7 @@ cat <<!
 
 Usage:
 
-	$0 '(Squore|Badminton|Racketlon|Tabletennis|CourtCare|UniOfNotthingham)'
+	$0 '(Squore|SquoreWear|Badminton|Racketlon|Tabletennis|CourtCare|UniOfNotthingham)'
 
 Always change back to Squore before change to another 'Brand'
 !
@@ -59,17 +59,24 @@ elif [[ "$tobranded" = "UniOfNotthingham" ]]; then
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.courtscore_uon.R\1~' ${f}
         #exit 1
     done
-elif [[ "$tobranded" = "Squore" ]]; then
+elif [[ "$tobranded" = "SquoreWear" ]]; then
     printf "Change to '${tobranded}'\n"
-    for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton).R" *); do
+    for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton|scoreboard).R[;\.]" *); do
+        printf "File %-72s to %s \n" $f $tobranded
+        sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\|badminton\|scoreboard\).R\([^a-z]\)~com.doubleyellow.squorewear.R\2~' ${f}
+        #exit 1
+    done
+elif [[ "$tobranded" = "Squore" ]]; then
+    printf "Change back to '${tobranded}'\n"
+    for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton|squorewear).R" *); do
         printf "File %-72s back to %s normal\n" $f $tobranded
-        sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\|badminton\).R\([^a-z]\)~com.doubleyellow.scoreboard.R\2~' ${f}
+        sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\|badminton\|squorewear\).R\([^a-z]\)~com.doubleyellow.scoreboard.R\2~' ${f}
         #exit 1
     done
     # comment out all brands ...
-    sed -i 's~^\(\s*\)\(\w\+\s*(\s*SportType\.\)~\1//\2~'      com/doubleyellow/scoreboard/Brand.java
+    sed -i 's~^\(\s*\)\(\w\+\s*(\s*SportType\.\)~\1//\2~'         com/doubleyellow/scoreboard/Brand.java
     # ... and uncomment Squore
-    sed -i "s~^\(\s\+\)//\(Squore.\+R.string.app_name\)~\1\2~" com/doubleyellow/scoreboard/Brand.java
+    sed -i "s~^\(\s\+\)//\(Squore\s*(.*R.string.app_name\)~\1\2~" com/doubleyellow/scoreboard/Brand.java
 else
 	showHelp
 fi
@@ -79,7 +86,9 @@ sed -i "s~Brand.\w\+;~Brand.${tobranded};~"                      com/doubleyello
 #vi +/Brand.                                                     com/doubleyellow/scoreboard/Brand.java
 
 # ensure the chosen brand is uncommented in the Brands.java file (Squore brand should ALWAYS be uncommented)
-sed -i "s~^\(\s\+\)//\(${tobranded}.\+R.string.app_name\)~\1\2~" com/doubleyellow/scoreboard/Brand.java
+if [[ "$tobranded" != "Squore" ]]; then
+    sed -i "s~^\(\s\+\)//\(${tobranded}\s*(.*R.string.app_name\)~\1\2~" com/doubleyellow/scoreboard/Brand.java
+fi
 
 # change some defaults in xml files (in java is/should be taken care of by means of code)
 cd ../res
@@ -99,6 +108,7 @@ elif [[ "$tobranded" = "Badminton" ]]; then
         sed -i 's~_\(Squash\|Racketlon\|Tabletennis\)"~_Badminton"~' ${f}
     done
 else
+    # Squore and SquoreWear
     for f in $(egrep -rl '@string.*_(Racketlon|Tabletennis|Badminton)"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_\(Racketlon\|Tabletennis\|Badminton\)"~_Squash"~' ${f}
@@ -107,7 +117,9 @@ fi
 
 
 cd ..
+# comment out all Manifest file lines
 sed -i 's~^\(\s\+\)srcFile~\1//srcFile~' build.gradle
-sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifest${tobranded}\)~\1\2~" build.gradle
+# uncomment the one Manifest file we are interested in
+sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifest${tobranded}\.\)~\1\2~" build.gradle
 #vi +/Manifest${tobranded} build.gradle
 
