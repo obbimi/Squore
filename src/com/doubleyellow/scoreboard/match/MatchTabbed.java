@@ -72,9 +72,9 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
     private ViewPager        viewPager;
 
     public enum SelectTab {
-        //Previous (PreviousMatchSelector.class, R.string.sb_stored_matches     , android.R.drawable.ic_menu_save),
-        Feed     (FeedMatchSelector    .class, R.string.sb_feed               ,         R.drawable.ic_action_web_site),
-        Mine     (StaticMatchSelector  .class, R.string.sb_static_match       ,         R.drawable.ic_action_view_as_list),
+      //Previous (PreviousMatchSelector.class, R.string.sb_stored_matches     , android.R.drawable.ic_menu_save),
+        Feed     (FeedMatchSelector    .class, R.string.sb_feed               , R.drawable.ic_action_web_site),
+        Mine     (StaticMatchSelector  .class, R.string.sb_static_match       , R.drawable.ic_action_view_as_list),
         Manual   (MatchFragment        .class, R.string.sb_new_singles_match  , R.drawable.circled_plus),
         ManualDbl(MatchFragmentDoubles .class, R.string.sb_new_doubles_match  , R.drawable.circled_plus),
         ;
@@ -102,7 +102,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
     }
 
     private Fragment getFragment(SelectTab tab) {
-        Fragment fragment = (Fragment) mAdapter.instantiateItem(viewPager, tab.ordinal());
+        Fragment fragment = (Fragment) mAdapter.instantiateItem(viewPager, actualTabsToShow.indexOf(tab) /*tab.ordinal()*/); // triggers tabsadapter.getItem(int) to be invoked
         return fragment;
     }
 /*
@@ -584,6 +584,13 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         ScoreBoard.initAllowedOrientation(this);
 
         actualTabsToShow = new ArrayList<SelectTab>(Arrays.asList(SelectTab.values()));
+        if ( ViewUtil.isWearable(this) ) {
+            actualTabsToShow.remove(SelectTab.Feed);
+            actualTabsToShow.remove(SelectTab.Mine);
+          //actualTabsToShow.remove(SelectTab.Manual);
+            actualTabsToShow.remove(SelectTab.ManualDbl);
+            setActionBarVisibility(false);
+        }
         //String sFeedMatchesUrl = PreferenceValues.getMatchesFeedURL(this);
         //String sFeedPlayersUrl = PreferenceValues.getPlayersFeedURL(this);
         if ( PreferenceValues.useFeedAndPostFunctionality(this) == false /*StringUtil.isEmpty(sFeedUrl)*/ ) {

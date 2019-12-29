@@ -23,6 +23,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.SparseArray;
+import android.widget.Toast;
+
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.IntentKeys;
@@ -105,6 +107,10 @@ public class OnlineSheetAvailableChoice extends BaseAlertDialog
                     context.startActivity(Intent.createChooser(intent, context.getString(R.string.cmd_share_with_friends)));
                     break;
                 case Preview:
+                    if ( isWearable(context) ) {
+                        Toast.makeText(context, "Sorry not supported on wearable", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     Intent nm = new Intent(context, ScoreSheetOnline.class);
                     Bundle bundle = new Bundle();
                     bundle.putString(IntentKeys.ScoreSheetOnline.toString(), sShowURL );

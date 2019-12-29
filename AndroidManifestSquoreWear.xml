@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.doubleyellow.squorewear"
+          android:versionCode="239"
+          android:versionName="4.27">
+<!--
+    <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
+    <uses-feature android:name="android.permission.INTERNET" android:required="true" />
+-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <!-- to autocomplete player names from contact list -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+    <!-- for import/export functionality -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- bluetooth -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />   <!-- for initiating and cancelling device discovery, and initiating connections -->
+    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+
+    <!-- android 9 casting -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- FOREGROUND_SERVICE is a normal permission, so the system automatically grants it to the requesting app. -->
+<!--
+    <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
+-->
+
+<!-- this can not be ON in default manifest, device must be a watch, hence separate Manifest file required for wearables -->
+    <uses-feature android:name="android.hardware.type.watch" android:required="true" />
+
+    <uses-sdk/>
+
+    <supports-screens
+            android:anyDensity="true"
+            android:xlargeScreens="false"
+            android:largeScreens="false"
+            android:normalScreens="true"
+            android:smallScreens="true" />
+
+    <application
+            android:theme="@style/SBTheme"
+            android:allowBackup="true"
+            android:usesCleartextTraffic="true"
+            android:resizeableActivity="true"
+            android:label="@string/app_name_short_brand_Squash"
+            android:icon="@drawable/logo_brand_squore">
+
+<!--
+    For ChromeCast (old)
+-->
+        <service android:name="com.doubleyellow.scoreboard.cast.PresentationService" android:exported="false" />
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+<!--
+    For ChromeCast (new)
+-->
+        <meta-data android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+                   android:value="com.doubleyellow.scoreboard.cast.framework.CastOptionsProvider" />
+
+<!-- Recommended for wearables
+-->
+        <meta-data android:name="com.google.android.wearable.standalone" android:value="true" />
+
+        <activity android:name="com.doubleyellow.scoreboard.main.ScoreBoard" android:label="@string/app_name_short_brand_Squash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <!-- mimetype must match the mimetype as passed from com.doubleyellow.scoreboard.main.ScoreBoard.createNdefMessage() -->
+<!--
+                <data android:mimeType="application/com.doubleyellow.scoreboard"/>
+-->
+                <data android:mimeType="application/json"/>
+            </intent-filter>
+
+<!--
+            <intent-filter>
+                <data android:scheme="http" android:host="squore.double-yellow.be"/>
+                <action android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+-->
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.match.Match" android:label="@string/sb_new_match">
+            <!--<meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />-->
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.match.MatchTabbed" android:label="@string/sb_new_match">
+            <!--<meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />-->
+        </activity>
+        <activity android:name="com.doubleyellow.scoreboard.archive.ArchiveTabbed" android:label="@string/Archive">
+            <!--<meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />-->
+        </activity>
+        <activity android:name="com.doubleyellow.scoreboard.feed.FeedFeedSelector" android:label="@string/add_new_feed">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.match.MatchTabbed" />
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.history.MatchHistory" android:label="@string/sb_score_details">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.activity.ScoreSheetOnline" android:label="@string/sb_score_details">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.activity.ConductInfo" android:label="@string/sb_possible_conducts">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.activity.Feedback" android:label="@string/cmd_feedback">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
+        </activity>
+
+        <activity android:name="com.doubleyellow.scoreboard.prefs.Preferences" android:label="@string/sb_preferences" android:theme="@style/SBPreferencesTheme">
+            <!--<meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />-->
+        </activity>
+
+    </application>
+</manifest>

@@ -144,13 +144,13 @@ public class SelectDeviceDialog extends BaseAlertDialog
         for (BluetoothDevice device : lPairedDevicesFilteredOnNWService) {
             ParcelUuid[] uuids = device.getUuids();
             if ( uuids == null ) {
-                Log.w(TAG, "No uuids found for device " + device);
+                Log.w(TAG, "No uuid's found for device " + device);
                 continue;
             }
             boolean bOK = false;
             for(ParcelUuid uuid: uuids ) {
                 UUID sUUUD = uuid.getUuid();
-                if ( sUUUD.equals(Brand.getUUID()) ) {
+                if ( sUUUD.equals( Brand.getUUID() ) ) {
                     bOK = true;
                     break;
                 }
