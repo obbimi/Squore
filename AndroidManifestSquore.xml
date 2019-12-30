@@ -32,7 +32,7 @@
     <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
 -->
 
-    <uses-feature android:name="android.hardware.type.watch"             android:required="false"/>
+<!--<uses-feature android:name="android.hardware.type.watch"             android:required="false"/>-->
     <uses-feature android:name="android.hardware.bluetooth"              android:required="false"/>
     <uses-feature android:name="android.hardware.audio.output"           android:required="false"/>
     <uses-feature android:name="android.hardware.touchscreen.multitouch" android:required="false"/>
