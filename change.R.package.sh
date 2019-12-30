@@ -113,6 +113,11 @@ else
         printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_\(Racketlon\|Tabletennis\|Badminton\)"~_Squash"~' ${f}
     done
+    if [[ "$tobranded" == "SquoreWear" ]]; then
+        sed -i "s~dy:boxedEdges~app:boxedEdges~" layout-watch/percentage.xml
+    else
+        sed -i "s~app:boxedEdges~dy:boxedEdges~" layout-watch/percentage.xml
+    fi
 fi
 
 

@@ -1,3 +1,8 @@
+## 4.28 (dec 2019)
+
+- turn on bluetooth automatically if 'Mirror score (Bluetooth)' is chosen
+- minor improvements for feeds
+
 ## 4.26 (okt 2019)
 
 - allow specifying a player color already in main match setup screen

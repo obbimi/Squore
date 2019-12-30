@@ -37,7 +37,7 @@ import java.util.*;
  * - have more flexible touch event handling
  * - allow drawing arrows for educational/demo purposes
  */
-public class SBRelativeLayout extends PercentRelativeLayout {
+public class SBRelativeLayout extends PercentRelativeLayout /* deprecated in 26.1.0, TODO: migrate to ConstraintLayout */ {
 
     public SBRelativeLayout(Context context) {
         super(context);
