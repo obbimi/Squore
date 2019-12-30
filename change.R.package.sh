@@ -123,3 +123,17 @@ sed -i 's~^\(\s\+\)srcFile~\1//srcFile~' build.gradle
 sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifest${tobranded}\.\)~\1\2~" build.gradle
 #vi +/Manifest${tobranded} build.gradle
 
+if [[ "$tobranded" == "SquoreWear" ]]; then
+    # for wear
+    # uncomment com.android.support:wear
+    sed -i "s~^\(\s*\)//\(\s*implementation\s\s*'com.android.support:wear\)~\1\2~" build.gradle
+    # minSdkVersion must be increased to 23
+    sed -i "s~^\(\s*minSdkVersion\)\s\s*[0-9][0-9]*~\1 23~"                        build.gradle
+else
+    # for not-wear
+    # minSdkVersion can increased to 19
+    sed -i "s~^\(\s*minSdkVersion\)\s\s*[0-9][0-9]*~\1 19~"                        build.gradle
+    # and if so, comment out com.android.support:wear
+    sed -i "s~^\(\s*\)\(\s*implementation\s\s*'com.android.support:wear\)~\1//\2~" build.gradle
+fi
+

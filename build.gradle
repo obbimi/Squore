@@ -30,7 +30,7 @@ android {
         implementation 'com.doubleyellow:AndroidBase@aar'
         // uncommenting this while in Android Studio creates a subdir AndroidBase with an .iml file in it
 
-        implementation 'com.android.support:wear:28.0.0'
+        //implementation 'com.android.support:wear:28.0.0' // needs minSdkVersion=23
         //implementation 'com.google.protobuf:protobuf-java:3.5.1'
 
         implementation fileTree(dir: 'libs', include: ['*.jar'])
