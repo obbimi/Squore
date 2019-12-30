@@ -58,7 +58,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Activity that allows the user to select a match from an internet feed like defined in
+ * Fragment that allows the user to select a match from an internet feed like defined in
  * feedPostUrls/feedPostUrl preferences.
  *
  * Used within MatchTabbed activity.
@@ -96,12 +96,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     // Feed Config
     //-------------------------------------------------------------------
 
-    private JSONObject m_joFeedConfig           = null;
-    private String     m_sDisplayFormat_Players = null;
-    private String     m_sDisplayFormat_Matches = null;
-    private final String DisplayFormat_PlayerDefault = "${" + JSONKey.name + "}";
-    private final String DisplayFormat_MatchDefault  = "${" + JSONKey.date + "} ${" + JSONKey.time + "} : ${FirstOfList:~${" + Player.A + "}~${A.name}~} [${A.country}] [${A.club}] - " +
-            "${FirstOfList:~${" + Player.B + "}~${B.name}~} [${B.country}] [${B.club}] : ${" + JSONKey.result + "} (${" + JSONKey.id + "})";
+    private       JSONObject m_joFeedConfig           = null;
+    private       String     m_sDisplayFormat_Players = null;
+    private       String     m_sDisplayFormat_Matches = null;
+    public static  final String DisplayFormat_PlayerDefault  = "${" + JSONKey.name + "} [${" + JSONKey.country + "}]";
+    private static final String DisplayFormat_MatchDefault   = "${" + JSONKey.date + "} ${" + JSONKey.time + "} : ${FirstOfList:~${" + Player.A + "}~${A.name}~} [${A.country}] [${A.club}] - " +
+                                                                                                                 "${FirstOfList:~${" + Player.B + "}~${B.name}~} [${B.country}] [${B.club}] : ${" + JSONKey.result + "} (${" + JSONKey.id + "})";
     private boolean    m_bHideCompletedMatches = false;
 
     private int readFeedConfig(JSONObject joRoot) throws Exception {
@@ -412,7 +412,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     /* for when a match is selected from plain text feed */
     private boolean populateModelFromString(Model model, String sText, String sGroup, String feedPostName) {
-        boolean bIsOnePlayerOnly = m_feedStatus == null ? false : m_feedStatus.isShowingPlayers();
+        boolean bIsOnePlayerOnly = (m_feedStatus != null) && m_feedStatus.isShowingPlayers();
         getMatchDetailsFromMatchString( model, sText, context, bIsOnePlayerOnly);
 
         // use feed name and group name for event details
@@ -423,6 +423,16 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     /* for when a match is selected from a JSON feed */
     private boolean populateModelFromJSON(Model model, JSONObject joMatch, String sGroup, String feedPostName) {
+
+        boolean bIsOnePlayerOnly = (m_feedStatus != null) && m_feedStatus.isShowingPlayers();
+        if ( bIsOnePlayerOnly && joMatch.has(JSONKey.name.toString() )) {
+            String sPlayer1  = joMatch.optString(JSONKey.name   .toString());
+            String sCountry1 = joMatch.optString(JSONKey.country.toString());
+            model.setPlayerName   (Player.A, sPlayer1.trim() );
+            model.setPlayerCountry(Player.A, sCountry1 );
+            return false;
+        }
+
         boolean bNamesPopulated = true;
         try {
             for(Player p: Player.values() ) {
@@ -837,10 +847,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 if ( (sContent == null) || (result.equals(FetchResult.OK) == false)) {
                     if ( StringUtil.isNotEmpty(sLastSuccessfulContent) ) {
 
-                        String sMsg = getResources().getString(R.string.Could_not_read_feed_x__y__Using_cached_content_aged_z_minutes, m_sLastFetchedURL, result, DateUtil.convertToMinutes(lCacheAge));
-                        DialogManager dialogManager = DialogManager.getInstance();
-                        dialogManager.showMessageDialog(context, "Internet", sMsg);
-
+                        if ( result.equals(FetchResult.Cancelled) == false ) {
+                            String sMsg = getResources().getString(R.string.Could_not_read_feed_x__y__Using_cached_content_aged_z_minutes, m_sLastFetchedURL, result, DateUtil.convertToMinutes(lCacheAge));
+                            DialogManager dialogManager = DialogManager.getInstance();
+                            dialogManager.showMessageDialog(context, "Internet", sMsg);
+                        }
                         sUseContent = sLastSuccessfulContent;
                     } else {
                         // invalid feed url?
@@ -1260,7 +1271,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         }
     }
 
-    private String canonicalizeJsonKeys(String sContent) {
+    public static String canonicalizeJsonKeys(String sContent) {
         // allow the feed to specify keys in CamelCase, we will be using all lower: (TODO: convert to lower in one go with a regexp)
         sContent = sContent
                 .replaceAll("\\bDivision\\b", JSONKey.division.toString())

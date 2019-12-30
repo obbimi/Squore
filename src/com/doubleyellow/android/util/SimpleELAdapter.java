@@ -77,6 +77,9 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
     private float iTxtMedium = 0f;
 
     public abstract void load(boolean bUseCacheIfPresent);
+    public void cancel() {
+        // allow override in task that may take a long time
+    }
 
     protected String m_sFetchingDataMessage = null;
 
@@ -135,9 +138,9 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
         filterData("");
     }
 
-    protected void removeHeader(String sGroup) {
+    protected boolean removeHeader(String sGroup) {
         m_lHeadersFull.remove(sGroup);
-        m_lHeaders.remove(sGroup); // no need to refilter
+        boolean bRemoved = m_lHeaders.remove(sGroup); // no need to refilter
         List<String> lItems = m_lHeader2ChildsFull.remove(sGroup);
 
         if ( lItems != null ) {
@@ -145,6 +148,7 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
                 Object remove = m_mObjects.remove(getKey(sGroup, sItem));
             }
         }
+        return bRemoved;
     }
 
     protected void addItem(String sGroup, String sItem) {
@@ -323,7 +327,9 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
         }
         return ListUtil.size(m_lHeader2Childs.get(getGroup(groupPosition)));
     }
-              public int     getChildrenCount () { return MapUtil.size(m_mObjects); }
+    public int getChildrenCount () {
+        return MapUtil.size(m_mObjects);
+    }
     @Override public int     getGroupCount() {
         if ( bRefilterRequired ) {
             refreshForFilter();

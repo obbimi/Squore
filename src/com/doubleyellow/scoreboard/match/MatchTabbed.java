@@ -356,16 +356,13 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
                 if (matchView == null) return false;
                 return matchView.clearRefereeFields();
             }
+            case R.id.uc_switch_feed: {
+                cancelCurrentFetch();
+                FeedMatchSelector.switchFeed(this);
+                return true;
+            }
             case R.id.uc_add_new_feed: {
-                // cancel possible fetching of matches/players
-                if ( getFragment(defaultTab) instanceof FeedMatchSelector ) {
-                    FeedMatchSelector fms = (FeedMatchSelector) getFragment(defaultTab);
-                    SimpleELAdapter listAdapter = fms.getListAdapter(getLayoutInflater());
-                    if ( listAdapter != null ) {
-                        listAdapter.cancel();
-                    }
-                }
-
+                cancelCurrentFetch();
                 Intent ff = new Intent(this, FeedFeedSelector.class);
                 startActivityForResult(ff, 1); // see onActivityResult
                 return true;
@@ -394,12 +391,9 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
 
                 return true;
             }
-            case R.id.uc_switch_feed: {
-                FeedMatchSelector.switchFeed(this);
-                return true;
-            }
             case R.id.show_players_from_feed:
             case R.id.show_matches_from_feed: {
+                cancelCurrentFetch();
                 Fragment fragment = getFragment(defaultTab);
                 if ( fragment instanceof ExpandableMatchSelector ) {
                     ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) fragment;
@@ -496,6 +490,19 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
                 return false;
         }
     }
+
+    private void cancelCurrentFetch() {
+        // cancel possible fetching of matches/players
+        Fragment fragment = getFragment(defaultTab);
+        if ( fragment instanceof FeedMatchSelector) {
+            FeedMatchSelector fms = (FeedMatchSelector) fragment;
+            SimpleELAdapter listAdapter = fms.getListAdapter(getLayoutInflater());
+            if ( listAdapter != null ) {
+                listAdapter.cancel();
+            }
+        }
+    }
+
     private void tryShowToast(String sMsg) {
         Log.w(TAG, sMsg);
         //Toast.makeText(this, sMsg, Toast.LENGTH_SHORT).show();

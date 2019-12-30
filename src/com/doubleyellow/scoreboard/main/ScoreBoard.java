@@ -5484,13 +5484,17 @@ touch -t 01030000 LAST.sb
         registerReceiver(mBTStateChangeReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
     }
     private void stopBlueTooth() {
+        if ( mBluetoothAdapter == null ) {
+            return; // no bluetooth on device
+        }
         if ( mBluetoothControlService != null ) {
             //mBluetoothControlService.stop();
         }
         try {
             unregisterReceiver(mBTStateChangeReceiver);
-        } catch (Exception e) { //have seen java.lang.IllegalArgumentException: Receiver not registered: com.doubleyellow.scoreboard.main.ScoreBoard$13@7a3594b
-            e.printStackTrace();
+        } catch (Exception e) { //have seen java.lang.IllegalArgumentException: Receiver not registered:
+            Log.w(TAG, e.getMessage());
+            //e.printStackTrace();
         }
     }
     //----------------------------------------------------

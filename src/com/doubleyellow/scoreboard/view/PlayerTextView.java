@@ -26,17 +26,25 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
+
+import com.doubleyellow.android.util.AndroidPlaceholder;
 import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.android.util.AutoSuggestAdapter;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.URLFeedTask;
+import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.prefs.URLsKeys;
 import com.doubleyellow.util.Enums;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -126,11 +134,46 @@ public class PlayerTextView extends AppCompatAutoCompleteTextView implements Con
             // revert to list stored in preferences
             setAutoCompleteAdapter(playerList);
         } else {
-            List<String> lInput = new ArrayList<String>(Arrays.asList(sContent.split("[\r\n]+")));
+            List<String> lInput = new ArrayList<>();
+
+            sContent = sContent.trim();
+            try {
+                if ( sContent.startsWith("{") && sContent.endsWith("}") ) {
+                    Log.d(TAG, "Json object");
+                    JSONObject joRoot = new JSONObject(sContent);
+                    joRoot.remove(URLsKeys.config.toString());
+                    joRoot.remove(URLsKeys.name  .toString());
+                    Iterator<String> itSections = joRoot.keys(); // e.g. Field names
+                    while ( itSections.hasNext() ) {
+                        String sSection = itSections.next();
+                        JSONArray joPlayers = joRoot.getJSONArray(sSection);
+                        addPlayersFromJson(lInput, joPlayers, FeedMatchSelector.DisplayFormat_PlayerDefault);
+                    }
+                } else if ( sContent.startsWith("[") && sContent.endsWith("]") ) {
+                    Log.d(TAG, "Json array");
+                    JSONArray joPlayers = new JSONArray(sContent);
+                    addPlayersFromJson(lInput, joPlayers, FeedMatchSelector.DisplayFormat_PlayerDefault);
+                } else {
+                    lInput = new ArrayList<String>(Arrays.asList(sContent.split("[\r\n]+")));
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
             lInput.addAll(0, playerList);
             lInput = ListUtil.removeDuplicates(lInput);
             lInput = ListUtil.filter(lInput, "^\\[.*\\]$", Enums.Match.Remove); // e.g. to filter out heading(s) containing feed setting(s)
             setAutoCompleteAdapter(lInput);
+        }
+    }
+
+    private void addPlayersFromJson(List<String> lAddTo, JSONArray jaPlayers, String sDisplayFormat) {
+        AndroidPlaceholder placeholder = new AndroidPlaceholder(TAG);
+        for ( int f=0; f < jaPlayers.length(); f++ ) {
+            JSONObject joPlayer = jaPlayers.optJSONObject(f);
+            String sDisplayName = placeholder.translate(sDisplayFormat, joPlayer);
+                   sDisplayName = placeholder.removeUntranslated(sDisplayName);
+                   sDisplayName = sDisplayName.replaceAll("[^\\w\\s]{2}", ""); // remove brackets around values that are not provided (), [], <>
+            lAddTo.add(sDisplayName);
         }
     }
 
