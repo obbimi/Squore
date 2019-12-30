@@ -28,14 +28,12 @@ cat <<!
     echo "Version code in ${mffile}: $vcFromManifest"
 	exit 1
 else
-    set -x
     relapk=$(find . -name '*-release.apk')
     if [[ -e ${relapk} ]]; then
         changedFiles="$(find . -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml)' | grep -v '.idea/')"
     else
         changedFiles="No apk to compare with"
     fi
-    set +x
 
     if [[ ${versionCode} -ne ${vcFromManifest} ]]; then
         sed -i "s~\(versionCode=.\)[0-9]*\(.\)~\1${versionCode}\2~" ${mffile}
