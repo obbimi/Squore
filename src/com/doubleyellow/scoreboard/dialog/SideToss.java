@@ -30,18 +30,18 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.doubleyellow.scoreboard.R;
-import com.doubleyellow.scoreboard.model.Model;
-import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.model.Model;
+import com.doubleyellow.scoreboard.vico.IBoard;
 
 /**
  * Dialog in which the referee can either
- * - choose the server (after a toss has been performed on court, e.g. by means of spinning a racket)
+ * - enter the which side of the table (tabletennis) the receiver will start receiving
  * - let the app perform a toss
  */
-public class ServerToss extends BaseAlertDialog
+public class SideToss extends BaseAlertDialog
 {
-    public ServerToss(Context context, Model matchModel, ScoreBoard scoreBoard) {
+    public SideToss(Context context, Model matchModel, ScoreBoard scoreBoard) {
         super(context, matchModel, scoreBoard);
     }
 
@@ -54,29 +54,28 @@ public class ServerToss extends BaseAlertDialog
     }
 
     @Override public void show() {
-        String sPlayerA = matchModel.getName(Player.A);
-        String sPlayerB = matchModel.getName(Player.B);
-        adb.setTitle         (R.string.sb_who_will_start_to_serve)
+        String sReceiver = matchModel.getName(matchModel.getServer().getOther());
+        adb.setTitle         (context.getString(R.string.sb_what_side_will_x_start_to_receive, sReceiver) )
            .setIcon          (R.drawable.toss_white)
-           .setPositiveButton(sPlayerA           , dialogClickListener)
-           .setNeutralButton(R.string.sb_cmd_toss, null)
-           .setNegativeButton(sPlayerB           , dialogClickListener)
+           .setPositiveButton(R.string.left_side           , dialogClickListener)
+           .setNeutralButton (R.string.sb_cmd_toss, null)
+           .setNegativeButton(R.string.right_side          , dialogClickListener)
            .setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override public boolean onKey(DialogInterface dialogI, int keyCode, KeyEvent event) {
                 int action  = event.getAction();
                 if (keyCode == KeyEvent.KEYCODE_BACK /* = 4 */ && action == KeyEvent.ACTION_UP) {
                     AlertDialog dialog = (AlertDialog) dialogI;
-                    final Button btnA = dialog.getButton(BTN_A_STARTS);
-                    final Button btnB = dialog.getButton(BTN_B_STARTS);
-                    if ( btnA.isEnabled() == false ) {
-                        // toss is performed and B was selected
-                        handleButtonClick(BTN_B_STARTS);
-                    } else if ( btnB.isEnabled() == false ) {
-                        // toss is performed and A was selected
-                        handleButtonClick(BTN_A_STARTS);
+                    final Button btnLeft  = dialog.getButton(BTN_RECEIVER_STARTS_LEFT);
+                    final Button btnRight = dialog.getButton(BTN_RECEIVER_STARTS_RIGHT);
+                    if ( btnLeft.isEnabled() == false ) {
+                        // toss is performed and RIGHT was selected
+                        handleButtonClick(BTN_RECEIVER_STARTS_RIGHT);
+                    } else if ( btnRight.isEnabled() == false ) {
+                        // toss is performed and LEFT was selected
+                        handleButtonClick(BTN_RECEIVER_STARTS_LEFT);
                     } else {
                         // no toss performed yet
-                        ServerToss.this.dismiss();
+                        SideToss.this.dismiss();
                     }
                     return true;
                 }
@@ -86,14 +85,13 @@ public class ServerToss extends BaseAlertDialog
 
         adb.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override public void onDismiss(DialogInterface dialog) {
-                scoreBoard.triggerEvent(ScoreBoard.SBEvent.tossDialogEnded, ServerToss.this);
+                scoreBoard.triggerEvent(ScoreBoard.SBEvent.sideTossDialogEnded, SideToss.this);
             }
         });
         try {
             OnShowListener listener = new OnShowListener(context, ButtonUpdater.iaColorNeutral);
-            dialog = adb.show(listener); // have had report that this throws android.view.WindowManager$BadTokenException, everything automated?: warmup timer+toss dialog
+            dialog = adb.show(listener);
         } catch (Exception e) {
-            // this may fail if activity has been in the background, seen during casting (android.view.WindowManager$BadTokenException: Unable to add window -- token android.os.BinderProxy@860c8b3 is not valid; is your activity running?)
             e.printStackTrace();
         }
     }
@@ -104,26 +102,27 @@ public class ServerToss extends BaseAlertDialog
         }
     };
 
-    public static final int BTN_A_STARTS = DialogInterface.BUTTON_POSITIVE;
-    public static final int BTN_B_STARTS = DialogInterface.BUTTON_NEGATIVE;
-    public static final int BTN_DO_TOSS  = DialogInterface.BUTTON_NEUTRAL;
+    public static final int BTN_RECEIVER_STARTS_LEFT  = DialogInterface.BUTTON_POSITIVE;
+    public static final int BTN_RECEIVER_STARTS_RIGHT = DialogInterface.BUTTON_NEGATIVE;
+    public static final int BTN_DO_TOSS      = DialogInterface.BUTTON_NEUTRAL;
     @Override public void handleButtonClick(int which) {
-        Player server = matchModel.getServer();
+        boolean bReceiverIsRight = IBoard.m_firstPlayerOnScreen.equals(matchModel.getServer());
+        Boolean bReceiverShouldBeRight = null;
         switch (which){
-            case BTN_A_STARTS:
-                server = Player.A;
+            case BTN_RECEIVER_STARTS_LEFT:
+                bReceiverShouldBeRight = false;
                 break;
-            case BTN_B_STARTS:
-                server = Player.B;
+            case BTN_RECEIVER_STARTS_RIGHT:
+                bReceiverShouldBeRight = true;
                 break;
             case BTN_DO_TOSS:
                 // impossible. Has it's own onClickListener
                 break;
         }
-        if ( (server != null) && (server.equals(matchModel.getServer()) == false) ) {
-            scoreBoard.changeSide(server);
+        if ( (bReceiverShouldBeRight != null) && (bReceiverShouldBeRight != bReceiverIsRight)) {
+            scoreBoard.swapPlayers(null, null);
         }
-        if ( server != null ) {
+        if ( bReceiverShouldBeRight != null ) {
             this.dismiss();
         }
     }
@@ -161,29 +160,31 @@ public class ServerToss extends BaseAlertDialog
     };
 
     private void simulateToss() {
-        final Button btnToss = dialog.getButton(BTN_DO_TOSS );
-        final Button btnA    = dialog.getButton(BTN_A_STARTS);
-        final Button btnB    = dialog.getButton(BTN_B_STARTS);
+        final Button btnToss  = dialog.getButton(BTN_DO_TOSS );
+        final Button btnLeft  = dialog.getButton(BTN_RECEIVER_STARTS_LEFT);
+        final Button btnRight = dialog.getButton(BTN_RECEIVER_STARTS_RIGHT);
         btnToss.setEnabled(false);
-        if ( (btnA == null) || (btnB == null) ) return;
+        if ( (btnLeft == null) || (btnRight == null) ) return;
 
-        boolean bInitialEnabledA = Math.round(Math.random()) == 0;
-        btnA.setEnabled(  bInitialEnabledA );
-        btnB.setEnabled( !bInitialEnabledA );
+        boolean bInitialEnabledLEFT = Math.round(Math.random()) == 0;
+        btnLeft .setEnabled(  bInitialEnabledLEFT );
+        btnRight.setEnabled( !bInitialEnabledLEFT );
         CountDownTimer countDownTimer = new CountDownTimer(2400, (80 + Math.abs(System.currentTimeMillis() % 40))) {
             @Override public void onTick(long l) {
-                btnA.setEnabled( btnA.isEnabled() == false );
-                btnB.setEnabled( btnB.isEnabled() == false );
+                btnLeft .setEnabled( btnLeft .isEnabled() == false );
+                btnRight.setEnabled( btnRight.isEnabled() == false );
             }
 
             @Override public void onFinish() {
                 btnToss.setEnabled(true);
-                if ( (matchModel != null) && (matchModel.hasStarted() == false) ) {
-                    // automatically change the serve side in the model already, but without closing the dialog
-                    if ( btnA.isEnabled() && matchModel.getServer().equals(Player.B) ) {
-                        scoreBoard.changeSide(Player.A);
-                    } else if (btnB.isEnabled() && matchModel.getServer().equals(Player.A) ) {
-                        scoreBoard.changeSide(Player.B);
+                if ( matchModel != null ) {
+                    // automatically swap players already, but without closing the dialog
+                    boolean bReceiverIsRight = IBoard.m_firstPlayerOnScreen.equals(matchModel.getServer());
+
+                    if ( btnRight.isEnabled() && (bReceiverIsRight == false)) {
+                        scoreBoard.swapPlayers(null, null);
+                    } else if (btnLeft.isEnabled() && bReceiverIsRight ) {
+                        scoreBoard.swapPlayers(null, null);
                     }
                 }
             }

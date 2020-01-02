@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- additional toss option for tabletennis (and badminton) -->
+    <string name="sb_what_side_will_x_start_to_receive">Aan welke kant begint %1$s met ontvangen?</string>
+    <string name="left_side">Links</string>
+    <string name="right_side">Rechts</string>
+
     <string name="Resume_game">Herneem game</string>
 
     <string name="number_of_serves_per_player">Aantal opslagen per speler</string>

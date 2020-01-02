@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- additional toss option for tabletennis (and badminton) -->
+    <string name="sb_what_side_will_x_start_to_receive">What side will %1$s receive?</string>
+    <string name="left_side">Left</string>
+    <string name="right_side">Right</string>
+
     <string name="Resume_game">Resume game</string>
 
     <string name="pref_category_expediteSystem">Expedite system</string>
