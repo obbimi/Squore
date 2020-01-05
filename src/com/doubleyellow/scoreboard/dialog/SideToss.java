@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017  Iddo Hoeve
+ * Copyright (C) 2020  Iddo Hoeve
  *
  * Squore is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,7 +63,7 @@ public class SideToss extends BaseAlertDialog
             sTitle   = context.getString(R.string.sb_what_side_will_x_start_to_y, sServer, getString(R.string.sb_serve  )  );
         }
         adb.setTitle         (sTitle)
-           .setMessage       ("(What side of the scoreboard should he/she initially be?)")
+           .setMessage       ("(" + getString(R.string.sb_on_what_side_of_the_scoreboard_should_player_be) + ")")
            .setIcon          (R.drawable.toss_white)
            .setPositiveButton(R.string.left_side           , dialogClickListener)
            .setNeutralButton (R.string.sb_cmd_toss, null)

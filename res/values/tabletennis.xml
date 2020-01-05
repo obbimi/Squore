@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- additional toss option for tabletennis (and badminton) -->
-    <string name="sb_what_side_will_x_start_to_receive">What side will %1$s receive?</string>
+    <string name="sb_what_side_will_x_start_to_y">What side will %1$s start to %2$s?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_player_be">On what side of the scoreboard should he/she initially be?</string>
     <string name="left_side">Left</string>
     <string name="right_side">Right</string>
 
@@ -83,7 +84,7 @@
 \nPostResult=demo/demo.post.matchresult.php?lang=en
 ]]></string>
     <string name="OfficialRulesURLs_default_Tabletennis"><![CDATA[http://www.ittf.com/?media-alias=2017_ITTF_Handbook
-\nhttps://pongworld.com/table-tennis-sport/official-rules
+\nhttp://pongworld.com/table-tennis-sport/official-rules
 ]]></string>
 
     <string name="matchList_default_Tabletennis"><![CDATA[- Seamaster 2017 ITTF World Tour Platinum, China Open

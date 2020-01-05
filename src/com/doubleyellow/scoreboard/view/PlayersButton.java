@@ -49,7 +49,8 @@ import java.util.Set;
 
 /**
  * Class to display player name (or player names for doubles)
- * For doubles this view includes the serve side button
+ * For doubles this view includes the serve (side) button.
+ * For tabletennis it is also used to indicate who should be receiving.
  *
  * If countries are specified this class can also display flags.
  * If avatars are specified this class can also display an avatar.
@@ -297,7 +298,12 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
             }
         }
 
-        setServer(doublesServe, serveSide, isHandout, null);
+        if ( DoublesServe.NA.equals(m_doublesServe) == false) {
+            setServer(m_doublesServe, m_serveSide, m_isHandout, m_sServerDisplayValueOverwrite);
+        }
+        if ( DoublesServe.NA.equals(m_doublesReceiver) == false) {
+            setReceiver(m_doublesReceiver);
+        }
         //this.setOnTouchListener(new TouchBothListener(clickBothListener));
     }
 
@@ -581,7 +587,7 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         for(TextView b: serveButtons) {
             b.setTextColor(this.textColorServer);
         }
-        setServer(doublesServe, serveSide, isHandout, null);
+        setServer(m_doublesServe, m_serveSide, m_isHandout, m_sServerDisplayValueOverwrite);
     }
 
     private int bgColorServer = Color.BLACK;
@@ -590,33 +596,30 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         for(TextView b: serveButtons) {
             ColorUtil.setBackground(b, this.bgColorServer);
         }
-        setServer(doublesServe, serveSide, isHandout, null);
+        setServer(m_doublesServe, m_serveSide, m_isHandout, m_sServerDisplayValueOverwrite);
     }
 
-    private DoublesServe doublesServe = DoublesServe.NA;
-    private ServeSide    serveSide    = ServeSide.R;
-    private boolean      isHandout    = true;
-    public void setServer(DoublesServe iServer, ServeSide serveSide, boolean bIsHandout, String sDisplayValueOverwrite) {
-        this.doublesServe = iServer;
-        this.serveSide    = serveSide;
-        this.isHandout    = bIsHandout;
-        boolean bShowDifferentColor = (nameButtons.size() == 2) /*&& (serveButtons.size() == 0)*/;
-        for(int i=0; i < nameButtons.size(); i++) {
-            TextView b = nameButtons.get(i);
-            if ( ( i == iServer.ordinal() ) && bShowDifferentColor ) {
-                b.setTextColor(this.textColorServer);
-                ColorUtil.setBackground(b, this.bgColorServer);
-            } else {
-                b.setTextColor(this.textColor);
-                ColorUtil.setBackground(b, this.bgColor);
-            }
+    private DoublesServe m_doublesServe = DoublesServe.NA;
+    private ServeSide    m_serveSide    = ServeSide.R;
+    private boolean      m_isHandout    = true;
+    private String       m_sServerDisplayValueOverwrite = null;
+    public void setServer(DoublesServe dsServer, ServeSide serveSide, boolean bIsHandout, String sDisplayValueOverwrite) {
+        m_doublesServe = dsServer;
+        if ( DoublesServe.NA.equals(m_doublesServe) == false ) {
+            m_doublesReceiver = DoublesServe.NA;
         }
+        m_serveSide    = serveSide;
+        m_isHandout    = bIsHandout;
+
+        updateNameButtonColorsForServeReceive(dsServer);
+
         for(int i=0; i < serveButtons.size(); i++) {
             TextView b = serveButtons.get(i);
             if ( b == null ) { continue; } // should not be happening
             String sText = " ";
-            if ( (i == iServer.ordinal()) && (serveSide != null) ) {
+            if ( (i == dsServer.ordinal()) && (serveSide != null) ) {
                 if ( StringUtil.isNotEmpty(sDisplayValueOverwrite) ) {
+                    m_sServerDisplayValueOverwrite = sDisplayValueOverwrite;
                     sText = sDisplayValueOverwrite;
                 } else {
                     sText = serveSide.toString() + (bIsHandout ? "?" : "");
@@ -625,6 +628,44 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
             b.setText(sText);
         }
     }
+
+    private final String sReceiverSymbol = "\u25CB";
+    private DoublesServe m_doublesReceiver = DoublesServe.NA;
+    public void setReceiver(DoublesServe dsReceiver) {
+        m_doublesReceiver = dsReceiver;
+        if ( DoublesServe.NA.equals(m_doublesReceiver) == false ) {
+            m_doublesServe = DoublesServe.NA;
+        }
+        updateNameButtonColorsForServeReceive(dsReceiver);
+        for(int i=0; i < serveButtons.size(); i++) {
+            TextView b = serveButtons.get(i);
+            if ( b == null ) { continue; } // should not be happening
+            String sText = " ";
+            if ( i == dsReceiver.ordinal() ) {
+                sText = sReceiverSymbol;
+            }
+            b.setText(sText);
+        }
+    }
+
+    private void updateNameButtonColorsForServeReceive(DoublesServe serverOrReceiver) {
+        boolean bShowDifferentColor = (nameButtons.size() == 2) /*&& (serveButtons.size() == 0)*/;
+        for(int i=0; i < nameButtons.size(); i++) {
+            TextView b = nameButtons.get(i);
+            if ( ( i == serverOrReceiver.ordinal() ) && bShowDifferentColor ) {
+                b.setTextColor(this.textColorServer);
+                ColorUtil.setBackground(b, this.bgColorServer);
+            } else {
+                b.setTextColor(this.textColor);
+                ColorUtil.setBackground(b, this.bgColor);
+            }
+        }
+    }
+
+    @Override public String toString() {
+        return nameButtons.get(0).getText() + "/" + nameButtons.get(1).getText() + " : " + (m_doublesServe.ordinal() + 1) + "/" + m_serveSide;
+    }
+
 /*
     @Override public void setBackgroundResource(int resid) {
         super.setBackgroundResource(resid);
