@@ -8,6 +8,8 @@
     <string name="oa_best_of_x_games_to_y">%1$s Satzspiel bis %2$s</string>
     <string name="oa_best_of_x_games">%1$s Satzspiel</string>
     <string name="oa_x_to_serve__y_to_receive">%1$s hat Aufschlag, %2$s Rückschläger</string>
+    <string name="sb_serve">Aufschlag</string>
+    <string name="sb_receive">Rückschläger</string>
     <string name="oa_love_all">Null Beide</string>
 
     <string name="oa_game_to_x">Satz an %s</string>

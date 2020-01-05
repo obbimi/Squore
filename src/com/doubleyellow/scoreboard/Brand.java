@@ -194,6 +194,10 @@ public enum Brand
             || isBadminton()   /* short interval at 11 points in game to 21: TODO: implement */
         ;
     }
+    public static boolean supportChooseServeOrReceive() {
+        return isTabletennis() || isBadminton()
+        ;
+    }
     public static boolean changeSidesBetweenGames() {
         return isTabletennis() || isBadminton();
     }

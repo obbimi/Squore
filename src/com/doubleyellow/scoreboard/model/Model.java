@@ -3356,9 +3356,9 @@ public abstract class Model implements Serializable
             // serve sequence for squash part of racketlon only: only one player on court
             return DoublesServe.I;
         }
-        boolean              bIsInTieBreak = isInTieBreak_TT_RL();
-        int                  iTotalPoints  = getTotalGamePoints();
-        int nrOfServesPerPlayer = getNrOfServesPerPlayer();
+        boolean bIsInTieBreak       = isInTieBreak_TT_RL();
+        int     iTotalPoints        = getTotalGamePoints();
+        int     nrOfServesPerPlayer = getNrOfServesPerPlayer();
         if ( bIsInTieBreak ) {
             nrOfServesPerPlayer = 1;
         }

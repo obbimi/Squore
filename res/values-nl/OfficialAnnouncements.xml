@@ -8,6 +8,8 @@
     <string name="oa_best_of_x_games_to_y">Best of %1$s games tot %2$s</string>
     <string name="oa_best_of_x_games">Best of %1$s games</string>
     <string name="oa_x_to_serve__y_to_receive">%1$s serveert, %2$s ontvangt</string>
+    <string name="sb_serve">Serveert</string>
+    <string name="sb_receive">Ontvangt</string>
     <string name="oa_love_all">Nul-Nul</string>
 
     <string name="oa_game_to_x">Game voor %s</string>

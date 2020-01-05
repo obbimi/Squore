@@ -32,11 +32,12 @@ import android.widget.LinearLayout;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
+import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.vico.IBoard;
 
 /**
  * Dialog in which the referee can either
- * - enter the which side of the table (tabletennis) the receiver will start receiving
+ * - enter the which end (side of the table in tabletennis) the receiver will start receiving (or server start serving if toss winner decided to receive)
  * - let the app perform a toss
  */
 public class SideToss extends BaseAlertDialog
@@ -54,8 +55,15 @@ public class SideToss extends BaseAlertDialog
     }
 
     @Override public void show() {
-        String sReceiver = matchModel.getName(matchModel.getServer().getOther());
-        adb.setTitle         (context.getString(R.string.sb_what_side_will_x_start_to_receive, sReceiver) )
+        Player pServer   = matchModel.getServer();
+        String sServer   = matchModel.getName(pServer);
+        String sReceiver = matchModel.getName(pServer.getOther());
+        String sTitle    = context.getString(R.string.sb_what_side_will_x_start_to_y, sReceiver, getString(R.string.sb_receive));
+        if ( pServer.equals(ServerToss.m_winnerOfToss) == false ) {
+            sTitle   = context.getString(R.string.sb_what_side_will_x_start_to_y, sServer, getString(R.string.sb_serve  )  );
+        }
+        adb.setTitle         (sTitle)
+           .setMessage       ("(What side of the scoreboard should he/she initially be?)")
            .setIcon          (R.drawable.toss_white)
            .setPositiveButton(R.string.left_side           , dialogClickListener)
            .setNeutralButton (R.string.sb_cmd_toss, null)
@@ -150,6 +158,8 @@ public class SideToss extends BaseAlertDialog
 
             // ensure that when toss button is clicked player buttons are toggled a couple of times then only one remains enabled
             btnToss.setOnClickListener(onClickTossListener);
+
+            btnToss.setVisibility(View.GONE); // do not allow toss here for now
         }
     }
 

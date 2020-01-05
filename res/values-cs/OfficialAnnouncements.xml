@@ -8,6 +8,8 @@
     <string name="oa_best_of_x_games_to_y">Na nejvýše %1$s sety(ů) do %2$s</string>
     <string name="oa_best_of_x_games">Na nejvýše %1$s sety(ů)</string>
     <string name="oa_x_to_serve__y_to_receive">%1$s podává, %2$s příjmá</string>
+    <string name="sb_serve">Podává</string>
+    <string name="sb_receive">Příjmá</string>
     <string name="oa_love_all">0:0</string>
 
     <string name="oa_game_to_x">set pro %s</string>

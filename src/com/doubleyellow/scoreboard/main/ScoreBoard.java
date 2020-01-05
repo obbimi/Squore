@@ -630,7 +630,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         addToDialogStack(changeSides);
     }
 
-    private void swapPlayers(Integer iToastLength, Player pFirst) {
+    public void swapPlayers(Integer iToastLength, Player pFirst) {
         if ( pFirst == null ) {
             pFirst = IBoard.togglePlayer2ScreenElements();
         } else {
@@ -2975,6 +2975,7 @@ touch -t 01030000 LAST.sb
         timerEnded,
         timerViewChanged,
         tossDialogEnded,
+        sideTossDialogEnded,
         endGameDialogEnded,
         endMatchDialogEnded,
         //editFormatDialogEnded,
@@ -3990,6 +3991,11 @@ touch -t 01030000 LAST.sb
         // ensure the match shows up in the list of live score a.s.a.p. so e.g. when toss dialog is started
         if ( ( matchModel.hasStarted() == false ) && ShareMatchPrefs.LinkWithFullDetailsEachPoint.equals(m_liveScoreShare) && (matchModel.isLocked() == false) ) {
             shareScoreSheetDelayed(1000);
+        }
+
+        if ( Brand.supportChooseServeOrReceive() ) {
+            SideToss sideToss = new SideToss(this, matchModel, this);
+            addToDialogStack(sideToss);
         }
 
         return true;
