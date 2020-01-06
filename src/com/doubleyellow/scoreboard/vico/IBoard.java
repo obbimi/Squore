@@ -425,6 +425,17 @@ public class IBoard implements TimerViewContainer
 
     public void updateReceiver(Player player, DoublesServe doublesServe) {
         //if ( Brand.supportChooseServeOrReceive() == false ) { return; } // continue always: also used to 'clean' any characters
+        int iServeId = m_player2serverSideId.get(player);
+        ServeButton btnSide = ( ServeButton ) findViewById(iServeId);
+        if ( btnSide == null ) { return; }
+        int iTransparencyNonServer = PreferenceValues.getServeButtonTransparencyNonServer(context);
+        EnumSet<ShowPlayerColorOn> showPlayerColorOn = PreferenceValues.showPlayerColorOn(context);
+        if ( showPlayerColorOn.contains(ShowPlayerColorOn.ServeSideButton) ) {
+            if ( StringUtil.hasNonEmpty(matchModel.getColor(Player.A), matchModel.getColor(Player.B)) ) {
+                iTransparencyNonServer = 0;
+            }
+        }
+        btnSide.setServeString(" ", iTransparencyNonServer);
 
         int iNameId = m_player2nameId.get(player);
         PlayersButton pbReceiver = (PlayersButton) findViewById(iNameId);

@@ -2726,8 +2726,8 @@ touch -t 01030000 LAST.sb
                 iBoard.updateScore    (p, matchModel.getScore(p));
             }
             Player server = matchModel.getServer();
-            iBoard.updateServeSide(server           , matchModel.getNextDoubleServe(server), matchModel.getNextServeSide(server), matchModel.isLastPointHandout());
-            iBoard.updateReceiver (server.getOther(), matchModel.getDoubleReceiver());
+            iBoard.updateServeSide(matchModel.getServer()  , matchModel.getNextDoubleServe(server), matchModel.getNextServeSide(server), matchModel.isLastPointHandout());
+            iBoard.updateReceiver (matchModel.getReceiver(), matchModel.getDoubleReceiver());
 
             // for restart score and complex undo
             updateTimerFloatButton();

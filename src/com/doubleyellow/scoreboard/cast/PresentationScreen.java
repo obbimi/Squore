@@ -24,6 +24,8 @@ import android.support.annotation.NonNull;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
+
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.*;
@@ -256,7 +258,13 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
             }
             if ( p == null ) { return; } // normally only e.g. for undo's of 'altered' scores
             iBoard.updateServeSide(p           ,doublesServe   , serveSide, bIsHandout);
-            iBoard.updateServeSide(p.getOther(),DoublesServe.NA, null     , false);
+            if ( Brand.supportChooseServeOrReceive() == false ) {
+                // remove any indication on receiver side
+                iBoard.updateReceiver(p.getOther(), DoublesServe.NA);
+            }
+        }
+        @Override public void OnReceiverChange(Player p, DoublesServe doublesServe) {
+            iBoard.updateReceiver(p, doublesServe);
         }
     }
 
