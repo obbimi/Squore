@@ -91,6 +91,7 @@ public abstract class Model implements Serializable
     public interface OnServeSideChangeListener extends OnModelChangeListener {
 		/** Invoked every time there is a change of where the next serve takes place */
         void OnServeSideChange(Player p, DoublesServe doublesServe, ServeSide serveSide, boolean bIsHandout);
+        void OnReceiverChange (Player p, DoublesServe doublesServe);
     }
     public interface OnSpecialScoreChangeListener extends OnModelChangeListener {
 		/** invoked each time a the score change implies 'GameBall' change: i.e. now having gameball, or no-longer having gameball */
@@ -197,7 +198,10 @@ public abstract class Model implements Serializable
             }
         }
         if ( changedListener instanceof OnServeSideChangeListener ) {
-            onServeSideChangeListener.add((OnServeSideChangeListener) changedListener);
+            OnServeSideChangeListener serveSideChangeListener = (OnServeSideChangeListener) changedListener;
+            onServeSideChangeListener.add(serveSideChangeListener);
+            serveSideChangeListener.OnServeSideChange(m_pServer           , m_in_out         , m_nextServeSide, false);
+            serveSideChangeListener.OnReceiverChange (m_pServer.getOther(), m_in_out_receiver);
         }
         if ( changedListener instanceof OnSpecialScoreChangeListener ) {
             OnSpecialScoreChangeListener specialScoreChangeListener = (OnSpecialScoreChangeListener) changedListener;
@@ -308,7 +312,8 @@ public abstract class Model implements Serializable
     // Double Serve side/sequence
     //------------------------
     private boolean                             m_bIsDouble             = false;
-    private DoublesServe                        m_in_out                = DoublesServe.NA;
+    private DoublesServe                        m_in_out/*server*/      = DoublesServe.NA;
+    private DoublesServe                        m_in_out_receiver       = DoublesServe.NA;
     // fixed per match in e.g. squash, might vary per set in e.g. racketlon
             DoublesServeSequence                m_doubleServeSequence   = DoublesServeSequence.NA;
 
@@ -463,6 +468,9 @@ public abstract class Model implements Serializable
         if ( (player != null) && player.equals(m_pServer) == false ) {
             m_pServer = player;
             bChanged = true;
+            if ( isDoubles() ) {
+                this.changeDoubleReceiver(m_in_out.getOther()); // in tabletennis: non server becomes the receiver
+            }
         }
         if ( (side != null) && side.equals(m_nextServeSide) == false ) {
             m_nextServeSide = side;
@@ -477,6 +485,10 @@ public abstract class Model implements Serializable
             // inform listeners
             for(OnServeSideChangeListener l: onServeSideChangeListener) {
                 l.OnServeSideChange(m_pServer, m_in_out, m_nextServeSide, isLastPointHandout());
+            }
+            if ( m_in_out_receiver == null || m_in_out_receiver.equals(DoublesServe.NA) ) {
+                // set initial value for receiver
+                this.changeDoubleReceiver(DoublesServe.I); // I is correct for tabletennis: first player will initially receive and after that serve
             }
         }
     }
@@ -502,6 +514,20 @@ public abstract class Model implements Serializable
     public void changeDoubleServe(Player p) {
         setServerAndSide(null, null, m_in_out.getOther());
     }
+    void changeDoubleReceiver(DoublesServe doublesServe) {
+        if ( doublesServe != null ) {
+            m_in_out_receiver = doublesServe;
+        } else {
+            m_in_out_receiver = m_in_out_receiver.getOther();
+        }
+        for(OnServeSideChangeListener l: onServeSideChangeListener) {
+            l.OnReceiverChange(m_pServer.getOther(), m_in_out_receiver);
+        }
+    }
+    public DoublesServe getDoubleReceiver() {
+        return m_in_out_receiver;
+    }
+
     public ServeSide getNextServeSide(Player player) {
         if ( player.equals(m_pServer) ) {
             return m_nextServeSide;
@@ -3252,6 +3278,7 @@ public abstract class Model implements Serializable
         }
         setLastPointWasHandout(false);
     }
+    /** determines AND sets the new value */
     void determineServerAndSide_BM(final Player pScorer) {
 
         Player    nextServer    = pScorer;
@@ -3292,10 +3319,11 @@ public abstract class Model implements Serializable
         }
         setServerAndSide(nextServer, serveSide, serveIO);
     }
+    /** determines AND sets the new value */
     void determineServerAndSide_TT_RL(boolean bForUndo, SportType sportType) {
-        DoublesServe ds = m_in_out;
+        DoublesServe dsIO = DoublesServe.NA;
         if ( isDoubles() ) {
-            ds = determineDoublesInOut_TT_RL();
+            dsIO = calculateDoublesInOut_TT_RL();
         }
         if ( isInTieBreak_TT_RL() ) {
             int    iMaxScore               = getMaxScore();
@@ -3305,16 +3333,16 @@ public abstract class Model implements Serializable
             if ( iNrOfPointsIntoTieBreak % 2 == 0 ) {
                 // 20-20,               22-21, 22-22              , 24-23
                 if ( iDiffScore == 0 ) {
-                    setServerAndSide(serverAtStartOfSet, ServeSide.R, ds);
+                    setServerAndSide(serverAtStartOfSet, ServeSide.R, dsIO);
                 } else {
-                    setServerAndSide(serverAtStartOfSet.getOther(), ServeSide.L, ds);
+                    setServerAndSide(serverAtStartOfSet.getOther(), ServeSide.L, dsIO);
                 }
             } else {
                 //        21-20, 21-21              , 23-22, 23-23
                 if ( iDiffScore == 0 ) {
-                    setServerAndSide(serverAtStartOfSet, ServeSide.L, ds);
+                    setServerAndSide(serverAtStartOfSet, ServeSide.L, dsIO);
                 } else {
-                    setServerAndSide(serverAtStartOfSet.getOther(), ServeSide.R, ds);
+                    setServerAndSide(serverAtStartOfSet.getOther(), ServeSide.R, dsIO);
                 }
             }
         } else {
@@ -3325,13 +3353,13 @@ public abstract class Model implements Serializable
                     if ( nextServeSide.equals(ServeSide.R) && (bForUndo == false)) {
                         server = server.getOther();
                         if ( isDoubles() ) {
-                            setServerAndSide(null, null , ds);
+                            setServerAndSide(null, null , dsIO);
                         }
                     }
                     if ( nextServeSide.equals(ServeSide.L) && (bForUndo) ) {
                         server = server.getOther();
                     }
-                    setServerAndSide(server, nextServeSide, ds);
+                    setServerAndSide(server, nextServeSide, dsIO);
                     break;
                 }
                 case Tabletennis:
@@ -3344,28 +3372,29 @@ public abstract class Model implements Serializable
                     for( int i = 0; i < iServerSwitches; i++ ) {
                         server = server.getOther();
                     }
-                    setServerAndSide(server, m_nextServeSide.getOther() /* dirty trick to always ensure listeners are triggered to */, ds);
+                    setServerAndSide(server, m_nextServeSide.getOther() /* dirty trick to always ensure listeners are triggered to */, dsIO);
                     break;
             }
         }
     }
 
-    DoublesServe determineDoublesInOut_TT_RL() {
+    DoublesServe calculateDoublesInOut_TT_RL() {
         DoublesServeSequence dss           = getDoubleServeSequence();
         if ( dss.equals(DoublesServeSequence.A1B1A1B1) ) {
             // serve sequence for squash part of racketlon only: only one player on court
             return DoublesServe.I;
         }
         boolean bIsInTieBreak       = isInTieBreak_TT_RL();
-        int     iTotalPoints        = getTotalGamePoints();
+        int     iTotalPointsScored  = getTotalGamePoints();
         int     nrOfServesPerPlayer = getNrOfServesPerPlayer();
         if ( bIsInTieBreak ) {
             nrOfServesPerPlayer = 1;
         }
-        DoublesServe ds = ( iTotalPoints % (nrOfServesPerPlayer * 4) >= nrOfServesPerPlayer * 2 ) ? DoublesServe.O : DoublesServe.I;
+        int iPointsScoredSinceEveryBodyHadServedSameNrOfTimes = iTotalPointsScored % (nrOfServesPerPlayer * 4 /*nr of players*/);
+        DoublesServe ds = ( iPointsScoredSinceEveryBodyHadServedSameNrOfTimes >= nrOfServesPerPlayer * 2 ) ? DoublesServe.O : DoublesServe.I;
         if ( bIsInTieBreak && (getNrOfPointsToWinGame() * 2) % (getNrOfServesPerPlayer() * 4 ) > 0 ) {
             // server of first point in tie-break player is NOT player that started serving in the game
-            ds = ds .getOther();
+            ds = ds.getOther();
         }
         return ds;
     }

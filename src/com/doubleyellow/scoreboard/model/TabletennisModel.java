@@ -18,16 +18,10 @@
 package com.doubleyellow.scoreboard.model;
 
 import android.content.Context;
-import com.doubleyellow.util.JsonUtil;
-import com.doubleyellow.util.ListUtil;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * http://www.allabouttabletennis.com/table-tennis-terminology.html
@@ -44,6 +38,19 @@ import java.util.Set;
  *
  * The player or pair starting at one end in a game shall start at the other end in the next game of the match and in the last possible game of a match the players or pairs shall change ends when first one player or pair scores 5 points.
  *
+ *
+ * Doubles serve/receive order
+ * 2.13.04	In each game of a doubles match, the pair having the right to serve first
+ *          shall choose which of them will do so and
+ *          in the first game of a match the receiving pair shall decide which of them will receive first;
+ *          in subsequent games of the match, the first server having been chosen,
+ *          the first receiver shall be the player who served to him or her in the preceding game.
+ * 2.13.05	In doubles, at each change of service the previous receiver shall become the server
+ *          and the partner of the previous server shall become the receiver.
+ * 2.13.06	The player or pair serving first in a game shall receive first in the next game of the
+ *          match and in the last possible game of a doubles match the pair due to receive next
+ *          shall change their order of receiving when first one pair scores 5 points.
+ *
  */
 public class TabletennisModel extends Model
 {
@@ -51,7 +58,7 @@ public class TabletennisModel extends Model
         super();
         setTiebreakFormat(TieBreakFormat.TwoClearPoints);
         setNrOfGamesToWinMatch(4);
-        setNrOfServesPerPlayer(2); // TODO: set it from user specification
+        setNrOfServesPerPlayer(2);
         setEnglishScoring(false);
     }
 
@@ -86,8 +93,7 @@ public class TabletennisModel extends Model
     /** LR and Handout parameters are totally ignored. Returns character to indicate number of serves left */
     @Override public Object convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar) {
         if ( isInExpedite() ) {
-            // TODO: special char for when in expedite
-            return "X";
+            return "X"; // eXpedite
         }
         boolean inTieBreak = isInTieBreak_TT_RL();
         if ( m_iNrOfServesPerPlayer > 2 ) {

@@ -327,7 +327,8 @@ public class RacketlonModel extends Model {
             }
             if ( isDoubles() ) {
                 // initialize
-                setServerAndSide(null, null, determineDoublesInOut_TT_RL());
+                DoublesServe dsIO = calculateDoublesInOut_TT_RL();
+                setServerAndSide(null, null, dsIO);
             }
         }
         return joMatch;

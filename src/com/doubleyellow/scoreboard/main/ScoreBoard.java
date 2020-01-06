@@ -443,17 +443,22 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             int viewId = getXmlIdOfParent(view);
             Player player = IBoard.m_id2player.get(viewId);
             if ( player == null ) { return; }
-            if ( matchModel.isDoubles() && player.equals( matchModel.getServer() ) ) {
-                DoublesServe inOutClickedOn = getInOrOut(view);
-                DoublesServe inOut = matchModel.getNextDoubleServe(player);
-                if ( (inOutClickedOn                         != null)
-                  && (inOutClickedOn.equals(DoublesServe.NA) == false)
-                  && (inOutClickedOn.equals(inOut)           == false)
-                   ) {
-                    // clicked on serve side button of non-serving doubles player of the same team
-                    matchModel.changeDoubleServe(player);
+            if ( matchModel.isDoubles() ) {
+                if ( player.equals( matchModel.getServer() ) ) {
+                    DoublesServe inOutClickedOn = getInOrOut(view);
+                    DoublesServe inOut = matchModel.getNextDoubleServe(player);
+                    if ( (inOutClickedOn                         != null)
+                      && (inOutClickedOn.equals(DoublesServe.NA) == false)
+                      && (inOutClickedOn.equals(inOut)           == false)
+                       ) {
+                        // clicked on serve side button of non-serving doubles player of the same team
+                        matchModel.changeDoubleServe(player);
+                    } else {
+                        changeSide(player);
+                    }
                 } else {
-                    changeSide(player);
+                    // toggle receiver
+                    //matchModel.changeDoubleReceiver(null); // swap players in stead
                 }
             } else {
                 if ( onClickXTimesHandler == null ) {
@@ -2719,8 +2724,11 @@ touch -t 01030000 LAST.sb
             iBoard.updateGameScores();
             for(Player p: Model.getPlayers()) {
                 iBoard.updateScore    (p, matchModel.getScore(p));
-                iBoard.updateServeSide(p, matchModel.getNextDoubleServe(p), matchModel.getNextServeSide(p), matchModel.isLastPointHandout());
             }
+            Player server = matchModel.getServer();
+            iBoard.updateServeSide(server           , matchModel.getNextDoubleServe(server), matchModel.getNextServeSide(server), matchModel.isLastPointHandout());
+            iBoard.updateReceiver (server.getOther(), matchModel.getDoubleReceiver());
+
             // for restart score and complex undo
             updateTimerFloatButton();
             updateTossFloatButton();
@@ -2736,7 +2744,13 @@ touch -t 01030000 LAST.sb
         @Override public void OnServeSideChange(Player p, DoublesServe doublesServe, ServeSide serveSide, boolean bIsHandout) {
             if ( p == null ) { return; } // normally only e.g. for undo's of 'altered' scores
             iBoard.updateServeSide(p           ,doublesServe   , serveSide, bIsHandout);
-            iBoard.updateServeSide(p.getOther(),DoublesServe.NA, null     , false);
+            if ( Brand.supportChooseServeOrReceive() == false ) {
+                // remove any indication on receiver side
+                iBoard.updateReceiver(p.getOther(), DoublesServe.NA);
+            }
+        }
+        @Override public void OnReceiverChange(Player p, DoublesServe doublesServe) {
+            iBoard.updateReceiver(p, doublesServe);
         }
     }
 

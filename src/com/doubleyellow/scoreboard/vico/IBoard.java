@@ -20,7 +20,6 @@ package com.doubleyellow.scoreboard.vico;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.support.percent.PercentLayoutHelper;
@@ -424,6 +423,17 @@ public class IBoard implements TimerViewContainer
         return sChar.toUpperCase() + (iGameNrZeroBased+1) + ": %s";
     }
 
+    public void updateReceiver(Player player, DoublesServe doublesServe) {
+        //if ( Brand.supportChooseServeOrReceive() == false ) { return; } // continue always: also used to 'clean' any characters
+
+        int iNameId = m_player2nameId.get(player);
+        PlayersButton pbReceiver = (PlayersButton) findViewById(iNameId);
+        View view = findViewById(iNameId);
+        if ( view instanceof PlayersButton ) {
+            DoublesServe dsReceiver = doublesServe;
+            pbReceiver.setReceiver(dsReceiver);
+        }
+    }
     public void updateServeSide(Player player, DoublesServe doublesServe, ServeSide nextServeSide, boolean bIsHandout) {
         if ( player == null ) { return; } // normally only e.g. for undo's of 'altered' scores
         int iServeId = m_player2serverSideId.get(player);

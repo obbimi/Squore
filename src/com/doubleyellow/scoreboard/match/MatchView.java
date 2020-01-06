@@ -531,6 +531,9 @@ public class MatchView extends SBRelativeLayout
         List<Integer> lViewsToHide = new ArrayList<Integer>();
         if ( bIsDoubles ) {
             lViewsToHide.add(R.id.ll_match_singles);
+            if ( Brand.supportsDoubleServeSequence() == false ) {
+                lViewsToHide.add(R.id.ll_doubleServeSequence);
+            }
         } else {
             lViewsToHide.add(R.id.ll_match_doubles);
             lViewsToHide.add(R.id.ll_doubleServeSequence);
