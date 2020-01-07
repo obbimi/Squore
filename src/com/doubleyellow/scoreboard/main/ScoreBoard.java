@@ -452,7 +452,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                       && (inOutClickedOn.equals(inOut)           == false)
                        ) {
                         // clicked on serve side button of non-serving doubles player of the same team
-                        matchModel.changeDoubleServe(player);
+                        if ( Brand.isSquash() ) {
+                            matchModel.changeDoubleServe(player);
+                        }
                     } else {
                         changeSide(player);
                     }
@@ -677,7 +679,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 .show();
     }
 
-    private void _swapDoublePlayers(Player pl) {
+    public void _swapDoublePlayers(Player pl) {
         if ( pl == null ) { return; }
         String sPlayerNames = matchModel.getName(pl);
         String[] saNames = sPlayerNames.split("/");
@@ -2990,6 +2992,7 @@ touch -t 01030000 LAST.sb
         timerViewChanged,
         tossDialogEnded,
         sideTossDialogEnded,
+        serverReceiverDialogEnded,
         endGameDialogEnded,
         endMatchDialogEnded,
         //editFormatDialogEnded,
@@ -3024,6 +3027,10 @@ touch -t 01030000 LAST.sb
                 if ( matchModel.hasStarted() == false ) {
                     timestampStartOfGame(GameTiming.ChangedBy.DialogClosed);
                 }
+                showNextDialog();
+                break;
+            case serverReceiverDialogEnded:
+            case sideTossDialogEnded:
                 showNextDialog();
                 break;
             case timerViewChanged:
@@ -4010,6 +4017,12 @@ touch -t 01030000 LAST.sb
         if ( Brand.supportChooseServeOrReceive() ) {
             SideToss sideToss = new SideToss(this, matchModel, this);
             addToDialogStack(sideToss);
+
+            DoublesFirstServer firstServer = new DoublesFirstServer(this, matchModel, this);
+            addToDialogStack(firstServer);
+
+            DoublesFirstReceiver firstReceiver = new DoublesFirstReceiver(this, matchModel, this);
+            addToDialogStack(firstReceiver);
         }
 
         return true;

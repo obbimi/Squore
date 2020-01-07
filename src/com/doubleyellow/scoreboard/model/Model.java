@@ -468,8 +468,12 @@ public abstract class Model implements Serializable
         if ( (player != null) && player.equals(m_pServer) == false ) {
             m_pServer = player;
             bChanged = true;
-            if ( isDoubles() ) {
+            if ( isDoubles() && (doublesServe!=null) ) {
                 this.changeDoubleReceiver(m_in_out.getOther()); // in tabletennis: non server becomes the receiver
+            } else {
+                for(OnServeSideChangeListener l: onServeSideChangeListener) {
+                    l.OnReceiverChange(m_pServer.getOther(), m_in_out_receiver);
+                }
             }
         }
         if ( (side != null) && side.equals(m_nextServeSide) == false ) {
@@ -515,13 +519,20 @@ public abstract class Model implements Serializable
         setServerAndSide(null, null, m_in_out.getOther());
     }
     void changeDoubleReceiver(DoublesServe doublesServe) {
+        boolean bChanged = false;
         if ( doublesServe != null ) {
-            m_in_out_receiver = doublesServe;
+            if ( doublesServe.equals(m_in_out_receiver) == false ) {
+                m_in_out_receiver = doublesServe;
+                bChanged = true;
+            }
         } else {
             m_in_out_receiver = m_in_out_receiver.getOther();
+            bChanged = true;
         }
-        for(OnServeSideChangeListener l: onServeSideChangeListener) {
-            l.OnReceiverChange(m_pServer.getOther(), m_in_out_receiver);
+        if ( bChanged ) {
+            for(OnServeSideChangeListener l: onServeSideChangeListener) {
+                l.OnReceiverChange(m_pServer.getOther(), m_in_out_receiver);
+            }
         }
     }
     public DoublesServe getDoubleReceiver() {

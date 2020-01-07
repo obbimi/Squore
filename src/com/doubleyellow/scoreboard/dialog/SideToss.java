@@ -21,13 +21,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.view.KeyEvent;
+import android.widget.Button;
+/*
+import android.os.CountDownTimer;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.Button;
 import android.widget.LinearLayout;
+*/
 
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -62,25 +64,26 @@ public class SideToss extends BaseAlertDialog
         if ( pServer.equals(ServerToss.m_winnerOfToss) == false ) {
             sTitle   = context.getString(R.string.sb_what_side_will_x_start_to_y, sServer, getString(R.string.sb_serve  )  );
         }
+        int iResMessage = matchModel.isDoubles() ? R.string.sb_on_what_side_of_the_scoreboard_should_team_be : R.string.sb_on_what_side_of_the_scoreboard_should_player_be;
         adb.setTitle         (sTitle)
-           .setMessage       ("(" + getString(R.string.sb_on_what_side_of_the_scoreboard_should_player_be) + ")")
+           .setMessage       ("(" + getString(iResMessage) + ")")
            .setIcon          (R.drawable.toss_white)
            .setPositiveButton(R.string.left_side           , dialogClickListener)
-           .setNeutralButton (R.string.sb_cmd_toss, null)
+         //.setNeutralButton (R.string.sb_cmd_toss, null)
            .setNegativeButton(R.string.right_side          , dialogClickListener)
            .setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override public boolean onKey(DialogInterface dialogI, int keyCode, KeyEvent event) {
                 int action  = event.getAction();
                 if (keyCode == KeyEvent.KEYCODE_BACK /* = 4 */ && action == KeyEvent.ACTION_UP) {
                     AlertDialog dialog = (AlertDialog) dialogI;
-                    final Button btnLeft  = dialog.getButton(BTN_RECEIVER_STARTS_LEFT);
-                    final Button btnRight = dialog.getButton(BTN_RECEIVER_STARTS_RIGHT);
+                    final Button btnLeft  = dialog.getButton(BTN_LOOSER_OF_TOSS_STARTS_LEFT);
+                    final Button btnRight = dialog.getButton(BTN_LOOSER_OF_TOSS_STARTS_RIGHT);
                     if ( btnLeft.isEnabled() == false ) {
                         // toss is performed and RIGHT was selected
-                        handleButtonClick(BTN_RECEIVER_STARTS_RIGHT);
+                        handleButtonClick(BTN_LOOSER_OF_TOSS_STARTS_RIGHT);
                     } else if ( btnRight.isEnabled() == false ) {
                         // toss is performed and LEFT was selected
-                        handleButtonClick(BTN_RECEIVER_STARTS_LEFT);
+                        handleButtonClick(BTN_LOOSER_OF_TOSS_STARTS_LEFT);
                     } else {
                         // no toss performed yet
                         SideToss.this.dismiss();
@@ -96,12 +99,15 @@ public class SideToss extends BaseAlertDialog
                 scoreBoard.triggerEvent(ScoreBoard.SBEvent.sideTossDialogEnded, SideToss.this);
             }
         });
+/*
         try {
             OnShowListener listener = new OnShowListener(context, ButtonUpdater.iaColorNeutral);
             dialog = adb.show(listener);
         } catch (Exception e) {
             e.printStackTrace();
         }
+*/
+        dialog = adb.show();
     }
 
     private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -110,31 +116,30 @@ public class SideToss extends BaseAlertDialog
         }
     };
 
-    public static final int BTN_RECEIVER_STARTS_LEFT  = DialogInterface.BUTTON_POSITIVE;
-    public static final int BTN_RECEIVER_STARTS_RIGHT = DialogInterface.BUTTON_NEGATIVE;
-    public static final int BTN_DO_TOSS      = DialogInterface.BUTTON_NEUTRAL;
+    public static final int BTN_LOOSER_OF_TOSS_STARTS_LEFT  = DialogInterface.BUTTON_POSITIVE;
+    public static final int BTN_LOOSER_OF_TOSS_STARTS_RIGHT = DialogInterface.BUTTON_NEGATIVE;
+//  public static final int BTN_DO_TOSS      = DialogInterface.BUTTON_NEUTRAL;
     @Override public void handleButtonClick(int which) {
-        boolean bReceiverIsRight = IBoard.m_firstPlayerOnScreen.equals(matchModel.getServer());
-        Boolean bReceiverShouldBeRight = null;
+        boolean bLooserOfTossIsRight = IBoard.m_firstPlayerOnScreen.equals(ServerToss.m_winnerOfToss);
+        Boolean bLooserShouldBeRight = null;
         switch (which){
-            case BTN_RECEIVER_STARTS_LEFT:
-                bReceiverShouldBeRight = false;
+            case BTN_LOOSER_OF_TOSS_STARTS_LEFT:
+                bLooserShouldBeRight = false;
                 break;
-            case BTN_RECEIVER_STARTS_RIGHT:
-                bReceiverShouldBeRight = true;
-                break;
-            case BTN_DO_TOSS:
-                // impossible. Has it's own onClickListener
+            case BTN_LOOSER_OF_TOSS_STARTS_RIGHT:
+                bLooserShouldBeRight = true;
                 break;
         }
-        if ( (bReceiverShouldBeRight != null) && (bReceiverShouldBeRight != bReceiverIsRight)) {
+        if ( (bLooserShouldBeRight != null) && (bLooserShouldBeRight != bLooserOfTossIsRight)) {
+            // swap teams
             scoreBoard.swapPlayers(null, null);
         }
-        if ( bReceiverShouldBeRight != null ) {
+        if ( bLooserShouldBeRight != null ) {
             this.dismiss();
         }
     }
 
+/*
     private class OnShowListener extends ButtonUpdater {
         private OnShowListener(Context context, int... iButton2Color) {
             super(context, iButton2Color);
@@ -171,8 +176,8 @@ public class SideToss extends BaseAlertDialog
 
     private void simulateToss() {
         final Button btnToss  = dialog.getButton(BTN_DO_TOSS );
-        final Button btnLeft  = dialog.getButton(BTN_RECEIVER_STARTS_LEFT);
-        final Button btnRight = dialog.getButton(BTN_RECEIVER_STARTS_RIGHT);
+        final Button btnLeft  = dialog.getButton(BTN_LOOSER_OF_TOSS_STARTS_LEFT);
+        final Button btnRight = dialog.getButton(BTN_LOOSER_OF_TOSS_STARTS_RIGHT);
         btnToss.setEnabled(false);
         if ( (btnLeft == null) || (btnRight == null) ) return;
 
@@ -201,4 +206,5 @@ public class SideToss extends BaseAlertDialog
         };
         countDownTimer.start();
     }
+*/
 }

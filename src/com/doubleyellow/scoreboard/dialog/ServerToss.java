@@ -63,22 +63,22 @@ public class ServerToss extends BaseAlertDialog
             adb.setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive)); // for gotoStage_ChooseServeReceive() we need to set something for the message that is set there to be visible
         }
         adb.setIcon          (R.drawable.toss_white)
-           .setPositiveButton(sPlayerA           , null /*dialogClickListener*/)
-           .setNeutralButton(R.string.sb_cmd_toss, null)
-           .setNegativeButton(sPlayerB           ,null /*dialogClickListener*/)
+           .setPositiveButton(sPlayerA            , null /*dialogClickListener*/)
+           .setNeutralButton (R.string.sb_cmd_toss, null)
+           .setNegativeButton(sPlayerB            ,null /*dialogClickListener*/)
            .setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override public boolean onKey(DialogInterface dialogI, int keyCode, KeyEvent event) {
                 int action  = event.getAction();
                 if (keyCode == KeyEvent.KEYCODE_BACK /* = 4 */ && action == KeyEvent.ACTION_UP) {
                     AlertDialog dialog = (AlertDialog) dialogI;
-                    final Button btnA = dialog.getButton(BTN_A_STARTS);
-                    final Button btnB = dialog.getButton(BTN_B_STARTS);
+                    final Button btnA = dialog.getButton(BTN_A_WINS_TOSS);
+                    final Button btnB = dialog.getButton(BTN_B_WINS_TOSS);
                     if ( btnA.isEnabled() == false ) {
                         // toss is performed and B was selected
-                        handleButtonClick(BTN_B_STARTS);
+                        handleButtonClick(BTN_B_WINS_TOSS);
                     } else if ( btnB.isEnabled() == false ) {
                         // toss is performed and A was selected
-                        handleButtonClick(BTN_A_STARTS);
+                        handleButtonClick(BTN_A_WINS_TOSS);
                     } else {
                         // no toss performed yet
                         ServerToss.this.dismiss();
@@ -103,17 +103,9 @@ public class ServerToss extends BaseAlertDialog
         }
     }
 
-/*
-    private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-        @Override public void onClick(DialogInterface dialog, int which) {
-            handleButtonClick(which);
-        }
-    };
-*/
-
-    private class LeftRightBUttonClickListener implements View.OnClickListener {
-        private int m_which = 0;
-        private LeftRightBUttonClickListener(int which) {
+    private class LeftRightButtonClickListener implements View.OnClickListener {
+        private int m_which;
+        private LeftRightButtonClickListener(int which) {
             m_which = which;
         }
         @Override public void onClick(View view) {
@@ -128,52 +120,54 @@ public class ServerToss extends BaseAlertDialog
     };
 
 
-    public static final int BTN_SERVE    = DialogInterface.BUTTON_POSITIVE;
-    public static final int BTN_RECEIVE  = DialogInterface.BUTTON_NEGATIVE;
-    public static final int BTN_A_STARTS = DialogInterface.BUTTON_POSITIVE;
-    public static final int BTN_B_STARTS = DialogInterface.BUTTON_NEGATIVE;
-    public static final int BTN_DO_TOSS  = DialogInterface.BUTTON_NEUTRAL;
+    public static final int BTN_SERVE       = DialogInterface.BUTTON_POSITIVE;
+    public static final int BTN_RECEIVE     = DialogInterface.BUTTON_NEGATIVE;
+    public static final int BTN_A_WINS_TOSS = DialogInterface.BUTTON_POSITIVE;
+    public static final int BTN_B_WINS_TOSS = DialogInterface.BUTTON_NEGATIVE;
+    public static final int BTN_DO_TOSS     = DialogInterface.BUTTON_NEUTRAL;
 
-    static Player m_winnerOfToss = null;
+            static Player  m_winnerOfToss          = null; // used by SideToss
+    private static boolean m_winnerChooseToReceive = false;
 
     private static final int VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE = View.INVISIBLE;
     @Override public void handleButtonClick(int which) {
         final Button btnToss = dialog.getButton(BTN_DO_TOSS );
-        if ( Brand.isTabletennis() && dialog.getButton(BTN_DO_TOSS).getVisibility() == VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE) {
+        if (    Brand.supportChooseServeOrReceive()
+             && dialog.getButton(BTN_DO_TOSS).getVisibility() == VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE
+           )
+        {
             // serve or receive
-            boolean bReceive = false;
             switch (which) {
                 case BTN_SERVE:
-                    bReceive = false;
+                    m_winnerChooseToReceive = false;
                     break;
                 case BTN_RECEIVE:
-                    bReceive = true;
+                    m_winnerChooseToReceive = true;
                     break;
             }
-            if ( bReceive ) {
+            if ( m_winnerChooseToReceive ) {
                 scoreBoard.changeSide(m_winnerOfToss.getOther());
             }
             this.dismiss();
         } else {
             final Player server = matchModel.getServer();
             switch (which){
-                case BTN_A_STARTS:
+                case BTN_A_WINS_TOSS:
                     m_winnerOfToss = Player.A;
                     break;
-                case BTN_B_STARTS:
+                case BTN_B_WINS_TOSS:
                     m_winnerOfToss = Player.B;
-                    break;
-                case BTN_DO_TOSS:
-                    // impossible. Has it's own onClickListener
                     break;
             }
             if ( (m_winnerOfToss != null) && (m_winnerOfToss.equals(server) == false) ) {
                 scoreBoard.changeSide(m_winnerOfToss);
             }
+
+            // optionally go to next 'stage' of dialog
             if ( m_winnerOfToss != null ) {
                 if ( Brand.supportChooseServeOrReceive() ) {
-                    final Button btnA    = dialog.getButton(BTN_A_STARTS);
-                    final Button btnB    = dialog.getButton(BTN_B_STARTS);
+                    final Button btnA = dialog.getButton(BTN_A_WINS_TOSS);
+                    final Button btnB = dialog.getButton(BTN_B_WINS_TOSS);
                     gotoStage_ChooseServeReceive(btnToss, btnA, btnB);
                 } else {
                     this.dismiss();
@@ -207,15 +201,15 @@ public class ServerToss extends BaseAlertDialog
             // ensure that when toss button is clicked player buttons are toggled a couple of times then only one remains enabled
             btnToss.setOnClickListener(onClickTossListener);
 
-            alertDialog.getButton(BTN_A_STARTS).setOnClickListener(new LeftRightBUttonClickListener(BTN_A_STARTS));
-            alertDialog.getButton(BTN_B_STARTS).setOnClickListener(new LeftRightBUttonClickListener(BTN_B_STARTS));
+            alertDialog.getButton(BTN_A_WINS_TOSS).setOnClickListener(new LeftRightButtonClickListener(BTN_A_WINS_TOSS));
+            alertDialog.getButton(BTN_B_WINS_TOSS).setOnClickListener(new LeftRightButtonClickListener(BTN_B_WINS_TOSS));
         }
     }
 
     private void simulateToss() {
         final Button btnToss = dialog.getButton(BTN_DO_TOSS );
-        final Button btnA    = dialog.getButton(BTN_A_STARTS);
-        final Button btnB    = dialog.getButton(BTN_B_STARTS);
+        final Button btnA    = dialog.getButton(BTN_A_WINS_TOSS);
+        final Button btnB    = dialog.getButton(BTN_B_WINS_TOSS);
         btnToss.setEnabled(false);
         if ( (btnA == null) || (btnB == null) ) return;
 

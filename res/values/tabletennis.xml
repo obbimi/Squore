@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- additional toss option for tabletennis (and badminton) -->
-    <string name="sb_what_side_will_x_start_to_y">What side will %1$s start to %2$s?</string>
-    <string name="sb_on_what_side_of_the_scoreboard_should_player_be">On what side of the scoreboard should he/she initially be?</string>
+    <string name="sb_what_side_will_x_start_to_y">What side/end will %1$s start to %2$s?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_player_be">On what side of the scoreboard should he/she/team initially be?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_team_be">On what side of the scoreboard should the team initially be?</string>
+    <string name="sb_which_player_of_team_will_start_to_x">Which player will start to %1$s?</string>
     <string name="left_side">Left</string>
     <string name="right_side">Right</string>
 
