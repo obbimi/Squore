@@ -456,7 +456,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                             matchModel.changeDoubleServe(player);
                         }
                     } else {
-                        changeSide(player);
+                        // clicked on serve side button of serving doubles player of the same team
+                        if ( Brand.isSquash() ) {
+                            changeSide(player);
+                        }
                     }
                 } else {
                     // toggle receiver
@@ -646,7 +649,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         matchModel.triggerListeners();
 
         if ( (iToastLength != null) && ( iToastLength == Toast.LENGTH_LONG || iToastLength == Toast.LENGTH_SHORT ) ) {
-            String sMsg = getString(R.string.player_names_swapped); // + " (" + pFirst + ")";
+            String sMsg = getString( matchModel.isDoubles()? R.string.teams_have_swapped_sides : R.string.player_names_swapped); // + " (" + pFirst + ")";
             Toast.makeText(this, sMsg, iToastLength).show();
         }
         if ( BTRole.Master.equals(m_blueToothRole) ) {
@@ -680,16 +683,23 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     }
 
     public void _swapDoublePlayers(Player pl) {
-        if ( pl == null ) { return; }
-        String sPlayerNames = matchModel.getName(pl);
-        String[] saNames = sPlayerNames.split("/");
-        if ( saNames.length != 2 ) { return; }
-        matchModel.setPlayerName(pl, saNames[1] + "/" + saNames[0]);
-        String sMsg = getString(R.string.double_player_names_swapped, pl);
-        Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
+        _swapDoublePlayers(new Player[] {pl}, true);
+    }
+    public void _swapDoublePlayers(Player[] pls, boolean bShowToast) {
+        if ( pls == null ) { return; }
+        for(Player pl: pls) {
+            String sPlayerNames = matchModel.getName(pl);
+            String[] saNames = sPlayerNames.split("/");
+            if ( saNames.length != 2 ) { continue; }
+            matchModel.setPlayerName(pl, saNames[1] + "/" + saNames[0]);
 
-        if ( BTRole.Master.equals(m_blueToothRole) ) {
-            writeMethodToBluetooth(BTMethods.swapDoublePlayers, pl);
+            if ( BTRole.Master.equals(m_blueToothRole) ) {
+                writeMethodToBluetooth(BTMethods.swapDoublePlayers, pl);
+            }
+        }
+        if ( bShowToast ) {
+            String sMsg = getString(R.string.double_player_names_of_team_x_swapped, ListUtil.join(Arrays.asList(pls), " & "));
+            Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -2805,6 +2815,12 @@ touch -t 01030000 LAST.sb
             }
             //iBoard.showGameBallMessage(false, null);
             iBoard.updateGameBallMessage(); // in rare case in racketlon a 0-0 score may be a matchball in set 3 or 4
+
+            if ( matchModel.isDoubles() && Brand.supportChooseServeOrReceive() ) {
+                if ( matchModel.matchHasEnded() == false ) {
+                    addToDialogStack(new DoublesFirstServer(ScoreBoard.this, matchModel, ScoreBoard.this));
+                }
+            }
         }
     }
     private class MatchEndListener implements Model.OnMatchEndListener {

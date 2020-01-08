@@ -131,7 +131,8 @@
     <string name="url_match_continue">Openen wedstrijd van URL: \n %1$s - %2$s</string>
 
     <string name="player_names_swapped">Namen van de spelers zijn omgewisseld</string>
-    <string name="double_player_names_swapped">Namen van de dubbel spelers van team %1$s zijn omgewisseld</string>
+    <string name="teams_have_swapped_sides">Teams zijn omgewisseld</string>
+    <string name="double_player_names_of_team_x_swapped">Namen van de dubbel spelers van team %1$s zijn omgewisseld</string>
     <string name="match_is_locked__unlock_to_allow_modifications">Deze wedstrijd is vergrendeld (%s). Kies ontgrendel om wijzigingen aan de score mogelijk te maken. Of begin een nieuwe wedstrijd.</string>
     <string name="match_is_locked">Deze wedstrijd is vergrendeld (%s). Begin eventueel een nieuwe wedstrijd.</string>
     <string name="match_is_now_locked">Wedstrijd is nu vergrendeld</string>

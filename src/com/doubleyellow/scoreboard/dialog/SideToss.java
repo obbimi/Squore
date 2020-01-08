@@ -67,7 +67,7 @@ public class SideToss extends BaseAlertDialog
         int iResMessage = matchModel.isDoubles() ? R.string.sb_on_what_side_of_the_scoreboard_should_team_be : R.string.sb_on_what_side_of_the_scoreboard_should_player_be;
         adb.setTitle         (sTitle)
            .setMessage       ("(" + getString(iResMessage) + ")")
-           .setIcon          (R.drawable.toss_white)
+           .setIcon          (R.drawable.change_sides)
            .setPositiveButton(R.string.left_side           , dialogClickListener)
          //.setNeutralButton (R.string.sb_cmd_toss, null)
            .setNegativeButton(R.string.right_side          , dialogClickListener)

@@ -141,7 +141,9 @@
     <string name="url_match_continue">Incontro in apertura da URL: \n %1$s - %2$s</string>
 
     <string name="player_names_swapped">I nomi dei giocatori sono stati invertiti</string>
-    <string name="double_player_names_swapped">I nomi dei giocatori di doppio della squadra %1$s sono stati invertiti</string>
+    <string name="teams_have_swapped_sides">I nomi squadra sono stati invertiti</string> <!-- TODO -->
+
+    <string name="double_player_names_of_team_x_swapped">I nomi dei giocatori di doppio della squadra %1$s sono stati invertiti</string>
     <string name="match_is_locked__unlock_to_allow_modifications">Questo incontro è bloccato (%s). Seleziona Sblocca per permettere di apportare modifiche al punteggio. Oppure, inizia un nuovo incontro</string>
     <string name="match_is_locked">Questo incontro è bloccato (%s). Se vuoi, puoi iniziare un nuovo incontro.</string>
     <string name="match_is_now_locked">L\'incontro è ora bloccato</string>

@@ -21,6 +21,8 @@ import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -88,6 +90,23 @@ public class TabletennisModel extends Model
 
     @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {
         return determineServerForNextGame_TT_RL(iGameZB, true);
+    }
+
+    private static List<DoublesServe> m_lDSPassesFromTo = Arrays.asList(DoublesServe.I, DoublesServe.I, DoublesServe.O, DoublesServe.O, DoublesServe.I);
+    @Override public DoublesServe determineDoublesReceiver(DoublesServe serverOfOppositeTeam) {
+        int iTotalPointsScored  = getTotalGamePoints();
+        int nrOfServesPerPlayer = getNrOfServesPerPlayer();
+        int iPointsScoredSinceEveryBodyHadServedSameNrOfTimes = iTotalPointsScored % (nrOfServesPerPlayer * 4 /*nr of players*/);
+
+        int iIntervalZB = 0;
+        while ( iPointsScoredSinceEveryBodyHadServedSameNrOfTimes >= nrOfServesPerPlayer) {
+            iPointsScoredSinceEveryBodyHadServedSameNrOfTimes -= nrOfServesPerPlayer;
+            iIntervalZB++;
+        }
+        DoublesServe dsServer   = m_lDSPassesFromTo.get(iIntervalZB);
+        DoublesServe dsReceiver = m_lDSPassesFromTo.get(iIntervalZB+1);
+
+        return dsReceiver;
     }
 
     /** LR and Handout parameters are totally ignored. Returns character to indicate number of serves left */

@@ -111,7 +111,12 @@ public class DoublesFirstServer extends BaseAlertDialog
                 break;
         }
         if ( bSwapPlayersOrder ) {
-            scoreBoard._swapDoublePlayers(doublesTeam);
+            if ( matchModel.hasStarted() ) {
+                // DoublesFirstReceiver will not be shown, receiving team needs to be swapped to
+                scoreBoard._swapDoublePlayers( new Player[] { doublesTeam, doublesTeam.getOther() }, true);
+            } else {
+                scoreBoard._swapDoublePlayers(doublesTeam);
+            }
         }
     }
 

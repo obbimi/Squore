@@ -129,7 +129,9 @@
     <string name="url_match_continue">Ouvrir le match de l\'URL : \n %1$s-%2$s</string>
 
     <string name="player_names_swapped">Les noms des joueurs du match ont été inversés</string>
-    <string name="double_player_names_swapped">Les noms des joueurs du match de double ont été inversés (équipe %1$s)</string>
+    <string name="teams_have_swapped_sides">Les équipes du match ont été inversés</string> <!-- TODO -->
+
+    <string name="double_player_names_of_team_x_swapped">Les noms des joueurs du match de double ont été inversés (équipe %1$s)</string>
     <string name="match_is_locked__unlock_to_allow_modifications">Ce match est verrouillé (%s). Choisissez \'Déverrouiller\' pour permettre des modifications. Ou débuter un nouveau match</string>
     <string name="match_is_locked">Ce match est verrouillé (%s). Vous pouvez commencer une nouvelle match si vous le souhaitez.</string>
     <string name="match_is_now_locked">Ce match est verrouillé maintenant.</string>

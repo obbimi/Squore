@@ -463,18 +463,16 @@ public abstract class Model implements Serializable
 
     public abstract boolean showChangeSidesMessageInGame(int iGameZB);
 
+    /** e.g. overwritten in Tabletennis */
+    public DoublesServe determineDoublesReceiver(DoublesServe serverOfOppositeTeam) {
+        return DoublesServe.NA;
+    }
+
     void setServerAndSide(Player player, ServeSide side, DoublesServe doublesServe) {
         boolean bChanged = false;
         if ( (player != null) && player.equals(m_pServer) == false ) {
             m_pServer = player;
             bChanged = true;
-            if ( isDoubles() && (doublesServe!=null) ) {
-                this.changeDoubleReceiver(m_in_out.getOther()); // in tabletennis: non server becomes the receiver
-            } else {
-                for(OnServeSideChangeListener l: onServeSideChangeListener) {
-                    l.OnReceiverChange(m_pServer.getOther(), m_in_out_receiver);
-                }
-            }
         }
         if ( (side != null) && side.equals(m_nextServeSide) == false ) {
             m_nextServeSide = side;
@@ -490,11 +488,9 @@ public abstract class Model implements Serializable
             for(OnServeSideChangeListener l: onServeSideChangeListener) {
                 l.OnServeSideChange(m_pServer, m_in_out, m_nextServeSide, isLastPointHandout());
             }
-            if ( m_in_out_receiver == null || m_in_out_receiver.equals(DoublesServe.NA) ) {
-                // set initial value for receiver
-                this.changeDoubleReceiver(DoublesServe.I); // I is correct for tabletennis: first player will initially receive and after that serve
-            }
         }
+        DoublesServe dsReceiver = determineDoublesReceiver(m_in_out);
+        this.changeDoubleReceiver(dsReceiver, bChanged);
     }
 
     /** at start of game it is also the winner of last game */
@@ -518,16 +514,13 @@ public abstract class Model implements Serializable
     public void changeDoubleServe(Player p) {
         setServerAndSide(null, null, m_in_out.getOther());
     }
-    void changeDoubleReceiver(DoublesServe doublesServe) {
-        boolean bChanged = false;
+    /** should be called only from setServerAndSide */
+    void changeDoubleReceiver(DoublesServe doublesServe, boolean bChanged) {
         if ( doublesServe != null ) {
             if ( doublesServe.equals(m_in_out_receiver) == false ) {
                 m_in_out_receiver = doublesServe;
                 bChanged = true;
             }
-        } else {
-            m_in_out_receiver = m_in_out_receiver.getOther();
-            bChanged = true;
         }
         if ( bChanged ) {
             for(OnServeSideChangeListener l: onServeSideChangeListener) {
@@ -3422,12 +3415,16 @@ public abstract class Model implements Serializable
     Player determineServerForNextGame_TT_RL(int iSetZB, boolean bSetServer) {
         Player server      = this.getServer();
         Player serverOfSet = null;
-        for ( int iSetZBTmp=0; iSetZBTmp < ListUtil.size (m_lGameScoreHistory); iSetZBTmp++ ) {
+
+        // determine server by means of looking who served in a previous set (preferably the first set)
+        for ( int iSetZBTmp = 0; iSetZBTmp < ListUtil.size (m_lGameScoreHistory); iSetZBTmp++ ) {
             List<ScoreLine> scoreLines = m_lGameScoreHistory.get(iSetZBTmp);
             if ( ListUtil.isEmpty(scoreLines) ) { break; }
+
             ScoreLine firstScoreLineOfGame = scoreLines.get(0);
             serverOfSet = firstScoreLineOfGame.getServingPlayer();
             if ( serverOfSet == null ) { continue; }
+
             server = ((iSetZB - iSetZBTmp) % 2 == 0) ? serverOfSet : serverOfSet.getOther();
             break;
         }
