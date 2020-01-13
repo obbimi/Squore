@@ -245,7 +245,9 @@ public class Handicap extends BaseAlertDialog {
             case CHANGE_HANDICAP:
                 int id = iGameAboutToStart * 100 + Player.A.ordinal();
                 for( Player p: Model.getPlayers() ) {
-                    String sB = lTexts.get(id + p.ordinal()).getText().toString();
+                    EditText txtOffset = lTexts.get(id + p.ordinal());
+                    if ( txtOffset == null ) { continue; }
+                    String sB = txtOffset.getText().toString();
                     int iOffset = 0;
                     if ( StringUtil.isNotEmpty(sB) ) {
                         try {

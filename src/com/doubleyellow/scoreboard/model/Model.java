@@ -201,7 +201,10 @@ public abstract class Model implements Serializable
             OnServeSideChangeListener serveSideChangeListener = (OnServeSideChangeListener) changedListener;
             onServeSideChangeListener.add(serveSideChangeListener);
             serveSideChangeListener.OnServeSideChange(m_pServer           , m_in_out         , m_nextServeSide, false);
-            serveSideChangeListener.OnReceiverChange (m_pServer.getOther(), m_in_out_receiver);
+            if ( isDoubles() ) {
+                DoublesServe dsReceiver = determineDoublesReceiver(m_in_out, m_nextServeSide);
+                this.changeDoubleReceiver(dsReceiver, true);
+            }
         }
         if ( changedListener instanceof OnSpecialScoreChangeListener ) {
             OnSpecialScoreChangeListener specialScoreChangeListener = (OnSpecialScoreChangeListener) changedListener;
@@ -464,7 +467,7 @@ public abstract class Model implements Serializable
     public abstract boolean showChangeSidesMessageInGame(int iGameZB);
 
     /** e.g. overwritten in Tabletennis */
-    public DoublesServe determineDoublesReceiver(DoublesServe serverOfOppositeTeam) {
+    DoublesServe determineDoublesReceiver(DoublesServe serverOfOppositeTeam, ServeSide serveSide) {
         return DoublesServe.NA;
     }
 
@@ -485,12 +488,15 @@ public abstract class Model implements Serializable
 
         if ( bChanged ) {
             // inform listeners
+            boolean lastPointHandout = isLastPointHandout();
             for(OnServeSideChangeListener l: onServeSideChangeListener) {
-                l.OnServeSideChange(m_pServer, m_in_out, m_nextServeSide, isLastPointHandout());
+                l.OnServeSideChange(m_pServer, m_in_out, m_nextServeSide, lastPointHandout);
             }
         }
-        DoublesServe dsReceiver = determineDoublesReceiver(m_in_out);
-        this.changeDoubleReceiver(dsReceiver, bChanged);
+        if ( isDoubles() ) {
+            DoublesServe dsReceiver = determineDoublesReceiver(m_in_out, m_nextServeSide);
+            this.changeDoubleReceiver(dsReceiver, bChanged);
+        }
     }
 
     /** at start of game it is also the winner of last game */
@@ -545,10 +551,10 @@ public abstract class Model implements Serializable
         DoublesServe new_i_o = m_in_out;
         if ( dsq.equals(DoublesServeSequence.NA) ) {
             m_doubleServeSequence = DoublesServeSequence.NA;
-            new_i_o              = DoublesServe.NA;
+            new_i_o               = DoublesServe.NA;
         } else {
             m_doubleServeSequence = dsq;
-            new_i_o              = dsq.playerToServe(DoublesServe.NA, true, m_iHandoutCountDoubles);
+            new_i_o               = dsq.playerToServe(DoublesServe.NA, true, m_iHandoutCountDoubles);
         }
         setServerAndSide(m_pServer, m_nextServeSide, new_i_o);
         return bChanged;
@@ -1573,6 +1579,15 @@ public abstract class Model implements Serializable
         }
         return saReturn;
     }
+
+    public boolean swapDoublesPlayerNames(Player pl) {
+        String sPlayerNames = this.getName(pl);
+        String[] saNames = sPlayerNames.split("/");
+        if ( saNames.length != 2 ) { return false; }
+        this.setPlayerName(pl, saNames[1] + "/" + saNames[0]);
+        return true;
+    }
+
     public static final String REGEXP_SPLIT_DOUBLES_NAMES = "/\\s*(?![0-9])";
     /** return names of single team in alphabetical order */
     public String[] getDoublePlayerNames(Player p) {
@@ -3111,11 +3126,17 @@ public abstract class Model implements Serializable
 */
 
     @Override public String toString() {
+        String nameA = getName(Player.A);
+        String nameB = getName(Player.B);
+        String sNvsN = "";
+        if ( StringUtil.areAllNonEmpty(nameA, nameB) ) {
+            sNvsN = (isDoubles()?"Doubles":"Singles") + ":" + nameA.substring(0,1) + "-" + nameB.substring(0,1);
+        }
         String sAvsB = getScore(Player.A) + "-" + getScore(Player.B);
         if ( sAvsB.equals("0-0") ) {
             return "GtwM:" + getNrOfGamesToWinMatch() + ", PtwG:" + getNrOfPointsToWinGame();
         }
-        return getGameScores() + " [" + sAvsB + "]";
+        return (sNvsN + " " + getGameScores() + " [" + sAvsB + "]").trim();
     }
 
     //---------------------------------
@@ -3318,6 +3339,9 @@ public abstract class Model implements Serializable
                         setLastPointWasHandout(false);
                         //serveSide = m_nextServeSide.getOther();
                     }
+                } else {
+                    // serve stayed within the same team
+                    setLastPointWasHandout(false);
                 }
             }
         }

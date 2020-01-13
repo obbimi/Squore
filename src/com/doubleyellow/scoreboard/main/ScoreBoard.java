@@ -688,11 +688,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     public void _swapDoublePlayers(Player[] pls, boolean bShowToast) {
         if ( pls == null ) { return; }
         for(Player pl: pls) {
-            String sPlayerNames = matchModel.getName(pl);
-            String[] saNames = sPlayerNames.split("/");
-            if ( saNames.length != 2 ) { continue; }
-            matchModel.setPlayerName(pl, saNames[1] + "/" + saNames[0]);
-
+            matchModel.swapDoublesPlayerNames(pl);
             if ( BTRole.Master.equals(m_blueToothRole) ) {
                 writeMethodToBluetooth(BTMethods.swapDoublePlayers, pl);
             }
@@ -4202,8 +4198,14 @@ touch -t 01030000 LAST.sb
                         m = (Model) extras.getSerializable(sEditMatch);
                     }
 
-                    PreferenceValues.setNumber  (PreferenceKeys.numberOfPointsToWinGame, this, m.getNrOfPointsToWinGame());
-                    PreferenceValues.setNumber  (PreferenceKeys.numberOfGamesToWinMatch, this, m.getNrOfGamesToWinMatch());
+                    int nrOfPointsToWinGame = m.getNrOfPointsToWinGame();
+                    if ( nrOfPointsToWinGame != Model.UNDEFINED_VALUE ) {
+                        PreferenceValues.setNumber  (PreferenceKeys.numberOfPointsToWinGame, this, nrOfPointsToWinGame);
+                    }
+                    int nrOfGamesToWinMatch = m.getNrOfGamesToWinMatch();
+                    if ( nrOfGamesToWinMatch != Model.UNDEFINED_VALUE ) {
+                        PreferenceValues.setNumber(PreferenceKeys.numberOfGamesToWinMatch, this, nrOfGamesToWinMatch);
+                    }
                     PreferenceValues.setNumber  (PreferenceKeys.numberOfServesPerPlayer, this, m.getNrOfServesPerPlayer());
                     PreferenceValues.setBoolean (PreferenceKeys.useHandInHandOutScoring, this, m.isEnglishScoring());
                     PreferenceValues.setBoolean (PreferenceKeys.playAllGames           , this, m.playAllGames());
