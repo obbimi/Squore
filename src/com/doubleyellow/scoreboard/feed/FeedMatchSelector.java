@@ -613,9 +613,16 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 if ( m_feedStatus.equals(FeedStatus.showingPlayers) ) {
                     SimpleELAdapter listAdapter = getListAdapter(null);
                     if ( listAdapter != null ) {
-                        List<String> lChilds = listAdapter.getChilds((String) itemAtPosition);
-                        if ( ListUtil.isNotEmpty(lChilds) ) {
-                            ScoreBoard.dialogWithOkOnly(context, String.format("%s : %d", itemAtPosition, ListUtil.size(lChilds)));
+                        if ( itemAtPosition instanceof String ) {
+                            List<String> lChilds = listAdapter.getChilds((String) itemAtPosition);
+                            if ( ListUtil.isNotEmpty(lChilds) ) {
+                                ScoreBoard.dialogWithOkOnly(context, String.format("%s : %d", itemAtPosition, ListUtil.size(lChilds)));
+                                return true;
+                            }
+                        } else if ( itemAtPosition instanceof JSONObject) {
+                            JSONObject jo = (JSONObject) itemAtPosition;
+                            ScoreBoard.dialogWithOkOnly(context, jo.toString() );
+                            return true;
                         }
                     }
                     return false;
@@ -625,7 +632,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 if (itemAtPosition instanceof JSONObject) {
                     boolean bNamesPopulated = populateModelFromJSON(mDetails, (JSONObject) itemAtPosition, null, PreferenceValues.getFeedPostName(context));
                 } else if (itemAtPosition instanceof String) {
-                    getMatchDetailsFromMatchString(mDetails, (String) itemAtPosition, context, m_feedStatus.isShowingPlayers());
+                    String sText = (String) itemAtPosition;
+                    if ( sText.startsWith("http") ) {
+                        // TODO: copy to clipboard, or open actual source of matches in browser
+                    } else {
+                        getMatchDetailsFromMatchString(mDetails, sText, context, m_feedStatus.isShowingPlayers());
+                    }
                 }
                 if ( mDetails.isDirty() == false ) { return false; }
                 JSONObject joModel = null;
@@ -633,8 +645,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     joModel = mDetails.getJsonObject(null, null);
 
                     // remove keys that have no value if match is not yet started
-                    joModel.remove(JSONKey.when.toString());
-                    joModel.remove(JSONKey.server.toString());
+                    joModel.remove(JSONKey.when     .toString());
+                    joModel.remove(JSONKey.server   .toString());
                     joModel.remove(JSONKey.serveSide.toString());
                     joModel.remove(JSONKey.isHandOut.toString());
 

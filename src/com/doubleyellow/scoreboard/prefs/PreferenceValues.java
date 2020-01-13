@@ -714,7 +714,7 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.swapPlayersOn180DegreesRotationOfDeviceInLandscape, context, iResDefault);
     }
     /** for tabletennis, not squash or racketlon */
-    public static boolean swapPlayersBetweenGames(Context context) {
+    public static boolean swapSidesBetweenGames(Context context) {
         return getBoolean(PreferenceKeys.swapPlayersBetweenGames, context, R.bool.swapPlayersBetweenGames_default);
     }
     /** for tabletennis, not squash or racketlon */
@@ -734,7 +734,7 @@ public class PreferenceValues extends RWValues
     }
 
     /** not for squash, for racketlon (all but squash, except for doubles), for tabletennis in last game */
-    public static Feature swapPlayersHalfwayGame(Context context) {
+    public static Feature swapSidesHalfwayGame(Context context) {
         return getEnum(PreferenceKeys.swapPlayersHalfwayGame, context, Feature.class, R.string.swapPlayersHalfwayGame_default);
     }
     public static DownUp numberOfServiceCountUpOrDown(Context context) {

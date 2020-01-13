@@ -26,6 +26,9 @@ import java.util.Map;
  *
  * http://www.worldbadminton.com/rules/history.htm
  * http://www.worldbadminton.com/ibf_laws_200208.htm
+ *
+ * Doubles:
+ * 11.1.3 The player of the receiving side who served last shall stay in the same service court from where he served last. The reverse pattern shall apply to the receiver's partner.
  */
 public class BadmintonModel extends Model
 {
@@ -56,6 +59,55 @@ public class BadmintonModel extends Model
     //-------------------------------
     // serve side/sequence
     //-------------------------------
+
+  //private Player       m_previousServingTeam   = null;
+  //private DoublesServe m_previousServingPlayer = null;
+  //private ServeSide    m_previousServerSide    = null;
+    @Override void setServerAndSide(Player newServer, ServeSide side, DoublesServe doublesServe) {
+        // serves changes from one team to the other: remember who served from where
+/*
+        Player oldServer = getServer();
+        if ( newServer.equals(oldServer) && isDoubles() ) {
+            //m_previousServingTeam   = null;
+            m_previousServerSide    = null;
+            m_previousServingPlayer = null;
+        } else {
+            //m_previousServingTeam   = oldServer;
+            m_previousServerSide    = getNextServeSide(oldServer);
+            m_previousServingPlayer = getNextDoubleServe(oldServer);
+        }
+*/
+        if ( (doublesServe != null) && doublesServe.equals(DoublesServe.NA) == false ) {
+            // for both teams keep R=O and L=I and in sync
+            if ( doublesServe.ordinal() == side.ordinal() ) {
+                doublesServe = doublesServe.getOther();
+            }
+        }
+
+        super.setServerAndSide(newServer, side, doublesServe);
+    }
+
+    @Override DoublesServe determineDoublesReceiver(DoublesServe serverOfOppositeTeam, ServeSide serveSide) {
+/*
+        if ( m_previousServingPlayer != null ) {
+            if ( serveSide.equals(m_previousServerSide) ) {
+                return
+            }
+        } else {
+            // server remains to same to team same player, just other player will be receiving
+            return getDoubleReceiver().getOther();
+        }
+*/
+        return serverOfOppositeTeam;
+    }
+
+    @Override void setLastPointWasHandout(boolean b) {
+        // handout is 'abused' for doubles to see if we need to auto-swap players to have serving right-to-right or left-left
+        super.setLastPointWasHandout(b);
+        if ( isDoubles() && (b == false) ) {
+            swapDoublesPlayerNames(getServer());
+        }
+    }
 
     public boolean setDoublesServeSequence(DoublesServeSequence dsq) {
         return super._setDoublesServeSequence(dsq);

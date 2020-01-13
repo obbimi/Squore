@@ -606,12 +606,12 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
     public void setServer(DoublesServe dsServer, ServeSide serveSide, boolean bIsHandout, String sDisplayValueOverwrite) {
         m_doublesServe = dsServer;
         if ( DoublesServe.NA.equals(m_doublesServe) == false ) {
-            m_doublesReceiver = DoublesServe.NA;
+            m_doublesReceiver = DoublesServe.NA; // can not be receiver and server at the same time
         }
         m_serveSide    = serveSide;
         m_isHandout    = bIsHandout;
 
-        updateNameButtonColorsForServeReceive(dsServer);
+        updateNameButtonColorsForServeReceive(dsServer, true);
 
         for(int i=0; i < serveButtons.size(); i++) {
             TextView b = serveButtons.get(i);
@@ -634,9 +634,10 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
     public void setReceiver(DoublesServe dsReceiver) {
         m_doublesReceiver = dsReceiver;
         if ( DoublesServe.NA.equals(m_doublesReceiver) == false ) {
-            m_doublesServe = DoublesServe.NA;
+            m_doublesServe = DoublesServe.NA; // can not be receiver and server at the same time
+            //m_serveSide    = null;
         }
-        updateNameButtonColorsForServeReceive(dsReceiver);
+        updateNameButtonColorsForServeReceive(dsReceiver, false);
         for(int i=0; i < serveButtons.size(); i++) {
             TextView b = serveButtons.get(i);
             if ( b == null ) { continue; } // should not be happening
@@ -648,8 +649,8 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         }
     }
 
-    private void updateNameButtonColorsForServeReceive(DoublesServe serverOrReceiver) {
-        boolean bShowDifferentColor = (nameButtons.size() == 2) /*&& (serveButtons.size() == 0)*/;
+    private void updateNameButtonColorsForServeReceive(DoublesServe serverOrReceiver, boolean bShowDifferentColor) {
+        bShowDifferentColor = bShowDifferentColor && (nameButtons.size() == 2); /*&& (serveButtons.size() == 0)*/;
         for(int i=0; i < nameButtons.size(); i++) {
             TextView b = nameButtons.get(i);
             if ( ( i == serverOrReceiver.ordinal() ) && bShowDifferentColor ) {
@@ -663,7 +664,9 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
     }
 
     @Override public String toString() {
-        return nameButtons.get(0).getText() + "/" + nameButtons.get(1).getText() + " : " + (m_doublesServe.ordinal() + 1) + "/" + m_serveSide;
+        return nameButtons.get(0).getText() + "/" + nameButtons.get(1).getText()
+           + " : " + (m_doublesServe   ) + "/" + m_serveSide
+           + " : " + (m_doublesReceiver);
     }
 
 /*

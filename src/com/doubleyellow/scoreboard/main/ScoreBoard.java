@@ -394,6 +394,13 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 // score will go to game-end, and most likely a dialog will be build and show. Prevent any accidental score changes while dialog is about to be shown
                 disableScoreButton(view);
             }
+            if ( dialogManager.dismissIfTwoTimerView() /*cancelTimer()*/ ) {
+                // only possible for inline timer
+                if ( isDialogShowing() ) {
+                    // e.g DoublesFirstServer may auto-show after timer is cancelled
+                    return;
+                }
+            }
             enableScoreButton(player.getOther());
             changeScore(player);
         }
@@ -619,9 +626,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     //-------------------------------------------------------------------------
 
     /** might present a dialog to the user, 'Based-On-Preference'. Returns true if a dialog was presented to the user. */
-    private boolean swapPlayers_BOP() {
-        Feature swapPlayersFeature = PreferenceValues.swapPlayersHalfwayGame(ScoreBoard.this);
-        switch(swapPlayersFeature) {
+    private boolean swapSides_BOP() {
+        Feature swapSidesFeature = PreferenceValues.swapSidesHalfwayGame(ScoreBoard.this);
+        switch(swapSidesFeature) {
             case DoNotUse:
                 return false;
             case Suggest:
@@ -640,7 +647,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         addToDialogStack(changeSides);
     }
 
-    public void swapPlayers(Integer iToastLength, Player pFirst) {
+    public void swapSides(Integer iToastLength, Player pFirst) {
         if ( pFirst == null ) {
             pFirst = IBoard.togglePlayer2ScreenElements();
         } else {
@@ -1429,7 +1436,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     // - from 0 to 2 or back, or
                     // - from 1 to 3 or back
                     Log.i(TAG, "Swap because going from " + iPrev + " to " + i0To4);
-                    swapPlayers(null /*Toast.LENGTH_SHORT*/, null);
+                    swapSides(null /*Toast.LENGTH_SHORT*/, null);
                     m_previousDegrees = i0To4;
                 }
             } else {
@@ -2583,7 +2590,7 @@ touch -t 01030000 LAST.sb
         @Override public void OnGameIsHalfwayChange(int iGameZB, int iScoreA, int iScoreB, Halfway hwStatus) {
             if ( matchModel.showChangeSidesMessageInGame(iGameZB) ) {
                 if ( hwStatus.isHalfway() && hwStatus.changeSidesFor(matchModel.getSport()) ) {
-                    boolean bDialogOpened = swapPlayers_BOP();
+                    boolean bDialogOpened = swapSides_BOP();
                     if ( bDialogOpened == false ) {
                         iBoard.showMessage(getString(R.string.oa_change_sides), 5);
                     }
@@ -2597,7 +2604,7 @@ touch -t 01030000 LAST.sb
                         }
 /*
                         if ( isSquashDiscipline == false ) {
-                            swapPlayers();
+                            swapSides();
                         }
 */
                     }
@@ -2646,7 +2653,7 @@ touch -t 01030000 LAST.sb
             iBoard.updateScore(p, iTotal);
             iBoard.updateScoreHistory(iDelta == 1);
             if ( bInitializingModelListeners == false ) {
-                cancelTimer(); // do not cancel
+                cancelTimer();
             }
             if ( iDelta != 1 ) {
                 updateTimerFloatButton();
@@ -2773,11 +2780,11 @@ touch -t 01030000 LAST.sb
 
             showAppropriateMenuItemInActionBar();
 
-            if ( Brand.changeSidesBetweenGames() && (matchModel.matchHasEnded() == false) && PreferenceValues.swapPlayersBetweenGames(ScoreBoard.this) ) {
+            if ( Brand.changeSidesBetweenGames() && (matchModel.matchHasEnded() == false) && PreferenceValues.swapSidesBetweenGames(ScoreBoard.this) ) {
                 if ( BTRole.Slave.equals(m_blueToothRole) ) {
                     // swap players only if requested by master
                 } else {
-                    swapPlayers(Toast.LENGTH_LONG, null);
+                    swapSides(Toast.LENGTH_LONG, null);
                 }
             }
 
@@ -2814,7 +2821,8 @@ touch -t 01030000 LAST.sb
 
             if ( matchModel.isDoubles() && Brand.supportChooseServeOrReceive() ) {
                 if ( matchModel.matchHasEnded() == false ) {
-                    addToDialogStack(new DoublesFirstServer(ScoreBoard.this, matchModel, ScoreBoard.this));
+                    DoublesFirstServer firstServer = new DoublesFirstServer(ScoreBoard.this, matchModel, ScoreBoard.this);
+                    addToDialogStack(firstServer);
                 }
             }
         }
@@ -3157,19 +3165,19 @@ touch -t 01030000 LAST.sb
     }
 
     /** e.g. called from timerview, before another timer is started */
-    public void cancelTimer() {
-        if ( timer != null ) {
-            Type type = Timer.timerType;
-            timer.cancel();
-            timer = null;
-            Timer.removeTimerView(false, dialogTimerView);
-            dialogTimerView = null;
-            this.triggerEvent(SBEvent.timerCancelled, type);
+    public boolean cancelTimer() {
+        if ( timer == null ) { return false; }
+        Type type = Timer.timerType;
+        timer.cancel();
+        timer = null;
+        Timer.removeTimerView(false, dialogTimerView);
+        dialogTimerView = null;
+        this.triggerEvent(SBEvent.timerCancelled, type);
 
-            if ( BTRole.Master.equals(m_blueToothRole) ) {
-                writeMethodToBluetooth(BTMethods.cancelTimer);
-            }
+        if ( BTRole.Master.equals(m_blueToothRole) ) {
+            writeMethodToBluetooth(BTMethods.cancelTimer);
         }
+        return true;
     }
 
     private void doTimerFeedback(Type viewType, boolean bIsEnd) {
@@ -3439,7 +3447,7 @@ touch -t 01030000 LAST.sb
                 toggleDemoMode(demoMessage);
                 return true;
             case R.id.sb_swap_players:
-                swapPlayers(Toast.LENGTH_LONG, null);
+                swapSides(Toast.LENGTH_LONG, null);
                 return true;
             case R.id.sb_swap_double_players:
                 swapDoublePlayers();
@@ -5644,7 +5652,7 @@ touch -t 01030000 LAST.sb
                         sendMatchToOtherBluetoothDevice(ScoreBoard.this, false);
 
                         // sync 'first player on screen'
-                        //writeMethodToBluetooth(BTMethods.swapPlayers, iBoard.m_firstPlayerOnScreen);
+                        //writeMethodToBluetooth(BTMethods.swapSides, iBoard.m_firstPlayerOnScreen);
                     }
                 })
                 .setNeutralButton(R.string.cmd_cancel, null)
@@ -5929,7 +5937,7 @@ touch -t 01030000 LAST.sb
                 }
                 case swapPlayers: {
                     Player pFirst = Player.valueOf(sMethodNArgs[1]);
-                    swapPlayers(Toast.LENGTH_LONG, pFirst);
+                    swapSides(Toast.LENGTH_LONG, pFirst);
                     break;
                 }
                 case swapDoublePlayers: {
@@ -5980,6 +5988,7 @@ touch -t 01030000 LAST.sb
         undoLastForScorer  (true),
         changeSide         (false),
         swapDoublePlayers  (false),
+        /* TODO: rename to switchSides */
         swapPlayers        (false),
         endGame            (false),
 

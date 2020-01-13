@@ -93,7 +93,7 @@ public class TabletennisModel extends Model
     }
 
     private static List<DoublesServe> m_lDSPassesFromTo = Arrays.asList(DoublesServe.I, DoublesServe.I, DoublesServe.O, DoublesServe.O, DoublesServe.I);
-    @Override public DoublesServe determineDoublesReceiver(DoublesServe serverOfOppositeTeam) {
+    @Override DoublesServe determineDoublesReceiver(DoublesServe serverOfOppositeTeam, ServeSide serveSide) {
         int iTotalPointsScored  = getTotalGamePoints();
         int nrOfServesPerPlayer = getNrOfServesPerPlayer();
         int iPointsScoredSinceEveryBodyHadServedSameNrOfTimes = iTotalPointsScored % (nrOfServesPerPlayer * 4 /*nr of players*/);

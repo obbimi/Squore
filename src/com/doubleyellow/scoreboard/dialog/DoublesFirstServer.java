@@ -25,12 +25,14 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.util.StringUtil;
 
 /**
  * Dialog in which the referee must indicate which of the two players of a team will actually start serving.
  * Introduced for Tabletennis.
  *
  * Subclass used (before first game) to indicate who is first receiver.
+ * This dialog will be presented before the start of each doubles games in tabletennis.
  */
 public class DoublesFirstServer extends BaseAlertDialog
 {
@@ -56,12 +58,20 @@ public class DoublesFirstServer extends BaseAlertDialog
         Player pServer   = matchModel.getServer();
         int    iResourceServeOrReceive = pServer.equals(this.doublesTeam) ? R.string.sb_serve : R.string.sb_receive;
         String sTitle    = context.getString(R.string.sb_which_player_of_team_will_start_to_x, getString(iResourceServeOrReceive));
+        String sMessage  = null;
+        int nrOfFinishedGames = matchModel.getNrOfFinishedGames();
+        if ( nrOfFinishedGames > 0 ) {
+            sMessage = sTitle;
+            sTitle   = StringUtil.capitalize(getGameOrSetString(R.string.oa_game)) + " " + (nrOfFinishedGames+1);
+        }
 
         String   sNames    = matchModel.getName(this.doublesTeam);
         String[] saNames   = sNames.split("/");
-        adb.setTitle         (sTitle)
-         //.setMessage       ("(" + getString(R.string.choose) + ")")
-           .setIcon          (R.drawable.ic_action_refresh)
+        adb.setTitle         (sTitle);
+        if (StringUtil.isNotEmpty(sMessage) ) {
+            adb.setMessage       (sMessage);
+        }
+        adb.setIcon          (R.drawable.ic_action_refresh)
            .setPositiveButton(saNames[0], dialogClickListener)
            .setNegativeButton(saNames[1], dialogClickListener)
            ;

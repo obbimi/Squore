@@ -423,7 +423,7 @@ public class IBoard implements TimerViewContainer
         return sChar.toUpperCase() + (iGameNrZeroBased+1) + ": %s";
     }
 
-    public void updateReceiver(Player player, DoublesServe doublesServe) {
+    public void updateReceiver(Player player, DoublesServe dsReceiver) {
         //if ( Brand.supportChooseServeOrReceive() == false ) { return; } // continue always: also used to 'clean' any characters
         int iServeId = m_player2serverSideId.get(player);
         ServeButton btnSide = ( ServeButton ) findViewById(iServeId);
@@ -441,7 +441,15 @@ public class IBoard implements TimerViewContainer
         PlayersButton pbReceiver = (PlayersButton) findViewById(iNameId);
         View view = findViewById(iNameId);
         if ( view instanceof PlayersButton ) {
-            DoublesServe dsReceiver = doublesServe;
+            if ( Brand.supportChooseServeOrReceive() ) {
+                if ( Brand.isBadminton() && matchModel.isDoubles() ) {
+                    if ( player.equals(IBoard.m_firstPlayerOnScreen) == false ) {
+                        // DoublesServe of server and receiver are always equal (model)
+                        // to always have receiver diagonally of server visually, swap for right side team
+                        dsReceiver = dsReceiver.getOther();
+                    }
+                }
+            }
             pbReceiver.setReceiver(dsReceiver);
         }
     }
@@ -465,8 +473,17 @@ public class IBoard implements TimerViewContainer
         int iNameId = m_player2nameId.get(player);
         View view = findViewById(iNameId);
         if ( view instanceof PlayersButton ) {
-            PlayersButton v = (PlayersButton) view;
-            v.setServer(doublesServe, nextServeSide, bIsHandout, sDisplayValueOverwrite);
+            PlayersButton pbServer = (PlayersButton) view;
+            if ( Brand.supportChooseServeOrReceive() ) {
+                if ( Brand.isBadminton() && matchModel.isDoubles() ) {
+                    if ( player.equals(IBoard.m_firstPlayerOnScreen) == false ) {
+                        // for team on right of scoreboard: do the same, but for visual feedback let it seem as if keep R=I and L=O and in sync
+                        doublesServe = doublesServe.getOther();
+                    }
+                }
+            }
+
+            pbServer.setServer(doublesServe, nextServeSide, bIsHandout, sDisplayValueOverwrite);
         }
         sendMessage(iServeId, sDisplayValueOverwrite);
 /*
