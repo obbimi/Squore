@@ -745,6 +745,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             id2Seq.add(R.id.sb_settings            );
 */
 
+            int iOfficialRulesResId = PreferenceValues.getSportTypeSpecificResId(ScoreBoard.this, R.string.sb_official_rules_Squash);
         startSection(R.string.uc_new   );
             addItem(R.id.sb_enter_singles_match , R.string.sb_new_singles_match    ,         R.drawable.circled_plus          );
             addItem(R.id.sb_select_static_match , R.string.sb_select_static_match  ,         R.drawable.ic_action_view_as_list);
@@ -763,7 +764,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         startSection(R.string.goto_help );
             addItem(R.id.sb_quick_intro         , R.string.Quick_intro             , android.R.drawable.ic_dialog_info         );
             addItem(R.id.sb_help                , R.string.goto_help               , android.R.drawable.ic_menu_help           );
-            addItem(R.id.sb_official_rules      , R.string.sb_official_rules_Squash, android.R.drawable.ic_menu_search         );
+            addItem(R.id.sb_official_rules      , iOfficialRulesResId              , android.R.drawable.ic_menu_search         );
             addItem(R.id.sb_live_score          , R.string.Live_Score              ,         R.drawable.ic_action_web_site     );
             addItem(R.id.sb_feedback            , R.string.cmd_feedback            ,         R.drawable.ic_action_import_export);
         startSection(R.string.pref_Other );
@@ -2085,11 +2086,12 @@ touch -t 01030000 LAST.sb
         }
     }
 
-    /** also invoked if child scoreBoard is activated */
+    /** also invoked if child scoreBoard is activated. Invoked before onDestroy() */
     @Override protected void onStop() {
         onActivityStop_Cast();
         super.onStop();
         persist(false);
+        createNotificationTimer();
     }
 
     /** is called when the Activity is being destroyed either by the system, or by the user, say by hitting back, until the app exits, device rotate. But also if child scoreBoard is created?! */
@@ -2098,14 +2100,21 @@ touch -t 01030000 LAST.sb
         persist(true);
         MatchTabbed.persist(this);
         ArchiveTabbed.persist(this);
-
+/*
         Log.d(TAG, "XActivity.status: " + XActivity.status);
         boolean bChangeOrientation = OrientationStatus.ChangingOrientation.equals(XActivity.status);
-        if ( /*(bChangeOrientation == false) &&*/ (timer != null) && timer.getSecondsLeft() > 5 ) {
+        if ( true ) {
+            createNotificationTimer();
+        }
+*/
+        stopBlueTooth();
+    }
+
+    private void createNotificationTimer() {
+        if ( (timer != null) && timer.getSecondsLeft() > 5 ) {
             m_notificationTimerView = new NotificationTimerView(this);
             timer.addTimerView(false, m_notificationTimerView);
         }
-        stopBlueTooth();
     }
 
     private NotificationTimerView m_notificationTimerView = null;
@@ -5604,11 +5613,20 @@ touch -t 01030000 LAST.sb
         }
         return true;
     }
+
+    /** Invoked from Appeal dialog */
     public void recordAppealAndCall(Player appealingPlayer, Call call) {
         if ( warnModelIsLocked() ) { return; }
         matchModel.recordAppealAndCall(appealingPlayer, call);
 
         writeMethodToBluetooth(BTMethods.recordAppealAndCall, appealingPlayer, call);
+    }
+    /** Invoked from Conduct dialog */
+    public void recordConduct(Player pMisbehaving, Call call, ConductType conductType) {
+        if ( warnModelIsLocked() ) { return; }
+        matchModel.recordConduct(pMisbehaving, call, conductType);
+
+        writeMethodToBluetooth(BTMethods.recordConduct, pMisbehaving, call, conductType);
     }
     public void timestampStartOfGame(GameTiming.ChangedBy changedBy) {
         matchModel.timestampStartOfGame(changedBy);
@@ -5869,7 +5887,7 @@ touch -t 01030000 LAST.sb
         BTMethods btMethod = null;
         try {
             btMethod = BTMethods.valueOf(sMethod);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             // might happen if connection is broken unexpectedly
             // or old version communicating with new version with new method
             //e.printStackTrace();
@@ -5923,8 +5941,15 @@ touch -t 01030000 LAST.sb
                 }
                 case recordAppealAndCall: {
                     Player player = Player.valueOf(sMethodNArgs[1]);
-                    Call call   = Call.valueOf(sMethodNArgs[2]);
+                    Call   call   = Call.valueOf(sMethodNArgs[2]);
                     matchModel.recordAppealAndCall(player, call);
+                    break;
+                }
+                case recordConduct: {
+                    Player      player      = Player.valueOf(sMethodNArgs[1]);
+                    Call        call        = Call.valueOf(sMethodNArgs[2]);
+                    ConductType conductType = ConductType.valueOf(sMethodNArgs[3]);
+                    matchModel.recordConduct(player, call, conductType);
                     break;
                 }
                 case restartScore: {
@@ -5984,6 +6009,7 @@ touch -t 01030000 LAST.sb
 
         changeScore        (true),
         recordAppealAndCall(true),
+        recordConduct      (true),
         undoLast           (true),
         undoLastForScorer  (true),
         changeSide         (false),

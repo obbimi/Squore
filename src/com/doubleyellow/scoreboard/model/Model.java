@@ -592,10 +592,10 @@ public abstract class Model implements Serializable
     // conduct/appeal
     //-------------------------------
 
-    /** invoked from Appeal dialog */
+    /** invoked indirectly from Appeal dialog */
     public abstract void recordAppealAndCall(Player appealing, Call call);
 
-    /** invoked from Conduct dialog */
+    /** invoked indirectly from Conduct dialog */
     public abstract void recordConduct(Player pMisbehaving, Call call, ConductType conductType);
 
     /** Holds conduct types decisions by the referee in sequence */

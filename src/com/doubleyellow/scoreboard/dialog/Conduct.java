@@ -46,7 +46,7 @@ public class Conduct extends BaseAlertDialog
     }
 
     @Override public boolean storeState(Bundle outState) {
-        outState.putSerializable(Player.class.getSimpleName(), appealingPlayer);
+        outState.putSerializable(Player.class.getSimpleName(), missbehavingPlayer);
         return true;
     }
 
@@ -55,12 +55,12 @@ public class Conduct extends BaseAlertDialog
         return true;
     }
 
-    private Player appealingPlayer = null;
+    private Player missbehavingPlayer = null;
     private SelectEnumView<ConductType> sv;
 
     @Override public void show() {
 
-        String sTitle = getString(R.string.oal_misconduct_by, matchModel.getName_no_nbsp(appealingPlayer, false));
+        String sTitle = getString(R.string.oal_misconduct_by, matchModel.getName_no_nbsp(missbehavingPlayer, false));
         if ( isWearable(context) == false ) {
             adb.setTitle(sTitle);
             adb.setIcon (R.drawable.microphone);
@@ -98,8 +98,8 @@ public class Conduct extends BaseAlertDialog
     }
 
 
-    public void init(Player appealingPlayer) {
-        this.appealingPlayer = appealingPlayer;
+    public void init(Player missbehavingPlayer) {
+        this.missbehavingPlayer = missbehavingPlayer;
     }
 
     private DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -119,6 +119,6 @@ public class Conduct extends BaseAlertDialog
             case BTN_CONDUCT_WARNING: call = Call.CW; break;
             case BTN_CONDUCT_GAME   : call = Call.CG; break;
         }
-        matchModel.recordConduct(appealingPlayer, call, conductType);
+        scoreBoard.recordConduct(missbehavingPlayer, call, conductType);
     }
 }

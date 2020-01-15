@@ -28,6 +28,7 @@ import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.util.Log;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 
@@ -145,7 +146,8 @@ public class NotificationTimerView implements TimerView
         // the NotificationChannel class is new and not in the support library
         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O /*26 */ ) {
             NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
-            NotificationChannel chDefault = new NotificationChannel(CHANNEL_ID, ctx.getString(R.string.app_name_short_brand_Squash), NotificationManager.IMPORTANCE_LOW);
+            int iResIdAppName = PreferenceValues.getSportTypeSpecificResId(ctx, R.string.app_name_short_brand_Squash);
+            NotificationChannel chDefault = new NotificationChannel(CHANNEL_ID, ctx.getString(iResIdAppName), NotificationManager.IMPORTANCE_LOW);
             //chDefault.setDescription(getString(R.string.channel_description));
             //chDefault.enableLights(true);
             //chDefault.setLightColor(Color.RED);
