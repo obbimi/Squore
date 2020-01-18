@@ -33,6 +33,7 @@
     <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-Pari - Giocatore alla risposta %2$s sceglie il punteggio vincente</string>
     <string name="sb_who_will_start_to_serve">Chi è al servizio?</string>
     <string name="sb_cmd_toss">Sorteggio</string>
+    <string name="choose_winner_of_toss_or_perform_toss">Scegli il vincitore del sorteggio o eseguilo con l\'app</string> <!-- TODO-->
     <string name="sb_makeThisTheDefault">Imposta come opzione predefinita</string>
     <string name="sb_delete_group_of_matches_confirm">Elimina un gruppo di incontri \'%s\'?</string>
     <string name="sb_cmd_ok_and_skip_timer">OK (salta cronometro)</string>

@@ -43,8 +43,10 @@
         \n- who should serve
         \n- if the player may serve twice (Ⅱ) or just one more time (Ⅰ) before serve switches to the opponent
         \n\nThe serve indication changes automatically after each point entered.
-        \n\nIf required (but normally it is not), you can toggle player by tapping it.
     </string>
+<!--
+    \n\nIf required (but normally it is not), you can toggle player by tapping it.
+-->
     <string name="scv_timer_button_Tabletennis">This button will allow you to start a __timer__.
         \n\nIt will only appear when appropriate
         \n
@@ -96,6 +98,9 @@
 \nJames - Richard
 \nRichard - Steven
 \nSteven - James
+\n- Doubles
+\nAntony/Bernard - Chris/Dave
+\nMa Long/Xu Xin [CHN] - Harimoto/Koki Niwa [JAP]
 ]]></string>
 
     <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Tabletennis">true</bool>

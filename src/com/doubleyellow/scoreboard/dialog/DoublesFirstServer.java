@@ -25,6 +25,7 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.vico.IBoard;
 import com.doubleyellow.util.StringUtil;
 
 /**
@@ -100,20 +101,25 @@ public class DoublesFirstServer extends BaseAlertDialog
                 // in the model both server and receiver are set to 'In' (first player of team)
                 switch (which) {
                     case BTN_PLAYER_0: bSwapPlayersOrder = false;break;
-                    case BTN_PLAYER_1: bSwapPlayersOrder = true;break;
+                    case BTN_PLAYER_1: bSwapPlayersOrder = true ;break;
                 }
                 break;
             case Badminton:
-                // TODO: check the rules
-                if ( m_bForServer ) {
-                    switch (which) {
-                        case BTN_PLAYER_0: bSwapPlayersOrder = false;break;
-                        case BTN_PLAYER_1: bSwapPlayersOrder = true;break;
-                    }
-                } else {
+                // in landscape we try to set
+                // - serving player from team on the left of the scoreboard
+                // - as second if he serves from the right, as first if he serves from the left
+                // similar but swapped for the receiver so that serve is always going from first player of one team to second player of other team to simulate 'diagonal' serving
+                if ( doublesTeam.equals(IBoard.m_firstPlayerOnScreen) ) {
+                    // first server/receiver should be set a second player
                     switch (which) {
                         case BTN_PLAYER_0: bSwapPlayersOrder = true ;break;
                         case BTN_PLAYER_1: bSwapPlayersOrder = false;break;
+                    }
+                } else {
+                    // first server/receiver should be set a first player
+                    switch (which) {
+                        case BTN_PLAYER_0: bSwapPlayersOrder = false;break;
+                        case BTN_PLAYER_1: bSwapPlayersOrder = true ;break;
                     }
                 }
                 break;

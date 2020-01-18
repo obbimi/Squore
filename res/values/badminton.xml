@@ -71,13 +71,16 @@
 \nhttps://web.mst.edu/~ima/rules/Badmintonrules.html
 ]]></string>
 
-    <string name="matchList_default_Badminton"><![CDATA[- Seamaster 2017 ITTF World Tour Platinum, China Open
+    <string name="matchList_default_Badminton"><![CDATA[- China Open
 \nMomota Kento [JAP] - Shi Yuki [CHN]
 \nAxelsen Viktor [DEN] - Chou Tien Chen [TPE]
 \n- Tuesday matches with mates
 \nJames - Richard
 \nRichard - Steven
 \nSteven - James
+\n- Doubles
+\nAntony/Bernard - Chris/Dave
+\nJames/Richard - Steven/Harry
 ]]></string>
 
     <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Badminton">true</bool>

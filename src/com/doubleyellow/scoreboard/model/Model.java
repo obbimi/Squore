@@ -496,6 +496,12 @@ public abstract class Model implements Serializable
         if ( isDoubles() ) {
             DoublesServe dsReceiver = determineDoublesReceiver(m_in_out, m_nextServeSide);
             this.changeDoubleReceiver(dsReceiver, bChanged);
+        } else {
+            if ( bChanged ) {
+                for(OnServeSideChangeListener l: onServeSideChangeListener) {
+                    l.OnReceiverChange(m_pServer.getOther(), DoublesServe.NA);
+                }
+            }
         }
     }
 

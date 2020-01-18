@@ -28,6 +28,7 @@
     <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-partout - Le receveur %2$s choisit le point gagnant</string>
     <string name="sb_who_will_start_to_serve">Qui commence à servir ?</string>
     <string name="sb_cmd_toss">Tirage au sort</string>
+    <string name="choose_winner_of_toss_or_perform_toss">Choisissez le gagnant du tirage au sort ou exécutez avec l\'application</string> <!-- TODO-->
     <string name="sb_makeThisTheDefault">Utiliser par défaut</string>
     <string name="sb_delete_group_of_matches_confirm">Effacer tous les matchs du groupe \'%s\' ?</string>
     <string name="sb_cmd_ok_and_skip_timer">OK (pas de chronomètre)</string>

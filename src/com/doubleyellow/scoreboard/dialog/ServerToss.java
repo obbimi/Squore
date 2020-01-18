@@ -60,7 +60,8 @@ public class ServerToss extends BaseAlertDialog
         adb.setTitle         (R.string.sb_who_will_start_to_serve);
         if ( Brand.supportChooseServeOrReceive() ) {
             adb.setTitle(R.string.sb_cmd_toss);
-            adb.setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive)); // for gotoStage_ChooseServeReceive() we need to set something for the message that is set there to be visible
+            adb.setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive) + "\n"
+                         + getString(R.string.choose_winner_of_toss_or_perform_toss)  ); // for gotoStage_ChooseServeReceive() we need to set something for the message that is set there to be visible
         }
         adb.setIcon          (R.drawable.toss_white)
            .setPositiveButton(sPlayerA            , null /*dialogClickListener*/)

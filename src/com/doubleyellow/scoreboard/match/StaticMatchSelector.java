@@ -512,11 +512,16 @@ public class StaticMatchSelector extends ExpandableMatchSelector
         Log.d(TAG, "Stored as new matchlist: " + sNew);
     }
 
+    private static final String RECENT_MATCH_PREFIX = "* ";
+
     @Override public ExpandableListView.OnChildClickListener getOnChildClickListener() {
         return new ExpandableListView.OnChildClickListener() {
             @Override public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 String sGroup = (String) getListAdapter(null).getGroup(groupPosition);
                 String sText = SimpleELAdapter.getText(v);
+                if ( sText.startsWith(RECENT_MATCH_PREFIX) ) {
+                    sText = sText.substring(RECENT_MATCH_PREFIX.length());
+                }
                 return startMatch(sGroup, sText);
             }
         };
@@ -748,7 +753,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                                 }
                             }
                             if ( (sKeyCurrent != null) && sKeyCurrent.equals(sKey) ) {
-                                sMatch = "* " + sMatch;
+                                sMatch = RECENT_MATCH_PREFIX + sMatch;
                             }
                       //}
                     }

@@ -33,6 +33,7 @@
     <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-All - Receiver %2$s chooses winning score</string>
     <string name="sb_who_will_start_to_serve">Who will start to serve?</string>
     <string name="sb_cmd_toss">Toss</string>
+    <string name="choose_winner_of_toss_or_perform_toss">Choose winner of toss, or toss with the app</string>
     <string name="sb_toss_won_by_x">Toss won by %1$s</string>
     <string name="sb_players_choice">Players choice:</string>
     <string name="sb_makeThisTheDefault">Make default</string>

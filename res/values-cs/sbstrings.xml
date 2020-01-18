@@ -33,6 +33,7 @@
     <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-všichni - Přijímající %2$s volí vítězné skóre</string>
     <string name="sb_who_will_start_to_serve">Kdo začíná podávat?</string>
     <string name="sb_cmd_toss">Losovat</string>
+    <string name="choose_winner_of_toss_or_perform_toss">Choose winner of toss, or toss with the app</string> <!-- TODO-->
     <string name="sb_makeThisTheDefault">Nastavit jako výchozí</string>
     <string name="sb_delete_group_of_matches_confirm">Smazat skupinu zápasů \'%s\'?</string>
     <string name="sb_cmd_ok_and_skip_timer">OK (nestopovat čas)</string>

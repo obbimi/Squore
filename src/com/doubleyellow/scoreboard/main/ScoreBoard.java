@@ -508,11 +508,20 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         changeSide(player);
                     } else {
                         // Who will serve at what score is totally determined by who started serving the first point
+                        if ( (matchModel.hasStarted() == false) && (player.equals(matchModel.getServer()) == false) ) {
+                            changeSide(player);
+                        }
                     }
                 } else if ( Brand.isBadminton() ) {
                     // Who will serve at what score is totally determined by the score: TODO: not in 'old' rules (double only?)
+                    if ( (matchModel.hasStarted() == false) && (player.equals(matchModel.getServer()) == false) ) {
+                        changeSide(player);
+                    }
                 } else if ( Brand.isRacketlon() ) {
                     // Who will serve at what score is totally determined by who started serving the first point
+                    if ( (matchModel.hasStarted() == false) && (player.equals(matchModel.getServer()) == false) ) {
+                        changeSide(player);
+                    }
                 } else {
                     changeSide(player);
                 }
@@ -2832,6 +2841,14 @@ touch -t 01030000 LAST.sb
                 if ( matchModel.matchHasEnded() == false ) {
                     DoublesFirstServer firstServer = new DoublesFirstServer(ScoreBoard.this, matchModel, ScoreBoard.this);
                     addToDialogStack(firstServer);
+
+                    if ( Brand.isBadminton() ) {
+                        // in badminton receiving team may choose first receiver
+                        DoublesFirstReceiver firstReceiver = new DoublesFirstReceiver(ScoreBoard.this, matchModel, ScoreBoard.this);
+                        addToDialogStack(firstReceiver);
+                    } else if ( Brand.isTabletennis() ) {
+                        // in tabletennis receiving player in receiving team depends on serving player in serving team
+                    }
                 }
             }
         }

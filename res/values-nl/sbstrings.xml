@@ -30,6 +30,7 @@
     <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s Gelijk - Ontvanger %2$s kiest winnende score</string>
     <string name="sb_who_will_start_to_serve">Wie begint met serveren?</string>
     <string name="sb_cmd_toss">Tossen</string>
+    <string name="choose_winner_of_toss_or_perform_toss">Selecteer de winnaar van de toss, of toss met de app</string>
     <string name="sb_makeThisTheDefault">Maak default</string>
     <string name="sb_delete_group_of_matches_confirm">Wil je de groep wedstrijden \'%s\' verwijderen?</string>
     <string name="sb_cmd_ok_and_skip_timer">OK (skip timer)</string>
