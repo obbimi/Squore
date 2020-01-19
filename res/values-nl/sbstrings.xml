@@ -77,7 +77,7 @@
     <string name="sb_edit_players">Wijzig speler namen</string>
     <string name="sb_edit_event_or_player">Wijzig event/speler</string>
     <string name="sb_swap_double_players">Verwissel dubbel spelers</string>
-    <string name="sb_swap_players">Verwissel spelers</string>
+    <string name="sb_swap_sides">Verwissel spelers</string>
     <string name="sb_choose_player">Voor welke speler?</string>
     <string name="sb_choose_players">Selecteer spelers</string>
     <string name="sb_choose_team">Voor welk team?</string>

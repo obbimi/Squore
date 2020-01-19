@@ -74,7 +74,7 @@
     <string name="sb_share_matches_summary">Partager le résumé des plusieurs matches</string> <!-- TODO -->
     <string name="sb_edit_players">Changer le nom des joueurs…</string>
     <string name="sb_swap_double_players">Inverser les joueurs du match de double</string>
-    <string name="sb_swap_players">Inverser les joueurs du match</string>
+    <string name="sb_swap_sides">Inverser les joueurs du match</string>
     <string name="sb_choose_player">Pour quel joueur ?</string>
     <string name="sb_choose_players">Quelles joueurs</string> <!-- TODO -->
     <string name="sb_choose_team">Pour quelle équipe ?</string>

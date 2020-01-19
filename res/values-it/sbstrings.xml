@@ -79,7 +79,7 @@
     <string name="sb_share_matches_summary">Condividi riassunto di incontri</string>
     <string name="sb_edit_players">Modifica nomi giocatore</string>
     <string name="sb_swap_double_players">Inverti giocatori di doppio</string>
-    <string name="sb_swap_players">Inverti giocatori</string>
+    <string name="sb_swap_sides">Inverti giocatori</string>
     <string name="sb_choose_player">Per quale giocatore?</string>
     <string name="sb_choose_players">Scegli giocatori</string>
     <string name="sb_choose_team">Per quale squadra?</string>

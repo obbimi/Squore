@@ -91,9 +91,14 @@ http://developer.android.com/guide/practices/screens_support.html
     <integer name="timerPauseBetweenGames_default_Racketlon">180</integer>
 
     <string name="timerPauseBetweenGames_values_default_Squash">90,120</string>
-    <string name="timerPauseBetweenGames_values_default_Badminton">60,120</string> <!-- 16.2.2 -->
+    <string name="timerPauseBetweenGames_values_default_Badminton">120,60</string> <!-- 16.2.2 -->
     <string name="timerPauseBetweenGames_values_default_Tabletennis">60,90</string>
     <string name="timerPauseBetweenGames_values_default_Racketlon">180,300</string>
+
+    <integer name="timerPauseBetweenGames_reminder_at_Squash">15</integer>
+    <integer name="timerPauseBetweenGames_reminder_at_Badminton">20</integer> <!-- seen during BWF match -->
+    <integer name="timerPauseBetweenGames_reminder_at_Tabletennis">15</integer>
+    <integer name="timerPauseBetweenGames_reminder_at_Racketlon">15</integer>
 
     <integer name="timerInjury_default">180</integer>
 

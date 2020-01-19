@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
@@ -128,8 +129,13 @@ public class DoublesFirstServer extends BaseAlertDialog
         }
         if ( bSwapPlayersOrder ) {
             if ( matchModel.hasStarted() ) {
-                // DoublesFirstReceiver will not be shown, receiving team needs to be swapped to
-                scoreBoard._swapDoublePlayers( new Player[] { doublesTeam, doublesTeam.getOther() }, true);
+                if ( Brand.isTabletennis() ) {
+                    // DoublesFirstReceiver will not be shown, receiving team needs to be swapped to
+                    scoreBoard._swapDoublePlayers( new Player[] { doublesTeam, doublesTeam.getOther() }, true);
+                } else {
+                    // badminton: receiver may be choosen in every game
+                    scoreBoard._swapDoublePlayers(doublesTeam);
+                }
             } else {
                 scoreBoard._swapDoublePlayers(doublesTeam);
             }

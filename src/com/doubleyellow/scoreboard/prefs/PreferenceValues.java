@@ -921,6 +921,10 @@ public class PreferenceValues extends RWValues
         if ( key.equals(PreferenceKeys.matchList) ) {
             int iResDefault = getSportTypeSpecificResId(context, R.string.matchList_default_Squash);
             String sMatchListDefault = context.getString(iResDefault);
+            if ( isBrandTesting(context) ) {
+                values = sMatchListDefault;
+            }
+
             if ( bFixedMatchesAreUnChanged && values.equals(sMatchListDefault) == false ) {
                 bFixedMatchesAreUnChanged = false;
             }
@@ -1084,7 +1088,8 @@ public class PreferenceValues extends RWValues
             iMax = 9999;
             setNumber(PreferenceKeys.numberOfPointsToWinGame, context, iMax);
         } else if ( iMax < 1 ) {
-            iMax = context.getResources().getInteger(R.integer.gameEndScore_default_Squash);
+            int iResIdDefault = getSportTypeSpecificResId(context, R.integer.gameEndScore_default_Squash);
+            iMax = context.getResources().getInteger(iResIdDefault);
             setNumber(PreferenceKeys.numberOfPointsToWinGame, context, iMax);
         }
         return iMax;
@@ -1595,7 +1600,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2019-12-31"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-01-20"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

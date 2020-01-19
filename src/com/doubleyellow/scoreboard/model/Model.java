@@ -315,8 +315,8 @@ public abstract class Model implements Serializable
     // Double Serve side/sequence
     //------------------------
     private boolean                             m_bIsDouble             = false;
-    private DoublesServe                        m_in_out/*server*/      = DoublesServe.NA;
-    private DoublesServe                        m_in_out_receiver       = DoublesServe.NA;
+            DoublesServe                        m_in_out/*server*/      = DoublesServe.NA;
+            DoublesServe                        m_in_out_receiver       = DoublesServe.NA;
     // fixed per match in e.g. squash, might vary per set in e.g. racketlon
             DoublesServeSequence                m_doubleServeSequence   = DoublesServeSequence.NA;
 
@@ -3279,36 +3279,6 @@ public abstract class Model implements Serializable
         return sResult;
     }
 
-    void deterimineServeAndSideFromPrevious_SQ_BT(ScoreLine lastValidWithServer, ScoreLine slRemoved) {
-        // TODO: improve for doubles
-
-        if ( lastValidWithServer != null ) {
-            Player    pServer              = lastValidWithServer.getScoringPlayer();
-            ServeSide serversPreferredSide = MapUtil.getMaxKey(m_player2ServeSideCount.get(pServer), ServeSide.R);
-            Player    lastServer           = lastValidWithServer.getServingPlayer();
-            ServeSide lastServeSide        = lastValidWithServer.getServeSide();
-            // savety precaution... should not occur
-            if ( lastServeSide == null ) {
-                lastServeSide = ServeSide.R;
-            }
-            ServeSide nextServeSide        = serversPreferredSide;
-            if ( pServer.equals(lastServer) && (lastServeSide != null) ) {
-                nextServeSide = lastServeSide.getOther();
-            }
-
-            setServerAndSide(pServer, nextServeSide, null);
-        } else if (slRemoved != null ) {
-            Player    removedServingPlayer = slRemoved.getServingPlayer();
-            ServeSide removedServeSide     = slRemoved.getServeSide();
-            if ( removedServingPlayer != null ) {
-                setServerAndSide(removedServingPlayer, null, null);
-            }
-            if ( removedServeSide != null ) {
-                setServerAndSide(null, removedServeSide, null);
-            }
-        }
-        setLastPointWasHandout(false);
-    }
     /** determines AND sets the new value */
     void determineServerAndSide_BM(final Player pScorer) {
 

@@ -27,8 +27,26 @@ import java.util.Map;
  * http://www.worldbadminton.com/rules/history.htm
  * http://www.worldbadminton.com/ibf_laws_200208.htm
  *
+ * TODO:
+ * 7.4 If the score becomes 20-all, the side which gains a two point lead first, shall win that game.
+ * 7.5 If the score becomes 29-all, the side scoring the 30th point shall win that game.
+ *
  * Doubles:
  * 11.1.3 The player of the receiving side who served last shall stay in the same service court from where he served last. The reverse pattern shall apply to the receiver's partner.
+ *
+ * 11.4 Sequence of serving
+ *      In any game, the right to serve shall pass consecutively:
+ * 11.4.1 from the initial server who started the game from the right service court
+ * 11.4.2 to the partner of the initial receiver.
+ * 11.4.3 to the partner of the initial server
+ * 11.4.4 to the initial receiver,
+ * 11.4.5 to the initial server and so on.
+
+ * 11.6 Either player of the winning side may serve first in the next game, and either player of the losing side may receive first in the next game.
+ *
+ * 16.2 Intervals:
+ * 16.2.1 not exceeding 60 seconds during each game when the leading score reaches 11 points; and
+ * 16.2.2 not exceeding 120 seconds between the first and second game, and between the second and third game shall be allowed in all matches.
  */
 public class BadmintonModel extends Model
 {
@@ -118,8 +136,37 @@ public class BadmintonModel extends Model
     }
 
     @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) {
-        super.deterimineServeAndSideFromPrevious_SQ_BT(lastValidWithServer, slRemoved);
-        //super.determineServerAndSide_BM(slRemoved.getServingPlayer());
+        if ( lastValidWithServer != null ) {
+            Player    pServer              = lastValidWithServer.getScoringPlayer();
+            ServeSide serversPreferredSide = MapUtil.getMaxKey(m_player2ServeSideCount.get(pServer), ServeSide.R);
+            Player    lastServer           = lastValidWithServer.getServingPlayer();
+            ServeSide lastServeSide        = lastValidWithServer.getServeSide();
+            // savety precaution... should not occur
+            if ( lastServeSide == null ) {
+                lastServeSide = ServeSide.R;
+            }
+            ServeSide nextServeSide        = serversPreferredSide;
+            if ( pServer.equals(lastServer) && (lastServeSide != null) ) {
+                nextServeSide = lastServeSide.getOther();
+                if ( isDoubles() ) {
+                    m_in_out          = m_in_out.getOther();
+                    m_in_out_receiver = m_in_out_receiver.getOther();
+                    swapDoublesPlayerNames(pServer);
+                }
+            }
+
+            setServerAndSide(pServer, nextServeSide, m_in_out);
+        } else if (slRemoved != null ) {
+            Player    removedServingPlayer = slRemoved.getServingPlayer();
+            ServeSide removedServeSide     = slRemoved.getServeSide();
+            if ( removedServingPlayer != null ) {
+                setServerAndSide(removedServingPlayer, null, null);
+            }
+            if ( removedServeSide != null ) {
+                setServerAndSide(null, removedServeSide, null);
+            }
+        }
+        setLastPointWasHandout(false);
     }
 
     @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {

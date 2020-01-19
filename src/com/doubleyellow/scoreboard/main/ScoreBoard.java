@@ -205,7 +205,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         showBrokenEquipment(player);
                         break;
                     } else {
-                        handleMenuItem(R.id.sb_swap_players);
+                        handleMenuItem(R.id.sb_swap_sides);
                     }
             }
             return false;
@@ -339,7 +339,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             List<Integer> lIds = Arrays.asList(view1.getId(), view2.getId());
             if ( lIds.containsAll(bothPlayerButtons) ) {
                 if ( isLandscape() ) {
-                    handleMenuItem(R.id.sb_swap_players);
+                    handleMenuItem(R.id.sb_swap_sides);
                 } else {
                     handleMenuItem(R.id.dyn_new_match);
                 }
@@ -641,16 +641,16 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             case DoNotUse:
                 return false;
             case Suggest:
-                _confirmSwapPlayers(null);
+                _confirmSwapSides(null);
                 return true;
             case Automatic:
-                handleMenuItem(R.id.sb_swap_players);
+                handleMenuItem(R.id.sb_swap_sides);
                 return false;
         }
         return false;
     }
 
-    private void _confirmSwapPlayers(Player leader) {
+    private void _confirmSwapSides(Player leader) {
         ChangeSides changeSides = new ChangeSides(this, matchModel, this);
         changeSides.init(leader);
         addToDialogStack(changeSides);
@@ -2699,7 +2699,7 @@ touch -t 01030000 LAST.sb
             }
 
             if ( (iDelta == 1) ) {
-                // for table tennis and badminton
+                // for tabletennis and badminton
                 int iEachX = PreferenceValues.autoShowGamePausedDialogAfterXPoints(ScoreBoard.this);
                 if ( matchModel.isTowelingDownScore(iEachX, 11) && (matchModel.isPossibleGameVictory() == false)) {
                     Feature showGamePausedDialog = PreferenceValues.showGamePausedDialog(ScoreBoard.this);
@@ -3472,8 +3472,11 @@ touch -t 01030000 LAST.sb
                 }
                 toggleDemoMode(demoMessage);
                 return true;
-            case R.id.sb_swap_players:
+            case R.id.sb_swap_sides:
                 swapSides(Toast.LENGTH_LONG, null);
+                if ( Brand.isBadminton() && matchModel.isDoubles() ) {
+                    _swapDoublePlayers(Player.values(), false);
+                }
                 return true;
             case R.id.sb_swap_double_players:
                 swapDoublePlayers();
@@ -3947,6 +3950,7 @@ touch -t 01030000 LAST.sb
 
     public void _showTimer(Type timerType, boolean bAutoTriggered) {
         int iInitialSecs = PreferenceValues.getInteger(timerType.getPrefKey(), this, timerType.getDefaultSecs());
+        int iReminderAt  = getResources().getInteger(PreferenceValues.getSportTypeSpecificResId(this, R.integer.timerPauseBetweenGames_reminder_at_Squash));
         boolean bIsResume = (timer != null);
         int iResumeAt = 0;
         if ( bIsResume ) {
@@ -3966,13 +3970,13 @@ touch -t 01030000 LAST.sb
                         iBoard.showToast(R.string.match_has_finished);
                         return;
                     }
-                    timer = new Timer(this, timerType, iInitialSecs, iResumeAt, /*iSeconds/6*/ 15, bAutoTriggered);
+                    timer = new Timer(this, timerType, iInitialSecs, iResumeAt, /*iSeconds/6*/ iReminderAt, bAutoTriggered); // squash: 15, badminton: reminder at 20 seconds
                     break;
                 case SelfInflictedInjury: // fall through
                 case ContributedInjury: // fall through
                 case OpponentInflictedInjury:
                     // injury
-                    timer = new Timer(this, timerType, iInitialSecs, iResumeAt, 15 /*Math.max(15,iInitialSecs/6)*/, bAutoTriggered);
+                    timer = new Timer(this, timerType, iInitialSecs, iResumeAt, iReminderAt /*Math.max(15,iInitialSecs/6)*/, bAutoTriggered);
                     break;
                 case Timeout:  // fall through
                 case TowelingDown:
