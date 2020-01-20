@@ -18,21 +18,19 @@
 package com.doubleyellow.scoreboard.dialog;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Bundle;
 
-import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
-import com.doubleyellow.scoreboard.model.Player;
 
 /**
  * Dialog in which the referee must indicate which of the two players of a team will actually start receiving.
+ *
+ * In tabletennis this is presented for the first game.
+ * For badminton it is presented at the start of each game.
  */
-public class DoublesFirstReceiver extends DoublesFirstServer
+public class DoublesFirstReceiver extends DoublesFirstServerReceiver
 {
     public DoublesFirstReceiver(Context context, Model matchModel, ScoreBoard scoreBoard) {
-        super(context, matchModel, scoreBoard);
-        m_bForServer = false;
+        super(context, matchModel, scoreBoard, false);
     }
 }

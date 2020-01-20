@@ -61,7 +61,7 @@ public class DialogManager {
     }
     /** returns true if dialog was added to the stack, false if the dialog was already on the stack or blocked from adding to the stack */
     public synchronized boolean addToDialogStack(BaseAlertDialog dialog) {
-        if ( IBoard.getBlockToasts() ) { return false; }
+        //if ( IBoard.getBlockToasts() ) { return false; } // commented out 20200108 in order to have DoublesFirstServer not be 'blocked' when DialogTimerView is showing
 
         boolean bAlreadyOnTheStack = false;
         if ( baseDialogs.size() > 0 ) {

@@ -1,3 +1,17 @@
+## 4.29 (jan 2020)
+
+Improved 'toss' functionality at start of a match
+
+- perform a toss
+    - let winner choose 'serve' or 'receive'
+    - let other player choose side/end of table
+
+Improve server/receiver indication for doubles:    
+
+- at start of each game, indicate which player of the serving team serves first 
+- at start of first game, indicate which player of the receiving team receives first 
+
+
 ## 4.28 (dec 2019)
 
 - turn on bluetooth automatically if 'Mirror score (Bluetooth)' is chosen

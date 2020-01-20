@@ -1,3 +1,8 @@
+## 4.29 (jan 2020)
+
+Improvements in bluetooth mirroring
+- ensure conducts are also shown on mirrored device
+
 ## 4.28 (dec 2019)
 
 - allow group matches from a feed by 'court' (if 'court' is specified per match in the feed)

@@ -1,3 +1,13 @@
+## 4.29 (jan 2020)
+
+Improved 'toss' functionality at start of a match
+
+- perform a toss
+    - let winner choose 'serve' or 'receive'
+    - let other player choose side/end of court
+
+Improve server/receiver indication for doubles.
+
 ## 4.28 (dec 2019)
 
 - turn on bluetooth automatically if 'Mirror score (Bluetooth)' is chosen
