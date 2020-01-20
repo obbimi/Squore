@@ -30,7 +30,7 @@ cat <<!
 else
     relapk=$(find . -name '*-release.apk')
     if [[ -e ${relapk} ]]; then
-        changedFiles="$(find . -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml)' | grep -v '.idea/')"
+        changedFiles="$(find . -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml|md)' | grep -v '.idea/')"
     else
         changedFiles="No apk to compare with"
     fi

@@ -8,6 +8,10 @@ Improved 'toss' functionality at start of a match
 
 Improve server/receiver indication for doubles.
 
+- at start of each game, indicate which player 
+    - of the serving team serves first 
+    - of the receiving team receives first 
+
 ## 4.28 (dec 2019)
 
 - turn on bluetooth automatically if 'Mirror score (Bluetooth)' is chosen
