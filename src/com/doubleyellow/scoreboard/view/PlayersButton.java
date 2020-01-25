@@ -676,9 +676,10 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
     }
 
     @Override public String toString() {
-        return nameButtons.get(0).getText() + "/" + nameButtons.get(1).getText()
-           + " : " + (m_doublesServe   ) + "/" + m_serveSide
-           + " : " + (m_doublesReceiver);
+        return (ListUtil.size(nameButtons)>=1?("/" + nameButtons.get(0).getText()):"")
+             + (ListUtil.size(nameButtons)>=2?("/" + nameButtons.get(1).getText()):"")
+             + " : " + (m_doublesServe   ) + "/" + m_serveSide
+             + " : " + (m_doublesReceiver);
     }
 
 /*
