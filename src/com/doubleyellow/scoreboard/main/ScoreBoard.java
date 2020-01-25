@@ -2424,8 +2424,12 @@ touch -t 01030000 LAST.sb
             }
         }
         if ( newMatchButton == null ) {
-            final float fMargin = isPortrait()?0.25f:0.25f; // TODO: simply within score button of player B?
-            newMatchButton = getFloatingActionButton(iActionId, fMargin, iDrawableId, colorKey, Direction.SE);
+            float fMargin = isPortrait()?0.25f:0.25f; // TODO: simply within score button of player B?
+            Direction se = Direction.SE;
+            if ( ViewUtil.isWearable(this) ) {
+                fMargin = 1.40f; // correct for using boxedEdges=all in percentage.xml (1.5 to big for square screen)
+            }
+            newMatchButton = getFloatingActionButton(iActionId, fMargin, iDrawableId, colorKey, se);
         } else {
             newMatchButton.setActionId(iActionId);
             newMatchButton.setDrawable(this.getResources().getDrawable(iDrawableId), getFloatingButtonSizePx(this));
@@ -2457,11 +2461,15 @@ touch -t 01030000 LAST.sb
     // -----------------float utility          ------------
     // ----------------------------------------------------
     private FloatingActionButton getFloatingActionButton(int iActionId, float fMargin, int iDrawable, ColorPrefs.ColorTarget colorTarget) {
-        return getFloatingActionButton(iActionId, fMargin, iDrawable, colorTarget, isPortrait() ? Direction.E : Direction.S);
+        Direction direction = isPortrait() ? Direction.E : Direction.S;
+        if ( ViewUtil.isWearable(this) ) {
+            direction = Direction.S;
+        }
+        return getFloatingActionButton(iActionId, fMargin, iDrawable, colorTarget, direction);
     }
     private FloatingActionButton getFloatingActionButton(int iActionId, float fMargin, int iDrawable, ColorPrefs.ColorTarget colorTarget, Direction direction) {
         int buttonSizePx = getFloatingButtonSizePx(this);
-        int iMargin = (int) fMargin * buttonSizePx; // 64=floatingActionButtonSize
+        int iMargin = (int) (fMargin * buttonSizePx); // 64=floatingActionButtonSize
 
         int iMarginLeft   = 0;
         int iMarginTop    = 0;
@@ -4068,11 +4076,13 @@ touch -t 01030000 LAST.sb
             SideToss sideToss = new SideToss(this, matchModel, this);
             addToDialogStack(sideToss);
 
-            DoublesFirstServer firstServer = new DoublesFirstServer(this, matchModel, this);
-            addToDialogStack(firstServer);
+            if ( matchModel.isDoubles() ) {
+                DoublesFirstServer firstServer = new DoublesFirstServer(this, matchModel, this);
+                addToDialogStack(firstServer);
 
-            DoublesFirstReceiver firstReceiver = new DoublesFirstReceiver(this, matchModel, this);
-            addToDialogStack(firstReceiver);
+                DoublesFirstReceiver firstReceiver = new DoublesFirstReceiver(this, matchModel, this);
+                addToDialogStack(firstReceiver);
+            }
         }
 
         return true;
@@ -4728,11 +4738,13 @@ touch -t 01030000 LAST.sb
         addToDialogStack(postMatchResult);
     }
 
+/*
     public void showOnlineSheetAvailableChoice(String sURL) {
         OnlineSheetAvailableChoice sheetAvailableChoice = new OnlineSheetAvailableChoice(this, matchModel, this);
         sheetAvailableChoice.init(sURL);
         addToDialogStack(sheetAvailableChoice);
     }
+*/
     /** Delete 'Based-On-Preference' */
     private void deleteFromMyList_BOP() {
         if ( MatchTabbed.SelectTab.Mine.equals(MatchTabbed.getDefaultTab() ) == false ) {

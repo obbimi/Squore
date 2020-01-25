@@ -587,16 +587,24 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         for(TextView b: serveButtons) {
             b.setTextColor(this.textColorServer);
         }
-        setServer(m_doublesServe, m_serveSide, m_isHandout, m_sServerDisplayValueOverwrite);
+        setServerOrReceiver();
     }
 
     private int bgColorServer = Color.BLACK;
     public void setBackgroundColorServer(int color) {
         this.bgColorServer = color;
-        for(TextView b: serveButtons) {
+        for (TextView b : serveButtons) {
             ColorUtil.setBackground(b, this.bgColorServer);
         }
-        setServer(m_doublesServe, m_serveSide, m_isHandout, m_sServerDisplayValueOverwrite);
+        setServerOrReceiver();
+    }
+
+    private void setServerOrReceiver() {
+        if (DoublesServe.NA.equals(m_doublesServe) == false) {
+            setServer(m_doublesServe, m_serveSide, m_isHandout, m_sServerDisplayValueOverwrite);
+        } else if (DoublesServe.NA.equals(m_doublesReceiver) == false) {
+            setReceiver(m_doublesReceiver);
+        }
     }
 
     private DoublesServe m_doublesServe = DoublesServe.NA;
@@ -625,6 +633,10 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
                     sText = serveSide.toString() + (bIsHandout ? "?" : "");
                 }
             }
+            String sOldText = b.getText().toString();
+            if ( StringUtil.isNotEmpty(sOldText) && (sOldText.equals(sText) == false) ) {
+                //Log.d(TAG, "Overwriting previous char " + sOldText);
+            }
             b.setText(sText);
         }
     }
@@ -638,7 +650,7 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
             //m_serveSide    = null;
         }
         updateNameButtonColorsForServeReceive(dsReceiver, false);
-        for(int i=0; i < serveButtons.size(); i++) {
+        for ( int i=0; i < serveButtons.size(); i++ ) {
             TextView b = serveButtons.get(i);
             if ( b == null ) { continue; } // should not be happening
             String sText = " ";

@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.doubleyellow.android.task.URLTask;
 import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.android.util.ContentUtil;
+import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.OnlineSheetAvailableChoice;
 import com.doubleyellow.scoreboard.main.DialogManager;
@@ -180,18 +181,22 @@ public class MatchModelPoster implements ContentReceiver
             }
             return;
         }
-        if ( m_context instanceof ScoreBoard) {
-            // triggered from match in scoreboard
-            ScoreBoard sb = (ScoreBoard) m_context;
-            sb.showOnlineSheetAvailableChoice(sShowURL);
-        } else {
-            // triggered from stored (old) match
-            OnlineSheetAvailableChoice sheetAvailableChoice = new OnlineSheetAvailableChoice(m_context, m_model, null);
-            sheetAvailableChoice.init(sShowURL);
-            //sheetAvailableChoice.show();
-            DialogManager dialogManager = DialogManager.getInstance();
-            dialogManager.addToDialogStack(sheetAvailableChoice);
+
+        if ( ViewUtil.isWearable(m_context) ) {
+            // OnlineSheetAvailableChoice has not many actions well supported on wearables
+            return;
         }
+
+        ScoreBoard sb = null;
+        if ( m_context instanceof ScoreBoard ) {
+            // triggered from match in scoreboard
+            sb = (ScoreBoard) m_context;
+        }
+        // triggered from stored (old) match
+        OnlineSheetAvailableChoice sheetAvailableChoice = new OnlineSheetAvailableChoice(m_context, m_model, sb);
+        sheetAvailableChoice.init(sShowURL);
+        DialogManager dialogManager = DialogManager.getInstance();
+        dialogManager.addToDialogStack(sheetAvailableChoice);
     }
 
     private boolean autoShareTriggeredBeforeEndOfMatch(Model matchModel) {

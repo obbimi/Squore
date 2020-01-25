@@ -19,6 +19,7 @@ package com.doubleyellow.scoreboard.dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -135,6 +136,7 @@ public class AdjustScore extends BaseAlertDialog {
                 txtPoints.setNextFocusDownId(nextFocusId);
                 txtPoints.setId(id);
                 txtPoints.setInputType(/*InputType.TYPE_CLASS_TEXT |*/ InputType.TYPE_CLASS_NUMBER);
+                txtPoints.setFilters(new InputFilter[] { new InputFilter.LengthFilter(9) }); // ensure we stay below Integer.MAX_VALUE =~ 2*10^9
                 txtPoints.setLayoutParams(layoutParams);
                 txtPoints.setSingleLine();
                 txtPoints.setMinWidth(60);
@@ -217,6 +219,7 @@ public class AdjustScore extends BaseAlertDialog {
                         if (  ( StringUtil.isEmpty (scoreFocus) || scoreFocus.equals("0"))
                                 && StringUtil.isNotEmpty(scoreOther)
                                 && StringUtil.isInteger (scoreOther)
+                                && StringUtil.size      (scoreOther) < 10
                         ) {
                             int iScoreOther = Integer.parseInt(scoreOther);
 

@@ -280,7 +280,10 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.tieBreakFormat, context, TieBreakFormat.class, TieBreakFormat.TwoClearPoints);
     }
     public static NewMatchLayout getNewMatchLayout(Context context) {
-        return getEnum(PreferenceKeys.newMatchLayout, context, NewMatchLayout.class, NewMatchLayout.AllFields);
+        if ( ViewUtil.isWearable(context) ) {
+            //return NewMatchLayout.Simple; // font to big
+        }
+        return getEnum(PreferenceKeys.newMatchLayout, context, NewMatchLayout.class, R.string.newMatchLayout_default);
     }
     public static GameScoresAppearance getGameScoresAppearance(Context context) {
         if ( Brand.isRacketlon() ) {
@@ -1600,7 +1603,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-01-20"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-01-25"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
@@ -1621,6 +1624,10 @@ public class PreferenceValues extends RWValues
                     // to allow adb monkey test it without the showcase/quickintro coming into the way
                     return StartupAction.None;
                 }
+                if ( ViewUtil.isWearable(context) ) {
+                    return StartupAction.None;
+                }
+
                 return StartupAction.QuickIntro;
 
             }
