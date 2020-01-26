@@ -95,7 +95,7 @@ public class BadmintonModel extends Model
             m_previousServingPlayer = getNextDoubleServe(oldServer);
         }
 */
-        if ( (doublesServe != null) && doublesServe.equals(DoublesServe.NA) == false ) {
+        if ( (doublesServe != null) && (doublesServe.equals(DoublesServe.NA) == false) && (side != null) ) {
             // for both teams keep R=O and L=I and in sync
             if ( doublesServe.ordinal() == side.ordinal() ) {
                 doublesServe = doublesServe.getOther();
@@ -136,37 +136,41 @@ public class BadmintonModel extends Model
     }
 
     @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) {
-        if ( lastValidWithServer != null ) {
-            Player    pServer              = lastValidWithServer.getScoringPlayer();
-            ServeSide serversPreferredSide = MapUtil.getMaxKey(m_player2ServeSideCount.get(pServer), ServeSide.R);
-            Player    lastServer           = lastValidWithServer.getServingPlayer();
-            ServeSide lastServeSide        = lastValidWithServer.getServeSide();
-            // savety precaution... should not occur
-            if ( lastServeSide == null ) {
-                lastServeSide = ServeSide.R;
-            }
-            ServeSide nextServeSide        = serversPreferredSide;
-            if ( pServer.equals(lastServer) && (lastServeSide != null) ) {
-                nextServeSide = lastServeSide.getOther();
-                if ( isDoubles() ) {
-                    m_in_out          = m_in_out.getOther();
-                    m_in_out_receiver = m_in_out_receiver.getOther();
-                    swapDoublesPlayerNames(pServer);
+        Player pNewServer = null;
+
+        if (slRemoved != null ) {
+                   pNewServer = slRemoved.getServingPlayer();
+            Player pScorer    = slRemoved.getScoringPlayer();
+            if ( isDoubles() ) {
+                // assume going back to 0-0
+                m_in_out          = m_in_out         .getOther();
+                m_in_out_receiver = m_in_out_receiver.getOther();
+                if ( pNewServer.equals(pScorer) ) {
+                    swapDoublesPlayerNames(pNewServer);
+                } else {
+                    // point entered was a handout, no swapping of players happened, so no swapping for undo either
                 }
             }
-
-            setServerAndSide(pServer, nextServeSide, m_in_out);
-        } else if (slRemoved != null ) {
-            Player    removedServingPlayer = slRemoved.getServingPlayer();
-            ServeSide removedServeSide     = slRemoved.getServeSide();
-            if ( removedServingPlayer != null ) {
-                setServerAndSide(removedServingPlayer, null, null);
-            }
-            if ( removedServeSide != null ) {
-                setServerAndSide(null, removedServeSide, null);
+        } else if ( lastValidWithServer != null ) {
+                   pNewServer = lastValidWithServer.getScoringPlayer();
+            Player lastServer = lastValidWithServer.getServingPlayer();
+            if ( isDoubles() ) {
+                m_in_out          = m_in_out         .getOther();
+                m_in_out_receiver = m_in_out_receiver.getOther();
+                if ( lastServer.equals(pNewServer) ) {
+                    // not a 'handout', players where swapped, swap them back
+                    swapDoublesPlayerNames(pNewServer);
+                } else {
+                    // point entered was a handout, no swapping of players happened, so no swapping for undo either
+                }
             }
         }
-        setLastPointWasHandout(false);
+
+        if ( pNewServer != null ) {
+            ServeSide nextServeSide  = ServeSide.values()[getScore(pNewServer) % 2];
+            setServerAndSide(pNewServer, nextServeSide, m_in_out);
+        }
+        //setLastPointWasHandout(false);
     }
 
     @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {
