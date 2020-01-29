@@ -49,7 +49,7 @@ public class BluetoothControlService
     private       Handler          mHandler;
     private       AcceptThread     mAcceptThread;
     private       ConnectThread    mConnectThread;
-    private       ConnectedThread  mConnectedThread;
+    private       ConnectedThread  mConnectedThread; // to write data onto
     private       BTState          mState = BTState.NONE;
 
     /**
@@ -191,21 +191,21 @@ public class BluetoothControlService
     }
 
     /**
-     * Write to the ConnectedThread in an not-synchronized manner
+     * Write to the ConnectedThread (in a synchronized manner!)
      */
-    public void write(String s) {
+    public synchronized void write(String s) {
         write(s.getBytes());
     }
-    public void write(byte[] out) {
+    private void write(byte[] out) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
-        synchronized (this) {
+        synchronized (this ) {
             if (mState.equals(BTState.CONNECTED)==false) return;
             r = mConnectedThread;
+
+            r.write(out);
         }
-        // Perform the write unsynchronized
-        r.write(out);
     }
 
     /**
@@ -386,8 +386,8 @@ public class BluetoothControlService
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
                     // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(BTMessage.READ.ordinal(), bytes, -1, buffer)
-                            .sendToTarget();
+                    Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), bytes, -1, buffer);
+                    message.sendToTarget();
                 } catch (IOException e) {
                     connectionLost();
                     BluetoothControlService.this.breakConnectionAndListenForNew();
@@ -406,8 +406,8 @@ public class BluetoothControlService
                 mmOutStream.write(buffer);
                 mmOutStream.flush();
                 // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(BTMessage.WRITE.ordinal(), buffer)
-                        .sendToTarget();
+                Message message = mHandler.obtainMessage(BTMessage.WRITE.ordinal(), buffer);
+                message.sendToTarget();
             } catch (IOException e) {
             }
         }

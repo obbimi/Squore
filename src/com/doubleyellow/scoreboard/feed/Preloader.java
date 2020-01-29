@@ -210,6 +210,8 @@ public class Preloader extends AsyncTask implements ContentReceiver
             case LoginToNetworkFirst:
             case NoCacheAndNetwork:
             case TimeoutError:
+                doNext(1);
+                break;
             case SSLHandshakeError: {
                     if ( PreferenceValues.allowTrustAllCertificatesAndHosts(m_context) ) {
                         try {

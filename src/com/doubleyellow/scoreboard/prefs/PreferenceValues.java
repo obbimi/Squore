@@ -26,6 +26,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.*;
@@ -1121,9 +1123,15 @@ public class PreferenceValues extends RWValues
     public static String getFeedsFeedURL(Context context) {
         return getString(PreferenceKeys.FeedFeedsURL, R.string.feedFeedsURL_default, context);
     }
-    public static int downloadImage(Context context, Object imageViewOrPreference, String sCountryCode) {
-        return downloadImage(context, imageViewOrPreference, sCountryCode, 1);
+
+    public static boolean hasInternetConnection(Context context) {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        return isConnected;
     }
+
     public static String getFlagURL(String sCountryCode, Context context) {
         String sFlagURL              = PreferenceValues.getFlagsURL(context);
         if ( StringUtil.isEmpty(sFlagURL) ) {
@@ -1148,15 +1156,30 @@ public class PreferenceValues extends RWValues
         }
         return sURL;
     }
+    public static File getFlagCacheName(String sCountryCode, Context ctx) {
+        String sURL      = getFlagURL(sCountryCode, ctx);
+        String sFileName = "flag." + sCountryCode + "." + sURL.replaceAll(".*[\\./]", "") + ".png";
+        return new File(ctx.getCacheDir(), sFileName);
+    }
+    public static int downloadImage(Context context, Object imageViewOrPreference, String sCountryCode) {
+        return downloadImage(context, imageViewOrPreference, sCountryCode, 1);
+    }
+    /** called e.g. by preloader */
     public static int downloadImage(Context context, Object imageViewOrPreference, String sCountryCode, int iMaxCacheAgeMultiplier) {
         String sURL                  = getFlagURL(sCountryCode, context);
         if ( StringUtil.isEmpty(sURL) ) {
             return 0;
         }
 
+        File   fCache                = getFlagCacheName(sCountryCode, context);
+        if (  (fCache.exists()                == false)
+           && (hasInternetConnection(context) == false)) {
+            // do not even attempt a download
+            Log.d(TAG, "Not even attempting downloading for " + sCountryCode);
+            return 0;
+        }
+
         int    iFlagMaxCacheAgeInMin = PreferenceValues.getMaxCacheAgeFlags(context) * iMaxCacheAgeMultiplier;
-        String sCacheName            = "flag." + sCountryCode + "." + sURL.replaceAll(".*[\\./]", "") + ".png";
-        File   fCache                = new File(context.getCacheDir(), sCacheName);
         DownloadImageTask imageTask = null;
         if ( imageViewOrPreference != null ) {
             // display it after download
@@ -1603,7 +1626,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-01-25"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-01-30"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

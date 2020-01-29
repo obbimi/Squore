@@ -36,6 +36,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
+import android.util.Base64;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.*;
@@ -57,10 +58,11 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.*;
 import com.doubleyellow.scoreboard.archive.ArchiveTabbed;
 import com.doubleyellow.scoreboard.archive.PreviousMatchSelector;
-import com.doubleyellow.scoreboard.bluetooth.BTMessage;
+import com.doubleyellow.scoreboard.bluetooth.BTMethods;
 import com.doubleyellow.scoreboard.bluetooth.BTRole;
 import com.doubleyellow.scoreboard.bluetooth.BTState;
 import com.doubleyellow.scoreboard.bluetooth.BluetoothControlService;
+import com.doubleyellow.scoreboard.bluetooth.BluetoothHandler;
 import com.doubleyellow.scoreboard.bluetooth.SelectDeviceDialog;
 import com.doubleyellow.scoreboard.cast.EndOfGameView;
 import com.doubleyellow.scoreboard.cast.framework.CastHelper;
@@ -3590,7 +3592,7 @@ touch -t 01030000 LAST.sb
                 shareMatchSummary(this, matchModel, "com.twitter.android", null);
                 return false;
             case R.id.sb_share_matches_summary:
-                selectMatchesForSummary(this);
+                selectMatchesForSummary();
                 return false;
             case R.id.sb_share_match_summary:
                 shareMatchSummary(this, matchModel, null, null);
@@ -4362,7 +4364,7 @@ touch -t 01030000 LAST.sb
         ResultSender resultSender = new ResultSender();
         resultSender.send(context, matchModel, sPackage, sDefaultRecipient);
     }
-    private void selectMatchesForSummary(Context context) {
+    private void selectMatchesForSummary() {
         handleMenuItem(R.id.sb_stored_matches, ArchiveTabbed.SelectTab.PreviousMultiSelect);
     }
 
@@ -5115,8 +5117,8 @@ touch -t 01030000 LAST.sb
 
     @Override public void onNdefPushComplete(NfcEvent nfcEvent) {
         // A handler is needed to send messages to the activity when this callback occurs, because it happens from a binder thread
-        if ( mHandler == null ) {
-            mHandler = new Handler() {
+        if ( mNdefHandler == null ) {
+            mNdefHandler = new Handler() {
                 @Override public void handleMessage(Message msg) {
                     switch (msg.what) {
                         case MESSAGE_SENT:
@@ -5126,10 +5128,10 @@ touch -t 01030000 LAST.sb
                 }
             };
         }
-        mHandler.obtainMessage(MESSAGE_SENT).sendToTarget();
+        mNdefHandler.obtainMessage(MESSAGE_SENT).sendToTarget();
     }
     /** This handler receives a message from onNdefPushComplete */
-    private static Handler mHandler = null;
+    private static Handler mNdefHandler = null;
 
     private static boolean m_bURLReceived = false;
     private void onResumeURL() {
@@ -5688,7 +5690,7 @@ touch -t 01030000 LAST.sb
         }
     }
 
-    private void pullOrPushMatchOverBluetooth(String sDeviceName) {
+    public void pullOrPushMatchOverBluetooth(String sDeviceName) {
         AlertDialog.Builder cfpop = getAlertDialogBuilder(this);
         cfpop.setTitle(R.string.bt_pull_or_push)
                 .setMessage(getString(R.string.bt_pull_in_match_from_device_x_or_push_to, sDeviceName ))
@@ -5713,66 +5715,7 @@ touch -t 01030000 LAST.sb
     /**
      * The Handler that gets information back from the BluetoothControlService
      */
-    private final Handler mBluetoothHandler = new BluetoothHandler();
-    private class BluetoothHandler extends Handler {
-        @Override public void handleMessage(Message msg) {
-            BTMessage btMessage = BTMessage.values()[msg.what];
-            switch (btMessage) {
-                case STATE_CHANGE:
-                    BTState btState = BTState.values()[msg.arg1] ;
-                    storeBTDeviceConnectedTo(msg.obj);
-                    switch (btState) {
-                        case CONNECTED:
-                            if ( BTRole.Master.equals(m_blueToothRole) ) {
-                                // show dialog to request to pull in match from other device, or push match on this device to other
-                                pullOrPushMatchOverBluetooth(m_btDeviceOther.getName());
-                            } else {
-                                setBluetoothRole(BTRole.Slave, btState);
-                            }
-                            setBluetoothIconVisibility(View.VISIBLE);
-                            break;
-                        case CONNECTING:
-                            break;
-                        case LISTEN:
-                        case NONE:
-                            setBluetoothRole(BTRole.Equal, btState);
-                            setBluetoothIconVisibility(View.INVISIBLE);
-                            break;
-                    }
-                    break;
-                case WRITE:
-                    byte[] writeBuf = (byte[]) msg.obj;
-                    String writeMessage = new String(writeBuf);
-                    Log.d(TAG, "writeMessage: " + writeMessage);
-                    if ( BTRole.Slave.equals(m_blueToothRole) && writeMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + ").*") == false ) {
-                        // become master
-                        setBluetoothRole(BTRole.Master, writeMessage.trim());
-                    }
-                    break;
-                case READ:
-                    byte[] readBuf = (byte[]) msg.obj;
-                    String readMessage = new String(readBuf, 0, msg.arg1); // msg.arg1 contains number of bytes actually having valid info
-                    Log.d(TAG, "readMessage: (#" + msg.arg1 + "):" + readMessage);
-                    if ( BTRole.Master.equals(m_blueToothRole) && readMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + ").*") == false ) {
-                        // become slave
-                        setBluetoothRole(BTRole.Slave, readMessage.trim());
-                    }
-
-                    interpretReceivedMessage(readMessage);
-                    break;
-                case INFO:
-                    storeBTDeviceConnectedTo(msg.obj); // normally correct device is already stored in 'case STATE_CHANGE'
-                    String sMsg = ScoreBoard.this.getString(msg.arg1, m_sDeviceNameLastConnected, Brand.getShortName(ScoreBoard.this));
-                    if ( msg.arg2 != 0 ) {
-                        String sInfo = ScoreBoard.this.getString(msg.arg2, m_sDeviceNameLastConnected, Brand.getShortName(ScoreBoard.this));
-                        ScoreBoard.dialogWithOkOnly(ScoreBoard.this, sMsg, sInfo, true);
-                    } else {
-                        Toast.makeText(ScoreBoard.this, sMsg, Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-            }
-        }
-    }
+    private final BluetoothHandler mBluetoothHandler = new BluetoothHandler(this);
 
     public void setBluetoothIconVisibility(int visibility) {
         if ( iBoard == null ) {
@@ -5780,16 +5723,6 @@ touch -t 01030000 LAST.sb
         }
 
         iBoard.setBluetoothIconVisibility(visibility);
-    }
-
-    private void storeBTDeviceConnectedTo(Object o) {
-        if ( o instanceof BluetoothDevice) {
-            m_btDeviceOther = (BluetoothDevice) o;
-            m_sDeviceNameLastConnected = m_btDeviceOther.getName();
-            PreferenceValues.setString(PreferenceKeys.lastConnectedBluetoothDevice, ScoreBoard.this, m_btDeviceOther.getName());
-        } else {
-            m_btDeviceOther = null;
-        }
     }
 
     private static Map<PreferenceKeys, String> mBtPrefSlaveSettings = new HashMap<>();
@@ -5802,7 +5735,7 @@ touch -t 01030000 LAST.sb
         mBtPrefSlaveSettings.put(PreferenceKeys.useVibrationNotificationInTimer, String.valueOf(false            ));
         mBtPrefSlaveSettings.put(PreferenceKeys.timerViewType                  , String.valueOf(ViewType.Inline  ));
     }
-    private void setBluetoothRole(BTRole role, Object oReason) {
+    public void setBluetoothRole(BTRole role, Object oReason) {
         switch (role) {
             case Slave:
                 // disable automatic showing of dialogs
@@ -5832,6 +5765,30 @@ touch -t 01030000 LAST.sb
             mBluetoothControlService.write( sJson.length() + ":" + sJson );
         } else {
             Log.d(TAG, "Bluetooth: Not sending complete match");
+        }
+    }
+    public void sendFlagToOtherBluetoothDevice(Context ctx, String sCountryCode) {
+        if ( mBluetoothControlService == null) {
+            return;
+        }
+
+        if  ( mBluetoothControlService.getState().equals(BTState.CONNECTED) ) {
+            File fCache   = PreferenceValues.getFlagCacheName(sCountryCode, ctx);
+            if ( fCache.exists() ) {
+                byte[] baFileContent = FileUtil.readFileToByteArray(fCache);
+                final String sBase64 = Base64.encodeToString(baFileContent, 0);
+                if ( true ) {
+                    String sMessage = BTFileType.CountryFlag + ":" + sCountryCode + ":" + sBase64;
+                    mBluetoothControlService.write( sMessage.length() + ":" + sMessage );
+                } else {
+                    String sMessage = BTFileType.CountryFlag + ":" + sCountryCode + ":" + sBase64.replaceAll("[\\s\\n\\t]", "");
+                    mBluetoothControlService.write( sMessage.length() + ":" + sMessage );
+                }
+                //Toast.makeText(ctx, String.format("Requested file %s send to paired device as requested", fCache), Toast.LENGTH_LONG).show();
+            } else {
+                //Toast.makeText(ctx, String.format("Requested file %s by paired device is not available", fCache), Toast.LENGTH_LONG).show();
+                writeMethodToBluetooth(BTMethods.Toast, String.format("File %s not available on paired device", fCache) );
+            }
         }
     }
 
@@ -5865,50 +5822,98 @@ touch -t 01030000 LAST.sb
         sb.append(")\n");
         mBluetoothControlService.write(sb.toString());
     }
-
+    /** length of file to be read */
     private int           iReceivingBTFileLength = 0;
+    /** Buffer with file content */
     private StringBuilder sbReceivingBTFile      = new StringBuilder();
-    private void interpretReceivedMessage(String readMessage) {
+    public synchronized void interpretReceivedMessage(String readMessage) {
 
         // read file if json is being sent (identified by first sending the length of the json string)
         {
-            if ( (iReceivingBTFileLength <= 0) && readMessage.matches("^\\d+:.*") ) {
-                String sLength = readMessage.replaceFirst(":.*", "");
+            int    iSubStrLength = Math.min(20, readMessage.length());
+            String readMessage20 = readMessage.substring(0, iSubStrLength);
+            if ( (iReceivingBTFileLength <= 0) && readMessage20.matches("^\\d+:.*") ) {
+                // first part of a long message being received
+                String sLength = readMessage20.replaceFirst(":.*", "");
                 iReceivingBTFileLength = Integer.parseInt(sLength);
                 readMessage = readMessage.substring(sLength.length() + 1);
             }
             if ( iReceivingBTFileLength > 0 ) {
+                // in the process of reading a file
                 sbReceivingBTFile.append(readMessage);
                 if (sbReceivingBTFile.length() >= iReceivingBTFileLength ) {
+                    // whole file received
+                    final String sFileContent = sbReceivingBTFile.toString();
+
+                    Log.d(TAG, String.format("Full file related message received (%d) : %s", sFileContent.length(), sFileContent ));
+
+                    // reset for next file communication
+                    sbReceivingBTFile      = new StringBuilder();
                     iReceivingBTFileLength = 0;
-                    // whole json received
-                    try {
-                        storeAsPrevious(this, matchModel, false);
-                        //persist(true);
-                        File fJson = getLastMatchFile(this);
-                        FileUtil.writeTo(fJson, sbReceivingBTFile.toString());
-                        sbReceivingBTFile = new StringBuilder();
-                        matchModel = null;
-                        boolean bReadOK = this.initScoreBoard(fJson);
-                        if ( bReadOK ) {
-                            matchModel.triggerListeners();
-                            if ( BTRole.Slave.equals(m_blueToothRole) ) {
-                                writeMethodToBluetooth(BTMethods.Toast, R.string.bt_match_received_by_X);
+
+                    if ( sFileContent.startsWith("{") && sFileContent.endsWith("}") ) {
+                        try {
+                            storeAsPrevious(this, matchModel, false);
+                            //persist(true);
+                            File fJson = getLastMatchFile(this);
+                            FileUtil.writeTo(fJson, sFileContent);
+
+                            matchModel = null;
+                            boolean bReadOK = this.initScoreBoard(fJson);
+                            if ( bReadOK ) {
+                                matchModel.triggerListeners();
+                                if ( BTRole.Slave.equals(m_blueToothRole) ) {
+                                    writeMethodToBluetooth(BTMethods.Toast, R.string.bt_match_received_by_X);
+                                }
+                                bluetoothRequestCountryFile(2000);
+                            } else {
+                                writeMethodToBluetooth(BTMethods.Toast, "Receiver could not read json...");
+                                if ( BTRole.Slave.equals(m_blueToothRole) ) {
+                                    writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
+                                }
                             }
-                        } else {
-                            writeMethodToBluetooth(BTMethods.Toast, "Receiver could not read json...");
-                            if ( BTRole.Slave.equals(m_blueToothRole) ) {
-                                writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            writeMethodToBluetooth(BTMethods.Toast, "Could not read json. Exception: " + e.getMessage());
+
+                            // re-requesting complete match if exception occured
+                        }
+                    } else {
+                        // assume base64 encoded image
+                        if ( sFileContent.startsWith(BTFileType.CountryFlag + ":") ) {
+                            int    iFirstColon  = sFileContent.indexOf(":");
+                            int    iSecondColon = sFileContent.indexOf(":", iFirstColon + 1);
+                            String sCountryCode = null;
+                            try {
+                                       sCountryCode = sFileContent.substring(iFirstColon+1, iSecondColon);
+                                String sBase64      = sFileContent.substring(iSecondColon+1);
+
+                                File   fCache = PreferenceValues.getFlagCacheName(sCountryCode, this);
+                                byte[] decodedByte    = Base64.decode(sBase64, 0);
+                                FileOutputStream fileOutputStream = new FileOutputStream(fCache);
+                                fileOutputStream.write(decodedByte);
+                                fileOutputStream.close();
+                                Log.d(TAG, String.format("Created flag file %s via bluetooth", fCache));
+
+                                // to refresh PlayerButton with the image
+                                for(Player p: Player.values() ) {
+                                    String sCountry = matchModel.getCountry(p);
+                                    if ( sCountry.equals(sCountryCode) ) {
+                                        iBoard.updatePlayerCountry(p, sCountry);
+                                    }
+                                }
+
+                                // we only request one file at a time, if one is received, request the other if required
+                                bluetoothRequestCountryFile(2000);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(this, String.format("Could not interpret file as image for %s", sCountryCode), Toast.LENGTH_LONG).show();
+                                writeMethodToBluetooth(BTMethods.Toast, "Receiver could not interpret image for " + sCountryCode);
                             }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        writeMethodToBluetooth(BTMethods.Toast, "Could not read json. Exception: " + e.getMessage());
-
-                        // re-requesting complete match if exception occured
                     }
                 } else {
-                    Log.d(TAG, String.format("Waiting for more json...(%d < %d)", sbReceivingBTFile.length(), iReceivingBTFileLength));
+                    Log.d(TAG, String.format("Waiting for more file content...(%d < %d)", sbReceivingBTFile.length(), iReceivingBTFileLength));
                 }
                 return;
             }
@@ -5926,63 +5931,84 @@ touch -t 01030000 LAST.sb
             //e.printStackTrace();
         }
         if ( btMethod == null ) {
-            Log.w(TAG, String.format("Could not derive btMethod from message %s (%s)", sMethod, readMessage));
+            Log.w(TAG, String.format("Could not derive btMethod from message %s (%s) [#%d]", sMethod, readMessage.substring(0, Math.min(20, readMessage.length())) + "...", readMessage.length()));
         } else {
             switch (btMethod) {
                 case changeScore: {
-                    Player player = Player.valueOf(sMethodNArgs[1]);
-                    matchModel.changeScore(player);
+                    if ( sMethodNArgs.length > 1 ) {
+                        Player player = Player.valueOf(sMethodNArgs[1]);
+                        matchModel.changeScore(player);
+                    }
                     break;
                 }
                 case changeSide: {
-                    Player player = Player.valueOf(sMethodNArgs[1]);
-                    matchModel.changeSide(player);
+                    if ( sMethodNArgs.length > 1 ) {
+                        Player player = Player.valueOf(sMethodNArgs[1]);
+                        matchModel.changeSide(player);
+                    }
                     break;
                 }
                 case changeColor: {
-                    Player player = Player.valueOf(sMethodNArgs[1]);
-                    matchModel.setPlayerColor(player, sMethodNArgs.length>2?sMethodNArgs[2]:null);
+                    if ( sMethodNArgs.length > 1 ) {
+                        Player player = Player.valueOf(sMethodNArgs[1]);
+                        matchModel.setPlayerColor(player, sMethodNArgs.length>2?sMethodNArgs[2]:null);
+                    }
                     break;
                 }
                 case undoLast: {
-                    matchModel.undoLast();break;
+                    matchModel.undoLast();
+                    break;
                 }
                 case undoLastForScorer: {
-                    Player nonScorer = Player.valueOf(sMethodNArgs[1]);
-                    matchModel.undoLastForScorer(nonScorer);
+                    if ( sMethodNArgs.length > 1 ) {
+                        Player nonScorer = Player.valueOf(sMethodNArgs[1]);
+                        matchModel.undoLastForScorer(nonScorer);
+                    }
                     break;
                 }
                 case endGame: {
-                    matchModel.endGame();break;
+                    matchModel.endGame();
+                    break;
                 }
                 case timestampStartOfGame: {
-                    GameTiming.ChangedBy changedBy = GameTiming.ChangedBy.valueOf(sMethodNArgs[1]);
-                    matchModel.timestampStartOfGame(changedBy);
+                    if ( sMethodNArgs.length > 1 ) {
+                        GameTiming.ChangedBy changedBy = GameTiming.ChangedBy.valueOf(sMethodNArgs[1]);
+                        matchModel.timestampStartOfGame(changedBy);
+                    }
                     break;
                 }
                 case cancelTimer: {
                     cancelTimer(); break;
                 }
                 case startTimer: {
-                    Type timerType = Type.valueOf(sMethodNArgs[1]);
-                    boolean bAutoStarted = sMethodNArgs.length>2?Boolean.valueOf(sMethodNArgs[2]):false;
-                    _showTimer(timerType, bAutoStarted);
+                    if ( sMethodNArgs.length > 1 ) {
+                        Type timerType = Type.valueOf(sMethodNArgs[1]);
+                        boolean bAutoStarted = sMethodNArgs.length>2?Boolean.valueOf(sMethodNArgs[2]):false;
+                        _showTimer(timerType, bAutoStarted);
+                    }
                     break;
                 }
                 case restartTimerWithSecondsLeft: {
-                    DialogTimerView.restartTimerWithSecondsLeft(Integer.parseInt(sMethodNArgs[1])); break;
+                    if ( sMethodNArgs.length > 1 ) {
+                        DialogTimerView.restartTimerWithSecondsLeft(Integer.parseInt(sMethodNArgs[1]));
+                        break;
+                    }
                 }
                 case recordAppealAndCall: {
-                    Player player = Player.valueOf(sMethodNArgs[1]);
-                    Call   call   = Call.valueOf(sMethodNArgs[2]);
-                    matchModel.recordAppealAndCall(player, call);
+                    if ( sMethodNArgs.length > 2 ) {
+                        Player player = Player.valueOf(sMethodNArgs[1]);
+                        Call   call   = Call  .valueOf(sMethodNArgs[2]);
+                        matchModel.recordAppealAndCall(player, call);
+                    }
                     break;
                 }
                 case recordConduct: {
-                    Player      player      = Player.valueOf(sMethodNArgs[1]);
-                    Call        call        = Call.valueOf(sMethodNArgs[2]);
-                    ConductType conductType = ConductType.valueOf(sMethodNArgs[3]);
-                    matchModel.recordConduct(player, call, conductType);
+                    if ( sMethodNArgs.length > 3 ) {
+                        Player      player      = Player     .valueOf(sMethodNArgs[1]);
+                        Call        call        = Call       .valueOf(sMethodNArgs[2]);
+                        ConductType conductType = ConductType.valueOf(sMethodNArgs[3]);
+                        matchModel.recordConduct(player, call, conductType);
+                    }
                     break;
                 }
                 case restartScore: {
@@ -5993,14 +6019,24 @@ touch -t 01030000 LAST.sb
                     sendMatchToOtherBluetoothDevice(this, false);
                     break;
                 }
+                case requestCountryFlag: {
+                    if ( sMethodNArgs.length > 1 ) {
+                        sendFlagToOtherBluetoothDevice(this, sMethodNArgs[1]);
+                    }
+                    break;
+                }
                 case swapPlayers: {
-                    Player pFirst = Player.valueOf(sMethodNArgs[1]);
-                    swapSides(Toast.LENGTH_LONG, pFirst);
+                    if ( sMethodNArgs.length > 1 ) {
+                        Player pFirst = Player.valueOf(sMethodNArgs[1]);
+                        swapSides(Toast.LENGTH_LONG, pFirst);
+                    }
                     break;
                 }
                 case swapDoublePlayers: {
-                    Player player = Player.valueOf(sMethodNArgs[1]);
-                    _swapDoublePlayers(player);
+                    if ( sMethodNArgs.length > 1 ) {
+                        Player player = Player.valueOf(sMethodNArgs[1]);
+                        _swapDoublePlayers(player);
+                    }
                     break;
                 }
                 case toggleGameScoreView: {
@@ -6008,16 +6044,18 @@ touch -t 01030000 LAST.sb
                     break;
                 }
                 case Toast: {
-                    String sMsg = sMethodNArgs[1];
-                    if ( StringUtil.isInteger(sMsg) ) {
-                        // a resource id was send
-                        try {
-                            sMsg = getString(Integer.parseInt(sMsg), (m_btDeviceOther==null?"":m_btDeviceOther.getName()) );
-                        } catch (Exception e) {
-                            //e.printStackTrace();
+                    if (  sMethodNArgs.length > 1 ) {
+                        String sMsg = sMethodNArgs[1];
+                        if ( StringUtil.isInteger(sMsg) ) {
+                            // a resource id was send
+                            try {
+                                sMsg = getString(Integer.parseInt(sMsg), (mBluetoothHandler.getOtherDeviceName()) );
+                            } catch (Exception e) {
+                                //e.printStackTrace();
+                            }
                         }
+                        Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                     }
-                    Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                     break;
                 }
                 default:
@@ -6037,40 +6075,31 @@ touch -t 01030000 LAST.sb
         }
     }
 
-    private enum BTMethods {
-        Toast(false)       ,
-
-        changeScore        (true),
-        recordAppealAndCall(true),
-        recordConduct      (true),
-        undoLast           (true),
-        undoLastForScorer  (true),
-        changeSide         (false),
-        swapDoublePlayers  (false),
-        /* TODO: rename to switchSides */
-        swapPlayers        (false),
-        endGame            (false),
-
-        timestampStartOfGame       (false),
-        startTimer                 (false),
-        restartTimerWithSecondsLeft(false),
-        cancelTimer                (false),
-
-        changeColor (false),
-
-        restartScore(false),
-        toggleGameScoreView(false),
-
-        requestCompleteJsonOfMatch(false),
-        ;
-        private boolean bVerifyScore = false;
-        BTMethods(boolean verifyScore) {
-            this.bVerifyScore = verifyScore;
+    private boolean bluetoothRequestCountryFile(int imsDelay) {
+        if ( PreferenceValues.hasInternetConnection(this) == false ) {
+            // if there are country codes, and this device can not download them, ask the other device to send them
+            for (Player p: Player.values() ) {
+                final String sCountryCode = matchModel.getCountry(p);
+                if ( StringUtil.isNotEmpty(sCountryCode) ) {
+                    File fCache = PreferenceValues.getFlagCacheName(sCountryCode, this);
+                    if ( fCache.exists() == false ) {
+                        CountDownTimer cdt = new CountDownTimer(imsDelay, 500) {
+                            @Override public void onTick(long millisUntilFinished) { }
+                            @Override public void onFinish() {
+                                writeMethodToBluetooth(BTMethods.requestCountryFlag, sCountryCode);
+                            }
+                        };
+                        cdt.start();
+                        return true;
+                    }
+                }
+            }
         }
-        public boolean verifyScore() {
+        return false;
+    }
 
-            return this.bVerifyScore;
-        }
+    private enum BTFileType {
+        CountryFlag,
     }
 
     private Boolean m_bAppTurnedOnBlueTooth = null;
@@ -6152,16 +6181,14 @@ touch -t 01030000 LAST.sb
         }
     }
 
-    private static BluetoothDevice         m_btDeviceOther            = null;
-    private static String                  m_sDeviceNameLastConnected = null;
     private static BluetoothControlService mBluetoothControlService   = null;
-    private static BTRole                  m_blueToothRole            = BTRole.Equal;
+    public  static BTRole                  m_blueToothRole            = BTRole.Equal;
     /**
      * Establish connection with other device
      */
     public void connectBluetoothDevice(String address) {
         if ( (mBluetoothControlService != null) && mBluetoothControlService.getState().equals(BTState.CONNECTED) ) {
-            if ( m_btDeviceOther != null && m_btDeviceOther.getAddress().equals(address) ) {
+            if ( mBluetoothHandler.getOtherDeviceAddressName().equals(address) ) {
                 Toast.makeText(this, getString(R.string.bt_already_connected_to_X, address), Toast.LENGTH_SHORT).show();
                 return;
             } else {
