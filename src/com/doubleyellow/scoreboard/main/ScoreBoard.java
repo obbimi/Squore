@@ -4312,7 +4312,7 @@ touch -t 01030000 LAST.sb
 
                     //setModelForCast(matchModel);
 
-                    sendMatchToOtherBluetoothDevice(this, true);
+                    sendMatchToOtherBluetoothDevice(this, true, 500);
                 }
             }
             {
@@ -4327,7 +4327,7 @@ touch -t 01030000 LAST.sb
                     // ensure selected match is also LAST_MATCH file
                     FileUtil.copyFile(f, getLastMatchFile(this));
 
-                    sendMatchToOtherBluetoothDevice(this, true);
+                    sendMatchToOtherBluetoothDevice(this, true, 1000);
                 }
             }
         }
@@ -5702,7 +5702,7 @@ touch -t 01030000 LAST.sb
                 })
                 .setNegativeButton(R.string.bt_push, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
-                        sendMatchToOtherBluetoothDevice(ScoreBoard.this, false);
+                        sendMatchToOtherBluetoothDevice(ScoreBoard.this, false, 200);
 
                         // sync 'first player on screen'
                         //writeMethodToBluetooth(BTMethods.swapSides, iBoard.m_firstPlayerOnScreen);
@@ -5753,7 +5753,8 @@ touch -t 01030000 LAST.sb
         }
     }
 
-    public static void sendMatchToOtherBluetoothDevice(Context ctx, boolean bOnlyAsMaster) {
+    private static CountDownTimer m_cdtSendMatchToOther = null;
+    public static void sendMatchToOtherBluetoothDevice(final Context ctx, boolean bOnlyAsMaster, int iDelayMs) {
         if ( mBluetoothControlService == null) {
             return;
         }
@@ -5761,8 +5762,18 @@ touch -t 01030000 LAST.sb
         if  ( mBluetoothControlService.getState().equals(BTState.CONNECTED)
          && ( (bOnlyAsMaster == false) || BTRole.Master.equals(m_blueToothRole) )
             ) {
-            String sJson = matchModel.toJsonString(ctx);
-            mBluetoothControlService.write( sJson.length() + ":" + sJson );
+
+            if ( m_cdtSendMatchToOther!= null) {
+                m_cdtSendMatchToOther.cancel();
+            }
+            m_cdtSendMatchToOther = new CountDownTimer(iDelayMs, 500) {
+                @Override public void onTick(long millisUntilFinished) { }
+                @Override public void onFinish() {
+                    String sJson = matchModel.toJsonString(ctx);
+                    mBluetoothControlService.write( sJson.length() + ":" + sJson );
+                }
+            };
+            m_cdtSendMatchToOther.start();
         } else {
             Log.d(TAG, "Bluetooth: Not sending complete match");
         }
@@ -6016,7 +6027,7 @@ touch -t 01030000 LAST.sb
                     break;
                 }
                 case requestCompleteJsonOfMatch: {
-                    sendMatchToOtherBluetoothDevice(this, false);
+                    sendMatchToOtherBluetoothDevice(this, false, 2000);
                     break;
                 }
                 case requestCountryFlag: {
