@@ -17,6 +17,7 @@
 
 package com.doubleyellow.scoreboard.model;
 
+/** TODO rename to DoublePlayer, since it is used to indicate a team player for both Serving as Receiving team */
 public enum DoublesServe {
     I, // In =player 1
     O, // Out=player 2

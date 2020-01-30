@@ -120,7 +120,7 @@ public class OnlineSheetAvailableChoice extends BaseAlertDialog
                 case ViewInBrowser:
                     Uri uriUrl = ScoreBoard.buildURL(context, sShowURL, false);
                     Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-                    context.startActivity(launchBrowser);
+                    context.startActivity(launchBrowser); // does not (always?) work on wearable
                     break;
                 case CopyToClipboard:
                     // TODO:

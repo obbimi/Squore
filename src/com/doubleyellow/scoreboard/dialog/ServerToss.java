@@ -147,7 +147,10 @@ public class ServerToss extends BaseAlertDialog
                     break;
             }
             if ( m_winnerChooseToReceive ) {
-                scoreBoard.changeSide(m_winnerOfToss.getOther());
+                if ( m_winnerOfToss != null ) {
+                    Player pLooserOfToss = m_winnerOfToss.getOther();
+                    scoreBoard.changeSide(pLooserOfToss);
+                }
             }
             this.dismiss();
         } else {
