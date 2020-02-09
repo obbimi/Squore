@@ -1232,11 +1232,14 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 }
                 case PressTwiceToExit: {
 
-                    ActionBar xActionBar = getXActionBar();
-                    if ( xActionBar != null) {
-                        if ( xActionBar.isShowing() == false ) {
-                            xActionBar.show();
-                            return;
+                    if ( ViewUtil.isWearable(ScoreBoard.this) == false ) {
+                        // do not show action bar in wearables... to BIG
+                        ActionBar xActionBar = getXActionBar();
+                        if ( xActionBar != null) {
+                            if ( xActionBar.isShowing() == false ) {
+                                xActionBar.show();
+                                return;
+                            }
                         }
                     }
                     if (onBackPressHandler == null) {

@@ -425,8 +425,8 @@ public class IBoard implements TimerViewContainer
 
     public void updateReceiver(Player player, DoublesServe dsReceiver) {
         //if ( Brand.supportChooseServeOrReceive() == false ) { return; } // continue always: also used to 'clean' any characters
-        int iServeId = m_player2serverSideId.get(player);
-        ServeButton btnSide = ( ServeButton ) findViewById(iServeId);
+        int iReceiveId = m_player2serverSideId.get(player);
+        ServeButton btnSide = ( ServeButton ) findViewById(iReceiveId);
         if ( btnSide == null ) { return; }
         int iTransparencyNonServer = PreferenceValues.getServeButtonTransparencyNonServer(context);
         EnumSet<ShowPlayerColorOn> showPlayerColorOn = PreferenceValues.showPlayerColorOn(context);
@@ -452,6 +452,7 @@ public class IBoard implements TimerViewContainer
             }
             pbReceiver.setReceiver(dsReceiver);
         }
+        sendMessage(iReceiveId, ""); // TODO: how about doubles and receiver indication
     }
     public void updateServeSide(Player player, DoublesServe doublesServe, ServeSide nextServeSide, boolean bIsHandout) {
         if ( player == null ) { return; } // normally only e.g. for undo's of 'altered' scores

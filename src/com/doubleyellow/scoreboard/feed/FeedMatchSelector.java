@@ -739,13 +739,18 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
         URLTask m_task              = null;
         int     m_iMatchesWithCourt = 0;
+        int     m_iMatchesWithOutResultWithCourt = 0;
         boolean m_bGroupByCourt     = false;
+        /** To keep the number of toast message to a certain minimum */
         int     m_iGroupByCourtMsg  = 0;
 
         @Override public void clear() {
             super.clear();
 
-            m_iMatchesWithCourt = 0; // will be 're-increased' by 'receive()'
+            // will be 're-increased' by 'receive()'
+            m_iMatchesWithCourt = 0;
+            m_iMatchesWithOutResultWithCourt = 0;
+
             m_bGroupByCourt     = PreferenceValues.groupMatchesInFeedByCourt(context); // if set to true, matches must be sorted by date+time within the 'section', my feeds usually come in 'per field'
         }
 
@@ -938,13 +943,26 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 }
             }
 
-            if ( result.equals(FetchResult.OK) && (m_iMatchesWithCourt == 0) && m_feedStatus.isShowingMatches() ) {
-                if ( m_bGroupByCourt && (m_iGroupByCourtMsg < 3) ) {
-                    Toast.makeText(context, "None of the matches in this feed has a court specified", Toast.LENGTH_LONG).show();
-                    m_iGroupByCourtMsg++;
+            if ( result.equals(FetchResult.OK) && m_feedStatus.isShowingMatches() ) {
+                if ( m_bGroupByCourt ) {
+                    if ( m_bHideCompletedMatches ) {
+                        if ( m_iMatchesWithOutResultWithCourt == 0 ) {
+                            if ( m_iGroupByCourtMsg < 3 ) {
+                                Toast.makeText(context, "None of the uncompleted matches in this feed has a court specified", Toast.LENGTH_LONG).show();
+                                m_iGroupByCourtMsg++;
+                            }
+                        }
+                    } else {
+                        if ( m_iMatchesWithCourt == 0 ) {
+                            if ( m_iGroupByCourtMsg < 3 ) {
+                                Toast.makeText(context, "None of the matches in this feed has a court specified", Toast.LENGTH_LONG).show();
+                                m_iGroupByCourtMsg++;
+                            }
+                        }
+                    }
+                } else {
+                    m_iGroupByCourtMsg = 0;
                 }
-            } else {
-                m_iGroupByCourtMsg = 0;
             }
 /*
             if ( showTip() == false ) {
@@ -1134,8 +1152,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 if ( StringUtil.isEmpty(sRoundOrDivision) || sRoundOrDivision.equals(sSection) ) {
                     sRoundOrDivision = joMatch.optString(JSONKey.round.toString(), sSection);
                 }
+                String sResult = joMatch.optString(JSONKey.result.toString());
                 if ( joMatch.has(JSONKey.court.toString() ) ) {
                     m_iMatchesWithCourt++;
+                    if ( StringUtil.isEmpty(sResult) ) {
+                        m_iMatchesWithOutResultWithCourt++;
+                    }
                     if ( m_bGroupByCourt ) {
                         sRoundOrDivision = joMatch.optString(JSONKey.court.toString(), sRoundOrDivision);
                     }
@@ -1150,7 +1172,6 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 switch ( m_feedStatus ) {
                     case showingMatches: {
                         if ( m_bHideCompletedMatches ) {
-                            String sResult = joMatch.optString(JSONKey.result.toString());
                             if ( StringUtil.isEmpty(sResult) ) {
                                 super.addItem(sRoundOrDivision, sDisplayName, joMatch);
                             }

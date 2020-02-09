@@ -20,7 +20,7 @@ package com.doubleyellow.scoreboard.cast;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.CountDownTimer;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
@@ -51,12 +51,15 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
 
     private Model         matchModel            = null;
     private boolean       bShowGraphDuringTimer = true;
+    private int           m_iRemoveHandoutCharAfterXSeconds = 5;
 
     PresentationScreen(Context context, Display display) {
         super(context, display);
 
         //bShowGraphDuringTimer = PreferenceValues.showGraphDuringTimer(context, true);
         bShowGraphDuringTimer = PreferenceValues.Cast_ShowGraphDuringTimer(context);
+
+        m_iRemoveHandoutCharAfterXSeconds = 5; // TODO: PreferenceValues only for Squash
     }
 
     void setModel(Model model) {
@@ -251,16 +254,33 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
             iBoard.updateGameBallMessage();
         }
     }
+    private CountDownTimer m_ctRemoveHandoutChar = null;
     private class ServeSideChangeListener implements Model.OnServeSideChangeListener {
-        @Override public void OnServeSideChange(Player p, DoublesServe doublesServe, ServeSide serveSide, boolean bIsHandout) {
+        @Override public void OnServeSideChange(final Player p, final DoublesServe doublesServe, final ServeSide serveSide, boolean bIsHandout) {
             if ( (endOfGameView != null) && endOfGameView.bIsShowing ) {
                 initBoard();
             }
             if ( p == null ) { return; } // normally only e.g. for undo's of 'altered' scores
-            iBoard.updateServeSide(p           ,doublesServe   , serveSide, bIsHandout);
+            iBoard.updateServeSide(p, doublesServe, serveSide, bIsHandout);
             if ( Brand.supportChooseServeOrReceive() == false ) {
                 // remove any indication on receiver side
                 iBoard.updateReceiver(p.getOther(), DoublesServe.NA);
+            }
+
+            // code for removing 'handout' char after a few seconds
+            if ( m_ctRemoveHandoutChar != null ) {
+                m_ctRemoveHandoutChar.cancel();
+                m_ctRemoveHandoutChar = null;
+            }
+            if ( bIsHandout && Brand.isSquash() ) {
+                // remove the handout character after a few seconds: so e.g. that WHILE rally is in progress character is now longer visible on cast device
+                m_ctRemoveHandoutChar = new CountDownTimer(m_iRemoveHandoutCharAfterXSeconds * 1000, 1000) {
+                    @Override public void onTick(long millisUntilFinished) { }
+                    @Override public void onFinish() {
+                        iBoard.updateServeSide(p, doublesServe, serveSide, false);
+                    }
+                };
+                m_ctRemoveHandoutChar.start();
             }
         }
         @Override public void OnReceiverChange(Player p, DoublesServe doublesServe) {
