@@ -194,7 +194,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     private class ChildClickListener implements ExpandableListView.OnChildClickListener
     {
         @Override public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-            if ( bDisabled ){
+            if ( m_bDisabled ) {
+                Log.d(TAG, "On click listener disabled");
                 return false;
             }
             final Model model = Brand.getModel();
@@ -237,9 +238,9 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
             return true;
         }
-        private boolean bDisabled = false;
+        private boolean m_bDisabled = false;
         void setDisabled(boolean b) {
-            this.bDisabled = b;
+            m_bDisabled = b;
         }
     }
 
@@ -861,7 +862,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             List<String> lExpandedGroups = null;
             String       sUseContent     = null;
             try {
-                if ( (sContent == null) || (result.equals(FetchResult.OK) == false)) {
+                if ( (sContent == null) || (result.equals(FetchResult.OK) == false) ) {
                     if ( StringUtil.isNotEmpty(sLastSuccessfulContent) ) {
 
                         if ( result.equals(FetchResult.Cancelled) == false ) {
@@ -1135,7 +1136,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 super.sortItems(SortOrder.Ascending); // TODO: Improve. This only sorts on 'display', we want to sort more detailed on/by date/time
             }
             for ( int f=0; f < matches.length(); f++ ) {
-                JSONObject joMatch = matches.getJSONObject(f);
+                Object o = matches.get(f);
+                if ( o instanceof JSONObject == false ) {
+                    Log.w(TAG, String.format("Not a JSONObject match at index %d", f));
+                    continue;
+                }
+                JSONObject joMatch = (JSONObject) o;
                 if ( joMatch.has(Player.A.toString()) == false ) {
                     // assume JSON array with the player names ==>   "players" : [ "John", "Peter" ]
                     JSONArray players = joMatch.optJSONArray(JSONKey.players.toString());

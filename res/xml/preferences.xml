@@ -21,27 +21,6 @@
                   xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:dy="http://double-yellow.be">
 
-    <PreferenceCategory android:title="@string/pref_Category_Brand" android:key="Brand">
-        <com.doubleyellow.prefs.EnumListPreference
-            android:key="squoreBrand"
-            android:title="@string/pref_Category_Brand"
-            android:defaultValue="Squore"
-            dy:enumClass="com.doubleyellow.scoreboard.Brand"
-            />
-        <com.doubleyellow.prefs.EnumMultiSelectPreference
-            android:key="showBrandLogoOn"
-            android:title="@string/pref_Show_logo_on_scoreboard"
-            android:summary="Specify on what screens the logo should be visible"
-            android:defaultValue="@array/showBrandLogoOn_DefaultValues"
-            dy:displayValues="@array/ShowOnScreen_DisplayValues"
-            dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
-            />
-        <CheckBoxPreference android:key="hideBrandLogoWhenGameInProgress"
-            android:title="@string/pref_Hide_logo_when_game_in_progress"
-            android:defaultValue="@bool/hideBrandLogoWhenGameInProgress_default"
-            />
-    </PreferenceCategory>
-
     <PreferenceScreen android:key="Appearance"
                       android:title="@string/pref_Appearance"
                       android:icon="@android:drawable/ic_menu_view"
@@ -381,6 +360,26 @@
 
         </PreferenceCategory>
 
+        <PreferenceCategory android:title="@string/pref_Category_Brand" android:key="Brand">
+            <com.doubleyellow.prefs.EnumListPreference
+                android:key="squoreBrand"
+                android:title="@string/pref_Category_Brand"
+                android:defaultValue="Squore"
+                dy:enumClass="com.doubleyellow.scoreboard.Brand"
+            />
+            <com.doubleyellow.prefs.EnumMultiSelectPreference
+                    android:key="showBrandLogoOn"
+                    android:title="@string/pref_Show_logo_on_scoreboard"
+                    android:summary="Specify on what screens the logo should be visible"
+                    android:defaultValue="@array/showBrandLogoOn_DefaultValues"
+                    dy:displayValues="@array/ShowOnScreen_DisplayValues"
+                    dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
+            />
+            <CheckBoxPreference android:key="hideBrandLogoWhenGameInProgress"
+                                android:title="@string/pref_Hide_logo_when_game_in_progress"
+                                android:defaultValue="@bool/hideBrandLogoWhenGameInProgress_default"
+            />
+        </PreferenceCategory>
     </PreferenceScreen>
 
     <PreferenceScreen android:key="Behaviour"
