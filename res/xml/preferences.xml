@@ -502,7 +502,7 @@
                 android:key="floatingMessageForGameBallOn"
                 android:title="@string/pref_floatingMessageForGameBall"
                 android:summary="@string/pref_floatingMessageForGameBall_summary"
-                android:defaultValue="@array/floatingMessageForGameBallOn_DefaultValues"
+                android:defaultValue="@array/floatingMessageForGameBallOn_DefaultValues_Squash"
                 dy:displayValues="@array/ShowOnScreen_DisplayValues"
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
@@ -518,7 +518,7 @@
                     android:title="@string/pref_endGameSuggestion"
                     android:summary="@string/pref_endGameSuggestion_summary"
                     android:icon="@drawable/arrow_right"
-                    android:defaultValue="@string/endGameSuggestion_default"
+                    android:defaultValue="@string/endGameSuggestion_default_Squash"
                     dy:displayValues="@array/EndGameDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
                     />

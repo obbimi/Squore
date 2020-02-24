@@ -13,6 +13,12 @@
 -->
     <color name="translucent_orange">#CCffbb33</color>
 
+    <string-array name="colorSchema_Padel" translatable="false">
+                               <!-- scorebtn|name+sht|serveside|backgrn -->
+        <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
+        <item>|IPF Light             |#1C3755|#D63E2D|#7BB0E7|#FFFFFF|</item><!-- purple|red|blue... -->
+        <item>|IPF Dark              |#1C3755|#D63E2D|#7BB0E7|#000000|</item><!-- purple|red|blue... -->
+    </string-array>
     <string-array name="colorSchema_Racketlon" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
@@ -100,6 +106,7 @@
 
     <color name="brand_squore_bg_color">#ffffffff</color>
     <color name="brand_racketlon_bg_color">#ff004071</color>
+    <color name="brand_padel_bg_color">#ff004071</color>
     <color name="brand_tabletennis_bg_color">#ffffff00</color>
     <color name="brand_badminton_bg_color">#ffffff00</color>
 

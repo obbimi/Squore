@@ -6,8 +6,11 @@ export JAVA_HOME=/osshare/software/oracle/java-8-oracle
 
 
 #mykill gradle
-
 mffile=$(grep Manifest build.gradle | grep -v '//' | cut -d "'" -f 2)
+if [[ -z "${mffile}" ]]; then
+    echo "Could not determine manifest file by looking in build.gradle"
+    exit 1
+fi
 pkg=$(grep package= ${mffile} | perl -ne 's~.*"([a-z\.]+)"~$1~; print')
 
 vcFromManifest=$(cat ${mffile} | grep versionCode | sed -e 's~.*versionCode=.\([0-9]*\).*~\1~')

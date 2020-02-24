@@ -87,6 +87,7 @@ android {
                 //srcFile 'AndroidManifestSquoreWear.xml'
                 //srcFile 'AndroidManifestRacketlon.xml'
                 //srcFile 'AndroidManifestBadminton.xml'
+                //srcFile 'AndroidManifestPadel.xml'
                 //srcFile 'AndroidManifestTabletennis.xml'
                 //srcFile 'AndroidManifestCourtCare.xml'
                 //srcFile 'AndroidManifestUniOfNotthingham.xml'

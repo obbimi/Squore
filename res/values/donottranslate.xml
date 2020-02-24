@@ -25,6 +25,7 @@
     <string name="app_name_short_brand_Racketlon">Score Racketlon</string>
     <string name="app_name_short_brand_Tabletennis">Score Table Tennis</string>
     <string name="app_name_short_brand_Badminton">Score Badminton</string>
+    <string name="app_name_short_brand_Padel">Score Padel</string>
     <string name="app_name_short_brand_asb">ASB Squore</string>
     <string name="app_name_short_brand_courtcare">CourtScore</string>
     <string name="app_name_short_brand_uniofnotthingham">CourtScore UoN</string>
@@ -39,16 +40,20 @@
     <string name="deactivate_mode_Racketlon"><!--De-activate xxx--></string>
     <string name="activate_mode_Badminton"><!--Activate xxx--></string>
     <string name="deactivate_mode_Badminton"><!--De-activate xxx--></string>
+    <string name="activate_mode_Padel"><!--Activate xxx--></string>
+    <string name="deactivate_mode_Padel"><!--De-activate xxx--></string>
 
     <integer name="showModeDialogAfterXMins_default_Squash">-1</integer>
     <integer name="showModeDialogAfterXMins_default_Racketlon">-1</integer>
     <integer name="showModeDialogAfterXMins_default_Tabletennis">10</integer>
     <integer name="showModeDialogAfterXMins_default_Badminton">-1</integer>
+    <integer name="showModeDialogAfterXMins_default_Padel">-1</integer>
 
     <string name="pref_swapPlayersHalfwayGame_Squash"><!--Not used in squash version of the app --></string>
     <string name="NewMatchesType_default_Squash">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
     <string name="lbl_Scoring_PointWhenServing_Tabletennis">Score when serving</string> <!-- not used -->
     <string name="lbl_Scoring_PointWhenServing_Racketlon">Score when serving</string>   <!-- not used -->
+    <string name="lbl_Scoring_PointWhenServing_Padel">Score when serving</string>   <!-- not used -->
 
 
     <!-- TODO: use this in e.g. feedback pages -->
@@ -59,13 +64,13 @@
     <string name="scorelineLayout_default_Badminton">HideServeSide</string>
     <string name="scorelineLayout_default_Racketlon">HideServeSide</string>
     <string name="scorelineLayout_default_Tabletennis">HideServeSide</string>
+    <string name="scorelineLayout_default_Padel">HideServeSide</string>
 
     <string name="newMatchLayout_default">AllFields</string>
     <string name="groupArchivedMatchesBy_default">Date</string>
     <string name="sortOrderOfArchivedMatches_default">Descending</string>
     <string name="BackKeyBehaviour_default">PressTwiceToExit</string>
     <string name="useTimersFeature_default">Suggest</string>
-    <string name="endGameSuggestion_default">Suggest</string>
     <string name="useOfficialAnnouncementsFeature_default">Suggest</string>
     <string name="swapPlayersHalfwayGame_default">Suggest</string>
     <string name="useTossFeature_default">Suggest</string>
@@ -124,9 +129,35 @@
         <!--<item>OnDevice</item>-->
         <!--<item>OnChromeCast</item>-->
     </string-array>
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_Padel">
+        <!--<item>OnDevice</item>-->
+        <!--<item>OnChromeCast</item>-->
+    </string-array>
     <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_Badminton">
         <item>OnDevice</item>
         <!--<item>OnChromeCast</item>-->
+    </string-array>
+    <string-array name="floatingMessageForGameBallOn_DefaultValues_Squash">
+        <item>OnDevice</item>
+        <item>OnChromeCast</item>
+    </string-array>
+    <string-array name="floatingMessageForGameBallOn_DefaultValues_Racketlon">
+        <item>OnDevice</item>
+        <item>OnChromeCast</item>
+    </string-array>
+    <string-array name="floatingMessageForGameBallOn_DefaultValues_Tabletennis">
+        <item>OnDevice</item>
+        <item>OnChromeCast</item>
+    </string-array>
+    <string-array name="floatingMessageForGameBallOn_DefaultValues_Padel">
+<!--
+        <item>OnDevice</item>
+        <item>OnChromeCast</item>
+-->
+    </string-array>
+    <string-array name="floatingMessageForGameBallOn_DefaultValues_Badminton">
+        <item>OnDevice</item>
+        <item>OnChromeCast</item>
     </string-array>
 
     <string-array name="showMatchDurationChronoOn_DefaultValues">
@@ -138,10 +169,6 @@
         <item>OnChromeCast</item>
     </string-array>
     <string-array name="showFieldDivisionOn_DefaultValues">
-        <item>OnDevice</item>
-        <item>OnChromeCast</item>
-    </string-array>
-    <string-array name="floatingMessageForGameBallOn_DefaultValues">
         <item>OnDevice</item>
         <item>OnChromeCast</item>
     </string-array>

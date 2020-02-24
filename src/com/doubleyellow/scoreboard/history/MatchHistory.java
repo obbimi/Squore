@@ -39,6 +39,7 @@ import com.doubleyellow.scoreboard.cast.EndOfGameView;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.model.RacketlonModel;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.timer.Timer;
@@ -262,7 +263,8 @@ public class MatchHistory extends XActivity implements MenuHandler
             } else {
                 int iGame1B = position + 1 - preGraphTabsToShow().size();
                 if ( Brand.isRacketlon() ) {
-                    return getString(R.string.graph_x, matchModel.getSportForGame(iGame1B));
+                    RacketlonModel rm = (RacketlonModel) matchModel;
+                    return getString(R.string.graph_x, rm.getSportForGame(iGame1B));
                 } else {
                     return getString(R.string.graph_game_x, iGame1B);
                 }

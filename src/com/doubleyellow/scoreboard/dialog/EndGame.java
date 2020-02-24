@@ -19,7 +19,6 @@ package com.doubleyellow.scoreboard.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 
 import android.os.CountDownTimer;
@@ -134,7 +133,7 @@ public class EndGame extends BaseAlertDialog
                .setTitle(getGameOrSetString(iEndGameMsgResId));
 
             if ( Brand.isRacketlon() ) {
-                adb.setMessage(ListUtil.join(getRacketlonMessages(matchHasEnded), "\n\n"));
+                adb.setMessage(ListUtil.join(getRacketlonMessages((RacketlonModel) matchModel, matchHasEnded), "\n\n"));
             }
         }
 
@@ -162,7 +161,7 @@ public class EndGame extends BaseAlertDialog
         dialog = adb.show(onShowListener);
     }
 
-    private List<String> getRacketlonMessages(boolean bMatchEnded) {
+    private List<String> getRacketlonMessages(RacketlonModel matchModel, boolean bMatchEnded) {
         List<String> messages = new ArrayList<>();
 
         int                  iSet1B             = matchModel.getGameNrInProgress();

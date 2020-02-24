@@ -27,4 +27,6 @@ public enum SportType {
     Racquetball,
     Tabletennis,
     Badminton,
+
+    Padel,
 }
