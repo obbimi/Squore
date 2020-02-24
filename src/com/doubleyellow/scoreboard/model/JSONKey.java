@@ -36,8 +36,8 @@ public enum JSONKey {
 		firstName,
 		lastName,
 	format,
-		numberOfPointsToWinGame,
-		numberOfGamesToWinMatch,
+	  //numberOfPointsToWinGame,
+	  //numberOfGamesToWinMatch,
 			/** total-of-x-games in stead of best-of-x-games */
 			playAllGames,
 		mode,

@@ -188,10 +188,12 @@ public enum PreferenceKeys {
     //showTimersFAB,
 
     MatchFormat,
-        numberOfGamesToWinMatch,
+        /** = numberOfSetsToWin for GSMModel */
+        numberOfGamesToWinMatch, // also used as JSONKey
             /** special case: not best-of-x, but total-of-x games */
             playAllGames,
-        numberOfPointsToWinGame,
+        /* = numberOfGamesToWinSet for GSMModel model */
+        numberOfPointsToWinGame, // also used as JSONKey
         /** tabletennis specific */
         numberOfServesPerPlayer,
         useHandInHandOutScoring,

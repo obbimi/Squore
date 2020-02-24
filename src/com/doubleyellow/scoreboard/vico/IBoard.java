@@ -144,6 +144,18 @@ public class IBoard implements TimerViewContainer
         TextView btnScore = (TextView) findViewById(id);
         if ( btnScore == null ) { return; }
         String sScore = ("" + iScore).trim();
+        if ( matchModel instanceof GSMModel ) {
+            GSMModel gsmModel = (GSMModel) matchModel;
+            sScore = gsmModel.translateScore(player, iScore);
+            if ( iScore >= 3 /* 3 so it also works if going back from AD */ ) {
+                // opponent 'display' score may go e.g. from AD back to 40
+                Player   opp         = player.getOther();
+                String   sScoreOpp   = gsmModel.translateScore(opp, gsmModel.getScore(opp));
+                Integer  idOpp       = m_player2scoreId.get(opp);
+                TextView btnScoreOpp = (TextView) findViewById(idOpp);
+                btnScoreOpp.setText(sScoreOpp);
+            }
+        }
         btnScore.setText(sScore);
         if ( Player.A.equals(player) && Brand.supportsTimeout() && matchModel.getMaxScore()==0 ) {
             m_lGameXWasPausedDuration.put(matchModel.getGameNrInProgress(), 0L);

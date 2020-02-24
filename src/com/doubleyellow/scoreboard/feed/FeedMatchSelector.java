@@ -532,11 +532,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     private void setMatchFormat(Model model, JSONObject joMatch) throws JSONException {
         // take match config from feed config (if it exists)
         if ( m_joFeedConfig != null ) {
-            if ( m_joFeedConfig.has(JSONKey.numberOfPointsToWinGame.toString() ) ) {
-                model.setNrOfPointsToWinGame(m_joFeedConfig.getInt(JSONKey.numberOfPointsToWinGame.toString()));
+            if ( m_joFeedConfig.has(PreferenceKeys.numberOfPointsToWinGame.toString() ) ) {
+                model.setNrOfPointsToWinGame(m_joFeedConfig.getInt(PreferenceKeys.numberOfPointsToWinGame.toString()));
             }
-            if ( m_joFeedConfig.has(JSONKey.numberOfGamesToWinMatch.toString() ) ) {
-                model.setNrOfGamesToWinMatch(m_joFeedConfig.getInt(JSONKey.numberOfGamesToWinMatch.toString()));
+            if ( m_joFeedConfig.has(PreferenceKeys.numberOfGamesToWinMatch.toString() ) ) {
+                model.setNrOfGamesToWinMatch(m_joFeedConfig.getInt(PreferenceKeys.numberOfGamesToWinMatch.toString()));
             }
             if ( m_joFeedConfig.has(JSONKey.useHandInHandOutScoring.toString() ) ) {
                 boolean bUseHandInOutScoring = m_joFeedConfig.getBoolean(JSONKey.useHandInHandOutScoring.toString());
@@ -554,11 +554,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         }
 
         // optionally overwrite match format by properties specified on match level
-        if ( joMatch.has(JSONKey.numberOfPointsToWinGame.toString() ) ) {
-            model.setNrOfPointsToWinGame(joMatch.getInt(JSONKey.numberOfPointsToWinGame.toString()));
+        if ( joMatch.has(PreferenceKeys.numberOfPointsToWinGame.toString() ) ) {
+            model.setNrOfPointsToWinGame(joMatch.getInt(PreferenceKeys.numberOfPointsToWinGame.toString()));
         }
-        if ( joMatch.has(JSONKey.numberOfGamesToWinMatch.toString() ) ) {
-            model.setNrOfGamesToWinMatch(joMatch.getInt(JSONKey.numberOfGamesToWinMatch.toString()));
+        if ( joMatch.has(PreferenceKeys.numberOfGamesToWinMatch.toString() ) ) {
+            model.setNrOfGamesToWinMatch(joMatch.getInt(PreferenceKeys.numberOfGamesToWinMatch.toString()));
         }
     }
 

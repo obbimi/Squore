@@ -190,10 +190,10 @@ public class MatchView extends SBRelativeLayout
                 break;
         }
         if ( Brand.supportsDoubleServeSequence() == false ) {
-            lToggleFormatViews.remove(R.id.ll_doubleServeSequence);
+            lToggleFormatViews.remove((Integer) R.id.ll_doubleServeSequence);
         }
         if ( Brand.supportsTiebreakFormat() == false ) {
-            lToggleFormatViews.remove(R.id.llTieBreakFormat);
+            lToggleFormatViews.remove((Integer) R.id.llTieBreakFormat);
         }
 
 /*
@@ -251,6 +251,19 @@ public class MatchView extends SBRelativeLayout
                         , R.id.llDisciplineStart
                         , R.id.llNumberOfServesPerPlayer
                       //, R.id.llScoringType
+                );
+                return false;
+            case Padel:
+                ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
+                        //, R.id.lblMatch_BestOf
+                        //, R.id.tbBestOf_or_TotalOf
+                        , R.id.llHandicapFormat
+                        , R.id.llScoringType
+                        , R.id.llTieBreakFormat
+                        , R.id.llDisciplineStart
+                        , R.id.llNumberOfServesPerPlayer
+                        , R.id.match_marker
+                        , R.id.ll_AnnouncementLanguage
                 );
                 return false;
         }
@@ -626,6 +639,10 @@ public class MatchView extends SBRelativeLayout
         if ( m_model != null ) {
             iGameEndPref        = m_model.getNrOfPointsToWinGame();
             iNrOfGamesToWinPref = m_model.getNrOfGamesToWinMatch();
+            if ( m_model instanceof GSMModel ) {
+                GSMModel m = (GSMModel) m_model;
+                iGameEndPref = m.getNrOfGamesToWinSet();
+            }
         }
         if ( iGameEndPref == Model.UNDEFINED_VALUE ) {
             iGameEndPref = PreferenceValues.numberOfPointsToWinGame(context);
@@ -1190,7 +1207,15 @@ public class MatchView extends SBRelativeLayout
             iNrOfGamesToWinMatch = (Integer.parseInt(spNumberOfGamesToWin.getSelectedItem().toString()) + 1) / 2;
         }
         Intent intent = new Intent();
-        Model  model = getModel(iNrOfPoints2Win, iNrOfGamesToWinMatch);
+        Model  model = getModel(/*iNrOfPoints2Win, iNrOfGamesToWinMatch*/);
+        if ( model instanceof GSMModel ) {
+            GSMModel gsmModel = (GSMModel) model;
+            gsmModel.setNrOfPointsToWinGame(iNrOfPoints2Win);
+            gsmModel.setNrOfGamesToWinMatch(iNrOfGamesToWinMatch);
+        } else {
+            model.setNrOfPointsToWinGame(iNrOfPoints2Win);
+            model.setNrOfGamesToWinMatch(iNrOfGamesToWinMatch);
+        }
         if ( StringUtil.isNotEmpty(sSource) ) {
             model.setSource(sSource, sSourceID);
         }
@@ -1204,7 +1229,7 @@ public class MatchView extends SBRelativeLayout
         return intent;
     }
 
-    private Model getModel(int iNrOfPoints2Win, int iNrOfGamesToWinMatch) {
+    private Model getModel(/*int iNrOfPoints2Win, int iNrOfGamesToWinMatch*/) {
         Model m = ModelFactory.getTemp();
         if ( m_bIsDoubles == false ) {
             m.setPlayerName(Player.A, txtPlayerA.getText().toString());
@@ -1254,8 +1279,10 @@ public class MatchView extends SBRelativeLayout
             m.setReferees( txtRefereeName.getTextAndPersist().toString()
                          , txtMarkerName .getTextAndPersist().toString());
         }
+/*
         m.setNrOfPointsToWinGame(iNrOfPoints2Win);
         m.setNrOfGamesToWinMatch(iNrOfGamesToWinMatch);
+*/
         if ( txtCourt != null ) {
             m.setCourt(txtCourt.getTextAndPersist().toString());
         }

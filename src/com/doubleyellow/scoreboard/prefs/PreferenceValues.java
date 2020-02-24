@@ -711,7 +711,8 @@ public class PreferenceValues extends RWValues
         return getIntegerR(PreferenceKeys.tournamentMaxDuration_InDays, context, R.integer.tournamentMaxDuration_InDays_default);
     }
     public static Feature endGameSuggestion(Context context) {
-        return getEnum(PreferenceKeys.endGameSuggestion, context, Feature.class, R.string.endGameSuggestion_default);
+        int iResDefault = getSportTypeSpecificResId(context, R.string.endGameSuggestion_default_Squash);
+        return getEnum(PreferenceKeys.endGameSuggestion, context, Feature.class, iResDefault);
     }
     /** for tabletennis and racketlon, not squash */
     public static boolean swapPlayersOn180DegreesRotationOfDeviceInLandscape(Context context) {
@@ -1626,7 +1627,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-01-30"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-02-23"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

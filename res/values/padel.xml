@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="end_game_Padel">End game</string>
+    <string name="lbl_court_Padel">Court</string>
+
+    <string name="pref_swapPlayersHalfwayGame_Padel">Swap players halfway a game (for TT, BM and TN, not SQ)</string>
+    <string name="NewMatchesType_default_Padel">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
+
+    <string name="sb_official_rules_Padel">Official Padel rules</string>
+    <string name="best_of_x_games_to_y_2_Padel">Sets to</string>
+    <string name="pref_feedPostUrls_default_Padel"><![CDATA[Name=Toernooi.NL 1
+\nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches&sport=padel
+\nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players&sport=padel
+\n
+\nName=Toernooi.NL
+\nFeedMatches=feed/tournamentsoftware.php?nr=2&pm=matches&sport=padel
+\nFeedPlayers=feed/tournamentsoftware.php?nr=2&pm=players&sport=padel
+\n
+\nName=Demo URL
+\nFeedMatches=demo/demo.matches.padel.txt
+\nFeedPlayers=demo/demo.players.padel.txt
+\nPostResult=demo/demo.post.matchresult.php?lang=en
+]]></string>
+
+    <string name="OfficialRulesURLs_default_Padel"><![CDATA[https://www.padelfip.com/wp-content/uploads/2017/06/Rules-of-Padel.pdf
+\nhttp://www.Padel.com/
+]]></string>
+
+    <string name="matchList_default_Padel"><![CDATA[- Toppers
+\nFrancisco Navarro Compán/Juan Lebrón Chincoa [ESP] - Maximiliano Sánchez/Carlos Daniel Gutiérrez [ARG]
+\nPablo Lima/Lucas De Oliveira Campagnolo [BRA] - Alejandro Galán Romo/Matías Díaz Sangiorgio [ESP]
+\n- Wednesday matches with mates
+\nAntionio/Bernardo - Carlos/Diego
+\nAntionio/Carlos - Bernardo/Diego
+\nAntionio/Diego - Bernardo/Carlos
+]]></string>
+
+    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Padel">true</bool>
+    <integer name="serveButtonTransparencyNonServer_default_Padel">90</integer> <!-- between 0 and 100 -->
+
+</resources>

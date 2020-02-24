@@ -57,12 +57,12 @@ public class Handicap extends BaseAlertDialog {
 
     @Override public boolean storeState(Bundle outState) {
         outState.putSerializable(HandicapFormat.class.getSimpleName(), handicapFormat);
-        outState.putInt(JSONKey.numberOfPointsToWinGame.toString(), iNrOfPointsToWinGame);
+        outState.putInt(PreferenceKeys.numberOfPointsToWinGame.toString(), iNrOfPointsToWinGame);
         return true;
     }
 
     @Override public boolean init(Bundle outState) {
-        init((HandicapFormat) outState.getSerializable(HandicapFormat.class.getSimpleName()), outState.getInt(JSONKey.numberOfPointsToWinGame.toString()));
+        init((HandicapFormat) outState.getSerializable(HandicapFormat.class.getSimpleName()), outState.getInt(PreferenceKeys.numberOfPointsToWinGame.toString()));
         return true;
     }
 

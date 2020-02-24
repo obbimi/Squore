@@ -39,6 +39,9 @@ public class ModelFactory
             case Racquetball:
                 m = new RacquetballModel();
                 break;
+            case Padel:
+                m = new PadelModel();
+                break;
         }
         return m;
     }
@@ -48,6 +51,7 @@ public class ModelFactory
     private static TabletennisModel mTmpTabletennis = new TabletennisModel();
     private static BadmintonModel   mTmpBadminton   = new BadmintonModel();
     private static RacquetballModel mTmpRacketball  = new RacquetballModel();
+    private static PadelModel       mTmpPadel       = new PadelModel();
     public static Model getTemp() {
         return getTemp(Brand.brand);
     }
@@ -68,6 +72,9 @@ public class ModelFactory
                 break;
             case Racquetball:
                 mTmp = mTmpRacketball;
+                break;
+            case Padel:
+                mTmp = mTmpPadel;
                 break;
         }
         mTmp.clear();
