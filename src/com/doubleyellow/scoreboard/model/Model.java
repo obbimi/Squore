@@ -26,6 +26,7 @@ import android.util.Log;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.util.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,8 +60,6 @@ public abstract class Model implements Serializable
     }
 
     public abstract SportType getSport();
-    /** mainly for Racketlon where each set is a different sport/discipline */
-    public abstract Sport getSportForGame(int iGame1B);
 
     //-----------------------------------------------------
     // Listeners
@@ -289,7 +288,6 @@ public abstract class Model implements Serializable
     private Map<Player, String>                 m_player2Country        = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Club           = new HashMap<Player, String>();
     /** Contains list of player names as the appeared in JSON. e.g. ${seq}:${id}:{LastName}, ${FirstName} */
-    private Map<Player, List<String>>           m_team2Players          = new HashMap<Player, List<String>>();
     private Map<Player, String>                 m_player2Avatar         = new HashMap<Player, String>();
     private String                              m_matchDate             = DateUtil.getCurrentYYYY_MM_DD();   // up to apk 202 DateUtil.getCurrentYYYYMMDD()
     private String                              m_matchTime             = DateUtil.getCurrentHHMMSS_Colon() + DateUtil.getTimezoneXXX(); // up to apk 202 DateUtil.getCurrentHHMMSS()
@@ -346,14 +344,14 @@ public abstract class Model implements Serializable
     //------------------------
 
     /** number of games each player has won: {A=2, B=1} */
-    private Map<Player, Integer>                m_player2GamesWon       = null;
+            Map<Player, Integer>                m_player2GamesWon       = null;
     /** holds array with history of games won like [0-0, 0-1, 1-1, 2-1] */
     private List<Map<Player, Integer>>          m_lGameCountHistory     = null;
     private List<Player>                        m_lGameWinner           = null;
 
-    transient private GameTiming                          m_gameTimingCurrent     = null;
+    transient private GameTiming                m_gameTimingCurrent     = null;
     /** game timing of all games including the one about to start/started */
-    transient private List<GameTiming>                    m_lGameTimings          = null;
+    transient private List<GameTiming>          m_lGameTimings          = null;
 
     //------------------------
     // Match scores
@@ -664,7 +662,7 @@ public abstract class Model implements Serializable
         return pointsWon;
     }
 
-    private void addScoreLine(ScoreLine slCall, boolean bAddTiming) {
+    void addScoreLine(ScoreLine slCall, boolean bAddTiming) {
         m_lScoreHistory.add(slCall);
 
         if ( bAddTiming ) {
@@ -695,7 +693,7 @@ public abstract class Model implements Serializable
     }
 
     /** also sets the model to dirty */
-    private Integer determineNewScoreForPlayer(Player player, int iDelta, boolean bEnglishScoring) {
+    Integer determineNewScoreForPlayer(Player player, int iDelta, boolean bEnglishScoring) {
         Integer iNewScore;
         if ( bEnglishScoring && (iDelta == 1) ) {
             if ( player.equals(m_pServer) ) {
@@ -710,7 +708,7 @@ public abstract class Model implements Serializable
         return iNewScore;
     }
 
-    private ScoreLine getScoreLine(Player player, Integer iNewScore, ServeSide sCurrentSide) {
+    ScoreLine getScoreLine(Player player, Integer iNewScore, ServeSide sCurrentSide) {
         ScoreLine scoreLine;
         if ( player.equals(m_pServer) ) {
             // score for the server
@@ -728,7 +726,7 @@ public abstract class Model implements Serializable
         return scoreLine;
     }
 
-    private void changeScoreInformListeners(Player player, boolean bTriggerServeSideChange, Call call, int iDelta, Player previousServer, DoublesServe previousDS, Integer iNewScore) {
+    void changeScoreInformListeners(Player player, boolean bTriggerServeSideChange, Call call, int iDelta, Player previousServer, DoublesServe previousDS, Integer iNewScore) {
         for(OnScoreChangeListener l: onScoreChangeListeners) {
             l.OnScoreChange(player, iNewScore, iDelta, call);
         }
@@ -2065,9 +2063,9 @@ public abstract class Model implements Serializable
             try {
                 // read match format
                 JSONObject joFormat = joMatch.getJSONObject(JSONKey.format.toString());
-                int numberOfPointsToWinGame = joFormat.getInt(JSONKey.numberOfPointsToWinGame.toString());
-                int nrOfGamesToWinMatch     = joFormat.optInt(JSONKey.nrOfGamesToWinMatch    .toString()); // old... keep for now for stored matches
-                    nrOfGamesToWinMatch     = joFormat.optInt(JSONKey.numberOfGamesToWinMatch.toString(), nrOfGamesToWinMatch); // optional for e.g. racketlon
+                int numberOfPointsToWinGame = joFormat.getInt(PreferenceKeys.numberOfPointsToWinGame.toString());
+                int nrOfGamesToWinMatch     = joFormat.optInt(JSONKey.nrOfGamesToWinMatch.toString()); // old... keep for now for stored matches
+                    nrOfGamesToWinMatch     = joFormat.optInt(PreferenceKeys.numberOfGamesToWinMatch.toString(), nrOfGamesToWinMatch); // optional for e.g. racketlon
                 setNrOfPointsToWinGame(numberOfPointsToWinGame);
                 if ( nrOfGamesToWinMatch > 0 ) {
                     setNrOfGamesToWinMatch(nrOfGamesToWinMatch);
@@ -2501,7 +2499,6 @@ public abstract class Model implements Serializable
         JSONObject joCountries   = new JSONObject();
         JSONObject joClubs       = new JSONObject();
         JSONObject joAvatars     = new JSONObject();
-        JSONObject joTeamPlayers = new JSONObject();
         for ( Player p : getPlayers() ) {
             joPlayers.put(p.toString(), m_player2Name.get(p));
             String sPlayerId = m_player2Id.get(p);
@@ -2523,10 +2520,6 @@ public abstract class Model implements Serializable
             String sAvatar = m_player2Avatar.get(p);
             if ( StringUtil.isNotEmpty(sAvatar) ) {
                 joAvatars.put(p.toString(), sAvatar);
-            }
-            List<String> players = m_team2Players.get(p);
-            if ( ListUtil.isNotEmpty(players) ) {
-                joTeamPlayers.put(p.toString(), new JSONArray(players));
             }
         }
         jsonObject.put(JSONKey.players.toString(), joPlayers);
@@ -2584,10 +2577,14 @@ public abstract class Model implements Serializable
 
         // match format
         JSONObject joFormat = new JSONObject();
-        joFormat.put(JSONKey.numberOfPointsToWinGame.toString(), m_iNrOfPointsToWinGame);
-        if ( EnumSet.of(SportType.Racketlon).contains(getSport()) == false ) {
-            joFormat.put(JSONKey.numberOfGamesToWinMatch    .toString(), m_iNrOfGamesToWinMatch);
+        if ( this instanceof GSMModel ) {
+            // m_iNrOfPointsToWinGame fixed to 4, hence use m_iNrOfGamesToWinSet
+            joFormat.put(PreferenceKeys.numberOfPointsToWinGame.toString(), ((GSMModel)this).getNrOfGamesToWinSet());
+        } else {
+            joFormat.put(PreferenceKeys.numberOfPointsToWinGame.toString(), m_iNrOfPointsToWinGame);
         }
+        joFormat.put(PreferenceKeys.numberOfGamesToWinMatch    .toString(), m_iNrOfGamesToWinMatch);
+
         if ( m_iTotalNrOfGamesToFinishForMatchToEnd != UNDEFINED_VALUE ) {
             joFormat.put(JSONKey.playAllGames.toString(), true);
         }
@@ -2822,10 +2819,12 @@ public abstract class Model implements Serializable
         scores.put(Player.B, iScoreB);
         addGameScore(scores, true);
 
-        // learn from current game ending to what game ending we are playing
-        int max  = Math.max(iScoreA, iScoreB);
-        if ( (max < m_iNrOfPointsToWinGame) && (getGameNrInProgress() == 1)) {
-            setNrOfPointsToWinGame(max);
+        if ( this instanceof GSMModel == false ) {
+            // learn from current game ending to what game ending we are playing
+            int max  = Math.max(iScoreA, iScoreB);
+            if ( (max < m_iNrOfPointsToWinGame) && (getGameNrInProgress() == 1)) {
+                setNrOfPointsToWinGame(max);
+            }
         }
 
         startNewGame();
@@ -2913,7 +2912,7 @@ public abstract class Model implements Serializable
     abstract Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom);
 
     /** If game format has no tie-break (sudden death), it can be game ball for both players simultaneously */
-    Player[] _isPossibleGameVictoryFor(When when, boolean bFromIsMatchBallFrom) {
+    final Player[] _isPossibleGameVictoryFor(When when, boolean bFromIsMatchBallFrom) {
         Player[] players = m_possibleGameFor.get(when);
         if ( players == null ) {
             players = calculateIsPossibleGameVictoryFor(when, m_scoreOfGameInProgress, bFromIsMatchBallFrom);
@@ -2926,12 +2925,13 @@ public abstract class Model implements Serializable
         return _isPossibleGameVictoryFor(When.ScoreOneMorePoint, false);
     }
 
-    public boolean isPossibleGameBallFor(Player p) {
+    public final boolean isPossibleGameBallFor(Player p) {
         Player[] pa = isPossibleGameBallFor();
         return ( pa.length >= 1 && pa[0].equals(p) )
             || ( pa.length >= 2 && pa[1].equals(p) );
     }
 
+    /** Triggers listeners */
     private void setGameVictoryFor(When when, Player[] gameballForNew) {
         // store the new value
         m_possibleGameFor.put(when, gameballForNew);
@@ -3416,7 +3416,7 @@ public abstract class Model implements Serializable
         Player server      = this.getServer();
         Player serverOfSet = null;
 
-        // determine server by means of looking who served in a previous set (preferably the first set)
+        // determine server by means of looking who served in a previous set (preferably going back to the first set)
         for ( int iSetZBTmp = 0; iSetZBTmp < ListUtil.size (m_lGameScoreHistory); iSetZBTmp++ ) {
             List<ScoreLine> scoreLines = m_lGameScoreHistory.get(iSetZBTmp);
             if ( ListUtil.isEmpty(scoreLines) ) { break; }
@@ -3564,7 +3564,7 @@ public abstract class Model implements Serializable
         }
     }
 
-    /** also called for racketlon/squash in case of appeal or conduct decision. In that case bTriggerServeSideChange=false */
+    /** also called for racketball/squash in case of appeal or conduct decision. In that case bTriggerServeSideChange=false */
     void changeScore_SQ_RB(Player player, boolean bTriggerServeSideChange, Call call)
     {
         boolean bConductGame = (call != null) && call.getScoreAffect().equals(Call.ScoreAffect.LoseGame);
@@ -3677,13 +3677,12 @@ public abstract class Model implements Serializable
         return player;
     }
 
-    Player[] calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(When when, Map<Player, Integer> gameScore)
+    Player[] calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(When when, Map<Player, Integer> gameScore, final int iNrOfPointsToWinGame)
     {
         int iScoreA = MapUtil.getInt(gameScore, Player.A, 0);
         int iScoreB = MapUtil.getInt(gameScore, Player.B, 0);
         int max     = Math.max(iScoreA, iScoreB);
         int diff    = Math.abs(iScoreA - iScoreB);
-        int iNrOfPointsToWinGame = getNrOfPointsToWinGame();
         switch(when) {
             case Now: {
                 if ( max < iNrOfPointsToWinGame + m_iTieBreakPlusX ) {

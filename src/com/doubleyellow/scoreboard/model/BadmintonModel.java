@@ -62,10 +62,6 @@ public class BadmintonModel extends Model
         return SportType.Badminton;
     }
 
-    @Override public Sport getSportForGame(int iGame1B) {
-        return Sport.Badminton;
-    }
-
     //-------------------------------
     // Toweling
     //-------------------------------
@@ -210,7 +206,7 @@ public class BadmintonModel extends Model
                     break;
             }
         }
-        return super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore);
+        return super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore, getNrOfPointsToWinGame());
     }
 
     @Override Player[] calculatePossibleMatchVictoryFor(When when, Player[] pGameVictoryFor) {

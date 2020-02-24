@@ -55,7 +55,7 @@ public abstract class GSMModel extends Model
         /** actually ended set and preparing for new one */
         void OnSetEnded(Player winningPlayer);
     }
-    transient private List<OnSetChangeListener>            onSetChangeListeners              = new ArrayList<OnSetChangeListener>();
+    transient private List<OnSetChangeListener> onSetChangeListeners = new ArrayList<OnSetChangeListener>();
 
     @Override public void registerListener(OnModelChangeListener changedListener) {
         super.registerListener(changedListener);
@@ -85,7 +85,7 @@ public abstract class GSMModel extends Model
     private boolean setNrOfGamesToWinSet(int i) {
         if ( (i != m_iNrOfGamesToWinSet) && (i != UNDEFINED_VALUE) ) {
             m_iNrOfGamesToWinSet = i;
-            setDirty(true);
+          //setDirty(true);
             return true;
         }
         return false;
@@ -94,7 +94,7 @@ public abstract class GSMModel extends Model
     private boolean setNrOfSetsToWinMatch(int i) {
         if ( i != m_iNrOfSetsToWinMatch ) {
             m_iNrOfSetsToWinMatch = i;
-            setDirty(true);
+          //setDirty(true);
             return true;
         }
         return false;
@@ -196,7 +196,7 @@ public abstract class GSMModel extends Model
         int iNrOfGames = getGameNrInProgress(); // TODO: spanning all sets
 
         Player server = getServer();
-        List<ScoreLine> scoreLines = m_lGameScoreHistory.get(0);
+        List<ScoreLine> scoreLines = getGameScoreHistory().get(0);
         if ( ListUtil.isNotEmpty(scoreLines) ) {
             ScoreLine scoreLine = scoreLines.get(0);
             server = scoreLine.getServingPlayer();
@@ -216,6 +216,30 @@ public abstract class GSMModel extends Model
         Player[] players = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore, _getNrOfPointToWinGame());
         if ( players.length == 1 ) {
             // check if it is possible setball/set victory
+            Player pGameBallFor = players[0];
+            //Log.d(TAG, "p2gw : " + m_player2GamesWon);
+            //Log.d(TAG, "sogip: " + m_scoreOfGameInProgress);
+            int iGamesWon    = m_player2GamesWon.get(pGameBallFor);
+            int iGamesWonOpp = m_player2GamesWon.get(pGameBallFor.getOther());
+            if ( iGamesWon >= getNrOfGamesToWinSet() - 1 ) {
+                // typically : at least 5 games won in set to 6
+                boolean bIsSetBall = false;
+                if ( iGamesWon > iGamesWonOpp ) {
+                    bIsSetBall = true;
+                } else if ( iGamesWon == iGamesWonOpp ) {
+                    if ( isTieBreakGame() ) {
+                        bIsSetBall = true;
+                    }
+                    // tie break set ball ?
+                } else {
+                    // opponent has won more games
+                }
+                for(OnSetChangeListener l: onSetChangeListeners) {
+                    l.OnSetBallChange(players, bIsSetBall);
+                }
+            }
+        } else if ( players.length == 2 ) {
+            // TODO: special tie-break format
         }
         return players;
     }

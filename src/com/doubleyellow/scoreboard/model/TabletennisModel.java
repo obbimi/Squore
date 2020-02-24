@@ -68,10 +68,6 @@ public class TabletennisModel extends Model
         return SportType.Tabletennis;
     }
 
-    @Override public Sport getSportForGame(int iGame1B) {
-        return Sport.Tabletennis;
-    }
-
     //-------------------------------
     // serve side/sequence
     //-------------------------------
@@ -175,7 +171,7 @@ public class TabletennisModel extends Model
     //-------------------------------
 
     @Override Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom) {
-        return super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore);
+        return super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore, getNrOfPointsToWinGame());
     }
 
     @Override Player[] calculatePossibleMatchVictoryFor(When when, Player[] pGameVictoryFor) {

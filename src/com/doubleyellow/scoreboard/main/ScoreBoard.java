@@ -2559,8 +2559,25 @@ touch -t 01030000 LAST.sb
     // -----------------model listeners        ------------
     // ----------------------------------------------------
 
-    private class SpecialScoreChangeListener implements Model.OnSpecialScoreChangeListener {
+    private class SpecialScoreChangeListener implements Model.OnSpecialScoreChangeListener, GSMModel.OnSetChangeListener
+    {
+        @Override public void OnSetBallChange(Player[] players, boolean bHasSetBall) {
+            iBoard.updateGameBallMessage(players, bHasSetBall);
+        }
+        @Override public void OnSetEnded(Player winningPlayer) {
+            // TODO: any special action required?
+        }
+
         @Override public void OnGameBallChange(Player[] players, boolean bHasGameBall) {
+            if ( Brand.isGameSetMatch() ) {
+                if ( bHasGameBall ) {
+                    // don't treat gameball as special, wait for SetBall in stead
+                    return;
+                } else {
+                    // no more gameball: hence also no more matchball: continue
+                }
+            }
+
             //iBoard.doGameBallColorSwitch(player, bHasGameBall);
             iBoard.updateGameBallMessage(players, bHasGameBall);
 
@@ -2626,8 +2643,9 @@ touch -t 01030000 LAST.sb
                         iBoard.showMessage(getString(R.string.oa_change_sides), 5);
                     }
                     if ( Brand.isRacketlon()  ) {
-                        boolean isSquashDiscipline = matchModel.getSportForGame(iGameZB + 1).equals(Sport.Squash);
-                        if ( isSquashDiscipline && matchModel.isDoubles() ) {
+                        RacketlonModel rm = (RacketlonModel) matchModel;
+                        boolean isSquashDiscipline = rm.getSportForGame(iGameZB + 1).equals(Sport.Squash);
+                        if ( isSquashDiscipline && rm.isDoubles() ) {
                             // we use A1B1A1B1 serve sequence: swap players for both teams so that R/L indication is displayed for players actually on court
                             for(Player p: Model.getPlayers() ) {
                                 _swapDoublePlayers(p);
@@ -2811,7 +2829,8 @@ touch -t 01030000 LAST.sb
 
             showAppropriateMenuItemInActionBar();
 
-            if ( Brand.changeSidesBetweenGames() && (matchModel.matchHasEnded() == false) && PreferenceValues.swapSidesBetweenGames(ScoreBoard.this) ) {
+            int iGameNr1B = matchModel.getNrOfFinishedGames();
+            if ( Brand.changeSidesBetweenGames(iGameNr1B) && (matchModel.matchHasEnded() == false) && PreferenceValues.swapSidesBetweenGames(ScoreBoard.this) ) {
                 if ( BTRole.Slave.equals(m_blueToothRole) ) {
                     // swap players only if requested by master
                 } else {
@@ -3399,6 +3418,9 @@ touch -t 01030000 LAST.sb
         } else {
             lShowIds.add(R.id.dyn_end_game);
         }
+        if ( Brand.isGameSetMatch() ) {
+            lShowIds.remove((Integer) R.id.dyn_score_details);
+        }
         if ( ListUtil.isNotEmpty(lShowIds) ) {
             setMenuItemVisibility(m_idOfVisibleActionBarItem, false);
             int iIdShow = lShowIds.remove(0);
@@ -3579,6 +3601,10 @@ touch -t 01030000 LAST.sb
             }
             case R.id.float_new_match:
             case R.id.dyn_new_match: {
+                if ( Brand.isPadel() && MatchTabbed.SelectTab.Manual.equals(MatchTabbed.getDefaultTab()) ) {
+                    // usually Padel is NOT singles
+                    MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.ManualDbl);
+                }
                 cancelShowCase();
                 Intent nm = new Intent(this, MatchTabbed.class);
                 startActivityForResult(nm, 1); // see onActivityResult
@@ -3963,7 +3989,8 @@ touch -t 01030000 LAST.sb
 
     public void _showTimer(Type timerType, boolean bAutoTriggered) {
         int iInitialSecs = PreferenceValues.getInteger(timerType.getPrefKey(), this, timerType.getDefaultSecs());
-        int iReminderAt  = getResources().getInteger(PreferenceValues.getSportTypeSpecificResId(this, R.integer.timerPauseBetweenGames_reminder_at_Squash));
+        int iResId       = PreferenceValues.getSportTypeSpecificResId(this, R.integer.timerPauseBetweenGames_reminder_at_Squash);
+        int iReminderAt  = getResources().getInteger(iResId);
         boolean bIsResume = (timer != null);
         int iResumeAt = 0;
         if ( bIsResume ) {

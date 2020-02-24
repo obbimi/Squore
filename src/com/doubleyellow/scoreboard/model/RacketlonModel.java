@@ -62,7 +62,7 @@ public class RacketlonModel extends Model {
         return SportType.Racketlon;
     }
 
-    @Override public Sport getSportForGame(int iSet1B) {
+    /*@Override*/ public Sport getSportForGame(int iSet1B) {
         List<Sport> disciplines = getDisciplines();
         int iSetZB = ( iSet1B - 1 ) % ListUtil.size(disciplines);
         if ( iSetZB < 0 ) {
@@ -187,7 +187,7 @@ public class RacketlonModel extends Model {
     }
 
     @Override Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom) {
-        Player[] pVictoryFor = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore);
+        Player[] pVictoryFor = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore, getNrOfPointsToWinGame());
         if ( ListUtil.isEmpty(pVictoryFor) && getGameNrInProgress() >= 3 && when.equals(When.ScoreOneMorePoint) && (bFromIsMatchBallFrom == false) ) {
             // in both the 3th and 4th (last) game in racketlon, it can be a match ball while it is not game ball just looking at the points of the current game
             // if it is, interpret it as game ball as well

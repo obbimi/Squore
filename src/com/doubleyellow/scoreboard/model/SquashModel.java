@@ -36,10 +36,6 @@ public class SquashModel extends Model {
         return SportType.Squash;
     }
 
-    @Override public Sport getSportForGame(int iSet1B) {
-        return Sport.Squash;
-    }
-
     //-------------------------------
     // serve side/sequence
     //-------------------------------
@@ -95,7 +91,7 @@ public class SquashModel extends Model {
     //-------------------------------
 
     @Override Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom) {
-        return super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore);
+        return super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore, getNrOfPointsToWinGame());
     }
 
     @Override Player[] calculatePossibleMatchVictoryFor(When when, Player[] paGameVictoryFor) {

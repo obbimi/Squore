@@ -36,10 +36,6 @@ public class RacquetballModel extends Model
         return SportType.Racquetball;
     }
 
-    @Override public Sport getSportForGame(int iGame1B) {
-        return Sport.Squash;
-    }
-
     /**
      * In racketlon the last (third) game typically only goes to 11 in stead of 15
      */
@@ -89,7 +85,7 @@ public class RacquetballModel extends Model
     }
 
     @Override Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom) {
-        return super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore);
+        return super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore, getNrOfPointsToWinGame());
     }
 
     //-------------------------------
