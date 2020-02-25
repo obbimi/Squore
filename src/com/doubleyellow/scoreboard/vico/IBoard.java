@@ -1245,16 +1245,18 @@ public class IBoard implements TimerViewContainer
         if ( ListUtil.isNotEmpty(possibleMatchBallFor) && (matchModel.playAllGames() == false) ) {
             iResId = R.string.oa_matchball;
 
-            if ( ( Brand.isBadminton() || Brand.isGameSetMatch() ) && bVisible ) {
-                iResId = R.string.oa_matchpoint;
-            }
-            if ( Brand.isRacketlon() && bVisible ) {
-                // it can be matchball for the OTHER player
-                pGameBallFor = possibleMatchBallFor;
+            if ( bVisible ) {
+                if ( Brand.isBadminton() || Brand.isGameSetMatch() ) {
+                    iResId = R.string.oa_matchpoint;
+                }
+                if ( Brand.isRacketlon() ) {
+                    // it can be matchball for the OTHER player
+                    pGameBallFor = possibleMatchBallFor;
 
-                // if it is matchball for 2 players at once, it is gummiarm
-                if ( ListUtil.length(pGameBallFor) == 2 ) {
-                    iResId = R.string.oa_gummiarm_point;
+                    // if it is matchball for 2 players at once, it is gummiarm
+                    if ( ListUtil.length(pGameBallFor) == 2 ) {
+                        iResId = R.string.oa_gummiarm_point;
+                    }
                 }
             }
         }

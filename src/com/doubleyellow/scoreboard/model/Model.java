@@ -135,7 +135,7 @@ public abstract class Model implements Serializable
     transient private List<OnServeSideChangeListener>    onServeSideChangeListener       = new ArrayList<OnServeSideChangeListener>();
     transient private List<OnSpecialScoreChangeListener> onSpecialScoreChangeListeners   = new ArrayList<OnSpecialScoreChangeListener>();
     transient private List<OnGameEndListener>            onGameEndListeners              = new ArrayList<OnGameEndListener>();
-    transient private List<OnMatchEndListener>           onMatchEndListeners             = new ArrayList<OnMatchEndListener>();
+    transient         List<OnMatchEndListener>           onMatchEndListeners             = new ArrayList<OnMatchEndListener>();
     transient private List<OnCallChangeListener>         onCallChangeListeners           = new ArrayList<OnCallChangeListener>();
     transient private List<OnComplexChangeListener>      onComplexChangeListeners        = new ArrayList<OnComplexChangeListener>();
     transient private List<OnBrokenEquipmentListener>    onBrokenEquipmentListeners      = new ArrayList<OnBrokenEquipmentListener>();
@@ -323,18 +323,18 @@ public abstract class Model implements Serializable
     //------------------------
 
     /** For drawing 'original' paper scoring. Contains all games including the one in progress */
-    private List<List<ScoreLine>>               m_lGameScoreHistory     = null;
+    private List<List<ScoreLine>>               m_lGamesScoreHistory    = null;
     /** scorehistory of the game in progress */
-    private List<ScoreLine>                     m_lScoreHistory         = null;
+    private List<ScoreLine>                     m_lGameScoreHistory     = null;
 
     //------------------------
     // Point scores
     //------------------------
 
-    /** scoring of the game in progress: { A=5, B=8 } */
-    private Map<Player, Integer>                m_scoreOfGameInProgress   = null;
+    /** scoring of the game in progress: { A=5, B=8 }. Taken from m_endScoreOfPreviousGames when 'undo-ing' into previous game */
+            Map<Player, Integer>                m_scoreOfGameInProgress   = null;
     /** end scores of already ended games [ {A=11,B=9},{A=4,B=11}, {A=11, B=8} ] . So does not hold game in progress. */
-    private List<Map<Player, Integer>>          m_endScoreOfPreviousGames = null;
+            List<Map<Player, Integer>>          m_endScoreOfPreviousGames = null;
 
     private Map<Player, Integer>                m_startScoreOfGameInProgress = null;
     private List<Map<Player, Integer>>          m_startScoreOfPreviousGames  = null;
@@ -344,7 +344,7 @@ public abstract class Model implements Serializable
     //------------------------
 
     /** number of games each player has won: {A=2, B=1} */
-            Map<Player, Integer>                m_player2GamesWon       = null;
+            Map<Player, Integer>                m_player2GamesWon       = null; // 'of set in progress' for GSMModel
     /** holds array with history of games won like [0-0, 0-1, 1-1, 2-1] */
     private List<Map<Player, Integer>>          m_lGameCountHistory     = null;
     private List<Player>                        m_lGameWinner           = null;
@@ -373,7 +373,7 @@ public abstract class Model implements Serializable
         m_player2ServeSideCount.put(Player.A, new HashMap<ServeSide, Integer>());
         m_player2ServeSideCount.put(Player.B, new HashMap<ServeSide, Integer>());
 
-        m_lGameScoreHistory     = new ArrayList<List<ScoreLine>>();
+        m_lGamesScoreHistory    = new ArrayList<List<ScoreLine>>();
 
         m_player2GamesWon       = new HashMap<Player, Integer>();
         m_player2GamesWon.put(Player.A, 0);
@@ -399,7 +399,7 @@ public abstract class Model implements Serializable
     }
 
 	/** Invoked when model is created and when a game is ended */
-    private void startNewGame() {
+    void startNewGame() {
         m_scoreOfGameInProgress = new HashMap<Player, Integer>();
         int iInitialScoreA = MapUtil.getInt(m_startScoreOfGameInProgress, Player.A, 0);
         int iInitialScoreB = MapUtil.getInt(m_startScoreOfGameInProgress, Player.B, 0);
@@ -663,7 +663,7 @@ public abstract class Model implements Serializable
     }
 
     void addScoreLine(ScoreLine slCall, boolean bAddTiming) {
-        m_lScoreHistory.add(slCall);
+        m_lGameScoreHistory.add(slCall);
 
         if ( bAddTiming ) {
             if ( m_gameTimingCurrent == null ) {
@@ -672,7 +672,7 @@ public abstract class Model implements Serializable
             }
             if ( m_gameTimingCurrent.startTimeIsSetManually() == false ) {
                 // correct by guessing start time
-                if ( ListUtil.size(m_lScoreHistory) == 1 ) {
+                if ( ListUtil.size(m_lGameScoreHistory) == 1 ) {
                     GameTiming gameTimingPrevious = ListUtil.size(m_lGameTimings) > 1 ? m_lGameTimings.get(m_lGameTimings.size() - 2) : null;
                     if (gameTimingPrevious != null) {
                         int iDiffBetweenEndOfPrevAndStartOfCurrent = DateUtil.convertToSeconds(m_gameTimingCurrent.getStart() - gameTimingPrevious.getEnd());
@@ -798,9 +798,9 @@ public abstract class Model implements Serializable
                 break;
         }
 
-        boolean bOneRallyPlayed = ListUtil.size(m_lScoreHistory) == 1 || (ListUtil.size(m_lScoreHistory) == 2 && m_lScoreHistory.get(0).isAppealWithPoint());
+        boolean bOneRallyPlayed = ListUtil.size(m_lGameScoreHistory) == 1 || (ListUtil.size(m_lGameScoreHistory) == 2 && m_lGameScoreHistory.get(0).isAppealWithPoint());
         if ( isUsingHandicap() ) {
-            bOneRallyPlayed = ListUtil.size(m_lScoreHistory) == 1 || (ListUtil.size(m_lScoreHistory) == 2 && m_lScoreHistory.get(0).isAppealWithPoint());
+            bOneRallyPlayed = ListUtil.size(m_lGameScoreHistory) == 1 || (ListUtil.size(m_lGameScoreHistory) == 2 && m_lGameScoreHistory.get(0).isAppealWithPoint());
         }
         if ( bOneRallyPlayed ) {
             for(OnSpecialScoreChangeListener l: onSpecialScoreChangeListeners) {
@@ -826,7 +826,7 @@ public abstract class Model implements Serializable
 
     /** special undo. Might remove a scoreline that has already followed by a scoreline where the other player scored. Basic implementation for tabletennis. E.g. will not work with conduct calls for Squash */
     public synchronized boolean undoLastForScorer(Player p) {
-        if ( m_lScoreHistory.size() == 0 ) {
+        if ( m_lGameScoreHistory.size() == 0 ) {
             return false;
         }
 
@@ -835,13 +835,13 @@ public abstract class Model implements Serializable
         if ( lastValidWithScoring == null ) {
             return false;
         }
-        int iIDX = m_lScoreHistory.indexOf(lastValidWithScoring);
+        int iIDX = m_lGameScoreHistory.indexOf(lastValidWithScoring);
 
         // remove that specific line from ...
-        m_lScoreHistory.remove(iIDX);
+        m_lGameScoreHistory.remove(iIDX);
         m_gameTimingCurrent.removeTimings(iIDX);
 
-        if ( ListUtil.size(m_lScoreHistory) < JsonUtil.size(m_rallyEndStatsGIP) ) {
+        if ( ListUtil.size(m_lGameScoreHistory) < JsonUtil.size(m_rallyEndStatsGIP) ) {
             // TODO: for now I only remove statistics if the number of statistics is simply to large: this can be improved
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
                 m_rallyEndStatsGIP.remove(m_rallyEndStatsGIP.length() - 1);
@@ -870,17 +870,17 @@ public abstract class Model implements Serializable
                 break;
         }
 
-        if ( m_lScoreHistory.size() == 0 ) {
+        if ( m_lGameScoreHistory.size() == 0 ) {
             if ( getGameNrInProgress() <= 1 ) {
                 // nothing to undo. we have not started yet
                 return;
             }
 
             // go back into the previous game
-            ListUtil.removeLast(m_lGameScoreHistory);
+            ListUtil.removeLast(m_lGamesScoreHistory);
             ListUtil.removeLast(m_lGameCountHistory);
             ListUtil.removeLast(m_rallyEndStatistics);
-            m_lScoreHistory         = ListUtil.getLast(m_lGameScoreHistory);
+            m_lGameScoreHistory     = ListUtil.getLast(m_lGamesScoreHistory);
             m_player2GamesWon       = ListUtil.getLast(m_lGameCountHistory);
             m_rallyEndStatsGIP      = ListUtil.getLast(m_rallyEndStatistics);
             ListUtil.removeLast(m_lGameWinner);
@@ -900,10 +900,10 @@ public abstract class Model implements Serializable
             }
         } else {
             // remove the last
-            ScoreLine slRemoved = ListUtil.removeLast(m_lScoreHistory);
-            m_gameTimingCurrent.removeTimings(ListUtil.size(m_lScoreHistory));
+            ScoreLine slRemoved = ListUtil.removeLast(m_lGameScoreHistory);
+            m_gameTimingCurrent.removeTimings(ListUtil.size(m_lGameScoreHistory));
 
-            if ( ListUtil.size(m_lScoreHistory) < JsonUtil.size(m_rallyEndStatsGIP) ) {
+            if ( ListUtil.size(m_lGameScoreHistory) < JsonUtil.size(m_rallyEndStatsGIP) ) {
                 // TODO: for now I only remove statistics if the number of statistics is simply to large: this can be improved
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
                     m_rallyEndStatsGIP.remove(m_rallyEndStatsGIP.length() - 1);
@@ -923,7 +923,7 @@ public abstract class Model implements Serializable
                 if ( slRemoved.call.getScoreAffect().equals(Call.ScoreAffect.LoseGame) ) {
                     // we are undo-ing a conduct-game (CG)
                     Player adjustScoreFor = slRemoved.getCallTargetPlayer().getOther();
-                    for(ScoreLine l: m_lScoreHistory) {
+                    for(ScoreLine l: m_lGameScoreHistory) {
                         if ( adjustScoreFor.equals(l.getScoringPlayer()) ) {
                             m_scoreOfGameInProgress.put(adjustScoreFor, l.getScore());
                         }
@@ -954,7 +954,7 @@ public abstract class Model implements Serializable
                     }
                 }
 
-                if ( m_lScoreHistory.size() != 0 ) {
+                if ( m_lGameScoreHistory.size() != 0 ) {
                     ScoreLine lastValid = getLastScoreLine();
                     if ( lastValid.isCall() ) {
                         if ( lastValid.call.hasScoreAffect() ) {
@@ -963,7 +963,7 @@ public abstract class Model implements Serializable
                     } else {
                         if ( lastValid.isBrokenEquipment() ) {
                             // as last valid, take one earlier to be able to see who server was
-                            lastValid = m_lScoreHistory.get(Math.max(0, m_lScoreHistory.size() - 2));
+                            lastValid = m_lGameScoreHistory.get(Math.max(0, m_lGameScoreHistory.size() - 2));
                         }
                         determineServerAndSideForUndoFromPreviousScoreLine(lastValid, slRemoved);
                         if ( isDoubles() && getSport().equals(SportType.Squash)) {
@@ -977,7 +977,6 @@ public abstract class Model implements Serializable
                 }
 
                 Player[] gameBallFor = isPossibleGameBallFor();
-                //setGameVictoryFor(gameBallFor);
             }
         }
     }
@@ -992,34 +991,34 @@ public abstract class Model implements Serializable
     }
 
     public ScoreLine getLastScoreLine() {
-        return ListUtil.getLast(m_lScoreHistory);
+        return ListUtil.getLast(m_lGameScoreHistory);
     }
 
     public ScoreLine getLastCall() {
-        int i = ListUtil.size(m_lScoreHistory) - 1;
+        int i = ListUtil.size(m_lGameScoreHistory) - 1;
         while (   ( i >= 0 )
-               && (m_lScoreHistory.get(i).isCall() == false)) {
+               && (m_lGameScoreHistory.get(i).isCall() == false)) {
             i--;
         }
-        if ( (i >=0) && m_lScoreHistory.get(i).isCall() ) {
-            return m_lScoreHistory.get(i);
+        if ( (i >=0) && m_lGameScoreHistory.get(i).isCall() ) {
+            return m_lGameScoreHistory.get(i);
         }
         return null;
     }
 
     private ScoreLine getLastWithValidServer() {
-        int iIdx = m_lScoreHistory.size()-1;
-        while ( iIdx>=0 && m_lScoreHistory.get(iIdx).getServingPlayer()==null ) {
+        int iIdx = m_lGameScoreHistory.size()-1;
+        while ( iIdx>=0 && m_lGameScoreHistory.get(iIdx).getServingPlayer()==null ) {
             iIdx--;
         }
-        return iIdx>=0?m_lScoreHistory.get(iIdx):null;
+        return iIdx>=0?m_lGameScoreHistory.get(iIdx):null;
     }
     private ScoreLine getLastWithValidScorerEquals(Player p) {
-        int iIdx = m_lScoreHistory.size()-1;
-        while ( iIdx>=0 && p.equals(m_lScoreHistory.get(iIdx).getScoringPlayer()) ==false ) {
+        int iIdx = m_lGameScoreHistory.size()-1;
+        while ( iIdx>=0 && p.equals(m_lGameScoreHistory.get(iIdx).getScoringPlayer()) ==false ) {
             iIdx--;
         }
-        return iIdx>=0?m_lScoreHistory.get(iIdx):null;
+        return iIdx>=0?m_lGameScoreHistory.get(iIdx):null;
     }
 
     public void setGameStartScoreOffset(Player player, int iOffset) {
@@ -1028,7 +1027,7 @@ public abstract class Model implements Serializable
             m_startScoreOfPreviousGames.add(new HashMap<Player, Integer>(m_startScoreOfGameInProgress));
         }
         m_startScoreOfGameInProgress.put(player, iOffset);
-        if ( ListUtil.size(m_lScoreHistory) == 0 ) {
+        if ( ListUtil.size(m_lGameScoreHistory) == 0 ) {
             m_scoreOfGameInProgress.putAll(m_startScoreOfGameInProgress);
             for(OnComplexChangeListener l: onComplexChangeListeners) {
                 l.OnChanged();
@@ -1093,15 +1092,15 @@ public abstract class Model implements Serializable
     }
 
     private void addNewGameScoreDetails() {
-        if ( m_lScoreHistory == null ) {
-            m_lScoreHistory = new ArrayList<>();
-            m_lGameScoreHistory.add(m_lScoreHistory);
-        } else if ( m_lScoreHistory.size() > 0 ) {
-            m_lScoreHistory = new ArrayList<>();
-            m_lGameScoreHistory.add(m_lScoreHistory);
-        } else if ( m_lScoreHistory.size() == 0 ) {
-            if ( m_lGameScoreHistory.contains(m_lScoreHistory) == false ) {
-                m_lGameScoreHistory.add(m_lScoreHistory);
+        if ( m_lGameScoreHistory == null ) {
+            m_lGameScoreHistory = new ArrayList<>();
+            m_lGamesScoreHistory.add(m_lGameScoreHistory);
+        } else if ( m_lGameScoreHistory.size() > 0 ) {
+            m_lGameScoreHistory = new ArrayList<>();
+            m_lGamesScoreHistory.add(m_lGameScoreHistory);
+        } else {
+            if ( m_lGamesScoreHistory.contains(m_lGameScoreHistory) == false ) {
+                m_lGamesScoreHistory.add(m_lGameScoreHistory);
             }
         }
         //Log.d(TAG, "new GameScoreDetails: list of size " + m_lGameScoreHistory.size());
@@ -1141,7 +1140,7 @@ public abstract class Model implements Serializable
     }
 
     public List<ScoreLine> getScoreHistory() {
-        return m_lScoreHistory;
+        return m_lGameScoreHistory;
     }
 
     public List<Map<Player, Integer>> getGameScoresIncludingInProgress() {
@@ -1159,7 +1158,7 @@ public abstract class Model implements Serializable
         Player winner = Util.getWinner(gameScore);
         m_lGameWinner.add(winner);
 
-        m_player2GamesWon = new HashMap<Player, Integer>(m_player2GamesWon);
+        m_player2GamesWon = new HashMap<Player, Integer>(m_player2GamesWon); // clone
         MapUtil.increaseCounter(m_player2GamesWon, winner);
         m_lGameCountHistory.add(m_player2GamesWon);
 
@@ -1252,12 +1251,12 @@ public abstract class Model implements Serializable
 
     /** For drawing 'original' paper scoring. Contains all games including the one in progress */
     public List<List<ScoreLine>> getGameScoreHistory() {
-        return m_lGameScoreHistory;
+        return m_lGamesScoreHistory;
     }
 
     /** One-based */
     public int getGameNrInProgress() {
-        return ListUtil.size(m_lGameScoreHistory);
+        return ListUtil.size(m_lGamesScoreHistory);
     }
     public int getNrOfFinishedGames() {
         List<Map<Player, Integer>> endScoreOfGames = getEndScoreOfGames();
@@ -1841,7 +1840,7 @@ public abstract class Model implements Serializable
         int pA, pB;
         if ( getGameNrInProgress() > iGameZB ) {
             // discard part of the already entered score
-            scoreLines = m_lGameScoreHistory.get(iGameZB);
+            scoreLines = m_lGamesScoreHistory.get(iGameZB);
             if ( ListUtil.size(m_endScoreOfPreviousGames) > iGameZB ) {
                 Map<Player, Integer> mScoreOfGameWeModify = m_endScoreOfPreviousGames.get(iGameZB);
                 pA = mScoreOfGameWeModify.get(Player.A);
@@ -1961,9 +1960,9 @@ public abstract class Model implements Serializable
         }
 */
         if ( iGameZB < getGameNrInProgress() ) {
-            m_lGameScoreHistory.set(iGameZB, scoreLines);
+            m_lGamesScoreHistory.set(iGameZB, scoreLines);
         } else {
-            m_lGameScoreHistory.add(scoreLines);
+            m_lGamesScoreHistory.add(scoreLines);
         }
         String sJson = toJsonString();
         this.fromJsonString(sJson, false);
@@ -2354,7 +2353,7 @@ public abstract class Model implements Serializable
                 Player scoringPlayer = scoreLine.getScoringPlayer();
                 if ( scoringPlayer != null ) {
                     ServeSide nextServeSide = null;
-                    if (scoreLine.isHandout(getSport()) || m_lScoreHistory.size() == 0) {
+                    if (scoreLine.isHandout(getSport()) || m_lGameScoreHistory.size() == 0) {
                         setLastPointWasHandout(true);
 
                         if (NEXT_SERVE_SIDE_FROM_COUNT) {
@@ -2422,7 +2421,7 @@ public abstract class Model implements Serializable
     public String toJsonString(Context context, JSONObject oSettings) {
         try {
             if ( m_gameTimingCurrent != null ) {
-                if ( (m_gameTimingCurrent.getStart() == m_gameTimingCurrent.getEnd()) && ListUtil.size(m_lScoreHistory)!=0 ) {
+                if ( (m_gameTimingCurrent.getStart() == m_gameTimingCurrent.getEnd()) && ListUtil.size(m_lGameScoreHistory)!=0 ) {
                     m_gameTimingCurrent.updateEnd(GameTiming.ChangedBy.StartAndEndStillEqual);
                 }
             }
@@ -2448,8 +2447,8 @@ public abstract class Model implements Serializable
 
         // games
         JSONArray games = new JSONArray();
-        for (int s = 0; s < m_lGameScoreHistory.size(); s++) {
-            List<ScoreLine> lScoreHistory = m_lGameScoreHistory.get(s);
+        for (int s = 0; s < m_lGamesScoreHistory.size(); s++) {
+            List<ScoreLine> lScoreHistory = m_lGamesScoreHistory.get(s);
 
             JSONArray game = new JSONArray();
             for (int i = 0; i < lScoreHistory.size(); i++) {
@@ -2637,7 +2636,7 @@ public abstract class Model implements Serializable
                 timing.put(JSONKey.end  .toString(), gameTiming.getEnd());
             } else {
                 long lEnd = gameTiming.getEnd();
-                if ( (lEnd > lStart) || ListUtil.isNotEmpty(m_lScoreHistory) ) {
+                if ( (lEnd > lStart) || ListUtil.isNotEmpty(m_lGameScoreHistory) ) {
                     timing.put(JSONKey.start.toString(), DateUtil.formatDate2String(lStart, jsonTimeFormat));
                     timing.put(JSONKey.end  .toString(), DateUtil.formatDate2String(lEnd  , jsonTimeFormat));
                 }
@@ -2801,7 +2800,7 @@ public abstract class Model implements Serializable
         }
     }
 
-    public void endGame() {
+    public final void endGame() {
         endGame(true);
     }
     public void endGame(boolean bNotifyListeners) {
@@ -2810,7 +2809,7 @@ public abstract class Model implements Serializable
         int iScoreB = MapUtil.getInt(m_scoreOfGameInProgress, Player.B, 0);
 
         if ( iScoreA == iScoreB ) {
-            // can not end game when both players have the same score
+            // can not end game when both players have the same score (how about last game in racketlon?)
             return;
         }
 
@@ -2909,7 +2908,7 @@ public abstract class Model implements Serializable
     private Map<When, Player[]> m_possibleGameFor      = new HashMap<>();
 
     abstract Player[] calculatePossibleMatchVictoryFor (When when, Player[] paGameVictoryFor);
-    abstract Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom);
+    abstract Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom /*Only checked when running for Racketlon*/ );
 
     /** If game format has no tie-break (sudden death), it can be game ball for both players simultaneously */
     final Player[] _isPossibleGameVictoryFor(When when, boolean bFromIsMatchBallFrom) {
@@ -3017,7 +3016,7 @@ public abstract class Model implements Serializable
         return _isPossibleMatchVictoryFor(When.ScoreOneMorePoint, paGameVictoryFor);
     }
 
-    Player[] _isPossibleMatchVictoryFor(When when, Player[] paGameVictoryFor) {
+    final Player[] _isPossibleMatchVictoryFor(When when, Player[] paGameVictoryFor) {
         Player[] players = m_possibleMatchFor.get(when);
         if ( players == null ) {
             players = calculatePossibleMatchVictoryFor(when, paGameVictoryFor);
@@ -3118,7 +3117,7 @@ public abstract class Model implements Serializable
     }
 
     public boolean gameHasStarted() {
-        return ListUtil.isNotEmpty(m_lScoreHistory);
+        return ListUtil.isNotEmpty(m_lGameScoreHistory);
     }
     public boolean hasStarted() {
         boolean bHasStarted = getNrOfFinishedGames() > 0 || gameHasStarted();
@@ -3417,8 +3416,8 @@ public abstract class Model implements Serializable
         Player serverOfSet = null;
 
         // determine server by means of looking who served in a previous set (preferably going back to the first set)
-        for ( int iSetZBTmp = 0; iSetZBTmp < ListUtil.size (m_lGameScoreHistory); iSetZBTmp++ ) {
-            List<ScoreLine> scoreLines = m_lGameScoreHistory.get(iSetZBTmp);
+        for ( int iSetZBTmp = 0; iSetZBTmp < ListUtil.size (m_lGamesScoreHistory); iSetZBTmp++ ) {
+            List<ScoreLine> scoreLines = m_lGamesScoreHistory.get(iSetZBTmp);
             if ( ListUtil.isEmpty(scoreLines) ) { break; }
 
             ScoreLine firstScoreLineOfGame = scoreLines.get(0);
@@ -3477,7 +3476,7 @@ public abstract class Model implements Serializable
         }
 
         if ( matchHasEnded() ) {
-            if ( ListUtil.isEmpty(m_lScoreHistory) ) {
+            if ( ListUtil.isEmpty(m_lGameScoreHistory) ) {
                 // new game was initialized after end of match
                 undoLast(); // ensure the conduct warning will be added to end of the final game of the match
             }

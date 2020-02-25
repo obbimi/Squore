@@ -288,7 +288,7 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.newMatchLayout, context, NewMatchLayout.class, R.string.newMatchLayout_default);
     }
     public static GameScoresAppearance getGameScoresAppearance(Context context) {
-        if ( Brand.isRacketlon() ) {
+        if ( Brand.isRacketlon() || Brand.isGameSetMatch() ) {
             return GameScoresAppearance.ShowFullScore;
         }
         return getEnum(PreferenceKeys.gameScoresAppearance, context, GameScoresAppearance.class, GameScoresAppearance.ShowGamesWon);

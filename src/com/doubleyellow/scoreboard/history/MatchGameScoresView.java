@@ -94,8 +94,17 @@ public class MatchGameScoresView extends LinearLayout
     public void update(Model matchModel, Player pFirst) {
         m_checkLayoutCountDownTimer = null; // ensure it will be re-started
         m_players = new Player[] { pFirst, pFirst.getOther() };
+        List<Map<Player, Integer>> endScores = matchModel.getEndScoreOfPreviousGames();
+        if ( Brand.isGameSetMatch() ) {
+            endScores = new ArrayList<>();
+            GSMModel gsmModel = (GSMModel) matchModel;
+            Map<Player, Integer> setsWon  = gsmModel.getSetsWon();
+            Map<Player, Integer> gamesWon = gsmModel.getGamesWon();
+            endScores.add(setsWon);
+            endScores.add(gamesWon);
+        }
         this.update( m_players
-                   , matchModel.getEndScoreOfPreviousGames()
+                   , endScores
                    , matchModel.getPlayerNames(true, true, m_players)
                    , matchModel.getCountries(m_players)
                    , matchModel.getTimes()
