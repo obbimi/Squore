@@ -54,7 +54,7 @@ public class MatchCallsView extends LinearLayout
         for ( Player player : Model.getPlayers() ) {
             mPlayerCallCount.put(player, new HashMap<Call, Integer>());
         }
-        List<List<ScoreLine>> gameScoreHistory = matchModel.getGameScoreHistory();
+        List<List<ScoreLine>> gameScoreHistory = matchModel.getGamesScoreHistory();
         for ( List<ScoreLine> gameHistory : gameScoreHistory ) {
             for ( ScoreLine scoreLine : gameHistory ) {
                 if ( scoreLine.isCall() ) {
@@ -115,7 +115,7 @@ public class MatchCallsView extends LinearLayout
     private TableLayout getListAppealsAndCalls(Model matchModel) {
         TableLayout tlListAppeal = new TableLayout(getContext());
 
-        List<List<ScoreLine>> gameScoreHistory = matchModel.getGameScoreHistory();
+        List<List<ScoreLine>> gameScoreHistory = matchModel.getGamesScoreHistory();
         int iGame = 0;
         for (List<ScoreLine> gameHistory : gameScoreHistory) {
             iGame++;
@@ -163,7 +163,7 @@ public class MatchCallsView extends LinearLayout
     private TableLayout getListConducts(Model matchModel) {
         TableLayout tlListConduct = new TableLayout(getContext());
 
-        List<List<ScoreLine>> gameScoreHistory = matchModel.getGameScoreHistory();
+        List<List<ScoreLine>> gameScoreHistory = matchModel.getGamesScoreHistory();
         int iGame = 0;
         int iConduct = -1;
         for (List<ScoreLine> gameHistory : gameScoreHistory) {

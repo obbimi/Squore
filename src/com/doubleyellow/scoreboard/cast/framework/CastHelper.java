@@ -90,6 +90,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
     private Model m_matchModel = null;
     @Override public void setModelForCast(Model matchModel) {
+        if ( isCasting() == false ) { return; }
         Log.d(TAG, "New model for cast passed in : " + matchModel);
         if ( matchModel != m_matchModel && (matchModel != null)) {
             m_matchModel = matchModel;

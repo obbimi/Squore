@@ -120,7 +120,7 @@ public class ResultMailer {
         sbHtml.append("<tt>");
 
         // draw 'set history' for all sets
-        List<List<ScoreLine>>      gameScoreHistory = matchModel.getGameScoreHistory();
+        List<List<ScoreLine>>      gameScoreHistory = matchModel.getGamesScoreHistory();
 
         int iMaxNrOfScoreLines = 0;
         List<List<ScoreLine>> lTmp = new ArrayList<List<ScoreLine>>();
@@ -262,7 +262,7 @@ public class ResultMailer {
         ScorelineLayout scorelineLayout = PreferenceValues.getScorelineLayout(ctx);
 
         // draw 'set history' for all sets
-        List<List<ScoreLine>> setScoreHistory = matchModel.getGameScoreHistory();
+        List<List<ScoreLine>> setScoreHistory = matchModel.getGamesScoreHistory();
         List<GameTiming> times = matchModel.getTimes();
         List<Map<Player, Integer>> setScores = matchModel.getEndScoreOfGames();
         List<Map<Player, Integer>> setCountHistory = matchModel.getGameCountHistory();

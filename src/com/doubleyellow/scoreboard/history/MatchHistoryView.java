@@ -133,7 +133,7 @@ public class MatchHistoryView extends LinearLayout
         final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         // draw 'game history' for all games
-        List<List<ScoreLine>>      gameScoreHistory       = matchModel.getGameScoreHistory(); // including one in progress
+        List<List<ScoreLine>>      gameScoreHistory       = matchModel.getGamesScoreHistory(); // including one in progress
         List<Map<Player, Integer>> gameCountHistory       = matchModel.getGameCountHistory();
 
         Map<ColorPrefs.ColorTarget, Integer> colorSchema = ColorPrefs.getTarget2colorMapping(context);

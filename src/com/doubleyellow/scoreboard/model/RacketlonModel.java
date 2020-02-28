@@ -196,14 +196,6 @@ public class RacketlonModel extends Model {
         return pVictoryFor;
     }
 
-    @Override public Player isPossibleMatchVictoryFor() {
-        Player[] players = _isPossibleMatchVictoryFor(When.Now, null);
-        if ( ListUtil.length(players) == 1 ) {
-            return players[0];
-        }
-        return null;
-    }
-
     @Override Player[] calculatePossibleMatchVictoryFor(When when, Player[] pSetBallFor) {
         Map<Player, Integer> diffNow             = getPointsDiff(true);
         int                  nrOfPointsToWinSet  = getNrOfPointsToWinGame();

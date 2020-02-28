@@ -160,7 +160,7 @@ public class GameGraphView extends LineGraphView
         graphViewStyle.setGridColor(iColorLoser);
         graphViewStyle.setVerticalLabelsColor(iColorWinner);
 
-        List<List<ScoreLine>> lGamesScoreHistory = model.getGameScoreHistory();
+        List<List<ScoreLine>> lGamesScoreHistory = model.getGamesScoreHistory();
         if ( ListUtil.size(lGamesScoreHistory) < iShowGame || (iShowGame < 1) ) {
             return;
         }

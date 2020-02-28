@@ -123,9 +123,9 @@ public class MatchGameScoresView extends LinearLayout
 
     private void startCheckLayoutTimer() {
         if ( m_checkLayoutCountDownTimer == null ) {
-            Log.d(TAG, "Creating new layout timer...");
+          //Log.d(TAG, "Creating new layout timer...");
             m_checkLayoutCountDownTimer = new CheckLayoutCountDownTimer(this);
-            Log.d(TAG, "Starting check layout timer...");
+          //Log.d(TAG, "Starting check layout timer...");
             m_checkLayoutCountDownTimer.start();
         }
     }
@@ -214,14 +214,14 @@ public class MatchGameScoresView extends LinearLayout
                     iaTotal_0NOK_1OK_2NOKCnt[0]++;
                     switch(lineCount) {
                         case 0:
-                            Log.d(TAG, "Not just 1 line: " + lineCount + " (" + artv + ")");
+                          //Log.d(TAG, "Not just 1 line: " + lineCount + " (" + artv + ")");
                             iaTotal_0NOK_1OK_2NOKCnt[1]++;
                             break;
                         case 1:
                             iaTotal_0NOK_1OK_2NOKCnt[2]++;
                             break;
                         default:
-                            Log.d(TAG, "Not just 1 line: " + lineCount + " (" + artv + ")");
+                            //Log.d(TAG, "Not just 1 line: " + lineCount + " (" + artv + ")");
                             iaTotal_0NOK_1OK_2NOKCnt[3]++;
                             break;
                     }
@@ -278,7 +278,7 @@ public class MatchGameScoresView extends LinearLayout
                 //this.cancel();
             } else {
                 m_iLayoutOKCount++;
-                Log.d(TAG, String.format("No layout update required : %d are 0NOK, %d are OK, %d are 2NOK of %d (ms left: %d)", iaTotal_0NOK_1OK_2NOKCnt[1], iaTotal_0NOK_1OK_2NOKCnt[2], iaTotal_0NOK_1OK_2NOKCnt[3], iaTotal_0NOK_1OK_2NOKCnt[0], millisUntilFinished));
+              //Log.d(TAG, String.format("No layout update required : %d are 0NOK, %d are OK, %d are 2NOK of %d (ms left: %d)", iaTotal_0NOK_1OK_2NOKCnt[1], iaTotal_0NOK_1OK_2NOKCnt[2], iaTotal_0NOK_1OK_2NOKCnt[3], iaTotal_0NOK_1OK_2NOKCnt[0], millisUntilFinished));
                 if ( m_iLayoutOKCount >= 1 ) {
                     this.gsv.setVisibility(m_iRestoreVisibilityTo); // still makes the 'recalculations' period visible to the eye
                     this.cancel();
@@ -286,7 +286,7 @@ public class MatchGameScoresView extends LinearLayout
             };
         }
         @Override public void onFinish() {
-            Log.d(TAG, String.format("Layout timer finished (%d)", m_iLayoutOKCount));
+          //Log.d(TAG, String.format("Layout timer finished (%d)", m_iLayoutOKCount));
             if ( this.gsv != null ) {
                 this.gsv.setVisibility(m_iRestoreVisibilityTo);
 
@@ -342,7 +342,9 @@ public class MatchGameScoresView extends LinearLayout
         super.setOrientation(VERTICAL);
 
       //final List<ViewGroup> rows = new ArrayList<ViewGroup>();
+        int iRow = 0;
         for ( Map<Player, Integer> scores: gameScores ) {
+            iRow++;
             Player gameWinner = Util.getWinner(scores);
 
             final RelativeLayout tr = (RelativeLayout) inflater.inflate(R.layout.scores_horizontal, null);
@@ -353,7 +355,11 @@ public class MatchGameScoresView extends LinearLayout
                 boolean  bLeftColumn = p.equals(players[0]);
                 int      iResId      = bLeftColumn ? R.id.score_player_1 : R.id.score_player_2;
                 TextView txt         = (TextView) tr.findViewById(iResId);
-                setSizeAndColors(txt, p.equals(gameWinner), iTxtSizeForInstanceAndOrientation, instanceKey);
+                boolean bInvert = p.equals(gameWinner);
+                if ( Brand.isGameSetMatch() ) {
+                    bInvert = (iRow == 2); // do not invert for nr of sets won (row 1), invert for both players for games in current set (row 2)
+                }
+                setSizeAndColors(txt, bInvert, iTxtSizeForInstanceAndOrientation, instanceKey);
                 //txt.setText(StringUtil.pad(String.valueOf(scores.get(p)), ' ', 3, bLeftColumn) );
                 txt.setText(String.valueOf(scores.get(p)) );
 
@@ -400,7 +406,11 @@ public class MatchGameScoresView extends LinearLayout
             }
         }
 
-        if ( (bOrientationFirstTime == false) && Brand.isRacketlon() && MapUtil.isNotEmpty(m_pointsDiff) && ListUtil.isNotEmpty(gameScores) ) {
+        if ( (bOrientationFirstTime == false)
+           && Brand.isRacketlon()
+           && MapUtil.isNotEmpty(m_pointsDiff)
+           && ListUtil.isNotEmpty(gameScores)
+           ) {
             final RelativeLayout tr = (RelativeLayout) inflater.inflate(R.layout.scores_horizontal, null);
             tr.setBackgroundColor(bgColorLoser);
 

@@ -525,7 +525,7 @@ public class IBoard implements TimerViewContainer
         if ( currentGameScoreLines == null) { return; }
         if ( currentGameScoreLines.getVisibility() != View.VISIBLE ) { return; }
 
-        List<ScoreLine> history = matchModel.getScoreHistory();
+        List<ScoreLine> history = matchModel.getGameScoreHistory();
         currentGameScoreLines.setStretchAllColumns(false);
         //int textSize = PreferenceValues.getHistoryTextSize(this);
         //currentGameScoreLines.setTextSizePx(textSize);
