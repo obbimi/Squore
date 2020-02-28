@@ -22,6 +22,9 @@ import android.util.Log;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -49,22 +52,24 @@ public abstract class GSMModel extends Model
         m_player2SetsWon.put(Player.A, 0);
         m_player2SetsWon.put(Player.B, 0);
 
-        m_lSetsScoreHistory    = new ArrayList<List<ScoreLine>>();
+        addNewSetScoreDetails();
+
         m_lSetWinner           = new ArrayList<Player>();
 
         m_lSetCountHistory     = new ArrayList<Map<Player, Integer>>();
         m_lSetCountHistory.add(m_player2SetsWon);
 
         m_endScoreOfPreviousSets         = new ArrayList<Map<Player, Integer>>();
-        m_endScoreOfPreviousGames_PerSet = new ArrayList<>();
+      //m_endScoreOfPreviousGames_PerSet = new ArrayList<>();
 
         super.init();
     }
 
+    private List<List<List<ScoreLine>>>   m_lSetsScoreHistory     = null;
     /** For drawing 'original' paper scoring. Contains all sets including the one in progress */
-    private List<List<ScoreLine>>       m_lSetsScoreHistory    = null;
+    //private List<List<ScoreLine>>       m_lSetsScoreHistory    = null;
     /** scorehistory of the set in progress */
-    private List<ScoreLine>             m_lSetScoreHistory     = null;
+    //private List<ScoreLine>             m_lSetScoreHistory     = null;
 
     //------------------------
     // Game scores
@@ -73,9 +78,9 @@ public abstract class GSMModel extends Model
     /** scoring of won games in the set in progress: { A=2, B=5 }. Taken from m_endScoreOfPreviousSets when 'undo-ing' into previous set */
     //private Map<Player, Integer>        m_scoreOfSetInProgress   = null; // using m_player2GamesWon
     /** end scores of already ended sets [ {A=6,B=3},{A=2,B=6}, {A=7, B=6} ] . So does not hold set in progress. */
-    private List<Map<Player, Integer>>  m_endScoreOfPreviousSets = null;
+    private List<Map<Player, Integer>>       m_endScoreOfPreviousSets = null;
 
-    private List<List<Map<Player, Integer>>> m_endScoreOfPreviousGames_PerSet = null; // holds list of values of m_endScoreOfPreviousGames
+  //private List<List<Map<Player, Integer>>> m_endScoreOfPreviousGames_PerSet = null; // holds list of values of m_endScoreOfPreviousGames
 
     //------------------------
     // Set scores
@@ -94,9 +99,10 @@ public abstract class GSMModel extends Model
         super.endGame(bNotifyListeners); // updates m_player2GamesWon
 
         // see if a new Set must be started
-        Player pLeader = MapUtil.getMaxKey(m_player2GamesWon, Player.A);
-        int iGamesLeader  = MapUtil.getInt(m_player2GamesWon, pLeader           , 0);
-        int iGamesTrailer = MapUtil.getInt(m_player2GamesWon, pLeader.getOther(), 0);
+        Map<Player, Integer> player2GamesWon = getPlayer2GamesWon();
+        Player pLeader = MapUtil.getMaxKey(player2GamesWon, Player.A);
+        int iGamesLeader  = MapUtil.getInt(player2GamesWon, pLeader           , 0);
+        int iGamesTrailer = MapUtil.getInt(player2GamesWon, pLeader.getOther(), 0);
 
         boolean bEndSet = false;
         if ( iGamesLeader == m_iNrOfGamesToWinSet ) {
@@ -141,29 +147,41 @@ public abstract class GSMModel extends Model
 
     /** Invoked when model is created and when a set is ended */
     private void startNewSet() {
-        m_player2GamesWon = new HashMap<Player, Integer>();
-        m_player2GamesWon.put(Player.A, 0);
-        m_player2GamesWon.put(Player.B, 0);
+        Map<Player, Integer> player2GamesWon = getPlayer2GamesWon();
+        if ( m_endScoreOfPreviousSets.contains(player2GamesWon) == false ) {
+            m_endScoreOfPreviousSets.add(player2GamesWon);
+        }
 
-        m_endScoreOfPreviousGames_PerSet.add(m_endScoreOfPreviousGames);
-        m_endScoreOfPreviousGames = new ArrayList<>();
+        initEndScoreOfPreviousGames();
 
         addNewSetScoreDetails();
     }
 
     private void addNewSetScoreDetails() {
-        if ( m_lSetScoreHistory == null ) {
-            m_lSetScoreHistory = new ArrayList<>();
-            m_lSetsScoreHistory.add(m_lSetScoreHistory);
-        } else if ( m_lSetScoreHistory.size() > 0 ) {
-            m_lSetScoreHistory = new ArrayList<>();
-            m_lSetsScoreHistory.add(m_lSetScoreHistory);
+        Log.d(TAG, "addNewSetScoreDetails");
+        if ( m_lSetsScoreHistory == null ) {
+            m_lSetsScoreHistory = new ArrayList<>();
+            m_lSetsScoreHistory.add(getGamesScoreHistory());
         } else {
-            if ( m_lSetsScoreHistory.contains(m_lSetScoreHistory) == false ) {
-                m_lSetsScoreHistory.add(m_lSetScoreHistory);
+            List<List<ScoreLine>> lGamesScoreHistory = getGamesScoreHistory();
+            if ( lGamesScoreHistory.size() == 0 ) {
+                // do not add a new, there is an empty one
+            } else if ( lGamesScoreHistory.size() == 1 && ListUtil.isEmpty(lGamesScoreHistory.get(0)) ) {
+                // do not add a new, there is an empty one
+            } else {
+                // actually create new set and game
+                setGamesScoreHistory(new ArrayList<List<ScoreLine>>());
+                addNewGameScoreDetails();
+
+                lGamesScoreHistory = getGamesScoreHistory();
+                if ( m_lSetsScoreHistory.contains(lGamesScoreHistory) == false ) {
+                    m_lSetsScoreHistory.add(lGamesScoreHistory);
+                }
+
+                //Log.d(TAG, "new SetScoreDetails: list of size " + m_lSetScoreHistory.size());
+                resetPlayer2GamesWon();
             }
         }
-        //Log.d(TAG, "new SetScoreDetails: list of size " + m_lSetScoreHistory.size());
     }
 
     /** One-based */
@@ -172,18 +190,19 @@ public abstract class GSMModel extends Model
     }
 
     @Override public synchronized void undoLast() {
-        if ( m_lSetScoreHistory.size() == 0 ) {
-            if ( getSetNrInProgress() > 2 ) {
+        if ( getGameScoreHistory().size() == 0 ) {
+            if ( getSetNrInProgress() >= 2 ) {
 
                 // go back into the previous set
                 ListUtil.removeLast(m_lSetsScoreHistory);
+                setGamesScoreHistory(ListUtil.getLast(m_lSetsScoreHistory));
+
                 ListUtil.removeLast(m_lSetCountHistory);
-                m_lSetScoreHistory     = ListUtil.getLast(m_lSetsScoreHistory);
                 m_player2SetsWon       = ListUtil.getLast(m_lSetCountHistory);
+
                 ListUtil.removeLast(m_lSetWinner);
 
-                m_player2GamesWon = ListUtil.removeLast(m_endScoreOfPreviousSets);
-
+                setPlayer2GamesWon(ListUtil.removeLast(m_endScoreOfPreviousSets));
 /*
                 for(OnComplexChangeListener l:onComplexChangeListeners) {
                     l.OnChanged();
@@ -195,18 +214,12 @@ public abstract class GSMModel extends Model
         super.undoLast();
     }
 
-    @Override void startNewGame() {
-        // TODO: see if a new Set must be started
-
-        super.startNewGame();
-    }
-
     private void addSetScore(Map<Player, Integer> setScore) {
         //Log.d(TAG, "addGameScore: " + scores + " " + ListUtil.size(m_endScoreOfPreviousGames));
         Player winner = Util.getWinner(setScore);
         m_lSetWinner.add(winner);
 
-        m_player2SetsWon = new HashMap<Player, Integer>(m_player2SetsWon); // clone
+        m_player2SetsWon = new HashMap<Player, Integer>(m_player2SetsWon); // clone to get current score before adding set
         MapUtil.increaseCounter(m_player2SetsWon, winner);
         m_lSetCountHistory.add(m_player2SetsWon);
 
@@ -216,9 +229,6 @@ public abstract class GSMModel extends Model
 // TODO: Tiebreak in All but last set,All Sets,All sets, supertiebreak in last set (or even AS deciding without last set)
 
     // TODO: Timer not between ALL games
-    // TODO: no game ball message, only set ball message
-    // DONE: Auto change sides every odd game
-    // DONE: doubles is the default in padel (not for tennis)
 
     /** nr of games needed to win a set  */
     private int                                 m_iNrOfGamesToWinSet    = 6; // in sync with m_iNrOfPointsToWinGame
@@ -255,7 +265,7 @@ public abstract class GSMModel extends Model
 
     @Override public boolean setNrOfPointsToWinGame(int i) {
         super.setNrOfPointsToWinGame(i);
-        Log.w(TAG, "Redirecting to setNrOfGamesToWinSet");
+      //Log.w(TAG, "Redirecting to setNrOfGamesToWinSet");
         return setNrOfGamesToWinSet(i);
     }
 
@@ -288,7 +298,8 @@ public abstract class GSMModel extends Model
     }
 
     @Override public int getGameNrInProgress() {
-        return ListUtil.size(m_endScoreOfPreviousGames);
+        return super.getGameNrInProgress();
+      //return ListUtil.size(m_endScoreOfPreviousGames); // TODO: required
     }
 
     private boolean isTieBreakGame() {
@@ -343,7 +354,7 @@ public abstract class GSMModel extends Model
     }
 
     @Override DoublesServeSequence getDoubleServeSequence(int iGameZB) {
-        return DoublesServeSequence.NA;
+        return DoublesServeSequence.NA; // TODO: always one and the same server in a game
     }
 
     @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) { }
@@ -362,7 +373,7 @@ public abstract class GSMModel extends Model
     }
 
     @Override public String getResultShort() {
-        return null;
+        return null; // TODO:
     }
 
     @Override public void changeScore(Player player) {
@@ -379,10 +390,13 @@ public abstract class GSMModel extends Model
         int iNrOfGames = getGameNrInProgress(); // TODO: spanning all sets
 
         Player server = getServer();
-        List<ScoreLine> scoreLines = getGameScoreHistory().get(0);
-        if ( ListUtil.isNotEmpty(scoreLines) ) {
-            ScoreLine scoreLine = scoreLines.get(0);
-            server = scoreLine.getServingPlayer();
+        List<List<ScoreLine>> gamesScoreHistory = getGamesScoreHistory();
+        if ( ListUtil.isNotEmpty(gamesScoreHistory) ) {
+            List<ScoreLine> scoreLines = gamesScoreHistory.get(0);
+            if ( ListUtil.isNotEmpty(scoreLines) ) {
+                ScoreLine scoreLine = scoreLines.get(0);
+                server = scoreLine.getServingPlayer();
+            }
         }
         for( int i = 0; i < iNrOfGames - 1; i++ ) {
             server = server.getOther();
@@ -394,7 +408,7 @@ public abstract class GSMModel extends Model
     @Override Player[] calculatePossibleMatchVictoryFor(When when, Player[] pLayersSB) {
         if ( pLayersSB == null ) {
             Player[] playersGB = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, m_scoreOfGameInProgress, _getNrOfPointsToWinGame());
-                     pLayersSB = calculateIsPossibleSetVictoryFor(playersGB, when, m_player2GamesWon);
+                     pLayersSB = calculateIsPossibleSetVictoryFor(playersGB, when, getPlayer2GamesWon());
             if ( pLayersSB.length == 1 ) {
                 int iSetsWon = MapUtil.getInt(m_player2SetsWon, pLayersSB[0], 0);
                 if ( iSetsWon + 1 == m_iNrOfSetsToWinMatch ) {
@@ -408,7 +422,7 @@ public abstract class GSMModel extends Model
 
     @Override Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom) {
         Player[] playersGB = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore, _getNrOfPointsToWinGame());
-        Player[] pLayersSB =       calculateIsPossibleSetVictoryFor(playersGB, when, m_player2GamesWon);
+        Player[] pLayersSB =       calculateIsPossibleSetVictoryFor(playersGB, when, getPlayer2GamesWon());
 
         switch ( when ) {
             case Now:
@@ -507,6 +521,74 @@ public abstract class GSMModel extends Model
         return getNoneOfPlayers();
     }
 
+    @Override protected List getScorelinesRoot() {
+        return m_lSetsScoreHistory;
+    }
+
+    @Override protected JSONArray scoreHistoryToJson(List lSetScoreHistory) throws JSONException {
+        JSONArray sets = new JSONArray();
+        for (int s = 0; s < lSetScoreHistory.size(); s++) {
+            List lGamesScoreHistory = (List) lSetScoreHistory.get(s);
+            JSONArray games = super.scoreHistoryToJson(lGamesScoreHistory);
+            sets.put(games);
+        }
+        return sets;
+    }
+
+    @Override protected ScoreLine scoreHistoryFromJSON(boolean bMatchFormatIsSet, JSONArray sets) throws JSONException {
+        ScoreLine scoreLine = null;
+        for ( int s=0; s < sets.length(); s++ ) {
+            JSONArray games = sets.getJSONArray(s);
+            if ( games.length() == 0 ) { continue; }
+
+            // add previous game scores to history
+            Map<Player, Integer> player2GamesWon = getPlayer2GamesWon();
+            if ( ( s != 0 ) && ( MapUtil.isNotEmpty(player2GamesWon) ) ) {
+                int max = Math.max( MapUtil.getInt(player2GamesWon, Player.A, 0)
+                                  , MapUtil.getInt(player2GamesWon, Player.B, 0)
+                                  );
+                boolean bSetIsStarted = max != 0;
+                if ( bSetIsStarted ) {
+                    addSetScore(player2GamesWon);
+                }
+            }
+            // initialize for new set
+            startNewSet();
+
+            scoreLine = super.scoreHistoryFromJSON(bMatchFormatIsSet, games);
+        }
+        return scoreLine;
+    }
+
+/*
+    @Override public JSONObject getJsonObject(Context context, JSONObject oSettings) throws JSONException {
+        JSONObject jsonObject = super.getJsonObject(context, oSettings);
+        String s = getSetScores();
+        return jsonObject;
+    }
+*/
+
+    @Override public String getGameScores() {
+        String gameScores = super.getGameScores();
+
+        StringBuilder sbSets = new StringBuilder();
+        List<Map<Player, Integer>> setEndScores = m_lSetCountHistory;
+        for(Map<Player, Integer> mSetScore: setEndScores) {
+            Integer iA = mSetScore.get(Player.A);
+            Integer iB = mSetScore.get(Player.B);
+            if ( iA + iB > 0 ) {
+                if ( sbSets.length() != 0 ) {
+                    sbSets.append(",");
+                }
+                sbSets.append(iA).append("-").append(iB);
+            }
+        }
+        return sbSets.toString();
+    }
+
+    @Override protected JSONArray timingsToJSON() throws JSONException {
+        return null;
+    }
     @Override public void recordAppealAndCall(Player appealing, Call call) { }
     @Override public void recordConduct(Player pMisbehaving, Call call, ConductType conductType) { }
 }
