@@ -357,7 +357,7 @@ public class MatchGameScoresView extends LinearLayout
                 TextView txt         = (TextView) tr.findViewById(iResId);
                 boolean bInvert = p.equals(gameWinner);
                 if ( Brand.isGameSetMatch() ) {
-                    bInvert = (iRow == 2); // do not invert for nr of sets won (row 1), invert for both players for games in current set (row 2)
+                    bInvert = (iRow == ListUtil.size(gameScores)); // do not invert for nr of sets won (row 1), invert for both players for games in current set (row 2)
                 }
                 setSizeAndColors(txt, bInvert, iTxtSizeForInstanceAndOrientation, instanceKey);
                 //txt.setText(StringUtil.pad(String.valueOf(scores.get(p)), ' ', 3, bLeftColumn) );
@@ -543,7 +543,9 @@ public class MatchGameScoresView extends LinearLayout
         final List<ViewGroup> cols = new ArrayList<ViewGroup>(); // holds all columns
 
         // show end scores of all games
+        int iRow = 0;
         for ( Map<Player, Integer> scores: gameScores ) {
+            iRow++;
             Player gameWinner = Util.getWinner(scores);
 
             final RelativeLayout col = (RelativeLayout) inflater.inflate(iResIdInflate, null);
@@ -554,7 +556,11 @@ public class MatchGameScoresView extends LinearLayout
                 boolean  bTopRow = p.equals(players[0]);
                 int      iResId  = bTopRow ? R.id.score_player_1 : R.id.score_player_2;
                 TextView txt     = (TextView) col.findViewById(iResId);
-                setSizeAndColors(txt, p.equals(gameWinner), iTxtSizeForInstanceAndOrientation, instanceKey);
+                boolean bInvert = p.equals(gameWinner);
+                if ( Brand.isGameSetMatch() ) {
+                    bInvert = (iRow == ListUtil.size(gameScores)); // do not invert for nr of sets won (row 1), invert for both players for games in current set (row 2)
+                }
+                setSizeAndColors(txt, bInvert, iTxtSizeForInstanceAndOrientation, instanceKey);
                 //txt.setText(StringUtil.pad(String.valueOf(scores.get(p)), ' ', 2, bLeftColumn) );
                 //txt.setText(" " + scores.get(p) + " "); // add a space just for spacing (on both sides for centering)
                 txt.setText(String.valueOf(scores.get(p)));

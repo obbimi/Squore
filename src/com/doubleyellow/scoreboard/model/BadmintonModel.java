@@ -74,23 +74,7 @@ public class BadmintonModel extends Model
     // serve side/sequence
     //-------------------------------
 
-  //private Player       m_previousServingTeam   = null;
-  //private DoublesServe m_previousServingPlayer = null;
-  //private ServeSide    m_previousServerSide    = null;
     @Override void setServerAndSide(Player newServer, ServeSide side, DoublesServe doublesServe) {
-        // serves changes from one team to the other: remember who served from where
-/*
-        Player oldServer = getServer();
-        if ( newServer.equals(oldServer) && isDoubles() ) {
-            //m_previousServingTeam   = null;
-            m_previousServerSide    = null;
-            m_previousServingPlayer = null;
-        } else {
-            //m_previousServingTeam   = oldServer;
-            m_previousServerSide    = getNextServeSide(oldServer);
-            m_previousServingPlayer = getNextDoubleServe(oldServer);
-        }
-*/
         if ( (doublesServe != null) && (doublesServe.equals(DoublesServe.NA) == false) && (side != null) ) {
             // for both teams keep R=O and L=I and in sync
             if ( doublesServe.ordinal() == side.ordinal() ) {
@@ -102,16 +86,6 @@ public class BadmintonModel extends Model
     }
 
     @Override DoublesServe determineDoublesReceiver(DoublesServe serverOfOppositeTeam, ServeSide serveSide) {
-/*
-        if ( m_previousServingPlayer != null ) {
-            if ( serveSide.equals(m_previousServerSide) ) {
-                return
-            }
-        } else {
-            // server remains to same to team same player, just other player will be receiving
-            return getDoubleReceiver().getOther();
-        }
-*/
         return serverOfOppositeTeam;
     }
 

@@ -46,12 +46,12 @@ public class ModelFactory
         return m;
     }
 
-    private static SquashModel      mTmpSquash      = new SquashModel(false);
-    private static RacketlonModel   mTmpRacketlon   = new RacketlonModel();
-    private static TabletennisModel mTmpTabletennis = new TabletennisModel();
-    private static BadmintonModel   mTmpBadminton   = new BadmintonModel();
-    private static RacquetballModel mTmpRacketball  = new RacquetballModel();
-    private static PadelModel       mTmpPadel       = new PadelModel();
+    private static SquashModel      mTmpSquash      = null;
+    private static RacketlonModel   mTmpRacketlon   = null;
+    private static TabletennisModel mTmpTabletennis = null;
+    private static BadmintonModel   mTmpBadminton   = null;
+    private static RacquetballModel mTmpRacketball  = null;
+    private static PadelModel       mTmpPadel       = null;
     public static Model getTemp() {
         return getTemp(Brand.brand);
     }
@@ -59,21 +59,39 @@ public class ModelFactory
         Model mTmp = null;
         switch (type.getSportType()) {
             case Squash:
+                if ( mTmpSquash == null ) {
+                    mTmpSquash = new SquashModel(false);
+                }
                 mTmp = mTmpSquash;
                 break;
             case Racketlon:
+                if ( mTmpRacketlon == null ) {
+                    mTmpRacketlon = new RacketlonModel();
+                }
                 mTmp = mTmpRacketlon;
                 break;
             case Tabletennis:
+                if ( mTmpTabletennis == null ) {
+                    mTmpTabletennis = new TabletennisModel();
+                }
                 mTmp = mTmpTabletennis;
                 break;
             case Badminton:
+                if ( mTmpBadminton == null ) {
+                    mTmpBadminton = new BadmintonModel();
+                }
                 mTmp = mTmpBadminton;
                 break;
             case Racquetball:
+                if ( mTmpRacketball == null ) {
+                    mTmpRacketball = new RacquetballModel();
+                }
                 mTmp = mTmpRacketball;
                 break;
             case Padel:
+                if ( mTmpPadel == null ) {
+                    mTmpPadel = new PadelModel();
+                }
                 mTmp = mTmpPadel;
                 break;
         }
