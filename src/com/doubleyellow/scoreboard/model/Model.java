@@ -28,7 +28,6 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.util.ListWrapper;
-import com.doubleyellow.scoreboard.util.MapWrapper;
 import com.doubleyellow.util.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -139,7 +138,7 @@ public abstract class Model implements Serializable
     transient private List<OnGameEndListener>            onGameEndListeners              = new ArrayList<OnGameEndListener>();
     transient         List<OnMatchEndListener>           onMatchEndListeners             = new ArrayList<OnMatchEndListener>();
     transient private List<OnCallChangeListener>         onCallChangeListeners           = new ArrayList<OnCallChangeListener>();
-    transient private List<OnComplexChangeListener>      onComplexChangeListeners        = new ArrayList<OnComplexChangeListener>();
+    transient         List<OnComplexChangeListener>      onComplexChangeListeners        = new ArrayList<OnComplexChangeListener>();
     transient private List<OnBrokenEquipmentListener>    onBrokenEquipmentListeners      = new ArrayList<OnBrokenEquipmentListener>();
     transient private List<OnLockChangeListener>         onLockChangeListeners           = new ArrayList<OnLockChangeListener>();
     transient private List<GameTiming.OnTimingChangedListener> onTimingChangedListeners  = new ArrayList<GameTiming.OnTimingChangedListener>();
@@ -335,36 +334,44 @@ public abstract class Model implements Serializable
     private List<List<ScoreLine>>               m_lGamesScorelineHistory    = null;
 
     /** For overwriting by GSMModel */
-    void setGamesScoreHistory(List<List<ScoreLine>> l) {
+    final void setGamesScoreHistory(List<List<ScoreLine>> l) {
         if ( m_lGamesScorelineHistory != null ) {
             Log.w(TAG, "m_lGamesScorelineHistory : Setting to a new array");
         }
         m_lGamesScorelineHistory = l;
     }
     /** For overwriting by GSMModel */
-    void setPlayer2GamesWonHistory(List<Map<Player, Integer>> l) {
+    final void setPlayer2GamesWonHistory(final List<Map<Player, Integer>> l) {
         if ( m_lPlayer2GamesWon != null ) {
             Log.w(TAG, "m_lPlayer2GamesWon : Setting to a new array");
         }
         m_lPlayer2GamesWon = l;
-    }
-    /** For overwriting by GSMModel */
-    void setPlayer2EndPointsOfGames(List<Map<Player, Integer>> l) {
-        if ( m_lPlayer2EndPointsOfGames != null ) {
-            Log.w(TAG, "m_lPlayer2EndPointsOfGames : Setting to a new array");
+        if ( l.isEmpty() ) {
+            l.add(getZeroZeroMap());
         }
-        m_lPlayer2EndPointsOfGames = new ListWrapper<Map<Player, Integer>>(l);
     }
-
-    List<Map<Player, Integer>> getPlayer2GamesWonHistory() {
+    final List<Map<Player, Integer>> getPlayer2GamesWonHistory() {
         if ( m_lPlayer2GamesWon == null ) {
-            setPlayer2GamesWonHistory(new ArrayList<Map<Player, Integer>>());
+            ListWrapper<Map<Player, Integer>> l = new ListWrapper<Map<Player, Integer>>();
+            l.setName("Set 1");
+            setPlayer2GamesWonHistory(l);
         }
         return m_lPlayer2GamesWon;
     }
-    List<Map<Player, Integer>> getPlayer2EndPointsOfGames() {
+
+    /** For overwriting by GSMModel */
+    final void setPlayer2EndPointsOfGames(List<Map<Player, Integer>> l) {
+        if ( m_lPlayer2EndPointsOfGames != null ) {
+            Log.w(TAG, "m_lPlayer2EndPointsOfGames : Setting to a new array");
+        }
+        m_lPlayer2EndPointsOfGames = l;
+    }
+
+    final List<Map<Player, Integer>> getPlayer2EndPointsOfGames() {
         if ( m_lPlayer2EndPointsOfGames == null ) {
-            setPlayer2EndPointsOfGames(new ArrayList<Map<Player, Integer>>());
+            ListWrapper<Map<Player, Integer>> l = new ListWrapper<Map<Player, Integer>>();
+            l.setName("Set 1");
+            setPlayer2EndPointsOfGames(l);
         }
         return m_lPlayer2EndPointsOfGames;
     }
@@ -381,11 +388,10 @@ public abstract class Model implements Serializable
         return ListUtil.getLast(m_lPlayer2EndPointsOfGames);
     }
     /* scoring of the game in progress: { A=5, B=8 }. Taken from m_lPlayer2EndPointsOfGames when 'undo-ing' into previous game */
-  //private Map<Player, Integer>                m_scoreOfGameInProgress   = null; // TODO: remove and take last from m_lPlayer2EndPointsOfGames
-    /** end scores of already ended games [ {A=11,B=9},{A=4,B=11}, {A=11, B=8} ] . So does not hold game in progress. */
-    /** end scores of all games [ {A=11,B=9},{A=4,B=11}, {A=5, B=8} ]. So does hold game in progress. */
+  //private Map<Player, Integer>                m_scoreOfGameInProgress   = null; // removed and taken last from m_lPlayer2EndPointsOfGames
+    /** end scores of all games [ {A=11,B=9},{A=4,B=11}, {A=5, B=8} ]. So does hold game in progress. length should always be equal to the number of games finished */
     private List<Map<Player, Integer>>          m_lPlayer2EndPointsOfGames   = null;
-    /** holds array with history of games won like [0-0, 0-1, 1-1, 2-1] */
+    /** holds array with history of games won like [0-0, 0-1, 1-1, 2-1]. length should always be one more than the number of games finished (in a set) */
     private List<Map<Player, Integer>>          m_lPlayer2GamesWon           = null;
 
     /** For when playing with handicap system */
@@ -451,36 +457,6 @@ public abstract class Model implements Serializable
         getPlayer2GamesWonHistory().add(player2GamesWon);
     }
 */
-
-    /** Invoked when model is created and when a game is ended */
-    private void startNewGame() {
-        m_gameTimingCurrent = new GameTiming(m_lGameTimings.size(), System.currentTimeMillis(), System.currentTimeMillis(), onTimingChangedListeners);
-        m_lGameTimings.add(m_gameTimingCurrent);
-
-        Player pLastScorer = null;
-        if ( hasStarted() ) {
-            ScoreLine slLast = getLastScoreLine();
-            if (slLast != null) { pLastScorer = slLast.getScoringPlayer(); }
-        }
-        Map<Player, Integer> player2EndPointsNewGame = addNewGameScoreDetails();
-
-        m_rallyEndStatsGIP = new JSONArray();
-        m_rallyEndStatistics.add(m_rallyEndStatsGIP);
-
-        if ( isDoubles() ) {
-            handout(pLastScorer, false);
-        } else {
-            handout(m_pServer, false);
-        }
-
-        for(OnScoreChangeListener l:onScoreChangeListeners) {
-            l.OnScoreChange(Player.A, MapUtil.getInt(player2EndPointsNewGame, Player.A, 0), 0, null);
-            l.OnScoreChange(Player.B, MapUtil.getInt(player2EndPointsNewGame, Player.B, 0), 0, null);
-        }
-
-        m_iTieBreakPlusX = 0; // reset value that might have been set for tie-break
-        m_halfwayStatus = Halfway.Before;
-    }
 
     //-------------------------------
     // serve side/sequence
@@ -1012,7 +988,7 @@ public abstract class Model implements Serializable
         setDirty(true);
     }
 
-    void undoBackOneGame() {
+    private void undoBackOneGame() {
         ListUtil.removeLast(m_lGamesScorelineHistory); // no from gsm
         ListUtil.removeLast(m_lPlayer2GamesWon); // TODO: not required if it is the zero-zero one?
         ListUtil.removeLast(m_rallyEndStatistics);
@@ -1150,7 +1126,7 @@ public abstract class Model implements Serializable
     }
 
     /** return getPlayer2EndPointsNewGame */
-    Map<Player, Integer> addNewGameScoreDetails() {
+    private Map<Player, Integer> addNewGameScoreDetails() {
         List<List<ScoreLine>> gamesScoreHistory = getGamesScoreHistory();
         List<ScoreLine> gameHistory;
         if ( gamesScoreHistory.size() == 0 ) {
@@ -1165,6 +1141,7 @@ public abstract class Model implements Serializable
         }
         //Log.d(TAG, "new GameScoreDetails: list of size " + m_lGameScoreHistory.size());
 
+        // add zero-zero to
         List<Map<Player, Integer>> player2EndPointsOfGames = getPlayer2EndPointsOfGames();
         Map<Player, Integer> last = ListUtil.getLast(player2EndPointsOfGames);
         if ( (last == null) || (MapUtil.getMaxValue(last) > 0) ) {
@@ -1231,10 +1208,9 @@ public abstract class Model implements Serializable
         Player winner = Util.getWinner(gameScore);
         m_lGameWinner.add(winner);
 
+        // clone last entry and add one to winner
         Map<Player, Integer> player2GamesWonNow = getPlayer2GamesWon();
         Map<Player, Integer> player2GamesWonNew = new HashMap<Player, Integer>(player2GamesWonNow);
-
-        // clone last entry
         MapUtil.increaseCounter(player2GamesWonNew, winner);
         m_lPlayer2GamesWon.add(player2GamesWonNew);
 
@@ -1350,7 +1326,7 @@ public abstract class Model implements Serializable
     }
 
     /** For drawing 'original' paper scoring. Contains all games including the one in progress */
-    public List<List<ScoreLine>> getGamesScoreHistory() {
+    public final List<List<ScoreLine>> getGamesScoreHistory() {
         if ( m_lGamesScorelineHistory == null ) {
             setGamesScoreHistory(new ArrayList<List<ScoreLine>>());
             //addNewGameScoreDetails();
@@ -2915,7 +2891,7 @@ public abstract class Model implements Serializable
     }
     /** called only 'manually forced' via menu item from outside model */
     public void endMatch(EndMatchManuallyBecause endMatchManuallyBecause, Player pWinnerManually) {
-        endGame(false);
+        endGame(false, true);
 
         m_winnerBecauseOf = pWinnerManually;
 
@@ -2943,9 +2919,9 @@ public abstract class Model implements Serializable
     }
 
     public final void endGame() {
-        endGame(true);
+        endGame(true, true);
     }
-    public void endGame(boolean bNotifyListeners) {
+    public void endGame(boolean bNotifyListeners, boolean bStartNewGame) {
         Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress();
         int iScoreA = MapUtil.getInt(scoreOfGameInProgress, Player.A, 0);
         int iScoreB = MapUtil.getInt(scoreOfGameInProgress, Player.B, 0);
@@ -2954,12 +2930,12 @@ public abstract class Model implements Serializable
             // can not end game when both players have the same score (how about last game in racketlon?)
             return;
         }
-/*
+
         HashMap<Player, Integer> scores = new HashMap<Player, Integer>();
         scores.put(Player.A, iScoreA);
         scores.put(Player.B, iScoreB);
         addGameScore(scores, true);
-*/
+
         if ( this instanceof GSMModel == false ) {
             // learn from current game ending to what game ending we are playing
             int max  = Math.max(iScoreA, iScoreB);
@@ -2968,10 +2944,12 @@ public abstract class Model implements Serializable
             }
         }
 
-        startNewGame();
+        if ( bStartNewGame ) {
+            startNewGame();
 
-        Player serverForNextGame = determineServerForNextGame(getGameNrInProgress()-1, iScoreA, iScoreB);
-        setServerAndSide(serverForNextGame, null, null);
+            Player serverForNextGame = determineServerForNextGame(getGameNrInProgress()-1, iScoreA, iScoreB);
+            setServerAndSide(serverForNextGame, null, null);
+        }
 
         setDirty(true);
 
@@ -2986,6 +2964,36 @@ public abstract class Model implements Serializable
                 }
             }
         }
+    }
+
+    /** Invoked when model is created and when a game is ended */
+    final void startNewGame() {
+        m_gameTimingCurrent = new GameTiming(m_lGameTimings.size(), System.currentTimeMillis(), System.currentTimeMillis(), onTimingChangedListeners);
+        m_lGameTimings.add(m_gameTimingCurrent);
+
+        Player pLastScorer = null;
+        if ( hasStarted() ) {
+            ScoreLine slLast = getLastScoreLine();
+            if (slLast != null) { pLastScorer = slLast.getScoringPlayer(); }
+        }
+        Map<Player, Integer> player2EndPointsNewGame = addNewGameScoreDetails();
+
+        m_rallyEndStatsGIP = new JSONArray();
+        m_rallyEndStatistics.add(m_rallyEndStatsGIP);
+
+        if ( isDoubles() ) {
+            handout(pLastScorer, false);
+        } else {
+            handout(m_pServer, false);
+        }
+
+        for(OnScoreChangeListener l:onScoreChangeListeners) {
+            l.OnScoreChange(Player.A, MapUtil.getInt(player2EndPointsNewGame, Player.A, 0), 0, null);
+            l.OnScoreChange(Player.B, MapUtil.getInt(player2EndPointsNewGame, Player.B, 0), 0, null);
+        }
+
+        m_iTieBreakPlusX = 0; // reset value that might have been set for tie-break
+        m_halfwayStatus = Halfway.Before;
     }
 
     public void timestampStartOfGame(GameTiming.ChangedBy changedBy) {
