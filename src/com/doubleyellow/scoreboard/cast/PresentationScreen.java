@@ -353,7 +353,6 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         }
     }
     private class TimingChangedListener implements GameTiming.OnTimingChangedListener  {
-        private int iCnt = 0;
         @Override public void OnTimingChanged(int iGameNr, GameTiming.Changed changed, long lTimeStart, long lTimeEnd, GameTiming.ChangedBy changedBy) {
             if ( changed.equals(GameTiming.Changed.Start) ) {
                 if (changedBy == GameTiming.ChangedBy.TimerEnded || changedBy == GameTiming.ChangedBy.DialogOpened || changedBy == GameTiming.ChangedBy.DialogClosed) {

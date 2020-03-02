@@ -269,6 +269,7 @@ public class IBoard implements TimerViewContainer
     public void updateGameAndMatchDurationChronos() {
         updateGameDurationChrono();
         updateMatchDurationChrono();
+        updateSetDurationChrono(); // GSM
     }
 
     public void stopMatchDurationChrono() {
@@ -302,6 +303,43 @@ public class IBoard implements TimerViewContainer
             } else {
                 tvMatchTime.setBase(roundToNearest1000(calculatedBase));
                 tvMatchTime.start();
+            }
+        }
+    }
+    /** only for GSMModel matches */
+    public void updateSetDurationChrono() {
+        Chronometer tvSetTime = (Chronometer) findViewById(R.id.sb_set_duration);
+        if ( tvSetTime == null ) { return; }
+
+        if ( Brand.isGameSetMatch() == false ) {
+            tvSetTime.setVisibility(View.GONE);
+        }
+
+        // TODO: hide during first set since it has the same value as match duration
+
+        boolean bShowSetTimer = PreferenceValues.showMatchDuration(context, isPresentation());
+        tvSetTime.setVisibility(bShowSetTimer?View.VISIBLE:View.GONE);
+
+        if ( bShowSetTimer ) {
+            GSMModel matchModel = (GSMModel) this.matchModel;
+            int setNrInProgress = matchModel.getSetNrInProgress();
+            String sFormat = getSetDurationFormat(setNrInProgress);
+            tvSetTime.setFormat(sFormat);
+
+            long elapsedRealtime = SystemClock.elapsedRealtime();
+            long lBootTime       = System.currentTimeMillis() - elapsedRealtime;
+            long lStartTime      = matchModel.getSetStart(setNrInProgress);
+            long calculatedBase  = lStartTime - lBootTime;
+            if ( matchModel.matchHasEnded() /*|| matchModel.isLocked()*/ ) {
+                long duration = matchModel.getSetDuration(setNrInProgress);
+                String sDuration = DateUtil.convertDurationToHHMMSS_Colon(duration);
+                tvSetTime.setText(String.format(sFormat, sDuration));
+                tvSetTime.stop();
+            } else if ( ScoreBoard.timer != null && ScoreBoard.timer.isShowing() && (ScoreBoard.timer.timerType == Type.Warmup) ) {
+                tvSetTime.stop();
+            } else {
+                tvSetTime.setBase(roundToNearest1000(calculatedBase));
+                tvSetTime.start();
             }
         }
     }
@@ -433,6 +471,12 @@ public class IBoard implements TimerViewContainer
             sChar = getOAString(context, R.string.oa_set).substring(0, 1);
         }
         return sChar.toUpperCase() + (iGameNrZeroBased+1) + ": %s";
+    }
+
+    /** GSMModel only */
+    private String getSetDurationFormat(int iSetNrOneBased) {
+        String sChar = getOAString(context, R.string.oa_set).substring(0, 1);
+        return sChar.toUpperCase() + (iSetNrOneBased) + ": %s";
     }
 
     public void updateReceiver(Player player, DoublesServe dsReceiver) {

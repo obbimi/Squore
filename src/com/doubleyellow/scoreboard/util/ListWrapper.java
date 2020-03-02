@@ -21,8 +21,9 @@ public class ListWrapper<E> extends ArrayList<E>
     public ListWrapper(Collection<? extends E> c) {
         super(c);
     }
-    public void setName(String s) {
+    public ListWrapper setName(String s) {
         m_sName = s;
+        return this;
     }
 
     @Override public boolean add(E e) {

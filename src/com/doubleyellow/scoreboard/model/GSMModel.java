@@ -46,7 +46,6 @@ public abstract class GSMModel extends Model
     GSMModel() {
         super();
         init();
-        addNewSetScoreDetails(false);
     }
 
     @Override void init() {
@@ -62,6 +61,7 @@ public abstract class GSMModel extends Model
     private List<List<List<ScoreLine>>>      m_lGamesScorelineHistory_PerSet   = null;
     private List<List<Map<Player, Integer>>> m_lPlayer2GamesWon_PerSet         = null;
     private List<List<Map<Player, Integer>>> m_lPlayer2EndPointsOfGames_PerSet = null;
+    private List<List<GameTiming>>           m_lGamesTiming_PerSet             = null;
 
     //------------------------
     // Game scores
@@ -141,9 +141,10 @@ public abstract class GSMModel extends Model
     @Override protected void setDirty(boolean bScoreRelated) {
         super.setDirty(bScoreRelated);
         if ( bScoreRelated ) {
-            Log.d(TAG, "m_lPlayer2EndPointsOfGames_PerSet:\n" + ListUtil.toNice(m_lPlayer2EndPointsOfGames_PerSet, false, 4));
-            Log.d(TAG, "m_lPlayer2GamesWon_PerSet        :\n" + ListUtil.toNice(m_lPlayer2GamesWon_PerSet, false, 4));
-            Log.d(TAG, "m_lGamesScorelineHistory_PerSet  :\n" + ListUtil.toNice(m_lGamesScorelineHistory_PerSet, false, 4));
+            //Log.d(TAG, "m_lPlayer2EndPointsOfGames_PerSet:\n" + ListUtil.toNice(m_lPlayer2EndPointsOfGames_PerSet, false, 4));
+            //Log.d(TAG, "m_lPlayer2GamesWon_PerSet        :\n" + ListUtil.toNice(m_lPlayer2GamesWon_PerSet, false, 4));
+            //Log.d(TAG, "m_lGamesScorelineHistory_PerSet  :\n" + ListUtil.toNice(m_lGamesScorelineHistory_PerSet, false, 4));
+            Log.d(TAG, "m_lGamesTiming_PerSet            :\n" + ListUtil.toNice(m_lGamesTiming_PerSet, false, 4));
         }
     }
 
@@ -162,6 +163,9 @@ public abstract class GSMModel extends Model
 
             m_lPlayer2EndPointsOfGames_PerSet = new ArrayList<>();
             m_lPlayer2EndPointsOfGames_PerSet.add(getPlayer2EndPointsOfGames());
+
+            m_lGamesTiming_PerSet = (new ListWrapper<>()).setName("GameTimesPerSet");
+            m_lGamesTiming_PerSet.add(getGamesTiming());
         } else {
             List<List<ScoreLine>> lGamesScoreHistory = getGamesScoreHistory();
             if ( lGamesScoreHistory.size() == 0 ) {
@@ -188,8 +192,55 @@ public abstract class GSMModel extends Model
                 l2.setName("Set " + (1 + ListUtil.size(m_lPlayer2EndPointsOfGames_PerSet)));
                 super.setPlayer2EndPointsOfGames(l2);
                 m_lPlayer2EndPointsOfGames_PerSet.add(l2);
+
+                ListWrapper<GameTiming> l3 = new ListWrapper<GameTiming>();
+                l3.setName("Timing Set " + (1 + ListUtil.size(m_lGamesTiming_PerSet)));
+                super.setGamesTiming(l3);
+                m_lGamesTiming_PerSet.add(l3);
+
             }
         }
+    }
+
+    //-------------------------------
+    // Date/Time
+    //-------------------------------
+
+    public long getSetStart(int setNr) {
+/*
+        if ( setNr == 1 ) {
+            return super.getMatchStart();
+        }
+*/
+        if ( ListUtil.size(m_lGamesTiming_PerSet) > setNr - 1 ) {
+            List<GameTiming> gameTimings = m_lGamesTiming_PerSet.get(setNr - 1);
+            if ( ListUtil.isNotEmpty(gameTimings) ) {
+                GameTiming gameTiming = gameTimings.get(0);
+                return gameTiming.getStart();
+            }
+        }
+        return getMatchStart();
+    }
+
+    public long getSetDuration(int setNr) {
+        if ( setNr == 1 ) {
+            return super.getDuration();
+        } else {
+            Long lStart = getSetStart(setNr);
+            Long lEnd   = System.currentTimeMillis();
+            if ( ListUtil.size(m_lGamesTiming_PerSet) > setNr - 1 ) {
+                List<GameTiming> gameTimings = m_lGamesTiming_PerSet.get(setNr - 1);
+                GameTiming last = ListUtil.getLast(gameTimings);
+                if (last != null) {
+                    lEnd = last.getEnd();
+                }
+            }
+            return lEnd - lStart;
+        }
+    }
+
+    @Override public long getMatchStart() {
+        return m_lGamesTiming_PerSet.get(0).get(0).getStart();
     }
 
     /** One-based */
@@ -215,6 +266,9 @@ public abstract class GSMModel extends Model
 
                     List<Map<Player, Integer>> shouldBeListWithZeroZeroOnly2 = ListUtil.removeLast(m_lPlayer2EndPointsOfGames_PerSet);
                     setPlayer2EndPointsOfGames(ListUtil.getLast(m_lPlayer2EndPointsOfGames_PerSet));
+
+                    List<GameTiming> shouldBeEmptyList2 = ListUtil.removeLast(m_lGamesTiming_PerSet);
+                    setGamesTiming(ListUtil.getLast(m_lGamesTiming_PerSet));
 
                     Map<Player, Integer> lastSetCountChange = ListUtil.removeLast(m_lSetCountHistory);
                     Player lastSetWinner = ListUtil.removeLast(m_lSetWinner);
@@ -553,6 +607,9 @@ public abstract class GSMModel extends Model
     @Override protected List getScorelinesRoot() {
         return m_lGamesScorelineHistory_PerSet;
     }
+    @Override protected List getTimingsRoot() {
+        return m_lGamesTiming_PerSet;
+    }
 
     @Override protected JSONArray scoreHistoryToJson(List lSetScoreHistory) throws JSONException {
         JSONArray sets = new JSONArray();
@@ -562,6 +619,16 @@ public abstract class GSMModel extends Model
             sets.put(games);
         }
         return sets;
+    }
+
+    @Override protected JSONArray timingsToJSON(List lSetTimings) throws JSONException {
+        JSONArray jaSetTimings = new JSONArray();
+        for (int s = 0; s < lSetTimings.size(); s++) {
+            List<GameTiming> lGamesTiming = (List<GameTiming>) lSetTimings.get(s);
+            JSONArray jaGameTimings = super.timingsToJSON(lGamesTiming);
+            jaSetTimings.put(jaGameTimings);
+        }
+        return jaSetTimings;
     }
 
     @Override protected ScoreLine scoreHistoryFromJSON(boolean bMatchFormatIsSet, JSONArray sets) throws JSONException {
@@ -594,6 +661,17 @@ public abstract class GSMModel extends Model
         }
 
         return scoreLine;
+    }
+
+    @Override protected List<GameTiming> gameTimingFromJson(JSONArray jaSetTimings) throws JSONException {
+        m_lGamesTiming_PerSet.clear();
+        List<GameTiming> lGameTimings = null;
+        for ( int s=0; s < jaSetTimings.length(); s++ ) {
+            JSONArray jaGameTimings = jaSetTimings.getJSONArray(s);
+            lGameTimings = super.gameTimingFromJson(jaGameTimings);
+            m_lGamesTiming_PerSet.add(lGameTimings);
+        }
+        return lGameTimings;
     }
 
     @Override public JSONObject fromJsonString(String sJson, boolean bStopAfterEventNamesDateTimeResult) {
@@ -632,9 +710,6 @@ public abstract class GSMModel extends Model
         return sbSets.toString();
     }
 
-    @Override protected JSONArray timingsToJSON() throws JSONException {
-        return null;
-    }
     @Override public void recordAppealAndCall(Player appealing, Call call) { }
     @Override public void recordConduct(Player pMisbehaving, Call call, ConductType conductType) { }
 }
