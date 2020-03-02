@@ -62,6 +62,63 @@ import java.util.*;
  */
 public class PreferenceValues extends RWValues
 {
+    private static Map<Integer, Integer> mOrgResId2BrandResId = new HashMap<>();
+
+    public static int updatePreferenceTitleResId(Preference preference, Context context) {
+        if ( preference == null ) { return 0; }
+
+        if (preference instanceof PreferenceScreen) {
+            // extension of preferencegroup
+        }
+        if (preference instanceof PreferenceCategory) {
+            // extension of preferencegroup
+        }
+        int iChanged = 0;
+        if (preference instanceof PreferenceGroup) {
+            PreferenceGroup preferenceGroup = (PreferenceGroup) preference;
+            for (int j = 0; j < preferenceGroup.getPreferenceCount(); ++j) {
+                iChanged += updatePreferenceTitleResId(preferenceGroup.getPreference(j), context);
+            }
+        }
+
+        int titleRes = preference.getTitleRes();
+        if ( titleRes == R.string.pref_floatingMessageForGameBall) {
+            Log.d(TAG, "SHOULD WORK");
+        }
+        Integer newTitleResId = getSportSpecificSuffixedResId(context, titleRes);
+        if ( (newTitleResId != null) && (newTitleResId != 0) ) {
+            Log.d(TAG, "replace: " + context.getString(titleRes));
+            Log.d(TAG, "by     : " + context.getString(newTitleResId));
+            preference.setTitle(newTitleResId);
+            iChanged++;
+        }
+/*
+        Integer newSummaryRes = getSportSpecificResId(context, preference.getSummaryRes());
+        if ( newSummaryRes != null && newSummaryRes != 0 ) {
+            preference.setSummary(newSummaryRes);
+            iChanged++;
+        }
+*/
+        return iChanged;
+    }
+
+    // TODO: 20200301: use this for more than just Padel
+    public static Integer getSportSpecificSuffixedResId(Context context, Integer titleRes) {
+        if ( (titleRes == null) || (titleRes == 0) ) { return 0; }
+
+        String sResName  = context.getResources().getResourceName(titleRes);
+        if ( mOrgResId2BrandResId.containsKey(titleRes) ) {
+            return mOrgResId2BrandResId.get(titleRes);
+        }
+        int iNewResId = context.getResources().getIdentifier(sResName + "_" + Brand.getSport(), "string", context.getPackageName());
+        if ( iNewResId != 0 ) {
+            mOrgResId2BrandResId.put(titleRes, iNewResId);
+        } else {
+            mOrgResId2BrandResId.put(titleRes, null);
+        }
+        return iNewResId;
+    }
+
     //public static final String removeSeedingRegExp = "[\\[\\]0-9/]+$";
     private static boolean m_restartRequired = false;
     public static void setRestartRequired(Context ctx) {
@@ -438,6 +495,7 @@ public class PreferenceValues extends RWValues
                 if ( iNewResId == 0 ) {
                     Log.w(TAG, "======================= No specific " + Brand.getSport() + " resource for " + sResName);
                 }
+                // TODO: improve this logic
                 return iNewResId; // still return 0 if no specific resource was found: showcase e.g. decides to skip a step if 0 is returned
             }
         }
@@ -633,6 +691,9 @@ public class PreferenceValues extends RWValues
     }
     // TODO: add to preferences.xml
     public static boolean useFeedAndPostFunctionality(Context context) {
+        if ( Brand.isGameSetMatch() && currentDateIsTestDate() ) {
+            return false; // TODO: temp
+        }
         return getBoolean(PreferenceKeys.useFeedAndPostFunctionality, context, R.bool.useFeedAndPostFunctionality_default);
     }
     public static boolean allowTrustAllCertificatesAndHosts(Context context) {
@@ -1627,7 +1688,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-02-23"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-03-04"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

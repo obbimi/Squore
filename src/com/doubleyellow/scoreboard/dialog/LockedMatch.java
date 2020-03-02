@@ -62,16 +62,27 @@ public class LockedMatch extends BaseAlertDialog
         dialog = adb.show();
     }
 
+
     private Dialog.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
         @Override public void onClick(DialogInterface dialog, int which) {
             handleButtonClick(which);
         }
     };
 
+    private int m_iBlockedActionId = 0;
+    private Object[] m_ctxForMenu = null;
+    public void init(int iBlockingActionId, Object... ctx) {
+        m_iBlockedActionId = iBlockingActionId;
+        m_ctxForMenu = ctx;
+    }
+
     @Override public void handleButtonClick(int which) {
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
                 scoreBoard.handleMenuItem(R.id.sb_unlock);
+                if ( m_iBlockedActionId > 0 ) {
+                    scoreBoard.handleMenuItem(m_iBlockedActionId, m_ctxForMenu);
+                }
                 break;
             case DialogInterface.BUTTON_NEUTRAL:
                 scoreBoard.handleMenuItem(R.id.dyn_new_match);

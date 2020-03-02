@@ -26,13 +26,16 @@
 \nhttp://www.Padel.com/
 ]]></string>
 
-    <string name="matchList_default_Padel"><![CDATA[- Toppers
+    <string name="matchList_default_Padel"><![CDATA[- Padel Toppers
 \nFrancisco Navarro Compán/Juan Lebrón Chincoa [ESP] - Maximiliano Sánchez/Carlos Daniel Gutiérrez [ARG]
 \nPablo Lima/Lucas De Oliveira Campagnolo [BRA] - Alejandro Galán Romo/Matías Díaz Sangiorgio [ESP]
-\n- Wednesday matches with mates
+\n- Wednesday padel with mates
 \nAntionio/Bernardo - Carlos/Diego
 \nAntionio/Carlos - Bernardo/Diego
 \nAntionio/Diego - Bernardo/Carlos
+\n- Tennis toppers
+\nNadal [ESP] - Federer [SUI]
+\nDjokovic [SRB] - Del Potro [ARG]
 ]]></string>
 
     <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Padel">true</bool>

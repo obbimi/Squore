@@ -58,10 +58,10 @@ public class About extends BaseAlertDialog
                 .setPositiveButton("Change Log", dialogClickListener)
                 .setNeutralButton ("Credits"   , dialogClickListener)
                 .setNegativeButton(R.string.cmd_cancel, null)
-              //.setIcon(R.drawable.logo)
+                .setIcon(Brand.getLogoResId())
                 .setOnKeyListener(getOnBackKeyListener())
                 .show();
-        ViewUtil.setPackageIcon(context, dialog);
+      //ViewUtil.setPackageIcon(context, dialog);
     }
 
     private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {

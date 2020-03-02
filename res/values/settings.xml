@@ -35,6 +35,7 @@
     <string name="pref_Category_Brand">Brand</string>
     <string name="pref_Category_Technical">Technical</string>
     <string name="pref_Category_End_of_Game">End of Game</string>
+    <string name="pref_Category_End_of_Game_Padel">End of Set</string>
     <string name="pref_Category_Others">Others</string>
     <string name="pref_Category_Live_Score__ChromeCast">Live Score/ChromeCast</string>
     <string name="pref_Category_ChromeCast">ChromeCast</string>
@@ -136,7 +137,9 @@
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape">Swap players when device is rotated 180 degrees</string>
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary">Allows to swap players on screen by rotating the device, or showing score to players by flipping device forward towards players</string>
     <string name="pref_swapPlayersBetweenGames">Swap players at the start of a new game</string>
+    <string name="pref_swapPlayersBetweenGames_Padel">Swap players after every odd game</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically">Auto show details of game</string>
+    <string name="pref_showDetailsAtEndOfGameAutomatically_Padel">Auto show details of set</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically_summary">When a game ends automatically open the screen to show graphical representation</string>
     <string name="pref_showTips">Show \'Tips\'</string>
     <string name="pref_recordRallyEndStatsAfterEachScore">Show \'Winner/Error\' dialog after each point</string>
@@ -164,6 +167,7 @@
     <string name="pref_MatchGameDuration">Game/Match duration</string>
     <string name="pref_showMatchDurationChronoOn">Show \'Match duration\' on</string>
     <string name="pref_showLastGameDurationChronoOn">Show \'Game duration\' on</string>
+    <string name="pref_showLastGameDurationChronoOn_Padel">Show \'Set duration\' on</string>
     <string name="pref_showFieldDivisionOn">Show \'Field or Division\' on</string>
     <string name="pref_timerViewType">Type of timer</string>
     <string name="pref_hapticFeedbackPerPoint">Haptic feedback per point</string>
@@ -175,6 +179,7 @@
     <string name="pref_indicateGameBall">Indicate \'game ball\' in score buttons</string>
     <string name="pref_indicateGameBall_summary">Give visual feedback in score buttons about the fact that the next rally may lead to winning a game</string>
     <string name="pref_floatingMessageForGameBall">Show \'game ball\' message</string>
+    <string name="pref_floatingMessageForGameBall_Padel">Show \'set ball\' message</string>
     <string name="pref_floatingMessageForGameBall_summary">Show a \'floating message\' when it is game- or match ball</string>
     <string name="pref_showNewMatchFloatButton">Show \'New Match\' floating button</string>
     <string name="pref_showNewMatchFloatButton_summary">Show conventient floating button to start a new match (when appropriate)</string>

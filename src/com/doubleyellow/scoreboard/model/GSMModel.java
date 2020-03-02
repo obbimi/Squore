@@ -36,10 +36,102 @@ import java.util.Map;
 /** Model for basis of Game-Set-Match models: Padel and Tennis */
 public abstract class GSMModel extends Model
 {
+    //-----------------------------------------------------
+    // Listeners
+    //-----------------------------------------------------
+
+    /** Padel, tennis like scoring only */
+    public interface OnSetChangeListener extends OnModelChangeListener {
+        /** invoked each time a the score change implies 'SetBall' change: i.e. now having setball, or no-longer having setball */
+        void OnSetBallChange(Player[] players, boolean bHasSetBall);
+        /** actually ended set and preparing for new one */
+        void OnSetEnded(Player winningPlayer);
+    }
+    transient private List<OnSetChangeListener> onSetChangeListeners = new ArrayList<OnSetChangeListener>();
+
+    @Override public void registerListener(OnModelChangeListener changedListener) {
+        super.registerListener(changedListener);
+
+        if ( changedListener instanceof OnSetChangeListener ) {
+            onSetChangeListeners.add((OnSetChangeListener) changedListener);
+        }
+    }
+
+    @Override public void triggerListeners() {
+        super.triggerListeners();
+
+        Player[] paSetBallFor = null; // isPossibleGameAndSetBallFor();
+        if ( ListUtil.length(paSetBallFor) != 0 ) {
+            for(OnSetChangeListener l: onSetChangeListeners) {
+                l.OnSetBallChange(paSetBallFor, true);
+            }
+        }
+    }
+
+    //------------------------
+    // Match Format / Player/Time Details
+    //------------------------
+
     /**  0-15-30-40-Game */
     private static final int NUMBER_OF_POINTS_TO_WIN_GAME     = 4;
     /** Number of points in a 'normal' tie-break (super tiebreak would be 10) */
     private static final int NUMBER_OF_POINTS_TO_WIN_TIEBREAK = 7;
+
+    /** nr of games needed to win a set  */
+    private int                                 m_iNrOfGamesToWinSet    = 6; // in sync with m_iNrOfPointsToWinGame
+    /** nr of sets needed to win a match */
+    private int                                 m_iNrOfSetsToWinMatch   = 2; // in sync with m_iNrOfGamesToWinMatch of super class
+
+    @Override public boolean setNrOfPointsToWinGame(int i) {
+        super.setNrOfPointsToWinGame(i);
+        //Log.w(TAG, "Redirecting to setNrOfGamesToWinSet");
+        return setNrOfGamesToWinSet(i);
+    }
+
+    private boolean setNrOfGamesToWinSet(int i) {
+        if ( (i != m_iNrOfGamesToWinSet) && (i != UNDEFINED_VALUE) ) {
+            m_iNrOfGamesToWinSet = i;
+            //setDirty(true);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean setNrOfSetsToWinMatch(int i) {
+        if ( i != m_iNrOfSetsToWinMatch ) {
+            m_iNrOfSetsToWinMatch = i;
+            //setDirty(true);
+            return true;
+        }
+        return false;
+    }
+
+    @Override public boolean setNrOfGamesToWinMatch(int i) {
+        super.setNrOfGamesToWinMatch(i);
+        Log.w(TAG, "setNrOfGamesToWinMatch::Redirecting m_iNrOfSetsToWinMatch");
+        return setNrOfSetsToWinMatch(i);
+    }
+    @Override public int getNrOfGamesToWinMatch() {
+        Log.w(TAG, "getNrOfGamesToWinMatch::Redirecting m_iNrOfSetsToWinMatch");
+        return m_iNrOfSetsToWinMatch;
+    }
+
+    public int getNrOfGamesToWinSet() {
+        return m_iNrOfGamesToWinSet;
+    }
+
+    /** Does NOT return the static NUMBER_OF_POINTS_TO_WIN_GAME or NUMBER_OF_POINTS_TO_WIN_TIEBREAK, but the nr of games to win a set */
+    @Override public int getNrOfPointsToWinGame() {
+        return super.getNrOfPointsToWinGame();
+    }
+
+    private int _getNrOfPointsToWinGame() {
+        if ( isTieBreakGame() ) {
+            return NUMBER_OF_POINTS_TO_WIN_TIEBREAK; // TODO: 10 for super tiebreak
+        } else {
+            return NUMBER_OF_POINTS_TO_WIN_GAME; // 1=15, 2=30, 3=40, 4=Game
+        }
+    }
 
     private final String TAG = "SB." + this.getClass().getSimpleName();
 
@@ -58,59 +150,76 @@ public abstract class GSMModel extends Model
         m_lSetCountHistory.add(getZeroZeroMap());
     }
 
+    //------------------------
+    // Serve side
+    //------------------------
+
+    @Override public boolean setDoublesServeSequence(DoublesServeSequence dsq) {
+        return false;
+    }
+
+    @Override DoublesServeSequence getDoubleServeSequence(int iGameZB) {
+        return DoublesServeSequence.A1B1A2B2; // TODO: check always one and the same server in a game
+    }
+
+    @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) { }
+
+    @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {
+        // determine server by means of looking who served in a previous game
+        return determineServerForNextGame_TT_RL(iGameZB, true);
+    }
+
+    @Override public Object convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar) {
+        return sRLInternational;
+    }
+
+    @Override public boolean showChangeSidesMessageInGame(int iGameZB) {
+        return false; // TODO: multiple times in tiebreak
+    }
+
+    private void determineServerAndSide_GSM() {
+        int iNrOfGames = getGameNrInProgress(); // TODO: spanning all sets
+
+        Player server = getServer();
+        List<List<ScoreLine>> gamesScoreHistory = getGamesScoreHistory();
+        if ( ListUtil.isNotEmpty(gamesScoreHistory) ) {
+            List<ScoreLine> scoreLines = gamesScoreHistory.get(0);
+            if ( ListUtil.isNotEmpty(scoreLines) ) {
+                ScoreLine scoreLine = scoreLines.get(0);
+                server = scoreLine.getServingPlayer();
+            }
+        }
+        for( int i = 0; i < iNrOfGames - 1; i++ ) {
+            server = server.getOther();
+        }
+        int iNrOfPoints = getTotalGamePoints();
+        setServerAndSide(server, ServeSide.values()[iNrOfPoints%2], null);
+    }
+
+
+    //------------------------
+    // 'Set' containers
+    //------------------------
+
     private List<List<List<ScoreLine>>>      m_lGamesScorelineHistory_PerSet   = null;
     private List<List<Map<Player, Integer>>> m_lPlayer2GamesWon_PerSet         = null;
     private List<List<Map<Player, Integer>>> m_lPlayer2EndPointsOfGames_PerSet = null;
     private List<List<GameTiming>>           m_lGamesTiming_PerSet             = null;
 
-    //------------------------
-    // Game scores
-    //------------------------
-
     /** end scores of already ended sets [ {A=6,B=3},{A=2,B=6}, {A=7, B=6} ] . So does not hold set in progress. */
   //private List<Map<Player, Integer>>       m_endScoreOfPreviousSets = null;
     /** holds array with history of sets won like [0-0, 0-1, 1-1, 2-1] */
     private List<Map<Player, Integer>>       m_lSetCountHistory     = null;
-    //------------------------
-    // Set scores
-    //------------------------
-
     /** number of sets each player has won: {A=2, B=1} */
-    private List<Player>                m_lSetWinner           = null;
-
-    // m_lGameCountHistory to be split into sets
-    @Override protected void handout(Player scorer, boolean bScoreChangeTrue_bNewGameFalse) {
-        Log.d(TAG, "No handout in GSM");
-    }
-
-    /** overridden to check at the end of a game that it is also end of a set */
-    @Override public void endGame(boolean bNotifyListeners, boolean bStartNewGame) {
-        // invokes startNewGame()
-        super.endGame(bNotifyListeners, false); // updates m_player2GamesWon of super class
-
-        if ( isDoubles() && getNrOfFinishedGames() % 2 == 1 ) {
-            setServerAndSide(null, null, m_in_out.getOther());
-        }
-        // see if a new Set must be started
-        Map<Player, Integer> player2GamesWon = getPlayer2GamesWon();
-        Player pLeader = MapUtil.getMaxKey(player2GamesWon, Player.A);
-        int iGamesLeader  = MapUtil.getInt(player2GamesWon, pLeader           , 0);
-        int iGamesTrailer = MapUtil.getInt(player2GamesWon, pLeader.getOther(), 0);
-
-        boolean bEndSet = false;
-        if ( iGamesLeader == m_iNrOfGamesToWinSet ) {
-            bEndSet = iGamesLeader - iGamesTrailer >= 2;
-        } else if ( iGamesLeader > m_iNrOfGamesToWinSet ) {
-            bEndSet = iGamesLeader - iGamesTrailer >= 1;
-        }
-        if ( bEndSet ) {
-            endSet(pLeader, iGamesLeader, iGamesTrailer, bNotifyListeners);
-        }
-        startNewGame();
-    }
+    private List<Player>                     m_lSetWinner           = null;
 
     public Map<Player, Integer> getSetsWon() {
         return ListUtil.getLast(m_lSetCountHistory);
+    }
+
+    /** One-based */
+    public int getSetNrInProgress() {
+        return ListUtil.size(m_lGamesScorelineHistory_PerSet);
     }
 
     private void endSet(Player pWinner, int iGamesLeader, int iGamesTrailer, boolean bNotifyListeners) {
@@ -135,16 +244,6 @@ public abstract class GSMModel extends Model
                     l.OnMatchEnded(possibleMatchVictoryFor, null);
                 }
             }
-        }
-    }
-
-    @Override protected void setDirty(boolean bScoreRelated) {
-        super.setDirty(bScoreRelated);
-        if ( bScoreRelated ) {
-            //Log.d(TAG, "m_lPlayer2EndPointsOfGames_PerSet:\n" + ListUtil.toNice(m_lPlayer2EndPointsOfGames_PerSet, false, 4));
-            //Log.d(TAG, "m_lPlayer2GamesWon_PerSet        :\n" + ListUtil.toNice(m_lPlayer2GamesWon_PerSet, false, 4));
-            //Log.d(TAG, "m_lGamesScorelineHistory_PerSet  :\n" + ListUtil.toNice(m_lGamesScorelineHistory_PerSet, false, 4));
-            Log.d(TAG, "m_lGamesTiming_PerSet            :\n" + ListUtil.toNice(m_lGamesTiming_PerSet, false, 4));
         }
     }
 
@@ -177,10 +276,10 @@ public abstract class GSMModel extends Model
             } else {
                 // actually create new set and game
                 super.setGamesScoreHistory(new ArrayList<List<ScoreLine>>());
-              //super.addNewGameScoreDetails();
+                //super.addNewGameScoreDetails();
                 lGamesScoreHistory = super.getGamesScoreHistory();
                 //if ( m_lGamesScorelineHistory_PerSet.contains(lGamesScoreHistory) == false ) {
-                    m_lGamesScorelineHistory_PerSet.add(lGamesScoreHistory);
+                m_lGamesScorelineHistory_PerSet.add(lGamesScoreHistory);
                 //}
 
                 ListWrapper<Map<Player, Integer>> l = new ListWrapper<Map<Player, Integer>>();
@@ -201,6 +300,19 @@ public abstract class GSMModel extends Model
             }
         }
     }
+
+    private void addSetScore(Map<Player, Integer> setScore) {
+        //Log.d(TAG, "addGameScore: " + scores + " " + ListUtil.size(m_endScoreOfPreviousGames));
+        Player winner = Util.getWinner(setScore);
+        m_lSetWinner.add(winner);
+
+        Map<Player, Integer> player2SetsWon = new HashMap<Player, Integer>(getSetsWon()); // clone to get current score before adding set
+        MapUtil.increaseCounter(player2SetsWon, winner);
+        m_lSetCountHistory.add(player2SetsWon);
+
+        //m_endScoreOfPreviousSets.add(setScore);
+    }
+
 
     //-------------------------------
     // Date/Time
@@ -243,9 +355,42 @@ public abstract class GSMModel extends Model
         return m_lGamesTiming_PerSet.get(0).get(0).getStart();
     }
 
-    /** One-based */
-    public int getSetNrInProgress() {
-        return ListUtil.size(m_lGamesScorelineHistory_PerSet);
+    //-------------------------------------
+    // Scoring
+    //-------------------------------------
+
+    @Override protected void handout(Player scorer, boolean bScoreChangeTrue_bNewGameFalse) {
+        Log.d(TAG, "No handout in GSM");
+    }
+
+    private static List<String> lTranslatedScores = Arrays.asList("0", "15", "30", "40", "AD");
+    public String translateScore(Player player, int iScore) {
+        if ( isTieBreakGame() ) {
+            return String.valueOf(iScore);
+        } else {
+            int iScoreOther = getScore(player.getOther());
+            if ( iScore < NUMBER_OF_POINTS_TO_WIN_GAME ) {
+                return lTranslatedScores.get(iScore);
+            } else {
+                // compare with opponent
+                if ( iScoreOther < iScore ) {
+                    return lTranslatedScores.get(NUMBER_OF_POINTS_TO_WIN_GAME);
+                }
+                // scores are equal or opponent has AD
+                return lTranslatedScores.get(NUMBER_OF_POINTS_TO_WIN_GAME - 1);
+            }
+        }
+    }
+
+    @Override public void changeScore(Player player) {
+        int iDelta = 1;
+        Integer iNewScore = determineNewScoreForPlayer(player, iDelta,false);
+        ScoreLine scoreLine = getScoreLine(player, iNewScore, m_nextServeSide);
+        determineServerAndSide_GSM();
+        addScoreLine(scoreLine, true);
+
+        // inform listeners
+        changeScoreInformListeners(player, true, null, iDelta, getServer(), m_in_out, iNewScore);
     }
 
     @Override public synchronized void undoLast() {
@@ -290,87 +435,75 @@ public abstract class GSMModel extends Model
         }
     }
 
-    private void addSetScore(Map<Player, Integer> setScore) {
-        //Log.d(TAG, "addGameScore: " + scores + " " + ListUtil.size(m_endScoreOfPreviousGames));
-        Player winner = Util.getWinner(setScore);
-        m_lSetWinner.add(winner);
+    @Override public String getGameScores() {
+        //String gameScores = super.getGameScores();
 
-        Map<Player, Integer> player2SetsWon = new HashMap<Player, Integer>(getSetsWon()); // clone to get current score before adding set
-        MapUtil.increaseCounter(player2SetsWon, winner);
-        m_lSetCountHistory.add(player2SetsWon);
-
-        //m_endScoreOfPreviousSets.add(setScore);
-    }
-
-// TODO: Tiebreak in All but last set,All Sets,All sets, supertiebreak in last set (or even AS deciding without last set)
-
-    // TODO: Timer not between ALL games
-
-    /** nr of games needed to win a set  */
-    private int                                 m_iNrOfGamesToWinSet    = 6; // in sync with m_iNrOfPointsToWinGame
-    /** nr of sets needed to win a match */
-    private int                                 m_iNrOfSetsToWinMatch   = 2; // in sync with m_iNrOfGamesToWinMatch of super class
-
-    /** Padel, tennis like scoring only */
-    public interface OnSetChangeListener extends OnModelChangeListener {
-        /** invoked each time a the score change implies 'SetBall' change: i.e. now having setball, or no-longer having setball */
-        void OnSetBallChange(Player[] players, boolean bHasSetBall);
-        /** actually ended set and preparing for new one */
-        void OnSetEnded(Player winningPlayer);
-    }
-    transient private List<OnSetChangeListener> onSetChangeListeners = new ArrayList<OnSetChangeListener>();
-
-    @Override public void registerListener(OnModelChangeListener changedListener) {
-        super.registerListener(changedListener);
-
-        if ( changedListener instanceof OnSetChangeListener ) {
-            onSetChangeListeners.add((OnSetChangeListener) changedListener);
-        }
-    }
-
-    @Override public void triggerListeners() {
-        super.triggerListeners();
-
-        Player[] paSetBallFor = null; // isPossibleGameAndSetBallFor();
-        if ( ListUtil.length(paSetBallFor) != 0 ) {
-            for(OnSetChangeListener l: onSetChangeListeners) {
-                l.OnSetBallChange(paSetBallFor, true);
+        StringBuilder sbSets = new StringBuilder();
+        List<Map<Player, Integer>> setEndScores = m_lSetCountHistory;
+        for(Map<Player, Integer> mSetScore: setEndScores) {
+            Integer iA = MapUtil.getInt(mSetScore, Player.A, 0);
+            Integer iB = MapUtil.getInt(mSetScore, Player.B, 0);
+            if ( iA + iB > 0 ) {
+                if ( sbSets.length() != 0 ) {
+                    sbSets.append(",");
+                }
+                sbSets.append(iA).append("-").append(iB);
             }
         }
+        return sbSets.toString();
     }
 
-    @Override public boolean setNrOfPointsToWinGame(int i) {
-        super.setNrOfPointsToWinGame(i);
-      //Log.w(TAG, "Redirecting to setNrOfGamesToWinSet");
-        return setNrOfGamesToWinSet(i);
+    @Override public String getResultShort() {
+        return null; // TODO:
     }
 
-    private boolean setNrOfGamesToWinSet(int i) {
-        if ( (i != m_iNrOfGamesToWinSet) && (i != UNDEFINED_VALUE) ) {
-            m_iNrOfGamesToWinSet = i;
-          //setDirty(true);
-            return true;
+    /** overridden to check at the end of a game that it is also end of a set */
+    @Override public void endGame(boolean bNotifyListeners, boolean bStartNewGame) {
+        // invokes startNewGame()
+        super.endGame(bNotifyListeners, false); // updates m_player2GamesWon of super class
+
+        if ( isDoubles() && getNrOfFinishedGames() % 2 == 1 ) {
+            setServerAndSide(null, null, m_in_out.getOther());
         }
-        return false;
-    }
+        // see if a new Set must be started
+        Map<Player, Integer> player2GamesWon = getPlayer2GamesWon();
+        Player pLeader = MapUtil.getMaxKey(player2GamesWon, Player.A);
+        int iGamesLeader  = MapUtil.getInt(player2GamesWon, pLeader           , 0);
+        int iGamesTrailer = MapUtil.getInt(player2GamesWon, pLeader.getOther(), 0);
 
-    private boolean setNrOfSetsToWinMatch(int i) {
-        if ( i != m_iNrOfSetsToWinMatch ) {
-            m_iNrOfSetsToWinMatch = i;
-          //setDirty(true);
-            return true;
+        boolean bEndSet = false;
+        if ( iGamesLeader == m_iNrOfGamesToWinSet ) {
+            bEndSet = iGamesLeader - iGamesTrailer >= 2;
+        } else if ( iGamesLeader > m_iNrOfGamesToWinSet ) {
+            bEndSet = iGamesLeader - iGamesTrailer >= 1;
         }
-        return false;
+        if ( bEndSet ) {
+            endSet(pLeader, iGamesLeader, iGamesTrailer, bNotifyListeners);
+        }
+        startNewGame();
     }
 
-    @Override public boolean setNrOfGamesToWinMatch(int i) {
-        super.setNrOfGamesToWinMatch(i);
-        Log.w(TAG, "setNrOfGamesToWinMatch::Redirecting m_iNrOfSetsToWinMatch");
-        return setNrOfSetsToWinMatch(i);
+
+    @Override protected void setDirty(boolean bScoreRelated) {
+        super.setDirty(bScoreRelated);
+        if ( bScoreRelated ) {
+            //Log.d(TAG, "m_lPlayer2EndPointsOfGames_PerSet:\n" + ListUtil.toNice(m_lPlayer2EndPointsOfGames_PerSet, false, 4));
+            //Log.d(TAG, "m_lPlayer2GamesWon_PerSet        :\n" + ListUtil.toNice(m_lPlayer2GamesWon_PerSet, false, 4));
+            //Log.d(TAG, "m_lGamesScorelineHistory_PerSet  :\n" + ListUtil.toNice(m_lGamesScorelineHistory_PerSet, false, 4));
+            Log.d(TAG, "m_lGamesTiming_PerSet            :\n" + ListUtil.toNice(m_lGamesTiming_PerSet, false, 4));
+        }
     }
-    @Override public int getNrOfGamesToWinMatch() {
-        Log.w(TAG, "getNrOfGamesToWinMatch::Redirecting m_iNrOfSetsToWinMatch");
-        return m_iNrOfSetsToWinMatch;
+
+    @Override public boolean hasStarted() {
+        boolean bGamesInCurrentSetHasStarted = super.hasStarted();
+
+        boolean bPreviousSetFinished = false;
+        if ( bGamesInCurrentSetHasStarted == false ) {
+            // check if a previous set has been played
+            List<List<ScoreLine>> gameScoreSet1 = m_lGamesScorelineHistory_PerSet.get(0);
+            bPreviousSetFinished = ListUtil.isNotEmpty(gameScoreSet1);
+        }
+        return bGamesInCurrentSetHasStarted || bPreviousSetFinished;
     }
 
     @Override public int getGameNrInProgress() {
@@ -388,97 +521,6 @@ public abstract class GSMModel extends Model
         } else {
             return false;
         }
-    }
-
-    public int getNrOfGamesToWinSet() {
-        return m_iNrOfGamesToWinSet;
-    }
-
-    /** Does NOT return the static NUMBER_OF_POINTS_TO_WIN_GAME or NUMBER_OF_POINTS_TO_WIN_TIEBREAK, but the nr of games to win a set */
-    @Override public int getNrOfPointsToWinGame() {
-        return super.getNrOfPointsToWinGame();
-    }
-
-    private int _getNrOfPointsToWinGame() {
-        if ( isTieBreakGame() ) {
-            return NUMBER_OF_POINTS_TO_WIN_TIEBREAK; // TODO: 10 for super tiebreak
-        } else {
-            return NUMBER_OF_POINTS_TO_WIN_GAME; // 1=15, 2=30, 3=40, 4=Game
-        }
-    }
-    private static List<String> lTranslatedScores = Arrays.asList("0", "15", "30", "40", "AD");
-    public String translateScore(Player player, int iScore) {
-        if ( isTieBreakGame() ) {
-            return String.valueOf(iScore);
-        } else {
-            int iScoreOther = getScore(player.getOther());
-            if ( iScore < NUMBER_OF_POINTS_TO_WIN_GAME ) {
-                return lTranslatedScores.get(iScore);
-            } else {
-                // compare with opponent
-                if ( iScoreOther < iScore ) {
-                    return lTranslatedScores.get(NUMBER_OF_POINTS_TO_WIN_GAME);
-                }
-                // scores are equal or opponent has AD
-                return lTranslatedScores.get(NUMBER_OF_POINTS_TO_WIN_GAME - 1);
-            }
-        }
-    }
-
-    @Override public boolean setDoublesServeSequence(DoublesServeSequence dsq) {
-        return false;
-    }
-
-    @Override DoublesServeSequence getDoubleServeSequence(int iGameZB) {
-        return DoublesServeSequence.A1B1A2B2; // TODO: check always one and the same server in a game
-    }
-
-    @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) { }
-
-    @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {
-        // determine server by means of looking who served in a previous game
-        return determineServerForNextGame_TT_RL(iGameZB, true);
-    }
-
-    @Override public Object convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar) {
-        return sRLInternational;
-    }
-
-    @Override public boolean showChangeSidesMessageInGame(int iGameZB) {
-        return false; // TODO: multiple times in tiebreak
-    }
-
-    @Override public String getResultShort() {
-        return null; // TODO:
-    }
-
-    @Override public void changeScore(Player player) {
-        int iDelta = 1;
-        Integer iNewScore = determineNewScoreForPlayer(player, iDelta,false);
-        ScoreLine scoreLine = getScoreLine(player, iNewScore, m_nextServeSide);
-        determineServerAndSide_GSM();
-        addScoreLine(scoreLine, true);
-
-        // inform listeners
-        changeScoreInformListeners(player, true, null, iDelta, getServer(), m_in_out, iNewScore);
-    }
-    private void determineServerAndSide_GSM() {
-        int iNrOfGames = getGameNrInProgress(); // TODO: spanning all sets
-
-        Player server = getServer();
-        List<List<ScoreLine>> gamesScoreHistory = getGamesScoreHistory();
-        if ( ListUtil.isNotEmpty(gamesScoreHistory) ) {
-            List<ScoreLine> scoreLines = gamesScoreHistory.get(0);
-            if ( ListUtil.isNotEmpty(scoreLines) ) {
-                ScoreLine scoreLine = scoreLines.get(0);
-                server = scoreLine.getServingPlayer();
-            }
-        }
-        for( int i = 0; i < iNrOfGames - 1; i++ ) {
-            server = server.getOther();
-        }
-        int iNrOfPoints = getTotalGamePoints();
-        setServerAndSide(server, ServeSide.values()[iNrOfPoints%2], null);
     }
 
     @Override Player[] calculatePossibleMatchVictoryFor(When when, Player[] pLayersSB) {
@@ -611,6 +653,11 @@ public abstract class GSMModel extends Model
         return m_lGamesTiming_PerSet;
     }
 
+    //-------------------------------
+    // JSON
+    //-------------------------------
+
+
     @Override protected JSONArray scoreHistoryToJson(List lSetScoreHistory) throws JSONException {
         JSONArray sets = new JSONArray();
         for (int s = 0; s < lSetScoreHistory.size(); s++) {
@@ -691,24 +738,6 @@ public abstract class GSMModel extends Model
         return jsonObject;
     }
 */
-
-    @Override public String getGameScores() {
-        //String gameScores = super.getGameScores();
-
-        StringBuilder sbSets = new StringBuilder();
-        List<Map<Player, Integer>> setEndScores = m_lSetCountHistory;
-        for(Map<Player, Integer> mSetScore: setEndScores) {
-            Integer iA = MapUtil.getInt(mSetScore, Player.A, 0);
-            Integer iB = MapUtil.getInt(mSetScore, Player.B, 0);
-            if ( iA + iB > 0 ) {
-                if ( sbSets.length() != 0 ) {
-                    sbSets.append(",");
-                }
-                sbSets.append(iA).append("-").append(iB);
-            }
-        }
-        return sbSets.toString();
-    }
 
     @Override public void recordAppealAndCall(Player appealing, Call call) { }
     @Override public void recordConduct(Player pMisbehaving, Call call, ConductType conductType) { }

@@ -197,7 +197,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 case R.id.btn_score1:
                 case R.id.btn_score2:
                     // on tablet, the buttons are so big that two finger touch/click may be performed without user thinking about it
-                    changeScore(player);
+                    handleMenuItem(R.id.pl_change_score, player);
                     return true;
                 case R.id.txt_player1:
                 case R.id.txt_player2:
@@ -404,7 +404,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 }
             }
             enableScoreButton(player.getOther());
-            changeScore(player);
+            handleMenuItem(R.id.pl_change_score, player);
         }
     }
 
@@ -618,7 +618,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 // toggle player names of the long clicked team
                 _swapDoublePlayers(pl);
             } else {
-                showConduct(pl);
+                handleMenuItem(R.id.pl_show_conduct, pl);
             }
 
             return true;
@@ -628,7 +628,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             int viewId = getXmlIdOfParent(view);
             Player pl = IBoard.m_id2player.get(viewId);
             if ( pl == null ) { return; }
-            showAppeal(pl);
+            handleMenuItem(R.id.pl_show_appeal, pl);
         }
     }
 
@@ -1358,7 +1358,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 // we only do something for 'up' action. If a user long presses a volume key a lot of 'down' events are triggered
                 Player first = IBoard.m_firstPlayerOnScreen;
                 if ( bUseVolumeButtonsForScoring ) {
-                    changeScore(bVolumeTrueIsUpFalseIsDown ? first : first.getOther());
+                    Player player = bVolumeTrueIsUpFalseIsDown ? first : first.getOther();
+                    handleMenuItem(R.id.pl_change_score, player);
                 } else {
                     showActivateDialog(context);
                 }
@@ -2281,6 +2282,11 @@ touch -t 01030000 LAST.sb
             // do not show timer button when it is gummiarm point
             bShowTimerFAB = false;
         }
+        int nrOfFinishedGames = matchModel.getNrOfFinishedGames();
+        if ( bShowTimerFAB && Brand.isGameSetMatch() && (nrOfFinishedGames > 0) && (nrOfFinishedGames % 2 == 0) ) {
+            // correction: do not show timer button after even nr of games
+            bShowTimerFAB = false;
+        }
         showTimerFloatButton(bShowTimerFAB);
     }
     private void showTimerFloatButton(boolean bVisible) {
@@ -2830,11 +2836,13 @@ touch -t 01030000 LAST.sb
             showAppropriateMenuItemInActionBar();
 
             int iGameNr1B = matchModel.getNrOfFinishedGames();
-            if ( Brand.changeSidesBetweenGames(iGameNr1B) && (matchModel.matchHasEnded() == false) && PreferenceValues.swapSidesBetweenGames(ScoreBoard.this) ) {
-                if ( BTRole.Slave.equals(m_blueToothRole) ) {
-                    // swap players only if requested by master
-                } else {
-                    swapSides(Toast.LENGTH_LONG, null);
+            if ( Brand.changeSidesBetweenGames(iGameNr1B) && (matchModel.matchHasEnded() == false)  ) {
+                if ( PreferenceValues.swapSidesBetweenGames(ScoreBoard.this) ) {
+                    if ( BTRole.Slave.equals(m_blueToothRole) ) {
+                        // swap players only if requested by master
+                    } else {
+                        swapSides(Toast.LENGTH_LONG, null);
+                    }
                 }
             }
 
@@ -2964,6 +2972,7 @@ touch -t 01030000 LAST.sb
             if ( changed == GameTiming.Changed.Start || changed == GameTiming.Changed.Both ) {
                 // most likely reset duration of game to 00:00
                 iBoard.updateGameDurationChrono();
+                iBoard.updateSetDurationChrono(); // GSM
             }
             if ( changed == GameTiming.Changed.End   || changed == GameTiming.Changed.Both ) {
                 if ( matchModel.isPossibleGameVictory() ) {
@@ -3390,7 +3399,8 @@ touch -t 01030000 LAST.sb
 
     private int m_idOfVisibleActionBarItem = 0;
     private void showAppropriateMenuItemInActionBar() {
-        List<Integer> lShowIds = new ArrayList<Integer>();
+        List<Integer> lShowIds = new ArrayList<Integer>(); // the first two in this list will be shown
+        List<Integer> lHideIds = new ArrayList<Integer>();
         if ( matchModel.hasStarted() == false ) {
             long lMatchStart = matchModel.getMatchStart();
             int lMinutes = DateUtil.convertToMinutes(System.currentTimeMillis() - lMatchStart);
@@ -3409,17 +3419,24 @@ touch -t 01030000 LAST.sb
         } else if ( matchModel.isLocked() ) {
             lShowIds.add(0, R.id.dyn_new_match);
         } else if ( matchModel.gameHasStarted() == false ) {
-            if (PreferenceValues.useTimersFeature(this).equals(Feature.Suggest)) {
+            if ( PreferenceValues.useTimersFeature(this).equals(Feature.Suggest) ) {
                 // timer buttons is already there as floating
                 lShowIds.add(R.id.dyn_score_details);
             } else {
                 lShowIds.add(R.id.dyn_timer);
             }
         } else {
+            lHideIds.add(R.id.dyn_timer);
             lShowIds.add(R.id.dyn_end_game);
         }
         if ( Brand.isGameSetMatch() ) {
             lShowIds.remove((Integer) R.id.dyn_score_details);
+            lShowIds.remove((Integer) R.id.dyn_end_game);
+        }
+        if ( ListUtil.isNotEmpty(lHideIds) ) {
+            for ( Integer iIdHide: lHideIds ) {
+                setMenuItemVisibility(iIdHide, false);
+            }
         }
         if ( ListUtil.isNotEmpty(lShowIds) ) {
             setMenuItemVisibility(m_idOfVisibleActionBarItem, false);
@@ -3486,7 +3503,7 @@ touch -t 01030000 LAST.sb
                 return true;
             case R.id.dyn_end_game:
             case R.id.end_game:
-                if ( warnModelIsLocked() ) { return false; }
+                if ( warnModelIsLocked(id, ctx) ) { return false; }
                 if ( matchModel.isPossibleGameVictory() ) {
                     endGame();
                 } else {
@@ -3555,6 +3572,18 @@ touch -t 01030000 LAST.sb
                     Toast.makeText(ScoreBoard.this, "Removed last scoreline for " + matchModel.getName(nonScorer), Toast.LENGTH_LONG).show();
                 }
                 return true;
+            case R.id.pl_change_score:
+                if ( warnModelIsLocked(id, ctx) ) { return false; }
+                changeScore((Player) ctx[0]);
+                break;
+            case R.id.pl_show_conduct:
+                if ( warnModelIsLocked(true, id, ctx) ) { return false; }
+                showConduct((Player) ctx[0]);
+                break;
+            case R.id.pl_show_appeal:
+                if ( warnModelIsLocked(id, ctx) ) { return false; }
+                showAppeal((Player) ctx[0]);
+                break;
             case R.id.sb_edit_event_or_player:
                 if ( true ) {
                     Intent nm = new Intent(this, Match.class);
@@ -3685,7 +3714,7 @@ touch -t 01030000 LAST.sb
                 adjustScore();
                 return true;
             case R.id.sb_clear_score:
-                if ( warnModelIsLocked() ) { return false; }
+                if ( warnModelIsLocked(id, ctx) ) { return false; }
                 if ( matchModel.hasStarted() ) {
                     confirmRestart();
                 } else {
@@ -3832,7 +3861,7 @@ touch -t 01030000 LAST.sb
 
     public static Evaluation.ValidationResult brandedVersionValidation = Evaluation.ValidationResult.OK;
 
-    private boolean warnModelIsLocked(boolean bIgnoreForConduct) {
+    private boolean warnModelIsLocked(boolean bIgnoreForConduct, int iBlockingActionId, Object... ctx) {
         if ( (brandedVersionValidation != Evaluation.ValidationResult.OK) && (brandedVersionValidation != Evaluation.ValidationResult.NoDate) ) {
             iBoard.showToast(String.format("Sorry, %s can no longer be used (%s)", Brand.getShortName(this), brandedVersionValidation));
             return true;
@@ -3847,18 +3876,21 @@ touch -t 01030000 LAST.sb
             iBoard.showToast(R.string.match_is__locked);
         } else {
             LockedMatch lockedMatch = new LockedMatch(this, matchModel, this);
+            lockedMatch.init(iBlockingActionId, ctx);
             show(lockedMatch);
         }
         return true;
     }
 
-    private boolean warnModelIsLocked(){
-        return warnModelIsLocked(false);
+    private boolean warnModelIsLocked(int iBlockingActionId, Object... ctx) {
+        return warnModelIsLocked(false, iBlockingActionId, ctx);
+    }
+    private boolean warnModelIsLocked() {
+        return warnModelIsLocked(false, 0, (Object[]) null);
     }
 
     private void showAppeal(Player appealingPlayer) {
         if ( Brand.isNotSquash() ) { return; }
-        if ( warnModelIsLocked() ) { return; }
         Appeal appeal = new Appeal(this, matchModel, this);
         appeal.init(appealingPlayer);
         show(appeal);
@@ -3878,7 +3910,6 @@ touch -t 01030000 LAST.sb
 
     private void showConduct(Player misbehavingPlayer) {
         if ( Brand.isNotSquash() ) { return; }
-        if ( warnModelIsLocked(true) ) { return; }
         Conduct conduct = new Conduct(this, matchModel, this);
         conduct.init(misbehavingPlayer);
         show(conduct);
@@ -4463,7 +4494,7 @@ touch -t 01030000 LAST.sb
             }
 */
             if ( possibleMatchVictoryFor != null ) {
-                matchModel.endGame(false); // don't notify listeners: might popup a disturbing dialog like 'Post to site?'
+                matchModel.endGame(false, true); // don't notify listeners: might popup a disturbing dialog like 'Post to site?'
             }
         }
         JSONObject oSettings = null;
@@ -5634,11 +5665,9 @@ touch -t 01030000 LAST.sb
     // WRAPPER methods to be able to intercept method call to model and communicate it to connected BT device
     //----------------------------------------------------
     private void changeScore(Player player) {
-        if ( warnModelIsLocked() ) { return; }
         //Log.d(TAG, "Changing score for for model " + matchModel);
         matchModel.changeScore(player);
-
-        writeMethodToBluetooth(BTMethods.changeScore, player);
+        writeMethodToBluetooth(BTMethods.changeScore, player); // TODO: fix for GSM to show 15/30/40/AD
     }
 
     public void setPlayerColor(Player player, String sColor) {
