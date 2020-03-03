@@ -5,7 +5,7 @@ cat <<!
 
 Usage:
 
-	$0 '(Squore|SquoreWear|Badminton|Padel|Racketlon|Tabletennis|CourtCare|UniOfNotthingham)'
+	$0 '(Squore|SquoreWear|Badminton|TennisPadel|Racketlon|Tabletennis|CourtCare|UniOfNotthingham)'
 
 Always change back to Squore before change to another 'Brand'
 !
@@ -45,11 +45,11 @@ elif [[ "$tobranded" = "Badminton" ]]; then
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.badminton.R\1~' ${f}
         #exit 1
     done
-elif [[ "$tobranded" = "Padel" ]]; then
+elif [[ "$tobranded" = "TennisPadel" ]]; then
     printf "Change to '${tobranded}'\n"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
         printf "File %-72s to %s \n" $f $tobranded
-        sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.padel.R\1~' ${f}
+        sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.tennispadel.R\1~' ${f}
         #exit 1
     done
 elif [[ "$tobranded" = "CourtCare" ]]; then
@@ -68,16 +68,16 @@ elif [[ "$tobranded" = "UniOfNotthingham" ]]; then
     done
 elif [[ "$tobranded" = "SquoreWear" ]]; then
     printf "Change to '${tobranded}'\n"
-    for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton|padel|scoreboard).R[;\.]" *); do
+    for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton|tennispadel|scoreboard).R[;\.]" *); do
         printf "File %-72s to %s \n" $f $tobranded
-        sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\|badminton\|padel\|scoreboard\).R\([^a-z]\)~com.doubleyellow.squorewear.R\2~' ${f}
+        sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\|badminton\|tennispadel\|scoreboard\).R\([^a-z]\)~com.doubleyellow.squorewear.R\2~' ${f}
         #exit 1
     done
 elif [[ "$tobranded" = "Squore" ]]; then
     printf "Change back to '${tobranded}'\n"
-    for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton|padel|squorewear).R" *); do
+    for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton|tennispadel|squorewear).R" *); do
         printf "File %-72s back to %s normal\n" $f $tobranded
-        sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\|badminton\|padel\|squorewear\).R\([^a-z]\)~com.doubleyellow.scoreboard.R\2~' ${f}
+        sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\|badminton\|tennispadel\|squorewear\).R\([^a-z]\)~com.doubleyellow.scoreboard.R\2~' ${f}
         #exit 1
     done
     # comment out all brands ...
@@ -102,28 +102,28 @@ cd ../res
 if [[ "$tobranded" = "Racketlon" ]]; then
     for f in $(egrep -rl '@string.*_(Squash|Tabletennis)"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
-        sed -i 's~_\(Squash\|Tabletennis\|Badminton\|Padel\)"~_Racketlon"~' ${f}
+        sed -i 's~_\(Squash\|Tabletennis\|Badminton\|TennisPadel\)"~_Racketlon"~' ${f}
     done
 elif [[ "$tobranded" = "Tabletennis" ]]; then
     for f in $(egrep -rl '@string.*_(Squash|Racketlon)"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
-        sed -i 's~_\(Squash\|Racketlon\|Badminton\|Padel\)"~_Tabletennis"~' ${f}
+        sed -i 's~_\(Squash\|Racketlon\|Badminton\|TennisPadel\)"~_Tabletennis"~' ${f}
     done
 elif [[ "$tobranded" = "Badminton" ]]; then
     for f in $(egrep -rl '@string.*_(Squash|Racketlon)"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
-        sed -i 's~_\(Squash\|Racketlon\|Tabletennis\|Padel\)"~_Badminton"~' ${f}
+        sed -i 's~_\(Squash\|Racketlon\|Tabletennis\|TennisPadel\)"~_Badminton"~' ${f}
     done
-elif [[ "$tobranded" = "Padel" ]]; then
+elif [[ "$tobranded" = "TennisPadel" ]]; then
     for f in $(egrep -rl '@string.*_(Squash|Racketlon)"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
-        sed -i 's~_\(Squash\|Racketlon\|Tabletennis\|Badminton\)"~_Padel"~' ${f}
+        sed -i 's~_\(Squash\|Racketlon\|Tabletennis\|Badminton\)"~_TennisPadel"~' ${f}
     done
 else
     # Squore and SquoreWear
-    for f in $(egrep -rl '@string.*_(Racketlon|Tabletennis|Badminton|Padel)"'); do
+    for f in $(egrep -rl '@string.*_(Racketlon|Tabletennis|Badminton|TennisPadel)"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
-        sed -i 's~_\(Racketlon\|Tabletennis\|Badminton\|Padel\)"~_Squash"~' ${f}
+        sed -i 's~_\(Racketlon\|Tabletennis\|Badminton\|TennisPadel\)"~_Squash"~' ${f}
     done
     if [[ "$tobranded" == "SquoreWear" ]]; then
         sed -i "s~dy:boxedEdges~app:boxedEdges~" layout-watch/percentage.xml
