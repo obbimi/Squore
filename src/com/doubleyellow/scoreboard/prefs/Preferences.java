@@ -341,6 +341,12 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         }
                         break;
                     case numberOfPointsToWinGame:
+/*
+                        if ( ScoreBoard.matchModel instanceof GSMModel ) {
+                            // should always be 4
+                            break;
+                        }
+*/
                         int iEndScore = PreferenceValues.getInteger(prefs, eKey, 11);
                         if ( ScoreBoard.matchModel != null ) {
                             List<Map<Player, Integer>> endScoreOfPreviousGames = ScoreBoard.matchModel.getEndScoreOfPreviousGames();
@@ -424,6 +430,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 //Log.w(TAG, "Not a valueOf() of PreferenceKeys " + key);
             }
             Preference preference = settingsFragment.findPreference(key);
+
+            // update title with value the preference currently has
             CharSequence charSequence = RWValues.updatePreferenceTitle(preference);
 
             try {
@@ -573,9 +581,21 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             if ( Brand.isSquash() ) {
                 hideRemovePreference(psgBeh, PreferenceKeys.changeSides);                     // only for racketlon badminton and tabletennis
             }
-            if ( Brand.isSquash() || Brand.isBadminton() ) {
+            if ( Brand.isSquash() || Brand.isBadminton() || Brand.isGameSetMatch() ) {
                 hideRemovePreference(psgBeh, PreferenceKeys.numberOfServiceCountUpOrDown);    // only for racketlon and tabletennis
             }
+            if ( Brand.isGameSetMatch() ) {
+                hideRemovePreference(psgBeh, PreferenceKeys.indicateGameBall); // always at AD/40 very common. In squash games may be to 9,11 or 15
+                hideRemovePreference(psgBeh, PreferenceKeys.endGameSuggestion); // should be always Automatic. very common score in tennispadel/tennis
+                hideRemovePreference(psgBeh, PreferenceKeys.showDetailsAtEndOfGameAutomatically); // TODO: make details about sets, not games
+                hideRemovePreference(psgBeh, PreferenceKeys.hapticFeedbackOnGameEnd);
+                hideRemovePreference(psgBeh, "AutomateWhatCanBeAutomatedPrefs");
+            }
+/*
+            if ( false && Brand.isGameSetMatch() ) {
+                hideRemovePreference(psgBeh, PreferenceKeys.numberOfPointsToWinGame);         // always 4
+            }
+*/
             if ( Brand.isTabletennis() ) {
                 boolean bAutoShow = PreferenceValues.autoShowModeActivationDialog(getActivity());
                 final Preference pShowModeDialogAfterXMins = this.findPreference(PreferenceKeys.showModeDialogAfterXMins);
@@ -783,6 +803,10 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 }
             }
 
+            // update titles with more sport specific titles
+            Preference preference = this.findPreference(PreferenceKeys.SBPreferences.toString());
+            PreferenceValues.updatePreferenceTitleResId(preference, getActivity());
+
             if ( ScoreBoard.isInSpecialMode() == false ) {
                 final PreferenceGroup psFeeds = (PreferenceGroup) this.findPreference(PreferenceKeys.webIntegration.toString());
                 if ( psFeeds != null ) {
@@ -872,9 +896,13 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             listPreference.setEntryValues(keys   .toArray(new String[0]));
         }
 
-        private void hideRemovePreference(PreferenceGroup pgParent, Object oKey) {
+        private boolean hideRemovePreference(PreferenceGroup pgParent, Object oKey) {
             Preference pgChild = this.findPreference(String.valueOf(oKey));
-            hideRemovePreference(pgParent, pgChild);
+            boolean bHidden = hideRemovePreference(pgParent, pgChild);
+            if ( bHidden == false ) {
+                Log.d(TAG, "Failed to hide " + oKey);
+            }
+            return bHidden;
         }
         private boolean hideRemovePreference(PreferenceGroup pgParent, Preference pgChild) {
             if ( pgParent == null ) { return false; }
@@ -944,5 +972,9 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
     static void setModelDirty() {
         if ( ScoreBoard.matchModel == null) { return; }
         ScoreBoard.matchModel.setDirty();
+    }
+
+    private void clearPPA() {
+        getPackageManager().clearPackagePreferredActivities(getPackageName());
     }
 }

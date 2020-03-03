@@ -432,7 +432,7 @@ public abstract class Model implements Serializable
         if ( player2GamesWonHistory.size() == 0 ) {
             player2GamesWonHistory.add(getZeroZeroMap());
         }
-        return ListUtil.getLast(player2GamesWonHistory); // TODO: increase m_lPlayer2GamesWon one on set end is missed?
+        return ListUtil.getLast(player2GamesWonHistory);
     }
 
     /** number of games each player has won: {A=2, B=1} */
@@ -924,8 +924,9 @@ public abstract class Model implements Serializable
         }
 
         List<ScoreLine> lGameScoreHistory = getGameScoreHistory();
+        final int gameNrInProgress = getGameNrInProgress();
         if ( lGameScoreHistory.size() == 0 ) {
-            if ( getGameNrInProgress() <= 1 ) {
+            if ( gameNrInProgress <= 1 ) {
                 // nothing to undo. we have not started yet
                 return;
             }
@@ -1367,6 +1368,7 @@ public abstract class Model implements Serializable
     }
     public int getNrOfFinishedGames() {
         Map<Player, Integer> last = ListUtil.getLast(m_lPlayer2GamesWon);
+        if ( last == null ) { return 0; }
         return last.get(Player.A) + last.get(Player.B);
     }
 

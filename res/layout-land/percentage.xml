@@ -258,8 +258,19 @@
     />
     <Chronometer android:id="@+id/sb_match_duration"
                  android:layout_alignBottom="@id/btn_score1"
-                 android:layout_alignLeft="@id/btn_score1"
                  android:layout_alignStart="@id/btn_score1"
+                 app:layout_widthPercent="@fraction/ls_match_timer_width"
+                 app:layout_marginBottomPercent="@fraction/ls_timer_bottom_margin" app:layout_aspectRatio="30%"
+                 app:layout_marginRightPercent="0%"
+                 app:layout_marginLeftPercent="0%"
+                 android:gravity="bottom|center_horizontal"
+                 android:visibility="visible"
+                 android:layout_width="0dp"
+                 android:layout_height="0dp"
+    />
+    <Chronometer android:id="@+id/sb_set_duration"
+                 android:layout_alignBottom="@id/btn_score1"
+                 android:layout_alignEnd="@id/btn_score1"
                  app:layout_widthPercent="@fraction/ls_match_timer_width"
                  app:layout_marginBottomPercent="@fraction/ls_timer_bottom_margin" app:layout_aspectRatio="30%"
                  app:layout_marginRightPercent="0%"
@@ -271,7 +282,6 @@
     />
     <Chronometer android:id="@+id/sb_game_duration"
                  android:layout_alignBottom="@id/btn_score2"
-                 android:layout_alignRight="@id/btn_score2"
                  android:layout_alignEnd="@id/btn_score2"
                  app:layout_widthPercent="@fraction/ls_match_timer_width"
                  app:layout_marginBottomPercent="@fraction/ls_timer_bottom_margin" app:layout_aspectRatio="30%"

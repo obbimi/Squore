@@ -13,7 +13,7 @@
 -->
     <color name="translucent_orange">#CCffbb33</color>
 
-    <string-array name="colorSchema_Padel" translatable="false">
+    <string-array name="colorSchema_TennisPadel" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|IPF Light             |#1C3755|#D63E2D|#7BB0E7|#FFFFFF|</item><!-- purple|red|blue... -->

@@ -34,8 +34,12 @@ import java.util.List;
 import java.util.Map;
 
 /** Model for basis of Game-Set-Match models: Padel and Tennis */
-public abstract class GSMModel extends Model
+public class GSMModel extends Model
 {
+    @Override public SportType getSport() {
+        return SportType.TennisPadel;
+    }
+
     //-----------------------------------------------------
     // Listeners
     //-----------------------------------------------------
@@ -46,6 +50,7 @@ public abstract class GSMModel extends Model
         void OnSetBallChange(Player[] players, boolean bHasSetBall);
         /** actually ended set and preparing for new one */
         void OnSetEnded(Player winningPlayer);
+        void OnXPointsPlayedInTiebreak();
     }
     transient private List<OnSetChangeListener> onSetChangeListeners = new ArrayList<OnSetChangeListener>();
 
@@ -137,6 +142,11 @@ public abstract class GSMModel extends Model
 
     GSMModel() {
         super();
+        setTiebreakFormat(TieBreakFormat.TwoClearPoints); // for games only deuce/advantage/game, TODO: but sometimes 'golden point' is used for games
+        //setNrOfGamesToWinSet  (6);
+        setNrOfPointsToWinGame  (6);
+        //setNrOfSetsToWinMatch (2);
+        setNrOfGamesToWinMatch (2);
         init();
     }
 
@@ -174,28 +184,24 @@ public abstract class GSMModel extends Model
     }
 
     @Override public boolean showChangeSidesMessageInGame(int iGameZB) {
-        return false; // TODO: multiple times in tiebreak
+        return false;
     }
-
-    private void determineServerAndSide_GSM() {
-        int iNrOfGames = getGameNrInProgress(); // TODO: spanning all sets
-
-        Player server = getServer();
-        List<List<ScoreLine>> gamesScoreHistory = getGamesScoreHistory();
-        if ( ListUtil.isNotEmpty(gamesScoreHistory) ) {
-            List<ScoreLine> scoreLines = gamesScoreHistory.get(0);
-            if ( ListUtil.isNotEmpty(scoreLines) ) {
-                ScoreLine scoreLine = scoreLines.get(0);
-                server = scoreLine.getServingPlayer();
-            }
-        }
-        for( int i = 0; i < iNrOfGames - 1; i++ ) {
-            server = server.getOther();
-        }
+/*
+    @Override public Player getServer() {
+        return super.getServer();
+    }
+*/
+    @Override void setServerAndSide(Player player, ServeSide side, DoublesServe doublesServe) {
         int iNrOfPoints = getTotalGamePoints();
-        setServerAndSide(server, ServeSide.values()[iNrOfPoints%2], null);
+        ServeSide serveSideBasedOnPoints = ServeSide.values()[iNrOfPoints % 2];
+        super.setServerAndSide(player, serveSideBasedOnPoints, doublesServe);
     }
 
+    @Override public void changeSide(Player player) {
+        if ( player.equals(getServer()) == false ) {
+            setServerAndSide(player, null, null);
+        }
+    }
 
     //------------------------
     // 'Set' containers
@@ -386,28 +392,55 @@ public abstract class GSMModel extends Model
         int iDelta = 1;
         Integer iNewScore = determineNewScoreForPlayer(player, iDelta,false);
         ScoreLine scoreLine = getScoreLine(player, iNewScore, m_nextServeSide);
-        determineServerAndSide_GSM();
+      //determineServerAndSide_GSM();
         addScoreLine(scoreLine, true);
+        setServerAndSide(getServer(), m_nextServeSide.getOther(), m_in_out);
+
+        if ( isTieBreakGame() ) {
+            // multiple times in tiebreak
+            int maxScore = getMaxScore();
+            int minScore = getMinScore();
+            int totalGamePoints = maxScore + minScore;
+
+            // if 6 points are played but tiebreak not yes decided
+            if ( totalGamePoints % 6 == 0 ) {
+                boolean possibleGameVictory = isPossibleGameVictory();
+/*
+                if (    (maxScore < NUMBER_OF_POINTS_TO_WIN_TIEBREAK)
+                     || (maxScore - minScore < 2)
+                   )
+*/
+                if ( possibleGameVictory == false )
+                {
+                    for(OnSetChangeListener l: onSetChangeListeners) {
+                        l.OnXPointsPlayedInTiebreak();
+                    }
+                }
+            }
+        }
 
         // inform listeners
         changeScoreInformListeners(player, true, null, iDelta, getServer(), m_in_out, iNewScore);
     }
 
     @Override public synchronized void undoLast() {
-        boolean bGoingBackAGame = false;
+        boolean bGoingBackASet = false;
         Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress();
         if ( MapUtil.getMaxValue(scoreOfGameInProgress) == 0 ) {
             // going back a game
-            bGoingBackAGame = true;
             Map<Player, Integer> player2GamesWon = getPlayer2GamesWon();
             if ( MapUtil.getMaxValue(player2GamesWon) == 0 ) {
                 if ( getSetNrInProgress() >= 2 ) {
+                    bGoingBackASet = true;
+
                     // go back into the previous set
                     List<List<ScoreLine>> shouldBeListWithEmptyList = ListUtil.removeLast(m_lGamesScorelineHistory_PerSet);
                     super.setGamesScoreHistory(ListUtil.getLast(m_lGamesScorelineHistory_PerSet));
 
                     List<Map<Player, Integer>> shouldBeListWithZeroZeroOnly = ListUtil.removeLast(m_lPlayer2GamesWon_PerSet);
-                    setPlayer2GamesWonHistory(ListUtil.getLast(m_lPlayer2GamesWon_PerSet));
+                    List<Map<Player, Integer>> lPlayer2GamesWon = ListUtil.getLast(m_lPlayer2GamesWon_PerSet);
+                    ListUtil.removeLast(lPlayer2GamesWon);
+                    setPlayer2GamesWonHistory(lPlayer2GamesWon);
 
                     List<Map<Player, Integer>> shouldBeListWithZeroZeroOnly2 = ListUtil.removeLast(m_lPlayer2EndPointsOfGames_PerSet);
                     setPlayer2EndPointsOfGames(ListUtil.getLast(m_lPlayer2EndPointsOfGames_PerSet));
@@ -426,12 +459,21 @@ public abstract class GSMModel extends Model
                 }
             }
         }
-
-        super.undoLast();
-
-        if ( bGoingBackAGame ) {
-            this.undoLast();
-            // trigger a second undo to not have e.g. AD-15 on scoreboard for a game in a finished state
+        if ( bGoingBackASet ) {
+            super.undoLast(); // removing last scoreline of last winning game
+        } else {
+            List<Map<Player, Integer>> player2EndPointsOfGames = getPlayer2EndPointsOfGames();
+            Map<Player, Integer> last = ListUtil.getLast(player2EndPointsOfGames);
+            if ( (last != null) && (MapUtil.getMaxValue(last) == 0) ) {
+                // go back in to previous game
+                super.undoLast();
+                // remove last scoreline of that previous game
+                // trigger a second undo to not have e.g. AD-15 on scoreboard for a game in a finished state
+                super.undoLast();
+            } else {
+                // remove last scoreline of game in progress
+                super.undoLast();
+            }
         }
     }
 
@@ -462,9 +504,13 @@ public abstract class GSMModel extends Model
         // invokes startNewGame()
         super.endGame(bNotifyListeners, false); // updates m_player2GamesWon of super class
 
+        Player server = getServer().getOther();
+        DoublesServe doublesServe = m_in_out;
         if ( isDoubles() && getNrOfFinishedGames() % 2 == 1 ) {
-            setServerAndSide(null, null, m_in_out.getOther());
+            doublesServe = doublesServe.getOther();
         }
+        setServerAndSide(server, null, doublesServe);
+
         // see if a new Set must be started
         Map<Player, Integer> player2GamesWon = getPlayer2GamesWon();
         Player pLeader = MapUtil.getMaxKey(player2GamesWon, Player.A);
@@ -487,10 +533,12 @@ public abstract class GSMModel extends Model
     @Override protected void setDirty(boolean bScoreRelated) {
         super.setDirty(bScoreRelated);
         if ( bScoreRelated ) {
-            //Log.d(TAG, "m_lPlayer2EndPointsOfGames_PerSet:\n" + ListUtil.toNice(m_lPlayer2EndPointsOfGames_PerSet, false, 4));
-            //Log.d(TAG, "m_lPlayer2GamesWon_PerSet        :\n" + ListUtil.toNice(m_lPlayer2GamesWon_PerSet, false, 4));
-            //Log.d(TAG, "m_lGamesScorelineHistory_PerSet  :\n" + ListUtil.toNice(m_lGamesScorelineHistory_PerSet, false, 4));
-            Log.d(TAG, "m_lGamesTiming_PerSet            :\n" + ListUtil.toNice(m_lGamesTiming_PerSet, false, 4));
+            Log.d(TAG, ""
+            + "\n" + "m_lPlayer2EndPointsOfGames_PerSet: " + ListUtil.toNice(m_lPlayer2EndPointsOfGames_PerSet, false, 4)
+            + "\n" + "m_lPlayer2GamesWon_PerSet        : " + ListUtil.toNice(m_lPlayer2GamesWon_PerSet, false, 4)
+            //+ "\n" + "m_lGamesScorelineHistory_PerSet  : " + ListUtil.toNice(m_lGamesScorelineHistory_PerSet, false, 4)
+            //+ "\n" + "m_lGamesTiming_PerSet            : " + ListUtil.toNice(m_lGamesTiming_PerSet, false, 4)
+            );
         }
     }
 
@@ -500,8 +548,7 @@ public abstract class GSMModel extends Model
         boolean bPreviousSetFinished = false;
         if ( bGamesInCurrentSetHasStarted == false ) {
             // check if a previous set has been played
-            List<List<ScoreLine>> gameScoreSet1 = m_lGamesScorelineHistory_PerSet.get(0);
-            bPreviousSetFinished = ListUtil.isNotEmpty(gameScoreSet1);
+            bPreviousSetFinished = ListUtil.size(m_lGamesScorelineHistory_PerSet) >= 2;
         }
         return bGamesInCurrentSetHasStarted || bPreviousSetFinished;
     }

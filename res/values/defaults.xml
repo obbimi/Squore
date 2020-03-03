@@ -68,56 +68,56 @@ http://developer.android.com/guide/practices/screens_support.html
     <integer name="gameEndScore_default_Tabletennis">11</integer>
     <integer name="gameEndScore_default_Racketlon">21</integer>
     <integer name="gameEndScore_default_Racquetball">15</integer>
-    <integer name="gameEndScore_default_Padel">6</integer> <!-- abuse to be used as setEndScore default, gameEndScore is always 4 -->
+    <integer name="gameEndScore_default_TennisPadel">6</integer> <!-- abuse to be used as setEndScore default, gameEndScore is always 4 -->
 
     <integer name="numberOfGamesToWin_default_Squash">3</integer>
     <integer name="numberOfGamesToWin_default_Badminton">2</integer>
     <integer name="numberOfGamesToWin_default_Tabletennis">4</integer>
     <integer name="numberOfGamesToWin_default_Racketlon">-1</integer>
     <integer name="numberOfGamesToWin_default_Racquetball">2</integer>
-    <integer name="numberOfGamesToWin_default_Padel">2</integer> <!-- = number of sets to win default -->
+    <integer name="numberOfGamesToWin_default_TennisPadel">2</integer> <!-- = number of sets to win default -->
 
     <string name="endGameSuggestion_default_Squash">Suggest</string>
     <string name="endGameSuggestion_default_Badminton">Suggest</string>
     <string name="endGameSuggestion_default_Tabletennis">Suggest</string>
     <string name="endGameSuggestion_default_Racketlon">Suggest</string>
     <string name="endGameSuggestion_default_Racquetball">Suggest</string>
-    <string name="endGameSuggestion_default_Padel">Automatic</string>
+    <string name="endGameSuggestion_default_TennisPadel">Automatic</string>
 
     <!--
-        <integer name="numberOfGamesToWinSet_default_Padel">6</integer>
-        <integer name="numberOfSetsToWin_default_Padel">2</integer>
+        <integer name="numberOfGamesToWinSet_default_TennisPadel">6</integer>
+        <integer name="numberOfSetsToWin_default_TennisPadel">2</integer>
     -->
 
     <integer name="timerWarmup_default_Squash">240</integer> <!-- changed from 300 to 240 according to new PSA rules -->
     <integer name="timerWarmup_default_Badminton">300</integer> <!-- no warmup stuff specified in rules -->
     <integer name="timerWarmup_default_Tabletennis">120</integer> <!-- two minutes according to rule 3.4.3.1 -->
     <integer name="timerWarmup_default_Racketlon">180</integer> <!-- not specified in rules -->
-    <integer name="timerWarmup_default_Padel">180</integer> <!-- TODO -->
+    <integer name="timerWarmup_default_TennisPadel">180</integer> <!-- TODO -->
 
     <string name="timerWarmup_values_default_Squash">240,300</string>
     <string name="timerWarmup_values_default_Badminton">120,180,240,300</string>
     <string name="timerWarmup_values_default_Tabletennis">240,300</string>
     <string name="timerWarmup_values_default_Racketlon">180,240,300</string>
-    <string name="timerWarmup_values_default_Padel">180,240,300</string> <!-- TODO -->
+    <string name="timerWarmup_values_default_TennisPadel">180,240,300</string> <!-- TODO -->
 
     <integer name="timerPauseBetweenGames_default_Squash">90</integer> <!-- PSA: 120 -->
     <integer name="timerPauseBetweenGames_default_Badminton">120</integer> <!-- 16.2.2 not exceeding 120 seconds between the first and second game, and between the second and third game shall be allowed in all matches.  -->
     <integer name="timerPauseBetweenGames_default_Tabletennis">60</integer><!-- 3.4.4.1.1 an interval of up to 1 minute between successive games of an individual match; -->
     <integer name="timerPauseBetweenGames_default_Racketlon">180</integer>
-    <integer name="timerPauseBetweenGames_default_Padel">180</integer> <!-- TODO -->
+    <integer name="timerPauseBetweenGames_default_TennisPadel">60</integer> <!-- TODO -->
 
     <string name="timerPauseBetweenGames_values_default_Squash">90,120</string>
     <string name="timerPauseBetweenGames_values_default_Badminton">120,60</string> <!-- 16.2.2 -->
     <string name="timerPauseBetweenGames_values_default_Tabletennis">60,90</string>
     <string name="timerPauseBetweenGames_values_default_Racketlon">180,300</string>
-    <string name="timerPauseBetweenGames_values_default_Padel">180,300</string> <!-- TODO -->
+    <string name="timerPauseBetweenGames_values_default_TennisPadel">60,90</string> <!-- TODO -->
 
     <integer name="timerPauseBetweenGames_reminder_at_Squash">15</integer>
     <integer name="timerPauseBetweenGames_reminder_at_Badminton">20</integer> <!-- seen during BWF match -->
     <integer name="timerPauseBetweenGames_reminder_at_Tabletennis">15</integer>
     <integer name="timerPauseBetweenGames_reminder_at_Racketlon">15</integer>
-    <integer name="timerPauseBetweenGames_reminder_at_Padel">15</integer> <!-- TODO -->
+    <integer name="timerPauseBetweenGames_reminder_at_TennisPadel">15</integer> <!-- TODO -->
 
     <integer name="timerInjury_default">180</integer>
 

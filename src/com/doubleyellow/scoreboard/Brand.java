@@ -37,7 +37,7 @@ public enum Brand
   //Tabletennis     (SportType.Tabletennis, R.string.app_name_short_brand_Tabletennis     , 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_tabletennis_bg_color     , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema_Tabletennis, 0                                            , 3000, "http://tabletennis.double-yellow.be", "e35d8fcb-a7c0-4c2a-9c74-cc3f6e1e6a41", R.raw.changelog_tabletennis),
   //Badminton       (SportType.Badminton  , R.string.app_name_short_brand_Badminton       , 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_badminton_bg_color       , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema_Badminton  , 0                                            , 3000, "http://badminton.double-yellow.be", "18be497c-ddfa-4851-9b43-0a5866605252", R.raw.changelog_badminton),
   //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand_Racketlon       , 0/*R.drawable.brand_squore*/              , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_racketlon       , R.array.colorSchema_Racketlon  , 0                                            , 3000, "http://racketlon.double-yellow.be", "6ffc7128-6fd5-46d1-b79c-46e4c613cba5", R.raw.changelog_racketlon),
-  //Padel           (SportType.Padel      , R.string.app_name_short_brand_Padel           , R.drawable.logo_brand_padel               , R.id.sb_branded_logo_ar400, R.color.brand_padel_bg_color           , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema_Padel      , 0                              , 4000, "http://tennispadel.double-yellow.be", "239ad8ef-0cdd-490c-8f01-4d50dd4e7c6b", R.raw.changelog_paddletennis),
+  //TennisPadel     (SportType.TennisPadel, R.string.app_name_short_brand_TennisPadel     , R.drawable.logo_brand_tennispadel         , R.id.sb_branded_logo_ar400, R.color.brand_padel_bg_color           , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema_TennisPadel      , 0                              , 4000, "http://tennispadel.double-yellow.be", "239ad8ef-0cdd-490c-8f01-4d50dd4e7c6b", R.raw.changelog_tennispadel),
   //Racquetball     (SportType.Racquetball, R.string.app_name_short_brand_Racquetball     , 0/*R.drawable.brand_squore*/              , R.id.sb_branded_logo_ar150, 0                                      , R.string.REMOTE_DISPLAY_APP_ID_brand_Racquetball     , R.array.colorSchema_Racquetball, 0                                            , 3000, "http://racquetball.double-yellow.be", R.raw.changelog),
   //CourtCare       (SportType.Squash     , R.string.app_name_short_brand_courtcare       , R.drawable.brand_courtcare                , R.id.sb_branded_logo_ar400, R.color.brand_courtcare_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_courtcare       , R.array.colorSchema_CourtCare  , R.string.brand_courtcare_color_name_re       , 4000, "http://squore.double-yellow.be", "060fa379-fc13-448d-b17a-87468ddd02ce", R.raw.changelog_courtcare),
   //XXXOfNotthingham(SportType.Squash     , R.string.app_name_short_brand_uniofnotthingham, R.drawable.brand_uniofnotthingham         , R.id.sb_branded_logo_ar150, R.color.brand_uniofnotthingham_bg_color, R.string.REMOTE_DISPLAY_APP_ID_brand_uniofnotthingham, R.array.colorSchema_UoN        , R.string.brand_uniofnotthingham_color_name_re, 4000, "http://squore.double-yellow.be", R.raw.changelog_courtcare),
@@ -174,9 +174,9 @@ public enum Brand
             PreferenceValues.setStringSet(PreferenceKeys.showScoringHistoryInMainScreenOn, EnumSet.of(ShowOnScreen.OnDevice), ctx); // show the scoring history
             PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring         , ctx, false);
         }
-        if ( isPadel() ) {
-            PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_Padel);
-            PreferenceValues.setNumberR  (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default_Padel);
+        if ( isGameSetMatch() ) {
+            PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default_TennisPadel);
+            PreferenceValues.setNumberR  (PreferenceKeys.numberOfGamesToWinMatch         , ctx, R.integer.numberOfGamesToWin_default_TennisPadel);
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
             PreferenceValues.setStringSet(PreferenceKeys.showScoringHistoryInMainScreenOn, EnumSet.noneOf(ShowOnScreen.class), ctx);
@@ -236,11 +236,13 @@ public enum Brand
         return getSport().equals(SportType.Squash);
     }
     public static boolean isGameSetMatch() {
-        return getSport().equals(SportType.Padel);
+        return getSport().equals(SportType.TennisPadel);
     }
+/*
     public static boolean isPadel() {
         return getSport().equals(SportType.Padel);
     }
+*/
     public static boolean isRacquetball() {
         return getSport().equals(SportType.Racquetball);
     }

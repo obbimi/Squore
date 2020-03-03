@@ -561,7 +561,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     private class GameScoresListener implements View.OnLongClickListener, View.OnClickListener {
         private long lActionBarToggledAt = 0L;
         @Override public void onClick(View view) {
-            if ( Brand.isRacketlon() == false ) {
+            if ( Brand.isGameSetMatch() ) {
+                // do nothing for now
+            } else if ( Brand.isRacketlon() == false ) {
                 toggleGameScoreView();
             } else {
                 long currentTime = System.currentTimeMillis();
@@ -2574,6 +2576,10 @@ touch -t 01030000 LAST.sb
             // TODO: any special action required?
         }
 
+        @Override public void OnXPointsPlayedInTiebreak() {
+            _confirmSwapSides(null);
+        }
+
         @Override public void OnGameBallChange(Player[] players, boolean bHasGameBall) {
             if ( Brand.isGameSetMatch() ) {
                 if ( bHasGameBall ) {
@@ -3630,10 +3636,12 @@ touch -t 01030000 LAST.sb
             }
             case R.id.float_new_match:
             case R.id.dyn_new_match: {
+/*
                 if ( Brand.isPadel() && MatchTabbed.SelectTab.Manual.equals(MatchTabbed.getDefaultTab()) ) {
                     // usually Padel is NOT singles
                     MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.ManualDbl);
                 }
+*/
                 cancelShowCase();
                 Intent nm = new Intent(this, MatchTabbed.class);
                 startActivityForResult(nm, 1); // see onActivityResult

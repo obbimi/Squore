@@ -313,6 +313,7 @@ public class IBoard implements TimerViewContainer
 
         if ( Brand.isGameSetMatch() == false ) {
             tvSetTime.setVisibility(View.GONE);
+            return;
         }
 
         // TODO: hide during first set since it has the same value as match duration

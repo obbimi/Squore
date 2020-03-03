@@ -253,7 +253,7 @@ public class MatchView extends SBRelativeLayout
                       //, R.id.llScoringType
                 );
                 return false;
-            case Padel:
+            case TennisPadel:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
                         //, R.id.lblMatch_BestOf
                         //, R.id.tbBestOf_or_TotalOf

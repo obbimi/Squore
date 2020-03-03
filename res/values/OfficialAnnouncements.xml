@@ -28,6 +28,7 @@
     <!-- tiny timers/chronos -->
     <string name="oa_match_firstletter">M</string>
     <string name="oa_game_firstletter">G</string>
+    <string name="oa_set_firstletter_GSM">S</string>
 
     <string name="oa_game">game</string>
     <string name="oa_games">games</string>

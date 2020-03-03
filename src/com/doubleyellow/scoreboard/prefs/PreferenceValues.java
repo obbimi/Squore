@@ -435,6 +435,9 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.shareAction, context, ShareMatchPrefs.class, ShareMatchPrefs.LinkWithFullDetails);
     }
     public static Feature useOfficialAnnouncementsFeature(Context context) {
+        if ( Brand.isGameSetMatch() ) {
+            return Feature.DoNotUse;
+        }
         return getEnum(PreferenceKeys.useOfficialAnnouncementsFeature, context, Feature.class, R.string.useOfficialAnnouncementsFeature_default);
     }
     public static void initForLiveScoring(Context ctx, boolean bTmp) {
@@ -1688,7 +1691,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-03-04"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-03-03"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
