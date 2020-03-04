@@ -181,10 +181,10 @@ console.log(data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
         if ( (! data.property) || data.property === 'text' ) {
             $('#' + data.id + ' > span').html(data.value);
             if ( data.id.indexOf('txt_player')===0 ) {
-                var iTextLength = data.value.length;
-                var sIdOther = data.id==='txt_player1'?'txt_player2':'txt_player1';
+                var iTextLength      = data.value.length;
+                var sIdOther         = data.id==='txt_player1'?'txt_player2':'txt_player1';
                 var iTextLengthOther = $('#' + sIdOther + ' > span').html().length;
-                var sIdToResize = iTextLength > iTextLengthOther ? data.id : sIdOther;
+                var sIdToResize      = iTextLength > iTextLengthOther ? data.id : sIdOther;
               //console.log('Resize to fit ' + sIdToResize);
                 //$('#' + data.id + ' > span').fitText(0.75); // does not work if there is a slash in the text
                 $('#' + sIdToResize).textfill({ success: function(o, fontSizeFinal) {
@@ -195,7 +195,8 @@ console.log(data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
                     }
                 });
                 iTxtPlayerCount++;
-                if ( iTxtPlayerCount === 2) {
+                if ( iTxtPlayerCount === 2 ) {
+                    // names of both players received, time two remove the 'loading...' message
                     $('#squoreboard_loading').fadeOut(1000);
                     $('#squoreboard_root_view').fadeIn(1000);
                 }
@@ -218,9 +219,11 @@ console.log(data.func);
     }
 }
 
-var CHANNEL_S = 'urn:x-cast:com.doubleyellow.scoreboard';
-var CHANNEL_T = 'urn:x-cast:com.doubleyellow.tabletennis';
-var CHANNEL_B = 'urn:x-cast:com.doubleyellow.badminton';
+var CHANNEL_SB = 'urn:x-cast:com.doubleyellow.scoreboard';
+var CHANNEL_BM = 'urn:x-cast:com.doubleyellow.badminton';
+var CHANNEL_TP = 'urn:x-cast:com.doubleyellow.tennispadel';
+var CHANNEL_TT = 'urn:x-cast:com.doubleyellow.tabletennis';
+
 window.onload = function ()
 {
     $('#squoreboard_root_view').hide();
@@ -238,13 +241,14 @@ window.onload = function ()
 
     // This is used to send data back to the senders apps.
     options.customNamespaces = Object.assign({});
-    options.customNamespaces[CHANNEL_B] = cast.framework.system.MessageType.JSON;
+    options.customNamespaces[CHANNEL_BM] = cast.framework.system.MessageType.JSON;
 //console.log('options:' + options);
 //console.log(options);
 
-    ctx.addCustomMessageListener(CHANNEL_B, handleMessage);
-    ctx.addCustomMessageListener(CHANNEL_S, handleMessage);
-    ctx.addCustomMessageListener(CHANNEL_T, handleMessage);
+    ctx.addCustomMessageListener(CHANNEL_SB, handleMessage);
+    ctx.addCustomMessageListener(CHANNEL_BM, handleMessage);
+    ctx.addCustomMessageListener(CHANNEL_TP, handleMessage);
+    ctx.addCustomMessageListener(CHANNEL_TT, handleMessage);
 
     ctx.start(options);
 }
