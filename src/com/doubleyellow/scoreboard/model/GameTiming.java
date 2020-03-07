@@ -20,11 +20,12 @@ package com.doubleyellow.scoreboard.model;
 import com.doubleyellow.util.DateUtil;
 import com.doubleyellow.util.ListUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class GameTiming
+public class GameTiming implements Serializable
 {
     public enum Changed {
         None,
@@ -57,7 +58,7 @@ public class GameTiming
 
     private int iGameNrZeroBased;
 
-    private List<OnTimingChangedListener> onTimingChangedListeners = null;
+    transient private List<OnTimingChangedListener> onTimingChangedListeners = null;
 
     /** version of the constructor for GUI preview mode only */
     public GameTiming(int iGameNrZeroBased, long s, long e) {
@@ -76,7 +77,7 @@ public class GameTiming
         triggerListeners(Changed.Both, ChangedBy.TimingCreated);
     }
 
-    void setTimingListeners(List<OnTimingChangedListener> onTimingChangedListeners) {
+    private void setTimingListeners(List<OnTimingChangedListener> onTimingChangedListeners) {
         this.onTimingChangedListeners = onTimingChangedListeners;
     }
 

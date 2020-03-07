@@ -1,3 +1,13 @@
+## 4.31 (march 2020)
+
+- allow configuration on swap sides
+  - when it should happen
+  - should it happen automatically or should it be 'suggested'
+- two 'modes' two show scores of previous sets
+  - nr of sets won
+  - end score of previous sets
+- Chrome cast
+
 ## 4.30 (feb 2020)
 
 - first version of the app converted for Tennis/Padel focused on
@@ -16,12 +26,10 @@
 - Known issues
   - Score history details: showing games of last set, should be sets
   - Blue tooth mirroring
-  - Chrome cast
   - manually change score dialog
   - Quick intro
     - intermediate dummy scores not tennis/padel like
 
 - TODO
-  - Suggest to Swap sides after each 6 points in a tiebreak
   - Online Help pages
 

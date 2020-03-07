@@ -641,6 +641,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
     /** might present a dialog to the user, 'Based-On-Preference'. Returns true if a dialog was presented to the user. */
     private boolean swapSides_BOP(Feature fChangeSides) {
+        if ( fChangeSides == null ) {
+            fChangeSides = PreferenceValues.useChangeSidesFeature(ScoreBoard.this);
+        }
         switch( fChangeSides ) {
             case DoNotUse:
                 return false;
@@ -2630,7 +2633,7 @@ touch -t 01030000 LAST.sb
                     // don't treat gameball as special, wait for SetBall in stead
                     return;
                 } else {
-                    // no more gameball: hence also no more matchball: continue
+                    // no more gameball: hence also no more setball: continue
                 }
             }
 
@@ -5825,7 +5828,7 @@ touch -t 01030000 LAST.sb
     }
 
     private void toggleSetScoreView() {
-        iBoard.toggleSetScoreView();
+        iBoard.updateSetScoresToShow(true);
 
         if ( BTRole.Master.equals(m_blueToothRole) ) {
             writeMethodToBluetooth(BTMethods.toggleGameScoreView);
@@ -6193,7 +6196,11 @@ touch -t 01030000 LAST.sb
                     break;
                 }
                 case toggleGameScoreView: {
-                    toggleGameScoreView();
+                    if ( Brand.isGameSetMatch() ) {
+                        toggleSetScoreView();
+                    } else {
+                        toggleGameScoreView();
+                    }
                     break;
                 }
                 case Toast: {

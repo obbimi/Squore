@@ -157,6 +157,7 @@ public class PlayerTextView extends AppCompatAutoCompleteTextView implements Con
                     lInput = new ArrayList<String>(Arrays.asList(sContent.split("[\r\n]+")));
                 }
             } catch(Exception e) {
+                Log.w(TAG, "Could not parse " + sContent);
                 e.printStackTrace();
             }
             lInput.addAll(0, playerList);

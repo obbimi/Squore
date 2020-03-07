@@ -155,14 +155,14 @@ public class IBoard implements TimerViewContainer
                 TextView btnScoreOpp = (TextView) findViewById(idOpp);
                 btnScoreOpp.setText(sScoreOpp);
 
-                sendMessage(idOpp, sScoreOpp);
+                castSetTextMessage(idOpp, sScoreOpp);
             }
         }
         btnScore.setText(sScore);
         if ( Player.A.equals(player) && Brand.supportsTimeout() && matchModel.getMaxScore()==0 ) {
             m_lGameXWasPausedDuration.put(matchModel.getGameNrInProgress(), 0L);
         }
-        sendMessage(id, sScore);
+        castSetTextMessage(id, sScore);
     }
     public boolean updatePlayerName(Player p, String sName, boolean bIsDoubles) {
         if ( m_player2nameId == null ) {
@@ -180,7 +180,7 @@ public class IBoard implements TimerViewContainer
                     pb.addListener(keepSizeInSyncTextResizeListener);
                 }
             }
-            sendMessage(id, sName);
+            castSetTextMessage(id, sName);
         }
         return false;
     }
@@ -201,8 +201,8 @@ public class IBoard implements TimerViewContainer
     //-------------------------------------------
     // if casting is ON (new way of casting)
     //-------------------------------------------
-    private void sendMessage(Integer iBoardResId, Object oValue) {
-        sendMessage(iBoardResId, oValue, "text");
+    private void castSetTextMessage(Integer iBoardResId, Object oValue) {
+        castSendMessage(iBoardResId, oValue, "text");
     }
     private void sendFunction(String s) {
         if ( castHelper == null ) { return; }
@@ -210,7 +210,7 @@ public class IBoard implements TimerViewContainer
     }
 
     // sProperty = background-color
-    private void sendMessage(Integer iBoardResId, Object oValue, String sProperty) {
+    private void castSendMessage(Integer iBoardResId, Object oValue, String sProperty) {
         if ( castHelper == null ) { return; }
         castHelper.sendMessage(iBoardResId, oValue, sProperty);
     }
@@ -511,7 +511,7 @@ public class IBoard implements TimerViewContainer
             }
             pbReceiver.setReceiver(dsReceiver);
         }
-        sendMessage(iReceiveId, ""); // TODO: how about doubles and receiver indication
+        castSetTextMessage(iReceiveId, ""); // TODO: how about doubles and receiver indication
     }
     public void updateServeSide(Player player, DoublesServe doublesServe, ServeSide nextServeSide, boolean bIsHandout) {
         if ( player == null ) { return; } // normally only e.g. for undo's of 'altered' scores
@@ -545,7 +545,7 @@ public class IBoard implements TimerViewContainer
 
             pbServer.setServer(doublesServe, nextServeSide, bIsHandout, sDisplayValueOverwrite);
         }
-        sendMessage(iServeId, sDisplayValueOverwrite);
+        castSetTextMessage(iServeId, sDisplayValueOverwrite);
 /*
         if ( matchModel.getDoubleServeSequence().equals(DoublesServeSequence.ABXY) ) {
             String sSSFilename = Util.filenameForAutomaticScreenshot(context, matchModel, showOnScreen, -1, -1, null);
@@ -586,14 +586,17 @@ public class IBoard implements TimerViewContainer
         PreferenceValues.setEnum(PreferenceKeys.gameScoresAppearance, context, appearance);
         setGameScoreView(appearance);
     }
-    public void toggleSetScoreView() {
+    public MatchGameScoresView.ScoresToShow updateSetScoresToShow(boolean bChange) {
         MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
         if ( matchGameScores != null ) {
             matchGameScores.setVisibility(View.VISIBLE);
-            matchGameScores.toggleSetScoresToShow();
-          //matchGameScores.refreshDrawableState();
+            MatchGameScoresView.ScoresToShow scoresToShow = matchGameScores.updateSetScoresToShow(bChange);
+            sendFunction("GameScores.display(" + scoresToShow.equals(MatchGameScoresView.ScoresToShow.GamesWonPerSet) + ")");
             matchGameScores.update(matchModel, m_firstPlayerOnScreen);
+
+            return scoresToShow;
         }
+        return null;
     }
     public void initGameScoreView() {
         GameScoresAppearance appearance = PreferenceValues.getGameScoresAppearance(context);
@@ -640,6 +643,10 @@ public class IBoard implements TimerViewContainer
 
         // update casting screen
         List<Map<Player, Integer>> endScoreOfPreviousGames = matchModel.getEndScoreOfPreviousGames();
+        if ( Brand.isGameSetMatch() ) {
+            GSMModel gsmModel = (GSMModel) matchModel;
+            endScoreOfPreviousGames = gsmModel.getGamesWonPerSet();
+        }
         JSONArray jsonArray = new JSONArray();
         for(Map<Player, Integer> m: endScoreOfPreviousGames) {
             jsonArray.put(new JSONObject(MapUtil.keysToString(m)));
@@ -656,7 +663,7 @@ public class IBoard implements TimerViewContainer
                         GamesWonButton v = (GamesWonButton) view;
                         v.setGamesWon(gamesWon.get(player));
                     }
-                    sendMessage(iNameId, gamesWon.get(player));
+                    castSetTextMessage(iNameId, gamesWon.get(player));
                 }
             } else {
                 // set both to zero?
@@ -766,10 +773,10 @@ public class IBoard implements TimerViewContainer
                     setBackgroundColor(ssView, iBgColor);
                     setTextColor(ssView, iTxtColor);
 
-                    sendMessage(ssView.getId(), iTxtColor, "color");
+                    castSendMessage(ssView.getId(), iTxtColor, "color");
                 } else {
-                    sendMessage(id, iBgColor, "background-color");
-                    sendMessage(id, iTxtColor, "color");
+                    castSendMessage(id, iBgColor, "background-color");
+                    castSendMessage(id, iTxtColor, "color");
                 }
             }
 
@@ -820,8 +827,8 @@ public class IBoard implements TimerViewContainer
                     v.setBackgroundColorServer(mColors.get(ColorPrefs.ColorTarget.serveButtonBackgroundColor));
                     v.setTextColorServer      (mColors.get(ColorPrefs.ColorTarget.serveButtonTextColor));
 
-                    sendMessage(id, pbBgColor, "background-color");
-                    sendMessage(id, pbTxtColor, "color");
+                    castSendMessage(id, pbBgColor, "background-color");
+                    castSendMessage(id, pbTxtColor, "color");
                 }
             }
 
@@ -1151,7 +1158,7 @@ public class IBoard implements TimerViewContainer
                 if ( iPlayerColor == null ) {
                     //setBackgroundColor(view, iScoreButtonBgColor);
                     setBackgroundAndBorder(view, iScoreButtonBgColor, iScoreButtonBgColor);
-                    sendMessage(view.getId(), iScoreButtonBgColor, "border-color");
+                    castSendMessage(view.getId(), iScoreButtonBgColor, "border-color");
                 } else {
                     setBackgroundAndBorder(view, iScoreButtonBgColor, iPlayerColor);
                 }
@@ -1186,14 +1193,14 @@ public class IBoard implements TimerViewContainer
             ((PlayersButton)view).setTextColor(iTxtColor);
         }
 
-        sendMessage(view.getId(), iTxtColor, "color");
+        castSendMessage(view.getId(), iTxtColor, "color");
     }
     private void setBackgroundColor(View view, Integer iBgColor) {
         //Log.d(TAG, "change bgcolor of " + view + " = " + iBgColor);
         //ColorUtil.setBackground(view, iBgColor);
         setBackgroundAndBorder(view, iBgColor, mViewId2BorderColor.get(view.getId()));
 
-        sendMessage(view.getId(), iBgColor, "background-color");
+        castSendMessage(view.getId(), iBgColor, "background-color");
     }
 
     private Map<Integer, Integer> mViewId2BorderColor = new HashMap<>();
@@ -1217,8 +1224,8 @@ public class IBoard implements TimerViewContainer
         view.setBackground(gd);
         view.invalidate();
 
-        sendMessage(view.getId(), iBgColor, "background-color");
-        sendMessage(view.getId(), iBorderColor, "border-color"); // TODO: thickness
+        castSendMessage(view.getId(), iBgColor, "background-color");
+        castSendMessage(view.getId(), iBorderColor, "border-color"); // TODO: thickness
     }
     /** invoked several times for different elements */
     private void initPerPlayerViewWithColors(Player p, Map<Player, Integer> mPlayer2ViewId, Integer iBgColor, Integer iTxtColor, ColorPrefs.ColorTarget bgColorDefKey, ColorPrefs.ColorTarget txtColorDefKey) {
@@ -1231,8 +1238,8 @@ public class IBoard implements TimerViewContainer
         Integer id = mPlayer2ViewId.get(p);
         if ( (id == null) || (iBgColor == null) || (iTxtColor == null) ) { return; }
 
-        sendMessage(id, iBgColor, "background-color");
-        sendMessage(id, iTxtColor, "color");
+        castSendMessage(id, iBgColor, "background-color");
+        castSendMessage(id, iTxtColor, "color");
 
         View view = findViewById(id);
         if (view == null) { return; }

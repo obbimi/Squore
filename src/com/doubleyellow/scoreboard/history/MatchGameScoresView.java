@@ -91,19 +91,28 @@ public class MatchGameScoresView extends LinearLayout
     private Map<Player, Integer>       m_pointsDiff    = null;
     private Player[]                   m_players       = Player.values(); // must be initialized with a value in order to let setProperties() succeed
 
-    public void toggleSetScoresToShow() {
-        switch (m_scoresToShow) {
-            case GamesWonPerSet:
-                m_scoresToShow = ScoresToShow.SetsWon_and_GamesWonInLastSet;
-                break;
-            case SetsWon_and_GamesWonInLastSet:
-                m_scoresToShow = ScoresToShow.GamesWonPerSet;
-                break;
+    public ScoresToShow updateSetScoresToShow(boolean bChange) {
+        if ( bChange ) {
+            switch (m_scoresToShow) {
+                case GamesWonPerSet:
+                    m_scoresToShow = ScoresToShow.SetsWon_and_GamesWonInLastSet;
+                    break;
+                case SetsWon_and_GamesWonInLastSet:
+                    m_scoresToShow = ScoresToShow.GamesWonPerSet;
+                    break;
+            }
         }
+        if ( m_scoresToShow.equals(ScoresToShow.PointsWonPerGame) ) {
+            // switch over to GSM valid value
+            m_scoresToShow = ScoresToShow.GamesWonPerSet;
+        }
+        return m_scoresToShow;
     }
     private ScoresToShow m_scoresToShow = ScoresToShow.PointsWonPerGame; // TODO: initial value from persisted setting
-    private enum ScoresToShow {
+    public enum ScoresToShow {
+        /* Non GSM match format */
         PointsWonPerGame,
+        /* GSM match format */
         GamesWonPerSet,
         SetsWon_and_GamesWonInLastSet,
     }

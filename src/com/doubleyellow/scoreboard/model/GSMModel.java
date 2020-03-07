@@ -548,7 +548,7 @@ public class GSMModel extends Model
 
     @Override protected void setDirty(boolean bScoreRelated) {
         super.setDirty(bScoreRelated);
-        if ( bScoreRelated ) {
+        if ( false && bScoreRelated ) {
             Log.d(TAG, ""
             + "\n" + "m_lPlayer2EndPointsOfGames_PerSet: " + ListUtil.toNice(m_lPlayer2EndPointsOfGames_PerSet, false, 4)
             + "\n" + "m_lPlayer2GamesWon_PerSet        : " + ListUtil.toNice(m_lPlayer2GamesWon_PerSet, false, 4)
@@ -586,14 +586,21 @@ public class GSMModel extends Model
         }
     }
 
-    @Override Player[] calculatePossibleMatchVictoryFor(When when, Player[] pLayersSB) {
-        if ( pLayersSB == null ) {
-            Player[] playersGB = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, getScoreOfGameInProgress(), _getNrOfPointsToWinGame());
-                     pLayersSB = calculateIsPossibleSetVictoryFor(playersGB, when, getPlayer2GamesWon());
-            if ( pLayersSB.length == 1 ) {
-                int iSetsWon = MapUtil.getInt(getSetsWon(), pLayersSB[0], 0);
-                if ( iSetsWon + 1 == m_iNrOfSetsToWinMatch ) {
-                    return pLayersSB;
+    @Override Player[] calculatePossibleMatchVictoryFor(When when, Player[] playersSB) {
+        if ( playersSB == null ) {
+            Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress();
+            Map<Player, Integer> player2GamesWon       = getPlayer2GamesWon();
+
+            Player[] playersGB = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, scoreOfGameInProgress, _getNrOfPointsToWinGame());
+            if ( ListUtil.length(playersGB) == 1 ) {
+                     playersSB =       calculateIsPossibleSetVictoryFor(playersGB, when, player2GamesWon);
+                if ( ListUtil.length(playersSB) == 1 ) {
+                    int iSetsWon = MapUtil.getInt(getSetsWon(), playersSB[0], 0);
+                    if ( iSetsWon + 1 == m_iNrOfSetsToWinMatch ) {
+                        return playersSB;
+                    }
+                } else {
+                  //Log.d(TAG, String.format("No setball %s, so no possible match victory", when));
                 }
             }
         }
@@ -609,27 +616,28 @@ public class GSMModel extends Model
         switch ( when ) {
             case Now:
                 // TODO: check
-                if ( ListUtil.isNotEmpty(pLayersSB) == true ) {
+                if ( ListUtil.isNotEmpty(pLayersSB) ) {
                     for( OnSetChangeListener l: onSetChangeListeners ) {
                         l.OnSetEnded(pLayersSB[0]);
                     }
                 }
                 break;
             case ScoreOneMorePoint:
-                if ( ListUtil.isNotEmpty(pLayersSB) == true ) {
+                //if ( ListUtil.isNotEmpty(pLayersSB) ) {
                     for( OnSetChangeListener l: onSetChangeListeners ) {
-                        l.OnSetBallChange(pLayersSB, true);
+                        l.OnSetBallChange(pLayersSB, ListUtil.isNotEmpty(pLayersSB));
                     }
-                }
+                //}
                 break;
         }
         return playersGB;
     }
 
+/*
     private Map<When, Player[]> m_possibleSetForPrev  = new HashMap<>();
     private Map<When, Player[]> m_possibleSetFor      = new HashMap<>();
 
-    /** Triggers listeners */
+    // Triggers listeners
     private void setSetVictoryFor(When when, Player[] setBallForNew) {
         // store the new value
         m_possibleSetFor.put(when, setBallForNew);
@@ -648,42 +656,47 @@ public class GSMModel extends Model
         }
 
         if ( when.equals(When.ScoreOneMorePoint) ) {
-/*
-            if ( ListUtil.isNotEmpty(setBallForOld) && (bSetBallFor_Unchanged == false) ) {
-                // no longer game ball for...
-                for( OnSetChangeListener l: onSetChangeListeners ) {
-                    l.OnSetBallChange(setBallForOld, false);
-                }
-            }
-*/
-
-            if ( ListUtil.isNotEmpty(setBallForNew) ) {
-                // now setBall for
-                for( OnSetChangeListener l: onSetChangeListeners ) {
-                    l.OnSetBallChange(setBallForNew, true);
-                }
+            // now setBall for
+            for( OnSetChangeListener l: onSetChangeListeners ) {
+                l.OnSetBallChange(setBallForNew, ListUtil.isNotEmpty(setBallForNew));
             }
         }
     }
+*/
 
     private Player[] calculateIsPossibleSetVictoryFor(Player[] playersWinningGame, When when, Map<Player, Integer> player2GamesWon){
-        switch (when) {
-            case Now:
-                break;
-            case ScoreOneMorePoint:
-                Player pPossibleSetBallFor = null;
-                if ( playersWinningGame.length == 1 ) {
-                    // check if it is possible setball/set victory
-                    pPossibleSetBallFor = playersWinningGame[0];
-                    //Log.d(TAG, "p2gw : " + m_player2GamesWon);
-                    //Log.d(TAG, "sogip: " + m_scoreOfGameInProgress);
-                } else if ( playersWinningGame.length == 2 ) {
-                    // special game format with 'golden point'.
-                    pPossibleSetBallFor = MapUtil.getMaxKey(player2GamesWon, null);
-                }
-                if ( pPossibleSetBallFor != null ) {
-                    int iGamesWon    = player2GamesWon.get(pPossibleSetBallFor);
-                    int iGamesWonOpp = player2GamesWon.get(pPossibleSetBallFor.getOther());
+        Player pPossibleSetBallFor = null;
+        if ( playersWinningGame.length == 1 ) {
+            // check if it is possible setball/set victory
+            pPossibleSetBallFor = playersWinningGame[0];
+            //Log.d(TAG, "p2gw : " + m_player2GamesWon);
+            //Log.d(TAG, "sogip: " + m_scoreOfGameInProgress);
+        } else if ( playersWinningGame.length == 2 ) {
+            // special game format with 'golden point'.
+            pPossibleSetBallFor = MapUtil.getMaxKey(player2GamesWon, null);
+        }
+
+        if ( pPossibleSetBallFor != null ) {
+            int iGamesWon    = player2GamesWon.get(pPossibleSetBallFor);
+            int iGamesWonOpp = player2GamesWon.get(pPossibleSetBallFor.getOther());
+            switch (when) {
+                case Now:
+                    // TODO:
+                    if ( iGamesWon >= getNrOfGamesToWinSet() ) {
+                        // typically : at least 6 games won in set to 6
+                        if ( iGamesWon > iGamesWonOpp ) {
+                            if ( iGamesWon - iGamesWonOpp >= 2 ) {
+                                return new Player[] { pPossibleSetBallFor};
+                            } else {
+                                if ( iGamesWon == 7 ) {
+                                    // tiebreak (TODO: what if no tiebreak is played in final set)
+                                    return new Player[] { pPossibleSetBallFor};
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case ScoreOneMorePoint:
                     if ( iGamesWon >= getNrOfGamesToWinSet() - 1 ) {
                         // typically : at least 5 games won in set to 6
                         if ( iGamesWon > iGamesWonOpp ) {
@@ -697,17 +710,19 @@ public class GSMModel extends Model
                             // opponent has won more games
                         }
                     }
-                }
-                break;
+                    break;
+            }
         }
         return getNoneOfPlayers();
     }
 
+/*
     @Override protected void clearPossibleGSM() {
         super.clearPossibleGSM();
         m_possibleSetForPrev .clear();m_possibleSetForPrev .putAll(m_possibleSetFor );
         m_possibleSetFor     .clear();
     }
+*/
 
     @Override protected List getScorelinesRoot() {
         return m_lGamesScorelineHistory_PerSet;

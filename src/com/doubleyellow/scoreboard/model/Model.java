@@ -915,6 +915,8 @@ public abstract class Model implements Serializable
     }
     public synchronized void undoLast() {
 
+        setDirty(true); // ensure gameball etc must be recalculated
+
         switch (m_halfwayStatus) {
             case Exactly:
             case JustAfter:
@@ -1014,7 +1016,6 @@ public abstract class Model implements Serializable
                 Player[] gameBallFor = isPossibleGameBallFor();
             }
         }
-        setDirty(true);
     }
 
     private void undoBackOneGame() {
@@ -3105,6 +3106,8 @@ public abstract class Model implements Serializable
         if ( players == null ) {
             players = calculateIsPossibleGameVictoryFor(when, getScoreOfGameInProgress(), bFromIsMatchBallFrom);
             setGameVictoryFor(when, players);
+        } else {
+          //Log.w(TAG, "[_isPossibleGameVictoryFor] Taken from cache " + players);
         }
         return players;
     }

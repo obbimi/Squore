@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.Menu;
 
 import com.doubleyellow.android.util.ColorUtil;
+import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.history.MatchGameScoresView;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
@@ -90,7 +92,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
     private Model m_matchModel = null;
     @Override public void setModelForCast(Model matchModel) {
-        if ( isCasting() == false ) { return; }
+      //if ( isCasting() == false ) { return; }
         Log.d(TAG, "New model for cast passed in : " + matchModel);
         if ( matchModel != m_matchModel && (matchModel != null)) {
             m_matchModel = matchModel;
@@ -259,6 +261,10 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 */
         iBoard.updateGameScores();
         iBoard.updateGameBallMessage();
+        if ( Brand.isGameSetMatch() ) {
+            MatchGameScoresView.ScoresToShow scoresToShow = iBoard.updateSetScoresToShow(false);
+            sendFunction("GameScores.display(" + scoresToShow.equals(MatchGameScoresView.ScoresToShow.GamesWonPerSet) + ")");
+        }
 
         for(Player p: Model.getPlayers()) {
             iBoard.updateScore(p, matchModel.getScore(p));
