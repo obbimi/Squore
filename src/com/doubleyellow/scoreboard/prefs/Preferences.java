@@ -579,7 +579,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 hideRemovePreference(psgBeh, PreferenceKeys.showChoosenDecisionShortly);      // not really for racketlon and tabletennis
             }
             if ( Brand.isSquash() ) {
-                hideRemovePreference(psgBeh, PreferenceKeys.changeSides);                     // only for racketlon badminton and tabletennis
+                hideRemovePreference(psgBeh, PreferenceKeys.changeSides);                     // several 'change sides' options: not for squash
             }
             if ( Brand.isSquash() || Brand.isBadminton() || Brand.isGameSetMatch() ) {
                 hideRemovePreference(psgBeh, PreferenceKeys.numberOfServiceCountUpOrDown);    // only for racketlon and tabletennis
@@ -590,6 +590,11 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 hideRemovePreference(psgBeh, PreferenceKeys.showDetailsAtEndOfGameAutomatically); // TODO: make details about sets, not games
                 hideRemovePreference(psgBeh, PreferenceKeys.hapticFeedbackOnGameEnd);
                 hideRemovePreference(psgBeh, "AutomateWhatCanBeAutomatedPrefs");
+
+                hideRemovePreference(psgBeh, PreferenceKeys.swapPlayersBetweenGames);
+                hideRemovePreference(psgBeh, PreferenceKeys.swapPlayersHalfwayGame);
+            } else {
+                hideRemovePreference(psgBeh, PreferenceKeys.changeSidesWhen_GSM);
             }
 /*
             if ( false && Brand.isGameSetMatch() ) {

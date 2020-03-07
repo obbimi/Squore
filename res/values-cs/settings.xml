@@ -246,6 +246,7 @@
     <string name="pref_playerList_summary">Používá se k našeptávání jmen při zadávání pomocí klávesnice</string>
     <string name="pref_clubList">Seznam klubů</string>
     <string name="pref_clubList_summary">Používá se k našeptávání názvů klubů při zadávání pomocí klávesnice</string>
+    <string name="pref_AutoComplete">Našeptávače jmen</string>
     <string name="pref_numberOfCharactersBeforeAutocomplete">Počet znaků pro aktivaci našeptávače jmen</string>
     <string name="pref_numberOfCharactersBeforeAutocomplete_summary">Našeptávat jména hráčů a názvy soutěží po zadání X prvních písmen</string>
     <string name="pref_numberOfCharactersBeforeAutocompleteCountry">Počet znaků pro aktivaci našeptávače země</string>

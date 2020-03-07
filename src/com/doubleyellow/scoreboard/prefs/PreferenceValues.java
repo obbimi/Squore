@@ -783,9 +783,18 @@ public class PreferenceValues extends RWValues
         int iResDefault = getSportTypeSpecificResId(context, R.bool.swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Squash);
         return getBoolean(PreferenceKeys.swapPlayersOn180DegreesRotationOfDeviceInLandscape, context, iResDefault);
     }
-    /** for tabletennis, not squash or racketlon */
+    /** @deprecated for tabletennis, not squash or racketlon */
     public static boolean swapSidesBetweenGames(Context context) {
         return getBoolean(PreferenceKeys.swapPlayersBetweenGames, context, R.bool.swapPlayersBetweenGames_default);
+    }
+    public static EnumSet<ChangeSidesWhen_GSM> changeSidesWhen_GSM(Context context) {
+        EnumSet<ChangeSidesWhen_GSM> defaultValues = EnumSet.of( ChangeSidesWhen_GSM.AfterOddGames
+                                                               , ChangeSidesWhen_GSM.EverySixPointsInTiebreak
+                                                               );
+        return getEnumSet(PreferenceKeys.changeSidesWhen_GSM, context, ChangeSidesWhen_GSM.class, defaultValues);
+    }
+    public static Feature useChangeSidesFeature(Context context) {
+        return getEnum(PreferenceKeys.useChangeSidesFeature, context, Feature.class, R.string.useChangeSidesFeature_default);
     }
     /** for tabletennis, not squash or racketlon */
     public static Feature showGamePausedDialog(Context context) {
@@ -1691,7 +1700,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-03-03"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-03-08"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

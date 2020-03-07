@@ -144,7 +144,7 @@ public class IBoard implements TimerViewContainer
         TextView btnScore = (TextView) findViewById(id);
         if ( btnScore == null ) { return; }
         String sScore = ("" + iScore).trim();
-        if ( matchModel instanceof GSMModel ) {
+        if ( Brand.isGameSetMatch() && (matchModel instanceof GSMModel) ) {
             GSMModel gsmModel = (GSMModel) matchModel;
             sScore = gsmModel.translateScore(player, iScore);
             if ( iScore >= 3 /* 3 so it also works if going back from AD */ ) {
@@ -154,6 +154,8 @@ public class IBoard implements TimerViewContainer
                 Integer  idOpp       = m_player2scoreId.get(opp);
                 TextView btnScoreOpp = (TextView) findViewById(idOpp);
                 btnScoreOpp.setText(sScoreOpp);
+
+                sendMessage(idOpp, sScoreOpp);
             }
         }
         btnScore.setText(sScore);
@@ -583,6 +585,15 @@ public class IBoard implements TimerViewContainer
                              appearance = ListUtil.getNextEnum(appearance);
         PreferenceValues.setEnum(PreferenceKeys.gameScoresAppearance, context, appearance);
         setGameScoreView(appearance);
+    }
+    public void toggleSetScoreView() {
+        MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
+        if ( matchGameScores != null ) {
+            matchGameScores.setVisibility(View.VISIBLE);
+            matchGameScores.toggleSetScoresToShow();
+          //matchGameScores.refreshDrawableState();
+            matchGameScores.update(matchModel, m_firstPlayerOnScreen);
+        }
     }
     public void initGameScoreView() {
         GameScoresAppearance appearance = PreferenceValues.getGameScoresAppearance(context);

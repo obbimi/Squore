@@ -242,4 +242,12 @@
         <item>A1/A2/B1/B2</item>               <!-- DSS___12_12__6 -->
         <item>A1/B1/A1/B1</item>               <!-- DSS___1_1____4 -->
     </string-array>
+
+    <string-array name="changeSidesWhen_GSM_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ChangeSidesWhen_GSM -->
+        <item>After Odd Games</item>
+        <item>Every 6 Points In a Tiebreak</item>
+        <item>After Even Games</item>
+        <item>Between Sets</item>
+    </string-array>
 </resources>

@@ -76,6 +76,7 @@
     <string name="useTossFeature_default">Suggest</string>
     <string name="useShareFeature_default">Suggest</string>
     <string name="showGamePausedDialog_default">Suggest</string>
+    <string name="useChangeSidesFeature_default">Suggest</string>
     <string name="KeepScreenOnWhen_default">MatchIsInProgress</string>
     <string name="VolumeKeysBehaviour_default">None</string>
 
@@ -84,6 +85,11 @@
     <string name="FlagsURLs_default"><![CDATA[/img/flag/%1$s
 \nhttp://www.geognos.com/api/en/countries/flag/%1$s.png]]>
     </string>
+
+    <string-array name="changeSidesWhen_GSM_DefaultValues">
+        <item>AfterOddGames</item>
+        <item>EverySixPointsInTiebreak</item>
+    </string-array>
 
     <string-array name="AutoLockContextDefaultValues">
         <!--
@@ -195,8 +201,9 @@
     <string name="REMOTE_DISPLAY_APP_ID_brand_courtcare">BF2E4D1B</string>
     <!--<string name="REMOTE_DISPLAY_APP_ID_brand_uniofnotthingham">E6F9858F</string> Accidentally Unregistered-->
 
+    <!-- https://developers.google.com/cast/docs/debugging -->
     <string name="CUSTOM_RECEIVER_APP_ID_brand_shared">55B51DEF</string> <!-- new:  -->
-    <string name="CUSTOM_RECEIVER_APP_ID_brand_test">775E79BC</string> <!-- new http://squore.double-yellow.be/casttest -->
+    <string name="CUSTOM_RECEIVER_APP_ID_brand_test">775E79BC</string> <!-- new https://squore.double-yellow.be/cast/test -->
 <!--  https:/cast-tse-demo.firebaseapp.com/sender/?appid=775E79BC -->
     <string name="media_route_menu_title">Route</string>
 </resources>

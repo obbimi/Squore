@@ -190,4 +190,12 @@
         <item>Specifieer aan begin van wedstrijd</item>
         <item>Specifieer aan begin elke game</item>
     </string-array>
+
+    <string-array name="changeSidesWhen_GSM_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ChangeSidesWhen_GSM -->
+        <item>Na Oneven Games</item>
+        <item>Elke 6 punten in een tiebreak</item>
+        <item>Na Even Games</item>
+        <item>Tussen elke set</item>
+    </string-array>
 </resources>

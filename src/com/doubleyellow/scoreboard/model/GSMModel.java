@@ -50,7 +50,7 @@ public class GSMModel extends Model
         void OnSetBallChange(Player[] players, boolean bHasSetBall);
         /** actually ended set and preparing for new one */
         void OnSetEnded(Player winningPlayer);
-        void OnXPointsPlayedInTiebreak();
+        void OnXPointsPlayedInTiebreak(int iTotalPoints);
     }
     transient private List<OnSetChangeListener> onSetChangeListeners = new ArrayList<OnSetChangeListener>();
 
@@ -221,6 +221,24 @@ public class GSMModel extends Model
 
     public Map<Player, Integer> getSetsWon() {
         return ListUtil.getLast(m_lSetCountHistory);
+    }
+
+    public List<Map<Player, Integer>> getGamesWonPerSet() {
+        List<Map<Player, Integer>> lReturn = new ArrayList<>();
+
+        Map<Player, Integer> mPlayer2GamesWonLast = null;
+        if ( ListUtil.isNotEmpty(m_lPlayer2GamesWon_PerSet) ) {
+            for(List<Map<Player, Integer>> player2GamesWonInSet :m_lPlayer2GamesWon_PerSet) {
+                mPlayer2GamesWonLast = ListUtil.getLast(player2GamesWonInSet);
+                if ( mPlayer2GamesWonLast != null ) {
+                    lReturn.add(mPlayer2GamesWonLast);
+                }
+            }
+        }
+        if ( ListUtil.isEmpty(lReturn) ) {
+            lReturn.add(getZeroZeroMap());
+        }
+        return lReturn;
     }
 
     /** One-based */
@@ -403,18 +421,16 @@ public class GSMModel extends Model
             int totalGamePoints = maxScore + minScore;
 
             // if 6 points are played but tiebreak not yes decided
-            if ( totalGamePoints % 6 == 0 ) {
-                boolean possibleGameVictory = isPossibleGameVictory();
+            boolean possibleGameVictory = isPossibleGameVictory();
 /*
-                if (    (maxScore < NUMBER_OF_POINTS_TO_WIN_TIEBREAK)
-                     || (maxScore - minScore < 2)
-                   )
+            if (    (maxScore < NUMBER_OF_POINTS_TO_WIN_TIEBREAK)
+                 || (maxScore - minScore < 2)
+               )
 */
-                if ( possibleGameVictory == false )
-                {
-                    for(OnSetChangeListener l: onSetChangeListeners) {
-                        l.OnXPointsPlayedInTiebreak();
-                    }
+            if ( possibleGameVictory == false )
+            {
+                for(OnSetChangeListener l: onSetChangeListeners) {
+                    l.OnXPointsPlayedInTiebreak(totalGamePoints);
                 }
             }
         }

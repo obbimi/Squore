@@ -563,6 +563,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         @Override public void onClick(View view) {
             if ( Brand.isGameSetMatch() ) {
                 // do nothing for now
+                toggleSetScoreView();
             } else if ( Brand.isRacketlon() == false ) {
                 toggleGameScoreView();
             } else {
@@ -639,13 +640,16 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     //-------------------------------------------------------------------------
 
     /** might present a dialog to the user, 'Based-On-Preference'. Returns true if a dialog was presented to the user. */
-    private boolean swapSides_BOP() {
-        Feature swapSidesFeature = PreferenceValues.swapSidesHalfwayGame(ScoreBoard.this);
-        switch(swapSidesFeature) {
+    private boolean swapSides_BOP(Feature fChangeSides) {
+        switch( fChangeSides ) {
             case DoNotUse:
                 return false;
             case Suggest:
-                _confirmSwapSides(null);
+                if ( Brand.isGameSetMatch() ) {
+                    showChangeSideFloatButton(true);
+                } else {
+                    _confirmChangeSides(null);
+                }
                 return true;
             case Automatic:
                 handleMenuItem(R.id.sb_swap_sides);
@@ -654,12 +658,13 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         return false;
     }
 
-    private void _confirmSwapSides(Player leader) {
+    private void _confirmChangeSides(Player leader) {
         ChangeSides changeSides = new ChangeSides(this, matchModel, this);
         changeSides.init(leader);
         addToDialogStack(changeSides);
     }
 
+    /** Invoked by SideToss */
     public void swapSides(Integer iToastLength, Player pFirst) {
         if ( pFirst == null ) {
             pFirst = IBoard.togglePlayer2ScreenElements();
@@ -2405,6 +2410,34 @@ touch -t 01030000 LAST.sb
     }
 
     // ----------------------------------------------------
+    // -----------------changeSide button      ------------
+    // ----------------------------------------------------
+    private FloatingActionButton changeSideButton = null;
+    private void showChangeSideFloatButton(boolean bVisible) {
+        if ( PreferenceValues.useChangeSidesFeature(this).equals(Feature.Suggest)==false ) {
+            if ( changeSideButton != null ) { changeSideButton.setHidden(true); }
+            return;
+        }
+
+        if ( changeSideButton == null ) {
+            float fMargin = 2.25f;
+            int iChangeSidesImage = R.drawable.arrows_left_right;
+
+            ColorPrefs.ColorTarget colorKey = ColorPrefs.ColorTarget.tossButtonBackgroundColor;
+            Integer iBG = mColors.get(colorKey);
+            if ( iBG != null ) {
+                // if we use a light background for the change sides button... switch to the black icon version
+                int blackOrWhiteFor = ColorUtil.getBlackOrWhiteFor(iBG);
+                if ( blackOrWhiteFor == Color.BLACK ) {
+                    iChangeSidesImage = R.drawable.arrows_left_right_black;
+                }
+            }
+            changeSideButton = getFloatingActionButton(R.id.sb_swap_sides, fMargin, iChangeSidesImage, colorKey);
+        }
+        changeSideButton.setHidden(bVisible == false);
+    }
+
+    // ----------------------------------------------------
     // -----------------new match button       ------------
     // ----------------------------------------------------
     private FloatingActionButton newMatchButton = null;
@@ -2573,11 +2606,22 @@ touch -t 01030000 LAST.sb
             iBoard.updateGameBallMessage(players, bHasSetBall);
         }
         @Override public void OnSetEnded(Player winningPlayer) {
-            // TODO: any special action required?
+            EnumSet<ChangeSidesWhen_GSM> playersWhen = PreferenceValues.changeSidesWhen_GSM(ScoreBoard.this);
+            if ( playersWhen.contains(ChangeSidesWhen_GSM.BetweenSets)
+              && playersWhen.contains(ChangeSidesWhen_GSM.AfterEvenGames) == false
+              && playersWhen.contains(ChangeSidesWhen_GSM.AfterOddGames ) == false
+               ) {
+                swapSides_BOP(null);
+            }
         }
 
-        @Override public void OnXPointsPlayedInTiebreak() {
-            _confirmSwapSides(null);
+        @Override public void OnXPointsPlayedInTiebreak(int iTotalPoints) {
+            if ( iTotalPoints % 6 == 0 ) {
+                EnumSet<ChangeSidesWhen_GSM> playersWhen = PreferenceValues.changeSidesWhen_GSM(ScoreBoard.this);
+                if ( playersWhen.contains(ChangeSidesWhen_GSM.EverySixPointsInTiebreak) ) {
+                    swapSides_BOP(null);
+                }
+            }
         }
 
         @Override public void OnGameBallChange(Player[] players, boolean bHasGameBall) {
@@ -2650,7 +2694,8 @@ touch -t 01030000 LAST.sb
         @Override public void OnGameIsHalfwayChange(int iGameZB, int iScoreA, int iScoreB, Halfway hwStatus) {
             if ( matchModel.showChangeSidesMessageInGame(iGameZB) ) {
                 if ( hwStatus.isHalfway() && hwStatus.changeSidesFor(matchModel.getSport()) ) {
-                    boolean bDialogOpened = swapSides_BOP();
+                    Feature fChangeSidesHW = PreferenceValues.swapSidesHalfwayGame(ScoreBoard.this);
+                    boolean bDialogOpened = swapSides_BOP(fChangeSidesHW);
                     if ( bDialogOpened == false ) {
                         iBoard.showMessage(getString(R.string.oa_change_sides), 5);
                     }
@@ -2698,6 +2743,8 @@ touch -t 01030000 LAST.sb
 
             // just to be on the save side: hide the following to as well
             showShareFloatButton(false, false);
+            showChangeSideFloatButton(false);
+
             iBoard.updateGameBallMessage();
             iBoard.updateBrandLogoBasedOnScore();
             iBoard.updateFieldDivisionBasedOnScore();
@@ -2841,13 +2888,33 @@ touch -t 01030000 LAST.sb
 
             showAppropriateMenuItemInActionBar();
 
-            int iGameNr1B = matchModel.getNrOfFinishedGames();
-            if ( Brand.changeSidesBetweenGames(iGameNr1B) && (matchModel.matchHasEnded() == false)  ) {
-                if ( PreferenceValues.swapSidesBetweenGames(ScoreBoard.this) ) {
+            if ( (matchModel.matchHasEnded() == false) ) {
+                int iGameNr1B = matchModel.getNrOfFinishedGames();
+                boolean bChangeSides = false;
+                if ( Brand.isTabletennis() || Brand.isBadminton() ) {
+                    bChangeSides = PreferenceValues.swapSidesBetweenGames(ScoreBoard.this);
+                } else if ( Brand.isGameSetMatch() ) {
+                    EnumSet<ChangeSidesWhen_GSM> playersWhen = PreferenceValues.changeSidesWhen_GSM(ScoreBoard.this);
+                    if ( playersWhen.contains(ChangeSidesWhen_GSM.AfterOddGames) ) {
+                        if ( (iGameNr1B % 2 == 1) ) {
+                            bChangeSides = true;
+                        }
+                    }
+                    if ( playersWhen.contains(ChangeSidesWhen_GSM.AfterEvenGames) ) {
+                        if ( (iGameNr1B % 2 == 0) ) {
+                            bChangeSides = true;
+                        }
+                    }
+                }
+
+                if ( bChangeSides ) {
+
                     if ( BTRole.Slave.equals(m_blueToothRole) ) {
                         // swap players only if requested by master
                     } else {
-                        swapSides(Toast.LENGTH_LONG, null);
+                        Feature fChangeSides = PreferenceValues.useChangeSidesFeature(ScoreBoard.this);
+                        swapSides_BOP(fChangeSides);
+                        //swapSides(Toast.LENGTH_LONG, null);
                     }
                 }
             }
@@ -5751,6 +5818,14 @@ touch -t 01030000 LAST.sb
     private void toggleGameScoreView() {
         iBoard.toggleGameScoreView();
         castGamesWonAppearance();
+
+        if ( BTRole.Master.equals(m_blueToothRole) ) {
+            writeMethodToBluetooth(BTMethods.toggleGameScoreView);
+        }
+    }
+
+    private void toggleSetScoreView() {
+        iBoard.toggleSetScoreView();
 
         if ( BTRole.Master.equals(m_blueToothRole) ) {
             writeMethodToBluetooth(BTMethods.toggleGameScoreView);

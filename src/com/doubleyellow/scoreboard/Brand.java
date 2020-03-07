@@ -209,15 +209,6 @@ public enum Brand
         return isTabletennis() || isBadminton()
         ;
     }
-    public static boolean changeSidesBetweenGames(int iGameNr1B) {
-        if ( isTabletennis() || isBadminton() ) {
-            return true;
-        }
-        if ( isGameSetMatch() && (iGameNr1B % 2 == 1) ) {
-            return true;
-        }
-        return false;
-    }
     public static boolean supportsDoubleServeSequence() {
         return isSquash() || isBadminton();
     }

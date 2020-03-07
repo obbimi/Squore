@@ -137,6 +137,8 @@
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape">Swap players when device is rotated 180 degrees</string>
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary">Allows to swap players on screen by rotating the device, or showing score to players by flipping device forward towards players</string>
     <string name="pref_swapPlayersBetweenGames">Swap players at the start of a new game</string>
+    <string name="pref_useChangeSidesFeature">Change sides feature</string>
+    <string name="pref_changeSidesWhen_GSM">When to swap players/teams</string>
     <string name="pref_swapPlayersBetweenGames_TennisPadel">Swap players after every odd game</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically">Auto show details of game</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically_TennisPadel">Auto show details of set</string>
@@ -251,6 +253,7 @@
     <string name="pref_playerList_summary">For autocomplete when typing in player names</string>
     <string name="pref_clubList">List of clubs</string>
     <string name="pref_clubList_summary">For autocomplete when typing in players club name</string>
+    <string name="pref_AutoComplete">Autocomplete</string>
     <string name="pref_numberOfCharactersBeforeAutocomplete">Number of characters for autocomplete</string>
     <string name="pref_numberOfCharactersBeforeAutocomplete_summary">The number of characters you need to type before autocomplete kicks in to suggest possible player names</string>
     <string name="pref_numberOfCharactersBeforeAutocompleteCountry">Number of characters for autocomplete country</string>

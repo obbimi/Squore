@@ -49,8 +49,11 @@ public enum PreferenceKeys {
         hideFieldDivisionWhenGameInProgress,
 
         changeSides,
+            /** @deprecated boolean */
             swapPlayersBetweenGames,
             swapPlayersHalfwayGame,
+            changeSidesWhen_GSM,
+            useChangeSidesFeature,
             swapPlayersOn180DegreesRotationOfDeviceInLandscape,
         /* Tabletennis: Expedite system */
         modeUsageCategory,

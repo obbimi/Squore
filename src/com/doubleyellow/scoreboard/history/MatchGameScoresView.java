@@ -91,17 +91,41 @@ public class MatchGameScoresView extends LinearLayout
     private Map<Player, Integer>       m_pointsDiff    = null;
     private Player[]                   m_players       = Player.values(); // must be initialized with a value in order to let setProperties() succeed
 
+    public void toggleSetScoresToShow() {
+        switch (m_scoresToShow) {
+            case GamesWonPerSet:
+                m_scoresToShow = ScoresToShow.SetsWon_and_GamesWonInLastSet;
+                break;
+            case SetsWon_and_GamesWonInLastSet:
+                m_scoresToShow = ScoresToShow.GamesWonPerSet;
+                break;
+        }
+    }
+    private ScoresToShow m_scoresToShow = ScoresToShow.PointsWonPerGame; // TODO: initial value from persisted setting
+    private enum ScoresToShow {
+        PointsWonPerGame,
+        GamesWonPerSet,
+        SetsWon_and_GamesWonInLastSet,
+    }
     public void update(Model matchModel, Player pFirst) {
         m_checkLayoutCountDownTimer = null; // ensure it will be re-started
         m_players = new Player[] { pFirst, pFirst.getOther() };
         List<Map<Player, Integer>> endScores = matchModel.getEndScoreOfPreviousGames();
         if ( Brand.isGameSetMatch() ) {
-            endScores = new ArrayList<>();
             GSMModel gsmModel = (GSMModel) matchModel;
-            Map<Player, Integer> setsWon  = gsmModel.getSetsWon();
-            Map<Player, Integer> gamesWon = gsmModel.getGamesWon();
-            endScores.add(setsWon);
-            endScores.add(gamesWon);
+            if ( m_scoresToShow.equals(ScoresToShow.PointsWonPerGame) ) {
+                // switch over to GSM valid value
+                m_scoresToShow = ScoresToShow.GamesWonPerSet; // TODO: configurable
+            }
+            if ( m_scoresToShow.equals(ScoresToShow.GamesWonPerSet) ) {
+                endScores = gsmModel.getGamesWonPerSet();
+            } else {
+                endScores = new ArrayList<>();
+                Map<Player, Integer> setsWon  = gsmModel.getSetsWon();
+                Map<Player, Integer> gamesWon = gsmModel.getGamesWon();
+                endScores.add(setsWon);
+                endScores.add(gamesWon);
+            }
         }
         this.update( m_players
                    , endScores
@@ -357,7 +381,16 @@ public class MatchGameScoresView extends LinearLayout
                 TextView txt         = (TextView) tr.findViewById(iResId);
                 boolean bInvert = p.equals(gameWinner);
                 if ( Brand.isGameSetMatch() ) {
-                    bInvert = (iRow == ListUtil.size(gameScores)); // do not invert for nr of sets won (row 1), invert for both players for games in current set (row 2)
+                    switch (m_scoresToShow) {
+                        case GamesWonPerSet:
+                            if (iRow == ListUtil.size(gameScores) ) {
+                                bInvert = false;
+                            }
+                            break;
+                        case SetsWon_and_GamesWonInLastSet:
+                            bInvert = (iRow == ListUtil.size(gameScores)); // do not invert for nr of sets won (row 1), invert for both players for games in current set (row 2)
+                            break;
+                    }
                 }
                 setSizeAndColors(txt, bInvert, iTxtSizeForInstanceAndOrientation, instanceKey);
                 //txt.setText(StringUtil.pad(String.valueOf(scores.get(p)), ' ', 3, bLeftColumn) );
@@ -558,7 +591,16 @@ public class MatchGameScoresView extends LinearLayout
                 TextView txt     = (TextView) col.findViewById(iResId);
                 boolean bInvert = p.equals(gameWinner);
                 if ( Brand.isGameSetMatch() ) {
-                    bInvert = (iRow == ListUtil.size(gameScores)); // do not invert for nr of sets won (row 1), invert for both players for games in current set (row 2)
+                    switch (m_scoresToShow) {
+                        case GamesWonPerSet:
+                            if (iRow == ListUtil.size(gameScores) ) {
+                                bInvert = false;
+                            }
+                            break;
+                        case SetsWon_and_GamesWonInLastSet:
+                            bInvert = (iRow == ListUtil.size(gameScores)); // do not invert for nr of sets won (row 1), invert for both players for games in current set (row 2)
+                            break;
+                    }
                 }
                 setSizeAndColors(txt, bInvert, iTxtSizeForInstanceAndOrientation, instanceKey);
                 //txt.setText(StringUtil.pad(String.valueOf(scores.get(p)), ' ', 2, bLeftColumn) );

@@ -129,6 +129,8 @@
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape">Verwissel spelers bij 180 graden rotatie in landscape</string>
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary">Laat toe om spelers op scherm van kant te wisselen door device te roteren alswel score tonen aan spelers door \'voorover\' kantelen</string>
     <string name="pref_swapPlayersBetweenGames">Verwissel spelers bij de start van een nieuwe game</string>
+    <string name="pref_useChangeSidesFeature">Wissel van kant optie</string>
+    <string name="pref_changeSidesWhen_GSM">Spelers/teams wisselen van kant</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically">Toon details van game automatisch</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically_summary">Als de game wordt beëindigd, toon dan automatisch de grafiek met het scoreverloop</string>
     <string name="pref_showTips">Toon \'Tips\'</string>

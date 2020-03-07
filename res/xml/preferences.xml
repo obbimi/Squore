@@ -471,24 +471,52 @@
                 dy:displayValues="@array/StartupActionDisplayValues"
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.StartupAction"
                 />
-            <EditTextPreference
-                android:icon="@drawable/dummy"
-                android:key="numberOfCharactersBeforeAutocomplete"
-                android:title="@string/pref_numberOfCharactersBeforeAutocomplete"
-                android:summary="@string/pref_numberOfCharactersBeforeAutocomplete_summary"
-                android:inputType="number"
-                android:defaultValue="@integer/numberOfCharactersBeforeAutocomplete_default"
-                />
-            <EditTextPreference
-                android:icon="@drawable/dummy"
-                android:key="numberOfCharactersBeforeAutocompleteCountry"
-                android:title="@string/pref_numberOfCharactersBeforeAutocompleteCountry"
-                android:summary="@string/pref_numberOfCharactersBeforeAutocompleteCountry_summary"
-                android:inputType="number"
-                android:defaultValue="@integer/numberOfCharactersBeforeAutocompleteCountry_default"
+        </PreferenceCategory>
+        <PreferenceCategory android:title="@string/pref_changeSides"
+            android:key="changeSides"
+            android:summary="@string/pref_changeSides_summary"
+            android:layout="@layout/custom_preference_category">
+
+            <com.doubleyellow.prefs.EnumListPreference
+                android:key="useChangeSidesFeature"
+                android:title="@string/pref_useChangeSidesFeature"
+                android:icon="@drawable/change_sides"
+                android:defaultValue="@string/useChangeSidesFeature_default"
+                dy:displayValues="@array/FeatureDisplayValues_DoAuto"
+                dy:enumClass="com.doubleyellow.util.Feature"
                 />
 
+            <com.doubleyellow.prefs.EnumMultiSelectPreference
+                android:key="changeSidesWhen_GSM"
+                android:title="@string/pref_changeSidesWhen_GSM"
+                android:icon="@drawable/change_sides"
+                android:defaultValue="@array/changeSidesWhen_GSM_DefaultValues"
+                dy:displayValues="@array/changeSidesWhen_GSM_DisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.ChangeSidesWhen_GSM"
+                />
+
+            <!--<Preference android:summary="@string/pref_changeSides_summary" android:selectable="false" />-->
+            <CheckBoxPreference android:key="swapPlayersOn180DegreesRotationOfDeviceInLandscape"
+                android:title="@string/pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape"
+                android:summary="@string/pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary"
+                android:icon="@drawable/change_sides"
+                android:defaultValue="@bool/swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Squash"
+                />
+            <CheckBoxPreference android:key="swapPlayersBetweenGames"
+                android:title="@string/pref_swapPlayersBetweenGames"
+                android:icon="@drawable/change_sides"
+                android:defaultValue="@bool/swapPlayersBetweenGames_default"
+                />
+            <com.doubleyellow.prefs.EnumListPreference
+                android:key="swapPlayersHalfwayGame"
+                android:title="@string/pref_swapPlayersHalfwayGame_Squash"
+                android:icon="@drawable/change_sides"
+                android:defaultValue="@string/swapPlayersHalfwayGame_default"
+                dy:displayValues="@array/FeatureDisplayValues"
+                dy:enumClass="com.doubleyellow.util.Feature"
+                />
         </PreferenceCategory>
+
         <PreferenceCategory android:title="@string/pref_Category_End_of_Game">
             <CheckBoxPreference
                 android:icon="@drawable/dummy"
@@ -536,31 +564,6 @@
                     />
         </PreferenceCategory>
 
-        <PreferenceCategory android:title="@string/pref_changeSides"
-                            android:key="changeSides"
-                            android:summary="@string/pref_changeSides_summary"
-                            android:layout="@layout/custom_preference_category">
-            <!--<Preference android:summary="@string/pref_changeSides_summary" android:selectable="false" />-->
-            <CheckBoxPreference android:key="swapPlayersOn180DegreesRotationOfDeviceInLandscape"
-                                android:title="@string/pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape"
-                                android:summary="@string/pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary"
-                                android:icon="@drawable/change_sides"
-                                android:defaultValue="@bool/swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Squash"
-                    />
-            <CheckBoxPreference android:key="swapPlayersBetweenGames"
-                                android:title="@string/pref_swapPlayersBetweenGames"
-                                android:icon="@drawable/change_sides"
-                                android:defaultValue="@bool/swapPlayersBetweenGames_default"
-                    />
-            <com.doubleyellow.prefs.EnumListPreference
-                    android:key="swapPlayersHalfwayGame"
-                    android:title="@string/pref_swapPlayersHalfwayGame_Squash"
-                    android:icon="@drawable/change_sides"
-                    android:defaultValue="@string/swapPlayersHalfwayGame_default"
-                    dy:displayValues="@array/FeatureDisplayValues"
-                    dy:enumClass="com.doubleyellow.util.Feature"
-            />
-        </PreferenceCategory>
 
         <PreferenceCategory android:title="@string/lock">
             <com.doubleyellow.prefs.EnumMultiSelectPreference
@@ -631,6 +634,25 @@
                 android:inputType="textMultiLine"
                 android:defaultValue="@string/OfficialRulesURLs_default_Squash"
                 />
+        </PreferenceCategory>
+        <PreferenceCategory android:title="@string/pref_AutoComplete">
+            <EditTextPreference
+                android:icon="@drawable/dummy"
+                android:key="numberOfCharactersBeforeAutocomplete"
+                android:title="@string/pref_numberOfCharactersBeforeAutocomplete"
+                android:summary="@string/pref_numberOfCharactersBeforeAutocomplete_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/numberOfCharactersBeforeAutocomplete_default"
+                />
+            <EditTextPreference
+                android:icon="@drawable/dummy"
+                android:key="numberOfCharactersBeforeAutocompleteCountry"
+                android:title="@string/pref_numberOfCharactersBeforeAutocompleteCountry"
+                android:summary="@string/pref_numberOfCharactersBeforeAutocompleteCountry_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/numberOfCharactersBeforeAutocompleteCountry_default"
+                />
+
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_Category_Others">
             <com.doubleyellow.prefs.EnumListPreference

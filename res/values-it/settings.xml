@@ -246,6 +246,7 @@
     <string name="pref_playerList_summary">Per il completamento automatico durante la digitazione dei nomi giocatore</string>
     <string name="pref_clubList">Lista dei club/società</string>
     <string name="pref_clubList_summary">Per il completamento automatico durante la digitazione dei nomi club/società</string>
+    <string name="pref_AutoComplete">Completamento automatico</string>
     <string name="pref_numberOfCharactersBeforeAutocomplete">Numero di caratteri per il completamento automatico</string>
     <string name="pref_numberOfCharactersBeforeAutocomplete_summary">Il numero minimo di caratteri che occorre digitare prima che il completamento automatico si attiva suggerendo possibili nomi giocatore</string>
     <string name="pref_numberOfCharactersBeforeAutocompleteCountry">Numero di caratteri per il completamento automatico della nazione</string>

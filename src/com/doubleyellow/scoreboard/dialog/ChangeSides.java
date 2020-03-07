@@ -53,6 +53,11 @@ public class ChangeSides extends BaseAlertDialog
            .setMessage(getString(R.string.sb_swap_sides) + "?")
            .setPositiveButton(R.string.cmd_yes, listener)
            .setNegativeButton(R.string.cmd_no , listener);
+        adb.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override public void onDismiss(DialogInterface dialog) {
+                scoreBoard.triggerEvent(ScoreBoard.SBEvent.sideTossDialogEnded, ChangeSides.this);
+            }
+        });
         dialog = adb.show();
     }
     private String getOAString(int iResId) {
