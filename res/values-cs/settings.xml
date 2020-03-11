@@ -132,6 +132,7 @@
     <string name="pref_StartupAction">Akce po spuštění aplikace</string>
     <string name="pref_StartupAction_summary">Výběr akce, která bude provedena po spuštění aplikace</string>
     <string name="pref_changeSides">Změna stran/Prohození hráčů</string>
+    <string name="pref_changeSides_short">Změna stran</string>
     <string name="pref_changeSides_summary">Jak se projeví změna stran na panelu</string>
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape">Prohodit hráče při otočení zařízení vzhůru nohama (o 180 stupňů)</string>
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary">Umožní prohození hráčů na obrazovce otočením zařízení nebo zobrazení skóre hráčům otočením zařízení směrem k hráčům</string>

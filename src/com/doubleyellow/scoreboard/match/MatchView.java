@@ -233,6 +233,7 @@ public class MatchView extends SBRelativeLayout
                         , R.id.tbBestOf_or_TotalOf
                         , R.id.spNumberOfGamesToWin
                         , R.id.llHandicapFormat
+                        , R.id.llChangesSidesWhen
                         , R.id.llScoringType
                         , R.id.llNumberOfServesPerPlayer
                         , R.id.match_marker
@@ -242,6 +243,7 @@ public class MatchView extends SBRelativeLayout
             case Squash:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
                         , R.id.llDisciplineStart
+                        , R.id.llChangesSidesWhen
                         , R.id.llNumberOfServesPerPlayer
                 );
                 return false;
@@ -249,6 +251,7 @@ public class MatchView extends SBRelativeLayout
                 ViewUtil.hideViewsForEver(this
                         , R.id.llHandicapFormat
                         , R.id.llDisciplineStart
+                        , R.id.llChangesSidesWhen
                         , R.id.llNumberOfServesPerPlayer
                       //, R.id.llScoringType
                 );
@@ -412,6 +415,7 @@ public class MatchView extends SBRelativeLayout
     private String[]             saAvatars = new String[2];
     private PreferenceACTextView txtClubA;
     private PreferenceACTextView txtClubB;
+    private CheckBox[]           cbChangesSidesWhen;
 
 /*
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
@@ -807,6 +811,32 @@ public class MatchView extends SBRelativeLayout
 
         cbUseEnglishScoring = (CompoundButton) findViewById(R.id.useHandInHandOutScoring);
         cbUseEnglishScoring.setChecked(PreferenceValues.useHandInHandOutScoring(context));
+
+        // initialize checkboxes array for 'Change Sides When'
+        Feature ffChangesSide = PreferenceValues.useChangeSidesFeature(context);
+        if ( Feature.DoNotUse.equals(ffChangesSide) == false ) {
+            LinearLayout llChangesSidesWhen = findViewById(R.id.llChangesSidesWhen);
+            if ( llChangesSidesWhen != null ) {
+                LinearLayout llChangesSidesCheckboxes = llChangesSidesWhen.findViewById(R.id.llChangesSidesCheckboxes);
+                if ( llChangesSidesCheckboxes != null ) {
+                    EnumSet<ChangeSidesWhen_GSM> checkedValues = PreferenceValues.changeSidesWhen_GSM(context);
+                    ChangeSidesWhen_GSM[] values = ChangeSidesWhen_GSM.values();
+                    String [] saDisplayValues = context.getResources().getStringArray(R.array.changeSidesWhen_GSM_DisplayValues);
+                    cbChangesSidesWhen = new CheckBox[values.length];
+                    for (int i = 0; i < values.length; i++) {
+                        CheckBox cb = new CheckBox(context);
+                        cb.setText(saDisplayValues[i]);
+                        ChangeSidesWhen_GSM eValue = values[i];
+                        boolean bChecked = checkedValues.contains(eValue);
+                        cb.setChecked(bChecked);
+                        cb.setTag(eValue);
+
+                        cbChangesSidesWhen[i] = cb;
+                        llChangesSidesCheckboxes.addView(cb);
+                    }
+                }
+            }
+        }
     }
 
     /** must be invoked after the view is added to its parent, else the color of the button will not show up */
@@ -1344,6 +1374,17 @@ public class MatchView extends SBRelativeLayout
             for(Player p: Player.values()) {
                 m.setPlayerId(p, m_model.getPlayerId(p));
             }
+        }
+
+        if ( ListUtil.isNotEmpty(cbChangesSidesWhen) ) {
+            EnumSet<ChangeSidesWhen_GSM> newPrefValues = EnumSet.noneOf(ChangeSidesWhen_GSM.class);
+            for(CheckBox cb: cbChangesSidesWhen) {
+                if ( cb.isChecked() ) {
+                    ChangeSidesWhen_GSM checkedEnum = (ChangeSidesWhen_GSM) cb.getTag();
+                    newPrefValues.add(checkedEnum);
+                }
+            }
+            PreferenceValues.setStringSet(PreferenceKeys.changeSidesWhen_GSM, newPrefValues, getContext());
         }
 
         return m;

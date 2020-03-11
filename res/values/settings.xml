@@ -133,6 +133,7 @@
     <string name="pref_StartupAction">Startup Action</string>
     <string name="pref_StartupAction_summary">The action that will be performed automatically when the app is started</string>
     <string name="pref_changeSides">Changing Sides/Flipping players</string>
+    <string name="pref_changeSides_short">Change Sides</string>
     <string name="pref_changeSides_summary">How to reflect/trigger change of sides on scoreboard</string>
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape">Swap players when device is rotated 180 degrees</string>
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary">Allows to swap players on screen by rotating the device, or showing score to players by flipping device forward towards players</string>

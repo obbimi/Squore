@@ -381,11 +381,11 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( view == null ) { return; }
         if ( view.isEnabled() ) { return; }
         view.setEnabled(true);
-        Log.d(TAG, "Re-enabled score button for player " + player);
+      //Log.d(TAG, "Re-enabled score button for player " + player);
     }
     void disableScoreButton(View view) {
         view.setEnabled(false);
-        Log.d(TAG, "Disabling score button for model " + matchModel);
+      //Log.d(TAG, "Disabling score button for model " + matchModel);
     }
     private class ScoreButtonListener implements View.OnClickListener
     {
@@ -2499,8 +2499,7 @@ touch -t 01030000 LAST.sb
                 bShowDialog = _confirmGameEnding(leadingPlayer);
                 break;
             case Automatic:
-                //nonIntrusiveGameEnding(leadingPlayer);// TODO: only enable if no automatic dialog follows (no official, no timer...)
-                endGame();
+                endGame(true); // skip bluetooth because 'changeScore' has not even been send if this method triggered by 'changeScore'
                 break;
         }
         return bShowDialog;
@@ -4838,23 +4837,6 @@ touch -t 01030000 LAST.sb
         addToDialogStack(endMatch);
     }
 
-/*
-    private boolean bNonIntrusiveGameEndingPerformed = false;
-    private boolean nonIntrusiveGameEnding(Player winner) {
-        // only show toast and vibration once per game
-        if ( bNonIntrusiveGameEndingPerformed == true ) { return false; }
-
-        bNonIntrusiveGameEndingPerformed = true;
-
-        int iResId = R.string.game_ended;
-        if ( matchModel.isPossibleMatchVictoryFor() != null ) {
-            iResId = R.string.match_ended;
-        }
-        iBoard.showToast(iResId);
-        return true;
-    }
-*/
-
     private void confirmPostMatchResult() {
         if ( PreferenceValues.autoSuggestToPostResult(ScoreBoard.this) == false ) {
             return;
@@ -5745,7 +5727,7 @@ touch -t 01030000 LAST.sb
     private void changeScore(Player player) {
         //Log.d(TAG, "Changing score for for model " + matchModel);
         matchModel.changeScore(player);
-        writeMethodToBluetooth(BTMethods.changeScore, player); // TODO: fix for GSM to show 15/30/40/AD
+        writeMethodToBluetooth(BTMethods.changeScore, player);
     }
 
     public void setPlayerColor(Player player, String sColor) {
@@ -5777,11 +5759,18 @@ touch -t 01030000 LAST.sb
         return bOK;
     }
     public boolean endGame() {
+        return endGame(false);
+    }
+    private boolean endGame(boolean bBTDelayed) {
         if ( warnModelIsLocked() ) { return false; }
         matchModel.endGame();
 
         if ( BTRole.Master.equals(m_blueToothRole) ) {
-            writeMethodToBluetooth(BTMethods.endGame);
+            if ( bBTDelayed ) {
+                writeMethodToBluetoothDelayed(BTMethods.endGame);
+            } else {
+                writeMethodToBluetooth(BTMethods.endGame);
+            }
         }
         return true;
     }
@@ -5948,12 +5937,28 @@ touch -t 01030000 LAST.sb
         }
     }
 
+    private StringBuilder m_sbBTDelayed = new StringBuilder();
+    private void writeMethodToBluetoothDelayed(BTMethods method, Object... args) {
+        addMethodAndArgs(m_sbBTDelayed, method, args);
+    }
+
     private void writeMethodToBluetooth(BTMethods method, Object... args) {
         if ( mBluetoothControlService == null) { return; }
         if ( mBluetoothControlService.getState().equals(BTState.CONNECTED) == false) { return; }
 
         // construct function-call-like string
         StringBuilder sb = new StringBuilder();
+        addMethodAndArgs(sb, method, args);
+        mBluetoothControlService.write(sb.toString());
+
+        // write optionally delayed method
+        if ( m_sbBTDelayed.length() > 0 ) {
+            mBluetoothControlService.write(m_sbBTDelayed.toString());
+            m_sbBTDelayed.setLength(0);
+        }
+    }
+
+    private void addMethodAndArgs(StringBuilder sb, BTMethods method, Object[] args) {
         sb.append(method);
         sb.append("(");
 
@@ -5976,8 +5981,8 @@ touch -t 01030000 LAST.sb
         }
 
         sb.append(")\n");
-        mBluetoothControlService.write(sb.toString());
     }
+
     /** length of file to be read */
     private int           iReceivingBTFileLength = 0;
     /** Buffer with file content */
