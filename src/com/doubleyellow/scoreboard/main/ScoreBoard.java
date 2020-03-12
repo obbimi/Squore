@@ -1599,6 +1599,13 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     matchModel.setNrOfPointsToWinGame(21);
                     matchModel.setNrOfGamesToWinMatch(2);
                     matchModel.setPlayerNames("Baddy", "Tonny");
+                } else if ( Brand.isGameSetMatch() ) {
+                    PreferenceValues.setOverwrite(PreferenceKeys.useOfficialAnnouncementsFeature, Feature.DoNotUse.toString());
+                    PreferenceValues.setOverwrite(PreferenceKeys.useTimersFeature               , Feature.DoNotUse.toString());
+                    GSMModel gsmModel = (GSMModel) matchModel;
+                    gsmModel.setNrOfPointsToWinGame(6); // = setNrOfGamesToWinSet
+                    gsmModel.setNrOfGamesToWinMatch(2); // = setNrOfSetsToWinMatch
+                    gsmModel.setPlayerNames("Paddy", "Tenny");
                 } else {
                     PreferenceValues.setOverwrite(PreferenceKeys.useOfficialAnnouncementsFeature, Feature.Suggest.toString());
                     matchModel.setNrOfPointsToWinGame(11);
@@ -1633,6 +1640,20 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         matchModel.changeScore(Player.B);
                         matchModel.changeScore(Player.B);
                     }
+                    if ( Brand.isGameSetMatch() ) {
+                        matchModel.changeScore(Player.A);
+                        matchModel.changeScore(Player.B);
+                        while ( matchModel.getMaxScore() > 0 ) {
+                            // continue until a game is won
+                            matchModel.changeScore(Player.B);
+                        }
+                        matchModel.changeScore(Player.A);
+                        matchModel.changeScore(Player.A);
+                        matchModel.changeScore(Player.B);
+                    }
+                    break;
+                case R.id.float_changesides:
+                    // TODO
                     break;
                 case R.id.float_timer:
                     PreferenceValues.setOverwrite(PreferenceKeys.showHideButtonOnTimer, false);
@@ -1661,9 +1682,15 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 case R.id.dyn_score_details:
                 case R.id.float_match_share:
                     if ( Brand.isNotSquash() ) {
-                        // trigger model changes that are not triggered by user step (sb_official_announcement), because some show case screens are skipped for e.g. Racketlon
-                        matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6);
-                        endGame();
+                        if ( Brand.isGameSetMatch() ) {
+                            // TODO: ensure match is ended
+                            GSMModel gsmModel= (GSMModel) matchModel;
+                            //matchModel.setSetScore_Json(); // TODO
+                        } else {
+                            // trigger model changes that are not triggered by user step (sb_official_announcement), because some show case screens are skipped for e.g. Racketlon
+                            matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6);
+                            endGame();
+                        }
                     }
                     if ( matchModel.matchHasEnded() == false) {
                         IBoard.setBlockToasts(true);
@@ -1678,6 +1705,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         } else if ( Brand.isBadminton() ) {
                             // add a score that ends the badminton match
                             // best of 3, nothing to do
+                        } else if ( Brand.isGameSetMatch() ) {
+                            // TODO: add a score that ends the tennis/padel match
                         } else {
                             matchModel.setGameScore_Json(3, nrOfPointsToWinGame +2, nrOfPointsToWinGame, 8);
                         }
@@ -2622,6 +2651,10 @@ touch -t 01030000 LAST.sb
                 EnumSet<ChangeSidesWhen_GSM> playersWhen = PreferenceValues.changeSidesWhen_GSM(ScoreBoard.this);
                 if ( playersWhen.contains(ChangeSidesWhen_GSM.EverySixPointsInTiebreak) ) {
                     swapSides_BOP(null);
+                }
+            } else {
+                if ( Brand.isGameSetMatch() ) {
+                    showChangeSideFloatButton(false);
                 }
             }
         }
