@@ -154,10 +154,11 @@ public class EditFormat extends BaseAlertDialog {
             }
         };
 
+        if ( isWearable() == false ) {
+            adb.setTitle(R.string.pref_MatchFormat);
+            adb.setIcon(R.drawable.ic_action_mouse);
+        }
         adb.setView(vg)
-                .setTitle(R.string.pref_MatchFormat)
-                //.setMessage(sb.toString().trim())
-                .setIcon(R.drawable.ic_action_mouse)
                 .setPositiveButton(android.R.string.ok, dialogClickListener)
                 .show();
     }

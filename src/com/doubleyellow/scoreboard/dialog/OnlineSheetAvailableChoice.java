@@ -107,7 +107,7 @@ public class OnlineSheetAvailableChoice extends BaseAlertDialog
                     context.startActivity(Intent.createChooser(intent, context.getString(R.string.cmd_share_with_friends)));
                     break;
                 case Preview:
-                    if ( isWearable(context) ) {
+                    if ( isWearable() ) {
                         Toast.makeText(context, "Sorry not supported on wearable", Toast.LENGTH_LONG).show();
                         return;
                     }

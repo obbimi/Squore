@@ -58,7 +58,7 @@ public class ColorPicker extends BaseAlertDialog
     @Override public void show()
     {
         View tl = getColorPickerView();
-        if ( isWearable(context) == false ) {
+        if ( isWearable() == false ) {
             String sTitle = getString(R.string.lbl_color) + ": " + matchModel.getName_no_nbsp(targetPlayer, false);
             adb.setTitle(sTitle);
             //.setIcon(R.drawable.microphone) // TODO: a t-shirt maybe?

@@ -125,8 +125,11 @@ public class Feedback extends XActivity implements View.OnClickListener, View.On
             }
             case R.id.cmd_like_on_facebook: {
                 Uri url = getLinkToFacebook(this);
-                startActivity(new Intent(Intent.ACTION_VIEW, url));
-
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, url));
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                }
 /*
                 Intent facebookAppIntent = null;
                 try {
@@ -209,7 +212,7 @@ public class Feedback extends XActivity implements View.OnClickListener, View.On
         Uri url = Uri.parse("https://www.facebook.com/SquoreSquashRefTool");
         try {
             ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo("com.facebook.katana", 0);
-            if (applicationInfo.enabled) {
+            if ( applicationInfo.enabled ) {
                 // http://stackoverflow.com/a/24547437/1048340
                 url = Uri.parse("fb://facewebmodal/f?href=" + url); // this only seems to work for https://www.facebook address (not e.g. http://facebook)
             }

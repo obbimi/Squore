@@ -2177,11 +2177,13 @@ public abstract class Model implements Serializable
             boolean bMatchFormatIsSet = false;
             try {
                 // read match format
-                JSONObject joFormat = joMatch.getJSONObject(JSONKey.format.toString());
-                int numberOfPointsToWinGame = joFormat.getInt(PreferenceKeys.numberOfPointsToWinGame.toString());
-                int nrOfGamesToWinMatch     = joFormat.optInt(JSONKey.nrOfGamesToWinMatch.toString()); // old... keep for now for stored matches
+                JSONObject joFormat = joMatch.optJSONObject(JSONKey.format.toString());
+                int numberOfPointsToWinGame = joFormat.optInt(PreferenceKeys.numberOfPointsToWinGame.toString(), UNDEFINED_VALUE);
+                int nrOfGamesToWinMatch     = joFormat.optInt(JSONKey.nrOfGamesToWinMatch.toString(), UNDEFINED_VALUE); // old... keep for now for stored matches
                     nrOfGamesToWinMatch     = joFormat.optInt(PreferenceKeys.numberOfGamesToWinMatch.toString(), nrOfGamesToWinMatch); // optional for e.g. racketlon
-                setNrOfPointsToWinGame(numberOfPointsToWinGame);
+                if ( numberOfPointsToWinGame != UNDEFINED_VALUE ) {
+                    setNrOfPointsToWinGame(numberOfPointsToWinGame);
+                }
                 if ( nrOfGamesToWinMatch > 0 ) {
                     setNrOfGamesToWinMatch(nrOfGamesToWinMatch);
                 }
@@ -2231,7 +2233,15 @@ public abstract class Model implements Serializable
                         m_startScoreOfGameInProgress.put(Player.B, joGame.optInt(Player.B.toString(), 0));
                     }
                 }
+                if ( joFormat.has(JSONKey.mode.toString())) {
+                    m_sMode = joFormat.optString(JSONKey.mode.toString());
+                }
+            } catch (Exception e) {
+                // not really an error, most likely last match stored did not use these keys
+                e.printStackTrace();
+            }
 
+            try {
                 // read ids
                 JSONObject joPlayerIds = joMatch.optJSONObject(JSONKey.playerids.toString());
                 if ( JsonUtil.isNotEmpty(joPlayerIds) ) {
@@ -2281,9 +2291,6 @@ public abstract class Model implements Serializable
                             m_player2Avatar.put(p, sAvatar);
                         }
                     }
-                }
-                if ( joFormat.has(JSONKey.mode.toString())) {
-                    m_sMode = joFormat.optString(JSONKey.mode.toString());
                 }
             } catch (Exception e) {
                 // not really an error, most likely last match stored did not use these keys
@@ -2707,9 +2714,13 @@ public abstract class Model implements Serializable
             // m_iNrOfPointsToWinGame fixed to 4, hence use m_iNrOfGamesToWinSet
             joFormat.put(PreferenceKeys.numberOfPointsToWinGame.toString(), ((GSMModel)this).getNrOfGamesToWinSet());
         } else {
-            joFormat.put(PreferenceKeys.numberOfPointsToWinGame.toString(), m_iNrOfPointsToWinGame);
+            if ( m_iNrOfPointsToWinGame != UNDEFINED_VALUE ) {
+                joFormat.put(PreferenceKeys.numberOfPointsToWinGame.toString(), m_iNrOfPointsToWinGame);
+            }
         }
-        joFormat.put(PreferenceKeys.numberOfGamesToWinMatch    .toString(), m_iNrOfGamesToWinMatch);
+        if ( m_iNrOfGamesToWinMatch != UNDEFINED_VALUE ) {
+            joFormat.put(PreferenceKeys.numberOfGamesToWinMatch.toString(), m_iNrOfGamesToWinMatch);
+        }
 
         if ( m_iTotalNrOfGamesToFinishForMatchToEnd != UNDEFINED_VALUE ) {
             joFormat.put(JSONKey.playAllGames.toString(), true);
@@ -2740,7 +2751,9 @@ public abstract class Model implements Serializable
             joOffset.put(new JSONObject(MapUtil.keysToString(m_startScoreOfGameInProgress)));
             joFormat.put(JSONKey.gameStartScoreOffset.toString(), joOffset);
         }
-        jsonObject.put(JSONKey.format.toString(), joFormat);
+        if ( JsonUtil.isNotEmpty(joFormat) ) {
+            jsonObject.put(JSONKey.format.toString(), joFormat);
+        }
 
         if ( m_lockState.equals(LockState.UnlockedEndOfFinalGame) ) {
             m_lockState = LockState.LockedEndOfMatch;
@@ -2836,7 +2849,9 @@ public abstract class Model implements Serializable
 */
         }
         JsonUtil.removeEmpty(metaData);
-        jsonObject.put(JSONKey.metadata.toString(), metaData);
+        if ( JsonUtil.isNotEmpty(metaData) ) {
+            jsonObject.put(JSONKey.metadata.toString(), metaData);
+        }
         return jsonObject;
     }
 

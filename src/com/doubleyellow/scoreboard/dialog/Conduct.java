@@ -61,7 +61,7 @@ public class Conduct extends BaseAlertDialog
     @Override public void show() {
 
         String sTitle = getString(R.string.oal_misconduct_by, matchModel.getName_no_nbsp(missbehavingPlayer, false));
-        if ( isWearable(context) == false ) {
+        if ( isWearable() == false ) {
             adb.setTitle(sTitle);
             adb.setIcon (R.drawable.microphone);
         }

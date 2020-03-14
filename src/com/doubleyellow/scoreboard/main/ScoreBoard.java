@@ -621,7 +621,12 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 // toggle player names of the long clicked team
                 _swapDoublePlayers(pl);
             } else {
-                handleMenuItem(R.id.pl_show_conduct, pl);
+                if ( ViewUtil.isWearable(ScoreBoard.this) && matchModel.hasStarted()==false ) {
+                    // on wearable allow changing name
+                    handleMenuItem(R.id.pl_change_name, pl);
+                } else {
+                    handleMenuItem(R.id.pl_show_conduct, pl);
+                }
             }
 
             return true;
@@ -631,7 +636,14 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             int viewId = getXmlIdOfParent(view);
             Player pl = IBoard.m_id2player.get(viewId);
             if ( pl == null ) { return; }
-            handleMenuItem(R.id.pl_show_appeal, pl);
+            if ( Brand.isSquash() ) {
+                handleMenuItem(R.id.pl_show_appeal, pl);
+            } else {
+                if ( ViewUtil.isWearable(ScoreBoard.this) ) {
+                    // for non-squash allow changing name by short click as well
+                    handleMenuItem(R.id.pl_change_name, pl);
+                }
+            }
         }
     }
 
@@ -1893,7 +1905,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
      * - MatchReceivedUtil (nfc match)
      * - receive match via bluetooth
      */
-    boolean initScoreBoard(File fJson) {
+    public boolean initScoreBoard(File fJson) {
         boolean bReadFromJsonOK = false;
 
         Model previous = matchModel;
@@ -2297,7 +2309,7 @@ touch -t 01030000 LAST.sb
                     iResImage = R.drawable.microphone_black;
                 }
             }
-            speakButton = getFloatingActionButton(R.id.sb_official_announcement, fMargin, iResImage, ColorPrefs.ColorTarget.speakButtonBackgroundColor);
+            speakButton = getFloatingActionButton(R.id.sb_official_announcement, fMargin, iResImage, ColorPrefs.ColorTarget.speakButtonBackgroundColor, null);
 /*
             speakButton.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View view) {
@@ -2307,6 +2319,41 @@ touch -t 01030000 LAST.sb
 */
         }
         speakButton.setHidden(bVisible == false);
+    }
+
+    // ----------------------------------------------------
+    // -----------------undo button (mainly for wearable)--
+    // ----------------------------------------------------
+    private FloatingActionButton undoButton = null;
+    private void showUndoFloatButton(boolean bVisible) {
+/*
+        if ( PreferenceValues.useOfficialAnnouncementsFeature(this).equals(Feature.DoNotUse) ) {
+            if ( undoButton != null ) { undoButton.setHidden(true); }
+            return;
+        }
+*/
+
+        if ( undoButton == null ) {
+            float fMargin = 0;
+            int iResImage = R.drawable.ic_action_undo;
+
+            ColorPrefs.ColorTarget colorKey = ColorPrefs.ColorTarget.speakButtonBackgroundColor;
+            Integer iBG = mColors.get(colorKey);
+            if ( iBG != null ) {
+                // if we use a light background for the microphone button... switch to the black icon version
+                int blackOrWhiteFor = ColorUtil.getBlackOrWhiteFor(iBG);
+                if ( blackOrWhiteFor == Color.BLACK ) {
+                    //iResImage = R.drawable.undo_black;
+                }
+            }
+            undoButton = getFloatingActionButton(R.id.sb_undo_last, fMargin, iResImage, ColorPrefs.ColorTarget.speakButtonBackgroundColor, null);
+            undoButton.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override public boolean onLongClick(View v) {
+                    return handleMenuItem(R.id.sb_clear_score);
+                }
+            });
+        }
+        undoButton.setHidden(bVisible == false);
     }
 
     // ----------------------------------------------------
@@ -2347,7 +2394,7 @@ touch -t 01030000 LAST.sb
                     iResImage = R.drawable.timer_black;
                 }
             }
-            timerButton = getFloatingActionButton(R.id.float_timer, fMargin, iResImage, ColorPrefs.ColorTarget.timerButtonBackgroundColor);
+            timerButton = getFloatingActionButton(R.id.float_timer, fMargin, iResImage, ColorPrefs.ColorTarget.timerButtonBackgroundColor, null);
         }
 
         if ( m_mode.equals(Mode.Normal) == false ) {
@@ -2399,7 +2446,7 @@ touch -t 01030000 LAST.sb
                     iResTossImage = R.drawable.toss_black;
                 }
             }
-            tossButton = getFloatingActionButton(R.id.float_toss, fMargin, iResTossImage, colorKey);
+            tossButton = getFloatingActionButton(R.id.float_toss, fMargin, iResTossImage, colorKey, null);
         }
         tossButton.setHidden(bVisible == false);
     }
@@ -2416,7 +2463,7 @@ touch -t 01030000 LAST.sb
 
         if ( shareButton == null ) {
             float fMargin = 1.25f; // same as 'Timer' button (not over toss button, because than it may hide the score)
-            shareButton = getFloatingActionButton(R.id.float_match_share, fMargin, android.R.drawable.ic_menu_share, ColorPrefs.ColorTarget.shareButtonBackgroundColor);
+            shareButton = getFloatingActionButton(R.id.float_match_share, fMargin, android.R.drawable.ic_menu_share, ColorPrefs.ColorTarget.shareButtonBackgroundColor, null);
             // ic_menu_share
             //   mdpi = 32x32
             //   ldpi = 36x36
@@ -2464,7 +2511,7 @@ touch -t 01030000 LAST.sb
                     iChangeSidesImage = R.drawable.arrows_left_right_black;
                 }
             }
-            changeSideButton = getFloatingActionButton(R.id.sb_swap_sides, fMargin, iChangeSidesImage, colorKey);
+            changeSideButton = getFloatingActionButton(R.id.sb_swap_sides, fMargin, iChangeSidesImage, colorKey, null);
         }
         changeSideButton.setHidden(bVisible == false);
     }
@@ -2488,11 +2535,13 @@ touch -t 01030000 LAST.sb
         int iActionId   = R.id.float_new_match;
         int iDrawableId = R.drawable.circled_plus;
 
-        if ( matchModel.getLockState().equals(LockState.LockedManualGUI) ) {
+        LockState lockState = matchModel.getLockState();
+        if ( lockState.equals(LockState.LockedManualGUI) ) {
             iActionId   = R.id.sb_unlock;
             iDrawableId = android.R.drawable.ic_lock_lock;
         }
-        ColorPrefs.ColorTarget colorKey = isLandscape()? ColorPrefs.ColorTarget.playerButtonBackgroundColor : ColorPrefs.ColorTarget.scoreButtonBackgroundColor;
+        boolean bUsePlayerButtonColor = isLandscape() || ViewUtil.isWearable(this);
+        ColorPrefs.ColorTarget colorKey = bUsePlayerButtonColor ? ColorPrefs.ColorTarget.playerButtonBackgroundColor : ColorPrefs.ColorTarget.scoreButtonBackgroundColor;
         Integer iBG = mColors.get(colorKey);
         if ( iBG != null ) {
             // if we use a light background for the player/plus button... switch to the black icon version
@@ -2504,9 +2553,6 @@ touch -t 01030000 LAST.sb
         if ( newMatchButton == null ) {
             float fMargin = isPortrait()?0.25f:0.25f; // TODO: simply within score button of player B?
             Direction se = Direction.SE;
-            if ( ViewUtil.isWearable(this) ) {
-                fMargin = 1.40f; // correct for using boxedEdges=all in percentage.xml (1.5 to big for square screen)
-            }
             newMatchButton = getFloatingActionButton(iActionId, fMargin, iDrawableId, colorKey, se);
         } else {
             newMatchButton.setActionId(iActionId);
@@ -2515,6 +2561,10 @@ touch -t 01030000 LAST.sb
         if ( newMatchButton != null ) {
             newMatchButton.setHidden(bVisible == false);
         }
+    }
+
+    private static boolean isScreenRound(Context context) {
+        return context.getResources().getConfiguration().isScreenRound();
     }
 
     /** might present a dialog to the user, Based-On-Preference. Returns true if dialog will be shown */
@@ -2537,16 +2587,23 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
     // -----------------float utility          ------------
     // ----------------------------------------------------
-    private FloatingActionButton getFloatingActionButton(int iActionId, float fMargin, int iDrawable, ColorPrefs.ColorTarget colorTarget) {
-        Direction direction = isPortrait() ? Direction.E : Direction.S;
-        if ( ViewUtil.isWearable(this) ) {
-            direction = Direction.S;
-        }
-        return getFloatingActionButton(iActionId, fMargin, iDrawable, colorTarget, direction);
-    }
     private FloatingActionButton getFloatingActionButton(int iActionId, float fMargin, int iDrawable, ColorPrefs.ColorTarget colorTarget, Direction direction) {
+        if ( direction == null ) {
+            direction = isPortrait() ? Direction.E : Direction.S;
+            if ( ViewUtil.isWearable(this) ) {
+                direction = Direction.S;
+            }
+        }
+
         int buttonSizePx = getFloatingButtonSizePx(this);
         int iMargin = (int) (fMargin * buttonSizePx); // 64=floatingActionButtonSize
+        if ( ViewUtil.isWearable(this) && isScreenRound(this) ) {
+            // add a little
+            int iScreenDiagonal   = ViewUtil.getScreenHeightWidthMaximum(this);
+            int boxedHeightWidth  = (int) Math.sqrt(Math.pow(iScreenDiagonal, 2) / 2);
+            int iAdditionalMargin = (iScreenDiagonal - boxedHeightWidth) / 2;
+            iMargin += iAdditionalMargin;
+        }
 
         int iMarginLeft   = 0;
         int iMarginTop    = 0;
@@ -2588,12 +2645,21 @@ touch -t 01030000 LAST.sb
         return view;
     }
 
-    private static int getFloatingButtonSizePx(Context context) {
+    public static int getFloatingButtonSizePx(Context context) {
         int buttonSizePx = 0;
         if ( ViewUtil.isPortraitOrientation(context) ) {
             buttonSizePx = ViewUtil.getScreenHeightWidthMaximumFraction(context, R.fraction.pt_gamescores_height);
         } else {
             buttonSizePx = ViewUtil.getScreenHeightWidthMaximumFraction(context, R.fraction.ls_gamescores_width);
+        }
+        if ( ViewUtil.isWearable(context) ) {
+            buttonSizePx = ViewUtil.getScreenHeightWidthMaximumFraction(context, R.fraction.ls_wearable_floating_button_fraction);
+            if ( isScreenRound(context) ) {
+                int iScreenDiagonal = ViewUtil.getScreenHeightWidthMaximum(context);
+                int boxedHeightWidth = (int) Math.sqrt(Math.pow(iScreenDiagonal, 2) / 2);
+                float fraction = context.getResources().getFraction(R.fraction.ls_wearable_floating_button_fraction, 1, 1);
+                buttonSizePx = (int) (fraction * boxedHeightWidth);
+            }
         }
         return buttonSizePx;
     }
@@ -3049,7 +3115,7 @@ touch -t 01030000 LAST.sb
                 setMenuItemVisibility(R.id.sb_unlock, false);
             }
             setMenuItemVisibility(R.id.dyn_undo_last, locked == false);
-            updateNewMatchFloatButton();
+            updateNewMatchFloatButton(); // temporary used as 'unlock' button
 
             if ( PreferenceValues.keepScreenOnWhen(ScoreBoard.this).equals(KeepScreenOnWhen.MatchIsInProgress) ) {
                 keepScreenOn(lockStateNew.isLocked() == false);
@@ -3564,6 +3630,10 @@ touch -t 01030000 LAST.sb
 
         boolean bShowUndo = (matchModel.isLocked() == false) && matchModel.hasStarted();
         setMenuItemVisibility(R.id.dyn_undo_last, bShowUndo);
+
+        if ( ViewUtil.isWearable(this) ) {
+            showUndoFloatButton(bShowUndo);
+        }
     }
     private void setMenuItemVisibility(int iId, boolean bVisible) {
         boolean bShowTextInActionBar = PreferenceValues.showTextInActionBar(this);
@@ -3688,18 +3758,18 @@ touch -t 01030000 LAST.sb
                 if ( warnModelIsLocked(true, id, ctx) ) { return false; }
                 showConduct((Player) ctx[0]);
                 break;
+            case R.id.pl_change_name:
+                if ( warnModelIsLocked(true, id, ctx) ) { return false; }
+                showChangeName((Player) ctx[0]);
+                break;
             case R.id.pl_show_appeal:
                 if ( warnModelIsLocked(id, ctx) ) { return false; }
                 showAppeal((Player) ctx[0]);
                 break;
-            case R.id.sb_edit_event_or_player:
-                if ( true ) {
+            case R.id.sb_edit_event_or_player: {
                     Intent nm = new Intent(this, Match.class);
                     nm.putExtra(IntentKeys.EditMatch.toString(), matchModel);
                     startActivityForResult(nm, 1);
-                    // XXStartAct
-                } else {
-                    editEventAndPlayers();
                 }
                 return true;
             case R.id.sb_stored_matches: {
@@ -3745,8 +3815,26 @@ touch -t 01030000 LAST.sb
                 }
 */
                 cancelShowCase();
-                Intent nm = new Intent(this, MatchTabbed.class);
-                startActivityForResult(nm, 1); // see onActivityResult
+                if ( ViewUtil.isWearable(this) ) {
+                    EditMatchWizard editMatchWizard = new EditMatchWizard(this, matchModel, this);
+                    editMatchWizard.show();
+/*
+                    // add 2 dialogs to the stack
+
+                    // 1
+                    EditPlayers editPlayers = new EditPlayers(this, matchModel, this);
+                    addToDialogStack(editPlayers);
+
+                    // 2
+                    editMatchFormatDialog();
+
+                    // start showing the dialogs
+                    showNextDialog();
+*/
+                } else {
+                    Intent nm = new Intent(this, MatchTabbed.class);
+                    startActivityForResult(nm, 1); // see onActivityResult
+                }
 
                 return true;
             }
@@ -4331,7 +4419,10 @@ touch -t 01030000 LAST.sb
         EditFormat editFormat = new EditFormat(this, matchModel, this);
         addToDialogStack(editFormat);
     }
-
+    /** For wearable only */
+    private void showChangeName(Player p) {
+        // TODO:
+    }
     private boolean autoShowTieBreakDialog(int iOccurrenceCount) {
         TieBreakFormat tbf = PreferenceValues.getTiebreakFormat(this);
 
@@ -4798,11 +4889,6 @@ touch -t 01030000 LAST.sb
     private void showCredits() {
         Credits credits = new Credits(this);
         show(credits);
-    }
-
-    private void editEventAndPlayers() {
-        EditPlayers editPlayers = new EditPlayers(this, matchModel, this);
-        show(editPlayers);
     }
 
     /** If you start referee-ing a match that was already in progress */

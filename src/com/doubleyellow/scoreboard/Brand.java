@@ -18,6 +18,8 @@
 package com.doubleyellow.scoreboard;
 
 import android.content.Context;
+
+import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.model.Model;
@@ -183,6 +185,9 @@ public enum Brand
             PreferenceValues.setBoolean  (PreferenceKeys.useHandInHandOutScoring         , ctx, false);
           //PreferenceValues.setStringSet(PreferenceKeys.floatingMessageForGameBallOn    , EnumSet.noneOf(ShowOnScreen.class), ctx);
             PreferenceValues.setEnum     (PreferenceKeys.endGameSuggestion               , ctx, Feature.Automatic);
+        }
+        if ( ViewUtil.isWearable(ctx) ) {
+            PreferenceValues.setEnum (PreferenceKeys.endGameSuggestion , ctx, Feature.Automatic);
         }
     }
 

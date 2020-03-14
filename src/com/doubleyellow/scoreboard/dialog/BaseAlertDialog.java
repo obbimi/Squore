@@ -282,7 +282,7 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
         DialogManager.getInstance().showNextDialog();
     }
 
-    protected boolean isWearable(Context ctx) {
-        return ViewUtil.isWearable(ctx);
+    protected boolean isWearable() {
+        return ViewUtil.isWearable(context);
     }
 }

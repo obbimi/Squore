@@ -52,8 +52,11 @@ public class LockedMatch extends BaseAlertDialog
         String    sMsg         = String.format(getString(iResId), sLockedDesc);
         //Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
         // TODO: if lockstate is LockedIdleTime, also mention the number of minutes
+        if ( ViewUtil.isWearable(context) == false) {
+           adb.setIcon(android.R.drawable.ic_lock_lock)
+              .setTitle(sLockedDesc);
+        }
         adb.setMessage(sMsg)
-           .setIcon(android.R.drawable.ic_lock_lock).setTitle(sLockedDesc)
            .setNegativeButton(android.R.string.cancel, dialogClickListener)
            .setNeutralButton(R.string.sb_new_match, dialogClickListener);
         if (bAllowUnlock) {

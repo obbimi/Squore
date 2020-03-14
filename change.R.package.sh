@@ -126,9 +126,13 @@ else
         sed -i 's~_\(Racketlon\|Tabletennis\|Badminton\|TennisPadel\)"~_Squash"~' ${f}
     done
     if [[ "$tobranded" == "SquoreWear" ]]; then
-        sed -i "s~dy:boxedEdges~app:boxedEdges~" layout-watch/percentage.xml
+        # turn on by giving the 'app' namespace
+        #sed -i "s~dy:boxedEdges~app:boxedEdges~" res/layout-watch/*.xml
+        echo "Leave boxEdges as is for now"
     else
-        sed -i "s~app:boxedEdges~dy:boxedEdges~" layout-watch/percentage.xml
+        # turn off by giving it 'dy' (not app) namespace
+        #sed -i "s~app:boxedEdges~dy:boxedEdges~" res/layout-watch/*.xml
+        echo "Leave boxEdges as is for now"
     fi
 fi
 

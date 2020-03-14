@@ -50,7 +50,8 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             try {
                 castContext = CastContext.getSharedInstance(activity); // requires com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME to be specified in Manifest.xml
             } catch (Exception e) {
-                e.printStackTrace(); // com.google.android.gms.dynamite.DynamiteModule$LoadingException: No acceptable module found. Local version is 0 and remote version is 0 (Samsung S4 with custom ROM 8.1)
+                Log.w(TAG, "No casting ..." + e.getMessage());
+                //e.printStackTrace(); // com.google.android.gms.dynamite.DynamiteModule$LoadingException: No acceptable module found. Local version is 0 and remote version is 0 (Samsung S4 with custom ROM 8.1)
             }
         }
         sPackageName = m_activity.getPackageName();

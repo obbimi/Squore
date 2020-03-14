@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <bool name="showActionBar_default">false</bool>
 
+    <string name="endGameSuggestion_default_Squash">Automatic</string>
 
 
 </resources>

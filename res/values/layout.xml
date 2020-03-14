@@ -14,6 +14,8 @@
 
     <!--<fraction name="ls_gamescores_height">60%</fraction>-->
 
+    <fraction name="ls_wearable_floating_button_fraction">20%</fraction>
+
 
     <fraction name="ls_timer_margin_from_side_button">16%</fraction>   <!-- not TOO big so tiny chrono to be readable while not full screen AND action bar visible -->
     <fraction name="ls_timer_height">20%</fraction>   <!-- for tiny chrono to be readable 20, else 16 may be better -->

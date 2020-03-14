@@ -71,7 +71,7 @@ public class Appeal extends BaseAlertDialog
         String sTitle = getString(R.string.oal_let_requested_by, matchModel.getName_no_nbsp(appealingPlayer, false));
         int iIconSize = PreferenceValues.getAppealHandGestureIconSize(context);
 
-        if ( isWearable(context) == false ) {
+        if ( isWearable() == false ) {
             adb.setTitle(sTitle);
             adb.setIcon (R.drawable.microphone);
         }
