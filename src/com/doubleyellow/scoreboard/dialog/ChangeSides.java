@@ -50,7 +50,7 @@ public class ChangeSides extends BaseAlertDialog
         String sTitle = getOAString(R.string.oa_change_sides);
         adb.setTitle(sTitle)
            .setIcon   (R.drawable.microphone)
-           .setMessage(getString(R.string.sb_swap_sides) + "?")
+           .setMessage(getString(R.string.sb_change_sides) + "?")
            .setPositiveButton(R.string.cmd_yes, listener)
            .setNegativeButton(R.string.cmd_no , listener);
         adb.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -79,7 +79,7 @@ public class ChangeSides extends BaseAlertDialog
     @Override public void handleButtonClick(int which) {
         switch (which) {
             case BTN_SWAP_PLAYERS :
-                scoreBoard.handleMenuItem(R.id.sb_swap_sides);
+                scoreBoard.handleMenuItem(R.id.sb_change_sides);
                 break;
             case BTN_DO_NOT_SWAP_PLAYERS   :
                 break;

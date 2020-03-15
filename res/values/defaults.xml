@@ -101,6 +101,12 @@ http://developer.android.com/guide/practices/screens_support.html
     <string name="timerWarmup_values_default_Racketlon">180,240,300</string>
     <string name="timerWarmup_values_default_TennisPadel">180,240,300</string> <!-- TODO -->
 
+    <integer-array name="commonEndScores_Squash"><item>9</item><item>11</item><item>15</item></integer-array>
+    <integer-array name="commonEndScores_Badminton"><item>11</item><item>21</item></integer-array>
+    <integer-array name="commonEndScores_Tabletennis"><item>11</item><item>21</item></integer-array>
+    <integer-array name="commonEndScores_Racketlon"><item>11</item><item>21</item></integer-array>
+    <integer-array name="commonEndScores_TennisPadel"><item>4</item><item>6</item></integer-array>
+
     <integer name="timerPauseBetweenGames_default_Squash">90</integer> <!-- PSA: 120 -->
     <integer name="timerPauseBetweenGames_default_Badminton">120</integer> <!-- 16.2.2 not exceeding 120 seconds between the first and second game, and between the second and third game shall be allowed in all matches.  -->
     <integer name="timerPauseBetweenGames_default_Tabletennis">60</integer><!-- 3.4.4.1.1 an interval of up to 1 minute between successive games of an individual match; -->

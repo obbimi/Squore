@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="oa_set">set</string>
+    <string name="oa_sets">sets</string>
     <string name="oa_set_ball">Set ball</string>
     <string name="oa_gummiarm_point">Gummiarm point</string>
     <string name="end_game_Racketlon">End set</string>

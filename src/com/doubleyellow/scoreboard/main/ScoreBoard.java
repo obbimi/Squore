@@ -207,7 +207,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         showBrokenEquipment(player);
                         break;
                     } else {
-                        handleMenuItem(R.id.sb_swap_sides);
+                        handleMenuItem(R.id.sb_change_sides);
                     }
             }
             return false;
@@ -316,18 +316,22 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             if ( lIds.containsAll(Arrays.asList(R.id.btn_side1, R.id.btn_side2)) ) {
                 // Nothing for end user yet
                 if ( PreferenceValues.isBrandTesting(ScoreBoard.this) ) {
-                    Brand newBrandForTesting = ListUtil.getNextEnum(Brand.brand);
-                    RWValues.setEnum(PreferenceKeys.squoreBrand, ScoreBoard.this, newBrandForTesting);
-                    Brand.setBrandPrefs(ScoreBoard.this);
-                    Brand.setSportPrefs(ScoreBoard.this);
-                    DynamicListPreference.deleteCacheFile(ScoreBoard.this, PreferenceKeys.colorSchema.toString());
-                    doRestart(ScoreBoard.this);
+                    toggleBrand();
                 }
             }
             // TODO: if playing double switch player names if clicking the two child view of R.id.txt_player1
             return false;
         }
     };
+
+    private void toggleBrand() {
+        Brand newBrandForTesting = ListUtil.getNextEnum(Brand.brand);
+        RWValues.setEnum(PreferenceKeys.squoreBrand, ScoreBoard.this, newBrandForTesting);
+        Brand.setBrandPrefs(ScoreBoard.this);
+        Brand.setSportPrefs(ScoreBoard.this);
+        DynamicListPreference.deleteCacheFile(ScoreBoard.this, PreferenceKeys.colorSchema.toString());
+        doRestart(ScoreBoard.this);
+    }
 
     private TouchBothListener.ClickBothListener clickBothListener = new TouchBothListener.ClickBothListener() {
         private long lLastBothClickServeSideButtons = 0;
@@ -341,7 +345,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             List<Integer> lIds = Arrays.asList(view1.getId(), view2.getId());
             if ( lIds.containsAll(bothPlayerButtons) ) {
                 if ( isLandscape() ) {
-                    handleMenuItem(R.id.sb_swap_sides);
+                    handleMenuItem(R.id.sb_change_sides);
                 } else {
                     handleMenuItem(R.id.dyn_new_match);
                 }
@@ -601,7 +605,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 toast.show();
                 lLastClickTime = currentTime;
             } else {
-                handleMenuItem(R.id.sb_undo_last);
+                handleMenuItem(R.id.sb_undo_last); // TODO: enough 'undo' options, we can use something else here
                 lLastClickTime = 0;
                 if ( toast != null ) {
                     toast.cancel();
@@ -622,8 +626,12 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 _swapDoublePlayers(pl);
             } else {
                 if ( ViewUtil.isWearable(ScoreBoard.this) && matchModel.hasStarted()==false ) {
-                    // on wearable allow changing name
-                    handleMenuItem(R.id.pl_change_name, pl);
+                    if ( PreferenceValues.isBrandTesting(ScoreBoard.this) ) {
+                        toggleBrand();
+                    } else {
+                        // on wearable allow changing name with minimal interface
+                        handleMenuItem(R.id.pl_change_name, pl);
+                    }
                 } else {
                     handleMenuItem(R.id.pl_show_conduct, pl);
                 }
@@ -667,7 +675,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 }
                 return true;
             case Automatic:
-                handleMenuItem(R.id.sb_swap_sides);
+                handleMenuItem(R.id.sb_change_sides);
                 return false;
         }
         return false;
@@ -928,7 +936,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( PreferenceValues.isUnbrandedExecutable(this) ) {
             // if we are running as unbranded but one ore more other brand values are uncommented
             if ( PreferenceValues.isBrandTesting(this) ) {
-                Brand.brand = PreferenceValues.getOverwriteBrand(this);
+                Brand overwriteBrand = PreferenceValues.getOverwriteBrand(this);
+                if ( overwriteBrand.equals(Brand.Squore) == false ) {
+                    Brand.brand = overwriteBrand;
+                }
                 Brand.setBrandPrefs(this);
                 Brand.setSportPrefs(this);
                 Model mTmp = Brand.getModel();
@@ -2254,7 +2265,7 @@ touch -t 01030000 LAST.sb
     // --------------- restart ------------------------
     // ----------------------------------------------------
 
-    /** Does not seem to work so well if app started for debuging. But when started from home screen it seems to work fine (android 7) */
+    /** Does not seem to work so well if app started for debugging. But when started from home screen it seems to work fine (android 7) */
     private static void doRestart(Context c) {
         if (c == null) return;
         // fetch the packagemanager so we can get the default launch activity
@@ -2326,13 +2337,6 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
     private FloatingActionButton undoButton = null;
     private void showUndoFloatButton(boolean bVisible) {
-/*
-        if ( PreferenceValues.useOfficialAnnouncementsFeature(this).equals(Feature.DoNotUse) ) {
-            if ( undoButton != null ) { undoButton.setHidden(true); }
-            return;
-        }
-*/
-
         if ( undoButton == null ) {
             float fMargin = 0;
             int iResImage = R.drawable.circle_2arrows;
@@ -2346,7 +2350,7 @@ touch -t 01030000 LAST.sb
                     iResImage = R.drawable.circle_2arrows_black;
                 }
             }
-            undoButton = getFloatingActionButton(R.id.sb_undo_last, fMargin, iResImage, ColorPrefs.ColorTarget.speakButtonBackgroundColor, null);
+            undoButton = getFloatingActionButton(R.id.float_undo_last, fMargin, iResImage, ColorPrefs.ColorTarget.speakButtonBackgroundColor, null);
             undoButton.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override public boolean onLongClick(View v) {
                     return handleMenuItem(R.id.sb_clear_score);
@@ -2511,7 +2515,7 @@ touch -t 01030000 LAST.sb
                     iChangeSidesImage = R.drawable.arrows_left_right_black;
                 }
             }
-            changeSideButton = getFloatingActionButton(R.id.sb_swap_sides, fMargin, iChangeSidesImage, colorKey, null);
+            changeSideButton = getFloatingActionButton(R.id.float_changesides, fMargin, iChangeSidesImage, colorKey, null);
         }
         changeSideButton.setHidden(bVisible == false);
     }
@@ -2587,7 +2591,7 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
     // -----------------float utility          ------------
     // ----------------------------------------------------
-    private FloatingActionButton getFloatingActionButton(int iActionId, float fMargin, int iDrawable, ColorPrefs.ColorTarget colorTarget, Direction direction) {
+    private FloatingActionButton getFloatingActionButton(int iActionId, float fMarginBasedOnButtonSize, int iDrawable, ColorPrefs.ColorTarget colorTarget, Direction direction) {
         if ( direction == null ) {
             direction = isPortrait() ? Direction.E : Direction.S;
             if ( ViewUtil.isWearable(this) ) {
@@ -2596,13 +2600,37 @@ touch -t 01030000 LAST.sb
         }
 
         int buttonSizePx = getFloatingButtonSizePx(this);
-        int iMargin = (int) (fMargin * buttonSizePx); // 64=floatingActionButtonSize
+        int iMargin = (int) (fMarginBasedOnButtonSize * buttonSizePx); // fMarginBasedOnButtonSize is mainly for nicely lining up buttons in the middle without overlaps
         if ( ViewUtil.isWearable(this) && isScreenRound(this) ) {
-            // add a little
+            // add a little extra since we use app:boxedEdges="all"
             int iScreenDiagonal   = ViewUtil.getScreenHeightWidthMaximum(this);
             int boxedHeightWidth  = (int) Math.sqrt(Math.pow(iScreenDiagonal, 2) / 2);
             int iAdditionalMargin = (iScreenDiagonal - boxedHeightWidth) / 2;
-            iMargin += iAdditionalMargin;
+
+            // special case: do not add additional margin and have button in free space around the square scoreboard
+            switch ( iActionId ) {
+                case R.id.float_toss:
+                case R.id.float_changesides:
+                    direction = Direction.N;
+                    iMargin = 0;
+                    break;
+                case R.id.float_new_match:
+                    direction = Direction.E;
+                    iMargin = 0;
+                    break;
+                case R.id.float_undo_last:
+                    direction = Direction.S;
+                    iMargin = 0;
+                    break;
+                case R.id.float_timer:
+                    direction = Direction.W;
+                    iMargin = 0;
+                    break;
+                default:
+                    iMargin += iAdditionalMargin;
+                    break;
+            }
+
         }
 
         int iMarginLeft   = 0;
@@ -3702,7 +3730,8 @@ touch -t 01030000 LAST.sb
                 }
                 toggleDemoMode(demoMessage);
                 return true;
-            case R.id.sb_swap_sides:
+            case R.id.sb_change_sides:
+            case R.id.float_changesides:
                 swapSides(Toast.LENGTH_LONG, null);
                 if ( Brand.isBadminton() && matchModel.isDoubles() ) {
                     _swapDoublePlayers(Player.values(), false);
@@ -3738,6 +3767,7 @@ touch -t 01030000 LAST.sb
                 break;
             case R.id.dyn_undo_last:
             case R.id.sb_undo_last:
+            case R.id.float_undo_last:
                 return undoLast();
             case R.id.sb_undo_last_for_non_scorer:
                 Player nonScorer = null;
@@ -4298,7 +4328,7 @@ touch -t 01030000 LAST.sb
         ViewGroup presentationFrame = (ViewGroup) findViewById(R.id.presentation_frame);
         int presentationFrameVisibility = presentationFrame.getVisibility();
         boolean pEndOfGameViewShowing = (presentationFrameVisibility == View.VISIBLE);
-        Log.d(TAG, "[hidePresentationEndOfGame] pEndOfGameViewShowing " + pEndOfGameViewShowing);
+      //Log.d(TAG, "[hidePresentationEndOfGame] pEndOfGameViewShowing " + pEndOfGameViewShowing);
         if ( pEndOfGameViewShowing ) {
             presentationFrame.setVisibility(View.GONE);
             findViewById(R.id.content_frame).setVisibility(View.VISIBLE);

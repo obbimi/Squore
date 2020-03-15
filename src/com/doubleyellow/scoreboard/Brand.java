@@ -98,13 +98,15 @@ public enum Brand
 
         //PreferenceValues.setStringSet(PreferenceKeys.showBrandLogoOn, ShowOnScreen.OnChromeCast, ctx); // = in line with normal default
 
-        PreferenceValues.setBoolean(PreferenceKeys.showTips, ctx, false);
-
       //PreferenceValues.setBoolean(PreferenceKeys.showFullScreen, ctx, true);
-        PreferenceValues.setBoolean(PreferenceKeys.showActionBar , ctx, true); // to be able to quickly select Cast Button, branded version probably uses ChromeCast
+        if ( ViewUtil.isWearable(ctx) == false ) {
+            PreferenceValues.setBoolean(PreferenceKeys.showTips, ctx, false);
 
-        // if they get in the way of the logo on the device screen, set them to DoNotUse
-        PreferenceValues.setEnum(PreferenceKeys.useOfficialAnnouncementsFeature, ctx, Feature.Suggest);
+            PreferenceValues.setBoolean(PreferenceKeys.showActionBar , ctx, true); // to be able to quickly select Cast Button, branded version probably uses ChromeCast
+
+            // if they get in the way of the logo on the device screen, set them to DoNotUse
+            PreferenceValues.setEnum(PreferenceKeys.useOfficialAnnouncementsFeature, ctx, Feature.Suggest);
+        }
 /*
         if ( Brand.isSquash() ) {
             PreferenceValues.setEnum(PreferenceKeys.useShareFeature, ctx, Feature.DoNotUse);
@@ -187,7 +189,9 @@ public enum Brand
             PreferenceValues.setEnum     (PreferenceKeys.endGameSuggestion               , ctx, Feature.Automatic);
         }
         if ( ViewUtil.isWearable(ctx) ) {
-            PreferenceValues.setEnum (PreferenceKeys.endGameSuggestion , ctx, Feature.Automatic);
+            PreferenceValues.setEnum (PreferenceKeys.endGameSuggestion               , ctx, Feature.Automatic);
+            PreferenceValues.setEnum (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
+            PreferenceValues.setEnum (PreferenceKeys.useTimersFeature                , ctx, Feature.Suggest);
         }
     }
 

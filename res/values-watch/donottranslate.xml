@@ -9,7 +9,7 @@
     <!--    <string name="BackKeyBehaviour_default">UndoScore</string>-->
     <string name="BackKeyBehaviour_default">UndoScoreNoConfirm</string>
 
-    <string name="useTimersFeature_default">Automatic</string>
+    <string name="useTimersFeature_default">Suggest</string>
     <string name="endGameSuggestion_default">Automatic</string>
     <string name="useOfficialAnnouncementsFeature_default">DoNotUse</string>
 

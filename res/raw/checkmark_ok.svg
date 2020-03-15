@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"
+    stroke="#D3D3D3">
+    <!--
+    This svg is not used as such, but converted to png files:
+
+    fill and stroke colors: #D3D3D3, #111111
+
+    export suffix='_black' #111111
+    export suffix=''       #D3D3D3
+    convert -background none -size  72x72  checkmark_ok.svg ../drawable-hdpi/checkmark_ok${suffix}.png
+    convert -background none -size  96x96  checkmark_ok.svg ../drawable-xhdpi/checkmark_ok${suffix}.png
+    convert -background none -size 144x144 checkmark_ok.svg ../drawable-xxhdpi/checkmark_ok${suffix}.png
+    convert -background none -size 192x192 checkmark_ok.svg ../drawable-xxxhdpi/checkmark_ok${suffix}.png
+    -->
+
+    <path id="top"  stroke-width="12" fill="none" stroke-linecap="round"
+        d="M30,70
+           q30,30
+            48,60
+           q20,-50
+            60,-100
+        "
+        />
+
+</svg>

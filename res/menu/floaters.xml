@@ -9,6 +9,7 @@
     <item android:id="@+id/float_timer"         android:visible="false" android:title="@string/sb_timer"/>
     <item android:id="@+id/float_toss"          android:visible="false" android:title="@string/sb_cmd_toss"/>
     <item android:id="@+id/float_changesides"   android:visible="false" android:title="@string/pref_changeSides_short"/>
+    <item android:id="@+id/float_undo_last"     android:visible="false" android:title="@string/uc_undo" />
 <!--
     <item android:id="@+id/float_score_details" android:visible="false" android:title="@string/sb_score_details" />
 -->

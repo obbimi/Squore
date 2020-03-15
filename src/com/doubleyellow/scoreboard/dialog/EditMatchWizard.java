@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.FloatingActionButton;
@@ -86,30 +84,36 @@ public class EditMatchWizard extends BaseAlertDialog
         m_rootView.setOrientation(LinearLayout.VERTICAL);
         ColorUtil.setBackground(m_rootView, iMainBgColor);
 
-        int buttonSizePx = (int) (ScoreBoard.getFloatingButtonSizePx(context) * 1.0f);
+        m_buttonSizePx = (int) (ScoreBoard.getFloatingButtonSizePx(context) * 1.0f);
 
         LinearLayout llPrevNext = new LinearLayout(context);
         llPrevNext.setOrientation(LinearLayout.HORIZONTAL);
         llPrevNext.setGravity(Direction.S.getGravity());
-        m_rootView.addView(llPrevNext, (int)(ViewUtil.getScreenWidth(context) * 0.9f), ViewGroup.LayoutParams.WRAP_CONTENT);
+        m_rootView.addView(llPrevNext, (int)(ViewUtil.getScreenWidth(context) * 1.0f), ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        final int iMargin = 0;
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(buttonSizePx, buttonSizePx);
-        layoutParams.setMargins(iMargin, iMargin, iMargin, iMargin);
-        //layoutParams.gravity = Direction.E.getGravity();
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(m_buttonSizePx, m_buttonSizePx);
 
-        FloatingActionButton fabNext = new FloatingActionButton.Builder(context, buttonSizePx)
+        m_fabNext = new FloatingActionButton.Builder(context, m_buttonSizePx)
                 .withDrawable(R.drawable.arrow_right)
                 .withButtonColor(iInputBgColor)
-              //.withGravity(Direction.E.getGravity())            // todo: are not working here for now
-              //.withMargins(iMargin, iMargin, iMargin, iMargin)  // todo: are not working here for now
                 .create(false);
-        llPrevNext.addView(fabNext, layoutParams);
-        fabNext.setOnClickListener(new View.OnClickListener() {
+        m_fabNext.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 storeAndShowNext(1);
             }
         });
+
+        m_fabPrev = new FloatingActionButton.Builder(context, m_buttonSizePx)
+                .withDrawable(R.drawable.arrow_left)
+                .withButtonColor(iInputBgColor)
+                .create(false);
+        m_fabPrev.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                storeAndShowNext(-1);
+            }
+        });
+        llPrevNext.addView(m_fabPrev, layoutParams);
+        llPrevNext.addView(m_fabNext, layoutParams);
 
         for(Player p: Player.values()) {
             PlayerTextView txtPlayer = new PlayerTextView(context); txtPlayer.setTag(p); txtPlayer.setHint(getString(R.string.lbl_player) + " " + p);
@@ -135,7 +139,7 @@ public class EditMatchWizard extends BaseAlertDialog
                 boolean bPlayAll = matchModel.playAllGames();
                 tbBestOf_or_TotalOf.setSelectedIndex(bPlayAll?1:0);
 
-                lpCC.weight = 3;
+              //lpCC.weight = 3;
                 llBestOf.addView(tbBestOf_or_TotalOf, lpCC);
             }
             {
@@ -146,32 +150,41 @@ public class EditMatchWizard extends BaseAlertDialog
                 lValues.add(1);
                 lValues.add(2);
                 lValues.add(3);
-                lValues.add(iPreferredNrToWin);
+                if ( Brand.isTabletennis() ) {
+                    lValues.add(4);
+                }
+                lValues.add(iPreferredNrToWin); // typically 4 (best of 7) for tabletennis
 
                 List<String> lDisplayValues = new ArrayList<String>();
                 for(Integer iNrToWin: lValues) {
                     int iPreferredBestOf = iNrToWin * 2 - 1;
                     int resId = iPreferredBestOf == 1 ? R.string.oa_game : R.string.oa_games;
+                    if ( Brand.isGameSetMatch() ) {
+                        resId = iPreferredBestOf == 1 ? R.string.oa_set : R.string.oa_sets;
+                    }
                     lDisplayValues.add(iPreferredBestOf + " " + getString(resId));
                 }
                 SelectObjectToggle<Integer> tbTotalNrOfGames = new SelectObjectToggle<Integer>(context, lValues, lDisplayValues);
                 tbTotalNrOfGames.setTag(PreferenceKeys.numberOfGamesToWinMatch);
                 tbTotalNrOfGames.setSelected(iPreferredNrToWin);
 
-                lpCC.weight = 1;
+              //lpCC.weight = 1;
                 llBestOf.addView(tbTotalNrOfGames, lpCC);
             }
             lControls.add(llBestOf);
 
             {
-                lpCC.weight = 1;
+              //lpCC.weight = 1;
 
                 int iPreferredNrToWin = PreferenceValues.numberOfPointsToWinGame(context);
                     iPreferredNrToWin = matchModel.getNrOfPointsToWinGame();
                 SortedSet<Integer> lValues = new TreeSet<>();
-                lValues.add(9);
-                lValues.add(11);
-                lValues.add(15);
+                int iCommonEndScoresResId = R.array.commonEndScores_Squash;
+                    iCommonEndScoresResId = PreferenceValues.getSportTypeSpecificResId(context, iCommonEndScoresResId);
+                int[] iaCommonEndScores = context.getResources().getIntArray(iCommonEndScoresResId);
+                for(int iEndScore: iaCommonEndScores) {
+                    lValues.add(iEndScore);
+                }
                 lValues.add(iPreferredNrToWin);
                 List<String> lDisplayValues = new ArrayList<String>();
                 for(Integer iVal: lValues) {
@@ -226,11 +239,17 @@ public class EditMatchWizard extends BaseAlertDialog
                 txtView.requestFocus();
             }
 
-            if ( m_iStep == lControls.size() -1 ) {
+            if ( m_iStep == lControls.size() - 1 ) {
                 // last control: change NEXT into DONE
+                m_fabNext.setDrawable(context.getDrawable(R.drawable.checkmark_ok), m_buttonSizePx);
+            } else if ( iStep == -1 ) {
+                m_fabNext.setDrawable(context.getDrawable(R.drawable.arrow_right ), m_buttonSizePx);
             }
             if ( m_iStep == 0 ) {
                 // first control: disable BACK
+                m_fabPrev.setVisibility(View.INVISIBLE);
+            } else {
+                m_fabPrev.setVisibility(View.VISIBLE);
             }
         } else {
             // Done
@@ -298,8 +317,12 @@ public class EditMatchWizard extends BaseAlertDialog
         }
     };
 
-    private List<View> lControls = new ArrayList<View>();
-    private Model m_tmp = ModelFactory.getTemp();
+    private FloatingActionButton m_fabNext = null;
+    private FloatingActionButton m_fabPrev = null;
+    private int m_buttonSizePx = 0;
+
+    private List<View>           lControls = new ArrayList<View>();
+    private Model                m_tmp = ModelFactory.getTemp();
 
     public final static int BTN_NEXT  = DialogInterface.BUTTON_POSITIVE;
     public final static int BTN_PREV  = DialogInterface.BUTTON_NEGATIVE;

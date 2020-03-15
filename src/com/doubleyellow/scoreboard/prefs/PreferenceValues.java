@@ -103,18 +103,18 @@ public class PreferenceValues extends RWValues
     }
 
     // TODO: 20200301: use this for more than just Padel
-    public static Integer getSportSpecificSuffixedResId(Context context, Integer titleRes) {
-        if ( (titleRes == null) || (titleRes == 0) ) { return 0; }
+    public static Integer getSportSpecificSuffixedResId(Context context, Integer iResIdNoSuffix) {
+        if ( (iResIdNoSuffix == null) || (iResIdNoSuffix == 0) ) { return 0; }
 
-        String sResName  = context.getResources().getResourceName(titleRes);
-        if ( mOrgResId2BrandResId.containsKey(titleRes) ) {
-            return mOrgResId2BrandResId.get(titleRes);
+        String sResName  = context.getResources().getResourceName(iResIdNoSuffix);
+        if ( mOrgResId2BrandResId.containsKey(iResIdNoSuffix) ) {
+            return mOrgResId2BrandResId.get(iResIdNoSuffix);
         }
         int iNewResId = context.getResources().getIdentifier(sResName + "_" + Brand.getSport(), "string", context.getPackageName());
         if ( iNewResId != 0 ) {
-            mOrgResId2BrandResId.put(titleRes, iNewResId);
+            mOrgResId2BrandResId.put(iResIdNoSuffix, iNewResId);
         } else {
-            mOrgResId2BrandResId.put(titleRes, null);
+            mOrgResId2BrandResId.put(iResIdNoSuffix, null);
         }
         return iNewResId;
     }
@@ -138,16 +138,20 @@ public class PreferenceValues extends RWValues
     private PreferenceValues() {}
 
     public static final String COM_DOUBLEYELLOW_SCOREBOARD = "com.doubleyellow.scoreboard";
+    public static final String COM_DOUBLEYELLOW_SQUOREWEAR = "com.doubleyellow.squorewear";
 
     public static boolean isUnbrandedExecutable(Context ctx) {
-        return ctx.getPackageName().equals(PreferenceValues.COM_DOUBLEYELLOW_SCOREBOARD);
+        String packageName = ctx.getPackageName();
+        return packageName.equals(PreferenceValues.COM_DOUBLEYELLOW_SCOREBOARD)
+            || packageName.equals(PreferenceValues.COM_DOUBLEYELLOW_SQUOREWEAR)
+            ;
     }
     public static boolean isBrandedExecutable(Context ctx) {
         return isUnbrandedExecutable(ctx) == false;
     }
 
     public static boolean isBrandTesting(Context ctx) {
-        if ( isUnbrandedExecutable(ctx) && (Brand.values().length>1) ) {
+        if ( isUnbrandedExecutable(ctx) && ( Brand.values().length > 2 ) ) {
             return true;
         }
         return false;
@@ -377,7 +381,12 @@ public class PreferenceValues extends RWValues
 */
 
     public static boolean showActionBar(Context context) {
-        return getBoolean(PreferenceKeys.showActionBar, context, R.bool.showActionBar_default);
+        boolean bDefault = context.getResources().getBoolean(R.bool.showActionBar_default);
+        if ( ViewUtil.isWearable(context) ) {
+            bDefault = false;
+        }
+        return getBoolean(PreferenceKeys.showActionBar, context, bDefault);
+//        return getBoolean(PreferenceKeys.showActionBar, context, R.bool.showActionBar_default);
     }
 
     public static boolean showFullScreen(Context context) {
@@ -488,9 +497,10 @@ public class PreferenceValues extends RWValues
         return language.toString().equals(deviceLanguage) == false;
     }
 
-    public static int getSportTypeSpecificResId(Context context, int iResid) {
+    /** translate a _Squash suffixid resource id in non squash specific */
+    public static int getSportTypeSpecificResId(Context context, int iResidSquashSuffixed) {
         if ( Brand.isNotSquash() ) {
-            String sResName = context.getResources().getResourceName(iResid);
+            String sResName = context.getResources().getResourceName(iResidSquashSuffixed);
             String suffix   = "_" + SportType.Squash;
             if ( sResName.endsWith(suffix) ) {
                 String sNewResName = sResName.replaceAll(suffix, "_" + Brand.getSport());
@@ -502,7 +512,7 @@ public class PreferenceValues extends RWValues
                 return iNewResId; // still return 0 if no specific resource was found: showcase e.g. decides to skip a step if 0 is returned
             }
         }
-        return iResid;
+        return iResidSquashSuffixed;
     }
 
     public static String getGameOrSetString(Context context, int iResid, Object... formatArgs) {
@@ -1700,7 +1710,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-03-08"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-03-16"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
