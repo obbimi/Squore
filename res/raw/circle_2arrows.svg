@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 10 140 140"
+    fill="#111111" stroke="#D3D3D3">
+    <!--
+    This svg is not used as such, but converted to png files:
+
+    fill and stroke colors: #D3D3D3, #111111
+
+    export suffix='_black' #111111
+    export suffix=''       #D3D3D3
+    convert -background none -size  72x72  circle_2arrows.svg ../drawable-hdpi/circle_2arrows${suffix}.png
+    convert -background none -size  96x96  circle_2arrows.svg ../drawable-xhdpi/circle_2arrows${suffix}.png
+    convert -background none -size 144x144 circle_2arrows.svg ../drawable-xxhdpi/circle_2arrows${suffix}.png
+    convert -background none -size 192x192 circle_2arrows.svg ../drawable-xxxhdpi/circle_2arrows${suffix}.png
+    -->
+
+    <path id="top"  stroke-width="10" fill="none" stroke-linecap="round"
+        d="M40,64 c  5,-45
+                    75,-45
+                    80,0"
+        />
+    <polyline id="toppoint" stroke-linecap="round" points="028,054
+                                                           040,070
+                                                           056,060" stroke-width="10" fill="none"/>
+
+    <path id="bottom"  stroke-width="10" fill="none" stroke-linecap="round"
+        d="M40,96 c  5,45
+                    75,45
+                    80,0"
+        />
+
+    <polyline id="bottompoint" stroke-linecap="round" points="104,100
+                                                              120,090
+                                                              132,106" stroke-width="10" fill="none"/>
+
+</svg>

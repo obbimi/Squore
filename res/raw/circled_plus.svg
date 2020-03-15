@@ -16,12 +16,6 @@
     convert -background none -size  64x64  circled_plus.svg ../drawable-xhdpi/circled_plus${suffix}.png
     convert -background none -size  96x96  circled_plus.svg ../drawable-xxhdpi/circled_plus${suffix}.png
     convert -background none -size  96x96  circled_plus.svg ../drawable-xxxhdpi/circled_plus${suffix}.png
-
-    # guidelines: https://developer.android.com/training/multiscreen/screendensities
-    convert -background none -size  72x72  circled_plus.svg ../drawable-hdpi/circled_plus${suffix}.png
-    convert -background none -size  96x96  circled_plus.svg ../drawable-xhdpi/circled_plus${suffix}.png
-    convert -background none -size 144x144 circled_plus.svg ../drawable-xxhdpi/circled_plus${suffix}.png
-    convert -background none -size 192x192 circled_plus.svg ../drawable-xxxhdpi/circled_plus${suffix}.png
     -->
 
     <circle id="disc" cx="260" cy="260" r="220" stroke-width="35" fill="none"/>

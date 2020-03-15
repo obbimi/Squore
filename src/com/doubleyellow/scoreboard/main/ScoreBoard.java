@@ -411,7 +411,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     private void confirmUndoLastForNonScorer(final Player p) {
         AlertDialog.Builder cfunls = getAlertDialogBuilder(this);
         cfunls.setTitle(R.string.uc_undo)
-                .setIcon(R.drawable.ic_action_undo)
+                .setIcon(R.drawable.circle_2arrows)
                 .setTitle(getString(R.string.sb_remove_last_score_for_x, matchModel.getName(p) ))
                 .setPositiveButton(R.string.cmd_yes, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
@@ -1276,7 +1276,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 case UndoScore: {
                     AlertDialog.Builder cfun = getAlertDialogBuilder(this);
                     cfun.setTitle(R.string.uc_undo)
-                        .setIcon(R.drawable.ic_action_undo)
+                        .setIcon(R.drawable.circle_2arrows)
                         .setPositiveButton(R.string.cmd_yes, new DialogInterface.OnClickListener() {
                             @Override public void onClick(DialogInterface dialog, int which) {
                                 handleMenuItem(R.id.dyn_undo_last);
@@ -2335,7 +2335,7 @@ touch -t 01030000 LAST.sb
 
         if ( undoButton == null ) {
             float fMargin = 0;
-            int iResImage = R.drawable.ic_action_undo;
+            int iResImage = R.drawable.circle_2arrows;
 
             ColorPrefs.ColorTarget colorKey = ColorPrefs.ColorTarget.speakButtonBackgroundColor;
             Integer iBG = mColors.get(colorKey);
@@ -2343,7 +2343,7 @@ touch -t 01030000 LAST.sb
                 // if we use a light background for the microphone button... switch to the black icon version
                 int blackOrWhiteFor = ColorUtil.getBlackOrWhiteFor(iBG);
                 if ( blackOrWhiteFor == Color.BLACK ) {
-                    //iResImage = R.drawable.undo_black;
+                    iResImage = R.drawable.circle_2arrows_black;
                 }
             }
             undoButton = getFloatingActionButton(R.id.sb_undo_last, fMargin, iResImage, ColorPrefs.ColorTarget.speakButtonBackgroundColor, null);

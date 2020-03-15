@@ -14,12 +14,6 @@
     convert -background none -size  64x64  timer.svg ../drawable-xhdpi/timer${suffix}.png
     convert -background none -size  96x96  timer.svg ../drawable-xxhdpi/timer${suffix}.png
     convert -background none -size  96x96  timer.svg ../drawable-xxxhdpi/timer${suffix}.png
-
-    # guidelines: https://developer.android.com/training/multiscreen/screendensities
-    convert -background none -size  72x72  timer.svg ../drawable-hdpi/timer${suffix}.png
-    convert -background none -size  96x96  timer.svg ../drawable-xhdpi/timer${suffix}.png
-    convert -background none -size 144x144 timer.svg ../drawable-xxhdpi/timer${suffix}.png
-    convert -background none -size 192x192 timer.svg ../drawable-xxxhdpi/timer${suffix}.png
     -->
 
     <circle id="disc" cx="260" cy="300" r="200" stroke-width="35" fill="none"/>

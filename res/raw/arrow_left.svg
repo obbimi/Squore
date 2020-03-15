@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520"
+    fill="#111111" stroke="#D3D3D3">
+    <!--
+    Replaces the resource image: R.drawable.ic_menu_forward
+
+    This svg is not used as such, but converted to png files:
+
+    fill and stroke colors: #D3D3D3, #111111
+
+    # guidelines: mine
+    export suffix='_black' #111111
+    export suffix=''       #D3D3D3
+    convert -background none -size  48x48  arrow_left.svg ../drawable-hdpi/arrow_left${suffix}.png
+    convert -background none -size  64x64  arrow_left.svg ../drawable-xhdpi/arrow_left${suffix}.png
+    convert -background none -size  96x96  arrow_left.svg ../drawable-xxhdpi/arrow_left${suffix}.png
+    convert -background none -size  96x96  arrow_left.svg ../drawable-xxxhdpi/arrow_left${suffix}.png
+    -->
+
+    <polyline id="horizontal" stroke-linecap="round" points="070,260
+                                                             450,260" stroke-width="35" fill="none"/>
+    <polyline id="point"      stroke-linecap="round" points="200,100
+                                                             070,260
+                                                             200,420" stroke-width="35" fill="none"/>
+
+</svg>

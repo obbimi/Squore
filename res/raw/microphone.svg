@@ -5,10 +5,12 @@
 
     fill and stroke colors: #D3D3D3, #111111
 
-    convert -background none -size  72x72  microphone.svg ../drawable-hdpi/microphone_black.png
-    convert -background none -size  96x96  microphone.svg ../drawable-xhdpi/microphone_black.png
-    convert -background none -size 144x144 microphone.svg ../drawable-xxhdpi/microphone_black.png
-    convert -background none -size 192x192 microphone.svg ../drawable-xxxhdpi/microphone_black.png
+    export suffix='_black' #111111
+    export suffix=''       #D3D3D3
+    convert -background none -size  72x72  microphone.svg ../drawable-hdpi/microphone${suffix}.png
+    convert -background none -size  96x96  microphone.svg ../drawable-xhdpi/microphone${suffix}.png
+    convert -background none -size 144x144 microphone.svg ../drawable-xxhdpi/microphone${suffix}.png
+    convert -background none -size 192x192 microphone.svg ../drawable-xxxhdpi/microphone${suffix}.png
     -->
     <rect id="top"  stroke="yellow" stroke-width="0"
         x="55"     y="0"

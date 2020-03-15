@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520"
+    fill="#111111" stroke="#111111">
+    <!--
+    Replaces the resource image: R.drawable.change_sides
+
+    This svg is not used as such, but converted to png files:
+
+    fill and stroke colors: #D3D3D3, #111111
+
+    # guidelines: mine
+    export suffix='_black' #111111
+    export suffix=''       #D3D3D3
+    convert -background none -size  48x48  arrows_left_right.svg ../drawable-hdpi/arrows_left_right${suffix}.png
+    convert -background none -size  64x64  arrows_left_right.svg ../drawable-xhdpi/arrows_left_right${suffix}.png
+    convert -background none -size  96x96  arrows_left_right.svg ../drawable-xxhdpi/arrows_left_right${suffix}.png
+    convert -background none -size  96x96  arrows_left_right.svg ../drawable-xxxhdpi/arrows_left_right${suffix}.png
+    -->
+
+    <polyline id="horizontal_r" stroke-linecap="round" points="070,150
+                                                               450,150" stroke-width="35" fill="none"/>
+    <polyline id="point_r"      stroke-linecap="round" points="320,070
+                                                               450,150
+                                                               320,230" stroke-width="35" fill="none"/>
+
+    <polyline id="horizontal_l" stroke-linecap="round" points="070,370
+                                                               450,370" stroke-width="35" fill="none"/>
+    <polyline id="point_l"      stroke-linecap="round" points="200,290
+                                                               070,370
+                                                               200,450" stroke-width="35" fill="none"/>
+
+</svg>
