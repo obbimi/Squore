@@ -71,11 +71,11 @@ public class Appeal extends BaseAlertDialog
         String sTitle = getString(R.string.oal_let_requested_by, matchModel.getName_no_nbsp(appealingPlayer, false));
         int iIconSize = PreferenceValues.getAppealHandGestureIconSize(context);
 
-        if ( isWearable() == false ) {
-            adb.setTitle(sTitle);
+        if ( isNotWearable() ) {
             adb.setIcon (R.drawable.microphone);
+            adb.setTitle(sTitle);
+            adb.setMessage(getOAString(R.string.oa_decision_colon));
         }
-        adb.setMessage(getOAString(R.string.oa_decision_colon));
         LinearLayout ll = new LinearLayout(context);
 
         int       iOrientation  = LinearLayout.VERTICAL;

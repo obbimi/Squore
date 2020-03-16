@@ -24,41 +24,10 @@ buildscript {
 }
 // Run ./gradlew -q :dependencies
 android {
-    dependencies {
-
-        //compile project(':AndroidBase')
-        implementation 'com.doubleyellow:AndroidBase@aar'
-        // uncommenting this while in Android Studio creates a subdir AndroidBase with an .iml file in it
-
-        //implementation 'com.android.support:wear:28.0.0' // needs minSdkVersion=23
-        //implementation 'com.google.protobuf:protobuf-java:3.5.1'
-
-        implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-        // 24.1.1 vs 23.4.0 vs 25.3.1 vs 27.1.1
-        implementation 'com.android.support:percent:28.0.0'
-
-        implementation 'com.android.support:support-v4:28.0.0'   // v4 not required for building
-        implementation 'com.android.support:appcompat-v7:28.0.0' // not required for building, BUT required for runtime when using newer gradle (20191022)
-
-        implementation 'com.android.support:support-v13:28.0.0'
-
-        // ChromeCast (old with 'Remote Display Receiver')
-        //compile 'com.google.android.gms:play-services-cast:11.0.4'
-        //compile 'com.google.android.gms:play-services-cast:16.2.0'
-        // repository google(), not found using jcenter
-
-        //compile 'com.android.support:recyclerview-v7:25.3.1'
-
-        // ChromeCast (new with Custom Receiver)
-        //compile 'com.android.support:appcompat-v7:28.0.0'   // Multiple dex files define Landroid/support/v13/view/DragAndDropPermissionsCompat
-        //compile 'com.android.support:mediarouter-v7:28.0.0' // Multiple dex files define Landroid/support/v13/view/DragAndDropPermissionsCompat
-        implementation 'com.google.android.gms:play-services-cast-framework:16.2.0' // when setting this to 17.1.0, 18.0.0, we get a  'Manifest merger failed' message 20191111
-    }
 
     // 25, 26
     //compileSdkVersion 25
-    compileSdkVersion 28
+    compileSdkVersion 29
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
     buildToolsVersion '28.0.3'
 
@@ -74,15 +43,19 @@ android {
         //minSdkVersion 14 // 4.0: ICE_CREAM_SANDWICH = 14, JELLY_BEAN = 16, JELLY_BEAN_MR1 = 17, JELLY_BEAN_MR2 = 18
         // https://www.androidpolice.com/2018/10/28/android-platform-distribution-numbers-updated-october-pie-still-missing/
         // https://en.wikipedia.org/wiki/Android_version_history
-        minSdkVersion 19 // 4.4 android.os.Build.VERSION_CODES.KITKAT, for wear at least 23 is required
+        //minSdkVersion 19 // 4.4 android.os.Build.VERSION_CODES.KITKAT, for wear at least 23 is required
+        minSdkVersion 23 // 6.0 android.os.Build.VERSION_CODES.M, for wear at least 23 is required
         // next property is not required for building... but should be specified for publishing in play-store
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         //testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
+        //applicationId "com.doubleyellow"
+        manifestPlaceholders = [versionName: "4.30"]
     }
     sourceSets {
         main {
             manifest {
+                // one valid entry must be here in main.manifest
                 srcFile 'AndroidManifestSquore.xml'
                 //srcFile 'AndroidManifestSquoreWear.xml'
                 //srcFile 'AndroidManifestRacketlon.xml'
@@ -100,6 +73,20 @@ android {
                 srcDir 'res'
             }
         }
+        phoneTablet {
+            manifest {
+                srcFile 'AndroidManifestALLPhoneTablet.xml'
+            }
+            res {
+                srcDir 'res'
+                //exclude '**/layout-watch/**' // does not work for resources
+            }
+        }
+        wearOs {
+            manifest {
+                srcFile 'AndroidManifestALLWearOS.xml'
+            }
+        }
     }
 
     signingConfigs {
@@ -110,10 +97,38 @@ android {
             keyPassword "this2hib"
         }
     }
+    flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
+    productFlavors {
+        phoneTablet {
+            dimension "devicetype"
+            //applicationIdSuffix ".scoreboard"
+            //minSdkVersion 19
+            manifestPlaceholders = [versionCode:"1915431"]
+        }
+        wearOs {
+            dimension "devicetype"
+            //applicationIdSuffix ".scoreboard"
+            //minSdkVersion 23
+            manifestPlaceholders = [versionCode:"2301431"]
+        }
+    }
     buildTypes {
         release {
             signingConfig signingConfigs.release
+            //embedMicroApp true
+
+            // showhow this makes my app crash
+            //minifyEnabled true // showhow this makes my app crash
+            //shrinkResources true // can not be done without minifyEnabled
         }
+/*
+        debug {
+            initWith release
+            manifestPlaceholders = [hostName:"internal.example.com"]
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+*/
         /*
             minified {
                 //debuggable true
@@ -128,6 +143,42 @@ android {
     aaptOptions {
         ignoreAssetsPattern '_gh_pages'
     }
+}
+
+dependencies {
+
+    //compile project(':AndroidBase')
+    implementation 'com.doubleyellow:AndroidBase@aar'
+    // uncommenting this while in Android Studio creates a subdir AndroidBase with an .iml file in it
+
+    implementation 'com.android.support:wear:28.0.0' // needs minSdkVersion=23
+    wearOsImplementation 'com.android.support:wear:28.0.0' // needs minSdkVersion=23
+    //implementation 'com.android.support:wear:28.0.0' // needs minSdkVersion=23
+    //implementation 'com.google.protobuf:protobuf-java:3.5.1'
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // 24.1.1 vs 23.4.0 vs 25.3.1 vs 27.1.1
+    implementation 'com.android.support:percent:28.0.0'
+
+    implementation 'com.android.support:support-v4:28.0.0'   // v4 not required for building
+    implementation 'com.android.support:appcompat-v7:28.0.0' // not required for building, BUT required for runtime when using newer gradle (20191022)
+
+    implementation 'com.android.support:support-v13:28.0.0'
+
+    // ChromeCast (old with 'Remote Display Receiver')
+    //compile 'com.google.android.gms:play-services-cast:11.0.4'
+    //compile 'com.google.android.gms:play-services-cast:16.2.0'
+    // repository google(), not found using jcenter
+
+    //compile 'com.android.support:recyclerview-v7:25.3.1'
+
+    // ChromeCast (new with Custom Receiver)
+    //compile 'com.android.support:appcompat-v7:28.0.0'   // Multiple dex files define Landroid/support/v13/view/DragAndDropPermissionsCompat
+    //compile 'com.android.support:mediarouter-v7:28.0.0' // Multiple dex files define Landroid/support/v13/view/DragAndDropPermissionsCompat
+    implementation 'com.google.android.gms:play-services-cast-framework:16.2.0' // when setting this to 17.1.0, 18.0.0, we get a  'Manifest merger failed' message 20191111
+
+    //wearApp project(':wear:base') // applies to all other variants
 }
 
 /*

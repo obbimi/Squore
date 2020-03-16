@@ -154,7 +154,7 @@ public class EditFormat extends BaseAlertDialog {
             }
         };
 
-        if ( isWearable() == false ) {
+        if ( isNotWearable() ) {
             adb.setTitle(R.string.pref_MatchFormat);
             adb.setIcon(R.drawable.ic_action_mouse);
         }

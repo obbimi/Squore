@@ -483,6 +483,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     onClickXTimesHandler = new OnClickXTimesHandler(300, 10);
                 }
                 if ( onClickXTimesHandler.handle() ) {
+                    if ( ViewUtil.isWearable(ScoreBoard.this) ) {
+                        handleMenuItem(R.id.sb_about);
+                        return;
+                    }
                     int[] iMenuIds = new int[] { R.id.sb_demo
                                                , R.id.sb_toggle_demo_mode
                                                , R.id.sb_download_posted_to_squore_matches
@@ -1402,7 +1406,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         private void showActivateDialog(final Context context) {
             if ( iDialogPresentedCnt > 1 ) { return; }
-            if ( ViewUtil.isLandscapeOrientation(context) ) { return; }
+            if ( isLandscape() ) { return; }
 
             //long currentTime = System.currentTimeMillis();
             //long lInterval = currentTime - this.lastPress;

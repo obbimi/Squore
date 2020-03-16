@@ -340,10 +340,11 @@ public class EditPlayers extends BaseAlertDialog
         };
         sv.addView(ll);
         String s1 = getString(R.string.lbl_event_and_players);
-        adb.setTitle(s1)
-                //.setMessage(s2)
-                .setView(sv)
-                .setIcon(android.R.drawable.ic_menu_edit)
+        if ( isNotWearable() ) {
+            adb.setTitle(s1);
+            adb.setIcon(android.R.drawable.ic_menu_edit);
+        }
+        adb     .setView(sv)
                 .setPositiveButton(R.string.cmd_ok    , dialogClickListener)
                 .setNegativeButton(R.string.cmd_cancel, dialogClickListener)
                 //.setCancelable(false)

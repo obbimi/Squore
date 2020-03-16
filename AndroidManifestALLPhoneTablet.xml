@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="${versionCode}">
+
+    <supports-screens
+            android:anyDensity="true"
+            android:xlargeScreens="true"
+            android:largeScreens="true"
+            android:normalScreens="true"
+            android:smallScreens="false"
+             />
+</manifest>

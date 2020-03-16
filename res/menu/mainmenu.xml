@@ -33,7 +33,7 @@
     <item android:id="@+id/media_route_menu_item" app:showAsAction="always" android:title="@string/media_route_menu_title" android:visible="true" app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"/>
 
     <!--<item android:id="@+id/dyn_bluetooth"     app:showAsAction="ifRoom" android:icon="@android:drawable/stat_sys_data_bluetooth" android:visible="false" android:title="Bluetooth" />-->
-    <item android:id="@+id/dyn_undo_last"     app:showAsAction="ifRoom" android:icon="@drawable/circle_2arrows_black"    android:visible="false" android:title="@string/uc_undo" />
+    <item android:id="@+id/dyn_undo_last"     app:showAsAction="ifRoom" android:icon="@drawable/circle_2arrows"          android:visible="false" android:title="@string/uc_undo" />
     <item android:id="@+id/dyn_end_game"      app:showAsAction="ifRoom" android:icon="@drawable/arrow_right"             android:visible="false" android:title="@string/end_game_Squash" />
     <item android:id="@+id/dyn_timer"         app:showAsAction="ifRoom" android:icon="@drawable/timer"                   android:visible="false" android:title="@string/sb_nbsp_timer"/>
     <item android:id="@+id/dyn_score_details" app:showAsAction="ifRoom" android:icon="@drawable/ic_action_chart_line"    android:visible="false" android:title="@string/sb_score_details" />
@@ -85,8 +85,8 @@
                     <item android:id="@+id/change_match_format"     app:showAsAction="never" android:icon="@drawable/ic_action_mouse"      android:title="@string/pref_MatchFormat"/>
                     <item android:id="@+id/sb_adjust_score"         app:showAsAction="never" android:icon="@android:drawable/ic_menu_edit" android:title="@string/sb_adjust_score" />
                     <item android:id="@+id/sb_edit_event_or_player" app:showAsAction="never" android:icon="@android:drawable/ic_menu_edit" android:title="@string/sb_edit_event_or_player" />
-                    <item android:id="@+id/sb_undo_last"            app:showAsAction="never" android:icon="@drawable/circle_2arrows_black" android:title="@string/uc_undo" />
-                    <item android:id="@+id/sb_undo_last_for_non_scorer" app:showAsAction="never" android:icon="@drawable/circle_2arrows_black" android:title="@string/sb_remove_last_score_for_x" android:visible="false"/>
+                    <item android:id="@+id/sb_undo_last"            app:showAsAction="never" android:icon="@drawable/circle_2arrows"       android:title="@string/uc_undo" />
+                    <item android:id="@+id/sb_undo_last_for_non_scorer" app:showAsAction="never" android:icon="@drawable/circle_2arrows"   android:title="@string/sb_remove_last_score_for_x" android:visible="false"/>
                     <item android:id="@+id/sb_swap_double_players"  app:showAsAction="never" android:icon="@drawable/ic_action_refresh"    android:title="@string/sb_swap_double_players" android:visible="false" />
                     <item android:id="@+id/sb_change_sides"           app:showAsAction="never" android:icon="@drawable/change_sides"         android:title="@string/sb_change_sides" android:visible="true" />
 

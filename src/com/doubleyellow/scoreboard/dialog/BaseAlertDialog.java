@@ -285,4 +285,7 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
     protected boolean isWearable() {
         return ViewUtil.isWearable(context);
     }
+    protected boolean isNotWearable() {
+        return isWearable() == false;
+    }
 }

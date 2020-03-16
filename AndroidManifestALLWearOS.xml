@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:versionCode="${versionCode}">
+
+    <!-- this can not be ON in default manifest, device must be a watch, hence separate Manifest file required for wearables -->
+    <uses-feature android:name="android.hardware.type.watch" android:required="true" />
+
+    <supports-screens
+            android:anyDensity="true"
+            android:xlargeScreens="false"
+            android:largeScreens="false"
+            android:normalScreens="false"
+            android:smallScreens="true" />
+    <application>
+        <!-- Recommended for wearables -->
+        <meta-data android:name="com.google.android.wearable.standalone" android:value="true" />
+
+    </application>
+</manifest>

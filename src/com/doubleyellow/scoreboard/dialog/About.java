@@ -52,13 +52,15 @@ public class About extends BaseAlertDialog
                    + String.format("API: %s\n", Build.VERSION.SDK_INT) // does not say anything about the app but the android version the device is running on
                      ;
 
+        if ( isNotWearable() ) {
+            adb.setIcon(Brand.getLogoResId())
+               .setTitle(Brand.getShortName(context));
+            adb.setPositiveButton("Change Log", dialogClickListener)
+               .setNeutralButton ("Credits"   , dialogClickListener);
+        }
         dialog = adb
                 .setMessage(msg)
-                .setTitle         (Brand.getShortName(context))
-                .setPositiveButton("Change Log", dialogClickListener)
-                .setNeutralButton ("Credits"   , dialogClickListener)
                 .setNegativeButton(R.string.cmd_cancel, null)
-                .setIcon(Brand.getLogoResId())
                 .setOnKeyListener(getOnBackKeyListener())
                 .show();
       //ViewUtil.setPackageIcon(context, dialog);
