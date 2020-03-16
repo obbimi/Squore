@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.doubleyellow.tennispadel"
-          android:versionCode="249"
-          android:versionName="4.31">
+    android:versionName="${versionName}">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
     <uses-feature android:name="android.permission.INTERNET" android:required="true" />
@@ -27,18 +26,28 @@
     <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
 
     <!-- android 9 casting -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!--
-        <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
-    -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- FOREGROUND_SERVICE is a normal permission, so the system automatically grants it to the requesting app. -->
+<!--
+    <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
+-->
+
+<!--<uses-feature android:name="android.hardware.type.watch"             android:required="false"/>-->
+    <uses-feature android:name="android.hardware.bluetooth"              android:required="false"/>
+    <uses-feature android:name="android.hardware.audio.output"           android:required="false"/>
+    <uses-feature android:name="android.hardware.touchscreen.multitouch" android:required="false"/>
+    <uses-feature android:name="android.hardware.touchscreen"            android:required="false"/>
+    <uses-feature android:name="android.hardware.wifi"                   android:required="false"/>
+
     <uses-sdk/>
 
+<!--
     <supports-screens
             android:anyDensity="true"
             android:xlargeScreens="true"
             android:largeScreens="true"
             android:normalScreens="true"
             android:smallScreens="true" />
+-->
 
     <application
             android:theme="@style/SBTheme"
