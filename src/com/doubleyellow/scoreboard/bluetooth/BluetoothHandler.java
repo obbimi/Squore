@@ -66,7 +66,10 @@ public class BluetoothHandler extends Handler
                 byte[] writeBuf = (byte[]) msg.obj;
                 String writeMessage = new String(writeBuf);
                 Log.d(TAG, "writeMessage: " + writeMessage);
-                if ( BTRole.Slave.equals(sb.m_blueToothRole) && writeMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + "|" + BTMethods.requestCountryFlag + ").*") == false ) {
+                if ( BTRole.Slave.equals(sb.m_blueToothRole)
+                  && writeMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + "|" + BTMethods.requestCountryFlag + ").*") == false
+                   )
+                {
                     // become master
                     sb.setBluetoothRole(BTRole.Master, writeMessage.trim());
                 }
@@ -75,12 +78,15 @@ public class BluetoothHandler extends Handler
                 byte[] readBuf = (byte[]) msg.obj;
                 String readMessage = new String(readBuf, 0, msg.arg1); // msg.arg1 contains number of bytes actually having valid info
                 Log.d(TAG, "readMessage: (#" + msg.arg1 + "):" + readMessage);
-                if ( BTRole.Master.equals(sb.m_blueToothRole) && readMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + "|" + BTMethods.requestCountryFlag + ").*") == false ) {
+                if ( BTRole.Master.equals(sb.m_blueToothRole)
+                  && readMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + "|" + BTMethods.requestCountryFlag + ").*") == false
+                   )
+                {
                     // become slave
                     sb.setBluetoothRole(BTRole.Slave, readMessage.trim());
                 }
 
-                sb.interpretReceivedMessage(readMessage);
+                sb.interpretReceivedMessage(readMessage, false);
                 break;
             case INFO:
                 storeBTDeviceConnectedTo(msg.obj); // normally correct device is already stored in 'case STATE_CHANGE'

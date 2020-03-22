@@ -19,8 +19,8 @@ package com.doubleyellow.scoreboard.view;
 
 import android.content.Context;
 import android.graphics.*;
-import android.support.percent.PercentLayoutHelper;
-import android.support.percent.PercentRelativeLayout;
+import androidx.percentlayout.widget.PercentLayoutHelper;
+import androidx.percentlayout.widget.PercentRelativeLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.*;

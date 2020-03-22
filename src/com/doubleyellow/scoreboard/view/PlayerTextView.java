@@ -25,7 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.support.v7.widget.AppCompatAutoCompleteTextView;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 import com.doubleyellow.android.util.AndroidPlaceholder;
 import com.doubleyellow.android.util.ContentReceiver;

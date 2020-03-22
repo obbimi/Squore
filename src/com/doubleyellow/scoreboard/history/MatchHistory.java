@@ -17,14 +17,18 @@
 
 package com.doubleyellow.scoreboard.history;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+//import android.app.Fragment;
+//import android.app.FragmentManager;
+//import androidx.legacy.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerTabStrip;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.PagerTabStrip;
+import androidx.viewpager.widget.ViewPager;
 import android.util.TypedValue;
 import android.view.*;
 
@@ -87,13 +91,13 @@ public class MatchHistory extends XActivity implements MenuHandler
         // Initialization
         viewPager  = (ViewPager) findViewById(R.id.mh_pager);
         titleStrip = ViewUtil.getFirstView(viewPager, PagerTabStrip.class);
-        mAdapter   = new TabsAdapter(getFragmentManager());
+        mAdapter   = new TabsAdapter(getSupportFragmentManager() /* getFragmentManager() */);
 
         viewPager.setAdapter(mAdapter);
         titleStrip.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getResources().getInteger(R.integer.TextSizeTabStrip) );
         ColorPrefs.setColor(titleStrip);
 
-        viewPager.setOnPageChangeListener(new OnPageChangeListener());
+        viewPager.addOnPageChangeListener(new OnPageChangeListener());
 
         // always go to the last tab for current match, to third tab for stored/finished matches
         Player possibleMatchVictoryFor = matchModel.isPossibleMatchVictoryFor();
@@ -226,7 +230,7 @@ public class MatchHistory extends XActivity implements MenuHandler
     public class TabsAdapter extends FragmentPagerAdapter
     {
         TabsAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT /*BEHAVIOR_SET_USER_VISIBLE_HINT*/);
         }
         /** Invoked only once, even after screen rotation */
         @Override public Fragment getItem(int index) {
@@ -236,7 +240,8 @@ public class MatchHistory extends XActivity implements MenuHandler
         }
 
         @Override public int getCount() {
-            int iCount = matchModel.getNrOfFinishedGames() + ListUtil.size(preGraphTabsToShow());
+            int nrOfFinishedGames = matchModel.getNrOfFinishedGames();
+            int iCount = nrOfFinishedGames + ListUtil.size(preGraphTabsToShow());
             if ( matchModel.gameHasStarted() && (matchModel.isPossibleGameVictory() == false)) {
                 // add a tab for a game in progress
                 iCount++;

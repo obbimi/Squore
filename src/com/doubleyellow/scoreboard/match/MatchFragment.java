@@ -17,7 +17,8 @@
 
 package com.doubleyellow.scoreboard.match;
 
-import android.app.Fragment;
+//import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;

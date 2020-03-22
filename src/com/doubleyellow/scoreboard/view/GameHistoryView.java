@@ -19,7 +19,7 @@ package com.doubleyellow.scoreboard.view;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;

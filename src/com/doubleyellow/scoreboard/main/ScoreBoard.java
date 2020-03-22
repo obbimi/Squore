@@ -34,7 +34,7 @@ import android.nfc.tech.NfcF;
 import android.os.*;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v4.widget.DrawerLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
@@ -101,8 +101,8 @@ import java.io.*;
 import java.util.*;
 
 /* ChromeCast */
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
 
 /* Wearable */
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -729,9 +729,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             String sMsg = getString( matchModel.isDoubles()? R.string.teams_have_swapped_sides : R.string.player_names_swapped); // + " (" + pFirst + ")";
             Toast.makeText(this, sMsg, iToastLength).show();
         }
-        if ( BTRole.Master.equals(m_blueToothRole) ) {
-            writeMethodToBluetooth(BTMethods.swapPlayers, pFirst);
-        }
+        writeMethodToBluetooth(BTMethods.swapPlayers, pFirst);
     }
 
     private void swapDoublePlayers() {
@@ -766,9 +764,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( pls == null ) { return; }
         for(Player pl: pls) {
             matchModel.swapDoublesPlayerNames(pl);
-            if ( BTRole.Master.equals(m_blueToothRole) ) {
-                writeMethodToBluetooth(BTMethods.swapDoublePlayers, pl);
-            }
+            writeMethodToBluetooth(BTMethods.swapDoublePlayers, pl);
         }
         if ( bShowToast ) {
             String sMsg = getString(R.string.double_player_names_of_team_x_swapped, ListUtil.join(Arrays.asList(pls), " & "));
@@ -3476,9 +3472,7 @@ touch -t 01030000 LAST.sb
         dialogTimerView = null;
         this.triggerEvent(SBEvent.timerCancelled, type);
 
-        if ( BTRole.Master.equals(m_blueToothRole) ) {
-            writeMethodToBluetooth(BTMethods.cancelTimer);
-        }
+        writeMethodToBluetooth(BTMethods.cancelTimer);
         return true;
     }
 
@@ -3774,26 +3768,10 @@ touch -t 01030000 LAST.sb
                 swapDoublePlayers();
                 return true;
             case R.id.sb_lock:
-                LockState lockState = LockState.LockedManual;
-                if ( ListUtil.length(ctx) != 0 ) {
-                    lockState = (LockState) ctx[0];
-                }
-                matchModel.setLockState(lockState);
+                lockMatch(ctx);
                 return true;
             case R.id.sb_unlock:
-                LockState current = matchModel.getLockState();
-                LockState lsNew   = LockState.UnlockedManual;
-                if ( (
-                         (LockState.LockedIdleTime == current)
-                      || (LockState.LockedEndOfMatchRetired == current)
-                      || (LockState.LockedEndOfMatchConduct == current)
-                     )
-                     &&
-                     (matchModel.matchHasEnded()==false)
-                   ) {
-                    lsNew = LockState.Unlocked;
-                }
-                matchModel.setLockState(lsNew);
+                unlockMatch();
                 return true;
             case R.id.sb_bluetooth:
                 setupBluetoothControl(true);
@@ -4338,9 +4316,7 @@ touch -t 01030000 LAST.sb
         if ( bIsResume == false ) {
             triggerEvent(SBEvent.timerStarted, viewType);
         }
-        if ( BTRole.Master.equals(m_blueToothRole) ) {
-            writeMethodToBluetooth(BTMethods.startTimer, timerType, bAutoTriggered); // added to ensure Toweling and Injury timeouts show up on connected device
-        }
+        writeMethodToBluetooth(BTMethods.startTimer, timerType, bAutoTriggered); // added to ensure Toweling and Injury timeouts show up on connected device
     }
 
     private EndOfGameView endOfGameView = null;
@@ -4994,9 +4970,7 @@ touch -t 01030000 LAST.sb
         initScoreBoard(null);
         matchModel.setDirty();
 
-        if ( BTRole.Master.equals(m_blueToothRole) ) {
-            writeMethodToBluetooth(BTMethods.restartScore);
-        }
+        writeMethodToBluetooth(BTMethods.restartScore);
     }
 
     /** If it has been cancelled and no 'undo' has been done, assume that match format 'end score' was accidentally chosen to low */
@@ -5409,6 +5383,7 @@ touch -t 01030000 LAST.sb
     }
 
     @Override public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         // onResume gets called after this to handle the intent
         Log.w(TAG, "onNewIntent.. intent = " + intent);
         setIntent(intent);
@@ -5924,6 +5899,33 @@ touch -t 01030000 LAST.sb
         writeMethodToBluetooth(BTMethods.changeSide, player);
     }
 
+    private void lockMatch(Object... ctx) {
+        LockState lockState = LockState.LockedManual;
+        if ( ListUtil.length(ctx) != 0 ) {
+            lockState = (LockState) ctx[0];
+        }
+        matchModel.setLockState(lockState);
+
+        writeMethodToBluetooth(BTMethods.lock);
+    }
+    private void unlockMatch() {
+        LockState current = matchModel.getLockState();
+        LockState lsNew   = LockState.UnlockedManual;
+        if ( (
+                (LockState.LockedIdleTime == current)
+                        || (LockState.LockedEndOfMatchRetired == current)
+                        || (LockState.LockedEndOfMatchConduct == current)
+        )
+                &&
+                (matchModel.matchHasEnded()==false)
+        ) {
+            lsNew = LockState.Unlocked;
+        }
+        matchModel.setLockState(lsNew);
+
+        writeMethodToBluetooth(BTMethods.unlock);
+    }
+
     private boolean undoLast() {
         if ( warnModelIsLocked() ) { return false; }
         enableScoreButton(matchModel.getServer());
@@ -5974,9 +5976,7 @@ touch -t 01030000 LAST.sb
     public void timestampStartOfGame(GameTiming.ChangedBy changedBy) {
         matchModel.timestampStartOfGame(changedBy);
 
-        if ( BTRole.Master.equals(m_blueToothRole) ) {
-            writeMethodToBluetooth(BTMethods.timestampStartOfGame, changedBy);
-        }
+        writeMethodToBluetooth(BTMethods.timestampStartOfGame, changedBy);
     }
     /**
      * Called from
@@ -5993,17 +5993,13 @@ touch -t 01030000 LAST.sb
         iBoard.toggleGameScoreView();
         castGamesWonAppearance();
 
-        if ( BTRole.Master.equals(m_blueToothRole) ) {
-            writeMethodToBluetooth(BTMethods.toggleGameScoreView);
-        }
+        writeMethodToBluetooth(BTMethods.toggleGameScoreView);
     }
 
     private void toggleSetScoreView() {
         iBoard.updateSetScoresToShow(true);
 
-        if ( BTRole.Master.equals(m_blueToothRole) ) {
-            writeMethodToBluetooth(BTMethods.toggleGameScoreView);
-        }
+        writeMethodToBluetooth(BTMethods.toggleGameScoreView);
     }
 
     public void pullOrPushMatchOverBluetooth(String sDeviceName) {
@@ -6051,6 +6047,8 @@ touch -t 01030000 LAST.sb
         mBtPrefSlaveSettings.put(PreferenceKeys.useVibrationNotificationInTimer, String.valueOf(false            ));
         mBtPrefSlaveSettings.put(PreferenceKeys.timerViewType                  , String.valueOf(ViewType.Inline  ));
     }
+    public  static BTRole                  m_blueToothRole            = BTRole.Equal;
+  //public  static BTRole                  m_wearableRole             = BTRole.Equal;
     public void setBluetoothRole(BTRole role, Object oReason) {
         switch (role) {
             case Slave:
@@ -6087,13 +6085,19 @@ touch -t 01030000 LAST.sb
                 @Override public void onFinish() {
                     String sJson = matchModel.toJsonString(ctx);
                     mBluetoothControlService.write( sJson.length() + ":" + sJson );
+
+                    sendMatchToWearables(sJson, ctx);
                 }
             };
             m_cdtSendMatchToOther.start();
         } else {
             Log.d(TAG, "Bluetooth: Not sending complete match");
         }
+
+        String sJson = matchModel.toJsonString(ctx);
+        sendMatchToWearables(sJson, ctx);
     }
+
     public void sendFlagToOtherBluetoothDevice(Context ctx, String sCountryCode) {
         if ( mBluetoothControlService == null) {
             return;
@@ -6125,23 +6129,52 @@ touch -t 01030000 LAST.sb
     }
 
     private void writeMethodToBluetooth(BTMethods method, Object... args) {
+        boolean bDoSend = true;
+        // DO not send some if Slave
+        switch (method) {
+            // do not invoke for 'Slave' connection
+            case swapPlayers:
+            case swapDoublePlayers:
+            case cancelTimer:
+            case startTimer:
+            case restartScore:
+            case timestampStartOfGame:
+          //case toggleSetScoreView:
+            case toggleGameScoreView:
+                if ( BTRole.Slave.equals(m_blueToothRole) ) {
+                    bDoSend = false;
+                }
+                break;
+            default:
+                if ( BTRole.Slave.equals(m_blueToothRole) ) {
+                    Log.d(TAG, "Sending as (currently being) slave " + method);
+                }
+        }
+
+        if ( bDoSend == false ) {
+            Log.d(TAG, "Not sending " + method);
+            return;
+        }
+
+        // construct function-call-like string
         StringBuilder sb = new StringBuilder();
         addMethodAndArgs(sb, method, args);
         final String sMessage = sb.toString();
 
-        sendMessageToWearableNodes(sMessage);
+        if ( mBluetoothControlService != null) {
+            if ( mBluetoothControlService.getState().equals(BTState.CONNECTED) ) {
+                Log.d(TAG, "About to write BT message " + sMessage.trim());
+                mBluetoothControlService.write(sMessage);
 
-        if ( mBluetoothControlService == null) { return; }
-        if ( mBluetoothControlService.getState().equals(BTState.CONNECTED) == false) { return; }
-
-        // construct function-call-like string
-        mBluetoothControlService.write(sMessage);
-
-        // write optionally delayed method
-        if ( m_sbBTDelayed.length() > 0 ) {
-            mBluetoothControlService.write(m_sbBTDelayed.toString());
-            m_sbBTDelayed.setLength(0);
+                // write optionally delayed method
+                if ( m_sbBTDelayed.length() > 0 ) {
+                    mBluetoothControlService.write(m_sbBTDelayed.toString());
+                    m_sbBTDelayed.setLength(0);
+                }
+            }
         }
+
+        sendMessageToWearables(this, NO_PATH, sMessage);
     }
 
     private void addMethodAndArgs(StringBuilder sb, BTMethods method, Object[] args) {
@@ -6173,7 +6206,7 @@ touch -t 01030000 LAST.sb
     private int           iReceivingBTFileLength = 0;
     /** Buffer with file content */
     private StringBuilder sbReceivingBTFile      = new StringBuilder();
-    public synchronized void interpretReceivedMessage(String readMessage) {
+    public synchronized void interpretReceivedMessage(String readMessage, boolean bTrueWearable_FalsePairedBluetooth) {
 
         // read file if json is being sent (identified by first sending the length of the json string)
         {
@@ -6325,12 +6358,13 @@ touch -t 01030000 LAST.sb
                     break;
                 }
                 case cancelTimer: {
-                    cancelTimer(); break;
+                    cancelTimer();
+                    break;
                 }
                 case startTimer: {
                     if ( sMethodNArgs.length > 1 ) {
                         Type timerType = Type.valueOf(sMethodNArgs[1]);
-                        boolean bAutoStarted = sMethodNArgs.length>2?Boolean.valueOf(sMethodNArgs[2]):false;
+                        boolean bAutoStarted = (sMethodNArgs.length>2) ? Boolean.valueOf(sMethodNArgs[2]) : false;
                         _showTimer(timerType, bAutoStarted);
                     }
                     break;
@@ -6409,19 +6443,57 @@ touch -t 01030000 LAST.sb
                     }
                     break;
                 }
+                case lock: {
+                    handleMenuItem(R.id.sb_lock);
+                    break;
+                }
+                case unlock: {
+                    handleMenuItem(R.id.sb_unlock);
+                    break;
+                }
                 default:
                     Log.w(TAG, "Not handling method " + btMethod);
                     break;
             }
-            if ( BTRole.Slave.equals(m_blueToothRole) && btMethod.verifyScore() ) {
-                // verify score of model against score received. If not equal request complete matchmodel to get in sync
-                String sScoreReceived = sMethodNArgs[sMethodNArgs.length - 1];
-                String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
-                if ( sModelScore.equals(sScoreReceived) == false ) {
-                    Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
-                    writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
+            if ( bTrueWearable_FalsePairedBluetooth ) {
+                // message is coming from paired wearable
+                if ( btMethod.verifyScore() ) {
+                  //if ( isWearable() == false ) {
+                        String sScoreReceived = sMethodNArgs[sMethodNArgs.length - 1];
+                        String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
+                        if ( sModelScore.equals(sScoreReceived) == false ) {
+                            Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
+                            boolean bRequestModel = true;
+                            if ( matchModel.isPossibleGameVictory() && sScoreReceived.equals("0-0") ) {
+                                if ( dialogManager.isDialogShowing() ) {
+                                    if ( dialogManager.baseDialog instanceof EndGame ) {
+                                        EndGame endGame = (EndGame) dialogManager.baseDialog;
+                                        endGame.handleButtonClick(EndGame.BTN_END_GAME_PLUS_TIMER);
+                                        bRequestModel = false;
+                                    }
+                                }
+                            }
+                            if ( bRequestModel ) {
+                                //writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
+                                String sJson = matchModel.toJsonString(this);
+                                sendMatchToWearables(sJson, this);
+                            }
+                        }
+                  //}
+                } else {
+                    Log.d(TAG, "Wearable: verify score not required for " + btMethod);
                 }
-                //hidePresentationEndOfGame();
+            } else {
+                if ( BTRole.Slave.equals(m_blueToothRole) && btMethod.verifyScore() ) {
+                    // verify score of model against score received. If not equal request complete matchmodel to get in sync
+                    String sScoreReceived = sMethodNArgs[sMethodNArgs.length - 1];
+                    String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
+                    if ( sModelScore.equals(sScoreReceived) == false ) {
+                        Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
+                        writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
+                    }
+                    //hidePresentationEndOfGame();
+                }
             }
         }
     }
@@ -6533,7 +6605,6 @@ touch -t 01030000 LAST.sb
     }
 
     private static BluetoothControlService mBluetoothControlService   = null;
-    public  static BTRole                  m_blueToothRole            = BTRole.Equal;
     /**
      * Establish connection with other device
      */
@@ -6556,7 +6627,7 @@ touch -t 01030000 LAST.sb
         BluetoothDevice btDeviceOther = mBluetoothAdapter.getRemoteDevice(address);
         // Attempt to connect to the device
 
-        m_blueToothRole = BTRole.Master;
+        setBluetoothRole(BTRole.Master, "Connecting...");
         mBluetoothControlService.connect(btDeviceOther);
     }
 
@@ -6567,15 +6638,115 @@ touch -t 01030000 LAST.sb
         return ViewUtil.isWearable(this);
     }
     private void onPauseWearable() {
-        Wearable.getDataClient      (this).removeListener(onDataChangedListener);
+      //Wearable.getDataClient      (this).removeListener(onDataChangedListener);
         Wearable.getMessageClient   (this).removeListener(onMessageReceivedListener);
         Wearable.getCapabilityClient(this).removeListener(onCapabilityChangedListener);
     }
     private void onResumeWearable() {
-        Wearable.getDataClient      (this).addListener(onDataChangedListener);
+      //Wearable.getDataClient      (this).addListener(onDataChangedListener);
         Wearable.getMessageClient   (this).addListener(onMessageReceivedListener);
         Wearable.getCapabilityClient(this).addListener(onCapabilityChangedListener, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
+
+        if ( isWearable() ) {
+            // TODO: request pull or push of match
+            pullOrPushMatchOverBluetooth("Handheld");
+        } else {
+            // TODO: only once!! not on rotate
+            sendMessageToWearables(this, START_ACTIVITY_PATH, "");
+        }
     }
+    private static boolean m_bHandlingWearableMessage = false;
+    private MessageClient.OnMessageReceivedListener onMessageReceivedListener = new MessageClient.OnMessageReceivedListener() {
+        @Override public void onMessageReceived(@NonNull MessageEvent messageEvent) {
+            byte[] data = messageEvent.getData();
+            String sData = new String(data);
+            String sourceNodeId = messageEvent.getSourceNodeId();
+            Log.d(TAG, String.format("onMessageReceived() A message from %s was received: reqid: %d, path: %s, message: %s", sourceNodeId, messageEvent.getRequestId(), messageEvent.getPath(), sData));
+
+            // received a message from the wearable: change score here
+            m_bHandlingWearableMessage = true;
+            interpretReceivedMessage(sData, true);
+            m_bHandlingWearableMessage = false;
+        }
+    };
+    private CapabilityClient.OnCapabilityChangedListener onCapabilityChangedListener = new CapabilityClient.OnCapabilityChangedListener() {
+        @Override public void onCapabilityChanged(@NonNull CapabilityInfo capabilityInfo) {
+            Log.d(TAG, "capabilityInfo: " + capabilityInfo);
+        }
+    };
+    public static void sendMatchToWearables(String sJson, Context ctx) {
+        //sendMessageToWearables(ctx, NO_PATH, sJson.length() + ":" + sJson); // don't : bypass check and start async task directly
+        new SendMessageToWearableTask(ctx).execute(NO_PATH, sJson.length() + ":" + sJson);
+    }
+
+    private static void sendMessageToWearables(Context context, String sPath, String sMessage) {
+        if ( m_bHandlingWearableMessage ) {
+            Log.d(TAG, "Not sending message " + sMessage + ". Still interpreting incoming message");
+            return;
+        }
+        new SendMessageToWearableTask(context).execute(sPath, sMessage);
+    }
+    private static class SendMessageToWearableTask extends AsyncTask<String, Void, String> {
+        private MessageClient messageClient = null;
+        private NodeClient    nodeClient    = null;
+
+        private SendMessageToWearableTask(Context ctx) {
+            messageClient = Wearable.getMessageClient(ctx);
+            nodeClient    = Wearable.getNodeClient(ctx);
+        }
+        @Override protected String doInBackground(String[] objects) {
+            if ( nodeClient == null ) {
+                Log.d(TAG, "No instance of " + NodeClient.class.getName());
+                return null;
+            }
+            if ( messageClient == null ) { return null; }
+
+            try {
+                Task<List<Node>> nodeListTask = nodeClient.getConnectedNodes();
+                List<Node> nodes = Tasks.await(nodeListTask);
+
+                if ( ListUtil.isEmpty(nodes) ) { return null; }
+                for( Node node : nodes ) {
+                    String sPath    = objects[0];
+                    String sMessage = objects[1];
+                    Task<Integer> sendMessageTask = messageClient.sendMessage(node.getId(), sPath, sMessage.getBytes());
+                    Integer result = Tasks.await(sendMessageTask);
+                    Log.d(TAG, "Send message task result: " + result); // just an (for every call increasing) integer...
+                }
+            } catch (Exception exception) {
+                Log.e(TAG, "Task failed: " + exception);
+            }
+            return null;
+        }
+    }
+
+    private static final String NO_PATH                 = "";
+    private static final String START_ACTIVITY_PATH     = "/start-activity";
+/*
+    private static final String DATA_ITEM_RECEIVED_PATH = "/data-item-received";
+    private static final String ASSET_PATH = "/image";
+    private static final String ASSET_KEY  = "photo";
+    private void sendData(String sMessage) {
+        Asset asset = Asset.createFromBytes(sMessage.getBytes());
+        PutDataMapRequest dmRequest = PutDataMapRequest.create(ASSET_PATH);
+        DataMap dataMap = dmRequest.getDataMap();
+        dataMap.putAsset(ASSET_KEY, asset);
+        dataMap.putLong("time", new Date().getTime());
+        PutDataRequest pdRequest = dmRequest.asPutDataRequest();
+        pdRequest.setUrgent();
+
+        DataClient dataClient = Wearable.getDataClient(this);
+        Task<DataItem> dataItemTask = dataClient.putDataItem(pdRequest);
+
+        dataItemTask.addOnSuccessListener(
+                new OnSuccessListener<DataItem>() {
+                    @Override public void onSuccess(DataItem dataItem) {
+                        Log.d(TAG, "Sending was successful: " + dataItem);
+                    }
+                });
+    }
+*/
+/*
     private DataClient.OnDataChangedListener onDataChangedListener = new DataClient.OnDataChangedListener() {
         @Override public void onDataChanged(@NonNull DataEventBuffer dataEvents) {
             Log.d(TAG, "dataEventBuffer: " + dataEvents);
@@ -6606,104 +6777,7 @@ touch -t 01030000 LAST.sb
             }
         }
     };
-    private MessageClient.OnMessageReceivedListener onMessageReceivedListener = new MessageClient.OnMessageReceivedListener() {
-        @Override public void onMessageReceived(@NonNull MessageEvent messageEvent) {
-            byte[] data = messageEvent.getData();
-            String sData = new String(data);
-            String sourceNodeId = messageEvent.getSourceNodeId();
-            Log.d(TAG, "onMessageReceived() A message from watch was received:" + messageEvent.getRequestId() + " " + messageEvent.getPath());
-        }
-    };
-    private CapabilityClient.OnCapabilityChangedListener onCapabilityChangedListener = new CapabilityClient.OnCapabilityChangedListener() {
-        @Override public void onCapabilityChanged(@NonNull CapabilityInfo capabilityInfo) {
-            Log.d(TAG, "capabilityInfo: " + capabilityInfo);
-        }
-    };
-    /** Sends an RPC to start a fullscreen Activity on the wearable. */
-    public void onStartWearableActivityClick(View view) {
-        Log.d(TAG, "Generating RPC");
-
-        // Trigger an AsyncTask that will query for a list of connected nodes and send a "start-activity" message to each connected node.
-        new StartWearableActivityTask().execute();
-    }
-    private class StartWearableActivityTask extends AsyncTask<Void, Void, Void> {
-        @Override protected Void doInBackground(Void... args) {
-            sendMessageToWearableNodes(START_ACTIVITY_PATH);
-            return null;
-        }
-    }
-
-    private void sendMessageToWearableNodes(String sMessage) {
-        Collection<String> nodes = getNodes();
-        if ( ListUtil.isEmpty(nodes) ) { return; }
-        for( String node : nodes ) {
-            sendMessageToNode(node, sMessage);
-        }
-    }
-
-    @WorkerThread
-    private Collection<String> getNodes() {
-        NodeClient nodeClient = Wearable.getNodeClient(/*getApplicationContext()*/ this);
-        if ( nodeClient == null ) {
-            Log.d(TAG, "No instance of " + NodeClient.class.getName());
-            return null;
-        }
-        HashSet<String> results = new HashSet<>();
-        Task<List<Node>> nodeListTask = nodeClient.getConnectedNodes();
-        try {
-            // Block on a task and get the result synchronously (because this is on a background thread).
-            List<Node> nodes = Tasks.await(nodeListTask);
-            for (Node node : nodes) {
-                results.add(node.getId());
-            }
-        } catch (ExecutionException exception) {
-            Log.e(TAG, "Task failed: " + exception);
-        } catch (InterruptedException exception) {
-            Log.e(TAG, "Interrupt occurred: " + exception);
-        }
-
-        return results;
-    }
-
-    private static final String START_ACTIVITY_PATH     = "/start-activity";
-    private static final String DATA_ITEM_RECEIVED_PATH = "/data-item-received";
-
-    @WorkerThread
-    private void sendMessageToNode(String node, String sMessage) {
-        MessageClient messageClient   = Wearable.getMessageClient(this);
-        Task<Integer> sendMessageTask = messageClient.sendMessage(node, sMessage, new byte[0]);
-        try {
-            // Block on a task and get the result synchronously (because this is on a background thread).
-            Integer result = Tasks.await(sendMessageTask);
-            Log.d(TAG, "Message sent: " + result);
-        } catch (ExecutionException exception) {
-            Log.e(TAG, "Task failed: " + exception);
-        } catch (InterruptedException exception) {
-            Log.e(TAG, "Interrupt occurred: " + exception);
-        }
-    }
-
-    private static final String ASSET_PATH = "/image";
-    private static final String ASSET_KEY  = "photo";
-    private void sendData(String sMessage) {
-        Asset asset = Asset.createFromBytes(sMessage.getBytes());
-        PutDataMapRequest dmRequest = PutDataMapRequest.create(ASSET_PATH);
-        DataMap dataMap = dmRequest.getDataMap();
-        dataMap.putAsset(ASSET_KEY, asset);
-        dataMap.putLong("time", new Date().getTime());
-        PutDataRequest pdRequest = dmRequest.asPutDataRequest();
-        pdRequest.setUrgent();
-
-        DataClient dataClient = Wearable.getDataClient(this);
-        Task<DataItem> dataItemTask = dataClient.putDataItem(pdRequest);
-
-        dataItemTask.addOnSuccessListener(
-                new OnSuccessListener<DataItem>() {
-                    @Override public void onSuccess(DataItem dataItem) {
-                        Log.d(TAG, "Sending was successful: " + dataItem);
-                    }
-                });
-    }
+*/
     // ----------------------------------------------------
     // --------------------- casting ----------------------
     // ----------------------------------------------------

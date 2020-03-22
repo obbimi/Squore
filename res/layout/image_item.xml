@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--  Single List Item Design -->
-<android.support.percent.PercentRelativeLayout
+<!--  Single List Item Design: Used in ShowTypesAdapter -->
+<androidx.percentlayout.widget.PercentRelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_height="wrap_content"
@@ -30,4 +30,4 @@
               android:padding="@dimen/main_button_padding"
               android:textSize="@dimen/txt_small"
               android:gravity="left" />
-</android.support.percent.PercentRelativeLayout>
+</androidx.percentlayout.widget.PercentRelativeLayout>

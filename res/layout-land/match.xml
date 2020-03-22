@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"/>
 
-    <android.support.percent.PercentRelativeLayout
+    <androidx.percentlayout.widget.PercentRelativeLayout
         android:layout_below="@id/match_splitterP"
         android:id="@+id/ll_match_singles"
         android:layout_width="match_parent"
@@ -120,9 +120,9 @@
                 android:maxLines="1"
                 android:imeOptions="actionDone"
                 android:layout_gravity="center_horizontal"/>
-    </android.support.percent.PercentRelativeLayout>
+    </androidx.percentlayout.widget.PercentRelativeLayout>
 
-    <android.support.percent.PercentRelativeLayout
+    <androidx.percentlayout.widget.PercentRelativeLayout
         android:layout_below="@id/ll_match_singles"
         android:id="@+id/ll_match_doubles"
         android:layout_width="match_parent"
@@ -254,7 +254,7 @@
             android:textSize="@dimen/txt_smaller"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-    </android.support.percent.PercentRelativeLayout>
+    </androidx.percentlayout.widget.PercentRelativeLayout>
 
     <RelativeLayout
         android:layout_below="@id/ll_match_doubles"

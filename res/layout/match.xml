@@ -27,7 +27,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <android.support.percent.PercentRelativeLayout android:id="@+id/ll_match_singles"
+    <androidx.percentlayout.widget.PercentRelativeLayout android:id="@+id/ll_match_singles"
             android:layout_alignParentTop="true"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -99,9 +99,9 @@
             android:textSize="@dimen/txt_smaller"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-    </android.support.percent.PercentRelativeLayout>
+    </androidx.percentlayout.widget.PercentRelativeLayout>
 
-    <android.support.percent.PercentRelativeLayout android:id="@+id/ll_match_doubles"
+    <androidx.percentlayout.widget.PercentRelativeLayout android:id="@+id/ll_match_doubles"
         android:layout_below="@id/ll_match_singles"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -218,7 +218,7 @@
             android:textSize="@dimen/txt_smaller"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-    </android.support.percent.PercentRelativeLayout>
+    </androidx.percentlayout.widget.PercentRelativeLayout>
 
 <!--
     <LinearLayout android:id="@+id/ll_match_doubles"

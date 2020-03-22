@@ -17,7 +17,7 @@
 ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 -->
-<android.support.wear.widget.BoxInsetLayout
+<androidx.wear.widget.BoxInsetLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dy="http://double-yellow.be"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
     app:boxedEdges="all">
-    <android.support.percent.PercentRelativeLayout
+    <androidx.percentlayout.widget.PercentRelativeLayout
         android:id="@+id/gamescores_container"
         android:layout_centerInParent="true"
         android:layout_alignParentTop="true"
@@ -70,7 +70,7 @@
             android:clickable="true"
             android:textStyle="bold"
             />
-    </android.support.percent.PercentRelativeLayout>
+    </androidx.percentlayout.widget.PercentRelativeLayout>
 
     <!-- playernames: one on each side of previous game scores -->
     <com.doubleyellow.scoreboard.view.PlayersButton
@@ -213,4 +213,4 @@
         android:layout_height="0dp"
         />
 </com.doubleyellow.view.SBRelativeLayout>
-</android.support.wear.widget.BoxInsetLayout>
+</androidx.wear.widget.BoxInsetLayout>

@@ -17,9 +17,14 @@
 
 package com.doubleyellow.scoreboard.archive;
 
+//import android.app.Fragment;
+//import android.app.FragmentManager;
+//import androidx.legacy.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+
 import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.nfc.NdefMessage;
@@ -27,9 +32,8 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerTabStrip;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.PagerTabStrip;
+import androidx.viewpager.widget.ViewPager;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -311,7 +315,7 @@ public class ArchiveTabbed extends XActivity implements NfcAdapter.CreateNdefMes
         viewPager = (ViewPager) findViewById(R.id.pager);
         titleStrip = ViewUtil.getFirstView(viewPager, PagerTabStrip.class);
 
-        mAdapter = new MatchTabsAdapter(getFragmentManager());
+        mAdapter = new MatchTabsAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(mAdapter);
 
