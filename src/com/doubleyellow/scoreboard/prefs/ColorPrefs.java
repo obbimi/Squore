@@ -729,12 +729,6 @@ public class ColorPrefs
             } else if ( tag.contains(Tags.mainBackgroundColor.toString())) {
                 setBackground(vgChild, mTarget2Color.get(ColorTarget.backgroundColor), tag);
             }
-/*
-            if ( v instanceof android.support.v4.view.ViewPager) {
-                android.support.v4.view.ViewPager viewPager = (ViewPager) v;
-                viewPager.sets
-            }
-*/
             setColors(vgChild, bHasHeaderTag?Tags.header : (bHasItemTag?Tags.item : null));
         } else {
             // skipping

@@ -677,6 +677,33 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
     }
 */
 
+
+/*
+    @Override public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ( ViewUtil.isWearable(this) ) {
+            if ( event.getRepeatCount() == 0 ) {
+                switch (keyCode) { // back button in android emulator: 4
+                    case KeyEvent.KEYCODE_STEM_PRIMARY:
+                        Log.d(TAG, "KEYCODE_STEM_PRIMARY: " + keyCode);
+                        _startMatch();
+                        return true;
+                    case KeyEvent.KEYCODE_STEM_1:
+                        Log.d(TAG, "KEYCODE_STEM_1: " + keyCode);
+                        return true;
+                    case KeyEvent.KEYCODE_STEM_2:
+                        Log.d(TAG, "KEYCODE_STEM_2: " + keyCode);
+                        return true;
+                    case KeyEvent.KEYCODE_STEM_3:
+                        Log.d(TAG, "KEYCODE_STEM_3: " + keyCode);
+                        return true;
+                }
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+*/
+
     @Override public void onBackPressed() {
         if ( ScoreBoard.isInDemoMode() ) {
             ScoreBoard.demoThread.cancelDemoMessage();

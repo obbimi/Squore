@@ -12,8 +12,28 @@
             android:normalScreens="false"
             android:smallScreens="true" />
     <application>
-        <!-- Recommended for wearables -->
+        <!-- Recommended for wearables
+        if not set to true, a WearOS connected to an iPhone will NOT see the app in the google play store
+        -->
         <meta-data android:name="com.google.android.wearable.standalone" android:value="true" />
 
+        <!-- allow WearOS app to be launched from phone app -->
+        <service android:name=".DataLayerListenerService">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <data android:scheme="wear" android:host="*" android:path="/start-activity" />
+            </intent-filter>
+        </service>
     </application>
+
+    <!--
+    https://developer.android.com/training/wearables/apps/standalone-apps
+
+    ?? ==>
+    Note: To qualify for promotion in the Google Play Store on Wear (that is, in the on-watch Play Store), your app needs to function independently from a phone. iOS as well as Android support is required.
+
+
+    https://developer.android.com/distribute/best-practices/launch/distribute-wear
+
+    -->
 </manifest>

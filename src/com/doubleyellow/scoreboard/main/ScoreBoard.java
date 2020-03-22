@@ -104,6 +104,31 @@ import java.util.*;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 
+/* Wearable */
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.android.gms.wearable.Asset;
+import com.google.android.gms.wearable.CapabilityClient;
+import com.google.android.gms.wearable.CapabilityInfo;
+import com.google.android.gms.wearable.DataClient;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataItemAsset;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.MessageClient;
+import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeClient;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
+import java.util.concurrent.ExecutionException;
+
 /**
  * The main Activity of the scoreboard app.
  */
@@ -483,7 +508,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     onClickXTimesHandler = new OnClickXTimesHandler(300, 10);
                 }
                 if ( onClickXTimesHandler.handle() ) {
-                    if ( ViewUtil.isWearable(ScoreBoard.this) ) {
+                    if ( isWearable() ) {
                         handleMenuItem(R.id.sb_about);
                         return;
                     }
@@ -629,7 +654,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 // toggle player names of the long clicked team
                 _swapDoublePlayers(pl);
             } else {
-                if ( ViewUtil.isWearable(ScoreBoard.this) && matchModel.hasStarted()==false ) {
+                if ( isWearable() && matchModel.hasStarted()==false ) {
                     if ( PreferenceValues.isBrandTesting(ScoreBoard.this) ) {
                         toggleBrand();
                     } else {
@@ -651,7 +676,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             if ( Brand.isSquash() ) {
                 handleMenuItem(R.id.pl_show_appeal, pl);
             } else {
-                if ( ViewUtil.isWearable(ScoreBoard.this) ) {
+                if ( isWearable() ) {
                     // for non-squash allow changing name by short click as well
                     handleMenuItem(R.id.pl_change_name, pl);
                 }
@@ -1106,6 +1131,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             return;
         }
 
+
+
         switch ( PreferenceValues.keepScreenOnWhen(this) ) {
             case Always:
                 keepScreenOn(true);
@@ -1136,6 +1163,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         onResumeNFC();
         onResumeBlueTooth();
+        onResumeWearable();
         onActivityResume_Cast();
 
         onResumeURL();
@@ -1269,7 +1297,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 }
                 case PressTwiceToExit: {
 
-                    if ( ViewUtil.isWearable(ScoreBoard.this) == false ) {
+                    if ( isWearable() == false ) {
                         // do not show action bar in wearables... to BIG
                         ActionBar xActionBar = getXActionBar();
                         if ( xActionBar != null) {
@@ -1749,7 +1777,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     ActionBar actionBar = getXActionBar();
                     if ( (actionBar != null) && (actionBar.isShowing() == false) ) {
                         // show action bar
-                        if ( ViewUtil.isWearable(ScoreBoard.this) == false ) {
+                        if ( isWearable() == false ) {
                             toggleActionBar(actionBar);
                         }
                     }
@@ -2147,6 +2175,7 @@ touch -t 01030000 LAST.sb
         persist(false);
         onNFCPause();
         onActivityPause_Cast();
+        onPauseWearable();
 /*
         if ( baseDialog instanceof TwoTimerView ) {
             Log.w(TAG, "onPause: A timer is running");
@@ -2493,7 +2522,7 @@ touch -t 01030000 LAST.sb
                 iDrawableId = prefs.getDrawableIdBlack();
             }
         }
-        shareButton.setDrawable(this.getResources().getDrawable(iDrawableId), getFloatingButtonSizePx(this));
+        shareButton.setDrawable(this.getResources().getDrawable(iDrawableId), getFloatingButtonSizePx());
     }
 
     // ----------------------------------------------------
@@ -2548,7 +2577,7 @@ touch -t 01030000 LAST.sb
             iActionId   = R.id.sb_unlock;
             iDrawableId = android.R.drawable.ic_lock_lock;
         }
-        boolean bUsePlayerButtonColor = isLandscape() || ViewUtil.isWearable(this);
+        boolean bUsePlayerButtonColor = isLandscape() || isWearable();
         ColorPrefs.ColorTarget colorKey = bUsePlayerButtonColor ? ColorPrefs.ColorTarget.playerButtonBackgroundColor : ColorPrefs.ColorTarget.scoreButtonBackgroundColor;
         Integer iBG = mColors.get(colorKey);
         if ( iBG != null ) {
@@ -2564,7 +2593,7 @@ touch -t 01030000 LAST.sb
             newMatchButton = getFloatingActionButton(iActionId, fMargin, iDrawableId, colorKey, se);
         } else {
             newMatchButton.setActionId(iActionId);
-            newMatchButton.setDrawable(this.getResources().getDrawable(iDrawableId), getFloatingButtonSizePx(this));
+            newMatchButton.setDrawable(this.getResources().getDrawable(iDrawableId), getFloatingButtonSizePx());
         }
         if ( newMatchButton != null ) {
             newMatchButton.setHidden(bVisible == false);
@@ -2598,14 +2627,14 @@ touch -t 01030000 LAST.sb
     private FloatingActionButton getFloatingActionButton(int iActionId, float fMarginBasedOnButtonSize, int iDrawable, ColorPrefs.ColorTarget colorTarget, Direction direction) {
         if ( direction == null ) {
             direction = isPortrait() ? Direction.E : Direction.S;
-            if ( ViewUtil.isWearable(this) ) {
+            if ( isWearable() ) {
                 direction = Direction.S;
             }
         }
 
-        int buttonSizePx = getFloatingButtonSizePx(this);
+        int buttonSizePx = getFloatingButtonSizePx();
         int iMargin = (int) (fMarginBasedOnButtonSize * buttonSizePx); // fMarginBasedOnButtonSize is mainly for nicely lining up buttons in the middle without overlaps
-        if ( ViewUtil.isWearable(this) && isScreenRound(this) ) {
+        if ( isWearable() && isScreenRound(this) ) {
             // add a little extra since we use app:boxedEdges="all"
             int iScreenDiagonal   = ViewUtil.getScreenHeightWidthMaximum(this);
             int boxedHeightWidth  = (int) Math.sqrt(Math.pow(iScreenDiagonal, 2) / 2);
@@ -2677,19 +2706,19 @@ touch -t 01030000 LAST.sb
         return view;
     }
 
-    public static int getFloatingButtonSizePx(Context context) {
+    public int getFloatingButtonSizePx() {
         int buttonSizePx = 0;
-        if ( ViewUtil.isPortraitOrientation(context) ) {
-            buttonSizePx = ViewUtil.getScreenHeightWidthMaximumFraction(context, R.fraction.pt_gamescores_height);
+        if ( ViewUtil.isPortraitOrientation(this) ) {
+            buttonSizePx = ViewUtil.getScreenHeightWidthMaximumFraction(this, R.fraction.pt_gamescores_height);
         } else {
-            buttonSizePx = ViewUtil.getScreenHeightWidthMaximumFraction(context, R.fraction.ls_gamescores_width);
+            buttonSizePx = ViewUtil.getScreenHeightWidthMaximumFraction(this, R.fraction.ls_gamescores_width);
         }
-        if ( ViewUtil.isWearable(context) ) {
-            buttonSizePx = ViewUtil.getScreenHeightWidthMaximumFraction(context, R.fraction.ls_wearable_floating_button_fraction);
-            if ( isScreenRound(context) ) {
-                int iScreenDiagonal = ViewUtil.getScreenHeightWidthMaximum(context);
+        if ( ViewUtil.isWearable(this) ) {
+            buttonSizePx = ViewUtil.getScreenHeightWidthMaximumFraction(this, R.fraction.ls_wearable_floating_button_fraction);
+            if ( isScreenRound(this) ) {
+                int iScreenDiagonal = ViewUtil.getScreenHeightWidthMaximum(this);
                 int boxedHeightWidth = (int) Math.sqrt(Math.pow(iScreenDiagonal, 2) / 2);
-                float fraction = context.getResources().getFraction(R.fraction.ls_wearable_floating_button_fraction, 1, 1);
+                float fraction = this.getResources().getFraction(R.fraction.ls_wearable_floating_button_fraction, 1, 1);
                 buttonSizePx = (int) (fraction * boxedHeightWidth);
             }
         }
@@ -3663,7 +3692,7 @@ touch -t 01030000 LAST.sb
         boolean bShowUndo = (matchModel.isLocked() == false) && matchModel.hasStarted();
         setMenuItemVisibility(R.id.dyn_undo_last, bShowUndo);
 
-        if ( ViewUtil.isWearable(this) ) {
+        if ( isWearable() ) {
             showUndoFloatButton(bShowUndo);
         }
     }
@@ -3849,7 +3878,7 @@ touch -t 01030000 LAST.sb
                 }
 */
                 cancelShowCase();
-                if ( ViewUtil.isWearable(this) ) {
+                if ( isWearable() ) {
                     EditMatchWizard editMatchWizard = new EditMatchWizard(this, matchModel, this);
                     editMatchWizard.show();
 /*
@@ -6096,13 +6125,17 @@ touch -t 01030000 LAST.sb
     }
 
     private void writeMethodToBluetooth(BTMethods method, Object... args) {
+        StringBuilder sb = new StringBuilder();
+        addMethodAndArgs(sb, method, args);
+        final String sMessage = sb.toString();
+
+        sendMessageToWearableNodes(sMessage);
+
         if ( mBluetoothControlService == null) { return; }
         if ( mBluetoothControlService.getState().equals(BTState.CONNECTED) == false) { return; }
 
         // construct function-call-like string
-        StringBuilder sb = new StringBuilder();
-        addMethodAndArgs(sb, method, args);
-        mBluetoothControlService.write(sb.toString());
+        mBluetoothControlService.write(sMessage);
 
         // write optionally delayed method
         if ( m_sbBTDelayed.length() > 0 ) {
@@ -6527,6 +6560,150 @@ touch -t 01030000 LAST.sb
         mBluetoothControlService.connect(btDeviceOther);
     }
 
+    // ----------------------------------------------------
+    // --------------------- Wearable ---------------------
+    // ----------------------------------------------------
+    private boolean isWearable() {
+        return ViewUtil.isWearable(this);
+    }
+    private void onPauseWearable() {
+        Wearable.getDataClient      (this).removeListener(onDataChangedListener);
+        Wearable.getMessageClient   (this).removeListener(onMessageReceivedListener);
+        Wearable.getCapabilityClient(this).removeListener(onCapabilityChangedListener);
+    }
+    private void onResumeWearable() {
+        Wearable.getDataClient      (this).addListener(onDataChangedListener);
+        Wearable.getMessageClient   (this).addListener(onMessageReceivedListener);
+        Wearable.getCapabilityClient(this).addListener(onCapabilityChangedListener, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
+    }
+    private DataClient.OnDataChangedListener onDataChangedListener = new DataClient.OnDataChangedListener() {
+        @Override public void onDataChanged(@NonNull DataEventBuffer dataEvents) {
+            Log.d(TAG, "dataEventBuffer: " + dataEvents);
+            for (DataEvent event : dataEvents) {
+                DataItem dataItem = event.getDataItem();
+                Map<String, DataItemAsset> assets = dataItem.getAssets();
+                int type = event.getType();
+                switch (type) {
+                    case DataEvent.TYPE_CHANGED:
+                        String path = dataItem.getUri().getPath();
+                        if ( ASSET_PATH.equals(path) ) {
+                            DataMapItem dataMapItem = DataMapItem.fromDataItem(dataItem);
+                            DataMap dataMap = dataMapItem.getDataMap();
+                            Asset asset = dataMap.getAsset(ASSET_KEY);
+                            // TODO: handle the asset
+
+                            // Optionally Send message to node that created the data item
+                            Uri uri = event.getDataItem().getUri();
+                            String nodeId = uri.getHost();
+                            Wearable.getMessageClient(ScoreBoard.this).sendMessage(nodeId, DATA_ITEM_RECEIVED_PATH, uri.toString().getBytes());
+                        } else {
+                            Log.d(TAG, "Unrecognized path: " + path);
+                        }
+                        break;
+                    case DataEvent.TYPE_DELETED:
+                        break;
+                }
+            }
+        }
+    };
+    private MessageClient.OnMessageReceivedListener onMessageReceivedListener = new MessageClient.OnMessageReceivedListener() {
+        @Override public void onMessageReceived(@NonNull MessageEvent messageEvent) {
+            byte[] data = messageEvent.getData();
+            String sData = new String(data);
+            String sourceNodeId = messageEvent.getSourceNodeId();
+            Log.d(TAG, "onMessageReceived() A message from watch was received:" + messageEvent.getRequestId() + " " + messageEvent.getPath());
+        }
+    };
+    private CapabilityClient.OnCapabilityChangedListener onCapabilityChangedListener = new CapabilityClient.OnCapabilityChangedListener() {
+        @Override public void onCapabilityChanged(@NonNull CapabilityInfo capabilityInfo) {
+            Log.d(TAG, "capabilityInfo: " + capabilityInfo);
+        }
+    };
+    /** Sends an RPC to start a fullscreen Activity on the wearable. */
+    public void onStartWearableActivityClick(View view) {
+        Log.d(TAG, "Generating RPC");
+
+        // Trigger an AsyncTask that will query for a list of connected nodes and send a "start-activity" message to each connected node.
+        new StartWearableActivityTask().execute();
+    }
+    private class StartWearableActivityTask extends AsyncTask<Void, Void, Void> {
+        @Override protected Void doInBackground(Void... args) {
+            sendMessageToWearableNodes(START_ACTIVITY_PATH);
+            return null;
+        }
+    }
+
+    private void sendMessageToWearableNodes(String sMessage) {
+        Collection<String> nodes = getNodes();
+        if ( ListUtil.isEmpty(nodes) ) { return; }
+        for( String node : nodes ) {
+            sendMessageToNode(node, sMessage);
+        }
+    }
+
+    @WorkerThread
+    private Collection<String> getNodes() {
+        NodeClient nodeClient = Wearable.getNodeClient(/*getApplicationContext()*/ this);
+        if ( nodeClient == null ) {
+            Log.d(TAG, "No instance of " + NodeClient.class.getName());
+            return null;
+        }
+        HashSet<String> results = new HashSet<>();
+        Task<List<Node>> nodeListTask = nodeClient.getConnectedNodes();
+        try {
+            // Block on a task and get the result synchronously (because this is on a background thread).
+            List<Node> nodes = Tasks.await(nodeListTask);
+            for (Node node : nodes) {
+                results.add(node.getId());
+            }
+        } catch (ExecutionException exception) {
+            Log.e(TAG, "Task failed: " + exception);
+        } catch (InterruptedException exception) {
+            Log.e(TAG, "Interrupt occurred: " + exception);
+        }
+
+        return results;
+    }
+
+    private static final String START_ACTIVITY_PATH     = "/start-activity";
+    private static final String DATA_ITEM_RECEIVED_PATH = "/data-item-received";
+
+    @WorkerThread
+    private void sendMessageToNode(String node, String sMessage) {
+        MessageClient messageClient   = Wearable.getMessageClient(this);
+        Task<Integer> sendMessageTask = messageClient.sendMessage(node, sMessage, new byte[0]);
+        try {
+            // Block on a task and get the result synchronously (because this is on a background thread).
+            Integer result = Tasks.await(sendMessageTask);
+            Log.d(TAG, "Message sent: " + result);
+        } catch (ExecutionException exception) {
+            Log.e(TAG, "Task failed: " + exception);
+        } catch (InterruptedException exception) {
+            Log.e(TAG, "Interrupt occurred: " + exception);
+        }
+    }
+
+    private static final String ASSET_PATH = "/image";
+    private static final String ASSET_KEY  = "photo";
+    private void sendData(String sMessage) {
+        Asset asset = Asset.createFromBytes(sMessage.getBytes());
+        PutDataMapRequest dmRequest = PutDataMapRequest.create(ASSET_PATH);
+        DataMap dataMap = dmRequest.getDataMap();
+        dataMap.putAsset(ASSET_KEY, asset);
+        dataMap.putLong("time", new Date().getTime());
+        PutDataRequest pdRequest = dmRequest.asPutDataRequest();
+        pdRequest.setUrgent();
+
+        DataClient dataClient = Wearable.getDataClient(this);
+        Task<DataItem> dataItemTask = dataClient.putDataItem(pdRequest);
+
+        dataItemTask.addOnSuccessListener(
+                new OnSuccessListener<DataItem>() {
+                    @Override public void onSuccess(DataItem dataItem) {
+                        Log.d(TAG, "Sending was successful: " + dataItem);
+                    }
+                });
+    }
     // ----------------------------------------------------
     // --------------------- casting ----------------------
     // ----------------------------------------------------

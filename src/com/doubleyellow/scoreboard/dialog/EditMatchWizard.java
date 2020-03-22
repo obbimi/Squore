@@ -84,12 +84,13 @@ public class EditMatchWizard extends BaseAlertDialog
         m_rootView.setOrientation(LinearLayout.VERTICAL);
         ColorUtil.setBackground(m_rootView, iMainBgColor);
 
-        m_buttonSizePx = (int) (ScoreBoard.getFloatingButtonSizePx(context) * 1.0f);
+        float fResizeFactorForWizard = 1.0f;
+        m_buttonSizePx = (int) (scoreBoard.getFloatingButtonSizePx() * fResizeFactorForWizard);
 
         LinearLayout llPrevNext = new LinearLayout(context);
         llPrevNext.setOrientation(LinearLayout.HORIZONTAL);
         llPrevNext.setGravity(Direction.S.getGravity());
-        m_rootView.addView(llPrevNext, (int)(ViewUtil.getScreenWidth(context) * 1.0f), ViewGroup.LayoutParams.WRAP_CONTENT);
+        m_rootView.addView(llPrevNext, (int)(ViewUtil.getScreenWidth(context) * fResizeFactorForWizard), ViewGroup.LayoutParams.WRAP_CONTENT);
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(m_buttonSizePx, m_buttonSizePx);
 
