@@ -19,8 +19,8 @@ package com.doubleyellow.scoreboard.activity;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import com.doubleyellow.android.view.Orientation;
 import com.doubleyellow.android.view.ViewUtil;
 

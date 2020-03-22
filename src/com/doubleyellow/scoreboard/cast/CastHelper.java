@@ -24,10 +24,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.MediaRouteActionProvider;
-import android.support.v7.media.MediaRouteSelector;
-import android.support.v7.media.MediaRouter;
+import androidx.core.view.MenuItemCompat;
+import androidx.mediarouter.app.MediaRouteActionProvider;
+import androidx.mediarouter.media.MediaRouteSelector;
+import androidx.mediarouter.media.MediaRouter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -191,7 +191,7 @@ public class CastHelper implements ICastHelper
         PresentationService.refreshGamesWonAppearance();
     }
 
-    private static class MediaRouterCallback extends android.support.v7.media.MediaRouter.Callback
+    private static class MediaRouterCallback extends androidx.mediarouter.media.MediaRouter.Callback
     {
         private Activity activity = null;
         private MediaRouterCallback(Activity activity) {

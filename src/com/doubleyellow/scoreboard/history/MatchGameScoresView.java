@@ -20,7 +20,7 @@ package com.doubleyellow.scoreboard.history;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.CountDownTimer;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -17,9 +17,14 @@
 
 package com.doubleyellow.scoreboard.match;
 
+//import android.app.Fragment;
+//import android.app.FragmentManager;
+//import androidx.legacy.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,9 +34,8 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerTabStrip;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.PagerTabStrip;
+import androidx.viewpager.widget.ViewPager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
@@ -644,7 +648,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         viewPager = (ViewPager) findViewById(R.id.pager);
         PagerTabStrip titleStrip = ViewUtil.getFirstView(viewPager, PagerTabStrip.class);
 
-        mAdapter = new MatchTabsAdapter(getFragmentManager());
+        mAdapter = new MatchTabsAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(mAdapter);
 
@@ -786,7 +790,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
     {
         private boolean[] loaded = null;
 
-        public MatchTabsAdapter(FragmentManager fm) {
+        MatchTabsAdapter(FragmentManager fm) {
             super(fm);
             loaded = new boolean[actualTabsToShow.size()];
         }

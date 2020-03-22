@@ -42,6 +42,9 @@ public enum BTMethods {
 
     requestCompleteJsonOfMatch(false),
     requestCountryFlag(false),
+
+    lock(false),
+    unlock(false),
     ;
     private boolean bVerifyScore = false;
     BTMethods(boolean verifyScore) {

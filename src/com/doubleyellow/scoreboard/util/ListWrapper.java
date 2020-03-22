@@ -1,6 +1,6 @@
 package com.doubleyellow.scoreboard.util;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.doubleyellow.util.StringUtil;

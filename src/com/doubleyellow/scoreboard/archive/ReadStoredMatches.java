@@ -49,7 +49,7 @@ class ReadStoredMatches extends AsyncTask<String, Void, String> {
     private ExpandableMatchSelector ems                = null;
     private Activity                activity           = null;
 
-    public ReadStoredMatches(ExpandableMatchSelector ems, SimpleELAdapter adapter, boolean bUseCacheIfPresent) {
+    ReadStoredMatches(ExpandableMatchSelector ems, SimpleELAdapter adapter, boolean bUseCacheIfPresent) {
         this.adapter            = adapter;
         this.bUseCacheIfPresent = bUseCacheIfPresent;
         this.ems                = ems;
