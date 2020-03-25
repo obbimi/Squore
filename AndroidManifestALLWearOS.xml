@@ -18,12 +18,14 @@
         <meta-data android:name="com.google.android.wearable.standalone" android:value="true" />
 
         <!-- allow WearOS app to be launched from phone app -->
-        <service android:name=".DataLayerListenerService">
+<!--
+        <service android:name="com.doubleyellow.scoreboard.wear.DataLayerListenerService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
                 <data android:scheme="wear" android:host="*" android:path="/start-activity" />
             </intent-filter>
         </service>
+-->
     </application>
 
     <!--
