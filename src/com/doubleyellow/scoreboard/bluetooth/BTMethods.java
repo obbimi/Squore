@@ -42,6 +42,8 @@ public enum BTMethods {
 
     requestCompleteJsonOfMatch(false),
     requestCountryFlag(false),
+    /** mainly used to be send from wearable to more userfriendly handheld */
+    openSuggestMatchSyncDialogOnOtherPaired(false),
 
     lock(false),
     unlock(false),
