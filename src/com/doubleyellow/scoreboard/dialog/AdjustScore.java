@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.PersistHelper;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
@@ -300,13 +301,13 @@ public class AdjustScore extends BaseAlertDialog {
                     GameHistoryView.dontShowForToManyPoints(iPointsA + iPointsB);
                     matchModel.setGameScore_Json(s-1, iPointsA, iPointsB, 0);
                 }
-                scoreBoard.persist(false);
+                PersistHelper.persist(matchModel, context);
 
                 // if last game entered was also a victory for someone: end the game
                 if ( matchModel.isPossibleGameVictory() ) {
                     scoreBoard.endGame();
                 }
-                ScoreBoard.sendMatchToOtherBluetoothDevice(context, true, 1000);
+                scoreBoard.sendMatchToOtherBluetoothDevice(context, true, 1000);
                 break;
             case DialogInterface.BUTTON_NEGATIVE:
                 // Do nothing.

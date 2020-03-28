@@ -32,6 +32,7 @@ import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.android.view.EnumSpinner;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.PersistHelper;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.archive.PreviousMatchSelector;
 import com.doubleyellow.scoreboard.model.JSONKey;
@@ -459,7 +460,7 @@ public class EditPlayers extends BaseAlertDialog
                             // if names have changed the filename will have changed... so need to remove the old .sb file
                             fWasStoredAs.delete();
                         }
-                        ScoreBoard.storeAsPrevious(context, matchModel, true);
+                        PersistHelper.storeAsPrevious(context, matchModel, true);
                         if ( context instanceof MenuHandler) {
                             MenuHandler menuHandler = (MenuHandler) context;
                             menuHandler.handleMenuItem(R.id.refresh);

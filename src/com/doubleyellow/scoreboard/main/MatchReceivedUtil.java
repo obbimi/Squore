@@ -24,7 +24,9 @@ import android.os.Bundle;
 import android.util.SparseArray;
 import android.widget.Toast;
 
+import com.doubleyellow.scoreboard.PersistHelper;
 import com.doubleyellow.scoreboard.activity.IntentKeys;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.history.MatchHistory;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.util.FileUtil;
@@ -56,10 +58,10 @@ public class MatchReceivedUtil implements DialogInterface.OnClickListener
                     // load the received match in scoreboard for continuation
 
                     // first store currently loaded match
-                    ScoreBoard.storeAsPrevious(scoreBoard, ScoreBoard.matchModel, false);
+                    PersistHelper.storeAsPrevious(scoreBoard, ScoreBoard.matchModel, false);
 
                     // put content of url into LAST match sb file
-                    File f = ScoreBoard.getLastMatchFile(scoreBoard);
+                    File f = PersistHelper.getLastMatchFile(scoreBoard);
                     FileUtil.writeTo(f, model.toJsonString(scoreBoard));
 
                     ScoreBoard.matchModel = null;
@@ -70,14 +72,14 @@ public class MatchReceivedUtil implements DialogInterface.OnClickListener
                     // show details of the finished match
                     Intent matchHistory = new Intent(scoreBoard, MatchHistory.class);
                     Bundle b = new Bundle();
-                    File fStoredAs = ScoreBoard.storeAsPrevious(scoreBoard, model, true);
+                    File fStoredAs = PersistHelper.storeAsPrevious(scoreBoard, model, true);
                     b.putSerializable(IntentKeys.MatchHistory.toString(), fStoredAs);
                     matchHistory.putExtra(IntentKeys.MatchHistory.toString(), b);
                     scoreBoard.startActivity(matchHistory, b);
                     break;
                 }
                 case SaveToStoredMatches: {
-                    File fStoredAs = ScoreBoard.storeAsPrevious(scoreBoard, model, true);
+                    File fStoredAs = PersistHelper.storeAsPrevious(scoreBoard, model, true);
                     break;
                 }
                 case Nothing:
@@ -95,7 +97,7 @@ public class MatchReceivedUtil implements DialogInterface.OnClickListener
         mButton2Action.put(DialogInterface.BUTTON_NEUTRAL , iActionNeutral);
         mButton2Action.put(DialogInterface.BUTTON_POSITIVE, iActionPos);
 
-        AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(scoreBoard);
+        AlertDialog.Builder ab = new MyDialogBuilder(scoreBoard);
         ab.setMessage       (sMsg)
                 .setNegativeButton(iCaptionNeg    , this)
                 .setNeutralButton (iCaptionNeutral, this);

@@ -65,7 +65,7 @@ public class DataLayerListenerService extends WearableListenerService
             String nodeId = uri.getHost();
             byte[] payload = uri.toString().getBytes();
             MessageClient messageClient = Wearable.getMessageClient(this);
-            messageClient.sendMessage(nodeId, ScoreBoard.BRAND_PATH, payload);
+            messageClient.sendMessage(nodeId, WearableHelper.BRAND_PATH, payload);
         }
     }
 }

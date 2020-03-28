@@ -43,6 +43,7 @@ import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.XActivity;
 import com.doubleyellow.scoreboard.archive.PreviousMatchSelector;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.feed.FeedFeedSelector;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -434,7 +435,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
                         if ( matchSelector instanceof FeedMatchSelector) {
                             FeedMatchSelector fms = (FeedMatchSelector) matchSelector;
                             SimpleELAdapter listAdapter = fms.getListAdapter(null);
-                            ScoreBoard.dialogWithOkOnly(this, MapUtil.toNiceString(listAdapter.getHeaderChildCounts()));
+                            MyDialogBuilder.dialogWithOkOnly(this, MapUtil.toNiceString(listAdapter.getHeaderChildCounts()));
                         }
                     } else if ( (menuItemId == R.id.filter) || (menuItemId == R.id.mt_filter) ) {
                         matchSelector.initFiltering(true);
@@ -719,7 +720,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
             super.onBackPressed();
         } else {
             // user enter valid data to start match with
-            AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(this);
+            AlertDialog.Builder ab = new MyDialogBuilder(this);
             DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
                 @Override public void onClick(DialogInterface dialog, int choice) {
                     switch (choice) {

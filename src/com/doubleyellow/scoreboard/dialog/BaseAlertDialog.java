@@ -51,7 +51,7 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
     protected Model       matchModel = null;
     protected ScoreBoard  scoreBoard = null;
 
-    protected ScoreBoard.MyDialogBuilder adb    = null;
+    protected MyDialogBuilder adb    = null;
     protected AlertDialog                dialog = null;
 
     protected final LinearLayout.LayoutParams llpMargin1Weight1;
@@ -65,7 +65,7 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
         llpMargin1Weight1.weight = 1;
         llpMargin1Weight1.setMargins(1, 1, 1, 1);
 
-        this.adb = ScoreBoard.getAlertDialogBuilder(context);
+        this.adb = new MyDialogBuilder(context);
     }
     protected String getString(int resId) {
         return context.getString(resId);

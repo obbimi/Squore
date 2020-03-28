@@ -21,6 +21,8 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
+
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.feed.Authentication;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Player;
@@ -235,7 +237,7 @@ public class ResultPoster implements ContentReceiver
         }
 
         scoreBoard.hideProgress();
-        ScoreBoard.dialogWithOkOnly(scoreBoard, sTitle, sMessage, bResultOK==false);
+        MyDialogBuilder.dialogWithOkOnly(scoreBoard, sTitle, sMessage, bResultOK==false);
 /*
         if ( result.equals(FetchResult.OK) ) {
             if ( sContent.contains("demo.post.") ) {

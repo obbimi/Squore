@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -93,7 +94,7 @@ public class BluetoothHandler extends Handler
                 String sMsg = sb.getString(msg.arg1, m_sDeviceNameLastConnected, Brand.getShortName(sb));
                 if ( msg.arg2 != 0 ) {
                     String sInfo = sb.getString(msg.arg2, m_sDeviceNameLastConnected, Brand.getShortName(sb));
-                    ScoreBoard.dialogWithOkOnly(sb, sMsg, sInfo, true);
+                    MyDialogBuilder.dialogWithOkOnly(sb, sMsg, sInfo, true);
                 } else {
                     Toast.makeText(sb, sMsg, Toast.LENGTH_SHORT).show();
                 }

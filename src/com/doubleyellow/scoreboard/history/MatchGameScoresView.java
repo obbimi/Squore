@@ -323,8 +323,8 @@ public class MatchGameScoresView extends LinearLayout
             if ( this.gsv != null ) {
                 this.gsv.setVisibility(m_iRestoreVisibilityTo);
 
-                Log.d(TAG, String.format("Invalidating gsv as a test "));
-                this.gsv.invalidate();
+                //Log.d(TAG, String.format("Invalidating gsv as a test "));
+                //this.gsv.invalidate();
             }
         }
     };

@@ -2302,6 +2302,9 @@ public abstract class Model implements Serializable
             JSONArray games = joMatch.optJSONArray(JSONKey.score.toString());
             if ( JsonUtil.isNotEmpty(games) ) {
                 scoreLine = scoreHistoryFromJSON(bMatchFormatIsSet, games);
+                if ( isPossibleGameVictory() ) {
+                    endGame(false, true); // introduced for graph not having nr of games correctly
+                }
             }
 
             // read conduct types

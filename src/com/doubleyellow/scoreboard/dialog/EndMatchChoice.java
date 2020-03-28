@@ -22,6 +22,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import com.doubleyellow.scoreboard.PersistHelper;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.EndMatchManuallyBecause;
@@ -89,7 +91,7 @@ public class EndMatchChoice extends BaseAlertDialog
         if ( player != null ) {
             EndMatchManuallyBecause endMatchManuallyBecause = evReason.getChecked();
             matchModel.endMatch(endMatchManuallyBecause, player);
-            scoreBoard.persist(false);
+            PersistHelper.persist(matchModel, context);
         }
         //before triggering an event that might open another dialog, dismiss this one
         dialog.dismiss();

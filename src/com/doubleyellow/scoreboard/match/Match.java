@@ -28,6 +28,7 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.activity.XActivity;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
@@ -236,7 +237,7 @@ public class Match extends XActivity implements MenuHandler
             super.onBackPressed();
         } else {
             // user enter valid data to start match with
-            AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(this);
+            AlertDialog.Builder ab = new MyDialogBuilder(this);
             DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
                 @Override public void onClick(DialogInterface dialog, int choice) {
                     switch (choice) {

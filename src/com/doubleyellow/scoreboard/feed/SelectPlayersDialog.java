@@ -42,6 +42,7 @@ import com.doubleyellow.android.view.SelectObjectView;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.BaseAlertDialog;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.JSONKey;
 import com.doubleyellow.scoreboard.model.Model;
@@ -270,7 +271,7 @@ public class SelectPlayersDialog extends BaseAlertDialog
         // add the teams last because it may be a long list
         llRoot.addView(llTeams);
 
-        AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
+        AlertDialog.Builder ab = new MyDialogBuilder(context);
         ab.setTitle(R.string.sb_choose_players)
                 .setView(llRoot)
                 .setNeutralButton (R.string.cmd_cancel, null)

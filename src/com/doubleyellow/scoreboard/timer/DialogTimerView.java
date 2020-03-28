@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.doubleyellow.android.view.AutoResizeTextView;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.history.MatchGameScoresView;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
@@ -262,7 +263,7 @@ public class DialogTimerView implements TimerView
             bRemove.setOnClickListener(onAddRemoveClickListener);
         }
 
-        AlertDialog.Builder db = ScoreBoard.getAlertDialogBuilder(scoreBoard);
+        AlertDialog.Builder db = new MyDialogBuilder(scoreBoard);
         int iResIDCancelCaption = R.string.cmd_cancel;
         if ( Type.UntillStartOfNextGame.equals(Timer.timerType) ) {
             iResIDCancelCaption = R.string.Start_game;

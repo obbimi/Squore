@@ -28,6 +28,7 @@ import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.util.Log;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -71,7 +72,7 @@ public class NotificationTimerView implements TimerView
         builder.setSmallIcon(R.drawable.timer)
                .setContentIntent(pIntent);
 
-        Bitmap bmIcon = ScoreBoard.getAppIconAsBitMap(ctx);
+        Bitmap bmIcon = Util.getAppIconAsBitMap(ctx);
         if ( bmIcon != null ) {
             builder.setLargeIcon(bmIcon);
         } else {

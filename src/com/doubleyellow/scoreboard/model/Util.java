@@ -23,8 +23,14 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import com.doubleyellow.android.util.ContentUtil;
+import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.prefs.DownUp;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -127,4 +133,29 @@ public class Util {
         }
         return o;
     }
+
+    private static Bitmap m_appIconAsBitMap = null;
+    public static Bitmap getAppIconAsBitMap(Context ctx) {
+        if ( m_appIconAsBitMap == null) {
+            Drawable icon = null;
+            try {
+                icon = ctx.getPackageManager().getApplicationIcon(ctx.getPackageName());
+            } catch (PackageManager.NameNotFoundException e) {
+            }
+            if ( icon instanceof BitmapDrawable) {
+                BitmapDrawable bmd = (BitmapDrawable) icon;
+                m_appIconAsBitMap = bmd.getBitmap();
+            }
+        }
+        return m_appIconAsBitMap;
+    }
+
+    public static Uri buildURL(Context context, String helpUrl, boolean bAddLocaleAsParam) {
+        if ( bAddLocaleAsParam ) {
+            boolean bUseAmpersand = helpUrl.contains("?");
+            return Uri.parse(helpUrl + (bUseAmpersand ? "&" : "?") + "lang=" + RWValues.getDeviceLanguage(context));
+        }
+        return Uri.parse(helpUrl);
+    }
+
 }

@@ -25,7 +25,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.*;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.net.Uri;
@@ -35,12 +34,10 @@ import android.os.*;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import androidx.drawerlayout.widget.DrawerLayout;
-import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.*;
-import android.webkit.WebView;
 import android.widget.*;
 
 import com.doubleyellow.android.SystemUtil;
@@ -87,8 +84,8 @@ import com.doubleyellow.scoreboard.view.ServeButton;
 import com.doubleyellow.android.handler.OnBackPressExitHandler;
 import com.doubleyellow.scoreboard.dialog.*;
 import com.doubleyellow.scoreboard.prefs.*;
-import com.doubleyellow.scoreboard.wear.DataLayerListenerService;
 import com.doubleyellow.scoreboard.wear.WearRole;
+import com.doubleyellow.scoreboard.wear.WearableHelper;
 import com.doubleyellow.util.*;
 import com.doubleyellow.view.SBRelativeLayout;
 import org.json.JSONArray;
@@ -105,28 +102,6 @@ import java.util.*;
 /* ChromeCast */
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
-
-/* Wearable */
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.android.gms.wearable.Asset;
-import com.google.android.gms.wearable.CapabilityClient;
-import com.google.android.gms.wearable.CapabilityInfo;
-import com.google.android.gms.wearable.DataClient;
-import com.google.android.gms.wearable.DataItem;
-import com.google.android.gms.wearable.DataMap;
-import com.google.android.gms.wearable.MessageClient;
-import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeClient;
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
-import com.google.android.gms.wearable.Wearable;
-import androidx.annotation.NonNull;
-
-import com.google.android.wearable.intent.RemoteIntent;
 
 /**
  * The main Activity of the scoreboard app.
@@ -437,7 +412,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     }
 
     private void confirmUndoLastForNonScorer(final Player p) {
-        AlertDialog.Builder cfunls = getAlertDialogBuilder(this);
+        AlertDialog.Builder cfunls = new MyDialogBuilder(this);
         cfunls.setTitle(R.string.uc_undo)
                 .setIcon(R.drawable.circle_2arrows)
                 .setTitle(getString(R.string.sb_remove_last_score_for_x, matchModel.getName(p) ))
@@ -747,7 +722,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             }
         };
 
-        AlertDialog.Builder ab = getAlertDialogBuilder(this);
+        AlertDialog.Builder ab = new MyDialogBuilder(this);
         ab.setMessage   (R.string.sb_choose_team)
                 .setIcon(R.drawable.ic_action_refresh)
                 .setPositiveButton(Player.A.toString()    , dialogClickListener)
@@ -967,7 +942,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 Brand.setBrandPrefs(this);
                 Brand.setSportPrefs(this);
                 Model mTmp = Brand.getModel();
-                File lastMatchFile = getLastMatchFile(this);
+                File lastMatchFile = PersistHelper.getLastMatchFile(this);
                 try {
                     boolean bModelRead = mTmp.fromJsonString(lastMatchFile);
                     if ( bModelRead == false ) {
@@ -1089,7 +1064,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         Timer.addTimerView(true, getCastTimerView());
 
-        initScoreBoard(getLastMatchFile(this));
+        initScoreBoard(PersistHelper.getLastMatchFile(this));
 
         initPlayerButtons();
 
@@ -1312,7 +1287,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     break;
                 }
                 case UndoScore: {
-                    AlertDialog.Builder cfun = getAlertDialogBuilder(this);
+                    AlertDialog.Builder cfun = new MyDialogBuilder(this);
                     cfun.setTitle(R.string.uc_undo)
                         .setIcon(R.drawable.circle_2arrows)
                         .setPositiveButton(R.string.cmd_yes, new DialogInterface.OnClickListener() {
@@ -1437,7 +1412,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             //if ( lInterval > 1500L ) { return; }
 
             // user pressed dialog button short after one another: present choice to turn on entering score using volume buttons
-            AlertDialog.Builder choose = getAlertDialogBuilder(context);
+            AlertDialog.Builder choose = new MyDialogBuilder(context);
             choose.setMessage(R.string.pref_VolumeKeysBehaviour_question)
                     .setIcon(R.drawable.dummy)
                     .setPositiveButton(R.string.cmd_yes, new DialogInterface.OnClickListener() {
@@ -2224,69 +2199,14 @@ touch -t 01030000 LAST.sb
 
     private NotificationTimerView m_notificationTimerView = null;
 
-    public static File getLastMatchFile(Context context) {
-        File file = new File(PreviousMatchSelector.getArchiveDir(context), "LAST." + Brand.getSport() + ".sb");
-        if ( file.exists() == false ) {
-            File fPrevVersion = new File(PreviousMatchSelector.getArchiveDir(context), "LAST.sb");
-            if ( fPrevVersion.exists() ) {
-                fPrevVersion.renameTo(file);
-            }
+    private void persist(boolean bDestroyModel) {
+        if (matchModel == null) {
+            return;
         }
-        return file;
-    }
-
-    public void persist(boolean bDestroyModel) {
-        try {
-            if (matchModel == null) {
-                return;
-            }
-            if (matchModel.isDirty() == false) {
-                return;
-            }
-
-            String sJson = matchModel.toJsonString(this); // for 5 games match around 1400 characters
-            //Log.d(TAG, "persist:" + sJson);
-            File fLastMatch = getLastMatchFile(this);
-            FileUtil.writeTo(fLastMatch, sJson);
-
-            // save named version only if it has progressed a little already
-            // store name only when at least a game has been played so that 'restarting' a named games does not overwrite the stored result
-            if ( PreferenceValues.saveMatchesForLaterUsage(this) ) {
-                storeAsPrevious(this, sJson, matchModel, false);
-            }
-            if ( bDestroyModel ) {
-                matchModel = null;
-            } else {
-                matchModel.setClean();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        PersistHelper.persist(matchModel, this);
+        if ( bDestroyModel ) {
+            matchModel = null;
         }
-    }
-
-    public static File storeAsPrevious(Context context, Model matchModel, boolean bForceStore) throws IOException {
-        return storeAsPrevious(context, null, matchModel, bForceStore);
-    }
-    private static File storeAsPrevious(Context context, String sJson, Model matchModel, boolean bForceStore) throws IOException {
-        if ( matchModel == null ) {
-            matchModel = Brand.getModel();
-            if ( sJson != null ) {
-                matchModel.fromJsonString(sJson);
-            }
-        }
-        if ( sJson == null ) {
-            sJson = matchModel.toJsonString(context);
-        }
-        File fStore = matchModel.getStoreAs(PreviousMatchSelector.getArchiveDir(context));
-        boolean bAtLeastOneGameFinished = matchModel.getNrOfFinishedGames() > 0;
-
-        Feature continueRecentMatch = PreferenceValues.continueRecentMatch(context);
-        boolean bPossiblyContinueThisMatchAsRecent = ( (continueRecentMatch != Feature.DoNotUse) && StaticMatchSelector.matchIsFrom(matchModel.getSource()));
-
-        if ( bForceStore || bAtLeastOneGameFinished || bPossiblyContinueThisMatchAsRecent ) {
-            FileUtil.writeTo(fStore, sJson);
-        }
-        return fStore;
     }
 
     // ----------------------------------------------------
@@ -2442,7 +2362,7 @@ touch -t 01030000 LAST.sb
                             sb.append("\n");
                         }
                     }
-                    dialogWithOkOnly(ScoreBoard.this, sb.toString());
+                    MyDialogBuilder.dialogWithOkOnly(ScoreBoard.this, sb.toString());
                     return true;
                 }
             });
@@ -2593,10 +2513,6 @@ touch -t 01030000 LAST.sb
         if ( newMatchButton != null ) {
             newMatchButton.setHidden(bVisible == false);
         }
-    }
-
-    private static boolean isScreenRound(Context context) {
-        return context.getResources().getConfiguration().isScreenRound();
     }
 
     /** might present a dialog to the user, Based-On-Preference. Returns true if dialog will be shown */
@@ -3503,22 +3419,6 @@ touch -t 01030000 LAST.sb
     private MenuItem[] menuItemsWithOrWithoutText = null;
 
 
-    private static Bitmap m_appIconAsBitMap = null;
-    public static Bitmap getAppIconAsBitMap(Context ctx) {
-        if ( m_appIconAsBitMap == null) {
-            Drawable icon = null;
-            try {
-                icon = ctx.getPackageManager().getApplicationIcon(ctx.getPackageName());
-            } catch (PackageManager.NameNotFoundException e) {
-            }
-            if ( icon instanceof BitmapDrawable) {
-                BitmapDrawable bmd = (BitmapDrawable) icon;
-                m_appIconAsBitMap = bmd.getBitmap();
-            }
-        }
-        return m_appIconAsBitMap;
-    }
-
     /** Populates the scoreBoard's options menu. Called only once for ScoreBoard (but re-invoked if orientation changes) */
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -3882,25 +3782,25 @@ touch -t 01030000 LAST.sb
                 ContentUtil.placeOnClipboard(this, "squore summary", ResultSender.getMatchSummary(this, matchModel));
                 return false;
             case R.id.sb_whatsapp_match_summary:
-                shareMatchSummary(this, matchModel, "com.whatsapp", null);
+                ShareHelper.shareMatchSummary(this, matchModel, "com.whatsapp", null);
                 return false;
             case R.id.sb_twitter_match_summary:
-                shareMatchSummary(this, matchModel, "com.twitter.android", null);
+                ShareHelper.shareMatchSummary(this, matchModel, "com.twitter.android", null);
                 return false;
             case R.id.sb_share_matches_summary:
                 selectMatchesForSummary();
                 return false;
             case R.id.sb_share_match_summary:
-                shareMatchSummary(this, matchModel, null, null);
+                ShareHelper.shareMatchSummary(this, matchModel, null, null);
                 return false;
             case R.id.sb_send_match_result:
-                shareMatchSummary(this, matchModel, null, PreferenceValues.getDefaultSMSTo(this));
+                ShareHelper.shareMatchSummary(this, matchModel, null, PreferenceValues.getDefaultSMSTo(this));
                 return false;
             case R.id.sb_post_match_result:
                 postMatchResult();
                 return false;
             case R.id.sb_email_match_result:
-                emailMatchResult(this, matchModel);
+                ShareHelper.emailMatchResult(this, matchModel);
                 return false;
             case R.id.cmd_import_settings:
                 ExportImportPrefs.importSettings(this);
@@ -4074,14 +3974,6 @@ touch -t 01030000 LAST.sb
         return false;
     }
 
-    public static Uri buildURL(Context context, String helpUrl, boolean bAddLocaleAsParam) {
-        if ( bAddLocaleAsParam ) {
-            boolean bUseAmpersand = helpUrl.contains("?");
-            return Uri.parse(helpUrl + (bUseAmpersand ? "&" : "?") + "lang=" + RWValues.getDeviceLanguage(context));
-        }
-        return Uri.parse(helpUrl);
-    }
-
     private void selectFilenameForExport() {
         Export export = new Export(this, null, null);
         show(export);
@@ -4170,7 +4062,7 @@ touch -t 01030000 LAST.sb
     private void openInBrowser(String url) {
         try {
             url = URLFeedTask.prefixWithBaseIfRequired(url);
-            Uri uri = buildURL(this, url,true);
+            Uri uri = Util.buildURL(this, url,true);
             Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(launchBrowser);
         } catch (Exception e) {
@@ -4625,7 +4517,7 @@ touch -t 01030000 LAST.sb
                     initScoreBoard(f);
 
                     // ensure selected match is also LAST_MATCH file
-                    FileUtil.copyFile(f, getLastMatchFile(this));
+                    FileUtil.copyFile(f, PersistHelper.getLastMatchFile(this));
 
                     sendMatchToOtherBluetoothDevice(this, true, 1000);
                 }
@@ -4659,19 +4551,8 @@ touch -t 01030000 LAST.sb
     // share match result
     // ------------------------------------------------------
 
-    /** Sending match result as SMS message to e.g. the boxmaster */
-    public static void shareMatchSummary(Context context, Model matchModel, String sPackage, String sDefaultRecipient) {
-        ResultSender resultSender = new ResultSender();
-        resultSender.send(context, matchModel, sPackage, sDefaultRecipient);
-    }
     private void selectMatchesForSummary() {
         handleMenuItem(R.id.sb_stored_matches, ArchiveTabbed.SelectTab.PreviousMultiSelect);
-    }
-
-    public static void emailMatchResult(Context context, Model matchModel) {
-        ResultMailer resultMailer = new ResultMailer();
-        boolean bHtml = PreferenceValues.mailFullScoringSheet(context);
-        resultMailer.mail(context, matchModel, bHtml);
     }
 
     private void postMatchResult() {
@@ -4774,134 +4655,6 @@ touch -t 01030000 LAST.sb
     // ------------------------------------------------------
     // dialog boxes
     // ------------------------------------------------------
-
-    //private static final int iDialogTheme = android.R.style.Theme_Translucent_NoTitleBar_Fullscreen; // this does not work, we need to specify a theme, not a style
-    //private static final int iDialogTheme = R.style.SBDialog;
-    //private static final int iDialogTheme = android.R.style.Theme_Dialog;
-    private static final int iDialogTheme = AlertDialog.THEME_TRADITIONAL;   // white titles on black background, spacing around buttons
-    //private static final int iDialogTheme = AlertDialog.THEME_HOLO_LIGHT;  // blue titles on white background, no spacing around buttons
-    //private static final int iDialogTheme = AlertDialog.THEME_HOLO_DARK;   // blue titles on dark grey background, no spacing around buttons
-    //private static final int iDialogTheme = AlertDialog.THEME_DEVICE_DEFAULT_LIGHT; // dark titles on light background, no spacing around buttons/ buttons borders not visible
-    //private static final int iDialogTheme = AlertDialog.THEME_DEVICE_DEFAULT_DARK; // white titles on dark grey background, no spacing around buttons/ buttons borders not visible
-    public static MyDialogBuilder getAlertDialogBuilder(Context context) {
-        //context = new ContextThemeWrapper(context, iDialogTheme);
-        //return new AlertDialog.Builder(context, iDialogTheme);
-        return new MyDialogBuilder(context);
-        //return new AlertDialog.Builder(context/*, iDialogTheme*/);
-    }
-
-    /**
-     * Introduced to apply some color to e.g. the Dialog title.
-     */
-    public static class MyDialogBuilder extends AlertDialog.Builder {
-        private Map<ColorPrefs.ColorTarget, Integer> target2colorMapping;
-
-        MyDialogBuilder(Context context) {
-            super(context, iDialogTheme);
-            target2colorMapping = ColorPrefs.getTarget2colorMapping(getContext());
-        }
-
-        @Override public AlertDialog.Builder setTitle(int titleId) {
-            Context context = getContext();
-            return this.setTitle(context.getString(titleId));
-        }
-
-        @Override public AlertDialog.Builder setTitle(CharSequence sTitle) {
-            if ( target2colorMapping != null ) {
-                Integer newColor = target2colorMapping.get(ColorPrefs.ColorTarget.middlest);
-                String  sColor   = ColorUtil.getRGBString(newColor);
-                long iDistanceToBlack = ColorUtil.getDistance2Black(sColor);
-                if ( iDistanceToBlack < 50 ) {
-                    // e.g. when using monochrome black
-                    sColor = "#FFFFFF";
-                }
-                sTitle = Html.fromHtml("<font color='" + sColor + "'>" + sTitle + "</font>");
-            }
-            AlertDialog.Builder builder = super.setTitle(sTitle);
-            return builder;
-        }
-
-        @Override public AlertDialog.Builder setIcon(int iconId) {
-            AlertDialog.Builder builder = super.setIcon(iconId);
-            return builder;
-        }
-
-        @Override public AlertDialog create() {
-            Log.w(TAG, "Try to use show() with listener if possible");
-            AlertDialog dialog = super.create();
-            return dialog;
-        }
-
-        @Override public AlertDialog show() {
-            ButtonUpdater listener = new ButtonUpdater(getContext());
-            return this.show(listener);
-        }
-
-        public AlertDialog show(DialogInterface.OnShowListener onShowListener) {
-            AlertDialog dialog = super.create();
-            dialog.setOnShowListener(onShowListener);
-            try {
-                dialog.show();
-            } catch (Exception e) {
-                e.printStackTrace();
-/* IH 20180322: try catch to prevent crash for following exception (reported for apk 183 on android 5.0 and 7.0)
-                android.view.WindowManager$BadTokenException:
-                at android.view.ViewRootImpl.setView (ViewRootImpl.java:922)
-                at android.view.WindowManagerGlobal.addView (WindowManagerGlobal.java:377)
-                at android.view.WindowManagerImpl.addView (WindowManagerImpl.java:105)
-                at android.app.Dialog.show (Dialog.java:404)
-                at com.doubleyellow.scoreboard.main.ScoreBoard$MyDialogBuilder.show (ScoreBoard.java:4018)
-                at com.doubleyellow.scoreboard.main.ScoreBoard$MyDialogBuilder.show (ScoreBoard.java:4012)
-                at com.doubleyellow.scoreboard.dialog.EditFormat.show (EditFormat.java:128)
-                at com.doubleyellow.scoreboard.main.DialogManager.showNextDialog (DialogManager.java:116)
-                at com.doubleyellow.scoreboard.main.ScoreBoard.showNextDialog (ScoreBoard.java:4061)
-                at com.doubleyellow.scoreboard.main.ScoreBoard.triggerEvent (ScoreBoard.java:2812)
-                at com.doubleyellow.scoreboard.timer.Timer$SBCountDownTimer.onFinish (Timer.java:242)            }
-                at android.os.CountDownTimer$1.handleMessage (CountDownTimer.java:127)
-*/
-            }
-            return dialog;
-        }
-    }
-    public static AlertDialog dialogWithOkOnly(Context context, String sMsg) {
-        return dialogWithOkOnly(context, null, sMsg, false);
-    }
-    private static AlertDialog dialogWithOkOnly(Context context, int iResTitle, int iResMsg, boolean bAlert) {
-        return dialogWithOkOnly(context, context.getString(iResTitle), context.getString(iResMsg, Brand.getShortName(context)), bAlert);
-    }
-    public static AlertDialog dialogWithOkOnly(Context context, String sTitle, String sMsg, boolean bAlert) {
-        AlertDialog.Builder ab = getAlertDialogBuilder(context);
-        ab.setPositiveButton(android.R.string.ok, null);
-
-        if ( StringUtil.isNotEmpty(sTitle) ) {
-            ab.setTitle(sTitle);
-            ab.setIcon(bAlert? android.R.drawable.ic_dialog_alert: android.R.drawable.ic_dialog_info);
-        }
-        if ( StringUtil.isNotEmpty(sMsg) ) {
-            if( sMsg.trim().toLowerCase().endsWith("html>") ) {
-                WebView wv = new WebView(context);
-                wv.loadData(sMsg, "text/html; charset=utf-8", "UTF-8");
-                ab.setView(wv);
-            } else {
-                ab.setMessage(sMsg);
-            }
-        }
-
-        try {
-            return ab.show();
-        } catch (Exception e) {
-/* IH 20170607: try catch to prevent crash for following exception (reported for apk 144 on android 5.0 and 7.0)
-            android.view.WindowManager$BadTokenException:
-            at android.view.ViewRootImpl.setView(ViewRootImpl.java:570)
-            at android.view.WindowManagerGlobal.addView(WindowManagerGlobal.java:272)
-            at android.view.WindowManagerImpl.addView(WindowManagerImpl.java:69)
-            at android.app.Dialog.show(Dialog.java:298)
-            at android.app.AlertDialog$Builder.show(AlertDialog.java:987)
-            at com.doubleyellow.scoreboard.main.ScoreBoard.dialogWithOkOnly(ScoreBoard.java:3547)
-*/
-            return null;
-        }
-    }
 
     DialogManager dialogManager = null;
     private synchronized void showNextDialog() {
@@ -5186,7 +4939,7 @@ touch -t 01030000 LAST.sb
             for(int iResInt: lResources.keySet()) {
                 SportType sportType = lResources.get(iResInt);
                 String sJsonDemo = ContentUtil.readRaw(this, iResInt);
-                storeAsPrevious(this, sJsonDemo, ModelFactory.getModel(sportType), true);
+                PersistHelper.storeAsPrevious(this, sJsonDemo, ModelFactory.getModel(sportType), true);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -5484,11 +5237,11 @@ touch -t 01030000 LAST.sb
                         );
                     }
                 } else {
-                    dialogWithOkOnly(context, "something went wrong with fetching " + sURL + "\n" + fetchResult);
+                    MyDialogBuilder.dialogWithOkOnly(context, "something went wrong with fetching " + sURL + "\n" + fetchResult);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                dialogWithOkOnly(context, "something went wrong with loaded content " + StringUtil.size(sContent));
+                MyDialogBuilder.dialogWithOkOnly(context, "something went wrong with loaded content " + StringUtil.size(sContent));
             }
         }
     }
@@ -5713,7 +5466,7 @@ touch -t 01030000 LAST.sb
                 String sMsg = String.format("Copy of file to import/export location %s failed (%s)", dir.getAbsolutePath(), sError);
                 lMessages.add(sMsg);
                 Log.w(TAG, sMsg);
-                dialogWithOkOnly(context, ztDownLoadShortname.toString(), ListUtil.join(lMessages, "\n\n"), true);
+                MyDialogBuilder.dialogWithOkOnly(context, ztDownLoadShortname.toString(), ListUtil.join(lMessages, "\n\n"), true);
             }
 
             if ( ztDownLoadShortname == ZipType.SquoreAll ) {
@@ -6010,7 +5763,7 @@ touch -t 01030000 LAST.sb
         pullOrPushMatchOverBluetooth(sDeviceName);
     }
     public synchronized void pullOrPushMatchOverBluetooth(String sDeviceName) {
-        AlertDialog.Builder cfpop = getAlertDialogBuilder(this);
+        AlertDialog.Builder cfpop = new MyDialogBuilder(this);
         if ( isWearable() == false ) {
             cfpop.setTitle(R.string.bt_pull_or_push)
                  .setIcon(android.R.drawable.stat_sys_data_bluetooth);
@@ -6076,34 +5829,32 @@ touch -t 01030000 LAST.sb
     }
 
     private static CountDownTimer m_cdtSendMatchToOther = null;
-    public static void sendMatchToOtherBluetoothDevice(final Context ctx, boolean bOnlyAsMaster, int iDelayMs) {
-        if ( mBluetoothControlService == null) {
-            return;
-        }
+    public void sendMatchToOtherBluetoothDevice(final Context ctx, boolean bOnlyAsMaster, int iDelayMs) {
+        if ( mBluetoothControlService != null) {
+            if  ( mBluetoothControlService.getState().equals(BTState.CONNECTED)
+             && ( (bOnlyAsMaster == false) || BTRole.Master.equals(m_blueToothRole) )
+                ) {
 
-        if  ( mBluetoothControlService.getState().equals(BTState.CONNECTED)
-         && ( (bOnlyAsMaster == false) || BTRole.Master.equals(m_blueToothRole) )
-            ) {
-
-            if ( m_cdtSendMatchToOther!= null) {
-                m_cdtSendMatchToOther.cancel();
-            }
-            m_cdtSendMatchToOther = new CountDownTimer(iDelayMs, 500) {
-                @Override public void onTick(long millisUntilFinished) { }
-                @Override public void onFinish() {
-                    String sJson = matchModel.toJsonString(ctx);
-                    mBluetoothControlService.write( sJson.length() + ":" + sJson );
-
-                    sendMatchFromToWearable(sJson, ctx);
+                if ( m_cdtSendMatchToOther!= null) {
+                    m_cdtSendMatchToOther.cancel();
                 }
-            };
-            m_cdtSendMatchToOther.start();
-        } else {
-            Log.d(TAG, "Bluetooth: Not sending complete match");
+                m_cdtSendMatchToOther = new CountDownTimer(iDelayMs, 500) {
+                    @Override public void onTick(long millisUntilFinished) { }
+                    @Override public void onFinish() {
+                        String sJson = matchModel.toJsonString(ctx);
+                        mBluetoothControlService.write( sJson.length() + ":" + sJson );
+
+                        //m_wearableHelper.sendMatchFromToWearable(sJson, ctx);
+                    }
+                };
+                m_cdtSendMatchToOther.start();
+            } else {
+                Log.d(TAG, "Bluetooth: Not sending complete match");
+            }
         }
 
         String sJson = matchModel.toJsonString(ctx);
-        sendMatchFromToWearable(sJson, ctx);
+        m_wearableHelper.sendMatchFromToWearable(sJson, ctx);
     }
 
     public void sendFlagToOtherBluetoothDevice(Context ctx, String sCountryCode) {
@@ -6182,7 +5933,7 @@ touch -t 01030000 LAST.sb
             }
         }
 
-        sendMessageToWearables(this, BRAND_PATH, sMessage);
+        m_wearableHelper.sendMessageToWearables(this, sMessage);
     }
 
     private void addMethodAndArgs(StringBuilder sb, BTMethods method, Object[] args) {
@@ -6226,7 +5977,7 @@ touch -t 01030000 LAST.sb
                 iReceivingBTFileLength = Integer.parseInt(sLength);
                 readMessage = readMessage.substring(sLength.length() + 1);
                 if ( bTrueWearable_FalsePairedBluetooth ) {
-                    m_wearableRole = WearRole.Equal;
+                    m_wearableHelper.setWearableRole(WearRole.Equal);
                 }
             }
             if ( iReceivingBTFileLength > 0 ) {
@@ -6244,9 +5995,9 @@ touch -t 01030000 LAST.sb
 
                     if ( sFileContent.startsWith("{") && sFileContent.endsWith("}") ) {
                         try {
-                            storeAsPrevious(this, matchModel, false);
+                            PersistHelper.storeAsPrevious(this, matchModel, false);
                             //persist(true);
-                            File fJson = getLastMatchFile(this);
+                            File fJson = PersistHelper.getLastMatchFile(this);
                             FileUtil.writeTo(fJson, sFileContent);
 
                             matchModel = null;
@@ -6488,7 +6239,7 @@ touch -t 01030000 LAST.sb
                             }
                         }
                         if ( bRequestModel ) {
-                            new SendMessageToWearableTask(this).execute(BRAND_PATH, BTMethods.requestCompleteJsonOfMatch.toString());
+                            m_wearableHelper.sendMessageToWearablesUnchecked(this, BTMethods.requestCompleteJsonOfMatch.toString());
 /*
                             if ( isWearable() ) {
                                 String sJson = matchModel.toJsonString(this);
@@ -6587,7 +6338,7 @@ touch -t 01030000 LAST.sb
             addToDialogStack(selectDevice);
         } else {
             // show dialog with info about how to solve/help/why
-            dialogWithOkOnly(this, iResIds[0], iResIds[1], false);
+            MyDialogBuilder.dialogWithOkOnly(this, iResIds[0], iResIds[1], false);
         }
 /*
         Intent nm = new Intent(this, DeviceListActivity.class);
@@ -6654,321 +6405,22 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
     // --------------------- Wearable ---------------------
     // ----------------------------------------------------
+    private static boolean isScreenRound(Context context) {
+        return context.getResources().getConfiguration().isScreenRound();
+    }
+
     private boolean isWearable() {
         return ViewUtil.isWearable(this);
     }
     private void onPauseWearable() {
-      //Wearable.getDataClient      (this).removeListener(onDataChangedListener);
-        Wearable.getMessageClient   (this).removeListener(onMessageReceivedListener);
-        Wearable.getCapabilityClient(this).removeListener(onCapabilityChangedListener);
+        m_wearableHelper.onPause(this);
     }
-    private static final boolean m_bStartAppOnWear = false;
+    private WearableHelper m_wearableHelper = null;
     private void onResumeWearable() {
-      //Wearable.getDataClient      (this).addListener(onDataChangedListener);
-        Wearable.getMessageClient   (this).addListener(onMessageReceivedListener);
-        Wearable.getCapabilityClient(this).addListener(onCapabilityChangedListener, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
-
-        // Initial request for devices with our capability, aka, our Wear app installed.
-        findWearDevicesWithApp();
-
-        // Initial request for all Wear devices connected (with or without our capability).
-        // Additional Note: Because there isn't a listener for ALL Nodes added/removed from network
-        // that isn't deprecated, we simply update the full list when the Google API Client is
-        // connected and when capability changes come through in the onCapabilityChanged() method.
-        findAllWearDevices();
-
-        if ( isWearable() ) {
-        } else {
-            // TODO: only once!! not on rotate
-            //sendMessageToWearables(this, DataLayerListenerService.START_ACTIVITY_PATH, "");
-            if ( m_bStartAppOnWear ) {
-                sendDataToWearables(DataLayerListenerService.START_ACTIVITY_PATH, "THE_TIME_TEST", "");
-            }
-
+        if ( m_wearableHelper == null ) {
+            m_wearableHelper = new WearableHelper(this);
         }
     }
-    /** variables used to not SEND a message back while handling an INCOMING message */
-    private static boolean m_bHandlingWearableMessageInProgress = false;
-    private MessageClient.OnMessageReceivedListener onMessageReceivedListener = new MessageClient.OnMessageReceivedListener() {
-        @Override public void onMessageReceived(@NonNull MessageEvent messageEvent) {
-            byte[] baData = messageEvent.getData();
-            String sData  = new String(baData);
-            String sourceNodeId = messageEvent.getSourceNodeId();
-            // messageEvent.getPath() // typically BRAND_PATH
-            Log.d(TAG, String.format("[WEAR] reqid %d from %s received: %s", messageEvent.getRequestId(), sourceNodeId , sData));
-
-            // received a message from the handheld-wearable counterpart: handle change here
-            m_bHandlingWearableMessageInProgress = true;
-            interpretReceivedMessage(sData, true);
-            m_bHandlingWearableMessageInProgress = false;
-        }
-    };
-
-    private Set<Node>  m_lWearNodesWithApp;
-    private List<Node> m_lAllConnectedNodes;
-    private CapabilityClient.OnCapabilityChangedListener onCapabilityChangedListener = new CapabilityClient.OnCapabilityChangedListener() {
-        // Is triggered when capabilities change (install/uninstall wear app). Also on start?
-        @Override public void onCapabilityChanged(@NonNull CapabilityInfo capabilityInfo) {
-            Log.d(TAG, "capabilityInfo: " + capabilityInfo); // e.g : [Node{Samsung Galaxy S7, id=fbc3c3e2, hops=1, isNearby=true}]
-            m_lWearNodesWithApp = capabilityInfo.getNodes();
-/*
-            // Because we have an updated list of devices with/without our app, we need to also update our list of active Wear devices.
-            if ( isWearable() == false ) {
-                findAllWearDevices();
-
-                considerWearableNodesAndTakeAction();
-            }
-*/
-        }
-    };
-    public static void sendMatchFromToWearable(String sJson, Context ctx) {
-        if ( m_wearableRole == null ) {
-            m_wearableRole = WearRole.Equal;
-        }
-        //sendMessageToWearables(ctx, BRAND_PATH, sJson.length() + ":" + sJson); // don't : bypass check and start async task directly
-        new SendMessageToWearableTask(ctx).execute(BRAND_PATH, sJson.length() + ":" + sJson);
-    }
-
-    private static void sendMessageToWearables(Context context, String sPath, String sMessage) {
-        if ( BTRole.Equal.equals(m_blueToothRole) == false ) {
-            // other manual set up bluetooth connection active
-            Log.d(TAG, "[WEAR] Manually paired via bluetooth... Not sending to wearable");
-        }
-        if ( m_bHandlingWearableMessageInProgress ) {
-            Log.d(TAG, "[WEAR] Not sending message " + sMessage + ". Still interpreting incoming message");
-            return;
-        }
-        if ( sMessage.startsWith(BTMethods.requestCompleteJsonOfMatch.toString() ) )  {
-            // independent of current wearable role, send anyways
-        } else if ( m_wearableRole == null ) {
-            Log.d(TAG, "[WEAR] No match has been exchanged. Not sending: " + sMessage);
-            return;
-        }
-        new SendMessageToWearableTask(context).execute(sPath, sMessage);
-    }
-    private static class SendMessageToWearableTask extends AsyncTask<String, Void, String> {
-        private MessageClient messageClient = null;
-        private NodeClient    nodeClient    = null;
-
-        private SendMessageToWearableTask(Context ctx) {
-            messageClient = Wearable.getMessageClient(ctx);
-            nodeClient    = Wearable.getNodeClient(ctx);
-        }
-        @Override protected String doInBackground(String[] objects) {
-            if ( nodeClient == null ) {
-                Log.d(TAG, "No instance of " + NodeClient.class.getName());
-                return null;
-            }
-            if ( messageClient == null ) { return null; }
-
-            try {
-                Task<List<Node>> nodeListTask = nodeClient.getConnectedNodes();
-                List<Node> nodes = Tasks.await(nodeListTask);
-
-                if ( ListUtil.isEmpty(nodes) ) { return null; }
-                for( Node node : nodes ) {
-                    String sPath    = objects[0];
-                    String sMessage = objects[1];
-                    Task<Integer> sendMessageTask = messageClient.sendMessage(node.getId(), sPath, sMessage.getBytes());
-                    Log.d(TAG, "[WEAR] Send message :" + sMessage);
-                    Integer requestId = Tasks.await(sendMessageTask);
-                    Log.d(TAG, "Send result: " + requestId); // just an (for every call increasing) integer. Same number as messageEvent.getRequestId() on receiving end
-                }
-            } catch (Exception exception) {
-                Log.e(TAG, "Task failed: " + exception);
-            }
-            return null;
-        }
-    }
-
-    public static final String BRAND_PATH              = "/" + Brand.brand;
-
-    // Name of capability listed in Wear app's wear.xml.
-    // IMPORTANT NOTE: This should be named differently than your Phone app's capability.
-    private static final String CAPABILITY_APP_WEAR     = "verify_remote_app_wear";
-    private static final String CAPABILITY_APP_HANDHELD = "verify_remote_app_handheld";
-
-    private void findWearDevicesWithApp() {
-        Log.d(TAG, "findWearDevicesWithApp()");
-
-        CapabilityClient capabilityClient = Wearable.getCapabilityClient(this);
-        String sCheckCapability = isWearable() ? CAPABILITY_APP_HANDHELD : CAPABILITY_APP_WEAR;
-        Task<CapabilityInfo> capabilityInfoTask = capabilityClient.getCapability(sCheckCapability, CapabilityClient.FILTER_ALL);
-
-        capabilityInfoTask.addOnCompleteListener(new OnCompleteListener<CapabilityInfo>() {
-            @Override public void onComplete(Task<CapabilityInfo> task) {
-                if ( task.isSuccessful() ) {
-                    CapabilityInfo capabilityInfo = task.getResult();
-                    m_lWearNodesWithApp = capabilityInfo.getNodes();
-
-                    Log.d(TAG, "Capable Nodes: " + m_lWearNodesWithApp); // [Node{Carlyle HR 1748, id=7a6a0c72, hops=1, isNearby=true}]
-
-                    considerWearableNodesAndTakeAction();
-                } else {
-                    Log.w(TAG, "Capability request failed to return any results.");
-                }
-            }
-        });
-    }
-    private void findAllWearDevices() {
-        Log.d(TAG, "findAllWearDevices()");
-
-        NodeClient nodeClient = Wearable.getNodeClient(this);
-        Task<List<Node>> NodeListTask = nodeClient.getConnectedNodes();
-
-        NodeListTask.addOnCompleteListener(new OnCompleteListener<List<Node>>() {
-            @Override public void onComplete(Task<List<Node>> task) {
-                if ( task.isSuccessful() ) {
-                    Log.d(TAG, "Node request succeeded.");
-                    m_lAllConnectedNodes = task.getResult();
-                } else {
-                    Log.w(TAG, "Node request failed to return any results.");
-                }
-
-                considerWearableNodesAndTakeAction();
-            }
-        });
-    }
-    private void considerWearableNodesAndTakeAction() {
-        Log.d(TAG, "verifyNodeAndUpdateUI()");
-
-        if ((m_lWearNodesWithApp == null) || (m_lAllConnectedNodes == null)) {
-            Log.d(TAG, "Waiting on Results for both 'connected nodes' and 'nodes with app'");
-        } else if ( m_lAllConnectedNodes.isEmpty() ) {
-/*
-        } else if ( m_lWearNodesWithApp.isEmpty() ) {
-            Log.d(TAG, MISSING_ALL_MESSAGE);
-            openPlayStoreOnWearDevicesWithoutApp();
-*/
-        } else if ( m_lWearNodesWithApp.size() < m_lAllConnectedNodes.size() ) {
-            //openOrSuggestInstallOnWearDevices();
-        } else {
-            if ( isWearable() ) {
-                //pullOrPushMatchOverBluetoothWearable("Handheld");
-                new SendMessageToWearableTask(this).execute(BRAND_PATH, BTMethods.openSuggestMatchSyncDialogOnOtherPaired.toString());
-            } else {
-                if ( m_bStartAppOnWear ) {
-                    openOrSuggestInstallOnWearDevices();
-                }
-            }
-        }
-    }
-
-    private static boolean m_bAttemptToStartOnWearableDone = false;
-    private void openOrSuggestInstallOnWearDevices() {
-        Log.d(TAG, "openOrSuggestInstallOnWearDevices()");
-        if ( ListUtil.isEmpty(m_lAllConnectedNodes)) {
-            return;
-        }
-        if ( m_bAttemptToStartOnWearableDone ) { return; }
-        m_bAttemptToStartOnWearableDone = true;
-/*
-<activity android:name="com.google.android.finsky.activities.MarketDeepLinkHandlerActivity"
-          android:enabled="true"
-          android:exported="true"
-          android:excludeFromRecents="true"
-          android:visibleToInstantApps="true">
-
-            <meta-data android:name="instantapps.clients.allowed" android:value="true" />
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="market" android:host="details" />
-            </intent-filter>
-        </activity>
-*/
-
-        String sMarketURL = "market://details" + "?id=" + this.getPackageName();
-
-        for (Node node : m_lAllConnectedNodes) {
-            String sAppURL = "ihoeve://" + Brand.brand.toString().toLowerCase();
-                   sAppURL = "market://squore.double-yellow.be"; // TODO
-                   sAppURL = Brand.brand.getBaseURL() + "/show/20"; // TODO:
-
-            String sURL = sAppURL;
-            if ( m_lWearNodesWithApp.contains(node) == false ) {
-                sURL = sMarketURL;
-            }
-            Intent intent = new Intent(Intent.ACTION_VIEW).addCategory(Intent.CATEGORY_BROWSABLE).setData(Uri.parse(sURL));
-            RemoteIntent.startRemoteActivity(this, intent, mResultReceiver, node.getId());
-        }
-    }
-
-    /**
-     * if not set, don't send messages between devices, allowing both to keep score of a different match
-     * If set to Equal, match has been exchanged deliberatly and try to keep them in sync from now on.
-     **/
-    private static WearRole m_wearableRole = null;
-
-    // Result from sending RemoteIntent to wear device(s) to open app in play/app store.
-    private final ResultReceiver mResultReceiver = new ResultReceiver(new Handler()) {
-        @Override protected void onReceiveResult(int resultCode, Bundle resultData) {
-            Log.d(TAG, "onReceiveResult: " + resultCode);
-
-            if ( resultCode == RemoteIntent.RESULT_OK ) {
-                Toast.makeText(ScoreBoard.this, "Play Store Request to Wear device successful.", Toast.LENGTH_SHORT).show();
-            } else if ( resultCode == RemoteIntent.RESULT_FAILED ) {
-                Toast.makeText(ScoreBoard.this, "Play Store Request Failed. Wear device(s) may not support Play Store,  that is, the Wear device may be version 1.0.", Toast.LENGTH_LONG).show();
-            } else {
-                throw new IllegalStateException("Unexpected result " + resultCode);
-            }
-        }
-    };
-
-    /** can e.g. be used to send a START_ACTIVITY message to a subclass of WearableListenerService */
-    private void sendDataToWearables(String sPath, String sAssetKey, String sMessage) {
-        Asset asset = Asset.createFromBytes(sMessage.getBytes());
-        PutDataMapRequest dmRequest = PutDataMapRequest.create(sPath); // ASSET_PATH
-        DataMap dataMap = dmRequest.getDataMap();
-        dataMap.putAsset(sAssetKey, asset);
-        dataMap.putLong("time", new Date().getTime());
-        PutDataRequest pdRequest = dmRequest.asPutDataRequest();
-        pdRequest.setUrgent();
-
-        DataClient dataClient = Wearable.getDataClient(this);
-        Task<DataItem> dataItemTask = dataClient.putDataItem(pdRequest);
-
-        dataItemTask.addOnSuccessListener(new OnSuccessListener<DataItem>() {
-            @Override public void onSuccess(DataItem dataItem) {
-                Log.d(TAG, "Sending was successful: " + dataItem);
-            }
-        });
-    }
-/*
-    private DataClient.OnDataChangedListener onDataChangedListener = new DataClient.OnDataChangedListener() {
-        @Override public void onDataChanged(@NonNull DataEventBuffer dataEvents) {
-            Log.d(TAG, "dataEventBuffer: " + dataEvents);
-            for (DataEvent event : dataEvents) {
-                DataItem dataItem = event.getDataItem();
-                Map<String, DataItemAsset> assets = dataItem.getAssets();
-                int type = event.getType();
-                switch (type) {
-                    case DataEvent.TYPE_CHANGED:
-                        String path = dataItem.getUri().getPath();
-                        if ( ASSET_PATH.equals(path) ) {
-                            DataMapItem dataMapItem = DataMapItem.fromDataItem(dataItem);
-                            DataMap dataMap = dataMapItem.getDataMap();
-                            Asset asset = dataMap.getAsset(ASSET_KEY);
-                            // TODO: handle the asset
-
-                            // Optionally Send message to node that created the data item
-                            Uri uri = event.getDataItem().getUri();
-                            String nodeId = uri.getHost();
-                            Wearable.getMessageClient(ScoreBoard.this).sendMessage(nodeId, DATA_ITEM_RECEIVED_PATH, uri.toString().getBytes());
-                        } else {
-                            Log.d(TAG, "Unrecognized path: " + path);
-                        }
-                        break;
-                    case DataEvent.TYPE_DELETED:
-                        break;
-                }
-            }
-        }
-    };
-*/
     // ----------------------------------------------------
     // --------------------- casting ----------------------
     // ----------------------------------------------------

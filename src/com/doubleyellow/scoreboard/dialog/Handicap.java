@@ -26,10 +26,10 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.ViewUtil;
+import com.doubleyellow.scoreboard.PersistHelper;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.HandicapFormat;
-import com.doubleyellow.scoreboard.model.JSONKey;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
@@ -265,7 +265,7 @@ public class Handicap extends BaseAlertDialog {
                     matchModel.setGameStartScoreOffset(p, iOffset);
                 }
 
-                scoreBoard.persist(false);
+                PersistHelper.persist(matchModel, context);
 
                 break;
             case DialogInterface.BUTTON_NEUTRAL:

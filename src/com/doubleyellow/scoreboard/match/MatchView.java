@@ -39,7 +39,7 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.dialog.ButtonUpdater;
-import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.prefs.*;
 import com.doubleyellow.scoreboard.view.PlayerTextView;
@@ -905,7 +905,7 @@ public class MatchView extends SBRelativeLayout
                     }
                 }
             };
-            ScoreBoard.MyDialogBuilder adb = ScoreBoard.getAlertDialogBuilder(context);
+            MyDialogBuilder adb = new MyDialogBuilder(context);
             if ( ViewUtil.isWearable(context) == false ) {
                 String sTitle = context.getString(R.string.lbl_color) + ": " + tvsPlayers[m_forPlayer.ordinal()].getText(); // not for wearable
                 adb.setTitle(sTitle);

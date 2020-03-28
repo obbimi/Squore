@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.PersistHelper;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.match.ExpandableMatchSelector;
 import com.doubleyellow.scoreboard.model.Model;
@@ -151,7 +152,7 @@ class ReadStoredMatches extends AsyncTask<String, Void, String> {
                         match.fromJsonString(sJson, false);
                     }
                     fMatchModel.delete();
-                    ScoreBoard.storeAsPrevious(activity, match, true);
+                    PersistHelper.storeAsPrevious(activity, match, true);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -212,7 +213,7 @@ class ReadStoredMatches extends AsyncTask<String, Void, String> {
                 fDuplicate.delete();
                 fMatchModel.delete();
                 try {
-                    File fReal = ScoreBoard.storeAsPrevious(activity, match, true);
+                    File fReal = PersistHelper.storeAsPrevious(activity, match, true);
                     adapter.addItem(sEventName, sDate + " " + sMatchDesc, fReal);
                 } catch (IOException e) {
                     e.printStackTrace();

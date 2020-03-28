@@ -38,6 +38,7 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.archive.PreviousMatchSelector;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.match.fixed.DialogOnClickListener;
@@ -169,7 +170,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 
         ColorPrefs.setColor(llParent);
 
-        AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
+        AlertDialog.Builder ab = new MyDialogBuilder(context);
         ab.setMessage       (saPlayers.length<2?R.string.cmd_new_matches_with:R.string.sb_edit_players)
           .setIcon          (R.drawable.circled_plus)
           .setPositiveButton(R.string.cmd_ok    , dialogClickListener)
@@ -295,7 +296,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
             ll.addView(txtNrOfPlayers);
         }
 
-        AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
+        AlertDialog.Builder ab = new MyDialogBuilder(context);
         ab.setMessage(bIsEditExistingGroupName ?R.string.cmd_edit:R.string.cmd_new_group)
                 .setIcon(bIsEditExistingGroupName ? android.R.drawable.ic_menu_edit : R.drawable.circled_plus)
                 .setPositiveButton(R.string.cmd_ok, new DialogInterface.OnClickListener() {
@@ -361,7 +362,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 
     private boolean confirmDeleteHeader(final String sHeader) {
 
-        AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
+        AlertDialog.Builder ab = new MyDialogBuilder(context);
         ab.setIcon          (android.R.drawable.ic_menu_delete)
           .setTitle         (getString(R.string.sb_delete_group_of_matches_confirm, sHeader) )
           .setNegativeButton(R.string.cmd_cancel, null)

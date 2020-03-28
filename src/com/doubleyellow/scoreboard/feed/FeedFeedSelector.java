@@ -34,6 +34,7 @@ import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.activity.XActivity;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -337,7 +338,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
           //Log.d(TAG, "Implement onLongClick");
             String    sName     = (String) v.getTag();
             JSONArray jsonArray = loadTypesAdapter.joRoot.optJSONArray(sName);
-            AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(FeedFeedSelector.this);
+            AlertDialog.Builder ab = new MyDialogBuilder(FeedFeedSelector.this);
             StringBuilder sb = new StringBuilder();
             sb.append(sName).append(" (").append(JsonUtil.size(jsonArray)).append(")").append("\n\n");
 
@@ -398,7 +399,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                     Map<String, String> existingUrls2Name = PreferenceValues.getFeedPostDetailMap(FeedFeedSelector.this, URLsKeys.FeedMatches, URLsKeys.Name, true);
                     if ( existingUrls2Name.containsKey(sNewURL) ) {
                         String sMsg = getString(R.string.feed_x_already_exist_with_name_y, sNewURL, existingUrls2Name.get(sNewURL));
-                        ScoreBoard.dialogWithOkOnly(FeedFeedSelector.this, sMsg);
+                        MyDialogBuilder.dialogWithOkOnly(FeedFeedSelector.this, sMsg);
                         return false;
                     }
 
@@ -429,7 +430,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                             }
                         }
 
-                        AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(FeedFeedSelector.this);
+                        AlertDialog.Builder ab = new MyDialogBuilder(FeedFeedSelector.this);
                         ab.setMessage(sb.toString())
                                 .setIcon(R.drawable.ic_action_web_site)
                                 .setPositiveButton(android.R.string.ok, null)

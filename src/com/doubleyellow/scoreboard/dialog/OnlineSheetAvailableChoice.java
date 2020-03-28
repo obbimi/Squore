@@ -31,6 +31,7 @@ import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.activity.ScoreSheetOnline;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
+import com.doubleyellow.scoreboard.model.Util;
 
 /**
  * Presented to the user after an online scoresheet of the match has been created.
@@ -118,7 +119,7 @@ public class OnlineSheetAvailableChoice extends BaseAlertDialog
                     context.startActivity(nm);
                     break;
                 case ViewInBrowser:
-                    Uri uriUrl = ScoreBoard.buildURL(context, sShowURL, false);
+                    Uri uriUrl = Util.buildURL(context, sShowURL, false);
                     Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
                     context.startActivity(launchBrowser); // does not (always?) work on wearable
                     break;

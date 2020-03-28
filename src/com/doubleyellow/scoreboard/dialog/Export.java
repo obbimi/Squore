@@ -32,6 +32,7 @@ import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.android.util.ExportImport;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.PersistHelper;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.archive.PreviousMatchSelector;
@@ -163,7 +164,7 @@ public class Export extends BaseAlertDialog implements HttpUploadFileTask.Upload
         File file = new File(targetDirectory, sFilename);
 
         // ensure LAST.sb is excluded from the export
-        File fLast = ScoreBoard.getLastMatchFile(context);
+        File fLast = PersistHelper.getLastMatchFile(context);
         File fLastTmp = new File(fLast.getPath() + ".tmp");
         fLast.renameTo(fLastTmp);
 
@@ -217,7 +218,7 @@ public class Export extends BaseAlertDialog implements HttpUploadFileTask.Upload
         } else {
             sMsg = context.getString(R.string.upload_to_server_failed__x, sContent);
         }
-        final AlertDialog dialog = ScoreBoard.dialogWithOkOnly(context, sMsg);
+        final AlertDialog dialog = MyDialogBuilder.dialogWithOkOnly(context, sMsg);
         if ( bSuccess ) {
             Button button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
             button.setText(R.string.cmd_share);

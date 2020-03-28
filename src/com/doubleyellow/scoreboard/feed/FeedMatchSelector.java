@@ -33,6 +33,7 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.activity.IntentKeys;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.dialog.SelectFeed;
 import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -617,12 +618,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         if ( itemAtPosition instanceof String ) {
                             List<String> lChilds = listAdapter.getChilds((String) itemAtPosition);
                             if ( ListUtil.isNotEmpty(lChilds) ) {
-                                ScoreBoard.dialogWithOkOnly(context, String.format("%s : %d", itemAtPosition, ListUtil.size(lChilds)));
+                                MyDialogBuilder.dialogWithOkOnly(context, String.format("%s : %d", itemAtPosition, ListUtil.size(lChilds)));
                                 return true;
                             }
                         } else if ( itemAtPosition instanceof JSONObject) {
                             JSONObject jo = (JSONObject) itemAtPosition;
-                            ScoreBoard.dialogWithOkOnly(context, jo.toString() );
+                            MyDialogBuilder.dialogWithOkOnly(context, jo.toString() );
                             return true;
                         }
                     }
@@ -653,7 +654,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
                     String sResultShort = (String) joModel.remove(JSONKey.result.toString());
 
-                    AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
+                    AlertDialog.Builder ab = new MyDialogBuilder(context);
                     String sMessage = /*MapUtil.toNiceString(mDetails)*/ joModel.toString(); // TODO: improve
                     ab.setMessage(sMessage)
                       .setIcon   (R.drawable.ic_action_web_site);
@@ -1341,7 +1342,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             case DoNotUse:
                 break;
             case Suggest:
-                AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
+                AlertDialog.Builder ab = new MyDialogBuilder(context);
                 ab.setMessage(m_sNoMatchesInFeed + "\n" + getString(R.string.uc_show) + " " + getString(R.string.pref_playerList) + "?");
                 ab.setIcon(R.drawable.ic_menu_cc);
                 ab.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

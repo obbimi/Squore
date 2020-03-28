@@ -45,6 +45,7 @@ import com.doubleyellow.prefs.EnumMultiSelectPreference;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.TieBreakFormat;
@@ -271,7 +272,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                                     if (iContactsCount > 300) {
                                         String sTitle = Preferences.this.getString(R.string.pref_readContactsForAutoCompletion);
                                         String sMsg = Preferences.this.getString(R.string.if_you_have_a_lot_of_contacts_dot_dot_dot, iContactsCount);
-                                        ScoreBoard.dialogWithOkOnly(Preferences.this, sTitle, sMsg, true);
+                                        MyDialogBuilder.dialogWithOkOnly(Preferences.this, sTitle, sMsg, true);
 
                                         //Toast.makeText(Preferences.this, sMsg, Toast.LENGTH_LONG).show();
                                     }
@@ -457,10 +458,10 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
         }
 
         private void showShareWarning(String sMsg) {
-            ScoreBoard.dialogWithOkOnly(Preferences.this, "Share", sMsg, true);
+            MyDialogBuilder.dialogWithOkOnly(Preferences.this, "Share", sMsg, true);
         }
         private void showShareInfo(String sMsg) {
-            ScoreBoard.dialogWithOkOnly(Preferences.this, "Share", sMsg, false);
+            MyDialogBuilder.dialogWithOkOnly(Preferences.this, "Share", sMsg, false);
             //Toast.makeText(Preferences.this, sMsg, Toast.LENGTH_LONG).show();
         }
     }

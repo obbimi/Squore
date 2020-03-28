@@ -29,8 +29,10 @@ import android.widget.*;
 import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.android.util.SimpleELAdapter;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.PersistHelper;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.ResultSender;
+import com.doubleyellow.scoreboard.ShareHelper;
 import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.dialog.*;
 import com.doubleyellow.scoreboard.history.MatchHistory;
@@ -84,7 +86,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
     }
 
     private void confirmDeleteHeader(final String sHeader) {
-        ScoreBoard.getAlertDialogBuilder(context)
+        new MyDialogBuilder(context)
                 .setIcon(android.R.drawable.ic_menu_delete)
                 .setTitle         (getString(R.string.sb_delete_group_of_matches_confirm, sHeader) )
                 .setNegativeButton(R.string.cmd_cancel, null)
@@ -96,7 +98,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
     }
 
     private void confirmDeleteMatch(final File f, final String sHeader, final String sText) {
-        ScoreBoard.getAlertDialogBuilder(context)
+        new MyDialogBuilder(context)
                 .setIcon(android.R.drawable.ic_menu_delete)
                 .setTitle         (getString(R.string.sb_delete_item, sText) )
                 .setNegativeButton(R.string.cmd_cancel, null)
@@ -318,7 +320,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
             File fCheck = match.getStoreAs(getArchiveDir(context));
             if ( fCheck.getAbsoluteFile().equals(fMatchModel) == false ) {
                 fMatchModel.delete();
-                ScoreBoard.storeAsPrevious(context, match, true);
+                PersistHelper.storeAsPrevious(context, match, true);
             }
         } catch (Exception e) {
             return false;
@@ -348,7 +350,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         } catch (Exception e) {
             return false;
         }
-        ScoreBoard.emailMatchResult(context, match);
+        ShareHelper.emailMatchResult(context, match);
         return true;
     }
     private boolean messageMatch(File fMatchModel, String sPackage) {
@@ -360,7 +362,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
             return false;
         }
         String defaultSMSTo = PreferenceValues.getDefaultSMSTo(context);
-        ScoreBoard.shareMatchSummary(context, match, sPackage, defaultSMSTo);
+        ShareHelper.shareMatchSummary(context, match, sPackage, defaultSMSTo);
         return true;
     }
     private boolean clipboardMatch(File fMatchModel) {
@@ -447,7 +449,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         }
         List<File> files = ContentUtil.getFilesRecursive(getArchiveDir(context), "^(" + sYear + ").*\\.(sb|json)", null, dNewerThan);
         List<File> lAllMatchFiles = new MultiSelectList<File>(files);
-        lAllMatchFiles.remove(ScoreBoard.getLastMatchFile(context)); // TODO: for multisports version remove possible multiple LAST.xxx.sb files
+        lAllMatchFiles.remove(PersistHelper.getLastMatchFile(context)); // TODO: for multisports version remove possible multiple LAST.xxx.sb files
         lAllMatchFiles.remove(ColorPrefs.getFile(context));
         return lAllMatchFiles;
     }
@@ -457,7 +459,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
     }
 
     public static void confirmDeleteAllPrevious(final Context context) {
-        AlertDialog.Builder ab = ScoreBoard.getAlertDialogBuilder(context);
+        AlertDialog.Builder ab = new MyDialogBuilder(context);
         ab.setIcon          (android.R.drawable.ic_menu_delete)
           .setTitle         (R.string.hms_delete_all )
           .setNegativeButton(R.string.cmd_cancel, null)

@@ -36,6 +36,7 @@ import android.widget.LinearLayout;
 import com.doubleyellow.android.view.ToggleResult;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.PersistHelper;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.activity.XActivity;
@@ -174,7 +175,7 @@ public class MatchHistory extends XActivity implements MenuHandler
 
         // if no file found in the intent presume it is started from the main scoreboard
         if ( file == null ) {
-            file = ScoreBoard.getLastMatchFile(this);
+            file = PersistHelper.getLastMatchFile(this);
             bIsStoredMatch = false;
         }
 
