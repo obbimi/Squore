@@ -337,14 +337,14 @@ public abstract class Model implements Serializable
     /** For overwriting by GSMModel */
     final void setGamesScoreHistory(List<List<ScoreLine>> l) {
         if ( m_lGamesScorelineHistory != null ) {
-            Log.w(TAG, "m_lGamesScorelineHistory : Setting to a new array");
+            //Log.w(TAG, "m_lGamesScorelineHistory : Setting to a new array");
         }
         m_lGamesScorelineHistory = l;
     }
     /** For overwriting by GSMModel */
     final void setPlayer2GamesWonHistory(final List<Map<Player, Integer>> l) {
         if ( m_lPlayer2GamesWon != null ) {
-            Log.w(TAG, "m_lPlayer2GamesWon : Setting to a new array");
+            //Log.w(TAG, "m_lPlayer2GamesWon : Setting to a new array");
         }
         m_lPlayer2GamesWon = l;
         if ( l.isEmpty() ) {
@@ -363,7 +363,7 @@ public abstract class Model implements Serializable
     /** For overwriting by GSMModel */
     final void setPlayer2EndPointsOfGames(List<Map<Player, Integer>> l) {
         if ( m_lPlayer2EndPointsOfGames != null ) {
-            Log.w(TAG, "m_lPlayer2EndPointsOfGames : Setting to a new array");
+            //Log.w(TAG, "m_lPlayer2EndPointsOfGames : Setting to a new array");
         }
         m_lPlayer2EndPointsOfGames = l;
     }
@@ -387,7 +387,7 @@ public abstract class Model implements Serializable
     /** For overwriting by GSMModel */
     final void setGamesTiming(List<GameTiming> l) {
         if ( m_lGameTimings != null ) {
-            Log.w(TAG, "m_lGameTimings : Setting to a new array");
+            //Log.w(TAG, "m_lGameTimings : Setting to a new array");
         }
         m_lGameTimings = l;
         if ( ListUtil.isEmpty(m_lGameTimings) ) {
@@ -2302,9 +2302,11 @@ public abstract class Model implements Serializable
             JSONArray games = joMatch.optJSONArray(JSONKey.score.toString());
             if ( JsonUtil.isNotEmpty(games) ) {
                 scoreLine = scoreHistoryFromJSON(bMatchFormatIsSet, games);
+/*
                 if ( isPossibleGameVictory() ) {
-                    endGame(false, true); // introduced for graph not having nr of games correctly
+                    endGame(false, true); // introduced for graph not having nr of games correctly, does screw up for GSMModel if
                 }
+*/
             }
 
             // read conduct types
@@ -2552,6 +2554,11 @@ public abstract class Model implements Serializable
                     scoreOfGameInProgress.put(scoreLine.getScoringPlayer(), scoreLine.getScore());
                 }
             }
+        }
+
+        clearPossibleGSM();
+        if ( isPossibleGameVictory() ) {
+            endGame(false, true); // introduced for graph not having nr of games correctly
         }
         // return last scoreline to e.g. determine server
         return scoreLine;
@@ -3334,7 +3341,7 @@ public abstract class Model implements Serializable
         //Log.v(TAG, String.format("Dirty cnt: %s , score related %s", m_iDirty, bScoreRelated));
     }
 
-    protected void clearPossibleGSM() {
+    void clearPossibleGSM() {
         m_possibleMatchForPrev.clear();m_possibleMatchForPrev.putAll(m_possibleMatchFor);
         m_possibleMatchFor    .clear();
         m_possibleGameForPrev .clear();m_possibleGameForPrev .putAll(m_possibleGameFor );
@@ -3371,7 +3378,7 @@ public abstract class Model implements Serializable
         }
         String sAvsB = getScore(Player.A) + "-" + getScore(Player.B);
         if ( sAvsB.equals("0-0") ) {
-            return "GtwM:" + getNrOfGamesToWinMatch() + ", PtwG:" + getNrOfPointsToWinGame();
+            return "GtwM:" + getNrOfGamesToWinMatch() + ", PtwG:" + getNrOfPointsToWinGame() + ", " + getGameScores();
         }
         return (sNvsN + " " + getGameScores() + " [" + sAvsB + "]").trim();
     }

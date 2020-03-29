@@ -2840,7 +2840,11 @@ touch -t 01030000 LAST.sb
                 updateTimerFloatButton();
                 updateTossFloatButton();
                 updateMicrophoneFloatButton();
-                showShareFloatButton(false, false);
+                if ( iDelta == 0 ) {
+                    showShareFloatButton(false, matchModel.matchHasEnded());
+                } else {
+                    showShareFloatButton(false, false);
+                }
                 iBoard.undoGameBallColorSwitch();
                 showAppropriateMenuItemInActionBar();
                 iBoard.updateBrandLogoBasedOnScore();
@@ -3075,6 +3079,7 @@ touch -t 01030000 LAST.sb
             }
             if ( bLockStateChanged == false ) {
                 updateNewMatchFloatButton();
+                showChangeSideFloatButton(matchModel.getLockState().isLocked()==false);
             }
         }
     }
@@ -5843,18 +5848,16 @@ touch -t 01030000 LAST.sb
                     @Override public void onFinish() {
                         String sJson = matchModel.toJsonString(ctx);
                         mBluetoothControlService.write( sJson.length() + ":" + sJson );
-
-                        //m_wearableHelper.sendMatchFromToWearable(sJson, ctx);
                     }
                 };
                 m_cdtSendMatchToOther.start();
             } else {
-                Log.d(TAG, "Bluetooth: Not sending complete match");
+              //Log.d(TAG, "Bluetooth: Not sending complete match");
             }
         }
 
         String sJson = matchModel.toJsonString(ctx);
-        m_wearableHelper.sendMatchFromToWearable(sJson, ctx);
+        m_wearableHelper.sendMatchFromToWearable(ctx, sJson);
     }
 
     public void sendFlagToOtherBluetoothDevice(Context ctx, String sCountryCode) {
@@ -5977,7 +5980,7 @@ touch -t 01030000 LAST.sb
                 iReceivingBTFileLength = Integer.parseInt(sLength);
                 readMessage = readMessage.substring(sLength.length() + 1);
                 if ( bTrueWearable_FalsePairedBluetooth ) {
-                    m_wearableHelper.setWearableRole(WearRole.Equal);
+                    //m_wearableHelper.setWearableRole(WearRole.Equal);
                 }
             }
             if ( iReceivingBTFileLength > 0 ) {
@@ -6191,7 +6194,7 @@ touch -t 01030000 LAST.sb
                     break;
                 }
                 case Toast: {
-                    if (  sMethodNArgs.length > 1 ) {
+                    if ( sMethodNArgs.length > 1 ) {
                         String sMsg = sMethodNArgs[1];
                         if ( StringUtil.isInteger(sMsg) ) {
                             // a resource id was send
@@ -6205,10 +6208,46 @@ touch -t 01030000 LAST.sb
                     }
                     break;
                 }
+                case resume: // fall through
+                case resume_confirmed: {
+                    String sJson = matchModel.toJsonString(null, null);
+                    int iJsonLengthHere = sJson.length();
+
+                    m_wearableHelper.setWearableRole(WearRole.AppRunningOnBoth);
+
+                    if ( btMethod.equals(BTMethods.resume) ) {
+                        m_wearableHelper.sendMessageToWearablesUnchecked(this, BTMethods.resume_confirmed + "(" + matchModel.getMatchStartTimeHHMMSSXXX() + "," + iJsonLengthHere + ")");
+                    } else {
+                        String sMatchStartTimeHere        = matchModel.getMatchStartTimeHHMMSSXXX();
+                        String sMatchStartTimeCounterPart = ( sMethodNArgs.length > 1 ) ? sMethodNArgs[1]: null;
+                        int    iMatchJsonLengthOther      = ( sMethodNArgs.length > 2 ) ? Integer.parseInt(sMethodNArgs[2]) : 0;
+                        Log.d(TAG, String.format("Match times (here - counterpart): %s - %s", sMatchStartTimeHere, sMatchStartTimeCounterPart));
+                        if ( sMatchStartTimeHere.equals(sMatchStartTimeCounterPart) ) {
+                            Log.d(TAG, String.format("Match json length (here - counterpart) : %d - %d", iJsonLengthHere, iMatchJsonLengthOther));
+                            // sync has happened before, keep them in sync. Take json from device that is 'biggest'
+                            if ( iJsonLengthHere > iMatchJsonLengthOther ) {
+                                m_wearableHelper.sendMatchFromToWearable(this, sJson);
+                            } else if ( iJsonLengthHere < iMatchJsonLengthOther ) {
+                                m_wearableHelper.sendMessageToWearablesUnchecked(this, BTMethods.requestCompleteJsonOfMatch);
+                            } else {
+                                // assume matches are still in sync
+                            }
+                        } else if ( isWearable() == false ) {
+                            pullOrPushMatchOverBluetoothWearable( isWearable() ? "Handheld" : "Wearable");
+                        }
+                    }
+                    break;
+                }
+                case paused: {
+                    m_wearableHelper.setWearableRole(WearRole.Paused);
+                    break;
+                }
+/*
                 case openSuggestMatchSyncDialogOnOtherPaired: {
                     pullOrPushMatchOverBluetoothWearable( isWearable() ? "Handheld" : "Wearable");
                     break;
                 }
+*/
                 case lock: {
                     handleMenuItem(R.id.sb_lock);
                     break;
@@ -6239,20 +6278,11 @@ touch -t 01030000 LAST.sb
                             }
                         }
                         if ( bRequestModel ) {
-                            m_wearableHelper.sendMessageToWearablesUnchecked(this, BTMethods.requestCompleteJsonOfMatch.toString());
-/*
-                            if ( isWearable() ) {
-                                String sJson = matchModel.toJsonString(this);
-                                sendMatchFromToWearable(sJson, this);
-                            } else {
-                                // assume handheld was temporary used for something else and score was entered on wearable
-                                new SendMessageToWearableTask(this).execute(BRAND_PATH, BTMethods.requestCompleteJsonOfMatch.toString());
-                            }
-*/
+                            m_wearableHelper.sendMessageToWearablesUnchecked(this, BTMethods.requestCompleteJsonOfMatch);
                         }
                     }
                 } else {
-                    Log.d(TAG, "[WEAR] verify score not required for " + btMethod);
+                    //Log.d(TAG, "[WEAR] verify score not required for " + btMethod);
                 }
             } else {
                 if ( BTRole.Slave.equals(m_blueToothRole) && btMethod.verifyScore() ) {
@@ -6420,6 +6450,7 @@ touch -t 01030000 LAST.sb
         if ( m_wearableHelper == null ) {
             m_wearableHelper = new WearableHelper(this);
         }
+        m_wearableHelper.onResume(this);
     }
     // ----------------------------------------------------
     // --------------------- casting ----------------------

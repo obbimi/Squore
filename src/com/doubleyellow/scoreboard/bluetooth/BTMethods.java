@@ -42,8 +42,14 @@ public enum BTMethods {
 
     requestCompleteJsonOfMatch(false),
     requestCountryFlag(false),
+
     /** mainly used to be send from wearable to more userfriendly handheld */
-    openSuggestMatchSyncDialogOnOtherPaired(false),
+    //openSuggestMatchSyncDialogOnOtherPaired(false),
+    /** to check when app opens if it also open on counterpart device */
+    resume(false),
+    resume_confirmed(false),
+    /** to let counter part app know this one is losing focus */
+    paused(false),
 
     lock(false),
     unlock(false),

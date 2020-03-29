@@ -227,7 +227,7 @@ public class Match extends XActivity implements MenuHandler
         boolean bNeutralButtonIsBackToList = StaticMatchSelector.matchIsFrom(m_sSource)
                                           || FeedMatchSelector  .class.getSimpleName().equals(m_sSource)
                                           || ((m_sSource != null) && m_sSource.startsWith("http"));
-        if ( bNeutralButtonIsBackToList ) {
+        if ( bNeutralButtonIsBackToList && (m_bIsEditMatch==false) ) {
             handleMenuItem(R.id.dyn_new_match);
             return;
         }

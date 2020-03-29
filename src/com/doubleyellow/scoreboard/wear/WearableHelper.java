@@ -20,7 +20,6 @@ package com.doubleyellow.scoreboard.wear;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -37,7 +36,6 @@ import com.doubleyellow.util.ListUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.CapabilityInfo;
@@ -59,41 +57,46 @@ import java.util.Set;
 
 import static com.doubleyellow.scoreboard.main.ScoreBoard.m_blueToothRole;
 
-public class WearableHelper {
+public class WearableHelper
+{
     private static final String TAG = "SB." + WearableHelper.class.getSimpleName();
 
-    private static final boolean m_bStartAppOnWear = false;
+    private static final boolean START_APP_ON_WEAR = false;
 
     public WearableHelper(ScoreBoard scoreBoard) {
       //Wearable.getDataClient      (this).addListener(onDataChangedListener);
         onMessageReceivedListener = new MessageListener(scoreBoard);
 
-        Wearable.getMessageClient   (scoreBoard).addListener(onMessageReceivedListener);
-        Wearable.getCapabilityClient(scoreBoard).addListener(onCapabilityChangedListener, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
+      //Wearable.getCapabilityClient(scoreBoard).addListener(onCapabilityChangedListener, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
 
         // Initial request for devices with our capability, aka, our Wear app installed.
-        findWearDevicesWithApp(scoreBoard);
+        //findWearDevicesWithApp(scoreBoard);
 
         // Initial request for all Wear devices connected (with or without our capability).
         // Additional Note: Because there isn't a listener for ALL Nodes added/removed from network
         // that isn't deprecated, we simply update the full list when the Google API Client is
         // connected and when capability changes come through in the onCapabilityChanged() method.
-        findAllWearDevices(scoreBoard);
+        //findAllWearDevices(scoreBoard);
 
         if ( ViewUtil.isWearable(scoreBoard) ) {
         } else {
             // TODO: only once!! not on rotate
             //sendMessageToWearables(this, DataLayerListenerService.START_ACTIVITY_PATH, "");
-            if ( m_bStartAppOnWear ) {
+            if (START_APP_ON_WEAR) {
                 sendDataToWearables(scoreBoard, DataLayerListenerService.START_ACTIVITY_PATH, "THE_TIME_TEST", "");
             }
         }
     }
 
-    public void onPause(ScoreBoard scoreBoard) {
+    public void onResume(Context scoreBoard) {
+        Wearable.getMessageClient   (scoreBoard).addListener(onMessageReceivedListener);
+        sendMessageToWearablesUnchecked(scoreBoard, BTMethods.resume);
+    }
+    public void onPause(Context scoreBoard) {
+        sendMessageToWearablesUnchecked(scoreBoard, BTMethods.paused);
         //Wearable.getDataClient      (this).removeListener(onDataChangedListener);
         Wearable.getMessageClient   (scoreBoard).removeListener(onMessageReceivedListener);
-        Wearable.getCapabilityClient(scoreBoard).removeListener(onCapabilityChangedListener);
+      //Wearable.getCapabilityClient(scoreBoard).removeListener(onCapabilityChangedListener);
     }
 
     static final String BRAND_PATH              = "/" + Brand.brand;
@@ -101,17 +104,21 @@ public class WearableHelper {
     private static boolean m_bHandlingWearableMessageInProgress = false;
 
     private MessageListener onMessageReceivedListener = null;
-    private static class MessageListener implements MessageClient.OnMessageReceivedListener {
+    private static class MessageListener implements MessageClient.OnMessageReceivedListener
+    {
         ScoreBoard m_scoreBoard = null;
+
         private MessageListener(ScoreBoard scoreBoard) {
             m_scoreBoard = scoreBoard;
         }
+
         @Override public void onMessageReceived(@NonNull MessageEvent messageEvent) {
             byte[] baData = messageEvent.getData();
             String sData  = new String(baData);
             String sourceNodeId = messageEvent.getSourceNodeId();
             // messageEvent.getPath() // typically BRAND_PATH
-            Log.d(TAG, String.format("reqid %d from %s received: %s", messageEvent.getRequestId(), sourceNodeId , sData));
+          //Log.d(TAG, String.format("reqid %d from %s received: %s", messageEvent.getRequestId(), sourceNodeId , sData));
+            Log.d(TAG, String.format("received reqid %d: %s", messageEvent.getRequestId() , sData));
 
             // received a message from the handheld-wearable counterpart: handle change here
             m_bHandlingWearableMessageInProgress = true;
@@ -200,30 +207,24 @@ public class WearableHelper {
         } else {
             if ( ViewUtil.isWearable(context) ) {
                 //pullOrPushMatchOverBluetoothWearable("Handheld");
-                new SendMessageToWearableTask(context).execute(BRAND_PATH, BTMethods.openSuggestMatchSyncDialogOnOtherPaired.toString());
+                //new SendMessageToWearableTask(context).execute(BRAND_PATH, BTMethods.openSuggestMatchSyncDialogOnOtherPaired.toString());
             } else {
-                if ( m_bStartAppOnWear ) {
+                if ( START_APP_ON_WEAR ) {
                     openOrSuggestInstallOnWearDevices(context);
                 }
             }
         }
     }
 
-    public void sendMatchFromToWearable(String sJson, Context ctx) {
-        if ( m_wearableRole == null ) {
-            m_wearableRole = WearRole.Equal;
-        }
+    public void sendMatchFromToWearable(Context ctx, String sJson) {
         //sendMessageToWearables(ctx, BRAND_PATH, sJson.length() + ":" + sJson); // don't : bypass check and start async task directly
-        new SendMessageToWearableTask(ctx).execute(BRAND_PATH, sJson.length() + ":" + sJson);
+        sendMessageToWearablesUnchecked(ctx, sJson.length() + ":" + sJson);
     }
 
-    public void sendMessageToWearablesUnchecked(Context context, String sMessage) {
+    public void sendMessageToWearablesUnchecked(Context context, Object sMessage) {
         new SendMessageToWearableTask(context).execute(BRAND_PATH, sMessage);
     }
     public void sendMessageToWearables(Context context, String sMessage) {
-        sendMessageToWearables(context, BRAND_PATH, sMessage);
-    }
-    private void sendMessageToWearables(Context context, String sPath, String sMessage) {
         if ( BTRole.Equal.equals(m_blueToothRole) == false ) {
             // other manual set up bluetooth connection active
             Log.d(TAG, "Manually paired via bluetooth... Not sending to wearable");
@@ -234,45 +235,11 @@ public class WearableHelper {
         }
         if ( sMessage.startsWith(BTMethods.requestCompleteJsonOfMatch.toString() ) )  {
             // independent of current wearable role, send anyways
-        } else if ( m_wearableRole == null ) {
-            Log.d(TAG, "No match has been exchanged. Not sending: " + sMessage);
+        } else if ( m_wearableRole.equals(WearRole.AppRunningOnBoth) == false ) {
+            Log.d(TAG, "App not running on both devices. Not sending: " + sMessage);
             return;
         }
-        new SendMessageToWearableTask(context).execute(sPath, sMessage);
-    }
-    private static class SendMessageToWearableTask extends AsyncTask<String, Void, String> {
-        private MessageClient messageClient = null;
-        private NodeClient    nodeClient    = null;
-
-        private SendMessageToWearableTask(Context ctx) {
-            messageClient = Wearable.getMessageClient(ctx);
-            nodeClient    = Wearable.getNodeClient(ctx);
-        }
-        @Override protected String doInBackground(String[] objects) {
-            if ( nodeClient == null ) {
-                Log.d(TAG, "No instance of " + NodeClient.class.getName());
-                return null;
-            }
-            if ( messageClient == null ) { return null; }
-
-            try {
-                Task<List<Node>> nodeListTask = nodeClient.getConnectedNodes();
-                List<Node> nodes = Tasks.await(nodeListTask);
-
-                if ( ListUtil.isEmpty(nodes) ) { return null; }
-                for( Node node : nodes ) {
-                    String sPath    = objects[0];
-                    String sMessage = objects[1];
-                    Task<Integer> sendMessageTask = messageClient.sendMessage(node.getId(), sPath, sMessage.getBytes());
-                    Log.d(TAG, "Send message :" + sMessage);
-                    Integer requestId = Tasks.await(sendMessageTask);
-                    Log.d(TAG, "Send result: " + requestId); // just an (for every call increasing) integer. Same number as messageEvent.getRequestId() on receiving end
-                }
-            } catch (Exception exception) {
-                Log.e(TAG, "Task failed: " + exception);
-            }
-            return null;
-        }
+        new SendMessageToWearableTask(context).execute(BRAND_PATH, sMessage);
     }
 
     private static boolean m_bAttemptToStartOnWearableDone = false;
@@ -322,7 +289,7 @@ public class WearableHelper {
      * if not set, don't send messages between devices, allowing both to keep score of a different match
      * If set to Equal, match has been exchanged deliberatly and try to keep them in sync from now on.
      **/
-    private WearRole m_wearableRole = null;
+    private WearRole m_wearableRole = WearRole.Unknown;
 
     public void setWearableRole(WearRole role) {
         m_wearableRole = role;

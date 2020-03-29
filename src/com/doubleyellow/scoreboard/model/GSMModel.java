@@ -194,6 +194,12 @@ public class GSMModel extends Model
     @Override void setServerAndSide(Player player, ServeSide side, DoublesServe doublesServe) {
         int iNrOfPoints = getTotalGamePoints();
         ServeSide serveSideBasedOnPoints = ServeSide.values()[iNrOfPoints % 2];
+        if ( isTieBreakGame() ) {
+            // swap server every two points (when scoring is odd)
+            if ( iNrOfPoints % 2 == 1 ) {
+                player = player.getOther();
+            }
+        }
         super.setServerAndSide(player, serveSideBasedOnPoints, doublesServe);
     }
 
@@ -238,6 +244,13 @@ public class GSMModel extends Model
         if ( ListUtil.isEmpty(lReturn) ) {
             lReturn.add(getZeroZeroMap());
         }
+        //super.clearPossibleGSM();
+        if ( matchHasEnded() ) {
+            if ( MapUtil.getMaxValue(ListUtil.getLast(lReturn)) == 0 ) {
+                Log.w(TAG, "removing 0-0 for a set that is not to be played");
+                ListUtil.removeLast(lReturn);
+            }
+        }
         return lReturn;
     }
 
@@ -258,6 +271,7 @@ public class GSMModel extends Model
         //Player serverForNextSet = determineServerForNextSet(getGameNrInProgress()-1, iScoreA, iScoreB);
         //setServerAndSide(serverForNextSet, null, null);
 
+        clearPossibleGSM();
         if ( bNotifyListeners ) {
             for ( OnSetChangeListener l : onSetChangeListeners ) {
                 l.OnSetEnded(pWinner);
@@ -307,12 +321,12 @@ public class GSMModel extends Model
                 //}
 
                 ListWrapper<Map<Player, Integer>> l = new ListWrapper<Map<Player, Integer>>();
-                l.setName("Set " + (1 + ListUtil.size(m_lPlayer2GamesWon_PerSet)));
+                l.setName("P2GW Set " + (1 + ListUtil.size(m_lPlayer2GamesWon_PerSet)));
                 super.setPlayer2GamesWonHistory(l);
                 m_lPlayer2GamesWon_PerSet.add(l);
 
                 ListWrapper<Map<Player, Integer>> l2 = new ListWrapper<Map<Player, Integer>>();
-                l2.setName("Set " + (1 + ListUtil.size(m_lPlayer2EndPointsOfGames_PerSet)));
+                l2.setName("P2EPOG Set " + (1 + ListUtil.size(m_lPlayer2EndPointsOfGames_PerSet)));
                 super.setPlayer2EndPointsOfGames(l2);
                 m_lPlayer2EndPointsOfGames_PerSet.add(l2);
 
@@ -376,7 +390,12 @@ public class GSMModel extends Model
     }
 
     @Override public long getMatchStart() {
-        return m_lGamesTiming_PerSet.get(0).get(0).getStart();
+        if ( ListUtil.isEmpty(m_lGamesTiming_PerSet) ) {
+            Log.w(TAG, "No game timing per set");
+        }
+        List<GameTiming> gameTimings = m_lGamesTiming_PerSet.get(0);
+        GameTiming gameTiming = gameTimings.get(0);
+        return gameTiming.getStart();
     }
 
     //-------------------------------------
@@ -512,7 +531,9 @@ public class GSMModel extends Model
     }
 
     @Override public String getResultShort() {
-        return null; // TODO:
+        // TODO:
+        //return String.valueOf(getGamesWonPerSet());
+        return String.valueOf(m_lSetCountHistory);
     }
 
     /** overridden to check at the end of a game that it is also end of a set */
@@ -590,18 +611,30 @@ public class GSMModel extends Model
         if ( playersSB == null ) {
             Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress();
             Map<Player, Integer> player2GamesWon       = getPlayer2GamesWon();
-
-            Player[] playersGB = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, scoreOfGameInProgress, _getNrOfPointsToWinGame());
-            if ( ListUtil.length(playersGB) == 1 ) {
-                     playersSB =       calculateIsPossibleSetVictoryFor(playersGB, when, player2GamesWon);
-                if ( ListUtil.length(playersSB) == 1 ) {
-                    int iSetsWon = MapUtil.getInt(getSetsWon(), playersSB[0], 0);
-                    if ( iSetsWon + 1 == m_iNrOfSetsToWinMatch ) {
-                        return playersSB;
+            Map<Player, Integer> player2setsWon        = getSetsWon();
+            switch (when) {
+                case Now:
+                    int iMaxSets = MapUtil.getMaxValue(player2setsWon);
+                    int iMinSets = MapUtil.getMinValue(player2setsWon);
+                    if ( iMaxSets > iMinSets && iMaxSets >= m_iNrOfSetsToWinMatch ) {
+                        Player maxKey = MapUtil.getMaxKey(player2setsWon, null);
+                        return new Player[] { maxKey };
                     }
-                } else {
-                  //Log.d(TAG, String.format("No setball %s, so no possible match victory", when));
-                }
+                    break;
+                case ScoreOneMorePoint:
+                    Player[] playersGB = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, scoreOfGameInProgress, _getNrOfPointsToWinGame());
+                    if ( ListUtil.length(playersGB) == 1 ) {
+                        playersSB = this.calculateIsPossibleSetVictoryFor(playersGB, when, player2GamesWon);
+                        if ( ListUtil.length(playersSB) == 1 ) {
+                            int iSetsWon = MapUtil.getInt(player2setsWon, playersSB[0], 0);
+                            if ( iSetsWon + 1 == m_iNrOfSetsToWinMatch ) {
+                                return playersSB;
+                            }
+                        } else {
+                            //Log.d(TAG, String.format("No setball %s, so no possible match victory", when));
+                        }
+                    }
+                    break;
             }
         }
 
@@ -679,10 +712,11 @@ public class GSMModel extends Model
         if ( pPossibleSetBallFor != null ) {
             int iGamesWon    = player2GamesWon.get(pPossibleSetBallFor);
             int iGamesWonOpp = player2GamesWon.get(pPossibleSetBallFor.getOther());
+            int nrOfGamesToWinSet = getNrOfGamesToWinSet();
             switch (when) {
                 case Now:
                     // TODO:
-                    if ( iGamesWon >= getNrOfGamesToWinSet() ) {
+                    if ( iGamesWon >= nrOfGamesToWinSet) {
                         // typically : at least 6 games won in set to 6
                         if ( iGamesWon > iGamesWonOpp ) {
                             if ( iGamesWon - iGamesWonOpp >= 2 ) {
@@ -697,7 +731,7 @@ public class GSMModel extends Model
                     }
                     break;
                 case ScoreOneMorePoint:
-                    if ( iGamesWon >= getNrOfGamesToWinSet() - 1 ) {
+                    if ( iGamesWon >= nrOfGamesToWinSet - 1 ) {
                         // typically : at least 5 games won in set to 6
                         if ( iGamesWon > iGamesWonOpp ) {
                             return new Player[] { pPossibleSetBallFor};
