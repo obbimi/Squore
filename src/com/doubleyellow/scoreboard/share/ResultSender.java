@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.doubleyellow.scoreboard;
+package com.doubleyellow.scoreboard.share;
 
 import android.content.ClipData;
 import android.content.Context;
@@ -28,10 +28,13 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.model.ModelFactory;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.util.*;
 //import android.util.Log;
 

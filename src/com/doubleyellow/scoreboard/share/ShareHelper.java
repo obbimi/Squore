@@ -15,12 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.doubleyellow.scoreboard;
+package com.doubleyellow.scoreboard.share;
 
 import android.content.Context;
 
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.share.ResultMailer;
+import com.doubleyellow.scoreboard.share.ResultSender;
 
 public class ShareHelper
 {

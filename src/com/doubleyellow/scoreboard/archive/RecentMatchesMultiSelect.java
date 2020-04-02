@@ -27,7 +27,7 @@ import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
 import com.doubleyellow.scoreboard.R;
-import com.doubleyellow.scoreboard.ResultSender;
+import com.doubleyellow.scoreboard.share.ResultSender;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.ModelFactory;
 import com.doubleyellow.scoreboard.model.Player;

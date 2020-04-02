@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.doubleyellow.scoreboard;
+package com.doubleyellow.scoreboard.share;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -25,6 +25,7 @@ import com.doubleyellow.android.task.URLTask;
 import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.android.view.ViewUtil;
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.OnlineSheetAvailableChoice;
 import com.doubleyellow.scoreboard.main.DialogManager;
