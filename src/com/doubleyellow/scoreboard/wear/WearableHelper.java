@@ -18,11 +18,6 @@
 package com.doubleyellow.scoreboard.wear;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -30,15 +25,10 @@ import androidx.annotation.NonNull;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.bluetooth.BTMethods;
-import com.doubleyellow.scoreboard.bluetooth.BTRole;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
-import com.doubleyellow.util.ListUtil;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wearable.Asset;
-import com.google.android.gms.wearable.CapabilityClient;
-import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.DataClient;
 import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMap;
@@ -49,13 +39,16 @@ import com.google.android.gms.wearable.NodeClient;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
-import com.google.android.wearable.intent.RemoteIntent;
+
+//import com.doubleyellow.util.ListUtil;
+//import com.google.android.gms.tasks.OnCompleteListener;
+//import com.google.android.gms.wearable.CapabilityClient;
+//import com.google.android.gms.wearable.CapabilityInfo;
+//import com.google.android.wearable.intent.RemoteIntent;
+//import java.util.Set;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
-import static com.doubleyellow.scoreboard.main.ScoreBoard.m_blueToothRole;
 
 public class WearableHelper
 {
@@ -63,11 +56,28 @@ public class WearableHelper
 
     private static final boolean START_APP_ON_WEAR = false;
 
+    private boolean m_bNoWearableSupport = false;
+
     public WearableHelper(ScoreBoard scoreBoard) {
+        try {
+            NodeClient nodeClient = Wearable.getNodeClient(scoreBoard);
+            Task<List<Node>> nodeListTask = nodeClient.getConnectedNodes();
+          //List<Node> nodes = Tasks.await(nodeListTask); // this throws exception if API not available, but can not be called on main thread
+
+            DataClient dataClient = Wearable.getDataClient(scoreBoard);
+            Task<DataItem> dataItemTask = dataClient.putDataItem(null);
+        } catch (Exception e) {
+            Log.e(TAG, "Task failed: " + e, e); // e.g. java.util.concurrent.ExecutionException: com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=SERVICE_INVALID, resolution=null, message=null}
+            Log.w(TAG, "No wearable support");
+            // return without registering listeners
+            m_bNoWearableSupport = true;
+            return;
+        }
       //Wearable.getDataClient      (this).addListener(onDataChangedListener);
         onMessageReceivedListener = new MessageListener(scoreBoard);
 
-      //Wearable.getCapabilityClient(scoreBoard).addListener(onCapabilityChangedListener, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
+
+        //Wearable.getCapabilityClient(scoreBoard).addListener(onCapabilityChangedListener, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
 
         // Initial request for devices with our capability, aka, our Wear app installed.
         //findWearDevicesWithApp(scoreBoard);
@@ -89,10 +99,14 @@ public class WearableHelper
     }
 
     public void onResume(Context scoreBoard) {
+        if ( m_bNoWearableSupport ) { return; }
+
         Wearable.getMessageClient   (scoreBoard).addListener(onMessageReceivedListener);
         sendMessageToWearablesUnchecked(scoreBoard, BTMethods.resume);
     }
     public void onPause(Context scoreBoard) {
+        if ( m_bNoWearableSupport ) { return; }
+
         sendMessageToWearablesUnchecked(scoreBoard, BTMethods.paused);
         //Wearable.getDataClient      (this).removeListener(onDataChangedListener);
         Wearable.getMessageClient   (scoreBoard).removeListener(onMessageReceivedListener);
@@ -127,6 +141,7 @@ public class WearableHelper
         }
     };
 
+/*
     private Set<Node> m_lWearNodesWithApp;
     private List<Node> m_lAllConnectedNodes;
     private CapabilityClient.OnCapabilityChangedListener onCapabilityChangedListener = new CapabilityClient.OnCapabilityChangedListener() {
@@ -134,17 +149,11 @@ public class WearableHelper
         @Override public void onCapabilityChanged(@NonNull CapabilityInfo capabilityInfo) {
             Log.d(TAG, "capabilityInfo: " + capabilityInfo); // e.g : [Node{Samsung Galaxy S7, id=fbc3c3e2, hops=1, isNearby=true}]
             m_lWearNodesWithApp = capabilityInfo.getNodes();
-/*
-            // Because we have an updated list of devices with/without our app, we need to also update our list of active Wear devices.
-            if ( isWearable() == false ) {
-                findAllWearDevices();
-
-                considerWearableNodesAndTakeAction();
-            }
-*/
         }
     };
+*/
 
+/*
     private void findWearDevicesWithApp(final Context ctx) {
         Log.d(TAG, "findWearDevicesWithApp()");
 
@@ -186,22 +195,19 @@ public class WearableHelper
             }
         });
     }
+*/
     // Name of capability listed in Wear app's wear.xml.
     // IMPORTANT NOTE: This should be named differently than your Phone app's capability.
     private static final String CAPABILITY_APP_WEAR     = "verify_remote_app_wear";
     private static final String CAPABILITY_APP_HANDHELD = "verify_remote_app_handheld";
 
+/*
     private void considerWearableNodesAndTakeAction(Context context) {
         Log.d(TAG, "verifyNodeAndUpdateUI()");
 
         if ((m_lWearNodesWithApp == null) || (m_lAllConnectedNodes == null)) {
             Log.d(TAG, "Waiting on Results for both 'connected nodes' and 'nodes with app'");
         } else if ( m_lAllConnectedNodes.isEmpty() ) {
-/*
-        } else if ( m_lWearNodesWithApp.isEmpty() ) {
-            Log.d(TAG, MISSING_ALL_MESSAGE);
-            openPlayStoreOnWearDevicesWithoutApp();
-*/
         } else if ( m_lWearNodesWithApp.size() < m_lAllConnectedNodes.size() ) {
             //openOrSuggestInstallOnWearDevices();
         } else {
@@ -215,20 +221,23 @@ public class WearableHelper
             }
         }
     }
+*/
 
     public void sendMatchFromToWearable(Context ctx, String sJson) {
+        if ( m_bNoWearableSupport ) { return; }
+
         //sendMessageToWearables(ctx, BRAND_PATH, sJson.length() + ":" + sJson); // don't : bypass check and start async task directly
         sendMessageToWearablesUnchecked(ctx, sJson.length() + ":" + sJson);
     }
 
     public void sendMessageToWearablesUnchecked(Context context, Object sMessage) {
+        if ( m_bNoWearableSupport ) { return; }
+
         new SendMessageToWearableTask(context).execute(BRAND_PATH, sMessage);
     }
     public void sendMessageToWearables(Context context, String sMessage) {
-        if ( BTRole.Equal.equals(m_blueToothRole) == false ) {
-            // other manual set up bluetooth connection active
-            Log.d(TAG, "Manually paired via bluetooth... Not sending to wearable");
-        }
+        if ( m_bNoWearableSupport ) { return; }
+
         if ( m_bHandlingWearableMessageInProgress ) {
             Log.d(TAG, "Not sending message " + sMessage + ". Still interpreting incoming message");
             return;
@@ -242,6 +251,7 @@ public class WearableHelper
         new SendMessageToWearableTask(context).execute(BRAND_PATH, sMessage);
     }
 
+/*
     private static boolean m_bAttemptToStartOnWearableDone = false;
     private void openOrSuggestInstallOnWearDevices(Context context) {
         Log.d(TAG, "openOrSuggestInstallOnWearDevices()");
@@ -250,24 +260,6 @@ public class WearableHelper
         }
         if ( m_bAttemptToStartOnWearableDone ) { return; }
         m_bAttemptToStartOnWearableDone = true;
-/*
-<activity android:name="com.google.android.finsky.activities.MarketDeepLinkHandlerActivity"
-          android:enabled="true"
-          android:exported="true"
-          android:excludeFromRecents="true"
-          android:visibleToInstantApps="true">
-
-            <meta-data android:name="instantapps.clients.allowed" android:value="true" />
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="market" android:host="details" />
-            </intent-filter>
-        </activity>
-*/
 
         String sMarketURL = "market://details" + "?id=" + context.getPackageName();
 
@@ -284,6 +276,7 @@ public class WearableHelper
             RemoteIntent.startRemoteActivity(context, intent, mResultReceiver, node.getId());
         }
     }
+*/
 
     /**
      * if not set, don't send messages between devices, allowing both to keep score of a different match
@@ -296,6 +289,7 @@ public class WearableHelper
     }
 
     // Result from sending RemoteIntent to wear device(s) to open app in play/app store.
+/*
     private final ResultReceiver mResultReceiver = new ResultReceiver(new Handler()) {
         @Override protected void onReceiveResult(int resultCode, Bundle resultData) {
             Log.d(TAG, "onReceiveResult: " + resultCode);
@@ -309,6 +303,7 @@ public class WearableHelper
             }
         }
     };
+*/
 
     /** can e.g. be used to send a START_ACTIVITY message to a subclass of WearableListenerService */
     private void sendDataToWearables(Context ctx, String sPath, String sAssetKey, String sMessage) {

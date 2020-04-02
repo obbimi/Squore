@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.doubleyellow.scoreboard"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.doubleyellow.scoreboard"
     android:versionName="${versionName}">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
@@ -38,7 +39,8 @@
     <uses-feature android:name="android.hardware.touchscreen"            android:required="false"/>
     <uses-feature android:name="android.hardware.wifi"                   android:required="false"/>
 
-    <uses-sdk/>
+    <!-- tools:overrideLibrary="androidx.wear" to be able to compile wearable functionality into non-wear app assuming it will not be invoked -->
+    <uses-sdk tools:overrideLibrary="androidx.wear"/>
 
 <!--
     <supports-screens
@@ -85,6 +87,16 @@
         <meta-data android:name="com.google.android.wearable.standalone" android:value="true" />
 -->
 
+        <!-- allow WearOS app to be launched from phone app -->
+<!--
+        <service android:name="com.doubleyellow.scoreboard.wear.DataLayerListenerService">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <data android:scheme="wear" android:host="*" android:path="/start-activity" />
+            </intent-filter>
+        </service>
+-->
+
         <activity android:name="com.doubleyellow.scoreboard.main.ScoreBoard" android:label="@string/app_name_short_brand_Squash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -98,6 +110,17 @@
             <!--
             <meta-data android:name="android.nfc.action.TECH_DISCOVERED" android:resource="@xml/filter_nfc" />
             -->
+
+            <!-- test to see if app can be started on wearable from handheld... does not seem to work -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+<!--                <data android:scheme="ihoeve" android:host="squore" />-->
+                <data android:scheme="market" android:host="squore.double-yellow.be" />
+            </intent-filter>
+
 
             <intent-filter> <data android:scheme="http"  android:host="squore.double-yellow.be"         android:pathPattern="/.*20.*"               /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="http"  android:host="squore.double-yellow.be"         android:pathPattern="/show/.*20.*"          /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>

@@ -307,7 +307,7 @@ public class AdjustScore extends BaseAlertDialog {
                 if ( matchModel.isPossibleGameVictory() ) {
                     scoreBoard.endGame();
                 }
-                scoreBoard.sendMatchToOtherBluetoothDevice(context, true, 1000);
+                scoreBoard.sendMatchToOtherBluetoothDevice( true, 1000);
                 break;
             case DialogInterface.BUTTON_NEGATIVE:
                 // Do nothing.

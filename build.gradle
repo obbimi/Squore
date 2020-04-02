@@ -17,9 +17,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-      //classpath 'com.android.tools.build:gradle:5.4.1'
-      classpath 'com.android.tools.build:gradle:3.6.1' // 3.0.0 is not in jcenter
-      //classpath 'com.android.tools.build:gradle:2.3.0'
+      classpath 'com.android.tools.build:gradle:3.6.2'
     }
 }
 // Run ./gradlew -q :dependencies
@@ -29,7 +27,7 @@ android {
     //compileSdkVersion 25
     compileSdkVersion 29
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
-    buildToolsVersion '28.0.3'
+    //buildToolsVersion '28.0.3'
 
     lintOptions {
         disable 'MissingTranslation'
@@ -44,7 +42,7 @@ android {
         // https://www.androidpolice.com/2018/10/28/android-platform-distribution-numbers-updated-october-pie-still-missing/
         // https://en.wikipedia.org/wiki/Android_version_history
         //minSdkVersion 19 // 4.4 android.os.Build.VERSION_CODES.KITKAT, for wear at least 23 is required
-        minSdkVersion 23 // 6.0 android.os.Build.VERSION_CODES.M, for wear at least 23 is required, wear2.0 needs 25
+        //minSdkVersion 23 // 6.0 android.os.Build.VERSION_CODES.M, for wear at least 23 is required, wear2.0 needs 25
         // next property is not required for building... but should be specified for publishing in play-store
         targetSdkVersion 29
 
@@ -71,22 +69,12 @@ android {
             }
             res {
                 srcDir 'res'
+                // exclude '**/layout-watch/**' // e.g. for non-wear does not work for resources
             }
         }
-        phoneTablet {
-            manifest {
-                srcFile 'AndroidManifestALLPhoneTablet.xml'
-            }
-            res {
-                srcDir 'res'
-                //exclude '**/layout-watch/**' // does not work for resources
-            }
-        }
-        wearOs {
-            manifest {
-                srcFile 'AndroidManifestALLWearOS.xml'
-            }
-        }
+        phoneTabletPre22  { manifest { srcFile 'AndroidManifestALLPhoneTablet.xml' } }
+        phoneTabletPost23 { manifest { srcFile 'AndroidManifestALLPhoneTablet.xml' } }
+        wearOs            { manifest { srcFile 'AndroidManifestALLWearOS.xml'      } }
     }
 
     signingConfigs {
@@ -99,17 +87,20 @@ android {
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
     productFlavors {
-        phoneTablet {
+        phoneTabletPre22 {
             dimension "devicetype"
-            //applicationIdSuffix ".scoreboard"
-            //minSdkVersion 23
-            manifestPlaceholders = [versionCode:"2315432"]
+            minSdkVersion 19
+            manifestPlaceholders = [versionCode:"19150432"]
+        }
+        phoneTabletPost23 {
+            dimension "devicetype"
+            minSdkVersion 23
+            manifestPlaceholders = [versionCode:"23150432"]
         }
         wearOs {
             dimension "devicetype"
-            //applicationIdSuffix ".scoreboard"
             minSdkVersion 25 // Wear2.0 (23 would suffice for Wear1.0)
-            manifestPlaceholders = [versionCode:"2501432"]
+            manifestPlaceholders = [versionCode:"25010432"]
         }
     }
     buildTypes {
@@ -128,7 +119,6 @@ android {
             applicationIdSuffix ".debug"
             debuggable true
         }
-*/
         minified {
             //debuggable true
             minifyEnabled true // somehow this makes my app crash
@@ -137,6 +127,7 @@ android {
             //proguardFile 'proguard-project.txt'
             signingConfig signingConfigs.release
         }
+*/
     }
     aaptOptions {
         ignoreAssetsPattern '_gh_pages'
@@ -150,7 +141,7 @@ dependencies {
     // uncommenting this while in Android Studio creates a subdir AndroidBase with an .iml file in it
 
     implementation 'androidx.wear:wear:1.0.0' // needs minSdkVersion=23
-    wearOsImplementation 'androidx.wear:wear:1.0.0' // needs minSdkVersion=23
+    //wearOsImplementation 'androidx.wear:wear:1.0.0' // needs minSdkVersion=23
     //implementation 'com.android.support:wear:28.0.0' // needs minSdkVersion=23
     //implementation 'com.google.protobuf:protobuf-java:3.5.1'
 
@@ -168,10 +159,23 @@ dependencies {
     // ChromeCast (new with Custom Receiver)
     //compile 'com.android.support:appcompat-v7:28.0.0'   // Multiple dex files define Landroid/support/v13/view/DragAndDropPermissionsCompat
     //compile 'com.android.support:mediarouter-v7:28.0.0' // Multiple dex files define Landroid/support/v13/view/DragAndDropPermissionsCompat
-    implementation 'com.google.android.gms:play-services-cast-framework:18.1.0' // when setting this to 17.1.0, 18.0.0, we get a  'Manifest merger failed' message 20191111
+    implementation 'com.google.android.gms:play-services-cast-framework:18.1.0' // when setting this to 17.1.0, 18.0.0, we get a 'Manifest merger failed' message 20191111
 
     // allow communication between handheld device and wearable
-    implementation 'com.google.android.gms:play-services-wearable:17.0.0'
+    phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:17.0.0' // compileOnly is good enough for API < 23
+    phoneTabletPost23Implementation   'com.google.android.gms:play-services-wearable:17.0.0' // compileOnly is good enough for API < 23
+    wearOsImplementation              'com.google.android.gms:play-services-wearable:17.0.0' // compileOnly is good enough for API < 23
+
+    // Required for e.g. com/google/android/gms/wearable/CapabilityClient$OnCapabilityChangedListener
+    //compileOnly    'com.google.android.wearable:wearable:2.5.0' // compileOnly sufficient for devices with API < 23
+
+    phoneTabletPre22CompileOnly     'com.google.android.support:wearable:2.5.0'
+    phoneTabletPost23Implementation 'com.google.android.support:wearable:2.5.0'
+    wearOsImplementation            'com.google.android.support:wearable:2.5.0'
+
+    phoneTabletPre22Implementation  'com.google.android.wearable:wearable:2.5.0'
+    phoneTabletPost23Implementation 'com.google.android.wearable:wearable:2.5.0'
+    wearOsImplementation            'com.google.android.wearable:wearable:2.5.0'
 
     //wearApp project(':wear:base') // applies to all other variants
 }

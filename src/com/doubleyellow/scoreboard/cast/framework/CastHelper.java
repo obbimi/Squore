@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2017  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.doubleyellow.scoreboard.cast.framework;
 
 import android.app.Activity;
@@ -23,6 +39,8 @@ import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.Session;
 import com.google.android.gms.cast.framework.SessionManagerListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.json.JSONObject;
 
@@ -55,8 +73,19 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             }
         }
         sPackageName = m_activity.getPackageName();
+
+        checkPlayServices();
     }
 
+    private boolean checkPlayServices() {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(m_activity);
+        if ( result != ConnectionResult.SUCCESS ) {
+            //Google Play Services app is not available or version is not up to date. Error the error condition here
+            return false;
+        }
+        return true;
+    }
     @Override public void initCastMenu(Activity activity, Menu menu, int iResIdMenuItem) {
         CastButtonFactory.setUpMediaRouteButton(activity, menu, iResIdMenuItem); // TODO: set to visible always in new cast framework?
     }
@@ -94,7 +123,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     private Model m_matchModel = null;
     @Override public void setModelForCast(Model matchModel) {
       //if ( isCasting() == false ) { return; }
-        Log.d(TAG, "New model for cast passed in : " + matchModel);
+      //Log.d(TAG, "New model for cast passed in : " + matchModel);
         if ( matchModel != m_matchModel && (matchModel != null)) {
             m_matchModel = matchModel;
         }
@@ -247,7 +276,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
     private void updateViewWithColorAndScore(Context context, Model matchModel) {
         if ( isCasting() == false || iBoard == null || matchModel == null ) {
-            Log.w(TAG, "Not updating (isCasting=" + isCasting() + ", iBoard=" + iBoard + ", model=" + matchModel + ")");
+          //Log.w(TAG, "Not updating (isCasting=" + isCasting() + ", iBoard=" + iBoard + ", model=" + matchModel + ")");
             return;
         }
         Log.d(TAG, "Updating cast (NEW)");

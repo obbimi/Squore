@@ -19,8 +19,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.doubleyellow.scoreboard.R;
 
@@ -46,7 +46,7 @@ public class BluetoothControlService
 
     // Member fields
     private final BluetoothAdapter mAdapter;
-    private       Handler          mHandler;
+    private       BluetoothHandler mHandler;
     private       AcceptThread     mAcceptThread;
     private       ConnectThread    mConnectThread;
     private       ConnectedThread  mConnectedThread; // to write data onto
@@ -64,7 +64,7 @@ public class BluetoothControlService
     /*
      * @param handler A Handler to send messages back to the UI Activity
      */
-    public void setHandler(Handler handler) {
+    public void setHandler(BluetoothHandler handler) {
         this.mHandler = handler;
     }
 
@@ -194,6 +194,13 @@ public class BluetoothControlService
      * Write to the ConnectedThread (in a synchronized manner!)
      */
     public synchronized void write(String s) {
+        if ( false
+           && mHandler.isHandlingMessage()
+           && (s.startsWith(BTMethods.requestCompleteJsonOfMatch.toString()) == false)
+           ) {
+            Log.d(TAG, String.format("Not sending message %s. In progress of handling message", s));
+            return;
+        }
         write(s.getBytes());
     }
     private void write(byte[] out) {

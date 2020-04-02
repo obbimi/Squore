@@ -30,6 +30,9 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.List;
 
+/**
+ * To send message in an asynchronous way to paired device.
+ */
 class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
 {
     private static final String TAG = "SB." + SendMessageToWearableTask.class.getSimpleName();
@@ -50,7 +53,7 @@ class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
 
         try {
             Task<List<Node>> nodeListTask = nodeClient.getConnectedNodes();
-            List<Node> nodes = Tasks.await(nodeListTask);
+            List<Node> nodes = Tasks.await(nodeListTask); // this throws exception if API not available
 
             if ( ListUtil.isEmpty(nodes) ) { return null; }
             for( Node node : nodes ) {
@@ -60,8 +63,8 @@ class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
                 Integer requestId = Tasks.await(sendMessageTask);
                 Log.d(TAG, String.format("send reqId %d : %s", requestId, sMessage)); // just an (for every call increasing) integer. Same number as messageEvent.getRequestId() on receiving end
             }
-        } catch (Exception exception) {
-            Log.e(TAG, "Task failed: " + exception);
+        } catch (Exception e) {
+            Log.e(TAG, "Task failed: " + e, e); // e.g. java.util.concurrent.ExecutionException: com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=SERVICE_INVALID, resolution=null, message=null}
         }
         return null;
     }

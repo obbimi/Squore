@@ -5,7 +5,7 @@ cat <<!
 
 Usage:
 
-	$0 '(Squore|SquoreWear|Badminton|TennisPadel|Racketlon|Tabletennis|CourtCare|UniOfNotthingham)'
+	$0 '(Squore|Badminton|TennisPadel|Racketlon|Tabletennis|CourtCare|UniOfNotthingham)'
 
 Always change back to Squore before change to another 'Brand'
 !
@@ -66,13 +66,6 @@ elif [[ "$tobranded" = "UniOfNotthingham" ]]; then
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.courtscore_uon.R\1~' ${f}
         #exit 1
     done
-elif [[ "$tobranded" = "SquoreWear" ]]; then
-    printf "Change to '${tobranded}'\n"
-    for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton|tennispadel|scoreboard).R[;\.]" *); do
-        printf "File %-72s to %s \n" $f $tobranded
-        sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\|badminton\|tennispadel\|scoreboard\).R\([^a-z]\)~com.doubleyellow.squorewear.R\2~' ${f}
-        #exit 1
-    done
 elif [[ "$tobranded" = "Squore" ]]; then
     printf "Change back to '${tobranded}'\n"
     for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton|tennispadel|squorewear).R" *); do
@@ -120,41 +113,35 @@ elif [[ "$tobranded" = "TennisPadel" ]]; then
         sed -i 's~_\(Squash\|Racketlon\|Tabletennis\|Badminton\)"~_TennisPadel"~' ${f}
     done
 else
-    # Squore and SquoreWear
+    # Squore
     for f in $(egrep -rl '@string.*_(Racketlon|Tabletennis|Badminton|TennisPadel)"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_\(Racketlon\|Tabletennis\|Badminton\|TennisPadel\)"~_Squash"~' ${f}
     done
-    if [[ "$tobranded" == "SquoreWear" ]]; then
-        # turn on by giving the 'app' namespace
-        #sed -i "s~dy:boxedEdges~app:boxedEdges~" res/layout-watch/*.xml
-        echo "Leave boxEdges as is for now"
-    else
-        # turn off by giving it 'dy' (not app) namespace
-        #sed -i "s~app:boxedEdges~dy:boxedEdges~" res/layout-watch/*.xml
-        echo "Leave boxEdges as is for now"
-    fi
 fi
 
 
 cd ..
 # comment out all Manifest file lines
 sed -i 's~^\(\s\+\)srcFile~\1//srcFile~' build.gradle
+# uncomment ManifestALL file lines
+sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifestALL\)~\1\2~" build.gradle
 # uncomment the one Manifest file we are interested in
 sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifest${tobranded}\.\)~\1\2~" build.gradle
 #vi +/Manifest${tobranded} build.gradle
 
-if [[ "$tobranded" == "SquoreWear" ]]; then
-    # for wear
-    # uncomment com.android.support:wear
-    sed -i "s~^\(\s*\)//\(\s*implementation\s\s*'com.android.support:wear\)~\1\2~" build.gradle
-    # minSdkVersion must be increased to 23
-    sed -i "s~^\(\s*minSdkVersion\)\s\s*[0-9][0-9]*~\1 23~"                        build.gradle
-else
-    # for not-wear
-    # minSdkVersion can increased to 19
-    sed -i "s~^\(\s*minSdkVersion\)\s\s*[0-9][0-9]*~\1 19~"                        build.gradle
-    # and if so, comment out com.android.support:wear
-    sed -i "s~^\(\s*\)\(\s*implementation\s\s*'com.android.support:wear\)~\1//\2~" build.gradle
-fi
+
+#if [[ "$tobranded" == "SquoreWear" ]]; then
+#    # for wear
+#    # uncomment com.android.support:wear
+#    sed -i "s~^\(\s*\)//\(\s*implementation\s\s*'com.android.support:wear\)~\1\2~" build.gradle
+#    # minSdkVersion must be increased to 23
+#    sed -i "s~^\(\s*minSdkVersion\)\s\s*[0-9][0-9]*~\1 23~"                        build.gradle
+#else
+#    # for not-wear
+#    # minSdkVersion can increased to 19
+#    sed -i "s~^\(\s*minSdkVersion\)\s\s*[0-9][0-9]*~\1 19~"                        build.gradle
+#    # and if so, comment out com.android.support:wear
+#    sed -i "s~^\(\s*\)\(\s*implementation\s\s*'com.android.support:wear\)~\1//\2~" build.gradle
+#fi
 

@@ -306,7 +306,7 @@ public class MatchGameScoresView extends LinearLayout
             int[] iaTotal_0NOK_1OK_2NOKCnt = checkAutoResizeTextViews(MatchGameScoresView.this);
             if ( iaTotal_0NOK_1OK_2NOKCnt[1] + iaTotal_0NOK_1OK_2NOKCnt[3] > 0 ) {
                 m_iLayoutNOKCount++;
-                Log.w(TAG, String.format("Trigger update, resize textview not all properly layed out : %d are 0NOK, %d are OK, %d are 2NOK of %d (ms left: %d)", iaTotal_0NOK_1OK_2NOKCnt[1], iaTotal_0NOK_1OK_2NOKCnt[2], iaTotal_0NOK_1OK_2NOKCnt[3], iaTotal_0NOK_1OK_2NOKCnt[0], millisUntilFinished));
+              //Log.w(TAG, String.format("Trigger update, resize textview not all properly layed out : %d are 0NOK, %d are OK, %d are 2NOK of %d (ms left: %d)", iaTotal_0NOK_1OK_2NOKCnt[1], iaTotal_0NOK_1OK_2NOKCnt[2], iaTotal_0NOK_1OK_2NOKCnt[3], iaTotal_0NOK_1OK_2NOKCnt[0], millisUntilFinished));
                 gsv.update(m_players, gsv.m_gamesScores, gsv.m_playerNames, m_countries, gsv.m_gameTimes, m_eventDivision, m_pointsDiff);
                 //this.cancel();
             } else {

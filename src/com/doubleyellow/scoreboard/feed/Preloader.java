@@ -121,7 +121,7 @@ public class Preloader extends AsyncTask implements ContentReceiver
             doNext(1);
 */
         } else if ( m_status.equals(Status.ContactsCache) ) {
-            Log.i(TAG, String.format("handling %s... ", m_status));
+          //Log.i(TAG, String.format("handling %s... ", m_status));
             PreferenceValues.getPlayerListAndContacts(m_context);
             doNext(1);
         } else if ( m_status.equals(Status.DynamicFeedNames) ) {
@@ -139,7 +139,7 @@ public class Preloader extends AsyncTask implements ContentReceiver
             }
             doNext(1);
         } else {
-            Log.i(TAG, String.format("No next %s ", m_status));
+            //Log.i(TAG, String.format("No next %s ", m_status));
         }
     }
     public Status getPreloadStatus() {
