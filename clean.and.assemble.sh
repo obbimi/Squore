@@ -6,7 +6,8 @@ export JAVA_HOME=/osshare/software/oracle/java-8-oracle
 
 
 #mykill gradle
-mffile=$(grep Manifest build.gradle | grep -v '//' | cut -d "'" -f 2)
+#set -x
+mffile=$(grep Manifest build.gradle | egrep -v '(ALL)' | grep -v '//' | cut -d "'" -f 2)
 if [[ -z "${mffile}" ]]; then
     echo "Could not determine manifest file by looking in build.gradle"
     exit 1
@@ -31,15 +32,16 @@ cat <<!
     echo "Version code in ${mffile}: $vcFromManifest"
 	exit 1
 else
-    relapk=$(find . -name '*-release.apk')
+    relapk=$(find . -name '*phoneTabletPost23-release.apk')
     if [[ -e ${relapk} ]]; then
-        changedFiles="$(find . -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml|md)' | grep -v '.idea/')"
+        changedFiles="$(find . -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml|md|gradle)' | egrep -v '(\.idea/|/\.gradle/|/generated/|/reports/)')"
     else
         changedFiles="No apk to compare with"
     fi
 
     if [[ ${versionCode} -ne ${vcFromManifest} ]]; then
-        sed -i "s~\(versionCode=.\)[0-9]*\(.\)~\1${versionCode}\2~" ${mffile}
+        echo "Not changing MANIFEST anymore"
+        #sed -i "s~\(versionCode=.\)[0-9]*\(.\)~\1${versionCode}\2~" ${mffile}
     fi
 	#head $mffile
 	#exit 2 # TMP
@@ -50,7 +52,9 @@ if [[ -n "$(grep 'NO_SHOWCASE_FOR_VERSION_BEFORE ='  ./src/com/doubleyellow/scor
     sed -i "s~\(NO_SHOWCASE_FOR_VERSION_BEFORE\s*=\s*.\)[0-9-]*~\1${todayYYYYMMDD}~" ./src/com/doubleyellow/scoreboard/prefs/PreferenceValues.java
 fi
 
-vc=$(grep versionCode ${mffile} | perl -ne 's~[^\d]*(\d+)"~$1~; print')
+#vc=$(grep versionCode ${mffile} | perl -ne 's~[^\d]*(\d+)"~$1~; print')
+vc=$(grep versionCode build.gradle | perl -ne 's~.*"\d{4}(\d+).*~$1~; print' | sort -u)
+
 #brand=$(grep app_name_short_brand_ ${mffile} | head -1 | perl -ne 's~.*_short_brand(\w+).*~$1~; print')
 brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
 
@@ -59,6 +63,11 @@ brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Bran
 ## will be repopulated during build
 #/bin/rm -rf -v build
 #/bin/rm -rfv $HOME/.android/build-cache
+
+if [[ 1 -eq 2 ]]; then
+    echo "TEMP EXIT"
+    exit 1
+fi
 
 targetdir=/osshare/doc/squash/www.double-yellow.be/app
 if [[ ! -e ${targetdir} ]]; then
@@ -87,18 +96,23 @@ if [[ ${iStep} -le 1 ]]; then
 
     echo "Building ... $pkg $vc"
     if ./gradlew assemble; then
-        relapk=$(find . -name '*-release.apk')
-        dbgapk=$(find . -name '*-minified.apk')
-        cp -v -p --backup ${relapk} ${targetdir}/Squore${brand}.${vc}.apk
-        #read -p "Does copy look ok"
-        if [[ -n "${relapk}" ]]; then
-            ls -l ${relapk}
-            echo "adb install -r Squore/${relapk}"
-        fi
-        if [[ -n "${dbgapk}" ]]; then
-            ls -l ${dbgapk}
-            echo "adb install -r Squore/${dbgapk}"
-        fi
+        productFlavors="phoneTabletPre22 phoneTabletPost23 wearOs"
+        for productFlavor in ${productFlavors}; do
+
+            relapk=$(find . -name "*-${productFlavor}-release.apk")
+            dbgapk=$(find . -name "*-${productFlavor}-debug.apk")
+            cp -v -p --backup ${relapk} ${targetdir}/Squore${brand}.${productFlavor}-${vc}.apk
+            #read -p "Does copy look ok"
+            if [[ -n "${relapk}" ]]; then
+                ls -l ${relapk}
+                echo "adb -s \${device} install -r Squore/${relapk}"
+            fi
+            if [[ -n "${dbgapk}" ]]; then
+                ls -l ${dbgapk}
+                echo "adb -s \${device} install -r Squore/${dbgapk}"
+            fi
+
+        done
     else
         echo '#################### Building failed #####################' > /dev/stderr
         exit 1
@@ -109,8 +123,18 @@ if [[ ${iStep} -le 2 ]]; then
     devices="$(adb devices | egrep -v '(List of|^$)' | sed 's~ *device~~')"
     for dvc in ${devices}; do
         #set -x
-        echo 'Installing new version ...'
-        adb -s ${dvc} install -r ${targetdir}/Squore${brand}.${vc}.apk 2> tmp.adb.install
+        build_version_sdk=$(adb -s ${dvc} shell getprop ro.build.version.sdk | sed -e 's~[^0-9]~~')
+
+        productFlavor="phoneTabletPost23"
+        if [[ ${build_version_sdk} -lt 23 ]]; then
+            productFlavor="phoneTabletPre22"
+        fi
+        if [[ "${dvc}" =~ ":5555" ]]; then
+            productFlavor="wearOs"
+        fi
+        set +x
+        echo "Installing new ${productFlavor} version on device ${dvc}..."
+        adb -s ${dvc} install -r ${targetdir}/Squore${brand}.${productFlavor}-${vc}.apk 2> tmp.adb.install 1> /dev/null
         if grep failed tmp.adb.install; then
             echo "Uninstalling previous version to install new version ..."
             # uninstall previous app
@@ -121,8 +145,11 @@ if [[ ${iStep} -le 2 ]]; then
         fi
 
         # launch the app
-        echo 'Launching the app ${pkg} ...'
-        adb -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1
+        echo "Launching the app ${pkg} ..."
+        #set -x
+        adb -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1 > /dev/null 2> /dev/null
+        set +x
+        #adb -s ${dvc} logcat
         echo "adb -s ${dvc} logcat | egrep '(SB|doubleyellow)' | egrep -v '(AutoResize)'"
     done
 
