@@ -6480,10 +6480,23 @@ touch -t 01030000 LAST.sb
         m_wearableHelper.onPause(this);
     }
     private WearableHelper m_wearableHelper = null;
+    private static boolean m_bNoWearablePossible = false;
     private void onResumeWearable() {
         if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.M /* 23 */ ) { return; }
 
         if ( m_wearableHelper == null ) {
+            try {
+                Class.forName("com.google.android.gms.wearable.Wearable");
+            } catch (Throwable e) {
+                String msg = "Installed on a device with no wearable support";
+                if ( m_bNoWearablePossible == false ) {
+                    m_bNoWearablePossible = true;
+                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+                Log.w(TAG, msg);
+                return;
+            }
             m_wearableHelper = new WearableHelper(this);
         }
         m_wearableHelper.onResume(this);

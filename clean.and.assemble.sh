@@ -14,9 +14,9 @@ if [[ -z "${mffile}" ]]; then
 fi
 pkg=$(grep package= ${mffile} | perl -ne 's~.*"([a-z\.]+)"~$1~; print')
 
-vcFromManifest=$(cat ${mffile} | grep versionCode | sed -e 's~.*versionCode=.\([0-9]*\).*~\1~')
-versionCode=$1
-if [[ -z "$versionCode" ]]; then
+#vcFromManifest=$(cat ${mffile} | grep versionCode | sed -e 's~.*versionCode=.\([0-9]*\).*~\1~')
+versionCodeX="X"
+if [[ -z "$versionCodeX" ]]; then
 cat <<!
 
 	Please specify versioncode as first argument for building ${pkg}
@@ -29,19 +29,20 @@ cat <<!
     fi
 	git tag | grep ${grepfor}
 
-    echo "Version code in ${mffile}: $vcFromManifest"
+    #echo "Version code in ${mffile}: $vcFromManifest"
 	exit 1
 else
-    relapk=$(find . -name '*phoneTabletPost23-release.apk')
+    productFlavor="phoneTabletPost23"
+    relapk=$(find . -name "*${productFlavor}-release.apk")
     if [[ -e ${relapk} ]]; then
         changedFiles="$(find . -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml|md|gradle)' | egrep -v '(\.idea/|/\.gradle/|/generated/|/reports/)')"
     else
         changedFiles="No apk to compare with"
     fi
 
-    if [[ ${versionCode} -ne ${vcFromManifest} ]]; then
-        echo "Not changing MANIFEST anymore"
-        #sed -i "s~\(versionCode=.\)[0-9]*\(.\)~\1${versionCode}\2~" ${mffile}
+    if [[ ${versionCodeX} -ne ${vcFromManifest} ]]; then
+        echo "Not changing MANIFEST anymore" > /dev/null
+        #sed -i "s~\(versionCode=.\)[0-9]*\(.\)~\1${versionCodeX}\2~" ${mffile}
     fi
 	#head $mffile
 	#exit 2 # TMP
@@ -53,7 +54,7 @@ if [[ -n "$(grep 'NO_SHOWCASE_FOR_VERSION_BEFORE ='  ./src/com/doubleyellow/scor
 fi
 
 #vc=$(grep versionCode ${mffile} | perl -ne 's~[^\d]*(\d+)"~$1~; print')
-vc=$(grep versionCode build.gradle | perl -ne 's~.*"\d{4}(\d+).*~$1~; print' | sort -u)
+#vc=$(grep versionCode build.gradle | perl -ne 's~.*"\d{4}(\d+).*~$1~; print' | sort -u)
 
 #brand=$(grep app_name_short_brand_ ${mffile} | head -1 | perl -ne 's~.*_short_brand(\w+).*~$1~; print')
 brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
@@ -91,25 +92,32 @@ else
 fi
 
 if [[ ${iStep} -le 1 ]]; then
-    echo "Cleaning ... $pkg $vc"
+    echo "Cleaning ... $pkg"
     ./gradlew clean
 
-    echo "Building ... $pkg $vc"
+    echo "Building ... $pkg"
     if ./gradlew assemble; then
         productFlavors="phoneTabletPre22 phoneTabletPost23 wearOs"
         for productFlavor in ${productFlavors}; do
 
             relapk=$(find . -name "*-${productFlavor}-release.apk")
             dbgapk=$(find . -name "*-${productFlavor}-debug.apk")
-            cp -v -p --backup ${relapk} ${targetdir}/Squore${brand}.${productFlavor}-${vc}.apk
+
+            # determine correct version number from manifest
+            mergedManifest=$(find build/intermediates/merged_manifests/${productFlavor}Release -name AndroidManifest.xml)
+            versionCode=$(head ${mergedManifest} | grep versionCode | sed -e 's~[^0-9]~~g')
+
+            cp -v -p --backup ${relapk} ${targetdir}/Score-${brand}.${productFlavor}-${versionCode}.apk
             #read -p "Does copy look ok"
-            if [[ -n "${relapk}" ]]; then
-                ls -l ${relapk}
-                echo "adb -s \${device} install -r Squore/${relapk}"
-            fi
-            if [[ -n "${dbgapk}" ]]; then
-                ls -l ${dbgapk}
-                echo "adb -s \${device} install -r Squore/${dbgapk}"
+            if [[ 1 -eq 2 ]]; then
+                if [[ -n "${relapk}" ]]; then
+                    ls -l ${relapk}
+                    echo "adb -s \${device} install -r Squore/${relapk}"
+                fi
+                if [[ -n "${dbgapk}" ]]; then
+                    ls -l ${dbgapk}
+                    echo "adb -s \${device} install -r Squore/${dbgapk}"
+                fi
             fi
 
         done
@@ -124,24 +132,28 @@ if [[ ${iStep} -le 2 ]]; then
     for dvc in ${devices}; do
         #set -x
         build_version_sdk=$(adb -s ${dvc} shell getprop ro.build.version.sdk | sed -e 's~[^0-9]~~')
+        build_product_model=$(adb -s ${dvc} shell getprop ro.product.model)
 
         productFlavor="phoneTabletPost23"
         if [[ ${build_version_sdk} -lt 23 ]]; then
             productFlavor="phoneTabletPre22"
         fi
-        if [[ "${dvc}" =~ ":5555" ]]; then
+        if [[ "${build_product_model}" =~ "wear" ]]; then
             productFlavor="wearOs"
         fi
+        mergedManifest=$(find build/intermediates/merged_manifests/${productFlavor}Release -name AndroidManifest.xml)
+        versionCode=$(head ${mergedManifest} | grep versionCode | sed -e 's~[^0-9]~~g')
+
         set +x
         echo "Installing new ${productFlavor} version on device ${dvc}..."
-        adb -s ${dvc} install -r ${targetdir}/Squore${brand}.${productFlavor}-${vc}.apk 2> tmp.adb.install 1> /dev/null
+        adb -s ${dvc} install -r ${targetdir}/Score-${brand}.${productFlavor}-${versionCode}.apk 2> tmp.adb.install # 1> /dev/null
         if grep failed tmp.adb.install; then
             echo "Uninstalling previous version to install new version ..."
             # uninstall previous app
             adb -s ${dvc} uninstall ${pkg}
 
             echo 'Installing new version (after uninstall) ...'
-            adb -s ${dvc} install -r ${targetdir}/Squore${brand}.${vc}.apk 2> tmp.adb.install
+            adb -s ${dvc} install -r ${targetdir}/Squore${brand}.${versionCode}.apk 2> tmp.adb.install
         fi
 
         # launch the app
@@ -149,7 +161,7 @@ if [[ ${iStep} -le 2 ]]; then
         #set -x
         adb -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1 > /dev/null 2> /dev/null
         set +x
-        #adb -s ${dvc} logcat
+        # adb -s ${dvc} logcat
         echo "adb -s ${dvc} logcat | egrep '(SB|doubleyellow)' | egrep -v '(AutoResize)'"
     done
 
@@ -157,7 +169,7 @@ if [[ ${iStep} -le 2 ]]; then
         echo "############### No devices found to install the app..."
     fi
 
-    #rm tmp.adb.install
+    rm tmp.adb.install
 fi
 # install a shortcut
 #    pkg=com.doubleyellow.scoreboard

@@ -38,7 +38,7 @@ class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
     private static final String TAG = "SB." + SendMessageToWearableTask.class.getSimpleName();
 
     private MessageClient messageClient = null;
-    private NodeClient nodeClient    = null;
+    private NodeClient    nodeClient    = null;
 
     SendMessageToWearableTask(Context ctx) {
         messageClient = Wearable.getMessageClient(ctx);
@@ -64,7 +64,7 @@ class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
                 Log.d(TAG, String.format("send reqId %d : %s", requestId, sMessage)); // just an (for every call increasing) integer. Same number as messageEvent.getRequestId() on receiving end
             }
         } catch (Exception e) {
-            Log.e(TAG, "Task failed: " + e, e); // e.g. java.util.concurrent.ExecutionException: com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=SERVICE_INVALID, resolution=null, message=null}
+            Log.w(TAG, "Task failed: " + e); // e.g. java.util.concurrent.ExecutionException: com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=SERVICE_INVALID, resolution=null, message=null}
         }
         return null;
     }
