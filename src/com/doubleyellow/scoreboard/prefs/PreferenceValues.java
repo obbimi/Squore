@@ -734,7 +734,8 @@ public class PreferenceValues extends RWValues
         return getEnumSet(PreferenceKeys.showPlayerColorOn, context, ShowPlayerColorOn.class, EnumSet.allOf(ShowPlayerColorOn.class)); // ShowPlayerColorOn_DefaultValues
     }
     public static EnumSet<ShowCountryAs> showCountryAs(Context context) {
-        return getEnumSet(PreferenceKeys.showCountryAs, context, ShowCountryAs.class, EnumSet.of(ShowCountryAs.FlagNextToNameOnDevice, ShowCountryAs.FlagNextToNameChromeCast));
+        EnumSet<ShowCountryAs> esDefault = EnumSet.of(ShowCountryAs.FlagNextToNameOnDevice, ShowCountryAs.FlagNextToNameChromeCast); // ShowCountryAs_DefaultValues in xml takes precedence
+        return getEnumSet(PreferenceKeys.showCountryAs, context, ShowCountryAs.class, esDefault);
     }
     public static EnumSet<ShowAvatarOn> showAvatarOn(Context context) {
         return getEnumSet(PreferenceKeys.showAvatarOn, context, ShowAvatarOn.class, EnumSet.of(ShowAvatarOn.OnDevice, ShowAvatarOn.OnChromeCast));
@@ -926,7 +927,7 @@ public class PreferenceValues extends RWValues
                 m_playerList.addAll(contacts);
             }
         } else {
-            Log.d(TAG, "Not reading contacts");
+            //Log.d(TAG, "Not reading contacts");
         }
         if ( ListUtil.size(m_playerList) < 500 ) {
             // to expensive operation for large number of players
@@ -1711,7 +1712,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-03-27"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-04-06"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

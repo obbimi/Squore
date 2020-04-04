@@ -149,6 +149,10 @@ public class DialogManager {
         return false;
     }
     public void clearDialogs() {
+        if ( isDialogShowing() ) {
+            Log.w(TAG, "Should normally only be happening if scoring is done on 'connected' device and slave is showing a dialog");
+            baseDialog.dismiss();
+        }
         baseDialogs.clear();
     }
     //private Model      matchModel = null;

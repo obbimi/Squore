@@ -678,7 +678,11 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 if ( Brand.isGameSetMatch() ) {
                     showChangeSideFloatButton(true);
                 } else {
-                    _confirmChangeSides(null);
+                    if ( isWearable() ) {
+                        showChangeSideFloatButton(true);
+                    } else {
+                        _confirmChangeSides(null);
+                    }
                 }
                 return true;
             case Automatic:

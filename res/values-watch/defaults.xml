@@ -3,6 +3,7 @@
     <bool name="showActionBar_default">false</bool>
 
     <string name="endGameSuggestion_default_Squash">Automatic</string>
+    <string name="endGameSuggestion_default_Tabletennis">Automatic</string>
 
 
 </resources>
