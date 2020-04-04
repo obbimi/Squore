@@ -19,10 +19,23 @@ function hideOnScreenKeyboard() {
     done
 }
 function getCurrentScore() {
-    _getTopLeftXY "btn_score2"
+    _getTopLeftXY "btn_score2" 1 2>&1 > /dev/null
      egrep "btn_score[1-2]" ${xmldump_file_work} | grep "text" | sed 's~.*text="~~' | sed 's~".*~~'
 }
-
+function finishGameFor() {
+    #set -x
+    player2Win=${1:-1}
+    scoreToWin=${2:-11}
+    scores=$(getCurrentScore | tail -2)
+    score1=$(echo "${scores}" | head -1)
+    score2=$(echo "${scores}" | tail -1)
+    score=$((score1 > score2 ? score1 : score2))
+    set +x
+    #let pointsNeeded=scoreToWin-score
+    for s in $(seq $((score + 1)) ${scoreToWin}); do
+        tabOnGUIElement "btn_score${player2Win}"
+    done
+}
 function adbshell() {
     #set -x
     cmd="$*"
@@ -72,7 +85,7 @@ function isNumber() {
 }
 function doSleep () {
     sleepAmount=${1:-2}
-    echo "Sleeping ${sleepAmount} ..."
+    echo "Sleeping ${sleepAmount} ... ${2}"
     sleep ${sleepAmount}
 }
 
@@ -185,8 +198,9 @@ function _getTopLeftXY() {
                 #echo "pulling in file from device ${ADB_DEVICE} to grep from "
                 adb -s ${ADB_DEVICE} pull ${xmldump_file_default} ${xmldump_file_work} > /dev/null
             else
+                #ADB_DEVICE=$(getprop ro.boot.serialno)
                 echo "cp file to work with on ${ADB_DEVICE}"
-                set -x
+                #set -x
                 cp -v ${xmldump_file_default} ${xmldump_file_work}
                 set +x
             fi

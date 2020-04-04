@@ -13,7 +13,8 @@ endAfter=${2:-6}
 #set +x
 
 # INITIALIZE
-pkg=com.doubleyellow.scoreboard
+pkg=${3:-com.doubleyellow.scoreboard}
+isSquash=1
 if [[ -n "${ADB_DEVICE}" ]]; then
     echo "Running from laptop for ${ADB_DEVICE}"
 else
@@ -29,6 +30,16 @@ else
                     emulator @${em} &
                 done
                 # to allow close emulators you do not want to use
+                cat <<EO_HELP
+
+Emulators have been started. Please:
+- close unwanted emulators
+- rotate other to landscape and
+    - no timers
+    - fullscreen
+When done, rerun script
+
+EO_HELP
                 exit
             fi
         fi
@@ -36,6 +47,21 @@ else
             #adb shell dumpsys package ${pkg}
 
         for dvc in ${devices}; do
+
+            #set -x
+            #if which adb; then
+                build_version_sdk=$(adb -s ${dvc} shell getprop ro.build.version.sdk | sed -e 's~[^0-9]~~')
+                build_product_model=$(adb -s ${dvc} shell getprop ro.product.model)
+
+                productFlavor="phoneTabletPost23"
+                if [[ ${build_version_sdk} -lt 23 ]]; then
+                    productFlavor="phoneTabletPre22"
+                fi
+                if echo "${build_product_model}" | grep "wear"; then
+                    productFlavor="wearOs"
+                fi
+            #fi
+
             # install the app
             if [[ ${startAt} -eq 0 ]]; then
                 if [[ -e ${pkg}.apk ]]; then
@@ -45,7 +71,11 @@ else
                     echo "No such file ${pkg}.apk"
                 fi
                 # start the app
-                adb -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1
+                adb -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1 > tmp.start.log
+                if [[ 1 -eq 1 ]]; then
+                    echo "Unable to start app ${pkg} ... "
+                    exit 1
+                fi
                 # stop showcase
                 adb -s ${dvc} shell input keyevent 4
                 adb -s ${dvc} shell input keyevent 4
@@ -53,7 +83,16 @@ else
                 echo "Assuming app is installed on ${dvc}"
             fi
             # start the app
-            adb -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1
+            if ! adb -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1; then
+                echo "Unable to start app ${pkg} on ${dvc} ... "
+
+                relapk=$(find .. -name "*-${productFlavor}-release.apk")
+
+                echo "Installing ${relapk} version on device ${dvc}..."
+                adb -s ${dvc} install -r ${relapk}
+
+                exit 1
+            fi
 
             if adb shell which sed | grep 'not found'; then
                 echo "Script NOT invokable on device"
@@ -107,7 +146,6 @@ function doStep () {
                                                         # mCurRootView=DecorView@63584a4[Appearance] to determine which subscreen of preferences is showing
                                                         # mCurRootView=DecorView@c755f40[ArchiveTabbed]
 # adb shell dumpsys activity top | grep ActionMenuItemView # to check for visible menu items and thus knowing which tab is active from e.g. MatchTabbed
-
 # start new game
 removeDumpFile
 if doStep "Start new game"; then
@@ -116,7 +154,9 @@ if doStep "Start new game"; then
     showMenuDrawer
     tabOnGUIElement "New singles match" # sb_enter_singles_match
     removeDumpFile
-    doSleep 2
+
+    doSleep 4
+    hideOnScreenKeyboard # just to be save
 
     tabOnGUIElement "match_playerB"
     typeText Harry$(date +%S)
@@ -154,12 +194,14 @@ if doStep "Mark game"; then
     closeDialogByClicking "Start"
 
     # appeals A
+    if [[ ${isSquash} -eq 1 ]]; then
     openDialogByClicking  "txt_player1"
     closeDialogByClicking "Stroke"
     openDialogByClicking  "txt_player1"
     closeDialogByClicking "Yes Let"
     openDialogByClicking  "txt_player1"
     closeDialogByClicking "No Let"
+    fi
 
     # score A
     tabOnGUIElement "btn_score1"
@@ -167,12 +209,14 @@ if doStep "Mark game"; then
     tabOnGUIElement "btn_score1"
 
     # appeals B
+    if [[ ${isSquash} -eq 1 ]]; then
     openDialogByClicking  "txt_player2"
     closeDialogByClicking "Stroke"
     openDialogByClicking  "txt_player2"
     closeDialogByClicking "Yes Let"
     openDialogByClicking  "txt_player2"
     closeDialogByClicking "No Let"
+    fi
 
     # score B
     tabOnGUIElement "btn_score2"
@@ -180,6 +224,8 @@ if doStep "Mark game"; then
     tabOnGUIElement "btn_score2"
     doSleep 2
 
+    # conduct
+    if [[ ${isSquash} -eq 1 ]]; then
     longpress "txt_player2"
     closeDialogByClicking "Conduct stroke"
     doSleep 2
@@ -188,11 +234,13 @@ if doStep "Mark game"; then
     tabOnGUIElement "Time wasting"
     closeDialogByClicking "Conduct warning"
     doSleep 2
+    fi
 
     tabOnGUIElement "btn_score2"
     tabOnGUIElement "btn_score1"
 
     getCurrentScore
+    finishGameFor 1
 
     #tap endGameOkPlustimerButton
 fi
@@ -207,17 +255,29 @@ fi
 if doStep "Show game scores"; then
     #longpress gameScores
     doBack
-    tap gameScores
+
+    # toggle full screen
+    longpress gamescores
+    longpress btn_gameswon1
+    longpress btn_gameswon1
+    longpress gamescores
+    doBack
+
+    # toggle gameswon/game-scores
     doSleep 3
-    tap gameScores
-    tap actionBarScoreDetails
+    tabOnGUIElement gamescores
+    tabOnGUIElement btn_gameswon1
+    doSleep 3
+    tabOnGUIElement btn_gameswon1
+    tabOnGUIElement gamescores
+    #tap actionBarScoreDetails
 fi
 if doStep "Undo by swipe"; then
     #HswipeScale12
     #doBack
-    tap score_A
+    tabOnGUIElement "btn_score1"
     swipeUndo score_A
-    tap score_B
+    tabOnGUIElement "btn_score2"
     swipeUndo score_B
 fi
 exit
