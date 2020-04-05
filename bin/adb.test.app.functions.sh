@@ -171,20 +171,22 @@ function showMenuDrawer () {
 
 export xmldump_file_default=/sdcard/window_dump.xml
 # must point to a dir that also exist on the device
-export xmldump_file_work=/sdcard/windowDump.xml
+export xmldump_file_work=/sdcard/windowDump.MINE.xml
 
 function removeDumpFile() {
-    rm ${xmldump_file_work}
+    echo "Removing dumpfile $1"
+    #rm ${xmldump_file_work}
+    mv ${xmldump_file_work} ${xmldump_file_work}.PREV
 }
 
 function _getTopLeftXY() {
     resourceId="$1"
-    refreshWindowDump=${2:-0}
+    refreshWindowDump=${2:-1}
 
     if [[ ! -e ${xmldump_file_work} ]]; then
         refreshWindowDump=1
     fi
-    # to call this command only when layout changes (when activity changes)
+    # to call this command only when layout changes (when activity changes, dialogs appear/disappear)
     if [[ ${refreshWindowDump} -gt 0 ]]; then
         if adbshell uiautomator dump > /dev/null; then
             if [[ -n "${ADB_DEVICE}" ]]; then
@@ -198,10 +200,14 @@ function _getTopLeftXY() {
                 #echo "pulling in file from device ${ADB_DEVICE} to grep from "
                 adb -s ${ADB_DEVICE} pull ${xmldump_file_default} ${xmldump_file_work} > /dev/null
             else
-                #ADB_DEVICE=$(getprop ro.boot.serialno)
-                echo "cp file to work with on ${ADB_DEVICE}"
-                #set -x
-                cp -v ${xmldump_file_default} ${xmldump_file_work}
+                if [[ -e ${xmldump_file_default} ]]; then
+                    #ADB_DEVICE=$(getprop ro.boot.serialno)
+                    echo "cp file to work with on ${ADB_DEVICE}"
+                    #set -x
+                    cp -v ${xmldump_file_default} ${xmldump_file_work}
+                else
+                    echo "Dump file not found : ${xmldump_file_default}"
+                fi
                 set +x
             fi
             # insert few line breaks for easy grepping
@@ -213,8 +219,11 @@ function _getTopLeftXY() {
         fi
     fi
 
-    topleftXY=$(egrep     "(${resourceId})" ${xmldump_file_work} | sed 's~.*bounds="\[~~'       | sed 's~\]\[.*~~' | tr ',' ' ')
-    bottomRightXY=$(egrep "(${resourceId})" ${xmldump_file_work} | sed 's~.*bounds="\[.*\]\[~~' | sed 's~\].*~~'   | tr ',' ' ')
+    #set -x
+    topleftXY=$(egrep     "(${resourceId})" ${xmldump_file_work} | tail -1 | sed 's~.*bounds="\[~~'       | sed 's~\]\[.*~~' | tr ',' ' ')
+    bottomRightXY=$(egrep "(${resourceId})" ${xmldump_file_work} | tail -1 | sed 's~.*bounds="\[.*\]\[~~' | sed 's~\].*~~'   | tr ',' ' ')
+    set +x
+
     if [[ -z "${topleftXY}" ]]; then
         # display all ids
         echo "*** Did not find ${resourceId}. Available are: "
@@ -232,15 +241,15 @@ function _getTopLeftXY() {
 }
 function openDialogByClicking() {
     tabOnGUIElement "$1"
-    removeDumpFile
+    removeDumpFile "after open dialog $1"
 }
 function closeDialogByClicking() {
     tabOnGUIElement "$1"
-    removeDumpFile
+    removeDumpFile "after close dialog with button $1"
 }
 function closeDialogByEscape() {
     typeEscape
-    removeDumpFile
+    removeDumpFile "after close dialog with escape"
 }
 
 

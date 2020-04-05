@@ -26,6 +26,10 @@
 <!--        <item>OnDevice</item>-->
         <item>OnChromeCast</item>
     </string-array>
+    <string-array name="floatingMessageForGameBallOn_DefaultValues_Badminton">
+<!--        <item>OnDevice</item>-->
+        <item>OnChromeCast</item>
+    </string-array>
     <string-array name="ShowCountryAs_DefaultValues">
         <!--<item>AbbreviationAfterName</item>-->
 <!--        <item>FlagNextToNameOnDevice</item>-->

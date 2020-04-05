@@ -4,6 +4,6 @@
 
     <string name="endGameSuggestion_default_Squash">Automatic</string>
     <string name="endGameSuggestion_default_Tabletennis">Automatic</string>
-
+    <string name="endGameSuggestion_default_Badminton">Automatic</string>
 
 </resources>

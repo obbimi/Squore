@@ -13,8 +13,33 @@ endAfter=${2:-6}
 #set +x
 
 # INITIALIZE
-pkg=${3:-com.doubleyellow.scoreboard}
-isSquash=1
+if [[ -e .brand.txt ]]; then
+    brandDefault=$(cat .brand.txt)
+else
+    brandDefault=Squore
+fi
+brand=${3:-${brandDefault}}
+brandLC=$(echo $brand | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz')
+
+echo $brand > .brand.txt
+
+pkg=com.doubleyellow.${brandLC}
+isSquash=0
+nrOfPointsToWinGame=11
+#set -x
+if [[ "${brandLC}" == "squore" ]]; then
+    isSquash=1
+    nrOfPointsToWinGame=11
+    pkg=com.doubleyellow.scoreboard
+fi
+if [[ "${brandLC}" == "tabletennis" ]]; then
+    nrOfPointsToWinGame=11
+fi
+if [[ "${brandLC}" == "badminton" ]]; then
+    nrOfPointsToWinGame=21
+fi
+set +x
+
 if [[ -n "${ADB_DEVICE}" ]]; then
     echo "Running from laptop for ${ADB_DEVICE}"
 else
@@ -64,11 +89,13 @@ EO_HELP
 
             # install the app
             if [[ ${startAt} -eq 0 ]]; then
-                if [[ -e ${pkg}.apk ]]; then
-                    adb -s ${dvc} uninstall ${pkg}
-                    adb -s ${dvc}   install ${pkg}.apk
+                #set -x
+                relapk=$(find /osshare/doc/squash/www.double-yellow.be/app/ -name '*.apk' | egrep -i "Score-${brand}.${productFlavor}.*[0-9]{4}" | sort | tail -1)
+                if [[ -e ${relapk} ]]; then
+                    adb -s ${dvc} uninstall ${pkg}    2> /dev/null
+                    adb -s ${dvc}   install ${relapk}
                 else
-                    echo "No such file ${pkg}.apk"
+                    echo "No such file ${relapk}"
                 fi
                 # start the app
                 adb -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1 > tmp.start.log
@@ -99,14 +126,14 @@ EO_HELP
                 echo "Script not moved to device. E.g sed,grep not supported on older APIs"
                 # invoked this script again with single target device specified in ADB_DEVICE
                 export ADB_DEVICE=${dvc}
-                ./adb.test.app.sh $1 $2
+                ./adb.test.app.sh $1 $2 $3
             else
                 export ADB_DEVICE=''
                 echo "Script invokable on device"
                 # push script files to the device and execute
                 adb -s ${dvc} push ./adb.test.* /sdcard/.
                 # start the test with the script running on the device
-                adb -s ${dvc} shell "cd /sdcard; sh adb.test.app.sh ${startAt} ${endAfter}"
+                adb -s ${dvc} shell "cd /sdcard; sh adb.test.app.sh ${startAt} ${endAfter} ${brand}"
             fi
         done
         exit
@@ -148,6 +175,8 @@ function doStep () {
 # adb shell dumpsys activity top | grep ActionMenuItemView # to check for visible menu items and thus knowing which tab is active from e.g. MatchTabbed
 # start new game
 removeDumpFile
+doSleep 2
+
 if doStep "Start new game"; then
     doBack
     doSleep 2
@@ -159,7 +188,7 @@ if doStep "Start new game"; then
     hideOnScreenKeyboard # just to be save
 
     tabOnGUIElement "match_playerB"
-    typeText Harry$(date +%S)
+    typeText ${brand}$(date +%S)
     hideOnScreenKeyboard
 
     tabOnGUIElement "match_playerA"
@@ -184,14 +213,31 @@ if doStep "Set colors"; then
 fi
 
 # mark a game
-if doStep "Mark game"; then
+if doStep "Toss"; then
     openDialogByClicking "float_toss"
     tabOnGUIElement "Toss"
     doSleep 6
-    closeDialogByEscape
+    #set -x
+    if [[ ${isSquash} -eq 1 ]]; then
+        closeDialogByEscape
+    else
+        # choose serve side
+        tabOnGUIElement "Serve"
+        doSleep 2
 
+        # choose side
+        tabOnGUIElement "Right"
+        doSleep 2
+        #closeDialogByEscape
+    fi
+    set +x
+fi
+
+if doStep "Mark game"; then
+    if [[ ${isSquash} -eq 1 ]]; then
     openDialogByClicking "sb_official_announcement"
     closeDialogByClicking "Start"
+    fi
 
     # appeals A
     if [[ ${isSquash} -eq 1 ]]; then
@@ -240,7 +286,7 @@ if doStep "Mark game"; then
     tabOnGUIElement "btn_score1"
 
     getCurrentScore
-    finishGameFor 1
+    finishGameFor 1 ${nrOfPointsToWinGame}
 
     #tap endGameOkPlustimerButton
 fi
