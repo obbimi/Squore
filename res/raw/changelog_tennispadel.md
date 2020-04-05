@@ -1,3 +1,9 @@
+## 4.32 (april 2020)
+
+- WearOS version of the app is now available
+  - the basic functionality has been ported to the wearable app
+  - communication/sync between handheld and wear version of app is possible
+
 ## 4.31 (march 2020)
 
 - allow configuration on swap sides
@@ -32,4 +38,5 @@
 
 - TODO
   - Online Help pages
+  - revisit 'Shared scoresheet'
 

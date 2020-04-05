@@ -88,9 +88,9 @@ EO_HELP
             #fi
 
             # install the app
+            relapk=$(find /osshare/doc/squash/www.double-yellow.be/app/ -name '*.apk' | egrep -i "Score-${brand}.${productFlavor}.*[0-9]{4}" | sort | tail -1)
             if [[ ${startAt} -eq 0 ]]; then
                 #set -x
-                relapk=$(find /osshare/doc/squash/www.double-yellow.be/app/ -name '*.apk' | egrep -i "Score-${brand}.${productFlavor}.*[0-9]{4}" | sort | tail -1)
                 if [[ -e ${relapk} ]]; then
                     adb -s ${dvc} uninstall ${pkg}    2> /dev/null
                     adb -s ${dvc}   install ${relapk}
@@ -112,8 +112,6 @@ EO_HELP
             # start the app
             if ! adb -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1; then
                 echo "Unable to start app ${pkg} on ${dvc} ... "
-
-                relapk=$(find .. -name "*-${productFlavor}-release.apk")
 
                 echo "Installing ${relapk} version on device ${dvc}..."
                 adb -s ${dvc} install -r ${relapk}

@@ -29,6 +29,9 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 
+/**
+ * Handler specific for Bluetooth connection/messages.
+ */
 public class BluetoothHandler extends Handler
 {
     private static final String TAG = "SB." + BluetoothHandler.class.getSimpleName();
@@ -86,8 +89,9 @@ public class BluetoothHandler extends Handler
                     // become slave
                     sb.setBluetoothRole(BTRole.Slave, readMessage.trim());
                 }
-
+                m_bHandlingBluetoothMessageInProgress = true;
                 sb.interpretReceivedMessage(readMessage, false);
+                m_bHandlingBluetoothMessageInProgress = false;
                 break;
             case INFO:
                 storeBTDeviceConnectedTo(msg.obj); // normally correct device is already stored in 'case STATE_CHANGE'
@@ -100,6 +104,10 @@ public class BluetoothHandler extends Handler
                 }
                 break;
         }
+    }
+    private boolean m_bHandlingBluetoothMessageInProgress = false;
+    boolean isHandlingMessage() {
+        return m_bHandlingBluetoothMessageInProgress;
     }
 
     private void storeBTDeviceConnectedTo(Object o) {
