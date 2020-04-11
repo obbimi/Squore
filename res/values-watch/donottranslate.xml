@@ -36,9 +36,11 @@
         <item>FlagNextToNameChromeCast</item>
     </string-array>
 
+    <!-- IMPORTANT NOTE: Should be different than capability in App res/values/wear.xml. -->
+<!--
     <string-array name="android_wear_capabilities">
-        <!-- IMPORTANT NOTE: Should be different than capability in App res/values/wear.xml. -->
         <item>verify_remote_app_wear</item>
     </string-array>
+-->
 
 </resources>

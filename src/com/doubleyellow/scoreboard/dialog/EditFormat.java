@@ -43,7 +43,7 @@ import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.Preferences;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
-import com.doubleyellow.util.StringUtil;
+
 
 import java.util.List;
 import java.util.Map;
