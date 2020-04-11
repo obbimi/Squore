@@ -49,6 +49,9 @@ public class LockedMatch extends BaseAlertDialog
             sLockedDesc += " , Winner " + matchModel.getName(matchModel.m_winnerBecauseOf);
         }
         int       iResId       = bAllowUnlock ? R.string.match_is_locked__unlock_to_allow_modifications : R.string.match_is_locked;
+        if ( isWearable() ) {
+            iResId = R.string.match_is__locked;
+        }
         String    sMsg         = String.format(getString(iResId), sLockedDesc);
         //Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
         // TODO: if lockstate is LockedIdleTime, also mention the number of minutes
@@ -57,8 +60,10 @@ public class LockedMatch extends BaseAlertDialog
               .setTitle(sLockedDesc);
         }
         adb.setMessage(sMsg)
-           .setNegativeButton(android.R.string.cancel, dialogClickListener)
            .setNeutralButton(R.string.sb_new_match, dialogClickListener);
+        if ( isNotWearable() ) {
+            adb.setNegativeButton(android.R.string.cancel, dialogClickListener);
+        }
         if (bAllowUnlock) {
              adb.setPositiveButton(R.string.unlock, dialogClickListener);
         }

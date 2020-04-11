@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="${versionCode}">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- this can not be ON in default manifest, device must be a watch, hence separate Manifest file required for wearables -->
     <uses-feature android:name="android.hardware.type.watch" android:required="true" />

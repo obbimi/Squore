@@ -49,7 +49,8 @@
     <string name="uc_clear_club_fields">Svuota campi Club</string>
     <string name="uc_clear_event_fields">Svuota campi Evento</string>
     <string name="uc_clear_referee_fields">Svuota campi Arbitro</string>
-    <string name="sb_clear_score_confirm_message">Vuoi riavviare il punteggio? La cronologia del punteggio dell\'incontro corrente andrà persa.</string>
+    <string name="sb_clear_score_confirm_message">Vuoi riavviare il punteggio? </string>
+    <string name="sb_clear_score_confirm_message_2">La cronologia del punteggio dell\'incontro corrente andrà persa.</string>
     <string name="cmd_change_format">Cambia formato</string>
     <string name="please_select_a_value_for_x">Seleziona per favoe un valore per \'%1$s\'</string> <!-- TODO -->
     <string name="sb_select_match">Seleziona incotro</string>

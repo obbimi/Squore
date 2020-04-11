@@ -288,7 +288,7 @@ public class WearableHelper
         Log.d(TAG, "openPlaystoreOnWearable()");
 
         String sMarketURL = "market://details" + "?id=" + context.getPackageName();
-        if ( PreferenceValues.isBrandTesting(context) ) {
+        if ( PreferenceValues.isBrandTesting(context) && (Brand.brand.equals(Brand.Squore) == false) ) {
             sMarketURL = "market://details" + "?id=com.doubleyellow." + Brand.brand.toString().toLowerCase();
         }
 

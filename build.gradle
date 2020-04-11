@@ -47,7 +47,11 @@ android {
 
         //testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
         //applicationId "com.doubleyellow"
-        manifestPlaceholders = [versionName: "4.32"]
+        manifestPlaceholders = [versionNameTabletennis: "4.32", versionCodeSuffixTabletennis: "0432"
+                               ,versionNameBadminton  : "4.32", versionCodeSuffixBadminton  : "0432"
+                               ,versionNameTennisPadel: "4.33", versionCodeSuffixTennisPadel: "0435"
+                               ,versionNameSquore     : "4.32", versionCodeSuffixSquore     : "0432"
+                               ]
     }
     sourceSets {
         main {
@@ -90,19 +94,19 @@ android {
             dimension "devicetype"
             minSdkVersion 19
           //targetSdkVersion 22 // if specified to low, google play rejects the APK
-            manifestPlaceholders = [versionCode:"19150433"]
+            manifestPlaceholders = [versionCodePrefix:"1915"]
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 29
-            manifestPlaceholders = [versionCode:"23150433"]
+            manifestPlaceholders = [versionCodePrefix:"2315"]
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 29
-            manifestPlaceholders = [versionCode:"25010433"]
+            manifestPlaceholders = [versionCodePrefix:"2501"]
         }
     }
     buildTypes {

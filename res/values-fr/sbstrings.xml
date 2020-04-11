@@ -44,7 +44,8 @@
     <string name="uc_clear_club_fields">Effacer les champs du club</string> <!-- TODO -->
     <string name="uc_clear_event_fields">Effacer les champs de l\'événement</string>
     <string name="uc_clear_referee_fields">Effacer les champs de l\'arbitre</string>
-    <string name="sb_clear_score_confirm_message">Vous voulez recommencer à zéro ? L\'historique du score du match actuel sera perdu.</string>
+    <string name="sb_clear_score_confirm_message">Vous voulez recommencer à zéro ? </string>
+    <string name="sb_clear_score_confirm_message_2">L\'historique du score du match actuel sera perdu.</string>
     <string name="cmd_change_format">Changer le format…</string>
     <string name="please_select_a_value_for_x">Please select a value for \'%1$s\'</string> <!-- TODO -->
     <string name="sb_select_match">Sélectionnez le match</string>

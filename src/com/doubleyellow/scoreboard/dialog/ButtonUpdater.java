@@ -23,16 +23,22 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Button;
+import android.widget.TextView;
+
 import com.doubleyellow.android.util.ColorUtil;
+import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 
 /**
  * Used to give a button
  * - a color
  * - an icon
+ *
+ * In case of wearables: reduce default text size of buttons and message
  */
 public class ButtonUpdater implements DialogInterface.OnShowListener {
 
@@ -119,5 +125,23 @@ public class ButtonUpdater implements DialogInterface.OnShowListener {
                 }
             }
         }
+        if ( false && ViewUtil.isWearable(context) ) {
+            float fMultiplyFactorForWearable = 0.75f;
+            for (int i = 0; i < iaButtonAll.length; i++) {
+                Button button = dialog.getButton(iaButtonAll[i]);
+                if ( button != null ) {
+                    reduceTextSize(fMultiplyFactorForWearable, button);
+                }
+            }
+            TextView tv = dialog.findViewById(android.R.id.message);
+            if ( tv != null ) {
+                reduceTextSize(fMultiplyFactorForWearable, tv);
+            }
+        }
+    }
+
+    private void reduceTextSize(float fMultiplyFactorForWearable, TextView tv) {
+        float iNewTextSize = tv.getTextSize() * fMultiplyFactorForWearable;
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, iNewTextSize);
     }
 }

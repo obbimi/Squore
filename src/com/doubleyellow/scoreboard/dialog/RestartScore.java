@@ -49,10 +49,14 @@ public class RestartScore extends BaseAlertDialog
         if ( isNotWearable() ) {
             adb.setNeutralButton (R.string.cmd_change_format, dialogClickListener);
         }
+        String sMessage = getString(R.string.sb_clear_score_confirm_message);
+        if ( isNotWearable() ) {
+            sMessage += " " + getString(R.string.sb_clear_score_confirm_message_2);
+        }
         adb.setPositiveButton(R.string.cmd_yes          , dialogClickListener)
            .setNegativeButton(R.string.cmd_no           , dialogClickListener)
            .setIcon          (R.drawable.ic_action_refresh)
-           .setMessage       (R.string.sb_clear_score_confirm_message)
+           .setMessage       (sMessage)
            .setOnKeyListener(getOnBackKeyListener(BTN_NO_RESTART));
         dialog = adb.show();
     }

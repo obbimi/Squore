@@ -133,12 +133,16 @@ if [[ ${iStep} -le 2 ]]; then
         #set -x
         build_version_sdk=$(adb -s ${dvc} shell getprop ro.build.version.sdk | sed -e 's~[^0-9]~~')
         build_product_model=$(adb -s ${dvc} shell getprop ro.product.model)
+        build_characteristics=$(adb -s ${dvc} shell getprop ro.build.characteristics) # "emulator,nosdcard,watch",default
 
         productFlavor="phoneTabletPost23"
         if [[ ${build_version_sdk} -lt 23 ]]; then
             productFlavor="phoneTabletPre22"
         fi
-        if [[ "${build_product_model}" =~ "wear" ]]; then
+        #if [[ "${build_product_model}" =~ "wear" ]]; then
+        #    productFlavor="wearOs"
+        #fi
+        if [[ "${build_characteristics}" =~ "watch" ]]; then
             productFlavor="wearOs"
         fi
         mergedManifest=$(find build/intermediates/merged_manifests/${productFlavor}Release -name AndroidManifest.xml)

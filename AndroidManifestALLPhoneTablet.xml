@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="${versionCode}">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <supports-screens
             android:anyDensity="true"
@@ -9,4 +9,10 @@
             android:normalScreens="true"
             android:smallScreens="false"
              />
+
+<!--
+    <application tools:replace="android:appComponentFactory">
+    </application>
+-->
+
 </manifest>

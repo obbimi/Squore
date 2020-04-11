@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -90,7 +91,7 @@ public class EditMatchWizard extends BaseAlertDialog
         m_rootView.setOrientation(LinearLayout.VERTICAL);
         ColorUtil.setBackground(m_rootView, iMainBgColor);
 
-        float fResizeFactorForWizard = 1.0f;
+        float fResizeFactorForWizard = 1.5f;
         m_buttonSizePx = (int) (scoreBoard.getFloatingButtonSizePx() * fResizeFactorForWizard);
 
         GridLayout llPrevNext = new GridLayout(context);
@@ -137,6 +138,8 @@ public class EditMatchWizard extends BaseAlertDialog
           //txtPlayer.setImeOptions(EditorInfo.IME_ACTION_NEXT); // don't --> next not yet available
             txtPlayer.setOnEditorActionListener(onEditorActionListener); // TODO: can we use this?
             txtPlayer.setText(matchModel.getName(p));
+
+            txtPlayer.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtPlayer.getTextSize() * fResizeFactorForWizard);
         }
 
         {

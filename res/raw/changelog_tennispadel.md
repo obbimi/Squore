@@ -1,3 +1,9 @@
+## 4.33 (april 2020)
+
+- added option for final set
+  - play tie break to 7, or
+  - play tie break to 10
+
 ## 4.32 (april 2020)
 
 - WearOS version of the app is now available

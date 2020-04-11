@@ -46,7 +46,8 @@
     <string name="uc_clear_club_fields">Maak club velden leeg</string>
     <string name="uc_clear_event_fields">Maak event velden leeg</string>
     <string name="uc_clear_referee_fields">Maak scheids velden leeg</string>
-    <string name="sb_clear_score_confirm_message">Wil je het scorebord resetten? Alles zal op 0 staan.</string>
+    <string name="sb_clear_score_confirm_message">Wil je het scorebord resetten? </string>
+    <string name="sb_clear_score_confirm_message_2">De historiek van de huidige wedstrijd zal verloren gaan.</string>
     <string name="cmd_change_format">Wijzig formaat</string>
     <string name="please_select_a_value_for_x">Selecteer een waarde voor \'%1$s\'</string>
     <string name="sb_select_match">Selecteer wedstrijd</string>
