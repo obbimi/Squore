@@ -473,6 +473,30 @@
                 android:orientation="vertical"/>
     </LinearLayout>
     <LinearLayout
+        android:layout_below="@id/llTieBreakFormat"
+        android:id="@+id/llFinalSetFinish"
+        android:orientation="horizontal"
+        android:layout_alignParentStart="true"
+        android:gravity="center"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView android:id="@+id/lblFinalSetFinish"
+                android:inputType="none"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sb_FinalSetFinish"
+                android:textSize="@dimen/txt_small"
+                android:layout_margin="2dp"
+                />
+        <Spinner android:id="@+id/spFinalSetFinish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/useHandInHandOutScoring"
+                android:layoutMode="opticalBounds"
+                android:orientation="vertical"/>
+    </LinearLayout>
+    <LinearLayout
         android:layout_below="@+id/llTieBreakFormat"
         android:id="@+id/llPauseDuration"
         android:orientation="horizontal"

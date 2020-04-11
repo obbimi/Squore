@@ -163,10 +163,11 @@ public class MatchView extends SBRelativeLayout
         int iInitialState = bRefTxtsAreEmpty && (bLanguageDeviates == false) ? GONE : VISIBLE;
         ViewUtil.installExpandCollapse(this, R.id.lblReferee, iToggleRefViews, iInitialState, sExpandedCollapsed);
 
-        // make list (brand depandant) of what elements to toggle when lblFormat is expanded collapsed
+        // make list (brand dependant) of what elements to toggle when lblFormat is expanded collapsed
         List<Integer> lToggleFormatViews = new ArrayList<>();
         lToggleFormatViews.add(R.id.llPoints);
         lToggleFormatViews.add(R.id.llTieBreakFormat);
+        lToggleFormatViews.add(R.id.llFinalSetFinish);
         lToggleFormatViews.add(R.id.llPauseDuration);
         lToggleFormatViews.add(R.id.llScoringType);
         lToggleFormatViews.add(R.id.llLiveScore);
@@ -194,6 +195,9 @@ public class MatchView extends SBRelativeLayout
         }
         if ( Brand.supportsTiebreakFormat() == false ) {
             lToggleFormatViews.remove((Integer) R.id.llTieBreakFormat);
+        }
+        if ( Brand.isGameSetMatch() == false ) {
+            lToggleFormatViews.remove((Integer) R.id.llFinalSetFinish );
         }
 
 /*
@@ -275,6 +279,9 @@ public class MatchView extends SBRelativeLayout
         }
         if ( Brand.supportsTiebreakFormat() == false ) {
             ViewUtil.hideViewsForEver(this, R.id.llTieBreakFormat);
+        }
+        if ( Brand.isGameSetMatch() == false ) {
+            ViewUtil.hideViewsForEver(this, R.id.llFinalSetFinish);
         }
         return false;
     }
@@ -387,6 +394,7 @@ public class MatchView extends SBRelativeLayout
     private Spinner              spNumberOfGamesToWin;
     private Spinner              spNumberOfServesPerPlayer;
     private Spinner              spTieBreakFormat;
+    private Spinner              spFinalSetFinish;
     private Spinner              spHandicap;
     private Spinner              spDisciplineStart;
     private Spinner              spWarmupDuration;
@@ -704,6 +712,20 @@ public class MatchView extends SBRelativeLayout
                         iaDisabled = new int[] { TieBreakFormat.SelectOneOrTwo.ordinal(), TieBreakFormat.SelectOneOrThree.ordinal(), TieBreakFormat.SelectOneTwoOrThree.ordinal()  };
                     }
                     initEnumSpinner(spTieBreakFormat, TieBreakFormat.class, tbfPref, null, R.array.tiebreakFormatDisplayValues, iaDisabled);
+                }
+            }
+        }
+        {
+            FinalSetFinish fsfPref = PreferenceValues.getFinalSetFinish(context);
+            spFinalSetFinish = (Spinner) findViewById(R.id.spFinalSetFinish);
+            if ( spFinalSetFinish != null ) {
+                // Currently instanceof Spinner, not EnumSpinner
+                if ( spFinalSetFinish instanceof EnumSpinner ) {
+                    EnumSpinner<FinalSetFinish> sp = (EnumSpinner<FinalSetFinish>) spFinalSetFinish;
+                    sp.setSelected(fsfPref);
+                } else {
+                    int[] iaDisabled = null;
+                    initEnumSpinner(spFinalSetFinish, FinalSetFinish.class, fsfPref, null, R.array.finalSetFinishDisplayValues, iaDisabled);
                 }
             }
         }
@@ -1242,6 +1264,10 @@ public class MatchView extends SBRelativeLayout
             GSMModel gsmModel = (GSMModel) model;
             gsmModel.setNrOfPointsToWinGame(iNrOfPoints2Win);
             gsmModel.setNrOfGamesToWinMatch(iNrOfGamesToWinMatch);
+            if ( (spFinalSetFinish != null) && (spFinalSetFinish.getVisibility() != View.GONE) && ( spFinalSetFinish.getSelectedItemPosition() != -1) ) {
+                FinalSetFinish fsf = FinalSetFinish.values()[spFinalSetFinish.getSelectedItemPosition()];
+                gsmModel.setFinalSetFinish(fsf);
+            }
         } else {
             model.setNrOfPointsToWinGame(iNrOfPoints2Win);
             model.setNrOfGamesToWinMatch(iNrOfGamesToWinMatch);

@@ -46,9 +46,10 @@ public class RestartScore extends BaseAlertDialog
         return true;
     }
     @Override public void show() {
-
+        if ( isNotWearable() ) {
+            adb.setNeutralButton (R.string.cmd_change_format, dialogClickListener);
+        }
         adb.setPositiveButton(R.string.cmd_yes          , dialogClickListener)
-           .setNeutralButton (R.string.cmd_change_format, dialogClickListener)
            .setNegativeButton(R.string.cmd_no           , dialogClickListener)
            .setIcon          (R.drawable.ic_action_refresh)
            .setMessage       (R.string.sb_clear_score_confirm_message)

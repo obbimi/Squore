@@ -19,9 +19,11 @@ package com.doubleyellow.scoreboard.model;
 
 import android.util.Log;
 
+import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.util.ListWrapper;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
+import com.doubleyellow.util.StringUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,6 +73,17 @@ public class GSMModel extends Model
                 l.OnSetBallChange(paSetBallFor, true);
             }
         }
+    }
+
+    //------------------------
+    // Final set finish
+    //------------------------
+    private FinalSetFinish m_finalSetFinish = FinalSetFinish.TieBreakTo7;
+    public void setFinalSetFinish(FinalSetFinish v) {
+        m_finalSetFinish = v;
+    }
+    public FinalSetFinish getFinalSetFinish() {
+        return m_finalSetFinish;
     }
 
     //------------------------
@@ -132,7 +145,19 @@ public class GSMModel extends Model
 
     private int _getNrOfPointsToWinGame() {
         if ( isTieBreakGame() ) {
-            return NUMBER_OF_POINTS_TO_WIN_TIEBREAK; // TODO: 10 for super tiebreak
+            int setNrInProgress = getSetNrInProgress();
+            if ( setNrInProgress == m_iNrOfSetsToWinMatch * 2 - 1 ) {
+                switch ( m_finalSetFinish ) {
+                    case TieBreakTo7:
+                        return 7;
+                    case TieBreakTo10:
+                        return 10;
+                    default:
+                        return NUMBER_OF_POINTS_TO_WIN_TIEBREAK;
+                }
+            } else {
+                return NUMBER_OF_POINTS_TO_WIN_TIEBREAK;
+            }
         } else {
             return NUMBER_OF_POINTS_TO_WIN_GAME; // 1=15, 2=30, 3=40, 4=Game
         }
@@ -769,6 +794,15 @@ public class GSMModel extends Model
     // JSON
     //-------------------------------
 
+    @Override void addFormatSettings(JSONObject joFormat) throws JSONException {
+        joFormat.put(PreferenceKeys.finalSetFinish.toString(), m_finalSetFinish);
+    }
+    @Override void readFormatSettings(JSONObject joFormat) throws JSONException {
+        String s = joFormat.optString(PreferenceKeys.finalSetFinish.toString());
+        if (StringUtil.isNotEmpty(s) ) {
+            setFinalSetFinish(FinalSetFinish.valueOf(s));
+        }
+    }
 
     @Override protected JSONArray scoreHistoryToJson(List lSetScoreHistory) throws JSONException {
         JSONArray sets = new JSONArray();

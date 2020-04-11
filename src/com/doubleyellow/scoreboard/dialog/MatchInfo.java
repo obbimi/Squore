@@ -118,6 +118,12 @@ public class MatchInfo extends BaseAlertDialog {
             sb.append(getString(R.string.pref_tiebreakFormat)).append(" : ").append(tieBreakValues[ matchModel.getTiebreakFormat().ordinal()]);
             sb.append("\n");
         }
+        if ( matchModel instanceof GSMModel ) {
+            String[] fsfValues = context.getResources().getStringArray(R.array.finalSetFinishDisplayValues);
+            sb.append("\n");
+            sb.append(getString(R.string.pref_finalSetFinish)).append(" : ").append(fsfValues[ ((GSMModel) matchModel).getFinalSetFinish().ordinal()]);
+            sb.append("\n");
+        }
         if ( matchModel.isDoubles() && Brand.supportsDoubleServeSequence() ) {
             sb.append("\n");
             sb.append(getString(R.string.sb_doublesServeSequence)).append(" : ").append(matchModel.getDoubleServeSequence());

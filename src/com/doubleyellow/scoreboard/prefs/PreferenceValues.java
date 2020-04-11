@@ -343,6 +343,9 @@ public class PreferenceValues extends RWValues
     public static TieBreakFormat getTiebreakFormat(Context context) {
         return getEnum(PreferenceKeys.tieBreakFormat, context, TieBreakFormat.class, TieBreakFormat.TwoClearPoints);
     }
+    public static FinalSetFinish getFinalSetFinish(Context context) {
+        return getEnum(PreferenceKeys.finalSetFinish, context, FinalSetFinish.class, FinalSetFinish.TieBreakTo7);
+    }
     public static NewMatchLayout getNewMatchLayout(Context context) {
         if ( ViewUtil.isWearable(context) ) {
             //return NewMatchLayout.Simple; // font to big

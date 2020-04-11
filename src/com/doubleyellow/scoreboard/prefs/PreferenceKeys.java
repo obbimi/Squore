@@ -208,6 +208,9 @@ public enum PreferenceKeys {
         /** to start with a score other than 0-0 */
         handicapFormat,
 
+        /** GSMModel*/
+        finalSetFinish, // also used as JSONKey
+
     StartupAction,
 
     Visuals,

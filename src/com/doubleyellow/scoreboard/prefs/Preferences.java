@@ -47,6 +47,8 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.model.FinalSetFinish;
+import com.doubleyellow.scoreboard.model.GSMModel;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.TieBreakFormat;
 import com.doubleyellow.util.*;
@@ -372,6 +374,12 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         TieBreakFormat tieBreakFormat = PreferenceValues.getTiebreakFormat(Preferences.this);
                         ScoreBoard.matchModel.setTiebreakFormat(tieBreakFormat);
                         break;
+                    case finalSetFinish:
+                        if ( ScoreBoard.matchModel instanceof GSMModel) {
+                            FinalSetFinish finalSetFinish = PreferenceValues.getFinalSetFinish(Preferences.this);
+                            ((GSMModel) ScoreBoard.matchModel).setFinalSetFinish(finalSetFinish);
+                        }
+                        break;
                     case lockMatchMV:
                         Set<String> set = prefs.getStringSet(key, null);
                         Preference pNrOfMins = settingsFragment.findPreference(PreferenceKeys.numberOfMinutesAfterWhichToLockMatch);
@@ -596,6 +604,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 hideRemovePreference(psgBeh, PreferenceKeys.swapPlayersHalfwayGame);
             } else {
                 hideRemovePreference(psgBeh, PreferenceKeys.changeSidesWhen_GSM);
+                hideRemovePreference(psgBeh, PreferenceKeys.finalSetFinish);
             }
 /*
             if ( false && Brand.isGameSetMatch() ) {

@@ -246,6 +246,7 @@
     <string name="pref_playAllGames_summary">Play \'Total-of-x-games\' in stead of \'Best-of-x-games\'</string>
     <string name="pref_useEnglishScoring">Hand-in/hand-out scoring</string>
     <string name="pref_useEnglishScoring_summary">\'Old\' scoring format. Player can only score if he served.</string>
+    <string name="pref_finalSetFinish">Final Set Finish</string> <!-- Tennis/Padel -->
     <string name="pref_tiebreakFormat">Tie-break format</string>
     <string name="pref_tiebreakFormat_summary">What rule to follow in case of a tie-break</string>
     <string name="pref_web_integration">Internet</string>

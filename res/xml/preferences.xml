@@ -1328,6 +1328,13 @@
             dy:displayValues="@array/tiebreakFormatDisplayValues"
             dy:enumClass="com.doubleyellow.scoreboard.model.TieBreakFormat"
         />
+        <com.doubleyellow.prefs.EnumListPreference
+            android:key="finalSetFinish"
+            android:title="@string/pref_finalSetFinish"
+            android:defaultValue="TieBreakTo7"
+            dy:displayValues="@array/finalSetFinishDisplayValues"
+            dy:enumClass="com.doubleyellow.scoreboard.model.FinalSetFinish"
+        />
         <CheckBoxPreference android:key="useHandInHandOutScoring"
                             android:title="@string/pref_useEnglishScoring"
                             android:summary="@string/pref_useEnglishScoring_summary"

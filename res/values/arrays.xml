@@ -230,6 +230,15 @@
         <item>Receiver selects 1 or 3</item> <!-- http://en.allexperts.com/q/Squash-Racquetball-1548/few-rules.htm : US Colleges and PSA old scoring -->
         <item>Sudden death</item>
     </string-array>
+    <string-array name="finalSetFinishDisplayValues"> <!-- keep in sync with com.doubleyellow.scoreboard.model.FinalSetFinish -->
+        <item>TieBreak To 7</item>
+        <item>TieBreak To 10</item>
+<!--
+        <item>Games To 12 - Then TieBreak To 7</item>
+        <item>Games To 12 - Then TieBreak To 10</item>
+        <item>No Tie-Break</item>
+-->
+    </string-array>
     <string-array name="handicapFormatDisplayValues">
         <item>None</item>
         <item>Specify at start of match</item>

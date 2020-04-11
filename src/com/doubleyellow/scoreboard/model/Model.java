@@ -2201,6 +2201,8 @@ public abstract class Model implements Serializable
                 if ( StringUtil.isNotEmpty(s) ) {
                     setTiebreakFormat(TieBreakFormat.valueOf(s));
                 }
+                readFormatSettings(joFormat);
+
                 if ( joFormat.has(JSONKey.doublesServeSequence.toString()) ) {
                     String ss = joFormat.getString(JSONKey.doublesServeSequence.toString());
                     DoublesServeSequence dsq;
@@ -2752,6 +2754,9 @@ public abstract class Model implements Serializable
                 }
             }
         }
+
+        addFormatSettings(joFormat);
+
         if ( isUsingHandicap() ) {
             joFormat.put(JSONKey.handicapFormat.toString(), m_HandicapFormat.toString());
             JSONArray joOffset = new JSONArray();
@@ -2864,6 +2869,9 @@ public abstract class Model implements Serializable
         }
         return jsonObject;
     }
+
+    void addFormatSettings (JSONObject joFormat) throws JSONException {};
+    void readFormatSettings(JSONObject joFormat) throws JSONException {};
 
     protected JSONArray timingsToJSON(List lGameTimings) throws JSONException {
         JSONArray timings = new JSONArray();
