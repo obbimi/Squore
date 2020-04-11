@@ -20,17 +20,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.FloatingActionButton;
-import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
@@ -41,7 +43,6 @@ import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.view.PlayerTextView;
 import com.doubleyellow.scoreboard.R;
-import com.doubleyellow.util.Direction;
 import com.doubleyellow.view.SelectObjectToggle;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-/** For specifying new match details in a small as possible dialog. Introduced for wearables */
+/** For specifying new match details in as-small-as-possible dialog. Introduced for wearables */
 public class EditMatchWizard extends BaseAlertDialog
 {
     private final static String TAG = "SB." + EditMatchWizard.class.getSimpleName();
@@ -73,6 +74,11 @@ public class EditMatchWizard extends BaseAlertDialog
         LinearLayout.LayoutParams lpPC = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams lpCC = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
+/*
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.matchwizard, null);
+*/
+
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
         int iMainBgColor   = mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
         int iLabelTxt      = mColors.get(ColorPrefs.ColorTarget.playerButtonTextColor);
@@ -87,12 +93,13 @@ public class EditMatchWizard extends BaseAlertDialog
         float fResizeFactorForWizard = 1.0f;
         m_buttonSizePx = (int) (scoreBoard.getFloatingButtonSizePx() * fResizeFactorForWizard);
 
-        LinearLayout llPrevNext = new LinearLayout(context);
-        llPrevNext.setOrientation(LinearLayout.HORIZONTAL);
-        llPrevNext.setGravity(Direction.S.getGravity());
-        m_rootView.addView(llPrevNext, (int)(ViewUtil.getScreenWidth(context) * fResizeFactorForWizard), ViewGroup.LayoutParams.WRAP_CONTENT);
+        GridLayout llPrevNext = new GridLayout(context);
+        llPrevNext.setColumnCount(4);
+        llPrevNext.setRowCount(1);
+        FrameLayout.LayoutParams lpButtonSize = new FrameLayout.LayoutParams(m_buttonSizePx, m_buttonSizePx);
 
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(m_buttonSizePx, m_buttonSizePx);
+        //m_rootView.addView(llPrevNext, (int)(ViewUtil.getScreenWidth(context) * fResizeFactorForWizard), ViewGroup.LayoutParams.MATCH_PARENT);
+        m_rootView.addView(llPrevNext, lpPC);
 
         m_fabNext = new FloatingActionButton.Builder(context, m_buttonSizePx)
                 .withDrawable(R.drawable.arrow_right)
@@ -113,8 +120,14 @@ public class EditMatchWizard extends BaseAlertDialog
                 storeAndShowNext(-1);
             }
         });
-        llPrevNext.addView(m_fabPrev, layoutParams);
-        llPrevNext.addView(m_fabNext, layoutParams);
+
+        GridLayout.LayoutParams lpGrid = getGridLayoutParams();
+        lpGrid.columnSpec = GridLayout.spec(0/*, 1, 1.0f*/);
+        llPrevNext.addView(m_fabPrev, lpGrid);
+
+        lpGrid = getGridLayoutParams();
+        lpGrid.columnSpec = GridLayout.spec(3/*, 1, 1.0f*/);
+        llPrevNext.addView(m_fabNext, lpGrid);
 
         for(Player p: Player.values()) {
             PlayerTextView txtPlayer = new PlayerTextView(context); txtPlayer.setTag(p); txtPlayer.setHint(getString(R.string.lbl_player) + " " + p);
@@ -139,6 +152,7 @@ public class EditMatchWizard extends BaseAlertDialog
                 tbBestOf_or_TotalOf.setTag(PreferenceKeys.playAllGames);
                 boolean bPlayAll = matchModel.playAllGames();
                 tbBestOf_or_TotalOf.setSelectedIndex(bPlayAll?1:0);
+                tbBestOf_or_TotalOf.setMinimumHeight(0); // has no effect when called here
 
               //lpCC.weight = 3;
                 llBestOf.addView(tbBestOf_or_TotalOf, lpCC);
@@ -219,6 +233,17 @@ public class EditMatchWizard extends BaseAlertDialog
 
         adb.setView(m_rootView);
         dialog = adb.show();
+
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+    }
+
+    private GridLayout.LayoutParams getGridLayoutParams() {
+        GridLayout.LayoutParams lpGrid = new GridLayout.LayoutParams();
+        lpGrid.height = m_buttonSizePx;
+        lpGrid.width  = m_buttonSizePx;
+        lpGrid.setGravity(Gravity.CENTER);
+        lpGrid.rowSpec = GridLayout.spec(0/*, 1, 1.0f*/);
+        return lpGrid;
     }
 
     private int  m_iStep   = -1;
@@ -329,7 +354,7 @@ public class EditMatchWizard extends BaseAlertDialog
     public final static int BTN_PREV  = DialogInterface.BUTTON_NEGATIVE;
 
     @Override public void handleButtonClick(int which) {
-        switch (which) {
+        switch ( which ) {
             case BTN_PREV:
                 storeAndShowNext(-1);
                 break;

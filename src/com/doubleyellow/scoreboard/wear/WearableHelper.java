@@ -18,6 +18,11 @@
 package com.doubleyellow.scoreboard.wear;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -26,6 +31,7 @@ import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.bluetooth.BTMethods;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wearable.Asset;
@@ -39,6 +45,7 @@ import com.google.android.gms.wearable.NodeClient;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
+import com.google.android.wearable.intent.RemoteIntent;
 
 //import com.doubleyellow.util.ListUtil;
 //import com.google.android.gms.tasks.OnCompleteListener;
@@ -90,9 +97,8 @@ public class WearableHelper
 
         if ( ViewUtil.isWearable(scoreBoard) ) {
         } else {
-            // TODO: only once!! not on rotate
             //sendMessageToWearables(this, DataLayerListenerService.START_ACTIVITY_PATH, "");
-            if (START_APP_ON_WEAR) {
+            if ( START_APP_ON_WEAR ) {
                 sendDataToWearables(scoreBoard, DataLayerListenerService.START_ACTIVITY_PATH, "THE_TIME_TEST", "");
             }
         }
@@ -278,6 +284,25 @@ public class WearableHelper
     }
 */
 
+    public boolean openPlayStoreOnWearable(Context context) {
+        Log.d(TAG, "openPlaystoreOnWearable()");
+
+        String sMarketURL = "market://details" + "?id=" + context.getPackageName();
+        if ( PreferenceValues.isBrandTesting(context) ) {
+            sMarketURL = "market://details" + "?id=com.doubleyellow." + Brand.brand.toString().toLowerCase();
+        }
+
+        if ( SendMessageToWearableTask.lastNodeId != null ) {
+            Intent intent = new Intent(Intent.ACTION_VIEW).addCategory(Intent.CATEGORY_BROWSABLE).setData(Uri.parse(sMarketURL));
+            RemoteIntent.startRemoteActivity(context, intent, mResultReceiver, SendMessageToWearableTask.lastNodeId);
+            return true;
+        } else {
+            //SendIntentToWearableTask task = new SendIntentToWearableTask(context, mResultReceiver);
+            //task.execute(sMarketURL);
+            return false;
+        }
+    }
+
     /**
      * if not set, don't send messages between devices, allowing both to keep score of a different match
      * If set to Equal, match has been exchanged deliberatly and try to keep them in sync from now on.
@@ -288,22 +313,20 @@ public class WearableHelper
         m_wearableRole = role;
     }
 
-    // Result from sending RemoteIntent to wear device(s) to open app in play/app store.
-/*
+    // Result from sending RemoteIntent to wear device(s) to e.g. open app in play/app store.
     private final ResultReceiver mResultReceiver = new ResultReceiver(new Handler()) {
         @Override protected void onReceiveResult(int resultCode, Bundle resultData) {
             Log.d(TAG, "onReceiveResult: " + resultCode);
 
             if ( resultCode == RemoteIntent.RESULT_OK ) {
-                Log.d(TAG, "Play Store Request to Wear device successful.");
+                Log.d(TAG, "Request to Wear device successful.");
             } else if ( resultCode == RemoteIntent.RESULT_FAILED ) {
-                Log.d(TAG, "Play Store Request Failed. Wear device(s) may not support Play Store,  that is, the Wear device may be version 1.0.");
+                Log.d(TAG, "Request Failed. Wear device(s) may not support Play Store, that is, the Wear device may be version 1.0.");
             } else {
                 throw new IllegalStateException("Unexpected result " + resultCode);
             }
         }
     };
-*/
 
     /** can e.g. be used to send a START_ACTIVITY message to a subclass of WearableListenerService */
     private void sendDataToWearables(Context ctx, String sPath, String sAssetKey, String sMessage) {

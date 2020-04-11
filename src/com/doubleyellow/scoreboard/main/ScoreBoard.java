@@ -590,7 +590,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         @Override public boolean onLongClick(View view) {
             ActionBar actionBar = getXActionBar();
-            if ( (actionBar != null) /*&& (PreferenceValues.showActionBar(ScoreBoard.this) == false)*/ ) {
+            if ( (actionBar != null) && (isWearable() == false) /*&& (PreferenceValues.showActionBar(ScoreBoard.this) == false)*/ ) {
                 toggleActionBar(actionBar);
                 lActionBarToggledAt = System.currentTimeMillis();
             } else {
@@ -1962,6 +1962,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             matchModel.setSource              (previous.getSource() , previous.getSourceID() );
             matchModel.setAdditionalPostParams(previous.getAdditionalPostParams());
             matchModel.setReferees            (previous.getReferee(), previous.getMarker());
+            if ( matchModel instanceof GSMModel ) {
+                FinalSetFinish finalSetFinish = ((GSMModel) previous).getFinalSetFinish();
+                ((GSMModel) matchModel).setFinalSetFinish(finalSetFinish);
+            }
 /*
             for ( Player p: Model.getPlayers() ) {
                 matchModel.setGameStartScoreOffset(p, matchModel.getGameStartScoreOffset(p));
@@ -3492,6 +3496,7 @@ touch -t 01030000 LAST.sb
 
         ViewUtil.setPackageIconOrHide(this, menu, R.id.sb_whatsapp_match_summary, "com.whatsapp");
         ViewUtil.setPackageIconOrHide(this, menu, R.id.sb_twitter_match_summary , "com.twitter.android");
+        ViewUtil.setPackageIconOrHide(this, menu, R.id.sb_open_store_on_wearable, "com.android.vending");
 
         setMenuItemVisibility(R.id.sb_send_match_result, StringUtil.isNotEmpty(PreferenceValues.getDefaultSMSTo(this)));
 
@@ -3684,6 +3689,9 @@ touch -t 01030000 LAST.sb
                 return true;
             case R.id.sb_unlock:
                 unlockMatch();
+                return true;
+            case R.id.sb_open_store_on_wearable:
+                openPlayStoreOnWearable();
                 return true;
             case R.id.sb_bluetooth:
                 setupBluetoothControl(true);
@@ -4482,6 +4490,10 @@ touch -t 01030000 LAST.sb
                         if ( Player.B.equals(IBoard.m_firstPlayerOnScreen) ) {
                             IBoard.togglePlayer2ScreenElements();
                         }
+                    }
+                    if ( Brand.isGameSetMatch() ) {
+                        GSMModel gsmModel = (GSMModel) m;
+                        PreferenceValues.setEnum(PreferenceKeys.finalSetFinish, this, gsmModel.getFinalSetFinish());
                     }
                     if ( MapUtil.isNotEmpty(RWValues.getOverwritten() ) ) {
                         Log.w(TAG, "remaining overwrites " + RWValues.getOverwritten());
@@ -6159,7 +6171,8 @@ touch -t 01030000 LAST.sb
                 }
                 case startTimer: {
                     if ( sMethodNArgs.length > 1 ) {
-                        Type timerType = Type.valueOf(sMethodNArgs[1]);
+                        //Type timerType = Type.valueOf(sMethodNArgs[1]); // might be empty string in rare cases
+                        Type timerType = Params.getEnumValueFromString(Type.class,sMethodNArgs[1]);
                         boolean bAutoStarted = (sMethodNArgs.length>2) ? Boolean.valueOf(sMethodNArgs[2]) : false;
                         _showTimer(timerType, bAutoStarted);
                     }
@@ -6520,6 +6533,10 @@ touch -t 01030000 LAST.sb
     private void sendMessageToWearablesUnchecked(Object sMessage) {
         if ( m_wearableHelper == null ) { return; }
         m_wearableHelper.sendMessageToWearablesUnchecked(this, sMessage);
+    }
+    private void openPlayStoreOnWearable() {
+        if ( m_wearableHelper == null ) { return; }
+        m_wearableHelper.openPlayStoreOnWearable(this);
     }
     // ----------------------------------------------------
     // --------------------- casting ----------------------
