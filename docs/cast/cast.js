@@ -222,7 +222,7 @@ const CHANNEL_BM = 'urn:x-cast:com.doubleyellow.badminton';
 const CHANNEL_TP = 'urn:x-cast:com.doubleyellow.tennispadel';
 const CHANNEL_TT = 'urn:x-cast:com.doubleyellow.tabletennis';
 
-const m_bDebug     = true;
+const m_bDebug     = false;
 const LOG_TAG      = 'SB';
 var m_crContext    = null;
 var m_crManager    = null;
