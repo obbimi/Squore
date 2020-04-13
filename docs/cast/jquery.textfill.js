@@ -214,7 +214,7 @@
 					Opts.fail(this);
 
 				_debug(
-					'[TextFill] Failure { ' +
+					'[TextFill] Failure 1 { ' +
 					'Current Width: '  + ourText.width()  + ', ' +
 					'Maximum Width: '  + maxWidth         + ', ' +
 					'Current Height: ' + ourText.height() + ', ' +
@@ -319,7 +319,7 @@
 				}
 
 				_debug(
-					'[TextFill] Failure { ' +
+					'[TextFill] Failure 2 { ' +
 					'Current Width: '  + ourText.width()  + ', ' +
 					'Maximum Width: '  + maxWidth         + ', ' +
 					'Current Height: ' + ourText.height() + ', ' +
@@ -327,7 +327,7 @@
 				);
 			}
 			else if (Opts.success) {
-				Opts.success(this, fontSizeFinal); // IHOEVE: my customization: also get calculated size back in callback function
+				Opts.success(this, fontSizeFinal || fontSizeWidth); // IHOEVE: my customization: also get calculated size back in callback function
 			}
 		});
 

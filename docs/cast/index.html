@@ -11,9 +11,12 @@
     -->
     <meta charset="utf-8" />
     <title>Score Cast</title>
-    <script type="text/javascript"
-            src="//www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js">
+    <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js">
     </script>
+    <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+    <!-- Cast Debug Logger -->
+    <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/devtools/debug_layer/caf_receiver_logger.js"></script>
+
     <script type="text/javascript" src="cast_dummy.js"></script>
     <script type="text/javascript" src="cast.js"></script>
 
@@ -64,13 +67,13 @@
             </tbody>
         </table>
     </div>
-    <div class="gui_element scorebutton"     id="btn_score1">
+    <div class="gui_element scorebutton noshrink"     id="btn_score1">
         <span class="center_vertically">11</span>
         <div class="gui_element sidebutton"  id="btn_side1">
             <span class="center_vertically">L</span>
         </div>
     </div>
-    <div class="gui_element scorebutton"     id="btn_score2">
+    <div class="gui_element scorebutton noshrink"     id="btn_score2">
         <span>9</span>
         <div class="gui_element sidebutton"  id="btn_side2">
             <span class="center_vertically">R?</span>
