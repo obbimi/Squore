@@ -36,6 +36,8 @@ import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.FloatingActionButton;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.model.FinalSetFinish;
+import com.doubleyellow.scoreboard.model.GSMModel;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.ModelFactory;
 import com.doubleyellow.scoreboard.model.Player;
@@ -157,7 +159,6 @@ public class EditMatchWizard extends BaseAlertDialog
                 tbBestOf_or_TotalOf.setSelectedIndex(bPlayAll?1:0);
                 tbBestOf_or_TotalOf.setMinimumHeight(0); // has no effect when called here
 
-              //lpCC.weight = 3;
                 llBestOf.addView(tbBestOf_or_TotalOf, lpCC);
             }
             {
@@ -186,14 +187,10 @@ public class EditMatchWizard extends BaseAlertDialog
                 tbTotalNrOfGames.setTag(PreferenceKeys.numberOfGamesToWinMatch);
                 tbTotalNrOfGames.setSelected(iPreferredNrToWin);
 
-              //lpCC.weight = 1;
                 llBestOf.addView(tbTotalNrOfGames, lpCC);
             }
-            lControls.add(llBestOf);
 
             {
-              //lpCC.weight = 1;
-
                 int iPreferredNrToWin = PreferenceValues.numberOfPointsToWinGame(context);
                     iPreferredNrToWin = matchModel.getNrOfPointsToWinGame();
                 SortedSet<Integer> lValues = new TreeSet<>();
@@ -213,24 +210,28 @@ public class EditMatchWizard extends BaseAlertDialog
                 otNrOfPointsToWinGame.setTag(PreferenceKeys.numberOfPointsToWinGame);
                 llBestOf.addView(otNrOfPointsToWinGame, lpCC);
             }
+            lControls.add(llBestOf);
+        }
 
-/*
-            for(int i=0; i<llBestOf.getChildCount(); i++) {
-                View v = llBestOf.getChildAt(i);
-                if ( v instanceof ToggleButton ) {
-                    ToggleButton tb = (ToggleButton) v;
-
-                    float textSizePx = tb.getTextSize();
-                    float fNewSizePx = textSizePx * 0.7f;
-                    tb.setTextSize(TypedValue.COMPLEX_UNIT_PX, fNewSizePx);
-
-                    int width = tb.getWidth();
-                    tb.setWidth((int)(width * 0.8f));
-                    tb.invalidate();
+        if ( Brand.isGameSetMatch() )
+        {
+            LinearLayout llGSM = new LinearLayout(context);
+            llGSM.setOrientation(LinearLayout.HORIZONTAL);
+            {
+                String[] fsfDescriptions = context.getResources().getStringArray(R.array.finalSetFinishDisplayValues);
+                List<String> lValues = new ArrayList<>();
+                for(String sDescription: fsfDescriptions ) {
+                    lValues.add(getString(R.string.pref_finalSetFinish) + ": " + sDescription);
                 }
+                SelectObjectToggle<String> tbBestOf_or_TotalOf = new SelectObjectToggle<String>(context, lValues);
+                tbBestOf_or_TotalOf.setTag(PreferenceKeys.finalSetFinish);
+                GSMModel gsmModel = (GSMModel) matchModel;
+                FinalSetFinish finalSetFinish = gsmModel.getFinalSetFinish();
+                tbBestOf_or_TotalOf.setSelectedIndex(finalSetFinish.ordinal());
+
+                llGSM.addView(tbBestOf_or_TotalOf, lpCC);
             }
-*/
-            //llBestOf.setWeightSum(6.0f);
+            lControls.add(llGSM);
         }
         storeAndShowNext(1);
 
@@ -294,7 +295,7 @@ public class EditMatchWizard extends BaseAlertDialog
     }
 
     private void storeValuesForView(View current) {
-        if ( current instanceof ViewGroup) {
+        if ( current instanceof ViewGroup ) {
             ViewGroup vg = (ViewGroup) current;
             int iChilds = vg.getChildCount();
             for(int i=0; i < iChilds; i++) {
@@ -308,7 +309,9 @@ public class EditMatchWizard extends BaseAlertDialog
 
             if ( tag.equals(Player.A) || tag.equals(Player.B) ) {
                 TextView txt = (TextView) current;
-                m_tmp.setPlayerName((Player) tag, txt.getText().toString());
+                String sName = txt.getText().toString();
+                       sName = sName.replaceFirst("[&\\+]", "/"); // allow usage of + or & to specify 2 players
+                m_tmp.setPlayerName((Player) tag, sName);
             }
             if ( tag instanceof PreferenceKeys ) {
                 PreferenceKeys eTag = (PreferenceKeys) tag;
@@ -328,6 +331,12 @@ public class EditMatchWizard extends BaseAlertDialog
                     case numberOfPointsToWinGame: {
                         SelectObjectToggle<Integer> tb = (SelectObjectToggle<Integer>) current;
                         m_tmp.setNrOfPointsToWinGame(tb.getSelected());
+                        break;
+                    }
+                    case finalSetFinish: {
+                        SelectObjectToggle<String> tb = (SelectObjectToggle<String>) current;
+                        FinalSetFinish finalSetFinish = FinalSetFinish.values()[tb.getSelectedIndex()];
+                        ((GSMModel) m_tmp).setFinalSetFinish(finalSetFinish);
                         break;
                     }
                 }
