@@ -13,6 +13,10 @@
     Without ChromeCast
         <style name="SBTheme" parent="android:Theme.Holo">
 -->
+<!--
+    <style name="SBTheme" parent="Theme.MaterialComponents">
+        was a test for wrapping EditText views in a com.google.android.material.textfield.TextInputLayout
+-->
     <style name="SBTheme" parent="Theme.AppCompat">
         <!-- added when starting to inherit from Theme.AppCompat (for before 5.0 only?) -->
 <!--

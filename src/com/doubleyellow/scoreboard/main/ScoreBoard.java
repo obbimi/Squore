@@ -700,6 +700,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
     /** Invoked by SideToss */
     public void swapSides(Integer iToastLength, Player pFirst) {
+        if ( matchModel == null ) { return; }
+
         if ( pFirst == null ) {
             pFirst = IBoard.togglePlayer2ScreenElements();
         } else {
@@ -3188,7 +3190,7 @@ touch -t 01030000 LAST.sb
             if ( m_bHasBeenPresented ) {
                 return;
             }
-            if ( matchModel.isInMode(TabletennisModel.Mode.Expedite) || matchModel.matchHasEnded() || matchModel.isLocked() ) {
+            if ( (matchModel == null) || matchModel.isInMode(TabletennisModel.Mode.Expedite) || matchModel.matchHasEnded() || matchModel.isLocked() ) {
                 return;
             }
             long lElapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
@@ -3545,6 +3547,8 @@ touch -t 01030000 LAST.sb
 
     private int m_idOfVisibleActionBarItem = 0;
     private void showAppropriateMenuItemInActionBar() {
+        if ( matchModel == null ) { return; }
+
         List<Integer> lShowIds = new ArrayList<Integer>(); // the first two in this list will be shown
         List<Integer> lHideIds = new ArrayList<Integer>();
         if ( matchModel.hasStarted() == false ) {
@@ -4080,27 +4084,27 @@ touch -t 01030000 LAST.sb
         show(colorPicker);
     }
 
-    private void openInBrowser(String url) {
+    public static void openInBrowser(Context ctx, String url) {
         try {
             url = URLFeedTask.prefixWithBaseIfRequired(url);
-            Uri uri = Util.buildURL(this, url,true);
+            Uri uri = Util.buildURL(ctx, url,true);
             Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(launchBrowser);
+            ctx.startActivity(launchBrowser);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage()); // e.g. only 'browser' app has been disabled by user
-            Toast.makeText(this, "Sorry, unable to open browser with \n" + url, Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx, "Sorry, unable to open browser with \n" + url, Toast.LENGTH_LONG).show();
         }
     }
 
     private void showOfficialSquashRules() {
-        openInBrowser(PreferenceValues.getOfficialSquashRulesURL(this));
+        openInBrowser(this, PreferenceValues.getOfficialSquashRulesURL(this));
     }
 
     private void showLiveScore() {
-        openInBrowser(getString(R.string.pref_live_score_url));
+        openInBrowser(this, getString(R.string.pref_live_score_url));
     }
     private void showHelp() {
-        openInBrowser("/help");
+        openInBrowser(this, "/help");
     }
 
     /** To share to 'Live' score on a regular basis without user interaction */

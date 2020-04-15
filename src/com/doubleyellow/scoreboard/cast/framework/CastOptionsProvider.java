@@ -35,14 +35,16 @@ import java.util.List;
 public class CastOptionsProvider implements OptionsProvider
 {
     @Override public CastOptions getCastOptions(Context context) {
-        CastOptions.Builder builder = new CastOptions.Builder();
         int remoteDisplayAppIdResId = Brand.brand.getRemoteDisplayAppIdResId();
         if ( PreferenceValues.isBrandTesting(context) ) {
             remoteDisplayAppIdResId = R.string.CUSTOM_RECEIVER_APP_ID_brand_test;
         }
         String sAppID = context.getString(remoteDisplayAppIdResId);
-        return builder.setReceiverApplicationId(sAppID)
-             .build();
+
+        return (new CastOptions.Builder())
+                .setReceiverApplicationId(sAppID)
+                .build()
+                ;
     }
 
     @Override public List<SessionProvider> getAdditionalSessionProviders(Context context) {

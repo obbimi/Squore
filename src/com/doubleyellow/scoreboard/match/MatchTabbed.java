@@ -219,7 +219,10 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
 
     /** Toggle visibility of certain menu items based on the active tab */
     private void toggleMenuItems(Menu menu, SelectTab forTab) {
-        ViewUtil.setMenuItemsVisibility(menu, new int[] {R.id.new_group, R.id.sort_group_names}, SelectTab.Mine.equals(forTab));
+        ViewUtil.setMenuItemsVisibility(menu, new int[] { R.id.new_group
+                                                        , R.id.sort_group_names
+                                                        }
+                                            , SelectTab.Mine.equals(forTab));
 /*
         MenuItem miNewGroup = menu.findItem(R.id.new_group);
         miNewGroup.setVisible(SelectTab.Mine.equals(forTab));
@@ -228,7 +231,11 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         miSortGroup.setVisible(SelectTab.Mine.equals(forTab));
 */
 
-        ViewUtil.setMenuItemsVisibility(menu, new int[] {R.id.uc_switch_feed, R.id.uc_hide_matches_with_result, R.id.uc_add_new_feed}, SelectTab.Feed.equals(forTab));
+        ViewUtil.setMenuItemsVisibility(menu, new int[] { R.id.uc_switch_feed
+                                                        , R.id.uc_hide_matches_with_result
+                                                        , R.id.uc_add_new_feed
+                                                        }
+                                            , SelectTab.Feed.equals(forTab));
         boolean bChecked = PreferenceValues.hideCompletedMatchesFromFeed(this);
         ViewUtil.checkMenuItem(menu, R.id.uc_hide_matches_with_result, bChecked);
 
@@ -259,19 +266,27 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
                                                        , R.id.mt_clear_all_fields
                                                        , R.id.mt_matchlayout_all
                                                        , R.id.mt_matchlayout_simple
-                                                       }, manualTabs.contains(forTab));
+                                                       }
+                                            , manualTabs.contains(forTab));
+
         ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.mt_refresh
                                                        , R.id.expand_all
                                                        , R.id.collapse_all
-                                                       }, manualTabs.contains(forTab) == false);
+                                                       }
+                                            , manualTabs.contains(forTab) == false);
+
         ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.show_players_from_feed }, SelectTab.Feed.equals(forTab) && StringUtil.isNotEmpty(PreferenceValues.getPlayersFeedURL(this)));
         ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.show_matches_from_feed }, SelectTab.Feed.equals(forTab) && StringUtil.isNotEmpty(PreferenceValues.getMatchesFeedURL(this)));
-        ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.mt_filter              }, SelectTab.Feed.equals(forTab));
+        ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.mt_filter
+                                                       , R.id.uc_group_matches_by_court
+                                                       , R.id.open_feed_url
+                                                       }
+                                            , SelectTab.Feed.equals(forTab));
 
         if ( manualTabs.contains(forTab) ) {
             NewMatchLayout newMatchLayout = PreferenceValues.getNewMatchLayout(this);
             ViewUtil.setMenuItemVisibility(menu, R.id.mt_matchlayout_simple, NewMatchLayout.AllFields.equals(newMatchLayout));
-            ViewUtil.setMenuItemVisibility(menu, R.id.mt_matchlayout_all, NewMatchLayout.Simple.equals(newMatchLayout));
+            ViewUtil.setMenuItemVisibility(menu, R.id.mt_matchlayout_all   , NewMatchLayout.Simple   .equals(newMatchLayout));
         }
 /*
         MenuItem miOK = menu.findItem(R.id.mt_cmd_ok);
@@ -370,6 +385,11 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
                 cancelCurrentFetch();
                 Intent ff = new Intent(this, FeedFeedSelector.class);
                 startActivityForResult(ff, 1); // see onActivityResult
+                return true;
+            }
+            case R.id.open_feed_url: {
+                String sURL = PreferenceValues.getMatchesFeedURL(this);
+                ScoreBoard.openInBrowser(this, sURL);
                 return true;
             }
             case R.id.uc_group_matches_by_court: // fall through

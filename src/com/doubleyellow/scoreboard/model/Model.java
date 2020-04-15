@@ -1704,7 +1704,7 @@ public abstract class Model implements Serializable
         return true;
     }
 
-    public static final String REGEXP_SPLIT_DOUBLES_NAMES = "/\\s*(?![0-9])";
+    public static final String REGEXP_SPLIT_DOUBLES_NAMES = "/\\s*(?![0-9])"; // forwardslash followed by whitespace
     /** return names of single team in alphabetical order */
     public String[] getDoublePlayerNames(Player p) {
         String sName = getName(p);

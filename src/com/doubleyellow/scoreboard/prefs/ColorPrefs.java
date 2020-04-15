@@ -556,7 +556,7 @@ public class ColorPrefs
             e.printStackTrace();
         }
     }
-
+    /** Typically called in onCreateView() */
     public static void setColors(Activity activity, View view) {
         if ( mTarget2Color == null ) { return; }
 
