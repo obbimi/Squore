@@ -53,8 +53,11 @@
     <string name="sb_select_match">Selecteer wedstrijd</string>
     <string name="sb_static_match">Mijn Lijst</string>
     <string name="sb_select_static_match">Selecteer van Mijn Lijst</string>
+<!--
     <string name="sb_whatsapp_match_summary">Verstuur uitslag met WhatsApp</string>
     <string name="sb_twitter_match_summary">Verstuur uitslag met Twitter</string>
+-->
+    <string name="sb_share_match_summary_using_x">Verstuur uitslag met %s</string>
     <string name="sb_put_match_summary_on_clipboard">Copieer uitslag op plakbord</string>
     <string name="sb_send_match_result">Verstuur uitslag per SMS</string>
     <string name="sb_post_match_result">Verstuur uitslag naar site</string>

@@ -58,8 +58,11 @@
     <string name="sb_select_match">Select match</string>
     <string name="sb_static_match">My List</string>
     <string name="sb_select_static_match">Select from My List</string>
+<!--
     <string name="sb_whatsapp_match_summary">Share match result via WhatsApp</string>
     <string name="sb_twitter_match_summary">Share match result via Twitter</string>
+-->
+    <string name="sb_share_match_summary_using_x">Share match result via %s</string>
     <string name="sb_put_match_summary_on_clipboard">Copy match result onto clipboard</string>
     <string name="sb_send_match_result">Message match result</string>
     <string name="sb_post_match_result">Post match result to site</string>

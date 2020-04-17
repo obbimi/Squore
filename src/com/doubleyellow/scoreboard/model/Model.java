@@ -528,7 +528,7 @@ public abstract class Model implements Serializable
             bChanged = true;
         }
         if ( (doublesServe != null) && doublesServe.equals(m_in_out) == false ) {
-            m_in_out = doublesServe;
+            setNextDoubleServe(doublesServe);
             bChanged = true;
         }
 
@@ -563,11 +563,29 @@ public abstract class Model implements Serializable
         return m_bIsDouble;
         //return (m_in_out.equals(DoublesServe.NA) == false);
     }
+    private void setDoubles(boolean b) {
+        m_bIsDouble = b;
+        if ( m_bIsDouble  ) {
+            if ( (m_in_out == null || m_in_out.equals(DoublesServe.NA)) ) {
+                setNextDoubleServe(DoublesServe.I);
+            }
+            if ( m_doubleServeSequence == null || m_doubleServeSequence.equals(DoublesServeSequence.NA) ) {
+                DoublesServeSequence dssDefault = getDoubleServeSequence(0);
+                _setDoublesServeSequence(dssDefault);
+            }
+        } else {
+            setNextDoubleServe(DoublesServe.NA);
+            _setDoublesServeSequence(DoublesServeSequence.NA);
+        }
+    }
     public DoublesServe getNextDoubleServe(Player p) {
         if ( p.equals(m_pServer) == false ) {
             return DoublesServe.NA;
         }
         return m_in_out;
+    }
+    void setNextDoubleServe(DoublesServe ds) {
+        m_in_out = ds;
     }
     public void changeDoubleServe(Player p) {
         setServerAndSide(null, null, m_in_out.getOther());
@@ -1721,11 +1739,7 @@ public abstract class Model implements Serializable
             sName = "";
         }
         String[] saNames = sName.split(REGEXP_SPLIT_DOUBLES_NAMES);
-        m_bIsDouble = saNames.length == 2;
-        if ( isDoubles() && m_doubleServeSequence.equals(DoublesServeSequence.NA) ) {
-            DoublesServeSequence dssDefault = getDoubleServeSequence(0);
-            _setDoublesServeSequence(dssDefault);
-        }
+        setDoubles(saNames.length == 2);
         sName = sName.trim();
         String sPrevious = m_player2Name.put(p, sName);
         if ( sName.equals(sPrevious) == false ) {
@@ -3476,8 +3490,8 @@ public abstract class Model implements Serializable
         setSource(null, null);
         setAdditionalPostParams(null);
       //m_doubleServeSequence = DoublesServeSequence.NA;
-        m_bIsDouble           = false;
-        m_in_out              = DoublesServe.NA;
+        setNextDoubleServe(DoublesServe.NA);
+        setDoubles(false);
         setDirty(true);
         m_iDirty              = 0;
     }

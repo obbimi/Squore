@@ -1973,7 +1973,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 matchModel.setGameStartScoreOffset(p, matchModel.getGameStartScoreOffset(p));
             }
 */
-            if ( Brand.supportsDoubleServeSequence() ) {
+            if ( Brand.supportsDoubleServeSequence() && matchModel.isDoubles() ) {
                 matchModel.setDoublesServeSequence(previous.getDoubleServeSequence());
             } else if (Brand.isRacketlon() ) {
                 ((RacketlonModel)matchModel).setDisciplines(((RacketlonModel)previous).getDisciplines());
@@ -3496,8 +3496,13 @@ touch -t 01030000 LAST.sb
         setMenuIconToPackage(this, menu, R.id.sb_email_match_result, "com.google.android.gm");
         }
 
-        ViewUtil.setPackageIconOrHide(this, menu, R.id.sb_whatsapp_match_summary, "com.whatsapp");
-        ViewUtil.setPackageIconOrHide(this, menu, R.id.sb_twitter_match_summary , "com.twitter.android");
+        if ( ShareHelper.m_menuResIdToPackage != null ) {
+            for(Map.Entry<Integer, String> mShare: ShareHelper.m_menuResIdToPackage.entrySet() ) {
+                int    iResId   = mShare.getKey();
+                String sPackage = mShare.getValue();
+                ViewUtil.setPackageIconOrHide(this, menu, iResId, sPackage);
+            }
+        }
         ViewUtil.setPackageIconOrHide(this, menu, R.id.sb_open_store_on_wearable, "com.android.vending");
 
         setMenuItemVisibility(R.id.sb_send_match_result, StringUtil.isNotEmpty(PreferenceValues.getDefaultSMSTo(this)));
@@ -3806,12 +3811,6 @@ touch -t 01030000 LAST.sb
             case R.id.sb_put_match_summary_on_clipboard:
                 ContentUtil.placeOnClipboard(this, "squore summary", ResultSender.getMatchSummary(this, matchModel));
                 return false;
-            case R.id.sb_whatsapp_match_summary:
-                ShareHelper.shareMatchSummary(this, matchModel, "com.whatsapp", null);
-                return false;
-            case R.id.sb_twitter_match_summary:
-                ShareHelper.shareMatchSummary(this, matchModel, "com.twitter.android", null);
-                return false;
             case R.id.sb_share_matches_summary:
                 selectMatchesForSummary();
                 return false;
@@ -3986,6 +3985,11 @@ touch -t 01030000 LAST.sb
                 return false;
             }
             default:
+                String sPackage = ShareHelper.m_menuResIdToPackage.get(id);
+                if ( StringUtil.isNotEmpty(sPackage) ) {
+                    ShareHelper.shareMatchSummary(this, matchModel, sPackage, null);
+                    return false;
+                }
                 Log.w(TAG, "Unhandled int " + id);
                 if ( id != 0) {
                     try {
@@ -4483,7 +4487,7 @@ touch -t 01030000 LAST.sb
                     PreferenceValues.setString  (PreferenceKeys.courtLast              , this, m.getCourt());
                     PreferenceValues.setString  (PreferenceKeys.locationLast           , this, m.getEventLocation());
                     PreferenceValues.setEnum    (PreferenceKeys.handicapFormat         , this, m.getHandicapFormat());
-                    if ( Brand.isSquash() ) {
+                    if ( Brand.isSquash() && m.isDoubles() ) {
                         DoublesServeSequence eDSS = m.getDoubleServeSequence();
                         if ( eDSS.equals(DoublesServeSequence.NA) == false ) {
                             PreferenceValues.setEnum(PreferenceKeys.doublesServeSequence, this, eDSS);
@@ -5044,7 +5048,7 @@ touch -t 01030000 LAST.sb
                 m_bShareStarted_DemoThread = false;
                 // auto start facebook app
                 PackageManager pm = activity.getPackageManager();
-                Intent fbIntent = pm.getLaunchIntentForPackage("com.facebook.katana");
+                Intent fbIntent = pm.getLaunchIntentForPackage(ShareHelper.m_menuResIdToPackage.get(R.id.sb_facebook_match_summary));
                 activity.startActivity(fbIntent);
             }
         }
@@ -6563,6 +6567,9 @@ touch -t 01030000 LAST.sb
         if ( (iBoard != null) && (castHelper instanceof CastHelper) ) {
             iBoard.setCastHelper( (CastHelper) castHelper);
         }
+    }
+    public void handleMessageFromCast(JSONObject joMessage) {
+        // TODO: present choice: e.g for layout, or simply show a message
     }
     private void initCastMenu(Menu menu) {
         castHelper.initCastMenu(this, menu, R.id.media_route_menu_item);

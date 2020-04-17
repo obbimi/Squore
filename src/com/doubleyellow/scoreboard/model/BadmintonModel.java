@@ -113,7 +113,7 @@ public class BadmintonModel extends Model
             Player pScorer    = slRemoved.getScoringPlayer();
             if ( isDoubles() ) {
                 // assume going back to 0-0
-                m_in_out          = m_in_out         .getOther();
+                setNextDoubleServe(m_in_out         .getOther());
                 m_in_out_receiver = m_in_out_receiver.getOther();
                 if ( pNewServer.equals(pScorer) ) {
                     swapDoublesPlayerNames(pNewServer);
@@ -125,7 +125,7 @@ public class BadmintonModel extends Model
                    pNewServer = lastValidWithServer.getScoringPlayer();
             Player lastServer = lastValidWithServer.getServingPlayer();
             if ( isDoubles() ) {
-                m_in_out          = m_in_out         .getOther();
+                setNextDoubleServe(m_in_out         .getOther());
                 m_in_out_receiver = m_in_out_receiver.getOther();
                 if ( lastServer.equals(pNewServer) ) {
                     // not a 'handout', players where swapped, swap them back

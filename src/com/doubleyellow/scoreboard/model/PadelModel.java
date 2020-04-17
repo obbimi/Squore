@@ -29,8 +29,10 @@ public class PadelModel extends GSMModel {
         //setNrOfSetsToWinMatch (2);
         setNrOfGamesToWinMatch (2);
     }
+/*
     @Override public SportType getSport() {
         return SportType.Padel;
     }
+*/
 
 }

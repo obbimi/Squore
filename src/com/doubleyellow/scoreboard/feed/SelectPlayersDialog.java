@@ -43,7 +43,6 @@ import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.BaseAlertDialog;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
-import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.JSONKey;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
@@ -171,7 +170,7 @@ public class SelectPlayersDialog extends BaseAlertDialog
 
         OKButtonActionForMandatoryPostParam eOKButtonAction = null;
         if ( (m_joFeedConfig != null) && m_joFeedConfig.has(URLsKeys.AdditionalPostParams.toString()) ) {
-            JSONArray  additionalPostParams = m_joFeedConfig.optJSONArray(URLsKeys.AdditionalPostParams.toString());
+            JSONArray additionalPostParams = m_joFeedConfig.optJSONArray(URLsKeys.AdditionalPostParams.toString());
             int iNrOfAdditionalPostParams = additionalPostParams.length();
             for (int p = 0; p < iNrOfAdditionalPostParams; p++) {
                 JSONObject   joPostParam = additionalPostParams.optJSONObject(p);

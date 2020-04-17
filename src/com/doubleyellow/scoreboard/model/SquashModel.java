@@ -45,6 +45,9 @@ public class SquashModel extends Model {
     }
 
     @Override public DoublesServeSequence getDoubleServeSequence(int iGameZB) {
+        if ( DoublesServeSequence.NA.equals(m_doubleServeSequence) ) {
+            m_doubleServeSequence = DoublesServeSequence.A1B1A2B2;
+        }
         return m_doubleServeSequence;
     }
 

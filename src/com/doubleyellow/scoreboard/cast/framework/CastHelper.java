@@ -33,17 +33,25 @@ import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.timer.TimerView;
 
 import com.doubleyellow.scoreboard.vico.IBoard;
+import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
+import com.google.android.gms.cast.ApplicationMetadata;
+import com.google.android.gms.cast.Cast;
+import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
+import com.google.android.gms.cast.framework.CastStateListener;
 import com.google.android.gms.cast.framework.Session;
+import com.google.android.gms.cast.framework.SessionManager;
 import com.google.android.gms.cast.framework.SessionManagerListener;
+import com.google.android.gms.cast.framework.media.RemoteMediaClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,6 +60,8 @@ import java.util.Map;
  * - Setting score
  * - Setting serve side button text
  * - Starting timers (actual countdown implemented on web page itself in javascript)
+ *
+ * chrome://inspect
  */
 public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 {
@@ -98,23 +108,29 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     }
     @Override public void onActivityPause_Cast() {
         if ( castContext == null ) { return; }
-        castContext.getSessionManager()
-                   .removeSessionManagerListener(sessionManagerListener, CastSession.class);
-
+        SessionManager sessionManager = castContext.getSessionManager();
+        sessionManager.removeSessionManagerListener(sessionManagerListener, CastSession.class);
     }
     @Override public void onActivityResume_Cast() {
         if ( castContext == null ) { return; }
-        castContext.getSessionManager()
-                   .addSessionManagerListener(sessionManagerListener, CastSession.class);
+        SessionManager sessionManager = castContext.getSessionManager();
+        sessionManager.addSessionManagerListener(sessionManagerListener, CastSession.class);
 
         // e.g. after screen rotation
         if ( (castSession == null) && (castContext != null) ) {
             // Get the current session if there is one
-            castSession = castContext.getSessionManager().getCurrentCastSession();
+            castSession = sessionManager.getCurrentCastSession();
 
             updateViewWithColorAndScore(m_activity, m_matchModel);
         }
+
+        castContext.addCastStateListener(new CastStateListener() {
+            @Override public void onCastStateChanged(int i) {
+                Log.d(TAG, "onCastStateChanged: " + i); // seen 2 (stopped) and 3 (connecting) and 4 (connected)
+            }
+        });
     }
+
 
     @Override public boolean isCasting() {
         return castSession != null;
@@ -236,9 +252,6 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         }
 */
     }
-    private void invalidateOptionsMenu() {
-        //getDelegate().invalidateOptionsMenu(); // TODO: required ?
-    }
 
     private  IBoard      iBoard   = null;
     public void setIBoard(IBoard iBoard) {
@@ -248,30 +261,35 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
     /** Listener is to get hold of castSession. Cast session is used for sending messages */
     private SessionManagerListener sessionManagerListener = new SessionManagerListener() {
-        @Override public void onSessionStarting(Session session) { }
-        @Override public void onSessionStartFailed(Session session, int i) { }
         @Override public void onSessionStarted(Session session, String s) {
-            Log.d(TAG, "Cast session started");
+            Log.d(TAG, "Cast session started: " + s);
             castSession = (CastSession) session;
 
             updateViewWithColorAndScore(m_activity, m_matchModel);
         }
 
-        @Override public void onSessionEnding(Session session) { }
-        @Override public void onSessionEnded(Session session, int i) {
-            cleanup();
-        }
-
-        @Override public void onSessionResuming(Session session, String s) { }
-        @Override public void onSessionResumeFailed(Session session, int i) { }
         @Override public void onSessionResumed(Session session, boolean b) {
-            Log.d(TAG, "Cast session resumed");
+            Log.d(TAG, "Cast session resumed " + b);
             castSession = (CastSession) session;
 
             updateViewWithColorAndScore(m_activity, m_matchModel);
         }
 
         @Override public void onSessionSuspended(Session session, int i) { }
+        @Override public void onSessionStarting(Session session) {
+            Log.d(TAG, "Cast session starting...");
+        }
+        @Override public void onSessionResuming(Session session, String s) { }
+        @Override public void onSessionEnding(Session session) { }
+        @Override public void onSessionEnded(Session session, int i) {
+            cleanup();
+        }
+        @Override public void onSessionStartFailed(Session session, int i) {
+            Log.w(TAG, "Cast session failed to start: " + i);
+        }
+        @Override public void onSessionResumeFailed(Session session, int i) {
+            Log.w(TAG, "Cast session failed to resume: " + i);
+        }
     };
 
     private void updateViewWithColorAndScore(Context context, Model matchModel) {
@@ -279,7 +297,55 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
           //Log.w(TAG, "Not updating (isCasting=" + isCasting() + ", iBoard=" + iBoard + ", model=" + matchModel + ")");
             return;
         }
-        Log.d(TAG, "Updating cast (NEW)");
+        //castSession.addCastListener(new CastListener());
+        try {
+            castSession.setMessageReceivedCallbacks("urn:x-cast:" + sPackageName, new Cast.MessageReceivedCallback() {
+                @Override public void onMessageReceived(CastDevice castDevice, String sNamespace, String sMsg) {
+                    Log.d(TAG, String.format("received message back from %s [%s] : %s", castDevice.getFriendlyName(), sNamespace, sMsg));
+
+                    try {
+                        JSONObject mMessage = new JSONObject(sMsg);
+                        m_activity.handleMessageFromCast(mMessage);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        CastDevice castDevice = castSession.getCastDevice();
+        String sFriendlyName = castDevice.getFriendlyName();
+        Log.d(TAG, "castDevice.getFriendlyName(): " + sFriendlyName); // e.g. Living
+        Cast.ApplicationConnectionResult applicationConnectionResult = castSession.getApplicationConnectionResult();
+
+        ApplicationMetadata applicationMetadata = castSession.getApplicationMetadata();
+        List<String> supportedNamespaces = applicationMetadata.getSupportedNamespaces(); // the namespaces added by the receiver using m_crContext.addCustomMessageListener(namespace)
+        Log.d(TAG, "Supported namespaces: " + ListUtil.join(supportedNamespaces, "\n") );
+        // [ urn:x-cast:com.google.cast.cac
+        // , urn:x-cast:com.google.cast.debugoverlay
+        // , urn:x-cast:com.google.cast.debuglogger
+        // , urn:x-cast:com.doubleyellow.scoreboard
+        // , urn:x-cast:com.doubleyellow.badminton
+        // , urn:x-cast:com.doubleyellow.tennispadel
+        // , urn:x-cast:com.doubleyellow.tabletennis
+        // , urn:x-cast:com.google.cast.broadcast
+        // , urn:x-cast:com.google.cast.media
+        // ]
+
+        RemoteMediaClient remoteMediaClient = castSession.getRemoteMediaClient();
+        Log.d(TAG, "remoteMediaClient.getNamespace(): " + remoteMediaClient.getNamespace()); // urn:x-cast:com.google.cast.media
+/*
+                remoteMediaClient.registerCallback(new RemoteMediaClient.Callback() {
+                });
+*/
+
+        //GoogleCast.EventEmitter.addListener();
+        // W CDC|API|500: [API] Ignoring message. Namespace 'urn:x-cast:com.doubleyellow.scoreboard' has not been registered.
+
+        Log.d(TAG, "Updating cast (CAF)");
 
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
         iBoard.initColors(mColors);
@@ -305,4 +371,44 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             iBoard.updatePlayerName   (p, matchModel.getName   (p), matchModel.isDoubles()); // player name last... if both are communicate cast screen will display screen elements
         }
     }
+
+    /** Not invoked very consistently... it seems */
+/*
+    private static class CastListener extends Cast.Listener
+    {
+        private CastListener() {
+            super();
+        }
+
+        @Override public void onApplicationStatusChanged() {
+            Log.d(TAG, "onApplicationStatusChanged");
+            super.onApplicationStatusChanged();
+        }
+
+        @Override public void onApplicationMetadataChanged(ApplicationMetadata applicationMetadata) {
+            Log.d(TAG, "onApplicationMetadataChanged(" + applicationMetadata + ")");
+            super.onApplicationMetadataChanged(applicationMetadata); // e.g. holds "My Test Receiver" and value of CUSTOM_RECEIVER_APP_ID_brand_test
+        }
+
+        @Override public void onApplicationDisconnected(int i) {
+            Log.d(TAG, "onApplicationDisconnected(" + i + ")");
+            super.onApplicationDisconnected(i);
+        }
+
+        @Override public void onActiveInputStateChanged(int i) {
+            Log.d(TAG, "onActiveInputStateChanged(" + i + ")");
+            super.onActiveInputStateChanged(i); // seen: -1
+        }
+
+        @Override public void onStandbyStateChanged(int i) {
+            Log.d(TAG, "onStandbyStateChanged(" + i + ")");
+            super.onStandbyStateChanged(i); // seen -1
+        }
+
+        @Override public void onVolumeChanged() {
+            Log.d(TAG, "onVolumeChanged");
+            super.onVolumeChanged();
+        }
+    }
+*/
 }

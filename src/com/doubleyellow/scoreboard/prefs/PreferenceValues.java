@@ -359,7 +359,8 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.gameScoresAppearance, context, GameScoresAppearance.class, GameScoresAppearance.ShowGamesWon);
     }
     public static DoublesServeSequence getDoublesServeSequence(Context context) {
-        return getEnum(PreferenceKeys.doublesServeSequence, context, DoublesServeSequence.class, DoublesServeSequence.values()[0], Model.mOldDSS2New);
+        DoublesServeSequence dssDefault = DoublesServeSequence.values()[0];
+        return getEnum(PreferenceKeys.doublesServeSequence, context, DoublesServeSequence.class, dssDefault, Model.mOldDSS2New);
     }
     public static EnumSet<OrientationPreference> getOrientationPreference(Context context) {
         String[] values = context.getResources().getStringArray(R.array.OrientationPreferenceDefaultValues);
@@ -1715,7 +1716,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-04-12"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-04-18"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

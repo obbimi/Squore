@@ -47,10 +47,10 @@ android {
 
         //testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
         //applicationId "com.doubleyellow"
-        manifestPlaceholders = [versionNameTabletennis: "4.32", versionCodeSuffixTabletennis: "0432"
-                               ,versionNameBadminton  : "4.32", versionCodeSuffixBadminton  : "0432"
-                               ,versionNameTennisPadel: "4.33", versionCodeSuffixTennisPadel: "0435"
-                               ,versionNameSquore     : "4.32", versionCodeSuffixSquore     : "0432"
+        manifestPlaceholders = [versionNameTabletennis: "4.32", versionCodeSuffixTabletennis: "0435"
+                               ,versionNameBadminton  : "4.32", versionCodeSuffixBadminton  : "0435"
+                               ,versionNameTennisPadel: "4.33", versionCodeSuffixTennisPadel: "0436"
+                               ,versionNameSquore     : "4.32", versionCodeSuffixSquore     : "0435"
                                ]
     }
     sourceSets {
@@ -90,6 +90,7 @@ android {
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
     productFlavors {
+        // versionCodePrefix specifies [min_api_level][bitwise_supported_screensizes s=1,m=2,l=4,xl=8]
         phoneTabletPre22 {
             dimension "devicetype"
             minSdkVersion 19
@@ -150,6 +151,8 @@ dependencies {
     //compile project(':AndroidBase')
     implementation 'com.doubleyellow:AndroidBase@aar'
     // uncommenting this while in Android Studio creates a subdir AndroidBase with an .iml file in it
+
+    //implementation 'com.google.android.material:material:1.2.0-alpha05'
 
     implementation 'androidx.wear:wear:1.0.0' // can not be set to compileOnly for Pre22 somehow because of boxedEdges in res/layout-watch/percentage.xml
     //wearOsImplementation 'androidx.wear:wear:1.0.0' // needs minSdkVersion=23

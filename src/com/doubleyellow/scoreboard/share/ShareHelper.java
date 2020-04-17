@@ -19,13 +19,25 @@ package com.doubleyellow.scoreboard.share;
 
 import android.content.Context;
 
+import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
-import com.doubleyellow.scoreboard.share.ResultMailer;
-import com.doubleyellow.scoreboard.share.ResultSender;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ShareHelper
 {
+    public static Map<Integer, String> m_menuResIdToPackage = null;
+    static {
+        m_menuResIdToPackage = new HashMap<>();
+        m_menuResIdToPackage.put(R.id.sb_whatsapp_match_summary     , "com.whatsapp");
+        m_menuResIdToPackage.put(R.id.sb_twitter_match_summary      , "com.twitter.android");
+        m_menuResIdToPackage.put(R.id.sb_instagram_match_summary    , "com.instagram.android");
+        m_menuResIdToPackage.put(R.id.sb_facebook_match_summary     , "com.facebook.katana");
+        m_menuResIdToPackage.put(R.id.sb_facebook_lite_match_summary, "com.facebook.lite");
+    }
+
     /** Sending match result as SMS message to e.g. the boxmaster */
     public static void shareMatchSummary(Context context, Model matchModel, String sPackage, String sDefaultRecipient) {
         ResultSender resultSender = new ResultSender();

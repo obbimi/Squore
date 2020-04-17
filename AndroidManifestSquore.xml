@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
     package="com.doubleyellow.scoreboard"
-    android:versionName="${versionName}">
+    android:versionName="${versionNameSquore}"
+    android:versionCode="${versionCodePrefix}${versionCodeSuffixSquore}">
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
     <uses-feature android:name="android.permission.INTERNET" android:required="true" />
