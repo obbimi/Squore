@@ -4,7 +4,6 @@
     <!-- menu items not actually used as menu. Just here to have a unique id for floating buttons -->
 <!--
     <item android:id="@+id/float_undo_last"     android:visible="false" android:title="@string/uc_undo" />
-    <item android:id="@+id/float_end_game"      android:visible="false" android:title="@string/end_game_Squash" />
 -->
     <item android:id="@+id/float_timer"         android:visible="false" android:title="@string/sb_timer"/>
     <item android:id="@+id/float_toss"          android:visible="false" android:title="@string/sb_cmd_toss"/>

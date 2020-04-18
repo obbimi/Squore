@@ -17,14 +17,7 @@ if [[ "${tobranded}" = "-h" ]]; then
 fi
 
 cd src
-if [[ "$tobranded" = "ASB" ]]; then
-    printf "Change to '${tobranded}'\n"
-    for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
-        printf "File %-72s to %s \n" $f $tobranded
-        sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.asbsquore.R\1~' ${f}
-        #exit 1
-    done
-elif [[ "$tobranded" = "Racketlon" ]]; then
+if [[ "$tobranded" = "Racketlon" ]]; then
     printf "Change to '${tobranded}'\n"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
         printf "File %-72s to %s \n" $f $tobranded
@@ -93,28 +86,28 @@ fi
 # change some defaults in xml files (in java is/should be taken care of by means of code)
 cd ../res
 if [[ "$tobranded" = "Racketlon" ]]; then
-    for f in $(egrep -rl '@string.*_(Squash|Tabletennis)"'); do
+    for f in $(egrep -rl '@string.*_Squash"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
-        sed -i 's~_\(Squash\|Tabletennis\|Badminton\|TennisPadel\)"~_Racketlon"~' ${f}
+        sed -i 's~_Squash"~_Racketlon"~' ${f}
     done
 elif [[ "$tobranded" = "Tabletennis" ]]; then
-    for f in $(egrep -rl '@string.*_(Squash|Racketlon)"'); do
+    for f in $(egrep -rl '@string.*_Squash"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
-        sed -i 's~_\(Squash\|Racketlon\|Badminton\|TennisPadel\)"~_Tabletennis"~' ${f}
+        sed -i 's~_Squash"~_Tabletennis"~' ${f}
     done
 elif [[ "$tobranded" = "Badminton" ]]; then
-    for f in $(egrep -rl '@string.*_(Squash|Racketlon)"'); do
+    for f in $(egrep -rl '@string.*_Squash"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
-        sed -i 's~_\(Squash\|Racketlon\|Tabletennis\|TennisPadel\)"~_Badminton"~' ${f}
+        sed -i 's~_Squash"~_Badminton"~' ${f}
     done
 elif [[ "$tobranded" = "TennisPadel" ]]; then
-    for f in $(egrep -rl '@string.*_(Squash|Racketlon)"'); do
+    for f in $(egrep -rl '@string.*_Squash"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
-        sed -i 's~_\(Squash\|Racketlon\|Tabletennis\|Badminton\)"~_TennisPadel"~' ${f}
+        sed -i 's~_Squash"~_TennisPadel"~' ${f}
     done
 else
     # Squore
-    for f in $(egrep -rl '@string.*_(Racketlon|Tabletennis|Badminton|TennisPadel)"'); do
+    for f in $(egrep -rl '@(string|fraction).*_(Racketlon|Tabletennis|Badminton|TennisPadel)"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_\(Racketlon\|Tabletennis\|Badminton\|TennisPadel\)"~_Squash"~' ${f}
     done

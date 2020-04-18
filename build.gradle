@@ -17,7 +17,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-      classpath 'com.android.tools.build:gradle:3.6.2'
+      classpath 'com.android.tools.build:gradle:3.6.3'
     }
 }
 // Run ./gradlew -q :dependencies
@@ -51,6 +51,7 @@ android {
                                ,versionNameBadminton  : "4.32", versionCodeSuffixBadminton  : "0435"
                                ,versionNameTennisPadel: "4.33", versionCodeSuffixTennisPadel: "0436"
                                ,versionNameSquore     : "4.32", versionCodeSuffixSquore     : "0435"
+                               ,versionNameRacketlon  : "4.32", versionCodeSuffixRacketlon  : "0435"
                                ]
     }
     sourceSets {
