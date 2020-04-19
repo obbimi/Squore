@@ -47,7 +47,7 @@ android {
 
         //testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
         //applicationId "com.doubleyellow"
-        manifestPlaceholders = [versionNameTabletennis: "4.33", versionCodeSuffixTabletennis: "0436"
+        manifestPlaceholders = [versionNameTabletennis: "4.33", versionCodeSuffixTabletennis: "0437"
                                ,versionNameBadminton  : "4.32", versionCodeSuffixBadminton  : "0435"
                                ,versionNameTennisPadel: "4.33", versionCodeSuffixTennisPadel: "0436"
                                ,versionNameSquore     : "4.32", versionCodeSuffixSquore     : "0436"

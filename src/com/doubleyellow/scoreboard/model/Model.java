@@ -354,7 +354,7 @@ public abstract class Model implements Serializable
     }
     final List<Map<Player, Integer>> getPlayer2GamesWonHistory() {
         if ( m_lPlayer2GamesWon == null ) {
-            ListWrapper<Map<Player, Integer>> l = new ListWrapper<Map<Player, Integer>>();
+            ListWrapper<Map<Player, Integer>> l = new ListWrapper<Map<Player, Integer>>(false);
             l.setName("Set 1");
             setPlayer2GamesWonHistory(l);
         }
@@ -371,7 +371,7 @@ public abstract class Model implements Serializable
 
     final List<Map<Player, Integer>> getPlayer2EndPointsOfGames() {
         if ( m_lPlayer2EndPointsOfGames == null ) {
-            ListWrapper<Map<Player, Integer>> l = new ListWrapper<Map<Player, Integer>>();
+            ListWrapper<Map<Player, Integer>> l = new ListWrapper<Map<Player, Integer>>(true);
             l.setName("Set 1");
             setPlayer2EndPointsOfGames(l);
         }
@@ -379,7 +379,7 @@ public abstract class Model implements Serializable
     }
     final List<GameTiming> getGamesTiming() {
         if ( m_lGameTimings == null ) {
-            ListWrapper<GameTiming> l = new ListWrapper<GameTiming>();
+            ListWrapper<GameTiming> l = new ListWrapper<GameTiming>(false);
             l.setName("GameTiming Set 1");
             setGamesTiming(l);
         }
@@ -410,10 +410,8 @@ public abstract class Model implements Serializable
     //------------------------
 
     Map<Player, Integer> getScoreOfGameInProgress() {
-        return ListUtil.getLast(m_lPlayer2EndPointsOfGames);
+        return ListUtil.getLast(getPlayer2EndPointsOfGames());
     }
-    /* scoring of the game in progress: { A=5, B=8 }. Taken from m_lPlayer2EndPointsOfGames when 'undo-ing' into previous game */
-  //private Map<Player, Integer>                m_scoreOfGameInProgress   = null; // removed and taken last from m_lPlayer2EndPointsOfGames
     /** end scores of all games [ {A=11,B=9},{A=4,B=11}, {A=5, B=8} ]. So does hold game in progress. length should always be equal to the number of games finished */
     private List<Map<Player, Integer>>          m_lPlayer2EndPointsOfGames   = null;
     /** holds array with history of games won like [0-0, 0-1, 1-1, 2-1]. length should always be one more than the number of games finished (in a set) */
@@ -459,7 +457,6 @@ public abstract class Model implements Serializable
 
         //resetPlayer2GamesWon();
 
-      //setPlayer2EndPointsOfGames(new ArrayList<Map<Player, Integer>>());
         addNewGameScoreDetails();
 
         m_lGameWinner             = new ArrayList<Player>();
@@ -693,6 +690,10 @@ public abstract class Model implements Serializable
         for(Map<Player, Integer> mGameScore: gameEndScores) {
             Integer iA = mGameScore.get(Player.A);
             Integer iB = mGameScore.get(Player.B);
+            if (iA == null || iB == null) {
+                Log.w(TAG, "Incomplete game score map");
+                continue;
+            }
             if ( iA + iB > 0 ) {
                 if ( sbGames.length() != 0 ) {
                     sbGames.append(",");
@@ -1036,7 +1037,7 @@ public abstract class Model implements Serializable
         m_rallyEndStatsGIP      = ListUtil.getLast(m_rallyEndStatistics);
         ListUtil.removeLast(m_lGameWinner); // required from GSM
 
-        ListUtil.removeLast(m_lPlayer2EndPointsOfGames);
+        ListUtil.removeLast(getPlayer2EndPointsOfGames());
         if ( m_HandicapFormat.equals(HandicapFormat.DifferentForAllGames) ) {
             ListUtil.removeLast(getDeviatingStartScoreOfGames());
         }
@@ -1219,7 +1220,7 @@ public abstract class Model implements Serializable
     }
 
     public List<Map<Player, Integer>> getGameScoresIncludingInProgress() {
-        List<Map<Player, Integer>> list = new ArrayList<Map<Player, Integer>>(m_lPlayer2EndPointsOfGames);
+        List<Map<Player, Integer>> list = new ArrayList<Map<Player, Integer>>(getPlayer2EndPointsOfGames());
 
 /*
         if ( false ) {
@@ -1236,7 +1237,7 @@ public abstract class Model implements Serializable
     }
 
     private void addGameScore(Map<Player, Integer> gameScore, boolean bNewStartScore) {
-        //Log.d(TAG, "addGameScore: " + scores + " " + ListUtil.size(m_lPlayer2EndPointsOfGames));
+        //Log.d(TAG, "addGameScore: " + scores + " " + ListUtil.size(getPlayer2EndPointsOfGames()));
         Player winner = Util.getWinner(gameScore);
         m_lGameWinner.add(winner);
 
@@ -1250,7 +1251,7 @@ public abstract class Model implements Serializable
             Map<Player, Integer> startScoreOfGameInProgress = getStartScoreOfGameInProgress();
             setDeviatingScore(getNrOfFinishedGames(), new HashMap<Player, Integer>(startScoreOfGameInProgress));
         }
-        //m_lPlayer2EndPointsOfGames.add(gameScore); // is already in there. Or better is taken from there
+        //getPlayer2EndPointsOfGames().add(gameScore); // is already in there. Or better is taken from there
     }
 
     /** holds array with history of games won like [0-0, 0-1, 1-1, 2-1] */
@@ -1272,7 +1273,7 @@ public abstract class Model implements Serializable
 
     /** end scores of already ended games [ {A=11,B=9},{A=4,B=11}, {A=11, B=8} ] . So does not hold game in progress. */
     public List<Map<Player, Integer>> getEndScoreOfPreviousGames() {
-        ArrayList<Map<Player, Integer>> points = new ArrayList<>(m_lPlayer2EndPointsOfGames);
+        ArrayList<Map<Player, Integer>> points = new ArrayList<>(getPlayer2EndPointsOfGames());
         ListUtil.removeLast(points); // TODO: check removing the one in progress
         return points;
     }
@@ -1280,8 +1281,9 @@ public abstract class Model implements Serializable
     /** similar to #getEndScoreOfGames() only if game in progress is also appears as actually finished it is included */
     public List<Map<Player, Integer>> getEndScoreOfGames() {
         List<Map<Player, Integer>> lReturn = new ArrayList<Map<Player, Integer>>();
-        if ( ListUtil.isNotEmpty(m_lPlayer2EndPointsOfGames) ) {
-            for ( Map<Player, Integer> mTmp: m_lPlayer2EndPointsOfGames ) {
+        List<Map<Player, Integer>> player2EndPointsOfGames = getPlayer2EndPointsOfGames();
+        if ( ListUtil.isNotEmpty(player2EndPointsOfGames) ) {
+            for ( Map<Player, Integer> mTmp: player2EndPointsOfGames) {
                 lReturn.add(new HashMap<Player, Integer>(mTmp));
             }
         }
@@ -1302,7 +1304,7 @@ public abstract class Model implements Serializable
         Map<Player, Integer> mGamesWon = getZeroZeroMap();
 
         Map<Player, Integer> mInProgress = getScoreOfGameInProgress();
-        for(Map<Player, Integer> mGameScore: m_lPlayer2EndPointsOfGames) {
+        for(Map<Player, Integer> mGameScore: getPlayer2EndPointsOfGames()) {
             if (mInProgress == mGameScore && bIncludeGameInprogress == false) {
                 break;
             } // skip last 'in progress'
@@ -1995,8 +1997,9 @@ public abstract class Model implements Serializable
         if ( getGameNrInProgress() > iGameZB ) {
             // discard part of the already entered score
             scoreLines = m_lGamesScorelineHistory.get(iGameZB);
-            if ( ListUtil.size(m_lPlayer2EndPointsOfGames) > iGameZB ) {
-                Map<Player, Integer> mScoreOfGameWeModify = m_lPlayer2EndPointsOfGames.get(iGameZB);
+            List<Map<Player, Integer>> player2EndPointsOfGames = getPlayer2EndPointsOfGames();
+            if ( ListUtil.size(player2EndPointsOfGames) > iGameZB ) {
+                Map<Player, Integer> mScoreOfGameWeModify = player2EndPointsOfGames.get(iGameZB);
                 pA = mScoreOfGameWeModify.get(Player.A);
                 pB = mScoreOfGameWeModify.get(Player.B);
             } else {
@@ -2461,7 +2464,7 @@ public abstract class Model implements Serializable
         }
     }
     protected List<GameTiming> gameTimingFromJson(JSONArray timings) throws JSONException {
-        ListWrapper<GameTiming> lGameTimings = new ListWrapper<>();
+        ListWrapper<GameTiming> lGameTimings = new ListWrapper<>(false);
         lGameTimings.setName("Set 1");
         GameTiming gameTimingCurrent = null;
         for ( int g=0; g < timings.length(); g++ ) {
@@ -2606,7 +2609,7 @@ public abstract class Model implements Serializable
     }
 
     private Map<Player, Integer> getPlayer2EndPointsNewGame() {
-        Map<Player, Integer> scoreOfGameInProgress = new HashMap<Player, Integer>();
+        Map<Player, Integer> scoreOfGameInProgress = getZeroZeroMap();
         if ( matchHasEnded() ) {
             Log.d(TAG, "Not adding handicap score for finished match");
         } else {
@@ -3624,7 +3627,7 @@ public abstract class Model implements Serializable
         if ( isInTieBreak_TT_RL() ) {
             int    iMaxScore               = getMaxScore();
             int    iDiffScore              = getDiffScore();
-            Player serverAtStartOfSet      = determineServerForNextGame(ListUtil.size(m_lPlayer2EndPointsOfGames), iMaxScore, iMaxScore);
+            Player serverAtStartOfSet      = determineServerForNextGame(ListUtil.size(getPlayer2EndPointsOfGames()), iMaxScore, iMaxScore);
             int    iNrOfPointsIntoTieBreak = iMaxScore - (getNrOfPointsToWinGame()-1);
             if ( iNrOfPointsIntoTieBreak % 2 == 0 ) {
                 // 20-20,               22-21, 22-22              , 24-23

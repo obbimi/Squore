@@ -326,7 +326,7 @@ public class GSMModel extends Model
             m_lPlayer2EndPointsOfGames_PerSet = new ArrayList<>();
             m_lPlayer2EndPointsOfGames_PerSet.add(getPlayer2EndPointsOfGames());
 
-            m_lGamesTiming_PerSet = (new ListWrapper<>()).setName("GameTimesPerSet");
+            m_lGamesTiming_PerSet = (new ListWrapper<>(false)).setName("GameTimesPerSet");
             m_lGamesTiming_PerSet.add(getGamesTiming());
         } else {
             List<List<ScoreLine>> lGamesScoreHistory = getGamesScoreHistory();
@@ -345,17 +345,17 @@ public class GSMModel extends Model
                 m_lGamesScorelineHistory_PerSet.add(lGamesScoreHistory);
                 //}
 
-                ListWrapper<Map<Player, Integer>> l = new ListWrapper<Map<Player, Integer>>();
+                ListWrapper<Map<Player, Integer>> l = new ListWrapper<Map<Player, Integer>>(false);
                 l.setName("P2GW Set " + (1 + ListUtil.size(m_lPlayer2GamesWon_PerSet)));
                 super.setPlayer2GamesWonHistory(l);
                 m_lPlayer2GamesWon_PerSet.add(l);
 
-                ListWrapper<Map<Player, Integer>> l2 = new ListWrapper<Map<Player, Integer>>();
+                ListWrapper<Map<Player, Integer>> l2 = new ListWrapper<Map<Player, Integer>>(false);
                 l2.setName("P2EPOG Set " + (1 + ListUtil.size(m_lPlayer2EndPointsOfGames_PerSet)));
                 super.setPlayer2EndPointsOfGames(l2);
                 m_lPlayer2EndPointsOfGames_PerSet.add(l2);
 
-                ListWrapper<GameTiming> l3 = new ListWrapper<GameTiming>();
+                ListWrapper<GameTiming> l3 = new ListWrapper<GameTiming>(false);
                 l3.setName("Timing Set " + (1 + ListUtil.size(m_lGamesTiming_PerSet)));
                 super.setGamesTiming(l3);
                 m_lGamesTiming_PerSet.add(l3);
