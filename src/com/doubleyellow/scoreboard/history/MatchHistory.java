@@ -103,6 +103,10 @@ public class MatchHistory extends XActivity implements MenuHandler
         // always go to the last tab for current match, to third tab for stored/finished matches
         Player possibleMatchVictoryFor = matchModel.isPossibleMatchVictoryFor();
         int iActiveTab = (bIsStoredMatch || (possibleMatchVictoryFor != null)) ? 2 : mAdapter.getCount();
+        if ( Brand.isRacketlon() && ViewUtil.isWearable(this) ) {
+            // goto scoresheet to have full score history quickly available on wearable
+            iActiveTab = 0;
+        }
         viewPager.setCurrentItem(iActiveTab);
 
         ViewUtil.setFullScreen(getWindow(), PreferenceValues.showFullScreen(this));

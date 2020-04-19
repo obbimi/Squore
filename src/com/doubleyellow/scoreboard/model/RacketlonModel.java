@@ -75,25 +75,25 @@ public class RacketlonModel extends Model {
 
     /** called from e.g. next set dialog */
     public void setDiscipline(int iSetZB, Sport sport) {
-        List<Sport> disciplines = getDisciplines();
+        List<Sport> disciplines = new ArrayList<>(getDisciplines());
         int iCurrentPos = disciplines.indexOf(sport);
         if ( iCurrentPos == iSetZB ) {
             return;
         }
         disciplines.remove(sport);
         disciplines.add(iSetZB, sport);
+        setDisciplines(disciplines);
         setDirty();
     }
 
-    public void setDisciplines(Collection<Sport> lDisciplines) {
-        m_lDisciplines = new ArrayList<>(lDisciplines);
+    public void setDisciplines(List<Sport> lDisciplines) {
+        m_lDisciplines = Collections.unmodifiableList(lDisciplines);
     }
 
     public List<Sport> getDisciplines() {
         // may be (but usually is not) in deviating sequence
         if ( ListUtil.size(m_lDisciplines) == 0 ) {
-            // construct a mutatable list
-            m_lDisciplines = new ArrayList<>(Arrays.asList(Sport.Tabletennis, Sport.Badminton, Sport.Squash, Sport.Tennis));
+            setDisciplines(Arrays.asList(Sport.Tabletennis, Sport.Badminton, Sport.Squash, Sport.Tennis));
         }
         return m_lDisciplines;
     }
@@ -315,7 +315,7 @@ public class RacketlonModel extends Model {
             if (JsonUtil.isNotEmpty(joDisciplines) ) {
                 List<String> disciplines = JsonUtil.asListOfStrings(joDisciplines);
                 Set<Sport> sports = ListUtil.toEnumValues(disciplines, Sport.class);
-                this.setDisciplines(sports);
+                this.setDisciplines(new ArrayList<Sport>(sports));
             }
             if ( isDoubles() ) {
                 // initialize

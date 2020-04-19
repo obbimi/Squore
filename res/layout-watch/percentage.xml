@@ -33,7 +33,8 @@
         android:layout_alignParentTop="true"
         android:elevation="1dp"
         app:layout_marginTopPercent="@fraction/wear_margin_to_show_gamescores_below_playerbuttons_Squash"
-        app:layout_widthPercent="@fraction/wear_gamescores_width" app:layout_aspectRatio="40%"
+        app:layout_widthPercent="@fraction/wear_gamescores_width"
+        app:layout_heightPercent="70%"
         android:layout_width="0dp"
         android:layout_height="0dp"
         >

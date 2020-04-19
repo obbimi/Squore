@@ -247,7 +247,7 @@ public class EditMatchWizard extends BaseAlertDialog
                 List<Integer> lIntValues = new ArrayList<>();
                 for( Sport sport: Sport.values() ) {
                     lIntValues.add(sport.ordinal());
-                    lValues.add(getString(R.string.start_with_x) + " : " + sport);
+                    lValues.add(getString(R.string.start_with_x, sport));
                 }
                 SelectObjectToggle<Integer> tbFirstDiscipline = new SelectObjectToggle<Integer>(context, lIntValues, lValues);
                 tbFirstDiscipline.setTag(PreferenceKeys.disciplineSequence);
@@ -371,7 +371,7 @@ public class EditMatchWizard extends BaseAlertDialog
                         SelectObjectToggle<Integer> tb = (SelectObjectToggle<Integer>) current;
                         Sport sport = Sport.values()[tb.getSelectedIndex()];
                         if ( sport.equals(Sport.Tabletennis) == false ) {
-                            RacketlonModel rm = (RacketlonModel) matchModel;
+                            RacketlonModel rm = (RacketlonModel) m_tmp;
                             rm.setDiscipline(0, sport);
                         }
                     }

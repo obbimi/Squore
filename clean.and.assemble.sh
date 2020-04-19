@@ -36,7 +36,7 @@ fi
 brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
 
 # check if a new version code for the brand for which we will be creating an apk is specified
-hasNewVersionCode=$(git diff build.gradle | grep ${brand})
+hasNewVersionCode=$(git diff build.gradle | egrep '^\+' | grep versionCode | grep -i ${brand})
 if [[ -z "${hasNewVersionCode}" ]]; then
     echo "Specify new version code for ${brand}"
     read -p "Open build.gradle ?"

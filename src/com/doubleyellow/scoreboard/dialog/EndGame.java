@@ -242,7 +242,7 @@ public class EndGame extends BaseAlertDialog
                 for (int i = iNextSetZB; i < disciplines.size(); i++ ) {
                     Sport       sport = disciplines.get(i);
                     RadioButton rb    = new RadioButton(context);
-                    rb.setId(sport.ordinal()); // for rg.getCheckedRadioButtonId()
+                    rb.setId  (sport.ordinal ()); // for rg.getCheckedRadioButtonId()
                     rb.setText(sport.toString());
                     rgDiscipline.addView(rb);
                 }
@@ -280,6 +280,9 @@ public class EndGame extends BaseAlertDialog
     private void setNextRacketlonDiscipline() {
         if ( (racketlonModel != null) && (rgDiscipline != null) ) {
             int   iSetZBJustFinished = matchModel.getNrOfFinishedGames() - 1;
+            if ( matchModel.isPossibleGameVictory() ) {
+                iSetZBJustFinished++;
+            }
             int   sportOrdinal       = rgDiscipline.getCheckedRadioButtonId();
             Sport sport              = Sport.values()[sportOrdinal];
             racketlonModel.setDiscipline(iSetZBJustFinished + 1, sport);

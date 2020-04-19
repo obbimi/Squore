@@ -1,8 +1,9 @@
-## 4.32 (april 2020)
+## 4.33 (april 2020)
 
 - WearOS version of the app is now available
   - the basic functionality has been ported to the wearable app
   - communication/sync between handheld and wear version of app is possible
+- bugfixes in handicap and deviating 'nr of servers per player'
 
 ## 4.29 (jan 2020)
 

@@ -1353,8 +1353,8 @@ public abstract class Model implements Serializable
             if ( MapUtil.isEmpty(mGameScore)) { continue; }
             Integer iA = mGameScore.get(Player.A);
             Integer iB = mGameScore.get(Player.B);
-            MapUtil.increaseCounter(pointsWon, Player.A, iA);
-            MapUtil.increaseCounter(pointsWon, Player.B, iB);
+            if ( iA != null ) MapUtil.increaseCounter(pointsWon, Player.A, iA);
+            if ( iB != null ) MapUtil.increaseCounter(pointsWon, Player.B, iB);
         }
         return pointsWon;
     }
@@ -1374,7 +1374,7 @@ public abstract class Model implements Serializable
     }
     public int getNrOfFinishedGames() {
         Map<Player, Integer> last = ListUtil.getLast(m_lPlayer2GamesWon);
-        if ( last == null ) { return 0; }
+        if ( MapUtil.isEmpty(last) ) { return 0; }
         return last.get(Player.A) + last.get(Player.B);
     }
 

@@ -150,7 +150,7 @@ public class PreferenceValues extends RWValues
     public static boolean isBrandedExecutable(Context ctx) {
         return isUnbrandedExecutable(ctx) == false;
     }
-
+    /** Uncomment more than 2 other brands than Squore in Brand.java to enter 'brandtesting' mode */
     public static boolean isBrandTesting(Context ctx) {
         if ( isUnbrandedExecutable(ctx) && ( Brand.values().length > 2 ) ) {
             return true;
@@ -443,6 +443,9 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.removeMatchFromMyListWhenSelected, context, Feature.class, Feature.DoNotUse);
     }
     public static Feature useShareFeature(Context context) {
+        if ( ViewUtil.isWearable(context) ) {
+            return Feature.DoNotUse;
+        }
         return getEnum(PreferenceKeys.useShareFeature, context, Feature.class, R.string.useShareFeature_default);
     }
     public static ShareMatchPrefs getShareAction(Context context) {
@@ -858,6 +861,7 @@ public class PreferenceValues extends RWValues
     }
 */
     private static EnumSet<ShowOnScreen> floatingMessageForGameBallOn(Context context) {
+        int iRes = R.array.floatingMessageForGameBallOn_DefaultValues_Squash; // value used in preferences.xml and therefor used
         return getEnumSet(PreferenceKeys.floatingMessageForGameBallOn, context, ShowOnScreen.class, EnumSet.of(ShowOnScreen.OnDevice, ShowOnScreen.OnChromeCast));
     }
     public static boolean floatingMessageForGameBall(Context context, boolean bIsPresentation) {
@@ -1716,7 +1720,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-04-18"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-04-20"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
