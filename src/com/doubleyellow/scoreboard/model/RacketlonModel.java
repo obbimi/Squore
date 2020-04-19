@@ -54,7 +54,7 @@ public class RacketlonModel extends Model {
     // (b) The next set has to commence within 6 minutes after the end of the previous set
 
 
-    private Sport getSportForSetInProgress() {
+    public Sport getSportForSetInProgress() {
         return getSportForGame(getGameNrInProgress());
     }
 

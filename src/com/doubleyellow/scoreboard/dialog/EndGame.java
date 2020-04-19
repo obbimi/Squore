@@ -27,6 +27,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
+
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Model;
@@ -83,8 +85,10 @@ public class EndGame extends BaseAlertDialog
             iResIdNeg = R.string.cmd_change_format;
         }
         int iEndGameMsgResId = matchHasEnded ? R.string.sb_end_game_and_match_message : R.string.sb_start_next_game_confirm_message;
-        adb.setPositiveButton(R.string.cmd_ok, dialogClickListener)
-           .setNegativeButton(iResIdNeg      , dialogClickListener);
+        adb.setPositiveButton(R.string.cmd_ok, dialogClickListener);
+        if ( isNotWearable() ) {
+            adb.setNegativeButton(iResIdNeg      , dialogClickListener);
+        }
 
         boolean bAutoShowTimer = featureUseTimers.equals(Feature.Automatic);
         if ( bShowWithNeutralButtonToShowTimer ) {
@@ -129,11 +133,16 @@ public class EndGame extends BaseAlertDialog
                    .setMessage(ListUtil.join(messages, "\n\n"));
             }
         } else {
-            adb.setIcon          (R.drawable.arrow_right)
-               .setTitle(getGameOrSetString(iEndGameMsgResId));
-
+            if ( isNotWearable() ) {
+                adb.setIcon(R.drawable.arrow_right)
+                   .setTitle(getGameOrSetString(iEndGameMsgResId));
+            }
             if ( Brand.isRacketlon() ) {
-                adb.setMessage(ListUtil.join(getRacketlonMessages((RacketlonModel) matchModel, matchHasEnded), "\n\n"));
+                String sMsgs = ListUtil.join(getRacketlonMessages((RacketlonModel) matchModel, matchHasEnded), "\n\n");
+                if ( isWearable() ) {
+                    sMsgs = getString(R.string.cmd_next);
+                }
+                adb.setMessage(sMsgs);
             }
         }
 
@@ -238,7 +247,13 @@ public class EndGame extends BaseAlertDialog
                     rgDiscipline.addView(rb);
                 }
                 rgDiscipline.check(disciplines.get(iNextSetZB).ordinal());
-                ll.addView(rgDiscipline);
+                if ( isWearable() ) {
+                    ScrollView sv = new ScrollView(context);
+                    sv.addView(rgDiscipline);
+                    ll.addView(sv);
+                } else {
+                    ll.addView(rgDiscipline);
+                }
                 adb.setView(ll);
             }
         }

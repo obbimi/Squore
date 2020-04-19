@@ -4,8 +4,6 @@
 #export JAVA_HOME=/usr/lib/jvm/java-10-openjdk
 export JAVA_HOME=/osshare/software/oracle/java-8-oracle
 
-
-#mykill gradle
 #set -x
 mffile=$(grep Manifest build.gradle | egrep -v '(ALL)' | grep -v '//' | cut -d "'" -f 2)
 if [[ -z "${mffile}" ]]; then
@@ -14,50 +12,37 @@ if [[ -z "${mffile}" ]]; then
 fi
 pkg=$(grep package= ${mffile} | perl -ne 's~.*"([a-z\.]+)"~$1~; print')
 
-#vcFromManifest=$(cat ${mffile} | grep versionCode | sed -e 's~.*versionCode=.\([0-9]*\).*~\1~')
-versionCodeX="X"
-if [[ -z "$versionCodeX" ]]; then
-cat <<!
 
-	Please specify versioncode as first argument for building ${pkg}
-
-    Known versioncodes based on git tags:
-!
-    grepfor=sq
-    if [[ "$pkg" = "com.doubleyellow.tabletennis" ]]; then
-        grepfor=tt
-    fi
-	git tag | grep ${grepfor}
-
-    #echo "Version code in ${mffile}: $vcFromManifest"
-	exit 1
+productFlavor="phoneTabletPost23"
+relapk=$(find . -name "*${productFlavor}-release.apk")
+if [[ -e ${relapk} ]]; then
+    changedFiles="$(find . -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml|md|gradle)' | egrep -v '(\.idea/|/\.gradle/|/generated/|/reports/)')"
 else
-    productFlavor="phoneTabletPost23"
-    relapk=$(find . -name "*${productFlavor}-release.apk")
-    if [[ -e ${relapk} ]]; then
-        changedFiles="$(find . -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml|md|gradle)' | egrep -v '(\.idea/|/\.gradle/|/generated/|/reports/)')"
-    else
-        changedFiles="No apk to compare with"
-    fi
-
-    if [[ ${versionCodeX} -ne ${vcFromManifest} ]]; then
-        echo "Not changing MANIFEST anymore" > /dev/null
-        #sed -i "s~\(versionCode=.\)[0-9]*\(.\)~\1${versionCodeX}\2~" ${mffile}
-    fi
-	#head $mffile
-	#exit 2 # TMP
+    changedFiles="No apk to compare with"
 fi
+
+if [[ ${versionCodeX} -ne ${vcFromManifest} ]]; then
+    echo "Not changing MANIFEST anymore" > /dev/null
+    #sed -i "s~\(versionCode=.\)[0-9]*\(.\)~\1${versionCodeX}\2~" ${mffile}
+fi
+
+# make a small modification in preferences date value so now 'Quick Intro' will play (to allow better PlayStore automated testing)
 todayYYYYMMDD=$(date --date='1 day' +%Y-%m-%d)
 if [[ -n "$(grep 'NO_SHOWCASE_FOR_VERSION_BEFORE ='  ./src/com/doubleyellow/scoreboard/prefs/PreferenceValues.java | grep -v ${todayYYYYMMDD})" ]]; then
     echo "Adapting NO_SHOWCASE_FOR_VERSION_BEFORE to $todayYYYYMMDD in PreferenceValues.java"
     sed -i "s~\(NO_SHOWCASE_FOR_VERSION_BEFORE\s*=\s*.\)[0-9-]*~\1${todayYYYYMMDD}~" ./src/com/doubleyellow/scoreboard/prefs/PreferenceValues.java
 fi
 
-#vc=$(grep versionCode ${mffile} | perl -ne 's~[^\d]*(\d+)"~$1~; print')
-#vc=$(grep versionCode build.gradle | perl -ne 's~.*"\d{4}(\d+).*~$1~; print' | sort -u)
-
-#brand=$(grep app_name_short_brand_ ${mffile} | head -1 | perl -ne 's~.*_short_brand(\w+).*~$1~; print')
 brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
+
+# check if a new version code for the brand for which we will be creating an apk is specified
+hasNewVersionCode=$(git diff build.gradle | grep ${brand})
+if [[ -z "${hasNewVersionCode}" ]]; then
+    echo "Specify new version code for ${brand}"
+    read -p "Open build.gradle ?"
+    vi +/${brand} build.gradle
+    exit 1
+fi
 
 ## will be repopulated by ./gradlew
 #/bin/rm -rf -v .gradle

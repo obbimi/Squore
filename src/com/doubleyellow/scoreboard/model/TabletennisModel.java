@@ -111,7 +111,8 @@ public class TabletennisModel extends Model
             return "X"; // eXpedite
         }
         boolean inTieBreak = isInTieBreak_TT_RL();
-        if ( m_iNrOfServesPerPlayer > 2 ) {
+        int nrOfServesPerPlayer = getNrOfServesPerPlayer();
+        if ( nrOfServesPerPlayer > 2 ) {
             // not the default for tabletennis, but possible
             if ( inTieBreak ) {
                 return 1;
@@ -121,9 +122,9 @@ public class TabletennisModel extends Model
             int iTotalInGame = iA + iB;
             //int i=0;
             //for(; i < iTotalInGame - m_iNrOfServesPerPlayer; i += m_iNrOfServesPerPlayer ) { }
-            return m_iNrOfServesPerPlayer - (iTotalInGame % m_iNrOfServesPerPlayer);
+            return String.valueOf(nrOfServesPerPlayer - (iTotalInGame % nrOfServesPerPlayer)); // return a string so no conversion to non numberic character is done in ServeButton
         }
-        if ( (m_iNrOfServesPerPlayer == 1) || inTieBreak ) {
+        if ( ( nrOfServesPerPlayer == 1 ) || inTieBreak ) {
             return 1; // single serve only
         }
         return 2 - serveSide.ordinal(); // R means 2 serves left, L means 1 left

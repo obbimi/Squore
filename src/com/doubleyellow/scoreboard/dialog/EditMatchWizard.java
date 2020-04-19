@@ -41,6 +41,8 @@ import com.doubleyellow.scoreboard.model.GSMModel;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.ModelFactory;
 import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.model.RacketlonModel;
+import com.doubleyellow.scoreboard.model.Sport;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -49,6 +51,7 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.view.SelectObjectToggle;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -159,7 +162,9 @@ public class EditMatchWizard extends BaseAlertDialog
                 tbBestOf_or_TotalOf.setSelectedIndex(bPlayAll?1:0);
                 tbBestOf_or_TotalOf.setMinimumHeight(0); // has no effect when called here
 
-                llBestOf.addView(tbBestOf_or_TotalOf, lpCC);
+                if ( Brand.isRacketlon() == false ) {
+                    llBestOf.addView(tbBestOf_or_TotalOf, lpCC);
+                }
             }
             {
                 int iPreferredNrToWin = PreferenceValues.numberOfGamesToWinMatch(context);
@@ -187,7 +192,9 @@ public class EditMatchWizard extends BaseAlertDialog
                 tbTotalNrOfGames.setTag(PreferenceKeys.numberOfGamesToWinMatch);
                 tbTotalNrOfGames.setSelected(iPreferredNrToWin);
 
-                llBestOf.addView(tbTotalNrOfGames, lpCC);
+                if ( Brand.isRacketlon() == false ) {
+                    llBestOf.addView(tbTotalNrOfGames, lpCC);
+                }
             }
 
             {
@@ -208,15 +215,18 @@ public class EditMatchWizard extends BaseAlertDialog
                 SelectObjectToggle<Integer> otNrOfPointsToWinGame = new SelectObjectToggle<Integer>(context, lValues, lDisplayValues);
                 otNrOfPointsToWinGame.setSelected(iPreferredNrToWin);
                 otNrOfPointsToWinGame.setTag(PreferenceKeys.numberOfPointsToWinGame);
+
                 llBestOf.addView(otNrOfPointsToWinGame, lpCC);
             }
+
             lControls.add(llBestOf);
         }
 
-        if ( Brand.isGameSetMatch() )
         {
-            LinearLayout llGSM = new LinearLayout(context);
-            llGSM.setOrientation(LinearLayout.HORIZONTAL);
+            LinearLayout llBrandSpecific = new LinearLayout(context);
+            llBrandSpecific.setOrientation(LinearLayout.HORIZONTAL);
+
+            if ( Brand.isGameSetMatch() )
             {
                 String[] fsfDescriptions = context.getResources().getStringArray(R.array.finalSetFinishDisplayValues);
                 List<String> lValues = new ArrayList<>();
@@ -229,9 +239,27 @@ public class EditMatchWizard extends BaseAlertDialog
                 FinalSetFinish finalSetFinish = gsmModel.getFinalSetFinish();
                 tbBestOf_or_TotalOf.setSelectedIndex(finalSetFinish.ordinal());
 
-                llGSM.addView(tbBestOf_or_TotalOf, lpCC);
+                llBrandSpecific.addView(tbBestOf_or_TotalOf, lpCC);
             }
-            lControls.add(llGSM);
+            if ( Brand.isRacketlon() ) {
+                // initial discipline
+                List<String>  lValues    = new ArrayList<>();
+                List<Integer> lIntValues = new ArrayList<>();
+                for( Sport sport: Sport.values() ) {
+                    lIntValues.add(sport.ordinal());
+                    lValues.add(getString(R.string.start_with_discipline) + " : " + sport);
+                }
+                SelectObjectToggle<Integer> tbFirstDiscipline = new SelectObjectToggle<Integer>(context, lIntValues, lValues);
+                tbFirstDiscipline.setTag(PreferenceKeys.disciplineSequence);
+                EnumSet<Sport> disciplineSequence = PreferenceValues.getDisciplineSequence(context);
+                tbFirstDiscipline.setSelectedIndex(disciplineSequence.iterator().next().ordinal());
+
+                llBrandSpecific.addView(tbFirstDiscipline, lpCC);
+            }
+
+            if ( llBrandSpecific.getChildCount() > 0 ) {
+                lControls.add(llBrandSpecific);
+            }
         }
         storeAndShowNext(1);
 
@@ -338,6 +366,14 @@ public class EditMatchWizard extends BaseAlertDialog
                         FinalSetFinish finalSetFinish = FinalSetFinish.values()[tb.getSelectedIndex()];
                         ((GSMModel) m_tmp).setFinalSetFinish(finalSetFinish);
                         break;
+                    }
+                    case disciplineSequence: {
+                        SelectObjectToggle<Integer> tb = (SelectObjectToggle<Integer>) current;
+                        Sport sport = Sport.values()[tb.getSelectedIndex()];
+                        if ( sport.equals(Sport.Tabletennis) == false ) {
+                            RacketlonModel rm = (RacketlonModel) matchModel;
+                            rm.setDiscipline(0, sport);
+                        }
                     }
                 }
             }

@@ -182,8 +182,9 @@ public abstract class Model implements Serializable
         if ( changedListener instanceof OnScoreChangeListener ) {
             OnScoreChangeListener scoreChangeListener = (OnScoreChangeListener) changedListener;
             onScoreChangeListeners.add(scoreChangeListener);
+            Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress();
             for(Player p: getPlayers() ) {
-                scoreChangeListener.OnScoreChange(p, getScoreOfGameInProgress().get(p), 0, null);
+                scoreChangeListener.OnScoreChange(p, MapUtil.getInt(scoreOfGameInProgress, p, 0), 0, null);
             }
         }
         if ( changedListener instanceof OnPlayerChangeListener ) {
@@ -418,11 +419,6 @@ public abstract class Model implements Serializable
     /** holds array with history of games won like [0-0, 0-1, 1-1, 2-1]. length should always be one more than the number of games finished (in a set) */
     private List<Map<Player, Integer>>          m_lPlayer2GamesWon           = null;
 
-    /** For when playing with handicap system */
-    private Map<Player, Integer>                m_startScoreOfGameInProgress = null;
-    /** For when playing with handicap system */
-    private List<Map<Player, Integer>>          m_startScoreOfPreviousGames  = null;
-
     //------------------------
     // Game scores
     //------------------------
@@ -435,8 +431,6 @@ public abstract class Model implements Serializable
         return ListUtil.getLast(player2GamesWonHistory);
     }
 
-    /** number of games each player has won: {A=2, B=1} */
-  //private Map<Player, Integer>                m_player2GamesWon       = null; // Last of m_lPlayer2GamesWon , 'of set in progress' for GSMModel
     private List<Player>                        m_lGameWinner           = null; // TODO: add one for set end in GSM
 
   //transient private GameTiming                m_gameTimingCurrent     = null;
@@ -467,9 +461,6 @@ public abstract class Model implements Serializable
 
       //setPlayer2EndPointsOfGames(new ArrayList<Map<Player, Integer>>());
         addNewGameScoreDetails();
-
-        m_startScoreOfGameInProgress = getZeroZeroMap();
-        m_startScoreOfPreviousGames = new ArrayList<Map<Player, Integer>>();
 
         m_lGameWinner             = new ArrayList<Player>();
         getGamesTiming();
@@ -1047,7 +1038,7 @@ public abstract class Model implements Serializable
 
         ListUtil.removeLast(m_lPlayer2EndPointsOfGames);
         if ( m_HandicapFormat.equals(HandicapFormat.DifferentForAllGames) ) {
-            m_startScoreOfGameInProgress = ListUtil.removeLast(m_startScoreOfPreviousGames);
+            ListUtil.removeLast(getDeviatingStartScoreOfGames());
         }
 
         if ( m_lGameTimings.size() > getGameNrInProgress() ) {
@@ -1103,32 +1094,24 @@ public abstract class Model implements Serializable
     }
 
     public void setGameStartScoreOffset(Player player, int iOffset) {
-        int iGame = getNrOfFinishedGames();
-        while ( ListUtil.size(m_startScoreOfPreviousGames) < iGame  ) {
-            m_startScoreOfPreviousGames.add(new HashMap<Player, Integer>(m_startScoreOfGameInProgress));
+        int iGameZB = getNrOfFinishedGames();
+        while ( ListUtil.size(getDeviatingStartScoreOfGames()) < iGameZB  ) {
+            Map<Player, Integer> last = getStartScoreOfGameInProgress();
+            HashMap<Player, Integer> copy = new HashMap<>(last);
+            addDeviatingScore(copy);
         }
-        m_startScoreOfGameInProgress.put(player, iOffset);
+        Map<Player, Integer> startScoreOfGameInProgress = getStartScoreOfGameInProgress();
+        startScoreOfGameInProgress.put(player, iOffset);
         if ( ListUtil.size(getGameScoreHistory()) == 0 ) {
-            getScoreOfGameInProgress().putAll(m_startScoreOfGameInProgress);
+            getScoreOfGameInProgress().putAll(startScoreOfGameInProgress);
             for(OnComplexChangeListener l: onComplexChangeListeners) {
                 l.OnChanged();
             }
         }
     }
+    /** Returns a copy if the internal map */
     public List<Map<Player, Integer>> getGameStartScoreOffsets() {
-        List<Map<Player, Integer>> lReturn = new ArrayList<Map<Player, Integer>>(m_startScoreOfPreviousGames);
-        lReturn.add(m_startScoreOfGameInProgress);
-        return lReturn;
-    }
-    public int getGameStartScoreOffset(Player player) {
-        int iGame = getNrOfFinishedGames();
-        return getGameStartScoreOffset(player, iGame);
-    }
-    public int getGameStartScoreOffset(Player player, int iGame) {
-        if ( ListUtil.size(m_startScoreOfPreviousGames) <= iGame ) {
-            return MapUtil.getInt(m_startScoreOfGameInProgress, player, 0);
-        }
-        return MapUtil.getInt(m_startScoreOfPreviousGames.get(iGame), player, 0);
+        return new ArrayList<Map<Player, Integer>>(getDeviatingStartScoreOfGames());
     }
     public int getNrOfPointsToWinGame() {
         return m_iNrOfPointsToWinGame;
@@ -1238,6 +1221,7 @@ public abstract class Model implements Serializable
     public List<Map<Player, Integer>> getGameScoresIncludingInProgress() {
         List<Map<Player, Integer>> list = new ArrayList<Map<Player, Integer>>(m_lPlayer2EndPointsOfGames);
 
+/*
         if ( false ) {
             // TODO: how/when to return getGameScoresEXCLUDINGInProgress
             Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress();
@@ -1247,6 +1231,7 @@ public abstract class Model implements Serializable
                 list.add(scoreOfGameInProgress);
             }
         }
+*/
         return list;
     }
 
@@ -1262,7 +1247,8 @@ public abstract class Model implements Serializable
         m_lPlayer2GamesWon.add(player2GamesWonNew);
 
         if ( m_HandicapFormat.equals(HandicapFormat.DifferentForAllGames) && bNewStartScore ) {
-            m_startScoreOfPreviousGames.add(new HashMap<Player, Integer>(m_startScoreOfGameInProgress));
+            Map<Player, Integer> startScoreOfGameInProgress = getStartScoreOfGameInProgress();
+            setDeviatingScore(getNrOfFinishedGames(), new HashMap<Player, Integer>(startScoreOfGameInProgress));
         }
         //m_lPlayer2EndPointsOfGames.add(gameScore); // is already in there. Or better is taken from there
     }
@@ -1364,6 +1350,7 @@ public abstract class Model implements Serializable
             gameEndScores = this.getEndScoreOfPreviousGames();
         }
         for(Map<Player, Integer> mGameScore: gameEndScores) {
+            if ( MapUtil.isEmpty(mGameScore)) { continue; }
             Integer iA = mGameScore.get(Player.A);
             Integer iB = mGameScore.get(Player.B);
             MapUtil.increaseCounter(pointsWon, Player.A, iA);
@@ -1421,7 +1408,7 @@ public abstract class Model implements Serializable
     // Nr of scores per server (tabletennis, racketlon)
     // -----------------------------------------
 
-    int m_iNrOfServesPerPlayer = 2;
+    private int m_iNrOfServesPerPlayer = 2;
     public boolean setNrOfServesPerPlayer(int i) {
         if ( m_iNrOfServesPerPlayer != i ) {
             m_iNrOfServesPerPlayer = i;
@@ -1463,6 +1450,46 @@ public abstract class Model implements Serializable
     // -----------------------------------------
     // Handicap
     // -----------------------------------------
+
+    /** For when playing with handicap system */
+    private List<Map<Player, Integer>>          m_deviatingStartScoreOfGames  = null;
+
+    private void addDeviatingScore(HashMap<Player, Integer> m) {
+        List<Map<Player, Integer>> deviatingStartScoreOfGames = getDeviatingStartScoreOfGames();
+        m_deviatingStartScoreOfGames.add(m);
+    }
+    private void setDeviatingScore(int iGameZB, HashMap<Player, Integer> m) {
+        List<Map<Player, Integer>> deviatingStartScoreOfGames = getDeviatingStartScoreOfGames();
+        if ( iGameZB < ListUtil.size(deviatingStartScoreOfGames)  ) {
+            deviatingStartScoreOfGames.set(iGameZB, m);
+        } else {
+            addDeviatingScore(m);
+        }
+    }
+    private List<Map<Player, Integer>> getDeviatingStartScoreOfGames() {
+        if ( m_deviatingStartScoreOfGames == null ) {
+            m_deviatingStartScoreOfGames = new ArrayList<>();
+        }
+        return m_deviatingStartScoreOfGames;
+    }
+    private Map<Player, Integer> getStartScoreOfGameInProgress() {
+        List<Map<Player, Integer>> deviatingStartScoreOfGames = getDeviatingStartScoreOfGames();
+        if ( ListUtil.isEmpty(deviatingStartScoreOfGames) ) {
+            deviatingStartScoreOfGames.add(getZeroZeroMap());
+        }
+        return ListUtil.getLast(deviatingStartScoreOfGames);
+    }
+    public int getGameStartScoreOffset(Player player) {
+        int iGameZB = getNrOfFinishedGames();
+        return getGameStartScoreOffset(player, iGameZB);
+    }
+    public int getGameStartScoreOffset(Player player, int iGameZB) {
+        if ( ListUtil.size(m_deviatingStartScoreOfGames) <= iGameZB ) {
+            return 0;
+        }
+        Map<Player, Integer> mOffset = m_deviatingStartScoreOfGames.get(iGameZB);
+        return MapUtil.getInt(mOffset, player, 0);
+    }
 
     public void setHandicapFormat(HandicapFormat b) {
         m_HandicapFormat = b;
@@ -2238,15 +2265,18 @@ public abstract class Model implements Serializable
                         try {
                             joGame = joOffset.getJSONObject(g);
                         } catch (Exception e) {
-                            // this should no longer be necc
+                            // this should no longer be necessary
                             joGame = new JSONObject(joOffset.optString(g)) ;
                         }
+/*
                         if ( g > 0 && m_startScoreOfGameInProgress != null) {
-                            m_startScoreOfPreviousGames.add(m_startScoreOfGameInProgress);
+                            m_deviatingStartScoreOfGames.add(m_startScoreOfGameInProgress);
                         }
-                        m_startScoreOfGameInProgress = new HashMap<Player, Integer>();
-                        m_startScoreOfGameInProgress.put(Player.A, joGame.optInt(Player.A.toString(), 0));
-                        m_startScoreOfGameInProgress.put(Player.B, joGame.optInt(Player.B.toString(), 0));
+*/
+                        HashMap<Player, Integer> startScoreOfGameInProgress = new HashMap<Player, Integer>();
+                        startScoreOfGameInProgress.put(Player.A, joGame.optInt(Player.A.toString(), 0));
+                        startScoreOfGameInProgress.put(Player.B, joGame.optInt(Player.B.toString(), 0));
+                        setDeviatingScore(g, startScoreOfGameInProgress);
                     }
                 }
                 if ( joFormat.has(JSONKey.mode.toString())) {
@@ -2511,12 +2541,7 @@ public abstract class Model implements Serializable
                 // determine if the game is started
                 boolean bGameIsStarted;
                 if ( isUsingHandicap() ) {
-                    Map<Player, Integer> startScore;
-                    if ( g < ListUtil.size(m_startScoreOfPreviousGames) ) {
-                        startScore = m_startScoreOfPreviousGames.get(g);
-                    } else {
-                        startScore = m_startScoreOfGameInProgress;
-                    }
+                    Map<Player, Integer> startScore = getStartScoreOfGameInProgress();
                     bGameIsStarted = scoreOfGameInProgress.get(Player.A)!= startScore.get(Player.A)
                                   || scoreOfGameInProgress.get(Player.B)!= startScore.get(Player.B);
                 } else {
@@ -2582,8 +2607,14 @@ public abstract class Model implements Serializable
 
     private Map<Player, Integer> getPlayer2EndPointsNewGame() {
         Map<Player, Integer> scoreOfGameInProgress = new HashMap<Player, Integer>();
-        scoreOfGameInProgress.put(Player.A, MapUtil.getInt(m_startScoreOfGameInProgress, Player.A, 0));
-        scoreOfGameInProgress.put(Player.B, MapUtil.getInt(m_startScoreOfGameInProgress, Player.B, 0));
+        if ( matchHasEnded() ) {
+            Log.d(TAG, "Not adding handicap score for finished match");
+        } else {
+            Map<Player, Integer> startScoreOfGameInProgress = getStartScoreOfGameInProgress();
+            scoreOfGameInProgress.put(Player.A, MapUtil.getInt(startScoreOfGameInProgress, Player.A, 0));
+            scoreOfGameInProgress.put(Player.B, MapUtil.getInt(startScoreOfGameInProgress, Player.B, 0));
+        }
+
         return scoreOfGameInProgress;
     }
 
@@ -2774,10 +2805,11 @@ public abstract class Model implements Serializable
         if ( isUsingHandicap() ) {
             joFormat.put(JSONKey.handicapFormat.toString(), m_HandicapFormat.toString());
             JSONArray joOffset = new JSONArray();
-            for ( Map<Player, Integer> ss : m_startScoreOfPreviousGames) {
-                joOffset.put(new JSONObject(MapUtil.keysToString(ss)));
+            List<Map<Player, Integer>> deviatingStartScoreOfGames = getDeviatingStartScoreOfGames();
+            for ( Map<Player, Integer> ss : deviatingStartScoreOfGames) {
+                Map<String, Object> ssC = MapUtil.keysToString(ss);
+                joOffset.put(new JSONObject(ssC));
             }
-            joOffset.put(new JSONObject(MapUtil.keysToString(m_startScoreOfGameInProgress)));
             joFormat.put(JSONKey.gameStartScoreOffset.toString(), joOffset);
         }
         if ( JsonUtil.isNotEmpty(joFormat) ) {
@@ -3630,9 +3662,10 @@ public abstract class Model implements Serializable
                     int iA = getScore(Player.A);
                     int iB = getScore(Player.B);
                     int iTotalInGame = iA + iB;
-                    int iSetZB = ListUtil.size(m_lPlayer2EndPointsOfGames);
+                    int iSetZB = ListUtil.size(m_lGameWinner);
                     Player server = determineServerForNextGame_TT_RL(iSetZB, false);
-                    int iServerSwitches = iTotalInGame / m_iNrOfServesPerPlayer;
+                    int nrOfServesPerPlayer = getNrOfServesPerPlayer();
+                    int iServerSwitches = (int) Math.floor(iTotalInGame / nrOfServesPerPlayer);
                     for( int i = 0; i < iServerSwitches; i++ ) {
                         server = server.getOther();
                     }

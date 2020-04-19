@@ -86,22 +86,22 @@ fi
 # change some defaults in xml files (in java is/should be taken care of by means of code)
 cd ../res
 if [[ "$tobranded" = "Racketlon" ]]; then
-    for f in $(egrep -rl '@string.*_Squash"'); do
+    for f in $(egrep -rl '@(string|fraction).*_Squash"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_Squash"~_Racketlon"~' ${f}
     done
 elif [[ "$tobranded" = "Tabletennis" ]]; then
-    for f in $(egrep -rl '@string.*_Squash"'); do
+    for f in $(egrep -rl '@(string|fraction).*_Squash"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_Squash"~_Tabletennis"~' ${f}
     done
 elif [[ "$tobranded" = "Badminton" ]]; then
-    for f in $(egrep -rl '@string.*_Squash"'); do
+    for f in $(egrep -rl '@(string|fraction).*_Squash"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_Squash"~_Badminton"~' ${f}
     done
 elif [[ "$tobranded" = "TennisPadel" ]]; then
-    for f in $(egrep -rl '@string.*_Squash"'); do
+    for f in $(egrep -rl '@(string|fraction).*_Squash"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_Squash"~_TennisPadel"~' ${f}
     done

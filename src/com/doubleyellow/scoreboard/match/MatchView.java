@@ -222,7 +222,7 @@ public class MatchView extends SBRelativeLayout
                         , R.id.ll_AnnouncementLanguage
                         , R.id.llNumberOfServesPerPlayer
                 );
-                return true;
+                break;
             case Tabletennis:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
                         , R.id.llDisciplineStart
@@ -230,36 +230,33 @@ public class MatchView extends SBRelativeLayout
                         , R.id.match_marker
                         , R.id.ll_AnnouncementLanguage
                 );
-                return true;
+                break;
             case Racketlon:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
                         //, R.id.lblMatch_BestOf
                         , R.id.tbBestOf_or_TotalOf
                         , R.id.spNumberOfGamesToWin
                         , R.id.llHandicapFormat
-                        , R.id.llChangesSidesWhen
                         , R.id.llScoringType
                         , R.id.llNumberOfServesPerPlayer
                         , R.id.match_marker
                         , R.id.ll_AnnouncementLanguage
                 );
-                return true;
+                break;
             case Squash:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
                         , R.id.llDisciplineStart
-                        , R.id.llChangesSidesWhen
                         , R.id.llNumberOfServesPerPlayer
                 );
-                return false;
+                break;
             case Racquetball:
                 ViewUtil.hideViewsForEver(this
                         , R.id.llHandicapFormat
                         , R.id.llDisciplineStart
-                        , R.id.llChangesSidesWhen
                         , R.id.llNumberOfServesPerPlayer
                       //, R.id.llScoringType
                 );
-                return false;
+                break;
             case TennisPadel:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
                         //, R.id.lblMatch_BestOf
@@ -272,7 +269,7 @@ public class MatchView extends SBRelativeLayout
                         , R.id.match_marker
                         , R.id.ll_AnnouncementLanguage
                 );
-                return false;
+                break;
         }
         if ( Brand.supportsDoubleServeSequence() == false ) {
             ViewUtil.hideViewsForEver(this, R.id.ll_doubleServeSequence);
@@ -282,8 +279,9 @@ public class MatchView extends SBRelativeLayout
         }
         if ( Brand.isGameSetMatch() == false ) {
             ViewUtil.hideViewsForEver(this, R.id.llFinalSetFinish);
+            ViewUtil.hideViewsForEver(this, R.id.llChangesSidesWhen);
         }
-        return false;
+        return true;
     }
 
     /** invoked from com.doubleyellow.scoreboard.match.Match */
