@@ -247,7 +247,7 @@ public class EditMatchWizard extends BaseAlertDialog
                 List<Integer> lIntValues = new ArrayList<>();
                 for( Sport sport: Sport.values() ) {
                     lIntValues.add(sport.ordinal());
-                    lValues.add(getString(R.string.start_with_discipline) + " : " + sport);
+                    lValues.add(getString(R.string.start_with_x) + " : " + sport);
                 }
                 SelectObjectToggle<Integer> tbFirstDiscipline = new SelectObjectToggle<Integer>(context, lIntValues, lValues);
                 tbFirstDiscipline.setTag(PreferenceKeys.disciplineSequence);

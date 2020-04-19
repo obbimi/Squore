@@ -316,6 +316,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     return handleMenuItem(R.id.change_match_format);
                 }
             }
+            // TODO: this only works if side buttons are NOT on top of score buttons (portrait only for now)
             if ( lIds.containsAll(Arrays.asList(R.id.btn_side1, R.id.btn_side2)) ) {
                 // Nothing for end user yet
                 if ( PreferenceValues.isBrandTesting(ScoreBoard.this) ) {
@@ -326,14 +327,15 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             return false;
         }
     };
-
+    /** side1 and side2 simulatiously */
     private void toggleBrand() {
         Brand newBrandForTesting = ListUtil.getNextEnum(Brand.brand);
         RWValues.setEnum(PreferenceKeys.squoreBrand, ScoreBoard.this, newBrandForTesting);
         Brand.setBrandPrefs(ScoreBoard.this);
         Brand.setSportPrefs(ScoreBoard.this);
         DynamicListPreference.deleteCacheFile(ScoreBoard.this, PreferenceKeys.colorSchema.toString());
-        doRestart(ScoreBoard.this);
+        //doRestart(ScoreBoard.this);
+        Toast.makeText(this, String.format("Restart to make new brand %s effective", newBrandForTesting), Toast.LENGTH_LONG).show();
     }
 
     private TouchBothListener.ClickBothListener clickBothListener = new TouchBothListener.ClickBothListener() {
@@ -573,7 +575,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         private long lActionBarToggledAt = 0L;
         @Override public void onClick(View view) {
             if ( Brand.isGameSetMatch() ) {
-                // do nothing for now
                 toggleSetScoreView();
             } else if ( Brand.isRacketlon() == false ) {
                 toggleGameScoreView();
@@ -581,7 +582,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 long currentTime = System.currentTimeMillis();
                 if ( currentTime - lActionBarToggledAt > 1500 ) {
                     // prevent single click show history being triggered after a long click
-                    showScoreHistory();
+                    handleMenuItem(R.id.sb_score_details);
                 } else {
                     Log.d(TAG, "Skip single click for now... ");
                 }
@@ -678,10 +679,24 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 if ( Brand.isGameSetMatch() ) {
                     showChangeSideFloatButton(true);
                 } else {
+                    if ( Brand.isRacketlon() ) {
+                        // no change side in squash discipline
+                        RacketlonModel racketlonModel = (RacketlonModel) matchModel;
+                        Sport sportForSet = racketlonModel.getSportForSetInProgress();
+                        if ( Sport.Squash.equals(sportForSet) ) {
+                            if ( racketlonModel.isDoubles() == false ) {
+                                return false;
+                            }
+                        }
+                    }
                     if ( isWearable() ) {
                         showChangeSideFloatButton(true);
                     } else {
-                        _confirmChangeSides(null);
+                        if ( matchModel.isUsingHandicap() ) {
+                            // TODO: suggest at the right time when to switch sides
+                        } else {
+                            _confirmChangeSides(null);
+                        }
                     }
                 }
                 return true;
@@ -2803,6 +2818,7 @@ touch -t 01030000 LAST.sb
                     }
                 } else {
                     iBoard.hideMessage();
+                    showChangeSideFloatButton(false);
                 }
             }
             if ( hwStatus.isHalfway() && ShareMatchPrefs.LinkWithFullDetailsEachHalf.equals(m_liveScoreShare) ) {
@@ -3517,6 +3533,13 @@ touch -t 01030000 LAST.sb
             boolean bIsInNormalMode = matchModel.isInNormalMode();
             setMenuItemVisibility(R.id.tt_activate_mode  , bIsInNormalMode == true );
             setMenuItemVisibility(R.id.tt_deactivate_mode, bIsInNormalMode == false);
+            if ( PreferenceValues.isBrandTesting(this) ) {
+                setMenuItemTitle(menu, R.id.tt_activate_mode  , getString(R.string.activate_mode_Tabletennis));
+                setMenuItemTitle(menu, R.id.tt_deactivate_mode, getString(R.string.deactivate_mode_Tabletennis));
+            }
+        } else {
+            setMenuItemVisibility(R.id.tt_activate_mode  , false );
+            setMenuItemVisibility(R.id.tt_deactivate_mode, false);
         }
 
         return true;
@@ -4723,6 +4746,7 @@ touch -t 01030000 LAST.sb
 
     private void autoShowHandicap() {
         if ( matchModel.isUsingHandicap() == false ) { return; }
+        if ( matchModel.matchHasEnded()            ) { return; }
         HandicapFormat handicapFormat = matchModel.getHandicapFormat();
         if ( handicapFormat.equals(HandicapFormat.SameForAllGames)      && matchModel.hasStarted()    ) { return; }
         if ( handicapFormat.equals(HandicapFormat.DifferentForAllGames) && matchModel.gameHasStarted()) { return; }

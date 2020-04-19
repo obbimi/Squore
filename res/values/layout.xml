@@ -12,6 +12,36 @@
     <fraction name="ls_name_width_2x">43%</fraction>
     <fraction name="ls_gamescores_width">12%</fraction>
 
+
+    <fraction name="wear_gamescores_width">16%</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_buttons_SHOW">8%</fraction> <!-- in sync with wear_gamescores_width -->
+    <fraction name="wear_margin_to_show_gamescores_between_buttons_HIDE">1%</fraction>
+    <fraction name="wear_margin_to_show_gamescores_below_playerbuttons_SHOW">18.0%</fraction> <!-- in sync with ls_name_height -->
+    <fraction name="wear_margin_to_show_gamescores_below_playerbuttons_HIDE">0.5%</fraction>
+
+    <fraction name="wear_margin_to_show_gamescores_between_scorebuttons_Squash">@fraction/wear_margin_to_show_gamescores_between_buttons_HIDE</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_scorebuttons_Tabletennis">@fraction/wear_margin_to_show_gamescores_between_buttons_HIDE</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_scorebuttons_Badminton">@fraction/wear_margin_to_show_gamescores_between_buttons_HIDE</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_scorebuttons_TennisPadel">@fraction/wear_margin_to_show_gamescores_between_buttons_HIDE</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_scorebuttons_Racketlon">@fraction/wear_margin_to_show_gamescores_between_buttons_SHOW</fraction>
+
+    <fraction name="wear_margin_to_show_gamescores_between_playerbuttons_Squash">@fraction/wear_margin_to_show_gamescores_between_buttons_SHOW</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_playerbuttons_Badminton">@fraction/wear_margin_to_show_gamescores_between_buttons_SHOW</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_playerbuttons_Tabletennis">@fraction/wear_margin_to_show_gamescores_between_buttons_SHOW</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_playerbuttons_TennisPadel">@fraction/wear_margin_to_show_gamescores_between_buttons_SHOW</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_playerbuttons_Racketlon">@fraction/wear_margin_to_show_gamescores_between_buttons_HIDE</fraction>
+
+    <fraction name="wear_margin_to_show_gamescores_below_playerbuttons_Squash">@fraction/wear_margin_to_show_gamescores_below_playerbuttons_HIDE</fraction>
+    <fraction name="wear_margin_to_show_gamescores_below_playerbuttons_Badminton">@fraction/wear_margin_to_show_gamescores_below_playerbuttons_HIDE</fraction>
+    <fraction name="wear_margin_to_show_gamescores_below_playerbuttons_Tabletennis">@fraction/wear_margin_to_show_gamescores_below_playerbuttons_HIDE</fraction>
+    <fraction name="wear_margin_to_show_gamescores_below_playerbuttons_TennisPadel">@fraction/wear_margin_to_show_gamescores_below_playerbuttons_HIDE</fraction>
+    <fraction name="wear_margin_to_show_gamescores_below_playerbuttons_Racketlon">@fraction/wear_margin_to_show_gamescores_below_playerbuttons_SHOW</fraction>
+
+    <fraction name="border_margin_playerButton_wear_round">0.0%</fraction> <!-- for now only has deviating value for round screens -->
+<!--
+    <fraction name="room_between_btn_score_2x">0.0%</fraction>
+-->
+
     <!--<fraction name="ls_gamescores_height">60%</fraction>-->
 
     <fraction name="ls_wearable_floating_button_fraction">20%</fraction>
@@ -88,7 +118,7 @@
     <fraction name="pt_conduct_width">95%</fraction>
 
     <fraction name="player_button_colorborder_thickness">2%</fraction>
-    <fraction name="player_button_corner_radius">8%</fraction> <!-- 10 looks fairly nice on samsung s4 -->
+    <fraction name="player_button_corner_radius">8%</fraction> <!-- not used in layout, only in java code -->
 <!--<fraction name="floating_action_button_radius">13%</fraction>-->
 
     <!-- end of game presentation -->

@@ -951,6 +951,10 @@ public class IBoard implements TimerViewContainer
         }
 
         String sField = matchModel.getEventDivision();
+        if ( ViewUtil.isWearable(context) && Brand.isRacketlon() ) {
+            Sport sportForSet = ((RacketlonModel) matchModel).getSportForSetInProgress();
+            sField = String.valueOf(sportForSet); // TODO: internationalize?
+        }
         m_tvFieldDivision.setText(sField);
         if ( StringUtil.isNotEmpty(sField) ) {
             m_tvFieldDivision.setVisibility(View.VISIBLE);

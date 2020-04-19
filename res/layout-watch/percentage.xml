@@ -27,13 +27,13 @@
     android:id="@+id/squoreboard_root_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-    app:boxedEdges="all">
-    <androidx.percentlayout.widget.PercentRelativeLayout
-        android:id="@+id/gamescores_container"
+    app:boxedEdges="top|bottom">
+    <androidx.percentlayout.widget.PercentRelativeLayout android:id="@+id/gamescores_container"
         android:layout_centerInParent="true"
         android:layout_alignParentTop="true"
-        app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
-        app:layout_widthPercent="@fraction/ls_gamescores_width" app:layout_aspectRatio="40%"
+        android:elevation="1dp"
+        app:layout_marginTopPercent="@fraction/wear_margin_to_show_gamescores_below_playerbuttons_Squash"
+        app:layout_widthPercent="@fraction/wear_gamescores_width" app:layout_aspectRatio="40%"
         android:layout_width="0dp"
         android:layout_height="0dp"
         >
@@ -72,81 +72,72 @@
             />
     </androidx.percentlayout.widget.PercentRelativeLayout>
 
-    <!-- playernames: one on each side of previous game scores -->
-    <com.doubleyellow.scoreboard.view.PlayersButton
-            android:id="@+id/txt_player1"
-            app:layout_widthPercent="@fraction/ls_name_width_2x"
-            app:layout_heightPercent="@fraction/ls_name_height"
-            app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
-            app:layout_marginLeftPercent="@fraction/ls_horizontal_margin_4x"
-            app:layout_marginRightPercent="@fraction/ls_horizontal_margin_4x"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@id/gamescores_container" android:layout_toStartOf="@id/gamescores_container"
-            android:text="@string/lbl_player_A"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-    />
-    <com.doubleyellow.scoreboard.view.PlayersButton
-            android:id="@+id/txt_player2"
-            app:layout_widthPercent="@fraction/ls_name_width_2x"
-            app:layout_heightPercent="@fraction/ls_name_height"
-            app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
-            app:layout_marginLeftPercent="@fraction/ls_horizontal_margin_4x"
-            app:layout_marginRightPercent="@fraction/ls_horizontal_margin_4x"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@id/gamescores_container" android:layout_toEndOf="@id/gamescores_container"
-            android:text="@string/lbl_player_B"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-    />
-
     <LinearLayout
         android:id="@+id/centered_ll"
         android:orientation="vertical"
-        android:layout_width="1px"
-        android:layout_height="10px"
+        android:layout_width="1dp"
+        android:layout_height="10dp"
         android:layout_centerInParent="true"/>
 
-    <!-- score buttons underneath names -->
-    <com.doubleyellow.android.view.AutoResizeTextView
-            style="@style/SBButton"
-            android:id="@+id/btn_score1"
-            android:layout_below="@id/txt_player1"
-            app:layout_widthPercent="@fraction/ls_score_width_2x"
-            app:layout_heightPercent="@fraction/ls_score_height"
-            android:layout_toEndOf="@id/centered_ll"
-            app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
-            app:layout_marginBottomPercent="@fraction/ls_vertical_margin_3x"
-            app:layout_marginLeftPercent="@fraction/ls_horizontal_margin_4x"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:text="11"
-            android:clickable="true"
-            android:includeFontPadding="false"
+    <!-- playernames: one on each side of previous game scores -->
+    <com.doubleyellow.scoreboard.view.PlayersButton android:id="@+id/txt_player1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@id/centered_ll"
+        app:layout_widthPercent="@fraction/ls_name_width_2x"
+        app:layout_heightPercent="@fraction/ls_name_height"
+        app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
+        app:layout_marginLeftPercent="@fraction/border_margin_playerButton_wear_round"
+        app:layout_marginRightPercent="@fraction/wear_margin_to_show_gamescores_between_playerbuttons_Squash"
+        android:text="@string/lbl_player_A" android:layout_width="0dp" android:layout_height="0dp"
+    />
+    <com.doubleyellow.scoreboard.view.PlayersButton android:id="@+id/txt_player2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignStart="@id/centered_ll"
+        app:layout_widthPercent="@fraction/ls_name_width_2x"
+        app:layout_heightPercent="@fraction/ls_name_height"
+        app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
+        app:layout_marginLeftPercent="@fraction/wear_margin_to_show_gamescores_between_playerbuttons_Squash"
+        app:layout_marginRightPercent="@fraction/border_margin_playerButton_wear_round"
+        android:text="@string/lbl_player_B" android:layout_width="0dp" android:layout_height="0dp"
     />
 
-    <com.doubleyellow.android.view.AutoResizeTextView
-            style="@style/SBButton"
-            android:id="@+id/btn_score2"
-            android:layout_below="@id/txt_player2"
-            app:layout_widthPercent="@fraction/ls_score_width_2x"
-            app:layout_heightPercent="@fraction/ls_score_height"
-            android:layout_alignStart="@id/centered_ll"
-            app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
-            app:layout_marginBottomPercent="@fraction/ls_vertical_margin_3x"
-            app:layout_marginRightPercent="@fraction/ls_horizontal_margin_4x"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:text="9"
-            android:clickable="true"
-            android:includeFontPadding="false"
+    <!-- score buttons underneath names -->
+    <com.doubleyellow.android.view.AutoResizeTextView android:id="@+id/btn_score1"
+        android:layout_below="@id/txt_player1"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@id/centered_ll"
+        app:layout_widthPercent="@fraction/ls_score_width_2x"
+        app:layout_heightPercent="@fraction/ls_score_height"
+        app:layout_marginTopPercent   ="@fraction/ls_vertical_margin_3x"
+        app:layout_marginBottomPercent="@fraction/ls_vertical_margin_3x"
+        app:layout_marginLeftPercent="@fraction/ls_horizontal_margin_4x"
+        app:layout_marginRightPercent="@fraction/wear_margin_to_show_gamescores_between_scorebuttons_Squash"
+        android:clickable="true"
+        android:includeFontPadding="false"
+        android:text="11" android:layout_width="0dp" android:layout_height="0dp"
+    />
+
+    <com.doubleyellow.android.view.AutoResizeTextView android:id="@+id/btn_score2"
+        android:layout_below="@id/txt_player2"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@id/centered_ll"
+        app:layout_widthPercent="@fraction/ls_score_width_2x"
+        app:layout_heightPercent="@fraction/ls_score_height"
+        app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
+        app:layout_marginBottomPercent="@fraction/ls_vertical_margin_3x"
+        app:layout_marginRightPercent="@fraction/ls_horizontal_margin_4x"
+        app:layout_marginLeftPercent="@fraction/wear_margin_to_show_gamescores_between_scorebuttons_Squash"
+        android:clickable="true"
+        android:includeFontPadding="false"
+        android:text="9" android:layout_width="0dp" android:layout_height="0dp"
     />
 
     <!-- side buttons underneath names towards the center -->
     <com.doubleyellow.scoreboard.view.ServeButton
-            style="@style/SBButton"
             android:id="@+id/btn_side1"
             android:layout_alignTop="@id/btn_score1"
             android:layout_alignEnd="@id/btn_score1"
@@ -154,13 +145,14 @@
             app:layout_marginTopPercent="@fraction/ls_side_margin_V"
             app:layout_marginRightPercent="@fraction/ls_side_margin_H"
             android:padding="3dp"
-            android:text="R?"
+            android:text="@string/right_serveside_single_char"
             android:clickable="true"
             android:textStyle="bold"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
     />
 
     <com.doubleyellow.scoreboard.view.ServeButton
-            style="@style/SBButton"
             android:id="@+id/btn_side2"
             android:layout_alignTop="@id/btn_score2"
             android:layout_alignStart="@id/btn_score2"
@@ -168,9 +160,11 @@
             app:layout_marginTopPercent="@fraction/ls_side_margin_V"
             app:layout_marginLeftPercent="@fraction/ls_side_margin_H"
             android:padding="3dp"
-            android:text="L"
+            android:text="@string/left_serveside_single_char"
             android:clickable="true"
             android:textStyle="bold"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             />
 
 
@@ -186,9 +180,7 @@
     <com.doubleyellow.android.view.AutoResizeTextView
             style="@style/SBButton"
             android:id="@+id/btn_timer"
-            android:layout_alignLeft="@id/btn_side1"
             android:layout_alignStart="@id/btn_side1"
-            android:layout_alignRight="@id/btn_side2"
             android:layout_alignEnd="@id/btn_side2"
             android:layout_below="@id/btn_side1"
             app:layout_heightPercent="@fraction/ls_timer_height"
@@ -201,14 +193,26 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
     />
-    <ImageView android:id="@+id/sb_bluetooth_icon"
+    <ImageView android:id="@+id/sb_bluetooth_icon" android:contentDescription="Indicate if currently syncing score via bluetooth"
         android:layout_alignTop="@id/btn_side2"
-        android:layout_alignRight="@id/btn_score2"
+        android:layout_alignEnd="@id/btn_score2"
         app:layout_marginRightPercent="@fraction/ls_side_margin_H"
         android:visibility="invisible"
         app:layout_heightPercent="@fraction/ls_bluetooth_icon_height"
         app:layout_aspectRatio="100%"
         android:src="@android:drawable/stat_sys_data_bluetooth"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+
+    <com.doubleyellow.android.view.AutoResizeTextView
+        style="@style/SBButton"
+        android:text="Field X"
+        android:id="@+id/btn_match_field_division"
+        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true"
+        app:layout_widthPercent="@fraction/ls_branded_logo_ar400" app:layout_aspectRatio="800%"
+        app:layout_marginBottomPercent="0%"
         android:layout_width="0dp"
         android:layout_height="0dp"
         />

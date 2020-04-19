@@ -42,6 +42,7 @@
     <string name="best_of_x_games_to_y_2_Racketlon">Sets tot</string>
     <string name="discipline_order">Discipline volgorde</string>
     <string name="start_with_discipline">Begin met discipline</string>
+    <string name="start_with_x">Begin met: %1$s</string>
     <string name="moving_from_displine_x_to_y">Wissel van %1$s naar %2$s</string>
     <string name="moving_from_displine_x_to">Wissel van %1$s naar</string>
     <string name="if_player_x_wins_discipline_y_he_wins_the_match">Als speler %1$s het %2$s wint, wint hij de wedstrijd</string>

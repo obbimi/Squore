@@ -1,3 +1,8 @@
+## 4.32 (april 2020)
+
+- support for Wearables
+- minor other improvements
+
 ## 4.20 (july 2019)
 
 - improvement for Android 9
