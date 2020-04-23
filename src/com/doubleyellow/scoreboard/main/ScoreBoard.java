@@ -582,7 +582,11 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 long currentTime = System.currentTimeMillis();
                 if ( currentTime - lActionBarToggledAt > 1500 ) {
                     // prevent single click show history being triggered after a long click
-                    handleMenuItem(R.id.sb_score_details);
+                    if ( isWearable() ) {
+                        // score details NOT yet optimized for wearables
+                    } else {
+                        handleMenuItem(R.id.sb_score_details);
+                    }
                 } else {
                     Log.d(TAG, "Skip single click for now... ");
                 }
@@ -638,7 +642,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         toggleBrand();
                     } else {
                         // on wearable allow changing name with minimal interface
-                        handleMenuItem(R.id.pl_change_name, pl);
+                        if ( handleMenuItem(R.id.pl_change_name, pl) == false ) {
+                            handleMenuItem(R.id.pl_show_conduct, pl);
+                        };
                     }
                 } else {
                     handleMenuItem(R.id.pl_show_conduct, pl);
@@ -1015,8 +1021,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         initShowActionBar();
 
         if ( bOrientationChangeRequested == false ) {
-            boolean bUseLeftDrawer = true;
-            if ( bUseLeftDrawer == false ) {
+            if ( isWearable() ) {
                 setContentView(R.layout.percentage); // triggers onContentChanged()
             } else {
                 setContentView(R.layout.mainwithmenudrawer);
@@ -3680,6 +3685,7 @@ touch -t 01030000 LAST.sb
                 startActivity(intent);
                 return true;
             case R.id.sb_settings:
+                if ( isWearable() ) { return false; }
                 Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
                 startActivity(settingsActivity);
                 return true;
@@ -3751,10 +3757,10 @@ touch -t 01030000 LAST.sb
                 if ( warnModelIsLocked(true, id, ctx) ) { return false; }
                 showConduct((Player) ctx[0]);
                 break;
-            case R.id.pl_change_name:
+            case R.id.pl_change_name: {
                 if ( warnModelIsLocked(true, id, ctx) ) { return false; }
-                showChangeName((Player) ctx[0]);
-                break;
+                return showChangeName((Player) ctx[0]);
+            }
             case R.id.pl_show_appeal:
                 if ( warnModelIsLocked(id, ctx) ) { return false; }
                 showAppeal((Player) ctx[0]);
@@ -3776,24 +3782,28 @@ touch -t 01030000 LAST.sb
                 return true;
             }
             case R.id.sb_select_feed_match: {
+                if ( isWearable() ) { return false; }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.Feed);
                 Intent nm = new Intent(this, MatchTabbed.class);
                 startActivityForResult(nm, 1); // see onActivityResult()
                 return true;
             }
             case R.id.sb_select_static_match: {
+                if ( isWearable() ) { return false; }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.Mine);
                 Intent nm = new Intent(this, MatchTabbed.class);
                 startActivityForResult(nm, 1); // see onActivityResult()
                 return true;
             }
             case R.id.sb_enter_singles_match: {
+                if ( isWearable() ) { return showNewMatchWizard(); }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.Manual);
                 Intent nm = new Intent(this, MatchTabbed.class);
                 startActivityForResult(nm, 1); // see onActivityResult()
                 return true;
             }
             case R.id.sb_enter_doubles_match: {
+                if ( isWearable() ) { return showNewMatchWizard(); }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.ManualDbl);
                 Intent nm = new Intent(this, MatchTabbed.class);
                 startActivityForResult(nm, 1); // see onActivityResult()
@@ -3809,21 +3819,7 @@ touch -t 01030000 LAST.sb
 */
                 cancelShowCase();
                 if ( isWearable() ) {
-                    EditMatchWizard editMatchWizard = new EditMatchWizard(this, matchModel, this);
-                    editMatchWizard.show();
-/*
-                    // add 2 dialogs to the stack
-
-                    // 1
-                    EditPlayers editPlayers = new EditPlayers(this, matchModel, this);
-                    addToDialogStack(editPlayers);
-
-                    // 2
-                    editMatchFormatDialog();
-
-                    // start showing the dialogs
-                    showNextDialog();
-*/
+                    showNewMatchWizard();
                 } else {
                     Intent nm = new Intent(this, MatchTabbed.class);
                     startActivityForResult(nm, 1); // see onActivityResult
@@ -4024,6 +4020,12 @@ touch -t 01030000 LAST.sb
                 break;
         }
         return false;
+    }
+
+    private boolean showNewMatchWizard() {
+        EditMatchWizard editMatchWizard = new EditMatchWizard(this, matchModel, this);
+        editMatchWizard.show();
+        return true;
     }
 
     private void selectFilenameForExport() {
@@ -4278,6 +4280,7 @@ touch -t 01030000 LAST.sb
 
     private void hidePresentationEndOfGame() {
         ViewGroup presentationFrame = (ViewGroup) findViewById(R.id.presentation_frame);
+        if ( presentationFrame == null ) { return; }
         int presentationFrameVisibility = presentationFrame.getVisibility();
         boolean pEndOfGameViewShowing = (presentationFrameVisibility == View.VISIBLE);
       //Log.d(TAG, "[hidePresentationEndOfGame] pEndOfGameViewShowing " + pEndOfGameViewShowing);
@@ -4402,8 +4405,9 @@ touch -t 01030000 LAST.sb
         addToDialogStack(editFormat);
     }
     /** For wearable only */
-    private void showChangeName(Player p) {
+    private boolean showChangeName(Player p) {
         // TODO:
+        return false;
     }
     private boolean autoShowTieBreakDialog(int iOccurrenceCount) {
         TieBreakFormat tbf = PreferenceValues.getTiebreakFormat(this);

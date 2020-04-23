@@ -27,7 +27,7 @@
     android:id="@+id/squoreboard_root_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-    app:boxedEdges="top|bottom">
+    app:boxedEdges="@integer/wear_round_boxedEdges_Squash">
     <androidx.percentlayout.widget.PercentRelativeLayout android:id="@+id/gamescores_container"
         android:layout_centerInParent="true"
         android:layout_alignParentTop="true"
@@ -88,7 +88,7 @@
         app:layout_widthPercent="@fraction/ls_name_width_2x"
         app:layout_heightPercent="@fraction/ls_name_height"
         app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
-        app:layout_marginLeftPercent="@fraction/border_margin_playerButton_wear_round"
+        app:layout_marginLeftPercent="@fraction/border_margin_playerButton_wear_round_Squash"
         app:layout_marginRightPercent="@fraction/wear_margin_to_show_gamescores_between_playerbuttons_Squash"
         android:text="@string/lbl_player_A" android:layout_width="0dp" android:layout_height="0dp"
     />
@@ -100,7 +100,7 @@
         app:layout_heightPercent="@fraction/ls_name_height"
         app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
         app:layout_marginLeftPercent="@fraction/wear_margin_to_show_gamescores_between_playerbuttons_Squash"
-        app:layout_marginRightPercent="@fraction/border_margin_playerButton_wear_round"
+        app:layout_marginRightPercent="@fraction/border_margin_playerButton_wear_round_Squash"
         android:text="@string/lbl_player_B" android:layout_width="0dp" android:layout_height="0dp"
     />
 
@@ -110,7 +110,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_alignEnd="@id/centered_ll"
-        app:layout_widthPercent="@fraction/ls_score_width_2x"
+        app:layout_widthPercent="@fraction/wear_score_width_2x"
         app:layout_heightPercent="@fraction/ls_score_height"
         app:layout_marginTopPercent   ="@fraction/ls_vertical_margin_3x"
         app:layout_marginBottomPercent="@fraction/ls_vertical_margin_3x"
@@ -126,7 +126,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@id/centered_ll"
-        app:layout_widthPercent="@fraction/ls_score_width_2x"
+        app:layout_widthPercent="@fraction/wear_score_width_2x"
         app:layout_heightPercent="@fraction/ls_score_height"
         app:layout_marginTopPercent="@fraction/ls_vertical_margin_3x"
         app:layout_marginBottomPercent="@fraction/ls_vertical_margin_3x"
