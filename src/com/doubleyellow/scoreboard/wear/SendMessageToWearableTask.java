@@ -63,7 +63,7 @@ class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
                 String sMessage = String.valueOf(objects[1]);
                 Task<Integer> sendMessageTask = messageClient.sendMessage(node.getId(), sPath, sMessage.getBytes());
                 Integer requestId = Tasks.await(sendMessageTask);
-                Log.d(TAG, String.format("send reqId %d : %s", requestId, sMessage)); // just an (for every call increasing) integer. Same number as messageEvent.getRequestId() on receiving end
+                Log.v(TAG, String.format("send reqId %d : %s", requestId, sMessage)); // just an (for every call increasing) integer. Same number as messageEvent.getRequestId() on receiving end
                 lastNodeId = node.getId();
             }
         } catch (Exception e) {

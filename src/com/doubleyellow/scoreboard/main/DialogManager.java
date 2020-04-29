@@ -151,7 +151,9 @@ public class DialogManager {
     public void clearDialogs() {
         if ( isDialogShowing() ) {
             Log.w(TAG, "Should normally only be happening if scoring is done on 'connected' device and slave is showing a dialog");
-            baseDialog.dismiss();
+            if ( baseDialog != null ) {
+                baseDialog.dismiss();
+            }
         }
         baseDialogs.clear();
     }

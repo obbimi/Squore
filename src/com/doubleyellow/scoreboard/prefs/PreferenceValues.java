@@ -122,7 +122,7 @@ public class PreferenceValues extends RWValues
 
     //public static final String removeSeedingRegExp = "[\\[\\]0-9/]+$";
     private static boolean m_restartRequired = false;
-    public static void setRestartRequired(Context ctx) {
+    static void setRestartRequired(Context ctx) {
         if ( m_restartRequired == false ) {
             Toast.makeText(ctx, R.string.for_this_to_take_effect_a_restart_is_required, Toast.LENGTH_SHORT).show();
         }
@@ -131,6 +131,16 @@ public class PreferenceValues extends RWValues
     public static boolean isRestartRequired() {
         boolean bReturn = false && m_restartRequired;
         m_restartRequired = false;
+        return bReturn;
+    }
+
+    private static boolean m_castRestartRequired = false;
+    public static void setCastRestartRequired() {
+        m_castRestartRequired = true;
+    }
+    public static boolean isCastRestartRequired() {
+        boolean bReturn = m_castRestartRequired;
+        m_castRestartRequired = false;
         return bReturn;
     }
 
@@ -870,6 +880,9 @@ public class PreferenceValues extends RWValues
         } else {
             return floatingMessageForGameBallOn(context).contains(ShowOnScreen.OnDevice);
         }
+    }
+    public static int useCastScreen(Context context) {
+        return RWValues.getInteger(PreferenceKeys.useCastScreen, context, 0);
     }
     public static boolean Cast_ShowGraphDuringTimer(Context context) {
         return getBoolean(PreferenceKeys.Cast_ShowGraphDuringTimer, context, R.bool.Cast_ShowGraphDuringTimer_default);
@@ -1720,7 +1733,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-04-20"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-04-30"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

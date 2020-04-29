@@ -42,7 +42,7 @@ import com.doubleyellow.scoreboard.prefs.ColorPrefs;
  */
 public class ButtonUpdater implements DialogInterface.OnShowListener {
 
-    private static final String TAG = ButtonUpdater.class.getSimpleName();
+    private static final String TAG = "SB." + ButtonUpdater.class.getSimpleName();
 
     private   static final int[] iaButtonAll    = new int[] { DialogInterface.BUTTON_POSITIVE ,DialogInterface.BUTTON_NEGATIVE, DialogInterface.BUTTON_NEUTRAL };
     protected static       int[] iaColorNeutral = null;

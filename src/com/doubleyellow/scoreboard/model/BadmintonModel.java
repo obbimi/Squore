@@ -137,7 +137,8 @@ public class BadmintonModel extends Model
         }
 
         if ( pNewServer != null ) {
-            ServeSide nextServeSide  = ServeSide.values()[getScore(pNewServer) % 2];
+            int i = getScore(pNewServer) % 2;
+            ServeSide nextServeSide  = ServeSide.values()[i];
             setServerAndSide(pNewServer, nextServeSide, m_in_out);
         }
         //setLastPointWasHandout(false);

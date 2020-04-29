@@ -274,9 +274,10 @@ public enum PreferenceKeys {
 
     targetDirForImportExport,
 
-    Cast_ShowGraphDuringTimer,
-    //showGraphDuringTimerOn,
+    useCastScreen,
+        Cast_ShowGraphDuringTimer,
 
     enableScoringByBluetoothConnection,
         lastConnectedBluetoothDevice,
+
 }

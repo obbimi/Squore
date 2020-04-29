@@ -51,10 +51,10 @@
 
     <!-- desired -->
     <integer name="wear_round_boxedEdges_TennisPadel">@integer/wear_round_boxedEdges_TOPBOTTOM</integer>
+    <integer name="wear_round_boxedEdges_Squash">@integer/wear_round_boxedEdges_TOPBOTTOM</integer>
+    <integer name="wear_round_boxedEdges_Badminton">@integer/wear_round_boxedEdges_TOPBOTTOM</integer>
 
     <!-- temporary to get it approved for round screens -->
-    <integer name="wear_round_boxedEdges_Squash">@integer/wear_round_boxedEdges_ALL</integer>
-    <integer name="wear_round_boxedEdges_Badminton">@integer/wear_round_boxedEdges_ALL</integer>
     <integer name="wear_round_boxedEdges_Tabletennis">@integer/wear_round_boxedEdges_ALL</integer>
     <integer name="wear_round_boxedEdges_Racketlon">@integer/wear_round_boxedEdges_ALL</integer>
 

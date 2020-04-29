@@ -69,7 +69,7 @@ import java.util.List;
  */
 public class MatchView extends SBRelativeLayout
 {
-    private static final String TAG = MatchView.class.getSimpleName();
+    private static final String TAG = "SB." + MatchView.class.getSimpleName();
 
     private NewMatchLayout m_layout = NewMatchLayout.AllFields;
 

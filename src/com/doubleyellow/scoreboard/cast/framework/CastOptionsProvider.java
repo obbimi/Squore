@@ -17,34 +17,38 @@
 package com.doubleyellow.scoreboard.cast.framework;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.doubleyellow.scoreboard.Brand;
-import com.doubleyellow.scoreboard.R;
-import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.google.android.gms.cast.framework.CastOptions;
 import com.google.android.gms.cast.framework.OptionsProvider;
 import com.google.android.gms.cast.framework.SessionProvider;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * New casting.
  *
  * This class is referenced from the Manifest file.
+ * Lazily initialized just once when
+ * - CastContext.getSharedInstance(activity), or
+ * - CastButtonFactory.setUpMediaRouteButton();
+ * is invoked.
  */
 public class CastOptionsProvider implements OptionsProvider
 {
-    @Override public CastOptions getCastOptions(Context context) {
-        int remoteDisplayAppIdResId = Brand.brand.getRemoteDisplayAppIdResId();
-        if ( PreferenceValues.isBrandTesting(context) ) {
-            remoteDisplayAppIdResId = R.string.CUSTOM_RECEIVER_APP_ID_brand_test;
-        }
-        String sAppID = context.getString(remoteDisplayAppIdResId);
+    private static final String TAG = "SB." + CastOptionsProvider.class.getSimpleName();
 
-        return (new CastOptions.Builder())
-                .setReceiverApplicationId(sAppID)
-                .build()
-                ;
+    @Override public CastOptions getCastOptions(Context context) {
+        Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(context);
+        Log.d(TAG, "remoteDisplayAppId2Info:" + remoteDisplayAppId2Info);
+
+        CastOptions.Builder builder = new CastOptions.Builder();
+        builder.setReceiverApplicationId(remoteDisplayAppId2Info.getKey());
+      //builder.setStopReceiverApplicationWhenEndingSession(true);
+        CastOptions options = builder.build();
+        return options;
     }
 
     @Override public List<SessionProvider> getAdditionalSessionProviders(Context context) {

@@ -19,7 +19,6 @@ package com.doubleyellow.scoreboard.history;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
@@ -47,10 +46,10 @@ import java.util.*;
  *
  * wget -O GraphView-3.1.4.jar "https://github.com/jjoe64/GraphView/blob/master/public/GraphView-3.1.4.jar?raw=true"
  *
- * NOT version 4.0.0 - it has changed to much
+ * NOT converted to version 4.0.0 yet - it has changed quite a lot
  * wget -O GraphView-4.0.0.jar "https://github.com/jjoe64/GraphView/blob/master/public/GraphView-4.0.0.jar?raw=true"
  *
- * Used/instanciated by MatchHistory activity.
+ * Used/instantiated by MatchHistory activity.
  */
 public class GameGraphView extends LineGraphView
 {
@@ -107,7 +106,7 @@ public class GameGraphView extends LineGraphView
             graphViewStyle.setVerticalLabelsColor(Color.RED);
         }
     }
-    /** Only use in edit mode */
+    /** Only used in edit mode */
     private void addPointFor(Player p, Map<Player, List<GraphViewData>> mGraphData) {
         List<GraphViewData> graphViewDatas = mGraphData.get(p);
         List<GraphViewData> graphViewDatasOther = mGraphData.get(p.getOther());
@@ -166,12 +165,12 @@ public class GameGraphView extends LineGraphView
         }
         List<ScoreLine> lGameScoreHistory = lGamesScoreHistory.get(iShowGame - 1);
         if ( ListUtil.size(lGameScoreHistory) > 50) {
-            // enlarging labelswidth here does not work... to late?
+            // enlarging labels width here does not work... to late?
             //int verticalLabelsWidth = ViewUtil.getScreenWidth(getContext()) / 15;
             //graphViewStyle.setVerticalLabelsWidth(verticalLabelsWidth); // to allow for 3 digits
 
             // reduce font size to allow for displaying bigger digits
-            int   iNrOfDigits = ("" + ListUtil.size(lGameScoreHistory)).length();
+            int   iNrOfDigits = ("" + ListUtil.size(lGameScoreHistory)).length(); // 1 for under 10, 2 for above 10
             float textSize    = graphViewStyle.getTextSize();
             float newTextSize = textSize * 2 / iNrOfDigits;
             graphViewStyle.setTextSize(newTextSize);
@@ -194,8 +193,8 @@ public class GameGraphView extends LineGraphView
         setGraphDataSeries(mGraphData, mLegendLabels);
         List<GraphView.GraphViewData> dataWinner = mGraphData.get(winner);
         List<GraphView.GraphViewData> dataLoser  = mGraphData.get(loser);
-        List<String> lYLabels = constructYLabels(dataWinner, dataLoser);
-        List<String> lXLabels = constructXLabels(dataWinner, dataLoser);
+        List<String> lYLabels = constructYLabels(dataWinner, dataLoser); // digits up to max score
+        List<String> lXLabels = constructXLabels(dataWinner, dataLoser); // empty labels
         super.setVerticalLabels  (lYLabels.toArray(new String[0]));
         super.setHorizontalLabels(lXLabels.toArray(new String[0]));
 
@@ -214,7 +213,7 @@ public class GameGraphView extends LineGraphView
 
         graphViewStyle.setHorizontalLabelsColor(iTxtColor);
         float txtSize = getResources().getDimension(R.dimen.txt_medium);
-              txtSize = ViewUtil.getScreenHeightWidthMinimum(getContext()) / 25;
+              txtSize = ViewUtil.getScreenHeight(getContext()) / 25;
         graphViewStyle.setTextSize(txtSize);
         //graphViewStyle.setTextSize(getResources().getInteger(R.integer.TextSizeTabStrip) );
         //graphViewStyle.setNumHorizontalLabels(5);
@@ -315,7 +314,7 @@ public class GameGraphView extends LineGraphView
         return mGraphData;
     }
 
-    // construct rang from 0-11 or 15 (or other maximum number of points scored) to be displayed on y-ax
+    /** construct range from 0-11 or 15 (or other maximum number of points scored) to be displayed on y-ax */
     private List<String> constructYLabels(List<GraphView.GraphViewData> dataWinner, List<GraphView.GraphViewData> dataLoser) {
         final GraphViewData last = ListUtil.getLast(dataWinner);
         int iMax = 1;
@@ -324,7 +323,7 @@ public class GameGraphView extends LineGraphView
         } else {
             Log.w(TAG, "no last??");
         }
-        int iMin = 0;
+        int iMin = 0; // typically zero, but may be something different for 'handicap' games
         if ( ListUtil.size(dataWinner) > 0 ) {
             iMin = (int) dataWinner.get(0).valueY;
         }
@@ -346,6 +345,16 @@ public class GameGraphView extends LineGraphView
 */
             iNrOfSteps = (iMax - iMin) / iStepSize;
         }
+
+        if ( ViewUtil.isLandscapeOrientation(getContext()) ) {
+            float textSizePx = graphViewStyle.getTextSize();
+            int minimumHeightPx = ViewUtil.getScreenHeightWidthMinimum();
+            float fTxtSizeStacked = textSizePx * (iMax - iMin) / iStepSize;
+            if ( fTxtSizeStacked * 2.5 > minimumHeightPx ) {
+                iStepSize +=1;
+            }
+        }
+
         List<String> lYLabels = new ArrayList<String>();
         for(int i=iMax; i>=iMin; i-=1) {
             if ( i == iMax ) {
@@ -360,7 +369,8 @@ public class GameGraphView extends LineGraphView
             }
 */
             if ( ( i % iStepSize != 0 ) || ( i == iMax - 1 ) ) {
-                //lYLabels.add(""); // no labels if not modulo stepsize, and no label for 'max minus one'
+                //lYLabels.add(""); // up to 20200426 no labels if not modulo stepsize, and no label for 'max minus one'
+                lYLabels.add(""); // starting from 20200426: empty labels if not modulo stepsize, and empty label for 'max minus one'
                 continue;
             }
             lYLabels.add(String.valueOf(i));

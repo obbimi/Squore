@@ -340,6 +340,7 @@
             android:layout_alignParentTop="true"
             android:layout_width="2dp"
             android:layout_height="wrap_content"/>
+        <!-- both CountryTextView have android:imeOptions="actionDone" so a popup with autocomplete countries appear when 'keyboard' is close by done -->
         <com.doubleyellow.android.view.CountryTextView
             android:id="@+id/match_countryA"
             android:hint="@string/lbl_country_A"
@@ -357,7 +358,7 @@
             android:singleLine="true"
             android:maxLines="1"
             android:nextFocusDown="@+id/match_countryB"
-            android:imeOptions="actionNext"
+            android:imeOptions="actionDone"
             android:layout_gravity="center_horizontal"/>
         <com.doubleyellow.android.view.CountryTextView
             android:id="@+id/match_countryB"

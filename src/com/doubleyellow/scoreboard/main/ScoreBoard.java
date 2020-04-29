@@ -99,6 +99,7 @@ import org.json.JSONObject;
 import com.doubleyellow.android.showcase.ShowcaseView;
 import com.doubleyellow.android.showcase.ShowcaseConfig;
 import com.doubleyellow.android.showcase.ShowcaseSequence;
+import com.google.android.gms.cast.framework.CastButtonFactory;
 
 import java.io.*;
 import java.util.*;
@@ -1130,9 +1131,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             //doRestart(this);
             return;
         }
-
-
-
         switch ( PreferenceValues.keepScreenOnWhen(this) ) {
             case Always:
                 keepScreenOn(true);
@@ -1164,6 +1162,12 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         onResumeNFC();
         onResumeBlueTooth();
         onResumeWearable();
+        if ( PreferenceValues.isCastRestartRequired() ) {
+            onActivityStop_Cast();
+            castHelper = null;
+            initCasting(iBoard);
+        }
+
         onActivityResume_Cast();
 
         onResumeURL();
@@ -1466,7 +1470,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         super.onRestart();    //e.g. after preferences change or match selection
         invalidateOptionsMenu(); // this is to trigger showing/hiding menu items base on e.g. specified URLs
 
-        if ( matchModel.isDirty() ) { // set by Settings
+        if ( (matchModel != null) && matchModel.isDirty() ) {
             persist(false);
 
             initColors();
@@ -4050,7 +4054,7 @@ touch -t 01030000 LAST.sb
             iBoard.showToast(String.format("Sorry, %s can no longer be used (%s)", Brand.getShortName(this), brandedVersionValidation));
             return true;
         }
-        if ( matchModel.isLocked() == false ) { return false; }
+        if ( (matchModel == null) || (matchModel.isLocked() == false) ) { return false; }
         if ( bIgnoreForConduct ) {
             if ( matchModel.getLockState().AllowRecordingConduct() ) {
                 return false;
@@ -6580,12 +6584,9 @@ touch -t 01030000 LAST.sb
     private com.doubleyellow.scoreboard.cast.ICastHelper castHelper = null;
     private void initCasting(IBoard iBoard) {
         if ( castHelper == null ) {
-            int remoteDisplayAppIdResId = Brand.brand.getRemoteDisplayAppIdResId();
-            if ( PreferenceValues.isBrandTesting(this) ) {
-                remoteDisplayAppIdResId = R.string.CUSTOM_RECEIVER_APP_ID_brand_test;
-            }
-            String sResName = getResources().getResourceName(remoteDisplayAppIdResId);
-            if ( sResName.contains("REMOTE_DISPLAY") ) { // e.g com.doubleyellow.scoreboard:string/REMOTE_DISPLAY_APP_ID_brand_squore
+            Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(this);
+            String sResInfo = remoteDisplayAppId2Info.getValue();
+            if ( sResInfo.contains("REMOTE_DISPLAY") ) { // e.g com.doubleyellow.scoreboard:string/REMOTE_DISPLAY_APP_ID_brand_squore
                 castHelper = new com.doubleyellow.scoreboard.cast.CastHelper(); // old
             } else {
                 // R.string.CUSTOM_RECEIVER_xxxx
@@ -6600,11 +6601,16 @@ touch -t 01030000 LAST.sb
         // TODO: present choice: e.g for layout, or simply show a message
     }
     private void initCastMenu(Menu menu) {
-        castHelper.initCastMenu(this, menu, R.id.media_route_menu_item);
+        if ( castHelper == null ) {
+            Log.w(TAG, "initCastMenu SKIPPED");
+            return;
+        }
+        castHelper.initCastMenu(this, menu);
         PreferenceValues.doesUserHavePermissionToCast(this, "Any device", true);
     }
     private void setModelForCast(Model matchModel) {
         if ( castHelper == null || matchModel == null ) { return; }
+        Log.d(TAG, "setModelForCast");
         castHelper.setModelForCast(matchModel);
     }
     private TimerView getCastTimerView() {
@@ -6625,10 +6631,14 @@ touch -t 01030000 LAST.sb
         castHelper.onActivityStart_Cast();
     }
     private void onActivityStop_Cast() {
+        if ( castHelper == null ) { return; }
         castHelper.onActivityStop_Cast();
     }
     private void onActivityResume_Cast() {
-        if ( castHelper == null || matchModel == null ) { return; }
+        if ( castHelper == null || matchModel == null ) {
+            Log.w(TAG, "onActivityResume_Cast SKIPPED");
+            return;
+        }
         castHelper.initCasting(this);
         castHelper.onActivityResume_Cast();
     }

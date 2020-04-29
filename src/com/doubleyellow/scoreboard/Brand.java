@@ -28,14 +28,18 @@ import com.doubleyellow.scoreboard.model.SportType;
 import com.doubleyellow.scoreboard.model.TieBreakFormat;
 import com.doubleyellow.scoreboard.prefs.*;
 import com.doubleyellow.util.Feature;
+import com.doubleyellow.util.ListUtil;
+import com.doubleyellow.util.Params;
 
+import java.util.AbstractMap;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public enum Brand
 {
     Squore          (SportType.Squash     , R.string.app_name_short_brand_Squash          , 0/*R.drawable.brand_squore*/    , R.id.sb_branded_logo_ar150, R.color.brand_squore_bg_color          , R.string.REMOTE_DISPLAY_APP_ID_brand_squore          , R.array.colorSchema            , 0                                            , 3000, "https://squore.double-yellow.be"   , "8da78f9d-f7dd-437c-8b7d-d5bc231f92ec", R.raw.changelog),
-  //SquoreWear      (SportType.Squash     , R.string.app_name_short_brand_SquashWear      , 0/*R.drawable.brand_squore*/    , R.id.sb_branded_logo_ar150, R.color.brand_squore_bg_color          , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema            , 0                                            , 3000, "https://squore.double-yellow.be"  , "8da78f9d-f7dd-437c-8b7d-d5bc231f92ec", R.raw.changelog),
   //Tabletennis     (SportType.Tabletennis, R.string.app_name_short_brand_Tabletennis     , 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_tabletennis_bg_color     , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema_Tabletennis, 0                                            , 3000, "https://tabletennis.double-yellow.be", "e35d8fcb-a7c0-4c2a-9c74-cc3f6e1e6a41", R.raw.changelog_tabletennis),
   //Badminton       (SportType.Badminton  , R.string.app_name_short_brand_Badminton       , 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_badminton_bg_color       , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema_Badminton  , 0                                            , 3000, "https://badminton.double-yellow.be", "18be497c-ddfa-4851-9b43-0a5866605252", R.raw.changelog_badminton),
   //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand_Racketlon       , 0/*R.drawable.brand_squore*/              , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_racketlon       , R.array.colorSchema_Racketlon  , 0                                            , 3000, "https://racketlon.double-yellow.be", "6ffc7128-6fd5-46d1-b79c-46e4c613cba5", R.raw.changelog_racketlon),
@@ -87,7 +91,43 @@ public enum Brand
 
     public SportType getSportType()         { return eSport; }
   //public int getREColorPalette()          { return iREColorPalette;}
-    public int getRemoteDisplayAppIdResId() { return iRemoteDisplayAppIdResId;}
+    /* @deprecated */
+    //public int getRemoteDisplayAppIdResId() { return iRemoteDisplayAppIdResId;}
+
+    private static Params m_mCastConfig = null;
+    public static void setCastConfig(Map mCastConfig) {
+        if ( true ) { return; } // TODO: for now don't use webconfig
+        m_mCastConfig = new Params(mCastConfig);
+        PreferenceValues.setCastRestartRequired();
+    }
+    public Map.Entry<String, String> getRemoteDisplayAppId2Info(Context ctx) {
+        if ( m_mCastConfig != null ) {
+            List<String> lDefaults = m_mCastConfig.getOptionalList("Default");
+            List<String> lBrand    = m_mCastConfig.getOptionalList(this.toString());
+            if (ListUtil.isNotEmpty(lDefaults) && ListUtil.isNotEmpty(lBrand) ) {
+                lBrand.addAll(lDefaults);
+                ListUtil.removeDuplicates(lBrand);
+            }
+            if (ListUtil.isNotEmpty(lDefaults) && ListUtil.isEmpty(lBrand) ) {
+                lBrand = lDefaults;
+            }
+            int iIdx = PreferenceValues.useCastScreen(ctx);
+            iIdx = iIdx % ListUtil.size(lBrand);
+            String sCastId = lBrand.get(iIdx);
+            return new AbstractMap.SimpleEntry<String, String>(sCastId, m_mCastConfig.getOptionalString(sCastId, sCastId));
+        }
+
+        int iFixedResId = iRemoteDisplayAppIdResId;
+        if ( PreferenceValues.isBrandTesting(ctx) ) {
+            iFixedResId = R.string.CUSTOM_RECEIVER_APP_ID_brand_test;
+            if ( this.equals(Squore) ) {
+                iFixedResId = R.string.CUSTOM_RECEIVER_APP_ID_brand_shared;
+            }
+        }
+
+        String sResName = ctx.getResources().getResourceName(iFixedResId);
+        return new AbstractMap.SimpleEntry<String, String>(ctx.getString(iFixedResId), sResName);
+    }
 
     public static final int[] imageViewIds = { R.id.sb_branded_logo_ar400, R.id.sb_branded_logo_ar150 };
 

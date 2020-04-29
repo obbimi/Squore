@@ -33,7 +33,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
-import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -97,7 +97,7 @@ import java.util.Map;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class CastHelper implements ICastHelper
 {
-    private static final String TAG = CastHelper.class.getSimpleName();
+    private static final String TAG = "SB.OLD." + CastHelper.class.getSimpleName();
 
     private static final boolean NOT_SUPPORTED_IN_SDK = Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1;
 
@@ -107,15 +107,11 @@ public class CastHelper implements ICastHelper
 
     private static String APP_ID = null;
 
-    /** Always called by the app */
-    @Override public void initCasting(ScoreBoard activity) {
+    @Override public void initCasting(Activity activity) {
         if (NOT_SUPPORTED_IN_SDK) { return; }
 
-        CastHelper.APP_ID = activity.getString(Brand.brand.getRemoteDisplayAppIdResId());
-        if ( PreferenceValues.isUnbrandedExecutable(activity) ) {
-            // to be able to test the branded layout with the 'unbranded' version
-            CastHelper.APP_ID = activity.getString(Brand.Squore.getRemoteDisplayAppIdResId());
-        }
+        Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(activity);
+        APP_ID = remoteDisplayAppId2Info.getKey();
 
         mediaRouterCallback = new MediaRouterCallback(activity);
 
@@ -125,25 +121,14 @@ public class CastHelper implements ICastHelper
                 .build();
     }
 
-    @Override public void initCastMenu(Activity activity, Menu menu, int iResIdMenuItem) {
+    @Override public void initCastMenu(Activity activity, Menu menu) {
         if (NOT_SUPPORTED_IN_SDK) { return; }
 
-        MenuItem mediaRouteMenuItem = menu.findItem(iResIdMenuItem);
+        MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
         mediaRouteMenuItem.setVisible(true);
         mediaRouteMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
         mediaRouteActionProvider.setRouteSelector(mediaRouteSelector);
-/*
-        mediaRouteMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override public boolean onMenuItemActionExpand(MenuItem item) {
-                return false;
-            }
-
-            @Override public boolean onMenuItemActionCollapse(MenuItem item) {
-                return false;
-            }
-        });
-*/
     }
 
     @Override public void onActivityPause_Cast() {
@@ -151,7 +136,10 @@ public class CastHelper implements ICastHelper
     }
 
     @Override public void onActivityResume_Cast() {
+        if (NOT_SUPPORTED_IN_SDK) { return; }
+        if (mediaRouter == null) { return; }
 
+        mediaRouter.addCallback(mediaRouteSelector, mediaRouterCallback, MediaRouter.CALLBACK_FLAG_PERFORM_ACTIVE_SCAN);
     }
 
     @Override public void onActivityStart_Cast() {
@@ -239,10 +227,6 @@ public class CastHelper implements ICastHelper
     }
 
     private static void runRemoteDisplayService(Context context, CastDevice selectedDevice) {
-        if ( Brand.isBadminton() ) {
-            // new casting
-            return;
-        }
         Intent intent = new Intent(context, context.getClass());
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent notificationPendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -253,20 +237,20 @@ public class CastHelper implements ICastHelper
         CastRemoteDisplayLocalService.Callbacks callbacks = new CastRemoteDisplayLocalService.Callbacks() {
             @Override public void onRemoteDisplaySessionStarted(CastRemoteDisplayLocalService service) {
                 // initialize sender UI
-                //Log.d(TAG, "onRemoteDisplaySessionStarted " + service);
+                Log.d(TAG, "onRemoteDisplaySessionStarted " + service);
             }
 
             @Override public void onRemoteDisplaySessionError(Status errorReason) {
                 //initError();
-                //Log.d(TAG, "onRemoteDisplaySessionError " + errorReason);
+                Log.d(TAG, "onRemoteDisplaySessionError " + errorReason);
             }
 
             @Override public void onServiceCreated(CastRemoteDisplayLocalService castRemoteDisplayLocalService) {
-                //Log.d(TAG, "onServiceCreated " + castRemoteDisplayLocalService);
+                Log.d(TAG, "onServiceCreated " + castRemoteDisplayLocalService);
             }
 
             @Override public void onRemoteDisplaySessionEnded(CastRemoteDisplayLocalService castRemoteDisplayLocalService) {
-                //Log.d(TAG, "onRemoteDisplaySessionEnded " + castRemoteDisplayLocalService);
+                Log.d(TAG, "onRemoteDisplaySessionEnded " + castRemoteDisplayLocalService);
             }
         };
 
