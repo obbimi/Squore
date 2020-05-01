@@ -174,7 +174,7 @@ public class Preloader extends AsyncTask implements ContentReceiver
                 if ( m_status == Status.WebConfig ) {
                     try {
                         JSONObject config = new JSONObject(sContent);
-                        if ( Brand.brand != Brand.Squore ) {
+                        if ( Brand.Squore.equals(Brand.brand) ) {
                             Evaluation.ValidationResult eval = Evaluation.check( Brand.brand.toString()
                                                                                , config.optString(Evaluation.Config.ValidUntil          + "-" + Brand.brand)
                                                                                , config.optString(Evaluation.Config.BrandValidUntilHash + "-" + Brand.brand)
@@ -182,6 +182,11 @@ public class Preloader extends AsyncTask implements ContentReceiver
                                                                                , Util.isMyDevice(m_context)  );
                             Log.d(TAG, "Evaluation result " + eval);
                             ScoreBoard.brandedVersionValidation = eval;
+                        }
+                        final String C_CastConfig = "CastConfig";
+                        if ( config.has(C_CastConfig) ) {
+                            JSONObject castConfig = config.getJSONObject(C_CastConfig);
+                            Brand.setCastConfig(JsonUtil.toMap(castConfig));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -99,7 +99,6 @@ import org.json.JSONObject;
 import com.doubleyellow.android.showcase.ShowcaseView;
 import com.doubleyellow.android.showcase.ShowcaseConfig;
 import com.doubleyellow.android.showcase.ShowcaseSequence;
-import com.google.android.gms.cast.framework.CastButtonFactory;
 
 import java.io.*;
 import java.util.*;
@@ -1090,7 +1089,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         initColors();
         initCountries();
 
-        initCasting(iBoard); // also onresume!!
+        initCasting(); // also onresume!!
         setModelForCast(matchModel);
 
         Timer.addTimerView(true, getCastTimerView());
@@ -1139,7 +1138,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 keepScreenOn(false);
                 break;
             case MatchIsInProgress:
-                keepScreenOn(matchModel.matchHasEnded() == false && matchModel.isLocked() == false);
+                keepScreenOn((matchModel != null) && matchModel.matchHasEnded() == false && matchModel.isLocked() == false);
                 break;
         }
 
@@ -1165,7 +1164,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( PreferenceValues.isCastRestartRequired() ) {
             onActivityStop_Cast();
             castHelper = null;
-            initCasting(iBoard);
+            initCasting();
         }
 
         onActivityResume_Cast();
@@ -3468,10 +3467,10 @@ touch -t 01030000 LAST.sb
         MenuInflater inflater = getMenuInflater();
 
         inflater.inflate(R.menu.mainmenu, menu);
-
-        initCastMenu(menu);
-
         mainMenu = menu;
+
+        //initCastMenu();
+
         if ( m_bHideDrawerItemsFromOldMenu && (id2String.isEmpty() == false) ) {
             for(Integer iId: id2String.keySet() ) {
                 boolean b = ViewUtil.hideMenuItemForEver(mainMenu, iId);
@@ -6582,7 +6581,14 @@ touch -t 01030000 LAST.sb
     // --------------------- casting ----------------------
     // ----------------------------------------------------
     private com.doubleyellow.scoreboard.cast.ICastHelper castHelper = null;
-    private void initCasting(IBoard iBoard) {
+    private void initCasting() {
+        if ( initCastDelayed() ) {
+            return;
+        }
+        createCastHelper();
+    }
+
+    private void createCastHelper() {
         if ( castHelper == null ) {
             Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(this);
             String sResInfo = remoteDisplayAppId2Info.getValue();
@@ -6597,15 +6603,20 @@ touch -t 01030000 LAST.sb
             iBoard.setCastHelper( (CastHelper) castHelper);
         }
     }
+
     public void handleMessageFromCast(JSONObject joMessage) {
         // TODO: present choice: e.g for layout, or simply show a message
     }
-    private void initCastMenu(Menu menu) {
+    private void initCastMenu() {
+        if ( initCastDelayed() ) {
+            return;
+        }
         if ( castHelper == null ) {
             Log.w(TAG, "initCastMenu SKIPPED");
             return;
         }
-        castHelper.initCastMenu(this, menu);
+
+        castHelper.initCastMenu(this, mainMenu);
         PreferenceValues.doesUserHavePermissionToCast(this, "Any device", true);
     }
     private void setModelForCast(Model matchModel) {
@@ -6628,6 +6639,9 @@ touch -t 01030000 LAST.sb
     }
 
     private void onActivityStart_Cast() {
+        if ( initCastDelayed() ) {
+            return;
+        }
         castHelper.onActivityStart_Cast();
     }
     private void onActivityStop_Cast() {
@@ -6635,6 +6649,9 @@ touch -t 01030000 LAST.sb
         castHelper.onActivityStop_Cast();
     }
     private void onActivityResume_Cast() {
+        if ( initCastDelayed() ) {
+            return;
+        }
         if ( castHelper == null || matchModel == null ) {
             Log.w(TAG, "onActivityResume_Cast SKIPPED");
             return;
@@ -6643,6 +6660,40 @@ touch -t 01030000 LAST.sb
         castHelper.onActivityResume_Cast();
     }
     private void onActivityPause_Cast() {
+        if ( castHelper == null ) { return; }
         castHelper.onActivityPause_Cast();
+    }
+
+    private CountDownTimer cdtInitCastDelayed       = null;
+    private int            iInitCastDelayedRunCount = 2;
+    private boolean initCastDelayed() {
+        if ( cdtInitCastDelayed == null ) {
+            cdtInitCastDelayed = new CountDownTimer(30000, 2500) {
+                @Override public void onTick(long millisUntilFinished) {
+                    if ( Brand.hasWebConfig() && (mainMenu != null) ) {
+                        createCastHelper();
+                        castHelper.initCasting(ScoreBoard.this);
+                        castHelper.initCastMenu(ScoreBoard.this, mainMenu);
+                        castHelper.onActivityStart_Cast();
+                        castHelper.onActivityResume_Cast();
+                        castHelper.setModelForCast(matchModel);
+                        Timer.addTimerView(true, getCastTimerView());
+                        this.cancel();
+                        iInitCastDelayedRunCount--;
+                        cdtInitCastDelayed = null;
+                        if ( iInitCastDelayedRunCount > 0 ) {
+                            initCastDelayed();
+                        }
+                    } else {
+                        Log.w(TAG, "Casting not yet initialized. No webconfig or menu");
+                    }
+                }
+                @Override public void onFinish() {
+                    iInitCastDelayedRunCount--;
+                }
+            };
+            cdtInitCastDelayed.start();
+        }
+        return iInitCastDelayedRunCount > 0;
     }
 }

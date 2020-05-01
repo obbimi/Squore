@@ -162,7 +162,28 @@ public class IBoard implements TimerViewContainer
         if ( Player.A.equals(player) && Brand.supportsTimeout() && matchModel.getMaxScore()==0 ) {
             m_lGameXWasPausedDuration.put(matchModel.getGameNrInProgress(), 0L);
         }
-        castSetTextMessage(id, sScore);
+        if ( castSetTextMessage(id, sScore) ) {
+            // casting is working, also send data to update graph
+            if ( Brand.isGameSetMatch() == false && matchModel.gameHasStarted() ) {
+                StringBuilder sb = new StringBuilder("GameGraph.show(");
+                sb.append(matchModel.getGameNrInProgress()).append(",");
+                sb.append(matchModel.getNrOfPointsToWinGame()).append(",");
+
+                StringBuilder sbScorers = new StringBuilder();
+                {
+                    List<ScoreLine> scoreHistory = matchModel.getGameScoreHistory();
+                    for (ScoreLine scoreLine : scoreHistory) {
+                        Player scoringPlayer = scoreLine.getScoringPlayer();
+                        if (scoringPlayer == null) { continue; }
+                        sbScorers.append(scoringPlayer.toString());
+                    }
+                }
+                sb.append("\"").append(sbScorers.toString()).append("\"");
+                sb.append(",").append(matchModel.isPossibleGameVictory());
+                sb.append(")");
+                castSendFunction(sb.toString());
+            }
+        }
     }
     public boolean updatePlayerName(Player p, String sName, boolean bIsDoubles) {
         if ( m_player2nameId == null ) {
@@ -201,22 +222,22 @@ public class IBoard implements TimerViewContainer
     //-------------------------------------------
     // if casting is ON (new way of casting)
     //-------------------------------------------
-    private void castSetTextMessage(Integer iBoardResId, Object oValue) {
-        castSendMessage(iBoardResId, oValue, "text");
+    private boolean castSetTextMessage(Integer iBoardResId, Object oValue) {
+        return castSendMessage(iBoardResId, oValue, "text");
     }
-    private void sendFunction(String s) {
+    private void castSendFunction(String s) {
         if ( castHelper == null ) { return; }
         castHelper.sendFunction(s);
     }
 
     // sProperty = background-color
-    private void castSendMessage(Integer iBoardResId, Object oValue, String sProperty) {
-        if ( castHelper == null ) { return; }
-        castHelper.sendMessage(iBoardResId, oValue, sProperty);
+    private boolean castSendMessage(Integer iBoardResId, Object oValue, String sProperty) {
+        if ( castHelper == null ) { return false; }
+        return castHelper.sendMessage(iBoardResId, oValue, sProperty);
     }
-    private void sendMessage(String sResName, Object oValue, String sProperty) {
-        if ( castHelper == null ) { return; }
-        castHelper.sendMessage(sResName, oValue, sProperty);
+    private boolean sendMessage(String sResName, Object oValue, String sProperty) {
+        if ( castHelper == null ) { return false; }
+        return castHelper.sendMessage(sResName, oValue, sProperty);
     }
     private CastHelper castHelper = null;
     public void setCastHelper(CastHelper castHelper) {
@@ -591,7 +612,7 @@ public class IBoard implements TimerViewContainer
         if ( matchGameScores != null ) {
             matchGameScores.setVisibility(View.VISIBLE);
             MatchGameScoresView.ScoresToShow scoresToShow = matchGameScores.updateSetScoresToShow(bChange);
-            sendFunction("GameScores.display(" + scoresToShow.equals(MatchGameScoresView.ScoresToShow.GamesWonPerSet) + ")");
+            castSendFunction("GameScores.display(" + scoresToShow.equals(MatchGameScoresView.ScoresToShow.GamesWonPerSet) + ")");
             matchGameScores.update(matchModel, m_firstPlayerOnScreen);
 
             return scoresToShow;
@@ -616,7 +637,7 @@ public class IBoard implements TimerViewContainer
 
         // update casting screen
         boolean bShowGameScores = appearance.showGamesWon(true) == false;
-        sendFunction("GameScores.display(" + bShowGameScores + ")");
+        castSendFunction("GameScores.display(" + bShowGameScores + ")");
 
         MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
         if ( matchGameScores != null ) {
@@ -647,11 +668,21 @@ public class IBoard implements TimerViewContainer
             GSMModel gsmModel = (GSMModel) matchModel;
             endScoreOfPreviousGames = gsmModel.getGamesWonPerSet();
         }
-        JSONArray jsonArray = new JSONArray();
-        for(Map<Player, Integer> m: endScoreOfPreviousGames) {
-            jsonArray.put(new JSONObject(MapUtil.keysToString(m)));
+        JSONArray lomPlayer2Score = new JSONArray();
+        for(Map<Player, Integer> mEndScoreOfPrev: endScoreOfPreviousGames) {
+            lomPlayer2Score.put(new JSONObject(MapUtil.keysToString(mEndScoreOfPrev)));
         }
-        sendFunction("GameScores.update(" + jsonArray.toString() + ", " + Player.B.equals(m_firstPlayerOnScreen)  + ")");
+        List<GameTiming> times = matchModel.getTimes();
+        JSONArray loiGameDuration = new JSONArray();
+        for(GameTiming time: times) {
+            loiGameDuration.put(time.getDurationMM());
+        }
+        boolean bSwapAAndB = Player.B.equals(m_firstPlayerOnScreen);
+        castSendFunction("GameScores.update(" + lomPlayer2Score.toString()
+                                           + "," + bSwapAAndB
+                                           + "," + loiGameDuration.toString()
+                                           + "," + matchModel.matchHasEnded()
+                                           + ")");
 
         if ( (m_player2gamesWonId != null) && (matchModel != null) ) {
             Map<Player, Integer> gamesWon = matchModel.getGamesWon(false);
@@ -1434,7 +1465,11 @@ public class IBoard implements TimerViewContainer
         }
         if ( bHide == false ) {
             // cast should take care of hiding the message itself
-            sendFunction("Call.showDecision('" + sMsg + "'," + fmIdx + ",'" + call + "'," + call.isConduct() + ")");
+            castSendFunction("Call.showDecision(" + "'" + sMsg + "'"
+                                               + ","       + fmIdx
+                                               + "," + "'" + call + "'"
+                                               + ","       + call.isConduct()
+                                               + ")");
         }
 
         decisionMessages[fmIdx].setHidden(bHide);

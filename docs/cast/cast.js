@@ -67,7 +67,7 @@ var Call = {
     }
 };
 var GameScores = {
-    update : function(lomPlayer2Score, bSwapAAndB) {
+    update : function(lomPlayer2Score, bSwapAAndB, loiGameDuration, bMatchIsFinished) {
         m_castLogger.info(LOG_TAG,lomPlayer2Score);
         $('#gameScores > table > tbody').empty();
         lomPlayer2Score.forEach(function (item, index) {
@@ -90,6 +90,56 @@ var GameScores = {
             $('#gameScores').hide();
             $('.gameswonbutton').show();
         }
+    }
+};
+var GameGraph = {
+    // http://dygraphs.com/
+    show: function(iGameNr1B, iNrOfPointsToWin, sScoreSequence, bGameIsFinished) {
+        this.parseGraphData(iNrOfPointsToWin, sScoreSequence);
+
+        var oDiv = document.getElementById('gameGraph');
+        var options = {
+                    labels : [ "Points"
+                             , $('#txt_player1').text().trim()
+                             , $('#txt_player2').text().trim()
+                             ],
+                    interactionModel: {},
+                    valueRange: [ 0, parseInt(this.iMax) + 1 ],
+                    axes : { y: { pixelsPerLabel: 12 }
+                           , x: { pixelsPerLabel: 20
+                                , independentTicks: true
+                                }
+                           },
+                    gridLineColor: 'rgb(0,0,0)',
+                    legend: 'always',
+                    //title : 'Game' + ' ' + iGameNr1B
+                 };
+        var g = new Dygraph( oDiv, this.aGameCsv, options );
+        $('.dygraph-legend').css('background-color', 'transparent'); // impossible with css because overwritten with jscode
+    },
+    aGameCsv : [],
+    iMax     : 0,
+    parseGraphData : function(iNrOfPointsToWin, sScoreSequence) {
+        let aTmp = [];
+        let iSeq = 0;
+        let iA   = 0;
+        let iB   = 0;
+        aTmp.push([iSeq, iA, iB]);
+        for(let i=0; i < sScoreSequence.length; i++) {
+            if ( sScoreSequence.substr(i,1)==='A' || sScoreSequence.substr(i,1)==='0' ) {
+                iA++;
+            } else if ( sScoreSequence.substr(i,1)==='B' || sScoreSequence.substr(i,1)==='1' ) {
+                iB++;
+            } else {
+                continue;
+            }
+            aTmp.push([++iSeq, iA, iB]);
+        }
+        for(let i=Math.max(iA, iB); i<=iNrOfPointsToWin; i++) {
+            aTmp.push([++iSeq]);
+        }
+        this.iMax = Math.max(iA, iB, iNrOfPointsToWin);
+        this.aGameCsv = aTmp;
     }
 };
 var iTxtPlayerCount = 0;

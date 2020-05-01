@@ -29,6 +29,7 @@ import com.doubleyellow.scoreboard.model.TieBreakFormat;
 import com.doubleyellow.scoreboard.prefs.*;
 import com.doubleyellow.util.Feature;
 import com.doubleyellow.util.ListUtil;
+import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.Params;
 
 import java.util.AbstractMap;
@@ -96,9 +97,12 @@ public enum Brand
 
     private static Params m_mCastConfig = null;
     public static void setCastConfig(Map mCastConfig) {
-        if ( true ) { return; } // TODO: for now don't use webconfig
+        //if ( true ) { return; } // TODO: for now don't use webconfig
         m_mCastConfig = new Params(mCastConfig);
         PreferenceValues.setCastRestartRequired();
+    }
+    public static boolean hasWebConfig() {
+        return MapUtil.isNotEmpty(m_mCastConfig);
     }
     public Map.Entry<String, String> getRemoteDisplayAppId2Info(Context ctx) {
         if ( m_mCastConfig != null ) {
@@ -120,7 +124,7 @@ public enum Brand
         int iFixedResId = iRemoteDisplayAppIdResId;
         if ( PreferenceValues.isBrandTesting(ctx) ) {
             iFixedResId = R.string.CUSTOM_RECEIVER_APP_ID_brand_test;
-            if ( this.equals(Squore) ) {
+            if ( false && this.equals(Squore) ) {
                 iFixedResId = R.string.CUSTOM_RECEIVER_APP_ID_brand_shared;
             }
         }
