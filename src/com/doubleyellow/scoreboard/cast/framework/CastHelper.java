@@ -19,6 +19,7 @@ package com.doubleyellow.scoreboard.cast.framework;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +52,7 @@ import com.google.android.gms.cast.framework.media.RemoteMediaClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -208,10 +210,10 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     }
 
     private void sendMessage(Integer iBoardResId, Object oValue) {
-        sendMessage(iBoardResId, oValue, "text");
+        sendChangeViewMessage(iBoardResId, oValue, "text");
     }
     // sProperty = background-color
-    public boolean sendMessage(Integer iBoardResId, Object oValue, String sProperty) {
+    public boolean sendChangeViewMessage(Integer iBoardResId, Object oValue, String sProperty) {
         if ( isCasting() == false ) { return false; }
         if ( iBoardResId == null ) {
             return false;
@@ -221,21 +223,53 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             String sResName = resources.getResourceName(iBoardResId);
                    sResName = sResName.replaceFirst(".*/", "");
 
-            return sendMessage(sResName, oValue, sProperty);
+            return sendChangeViewMessage(sResName, oValue, sProperty);
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    public boolean sendMessage(String sResName, Object oValue, String sProperty) {
+    private final List<Map> m_lSendChangeViewDelayed = new ArrayList<>(); // make null if you do not want to use delayed
+
+    public boolean sendChangeViewMessage(String sResName, Object oValue, String sProperty) {
         if ( isCasting() == false ) { return false; }
         if ( sProperty.contains("color") && oValue instanceof Integer ) {
             oValue = ColorUtil.getRGBString((Integer) oValue);
         }
         Map map = MapUtil.getMap("id", sResName, "property", sProperty, "value", oValue);
-        return sendMapAsJsonMessage(map);
+        if ( m_lSendChangeViewDelayed != null ) {
+            synchronized (m_lSendChangeViewDelayed) {
+                if ( m_cdtDelayedSendChangeViewMessages != null ) {
+                    m_cdtDelayedSendChangeViewMessages.cancel();
+                }
+                m_lSendChangeViewDelayed.add(map);
+                m_cdtDelayedSendChangeViewMessages = new DelayedChangeViewCountDown(300);
+                m_cdtDelayedSendChangeViewMessages.start();
+            }
+            return true;
+        } else {
+            return sendMapAsJsonMessage(map);
+        }
     }
+    private DelayedChangeViewCountDown m_cdtDelayedSendChangeViewMessages = null;
+
+    private class DelayedChangeViewCountDown extends CountDownTimer {
+        private DelayedChangeViewCountDown(long iMilliSeconds) {
+            super(iMilliSeconds, iMilliSeconds);
+        }
+        @Override public void onTick(long millisUntilFinished) {
+            //Log.d(TAG, "Waiting ... " + millisUntilFinished);
+        }
+        @Override public void onFinish() {
+            Log.d(TAG, "Posting ... ");
+            synchronized (m_lSendChangeViewDelayed) {
+                sendArrayAsJsonMessage(m_lSendChangeViewDelayed);
+                m_lSendChangeViewDelayed.clear();
+            }
+        }
+    }
+
     /** Used e.g. to show/cancel/reset timer and send data for a graph */
     public void sendFunction(String sFunction) {
         if ( isCasting() == false ) { return; }
@@ -246,6 +280,12 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     private boolean sendMapAsJsonMessage(Map map) {
         JSONObject jsonObject = new JSONObject(map);
         String sMsg = jsonObject.toString();
+        return sendJsonMessage(sMsg);
+    }
+
+    private boolean sendArrayAsJsonMessage(List<Map> lMaps) {
+        JSONArray jsonArray = new JSONArray(lMaps);
+        String sMsg = jsonArray.toString();
         return sendJsonMessage(sMsg);
     }
 
