@@ -4322,8 +4322,11 @@ touch -t 01030000 LAST.sb
         }
 
         if ( Brand.supportChooseServeOrReceive() ) {
-            SideToss sideToss = new SideToss(this, matchModel, this);
-            addToDialogStack(sideToss);
+            if ( isWearable() == false ) {
+                // TODO: dialog has to long texts for wearable
+                SideToss sideToss = new SideToss(this, matchModel, this);
+                addToDialogStack(sideToss);
+            }
 
             if ( matchModel.isDoubles() ) {
                 DoublesFirstServer firstServer = new DoublesFirstServer(this, matchModel, this);
