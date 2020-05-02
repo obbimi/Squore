@@ -2,25 +2,33 @@
 <html>
 <!--
 .htaccess
+cd docs/cast
 scp cast_css.html      dy:subsites/squore.double-yellow.be/cast/.
 scp cast.js            dy:subsites/squore.double-yellow.be/cast/.
 scp jquery.textfill.js dy:subsites/squore.double-yellow.be/cast/.
+scp request_info.php   dy:subsites/squore.double-yellow.be/cast/.
 -->
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <title>Score Cast CSS</title>
     <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
     <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     <!-- Cast Debug Logger -->
     <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/devtools/debug_layer/caf_receiver_logger.js"></script>
 
+    <script type="text/javascript" src="cast.js?t=20200502T1906"></script>
     <script type="text/javascript" src="cast_dummy.js"></script>
-    <script type="text/javascript" src="cast.js"></script>
 
-<!--
-    <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css" />
--->
+    <script type='text/javascript' src='../js/dygraph-combined.js'> </script>
+
+    <!--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js"></script>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css" />
+    -->
 
     <script
             src="https://code.jquery.com/jquery-3.3.1.js"
@@ -88,6 +96,24 @@ html, BODY {
 .gameswon     { font-size: 10vh;
 	transform: skew(0deg); /* prevent doubled skew because of div nesting */
 }
+#gameGraph {
+    position: absolute;
+	border: 0.5vw solid #444444;
+    transform: skew(-10deg);
+    top: 2vh;
+    left: 30vw;
+    width: 28vw;
+    height: 20vh;
+}
+.dygraph-axis-label {
+    color: white;
+}
+.dygraph-axis-label-x {
+    display: none;
+}
+.dygraph-legend {
+	background-color: black; /* seems to be overwritten by jscode of dygraph */
+}
     </style>
 </head>
 <body>
@@ -98,15 +124,15 @@ html, BODY {
     <div class="text_element namebutton no-color"   id="txt_player2">
         <span>Player 2</span>
     </div>
-    <div class="text_element scorebutton"  id="btn_score1">
+    <div class="text_element scorebutton no-border-color"  id="btn_score1">
         <span>0</span>
-        <div class="text_element gameswon no-background-color no-color" id="btn_gameswon1">
+        <div class="text_element gameswon no-background-color no-color no-border-color" id="btn_gameswon1">
             <span>0</span>
         </div>
     </div>
-    <div class="text_element scorebutton"  id="btn_score2">
+    <div class="text_element scorebutton no-border-color"  id="btn_score2">
         <span>0</span>
-        <div class="text_element gameswon no-background-color no-color" id="btn_gameswon2">
+        <div class="text_element gameswon no-background-color no-color no-border-color" id="btn_gameswon2">
             <span>0</span>
         </div>
     </div>
@@ -115,9 +141,11 @@ html, BODY {
     <div id="img_flag2" class="flag" style="background-image: url(https://squore.double-yellow.be/img/flag/NL);">&nbsp;</div>
 
     <div class="text_element" id="btn_timer">
-        <span>01:30</span>
+        <span>01:40</span>
     </div>
-
+    <div id="gameGraph">
+        <span></span>
+    </div>
     <div id="dummy_messages" style="display: none; position: absolute;">
         <button value="send" onclick="sendDummyMessages()">Dummy</button>
     </div>
@@ -126,6 +154,8 @@ html, BODY {
 window.onload = function ()
 {
     window_onload();
+
+    m_castLogger.warn('cast.isDummy : ' + cast.isDummy);
 }
 </script>
 </body>

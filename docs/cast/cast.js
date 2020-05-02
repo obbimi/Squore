@@ -68,11 +68,11 @@ var Call = {
 };
 var GameScores = {
     update : function(lomPlayer2Score, bSwapAAndB, loiGameDuration, bMatchIsFinished) {
-        m_castLogger.info(LOG_TAG,lomPlayer2Score);
+        m_castLogger.debug(LOG_TAG, JSON.stringify(lomPlayer2Score));
         $('#gameScores > table > tbody').empty();
         lomPlayer2Score.forEach(function (item, index) {
-            m_castLogger.info(LOG_TAG,index);
-            m_castLogger.info(LOG_TAG,item);
+            m_castLogger.debug(LOG_TAG, 'index:' + index);
+            m_castLogger.debug(LOG_TAG, 'item ' + JSON.stringify(item));
             var sA = '<td class="digit is_winner_{1}">{0}</td>'.format(item.A, item.A > item.B);
             var sB = '<td class="digit is_winner_{1}">{0}</td>'.format(item.B, item.B > item.A);
             var sTR = '<tr>{0}<td class="splitter">-</td>{1}</tr>'.format(sA, sB);
@@ -98,6 +98,10 @@ var GameGraph = {
         this.parseGraphData(iNrOfPointsToWin, sScoreSequence);
 
         var oDiv = document.getElementById('gameGraph');
+        if ( ! oDiv ) {
+            m_castLogger.warn('No div for graph');
+            return;
+        }
         var options = {
                     labels : [ "Points"
                              , $('#txt_player1').text().trim()
@@ -126,7 +130,7 @@ var GameGraph = {
         let iB   = 0;
         aTmp.push([iSeq, iA, iB]);
         for(let i=0; i < sScoreSequence.length; i++) {
-            if ( sScoreSequence.substr(i,1)==='A' || sScoreSequence.substr(i,1)==='0' ) {
+            if        ( sScoreSequence.substr(i,1)==='A' || sScoreSequence.substr(i,1)==='0' ) {
                 iA++;
             } else if ( sScoreSequence.substr(i,1)==='B' || sScoreSequence.substr(i,1)==='1' ) {
                 iB++;
@@ -135,7 +139,7 @@ var GameGraph = {
             }
             aTmp.push([++iSeq, iA, iB]);
         }
-        for(let i=Math.max(iA, iB); i<=iNrOfPointsToWin; i++) {
+        for ( let i=Math.max(iA, iB); i <= iNrOfPointsToWin; i++ ) {
             aTmp.push([++iSeq]);
         }
         this.iMax = Math.max(iA, iB, iNrOfPointsToWin);
@@ -159,16 +163,52 @@ function handleMessageLS(customEvent) {
 }
 function handleMessage(customEvent, logTag)
 {
-    m_castLogger.info(logTag,'customEvent:' + JSON.stringify(customEvent.data)); // typically { "type":"message", "defaultPrevented":false, "senderId":"<GUID>:com.doubleyellow.scoreboard-164", "data": {}
+    if ( cast.isDummy ) {
+        // for non-dummy events, the caf framework logs messages in the console already
+        m_castLogger.debug(logTag, 'customEvent:' + JSON.stringify(customEvent.data)); // typically { "type":"message", "defaultPrevented":false, "senderId":"<GUID>:com.doubleyellow.scoreboard-164", "data": {}
+    }
     if ( ! senderIds[customEvent.senderId] ) {
-        m_castLogger.info(logTag,'senderId:' + customEvent.senderId);
+        m_castLogger.warn(logTag,'senderId:' + customEvent.senderId);
         senderIds[customEvent.senderId] = 1;
     }
     var data = customEvent.data;
+
+    if ( Array.isArray(data) ) {
+        // several changes at once
+        var aChanges = data;
+        for(var i=0; i < aChanges.length; i++) {
+          //m_castLogger.info(logTag, "Item " + i);
+            handleData(aChanges[i], logTag);
+        }
+    } else {
+        handleData(data, logTag);
+    }
+    if ( false ) {
+        //m_castLogger.info(logTag, 'sending message back 1');
+        //m_crContext.sendCustomMessage(CHANNEL_SB,                       JSON.stringify(data)); // does not work
+        //m_crContext.sendCustomMessage(CHANNEL_SB, undefined           , JSON.stringify(data)); // results in ignored messages in adb logcat
+        //m_crContext.sendCustomMessage(CHANNEL_SB, customEvent.senderId, JSON.stringify(data)); // results in ignored messages in adb logcat
+        //m_castLogger.info(logTag, 'sending message back 2');
+        //m_crContext.sendCustomMessage(CHANNEL_SB, customEvent.senderId, { type: 'status' , message: 'Playing' });
+        //m_castLogger.info(logTag, 'sending message back 3');
+
+        //m_crMessageBus.send(customEvent.senderId, data);
+        m_crMessageBus.send(customEvent.senderId, 'OK');
+
+        //m_crMessageBus.broadcast('OK'); // send a message to ALL connected devices
+
+        //var castChannel = m_crMessageBus.getCastChannel(customEvent.senderId);
+        //m_castLogger.info(logTag, 'castChannel : ' + castChannel);
+    }
+}
+function handleData(data, logTag) {
     if ( data.id ) {
-m_castLogger.info(logTag,data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
+m_castLogger.debug(logTag, data.id + '.'  + (data.property || 'text') + ' = ' + data.value);
         if ( (! data.property) || data.property === 'text' ) {
+            // change the text
             Changer.setText(data.id, data.value);
+
+            // take some special action based on target that was updated
             if ( data.id.indexOf('txt_player')===0 ) {
                 var iTextLength      = data.value.length;
                 var sIdOther         = data.id==='txt_player1'?'txt_player2':'txt_player1';
@@ -203,7 +243,7 @@ m_castLogger.info(logTag,'Resized to fit - failed ...' + o.id);
                 }
                 iTxtPlayerCount++;
                 if ( iTxtPlayerCount === 2 ) {
-                    // names of both players received, time two remove the 'loading...' message
+                    // names of both players received, time to remove the 'loading...' message
                     $('#squoreboard_loading').fadeOut(1000);
                     $('#squoreboard_root_view').fadeIn(1000);
                     m_crManager.setApplicationState("Displaying score"); // displayed as status when selecting device on handheld
@@ -245,25 +285,8 @@ m_castLogger.info(logTag,'Resized to fit - failed ...' + o.id);
         }
     }
     if ( data.func ) {
-m_castLogger.info(logTag,data.func);
+m_castLogger.info(logTag, data.func);
         eval(data.func);
-    }
-    if ( false ) {
-        //m_castLogger.info(logTag, 'sending message back 1');
-        //m_crContext.sendCustomMessage(CHANNEL_SB,                       JSON.stringify(data)); // does not work
-        //m_crContext.sendCustomMessage(CHANNEL_SB, undefined           , JSON.stringify(data)); // results in ignored messages in adb logcat
-        //m_crContext.sendCustomMessage(CHANNEL_SB, customEvent.senderId, JSON.stringify(data)); // results in ignored messages in adb logcat
-        //m_castLogger.info(logTag, 'sending message back 2');
-        //m_crContext.sendCustomMessage(CHANNEL_SB, customEvent.senderId, { type: 'status' , message: 'Playing' });
-        //m_castLogger.info(logTag, 'sending message back 3');
-
-        //m_crMessageBus.send(customEvent.senderId, data);
-        m_crMessageBus.send(customEvent.senderId, 'OK');
-
-        //m_crMessageBus.broadcast('OK'); // send a message to ALL connected devices
-
-        //var castChannel = m_crMessageBus.getCastChannel(customEvent.senderId);
-        //m_castLogger.info(logTag, 'castChannel : ' + castChannel);
     }
 }
 
@@ -272,18 +295,16 @@ const CHANNEL_BM = 'urn:x-cast:com.doubleyellow.badminton';
 const CHANNEL_TP = 'urn:x-cast:com.doubleyellow.tennispadel';
 const CHANNEL_TT = 'urn:x-cast:com.doubleyellow.tabletennis';
 
-const m_bDebug     = false;
-const LOG_TAG      = 'SB';
 var m_crContext    = null;
 var m_crManager    = null;
-var m_castLogger   = null;
 var m_crMessageBus = null;
 
 function window_onload() {
     // Debug Logger
-    m_castLogger = cast.debug.CastDebugLogger.getInstance();
 
     if ( m_bDebug ) {
+        m_castLogger = cast.debug.CastDebugLogger.getInstance();
+
         // Enable debug logger and show a 'DEBUG MODE' overlay at top left corner.
         m_castLogger.setEnabled(true);
 
@@ -300,6 +321,8 @@ function window_onload() {
 
         // Show debug overlay
         m_castLogger.showDebugLogs(true);
+    } else {
+        m_castLogger = DebugLogger.getInstance();
     }
 
     $('#squoreboard_root_view').hide();
@@ -335,10 +358,10 @@ function window_onload() {
     m_crContext.addCustomMessageListener(CHANNEL_TT, handleMessageLS);
 
     if ( true ) {
-        m_crManager = cast.receiver.CastReceiverManager.getInstance();
+        m_crManager = cast.receiver.CastReceiverManager.getInstance(); // received by cast.framework.CastReceiverContext
         m_crManager.onSenderDisconnected = function(event) {
-            m_castLogger.info(LOG_TAG,'event.reason: ' + event.reason + '(cast.receiver.system.DisconnectReason.REQUESTED_BY_SENDER='+ cast.receiver.system.DisconnectReason.REQUESTED_BY_SENDER + ')');
-            m_castLogger.info(LOG_TAG,'m_crManager.getSenders().length: ' + this.getSenders().length);
+            m_castLogger.info(LOG_TAG, 'event.reason: ' + event.reason + '(cast.receiver.system.DisconnectReason.REQUESTED_BY_SENDER='+ cast.receiver.system.DisconnectReason.REQUESTED_BY_SENDER + ')');
+            m_castLogger.info(LOG_TAG, 'm_crManager.getSenders().length: ' + this.getSenders().length);
               if (  ( m_crManager.getSenders().length == 0 )
                  && ( event.reason == cast.receiver.system.DisconnectReason.REQUESTED_BY_SENDER )
                  ) {
@@ -362,4 +385,48 @@ function window_onload() {
     }
 
     m_crContext.start(crOptions);
+}
+
+var m_bDebug     = false;
+const LOG_TAG      = 'SB';
+var m_castLogger   = null;
+
+const DebugLogger = {
+    getInstance : function() {
+        return this;
+    },
+    setEnabled : function(b) {
+        console.log('Dummy enabled ' + b);
+    },
+    showDebugLogs : function(b) {
+        console.log('Dummy enabled ' + b);
+    },
+    warn : function(sTag, sMessage) {
+        if ( ! sMessage ) {
+            sMessage = sTag;
+            sTag = LOG_TAG;
+        }
+        console.warn('[' + sTag + '] ' + sMessage );
+    },
+    info : function(sTag, sMessage) {
+        if ( ! sMessage ) {
+            sMessage = sTag;
+            sTag = LOG_TAG;
+        }
+        console.log('[' + sTag + '] ' + sMessage );
+    },
+    error : function(sTag, sMessage) {
+        if ( ! sMessage ) {
+            sMessage = sTag;
+            sTag = LOG_TAG;
+        }
+        console.error('[' + sTag + '] ' + sMessage );
+    },
+    debug : function(sTag, sMessage) {
+        if ( ! sMessage ) {
+            sMessage = sTag;
+            sTag = LOG_TAG;
+        }
+        console.debug('[' + sTag + '] ' + sMessage );
+    },
 }
