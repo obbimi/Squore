@@ -768,6 +768,24 @@
         </PreferenceCategory>
 
         <PreferenceCategory android:title="@string/pref_Category_ChromeCast">
+            <EditTextPreference android:key="castScreenLogoUrl"
+                android:icon="@drawable/ic_chromecast"
+                android:title="@string/pref_castScreenLogoUrl"
+                android:defaultValue="/cast/logo/%s"
+                />
+            <EditTextPreference android:key="castScreenSponsorUrl"
+                android:icon="@drawable/ic_chromecast"
+                android:title="@string/pref_castScreenSponsorUrl"
+                />
+
+            <EditTextPreference android:key="useCastScreen"
+                android:icon="@drawable/ic_chromecast"
+                android:title="@string/pref_useCastScreen"
+                android:summary="@string/pref_useCastScreen_summary"
+                android:inputType="number"
+                android:defaultValue="0"
+                />
+
             <CheckBoxPreference android:key="Cast_ShowGraphDuringTimer"
                                 android:title="@string/pref_Cast_ShowGraphDuringTimer"
                                 android:icon="@drawable/ic_chromecast"

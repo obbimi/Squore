@@ -1130,7 +1130,7 @@ public class IBoard implements TimerViewContainer
         }
 
         boolean bShowFlag = bShowAsFlagPref && (bHideBecauseSameCountry == false);
-        if (view instanceof PlayersButton) {
+        if ( view instanceof PlayersButton ) {
             PlayersButton button = (PlayersButton) view;
 
             button.setCountry(sCountry, bShowAsTextAbbr, bShowFlag);
@@ -1144,6 +1144,9 @@ public class IBoard implements TimerViewContainer
         } else {
             castSendChangeViewMessage("img_flag" + iNrOnCast, String.format("url(%s)", ""      ), "background-image");
         }
+
+        boolean bSwapAAndB = Player.B.equals(m_firstPlayerOnScreen);
+        castSendFunction("Country.update('" + p + "','" + (sCountry!=null?sCountry:"") + "'," + bSwapAAndB + ")");
     }
     public void updatePlayerAvatar(Player p, String sAvatar) {
         EnumSet<ShowAvatarOn> avatarPref = PreferenceValues.showAvatarOn(context);
@@ -1166,6 +1169,9 @@ public class IBoard implements TimerViewContainer
         } else {
             castSendChangeViewMessage("img_avatar" + iNrOnCast, String.format("url(%s)", ""     ), "background-image");
         }
+
+        boolean bSwapAAndB = Player.B.equals(m_firstPlayerOnScreen);
+        castSendFunction("Avatar.update('" + p + "','" + (sAvatar!=null?sAvatar:"") + "'," + bSwapAAndB + ")");
     }
 
     public void initPerPlayerColors(Player p, String sColor, String sColorPrev) {

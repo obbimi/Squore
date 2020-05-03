@@ -275,6 +275,8 @@ public enum PreferenceKeys {
     targetDirForImportExport,
 
     useCastScreen,
+        castScreenLogoUrl,
+        castScreenSponsorUrl,
         Cast_ShowGraphDuringTimer,
 
     enableScoringByBluetoothConnection,

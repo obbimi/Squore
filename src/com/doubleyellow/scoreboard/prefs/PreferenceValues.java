@@ -891,6 +891,12 @@ public class PreferenceValues extends RWValues
     public static int useCastScreen(Context context) {
         return RWValues.getInteger(PreferenceKeys.useCastScreen, context, 0);
     }
+    public static String castScreenLogoUrl(Context context) {
+        return RWValues.getString(PreferenceKeys.castScreenLogoUrl, "", context);
+    }
+    public static String castScreenSponsorUrl(Context context) {
+        return RWValues.getString(PreferenceKeys.castScreenSponsorUrl, "", context);
+    }
     public static boolean Cast_ShowGraphDuringTimer(Context context) {
         return getBoolean(PreferenceKeys.Cast_ShowGraphDuringTimer, context, R.bool.Cast_ShowGraphDuringTimer_default);
     }

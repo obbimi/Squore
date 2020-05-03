@@ -26,6 +26,7 @@ import android.view.MenuItem;
 
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.history.MatchGameScoresView;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -39,6 +40,7 @@ import com.doubleyellow.scoreboard.vico.IBoard;
 import com.doubleyellow.util.FileUtil;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
+import com.doubleyellow.util.StringUtil;
 import com.google.android.gms.cast.ApplicationMetadata;
 import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.CastDevice;
@@ -508,6 +510,27 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             iBoard.updatePlayerClub   (p, matchModel.getClub   (p));
             iBoard.updatePlayerName   (p, matchModel.getName   (p), matchModel.isDoubles()); // player name last... if both are communicate cast screen will display screen elements
         }
+
+        updateLogo(context);
+        updateSponsor(context);
+    }
+
+    private void updateSponsor(Context context) {
+        String sSponsorURL = PreferenceValues.castScreenSponsorUrl(context);
+        if ( StringUtil.isNotEmpty(sSponsorURL) ) {
+            sSponsorURL = URLFeedTask.prefixWithBaseIfRequired(sSponsorURL);
+            sSponsorURL = String.format(sSponsorURL, Brand.brand);
+        }
+        sendFunction(String.format("LogoSponsor.setSponsor('%s')", sSponsorURL));
+    }
+
+    private void updateLogo(Context context) {
+        String sLogoURL = PreferenceValues.castScreenLogoUrl(context);
+        if ( StringUtil.isNotEmpty(sLogoURL) ) {
+            sLogoURL = URLFeedTask.prefixWithBaseIfRequired(sLogoURL);
+            sLogoURL = String.format(sLogoURL, Brand.brand);
+        }
+        sendFunction(String.format("LogoSponsor.setLogo('%s')", sLogoURL));
     }
 
     /** Not invoked very consistently... it seems */

@@ -20,7 +20,7 @@ scp request_info.php   dy:subsites/squore.double-yellow.be/cast/.
     <!-- Cast Debug Logger -->
     <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/devtools/debug_layer/caf_receiver_logger.js"></script>
 
-    <script type="text/javascript" src="cast.js?t=20200502T1906"></script>
+    <script type="text/javascript" src="cast.js?t=20200502T2132"></script>
     <script type="text/javascript" src="cast_dummy.js"></script>
 
     <script type='text/javascript' src='../js/dygraph-combined.js'> </script>
@@ -43,6 +43,27 @@ html, BODY {
     position: absolute;
     top: 0; left:0; bottom: 0; right:0;
     background-image: linear-gradient(to right, #000000FF, #444444FF , #000000FF);
+}
+#squoreboard_loading {
+    height: 100vh;
+    width : 100vw;
+    background-image: linear-gradient(to right, #000000FF, #444444FF , #000000FF);
+    /*
+    opacity: 100%;
+    z-index: -1;
+    */
+}
+#squoreboard_loading div {
+    /* attempt to center text vertically in its element */
+    top: 42%;
+    left: 20vw;
+    transform: translateY(-45%);
+}
+
+#squoreboard_root_view {
+    height: 100vh;
+    width : 100vw;
+    bottom: 0;
 }
 .text_element {
     position: absolute;
@@ -86,8 +107,8 @@ html, BODY {
 	border: 0.5vw solid #444444;
 	transform: skew(-10deg);
 }
-#img_flag1 { top   : 2vh; left: 7vw; }
-#img_flag2 { bottom: 2vh; left: 56vw; }
+#img_country_or_avatarA { top   : 2vh; left: 7vw; }
+#img_country_or_avatarB { bottom: 2vh; left: 56vw; }
 #btn_timer { top   : 2vh; left: 65vw; width: 25vw; height: 12vh;
     justify-content: center; /* center horizontally */
 }
@@ -117,7 +138,14 @@ html, BODY {
     </style>
 </head>
 <body>
-    <div class="background"></div>
+
+<div class="background"></div>
+<div id="squoreboard_loading">
+    <div class="text_element" id="loading_message">
+        <span class="center_vertically">Loading...</span>
+    </div>
+</div>
+<div id="squoreboard_root_view" style="display: none">
     <div class="text_element namebutton no-color"   id="txt_player1">
         <span>Player 1</span>
     </div>
@@ -137,8 +165,8 @@ html, BODY {
         </div>
     </div>
 
-    <div id="img_flag1" class="flag" style="background-image: url(https://squore.double-yellow.be/img/flag/BE);">&nbsp;</div>
-    <div id="img_flag2" class="flag" style="background-image: url(https://squore.double-yellow.be/img/flag/NL);">&nbsp;</div>
+    <div id="img_country_or_avatarA" class="flag" style="background-image: url(https://squore.double-yellow.be/img/flag/BE);">&nbsp;</div>
+    <div id="img_country_or_avatarB" class="flag" style="background-image: url(https://squore.double-yellow.be/img/flag/NL);">&nbsp;</div>
 
     <div class="text_element" id="btn_timer">
         <span>01:40</span>
@@ -146,9 +174,10 @@ html, BODY {
     <div id="gameGraph">
         <span></span>
     </div>
-    <div id="dummy_messages" style="display: none; position: absolute;">
-        <button value="send" onclick="sendDummyMessages()">Dummy</button>
-    </div>
+</div>
+<div id="dummy_messages" style="display: none; position: absolute;">
+    <button value="send" onclick="sendDummyMessages()">Dummy</button>
+</div>
 
     <script type="text/javascript">
 window.onload = function ()

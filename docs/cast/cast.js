@@ -21,7 +21,32 @@ var Changer = {
         }
     }
 };
-
+var Avatar = {
+    hasAvatarFor : {},
+    update : function(sPlayerAB, sUrl, bSwapAAndB) {
+        m_castLogger.info([sPlayerAB, sUrl, bSwapAAndB]);
+        $('#img_country_or_avatar' + sPlayerAB).css('background-image', 'url({0})'.format(sUrl));
+        this.hasAvatarFor[sPlayerAB] = sUrl;
+    }
+}
+var Country = {
+    baseUrl : 'https://squore.double-yellow.be/img/flag',
+    update : function(sPlayerAB, sCountryCode, bSwapAAndB) {
+        m_castLogger.info([sPlayerAB, sCountryCode, bSwapAAndB]);
+        $('#img_country_or_avatar' + sPlayerAB).css('background-image', 'url({0}/{1})'.format(this.baseUrl, sCountryCode));
+        if ( ! sCountryCode && Avatar.hasAvatarFor[sPlayerAB] ) {
+            Avatar.update(sPlayerAB, Avatar.hasAvatarFor[sPlayerAB], bSwapAAndB);
+        }
+    }
+}
+var LogoSponsor = {
+    setLogo : function(sUrl) {
+        m_castLogger.info(sUrl);
+    },
+    setSponsor : function(sUrl) {
+        m_castLogger.info(sUrl);
+    }
+}
 var CountDownTimer = {
     m_iSecondsLeft : 0,
     m_iInterval    : null,
@@ -255,7 +280,7 @@ m_castLogger.info(logTag,'Resized to fit - failed ...' + o.id);
         } else {
             var eTarget = $('#' + data.id);
             if ( eTarget.hasClass('no-' + data.property) ) {
-                m_castLogger.info(logTag,'Deliberatly not setting property {0} for {1}'.format(data.property, data.id));
+                m_castLogger.info(logTag,'Deliberately not setting property {0} for {1}'.format(data.property, data.id));
             } else {
                 if ( data.property === 'src' ) {
                     // flags
