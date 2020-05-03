@@ -25,11 +25,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -42,6 +42,8 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.util.ListUtil;
+import com.doubleyellow.util.StringUtil;
 
 import java.util.*;
 
@@ -143,63 +145,74 @@ public class Feedback extends XActivity implements View.OnClickListener, View.On
                 break;
             }
             case R.id.cmd_email_the_developer:
-                StringBuilder sbMsg = new StringBuilder();
+                List<String> lInfo = new ArrayList<>();
 
                 // put user settings in the email
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                sbMsg.append("========== Debug Info =========================\n");
+                lInfo.add(StringUtil.lrpad("Debug Info", '=', 40));
                 try {
                     PackageInfo info = getPackageManager().getPackageInfo(this.getPackageName(), 0);
 
-                    sbMsg.append("App Version: ").append(info.versionName).append(" (").append(info.versionCode).append(")");
-                    sbMsg.append("\n");
-                    sbMsg.append("Device API Level: ").append(Build.VERSION.SDK_INT);
-                    sbMsg.append("\n");
-                    sbMsg.append("Device: ").append(Build.MANUFACTURER).append(" ").append(Build.MODEL).append(" ").append(Build.BRAND).append(" ").append(Build.VERSION.RELEASE);
-                    sbMsg.append("\n");
+                    lInfo.add("App Version: " + info.versionName + " (" + info.versionCode + ")");
+                    lInfo.add("Device API Level: " + Build.VERSION.SDK_INT);
+                    lInfo.add("Device: " + Build.MANUFACTURER + " " + Build.MODEL + " " + Build.BRAND + " " + Build.VERSION.RELEASE);
                 } catch (Exception e) { }
-                sbMsg.append("Screen Size HxW: ").append(ViewUtil.getScreenHeightWidthMaximum(this)).append(" x ").append(ViewUtil.getScreenHeightWidthMinimum(this)).append("\n");
-                sbMsg.append("DeviceDefaultOrientation:").append(ViewUtil.getDeviceDefaultOrientation(this)).append("\n");
-                sbMsg.append("Resource folder: ").append(getString(R.string.setting_resource_folder)).append("\n");
+                lInfo.add("Screen Size HxW: " + ViewUtil.getScreenHeightWidthMaximum(this) + " x " + ViewUtil.getScreenHeightWidthMinimum(this));
+                lInfo.add("DeviceDefaultOrientation:" + ViewUtil.getDeviceDefaultOrientation(this));
+                lInfo.add("Resource folder: " + getString(R.string.setting_resource_folder));
 
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                sbMsg.append(displayMetrics.toString()).append("\n"); // string like DisplayMetrics{density=1.5, width=480, height= 800, scaledDensity=1.2750001, xdpi=217.713  , ydpi=207.347}
-                sbMsg.append("========== Features ===========================\n");
-                final FeatureInfo[] featuresList = getPackageManager().getSystemAvailableFeatures();
-                for (FeatureInfo f : featuresList) {
-                    sbMsg.append(f.name).append("\n");
-                }
-                sbMsg.append("========== Settings ========================\n");
-                Map<String, ?> all = prefs.getAll();
-                Set<String> keys = all.keySet();
-                SortedSet<String> keysSorted = new TreeSet<String>(keys);
-                for(String key: keysSorted) {
-                    Object val = all.get(key);
-                    if ( key.toLowerCase().matches(".*password$")) {
-                        val = "******"; // do not send any passwords in the feedback mail: would piss off the user
-                    }
-                    if ( key.endsWith("List") ) { // EventList RoundList PlayerList MatchList
-                        val = String.format("[list of length %s]", String.valueOf(val).split("\n").length);
-                    }
-                    sbMsg.append("\n|").append(key).append(":").append(val);
-                }
-                sbMsg.append("\n");
-                sbMsg.append("Become a tester: https://play.google.com/apps/testing/").append(getPackageName());
-                sbMsg.append("\n");
-                sbMsg.append("===============================================\n");
+                lInfo.add(displayMetrics.toString()); // string like DisplayMetrics{density=1.5, width=480, height= 800, scaledDensity=1.2750001, xdpi=217.713  , ydpi=207.347}
 
-                String sendMatchResultTo = "iddo.hoeve@gmail.com";
+                if ( true ) {
+                    lInfo.add(StringUtil.lrpad("Features", '=', 40));
+                    final FeatureInfo[] featuresList = getPackageManager().getSystemAvailableFeatures();
+                    for (FeatureInfo f : featuresList) {
+                        lInfo.add(f.name);
+                    }
+                }
+                if ( true ) {
+                    lInfo.add(StringUtil.lrpad("Settings", '=', 40));
+                    Map<String, ?> all = prefs.getAll();
+                    Set<String> keys = all.keySet();
+                    SortedSet<String> keysSorted = new TreeSet<String>(keys);
+                    for(String key: keysSorted) {
+                        Object val = all.get(key);
+                        if ( key.toLowerCase().matches(".*password$")) {
+                            val = "******"; // do not send any passwords in the feedback mail: would piss off the user
+                        }
+                        if ( key.endsWith("List") ) { // EventList RoundList PlayerList MatchList
+                            val = String.format("[list of length %s]", String.valueOf(val).split("\n").length);
+                        }
+                        lInfo.add("|" + key + ":" + val);
+                    }
+                }
+                if ( true ) {
+                    lInfo.add(StringUtil.lrpad("", '=', 40));
+                    lInfo.add("Become a tester: https://play.google.com/apps/testing/" + getPackageName());
+                    lInfo.add(StringUtil.lrpad("", '=', 40));
+                }
+
+                String sendFeedbackTo = "iddo.hoeve@gmail.com";
                 String sSubject = Brand.getShortName(this) + " Feedback";
 
-                Log.i("SB.Feedback", sbMsg.toString());
+                Log.i(TAG, ListUtil.join(lInfo,"\n"));
 
                 try {
-                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", sendMatchResultTo, null));
-                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, sSubject);
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, sbMsg.toString());
+                  //Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", sendFeedbackTo, null)); // this no longer seems to work: Gmail issue?
 
-                    startActivity(Intent.createChooser(emailIntent, getString(R.string.cmd_feedback)));
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                    emailIntent.setData(Uri.parse("mailto:")); // only email apps should handle this
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL  , new String[] { sendFeedbackTo });
+
+                  //emailIntent.putExtra(Intent.EXTRA_TEXT   , ListUtil.join(lInfo,"\n"));
+                    emailIntent.putExtra(Intent.EXTRA_TEXT   , Html.fromHtml("<tt>" + ListUtil.join(lInfo,"</tt><br/>\n<tt>") + "</tt>"));  // TODO: test
+
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, sSubject);
+
+                    this.startActivity(Intent.createChooser(emailIntent, getString(R.string.cmd_feedback)));
                 } catch (Exception e) {
+                    e.printStackTrace();
                     //Log.e(TAG, "Starting sms or call failed");
                     Toast.makeText(this, "Could not launch email intent!", Toast.LENGTH_SHORT).show();
                 }

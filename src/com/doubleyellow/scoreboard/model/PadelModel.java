@@ -20,19 +20,10 @@ package com.doubleyellow.scoreboard.model;
 public class PadelModel extends GSMModel {
 
     // TODO: sometimes a 'gold point' (no advantage) is used for deciding a game
-
     PadelModel() {
         super();
-        setTiebreakFormat(TieBreakFormat.TwoClearPoints); // for games only deuce/advantage/game, TODO: but sometimes 'golden point' is used for games
-        //setNrOfGamesToWinSet  (6);
-        setNrOfPointsToWinGame  (6);
-        //setNrOfSetsToWinMatch (2);
-        setNrOfGamesToWinMatch (2);
     }
-/*
     @Override public SportType getSport() {
         return SportType.Padel;
     }
-*/
-
 }

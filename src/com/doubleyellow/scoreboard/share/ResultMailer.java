@@ -119,8 +119,6 @@ public class ResultMailer {
      * Within <tt> tags multiple whitespaces are only displayed as one.
      */
     private void buildLimitedHtmlContent(Context context, Model matchModel, StringBuilder sbHtml) {
-        sbHtml.append("<tt>");
-
         // draw 'set history' for all sets
         List<List<ScoreLine>>      gameScoreHistory = matchModel.getGamesScoreHistory();
 
@@ -229,6 +227,7 @@ public class ResultMailer {
 
         // TODO: add this somewhere: matchModel.getDurationInMinutes()
 
+        sbHtml.append("<tt>");
         sbHtml.append(ListUtil.join(lLines, "</tt><br/>\n<tt>"));
         sbHtml.append("</tt>");
     }

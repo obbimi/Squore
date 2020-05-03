@@ -445,37 +445,40 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         }
 
 
-        CastDevice castDevice = m_castSession.getCastDevice();
-        if ( castDevice != null ) {
-            String sFriendlyName = castDevice.getFriendlyName();
-            Log.d(TAG, "castDevice.getFriendlyName(): " + sFriendlyName); // e.g. Living
-        }
-        Cast.ApplicationConnectionResult applicationConnectionResult = m_castSession.getApplicationConnectionResult();
+        try {
+            CastDevice castDevice = m_castSession.getCastDevice();
+            if ( castDevice != null ) {
+                String sFriendlyName = castDevice.getFriendlyName();
+                Log.d(TAG, "castDevice.getFriendlyName(): " + sFriendlyName); // e.g. Living
+            }
+            Cast.ApplicationConnectionResult applicationConnectionResult = m_castSession.getApplicationConnectionResult();
 
-        ApplicationMetadata applicationMetadata = m_castSession.getApplicationMetadata();
-        if ( applicationMetadata != null ) {
-            List<String> supportedNamespaces = applicationMetadata.getSupportedNamespaces(); // the namespaces added by the receiver using m_crContext.addCustomMessageListener(namespace)
-            Log.d(TAG, "Supported namespaces: " + ListUtil.join(supportedNamespaces, "\n") );
-            // [ urn:x-cast:com.google.cast.cac
-            // , urn:x-cast:com.google.cast.debugoverlay
-            // , urn:x-cast:com.google.cast.debuglogger
-            // , urn:x-cast:com.doubleyellow.scoreboard
-            // , urn:x-cast:com.doubleyellow.badminton
-            // , urn:x-cast:com.doubleyellow.tennispadel
-            // , urn:x-cast:com.doubleyellow.tabletennis
-            // , urn:x-cast:com.google.cast.broadcast
-            // , urn:x-cast:com.google.cast.media
-            // ]
-        }
+            ApplicationMetadata applicationMetadata = m_castSession.getApplicationMetadata();
+            if ( applicationMetadata != null ) {
+                List<String> supportedNamespaces = applicationMetadata.getSupportedNamespaces(); // the namespaces added by the receiver using m_crContext.addCustomMessageListener(namespace)
+                Log.d(TAG, "Supported namespaces: " + ListUtil.join(supportedNamespaces, "\n") );
+                // [ urn:x-cast:com.google.cast.cac
+                // , urn:x-cast:com.google.cast.debugoverlay
+                // , urn:x-cast:com.google.cast.debuglogger
+                // , urn:x-cast:com.doubleyellow.scoreboard
+                // , urn:x-cast:com.doubleyellow.badminton
+                // , urn:x-cast:com.doubleyellow.tennispadel
+                // , urn:x-cast:com.doubleyellow.tabletennis
+                // , urn:x-cast:com.google.cast.broadcast
+                // , urn:x-cast:com.google.cast.media
+                // ]
+            }
 
-        RemoteMediaClient remoteMediaClient = m_castSession.getRemoteMediaClient();
-        if ( remoteMediaClient != null ) {
-            Log.d(TAG, "remoteMediaClient.getNamespace(): " + remoteMediaClient.getNamespace()); // urn:x-cast:com.google.cast.media
-        }
+            RemoteMediaClient remoteMediaClient = m_castSession.getRemoteMediaClient();
+            if ( remoteMediaClient != null ) {
+                Log.d(TAG, "remoteMediaClient.getNamespace(): " + remoteMediaClient.getNamespace()); // urn:x-cast:com.google.cast.media
 /*
-                remoteMediaClient.registerCallback(new RemoteMediaClient.Callback() {
-                });
+                remoteMediaClient.registerCallback(new RemoteMediaClient.Callback() { });
 */
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //GoogleCast.EventEmitter.addListener();
         // W CDC|API|500: [API] Ignoring message. Namespace 'urn:x-cast:com.doubleyellow.scoreboard' has not been registered.
@@ -498,7 +501,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         }
 
         for(Player p: Model.getPlayers()) {
-            iBoard.updateScore(p, matchModel.getScore(p));
+            iBoard.updateScore        (p, matchModel.getScore(p));
             iBoard.updateServeSide    (p, matchModel.getNextDoubleServe(p), matchModel.getNextServeSide(p), matchModel.isLastPointHandout());
             iBoard.updatePlayerAvatar (p, matchModel.getAvatar (p));
             iBoard.updatePlayerCountry(p, matchModel.getCountry(p));

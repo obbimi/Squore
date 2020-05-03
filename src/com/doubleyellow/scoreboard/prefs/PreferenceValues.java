@@ -515,22 +515,29 @@ public class PreferenceValues extends RWValues
         return language.toString().equals(deviceLanguage) == false;
     }
 
-    /** translate a _Squash suffixid resource id in non squash specific */
+    /** translate a _Squash suffixid STRING resource id in non squash specific */
     public static int getSportTypeSpecificResId(Context context, int iResidSquashSuffixed) {
+        return getSportTypeSpecificResId(context, iResidSquashSuffixed, iResidSquashSuffixed);
+    }
+    public static int getSportTypeSpecificResId(Context context, int iResidSquashSuffixed, int iDefault) {
         if ( Brand.isNotSquash() ) {
-            String sResName = context.getResources().getResourceName(iResidSquashSuffixed);
-            String suffix   = "_" + SportType.Squash;
+            final String sResName = context.getResources().getResourceName(iResidSquashSuffixed);
+            final String suffix   = "_" + SportType.Squash;
             if ( sResName.endsWith(suffix) ) {
                 String sNewResName = sResName.replaceAll(suffix, "_" + Brand.getSport());
                 int iNewResId = context.getResources().getIdentifier(sNewResName, "string", context.getPackageName());
+                if ( (iNewResId == 0) && Brand.isPadel() ) {
+                    sNewResName = sResName.replaceAll(suffix, "_TennisPadel" /*+ Brand.TennisPadel*/ );
+                    iNewResId = context.getResources().getIdentifier(sNewResName, "string", context.getPackageName());
+                }
                 if ( iNewResId == 0 ) {
                     Log.w(TAG, "======================= No specific " + Brand.getSport() + " resource for " + sResName);
+                    return iDefault;
                 }
-                // TODO: improve this logic
-                return iNewResId; // still return 0 if no specific resource was found: showcase e.g. decides to skip a step if 0 is returned
+                return iNewResId;
             }
         }
-        return iResidSquashSuffixed;
+        return iDefault;
     }
 
     public static String getGameOrSetString(Context context, int iResid, Object... formatArgs) {
@@ -1733,7 +1740,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-04-30"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-05-04"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

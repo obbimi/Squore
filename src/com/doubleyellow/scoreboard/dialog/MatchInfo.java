@@ -108,7 +108,8 @@ public class MatchInfo extends BaseAlertDialog {
         }
         sb.append("\n");
         if ( matchModel.isEnglishScoring() ) {
-            sb.append(getString(R.string.lbl_Scoring)).append(": ").append(getString(PreferenceValues.getSportTypeSpecificResId(context, R.string.lbl_Scoring_PointWhenServing_Squash)));
+            int iScorePointWhenServingResId = PreferenceValues.getSportTypeSpecificResId(context, R.string.lbl_Scoring_PointWhenServing_Squash);
+            sb.append(getString(R.string.lbl_Scoring)).append(": ").append(getString(iScorePointWhenServingResId));
             sb.append("\n");
         } else {
             // point a rally: so common, don't even state it

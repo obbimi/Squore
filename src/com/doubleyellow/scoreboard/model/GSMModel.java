@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Model for basis of Game-Set-Match models: Padel and Tennis */
+/** Model for basis of Game-Set-Match (GSM) models: Padel and Tennis */
 public class GSMModel extends Model
 {
     @Override public SportType getSport() {
