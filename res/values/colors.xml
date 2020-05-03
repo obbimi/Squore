@@ -113,7 +113,6 @@
     <color name="brand_asb_bg_color">#ffffffff</color> <!-- first 2 determine 'transparency' ff is not, 00 is completely transparent -->
     <color name="brand_courtcare_bg_color">#ffff0000</color>
     <color name="brand_uniofnotthingham_bg_color">#ff005f36</color>
-    <string name="brand_asb_color_name_re">.*Squash Site.*Light.*</string>         <!-- points to entry in string-array colorSchema -->
     <string name="brand_courtcare_color_name_re">.*World.*Squash.*Light.*</string> <!-- points to entry in string-array colorSchema -->
     <string name="brand_uniofnotthingham_color_name_re">^[^\\w]*U.*o.*N.*</string>  <!-- points to entry in string-array colorSchema -->
 </resources>

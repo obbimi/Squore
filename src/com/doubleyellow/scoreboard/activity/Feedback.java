@@ -193,7 +193,7 @@ public class Feedback extends XActivity implements View.OnClickListener, View.On
                     lInfo.add(StringUtil.lrpad("", '=', 40));
                 }
 
-                String sendFeedbackTo = "iddo.hoeve@gmail.com";
+                String sendFeedbackTo = getString(R.string.developer_email);
                 String sSubject = Brand.getShortName(this) + " Feedback";
 
                 Log.i(TAG, ListUtil.join(lInfo,"\n"));

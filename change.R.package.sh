@@ -5,7 +5,7 @@ cat <<!
 
 Usage:
 
-	$0 '(Squore|Badminton|TennisPadel|Racketlon|Tabletennis|CourtCare|UniOfNotthingham)'
+	$0 '(Squore|Badminton|TennisPadel|Padel|Racketlon|Tabletennis|CourtCare|UniOfNotthingham)'
 
 Always change back to Squore before change to another 'Brand'
 !
@@ -15,6 +15,39 @@ if [[ "${tobranded}" = "-h" ]]; then
 	showHelp
 	exit
 fi
+
+function correctSportSpecificResource {
+    from=$1
+    to=$2
+
+    let correctedCnt=0
+    let keptCnt=0
+    # list all renamed USED resource names and ...
+    for res in $(egrep -r '@.*_(TennisPadel|Padel|Tabletennis|Badminton|Racketlon|Squash|Empty)' * | perl -ne 's~.*@(string|string-array|integer|integer-array|bool|array|fraction)\/(\w+).*~$2~; print' | sort -u); do
+        # ... check the appropriate res definition exists
+        if egrep -q -r "name=.$res." *; then
+            if echo ${res} | grep "_${from}"; then
+                let keptCnt=keptCnt+1
+            fi
+        else
+            #echo "XXXXXXXXXXXXXXXXXX Is NOT ${res} available"
+
+            if [[ -n "${2}" ]]; then
+                newRes=$(echo "${res}" | sed -e "s~_${from}~_${to}~")
+                for f in $(grep -rl "$res" *); do
+                    printf "Correcting %-72s from %-32s to %-32s \n" ${f} ${res} ${newRes}
+                    sed -i "s~${res}~${newRes}~" ${f}
+                    let correctedCnt=correctedCnt+1
+                done
+            fi
+        fi
+    done
+
+    if [[ ${correctedCnt} -gt 0 ]]; then
+        echo "CORRECTED ${correctedCnt} resources from ${from} to ${to}"
+        echo "KEPT ${keptCnt} resources for ${from}"
+    fi
+}
 
 cd src
 if [[ "$tobranded" = "Racketlon" ]]; then
@@ -45,6 +78,13 @@ elif [[ "$tobranded" = "TennisPadel" ]]; then
         sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.tennispadel.R\1~' ${f}
         #exit 1
     done
+elif [[ "$tobranded" = "Padel" ]]; then
+    printf "Change to '${tobranded}'\n"
+    for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
+        printf "File %-72s to %s \n" $f $tobranded
+        sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.padel.R\1~' ${f}
+        #exit 1
+    done
 elif [[ "$tobranded" = "CourtCare" ]]; then
     printf "Change to '${tobranded}'\n"
     for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
@@ -61,9 +101,9 @@ elif [[ "$tobranded" = "UniOfNotthingham" ]]; then
     done
 elif [[ "$tobranded" = "Squore" ]]; then
     printf "Change back to '${tobranded}'\n"
-    for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton|tennispadel|squorewear).R" *); do
+    for f in $(egrep -irl "com.doubleyellow.(asbsquore|courtcaresquore|courtscore_uon|racketlon|tabletennis|badminton|tennispadel|padel|squorewear).R" *); do
         printf "File %-72s back to %s normal\n" $f $tobranded
-        sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\|badminton\|tennispadel\|squorewear\).R\([^a-z]\)~com.doubleyellow.scoreboard.R\2~' ${f}
+        sed -i 's~com.doubleyellow.\(asbsquore\|courtcaresquore\|courtscore_uon\|racketlon\|tabletennis\|badminton\|tennispadel\|padel\|squorewear\).R\([^a-z]\)~com.doubleyellow.scoreboard.R\2~' ${f}
         #exit 1
     done
     # comment out all brands ...
@@ -105,13 +145,24 @@ elif [[ "$tobranded" = "TennisPadel" ]]; then
         printf "File %-30s to %s strings\n" $f $tobranded
         sed -i 's~_Squash"~_TennisPadel"~' ${f}
     done
+    #correctSportSpecificResource TennisPadel Padel
+    #correctSportSpecificResource Padel Squash
+elif [[ "$tobranded" = "Padel" ]]; then
+    for f in $(egrep -rl '@(string|fraction).*_Squash"'); do
+        printf "File %-30s to %s strings\n" $f $tobranded
+        sed -i 's~_Squash"~_Padel"~' ${f}
+    done
+    correctSportSpecificResource Padel TennisPadel
+    correctSportSpecificResource       TennisPadel Empty
 else
     # Squore
-    for f in $(egrep -rl '@(string|fraction).*_(Racketlon|Tabletennis|Badminton|TennisPadel)"'); do
+    for f in $(egrep -rl '@(string|fraction).*_(Racketlon|Tabletennis|Badminton|TennisPadel|Padel|Empty)"'); do
         printf "File %-30s to %s strings\n" $f $tobranded
-        sed -i 's~_\(Racketlon\|Tabletennis\|Badminton\|TennisPadel\)"~_Squash"~' ${f}
+        sed -i 's~_\(Racketlon\|Tabletennis\|Badminton\|TennisPadel\|Padel\|Empty\)"~_Squash"~' ${f}
     done
 fi
+
+correctSportSpecificResource ${tobranded} Empty
 
 
 cd ..

@@ -8,14 +8,6 @@
     <string name="oa_matchpoint">Match point</string>
     <string name="oa_gamepoint">Game point</string>
 
-<!--
-    <string name="activate_mode_Badminton">Activate expedite</string>
-    <string name="activate_mode_description_Badminton">More than %s minutes passed since the start of the game. Activate the expedite system?</string>
-    <string name="deactivate_mode_Badminton">De-activate expedite</string>
-    <string name="NewMatchesType_default_Badminton">TeamVsTeam_XMatchesPlayer</string>
-
-    <string name="number_of_serves_per_player">Number of serves per player</string>
--->
     <string name="end_game_Badminton">End game</string>
     <string name="best_of_x_games_to_y_2_Badminton">games to</string>
     <string name="lbl_court_Badminton">Court</string>

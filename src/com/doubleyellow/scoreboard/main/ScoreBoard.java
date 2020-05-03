@@ -816,7 +816,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             id2Seq.add(R.id.sb_settings            );
 */
 
-            int iOfficialRulesResId = PreferenceValues.getSportTypeSpecificResId(ScoreBoard.this, R.string.sb_official_rules_Squash);
+            int iOfficialRulesResId = PreferenceValues.getSportTypeSpecificResId(ScoreBoard.this, R.string.sb_official_rules_Squash, 0);
         startSection(R.string.uc_new   );
             addItem(R.id.sb_enter_singles_match , R.string.sb_new_singles_match    ,         R.drawable.circled_plus          );
             addItem(R.id.sb_select_static_match , R.string.sb_select_static_match  ,         R.drawable.ic_action_view_as_list);
@@ -854,6 +854,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             id2String.put(iCaptionId, iCaptionId);
         }
         private void addItem(int iActionId, int iCaptionId, int iImageId) {
+            if ( iCaptionId == 0 ) {
+                // e.g. for Tennis AND Padel rules... menu option
+                return;
+            }
             id2String.put(iActionId , iCaptionId);
             if ( iImageId != 0 ) {
                 id2Image .put(iActionId , iImageId  );
@@ -1622,7 +1626,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         return addSequenceItem(iViewId, iResid, ShowcaseView.ShapeType.Rectangle);
     }
     private ShowcaseSequence addSequenceItem(int iViewId, int iResid, ShowcaseView.ShapeType shapeType) {
-        int iNewResId = PreferenceValues.getSportTypeSpecificResId(this, iResid);
+        int iNewResId = PreferenceValues.getSportTypeSpecificResId(this, iResid, 0);
         if ( iNewResId > 0 ) {
             iResid = iNewResId;
         } else {
@@ -3814,12 +3818,11 @@ touch -t 01030000 LAST.sb
             }
             case R.id.float_new_match:
             case R.id.dyn_new_match: {
-/*
-                if ( Brand.isPadel() && MatchTabbed.SelectTab.Manual.equals(MatchTabbed.getDefaultTab()) ) {
-                    // usually Padel is NOT singles
+                MatchTabbed.SelectTab defaultTab = MatchTabbed.getDefaultTab();
+                if ( Brand.isPadel() && ( (defaultTab == null) || MatchTabbed.SelectTab.Manual.equals(defaultTab) ) ) {
+                    // usually Padel is NOT singles, go to doubles by default
                     MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.ManualDbl);
                 }
-*/
                 cancelShowCase();
                 if ( isWearable() ) {
                     showNewMatchWizard();
@@ -4998,7 +5001,7 @@ touch -t 01030000 LAST.sb
             // if we are running as unbranded but one ore more other brand values are uncommented
             if ( PreferenceValues.isBrandTesting(this) ) {
                 for(Brand brand: Brand.values() ) {
-                    addDemoMatchesForSport(lResources, brand.getSportType());
+                    addDemoMatchesForSport(lResources, Brand.getSport());
                 }
             }
         }
@@ -6632,6 +6635,7 @@ touch -t 01030000 LAST.sb
         return castHelper.getTimerView();
     }
     private void castColors(Map<ColorPrefs.ColorTarget, Integer> mColors) {
+        if ( castHelper == null ) { return; }
         castHelper.castColors(mColors);
     }
     public void castDurationChronos() {
@@ -6645,6 +6649,7 @@ touch -t 01030000 LAST.sb
         if ( initCastDelayed() ) {
             return;
         }
+        if ( castHelper == null ) { return; }
         castHelper.onActivityStart_Cast();
     }
     private void onActivityStop_Cast() {

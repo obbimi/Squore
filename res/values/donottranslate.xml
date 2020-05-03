@@ -19,13 +19,14 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="developer">Iddo Hoeve</string>
+    <string name="developer_email">iddo.hoeve@gmail.com</string>
 
     <string name="app_name_short_brand_Squash">Squore</string>
     <string name="app_name_short_brand_Racketlon">Score Racketlon</string>
     <string name="app_name_short_brand_Tabletennis">Score Table Tennis</string>
     <string name="app_name_short_brand_Badminton">Score Badminton</string>
     <string name="app_name_short_brand_TennisPadel">Score Tennis/Padel</string>
-    <string name="app_name_short_brand_asb">ASB Squore</string>
+    <string name="app_name_short_brand_Padel">Score Padel</string>
     <string name="app_name_short_brand_courtcare">CourtScore</string>
     <string name="app_name_short_brand_uniofnotthingham">CourtScore UoN</string>
 <!--
@@ -33,26 +34,18 @@
     <string name="app_scoreboard">Squore Board</string>
 -->
 
-    <string name="activate_mode_Squash"><!--Activate xxx--></string>
-    <string name="deactivate_mode_Squash"><!--De-activate xxx--></string>
-    <string name="activate_mode_Racketlon"><!--Activate xxx--></string>
-    <string name="deactivate_mode_Racketlon"><!--De-activate xxx--></string>
-    <string name="activate_mode_Badminton"><!--Activate xxx--></string>
-    <string name="deactivate_mode_Badminton"><!--De-activate xxx--></string>
-    <string name="activate_mode_TennisPadel"><!--Activate xxx--></string>
-    <string name="deactivate_mode_TennisPadel"><!--De-activate xxx--></string>
+    <string name="activate_mode_Squash">@string/activate_mode_Empty</string>
+    <string name="deactivate_mode_Squash">@string/deactivate_mode_Empty</string>
+    <string name="activate_mode_Empty"><!--Activate xxx--></string>
+    <string name="deactivate_mode_Empty"><!--De-activate xxx--></string>
 
-    <integer name="showModeDialogAfterXMins_default_Squash">-1</integer>
-    <integer name="showModeDialogAfterXMins_default_Racketlon">-1</integer>
     <integer name="showModeDialogAfterXMins_default_Tabletennis">10</integer>
-    <integer name="showModeDialogAfterXMins_default_Badminton">-1</integer>
-    <integer name="showModeDialogAfterXMins_default_TennisPadel">-1</integer>
+    <integer name="showModeDialogAfterXMins_default_Squash">@integer/showModeDialogAfterXMins_default_Empty</integer>
+    <integer name="showModeDialogAfterXMins_default_Empty">-1</integer>
 
-    <string name="pref_swapPlayersHalfwayGame_Squash"><!--Not used in squash version of the app --></string>
+    <string name="pref_swapPlayersHalfwayGame_Squash"/> <!--Not used in squash version of the app -->
     <string name="NewMatchesType_default_Squash">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
-    <string name="lbl_Scoring_PointWhenServing_Tabletennis">Score when serving</string> <!-- not used -->
-    <string name="lbl_Scoring_PointWhenServing_Racketlon">Score when serving</string>   <!-- not used -->
-    <string name="lbl_Scoring_PointWhenServing_TennisPadel">Score when serving</string>   <!-- not used -->
+    <string name="lbl_Scoring_PointWhenServing_Empty">Score when serving</string> <!-- not used -->
 
 
     <!-- TODO: use this in e.g. feedback pages -->
