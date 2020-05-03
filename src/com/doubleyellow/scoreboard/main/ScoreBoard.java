@@ -5001,7 +5001,7 @@ touch -t 01030000 LAST.sb
             // if we are running as unbranded but one ore more other brand values are uncommented
             if ( PreferenceValues.isBrandTesting(this) ) {
                 for(Brand brand: Brand.values() ) {
-                    addDemoMatchesForSport(lResources, Brand.getSport());
+                    addDemoMatchesForSport(lResources, brand.getSportType());
                 }
             }
         }

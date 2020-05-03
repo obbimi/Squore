@@ -65,7 +65,12 @@ public class DialogTimerView implements TimerView
 
     private void setDBTitle() {
         if ( alertDialog == null ) { return; }
-        alertDialog.setTitle(getDBTitle());
+        String dbTitle = getDBTitle();
+        try {
+            alertDialog.setTitle(dbTitle);
+        } catch (Exception e) {
+            e.printStackTrace(); // java.lang.IllegalArgumentException on PlayStore 20200502
+        }
     }
 
     private String getDBTitle() {

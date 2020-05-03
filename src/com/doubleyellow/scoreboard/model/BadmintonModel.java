@@ -137,7 +137,12 @@ public class BadmintonModel extends Model
         }
 
         if ( pNewServer != null ) {
-            int i = getScore(pNewServer) % 2;
+            int score = getScore(pNewServer);
+            while ( score < 0 ) {
+                // if started with very special handicap
+                score += 2;
+            }
+            int i = score % 2;
             ServeSide nextServeSide  = ServeSide.values()[i];
             setServerAndSide(pNewServer, nextServeSide, m_in_out);
         }
