@@ -40,6 +40,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
 import com.doubleyellow.android.view.ViewUtil;
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.XActivity;
 import com.doubleyellow.scoreboard.archive.PreviousMatchSelector;
@@ -616,6 +617,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         ScoreBoard.initAllowedOrientation(this);
 
         actualTabsToShow = new ArrayList<SelectTab>(Arrays.asList(SelectTab.values()));
+/*
         if ( ViewUtil.isWearable(this) ) {
             actualTabsToShow.remove(SelectTab.Feed);
             actualTabsToShow.remove(SelectTab.Mine);
@@ -623,10 +625,17 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
             actualTabsToShow.remove(SelectTab.ManualDbl);
             setActionBarVisibility(false);
         }
+*/
         //String sFeedMatchesUrl = PreferenceValues.getMatchesFeedURL(this);
         //String sFeedPlayersUrl = PreferenceValues.getPlayersFeedURL(this);
         if ( PreferenceValues.useFeedAndPostFunctionality(this) == false /*StringUtil.isEmpty(sFeedUrl)*/ ) {
             actualTabsToShow.remove(SelectTab.Feed);
+        }
+        if ( Brand.useSinglesMatches() == false ) {
+            actualTabsToShow.remove(SelectTab.Manual);
+        }
+        if ( Brand.useMyListMatches() == false ) {
+            actualTabsToShow.remove(SelectTab.Mine);
         }
 /*
         if ( PreferenceValues.saveMatchesForLaterUsage(this) == false ) {

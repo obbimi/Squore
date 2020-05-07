@@ -258,13 +258,6 @@ public class MatchView extends SBRelativeLayout
                 );
                 break;
             case Padel:
-                ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
-                        //, R.id.lblMatch_BestOf
-                        //, R.id.tbBestOf_or_TotalOf
-                        , R.id.lblReferee
-                        , R.id.ll_referees
-                );
-                break;
             case TennisPadel:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
                         //, R.id.lblMatch_BestOf
@@ -272,6 +265,12 @@ public class MatchView extends SBRelativeLayout
                         , R.id.match_marker
                 );
                 break;
+        }
+        if ( Brand.useReferees() == false ) {
+            ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
+                    , R.id.lblReferee
+                    , R.id.ll_referees
+            );
         }
         if ( Brand.supportsDoubleServeSequence() == false ) {
             ViewUtil.hideViewsForEver(this, R.id.ll_doubleServeSequence);

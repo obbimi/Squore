@@ -46,8 +46,6 @@ public enum Brand
   //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand_Racketlon       , 0, 0/*R.drawable.brand_squore*/              , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_racketlon       , R.array.colorSchema_Racketlon  , 0                                            , 3000, "https://racketlon.double-yellow.be", "6ffc7128-6fd5-46d1-b79c-46e4c613cba5", R.raw.changelog_racketlon),
   //TennisPadel     (SportType.TennisPadel, R.string.app_name_short_brand_TennisPadel     , 0, R.drawable.logo_brand_tennispadel         , R.id.sb_branded_logo_ar400, R.color.brand_padel_bg_color           , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema_TennisPadel      , 0                              , 4000, "https://tennispadel.double-yellow.be", "239ad8ef-0cdd-490c-8f01-4d50dd4e7c6b", R.raw.changelog_tennispadel),
   //Racquetball     (SportType.Racquetball, R.string.app_name_short_brand_Racquetball     , 0, 0/*R.drawable.brand_squore*/              , R.id.sb_branded_logo_ar150, 0                                      , R.string.REMOTE_DISPLAY_APP_ID_brand_Racquetball     , R.array.colorSchema_Racquetball, 0                                            , 3000, "https://racquetball.double-yellow.be", R.raw.changelog),
-  //CourtCare       (SportType.Squash     , R.string.app_name_short_brand_courtcare       , 0, R.drawable.brand_courtcare                , R.id.sb_branded_logo_ar400, R.color.brand_courtcare_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_courtcare       , R.array.colorSchema_CourtCare  , R.string.brand_courtcare_color_name_re       , 4000, "https://squore.double-yellow.be", "060fa379-fc13-448d-b17a-87468ddd02ce", R.raw.changelog_courtcare),
-  //UniOfNotthingham(SportType.Squash     , R.string.app_name_short_brand_uniofnotthingham, 0, R.drawable.brand_courtcare/*_uoncolors*/  , R.id.sb_branded_logo_ar400, R.color.brand_uniofnotthingham_bg_color, R.string.REMOTE_DISPLAY_APP_ID_brand_courtcare       , R.array.colorSchema_UoN        , R.string.brand_uniofnotthingham_color_name_re, 4000, "https://squore.double-yellow.be", "a83bd93b-bcff-4b33-b26e-24f45d2f0d5f", R.raw.changelog_courtcare),
     ;
     Brand( SportType sport
          , int iShortNameResId
@@ -293,6 +291,15 @@ public enum Brand
     }
     public static boolean useWarmup() {
         return trueUnlessFlagIsOn(1);
+    }
+    public static boolean useSinglesMatches() {
+        return trueUnlessFlagIsOn(2);
+    }
+    public static boolean useMyListMatches() {
+        return trueUnlessFlagIsOn(4);
+    }
+    public static boolean useReferees() {
+        return trueUnlessFlagIsOn(8);
     }
     private static boolean trueUnlessFlagIsOn(int iFlag) {
         return (brand.iTurnedOffFlags & iFlag) != iFlag;
