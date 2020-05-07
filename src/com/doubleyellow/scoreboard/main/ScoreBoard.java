@@ -830,7 +830,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         startSection(R.string.uc_show   );
             addItem(R.id.sb_toss                , R.string.sb_cmd_toss             ,         R.drawable.toss_white          );
             addItem(R.id.sb_timer               , R.string.sb_timer                ,         R.drawable.timer               );
-            addItem(R.id.sb_injury_timer        , R.string.sb_injury_timer         ,         R.drawable.timer               );
+            addItem(R.id.sb_injury_timer        , R.string.sb_injury_timer         ,         R.drawable.timer               , R.bool.useInjuryTimers_Squash);
             addItem(R.id.sb_score_details       , R.string.sb_score_details        ,         R.drawable.ic_action_chart_line);
         startSection(R.string.goto_help );
             addItem(R.id.sb_quick_intro         , R.string.Quick_intro             , android.R.drawable.ic_dialog_info         );
@@ -854,6 +854,17 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             id2String.put(iCaptionId, iCaptionId);
         }
         private void addItem(int iActionId, int iCaptionId, int iImageId) {
+            addItem(iActionId, iCaptionId, iImageId, 0);
+        }
+        private void addItem(int iActionId, int iCaptionId, int iImageId, int iShowResid) {
+            if ( iShowResid != 0 ) {
+                iShowResid = PreferenceValues.getSportTypeSpecificResId(ScoreBoard.this, iShowResid, iShowResid);
+                boolean bShow = getResources().getBoolean(iShowResid);
+                if ( bShow == false ) {
+                    Log.d(TAG, "Specifically not showing " + getResources().getResourceName(iActionId) );
+                    return;
+                }
+            }
             if ( iCaptionId == 0 ) {
                 // e.g. for Tennis AND Padel rules... menu option
                 return;

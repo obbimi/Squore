@@ -258,17 +258,18 @@ public class MatchView extends SBRelativeLayout
                 );
                 break;
             case Padel:
+                ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
+                        //, R.id.lblMatch_BestOf
+                        //, R.id.tbBestOf_or_TotalOf
+                        , R.id.lblReferee
+                        , R.id.ll_referees
+                );
+                break;
             case TennisPadel:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
                         //, R.id.lblMatch_BestOf
                         //, R.id.tbBestOf_or_TotalOf
-                        , R.id.llHandicapFormat
-                        , R.id.llScoringType
-                        , R.id.llTieBreakFormat
-                        , R.id.llDisciplineStart
-                        , R.id.llNumberOfServesPerPlayer
                         , R.id.match_marker
-                        , R.id.ll_AnnouncementLanguage
                 );
                 break;
         }
@@ -281,6 +282,17 @@ public class MatchView extends SBRelativeLayout
         if ( Brand.isGameSetMatch() == false ) {
             ViewUtil.hideViewsForEver(this, R.id.llFinalSetFinish);
             ViewUtil.hideViewsForEver(this, R.id.llChangesSidesWhen);
+        } else {
+            ViewUtil.hideViewsForEver(this, R.id.llHandicapFormat);
+            ViewUtil.hideViewsForEver(this, R.id.llScoringType);
+            ViewUtil.hideViewsForEver(this, R.id.llDisciplineStart);
+            ViewUtil.hideViewsForEver(this, R.id.llNumberOfServesPerPlayer);
+            ViewUtil.hideViewsForEver(this, R.id.ll_AnnouncementLanguage);
+        }
+        if ( Brand.useWarmup() == false ) {
+            ViewUtil.hideViewsForEver(this, R.id.lblWarmupDuration);
+            ViewUtil.hideViewsForEver(this, R.id.spWarmupDuration);
+            ViewUtil.hideViewsForEver(this, R.id.cbWarmupDuration);
         }
         return true;
     }

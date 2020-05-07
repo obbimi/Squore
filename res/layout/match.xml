@@ -627,7 +627,7 @@
             android:layout_height="wrap_content">
             <TextView
                 android:inputType="none"
-                android:id="@+id/lblPauseDuration"
+                android:id="@+id/lblWarmupDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sb_Duration_Warmup"
@@ -966,7 +966,6 @@
             android:textAppearance="?android:attr/textAppearanceLarge"/>
     <LinearLayout android:id="@+id/ll_referees"
             android:layout_alignTop="@id/lblReferee"
-            android:layout_toRightOf="@id/lblReferee"
             android:layout_toEndOf="@id/lblReferee"
             android:orientation="vertical"
             android:layout_width="match_parent"

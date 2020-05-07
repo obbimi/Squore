@@ -63,7 +63,7 @@ import java.util.*;
  */
 public class PreferenceValues extends RWValues
 {
-    private static Map<Integer, Integer> mOrgResId2BrandResId = new HashMap<>();
+    private static Map<String, String> mOrgResId2BrandResId = new HashMap<>();
 
     public static int updatePreferenceTitleResId(Preference preference, Context context) {
         if ( preference == null ) { return 0; }
@@ -87,7 +87,7 @@ public class PreferenceValues extends RWValues
             Log.d(TAG, "SHOULD WORK");
         }
         Integer newTitleResId = getSportSpecificSuffixedResId(context, titleRes);
-        if ( (newTitleResId != null) && (newTitleResId != 0) ) {
+        if ( (newTitleResId != null) && (newTitleResId != 0) && (newTitleResId.equals(titleRes) == false) ) {
             Log.d(TAG, "replace: " + context.getString(titleRes));
             Log.d(TAG, "by     : " + context.getString(newTitleResId));
             preference.setTitle(newTitleResId);
@@ -101,23 +101,6 @@ public class PreferenceValues extends RWValues
         }
 */
         return iChanged;
-    }
-
-    // TODO: 20200301: use this for more than just Padel
-    public static Integer getSportSpecificSuffixedResId(Context context, Integer iResIdNoSuffix) {
-        if ( (iResIdNoSuffix == null) || (iResIdNoSuffix == 0) ) { return 0; }
-
-        String sResName  = context.getResources().getResourceName(iResIdNoSuffix);
-        if ( mOrgResId2BrandResId.containsKey(iResIdNoSuffix) ) {
-            return mOrgResId2BrandResId.get(iResIdNoSuffix);
-        }
-        int iNewResId = context.getResources().getIdentifier(sResName + "_" + Brand.getSport(), "string", context.getPackageName());
-        if ( iNewResId != 0 ) {
-            mOrgResId2BrandResId.put(iResIdNoSuffix, iNewResId);
-        } else {
-            mOrgResId2BrandResId.put(iResIdNoSuffix, null);
-        }
-        return iNewResId;
     }
 
     //public static final String removeSeedingRegExp = "[\\[\\]0-9/]+$";
@@ -515,20 +498,52 @@ public class PreferenceValues extends RWValues
         return language.toString().equals(deviceLanguage) == false;
     }
 
-    /** translate a _Squash suffixid STRING resource id in non squash specific */
+    // TODO: 20200301: use this for more than just Padel
+    /** Try to obtain a more specific value by suffixing a resource with the Brand name */
+    public static Integer getSportSpecificSuffixedResId(Context context, Integer iResIdNoSuffix) {
+        if ( (iResIdNoSuffix == null) || (iResIdNoSuffix == 0) ) { return 0; }
+
+        final String sResName  = context.getResources().getResourceName    (iResIdNoSuffix);
+        final String sResType  = context.getResources().getResourceTypeName(iResIdNoSuffix);
+
+        String sNewResName = null;
+        if ( mOrgResId2BrandResId.containsKey(sResName) ) {
+            sNewResName = mOrgResId2BrandResId.get(sResName);
+        } else {
+            sNewResName = sResName + "_" + Brand.brand;
+        }
+        int iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
+        if ( iNewResId == 0 ) {
+            sNewResName = sResName + "_" + Brand.getSport();
+            iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
+        }
+        if ( iNewResId != 0 ) {
+            mOrgResId2BrandResId.put(sResName, sNewResName);
+            return iNewResId;
+        } else {
+            return iResIdNoSuffix;
+        }
+    }
+
+    /** translate a _Squash suffixed STRING resource id in non squash specific */
     public static int getSportTypeSpecificResId(Context context, int iResidSquashSuffixed) {
         return getSportTypeSpecificResId(context, iResidSquashSuffixed, iResidSquashSuffixed);
     }
     public static int getSportTypeSpecificResId(Context context, int iResidSquashSuffixed, int iDefault) {
         if ( Brand.isNotSquash() ) {
             final String sResName = context.getResources().getResourceName(iResidSquashSuffixed);
+            final String sResType = context.getResources().getResourceTypeName(iResidSquashSuffixed);
             final String suffix   = "_" + SportType.Squash;
             if ( sResName.endsWith(suffix) ) {
-                String sNewResName = sResName.replaceAll(suffix, "_" + Brand.getSport());
-                int iNewResId = context.getResources().getIdentifier(sNewResName, "string", context.getPackageName());
+                String sNewResName = sResName.replaceAll(suffix, "_" + Brand.brand);
+                int iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
+                if ( iNewResId == 0 ) {
+                    sNewResName = sResName.replaceAll(suffix, "_" + Brand.getSport());
+                    iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
+                }
                 if ( (iNewResId == 0) && Brand.isPadel() ) {
                     sNewResName = sResName.replaceAll(suffix, "_TennisPadel" /*+ Brand.TennisPadel*/ );
-                    iNewResId = context.getResources().getIdentifier(sNewResName, "string", context.getPackageName());
+                    iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
                 }
                 if ( iNewResId == 0 ) {
                     Log.w(TAG, "======================= No specific " + Brand.getSport() + " resource for " + sResName);
@@ -730,9 +745,10 @@ public class PreferenceValues extends RWValues
     // TODO: add to preferences.xml
     public static boolean useFeedAndPostFunctionality(Context context) {
         if ( Brand.isGameSetMatch() && currentDateIsTestDate() ) {
-            return false; // TODO: temp
+            return false;
         }
-        return getBoolean(PreferenceKeys.useFeedAndPostFunctionality, context, R.bool.useFeedAndPostFunctionality_default);
+        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useFeedAndPostFunctionality_default);
+        return getBoolean(PreferenceKeys.useFeedAndPostFunctionality, context, iResBrandSpecific);
     }
     public static boolean allowTrustAllCertificatesAndHosts(Context context) {
         return getBoolean(PreferenceKeys.allowTrustAllCertificatesAndHosts, context, R.bool.allowTrustAllCertificatesAndHosts_default);
@@ -1746,7 +1762,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-05-04"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-05-08"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

@@ -508,7 +508,7 @@
         android:layout_height="wrap_content">
         <TextView
             android:inputType="none"
-            android:id="@+id/lblPauseDuration"
+            android:id="@+id/lblWarmupDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sb_Duration_Warmup"
