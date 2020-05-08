@@ -431,6 +431,9 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             SystemUtil.doVibrate(Preferences.this, 200);
                         }
                         break;
+                    case useCastScreen:
+                        PreferenceValues.setCastRestartRequired();
+                        break;
                     default:
                         //Log.d(TAG, "Not handling case for " + eKey);
                         break;
@@ -945,12 +948,12 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
     }
 
     public static List<String> syncAndClean_warmupValues(Context ctx) {
-        return syncAndClean_durationValues(ctx, PreferenceKeys.timerWarmup       , R.integer.timerWarmup_default_Squash
-                                              , PreferenceKeys.timerWarmup_values, R.string.timerWarmup_values_default_Squash);
+        return syncAndClean_durationValues(ctx, PreferenceKeys.timerWarmup       , R.integer.timerWarmup_default__Squash
+                                              , PreferenceKeys.timerWarmup_values, R.string.timerWarmup_values_default__Squash);
     }
     public static List<String> syncAndClean_pauseBetweenGamesValues(Context ctx) {
-        return syncAndClean_durationValues(ctx, PreferenceKeys.timerPauseBetweenGames       , R.integer.timerPauseBetweenGames_default_Squash
-                                              , PreferenceKeys.timerPauseBetweenGames_values, R.string.timerPauseBetweenGames_values_default_Squash);
+        return syncAndClean_durationValues(ctx, PreferenceKeys.timerPauseBetweenGames       , R.integer.timerPauseBetweenGames_default__Squash
+                                              , PreferenceKeys.timerPauseBetweenGames_values, R.string.timerPauseBetweenGames_values_default__Squash);
     }
     private static List<String> syncAndClean_durationValues(Context ctx, PreferenceKeys pref, int iResDefaultValue, PreferenceKeys prefMV, int iResDefaultValues) {
         int iResDefault = PreferenceValues.getSportTypeSpecificResId(ctx, iResDefaultValues);
