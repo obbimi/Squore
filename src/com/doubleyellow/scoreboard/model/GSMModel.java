@@ -207,7 +207,7 @@ public class GSMModel extends Model
     @Override public Object convertServeSideCharacter(String sRLInternational, ServeSide serveSide, String sHandoutChar) {
         return sRLInternational;
     }
-
+    /** Typically for halfway game in Tabletennis, so NO not in tennis/padel */
     @Override public boolean showChangeSidesMessageInGame(int iGameZB) {
         return false;
     }
@@ -563,7 +563,7 @@ public class GSMModel extends Model
 
     /** overridden to check at the end of a game that it is also end of a set */
     @Override public void endGame(boolean bNotifyListeners, boolean bStartNewGame) {
-        // invokes startNewGame()
+        // invokes startNewGame() in the end
         super.endGame(bNotifyListeners, false); // updates m_player2GamesWon of super class
 
         Player server = getServer().getOther();
@@ -589,6 +589,9 @@ public class GSMModel extends Model
             endSet(pLeader, iGamesLeader, iGamesTrailer, bNotifyListeners);
         }
         startNewGame();
+
+        // ensure 'R' is indicated as serveside
+        super.setServerAndSide(null, ServeSide.R, null);
     }
 
 

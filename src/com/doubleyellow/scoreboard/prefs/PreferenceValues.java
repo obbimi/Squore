@@ -546,6 +546,10 @@ public class PreferenceValues extends RWValues
                     iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
                 }
                 if ( iNewResId == 0 ) {
+                    sNewResName = sResName.replaceAll(suffix, "__" + "Empty");
+                    iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
+                }
+                if ( iNewResId == 0 ) {
                     Log.w(TAG, "======================= No specific " + Brand.getSport() + " resource for " + sResName);
                     return iDefault;
                 }
