@@ -32,18 +32,18 @@
     <string name="app_scoreboard">Squore Board</string>
 -->
 
-    <string name="activate_mode__Squash">@string/activate_mode_Empty</string>
-    <string name="deactivate_mode__Squash">@string/deactivate_mode_Empty</string>
-    <string name="activate_mode_Empty"><!--Activate xxx--></string>
-    <string name="deactivate_mode_Empty"><!--De-activate xxx--></string>
+    <string name="activate_mode__Squash">@string/activate_mode__Empty</string>
+    <string name="deactivate_mode__Squash">@string/deactivate_mode__Empty</string>
+    <string name="activate_mode__Empty"><!--Activate xxx--></string>
+    <string name="deactivate_mode__Empty"><!--De-activate xxx--></string>
 
     <integer name="showModeDialogAfterXMins_default__Tabletennis">10</integer>
-    <integer name="showModeDialogAfterXMins_default__Squash">@integer/showModeDialogAfterXMins_default_Empty</integer>
-    <integer name="showModeDialogAfterXMins_default_Empty">-1</integer>
+    <integer name="showModeDialogAfterXMins_default__Squash">@integer/showModeDialogAfterXMins_default__Empty</integer>
+    <integer name="showModeDialogAfterXMins_default__Empty">-1</integer>
 
     <string name="pref_swapPlayersHalfwayGame__Squash"/> <!--Not used in squash version of the app -->
     <string name="NewMatchesType_default__Squash">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
-    <string name="lbl_Scoring_PointWhenServing_Empty">Score when serving</string> <!-- not used -->
+    <string name="lbl_Scoring_PointWhenServing__Empty">Score when serving</string> <!-- not used -->
 
 
     <!-- TODO: use this in e.g. feedback pages -->
