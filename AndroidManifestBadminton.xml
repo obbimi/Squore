@@ -55,7 +55,7 @@
             android:theme="@style/SBTheme"
             android:allowBackup="true"
             android:usesCleartextTraffic="true"
-            android:label="@string/app_name_short_brand_Badminton"
+            android:label="@string/app_name_short_brand__Badminton"
             android:icon="@drawable/logo_brand_badminton">
 
 <!--
@@ -77,7 +77,7 @@
         </activity>
 -->
 
-        <activity android:name="com.doubleyellow.scoreboard.main.ScoreBoard" android:label="@string/app_name_short_brand_Badminton">
+        <activity android:name="com.doubleyellow.scoreboard.main.ScoreBoard" android:label="@string/app_name_short_brand__Badminton">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

@@ -108,7 +108,7 @@ public class MatchInfo extends BaseAlertDialog {
         }
         sb.append("\n");
         if ( matchModel.isEnglishScoring() ) {
-            int iScorePointWhenServingResId = PreferenceValues.getSportTypeSpecificResId(context, R.string.lbl_Scoring_PointWhenServing_Squash);
+            int iScorePointWhenServingResId = PreferenceValues.getSportTypeSpecificResId(context, R.string.lbl_Scoring_PointWhenServing__Squash);
             sb.append(getString(R.string.lbl_Scoring)).append(": ").append(getString(iScorePointWhenServingResId));
             sb.append("\n");
         } else {

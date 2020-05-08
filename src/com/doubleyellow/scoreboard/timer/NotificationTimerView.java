@@ -147,7 +147,7 @@ public class NotificationTimerView implements TimerView
         // the NotificationChannel class is new and not in the support library
         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O /*26 */ ) {
             NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
-            int iResIdAppName = PreferenceValues.getSportTypeSpecificResId(ctx, R.string.app_name_short_brand_Squash);
+            int iResIdAppName = PreferenceValues.getSportTypeSpecificResId(ctx, R.string.app_name_short_brand__Squash);
             NotificationChannel chDefault = new NotificationChannel(CHANNEL_ID, ctx.getString(iResIdAppName), NotificationManager.IMPORTANCE_LOW);
             //chDefault.setDescription(getString(R.string.channel_description));
             //chDefault.enableLights(true);

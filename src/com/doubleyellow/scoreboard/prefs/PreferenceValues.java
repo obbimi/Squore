@@ -239,7 +239,7 @@ public class PreferenceValues extends RWValues
 
     /** User may choose for a value between 0 and 100. We translate it to a value between 0 and 255 */
     public static int getServeButtonTransparencyNonServer(Context context) {
-        int iResDefault = getSportTypeSpecificResId(context, R.integer.serveButtonTransparencyNonServer_default_Squash);
+        int iResDefault = getSportTypeSpecificResId(context, R.integer.serveButtonTransparencyNonServer_default__Squash);
 
         // get user preference value ( must be between 0 and 100 )
         int i0To100Stored = getIntegerR(PreferenceKeys.serveButtonTransparencyNonServer, context, iResDefault);
@@ -510,11 +510,11 @@ public class PreferenceValues extends RWValues
         if ( mOrgResId2BrandResId.containsKey(sResName) ) {
             sNewResName = mOrgResId2BrandResId.get(sResName);
         } else {
-            sNewResName = sResName + "_" + Brand.brand;
+            sNewResName = sResName + "__" + Brand.brand;
         }
         int iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
         if ( iNewResId == 0 ) {
-            sNewResName = sResName + "_" + Brand.getSport();
+            sNewResName = sResName + "__" + Brand.getSport();
             iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
         }
         if ( iNewResId != 0 ) {
@@ -525,7 +525,7 @@ public class PreferenceValues extends RWValues
         }
     }
 
-    /** translate a _Squash suffixed STRING resource id in non squash specific */
+    /** translate a __Squash suffixed STRING resource id in non squash specific */
     public static int getSportTypeSpecificResId(Context context, int iResidSquashSuffixed) {
         return getSportTypeSpecificResId(context, iResidSquashSuffixed, iResidSquashSuffixed);
     }
@@ -533,16 +533,16 @@ public class PreferenceValues extends RWValues
         if ( Brand.isNotSquash() ) {
             final String sResName = context.getResources().getResourceName(iResidSquashSuffixed);
             final String sResType = context.getResources().getResourceTypeName(iResidSquashSuffixed);
-            final String suffix   = "_" + SportType.Squash;
+            final String suffix   = "__" + SportType.Squash;
             if ( sResName.endsWith(suffix) ) {
-                String sNewResName = sResName.replaceAll(suffix, "_" + Brand.brand);
+                String sNewResName = sResName.replaceAll(suffix, "__" + Brand.brand);
                 int iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
                 if ( iNewResId == 0 ) {
-                    sNewResName = sResName.replaceAll(suffix, "_" + Brand.getSport());
+                    sNewResName = sResName.replaceAll(suffix, "__" + Brand.getSport());
                     iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
                 }
                 if ( (iNewResId == 0) && Brand.isPadel() ) {
-                    sNewResName = sResName.replaceAll(suffix, "_TennisPadel" /*+ Brand.TennisPadel*/ );
+                    sNewResName = sResName.replaceAll(suffix, "__" + "TennisPadel" /*+ Brand.TennisPadel*/ );
                     iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
                 }
                 if ( iNewResId == 0 ) {
@@ -739,7 +739,7 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.groupArchivedMatchesBy, context, GroupMatchesBy.class, R.string.groupArchivedMatchesBy_default);
     }
     public static ScorelineLayout getScorelineLayout(Context context) {
-        int iResDefault = getSportTypeSpecificResId(context, R.string.scorelineLayout_default_Squash);
+        int iResDefault = getSportTypeSpecificResId(context, R.string.scorelineLayout_default__Squash);
         return getEnum(PreferenceKeys.scorelineLayout, context, ScorelineLayout.class, iResDefault);
     }
     // TODO: add to preferences.xml
@@ -811,7 +811,7 @@ public class PreferenceValues extends RWValues
         return getIntegerR(PreferenceKeys.numberOfMinutesAfterWhichToLockMatch, context, R.integer.numberOfMinutesAfterWhichToLockMatch_default);
     }
     public static NewMatchesType getNewMatchesType(Context context) {
-        int iResDefault = getSportTypeSpecificResId(context, R.string.NewMatchesType_default_Squash);
+        int iResDefault = getSportTypeSpecificResId(context, R.string.NewMatchesType_default__Squash);
         return getEnum(PreferenceKeys.NewMatchesType, context, NewMatchesType.class, iResDefault);
     }
     public static int maxNumberOfPlayersInGroup(Context context) {
@@ -827,12 +827,12 @@ public class PreferenceValues extends RWValues
         return getIntegerR(PreferenceKeys.tournamentMaxDuration_InDays, context, R.integer.tournamentMaxDuration_InDays_default);
     }
     public static Feature endGameSuggestion(Context context) {
-        int iResDefault = getSportTypeSpecificResId(context, R.string.endGameSuggestion_default_Squash);
+        int iResDefault = getSportTypeSpecificResId(context, R.string.endGameSuggestion_default__Squash);
         return getEnum(PreferenceKeys.endGameSuggestion, context, Feature.class, iResDefault);
     }
     /** for tabletennis and racketlon, not squash */
     public static boolean swapPlayersOn180DegreesRotationOfDeviceInLandscape(Context context) {
-        int iResDefault = getSportTypeSpecificResId(context, R.bool.swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Squash);
+        int iResDefault = getSportTypeSpecificResId(context, R.bool.swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Squash);
         return getBoolean(PreferenceKeys.swapPlayersOn180DegreesRotationOfDeviceInLandscape, context, iResDefault);
     }
     /** @deprecated for tabletennis, not squash or racketlon */
@@ -860,7 +860,7 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.autoShowModeActivationDialog, context, false);
     }
     public static int showModeDialogAfterXMins(Context context) {
-        int iResDefault = getSportTypeSpecificResId(context, R.integer.showModeDialogAfterXMins_default_Squash);
+        int iResDefault = getSportTypeSpecificResId(context, R.integer.showModeDialogAfterXMins_default__Squash);
         return getIntegerR(PreferenceKeys.showModeDialogAfterXMins, context, iResDefault);
     }
 
@@ -894,7 +894,7 @@ public class PreferenceValues extends RWValues
     }
 */
     private static EnumSet<ShowOnScreen> floatingMessageForGameBallOn(Context context) {
-        int iRes = R.array.floatingMessageForGameBallOn_DefaultValues_Squash; // value used in preferences.xml and therefor used
+        int iRes = R.array.floatingMessageForGameBallOn_DefaultValues__Squash; // value used in preferences.xml and therefor used
         return getEnumSet(PreferenceKeys.floatingMessageForGameBallOn, context, ShowOnScreen.class, EnumSet.of(ShowOnScreen.OnDevice, ShowOnScreen.OnChromeCast));
     }
     public static boolean floatingMessageForGameBall(Context context, boolean bIsPresentation) {
@@ -1060,7 +1060,7 @@ public class PreferenceValues extends RWValues
             return new ArrayList<String>();
         }
         if ( key.equals(PreferenceKeys.matchList) ) {
-            int iResDefault = getSportTypeSpecificResId(context, R.string.matchList_default_Squash);
+            int iResDefault = getSportTypeSpecificResId(context, R.string.matchList_default__Squash);
             String sMatchListDefault = context.getString(iResDefault);
             if ( isBrandTesting(context) ) {
                 values = sMatchListDefault;
@@ -1213,7 +1213,7 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.handicapFormat, context, HandicapFormat.class, R.string.handicapFormat_default);
     }
     public static int numberOfGamesToWinMatch(Context context) {
-        int iMax = getIntegerR(PreferenceKeys.numberOfGamesToWinMatch, context, R.integer.numberOfGamesToWin_default_Squash);
+        int iMax = getIntegerR(PreferenceKeys.numberOfGamesToWinMatch, context, R.integer.numberOfGamesToWin_default__Squash);
         if ( iMax > 999 || (iMax < 1 /*&& iMax != -1*/ ) ) { // -1 means not used, like in racketlon
             iMax = 999;
             setNumber(PreferenceKeys.numberOfGamesToWinMatch, context, iMax);
@@ -1224,12 +1224,12 @@ public class PreferenceValues extends RWValues
         return getIntegerR(PreferenceKeys.numberOfServesPerPlayer, context, R.integer.numberOfServesPerPlayer_default);
     }
     public static int numberOfPointsToWinGame(Context context) {
-        int iMax = getIntegerR(PreferenceKeys.numberOfPointsToWinGame, context, R.integer.gameEndScore_default_Squash);
+        int iMax = getIntegerR(PreferenceKeys.numberOfPointsToWinGame, context, R.integer.gameEndScore_default__Squash);
         if ( iMax > 9999 ) {
             iMax = 9999;
             setNumber(PreferenceKeys.numberOfPointsToWinGame, context, iMax);
         } else if ( iMax < 1 ) {
-            int iResIdDefault = getSportTypeSpecificResId(context, R.integer.gameEndScore_default_Squash);
+            int iResIdDefault = getSportTypeSpecificResId(context, R.integer.gameEndScore_default__Squash);
             iMax = context.getResources().getInteger(iResIdDefault);
             setNumber(PreferenceKeys.numberOfPointsToWinGame, context, iMax);
         }
@@ -1242,10 +1242,10 @@ public class PreferenceValues extends RWValues
         return getIntegerR(PreferenceKeys.numberOfCharactersBeforeAutocompleteCountry, context, R.integer.numberOfCharactersBeforeAutocompleteCountry_default);
     }
     public static int getPauseDuration(Context context) {
-        return getIntegerR(PreferenceKeys.timerPauseBetweenGames, context, R.integer.timerPauseBetweenGames_default_Squash);
+        return getIntegerR(PreferenceKeys.timerPauseBetweenGames, context, R.integer.timerPauseBetweenGames_default__Squash);
     }
     public static int getWarmupDuration(Context context) {
-        return getIntegerR(PreferenceKeys.timerWarmup, context, R.integer.timerWarmup_default_Squash);
+        return getIntegerR(PreferenceKeys.timerWarmup, context, R.integer.timerWarmup_default__Squash);
     }
 
     private static boolean bFixedMatchesAreUnChanged = true;
@@ -1553,7 +1553,7 @@ public class PreferenceValues extends RWValues
     }
 
     public static String getOfficialSquashRulesURL(Context context) {
-        int iResDefault = getSportTypeSpecificResId(context, R.string.OfficialRulesURLs_default_Squash);
+        int iResDefault = getSportTypeSpecificResId(context, R.string.OfficialRulesURLs_default__Squash);
         return getFirstOfList(PreferenceKeys.OfficialSquashRulesURLs, iResDefault, context);
     }
 
@@ -1652,7 +1652,7 @@ public class PreferenceValues extends RWValues
         }
 
         if ( bFeedsAreUnChanged && URLsKeys.FeedMatches.equals(key) ) {
-            int iResDefault = getSportTypeSpecificResId(context, R.string.pref_feedPostUrls_default_Squash);
+            int iResDefault = getSportTypeSpecificResId(context, R.string.pref_feedPostUrls_default__Squash);
             if ( iResDefault != 0 ) {
                 String sDefaultUrls = context.getString(iResDefault);
                 List<Map<URLsKeys, String>> urlsListDefault = getUrlsList(sDefaultUrls, context);
@@ -1762,7 +1762,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-05-08"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-05-09"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

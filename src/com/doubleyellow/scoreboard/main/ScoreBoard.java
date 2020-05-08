@@ -816,7 +816,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             id2Seq.add(R.id.sb_settings            );
 */
 
-            int iOfficialRulesResId = PreferenceValues.getSportTypeSpecificResId(ScoreBoard.this, R.string.sb_official_rules_Squash, 0);
+            int iOfficialRulesResId = PreferenceValues.getSportTypeSpecificResId(ScoreBoard.this, R.string.sb_official_rules__Squash, 0);
         startSection(R.string.uc_new   );
             addItem(R.id.sb_enter_singles_match , R.string.sb_new_singles_match    ,         R.drawable.circled_plus          );
             addItem(R.id.sb_select_static_match , R.string.sb_select_static_match  ,         R.drawable.ic_action_view_as_list);
@@ -830,7 +830,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         startSection(R.string.uc_show   );
             addItem(R.id.sb_toss                , R.string.sb_cmd_toss             ,         R.drawable.toss_white          );
             addItem(R.id.sb_timer               , R.string.sb_timer                ,         R.drawable.timer               );
-            addItem(R.id.sb_injury_timer        , R.string.sb_injury_timer         ,         R.drawable.timer               , R.bool.useInjuryTimers_Squash);
+            addItem(R.id.sb_injury_timer        , R.string.sb_injury_timer         ,         R.drawable.timer               , R.bool.useInjuryTimers__Squash);
             addItem(R.id.sb_score_details       , R.string.sb_score_details        ,         R.drawable.ic_action_chart_line);
         startSection(R.string.goto_help );
             addItem(R.id.sb_quick_intro         , R.string.Quick_intro             , android.R.drawable.ic_dialog_info         );
@@ -1600,30 +1600,30 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             // typically for a first install via StartAction
             addSequenceItem(iSomeActionBarId, R.string.scv_first_run, ShowcaseView.ShapeType.None).setDismissText(R.string.cmd_ok);
         }
-        addSequenceItemOval(R.id.float_toss              , R.string.scv_toss                            );
-        addSequenceItemOval(R.id.btn_side1               , R.string.scv_side_buttons_Squash             );
-        addSequenceItemRect(R.id.btn_score1              , R.string.scv_big_buttons                     );
-        addSequenceItemRect(R.id.dyn_undo_last           , R.string.scv_undo_last                       );
-        addSequenceItemOval(R.id.float_timer             , R.string.scv_timer_button_Squash             );
+        addSequenceItemOval(R.id.float_toss              , R.string.scv_toss                             );
+        addSequenceItemOval(R.id.btn_side1               , R.string.scv_side_buttons__Squash             );
+        addSequenceItemRect(R.id.btn_score1              , R.string.scv_big_buttons                      );
+        addSequenceItemRect(R.id.dyn_undo_last           , R.string.scv_undo_last                        );
+        addSequenceItemOval(R.id.float_timer             , R.string.scv_timer_button__Squash             );
         if ( Brand.isSquash() ) {
-        addSequenceItemOval(R.id.sb_official_announcement, R.string.scv_announcement_button_Squash); // not for Racketlon
+        addSequenceItemOval(R.id.sb_official_announcement, R.string.scv_announcement_button__Squash); // not for Racketlon
         }
-        addSequenceItemOval(R.id.btn_side2               , R.string.scv_shirt_color_Squash              );
-        addSequenceItemOval(R.id.gamescores_container    , R.string.scv_game_scores_Squash              );
-        addSequenceItemRect(R.id.txt_player1             , R.string.scv_player_buttons_appeal_Squash   );// not for Racketlon
-        addSequenceItemRect(R.id.txt_player2             , R.string.scv_player_buttons_misconduct_Squash);// not for Racketlon
-        addSequenceItemRect(R.id.scorehistorytable       , R.string.scv_old_fashioned_scoring_Squash    );// not for Racketlon
+        addSequenceItemOval(R.id.btn_side2               , R.string.scv_shirt_color__Squash              );
+        addSequenceItemOval(R.id.gamescores_container    , R.string.scv_game_scores__Squash              );
+        addSequenceItemRect(R.id.txt_player1             , R.string.scv_player_buttons_appeal__Squash    );// not for Racketlon
+        addSequenceItemRect(R.id.txt_player2             , R.string.scv_player_buttons_misconduct__Squash);// not for Racketlon
+        addSequenceItemRect(R.id.scorehistorytable       , R.string.scv_old_fashioned_scoring__Squash    );// not for Racketlon
 
         //addSequenceItem(R.id.dyn_score_details       , R.string.scv_score_details); //.setDelay(1000); // a little extra delay to allow share button to appear
         addSequenceItemOval(R.id.float_match_share       , R.string.scv_share_button); //.setDelay(1000); // a little extra delay to allow share button to appear
 
-        addSequenceItemOval(R.id.sb_overflow_submenu     , R.string.scv_overflow_submenu_Squash);
+        addSequenceItemOval(R.id.sb_overflow_submenu     , R.string.scv_overflow_submenu__Squash);
         addSequenceItemOval(R.id.gamescores_container    , R.string.scv_toggle_action_bar);
         if ( bFromMenu ) {
-            addSequenceItemOval(iSomeActionBarId, R.string.scv_few_more_gui_hints_Squash);
+            addSequenceItemOval(iSomeActionBarId, R.string.scv_few_more_gui_hints__Squash);
         }
         addSequenceItemOval(iSomeActionBarId, R.string.scv_few_more_good_to_knows);
-        addSequenceItemOval(R.id.float_new_match         , R.string.scv_new_match_button_Squash).setDismissText(R.string.cmd_ok);
+        addSequenceItemOval(R.id.float_new_match         , R.string.scv_new_match_button__Squash).setDismissText(R.string.cmd_ok);
 
         scSequence.setOnItemChangeListener(showcaseListener);
         if ( bFromMenu ) {
@@ -1641,7 +1641,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( iNewResId > 0 ) {
             iResid = iNewResId;
         } else {
-            // ending with _Squash but no e.g. _Racketlon equivalent. Skip the item
+            // ending with __Squash but no e.g. __Racketlon equivalent. Skip the item
             return scSequence;
         }
         return scSequence.addSequenceItem(iViewId, iResid, shapeType);
@@ -3259,7 +3259,7 @@ touch -t 01030000 LAST.sb
                         showActivateMode(TabletennisModel.Mode.Expedite.toString());
 /*
                         if ( isDialogShowing() ) {
-                            Toast.makeText(ScoreBoard.this, R.string.activate_mode_Tabletennis, Toast.LENGTH_LONG).show();
+                            Toast.makeText(ScoreBoard.this, R.string.activate_mode__Tabletennis, Toast.LENGTH_LONG).show();
                         } else {
                             showActivateMode(TabletennisModel.Mode.Expedite.toString());
                         }
@@ -3557,8 +3557,8 @@ touch -t 01030000 LAST.sb
             setMenuItemVisibility(R.id.tt_activate_mode  , bIsInNormalMode == true );
             setMenuItemVisibility(R.id.tt_deactivate_mode, bIsInNormalMode == false);
             if ( PreferenceValues.isBrandTesting(this) ) {
-                setMenuItemTitle(menu, R.id.tt_activate_mode  , getString(R.string.activate_mode_Tabletennis));
-                setMenuItemTitle(menu, R.id.tt_deactivate_mode, getString(R.string.deactivate_mode_Tabletennis));
+                setMenuItemTitle(menu, R.id.tt_activate_mode  , getString(R.string.activate_mode__Tabletennis));
+                setMenuItemTitle(menu, R.id.tt_deactivate_mode, getString(R.string.deactivate_mode__Tabletennis));
             }
         } else {
             setMenuItemVisibility(R.id.tt_activate_mode  , false );
@@ -4221,7 +4221,7 @@ touch -t 01030000 LAST.sb
 
     public void _showTimer(Type timerType, boolean bAutoTriggered) {
         int iInitialSecs = PreferenceValues.getInteger(timerType.getPrefKey(), this, timerType.getDefaultSecs());
-        int iResId       = PreferenceValues.getSportTypeSpecificResId(this, R.integer.timerPauseBetweenGames_reminder_at_Squash);
+        int iResId       = PreferenceValues.getSportTypeSpecificResId(this, R.integer.timerPauseBetweenGames_reminder_at__Squash);
         int iReminderAt  = getResources().getInteger(iResId);
         boolean bIsResume = (timer != null);
         int iResumeAt = 0;
@@ -4891,8 +4891,8 @@ touch -t 01030000 LAST.sb
     // promo modus
     // ------------------------------------------------------
     private void initPreferencesForPromoDemoThread() {
-        PreferenceValues.setNumberR  (PreferenceKeys.numberOfGamesToWinMatch          , this, R.integer.numberOfGamesToWin_default_Squash);
-        PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame          , this, R.integer.gameEndScore_default_Squash);
+        PreferenceValues.setNumberR  (PreferenceKeys.numberOfGamesToWinMatch          , this, R.integer.numberOfGamesToWin_default__Squash);
+        PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame          , this, R.integer.gameEndScore_default__Squash);
         PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                   , this, TieBreakFormat.TwoClearPoints);
         PreferenceValues.setEnum     (PreferenceKeys.recordRallyEndStatsAfterEachScore, this, Feature.DoNotUse);
         PreferenceValues.setEnum     (PreferenceKeys.useTimersFeature                 , this, Feature.Suggest);

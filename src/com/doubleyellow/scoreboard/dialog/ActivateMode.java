@@ -46,8 +46,8 @@ public class ActivateMode extends BaseAlertDialog
     //private String m_sMode = null;
 
     @Override public void show() {
-        String sTitle = getString(R.string.activate_mode_Tabletennis);
-        String sDesc  = getString(R.string.activate_mode_description_Tabletennis, PreferenceValues.showModeDialogAfterXMins(context));
+        String sTitle = getString(R.string.activate_mode__Tabletennis);
+        String sDesc  = getString(R.string.activate_mode_description__Tabletennis, PreferenceValues.showModeDialogAfterXMins(context));
         adb.setTitle(sTitle + "?")
            .setMessage(sDesc)
            .setIcon   (R.drawable.microphone)

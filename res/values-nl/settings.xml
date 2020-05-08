@@ -35,7 +35,7 @@
     <string name="pref_Category_Technical">Technisch</string>
     <string name="pref_Category_End_of_Game">Game Einde</string>
     <string name="pref_Category_Others">Others</string>
-    <string name="pref_Category_Live_Score__ChromeCast">Live Score/ChromeCast</string>
+    <string name="pref_Category_Live_Score_ChromeCast">Live Score/ChromeCast</string>
     <string name="pref_Category_ChromeCast">ChromeCast</string>
     <string name="pref_Category_Directory_for_import_export">Folder voor import/export</string>
     <string name="pref_Category_Contacts">Contacten</string>

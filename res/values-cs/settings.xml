@@ -36,7 +36,7 @@
     <string name="pref_Category_Technical">Technické</string>
     <string name="pref_Category_End_of_Game">Konec setu</string>
     <string name="pref_Category_Others">Ostatní</string>
-    <string name="pref_Category_Live_Score__ChromeCast">Skóre živě/ChromeCast</string>
+    <string name="pref_Category_Live_Score_ChromeCast">Skóre živě/ChromeCast</string>
     <string name="pref_Category_ChromeCast">ChromeCast</string>
     <string name="pref_Category_Directory_for_import_export">Složka pro import/export</string>
     <string name="pref_Category_Contacts">Kontakty</string>

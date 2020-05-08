@@ -52,7 +52,12 @@ public abstract class XActivity extends /*Activity*/ AppCompatActivity /* For Im
 
     /** Method to be able to quickly switch between when extending Activity and AppCompatActivity */
     protected ActionBar getXActionBar() {
-        return super.getSupportActionBar(); // with ChromeCast
+        try {
+            return super.getSupportActionBar(); // with ChromeCast
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
         //return super.getActionBar();      // without Cast
     }
 

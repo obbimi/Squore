@@ -746,7 +746,7 @@
     <PreferenceScreen android:key="LiveScore_Cast"
                       android:icon="@drawable/ic_chromecast"
                       android:summary="@string/pref_live_score_summary"
-                      android:title="@string/pref_Category_Live_Score__ChromeCast">
+                      android:title="@string/pref_Category_Live_Score_ChromeCast">
         <PreferenceCategory android:title="@string/Live_Score">
             <com.doubleyellow.scoreboard.prefs.LiveScorePrefs
                 android:icon="@drawable/dummy"

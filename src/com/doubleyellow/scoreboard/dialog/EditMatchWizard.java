@@ -201,7 +201,7 @@ public class EditMatchWizard extends BaseAlertDialog
                 int iPreferredNrToWin = PreferenceValues.numberOfPointsToWinGame(context);
                     iPreferredNrToWin = matchModel.getNrOfPointsToWinGame();
                 SortedSet<Integer> lValues = new TreeSet<>();
-                int iCommonEndScoresResId = R.array.commonEndScores_Squash;
+                int iCommonEndScoresResId = R.array.commonEndScores__Squash;
                     iCommonEndScoresResId = PreferenceValues.getSportTypeSpecificResId(context, iCommonEndScoresResId);
                 int[] iaCommonEndScores = context.getResources().getIntArray(iCommonEndScoresResId);
                 for(int iEndScore: iaCommonEndScores) {
