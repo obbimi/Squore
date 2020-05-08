@@ -63,72 +63,72 @@ xxxhdpi: Extra-extra-extra-high-density uses (launcher icon only, see the note i
 http://developer.android.com/guide/practices/screens_support.html
 
 -->
-    <integer name="gameEndScore_default_Squash">11</integer>
-    <integer name="gameEndScore_default_Badminton">21</integer>
-    <integer name="gameEndScore_default_Tabletennis">11</integer>
-    <integer name="gameEndScore_default_Racketlon">21</integer>
-    <integer name="gameEndScore_default_Racquetball">15</integer>
-    <integer name="gameEndScore_default_TennisPadel">6</integer> <!-- abuse to be used as setEndScore default, gameEndScore is always 4 -->
+    <integer name="gameEndScore_default__Squash">11</integer>
+    <integer name="gameEndScore_default__Badminton">21</integer>
+    <integer name="gameEndScore_default__Tabletennis">11</integer>
+    <integer name="gameEndScore_default__Racketlon">21</integer>
+    <integer name="gameEndScore_default__Racquetball">15</integer>
+    <integer name="gameEndScore_default__TennisPadel">6</integer> <!-- abuse to be used as setEndScore default, gameEndScore is always 4 -->
 
-    <integer name="numberOfGamesToWin_default_Squash">3</integer>
-    <integer name="numberOfGamesToWin_default_Badminton">2</integer>
-    <integer name="numberOfGamesToWin_default_Tabletennis">4</integer>
-    <integer name="numberOfGamesToWin_default_Racketlon">-1</integer>
-    <integer name="numberOfGamesToWin_default_Racquetball">2</integer>
-    <integer name="numberOfGamesToWin_default_TennisPadel">2</integer> <!-- = number of sets to win default -->
+    <integer name="numberOfGamesToWin_default__Squash">3</integer>
+    <integer name="numberOfGamesToWin_default__Badminton">2</integer>
+    <integer name="numberOfGamesToWin_default__Tabletennis">4</integer>
+    <integer name="numberOfGamesToWin_default__Racketlon">-1</integer>
+    <integer name="numberOfGamesToWin_default__Racquetball">2</integer>
+    <integer name="numberOfGamesToWin_default__TennisPadel">2</integer> <!-- = number of sets to win default -->
 
-    <string name="endGameSuggestion_default_Squash">Suggest</string>
-    <string name="endGameSuggestion_default_Badminton">Suggest</string>
-    <string name="endGameSuggestion_default_Tabletennis">Suggest</string>
-    <string name="endGameSuggestion_default_Racketlon">Suggest</string>
-    <string name="endGameSuggestion_default_Racquetball">Suggest</string>
-    <string name="endGameSuggestion_default_TennisPadel">Automatic</string>
+    <string name="endGameSuggestion_default__Squash">Suggest</string>
+    <string name="endGameSuggestion_default__Badminton">Suggest</string>
+    <string name="endGameSuggestion_default__Tabletennis">Suggest</string>
+    <string name="endGameSuggestion_default__Racketlon">Suggest</string>
+    <string name="endGameSuggestion_default__Racquetball">Suggest</string>
+    <string name="endGameSuggestion_default__TennisPadel">Automatic</string>
 
     <!--
-        <integer name="numberOfGamesToWinSet_default_TennisPadel">6</integer>
-        <integer name="numberOfSetsToWin_default_TennisPadel">2</integer>
+        <integer name="numberOfGamesToWinSet_default__TennisPadel">6</integer>
+        <integer name="numberOfSetsToWin_default__TennisPadel">2</integer>
     -->
 
-    <integer name="timerWarmup_default_Squash">240</integer> <!-- changed from 300 to 240 according to new PSA rules -->
-    <integer name="timerWarmup_default_Badminton">300</integer> <!-- no warmup stuff specified in rules -->
-    <integer name="timerWarmup_default_Tabletennis">120</integer> <!-- two minutes according to rule 3.4.3.1 -->
-    <integer name="timerWarmup_default_Racketlon">180</integer> <!-- not specified in rules -->
-    <integer name="timerWarmup_default_TennisPadel">180</integer> <!-- TODO -->
+    <integer name="timerWarmup_default__Squash">240</integer> <!-- changed from 300 to 240 according to new PSA rules -->
+    <integer name="timerWarmup_default__Badminton">300</integer> <!-- no warmup stuff specified in rules -->
+    <integer name="timerWarmup_default__Tabletennis">120</integer> <!-- two minutes according to rule 3.4.3.1 -->
+    <integer name="timerWarmup_default__Racketlon">180</integer> <!-- not specified in rules -->
+    <integer name="timerWarmup_default__TennisPadel">180</integer> <!-- TODO -->
 
-    <string name="timerWarmup_values_default_Squash">240,300</string>
-    <string name="timerWarmup_values_default_Badminton">120,180,240,300</string>
-    <string name="timerWarmup_values_default_Tabletennis">240,300</string>
-    <string name="timerWarmup_values_default_Racketlon">180,240,300</string>
-    <string name="timerWarmup_values_default_TennisPadel">180,240,300</string> <!-- TODO -->
+    <string name="timerWarmup_values_default__Squash">240,300</string>
+    <string name="timerWarmup_values_default__Badminton">120,180,240,300</string>
+    <string name="timerWarmup_values_default__Tabletennis">240,300</string>
+    <string name="timerWarmup_values_default__Racketlon">180,240,300</string>
+    <string name="timerWarmup_values_default__TennisPadel">180,240,300</string> <!-- TODO -->
 
-    <integer-array name="commonEndScores_Squash"><item>9</item><item>11</item><item>15</item></integer-array>
-    <integer-array name="commonEndScores_Badminton"><item>11</item><item>21</item></integer-array>
-    <integer-array name="commonEndScores_Tabletennis"><item>11</item><item>21</item></integer-array>
-    <integer-array name="commonEndScores_Racketlon"><item>11</item><item>21</item></integer-array>
-    <integer-array name="commonEndScores_TennisPadel"><item>4</item><item>6</item></integer-array>
+    <integer-array name="commonEndScores__Squash"><item>9</item><item>11</item><item>15</item></integer-array>
+    <integer-array name="commonEndScores__Badminton"><item>11</item><item>21</item></integer-array>
+    <integer-array name="commonEndScores__Tabletennis"><item>11</item><item>21</item></integer-array>
+    <integer-array name="commonEndScores__Racketlon"><item>11</item><item>21</item></integer-array>
+    <integer-array name="commonEndScores__TennisPadel"><item>4</item><item>6</item></integer-array>
 
-    <integer name="timerPauseBetweenGames_default_Squash">90</integer> <!-- PSA: 120 -->
-    <integer name="timerPauseBetweenGames_default_Badminton">120</integer> <!-- 16.2.2 not exceeding 120 seconds between the first and second game, and between the second and third game shall be allowed in all matches.  -->
-    <integer name="timerPauseBetweenGames_default_Tabletennis">60</integer><!-- 3.4.4.1.1 an interval of up to 1 minute between successive games of an individual match; -->
-    <integer name="timerPauseBetweenGames_default_Racketlon">180</integer>
-    <integer name="timerPauseBetweenGames_default_TennisPadel">60</integer> <!-- TODO -->
+    <integer name="timerPauseBetweenGames_default__Squash">90</integer> <!-- PSA: 120 -->
+    <integer name="timerPauseBetweenGames_default__Badminton">120</integer> <!-- 16.2.2 not exceeding 120 seconds between the first and second game, and between the second and third game shall be allowed in all matches.  -->
+    <integer name="timerPauseBetweenGames_default__Tabletennis">60</integer><!-- 3.4.4.1.1 an interval of up to 1 minute between successive games of an individual match; -->
+    <integer name="timerPauseBetweenGames_default__Racketlon">180</integer>
+    <integer name="timerPauseBetweenGames_default__TennisPadel">60</integer> <!-- TODO -->
 
-    <string name="timerPauseBetweenGames_values_default_Squash">90,120</string>
-    <string name="timerPauseBetweenGames_values_default_Badminton">120,60</string> <!-- 16.2.2 -->
-    <string name="timerPauseBetweenGames_values_default_Tabletennis">60,90</string>
-    <string name="timerPauseBetweenGames_values_default_Racketlon">180,300</string>
-    <string name="timerPauseBetweenGames_values_default_TennisPadel">60,90</string> <!-- TODO -->
+    <string name="timerPauseBetweenGames_values_default__Squash">90,120</string>
+    <string name="timerPauseBetweenGames_values_default__Badminton">120,60</string> <!-- 16.2.2 -->
+    <string name="timerPauseBetweenGames_values_default__Tabletennis">60,90</string>
+    <string name="timerPauseBetweenGames_values_default__Racketlon">180,300</string>
+    <string name="timerPauseBetweenGames_values_default__TennisPadel">60,90</string> <!-- TODO -->
 
-    <integer name="timerPauseBetweenGames_reminder_at_Squash">15</integer>
-    <integer name="timerPauseBetweenGames_reminder_at_Badminton">20</integer> <!-- seen during BWF match -->
-    <integer name="timerPauseBetweenGames_reminder_at_Tabletennis">15</integer>
-    <integer name="timerPauseBetweenGames_reminder_at_Racketlon">15</integer>
-    <integer name="timerPauseBetweenGames_reminder_at_TennisPadel">15</integer> <!-- TODO -->
+    <integer name="timerPauseBetweenGames_reminder_at__Squash">15</integer>
+    <integer name="timerPauseBetweenGames_reminder_at__Badminton">20</integer> <!-- seen during BWF match -->
+    <integer name="timerPauseBetweenGames_reminder_at__Tabletennis">15</integer>
+    <integer name="timerPauseBetweenGames_reminder_at__Racketlon">15</integer>
+    <integer name="timerPauseBetweenGames_reminder_at__TennisPadel">15</integer> <!-- TODO -->
 
     <integer name="timerInjury_default">180</integer>
 
-    <integer name="serveButtonTransparencyNonServer_default_Squash">60</integer> <!-- between 0 and 100 -->
-    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Squash">false</bool>
+    <integer name="serveButtonTransparencyNonServer_default__Squash">60</integer> <!-- between 0 and 100 -->
+    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Squash">false</bool>
     <bool name="swapPlayersBetweenGames_default">true</bool>
     <bool name="useEnglishScoring_default">false</bool>
     <bool name="playAllGames_default">false</bool>
@@ -170,7 +170,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="useFeedAndPostFunctionality_default">true</bool>
     <bool name="useSinglesMatches_default">true</bool>
     <bool name="useMyListFunctionality_default">true</bool>
-    <bool name="useInjuryTimers_Squash">true</bool>
+    <bool name="useInjuryTimers__Squash">true</bool>
     <bool name="allowTrustAllCertificatesAndHosts_default">false</bool>
     <bool name="sortMatchesByEvent_default">true</bool>
     <bool name="TextSizeScoreAsBigAsPossible_default">true</bool>
@@ -286,7 +286,7 @@ http://developer.android.com/guide/practices/screens_support.html
 \nNicolette Fernandes
 ]]></string>
 -->
-    <string name="matchList_default_Squash"><![CDATA[- PSA Tournament > Semi Finals
+    <string name="matchList_default__Squash"><![CDATA[- PSA Tournament > Semi Finals
 \nGregory Gaultier [FRA] - Ramy Ashour [EGY]
 \nNick Matthew (GBR) - Miguel Ángel Rodríguez (COL)
 \n- Tuesday matches with me mates
@@ -299,7 +299,7 @@ http://developer.android.com/guide/practices/screens_support.html
 \n
 ]]></string>
 
-    <string name="pref_feedPostUrls_default_Squash"><![CDATA[Name=TournamentSoftware 1
+    <string name="pref_feedPostUrls_default__Squash"><![CDATA[Name=TournamentSoftware 1
 \nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches
 \nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players
 \n
@@ -329,7 +329,7 @@ http://developer.android.com/guide/practices/screens_support.html
 \nPostResult=demo/demo.post.matchresult.basic.auth.php?lang=en
 \nAuthentication=Basic
 ]]></string>
-    <string name="OfficialRulesURLs_default_Squash"><![CDATA[/help/rules.of.singles.squash.php
+    <string name="OfficialRulesURLs_default__Squash"><![CDATA[/help/rules.of.singles.squash.php
 \nhttp://www.worldsquash.org/ws/rules/rules-of-squash-2
 \nhttp://www.worldsquash.org/wp-content/uploads/2018/11/190101_Rules-of-Singles-Squash-2019-V1-1.pdf
 \nhttp://www.worldsquash.org/ws/wp-content/uploads/2014/11/150101_Doubles-Rules-Final.pdf

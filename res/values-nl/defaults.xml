@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pref_feedPostUrls_default_Squash"><![CDATA[Name=Toernooi.NL 1
+    <string name="pref_feedPostUrls_default__Squash"><![CDATA[Name=Toernooi.NL 1
 \nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches
 \nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players
 \n
@@ -36,12 +36,12 @@
 \nFeedPlayers=http://www.double-yellow.be/box/players.txt.php
 ]]></string>
 
-    <string name="OfficialRulesURLs_default_Squash"><![CDATA[/help/rules.of.singles.squash.php?lang-nl
+    <string name="OfficialRulesURLs_default__Squash"><![CDATA[/help/rules.of.singles.squash.php?lang-nl
 \nhttp://www.worldsquash.org/ws/rules/rules-of-squash-2
 \nhttp://www.worldsquash.org/ws/wp-content/uploads/2014/01/2014-Dutch-Rules.pdf
 ]]></string>
 
-    <string name="matchList_default_Squash"><![CDATA[- PSA Toernooi > Halve Finales
+    <string name="matchList_default__Squash"><![CDATA[- PSA Toernooi > Halve Finales
 \nGregory Gaultier [FRA] - Ramy Ashour [EGY]
 \nNick Matthew (GBR) - Miguel Ángel Rodríguez (COL)
 \nPiedro Schweertman (NLD) - Jan Van Den Herrewegen (BEL)

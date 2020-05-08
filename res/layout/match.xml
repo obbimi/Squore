@@ -476,7 +476,7 @@
                     android:id="@+id/lblMatch_GamesTo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/best_of_x_games_to_y_2_Squash"
+                    android:text="@string/best_of_x_games_to_y_2__Squash"
                     android:textSize="@dimen/txt_small"
                     android:layout_margin="2dp" />
                 <Spinner
@@ -510,7 +510,7 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/best_of_x_games_to_y_2_Squash"
+                    android:text="@string/best_of_x_games_to_y_2__Squash"
                     android:layout_margin="2dp"
                     android:id="@+id/lblMatch_GamesTo"/>
             <NumberPicker
@@ -737,7 +737,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textOff="@string/lbl_Scoring_PointPerRally"
-                android:textOn="@string/lbl_Scoring_PointWhenServing_Squash"
+                android:textOn="@string/lbl_Scoring_PointWhenServing__Squash"
                 android:textSize="@dimen/txt_small"
                 android:layoutMode="opticalBounds"
                 />
@@ -747,7 +747,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textOff="@string/lbl_Scoring_PointPerRally"
-                android:textOn="@string/lbl_Scoring_PointWhenServing_Squash"
+                android:textOn="@string/lbl_Scoring_PointWhenServing__Squash"
                 android:showText="true"
                 android:textSize="@dimen/txt_small"
                 android:layoutMode="opticalBounds"
@@ -935,7 +935,7 @@
                     android:background="@drawable/button_dark"
                     android:textCursorDrawable="@null"
                     android:paddingStart="@dimen/sb_playername_leftpadding"
-                    android:hint="@string/lbl_court_Squash"
+                    android:hint="@string/lbl_court__Squash"
                     android:textSize="@dimen/txt_small"
                     android:tag="item"
                     android:layout_width="match_parent"

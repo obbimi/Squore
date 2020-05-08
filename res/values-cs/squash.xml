@@ -43,7 +43,7 @@
     <string name="lbl_event">Soutěž</string>
     <string name="lbl_division">Divize</string>
     <string name="lbl_round">Kolo</string>
-    <string name="lbl_court_Squash">Kurt</string>
+    <string name="lbl_court__Squash">Kurt</string>
     <string name="lbl_location">Místo</string>
     <string name="lbl_referee">Rozhodčí</string>
     <string name="lbl_marker">Marker</string>

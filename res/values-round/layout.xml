@@ -2,12 +2,12 @@
 <resources>
 
     <!-- desired, activate per brand once approved for round screens by google -->
-    <fraction name="border_margin_playerButton_wear_round_TennisPadel">@fraction/border_margin_playerButton_wear_round_10</fraction>
-    <fraction name="border_margin_playerButton_wear_round_Squash">@fraction/border_margin_playerButton_wear_round_10</fraction>
-    <fraction name="border_margin_playerButton_wear_round_Badminton">@fraction/border_margin_playerButton_wear_round_10</fraction>
+    <fraction name="border_margin_playerButton_wear_round__TennisPadel">@fraction/border_margin_playerButton_wear_round_10</fraction>
+    <fraction name="border_margin_playerButton_wear_round__Squash">@fraction/border_margin_playerButton_wear_round_10</fraction>
+    <fraction name="border_margin_playerButton_wear_round__Badminton">@fraction/border_margin_playerButton_wear_round_10</fraction>
 <!--
-    <fraction name="border_margin_playerButton_wear_round_Tabletennis">@fraction/border_margin_playerButton_wear_round_10</fraction>
-    <fraction name="border_margin_playerButton_wear_round_Racketlon">@fraction/border_margin_playerButton_wear_round_10</fraction>
+    <fraction name="border_margin_playerButton_wear_round__Tabletennis">@fraction/border_margin_playerButton_wear_round_10</fraction>
+    <fraction name="border_margin_playerButton_wear_round__Racketlon">@fraction/border_margin_playerButton_wear_round_10</fraction>
 -->
 
     <fraction name="wear_score_width_2x">44%</fraction>

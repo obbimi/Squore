@@ -45,7 +45,7 @@
                 android:id="@+id/lblMatch_GamesTo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/best_of_x_games_to_y_2_Squash"
+                android:text="@string/best_of_x_games_to_y_2__Squash"
                 android:textSize="@dimen/txt_small"
                 android:layout_margin="2dp"
                 />
@@ -206,7 +206,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/lbl_Scoring"
             android:textOff="@string/lbl_Scoring_PointPerRally"
-            android:textOn="@string/lbl_Scoring_PointWhenServing_Squash"
+            android:textOn="@string/lbl_Scoring_PointWhenServing__Squash"
             android:textSize="@dimen/txt_small"
             />
     </LinearLayout>

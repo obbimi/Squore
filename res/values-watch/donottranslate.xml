@@ -13,24 +13,24 @@
     <string name="endGameSuggestion_default">Automatic</string>
     <string name="useOfficialAnnouncementsFeature_default">DoNotUse</string>
 
-    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_Squash">
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues__Squash">
         <!--        <item>OnDevice</item>-->
         <item>OnChromeCast</item>
     </string-array>
 
-    <string-array name="floatingMessageForGameBallOn_DefaultValues_Squash">
+    <string-array name="floatingMessageForGameBallOn_DefaultValues__Squash">
 <!--        <item>OnDevice</item>-->
         <item>OnChromeCast</item>
     </string-array>
-    <string-array name="floatingMessageForGameBallOn_DefaultValues_Tabletennis">
+    <string-array name="floatingMessageForGameBallOn_DefaultValues__Tabletennis">
 <!--        <item>OnDevice</item>-->
         <item>OnChromeCast</item>
     </string-array>
-    <string-array name="floatingMessageForGameBallOn_DefaultValues_Badminton">
+    <string-array name="floatingMessageForGameBallOn_DefaultValues__Badminton">
 <!--        <item>OnDevice</item>-->
         <item>OnChromeCast</item>
     </string-array>
-    <string-array name="floatingMessageForGameBallOn_DefaultValues_Racketlon">
+    <string-array name="floatingMessageForGameBallOn_DefaultValues__Racketlon">
 <!--        <item>OnDevice</item>-->
         <item>OnChromeCast</item>
     </string-array>

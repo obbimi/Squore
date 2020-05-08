@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="lbl_Scoring_PointWhenServing_Badminton">Classic</string>
+    <string name="lbl_Scoring_PointWhenServing__Badminton">Classic</string>
 
-    <string name="pref_swapPlayersHalfwayGame_Badminton">Swap players halfway the deciding game</string>
+    <string name="pref_swapPlayersHalfwayGame__Badminton">Swap players halfway the deciding game</string>
 
     <!-- badminton -->
     <string name="oa_matchpoint">Match point</string>
     <string name="oa_gamepoint">Game point</string>
 
-    <string name="end_game_Badminton">End game</string>
-    <string name="best_of_x_games_to_y_2_Badminton">games to</string>
-    <string name="lbl_court_Badminton">Court</string>
+    <string name="end_game__Badminton">End game</string>
+    <string name="best_of_x_games_to_y_2__Badminton">games to</string>
+    <string name="lbl_court__Badminton">Court</string>
 
 
-    <string name="scv_side_buttons_Badminton">The __serve buttons__ indicate
+    <string name="scv_side_buttons__Badminton">The __serve buttons__ indicate
         \n
         \n- who should serve
         \n- if the player may should serve from the right (R) or from the left (L)
         \n\nThe serve indication changes automatically after each point entered.
         \n\nIf required (but normally it is not), you can toggle player by tapping it.
     </string>
-    <string name="scv_timer_button_Badminton">This button will allow you to start a __timer__.
+    <string name="scv_timer_button__Badminton">This button will allow you to start a __timer__.
         \n\nIt will only appear when appropriate
         \n
         \n- Warmup before the match
         \n- Between games
     </string>
-    <string name="scv_shirt_color_Badminton">You can optionally __enter a color__ for both players/teams.
+    <string name="scv_shirt_color__Badminton">You can optionally __enter a color__ for both players/teams.
         \n\nLong click the serve side button to select a color.</string>
-    <string name="scv_game_scores_Badminton">The scores of __previous games__ are visible here.
+    <string name="scv_game_scores__Badminton">The scores of __previous games__ are visible here.
         \n\nTap it to see all details of previous games.</string>
     <!--
-    <string name="scv_overflow_submenu_Badminton">More options are available from the menu. You can for example:
+    <string name="scv_overflow_submenu__Badminton">More options are available from the menu. You can for example:
         \n
         \n- Customize appearance and behaviour of the app via \'Settings\'
         \n- Show details of previously reffed matches
@@ -41,12 +41,12 @@
         \n- Consult the official racketlon rules
     </string>
     -->
-    <string name="scv_new_match_button_Badminton">__That\'s it. Enjoy your Badminton.__
+    <string name="scv_new_match_button__Badminton">__That\'s it. Enjoy your Badminton.__
         \n\nStart a new match by tapping this button.</string>
 
-    <string name="sb_official_rules_Badminton">Official Badminton rules</string><!--  -->
+    <string name="sb_official_rules__Badminton">Official Badminton rules</string><!--  -->
 
-    <string name="pref_feedPostUrls_default_Badminton"><![CDATA[Name=TournamentSoftware 1
+    <string name="pref_feedPostUrls_default__Badminton"><![CDATA[Name=TournamentSoftware 1
 \nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches&sport=badminton
 \nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players&sport=badminton
 \n
@@ -59,11 +59,11 @@
 \nFeedPlayers=demo/demo.players.badminton.txt
 \nPostResult=demo/demo.post.matchresult.php?lang=en
 ]]></string>
-    <string name="OfficialRulesURLs_default_Badminton"><![CDATA[http://www.worldbadminton.com/rules/
+    <string name="OfficialRulesURLs_default__Badminton"><![CDATA[http://www.worldbadminton.com/rules/
 \nhttps://web.mst.edu/~ima/rules/Badmintonrules.html
 ]]></string>
 
-    <string name="matchList_default_Badminton"><![CDATA[- China Open
+    <string name="matchList_default__Badminton"><![CDATA[- China Open
 \nMomota Kento [JAP] - Shi Yuki [CHN]
 \nAxelsen Viktor [DEN] - Chou Tien Chen [TPE]
 \n- Tuesday matches with mates
@@ -76,6 +76,6 @@
 \nPolii/Rahayu [INA] - Fruergaard/Thygesen [DEN]
 ]]></string>
 
-    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Badminton">true</bool>
-    <integer name="serveButtonTransparencyNonServer_default_Badminton">90</integer> <!-- between 0 and 100 -->
+    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Badminton">true</bool>
+    <integer name="serveButtonTransparencyNonServer_default__Badminton">90</integer> <!-- between 0 and 100 -->
 </resources>

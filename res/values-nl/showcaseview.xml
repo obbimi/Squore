@@ -15,7 +15,7 @@
         \n- het resultaat van de toss in te geven
         \n- de app te laten tossen
     </string>
-    <string name="scv_side_buttons_Squash">De __opslag kant knoppen__ geven aan
+    <string name="scv_side_buttons__Squash">De __opslag kant knoppen__ geven aan
         \n
         \n- wie er moet serveren
         \n- van welke kant (L/R)
@@ -32,35 +32,35 @@
         \n
         \nEen andere mogelijk om de score te herstellen is door te swipen over de score knop welke je per ongeluk had verhoogd.
     </string>
-    <string name="scv_player_buttons_appeal_Squash">Het bijhouden van __Stroke/Yes Let/No let__ beslissingen kan door kort op de naam van een speler te drukken.
+    <string name="scv_player_buttons_appeal__Squash">Het bijhouden van __Stroke/Yes Let/No let__ beslissingen kan door kort op de naam van een speler te drukken.
         \nIn de dialoog die verschijnt kan je je beslissing ingeven.
     </string>
 <!--
     \n
     \nIn case of _No let_ or _Stroke_, the awarded point is automatically reflected by the app. (No need to tap the big score button).
 -->
-    <string name="scv_player_buttons_misconduct_Squash">Eveneens kan je __Conduct Warning/Stroke__ beslissingen bijhouden.
+    <string name="scv_player_buttons_misconduct__Squash">Eveneens kan je __Conduct Warning/Stroke__ beslissingen bijhouden.
         \n
         \nHoud hiervoor een spelers knop wat langer ingedrukt.</string>
-    <string name="scv_old_fashioned_scoring_Squash">Een \'ouderwets\' score blad is zichtbaar in het midden van het scherm.
+    <string name="scv_old_fashioned_scoring__Squash">Een \'ouderwets\' score blad is zichtbaar in het midden van het scherm.
         \n\nDeze kan eventueel worden uitgezet via \'Instellingen\'.</string>
 <!--
     <string name="scv_home_button">At any time you can also start a new match by tapping the home button.</string>
 -->
-    <string name="scv_announcement_button_Squash">Deze knop verschijnt als een __officiele aankondiging__ van toepassing is:
+    <string name="scv_announcement_button__Squash">Deze knop verschijnt als een __officiele aankondiging__ van toepassing is:
         \n
         \n - Begin van een game/wedstrijd
         \n - Einde van een game/wedstrijd
         \n - Eerste tiebreak
         \n
         \nDruk er op om de aankondiging te zien.</string>
-    <string name="scv_shirt_color_Squash">Als je 2 spelers moet reffen die je (nog) niet bij naam kent,
+    <string name="scv_shirt_color__Squash">Als je 2 spelers moet reffen die je (nog) niet bij naam kent,
         kan je per speler __een kleur ingeven__.
         \n\nHoud hiervoor de __opslag kant knop__ even ingedrukt.</string>
-    <string name="scv_game_scores_Squash">Het aantal gewonnen games is hier te zien.
+    <string name="scv_game_scores__Squash">Het aantal gewonnen games is hier te zien.
         \n
         \nDruk er op om de eindstand van __vorige games__ te zien.</string>
-    <string name="scv_timer_button_Squash">Deze knop laat het je toe een __timer__ te starten.
+    <string name="scv_timer_button__Squash">Deze knop laat het je toe een __timer__ te starten.
         \n\nHij verschijnt alleen als een timer toepasselijk is:
         \n
         \n- Opwarming
@@ -75,7 +75,7 @@
         \n- Post de uitslag naar een website
         \n- Email het score blad
       </string>
-    <string name="scv_overflow_submenu_Squash">Andere opties zijn beschikbaar via het menu. Je kan er bijvoorbeeld:
+    <string name="scv_overflow_submenu__Squash">Andere opties zijn beschikbaar via het menu. Je kan er bijvoorbeeld:
         \n
         \n- Aanpassen van de \'Look and feel\' en van het gedrag van de app via \'Instellingen\'
         \n- Resultaten van eerdere, met de app ingegeven, wedstrijden bekijken
@@ -90,7 +90,7 @@
         \n
         \nAls de actiebar is verborgen heb je geen \'Herstel\' knop maar kan je nog altijd herstellen door te \'Swipen\'!
           </string>
-    <string name="scv_few_more_gui_hints_Squash">Nog een paar hints:
+    <string name="scv_few_more_gui_hints__Squash">Nog een paar hints:
         \n
         \n__Speler knoppen__
         \n
@@ -110,6 +110,6 @@
         \n- Je kan ook de volume knop instellen om de ingave van punten mee te doen. (Moet ge-activeerd worden via \'Instellingen\').
         \n- Je kan een wedstrijd van device naar device overzetten door middel van NFC/Android beam.
           </string>
-    <string name="scv_new_match_button_Squash">__Dat was het. Happy squashing, happy reffing.__
+    <string name="scv_new_match_button__Squash">__Dat was het. Happy squashing, happy reffing.__
         \n\nStart een nieuwe wedstrijd door op deze knop te klikken.</string>
 </resources>

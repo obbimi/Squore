@@ -102,7 +102,7 @@
     <string name="sb_score_details">Dettagli di Punteggio</string>
     <string name="Live_Score">Punteggio in diretta</string>
     <string name="sb_official_announcement">Annuncio ufficiale</string>
-    <string name="sb_official_rules_Squash">Regolamento ufficiale squash</string>
+    <string name="sb_official_rules__Squash">Regolamento ufficiale squash</string>
     <string name="sb_possible_conducts">Possibili Condotte</string>
     <string name="sb_self_inflicted_injury">Infortunio Auto-Inflitto</string>
     <string name="sb_opponent_inflicted_injury">Infortunio Inflitto dall\'avversario</string>
@@ -114,7 +114,7 @@
     <string name="sb_delete_group">Elimina gruppo</string>
     <string name="sb_edit_item">Modifica voce \'%s\'</string>
     <string name="sb_new_item">Nuova voce \'%s\'</string>
-    <string name="end_game_Squash">Termina gioco</string>
+    <string name="end_game__Squash">Termina gioco</string>
     <string name="end_match">Termina incontro</string>
     <string name="sb_match_history">Cronologia incontro</string>
     <string name="sb_stored_matches">Incontri salvati</string>
@@ -133,7 +133,7 @@
     <string name="total_of_x_games_to_y_1">Totale di</string>
 
     <string name="best_of_x_games_to_y_1">Al meglio di</string>
-    <string name="best_of_x_games_to_y_2_Squash">giochi a</string>
+    <string name="best_of_x_games_to_y_2__Squash">giochi a</string>
 
     <string name="no_statistics_recorded_for_this_match">Nessuna statistica (vincenti/sbagliate) registrata per questo incontro</string>
 

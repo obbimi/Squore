@@ -26,19 +26,19 @@
     <integer name="autoShowGamePausedDialogAfterXPoints_default">6</integer>
     <integer name="timerTowelingDown_default">60</integer>
 
-    <string name="pref_swapPlayersHalfwayGame_Tabletennis">Swap players halfway the deciding game</string>
+    <string name="pref_swapPlayersHalfwayGame__Tabletennis">Swap players halfway the deciding game</string>
 
-    <string name="activate_mode_Tabletennis">Activate expedite</string>
-    <string name="activate_mode_description_Tabletennis">More than %s minutes passed since the start of the game. Activate the expedite system?</string>
-    <string name="deactivate_mode_Tabletennis">De-activate expedite</string>
-    <string name="NewMatchesType_default_Tabletennis">TeamVsTeam_XMatchesPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
+    <string name="activate_mode__Tabletennis">Activate expedite</string>
+    <string name="activate_mode_description__Tabletennis">More than %s minutes passed since the start of the game. Activate the expedite system?</string>
+    <string name="deactivate_mode__Tabletennis">De-activate expedite</string>
+    <string name="NewMatchesType_default__Tabletennis">TeamVsTeam_XMatchesPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
 
     <string name="number_of_serves_per_player">Number of serves per player</string>
-    <string name="end_game_Tabletennis">End game</string>
-    <string name="best_of_x_games_to_y_2_Tabletennis">games to</string>
-    <string name="lbl_court_Tabletennis">Table</string>
+    <string name="end_game__Tabletennis">End game</string>
+    <string name="best_of_x_games_to_y_2__Tabletennis">games to</string>
+    <string name="lbl_court__Tabletennis">Table</string>
 
-    <string name="scv_side_buttons_Tabletennis">The __serve buttons__ indicate
+    <string name="scv_side_buttons__Tabletennis">The __serve buttons__ indicate
         \n
         \n- who should serve
         \n- if the player may serve twice (Ⅱ) or just one more time (Ⅰ) before serve switches to the opponent
@@ -47,19 +47,19 @@
 <!--
     \n\nIf required (but normally it is not), you can toggle player by tapping it.
 -->
-    <string name="scv_timer_button_Tabletennis">This button will allow you to start a __timer__.
+    <string name="scv_timer_button__Tabletennis">This button will allow you to start a __timer__.
         \n\nIt will only appear when appropriate
         \n
         \n- Warmup before the match
         \n- Between games
         \n- Toweling down
     </string>
-    <string name="scv_shirt_color_Tabletennis">You can optionally __enter a color__ for both players/teams.
+    <string name="scv_shirt_color__Tabletennis">You can optionally __enter a color__ for both players/teams.
         \n\nLong click the serve side button to select a color.</string>
-    <string name="scv_game_scores_Tabletennis">The scores of __previous games__ are visible here.
+    <string name="scv_game_scores__Tabletennis">The scores of __previous games__ are visible here.
         \n\nTap it to see all details of previous games.</string>
     <!--
-    <string name="scv_overflow_submenu_Tabletennis">More options are available from the menu. You can for example:
+    <string name="scv_overflow_submenu__Tabletennis">More options are available from the menu. You can for example:
         \n
         \n- Customize appearance and behaviour of the app via \'Settings\'
         \n- Show details of previously reffed matches
@@ -69,12 +69,12 @@
         \n- Consult the official racketlon rules
     </string>
     -->
-    <string name="scv_new_match_button_Tabletennis">__That\'s it. Enjoy your table tennis.__
+    <string name="scv_new_match_button__Tabletennis">__That\'s it. Enjoy your table tennis.__
         \n\nStart a new match by tapping this button.</string>
 
-    <string name="sb_official_rules_Tabletennis">Official table tennis rules</string><!--  -->
+    <string name="sb_official_rules__Tabletennis">Official table tennis rules</string><!--  -->
 
-    <string name="pref_feedPostUrls_default_Tabletennis"><![CDATA[Name=TournamentSoftware 1
+    <string name="pref_feedPostUrls_default__Tabletennis"><![CDATA[Name=TournamentSoftware 1
 \nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches&sport=tabletennis
 \nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players&sport=tabletennis
 \n
@@ -87,11 +87,11 @@
 \nFeedPlayers=demo/demo.players.tabletennis.txt
 \nPostResult=demo/demo.post.matchresult.php?lang=en
 ]]></string>
-    <string name="OfficialRulesURLs_default_Tabletennis"><![CDATA[http://www.ittf.com/?media-alias=2017_ITTF_Handbook
+    <string name="OfficialRulesURLs_default__Tabletennis"><![CDATA[http://www.ittf.com/?media-alias=2017_ITTF_Handbook
 \nhttp://pongworld.com/table-tennis-sport/official-rules
 ]]></string>
 
-    <string name="matchList_default_Tabletennis"><![CDATA[- Seamaster 2017 ITTF World Tour Platinum, China Open
+    <string name="matchList_default__Tabletennis"><![CDATA[- Seamaster 2017 ITTF World Tour Platinum, China Open
 \nOVTCHAROV Dimitrij [GER] - FAN Zhendong [CHN]
 \nHARIMOTO Tomokazu [JAP] - BOLL Timo [GER]
 \n- Tuesday matches with mates
@@ -103,6 +103,6 @@
 \nMa Long/Xu Xin [CHN] - Harimoto/Koki Niwa [JAP]
 ]]></string>
 
-    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Tabletennis">true</bool>
-    <integer name="serveButtonTransparencyNonServer_default_Tabletennis">90</integer> <!-- between 0 and 100 -->
+    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Tabletennis">true</bool>
+    <integer name="serveButtonTransparencyNonServer_default__Tabletennis">90</integer> <!-- between 0 and 100 -->
 </resources>

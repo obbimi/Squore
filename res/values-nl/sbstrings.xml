@@ -98,7 +98,7 @@
     <string name="sb_injury_timer">Blessure Timer</string>
     <string name="sb_score_details">Score verloop</string>
     <string name="sb_official_announcement">Officiele aankondiging</string>
-    <string name="sb_official_rules_Squash">Officiele squash regels</string>
+    <string name="sb_official_rules__Squash">Officiele squash regels</string>
     <string name="sb_possible_conducts">Mogelijke \'Conducts\'</string>
     <string name="sb_self_inflicted_injury">Zelf-veroorzaakte blessure</string>
     <string name="sb_opponent_inflicted_injury">Blessure door tegenstander</string>
@@ -110,7 +110,7 @@
     <string name="sb_delete_group">Verwijder groep</string>
     <string name="sb_edit_item">Wijzig item \'%s\'</string>
     <string name="sb_new_item">Nieuw \'%s\' item</string>
-    <string name="end_game_Squash">Beëindig game</string>
+    <string name="end_game__Squash">Beëindig game</string>
     <string name="end_match">Beëindig wedstrijd</string>
     <string name="sb_match_history">Wedstrijd historiek</string>
     <string name="sb_stored_matches">Opgeslagen wedstrijden</string>
@@ -123,7 +123,7 @@
     <string name="press_again_to_undo_last_score">Druk nogmaals op score verloop om laatste score ongedaan te maken</string>
     <string name="unable_to_interpret_entered_text_as_2_names">Sorry, de ingegeven text kon niet eenduidig als 2 namen worden geinterpreteerd</string>
     <string name="best_of_x_games_to_y_1">Best of</string>
-    <string name="best_of_x_games_to_y_2_Squash">games tot</string>
+    <string name="best_of_x_games_to_y_2__Squash">games tot</string>
 
     <string name="no_statistics_recorded_for_this_match">Geen statistieken (winners/fouten) ingegeven voor deze wedstrijd.</string>
 

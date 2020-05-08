@@ -2,9 +2,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <bool name="showActionBar_default">false</bool>
 
-    <string name="endGameSuggestion_default_Squash">Automatic</string>
-    <string name="endGameSuggestion_default_Tabletennis">Automatic</string>
-    <string name="endGameSuggestion_default_Badminton">Automatic</string>
+    <string name="endGameSuggestion_default__Squash">Automatic</string>
+    <string name="endGameSuggestion_default__Tabletennis">Automatic</string>
+    <string name="endGameSuggestion_default__Badminton">Automatic</string>
 
 <!--    <dimen name="sb_button_radius">10dp</dimen>-->
 

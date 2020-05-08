@@ -13,25 +13,25 @@
 -->
     <color name="translucent_orange">#CCffbb33</color>
 
-    <string-array name="colorSchema_TennisPadel" translatable="false">
+    <string-array name="colorSchema__TennisPadel" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|IPF Light             |#1C3755|#D63E2D|#7BB0E7|#FFFFFF|</item><!-- purple|red|blue... -->
         <item>|IPF Dark              |#1C3755|#D63E2D|#7BB0E7|#000000|</item><!-- purple|red|blue... -->
     </string-array>
-    <string-array name="colorSchema_Racketlon" translatable="false">
+    <string-array name="colorSchema__Racketlon" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|FIR Light             |#004071|#C30D14|#D6D6D6|#FFFFFF|</item><!-- purple|red|grey... -->
         <item>|FIR Dark              |#004071|#C30D14|#D6D6D6|#000000|</item><!-- purple|red|grey... -->
     </string-array>
-    <string-array name="colorSchema_Racquetball" translatable="false">
+    <string-array name="colorSchema__Racquetball" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|Light                 |#004071|#C30D14|#D6D6D6|#FFFFFF|</item><!-- purple|red|grey... -->
         <item>|Dark                  |#004071|#C30D14|#D6D6D6|#000000|</item><!-- purple|red|grey... -->
     </string-array>
-    <string-array name="colorSchema_Tabletennis" translatable="false">
+    <string-array name="colorSchema__Tabletennis" translatable="false">
                                 <!-- scorebtn|name  |serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|Tabletennis Rubbers   |#000001|#C3161C|#DDDDDD|#FFFFFF|</item><!-- black|red|grey ... -->
@@ -40,7 +40,7 @@
         <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
         <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
-    <string-array name="colorSchema_Badminton" translatable="false">
+    <string-array name="colorSchema__Badminton" translatable="false">
                                 <!-- scorebtn|name  |serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|BWF                   |#000001|#DF2027|#DDDDDD|#FFFFFF|</item><!-- black|red|grey ... -->

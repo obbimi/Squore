@@ -11,14 +11,14 @@
     <string name="Resume_game">Herneem game</string>
 
     <string name="number_of_serves_per_player">Aantal opslagen per speler</string>
-    <string name="end_game_Tabletennis">Beëindig game</string>
-    <string name="best_of_x_games_to_y_2_Tabletennis">games tot</string>
-    <string name="lbl_court_Tabletennis">Tafel</string>
+    <string name="end_game__Tabletennis">Beëindig game</string>
+    <string name="best_of_x_games_to_y_2__Tabletennis">games tot</string>
+    <string name="lbl_court__Tabletennis">Tafel</string>
 
     <string name="pref_autoShow_towelingDown_timer_after_X_points">Toon \'Toweling down\' timer na elke X punten</string>
-    <string name="pref_swapPlayersHalfwayGame_Tabletennis">Verwissel spelers halverwege game</string>
+    <string name="pref_swapPlayersHalfwayGame__Tabletennis">Verwissel spelers halverwege game</string>
 
-    <string name="scv_side_buttons_Tabletennis">De __opslag kant knoppen__ geven aan
+    <string name="scv_side_buttons__Tabletennis">De __opslag kant knoppen__ geven aan
         \n
         \n- wie er moet serveren
         \n- of de speler nog twee (Ⅱ) of één (Ⅰ) beurt heeft om op te slaan
@@ -27,19 +27,19 @@
         \n
         \nIndien nodig kan je van speler/kant wisselen door kort op de knop te drukken.
     </string>
-    <string name="scv_timer_button_Tabletennis">Deze knop laat het je toe een __timer__ te starten.
+    <string name="scv_timer_button__Tabletennis">Deze knop laat het je toe een __timer__ te starten.
         \n\nHij verschijnt alleen als een timer toepasselijk is:
         \n
         \n- Opwarming
         \n- Tussen twee games
         \n- Toweling down
     </string>
-    <string name="scv_shirt_color_Tabletennis">Je kan eventueel een kleur in geven voor beide spelers/teams.
+    <string name="scv_shirt_color__Tabletennis">Je kan eventueel een kleur in geven voor beide spelers/teams.
         \n\nHoud hiervoor de __opslag kant knop__ even ingedrukt.</string>
-    <string name="scv_game_scores_Tabletennis">De eindstand van __vorige games__ van een wedstrijd zijn hier te zien.
+    <string name="scv_game_scores__Tabletennis">De eindstand van __vorige games__ van een wedstrijd zijn hier te zien.
         \n\nDruk er op om details van reeds gespeelde games in grafiek vorm te zien.</string>
     <!--
-    <string name="scv_overflow_submenu_Tabletennis">More options are available from the menu. You can for example:
+    <string name="scv_overflow_submenu__Tabletennis">More options are available from the menu. You can for example:
         \n
         \n- Customize appearance and behaviour of the app via \'Settings\'
         \n- Show details of previously reffed matches
@@ -49,12 +49,12 @@
         \n- Consult the official racketlon rules
     </string>
     -->
-    <string name="scv_new_match_button_Tabletennis">__Dat was het. Veel tafel tennis plezier.__
+    <string name="scv_new_match_button__Tabletennis">__Dat was het. Veel tafel tennis plezier.__
         \n\nStart een nieuwe wedstrijd door op deze knop te klikken.</string>
 
-    <string name="sb_official_rules_Tabletennis">Officiele tafel tennis regels</string>
+    <string name="sb_official_rules__Tabletennis">Officiele tafel tennis regels</string>
 
-    <string name="pref_feedPostUrls_default_Tabletennis"><![CDATA[Name=Toernooi.NL 1
+    <string name="pref_feedPostUrls_default__Tabletennis"><![CDATA[Name=Toernooi.NL 1
 \nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches&sport=tabletennis
 \nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players&sport=tabletennis
 \n
@@ -67,11 +67,11 @@
 \nFeedPlayers=demo/demo.players.tabletennis.txt
 \nPostResult=demo/demo.post.matchresult.php?lang=en
 ]]></string>
-    <string name="OfficialRulesURLs_default_Tabletennis"><![CDATA[http://www.ittf.com/?media-alias=2017_ITTF_Handbook
+    <string name="OfficialRulesURLs_default__Tabletennis"><![CDATA[http://www.ittf.com/?media-alias=2017_ITTF_Handbook
 \nhttps://pongworld.com/table-tennis-sport/official-rules
 ]]></string>
 
-    <string name="matchList_default_Tabletennis"><![CDATA[- Seamaster 2017 ITTF World Tour Platinum, China Open
+    <string name="matchList_default__Tabletennis"><![CDATA[- Seamaster 2017 ITTF World Tour Platinum, China Open
 \nOVTCHAROV Dimitrij [GER] - FAN Zhendong [CHN]
 \nHARIMOTO Tomokazu [JAP] - BOLL Timo [GER]
 \n- Dinsdag wedstrijden met vrienden

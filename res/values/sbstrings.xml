@@ -104,7 +104,7 @@
     <string name="sb_score_details">Score Details</string>
     <string name="Live_Score">Live Score</string>
     <string name="sb_official_announcement">Official announcement</string>
-    <string name="sb_official_rules_Squash">Official squash rules</string>
+    <string name="sb_official_rules__Squash">Official squash rules</string>
     <string name="sb_possible_conducts">Possible Conducts</string>
     <string name="sb_self_inflicted_injury">Self-Inflicted Injury</string>
     <string name="sb_opponent_inflicted_injury">Opponent-Inflicted Injury</string>
@@ -116,7 +116,7 @@
     <string name="sb_delete_group">Delete group</string>
     <string name="sb_edit_item">Edit item \'%s\'</string>
     <string name="sb_new_item">New \'%s\' item</string>
-    <string name="end_game_Squash">End game</string>
+    <string name="end_game__Squash">End game</string>
     <string name="end_match">End match</string>
     <string name="sb_match_history">Match history</string>
     <string name="sb_stored_matches">Stored matches</string>
@@ -135,7 +135,7 @@
     <string name="total_of_x_games_to_y_1">Total of</string>
 
     <string name="best_of_x_games_to_y_1">Best of</string>
-    <string name="best_of_x_games_to_y_2_Squash">games to</string>
+    <string name="best_of_x_games_to_y_2__Squash">games to</string>
 
     <string name="no_statistics_recorded_for_this_match">No statistics (winners/errors) recorded for this match</string>
 

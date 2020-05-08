@@ -21,28 +21,28 @@
     <string name="developer">Iddo Hoeve</string>
     <string name="developer_email">iddo.hoeve@gmail.com</string>
 
-    <string name="app_name_short_brand_Squash">Squore</string>
-    <string name="app_name_short_brand_Racketlon">Score Racketlon</string>
-    <string name="app_name_short_brand_Tabletennis">Score Table Tennis</string>
-    <string name="app_name_short_brand_Badminton">Score Badminton</string>
-    <string name="app_name_short_brand_TennisPadel">Score Tennis/Padel</string>
-    <string name="app_name_short_brand_Padel">Score Padel</string>
+    <string name="app_name_short_brand__Squash">Squore</string>
+    <string name="app_name_short_brand__Racketlon">Score Racketlon</string>
+    <string name="app_name_short_brand__Tabletennis">Score Table Tennis</string>
+    <string name="app_name_short_brand__Badminton">Score Badminton</string>
+    <string name="app_name_short_brand__TennisPadel">Score Tennis/Padel</string>
+    <string name="app_name_short_brand__Padel">Score Padel</string>
 <!--
     <string name="app_name">Squore</string>
     <string name="app_scoreboard">Squore Board</string>
 -->
 
-    <string name="activate_mode_Squash">@string/activate_mode_Empty</string>
-    <string name="deactivate_mode_Squash">@string/deactivate_mode_Empty</string>
+    <string name="activate_mode__Squash">@string/activate_mode_Empty</string>
+    <string name="deactivate_mode__Squash">@string/deactivate_mode_Empty</string>
     <string name="activate_mode_Empty"><!--Activate xxx--></string>
     <string name="deactivate_mode_Empty"><!--De-activate xxx--></string>
 
-    <integer name="showModeDialogAfterXMins_default_Tabletennis">10</integer>
-    <integer name="showModeDialogAfterXMins_default_Squash">@integer/showModeDialogAfterXMins_default_Empty</integer>
+    <integer name="showModeDialogAfterXMins_default__Tabletennis">10</integer>
+    <integer name="showModeDialogAfterXMins_default__Squash">@integer/showModeDialogAfterXMins_default_Empty</integer>
     <integer name="showModeDialogAfterXMins_default_Empty">-1</integer>
 
-    <string name="pref_swapPlayersHalfwayGame_Squash"/> <!--Not used in squash version of the app -->
-    <string name="NewMatchesType_default_Squash">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
+    <string name="pref_swapPlayersHalfwayGame__Squash"/> <!--Not used in squash version of the app -->
+    <string name="NewMatchesType_default__Squash">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
     <string name="lbl_Scoring_PointWhenServing_Empty">Score when serving</string> <!-- not used -->
 
 
@@ -50,11 +50,11 @@
     <string name="supported_languages">en,nl,fr,cs</string>
     <string name="soon_to_come_languages">de,es,pt</string>
 
-    <string name="scorelineLayout_default_Squash">DigitsInside</string>
-    <string name="scorelineLayout_default_Badminton">HideServeSide</string>
-    <string name="scorelineLayout_default_Racketlon">HideServeSide</string>
-    <string name="scorelineLayout_default_Tabletennis">HideServeSide</string>
-    <string name="scorelineLayout_default_TennisPadel">HideServeSide</string>
+    <string name="scorelineLayout_default__Squash">DigitsInside</string>
+    <string name="scorelineLayout_default__Badminton">HideServeSide</string>
+    <string name="scorelineLayout_default__Racketlon">HideServeSide</string>
+    <string name="scorelineLayout_default__Tabletennis">HideServeSide</string>
+    <string name="scorelineLayout_default__TennisPadel">HideServeSide</string>
 
     <string name="newMatchLayout_default">AllFields</string>
     <string name="groupArchivedMatchesBy_default">Date</string>
@@ -113,45 +113,45 @@
         <item>Landscape</item>
         <item>Portrait</item>
     </string-array>
-    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_Squash">
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues__Squash">
         <item>OnDevice</item>
         <!--<item>OnChromeCast</item>-->
     </string-array>
-    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_Racketlon">
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues__Racketlon">
         <!--<item>OnDevice</item>-->
         <!--<item>OnChromeCast</item>-->
     </string-array>
-    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_Tabletennis">
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues__Tabletennis">
         <!--<item>OnDevice</item>-->
         <!--<item>OnChromeCast</item>-->
     </string-array>
-    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_TennisPadel">
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues__TennisPadel">
         <!--<item>OnDevice</item>-->
         <!--<item>OnChromeCast</item>-->
     </string-array>
-    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues_Badminton">
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues__Badminton">
         <item>OnDevice</item>
         <!--<item>OnChromeCast</item>-->
     </string-array>
 
 
-    <string-array name="floatingMessageForGameBallOn_DefaultValues_Squash">
+    <string-array name="floatingMessageForGameBallOn_DefaultValues__Squash">
         <item>OnDevice</item>
         <item>OnChromeCast</item>
     </string-array>
-    <string-array name="floatingMessageForGameBallOn_DefaultValues_Racketlon">
+    <string-array name="floatingMessageForGameBallOn_DefaultValues__Racketlon">
         <item>OnDevice</item>
         <item>OnChromeCast</item>
     </string-array>
-    <string-array name="floatingMessageForGameBallOn_DefaultValues_Tabletennis">
+    <string-array name="floatingMessageForGameBallOn_DefaultValues__Tabletennis">
         <item>OnDevice</item>
         <item>OnChromeCast</item>
     </string-array>
-    <string-array name="floatingMessageForGameBallOn_DefaultValues_TennisPadel">
+    <string-array name="floatingMessageForGameBallOn_DefaultValues__TennisPadel">
         <item>OnDevice</item>
         <item>OnChromeCast</item>
     </string-array>
-    <string-array name="floatingMessageForGameBallOn_DefaultValues_Badminton">
+    <string-array name="floatingMessageForGameBallOn_DefaultValues__Badminton">
         <item>OnDevice</item>
         <item>OnChromeCast</item>
     </string-array>

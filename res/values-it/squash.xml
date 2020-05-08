@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="lbl_Scoring">Punteggio</string>
     <string name="lbl_Scoring_PointPerRally">Punto-per-scambio</string>
-    <string name="lbl_Scoring_PointWhenServing_Squash">Punteggio al cambio servizio</string>
+    <string name="lbl_Scoring_PointWhenServing__Squash">Punteggio al cambio servizio</string>
 
     <string name="Score">Punteggio</string>
     <string name="Game">Gioco</string>
@@ -47,7 +47,7 @@
     <string name="lbl_event">Evento</string>
     <string name="lbl_division">Divisione</string>
     <string name="lbl_round">Turno</string>
-    <string name="lbl_court_Squash">Campo</string>
+    <string name="lbl_court__Squash">Campo</string>
     <string name="lbl_location">Luogo</string>
     <string name="lbl_referee">Arbitro</string>
     <string name="lbl_marker">Segnapunti</string>

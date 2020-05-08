@@ -102,7 +102,7 @@
     <string name="sb_score_details">Podrobné výsledky</string>
     <string name="Live_Score">Skóre živě</string>
     <string name="sb_official_announcement">Hlášení rozhodčího</string>
-    <string name="sb_official_rules_Squash">Oficiální pravidla squash</string>
+    <string name="sb_official_rules__Squash">Oficiální pravidla squash</string>
     <string name="sb_possible_conducts">Možné tresty</string>
     <string name="sb_self_inflicted_injury">Samozaviněné zranění</string>
     <string name="sb_opponent_inflicted_injury">Zranění způsobené protihráčem</string>
@@ -114,7 +114,7 @@
     <string name="sb_delete_group">Smazat skupinu</string>
     <string name="sb_edit_item">Upravit položku \'%s\'</string>
     <string name="sb_new_item">Nová \'%s\' položka</string>
-    <string name="end_game_Squash">Konec setu</string>
+    <string name="end_game__Squash">Konec setu</string>
     <string name="end_match">Konec zápasu</string>
     <string name="sb_match_history">Vývoj zápasu</string>
     <string name="sb_stored_matches">Uložené zápasy</string>
@@ -133,7 +133,7 @@
     <string name="total_of_x_games_to_y_1">Total of</string><!-- TODO -->
 
     <string name="best_of_x_games_to_y_1">Nejvýše</string>
-    <string name="best_of_x_games_to_y_2_Squash">sety(ů) do</string>
+    <string name="best_of_x_games_to_y_2__Squash">sety(ů) do</string>
 
     <string name="no_statistics_recorded_for_this_match">Statistiky (vítězné/chyby) nebyly pro tento zápas vedeny</string>
 

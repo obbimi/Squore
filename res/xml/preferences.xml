@@ -137,7 +137,7 @@
                 android:title="@string/pref_serveButtonTransparencyNonServer"
                 android:summary="@string/pref_serveButtonTransparencyNonServer_summary"
                 android:inputType="number"
-                android:defaultValue="@integer/serveButtonTransparencyNonServer_default_Squash"
+                android:defaultValue="@integer/serveButtonTransparencyNonServer_default__Squash"
                 />
 
         </PreferenceScreen>
@@ -282,7 +282,7 @@
                 android:icon="@drawable/dummy"
                 android:key="showScoringHistoryInMainScreenOn"
                 android:title="@string/pref_showScoringHistoryInMainScreen"
-                android:defaultValue="@array/showScoringHistoryInMainScreenOn_DefaultValues_Squash"
+                android:defaultValue="@array/showScoringHistoryInMainScreenOn_DefaultValues__Squash"
                 dy:displayValues="@array/ShowOnScreen_DisplayValues"
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
@@ -298,7 +298,7 @@
                 android:icon="@drawable/dummy"
                 android:key="scorelineLayout"
                 android:title="@string/pref_scorelineLayout"
-                android:defaultValue="@string/scorelineLayout_default_Squash"
+                android:defaultValue="@string/scorelineLayout_default__Squash"
                 dy:displayValues="@array/ScorelineLayout_DisplayValues"
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.ScorelineLayout"
                 />
@@ -500,7 +500,7 @@
                 android:title="@string/pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape"
                 android:summary="@string/pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary"
                 android:icon="@drawable/change_sides"
-                android:defaultValue="@bool/swapPlayersOn180DegreesRotationOfDeviceInLandscape_default_Squash"
+                android:defaultValue="@bool/swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Squash"
                 />
             <CheckBoxPreference android:key="swapPlayersBetweenGames"
                 android:title="@string/pref_swapPlayersBetweenGames"
@@ -509,7 +509,7 @@
                 />
             <com.doubleyellow.prefs.EnumListPreference
                 android:key="swapPlayersHalfwayGame"
-                android:title="@string/pref_swapPlayersHalfwayGame_Squash"
+                android:title="@string/pref_swapPlayersHalfwayGame__Squash"
                 android:icon="@drawable/change_sides"
                 android:defaultValue="@string/swapPlayersHalfwayGame_default"
                 dy:displayValues="@array/FeatureDisplayValues"
@@ -530,7 +530,7 @@
                 android:key="floatingMessageForGameBallOn"
                 android:title="@string/pref_floatingMessageForGameBall"
                 android:summary="@string/pref_floatingMessageForGameBall_summary"
-                android:defaultValue="@array/floatingMessageForGameBallOn_DefaultValues_Squash"
+                android:defaultValue="@array/floatingMessageForGameBallOn_DefaultValues__Squash"
                 dy:displayValues="@array/ShowOnScreen_DisplayValues"
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
@@ -546,7 +546,7 @@
                     android:title="@string/pref_endGameSuggestion"
                     android:summary="@string/pref_endGameSuggestion_summary"
                     android:icon="@drawable/arrow_right"
-                    android:defaultValue="@string/endGameSuggestion_default_Squash"
+                    android:defaultValue="@string/endGameSuggestion_default__Squash"
                     dy:displayValues="@array/EndGameDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
                     />
@@ -632,7 +632,7 @@
                 android:title="@string/pref_OfficialSquashRulesURLs"
                 android:summary="@string/pref_OfficialSquashRulesURLs_summary"
                 android:inputType="textMultiLine"
-                android:defaultValue="@string/OfficialRulesURLs_default_Squash"
+                android:defaultValue="@string/OfficialRulesURLs_default__Squash"
                 />
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_AutoComplete">
@@ -847,26 +847,26 @@
                 android:title="@string/pref_timerWarmup"
                 android:summary="@string/pref_timerWarmup_summary"
                 android:inputType="number"
-                android:defaultValue="@integer/timerWarmup_default_Squash"
+                android:defaultValue="@integer/timerWarmup_default__Squash"
                 />
             <EditTextPreference android:key="timerWarmup_values"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_timerWarmup_values"
                 android:summary="@string/pref_timerWarmup_values_summary"
-                android:defaultValue="@string/timerWarmup_values_default_Squash"
+                android:defaultValue="@string/timerWarmup_values_default__Squash"
                 />
             <EditTextPreference android:key="timerPauseBetweenGames"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_timerPauseBetweenGames"
                 android:summary="@string/pref_timerPauseBetweenGames_summary"
                 android:inputType="number"
-                android:defaultValue="@integer/timerPauseBetweenGames_default_Squash"
+                android:defaultValue="@integer/timerPauseBetweenGames_default__Squash"
                 />
             <EditTextPreference android:key="timerPauseBetweenGames_values"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_timerPauseBetweenGames_values"
                 android:summary="@string/pref_timerPauseBetweenGames_values_summary"
-                android:defaultValue="@string/timerPauseBetweenGames_values_default_Squash"
+                android:defaultValue="@string/timerPauseBetweenGames_values_default__Squash"
                 />
             <CheckBoxPreference android:key="showTimeIsAlreadyUpFor_Chrono"
                 android:icon="@drawable/dummy"
@@ -937,10 +937,10 @@
                 />
             <EditTextPreference android:key="showModeDialogAfterXMins"
                 android:icon="@drawable/timer"
-                android:title="@string/activate_mode_Squash"
+                android:title="@string/activate_mode__Squash"
                 android:summary="@string/pref_autoShow_activeExpediteSystem_dialog_after_X_mins"
                 android:inputType="number"
-                android:defaultValue="@integer/showModeDialogAfterXMins_default_Squash"
+                android:defaultValue="@integer/showModeDialogAfterXMins_default__Squash"
                 />
         </PreferenceCategory>
 
@@ -1109,7 +1109,7 @@
                             android:icon="@drawable/ic_action_view_as_list"
                             android:title="@string/pref_matchList"
                             android:summary="@string/pref_matchList_summary"
-                            android:defaultValue="@string/matchList_default_Squash"
+                            android:defaultValue="@string/matchList_default__Squash"
                             android:inputType="textMultiLine"
                 />
         <CheckBoxPreference android:key="useGroupNameAsEventData"
@@ -1168,7 +1168,7 @@
                       android:title="@string/pref_feedPostUrls"
                       android:summary="@string/pref_feedPostUrls_summary"
                       android:inputType="textMultiLine"
-                      android:defaultValue="@string/pref_feedPostUrls_default_Squash"
+                      android:defaultValue="@string/pref_feedPostUrls_default__Squash"
                     />
 
             <ListPreference android:key="feedPostUrl"
@@ -1263,7 +1263,7 @@
                                 android:title="@string/pref_OfficialSquashRulesURLs"
                                 android:summary="@string/pref_OfficialSquashRulesURLs_summary"
                                 android:inputType="textMultiLine"
-                                android:defaultValue="@string/OfficialRulesURLs_default_Squash"
+                                android:defaultValue="@string/OfficialRulesURLs_default__Squash"
                     />
             <com.doubleyellow.prefs.EnumListPreference
                     android:key="useShareFeature"
@@ -1330,13 +1330,13 @@
                             android:title="@string/pref_gameEndScore"
                             android:summary="@string/pref_gameEndScore_summary"
                             android:inputType="number"
-                            android:defaultValue="@integer/gameEndScore_default_Squash"
+                            android:defaultValue="@integer/gameEndScore_default__Squash"
         />
         <EditTextPreference android:key="numberOfGamesToWinMatch"
                             android:title="@string/pref_numberOfGamesToWin"
                             android:summary="@string/pref_numberOfGamesToWin_summary"
                             android:inputType="number"
-                            android:defaultValue="@integer/numberOfGamesToWin_default_Squash"
+                            android:defaultValue="@integer/numberOfGamesToWin_default__Squash"
         />
         <com.doubleyellow.prefs.EnumListPreference
             android:key="tieBreakFormat"

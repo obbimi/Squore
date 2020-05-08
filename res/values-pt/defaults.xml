@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
     <!-- overall defaults -->
-    <string name="OfficialRulesURLs_default_Squash" formatted="false"><![CDATA[/help/rules.of.singles.squash.php?lang=pt
+    <string name="OfficialRulesURLs_default__Squash" formatted="false"><![CDATA[/help/rules.of.singles.squash.php?lang=pt
 \nhttp://www.worldsquash.org/wp-content/uploads/2019/02/190101_Regras-squash-portugu%C3%AAs-2019-V1-1.pdf
 ]]></string>
 
