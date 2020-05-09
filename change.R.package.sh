@@ -39,17 +39,23 @@ function correctSportSpecificResource {
     from=$1
     to=$2
 
-    read -t 5 -p "Correcting from ${from} to ${to}. Continue ?"
+    read -t 500 -p "Correcting from ${from} to ${to}. Continue ?"
     echo
+
+    echo -n > notcorrected.txt
+    echo -n > corrected.txt
 
     let correctedCnt=0
     let keptCnt=0
     # list all renamed USED resource names and ...
     for res in $(egrep -r '@(array|bool|fraction|integer|integer-array|string|string-array).*__[A-Z][A-Za-z]+' * | perl -ne 's~.*@(array|bool|fraction|integer|integer-array|string|string-array)\/(\w+__\w+).*~$2~; print' | sort -u); do
         # ... check the appropriate res definition exists
-        if egrep -q -r "name=.$res." *; then
-            if echo ${res} | grep "__${from}"; then
-                let keptCnt=keptCnt+1
+        if egrep -q -r "name=.${res}." *; then
+            if echo ${res} | grep -q "__${from}"; then
+                nrOfOccurrences=$(egrep -h -c -r "@.*${res}" * | egrep -v '^0$' | xargs | sed -e 's/\ /+/g' | bc) # bc is calculator
+                #read -t 3 -p "Nr of occurrences of valid ${res} : ${nrOfOccurrences}"
+                let keptCnt=keptCnt+nrOfOccurrences
+                printf "%2d (+%d) %-72s OK \n" ${keptCnt} ${nrOfOccurrences} ${res} >> notcorrected.txt
             fi
         else
             #echo "XXXXXXXXXXXXXXXXXX Is NOT available : ${res}"
@@ -57,13 +63,22 @@ function correctSportSpecificResource {
             if [[ -n "${2}" ]]; then
                 newRes=$(echo "${res}" | sed -e "s~__${from}~__${to}~")
                 for f in $(grep -rl "$res" *); do
-                    printf "Correcting %-72s from %-32s to %-32s \n" ${f} ${res} ${newRes}
+                    nrToCorrect=$(grep -c ${res} ${f})
+                    #if [[ ${nrToCorrect} -gt 1 ]]; then
+                    #    echo "================>>>>>>>>>>>>>>>> ${nrToCorrect} corrections for ${res} to ${newRes} in ${f}"
+                    #fi
+
                     sed -i "s~${res}~${newRes}~" ${f}
-                    let correctedCnt=correctedCnt+1
+                    let correctedCnt=correctedCnt+nrToCorrect
+
+                    printf "%2d (+%d) Corrected %-72s from %-32s to %-32s \n" ${correctedCnt} ${nrToCorrect} ${f} ${res} ${newRes} >> corrected.txt
                 done
             fi
         fi
     done
+
+    cat notcorrected.txt
+    cat corrected.txt
 
     if [[ ${correctedCnt} -gt 0 ]]; then
         (
@@ -187,7 +202,12 @@ if [[ "${tobranded}" = "Padel" || "${parentBrand}" = "Padel" ]]; then
     correctSportSpecificResource       TennisPadel Default
 fi
 
-correctSportSpecificResource ${toSuffix} Default
+if [[ -e correctSportSpecificResource.txt && -n "$(grep 'to Default' correctSportSpecificResource.txt)" ]]; then
+    echo "To Default already happened"
+else
+    correctSportSpecificResource ${toSuffix} Default
+fi
+
 
 if [[ -e correctSportSpecificResource.txt ]]; then
     echo
@@ -200,18 +220,9 @@ fi
 ####################################################
 
 cd ..
-if [[ 1 -eq 2 ]]; then
-    # comment out all Manifest file lines
-    sed -i 's~^\(\s\+\)srcFile~\1//srcFile~' build.gradle
-    # uncomment ManifestALL file lines
-    sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifestALL\)~\1\2~" build.gradle
-    # uncomment the one Manifest file we are interested in
-    sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifest${tobranded}\.\)~\1\2~" build.gradle
-    #vi +/Manifest${tobranded} build.gradle
-else
-    # change manifest file name
-    cat build.gradle | perl -ne "s~(srcFile\s+')AndroidManifest[A-Z][a-z][A-Za-z]+.xml~\1AndroidManifest${tobranded}.xml~; print" > build.gradle.tmp
-    if [[ -n "$(diff build.gradle.tmp build.gradle)" ]]; then
-        mv -v build.gradle.tmp build.gradle
-    fi
+
+# change manifest file name to one of brand we want to generate apk for
+cat build.gradle | perl -ne "s~(srcFile\s+')AndroidManifest[A-Z][a-z][A-Za-z]+.xml~\1AndroidManifest${tobranded}.xml~; print" > build.gradle.tmp
+if [[ -n "$(diff build.gradle.tmp build.gradle)" ]]; then
+    mv build.gradle.tmp build.gradle
 fi
