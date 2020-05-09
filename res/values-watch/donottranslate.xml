@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string-array name="ShowPlayerColorOn_DefaultValues" tools:ignore="InconsistentArrays">
+    <string-array name="ShowPlayerColorOn__Default" tools:ignore="InconsistentArrays">
         <item>ServeSideButton</item>
         <item>PlayerButton</item>
         <item>GameBallMessage</item>

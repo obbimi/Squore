@@ -44,4 +44,7 @@
     <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__TennisPadel">true</bool>
     <integer name="serveButtonTransparencyNonServer_default__TennisPadel">90</integer> <!-- between 0 and 100 -->
 
+    <string name="scv_new_match_button__TennisPadel">__That\'s it. Enjoy your games.__
+        \n\nStart a new match by tapping this button.</string>
+
 </resources>

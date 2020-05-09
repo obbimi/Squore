@@ -37,6 +37,7 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.XActivity;
 import com.doubleyellow.scoreboard.dialog.ButtonUpdater;
+import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.util.*;
 import com.doubleyellow.android.util.ColorUtil;
 
@@ -433,6 +434,32 @@ public class ColorPrefs
         return false;
     }
 */
+    public static int getInitialPlayerColor(Context context, Player p, int iDefault) {
+        int iResBrandSpecific = PreferenceValues.getSportTypeSpecificResId(context, R.array.initialPlayerColor__Default);
+        if ( iResBrandSpecific != 0 ) {
+            String[] sColors = context.getResources().getStringArray(iResBrandSpecific);
+            if ( sColors.length == 2 ) {
+                String sColor = sColors[p.ordinal()];
+                if ( StringUtil.isEmpty(sColor) ) { return iDefault; }
+                try {
+                    ColorTarget colorTarget = ColorTarget.valueOf(sColor);
+                    int iColor = getTarget2colorMapping(context).get(colorTarget);
+                    return iColor;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if ( StringUtil.isNotEmpty(sColor) ) {
+                    try {
+                        int iColor = Color.parseColor(sColor);
+                        return iColor;
+                    } catch (Exception e) {
+                        return iDefault;
+                    }
+                }
+            }
+        }
+        return iDefault;
+    }
 
     public static String getColorPrefsAsCss(Context context) {
         Map<ColorTarget, Integer> target2colorMapping = getTarget2colorMapping(context);

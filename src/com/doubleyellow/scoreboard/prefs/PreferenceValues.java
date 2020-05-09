@@ -554,8 +554,10 @@ public class PreferenceValues extends RWValues
                 return iDefault;
             }
             return iNewResId;
+        } else {
+            // no specially formatted resource id, just return as-is
+            return iResidSquashSuffixed;
         }
-        return iDefault;
     }
 
     public static String getGameOrSetString(Context context, int iResid, Object... formatArgs) {
@@ -789,7 +791,7 @@ public class PreferenceValues extends RWValues
         return getEnumSet(PreferenceKeys.lockMatchMV, context, AutoLockContext.class, EnumSet.allOf(AutoLockContext.class));
     }
     public static EnumSet<ShowPlayerColorOn> showPlayerColorOn(Context context) {
-        return getEnumSet(PreferenceKeys.showPlayerColorOn, context, ShowPlayerColorOn.class, EnumSet.allOf(ShowPlayerColorOn.class)); // ShowPlayerColorOn_DefaultValues
+        return getEnumSet(PreferenceKeys.showPlayerColorOn, context, ShowPlayerColorOn.class, EnumSet.allOf(ShowPlayerColorOn.class)); // ShowPlayerColorOn__Default
     }
     public static EnumSet<ShowCountryAs> showCountryAs(Context context) {
         EnumSet<ShowCountryAs> esDefault = EnumSet.of(ShowCountryAs.FlagNextToNameOnDevice, ShowCountryAs.FlagNextToNameChromeCast); // ShowCountryAs_DefaultValues in xml takes precedence

@@ -28,6 +28,8 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.*;
 
+import androidx.annotation.ColorInt;
+
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.ColorPickerView;
 import com.doubleyellow.android.view.CountryTextView;
@@ -458,6 +460,7 @@ public class MatchView extends SBRelativeLayout
     private View[]     tvsReferee   = null;
     private TextView[] tvsEvent     = null;
     private Button[]   btnsColor    = null;
+    @ColorInt
     private Integer    m_iNoColor   = null;
 
     boolean clearEventFields() {
@@ -643,7 +646,7 @@ public class MatchView extends SBRelativeLayout
         } else {
             btnsColor  = new Button[] { findViewById(R.id.match_colorA  ), findViewById(R.id.match_colorB  ) };
         }
-        m_iNoColor = ColorPrefs.getTarget2colorMapping(context).get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
+        m_iNoColor = ColorPrefs.getTarget2colorMapping(context).get(ColorPrefs.ColorTarget.playerButtonBackgroundColor); // TODO : scoreButtonBackgroundColor ?
         for(final Player p: Player.values() ) {
             Button btnColor = btnsColor[p.ordinal()];
             if ( btnColor == null ) { continue; }
@@ -885,6 +888,9 @@ public class MatchView extends SBRelativeLayout
                 if ( StringUtil.isNotEmpty(sPlayerColor) ) {
                     iInitialColor = Color.parseColor(sPlayerColor);
                 }
+            } else {
+                // new match
+                iInitialColor = ColorPrefs.getInitialPlayerColor(getContext(), p, iInitialColor);
             }
             btnColor.setTag(iInitialColor);
             ColorUtil.setBackground(btnColor, iInitialColor); // todo: already coming from feed, e.g. a club color

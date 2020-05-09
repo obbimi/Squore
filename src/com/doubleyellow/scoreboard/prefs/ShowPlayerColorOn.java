@@ -21,8 +21,8 @@ public enum ShowPlayerColorOn {
     ScoreButtonBorder,
     ServeSideButton,
     PlayerButton,
-    //ScoreButton, // a bit to much...
     GameBallMessage,
     GameScoreGraph,
     DecisionMessage,
+    ScoreButton, // a bit to much... in most cases. Left in for very specific Brands
 }

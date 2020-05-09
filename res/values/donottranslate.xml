@@ -87,11 +87,12 @@
         <item>AtEndOfMatch</item>
         <item>WhenMatchIsUnchangeForX_Minutes</item>
     </string-array>
-    <string-array name="ShowPlayerColorOn_DefaultValues" tools:ignore="InconsistentArrays">
+
+    <string-array name="ShowPlayerColorOn__Default" tools:ignore="InconsistentArrays">
         <item>ScoreButtonBorder</item>
         <!--
-                <item>ServeSideButton</item>
-                <item>PlayerButton</item>
+        <item>ServeSideButton</item>
+        <item>PlayerButton</item>
         -->
         <item>GameBallMessage</item>
     </string-array>

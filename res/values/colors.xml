@@ -13,6 +13,13 @@
 -->
     <color name="translucent_orange">#CCffbb33</color>
 
+    <string-array name="initialPlayerColor__Default">
+<!--
+        <item>scoreButtonBackgroundColor</item>
+        <item>scoreButtonBackgroundColor</item>
+-->
+    </string-array>
+
     <string-array name="colorSchema__TennisPadel" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>

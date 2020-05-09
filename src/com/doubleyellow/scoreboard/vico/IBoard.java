@@ -1189,7 +1189,7 @@ public class IBoard implements TimerViewContainer
             initPerPlayerViewWithColors(p, m_player2serverSideId, iPlayerColor, iTxtColor, ColorPrefs.ColorTarget.serveButtonBackgroundColor, ColorPrefs.ColorTarget.serveButtonTextColor);
         }
 
-        if ( colorOns.contains(ShowPlayerColorOn.ScoreButtonBorder) ) {
+        if ( colorOns.contains(ShowPlayerColorOn.ScoreButtonBorder) || colorOns.contains(ShowPlayerColorOn.ScoreButton) ) {
             View view = findViewById(m_player2scoreId.get(p));
             if ( view != null ) {
                 Integer iScoreButtonBgColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
@@ -1202,7 +1202,11 @@ public class IBoard implements TimerViewContainer
                     setBackgroundAndBorder(view, iScoreButtonBgColor, iScoreButtonBgColor);
                     castSendChangeViewMessage(view.getId(), iScoreButtonBgColor, "border-color");
                 } else {
-                    setBackgroundAndBorder(view, iScoreButtonBgColor, iPlayerColor);
+                    if ( colorOns.contains(ShowPlayerColorOn.ScoreButton) ) {
+                        setBackgroundAndBorder(view, iPlayerColor       , iPlayerColor);
+                    } else {
+                        setBackgroundAndBorder(view, iScoreButtonBgColor, iPlayerColor);
+                    }
                 }
             }
 

@@ -45,6 +45,7 @@ public class MatchFragment extends Fragment
             boolean bIsDoubles = this instanceof MatchFragmentDoubles;
             MatchView rootView = new MatchView(context, bIsDoubles, null, PreferenceValues.getNewMatchLayout(context));
             ColorPrefs.setColors(getActivity(), rootView);
+            rootView.initPlayerColors();
         //}
 
         return rootView;
