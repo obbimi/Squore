@@ -39,7 +39,7 @@ function correctSportSpecificResource {
     from=$1
     to=$2
 
-    read -t 500 -p "Correcting from ${from} to ${to}. Continue ?"
+    read -t 1 -p "Correcting from ${from} to ${to}. Continue ?"
     echo
 
     echo -n > notcorrected.txt

@@ -47,11 +47,11 @@ android {
 
         //testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
         //applicationId "com.doubleyellow"
-        manifestPlaceholders = [versionNameTabletennis: "4.33", versionCodeSuffixTabletennis: "0438"
-                               ,versionNameBadminton  : "4.32", versionCodeSuffixBadminton  : "0435"
-                               ,versionNameTennisPadel: "4.33", versionCodeSuffixTennisPadel: "0436"
-                               ,versionNameSquore     : "4.32", versionCodeSuffixSquore     : "0438"
-                               ,versionNameRacketlon  : "4.33", versionCodeSuffixRacketlon  : "0438"
+        manifestPlaceholders = [versionNameTabletennis: "4.34", versionCodeSuffixTabletennis: "0441"
+                               ,versionNameBadminton  : "4.32", versionCodeSuffixBadminton  : "0436"
+                               ,versionNameTennisPadel: "4.33", versionCodeSuffixTennisPadel: "0437"
+                               ,versionNameSquore     : "4.32", versionCodeSuffixSquore     : "0439"
+                               ,versionNameRacketlon  : "4.33", versionCodeSuffixRacketlon  : "0439"
                                ]
     }
     sourceSets {
@@ -59,13 +59,6 @@ android {
             manifest {
                 // one valid entry must be here in main.manifest
                 srcFile 'AndroidManifestSquore.xml'
-                //srcFile 'AndroidManifestSquoreWear.xml'
-                //srcFile 'AndroidManifestRacketlon.xml'
-                //srcFile 'AndroidManifestBadminton.xml'
-                //srcFile 'AndroidManifestTennisPadel.xml'
-                //srcFile 'AndroidManifestTabletennis.xml'
-                //srcFile 'AndroidManifestCourtCare.xml'
-                //srcFile 'AndroidManifestUniOfNotthingham.xml'
             }
             java {
                 srcDir 'src'
@@ -177,19 +170,19 @@ dependencies {
 
     // allow communication between handheld device and wearable
     phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:17.0.0' // compileOnly is good enough for API < 23
-    phoneTabletPost23Implementation   'com.google.android.gms:play-services-wearable:17.0.0' // compileOnly is good enough for API < 23
-    wearOsImplementation              'com.google.android.gms:play-services-wearable:17.0.0' // compileOnly is good enough for API < 23
+    phoneTabletPost23Implementation   'com.google.android.gms:play-services-wearable:17.0.0'
+    wearOsImplementation              'com.google.android.gms:play-services-wearable:17.0.0'
 
     // Required for e.g. com/google/android/gms/wearable/CapabilityClient$OnCapabilityChangedListener
     //compileOnly    'com.google.android.wearable:wearable:2.5.0' // compileOnly sufficient for devices with API < 23
 
-    phoneTabletPre22CompileOnly       'com.google.android.support:wearable:2.5.0'
-    phoneTabletPost23Implementation   'com.google.android.support:wearable:2.5.0'
-    wearOsImplementation              'com.google.android.support:wearable:2.5.0'
+    phoneTabletPre22CompileOnly       'com.google.android.support:wearable:2.6.0'
+    phoneTabletPost23Implementation   'com.google.android.support:wearable:2.6.0'
+    wearOsImplementation              'com.google.android.support:wearable:2.6.0'
 
-    phoneTabletPre22Implementation    'com.google.android.wearable:wearable:2.5.0'
-    phoneTabletPost23Implementation   'com.google.android.wearable:wearable:2.5.0'
-    wearOsImplementation              'com.google.android.wearable:wearable:2.5.0'
+    phoneTabletPre22Implementation    'com.google.android.wearable:wearable:2.6.0'
+    phoneTabletPost23Implementation   'com.google.android.wearable:wearable:2.6.0'
+    wearOsImplementation              'com.google.android.wearable:wearable:2.6.0'
 
     //wearApp project(':wear:base') // applies to all other variants
 }

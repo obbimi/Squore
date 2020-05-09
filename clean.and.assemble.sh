@@ -44,7 +44,7 @@ if [[ -z "${hasNewVersionCode}" ]]; then
         vi +/${brand} build.gradle
         exit 1
     else
-        read -p "Warning : continue without changing version code for ${brand} ?"
+        read -t 10 -p "Warning : continue without changing version code for ${brand} ?"
     fi
 fi
 
