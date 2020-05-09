@@ -37,11 +37,15 @@ brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Bran
 
 # check if a new version code for the brand for which we will be creating an apk is specified
 hasNewVersionCode=$(git diff build.gradle | egrep '^\+' | grep versionCode | grep -i ${brand})
-if [[ -z "${hasNewVersionCode}" && "${brand}" != "CourtCare" && "${brand}" != "UniOfNotthingham" ]]; then
-    echo "Specify new version code for ${brand}"
-    read -p "Open build.gradle ?"
-    vi +/${brand} build.gradle
-    exit 1
+if [[ -z "${hasNewVersionCode}" ]]; then
+    if [[ -n "$(grep versionCode build.gradle | grep -i ${brand})" ]]; then
+        echo "Specify new version code for ${brand}"
+        read -p "Open build.gradle ?"
+        vi +/${brand} build.gradle
+        exit 1
+    else
+        read -p "Warning : continue without changing version code for ${brand} ?"
+    fi
 fi
 
 ## will be repopulated by ./gradlew

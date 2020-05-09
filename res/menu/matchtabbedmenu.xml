@@ -61,7 +61,7 @@
             <item android:id="@+id/mt_clear_club_fields"                                                             android:title="@string/uc_clear_club_fields" />
             <item android:id="@+id/mt_clear_country_fields"                                                          android:title="@string/uc_clear_country_fields" />
             <item android:id="@+id/mt_clear_event_fields"                                                            android:title="@string/uc_clear_event_fields" />
-            <item android:id="@+id/mt_clear_referee_fields"                                                          android:title="@string/uc_clear_referee_fields" />
+            <item android:id="@+id/mt_clear_referee_fields"                                                          android:title="@string/uc_clear_referee_fields" android:visible="@bool/useReferees__Default" />
             <item android:id="@+id/mt_clear_all_fields"                                                              android:title="@string/uc_clear_all_fields" />
 
             <!-- only for static -->

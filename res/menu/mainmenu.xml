@@ -60,9 +60,9 @@
                     app:showAsAction="never">
                 <menu>
 
-                    <item android:id="@+id/sb_select_feed_match"   app:showAsAction="never" android:icon="@drawable/ic_action_web_site"     android:visible="true"  android:title="@string/sb_select_feed_match"   />
-                    <item android:id="@+id/sb_select_static_match" app:showAsAction="never" android:icon="@drawable/ic_action_view_as_list" android:visible="true"  android:title="@string/sb_select_static_match" />
-                    <item android:id="@+id/sb_enter_singles_match" app:showAsAction="never" android:icon="@drawable/circled_plus"           android:visible="true"  android:title="@string/sb_new_singles_match"   />
+                    <item android:id="@+id/sb_select_feed_match"   app:showAsAction="never" android:icon="@drawable/ic_action_web_site"     android:visible="@bool/useMatchFromFeed__Default"   android:title="@string/sb_select_feed_match"   />
+                    <item android:id="@+id/sb_select_static_match" app:showAsAction="never" android:icon="@drawable/ic_action_view_as_list" android:visible="@bool/useMyListFunctionality__Default" android:title="@string/sb_select_static_match" />
+                    <item android:id="@+id/sb_enter_singles_match" app:showAsAction="never" android:icon="@drawable/circled_plus"           android:visible="@bool/useSinglesMatch__Default"    android:title="@string/sb_new_singles_match"   />
                     <item android:id="@+id/sb_enter_doubles_match" app:showAsAction="never" android:icon="@drawable/circled_plus"           android:visible="true"  android:title="@string/sb_new_doubles_match"   />
 
                     <item android:id="@+id/sb_new_match"           app:showAsAction="never" android:icon="@drawable/circled_plus"           android:visible="false" android:title="@string/sb_new_match"           />

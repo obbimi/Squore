@@ -525,36 +525,35 @@ public class PreferenceValues extends RWValues
         }
     }
 
-    /** translate a __Squash suffixed STRING resource id in non squash specific */
     public static int getSportTypeSpecificResId(Context context, int iResidSquashSuffixed) {
         return getSportTypeSpecificResId(context, iResidSquashSuffixed, iResidSquashSuffixed);
     }
+    /** translate a __(Squash|Default) suffixed STRING resource id in brand specific resource id */
     public static int getSportTypeSpecificResId(Context context, int iResidSquashSuffixed, int iDefault) {
-        if ( Brand.isNotSquash() ) {
-            final String sResName = context.getResources().getResourceName(iResidSquashSuffixed);
-            final String sResType = context.getResources().getResourceTypeName(iResidSquashSuffixed);
-            final String suffix   = "__" + SportType.Squash;
-            if ( sResName.endsWith(suffix) ) {
-                String sNewResName = sResName.replaceAll(suffix, "__" + Brand.brand);
-                int iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
-                if ( iNewResId == 0 ) {
-                    sNewResName = sResName.replaceAll(suffix, "__" + Brand.getSport());
-                    iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
-                }
-                if ( (iNewResId == 0) && Brand.isPadel() ) {
-                    sNewResName = sResName.replaceAll(suffix, "__" + "TennisPadel" /*+ Brand.TennisPadel*/ );
-                    iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
-                }
-                if ( iNewResId == 0 ) {
-                    sNewResName = sResName.replaceAll(suffix, "__" + "Empty");
-                    iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
-                }
-                if ( iNewResId == 0 ) {
-                    Log.w(TAG, "======================= No specific " + Brand.getSport() + " resource for " + sResName);
-                    return iDefault;
-                }
-                return iNewResId;
+        final String sResName = context.getResources().getResourceName    (iResidSquashSuffixed);
+        final String sResType = context.getResources().getResourceTypeName(iResidSquashSuffixed);
+        if ( sResName.matches(".+__[A-Z][A-Za-z]+$") ) {
+            final String sResNameNoSuffix = sResName.replaceFirst("__[A-Z][A-Za-z]+$", "__");
+            final String sResNameSuffix   = sResName.replaceFirst(".+__([A-Z][A-Za-z]+)$", "$1");
+            String sNewResName = sResNameNoSuffix + Brand.brand;
+            int iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
+            if ( iNewResId == 0 ) {
+                sNewResName = sResNameNoSuffix + Brand.getSport();
+                iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
             }
+            if ( (iNewResId == 0) && Brand.isPadel() ) {
+                sNewResName = sResNameNoSuffix + "TennisPadel" /*+ Brand.TennisPadel*/;
+                iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
+            }
+            if ( iNewResId == 0 ) {
+                sNewResName = sResNameNoSuffix + "Default";
+                iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
+            }
+            if ( iNewResId == 0 ) {
+                Log.w(TAG, "======================= No specific " + Brand.getSport() + " resource for " + sResName);
+                return iDefault;
+            }
+            return iNewResId;
         }
         return iDefault;
     }
@@ -746,13 +745,28 @@ public class PreferenceValues extends RWValues
         int iResDefault = getSportTypeSpecificResId(context, R.string.scorelineLayout_default__Squash);
         return getEnum(PreferenceKeys.scorelineLayout, context, ScorelineLayout.class, iResDefault);
     }
-    // TODO: add to preferences.xml
     public static boolean useFeedAndPostFunctionality(Context context) {
         if ( Brand.isGameSetMatch() && currentDateIsTestDate() ) {
             return false;
         }
         int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useFeedAndPostFunctionality_default);
         return getBoolean(PreferenceKeys.useFeedAndPostFunctionality, context, iResBrandSpecific);
+    }
+    public static boolean useSinglesMatches(Context context) {
+        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useSinglesMatch__Default);
+        return context.getResources().getBoolean(iResBrandSpecific);
+    }
+    public static boolean useMyListFunctionality(Context context) {
+        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useMyListFunctionality__Default);
+        return context.getResources().getBoolean(iResBrandSpecific);
+    }
+    public static boolean useWarmup(Context context) {
+        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useWarmup__Default);
+        return context.getResources().getBoolean(iResBrandSpecific);
+    }
+    public static boolean useReferees(Context context) {
+        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useReferees__Default);
+        return context.getResources().getBoolean(iResBrandSpecific);
     }
     public static boolean allowTrustAllCertificatesAndHosts(Context context) {
         return getBoolean(PreferenceKeys.allowTrustAllCertificatesAndHosts, context, R.bool.allowTrustAllCertificatesAndHosts_default);
@@ -1766,7 +1780,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-05-09"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-05-10"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

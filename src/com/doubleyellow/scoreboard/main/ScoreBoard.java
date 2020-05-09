@@ -818,9 +818,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
             int iOfficialRulesResId = PreferenceValues.getSportTypeSpecificResId(ScoreBoard.this, R.string.sb_official_rules__Squash, 0);
         startSection(R.string.uc_new   );
-            addItem(R.id.sb_enter_singles_match , R.string.sb_new_singles_match    ,         R.drawable.circled_plus          );
-            addItem(R.id.sb_select_static_match , R.string.sb_select_static_match  ,         R.drawable.ic_action_view_as_list);
-            addItem(R.id.sb_select_feed_match   , R.string.sb_select_feed_match    ,         R.drawable.ic_action_web_site    );
+            addItem(R.id.sb_enter_singles_match , R.string.sb_new_singles_match    ,         R.drawable.circled_plus          , R.bool.useSinglesMatch__Default   );
+            addItem(R.id.sb_select_static_match , R.string.sb_select_static_match  ,         R.drawable.ic_action_view_as_list, R.bool.useMyListFunctionality__Default);
+            addItem(R.id.sb_select_feed_match   , R.string.sb_select_feed_match    ,         R.drawable.ic_action_web_site    , R.bool.useMatchFromFeed__Default  );
             addItem(R.id.sb_enter_doubles_match , R.string.sb_new_doubles_match    ,         R.drawable.circled_plus          );
         startSection(R.string.uc_edit   );
             addItem(R.id.sb_clear_score         , R.string.sb_clear_score          ,         R.drawable.ic_action_refresh   );
@@ -1641,7 +1641,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( iNewResId > 0 ) {
             iResid = iNewResId;
         } else {
-            // ending with __Squash but no e.g. __Racketlon equivalent. Skip the item
+            // ending with __Squash but no e.g. __Racketlon equivalent available. Skip the item
             return scSequence;
         }
         return scSequence.addSequenceItem(iViewId, iResid, shapeType);

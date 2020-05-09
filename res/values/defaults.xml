@@ -169,9 +169,13 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="saveMatchesForLaterUsage_default">true</bool>
     <bool name="useFeedAndPostFunctionality_default">true</bool>
     <bool name="useSinglesMatches_default">true</bool>
-    <bool name="useMyListFunctionality_default">true</bool>
+    <bool name="useMyListFunctionality__Default">true</bool>
+    <bool name="useWarmup__Default">true</bool>
+    <bool name="useReferees__Default">true</bool>
+    <bool name="useMatchFromFeed__Default">true</bool>
+    <bool name="useSinglesMatch__Default">true</bool>
     <bool name="useInjuryTimers__Squash">true</bool>
-    <bool name="useInjuryTimers__Empty">false</bool>
+    <bool name="useInjuryTimers__Default">false</bool>
     <bool name="allowTrustAllCertificatesAndHosts_default">false</bool>
     <bool name="sortMatchesByEvent_default">true</bool>
     <bool name="TextSizeScoreAsBigAsPossible_default">true</bool>

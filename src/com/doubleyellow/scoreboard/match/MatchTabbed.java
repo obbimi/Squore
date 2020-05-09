@@ -40,7 +40,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
 import com.doubleyellow.android.view.ViewUtil;
-import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.XActivity;
 import com.doubleyellow.scoreboard.archive.PreviousMatchSelector;
@@ -631,10 +630,10 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         if ( PreferenceValues.useFeedAndPostFunctionality(this) == false /*StringUtil.isEmpty(sFeedUrl)*/ ) {
             actualTabsToShow.remove(SelectTab.Feed);
         }
-        if ( Brand.useSinglesMatches() == false ) {
+        if ( PreferenceValues.useSinglesMatches(this) == false ) {
             actualTabsToShow.remove(SelectTab.Manual);
         }
-        if ( Brand.useMyListMatches() == false ) {
+        if ( PreferenceValues.useMyListFunctionality(this) == false ) {
             actualTabsToShow.remove(SelectTab.Mine);
         }
 /*

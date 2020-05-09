@@ -53,7 +53,7 @@
             android:allowBackup="true"
             android:usesCleartextTraffic="true"
             android:resizeableActivity="true"
-            android:label="@string/app_name_short_brand_courtcare"
+            android:label="@string/app_name_short_brand__CourtCare"
             android:icon="@drawable/logo_brand_courtcare">
 
 <!--
@@ -73,7 +73,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.doubleyellow.scoreboard.main.ScoreBoard" android:label="@string/app_name_short_brand_courtcare">
+        <activity android:name="com.doubleyellow.scoreboard.main.ScoreBoard" android:label="@string/app_name_short_brand__CourtCare">
 <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

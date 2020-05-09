@@ -15,6 +15,7 @@ Always change back to Squore (the default) before change to another 'Brand'
 !
 }
 tobranded=${1:-Squore}
+backupBrand="${2}"
 if [[ "${tobranded}" = "-h" ]]; then
 	showHelp
 	exit
@@ -32,10 +33,12 @@ function correctSportSpecificResource {
     from=$1
     to=$2
 
+    read -p "Correcting from ${from} to ${to}. Continue ?"
+
     let correctedCnt=0
     let keptCnt=0
     # list all renamed USED resource names and ...
-    for res in $(egrep -r '@(array|bool|fraction|integer|integer-array|string|string-array).*__[A-Z][A-Za-z]+' * | perl -ne 's~.*@(array|bool|fraction|integer|integer-array|string|string-array)\/(\w+).*~$2~; print' | sort -u); do
+    for res in $(egrep -r '@(array|bool|fraction|integer|integer-array|string|string-array).*__[A-Z][A-Za-z]+' * | perl -ne 's~.*@(array|bool|fraction|integer|integer-array|string|string-array)\/(\w+__\w+).*~$2~; print' | sort -u); do
         # ... check the appropriate res definition exists
         if egrep -q -r "name=.$res." *; then
             if echo ${res} | grep "__${from}"; then
@@ -143,7 +146,7 @@ cd ../res
 ####################################################
 
 echo '=================================='
-fromSuffix=Squash
+fromSuffix="(Squash|Default)"
 toSuffix=${tobranded}
 if [[ "$tobranded" = "Squore" ]] ; then
     fromSuffix="[A-Z][a-z][A-Za-z]+"
@@ -165,22 +168,34 @@ done
 echo '=================================='
 read -p 'menu/layout/preferences files processed. Continue ? '
 
-if [[ "$tobranded" = "Padel" ]]; then
+if [[ -n "${backupBrand}" ]]; then
+    correctSportSpecificResource ${toSuffix} ${backupBrand}
+    #correctSportSpecificResource ${backupBrand} Default
+fi
+if [[ "$tobranded" = "Padel" || "$backupBrand" = "Padel" ]]; then
     correctSportSpecificResource Padel TennisPadel
-    correctSportSpecificResource       TennisPadel Empty
+    correctSportSpecificResource       TennisPadel Default
 fi
 
-correctSportSpecificResource ${tobranded} Empty
+correctSportSpecificResource ${toSuffix} Default
 
 ####################################################
 # Change build.gradle
 ####################################################
 
 cd ..
-# comment out all Manifest file lines
-sed -i 's~^\(\s\+\)srcFile~\1//srcFile~' build.gradle
-# uncomment ManifestALL file lines
-sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifestALL\)~\1\2~" build.gradle
-# uncomment the one Manifest file we are interested in
-sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifest${tobranded}\.\)~\1\2~" build.gradle
-#vi +/Manifest${tobranded} build.gradle
+if [[ 1 -eq 2 ]]; then
+    # comment out all Manifest file lines
+    sed -i 's~^\(\s\+\)srcFile~\1//srcFile~' build.gradle
+    # uncomment ManifestALL file lines
+    sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifestALL\)~\1\2~" build.gradle
+    # uncomment the one Manifest file we are interested in
+    sed -i "s~^\(\s\+\)//\(srcFile\s\+'AndroidManifest${tobranded}\.\)~\1\2~" build.gradle
+    #vi +/Manifest${tobranded} build.gradle
+else
+    # change manifest file name
+    cat build.gradle | perl -ne "s~(srcFile\s+')AndroidManifest[A-Z][a-z][A-Za-z]+.xml~\1AndroidManifest${tobranded}.xml~; print" > build.gradle.tmp
+    if [[ -n "$(diff build.gradle.tmp build.gradle)" ]]; then
+        mv -v build.gradle.tmp build.gradle
+    fi
+fi

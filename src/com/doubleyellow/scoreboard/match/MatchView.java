@@ -266,7 +266,7 @@ public class MatchView extends SBRelativeLayout
                 );
                 break;
         }
-        if ( Brand.useReferees() == false ) {
+        if ( PreferenceValues.useReferees(getContext()) == false ) {
             ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
                     , R.id.lblReferee
                     , R.id.ll_referees
@@ -288,7 +288,7 @@ public class MatchView extends SBRelativeLayout
             ViewUtil.hideViewsForEver(this, R.id.llNumberOfServesPerPlayer);
             ViewUtil.hideViewsForEver(this, R.id.ll_AnnouncementLanguage);
         }
-        if ( Brand.useWarmup() == false ) {
+        if ( PreferenceValues.useWarmup(getContext()) == false ) {
             ViewUtil.hideViewsForEver(this, R.id.lblWarmupDuration);
             ViewUtil.hideViewsForEver(this, R.id.spWarmupDuration);
             ViewUtil.hideViewsForEver(this, R.id.cbWarmupDuration);
