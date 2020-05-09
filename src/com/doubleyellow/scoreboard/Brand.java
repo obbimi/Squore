@@ -76,6 +76,8 @@ public enum Brand
         this.iTurnedOffFlags          = iTurnedOffFlags;
     };
 
+    public  static/*final*/Brand brand = Brand.Squore;
+
     private SportType eSport;
     private int iShortNameResId;
     private int iSplashDuration;
@@ -239,8 +241,6 @@ public enum Brand
         }
     }
 
-    public  static/*final*/Brand brand = Brand.Squore;
-
     public static Model getModel() {
         return ModelFactory.getModel(getSport());
     }
@@ -289,18 +289,26 @@ public enum Brand
     public static boolean isRacquetball() {
         return getSport().equals(SportType.Racquetball);
     }
+
+    /*
+    private static int I_FLAG_WARMUP_OFF   = 1;
+    private static int I_FLAG_SINGLES_OFF  = 2;
+    private static int I_FLAG_MYLIST_OFF   = 4;
+    private static int I_FLAG_REFEREES_OFF = 8;
+
     public static boolean useWarmup() {
-        return trueUnlessFlagIsOn(1);
+        return trueUnlessFlagIsOn(I_FLAG_WARMUP_OFF);
     }
     public static boolean useSinglesMatches() {
-        return trueUnlessFlagIsOn(2);
+        return trueUnlessFlagIsOn(I_FLAG_SINGLES_OFF);
     }
     public static boolean useMyListMatches() {
-        return trueUnlessFlagIsOn(4);
+        return trueUnlessFlagIsOn(I_FLAG_MYLIST_OFF);
     }
     public static boolean useReferees() {
-        return trueUnlessFlagIsOn(8);
+        return trueUnlessFlagIsOn(I_FLAG_REFEREES_OFF);
     }
+    */
     private static boolean trueUnlessFlagIsOn(int iFlag) {
         return (brand.iTurnedOffFlags & iFlag) != iFlag;
     }

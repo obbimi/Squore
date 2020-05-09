@@ -753,19 +753,19 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.useFeedAndPostFunctionality, context, iResBrandSpecific);
     }
     public static boolean useSinglesMatches(Context context) {
-        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useSinglesMatch__Default);
+        int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useSinglesMatch__Default);
         return context.getResources().getBoolean(iResBrandSpecific);
     }
     public static boolean useMyListFunctionality(Context context) {
-        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useMyListFunctionality__Default);
+        int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useMyListFunctionality__Default);
         return context.getResources().getBoolean(iResBrandSpecific);
     }
     public static boolean useWarmup(Context context) {
-        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useWarmup__Default);
+        int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useWarmup__Default);
         return context.getResources().getBoolean(iResBrandSpecific);
     }
     public static boolean useReferees(Context context) {
-        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useReferees__Default);
+        int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useReferees__Default);
         return context.getResources().getBoolean(iResBrandSpecific);
     }
     public static boolean allowTrustAllCertificatesAndHosts(Context context) {

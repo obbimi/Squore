@@ -2377,6 +2377,11 @@ touch -t 01030000 LAST.sb
             // correction: do not show timer button after even nr of games
             bShowTimerFAB = false;
         }
+        if ( (matchModel.hasStarted() == false) && (PreferenceValues.useWarmup(this) == false) ) {
+            // do not show if it serves as 'warmup' timer
+            bShowTimerFAB = false;
+        }
+
         showTimerFloatButton(bShowTimerFAB);
     }
     private void showTimerFloatButton(boolean bVisible) {
