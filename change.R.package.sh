@@ -15,7 +15,7 @@ Always change back to Squore (the default) before change to another 'Brand'
 !
 }
 tobranded=${1:-Squore}
-backupBrand="${2}"
+parentBrand="${2}"
 if [[ "${tobranded}" = "-h" ]]; then
 	showHelp
 	exit
@@ -29,11 +29,18 @@ Allowed are: ${allowedInput}
 	exit
 fi
 
+if [[ -z "${parentBrand}" ]]; then
+    parentBrand="$(cat AndroidManifest${tobranded}.xml | grep parentBrand | sed -e 's~parentBrand\s*=\s*~~' | tr -d ' ')"
+    read -t 1 -p "Backup brand from AndroidManifest${tobranded}.xml ==> '${parentBrand}'. Continuing...."
+    echo
+fi
+
 function correctSportSpecificResource {
     from=$1
     to=$2
 
-    read -p "Correcting from ${from} to ${to}. Continue ?"
+    read -t 5 -p "Correcting from ${from} to ${to}. Continue ?"
+    echo
 
     let correctedCnt=0
     let keptCnt=0
@@ -59,10 +66,12 @@ function correctSportSpecificResource {
     done
 
     if [[ ${correctedCnt} -gt 0 ]]; then
+        (
         echo "=================================================="
         echo "CORRECTED ${correctedCnt} resources from ${from} to ${to}"
         echo "KEPT ${keptCnt} resources for ${from}"
         echo "=================================================="
+        ) | tee -a correctSportSpecificResource.txt
     fi
 }
 
@@ -120,7 +129,7 @@ for f in $(egrep -irl 'com\.doubleyellow\.[a-z]+\.R[^a-z]' *); do
     #exit 1
 done
 echo '=================================='
-read -p ' Java files changed. Continue ... ? '
+#read -t 10 -p ' Java files changed. Continue ... ? '
 
 if [[ "$tobranded" = "CourtCare" ]]; then
     printf "Change to '${tobranded}'\n"
@@ -163,21 +172,28 @@ for f in $(egrep -rl "@(string|fraction).*__${fromSuffix}\""); do
     else
         rm ${f}.1.xml
     fi
-    #read -p ' Continue ? '
+    #read -t 10 -p ' Continue ? '
 done
 echo '=================================='
-read -p 'menu/layout/preferences files processed. Continue ? '
-
-if [[ -n "${backupBrand}" ]]; then
-    correctSportSpecificResource ${toSuffix} ${backupBrand}
-    #correctSportSpecificResource ${backupBrand} Default
+#read -t 10 -p 'menu/layout/preferences files processed. Continue ? '
+if [[ -e correctSportSpecificResource.txt ]]; then
+    rm -v correctSportSpecificResource.txt
 fi
-if [[ "$tobranded" = "Padel" || "$backupBrand" = "Padel" ]]; then
+if [[ -n "${parentBrand}" ]]; then
+    correctSportSpecificResource ${toSuffix} ${parentBrand}
+fi
+if [[ "${tobranded}" = "Padel" || "${parentBrand}" = "Padel" ]]; then
     correctSportSpecificResource Padel TennisPadel
     correctSportSpecificResource       TennisPadel Default
 fi
 
 correctSportSpecificResource ${toSuffix} Default
+
+if [[ -e correctSportSpecificResource.txt ]]; then
+    echo
+    echo '######## SUMMARY ############'
+    cat correctSportSpecificResource.txt
+fi
 
 ####################################################
 # Change build.gradle
