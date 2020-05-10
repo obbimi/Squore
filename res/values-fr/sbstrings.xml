@@ -108,7 +108,7 @@
     <string name="sb_delete_group">Supprimer le groupe</string>
     <string name="sb_edit_item">Editer l\'élément \'%s\'</string>
     <string name="sb_new_item">Nouvel élément \'%s\'</string>
-    <string name="end_game__Squash">Fin du jeu</string>
+    <string name="end_game__Default">Fin du jeu</string>
     <string name="end_match">Fin du match</string> <!-- TODO-->
     <string name="sb_match_history">Historique du score</string>
     <string name="sb_stored_matches">Matchs stockés</string>
@@ -121,7 +121,8 @@
     <string name="press_again_to_undo_last_score">Appuyez sur l\'historique du score pour annuler le dernièr score</string>
     <string name="unable_to_interpret_entered_text_as_2_names">Désolé, je n\'ai pas pu interpréter le texte saisi comme étant 2 noms distincts</string>
     <string name="best_of_x_games_to_y_1">Au meilleur des</string>
-    <string name="best_of_x_games_to_y_2__Squash">jeux à</string>
+    <string name="best_of_x_games_to_y_2__Default">jeux à</string>
+    <string name="lbl_court__Default">Cour</string>
 
     <string name="no_statistics_recorded_for_this_match">Aucune statistique (coups gagnants/fautes directes) enregistrée pour ce match</string>
 

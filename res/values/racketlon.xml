@@ -1,96 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="oa_set">set</string>
-    <string name="oa_sets">sets</string>
-    <string name="oa_set_ball">Set ball</string>
     <string name="oa_gummiarm_point">Gummiarm point</string>
     <string name="end_game__Racketlon">End set</string>
-    <string name="lbl_court__Racketlon">Court</string>
 
     <string name="pref_swapPlayersHalfwayGame__Racketlon">Swap players halfway a game (for TT, BM and TN, not SQ)</string>
-    <string name="NewMatchesType_default__Racketlon">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
-
-    <string name="scv_side_buttons__Racketlon">The __serve side buttons__ indicate
-        \n
-        \n- who should serve
-        \n- from which side (L/R) (badminton, squash, tennis)
-        \n- if the player may serve twice (Ⅱ) or just one more time (Ⅰ) before serve switches to the opponent (table tennis)
-        \n\nThe side or player changes automatically after each point entered.
-        \n\nIf required (but normally it is not), you can toggle side/player by tapping it.
-    </string>
-    <string name="scv_timer_button__Racketlon">This button will allow you to start a __timer__.
-        \n\nIt will only appear when appropriate
-        \n
-        \n- Between sets
-        \n- Warmup for each set
-    </string>
-    <string name="scv_shirt_color__Racketlon">You can optionally __enter a color__ for both players/teams.
-        \n\nLong click the serve side button to select a color.</string>
-    <string name="scv_game_scores__Racketlon">The scores of __previous sets__, as well as the difference in points, are visible here.
-        \n\nTap it to see the details of previous sets in a graph.</string>
-    <string name="scv_overflow_submenu__Racketlon">More options are available from the menu. You can for example:
-        \n
-        \n- Customize appearance and behaviour of the app via \'Settings\'
-        \n- Show details of previously reffed matches
-        \n- Start an injury timer
-        \n- Export/import all your reffed matches to/from a zip file
-        \n- Consult an elaborate help page for this app
-        \n- Consult the official racketlon rules
-    </string>
-    <string name="scv_new_match_button__Racketlon">__That\'s it. Enjoy your racketlon.__
-        \n\nStart a new match by tapping this button.</string>
 
     <string name="sb_official_rules__Racketlon">Official racketlon rules</string>
     <string name="best_of_x_games_to_y_2__Racketlon">Sets to</string>
     <string name="discipline_order">Discipline order</string>
     <string name="start_with_discipline">Start with discipline</string>
     <string name="start_with_x">Start with: %1$s</string>
-    <string name="moving_from_displine_x_to_y">Moving from %1$s to %2$s</string>
-    <string name="moving_from_displine_x_to">Moving from %1$s to</string>
+    <string name="moving_from_discipline_x_to_y">Moving from %1$s to %2$s</string>
+    <string name="moving_from_discipline_x_to">Moving from %1$s to</string>
     <string name="if_player_x_wins_discipline_y_he_wins_the_match">If player %1$s wins the %2$s he wins the match</string>
     <string name="player_x_needs_1_more_point_to_win">Player %1$s needs 1 more point to win</string>
     <string name="player_x_needs_y_more_points_to_win">Player %1$s needs %2$s more points to win</string>
-    <string name="dicispline_x_does_not_need_to_be_played">Discipline %1$s does not need to be played</string>
+    <string name="discipline_x_does_not_need_to_be_played">Discipline %1$s does not need to be played</string>
     <string name="x_is_winner_Difference_is_y">%1$s wins. Score is +%2$s</string>
 
-    <string name="pref_feedPostUrls_default__Racketlon"><![CDATA[Name=FIR Tournament 1
-\nFeedMatches=feed/fir.tournamentsoftware.php?nr=1&pm=matches
-\nFeedPlayers=feed/fir.tournamentsoftware.php?nr=1&pm=players
-\n
-\nName=FIR Tournament 2
-\nFeedMatches=feed/fir.tournamentsoftware.php?nr=2&pm=matches
-\nFeedPlayers=feed/fir.tournamentsoftware.php?nr=2&pm=players
-\n
-\nName=TournamentSoftware 1
-\nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches
-\nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players
-\n
-\nName=TournamentSoftware 2
-\nFeedMatches=feed/tournamentsoftware.php?nr=2&pm=matches
-\nFeedPlayers=feed/tournamentsoftware.php?nr=2&pm=players
-\n
-\nName=Demo URL
-\nFeedMatches=demo/demo.matches.racketlon.txt
-\nFeedPlayers=demo/demo.players.racketlon.txt
-\nPostResult=demo/demo.post.matchresult.php?lang=en
-]]></string>
     <string name="OfficialRulesURLs_default__Racketlon"><![CDATA[http://www.racketlon.net/sites/default/files/FIR%20-%20Rules%20of%20Racketlon%20(2017-01-01),%20FINAL.pdf
 \nhttp://www.racketlon.com/rackrules.Db.pdf
 ]]></string>
-
-    <string name="matchList_default__Racketlon"><![CDATA[- King of Rackets > Semi Finals
-\nLukas Windischberger [AUT] - Michi Dickert [AUT]
-\nJesper Hougaard (DEN) - Peter Duyck (BEL)
-\n- Tuesday matches with mates
-\nJames - Richard
-\nRichard - Steven
-\nSteven - James
-\nIWT Latvian Open > Elite Doubles
-\nJeroen De Block/GermanyJörn Sültrup - Michi Dickert/Morten Jaksland
-\nUldis Dzirkalis/Arturs Zaicevs - Piers Boden/Luka Penttinen
-]]></string>
-
-    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Racketlon">true</bool>
-    <integer name="serveButtonTransparencyNonServer_default__Racketlon">90</integer> <!-- between 0 and 100 -->
 
 </resources>

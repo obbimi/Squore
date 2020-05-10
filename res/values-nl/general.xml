@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="lbl_left">Links</string>
+    <string name="lbl_right">Rechts</string>
 
     <string name="fetching_data">Ophalen van gegevens…</string>
     <string name="loading">Laden…</string>

@@ -34,7 +34,7 @@
 
     <!--<item android:id="@+id/dyn_bluetooth"     app:showAsAction="ifRoom" android:icon="@android:drawable/stat_sys_data_bluetooth" android:visible="false" android:title="Bluetooth" />-->
     <item android:id="@+id/dyn_undo_last"     app:showAsAction="ifRoom" android:icon="@drawable/circle_2arrows"          android:visible="false" android:title="@string/uc_undo" />
-    <item android:id="@+id/dyn_end_game"      app:showAsAction="ifRoom" android:icon="@drawable/arrow_right"             android:visible="false" android:title="@string/end_game__Squash" />
+    <item android:id="@+id/dyn_end_game"      app:showAsAction="ifRoom" android:icon="@drawable/arrow_right"             android:visible="false" android:title="@string/end_game__Default" />
     <item android:id="@+id/dyn_timer"         app:showAsAction="ifRoom" android:icon="@drawable/timer"                   android:visible="false" android:title="@string/sb_nbsp_timer"/>
     <item android:id="@+id/dyn_score_details" app:showAsAction="ifRoom" android:icon="@drawable/ic_action_chart_line"    android:visible="false" android:title="@string/sb_score_details" />
     <item android:id="@+id/dyn_new_match"     app:showAsAction="ifRoom" android:icon="@drawable/circled_plus"            android:visible="false" android:title="@string/sb_new_match" />
@@ -93,7 +93,7 @@
                     <item android:id="@+id/sb_lock"                 app:showAsAction="never" android:icon="@android:drawable/ic_lock_lock" android:title="@string/lock" />
                     <item android:id="@+id/sb_unlock"               app:showAsAction="never" android:icon="@drawable/ic_lock_unlock"       android:title="@string/unlock"/>
 
-                    <item android:id="@+id/end_game"                app:showAsAction="never" android:icon="@drawable/arrow_right"      android:title="@string/end_game__Squash"  />
+                    <item android:id="@+id/end_game"                app:showAsAction="never" android:icon="@drawable/arrow_right"      android:title="@string/end_game__Default"  />
                     <item android:id="@+id/end_match"               app:showAsAction="never" android:icon="@drawable/arrow_right"      android:title="@string/end_match" />
                 </menu>
             </item>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="scv_side_buttons__Racketlon">The __serve side buttons__ indicate
+        \n
+        \n- who should serve
+        \n- from which side (L/R) (badminton, squash, tennis)
+        \n- if the player may serve twice (Ⅱ) or just one more time (Ⅰ) before serve switches to the opponent (table tennis)
+        \n\nThe side or player changes automatically after each point entered.
+        \n\nIf required (but normally it is not), you can toggle side/player by tapping it.
+    </string>
+    <string name="scv_timer_button__Racketlon">This button will allow you to start a __timer__.
+        \n\nIt will only appear when appropriate
+        \n
+        \n- Between sets
+        \n- Warmup for each set
+    </string>
+    <string name="scv_shirt_color__Racketlon">You can optionally __enter a color__ for both players/teams.
+        \n\nLong click the serve side button to select a color.</string>
+    <string name="scv_game_scores__Racketlon">The scores of __previous sets__, as well as the difference in points, are visible here.
+        \n\nTap it to see the details of previous sets in a graph.</string>
+    <string name="scv_overflow_submenu__Racketlon">More options are available from the menu. You can for example:
+        \n
+        \n- Customize appearance and behaviour of the app via \'Settings\'
+        \n- Show details of previously reffed matches
+        \n- Start an injury timer
+        \n- Export/import all your reffed matches to/from a zip file
+        \n- Consult an elaborate help page for this app
+        \n- Consult the official racketlon rules
+    </string>
+    <string name="scv_new_match_button__Racketlon">__That\'s it. Enjoy your racketlon.__
+        \n\nStart a new match by tapping this button.</string>
+
+</resources>

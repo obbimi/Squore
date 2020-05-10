@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="scv_side_buttons__Tabletennis">The __serve buttons__ indicate
+        \n
+        \n- who should serve
+        \n- if the player may serve twice (Ⅱ) or just one more time (Ⅰ) before serve switches to the opponent
+        \n\nThe serve indication changes automatically after each point entered.
+    </string>
+    <!--
+        \n\nIf required (but normally it is not), you can toggle player by tapping it.
+    -->
+    <string name="scv_timer_button__Tabletennis">This button will allow you to start a __timer__.
+        \n\nIt will only appear when appropriate
+        \n
+        \n- Warmup before the match
+        \n- Between games
+        \n- Toweling down
+    </string>
+    <string name="scv_shirt_color__Tabletennis">You can optionally __enter a color__ for both players/teams.
+        \n\nLong click the serve side button to select a color.</string>
+    <string name="scv_game_scores__Tabletennis">The scores of __previous games__ are visible here.
+        \n\nTap it to see all details of previous games.</string>
+    <!--
+    <string name="scv_overflow_submenu__Tabletennis">More options are available from the menu. You can for example:
+        \n
+        \n- Customize appearance and behaviour of the app via \'Settings\'
+        \n- Show details of previously reffed matches
+        \n- Start an injury timer
+        \n- Export/import all your reffed matches to/from a zip file
+        \n- Consult an elaborate help page for this app
+        \n- Consult the official racketlon rules
+    </string>
+    -->
+    <string name="scv_new_match_button__Tabletennis">__That\'s it. Enjoy your table tennis.__
+        \n\nStart a new match by tapping this button.</string>
+</resources>

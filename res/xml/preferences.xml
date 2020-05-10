@@ -509,7 +509,7 @@
                 />
             <com.doubleyellow.prefs.EnumListPreference
                 android:key="swapPlayersHalfwayGame"
-                android:title="@string/pref_swapPlayersHalfwayGame__Squash"
+                android:title="@string/pref_swapPlayersHalfwayGame__Default"
                 android:icon="@drawable/change_sides"
                 android:defaultValue="@string/swapPlayersHalfwayGame_default"
                 dy:displayValues="@array/FeatureDisplayValues"

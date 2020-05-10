@@ -347,4 +347,10 @@
     <string name="pref_reset_no_keep">No, KEEP current values</string>
     <string name="pref_import_prefs">Import settings</string>
     <string name="pref_export_prefs">Export settings</string>
+
+    <!-- TT RL -->
+    <string name="pref_numberOfServiceCountUpOrDown">Number of serves. Count</string>
+    <string name="pref_numberOfServiceCountUpOrDown_summary">Down: number of serves left. Up: consecutive serves to be performed</string>
+    <string name="number_of_serves_per_player">Number of serves per player</string>
+
 </resources>

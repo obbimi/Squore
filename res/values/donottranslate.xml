@@ -40,7 +40,6 @@
     <integer name="showModeDialogAfterXMins_default__Squash">@integer/showModeDialogAfterXMins_default__Default</integer>
     <integer name="showModeDialogAfterXMins_default__Default">-1</integer>
 
-    <string name="pref_swapPlayersHalfwayGame__Squash"/> <!--Not used in squash version of the app -->
     <string name="NewMatchesType_default__Squash">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
     <string name="lbl_Scoring_PointWhenServing__Default">Score when serving</string> <!-- not used -->
 
@@ -203,5 +202,6 @@
         <item>verify_remote_app_handheld</item>
     </string-array>
 -->
+    <string name="pref_swapPlayersHalfwayGame__Default"><!-- not used --></string> <!--  (for TT, BM and TN, not SQ) -->
 
 </resources>

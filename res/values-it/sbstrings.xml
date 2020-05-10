@@ -114,7 +114,7 @@
     <string name="sb_delete_group">Elimina gruppo</string>
     <string name="sb_edit_item">Modifica voce \'%s\'</string>
     <string name="sb_new_item">Nuova voce \'%s\'</string>
-    <string name="end_game__Squash">Termina gioco</string>
+    <string name="end_game__Default">Termina gioco</string>
     <string name="end_match">Termina incontro</string>
     <string name="sb_match_history">Cronologia incontro</string>
     <string name="sb_stored_matches">Incontri salvati</string>
@@ -133,7 +133,8 @@
     <string name="total_of_x_games_to_y_1">Totale di</string>
 
     <string name="best_of_x_games_to_y_1">Al meglio di</string>
-    <string name="best_of_x_games_to_y_2__Squash">giochi a</string>
+    <string name="best_of_x_games_to_y_2__Default">giochi a</string>
+    <string name="lbl_court__Default">Campo</string>
 
     <string name="no_statistics_recorded_for_this_match">Nessuna statistica (vincenti/sbagliate) registrata per questo incontro</string>
 

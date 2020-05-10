@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"  tools:ignore="MissingTranslation">
+    <string name="pref_feedPostUrls_default__Badminton"><![CDATA[Name=TournamentSoftware 1
+\nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches&sport=badminton
+\nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players&sport=badminton
+\n
+\nName=TournamentSoftware 2
+\nFeedMatches=feed/tournamentsoftware.php?nr=2&pm=matches&sport=badminton
+\nFeedPlayers=feed/tournamentsoftware.php?nr=2&pm=players&sport=badminton
+\n
+\nName=Demo URL
+\nFeedMatches=demo/demo.matches.badminton.txt
+\nFeedPlayers=demo/demo.players.badminton.txt
+\nPostResult=demo/demo.post.matchresult.php?lang=en
+]]></string>
+
+    <string name="matchList_default__Badminton"><![CDATA[- China Open
+\nMomota Kento [JAP] - Shi Yuki [CHN]
+\nAxelsen Viktor [DEN] - Chou Tien Chen [TPE]
+\n- Tuesday matches with mates
+\nJames - Richard
+\nRichard - Steven
+\nSteven - James
+\n- Doubles
+\nAntony/Bernard - Chris/Dave
+\nJames/Richard - Steven/Harry
+\nPolii/Rahayu [INA] - Fruergaard/Thygesen [DEN]
+]]></string>
+
+    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Badminton">true</bool>
+    <integer name="serveButtonTransparencyNonServer_default__Badminton">90</integer> <!-- between 0 and 100 -->
+</resources>

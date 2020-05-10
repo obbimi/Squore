@@ -110,7 +110,7 @@
     <string name="sb_delete_group">Verwijder groep</string>
     <string name="sb_edit_item">Wijzig item \'%s\'</string>
     <string name="sb_new_item">Nieuw \'%s\' item</string>
-    <string name="end_game__Squash">Beëindig game</string>
+    <string name="end_game__Default">Beëindig game</string>
     <string name="end_match">Beëindig wedstrijd</string>
     <string name="sb_match_history">Wedstrijd historiek</string>
     <string name="sb_stored_matches">Opgeslagen wedstrijden</string>
@@ -123,7 +123,8 @@
     <string name="press_again_to_undo_last_score">Druk nogmaals op score verloop om laatste score ongedaan te maken</string>
     <string name="unable_to_interpret_entered_text_as_2_names">Sorry, de ingegeven text kon niet eenduidig als 2 namen worden geinterpreteerd</string>
     <string name="best_of_x_games_to_y_1">Best of</string>
-    <string name="best_of_x_games_to_y_2__Squash">games tot</string>
+    <string name="best_of_x_games_to_y_2__Default">games tot</string>
+    <string name="lbl_court__Default">Terrein</string>
 
     <string name="no_statistics_recorded_for_this_match">Geen statistieken (winners/fouten) ingegeven voor deze wedstrijd.</string>
 
@@ -157,4 +158,13 @@
 
     <string name="creating_url_for_sharing_match_details">Aanmaken van link om wedstrijd details te delen…</string>
     <string name="select_reason_and_winner">Selecteer reden en klik op de winnaar</string>
+
+    <!-- additional toss option for tabletennis (and badminton) -->
+    <string name="sb_what_side_will_x_start_to_y">Aan welke kant begint %1$s met %2$s?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_player_be">Op welke kant van het scorebord moet hij/zij initieel staan?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_team_be">Op welke kant van het scorebord moeten zij initieel staan?</string>
+    <string name="sb_which_player_of_team_will_start_to_x">Welke speler begint met %1$s?</string>
+
+    <string name="Resume_game">Herneem game</string>
+
 </resources>

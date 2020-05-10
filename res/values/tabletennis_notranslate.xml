@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"  tools:ignore="MissingTranslation">
+
+    <integer name="autoShowGamePausedDialogAfterXPoints_default">6</integer>
+    <integer name="timerTowelingDown_default">60</integer>
+
+    <string name="pref_feedPostUrls_default__Tabletennis"><![CDATA[Name=TournamentSoftware 1
+\nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches&sport=tabletennis
+\nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players&sport=tabletennis
+\n
+\nName=TournamentSoftware 2
+\nFeedMatches=feed/tournamentsoftware.php?nr=2&pm=matches&sport=tabletennis
+\nFeedPlayers=feed/tournamentsoftware.php?nr=2&pm=players&sport=tabletennis
+\n
+\nName=Demo URL
+\nFeedMatches=demo/demo.matches.tabletennis.txt
+\nFeedPlayers=demo/demo.players.tabletennis.txt
+\nPostResult=demo/demo.post.matchresult.php?lang=en
+]]></string>
+
+    <string name="matchList_default__Tabletennis"><![CDATA[- Seamaster 2017 ITTF World Tour Platinum, China Open
+\nOVTCHAROV Dimitrij [GER] - FAN Zhendong [CHN]
+\nHARIMOTO Tomokazu [JAP] - BOLL Timo [GER]
+\n- Tuesday matches with mates
+\nJames - Richard
+\nRichard - Steven
+\nSteven - James
+\n- Doubles
+\nAntony/Bernard - Chris/Dave
+\nMa Long/Xu Xin [CHN] - Harimoto/Koki Niwa [JAP]
+]]></string>
+
+    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Tabletennis">true</bool>
+    <integer name="serveButtonTransparencyNonServer_default__Tabletennis">90</integer> <!-- between 0 and 100 -->
+    <string name="NewMatchesType_default__Tabletennis">TeamVsTeam_XMatchesPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
+
+</resources>

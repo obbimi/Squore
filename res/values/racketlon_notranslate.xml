@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"  tools:ignore="MissingTranslation">
+    <string name="pref_feedPostUrls_default__Racketlon"><![CDATA[Name=FIR Tournament 1
+\nFeedMatches=feed/fir.tournamentsoftware.php?nr=1&pm=matches
+\nFeedPlayers=feed/fir.tournamentsoftware.php?nr=1&pm=players
+\n
+\nName=FIR Tournament 2
+\nFeedMatches=feed/fir.tournamentsoftware.php?nr=2&pm=matches
+\nFeedPlayers=feed/fir.tournamentsoftware.php?nr=2&pm=players
+\n
+\nName=TournamentSoftware 1
+\nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches
+\nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players
+\n
+\nName=TournamentSoftware 2
+\nFeedMatches=feed/tournamentsoftware.php?nr=2&pm=matches
+\nFeedPlayers=feed/tournamentsoftware.php?nr=2&pm=players
+\n
+\nName=Demo URL
+\nFeedMatches=demo/demo.matches.racketlon.txt
+\nFeedPlayers=demo/demo.players.racketlon.txt
+\nPostResult=demo/demo.post.matchresult.php?lang=en
+]]></string>
+
+    <string name="matchList_default__Racketlon"><![CDATA[- King of Rackets > Semi Finals
+\nLukas Windischberger [AUT] - Michi Dickert [AUT]
+\nJesper Hougaard (DEN) - Peter Duyck (BEL)
+\n- Tuesday matches with mates
+\nJames - Richard
+\nRichard - Steven
+\nSteven - James
+\nIWT Latvian Open > Elite Doubles
+\nJeroen De Block/GermanyJörn Sültrup - Michi Dickert/Morten Jaksland
+\nUldis Dzirkalis/Arturs Zaicevs - Piers Boden/Luka Penttinen
+]]></string>
+
+    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Racketlon">true</bool>
+    <integer name="serveButtonTransparencyNonServer_default__Racketlon">90</integer> <!-- between 0 and 100 -->
+    <string name="NewMatchesType_default__Racketlon">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
+
+</resources>

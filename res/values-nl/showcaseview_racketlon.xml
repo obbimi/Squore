@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="scv_side_buttons__Racketlon">De __opslag kant knoppen__ geven aan
+        \n
+        \n- wie er moet serveren
+        \n- van welke kant (L/R) (Badminton, Squash, Tennis)
+        \n- of de speler nog twee (Ⅱ) of één (Ⅰ) beurt heeft om op te slaan
+        \n
+        \nDe wisseling van kant of speler doet de app automatisch bij het ingeven van een punt.
+        \n
+        \nIndien nodig kan je van speler/kant wisselen door kort op de knop te drukken.
+    </string>
+    <string name="scv_timer_button__Racketlon">Deze knop laat het je toe een __timer__ te starten.
+        \n\nHij verschijnt alleen als een timer toepasselijk is:
+        \n
+        \n- Tussen twee sets
+        \n- Opwarming voor nieuwe sport
+    </string>
+    <string name="scv_shirt_color__Racketlon">Je kan eventueel een kleur in geven voor beide spelers/teams.
+        \n\nHoud hiervoor de __opslag kant knop__ even ingedrukt.</string>
+    <string name="scv_game_scores__Racketlon">De eindstand van __vorige sets__ van een wedstrijd, evenals het verschil in punten, zijn hier te zien.
+        \n\nDruk er op om details van reeds gespeelde sets in grafiek vorm te zien.</string>
+    <string name="scv_overflow_submenu__Racketlon">Andere opties zijn beschikbaar via het menu. Je kan er bijvoorbeeld:
+        \n
+        \n- Aanpassen van de \'Look and feel\' en van het gedrag van de app via \'Instellingen\'
+        \n- Resultaten van eerdere, met de app ingegeven, wedstrijden bekijken
+        \n- Exporteren/importeren van alle opgeslagen wedstrijden naar een zip file
+        \n- Raadplegen van een uitgebreide help pagina
+        \n- Raadplegen van de officiele racketlon regels
+    </string>
+    <string name="scv_new_match_button__Racketlon">__Dat was het. Veel racketlon plezier.__
+        \n\nStart een nieuwe wedstrijd door op deze knop te klikken.</string>
+</resources>

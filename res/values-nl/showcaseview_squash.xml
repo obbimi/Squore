@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="scv_side_buttons__Squash">De __opslag kant knoppen__ geven aan
+        \n
+        \n- wie er moet serveren
+        \n- van welke kant (L/R)
+        \n- of het een hand-out is (?)
+        \n
+        \nDe wisseling van kant of speler doet de app automatisch bij het ingeven van een punt.
+        \n
+        \nIndien nodig kan je van speler/kant wisselen door kort op de knop te drukken.
+    </string>
+    <string name="scv_player_buttons_appeal__Squash">Het bijhouden van __Stroke/Yes Let/No let__ beslissingen kan door kort op de naam van een speler te drukken.
+        \nIn de dialoog die verschijnt kan je je beslissing ingeven.
+    </string>
+    <!--
+        \n
+        \nIn case of _No let_ or _Stroke_, the awarded point is automatically reflected by the app. (No need to tap the big score button).
+    -->
+    <string name="scv_player_buttons_misconduct__Squash">Eveneens kan je __Conduct Warning/Stroke__ beslissingen bijhouden.
+        \n
+        \nHoud hiervoor een spelers knop wat langer ingedrukt.</string>
+    <string name="scv_old_fashioned_scoring__Squash">Een \'ouderwets\' score blad is zichtbaar in het midden van het scherm.
+        \n\nDeze kan eventueel worden uitgezet via \'Instellingen\'.</string>
+    <!--
+        <string name="scv_home_button">At any time you can also start a new match by tapping the home button.</string>
+    -->
+    <string name="scv_announcement_button__Squash">Deze knop verschijnt als een __officiele aankondiging__ van toepassing is:
+        \n
+        \n - Begin van een game/wedstrijd
+        \n - Einde van een game/wedstrijd
+        \n - Eerste tiebreak
+        \n
+        \nDruk er op om de aankondiging te zien.</string>
+    <string name="scv_shirt_color__Squash">Als je 2 spelers moet reffen die je (nog) niet bij naam kent,
+        kan je per speler __een kleur ingeven__.
+        \n\nHoud hiervoor de __opslag kant knop__ even ingedrukt.</string>
+    <string name="scv_game_scores__Squash">Het aantal gewonnen games is hier te zien.
+        \n
+        \nDruk er op om de eindstand van __vorige games__ te zien.</string>
+    <string name="scv_timer_button__Squash">Deze knop laat het je toe een __timer__ te starten.
+        \n\nHij verschijnt alleen als een timer toepasselijk is:
+        \n
+        \n- Opwarming
+        \n- Voor het begin van de eerste game
+        \n- Tussen twee games
+    </string>
+    <string name="scv_overflow_submenu__Squash">Andere opties zijn beschikbaar via het menu. Je kan er bijvoorbeeld:
+        \n
+        \n- Aanpassen van de \'Look and feel\' en van het gedrag van de app via \'Instellingen\'
+        \n- Resultaten van eerdere, met de app ingegeven, wedstrijden bekijken
+        \n- Starten van een \'Blessure timer\'
+        \n- Exporteren/importeren van alle opgeslagen wedstrijden naar een zip file
+        \n- Raadplegen van een uitgebreide help pagina
+        \n- Raadplegen van de officiele squash regels
+        \n- Activeren van noteren van \'Statistieken\' zoals FH/BH Winner/Error (e.g. voor coaches/trainers die hun pupillen observeren tijdens een wedstrijd)
+          </string>
+    <string name="scv_few_more_gui_hints__Squash">Nog een paar hints:
+        \n
+        \n__Speler knoppen__
+        \n
+        \n- Raak met 2 vingers aan om de gebeurtenis van een gebroken bal/bespanning/racket te noteren
+        \n- Veeg heen-en-weer over een speler naam om wedstrijd details (speler namen, evenement, referee) te bekijken/wijzigen.
+        \n- Veeg naar links over de naam van de serveerder om de opslag kant van rechts naar links te wijzigen. Idem dito voor de veeg naar rechts.
+        \n
+        \n__Score knoppen__
+        \n
+        \n- Raak ze tegelijk aan om een begin score in te geven (reffen van een wedstrijd die al was begonnen)
+        \n- Raak ze allebei wat langer aan om het gekozen \'wedstrijd formaat\' te verifieren
+        \n- Veeg diagonaal heen een weer om de score te herstarten (e.g. na het demo-en van de app aan clubgenoten)
+          </string>
+    <string name="scv_new_match_button__Squash">__Dat was het. Happy squashing, happy reffing.__
+        \n\nStart een nieuwe wedstrijd door op deze knop te klikken.</string>
+</resources>

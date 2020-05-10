@@ -114,7 +114,7 @@
     <string name="sb_delete_group">Smazat skupinu</string>
     <string name="sb_edit_item">Upravit položku \'%s\'</string>
     <string name="sb_new_item">Nová \'%s\' položka</string>
-    <string name="end_game__Squash">Konec setu</string>
+    <string name="end_game__Default">Konec setu</string>
     <string name="end_match">Konec zápasu</string>
     <string name="sb_match_history">Vývoj zápasu</string>
     <string name="sb_stored_matches">Uložené zápasy</string>
@@ -133,7 +133,8 @@
     <string name="total_of_x_games_to_y_1">Total of</string><!-- TODO -->
 
     <string name="best_of_x_games_to_y_1">Nejvýše</string>
-    <string name="best_of_x_games_to_y_2__Squash">sety(ů) do</string>
+    <string name="best_of_x_games_to_y_2__Default">sety(ů) do</string>
+    <string name="lbl_court__Default">Kurt</string>
 
     <string name="no_statistics_recorded_for_this_match">Statistiky (vítězné/chyby) nebyly pro tento zápas vedeny</string>
 

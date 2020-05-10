@@ -1,108 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- additional toss option for tabletennis (and badminton) -->
-    <string name="sb_what_side_will_x_start_to_y">What side/end will %1$s start to %2$s?</string>
-    <string name="sb_on_what_side_of_the_scoreboard_should_player_be">On what side of the scoreboard should he/she/team initially be?</string>
-    <string name="sb_on_what_side_of_the_scoreboard_should_team_be">On what side of the scoreboard should the team initially be?</string>
-    <string name="sb_which_player_of_team_will_start_to_x">Which player will start to %1$s?</string>
-    <string name="left_side">Left</string>
-    <string name="right_side">Right</string>
-
-    <string name="Resume_game">Resume game</string>
-
     <string name="pref_category_expediteSystem">Expedite system</string>
     <string name="pref_autoShow_activeExpediteSystem_dialog">Auto-show \'Activate Expedite mode\' dialog</string>
     <string name="pref_autoShow_activeExpediteSystem_dialog_after_X_mins">Show \'Activate expedite\' dialog after X mins</string>
-
-    <!-- tabletennis/racketlon -->
-    <string name="pref_numberOfServiceCountUpOrDown">Number of serves. Count</string>
-    <string name="pref_numberOfServiceCountUpOrDown_summary">Down: number of servers left. Up: consecutive serve to be performed</string>
 
     <string name="pref_category_towelingDown">Toweling down</string><!-- 3.4.4.1.2 brief intervals for towelling after every 6 points from the start of each game and at the change of ends in the last possible game of an individual match. -->
     <string name="pref_towelingDown_timer">\'Toweling down\' timer</string>
     <string name="pref_autoShow_towelingDown_timer_after_X_points">Show \'Toweling down\' timer after each X points</string>
     <string name="toweling_down">Toweling</string>
-    <string name="timeout">Timeout</string> <!-- 3.4.4.2.4 On receiving a valid request for a time-out the umpire shall suspend play and shall hold up a white card with the hand on the side of the player or pair who requested it; the white card or another appropriate marker shall be placed on the court of that player or pair. -->
-    <integer name="autoShowGamePausedDialogAfterXPoints_default">6</integer>
-    <integer name="timerTowelingDown_default">60</integer>
 
     <string name="pref_swapPlayersHalfwayGame__Tabletennis">Swap players halfway the deciding game</string>
 
     <string name="activate_mode__Tabletennis">Activate expedite</string>
     <string name="activate_mode_description__Tabletennis">More than %s minutes passed since the start of the game. Activate the expedite system?</string>
     <string name="deactivate_mode__Tabletennis">De-activate expedite</string>
-    <string name="NewMatchesType_default__Tabletennis">TeamVsTeam_XMatchesPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
 
-    <string name="number_of_serves_per_player">Number of serves per player</string>
-    <string name="end_game__Tabletennis">End game</string>
-    <string name="best_of_x_games_to_y_2__Tabletennis">games to</string>
     <string name="lbl_court__Tabletennis">Table</string>
-
-    <string name="scv_side_buttons__Tabletennis">The __serve buttons__ indicate
-        \n
-        \n- who should serve
-        \n- if the player may serve twice (Ⅱ) or just one more time (Ⅰ) before serve switches to the opponent
-        \n\nThe serve indication changes automatically after each point entered.
-    </string>
-<!--
-    \n\nIf required (but normally it is not), you can toggle player by tapping it.
--->
-    <string name="scv_timer_button__Tabletennis">This button will allow you to start a __timer__.
-        \n\nIt will only appear when appropriate
-        \n
-        \n- Warmup before the match
-        \n- Between games
-        \n- Toweling down
-    </string>
-    <string name="scv_shirt_color__Tabletennis">You can optionally __enter a color__ for both players/teams.
-        \n\nLong click the serve side button to select a color.</string>
-    <string name="scv_game_scores__Tabletennis">The scores of __previous games__ are visible here.
-        \n\nTap it to see all details of previous games.</string>
-    <!--
-    <string name="scv_overflow_submenu__Tabletennis">More options are available from the menu. You can for example:
-        \n
-        \n- Customize appearance and behaviour of the app via \'Settings\'
-        \n- Show details of previously reffed matches
-        \n- Start an injury timer
-        \n- Export/import all your reffed matches to/from a zip file
-        \n- Consult an elaborate help page for this app
-        \n- Consult the official racketlon rules
-    </string>
-    -->
-    <string name="scv_new_match_button__Tabletennis">__That\'s it. Enjoy your table tennis.__
-        \n\nStart a new match by tapping this button.</string>
 
     <string name="sb_official_rules__Tabletennis">Official table tennis rules</string><!--  -->
 
-    <string name="pref_feedPostUrls_default__Tabletennis"><![CDATA[Name=TournamentSoftware 1
-\nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches&sport=tabletennis
-\nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players&sport=tabletennis
-\n
-\nName=TournamentSoftware 2
-\nFeedMatches=feed/tournamentsoftware.php?nr=2&pm=matches&sport=tabletennis
-\nFeedPlayers=feed/tournamentsoftware.php?nr=2&pm=players&sport=tabletennis
-\n
-\nName=Demo URL
-\nFeedMatches=demo/demo.matches.tabletennis.txt
-\nFeedPlayers=demo/demo.players.tabletennis.txt
-\nPostResult=demo/demo.post.matchresult.php?lang=en
-]]></string>
     <string name="OfficialRulesURLs_default__Tabletennis"><![CDATA[http://www.ittf.com/?media-alias=2017_ITTF_Handbook
 \nhttp://pongworld.com/table-tennis-sport/official-rules
 ]]></string>
 
-    <string name="matchList_default__Tabletennis"><![CDATA[- Seamaster 2017 ITTF World Tour Platinum, China Open
-\nOVTCHAROV Dimitrij [GER] - FAN Zhendong [CHN]
-\nHARIMOTO Tomokazu [JAP] - BOLL Timo [GER]
-\n- Tuesday matches with mates
-\nJames - Richard
-\nRichard - Steven
-\nSteven - James
-\n- Doubles
-\nAntony/Bernard - Chris/Dave
-\nMa Long/Xu Xin [CHN] - Harimoto/Koki Niwa [JAP]
-]]></string>
-
-    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Tabletennis">true</bool>
-    <integer name="serveButtonTransparencyNonServer_default__Tabletennis">90</integer> <!-- between 0 and 100 -->
 </resources>

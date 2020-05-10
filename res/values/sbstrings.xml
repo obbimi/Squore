@@ -116,7 +116,7 @@
     <string name="sb_delete_group">Delete group</string>
     <string name="sb_edit_item">Edit item \'%s\'</string>
     <string name="sb_new_item">New \'%s\' item</string>
-    <string name="end_game__Squash">End game</string>
+    <string name="end_game__Default">End game</string>
     <string name="end_match">End match</string>
     <string name="sb_match_history">Match history</string>
     <string name="sb_stored_matches">Stored matches</string>
@@ -135,7 +135,8 @@
     <string name="total_of_x_games_to_y_1">Total of</string>
 
     <string name="best_of_x_games_to_y_1">Best of</string>
-    <string name="best_of_x_games_to_y_2__Squash">games to</string>
+    <string name="best_of_x_games_to_y_2__Default">games to</string>
+    <string name="lbl_court__Default">Court</string>
 
     <string name="no_statistics_recorded_for_this_match">No statistics (winners/errors) recorded for this match</string>
 
@@ -169,4 +170,14 @@
 
     <string name="creating_url_for_sharing_match_details">Creating link for sharing match details…</string>
     <string name="select_reason_and_winner">Select reason and click on winner</string>
+
+    <!-- additional toss options (TT BM TN PD) -->
+    <string name="sb_what_side_will_x_start_to_y">What side/end will %1$s start to %2$s?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_player_be">On what side of the scoreboard should he/she initially be?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_team_be">On what side of the scoreboard should the team initially be?</string>
+    <string name="sb_which_player_of_team_will_start_to_x">Which player will start to %1$s?</string>
+
+    <string name="timeout">Timeout</string> <!-- TT 3.4.4.2.4 On receiving a valid request for a time-out the umpire shall suspend play and shall hold up a white card with the hand on the side of the player or pair who requested it; the white card or another appropriate marker shall be placed on the court of that player or pair. -->
+    <string name="Resume_game">Resume game</string>
+
 </resources>

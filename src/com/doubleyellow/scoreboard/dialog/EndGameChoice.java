@@ -50,8 +50,10 @@ public class EndGameChoice extends BaseAlertDialog
     }
     @Override public void show() {
         //int iEndGameMsgResId = R.string.sb_start_next_game_confirm_message;
-        adb.setPositiveButton(getGameOrSetString(R.string.end_game__Squash), dialogClickListener)
-           .setNegativeButton(R.string.cmd_cancel                  , dialogClickListener)
+        int iResId = PreferenceValues.getSportTypeSpecificResId(context, R.string.end_game__Default);
+
+        adb.setPositiveButton(iResId             , dialogClickListener)
+           .setNegativeButton(R.string.cmd_cancel, dialogClickListener)
            .setIcon(R.drawable.microphone);
         List<String> messages = new ArrayList<>();
         messages.add(getGameOrSetString(R.string.sb_not_a_valid_endscore));

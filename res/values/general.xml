@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="lbl_left">Left</string>
+    <string name="lbl_right">Right</string>
 
     <string name="lbl_Scoring">Scoring</string>
     <string name="lbl_Scoring_PointPerRally">Point-per-rally</string>

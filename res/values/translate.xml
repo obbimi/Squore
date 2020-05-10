@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+    cd res/values
+    for f in $(ls -1 *.xml | egrep -v 'notranslate|translate|defaults|colors|brand|dimens|PreferenceCheckBox|SelectEnum|styles|layout'); do
+        echo "tar -append -f totranslate.tar $f"
+    done
+    -->
+</resources>

@@ -189,7 +189,7 @@ public class EndGame extends BaseAlertDialog
             Sport nextDiscipline = matchModel.getSportForGame(iSet1B + 1);
 
             if ( bMatchEnded ) {
-                messages.add(getString(R.string.dicispline_x_does_not_need_to_be_played, nextDiscipline));
+                messages.add(getString(R.string.discipline_x_does_not_need_to_be_played, nextDiscipline));
             } else {
                 // if a player can reach matchball, add message how many more points he needs
                 int iNeeded = 0;
@@ -225,9 +225,9 @@ public class EndGame extends BaseAlertDialog
                 }
                 String sMsg = null;
                 if ( bAllowSelectionOfNextDiscipline ) {
-                    sMsg = getString(R.string.moving_from_displine_x_to  , lastDiscipline);
+                    sMsg = getString(R.string.moving_from_discipline_x_to  , lastDiscipline);
                 } else {
-                    sMsg = getString(R.string.moving_from_displine_x_to_y, lastDiscipline, nextDiscipline);
+                    sMsg = getString(R.string.moving_from_discipline_x_to_y, lastDiscipline, nextDiscipline);
                 }
                 messages.add(sMsg);
             }

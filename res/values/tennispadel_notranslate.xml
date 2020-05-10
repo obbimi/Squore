@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="matchList_default__TennisPadel"><![CDATA[- Padel Toppers
+\nFrancisco Navarro Compán/Juan Lebrón Chincoa [ESP] - Maximiliano Sánchez/Carlos Daniel Gutiérrez [ARG]
+\nPablo Lima/Lucas De Oliveira Campagnolo [BRA] - Alejandro Galán Romo/Matías Díaz Sangiorgio [ESP]
+\n- Wednesday padel with mates
+\nAntionio/Bernardo - Carlos/Diego
+\nAntionio/Carlos - Bernardo/Diego
+\nAntionio/Diego - Bernardo/Carlos
+\n- Tennis toppers
+\nNadal [ESP] - Federer [SUI]
+\nDjokovic [SRB] - Del Potro [ARG]
+]]></string>
+
+    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__TennisPadel">true</bool>
+    <integer name="serveButtonTransparencyNonServer_default__TennisPadel">90</integer> <!-- between 0 and 100 -->
+
+    <string name="pref_feedPostUrls_default__TennisPadel"><![CDATA[Name=Toernooi.NL 1
+\nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches&sport=tennispadel
+\nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players&sport=tennispadel
+\n
+\nName=Toernooi.NL
+\nFeedMatches=feed/tournamentsoftware.php?nr=2&pm=matches&sport=tennispadel
+\nFeedPlayers=feed/tournamentsoftware.php?nr=2&pm=players&sport=tennispadel
+\n
+\nName=Demo URL
+\nFeedMatches=demo/demo.matches.tennispadel.txt
+\nFeedPlayers=demo/demo.players.tennispadel.txt
+\nPostResult=demo/demo.post.matchresult.php?lang=en
+]]></string>
+
+    <string name="NewMatchesType_default__TennisPadel">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
+
+</resources>

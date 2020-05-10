@@ -216,7 +216,7 @@
                 android:id="@+id/lblMatch_GamesTo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/best_of_x_games_to_y_2__Squash"
+                android:text="@string/best_of_x_games_to_y_2__Default"
                 android:textSize="@dimen/txt_medium"
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="6dp" />

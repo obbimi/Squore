@@ -31,6 +31,10 @@
     <string name="oa_gameball">Game bal</string>
     <string name="oa_matchball">Match bal</string>
 
+    <string name="oa_set">set</string>
+    <string name="oa_sets">sets</string>
+    <string name="oa_set_ball">Set bal</string>
+
     <string name="oa_n_all">%s Gelijk</string>
     <string name="oa_player_needs_2_clear_points">Een speler moet winnen met twee punten verschil</string>
 

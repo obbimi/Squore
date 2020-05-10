@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="scv_side_buttons__Squash">Tlačítko strany podání ukazuje
+        \n
+        \n- kdo má podávat
+        \n- z které strany (L/P)
+        \n- zda se jedná o ztrátu (?)
+        \n\nStrana i hráč se mění automaticky s každým zadaným bodem.
+        \n\nStranu i hráče můžete stisknutím tlačítka změnit.
+    </string>
+    <string name="scv_player_buttons_appeal__Squash">Rozhodnutí __Stroke/Yes Let/No let__ provedete klepnutím na tlačítko se jménem hráče, který žádal o Let.
+        \nObjeví se nabídka, ze které vyberete rozhodnutí.
+    </string>
+    <string name="scv_player_buttons_misconduct__Squash">Můžete také udělovat varování a tresty (stroke, set, zápas).
+        \n
+        \nPodržte chvíli tlačítko se jménem hráče a objeví se nabídka Provinění.</string>
+    <string name="scv_old_fashioned_scoring__Squash">Na obrzovce se podle potřeby zobrazuje i klasický zápis.
+        \n\nTo se dá změnit v \'Nastavení\'.</string>
+    <string name="scv_announcement_button__Squash">Toto tlačítko se zobrazí v případě, že rozhodčí má provést oznámení:
+        \n
+        \n - Začátek/konec zápasu
+        \n - Konec setu
+        \n - Začátek zkrácené hry
+        \n\nStiskněte tlačítko pro zobrazení oznámení.</string>
+    <string name="scv_shirt_color__Squash">Budete-li rozhodovat utkání hráčů, které neznáte a máte problém si je zapamatovat, můžete si je barevně označit.
+    \n\nPodržte dlouze tlačítko strany podání a vyberte si bravu, kterou chcete hráči přiřadit.</string>
+
+    <string name="scv_game_scores__Squash">Výsledky předchozích setů jsou zobrazeny zde.
+        \n\nKlepněte na ně pro zobrazení podrobností.</string>
+
+    <string name="scv_timer_button__Squash">Toto tlačítko spouští časomíru.
+        \n\nTlačítko se objeví jen v situacích, které to vyžadují
+        \n
+        \n- Zahřívání
+        \n- Před začátkem prvního setu
+        \n- Mezi sety
+      </string>
+
+
+    <string name="scv_overflow_submenu__Squash">V menu naleznete další možnosti. Můžete například:
+        \n
+        \n- Přizpůsobit si vzhled a chování aplikace v \'Nastavení\'
+        \n- Zobrazit podrobnosti zápasů, které jste rozhodovali dříve
+        \n- Spustit časomíru pro zranění
+        \n- Exportovat/importovat všechny Vámi rozhodované zápasy do/z ZIP souboru
+        \n- Nahlédnout do návodu aplikace
+        \n- Otevřít oficiální pravidla squashe (web)
+        \n- Zapnout možnost zaznamenávat statistiky FH/BH vítězný míček/chyba (např. pro trenéry sledující zápasy svých svěřenců)
+          </string>
+    <string name="scv_few_more_gui_hints__Squash">Pár dalších tipů:
+        \n
+        \n__Tlačítka hráčů__
+        \n
+        \n- Dotkněte se dvěma prsty k zaznamenání prasklého míčku/výpletu/rakety
+        \n- Potáhněte prstem tam a zpět pro zobrazení a úpravy podrobností soutěže, jmen klubů, hráčů, atd
+        \n
+        \n__Tlačítka bodů__
+        \n
+        \n- Dotkněte se obou tlačítek současně a můžete zadat počáteční skóre (např. pokud rozhodujete zápas, který již běží)
+        \n- Podržte dlouze obě tlačítka současně pro zobrazení formátu aktuálního zápasu
+        \n- Přejeďte prstem diagonálně tam a zpět pro možnost vynulování skóre (např. po předvedení možností aplikace někomu dalšímu)
+          </string>
+    <string name="scv_new_match_button__Squash">__Toť vše. Dobře si zahrejte i zarozhodujte.__
+        \n\nStiskněte toto tlačítko pro spuštění nového zápasu.</string>
+</resources>

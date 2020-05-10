@@ -326,4 +326,9 @@
     <string name="pref_reset_no_keep">Nee, BEHOUD huidige instellingen</string>
     <string name="pref_import_prefs">Importeer voorkeuren</string>
     <string name="pref_export_prefs">Exporteer voorkeuren</string>
+
+    <!-- TT RL -->
+    <string name="pref_numberOfServiceCountUpOrDown">Aantal opslagen. Telling</string>
+    <string name="pref_numberOfServiceCountUpOrDown_summary">Down: aantal opslagen nog te gaan. Up: aantal opslagen nog uit te voeren</string>
+    <string name="number_of_serves_per_player">Aantal opslagen per speler</string>
 </resources>

@@ -68,9 +68,9 @@ public class SideToss extends BaseAlertDialog
         adb.setTitle         (sTitle)
            .setMessage       ("(" + getString(iResMessage) + ")")
            .setIcon          (R.drawable.change_sides)
-           .setPositiveButton(R.string.left_side           , dialogClickListener)
+           .setPositiveButton(R.string.lbl_left           , dialogClickListener)
          //.setNeutralButton (R.string.sb_cmd_toss, null)
-           .setNegativeButton(R.string.right_side          , dialogClickListener)
+           .setNegativeButton(R.string.lbl_right          , dialogClickListener)
            .setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override public boolean onKey(DialogInterface dialogI, int keyCode, KeyEvent event) {
                 int action  = event.getAction();
