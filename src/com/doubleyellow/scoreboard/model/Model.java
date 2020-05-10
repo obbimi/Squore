@@ -3627,7 +3627,9 @@ public abstract class Model implements Serializable
         if ( isInTieBreak_TT_RL() ) {
             int    iMaxScore               = getMaxScore();
             int    iDiffScore              = getDiffScore();
-            Player serverAtStartOfSet      = determineServerForNextGame(ListUtil.size(getPlayer2EndPointsOfGames()), iMaxScore, iMaxScore);
+            int    iGameZB = ListUtil.size(getPlayer2EndPointsOfGames()) - 1;
+          //Player serverAtStartOfSet      = determineServerForNextGame(iGameZB, iMaxScore, iMaxScore);
+            Player serverAtStartOfSet      = determineServerForNextGame_TT_RL(iGameZB, false);
             int    iNrOfPointsIntoTieBreak = iMaxScore - (getNrOfPointsToWinGame()-1);
             if ( iNrOfPointsIntoTieBreak % 2 == 0 ) {
                 // 20-20,               22-21, 22-22              , 24-23

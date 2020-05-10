@@ -122,7 +122,7 @@ public class TabletennisModel extends Model
             int iTotalInGame = iA + iB;
             //int i=0;
             //for(; i < iTotalInGame - m_iNrOfServesPerPlayer; i += m_iNrOfServesPerPlayer ) { }
-            return String.valueOf(nrOfServesPerPlayer - (iTotalInGame % nrOfServesPerPlayer)); // return a string so no conversion to non numberic character is done in ServeButton
+            return String.valueOf(nrOfServesPerPlayer - (iTotalInGame % nrOfServesPerPlayer)); // return a string so no conversion to non numeric character is done in ServeButton
         }
         if ( ( nrOfServesPerPlayer == 1 ) || inTieBreak ) {
             return 1; // single serve only

@@ -126,11 +126,11 @@ public class GSMModel extends Model
 
     @Override public boolean setNrOfGamesToWinMatch(int i) {
         super.setNrOfGamesToWinMatch(i);
-        Log.w(TAG, "setNrOfGamesToWinMatch::Redirecting m_iNrOfSetsToWinMatch");
+        //Log.w(TAG, "setNrOfGamesToWinMatch::Redirecting m_iNrOfSetsToWinMatch");
         return setNrOfSetsToWinMatch(i);
     }
     @Override public int getNrOfGamesToWinMatch() {
-        Log.w(TAG, "getNrOfGamesToWinMatch::Redirecting m_iNrOfSetsToWinMatch");
+        //Log.w(TAG, "getNrOfGamesToWinMatch::Redirecting m_iNrOfSetsToWinMatch");
         return m_iNrOfSetsToWinMatch;
     }
 
@@ -197,7 +197,19 @@ public class GSMModel extends Model
         return DoublesServeSequence.A1B1A2B2; // TODO: check always one and the same server in a game
     }
 
-    @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) { }
+    @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) {
+        // TODO: improve
+        ServeSide serveSideRemoved = slRemoved.getServeSide();
+        ServeSide ssNew = null;
+        if (serveSideRemoved != null) {
+            ssNew = serveSideRemoved.getOther();
+        }
+        Player pNewServer = null;
+        if ( lastValidWithServer != null ) {
+            pNewServer = lastValidWithServer.getServingPlayer();
+        }
+        setServerAndSide(pNewServer, ssNew, null);
+    }
 
     @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {
         // determine server by means of looking who served in a previous game
@@ -223,6 +235,12 @@ public class GSMModel extends Model
             // swap server every two points (when scoring is odd)
             if ( iNrOfPoints % 2 == 1 ) {
                 player = player.getOther();
+                if ( isDoubles() && (doublesServe != null) ) {
+                    // swap player within team
+                    if ( iNrOfPoints % 4 == 1 ) {
+                        doublesServe = doublesServe.getOther();
+                    }
+                }
             }
         }
         super.setServerAndSide(player, serveSideBasedOnPoints, doublesServe);
@@ -243,7 +261,7 @@ public class GSMModel extends Model
     private List<List<Map<Player, Integer>>> m_lPlayer2EndPointsOfGames_PerSet = null;
     private List<List<GameTiming>>           m_lGamesTiming_PerSet             = null;
 
-    /** end scores of already ended sets [ {A=6,B=3},{A=2,B=6}, {A=7, B=6} ] . So does not hold set in progress. */
+    /* end scores of already ended sets [ {A=6,B=3},{A=2,B=6}, {A=7, B=6} ] . So does not hold set in progress. */
   //private List<Map<Player, Integer>>       m_endScoreOfPreviousSets = null;
     /** holds array with history of sets won like [0-0, 0-1, 1-1, 2-1] */
     private List<Map<Player, Integer>>       m_lSetCountHistory     = null;

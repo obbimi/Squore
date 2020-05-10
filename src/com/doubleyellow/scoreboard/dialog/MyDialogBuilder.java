@@ -129,11 +129,17 @@ public class MyDialogBuilder extends AlertDialog.Builder {
             ab.setTitle(sTitle);
             ab.setIcon(bAlert? android.R.drawable.ic_dialog_alert: android.R.drawable.ic_dialog_info);
         }
+
         if ( StringUtil.isNotEmpty(sMsg) ) {
-            if( sMsg.trim().toLowerCase().endsWith("html>") ) {
-                WebView wv = new WebView(context);
-                wv.loadData(sMsg, "text/html; charset=utf-8", "UTF-8");
-                ab.setView(wv);
+            if ( sMsg.trim().toLowerCase().endsWith("html>") ) {
+                try {
+                    WebView wv = new WebView(context); // seen this crash because of unclear reasons on android5
+                    wv.loadData(sMsg, "text/html; charset=utf-8", "UTF-8");
+                    ab.setView(wv);
+                } catch (Exception e) {
+                    Log.w(TAG, "Could not initialize webview");
+                    return null;
+                }
             } else {
                 ab.setMessage(sMsg);
             }
