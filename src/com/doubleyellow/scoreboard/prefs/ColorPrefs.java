@@ -446,7 +446,7 @@ public class ColorPrefs
                     int iColor = getTarget2colorMapping(context).get(colorTarget);
                     return iColor;
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
                 if ( StringUtil.isNotEmpty(sColor) ) {
                     try {

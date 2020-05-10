@@ -158,7 +158,7 @@ public class PlayerTextView extends AppCompatAutoCompleteTextView implements Con
                 }
             } catch(Exception e) {
                 Log.w(TAG, "Could not parse " + sContent);
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             lInput.addAll(0, playerList);
             lInput = ListUtil.removeDuplicates(lInput);

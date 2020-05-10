@@ -1,0 +1,118 @@
+{
+  "score": [
+    [
+      ["R1--", "L2--", "R--1", "L3--", "R4--"],
+      ["-1R-", "-2L-", "--R1", "-3L-", "-4R-"],
+      ["R--1", "L1--", "R2--", "L3--", "R--2", "L4--"],
+      ["-1R-", "-2L-", "-3R-", "-4L-"],
+      ["R--1", "L1--", "R--2", "L2--", "R3--", "L4--"],
+      ["-1R-", "--L1", "-2R-", "--L2", "-3R-", "-4L-"]
+    ],
+    [
+      ["R1--", "L--1", "R--2", "L--3", "R--4"],
+      ["-1R-", "--L1", "-2R-", "-3L-", "-4R-"],
+      ["R1--", "L--1", "R--2", "L--3", "R--4"],
+      ["--R1", "--L2", "--R3", "--L4"],
+      ["R--1", "L--2", "R--3", "L--4"],
+      ["--R1", "--L2", "--R3", "--L4"],
+      ["R--1", "L--2", "R--3", "L--4"]
+    ],
+    [
+      ["--R1", "-1L-", "-2R-", "-3L-", "-4R-"],
+      ["R1--", "L--1", "R--2", "L--3", "R--4"],
+      ["--R1", "--L2", "--R3", "-1L-", "-2R-", "-3L-", "--R4", "-4L-", "-5R-", "-6L-"],
+      ["R1--", "L2--", "R3--", "L--1", "R4--"],
+      ["--R1", "-1L-", "-2R-", "-3L-", "--R2", "--L3", "--R4", "--L5"],
+      ["R--1", "L--2", "R--3", "L--4"],
+      ["--R1", "--L2", "--R3", "--L4"],
+      ["R--1", "L--2", "R--3", "L--4"],
+      ["--R1", "--L2", "-1R-", "-2L-", "-3R-", "-4L-"],
+      ["R1--", "L2--", "R3--", "L4--"],
+      ["-1R-", "-2L-", "-3R-", "-4L-"],
+      ["R1--", "L--1", "R--2", "L--3", "R--4"],
+      ["-1R-", "L2--", "R3--", "-4L-", "-5R-", "L--1", "R--2", "-6L-", "-7R-"]
+    ],
+    [
+      ["R1--", "L--1", "R--2", "L--3", "R--4"],
+      ["-1R-", "--L1", "-2R-", "-3L-", "-4R-"],
+      ["R1--", "L--1", "R--2", "L--3", "R--4"],
+      ["--R1", "--L2", "--R3", "--L4"],
+      ["R--1", "L--2", "R--3", "L--4"],
+      ["--R1", "--L2", "--R3", "--L4"],
+      ["R--1", "L--2", "R--3", "L--4"]
+    ],
+    [
+      ["--R1", "-1L-", "-2R-", "-3L-", "-4R-"],
+      ["R1--", "L--1", "R--2", "L--3", "R--4"],
+      ["--R1", "--L2", "--R3", "-1L-", "-2R-", "-3L-", "--R4", "-4L-", "-5R-", "-6L-"],
+      ["R1--", "L2--", "R3--", "L--1", "R4--"],
+      ["--R1", "-1L-", "-2R-", "-3L-", "--R2", "--L3", "--R4", "--L5"],
+      ["R--1", "L--2", "R--3", "L--4"],
+      ["--R1", "--L2", "--R3", "--L4"],
+      ["R--1", "L--2", "R--3", "L--4"],
+      ["--R1", "--L2", "-1R-", "-2L-", "-3R-", "-4L-"],
+      ["R1--", "L2--", "R3--", "L4--"],
+      ["-1R-", "-2L-", "-3R-", "-4L-"],
+      ["R1--", "L--1", "R--2", "L--3", "R--4"],
+      ["-1R-", "L2--", "R3--", "-4L-", "-5R-", "L--1", "R--2", "-6L-", "-7R-"]
+    ],
+    []
+  ],
+  "result": "3-2",
+  "gamescores": "6-0,1-6,7-6,1-6,7-6",
+  "players": {
+    "A": "Ernesto\/Fernando",
+    "B": "Guan\/Horta"
+  },
+  "colors": {
+    "A": "#1c3754",
+    "B": "#d63e2c"
+  },
+  "when": {
+    "date": "2020-05-10",
+    "time": "15:55:14+02:00"
+  },
+  "format": {
+    "numberOfPointsToWinGame": 6,
+    "numberOfGamesToWinMatch": 3,
+    "finalSetFinish": "TieBreakTo7"
+  },
+  "lockState": "SharedEndedMatch",
+  "settings": {
+    "colors": {
+      "background": "#ffffff",
+      "mainText": "#000000",
+      "actionBarBackground": "#1c3755",
+      "timerButtonBackground": "#d63e2d",
+      "timerButtonBackground_Warn": "#7bb0e7",
+      "playerButtonBackground": "#d63e2d",
+      "playerButtonText": "#ffffff",
+      "speakButtonBackground": "#1c3755",
+      "scoreButtonBackground": "#1c3755",
+      "scoreButtonText": "#ffffff",
+      "tossButtonBackground": "#7bb0e7",
+      "shareButtonBackground": "#7bb0e7",
+      "serveButtonBackground": "#7bb0e7",
+      "serveButtonText": "#000000",
+      "historyBackground": "#d63e2d",
+      "historyText": "#ffffff",
+      "darkest": "#1c3755",
+      "middlest": "#d63e2d",
+      "lightest": "#7bb0e7"
+    },
+    "css": ".serveButton {\n background-color:#7bb0e7;\n color:#000000;\n}\n.serveButtonInv {\n background-color:#000000;\n color:#7bb0e7;\n}\n.scoreButton {\n background-color:#1c3755;\n color:#ffffff;\n}\n.scoreButtonInv {\n background-color:#ffffff;\n color:#1c3755;\n}\n.playerButton {\n background-color:#d63e2d;\n color:#ffffff;\n}\n.playerButtonInv {\n background-color:#ffffff;\n color:#d63e2d;\n}\n"
+  },
+  "sport": "Padel",
+  "appName": "Winner Padel",
+  "appPackage": "es.winnerpadel.scoreboard",
+  "metadata": {
+    "source": "ManualDoubles",
+    "version": 23150438,
+    "language": "en",
+    "wifi": {
+      "ipaddress": "192.168.0.128",
+      "ssid": "unknownssid",
+      "mac": "02:00:00:00:00:00"
+    }
+  }
+}

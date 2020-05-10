@@ -94,7 +94,7 @@ public class Export extends BaseAlertDialog implements HttpUploadFileTask.Upload
         label.setTextColor(iLabelTxt);
         llLabelAndText.addView(label);
 
-        String sSuggest = Brand.getShortName(context).replaceAll(" ", "") + "." + DateUtil.getCurrentYYYYMMDD();
+        String sSuggest = Brand.getShortName(context).replaceAll("[ /]", "") + "." + DateUtil.getCurrentYYYYMMDD();
         String sSuffix = "";
         int iSuffix = 0;
         do {

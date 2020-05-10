@@ -555,10 +555,23 @@ public class GSMModel extends Model
         }
     }
 
+    /** for this model: returns end score of sets: e.g. 7-6,3-6,6-4 */
     @Override public String getGameScores() {
         //String gameScores = super.getGameScores();
-
-        StringBuilder sbSets = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
+        for(List<Map<Player, Integer>> lGamesWonInSet : m_lPlayer2GamesWon_PerSet) {
+            Map<Player, Integer> mTotalGamesWonInSet = ListUtil.getLast(lGamesWonInSet);
+            if ( MapUtil.getMaxValue(mTotalGamesWonInSet) <=0 ) { continue; }
+            if ( sb.length() > 0 ) {
+                sb.append(",");
+            }
+            for ( Player p: Player.values() ) {
+                if ( p.ordinal() > 0 ) sb.append("-");
+                sb.append(mTotalGamesWonInSet.get(p));
+            }
+        }
+        return sb.toString();
+/*
         List<Map<Player, Integer>> setEndScores = m_lSetCountHistory;
         for(Map<Player, Integer> mSetScore: setEndScores) {
             Integer iA = MapUtil.getInt(mSetScore, Player.A, 0);
@@ -571,12 +584,23 @@ public class GSMModel extends Model
             }
         }
         return sbSets.toString();
+*/
     }
 
     @Override public String getResultShort() {
-        // TODO:
-        //return String.valueOf(getGamesWonPerSet());
-        return String.valueOf(m_lSetCountHistory);
+        StringBuilder sb = new StringBuilder();
+        Map<Player, Integer> mSetsWon = ListUtil.getLast(m_lSetCountHistory);
+        for ( Player p: Player.values() ) {
+            if ( p.ordinal() > 0 ) sb.append("-");
+            sb.append(mSetsWon.get(p));
+        }
+        if ( false ) {
+            sb.append(" : ");
+            // include set end scores
+            sb.append(getGameScores());
+        }
+
+        return sb.toString();
     }
 
     /** overridden to check at the end of a game that it is also end of a set */

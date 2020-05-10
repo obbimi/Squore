@@ -5035,15 +5035,20 @@ touch -t 01030000 LAST.sb
     private void addDemoMatchesForSport(Map<Integer, SportType> lResources, SportType sport) {
         switch (sport) {
             case Squash:
-                lResources.put(R.raw.demomatch1, sport);
-                lResources.put(R.raw.demomatch2, sport);
-                lResources.put(R.raw.demomatch3, sport);
+                lResources.put(R.raw.demomatch1_squash, sport);
+                lResources.put(R.raw.demomatch2_squash, sport);
+                lResources.put(R.raw.demomatch3_squash, sport);
                 break;
             case Racketlon:
                 lResources.put(R.raw.demomatch1_racketlon, sport);
                 break;
             case Tabletennis:
                 lResources.put(R.raw.demomatch1_tabletennis, sport);
+                break;
+            case Padel:
+            case TennisPadel:
+                lResources.put(R.raw.demomatch1_tennispadel, sport);
+                lResources.put(R.raw.demomatch2_tennispadel, sport);
                 break;
         }
     }

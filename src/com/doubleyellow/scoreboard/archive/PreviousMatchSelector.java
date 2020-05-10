@@ -22,10 +22,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+
 import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.android.util.SimpleELAdapter;
 import com.doubleyellow.scoreboard.Brand;
@@ -55,8 +57,10 @@ import java.util.*;
  */
 public class PreviousMatchSelector extends ExpandableMatchSelector
 {
-           static String sNoMatchesStored = null;
+    static String sNoMatchesStored = null;
     public static final String TAG = "SB." + PreviousMatchSelector.class.getSimpleName();
+
+    private ReadStoredMatches rsmTask = null;
 
     private SortOrder sortOrder = SortOrder.Descending;
 
@@ -66,6 +70,13 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         sortOrder = PreferenceValues.sortOrderOfArchivedMatches(context);
 
         super.onCreate(savedInstanceState);
+    }
+
+    @Override public void onDestroy() {
+        super.onDestroy();
+        if ( rsmTask != null ) {
+            rsmTask.cancel(true);
+        }
     }
 
     @Override protected void setGuiDefaults(List<String> lExpanded) {
@@ -197,7 +208,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         public void load(boolean bUseCacheIfPresent)
         {
             String sNewMsg = getString(R.string.loading);
-            boolean bAsync = true; //sNewMsg.equals(m_sLastMessage);
+            final boolean bAsync = true; //sNewMsg.equals(m_sLastMessage);
 
             showProgress(sNewMsg, null);
 
@@ -208,9 +219,11 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
             setGuiDefaults(null);
 
             // start separate task to ensure loading message is actually shown
-            ReadStoredMatches rsmTask = new ReadStoredMatches(PreviousMatchSelector.this, this, bUseCacheIfPresent);
+            rsmTask = new ReadStoredMatches(PreviousMatchSelector.this, this, bUseCacheIfPresent);
             if ( bAsync ) {
-                rsmTask.execute(); // doing this in background works initially with nice progress message, but sorting no longer works
+                rsmTask.execute(TAG); // doing this in background works initially with nice progress message, but sorting no longer works?!
+                //rsmTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                //rsmTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
             } else {
                 rsmTask.doInBackground();
                 rsmTask.onPostExecute(null);
