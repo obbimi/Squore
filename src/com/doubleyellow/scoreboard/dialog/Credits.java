@@ -40,7 +40,7 @@ public class Credits extends BaseAlertDialog
 
     @Override public void show() {
         MarkDownView webView = new MarkDownView(context, null);
-        webView.init( ( Brand.isTabletennis() || Brand.isBadminton() ) ? R.raw.credits_tabletennis : R.raw.credits);
+        webView.init( ( Brand.isNotSquash() ) ? R.raw.credits_tabletennis : R.raw.credits);
 
         dialog = adb
                 .setTitle("Credits")

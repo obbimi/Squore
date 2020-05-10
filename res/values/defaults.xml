@@ -173,6 +173,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="useWarmup__Default">true</bool>
     <bool name="useReferees__Default">true</bool>
     <bool name="useMatchFromFeed__Default">true</bool>
+    <bool name="isPublicApp__Default">true</bool>
     <bool name="useSinglesMatch__Default">true</bool>
     <bool name="useInjuryTimers__Squash">true</bool>
     <bool name="useInjuryTimers__Default">false</bool>

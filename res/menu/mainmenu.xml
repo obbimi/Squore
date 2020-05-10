@@ -168,7 +168,7 @@
                     <item android:id="@+id/sb_change_log"            app:showAsAction="never"  android:icon="@android:drawable/ic_dialog_info"  android:title="Change Log" />
                     <item android:id="@+id/sb_credits"               app:showAsAction="never"                                                   android:title="Credits" android:visible="false" />
                     <item android:id="@+id/sb_about"                 app:showAsAction="never" android:icon="@android:drawable/ic_dialog_info"   android:title="@string/about" />
-                    <item android:id="@+id/sb_privacy_and_terms"     app:showAsAction="never" android:icon="@android:drawable/ic_dialog_info"   android:title="@string/privacy_and_terms" />
+                    <item android:id="@+id/sb_privacy_and_terms"     app:showAsAction="never" android:icon="@android:drawable/ic_dialog_info"   android:title="@string/privacy_and_terms"  android:visible="@bool/isPublicApp__Default" />
 
                     <item android:id="@+id/sb_demo"                  app:showAsAction="never"  android:icon="@android:drawable/ic_media_play"   android:title="Demo"             android:visible="false"/>
                     <item android:id="@+id/sb_toggle_demo_mode"      app:showAsAction="never"                                                   android:title="Toggle demo mode" android:visible="false" />
@@ -179,7 +179,7 @@
                 </menu>
             </item>
 
-            <item android:id="@+id/sb_feedback" app:showAsAction="never" android:icon="@drawable/ic_action_import_export"            android:title="@string/cmd_feedback" />
+            <item android:id="@+id/sb_feedback" app:showAsAction="never" android:icon="@drawable/ic_action_import_export"            android:title="@string/cmd_feedback" android:visible="@bool/isPublicApp__Default" />
             <item android:id="@+id/sb_exit"     app:showAsAction="never" android:icon="@android:drawable/ic_menu_close_clear_cancel" android:title="@string/uc_exit" />
         </menu>
     </item>
