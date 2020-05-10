@@ -13,7 +13,6 @@
 
     <!-- Score board -->
     <string name="sb_not_a_valid_endscore">L\'attuale punteggio non sembra valido per essere un risultato finale d\'un gioco.</string>
-    <string name="sb_did_you_mean_conduct_game">Se si tratta di \'Gioco di penalità\', premi a lungo sul giocatore reo di cattiva condotta e seleziona l\'opzione adatta lì.</string>
     <string name="sb_start_next_game_confirm_message">Iniziare il prossimo gioco?</string>
     <string name="Quick_intro">Introduzione veloce</string>
     <string name="Start_game">Inizia game</string>
@@ -23,14 +22,11 @@
     <string name="hms_delete_selected">Elimina selezionati risultati salvati</string>
     <string name="sb_online_sheet_available">Foglio di punteggio (Scoresheet) online disponibile</string>
     <string name="sb_online_sheet_updated">Foglio di punteggio (Scoresheet) online aggiornato</string>
-    <string name="sb_injury_type">Tipo di\'infortunio</string>
     <string name="sb_doublesServeSequence">Sequenza di Servizio</string>
     <string name="sb_Duration_Warmup_and_Pauses">Durata Riscaldamento &amp; Pausa</string>
     <string name="sb_Duration_Warmup">Durata Riscaldamento</string>
     <string name="sb_Duration__and_Pauses">Pausa</string>
     <string name="sb_tiebreak">Spareggio</string>
-    <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-Pari - Giocatore alla risposta %2$s sceglie di giocare a %3$s o a %4$s</string>
-    <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-Pari - Giocatore alla risposta %2$s sceglie il punteggio vincente</string>
     <string name="sb_who_will_start_to_serve">Chi è al servizio?</string>
     <string name="sb_cmd_toss">Sorteggio</string>
     <string name="choose_winner_of_toss_or_perform_toss">Scegli il vincitore del sorteggio o eseguilo con l\'app</string> <!-- TODO-->
@@ -102,11 +98,6 @@
     <string name="sb_score_details">Dettagli di Punteggio</string>
     <string name="Live_Score">Punteggio in diretta</string>
     <string name="sb_official_announcement">Annuncio ufficiale</string>
-    <string name="sb_official_rules__Squash">Regolamento ufficiale squash</string>
-    <string name="sb_possible_conducts">Possibili Condotte</string>
-    <string name="sb_self_inflicted_injury">Infortunio Auto-Inflitto</string>
-    <string name="sb_opponent_inflicted_injury">Infortunio Inflitto dall\'avversario</string>
-    <string name="sb_contributed_injury">Infortunio Indotto</string>
     <!--<string name="sb_untill_next_game">Next game starts in</string>-->
     <string name="sb_remove_match_from_my_list">Rimuovi incontro \'%s\' da \'La Mia Lista\'</string>
     <string name="sb_delete_item">Elimina voce \'%s\'</string>
@@ -120,7 +111,7 @@
     <string name="sb_stored_matches">Incontri salvati</string>
     <string name="no_matches_selected">Nessun incontro selezionato</string>
     <string name="sb_recent_matches">Incontri recenti</string>
-    <string name="sb_preferences">Impostazioni Squore</string>
+    <string name="sb_preferences">Impostazioni App</string>
     <string name="sb_no_matches_stored">Non sono stati trovati incontri salvati</string>
     <string name="sb_no_recent_matches_stored">Non sono stati trovati incontri recenti salvati</string>
     <string name="match_has_finished">L\'incontro è terminato</string>
@@ -168,4 +159,54 @@
 
     <string name="creating_url_for_sharing_match_details">Creazione del collegamento per la condivisione dei dettagli dell\'incontro in corso…</string>
     <string name="select_reason_and_winner">Seleziona un motivo e clicca sul vincitore</string>
+
+    <string name="lbl_Scoring">Punteggio</string>
+    <string name="lbl_Scoring_PointPerRally">Punto-per-scambio</string>
+
+    <string name="Score">Punteggio</string>
+    <string name="Game">Gioco</string>
+
+    <string name="left_serveside_single_char">S</string>
+    <string name="right_serveside_single_char">D</string>
+
+    <string name="handout">Cambio</string>
+    <string name="lbl_all_games">Tutti i giochi</string>
+    <!--<string name="lbl_game">Game</string>-->
+    <string name="lbl_players">Giocatori</string>
+    <string name="lbl_event_and_players">Evento e Gioctori</string>
+    <string name="lbl_player">Giocatore</string>
+    <string name="lbl_player_A">Giocatore A</string>
+    <string name="lbl_playerA1">Giocatore A1</string>
+    <string name="lbl_playerA2">Giocatore A2</string>
+    <string name="lbl_player_B">Giocatore B</string>
+    <string name="lbl_playerB1">Giocatore B1</string>
+    <string name="lbl_playerB2">Giocatore B2</string>
+    <string name="lbl_player_x">Giocatore %s</string>
+    <string name="lbl_countries">Nazioni</string>
+    <string name="lbl_country_A">Nazione A</string>
+    <string name="lbl_country_B">Nazione B</string>
+    <string name="lbl_color_A">Colore A</string>
+    <string name="lbl_color_B">Colore B</string>
+    <string name="lbl_clubs">Club/Società</string>
+    <string name="lbl_club_A">Club/Società A</string>
+    <string name="lbl_club_B">Club/Società B</string>
+    <string name="add_x_matches">Aggiungi %d incontri</string>
+    <string name="lbl_event">Evento</string>
+    <string name="lbl_division">Divisione</string>
+    <string name="lbl_round">Turno</string>
+    <string name="lbl_location">Luogo</string>
+    <string name="lbl_referee">Arbitro</string>
+    <string name="lbl_versus">vs</string>
+
+    <string name="lbl_broken_equipment">Attrezzatura rotta segnalata da %s</string>
+    <string name="point_awarded_to_p">Punto assegnato a %s</string>
+    <string name="point">Punto</string>
+    <string name="points">Punti</string>
+    <string name="lbl_warning">Richiamo</string>
+    <!--
+        <string name="last_game__score_x_induration_y_z">Last game: %s in %s %s</string>
+        <string name="last_game__score_x_induration_y_z__2lines">Last game: %s\nin %s %s</string>
+    -->
+    <string name="game_ended">Gioco terminato</string>
+    <string name="match_ended">Incontro terminato</string>
 </resources>

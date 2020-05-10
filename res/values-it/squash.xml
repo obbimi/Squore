@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="lbl_Scoring">Punteggio</string>
-    <string name="lbl_Scoring_PointPerRally">Punto-per-scambio</string>
     <string name="lbl_Scoring_PointWhenServing__Squash">Punteggio al cambio servizio</string>
-
-    <string name="Score">Punteggio</string>
-    <string name="Game">Gioco</string>
-
-    <string name="left_serveside_single_char">S</string>
-    <string name="right_serveside_single_char">D</string>
+    <string name="lbl_marker">Segnapunti</string>
 
     <string name="no_let_abbreviation">N</string>
     <string name="yes_let_abbreviation">L</string>
@@ -22,47 +15,17 @@
     <string name="broken_ball_abbreviation">RP</string>
     <string name="broken_racket_abbreviation">RR</string>
 
-    <string name="handout">Cambio</string>
-    <string name="lbl_all_games">Tutti i giochi</string>
-    <!--<string name="lbl_game">Game</string>-->
-    <string name="lbl_players">Giocatori</string>
-    <string name="lbl_event_and_players">Evento e Gioctori</string>
-    <string name="lbl_player">Giocatore</string>
-    <string name="lbl_player_A">Giocatore A</string>
-    <string name="lbl_playerA1">Giocatore A1</string>
-    <string name="lbl_playerA2">Giocatore A2</string>
-    <string name="lbl_player_B">Giocatore B</string>
-    <string name="lbl_playerB1">Giocatore B1</string>
-    <string name="lbl_playerB2">Giocatore B2</string>
-    <string name="lbl_player_x">Giocatore %s</string>
-    <string name="lbl_countries">Nazioni</string>
-    <string name="lbl_country_A">Nazione A</string>
-    <string name="lbl_country_B">Nazione B</string>
-    <string name="lbl_color_A">Colore A</string>
-    <string name="lbl_color_B">Colore B</string>
-    <string name="lbl_clubs">Club/Società</string>
-    <string name="lbl_club_A">Club/Società A</string>
-    <string name="lbl_club_B">Club/Società B</string>
-    <string name="add_x_matches">Aggiungi %d incontri</string>
-    <string name="lbl_event">Evento</string>
-    <string name="lbl_division">Divisione</string>
-    <string name="lbl_round">Turno</string>
-    <string name="lbl_location">Luogo</string>
-    <string name="lbl_referee">Arbitro</string>
-    <string name="lbl_marker">Segnapunti</string>
-    <string name="lbl_versus">vs</string>
+    <string name="sb_injury_type">Tipo di\'infortunio</string>
+    <string name="sb_did_you_mean_conduct_game">Se si tratta di \'Gioco di penalità\', premi a lungo sul giocatore reo di cattiva condotta e seleziona l\'opzione adatta lì.</string>
 
-    <string name="lbl_broken_equipment">Attrezzatura rotta segnalata da %s</string>
-    <string name="point_awarded_to_p">Punto assegnato a %s</string>
-    <string name="point">Punto</string>
-    <string name="points">Punti</string>
-    <string name="lbl_warning">Richiamo</string>
-<!--
-    <string name="last_game__score_x_induration_y_z">Last game: %s in %s %s</string>
-    <string name="last_game__score_x_induration_y_z__2lines">Last game: %s\nin %s %s</string>
--->
-    <string name="game_ended">Gioco terminato</string>
-    <string name="match_ended">Incontro terminato</string>
+    <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-Pari - Giocatore alla risposta %2$s sceglie di giocare a %3$s o a %4$s</string>
+    <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-Pari - Giocatore alla risposta %2$s sceglie il punteggio vincente</string>
+
+    <string name="sb_official_rules__Squash">Regolamento ufficiale squash</string>
+    <string name="sb_possible_conducts">Possibili Condotte</string>
+    <string name="sb_self_inflicted_injury">Infortunio Auto-Inflitto</string>
+    <string name="sb_opponent_inflicted_injury">Infortunio Inflitto dall\'avversario</string>
+    <string name="sb_contributed_injury">Infortunio Indotto</string>
 
     <!-- source: http://www.worldsquash.org/referees-info/conduct-on-court/ -->
     <string name="conducts_guidelines_default"><![CDATA[

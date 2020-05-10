@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="Game">Jeu</string>
-
-    <string name="left_serveside_single_char">G</string>
-    <string name="right_serveside_single_char">D</string>
+    <string name="lbl_marker">Marqueur</string>
 
     <string name="no_let_abbreviation">NL</string>
     <string name="yes_let_abbreviation">L</string>
@@ -17,46 +14,16 @@
     <string name="broken_ball_abbreviation">BC</string> <!-- TODO -->
     <string name="broken_racket_abbreviation">RC</string> <!-- TODO -->
 
-    <string name="handout">Changement</string>
-    <string name="lbl_all_games">Tous les jeux</string>
-    <string name="lbl_players">Joueurs</string>
-    <string name="lbl_countries">Pays</string> <!-- TODO -->
-    <string name="lbl_event_and_players">Événement et joueurs</string>
-    <string name="lbl_player">Joueur</string>
-    <string name="lbl_player_A">Joueur A</string>
-    <string name="lbl_playerA1">Joueur A1</string>
-    <string name="lbl_playerA2">Joueur A2</string>
-    <string name="lbl_player_B">Joueur B</string>
-    <string name="lbl_playerB1">Joueur B1</string>
-    <string name="lbl_playerB2">Joueur B2</string>
-    <string name="lbl_player_x">Joueur %s</string>
-    <string name="lbl_country_A">Pays A</string> <!-- TODO -->
-    <string name="lbl_country_B">Pays B</string> <!-- TODO -->
-    <string name="lbl_color_A">Couleur A</string>
-    <string name="lbl_color_B">Couleur B</string>
-    <string name="lbl_clubs">Clubs</string> <!-- TODO -->
-    <string name="lbl_club_A">Club A</string> <!-- TODO -->
-    <string name="lbl_club_B">Club B</string> <!-- TODO -->
-    <string name="add_x_matches">Ajouter %d matchs</string>
-    <string name="lbl_event">Evénement</string>
-    <string name="lbl_division">Division</string>
-    <string name="lbl_round">Tour</string>
-    <string name="lbl_location">Lieu</string>
-    <string name="lbl_referee">Arbitre</string>
-    <string name="lbl_marker">Marqueur</string>
-    <string name="lbl_versus">contre</string>
+    <string name="sb_injury_type">Type de blessure</string>
 
-    <string name="lbl_broken_equipment">Matériel endommagé rapporté par %s</string>
-    <string name="point_awarded_to_p">Point attribué à %s</string>
-    <string name="point">Point</string>
-    <string name="points">Points</string>
-    <string name="lbl_warning">Avertissement</string>
-<!--
-    <string name="last_game__score_x_induration_y_z">Dernier jeu : %s en %s %s</string>
-    <string name="last_game__score_x_induration_y_z__2lines">Dernier jeu : %s\\nen %s %s</string>
--->
-    <string name="game_ended">Fin de Jeu</string>
-    <string name="match_ended">Fin de Match</string>
+    <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-partout - Le receveur %2$s choisit de jouer en %3$s ou à %4$s</string>
+    <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-partout - Le receveur %2$s choisit le point gagnant</string>
+
+    <string name="sb_official_rules__Squash">Règles officielles</string>
+    <string name="sb_possible_conducts">Conduites abusives</string>
+    <string name="sb_self_inflicted_injury">Blessure auto-infligée</string>
+    <string name="sb_opponent_inflicted_injury">Blessure infligée par l\'adversaire</string>
+    <string name="sb_contributed_injury">Blessure à responsabilité partagée</string>
 
     <!-- source: http://www.worldsquash.org/referees-info/conduct-on-court/ -->
     <string name="conducts_guidelines_default"><![CDATA[

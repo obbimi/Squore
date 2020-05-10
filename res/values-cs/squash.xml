@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="Score">Skóre</string>
-    <string name="Game">Set</string>
-
-    <string name="left_serveside_single_char">L</string>
-    <string name="right_serveside_single_char">P</string>
+    <string name="lbl_marker">Marker</string>
 
     <string name="no_let_abbreviation">NL</string>
     <string name="yes_let_abbreviation">YL</string>
@@ -18,47 +14,18 @@
     <string name="broken_ball_abbreviation">PM</string>
     <string name="broken_racket_abbreviation">PR</string>
 
-    <string name="handout">Ztráta</string>
-    <string name="lbl_all_games">All Games</string>
-    <!--<string name="lbl_game">Game</string>-->
-    <string name="lbl_players">Hráči</string>
-    <string name="lbl_event_and_players">Soutěže a hráči</string>
-    <string name="lbl_player">Hráč</string>
-    <string name="lbl_player_A">Hráč A</string>
-    <string name="lbl_playerA1">Hráč A1</string>
-    <string name="lbl_playerA2">Hráč A2</string>
-    <string name="lbl_player_B">Hráč B</string>
-    <string name="lbl_playerB1">Hráč B1</string>
-    <string name="lbl_playerB2">Hráč B2</string>
-    <string name="lbl_player_x">Hráč %s</string>
-    <string name="lbl_countries">Země</string>
-    <string name="lbl_country_A">Země A</string>
-    <string name="lbl_country_B">Země B</string>
-    <string name="lbl_color_A">Barva A</string> <!-- TODO -->
-    <string name="lbl_color_B">Barva B</string> <!-- TODO -->
-    <string name="lbl_clubs">Kluby</string>
-    <string name="lbl_club_A">Klub A</string>
-    <string name="lbl_club_B">Klub B</string>
-    <string name="add_x_matches">Přidat %d zápasů</string>
-    <string name="lbl_event">Soutěž</string>
-    <string name="lbl_division">Divize</string>
-    <string name="lbl_round">Kolo</string>
-    <string name="lbl_location">Místo</string>
-    <string name="lbl_referee">Rozhodčí</string>
-    <string name="lbl_marker">Marker</string>
-    <string name="lbl_versus">vs</string>
+    <string name="sb_injury_type">Druh zranění</string>
 
-    <string name="lbl_broken_equipment">Prasklé vybavení nahlásil %s</string>
-    <string name="point_awarded_to_p">Bod přidělen hráči %s</string>
-    <string name="point">Bod</string>
-    <string name="points">Body</string>
-    <string name="lbl_warning">Varování</string>
-<!--
-    <string name="last_game__score_x_induration_y_z">Last game: %s in %s %s</string>
-    <string name="last_game__score_x_induration_y_z__2lines">Last game: %s\nin %s %s</string>
--->
-    <string name="game_ended">Set ukončen</string>
-    <string name="match_ended">Zápas ukončen</string>
+    <string name="sb_did_you_mean_conduct_game">Jedná-li se o trestný set, klikněte dlouze na jméno hráče, který se provinil. Poté vyberte ze zobrazených možností</string>
+
+    <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-všichni - Přijímající %2$s volí, zda se hraje do %3$s nebo do %4$s</string>
+    <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-všichni - Přijímající %2$s volí vítězné skóre</string>
+
+    <string name="sb_official_rules__Squash">Oficiální pravidla squash</string>
+    <string name="sb_possible_conducts">Možné tresty</string>
+    <string name="sb_self_inflicted_injury">Samozaviněné zranění</string>
+    <string name="sb_opponent_inflicted_injury">Zranění způsobené protihráčem</string>
+    <string name="sb_contributed_injury">Zranění s přispěním protihráče</string>
 
     <!-- source: http://www.worldsquash.org/referees-info/conduct-on-court/ -->
     <string name="conducts_guidelines_default"><![CDATA[

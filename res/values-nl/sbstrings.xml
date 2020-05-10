@@ -20,14 +20,11 @@
     <string name="hms_delete_selected">Verwijder de geselecteerd opgeslagen resultaten</string>
     <string name="sb_online_sheet_available">Online Scoreblad Beschikbaar</string>
     <string name="sb_online_sheet_updated">Online scoreblad bijgewerkt</string>
-    <string name="sb_injury_type">Oorzaak van Blessure</string>
     <string name="sb_doublesServeSequence">Opslag volgorde</string>
     <string name="sb_Duration_Warmup_and_Pauses">Duur Warmup &amp; Pause (s)</string>
     <string name="sb_Duration_Warmup">Duur Warmup</string>
     <string name="sb_Duration__and_Pauses">Pause (s)</string>
     <string name="sb_tiebreak">Tie Break</string>
-    <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s Gelijk - Ontvanger %2$s kiest om tot %3$s of tot %4$s te spelen</string>
-    <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s Gelijk - Ontvanger %2$s kiest winnende score</string>
     <string name="sb_who_will_start_to_serve">Wie begint met serveren?</string>
     <string name="sb_cmd_toss">Tossen</string>
     <string name="choose_winner_of_toss_or_perform_toss">Selecteer de winnaar van de toss, of toss met de app</string>
@@ -98,11 +95,6 @@
     <string name="sb_injury_timer">Blessure Timer</string>
     <string name="sb_score_details">Score verloop</string>
     <string name="sb_official_announcement">Officiele aankondiging</string>
-    <string name="sb_official_rules__Squash">Officiele squash regels</string>
-    <string name="sb_possible_conducts">Mogelijke \'Conducts\'</string>
-    <string name="sb_self_inflicted_injury">Zelf-veroorzaakte blessure</string>
-    <string name="sb_opponent_inflicted_injury">Blessure door tegenstander</string>
-    <string name="sb_contributed_injury">Blessure met gedeelde schuld</string>
     <!--<string name="sb_untill_next_game">Start van volgende game</string>-->
     <string name="sb_remove_match_from_my_list">Verwijder wedstrijd \'%s\' van \'Mijn list\'</string>
     <string name="sb_delete_item">Verwijder item \'%s\'</string>
@@ -116,7 +108,7 @@
     <string name="sb_stored_matches">Opgeslagen wedstrijden</string>
     <string name="no_matches_selected">Geen wedstrijden geselecteerd</string>
     <string name="sb_recent_matches">Recente wedstrijden</string>
-    <string name="sb_preferences">Squore Instellingen</string>
+    <string name="sb_preferences">App Instellingen</string>
     <string name="sb_no_matches_stored">Geen opgeslagen matches aanwezig</string>
     <string name="sb_no_recent_matches_stored">Geen recent opgeslagen matches aanwezig</string>
     <string name="match_has_finished">Wedstrijd is afgelopen</string>
@@ -167,4 +159,50 @@
 
     <string name="Resume_game">Herneem game</string>
 
+    <string name="Score">Score</string>
+    <string name="Game">Game</string>
+
+    <string name="left_serveside_single_char">L</string>
+    <string name="right_serveside_single_char">R</string>
+
+    <string name="handout">Hand-out</string>
+    <string name="lbl_all_games">Alle Games</string>
+    <!--<string name="lbl_game">Game</string>-->
+    <string name="lbl_players">Spelers</string>
+    <string name="lbl_event_and_players">Event en Spelers</string>
+    <string name="lbl_player">Speler</string>
+    <string name="lbl_player_A">Speler A</string>
+    <string name="lbl_playerA1">Speler A1</string>
+    <string name="lbl_playerA2">Speler A2</string>
+    <string name="lbl_player_B">Speler B</string>
+    <string name="lbl_playerB1">Speler B1</string>
+    <string name="lbl_playerB2">Speler B2</string>
+    <string name="lbl_player_x">Speler %s</string>
+    <string name="lbl_countries">Landen</string>
+    <string name="lbl_country_A">Land A</string>
+    <string name="lbl_country_B">Land B</string>
+    <string name="lbl_color_A">Kleur A</string>
+    <string name="lbl_color_B">Kleur B</string>
+    <string name="lbl_clubs">Clubs</string>
+    <string name="lbl_club_A">Club A</string>
+    <string name="lbl_club_B">Club B</string>
+    <string name="add_x_matches">Voeg %d wedstrijden toe</string>
+    <string name="lbl_event">Event</string>
+    <string name="lbl_division">Divisie</string>
+    <string name="lbl_round">Ronde</string>
+    <string name="lbl_location">Locatie</string>
+    <string name="lbl_referee">Scheidsrechter</string>
+    <string name="lbl_versus">vs</string>
+
+    <string name="lbl_broken_equipment">Kapotte uitrusting. Gemeld door %s</string>
+    <string name="point_awarded_to_p">Punt toegekend aan %s</string>
+    <string name="point">Punt</string>
+    <string name="points">Punten</string>
+    <string name="lbl_warning">Waarschuwing</string>
+    <!--
+        <string name="last_game__score_x_induration_y_z">Laatste game: %s in %s %s</string>
+        <string name="last_game__score_x_induration_y_z__2lines">Laatste game: %s\nin %s %s</string>
+    -->
+    <string name="game_ended">Game beëindigd</string>
+    <string name="match_ended">Match beëindigd</string>
 </resources>
