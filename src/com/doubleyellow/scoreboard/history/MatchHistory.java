@@ -148,11 +148,11 @@ public class MatchHistory extends XActivity implements MenuHandler
     private String getTitle(int position) {
         String sTitle = MatchHistory.this.getString(R.string.sb_score_details);
         if ( preGraphTabsToShow().size() > 0 ) {
-            if (position == PreGraphTabs.MatchHistoryViewTab.ordinal()) {
+            if ( position == PreGraphTabs.MatchHistoryViewTab.ordinal() ) {
                 sTitle = matchHistoryView.getTitle();
-            } else if (position == PreGraphTabs.CallHistoryViewTab.ordinal()) {
+            } else if ( position == PreGraphTabs.CallHistoryViewTab.ordinal() ) {
                 sTitle = matchCallsView.getTitle();
-            } else if (position == PreGraphTabs.StatisticsViewTab.ordinal()) {
+            } else if ( position == PreGraphTabs.StatisticsViewTab.ordinal() ) {
                 sTitle = matchStatisticsView.getTitle();
             }
         }
@@ -227,6 +227,8 @@ public class MatchHistory extends XActivity implements MenuHandler
             return new ArrayList<PreGraphTabs>(EnumSet.of(PreGraphTabs.MatchHistoryViewTab));
         } else if ( Brand.isRacketlon() ) {
             return new ArrayList<PreGraphTabs>(EnumSet.of(PreGraphTabs.MatchHistoryViewTab));
+        } else if ( Brand.isGameSetMatch() ) {
+            return new ArrayList<PreGraphTabs>(EnumSet.of(PreGraphTabs.MatchHistoryViewTab));
         } else {
             return new ArrayList<PreGraphTabs>(EnumSet.noneOf(PreGraphTabs.class));
         }
@@ -245,11 +247,16 @@ public class MatchHistory extends XActivity implements MenuHandler
         }
 
         @Override public int getCount() {
-            int nrOfFinishedGames = matchModel.getNrOfFinishedGames();
-            int iCount = nrOfFinishedGames + ListUtil.size(preGraphTabsToShow());
-            if ( matchModel.gameHasStarted() && (matchModel.isPossibleGameVictory() == false)) {
-                // add a tab for a game in progress
-                iCount++;
+            int iCount = ListUtil.size(preGraphTabsToShow());
+            if ( Brand.isGameSetMatch() ) {
+                // TODO: graphs for Tennis/Padel ?!
+            } else {
+                int nrOfFinishedGames = matchModel.getNrOfFinishedGames();
+                iCount += nrOfFinishedGames + ListUtil.size(preGraphTabsToShow());
+                if ( matchModel.gameHasStarted() && (matchModel.isPossibleGameVictory() == false)) {
+                    // add a tab for a game in progress
+                    iCount++;
+                }
             }
 /*
             List<List<ScoreLine>> setScoreHistory = matchModel.getGameScoreHistory();

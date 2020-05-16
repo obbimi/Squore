@@ -10,7 +10,8 @@
     "time": "18:16:48"
   },
   "format": {
-    "numberOfPointsToWinGame": 11
+    "numberOfPointsToWinGame": 11,
+    "nrOfGamesToWinMatch": 4
   },
   "score": [
     [
