@@ -37,31 +37,32 @@ class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
 {
     private static final String TAG = "SB." + SendMessageToWearableTask.class.getSimpleName();
 
-    private MessageClient messageClient = null;
-    private NodeClient    nodeClient    = null;
+    private MessageClient m_messageClient = null;
+    private NodeClient    m_nodeClient    = null;
 
     static String lastNodeId = null;
 
     SendMessageToWearableTask(Context ctx) {
-        messageClient = Wearable.getMessageClient(ctx);
-        nodeClient    = Wearable.getNodeClient(ctx);
+        super();
+        m_messageClient = Wearable.getMessageClient(ctx);
+        m_nodeClient    = Wearable.getNodeClient(ctx);
     }
     @Override protected String doInBackground(Object[] objects) {
-        if ( nodeClient == null ) {
+        if ( m_nodeClient == null ) {
             Log.d(TAG, "No instance of " + NodeClient.class.getName());
             return null;
         }
-        if ( messageClient == null ) { return null; }
+        if ( m_messageClient == null ) { return null; }
 
         try {
-            Task<List<Node>> nodeListTask = nodeClient.getConnectedNodes();
+            Task<List<Node>> nodeListTask = m_nodeClient.getConnectedNodes();
             List<Node> nodes = Tasks.await(nodeListTask); // this throws exception if API not available
 
             if ( ListUtil.isEmpty(nodes) ) { return null; }
             for( Node node : nodes ) {
                 String sPath    = String.valueOf(objects[0]) ;
                 String sMessage = String.valueOf(objects[1]);
-                Task<Integer> sendMessageTask = messageClient.sendMessage(node.getId(), sPath, sMessage.getBytes());
+                Task<Integer> sendMessageTask = m_messageClient.sendMessage(node.getId(), sPath, sMessage.getBytes());
                 Integer requestId = Tasks.await(sendMessageTask);
                 Log.v(TAG, String.format("send reqId %d : %s", requestId, sMessage)); // just an (for every call increasing) integer. Same number as messageEvent.getRequestId() on receiving end
                 lastNodeId = node.getId();

@@ -124,6 +124,7 @@ public class CastHelper implements ICastHelper
     @Override public void initCastMenu(Activity activity, Menu menu) {
         if (NOT_SUPPORTED_IN_SDK) { return; }
 
+        Log.w(TAG, "Old way of casting... discouraged by Google");
         MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
         mediaRouteMenuItem.setVisible(true);
         mediaRouteMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);

@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
@@ -196,6 +197,8 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         return emsAdapter;
     }
 
+    // on api 29 this bug does not seem to manifest itself
+    private static int m_iLoadCount = 0; // using this to decide between between sync and async because on API 26 only first time all goes well async
     private class EMSAdapter extends SimpleELAdapter
     {
         private EMSAdapter(LayoutInflater inflater)
@@ -208,7 +211,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         public void load(boolean bUseCacheIfPresent)
         {
             String sNewMsg = getString(R.string.loading);
-            final boolean bAsync = true; //sNewMsg.equals(m_sLastMessage);
+            //final boolean bAsync = true; //sNewMsg.equals(m_sLastMessage);
 
             showProgress(sNewMsg, null);
 
@@ -220,13 +223,18 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
 
             // start separate task to ensure loading message is actually shown
             rsmTask = new ReadStoredMatches(PreviousMatchSelector.this, this, bUseCacheIfPresent);
-            if ( bAsync ) {
-                rsmTask.execute(TAG); // doing this in background works initially with nice progress message, but sorting no longer works?!
-                //rsmTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            if ( m_iLoadCount == 0 ) {
+                AsyncTask<String, Void, Integer> task = rsmTask.execute(TAG);// doing this in background works initially with nice progress message, but sorting no longer works?!
+                AsyncTask.Status status = task.getStatus();
+                Log.d(TAG, "Status = " + status); // returns RUNNING, even when bug manifests itself on 27 and before
+//rsmTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 //rsmTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
             } else {
                 rsmTask.doInBackground();
                 rsmTask.onPostExecute(null);
+            }
+            if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1 /* O_MR1=27 */ ) {
+                m_iLoadCount++; // only to ensure next call will not by async for bugfix .... :-(
             }
         }
 

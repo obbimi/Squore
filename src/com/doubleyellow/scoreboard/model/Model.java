@@ -3527,8 +3527,9 @@ public abstract class Model implements Serializable
       //m_doubleServeSequence = DoublesServeSequence.NA;
         setNextDoubleServe(DoublesServe.NA);
         setDoubles(false);
+
         setDirty(true);
-        m_iDirty              = 0;
+        setClean();
     }
     private String m_sUnparsedDate = null;
     public String getUnparsedDate() { return m_sUnparsedDate; }

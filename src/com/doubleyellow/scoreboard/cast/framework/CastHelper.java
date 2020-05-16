@@ -76,26 +76,27 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 {
     private static final String TAG = "SB." + CastHelper.class.getSimpleName();
 
-    private Activity    m_activity   = null;
-    private CastContext castContext  = null; /* has nothing to do with android.content.Context */
+    private Activity    m_activity     = null;
+    private CastContext m_castContext  = null; /* has nothing to do with android.content.Context */
     /** there does NOT need to be a session already for the cast button to show up */
     private CastSession m_castSession  = null;
     private String      m_sPackageName = null; /* serves as Namespace */
+    private MenuItem    m_mediaRouteMenuItem = null;
 
     @Override public void initCasting(Activity activity) {
         m_activity     = activity;
         m_sPackageName = m_activity.getPackageName();
 
         createCastContext(activity);
-        setUpListeners(castContext);
+        setUpListeners(m_castContext);
 
-        checkPlayServices();
+        //checkPlayServices();
     }
 
     private void createCastContext(Activity activity) {
-        if ( castContext == null ) {
+        if ( m_castContext == null ) {
             try {
-                castContext = CastContext.getSharedInstance(activity); // requires com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME to be specified in Manifest.xml
+                m_castContext = CastContext.getSharedInstance(activity); // requires com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME to be specified in Manifest.xml
                 Log.d(TAG, "CastContext created");
             } catch (Exception e) {
                 Log.w(TAG, "No casting ..." + e.getMessage());
@@ -116,11 +117,10 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     @Override public void initCastMenu(Activity activity, Menu menu) {
         Log.d(TAG, "initCastMenu");
 
-        MenuItem mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(activity, menu, R.id.media_route_menu_item); // new
+        m_mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(activity, menu, R.id.media_route_menu_item);
+        m_mediaRouteMenuItem.setVisible(true);
+        m_mediaRouteMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 /*
-        MenuItem mediaRouteMenuItem = menu.findItem(iResIdMenuItem);
-        mediaRouteMenuItem.setVisible(true);
-        mediaRouteMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
         mediaRouteActionProvider.setRouteSelector(mediaRouteSelector);
 */
@@ -135,12 +135,12 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     }
 
     @Override public void onActivityPause_Cast() {
-        if ( castContext == null ) { return; }
-        removeListeners(castContext);
+        if ( m_castContext == null ) { return; }
+        removeListeners(m_castContext);
     }
 
     @Override public void onActivityResume_Cast() {
-        if ( castContext == null ) {
+        if ( m_castContext == null ) {
             Log.w(TAG, "onActivityResume_Cast SKIPPED");
             return;
         }
@@ -154,7 +154,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     private void getCastSessionFromCastContext() {
         if ( m_castSession == null ) {
             // Get the current session if there is one
-            SessionManager sessionManager = castContext.getSessionManager();
+            SessionManager sessionManager = m_castContext.getSessionManager();
             m_castSession = sessionManager.getCurrentCastSession();
             Log.d(TAG, "Cast session from cast context: " + m_castSession); // returns null of user has not started a session yet
 
@@ -165,18 +165,18 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     private void setUpListeners(CastContext castContext) {
         if ( castContext == null ) { return; }
         SessionManager sessionManager = castContext.getSessionManager();
-        sessionManager.addSessionManagerListener(sessionManagerListener, CastSession.class);
+        sessionManager.addSessionManagerListener(m_sessionManagerListener, CastSession.class);
 
-        castContext.addCastStateListener(castStateListener);
+        castContext.addCastStateListener(m_castStateListener);
     }
     private void removeListeners(CastContext castContext) {
         if ( castContext == null ) { return; }
         SessionManager sessionManager = castContext.getSessionManager();
-        sessionManager.removeSessionManagerListener(sessionManagerListener, CastSession.class);
+        sessionManager.removeSessionManagerListener(m_sessionManagerListener, CastSession.class);
     }
 
     /** Has no real functionality, just some logging */
-    private CastStateListener castStateListener = new CastStateListener() {
+    private CastStateListener m_castStateListener = new CastStateListener() {
         @Override public void onCastStateChanged(int iStatus) {
             String sState = "";
             switch ( iStatus ) {
@@ -388,7 +388,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     }
 
     /** Listener is to get hold of castSession. Cast session is used for sending messages */
-    private SessionManagerListener<CastSession> sessionManagerListener = new SessionManagerListener<CastSession>() {
+    private SessionManagerListener<CastSession> m_sessionManagerListener = new SessionManagerListener<CastSession>() {
         @Override public void onSessionStarted(CastSession session, String s) {
             Log.d(TAG, "Cast session started: " + session + " " + s);
             m_castSession = session;

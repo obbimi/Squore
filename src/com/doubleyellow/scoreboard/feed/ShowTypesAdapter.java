@@ -102,7 +102,7 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
         ViewHolder viewHolder = null;
 
         boolean bReUseView = false;
-        if( view!=null && bReUseView ) {
+        if ( (view != null) && bReUseView ) {
             viewHolder = (ViewHolder) view.getTag();
           //Log.d(TAG, "re-using view from " + viewHolder.img.getTag() + " for " + sType);
         } else {

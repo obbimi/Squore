@@ -199,7 +199,11 @@ public class GameTiming implements Serializable
         if ( this.start == 0 ) {
             // normally only if from parsed json string, modified manually
             // end time is no real time but a duration in minutes
-            return (int) this.end;
+            if ( this.end > 10000 ) {
+                return (int) (this.end / 1000 / 60);
+            } else {
+                return (int) this.end;
+            }
         } else {
             long lDuration = this.end - this.start;
             int i = DateUtil.convertToMinutesCeil(lDuration);

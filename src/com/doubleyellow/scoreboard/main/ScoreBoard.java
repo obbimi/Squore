@@ -99,6 +99,7 @@ import org.json.JSONObject;
 import com.doubleyellow.android.showcase.ShowcaseView;
 import com.doubleyellow.android.showcase.ShowcaseConfig;
 import com.doubleyellow.android.showcase.ShowcaseSequence;
+import com.google.android.gms.cast.framework.CastButtonFactory;
 
 import java.io.*;
 import java.util.*;
@@ -3487,9 +3488,10 @@ touch -t 01030000 LAST.sb
         MenuInflater inflater = getMenuInflater();
 
         inflater.inflate(R.menu.mainmenu, menu);
+        MenuItem mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), menu, R.id.media_route_menu_item);
         mainMenu = menu;
 
-        //initCastMenu();
+        initCastMenu();
 
         if ( m_bHideDrawerItemsFromOldMenu && (id2String.isEmpty() == false) ) {
             for(Integer iId: id2String.keySet() ) {
@@ -5170,10 +5172,12 @@ touch -t 01030000 LAST.sb
     private NfcAdapter     mNfcAdapter        = null;
     private void registerNfc() {
         if ( getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC) == false ) {
+            Log.w(TAG, "No nfc on this device");
             return;
         }
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if ( mNfcAdapter == null ) {
+            Log.w(TAG, "NFC not turned on");
             //Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show();
             return;
         }
@@ -5610,10 +5614,10 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
 
     // Get the default adapter
-    private static BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    private static final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     private void onCreateInitBluetooth() {
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        //mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if ( mBluetoothAdapter != null ) {
             ViewUtil.setMenuItemsVisibility(mainMenu, new int[] { R.id.sb_bluetooth }, mBluetoothAdapter.isEnabled());
@@ -6693,11 +6697,14 @@ touch -t 01030000 LAST.sb
         castHelper.onActivityPause_Cast();
     }
 
-    private CountDownTimer cdtInitCastDelayed       = null;
+    private CountDownTimer cdtInitCastDelayed       = null; // delayed mainly to wait for webconfig being available
     private int            iInitCastDelayedRunCount = 2;
     private boolean initCastDelayed() {
+        //if ( true ) { return true; }
+        //if ( true ) { return false; }
+
         if ( cdtInitCastDelayed == null ) {
-            cdtInitCastDelayed = new CountDownTimer(30000, 2500) {
+            cdtInitCastDelayed = new CountDownTimer(30000, 500) {
                 @Override public void onTick(long millisUntilFinished) {
                     if ( Brand.hasWebConfig() && (mainMenu != null) ) {
                         createCastHelper();
@@ -6714,7 +6721,7 @@ touch -t 01030000 LAST.sb
                             initCastDelayed();
                         }
                     } else {
-                        Log.w(TAG, "Casting not yet initialized. No webconfig or menu");
+                        Log.d(TAG, "Casting not yet initialized. No webconfig or menu");
                     }
                 }
                 @Override public void onFinish() {
