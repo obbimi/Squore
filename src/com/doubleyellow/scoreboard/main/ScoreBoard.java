@@ -1179,7 +1179,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         onResumeWearable();
         if ( PreferenceValues.isCastRestartRequired() ) {
             onActivityStop_Cast();
-            castHelper = null;
+            castHelper         = null;
+            cdtInitCastDelayed = null;
             initCasting();
         }
 
@@ -3488,7 +3489,7 @@ touch -t 01030000 LAST.sb
         MenuInflater inflater = getMenuInflater();
 
         inflater.inflate(R.menu.mainmenu, menu);
-        MenuItem mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), menu, R.id.media_route_menu_item);
+      //MenuItem mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), menu, R.id.media_route_menu_item);
         mainMenu = menu;
 
         initCastMenu();
@@ -6623,12 +6624,13 @@ touch -t 01030000 LAST.sb
         if ( castHelper == null ) {
             Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(this);
             String sResInfo = remoteDisplayAppId2Info.getValue();
-            if ( sResInfo.contains("REMOTE_DISPLAY") ) { // e.g com.doubleyellow.scoreboard:string/REMOTE_DISPLAY_APP_ID_brand_squore
+            if ( sResInfo.contains("REMOTE_DISPLAY") || sResInfo.contains("PresentationScreen") ) { // e.g com.doubleyellow.scoreboard:string/REMOTE_DISPLAY_APP_ID_brand_squore
                 castHelper = new com.doubleyellow.scoreboard.cast.CastHelper(); // old
             } else {
                 // R.string.CUSTOM_RECEIVER_xxxx
                 castHelper = new CastHelper(); // new
             }
+            Log.d(TAG, "Cast helper created " + remoteDisplayAppId2Info);
         }
         if ( (iBoard != null) && (castHelper instanceof CastHelper) ) {
             iBoard.setCastHelper( (CastHelper) castHelper);
@@ -6686,7 +6688,7 @@ touch -t 01030000 LAST.sb
             return;
         }
         if ( castHelper == null || matchModel == null ) {
-            Log.w(TAG, "onActivityResume_Cast SKIPPED");
+            Log.w(TAG, String.format("onActivityResume_Cast SKIPPED (helper=%s, model=%s)", castHelper, matchModel));
             return;
         }
         castHelper.initCasting(this);

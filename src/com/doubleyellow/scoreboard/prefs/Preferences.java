@@ -53,6 +53,8 @@ import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.TieBreakFormat;
 import com.doubleyellow.util.*;
 
+import org.json.JSONArray;
+
 import java.io.*;
 import java.util.*;
 
@@ -432,7 +434,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         }
                         break;
                     case useCastScreen:
-                        PreferenceValues.setCastRestartRequired();
+                        PreferenceValues.setCastRestartRequired(Preferences.this);
                         break;
                     default:
                         //Log.d(TAG, "Not handling case for " + eKey);
@@ -539,6 +541,21 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     });
                 }
             }
+            final PreferenceGroup psCastLiveScore = (PreferenceGroup) this.findPreference(PreferenceKeys.ChromeCast);
+            if ( psCastLiveScore != null ) {
+                ListPreference castScreen = (ListPreference) psCastLiveScore.findPreference(PreferenceKeys.useCastScreen.toString());
+
+                List<CharSequence> lLetUserSelectFrom   = new ArrayList();
+                List<CharSequence> lLetUserSelectFromHR = new ArrayList();
+                JSONArray jaDisplayIds = Brand.brand.getCastListForBrandFromConfig(false);
+                for (int i = 0; i < jaDisplayIds.length(); i++) {
+                    lLetUserSelectFrom  .add(String.valueOf(i));
+                    lLetUserSelectFromHR.add(jaDisplayIds.optString(i));
+                }
+
+                castScreen.setEntryValues(lLetUserSelectFrom  .toArray(new CharSequence[0])); // actual values
+                castScreen.setEntries    (lLetUserSelectFromHR.toArray(new CharSequence[0])); // human readable
+            }
 
             // remove some brand preferences if required
             final PreferenceGroup psBrandCategory = (PreferenceGroup) this.findPreference(PreferenceKeys.Brand);
@@ -606,8 +623,9 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 hideRemovePreference(psgBeh, PreferenceKeys.swapPlayersBetweenGames);
                 hideRemovePreference(psgBeh, PreferenceKeys.swapPlayersHalfwayGame);
             } else {
-                hideRemovePreference(psgBeh, PreferenceKeys.changeSidesWhen_GSM);
-                hideRemovePreference(psgBeh, PreferenceKeys.finalSetFinish);
+                PreferenceGroup  psgMF = (PreferenceGroup)    ps.findPreference(PreferenceKeys.MatchFormat.toString());
+                hideRemovePreference(psgMF, PreferenceKeys.changeSidesWhen_GSM);
+                hideRemovePreference(psgMF, PreferenceKeys.finalSetFinish);
             }
 /*
             if ( false && Brand.isGameSetMatch() ) {
@@ -918,7 +936,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             Preference pgChild = this.findPreference(String.valueOf(oKey));
             boolean bHidden = hideRemovePreference(pgParent, pgChild);
             if ( bHidden == false ) {
-                Log.d(TAG, "Failed to hide " + oKey);
+                Log.w(TAG, "Failed to hide " + oKey);
             }
             return bHidden;
         }

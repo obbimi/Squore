@@ -39,7 +39,7 @@ import java.util.*;
  * - data from a feed
  * - all possible feeds
  */
-public class Preloader extends AsyncTask implements ContentReceiver
+public class Preloader extends AsyncTask<Context, Void, Integer> implements ContentReceiver
 {
     private static String TAG = "SB." + Preloader.class.getSimpleName();
     private static Preloader instance = null;
@@ -48,55 +48,68 @@ public class Preloader extends AsyncTask implements ContentReceiver
     public static Preloader getInstance(Context context) {
         if ( instance == null ) {
             instance = new Preloader();
-            instance.m_context = context;
-            instance.execute(); // execute in separate thread on AsyncTask.SERIAL_EXECUTOR
-          //instance.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+          //instance.execute(context); // execute in separate thread on AsyncTask.SERIAL_EXECUTOR
+            instance.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context);
 
             //instance.go(context);
         }
         return instance;
     }
 
-    @Override protected Object doInBackground(Object[] params) {
-        go(m_context);
-        return null;
+    @Override protected Integer doInBackground(Context[] params) {
+        m_context = params[0];
+
+        mStatus2Url.put(Status.WebConfig        , PreferenceValues.getWebConfigURL  (m_context));
+        mStatus2Url.put(Status.ActiveMatchesFeed, PreferenceValues.getMatchesFeedURL(m_context));
+        mStatus2Url.put(Status.ActivePlayersFeed, PreferenceValues.getPlayersFeedURL(m_context));
+        mStatus2Url.put(Status.FeedOfFeeds      , PreferenceValues.getFeedsFeedURL  (m_context));
+
+        doNext(1);
+
+        while(m_status.equals(Status.Done) == false ) {
+            synchronized (this) {
+                try {
+                    wait(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Log.d(TAG, "Status " + m_status);
+        }
+
+        return 1;
     }
 
-    @Override protected void onPostExecute(Object o) {
+    @Override protected void onPostExecute(Integer o) {
         // to e.g. allow the preloader to restart after rotation or so... normally not desired
         //instance = null;
-        Log.d(TAG, "Preloader is done");
+        Log.d(TAG, "Preloader is done: " + o);
         m_context = null;
     }
 
-    private Context m_context = null;
-    private void go(Context context) {
-        if ( m_bFetching ) { return; }
-        m_context = context;
-
-        if ( mStatus2Url.size() == 0 ) {
-            mStatus2Url.put(Status.WebConfig        , PreferenceValues.getWebConfigURL  (context));
-            mStatus2Url.put(Status.ActiveMatchesFeed, PreferenceValues.getMatchesFeedURL(context));
-            mStatus2Url.put(Status.ActivePlayersFeed, PreferenceValues.getPlayersFeedURL(context));
-            mStatus2Url.put(Status.FeedOfFeeds      , PreferenceValues.getFeedsFeedURL  (context));
-        }
-
-        switch (m_status) {
-            case Done:
-            case NoConnection:
-                return;
-            case NotStarted:
-                doNext(1);
-                break;
-        }
+    private void setFetching(boolean b) {
+        m_bFetching = b;
     }
+    private Context m_context = null;
     private synchronized void doNext(int iOffSet) {
-        m_bFetching = true;
-        if ( m_status.ordinal() == Status.values().length - 1 ) {
+        if ( m_bFetching ) {
+            Log.w(TAG, "Fetching ....");
             return;
         }
+        if ( m_context == null ) {
+            Log.w(TAG, "No context object anymore ?!");
+            return;
+        }
+
+        if ( m_status.equals(Status.Done) ) {
+            // last one was processed
+            return;
+        }
+        // goto the next 'status'
+        //m_status = ListUtil.getNextEnum(m_status);
         m_status = Status.values()[m_status.ordinal()+iOffSet];
         if ( mStatus2Url.containsKey(m_status) ) {
+            // step involves fetching data from internet
             String sURL = mStatus2Url.get(m_status);
             if ( StringUtil.isNotEmpty(sURL) ) {
                 sURL = URLFeedTask.prefixWithBaseIfRequired(sURL);
@@ -105,6 +118,7 @@ public class Preloader extends AsyncTask implements ContentReceiver
                     urlFeedTask.setNrForUserAgent(PreferenceValues.getRunCount(m_context, PreferenceKeys.FeedFeedsURL));
                 }
                 urlFeedTask.setContentReceiver(this);
+                setFetching(true);
                 urlFeedTask.execute();
             } else {
                 doNext(1);
@@ -169,11 +183,12 @@ public class Preloader extends AsyncTask implements ContentReceiver
     private static final String SHARED_SECRET = "YourSquore1h03v3";
     // echo -n 'YourSquore1h03v320210208-2330' | md5sum
     @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent) {
-        m_bFetching = false;
+        setFetching(false);
+        Log.d(TAG, "Fetching done for " + m_status + " (result:" + result + ")");
         switch (result) {
             case OK:
                 Log.i(TAG, String.format("Fetched %s (cache age %s)", m_status, lCacheAge));
-                if ( m_status == Status.WebConfig ) {
+                if ( m_status.equals(Status.WebConfig) ) {
                     try {
                         JSONObject config = new JSONObject(sContent);
                         if ( Brand.Squore.equals(Brand.brand) ) {
@@ -188,7 +203,7 @@ public class Preloader extends AsyncTask implements ContentReceiver
                         final String C_CastConfig = "CastConfig";
                         if ( config.has(C_CastConfig) ) {
                             JSONObject castConfig = config.getJSONObject(C_CastConfig);
-                            Brand.setCastConfig(JsonUtil.toMap(castConfig));
+                            Brand.setCastConfig(castConfig);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
