@@ -20,18 +20,23 @@ if [[ "${tobranded}" = "-h" ]]; then
 	showHelp
 	exit
 fi
-if [[ ! -e AndroidManifest${tobranded}.xml ]]; then
+
+brandMfFile=AndroidManifest${tobranded}.xml
+if [[ ! -e ${brandMfFile} ]]; then
     echo "\
 ERROR : Unknown brand ${tobranded}
 
 Allowed are: ${allowedInput}
 " > /dev/stderr
 	exit
+else
+    brandPkg=$(grep package= ${brandMfFile} | perl -ne 's~.*"([a-z\.]+)"~$1~; print')
+    read -t 2 -p "New package ${brandPkg}"
 fi
 
 if [[ -z "${parentBrand}" ]]; then
-    parentBrand="$(cat AndroidManifest${tobranded}.xml | grep parentBrand | sed -e 's~parentBrand\s*=\s*~~' | tr -d ' ')"
-    read -t 1 -p "Backup brand from AndroidManifest${tobranded}.xml ==> '${parentBrand}'. Continuing...."
+    parentBrand="$(cat ${brandMfFile} | grep parentBrand | sed -e 's~parentBrand\s*=\s*~~' | tr -d ' ')"
+    read -t 1 -p "Backup brand from ${brandMfFile} ==> '${parentBrand}'. Continuing...."
     echo
 fi
 
@@ -105,6 +110,10 @@ if ! egrep -q "${tobranded}.*SportType" com/doubleyellow/scoreboard/Brand.java; 
     exit 1
 fi
 
+# derive current package by looking for .R reference in Brand.java
+pkgFrom=$(egrep 'import[ ]+.*\.R;' com/doubleyellow/scoreboard/Brand.java | perl -ne 's~import\s+([\w\.]+)\.R;~\1~; print')
+read -t 2 -p "From package ${pkgFrom}"
+
 if [[ "$tobranded" = "Squore" ]]; then
     # comment out all brands ...
     sed -i 's~^\(\s*\)\(\w\+\s*(\s*SportType\.\)~\1//\2~'         com/doubleyellow/scoreboard/Brand.java
@@ -121,46 +130,29 @@ sed -i "s~Brand.\w\+;~Brand.${tobranded};~"                      com/doubleyello
 #vi +/Brand.                                                     com/doubleyellow/scoreboard/Brand.java
 
 
-
 ####################################################
 # Change <other>.java
 ####################################################
 
 echo '=================================='
 printf "Change to '${tobranded}'\n"
-tobrandedLC=$(echo ${tobranded} | tr 'ABCEDFGHIJKLMNOPQRSTUVWXYZ' 'abcedfghijklmnopqrstuvwxyz')
-if [[ "$tobranded" = "Squore" ]]; then
-    tobrandedLC='scoreboard'
-fi
-for f in $(egrep -irl 'com\.doubleyellow\.[a-z]+\.R[^a-z]' *); do
-    cat ${f} | perl -ne "s~com\.doubleyellow\.(?!base.R)[a-z]+\.R([^A-Za-z'])~com.doubleyellow.${tobrandedLC}.R\$1~; print" > ${f}.1.txt
+#tobrandedLC=$(echo ${tobranded} | tr 'ABCEDFGHIJKLMNOPQRSTUVWXYZ' 'abcedfghijklmnopqrstuvwxyz')
+#if [[ "$tobranded" = "Squore" ]]; then
+#    tobrandedLC='scoreboard'
+#fi
+#for f in $(egrep -irl 'com\.doubleyellow\.[a-z]+\.R[^a-z]' *); do
+#    cat ${f} | perl -ne "s~com\.doubleyellow\.(?!base.R)[a-z]+\.R([^A-Za-z'])~com.doubleyellow.${tobrandedLC}.R\$1~; print" > ${f}.1.txt
+for f in $(egrep -irl "${pkgFrom}\.R[^a-z]" *); do
+    cat ${f} | perl -ne "s~${pkgFrom}\.R([^A-Za-z'])~${brandPkg}.R\$1~; print" > ${f}.1.txt
     if [[ -n "$(diff ${f} ${f}.1.txt)" ]]; then
-        printf "File %-72s to %s \n" $f $tobranded
+        printf "File %-72s to %s \n" ${f} ${tobranded}
         mv ${f}.1.txt ${f} #.2.txt
     else
         rm ${f}.1.txt
     fi
-    #sed -i "s~com\.doubleyellow\.[a-z]*\.R\([^A-Za-z]\)~com.doubleyellow.${tobrandedLC}.R\1~" ${f}
-    #exit 1
 done
 echo '=================================='
 #read -t 10 -p ' Java files changed. Continue ... ? '
-
-if [[ "$tobranded" = "CourtCare" ]]; then
-    printf "Change to '${tobranded}'\n"
-    for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
-        printf "File %-72s to %s \n" $f $tobranded
-        sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.courtcaresquore.R\1~' ${f}
-        #exit 1
-    done
-elif [[ "$tobranded" = "UniOfNotthingham" ]]; then
-    printf "Change to '${tobranded}'\n"
-    for f in $(egrep -irl 'com.doubleyellow.scoreboard.R[^a-z]' *); do
-        printf "File %-72s to %s \n" $f $tobranded
-        sed -i 's~com.doubleyellow.scoreboard.R\([^a-z]\)~com.doubleyellow.courtscore_uon.R\1~' ${f}
-        #exit 1
-    done
-fi
 
 # change some defaults in xml files (in java is/should be taken care of by means of code)
 cd ../res
@@ -222,7 +214,7 @@ fi
 cd ..
 
 # change manifest file name to one of brand we want to generate apk for
-cat build.gradle | perl -ne "s~(srcFile\s+')AndroidManifest[A-Z][a-z][A-Za-z]+.xml~\1AndroidManifest${tobranded}.xml~; print" > build.gradle.tmp
+cat build.gradle | perl -ne "s~(srcFile\s+')AndroidManifest[A-Z][a-z][A-Za-z]+.xml~\1${brandMfFile}~; print" > build.gradle.tmp
 if [[ -n "$(diff build.gradle.tmp build.gradle)" ]]; then
     mv build.gradle.tmp build.gradle
 fi

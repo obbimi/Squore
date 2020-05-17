@@ -1278,7 +1278,7 @@ public abstract class Model implements Serializable
         return points;
     }
 
-    /** similar to #getEndScoreOfGames() only if game in progress is also appears as actually finished it is included */
+    /** Typically: [ { A:11, B:8 }, { A:11, B:7 }, { A:3, B:11 }, { A:12, B:10} ] */
     public List<Map<Player, Integer>> getEndScoreOfGames() {
         List<Map<Player, Integer>> lReturn = new ArrayList<Map<Player, Integer>>();
         List<Map<Player, Integer>> player2EndPointsOfGames = getPlayer2EndPointsOfGames();
@@ -1504,34 +1504,37 @@ public abstract class Model implements Serializable
     }
 
     //-------------------------------
-    // Date/Time
+    // Date/Time/Duration
     //-------------------------------
 
     public String getMatchDateYYYYMMDD_DASH() {
         return m_matchDate;
     }
     public long getDuration() {
-        if ( ListUtil.size(m_lGameTimings) == 0 ) { return 0; }
-        long lStart = m_lGameTimings.get(0).getStart();
+        return getSetDuration(m_lGameTimings);
+    }
+    long getSetDuration(List<GameTiming> lGameTimings) {
+        if ( ListUtil.size(lGameTimings) == 0 ) { return 0; }
+        long lStart = lGameTimings.get(0).getStart();
         long lEnd = 0;
         if ( lStart == 0 ) {
             // manually entered game durations
-            for (int gameNrZeroBased = 0; gameNrZeroBased < ListUtil.size(m_lGameTimings); gameNrZeroBased++) {
-                GameTiming gt = m_lGameTimings.get(gameNrZeroBased);
+            for (int gameNrZeroBased = 0; gameNrZeroBased < ListUtil.size(lGameTimings); gameNrZeroBased++) {
+                GameTiming gt = lGameTimings.get(gameNrZeroBased);
                 long lDuration = gt.getEnd() - gt.getStart();
                 if ( gt.getStart() > 0 || lDuration > 100 || lDuration == 0 ) {
                     // mixup of gametimings: actual gametimings after demo game timing
                     lDuration = 6;
                     gt = new GameTiming(gameNrZeroBased, 0, lDuration);
-                    m_lGameTimings.set(gameNrZeroBased, gt);
+                    lGameTimings.set(gameNrZeroBased, gt);
                 }
                 lEnd += lDuration;
             }
-            lEnd += 2 * (m_lGameTimings.size() - 1); // pauses between games (guess 2 minutes)
+            lEnd += 2 * (lGameTimings.size() - 1); // pauses between games (guess 2 minutes)
             // lEnd is now in minutes in demo mode, return in milliseconds
             lEnd = (lEnd * 1000 * 60) + (5 * 1000 /* add 5 seconds to NOT have a nicely rounded nr of minutes */ );
         } else {
-            lEnd = ListUtil.getLast(m_lGameTimings).getEnd();
+            lEnd = ListUtil.getLast(lGameTimings).getEnd();
         }
         return lEnd - lStart;
     }
@@ -1957,7 +1960,8 @@ public abstract class Model implements Serializable
         if (matchStartTimeHHMMSSXXX != null) {
             sTimeHHMMSS = removeTimezone(matchStartTimeHHMMSSXXX);
         }
-        String sDateName = m_matchDate.replace("-", "") + "." + (StringUtil.isNotEmpty(sTimeHHMMSS)?(sTimeHHMMSS + "."):"") + getName(Player.A) + "-" + getName(Player.B);
+        String sNames = getName(Player.A) + "-" + getName(Player.B);
+        String sDateName = m_matchDate.replace("-", "") + "." + (StringUtil.isNotEmpty(sTimeHHMMSS) ? (sTimeHHMMSS + ".") : "") + sNames;
         sDateName = sDateName.replaceAll("[^A-za-z0-9\\-\\.]", "");
         return new File(fParentDir, sDateName + ".sb");
     }
@@ -2208,8 +2212,9 @@ public abstract class Model implements Serializable
             }
 
             String sSport = joMatch.optString(JSONKey.sport.toString(), SportType.Squash.toString());
-            if ( sSport.equals(getSport().toString()) == false ) {
+            if ( sSport.contains(getSport().toString()) == false ) { // using 'contains' for TennisPadel for Padel version
                 // model was not created for/with current sport. Better not open it. Might screw up the data
+                Log.w(TAG, String.format("Model not for this brand %s != %s ", sSport, getSport()));
                 return null;
             }
 

@@ -80,7 +80,8 @@ class ShowFeedsAdapter extends SimpleELAdapter {
     @Override public void load(boolean bUseCacheIfPresent) {
         this.clear();
         ShowFeedsTask showFeedsTask = new ShowFeedsTask();
-        showFeedsTask.execute(m_sName);
+        //showFeedsTask.execute(m_sName); // execute in separate thread on AsyncTask.SERIAL_EXECUTOR
+        showFeedsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, m_sName);
     }
 
     private JSONArray m_feeds = null;

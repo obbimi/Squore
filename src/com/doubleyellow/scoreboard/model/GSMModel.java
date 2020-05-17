@@ -271,7 +271,10 @@ public class GSMModel extends Model
     public Map<Player, Integer> getSetsWon() {
         return ListUtil.getLast(m_lSetCountHistory);
     }
-
+    public List<Map<Player, Integer>> getSetCountHistory() {
+        return m_lSetCountHistory;
+    }
+    /** Typically [ { A:2, B:6 }, { A:7 B:6 } , { A: 6, B:4} ] */
     public List<Map<Player, Integer>> getGamesWonPerSet() {
         List<Map<Player, Integer>> lReturn = new ArrayList<>();
 
@@ -300,6 +303,10 @@ public class GSMModel extends Model
     /** One-based */
     public int getSetNrInProgress() {
         return ListUtil.size(m_lGamesScorelineHistory_PerSet);
+    }
+    public List<List<ScoreLine>> getGameScoreLinesOfSet(int iSetNrZB) {
+        if ( iSetNrZB > ListUtil.size(m_lGamesScorelineHistory_PerSet) ) { return null; }
+        return m_lGamesScorelineHistory_PerSet.get(iSetNrZB);
     }
 
     private void endSet(Player pWinner, int iGamesLeader, int iGamesTrailer, boolean bNotifyListeners) {
@@ -382,6 +389,7 @@ public class GSMModel extends Model
         }
     }
 
+
     private void addSetScore(Map<Player, Integer> setScore) {
         //Log.d(TAG, "addGameScore: " + scores + " " + ListUtil.size(m_endScoreOfPreviousGames));
         Player winner = Util.getWinner(setScore);
@@ -415,20 +423,68 @@ public class GSMModel extends Model
         return getMatchStart();
     }
 
-    public long getSetDuration(int setNr) {
-        if ( setNr == 1 ) {
+    /** Returns set duration per set 'wrapped' in GameTiming object */
+    @Override public List<GameTiming> getTimes() {
+        List<GameTiming> lSetTimings = new ArrayList<>();
+        int iSetNrZB = 0;
+        for( List<GameTiming> gameTimingListOfSet : m_lGamesTiming_PerSet ) {
+            if ( ListUtil.isEmpty(gameTimingListOfSet) ) { continue; }
+            GameTiming gtFirst = gameTimingListOfSet.get(0);
+            GameTiming gtLast  = ListUtil.getLast(gameTimingListOfSet);
+            GameTiming setTiming = new GameTiming(iSetNrZB, gtFirst.getStart(), gtLast.getEnd());
+            lSetTimings.add(setTiming);
+            iSetNrZB++;
+        }
+        return lSetTimings;
+    }
+
+    @Override public int getDurationInMinutes() {
+        if ( ListUtil.isEmpty(m_lGamesTiming_PerSet) ) { return 0; }
+
+        List<GameTiming> firstSet = m_lGamesTiming_PerSet.get(0);
+        GameTiming gtFirst = firstSet.get(0);
+
+        List<GameTiming> lastSet = null;
+        int iSetNrZB = ListUtil.size(m_lGamesTiming_PerSet) -1;
+        while( ListUtil.isEmpty(lastSet) && iSetNrZB >=0 ) {
+            lastSet = m_lGamesTiming_PerSet.get(iSetNrZB);
+            if ( ListUtil.size(lastSet) == 1 ) {
+                // do not use if single gametiming with same start as end time
+                if ( lastSet.get(0).getDuration() == 0 ) {
+                    lastSet = null;
+                }
+            }
+            iSetNrZB--;
+        }
+        GameTiming gtLast = ListUtil.getLast(lastSet);
+        GameTiming gtTmp = new GameTiming(0, gtFirst.getStart(), gtLast.getEnd());
+        return gtTmp.getDurationMM();
+    }
+
+    public long getSetDuration(int setNr1B) {
+        if ( setNr1B == 1 ) {
             return super.getDuration();
         } else {
-            Long lStart = getSetStart(setNr);
+            long lDuration = 0; // TODO: use this?
+            if ( setNr1B - 1 < ListUtil.size(m_lGamesTiming_PerSet) ) {
+                List<GameTiming> lGameTimingsForSet = m_lGamesTiming_PerSet.get(setNr1B - 1);
+                lDuration = getSetDuration(lGameTimingsForSet);
+                //return lDuration1;
+            }
+            Long lStart = getSetStart(setNr1B);
             Long lEnd   = System.currentTimeMillis();
-            if ( ListUtil.size(m_lGamesTiming_PerSet) > setNr - 1 ) {
-                List<GameTiming> gameTimings = m_lGamesTiming_PerSet.get(setNr - 1);
+            if ( setNr1B - 1 < ListUtil.size(m_lGamesTiming_PerSet) ) {
+                List<GameTiming> lGameTimingsForSet = m_lGamesTiming_PerSet.get(setNr1B - 1);
+
+                List<GameTiming> gameTimings = lGameTimingsForSet;
                 GameTiming last = ListUtil.getLast(gameTimings);
-                if (last != null) {
+                if ( last != null ) {
                     lEnd = last.getEnd();
                 }
             }
-            return lEnd - lStart;
+            lDuration = lEnd - lStart;
+
+            return lDuration;
         }
     }
 

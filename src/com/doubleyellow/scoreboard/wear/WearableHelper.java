@@ -239,7 +239,9 @@ public class WearableHelper
     public void sendMessageToWearablesUnchecked(Context context, Object sMessage) {
         if ( m_bNoWearableSupport ) { return; }
 
-        new SendMessageToWearableTask(context).execute(BRAND_PATH, sMessage);
+        SendMessageToWearableTask task = new SendMessageToWearableTask(context);
+        task.execute(BRAND_PATH, sMessage); // execute in separate thread on AsyncTask.SERIAL_EXECUTOR
+        //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BRAND_PATH, sMessage);
     }
     public void sendMessageToWearables(Context context, String sMessage) {
         if ( m_bNoWearableSupport ) { return; }
@@ -254,7 +256,9 @@ public class WearableHelper
             //Log.d(TAG, "App not running on both devices. Not sending: " + sMessage);
             return;
         }
-        new SendMessageToWearableTask(context).execute(BRAND_PATH, sMessage);
+        SendMessageToWearableTask task = new SendMessageToWearableTask(context);
+        task.execute(BRAND_PATH, sMessage); // execute in separate thread on AsyncTask.SERIAL_EXECUTOR
+        //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BRAND_PATH, sMessage);
     }
 
 /*

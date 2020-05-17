@@ -49,7 +49,9 @@ public class Preloader extends AsyncTask implements ContentReceiver
         if ( instance == null ) {
             instance = new Preloader();
             instance.m_context = context;
-            instance.execute(); // separate thread
+            instance.execute(); // execute in separate thread on AsyncTask.SERIAL_EXECUTOR
+          //instance.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
             //instance.go(context);
         }
         return instance;
@@ -60,12 +62,12 @@ public class Preloader extends AsyncTask implements ContentReceiver
         return null;
     }
 
-/*
     @Override protected void onPostExecute(Object o) {
         // to e.g. allow the preloader to restart after rotation or so... normally not desired
-        instance = null;
+        //instance = null;
+        Log.d(TAG, "Preloader is done");
+        m_context = null;
     }
-*/
 
     private Context m_context = null;
     private void go(Context context) {

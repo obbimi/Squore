@@ -22,7 +22,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.PersistHelper;
-import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.match.ExpandableMatchSelector;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
@@ -42,22 +41,22 @@ import java.util.*;
 /**
  * Used by PreviousMatchSelector to populate the list
  */
-class ReadStoredMatches extends AsyncTask<String, Void, String> {
+class ReadStoredMatches extends AsyncTask<String /* Params: input of execute() */, Void /* Progress */, Integer /*Result: return of doInBackground, input of postExecute*/ >  {
     public static final String TAG = "SB." + ReadStoredMatches.class.getSimpleName();
 
-    private SimpleELAdapter         adapter            = null;
-    private boolean                 bUseCacheIfPresent = true;
-    private ExpandableMatchSelector ems                = null;
-    private Activity                activity           = null;
+    private SimpleELAdapter         m_mainThreadAdapter  = null;
+    private boolean                 m_bUseCacheIfPresent = true;
+    private ExpandableMatchSelector m_ems                = null;
 
     ReadStoredMatches(ExpandableMatchSelector ems, SimpleELAdapter adapter, boolean bUseCacheIfPresent) {
-        this.adapter            = adapter;
-        this.bUseCacheIfPresent = bUseCacheIfPresent;
-        this.ems                = ems;
-        this.activity           = ems.getActivity();
+        m_mainThreadAdapter  = adapter;
+        m_bUseCacheIfPresent = bUseCacheIfPresent;
+        m_ems                = ems;
     }
-    private class TmpAdapter extends SimpleELAdapter {
-        private TmpAdapter() {
+
+    /** Adapter modified outside the main thread */
+    private static class StoreOnlyAdapter extends SimpleELAdapter {
+        private StoreOnlyAdapter() {
             super(null, 0, 0, null, false);
         }
         @Override public void load(boolean bUseCacheIfPresent) {
@@ -65,60 +64,70 @@ class ReadStoredMatches extends AsyncTask<String, Void, String> {
         }
     }
 
-    private SimpleELAdapter tmpAdapter = new TmpAdapter();
-    @Override protected String doInBackground(String... params) {
+    @Override protected void onPreExecute() {
+        super.onPreExecute();
+        Log.d(TAG, "onPreExecute");
+    }
 
+    private SimpleELAdapter m_storeOnlyAdapter = new StoreOnlyAdapter();
+    @Override protected Integer doInBackground(String... inputParam)
+    {
         try {
-            tmpAdapter.clear();
-            if (activity == null) {
+            m_storeOnlyAdapter.clear();
+            Activity activity = m_ems.getActivity();
+            if ( activity == null ) {
                 // happens on android 4.1. (my tablet API 17?) when returning from matchdetails
-                return "";
+                return -1;
             }
             List<File> lAllMatchFiles = PreviousMatchSelector.getAllPreviousMatchFiles(activity);
             long lLastModified = FileUtil.getMaxLastModified(lAllMatchFiles);
 
             if ( lAllMatchFiles.size() == 0 ) {
-                tmpAdapter.addItems(PreviousMatchSelector.sNoMatchesStored, null);
-                //adapter.notifyDataSetChanged();
+                m_storeOnlyAdapter.addItems(PreviousMatchSelector.sNoMatchesStored, null);
+                //m_mainThreadAdapter.notifyDataSetChanged();
             } else {
                 boolean bRefreshed = false;
-                File fCache = tmpAdapter.getCacheFile(activity);
+                File fCache = m_storeOnlyAdapter.getCacheFile(activity);
                 if ( fCache.exists() && ( lLastModified > fCache.lastModified() ) ) {
                     fCache.delete();
                 }
-                if ( bUseCacheIfPresent && fCache.exists() ) {
-                    if ( tmpAdapter.createFromCache(fCache) == false ) {
-                        populate(lAllMatchFiles, tmpAdapter);
+                if ( m_bUseCacheIfPresent && fCache.exists() ) {
+                    if ( m_storeOnlyAdapter.createFromCache(fCache) == false ) {
+                        populate(lAllMatchFiles, m_storeOnlyAdapter);
                         bRefreshed = true;
                     }
                 } else {
-                    populate(lAllMatchFiles, tmpAdapter);
+                    populate(lAllMatchFiles, m_storeOnlyAdapter);
                     bRefreshed = true;
                 }
                 if (bRefreshed) {
-                    final boolean bCacheCreated = tmpAdapter.createCache(fCache);
+                    final boolean bCacheCreated = m_storeOnlyAdapter.createCache(fCache);
                     Log.i(TAG, "Cache created " + fCache.getPath());
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "", e);
         } finally {
+
         }
-        return "";
+        return m_storeOnlyAdapter.getChildrenCount();
     }
 
-    @Override protected void onPostExecute(String s) {
-        //super.onPostExecute(s);
-        // back on the main thread.... we may no modify the actual adapter
-        this.adapter.copyContentFrom(tmpAdapter);
+    @Override protected void onPostExecute(Integer iCount) {
+        //super.onPostExecute(s); // default does nothing
 
-        this.adapter.notifyDataSetChanged();
-        ems.hideProgress(); // just to be sure, for if swipe is used
+        // back on the main thread.... we may now modify the actual adapter
+        m_mainThreadAdapter.copyContentFrom(m_storeOnlyAdapter);
+
+        m_mainThreadAdapter.notifyDataSetChanged();
+        m_ems.hideProgress(); // just to be sure, for if swipe is used
     }
 
     private void populate(List<File> lAllMatchFiles, SimpleELAdapter adapter) {
         boolean bFastRead = (lAllMatchFiles.size() >= 20); // for performance reasons: fast read only tries to read name, date, time after parsing
 
+        Activity activity = m_ems.getActivity();
         GroupMatchesBy sortBy    = PreferenceValues.groupArchivedMatchesBy(activity); // Event, Date
         Collections.sort(lAllMatchFiles);
         final DateFormat sdf = android.text.format.DateFormat.getDateFormat(activity);
@@ -130,6 +139,7 @@ class ReadStoredMatches extends AsyncTask<String, Void, String> {
 
         for (File fMatchModel : lAllMatchFiles) {
             Model match = Brand.getModel();
+            //match.setClean();
             String sJson = null;
             try {
                 sJson = FileUtil.readFileAsString(fMatchModel);
@@ -145,7 +155,7 @@ class ReadStoredMatches extends AsyncTask<String, Void, String> {
                 Log.w(TAG, "Skipping " + fMatchModel.getName());
                 continue;
             }
-            if ( match.isDirty() ) {
+            if ( false && match.isDirty() ) { // TODO: why was this again: 20200515 called to many times.. so disabled ?
                 try {
                     if ( bFastRead ) {
                         // re-read it fully first so nothing gets lost
@@ -220,10 +230,11 @@ class ReadStoredMatches extends AsyncTask<String, Void, String> {
                 }
             }
         }
-
-        PreferenceValues.addPlayersToList(activity, mPlayers);
-        PreferenceValues.addStringsToList(activity, PreferenceKeys.eventList, mEvents);
-        PreferenceValues.addStringsToList(activity, PreferenceKeys.roundList, mRounds);
-        PreferenceValues.addStringsToList(activity, PreferenceKeys.clubList , mClubs );
+        if ( PreferenceValues.useMyListFunctionality(activity) ) {
+            PreferenceValues.addPlayersToList(activity, mPlayers);
+            PreferenceValues.addStringsToList(activity, PreferenceKeys.eventList, mEvents);
+            PreferenceValues.addStringsToList(activity, PreferenceKeys.roundList, mRounds);
+            PreferenceValues.addStringsToList(activity, PreferenceKeys.clubList , mClubs );
+        }
     }
 }

@@ -33,13 +33,14 @@ import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.Preferences;
-import com.doubleyellow.scoreboard.vico.IBoard;
 import com.doubleyellow.scoreboard.view.GameHistoryView;
 import com.doubleyellow.scoreboard.view.GameHistoryViewH;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,8 +58,11 @@ public class MatchHistoryView extends LinearLayout
         super(context);
         super.setOrientation(VERTICAL);
 
-        textSize = IBoard.iTxtSizePx_PaperScoringSheet; // PreferenceValues.getTextSize(PreferenceValues.TextSize.History, context, R.integer.TextSizeHistory_default);
-        textSize = (textSize * 4) / 5; // a bit smaller than on the main score board
+        textSize = com.doubleyellow.scoreboard.vico.IBoard.iTxtSizePx_PaperScoringSheet; // PreferenceValues.getTextSize(PreferenceValues.TextSize.History, context, R.integer.TextSizeHistory_default);
+        if ( true || (Brand.isGameSetMatch() == false) ) {
+            // long games
+            textSize = (textSize * 4) / 5; // a bit smaller than on the main score board
+        }
         TableLayout llEvent = new TableLayout(context);
         this.addView(llEvent);
 
@@ -68,6 +72,12 @@ public class MatchHistoryView extends LinearLayout
         if ( ListUtil.size(times) > ListUtil.size(previousGamesEndScores) ) {
             // prevent displaying a zero for not-(yet)-started games
             ListUtil.removeLast(times);
+        }
+        if ( matchModel instanceof GSMModel ) {
+            GSMModel gsmModel = (GSMModel) matchModel;
+            previousGamesEndScores = gsmModel.getGamesWonPerSet();
+            gamesWon               = gsmModel.getSetsWon();
+            times                  = gsmModel.getTimes();
         }
 
         // event data if present
@@ -135,6 +145,40 @@ public class MatchHistoryView extends LinearLayout
         // draw 'game history' for all games
         List<List<ScoreLine>>      gameScoreHistory       = matchModel.getGamesScoreHistory(); // including one in progress
         List<Map<Player, Integer>> gameCountHistory       = matchModel.getGameCountHistory();
+
+        // convert data of GSM model
+        if ( matchModel instanceof GSMModel ) {
+            GSMModel gsmModel = (GSMModel) matchModel;
+            gameCountHistory = gsmModel.getSetCountHistory();
+
+            List<List<ScoreLine>> lMatchSetScoreHistory = new ArrayList<>();
+            for(int iSetNrZB=0; iSetNrZB < gsmModel.getSetNrInProgress(); iSetNrZB++ ) {
+                List<ScoreLine> lSetScoreHistory = new ArrayList<>();
+                lMatchSetScoreHistory.add(lSetScoreHistory);
+
+                Map<Player, Integer> mGamesWonInSet = new HashMap<>();
+                mGamesWonInSet.put(Player.A, 0);
+                mGamesWonInSet.put(Player.B, 0);
+
+                // convert winning of a game to one single score line
+                List<List<ScoreLine>> gameScoreLinesOfSet = gsmModel.getGameScoreLinesOfSet(iSetNrZB);
+                for( List<ScoreLine> lGameScoreLine : gameScoreLinesOfSet ) {
+                    if ( ListUtil.isEmpty(lGameScoreLine) ) { continue; }
+                    ScoreLine lLastPointInGame = ListUtil.getLast(lGameScoreLine);
+                    Player winnerOfGame = lLastPointInGame.getScoringPlayer();
+                    int iGamesWon = MapUtil.increaseCounter(mGamesWonInSet, winnerOfGame);
+
+                    ScoreLine scoreLine = null;
+                    if ( winnerOfGame.equals(Player.A) ) {
+                        scoreLine = new ScoreLine(null, mGamesWonInSet.get(Player.A), null, null );
+                    } else {
+                        scoreLine = new ScoreLine(null, null, null, mGamesWonInSet.get(Player.B) );
+                    }
+                    lSetScoreHistory.add(scoreLine);
+                }
+            }
+            gameScoreHistory = lMatchSetScoreHistory;
+        }
 
         Map<ColorPrefs.ColorTarget, Integer> colorSchema = ColorPrefs.getTarget2colorMapping(context);
         Integer iBgColor  = colorSchema.get(ColorPrefs.ColorTarget.historyBackgroundColor);

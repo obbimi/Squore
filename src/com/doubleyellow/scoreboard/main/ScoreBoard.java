@@ -5027,7 +5027,7 @@ touch -t 01030000 LAST.sb
             for(int iResInt: lResources.keySet()) {
                 SportType sportType = lResources.get(iResInt);
                 String sJsonDemo = ContentUtil.readRaw(this, iResInt);
-                PersistHelper.storeAsPrevious(this, sJsonDemo, ModelFactory.getModel(sportType), true);
+                PersistHelper.storeAsPrevious(this, sJsonDemo, null, true);
             }
         } catch (Exception e) {
             e.printStackTrace();

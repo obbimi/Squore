@@ -227,8 +227,6 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
                 AsyncTask<String, Void, Integer> task = rsmTask.execute(TAG);// doing this in background works initially with nice progress message, but sorting no longer works?!
                 AsyncTask.Status status = task.getStatus();
                 Log.d(TAG, "Status = " + status); // returns RUNNING, even when bug manifests itself on 27 and before
-//rsmTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                //rsmTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
             } else {
                 rsmTask.doInBackground();
                 rsmTask.onPostExecute(null);

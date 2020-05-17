@@ -12,7 +12,6 @@ if [[ -z "${mffile}" ]]; then
 fi
 pkg=$(grep package= ${mffile} | perl -ne 's~.*"([a-z\.]+)"~$1~; print')
 
-
 productFlavor="phoneTabletPost23"
 relapk=$(find . -name "*${productFlavor}-release.apk")
 if [[ -e ${relapk} ]]; then
@@ -26,17 +25,22 @@ if [[ ${versionCodeX} -ne ${vcFromManifest} ]]; then
     #sed -i "s~\(versionCode=.\)[0-9]*\(.\)~\1${versionCodeX}\2~" ${mffile}
 fi
 
-# make a small modification in preferences date value so now 'Quick Intro' will play (to allow better PlayStore automated testing)
-todayYYYYMMDD=$(date --date='1 day' +%Y-%m-%d)
-if [[ -n "$(grep 'NO_SHOWCASE_FOR_VERSION_BEFORE ='  ./src/com/doubleyellow/scoreboard/prefs/PreferenceValues.java | grep -v ${todayYYYYMMDD})" ]]; then
-    echo "Adapting NO_SHOWCASE_FOR_VERSION_BEFORE to $todayYYYYMMDD in PreferenceValues.java"
-    sed -i "s~\(NO_SHOWCASE_FOR_VERSION_BEFORE\s*=\s*.\)[0-9-]*~\1${todayYYYYMMDD}~" ./src/com/doubleyellow/scoreboard/prefs/PreferenceValues.java
+# check if a new version code for the brand for which we will be creating an apk is specified
+brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
+hasNewVersionCode=$(git diff build.gradle | egrep '^\+' | grep versionCode | grep -i ${brand})
+
+# make a small modification in preferences date value so 'Quick Intro' will not play for 1 or 2 days (to allow better PlayStore automated testing)
+#if grep -q ${mffile} .gitignore; then
+if [[ -z "${hasNewVersionCode}" ]]; then
+    echo "Not modifying PreferenceValues.java for build ${mffile}"
+else
+    todayYYYYMMDD=$(date --date='1 day' +%Y-%m-%d)
+    if [[ -n "$(grep 'NO_SHOWCASE_FOR_VERSION_BEFORE ='  ./src/com/doubleyellow/scoreboard/prefs/PreferenceValues.java | grep -v ${todayYYYYMMDD})" ]]; then
+        echo "Adapting NO_SHOWCASE_FOR_VERSION_BEFORE to $todayYYYYMMDD in PreferenceValues.java"
+        sed -i "s~\(NO_SHOWCASE_FOR_VERSION_BEFORE\s*=\s*.\)[0-9-]*~\1${todayYYYYMMDD}~" ./src/com/doubleyellow/scoreboard/prefs/PreferenceValues.java
+    fi
 fi
 
-brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
-
-# check if a new version code for the brand for which we will be creating an apk is specified
-hasNewVersionCode=$(git diff build.gradle | egrep '^\+' | grep versionCode | grep -i ${brand})
 if [[ -z "${hasNewVersionCode}" ]]; then
     if [[ -n "$(grep versionCode build.gradle | grep -i ${brand})" ]]; then
         echo "Specify new version code for ${brand}"
@@ -81,10 +85,10 @@ else
 fi
 
 if [[ ${iStep} -le 1 ]]; then
-    echo "Cleaning ... $pkg"
+    echo "Cleaning ... ${pkg}"
     ./gradlew clean
 
-    echo "Building ... $pkg"
+    echo "Building ... ${pkg}"
     if ./gradlew assemble; then
         productFlavors="phoneTabletPre22 phoneTabletPost23 wearOs"
         for productFlavor in ${productFlavors}; do
@@ -139,14 +143,15 @@ if [[ ${iStep} -le 2 ]]; then
 
         set +x
         echo "Installing new ${productFlavor} version on device ${dvc}..."
-        adb -s ${dvc} install -r ${targetdir}/Score-${brand}.${productFlavor}-${versionCode}.apk 2> tmp.adb.install # 1> /dev/null
+        apkFile=${targetdir}/Score-${brand}.${productFlavor}-${versionCode}.apk
+        adb -s ${dvc} install -r ${apkFile} 2> tmp.adb.install # 1> /dev/null
         if grep failed tmp.adb.install; then
-            echo "Uninstalling previous version to install new version ..."
+            echo "Uninstalling previous version of ${pkg} to install new version ..."
             # uninstall previous app
             adb -s ${dvc} uninstall ${pkg}
 
             echo 'Installing new version (after uninstall) ...'
-            adb -s ${dvc} install -r ${targetdir}/Squore${brand}.${versionCode}.apk 2> tmp.adb.install
+            adb -s ${dvc} install -r ${apkFile} 2> tmp.adb.install
         fi
 
         # launch the app
@@ -171,5 +176,5 @@ fi
 #    -a com.android.launcher.action.INSTALL_SHORTCUT \
 #    --es Intent.EXTRA_SHORTCUT_NAME "Squore" \
 #    --esn Intent.EXTRA_SHORTCUT_ICON_RESOURCE \
-#    $pkg/.activity
+#    ${pkg}/.activity
 #
