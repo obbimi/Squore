@@ -75,15 +75,15 @@ public class SquashModel extends Model {
                 nextServeSide = lastServeSide.getOther();
             }
 
-            setServerAndSide(pServer, nextServeSide, null);
+            setServerAndSide(pServer, nextServeSide, null, true);
         } else if (slRemoved != null ) {
             Player    removedServingPlayer = slRemoved.getServingPlayer();
             ServeSide removedServeSide     = slRemoved.getServeSide();
             if ( removedServingPlayer != null ) {
-                setServerAndSide(removedServingPlayer, null, null);
+                setServerAndSide(removedServingPlayer, null, null, true);
             }
             if ( removedServeSide != null ) {
-                setServerAndSide(null, removedServeSide, null);
+                setServerAndSide(null, removedServeSide, null, true);
             }
         }
         setLastPointWasHandout(false);

@@ -436,6 +436,16 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     case useCastScreen:
                         PreferenceValues.setCastRestartRequired(Preferences.this);
                         break;
+                    case useSpeechFeature:
+                        boolean bUseSpeech = prefs.getBoolean(key, true);
+                        PreferenceKeys [] keys = new PreferenceKeys[] { PreferenceKeys.speechPitch, PreferenceKeys.speechRate };
+                        for(PreferenceKeys keyOfPrefToToggle: keys) {
+                            final Preference pref = settingsFragment.findPreference(keyOfPrefToToggle);
+                            if ( pref != null ) {
+                                pref.setEnabled(bUseSpeech);
+                            }
+                        }
+                        break;
                     default:
                         //Log.d(TAG, "Not handling case for " + eKey);
                         break;
@@ -726,6 +736,16 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 final Preference pShowTextInActionBar = this.findPreference(PreferenceKeys.showTextInActionBar);
                 if ( pShowTextInActionBar != null ) {
                     pShowTextInActionBar.setEnabled(bShowActionBar);
+                }
+            }
+
+            // disable 'speech' controllers if 'use speech = false'
+            boolean bUseSpeech = PreferenceValues.useSpeechFeature(getActivity());
+            PreferenceKeys [] keys = new PreferenceKeys[] { PreferenceKeys.speechPitch, PreferenceKeys.speechRate };
+            for(PreferenceKeys keyOfPrefToToggle: keys) {
+                final Preference pref = this.findPreference(keyOfPrefToToggle);
+                if ( pref != null ) {
+                    pref.setEnabled(bUseSpeech);
                 }
             }
 

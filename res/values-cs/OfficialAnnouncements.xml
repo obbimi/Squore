@@ -34,7 +34,7 @@
     <string name="oa_gameball">Setbol</string>
     <string name="oa_matchball">Mečbol</string>
 
-    <string name="oa_n_all">%s oba</string>
+    <string name="oa_n_all">%d oba</string>
     <string name="oa_player_needs_2_clear_points">Hráč musí vyhrát o dva body</string>
 
     <string name="oa_change_sides">Změnit stranu!</string>

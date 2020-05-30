@@ -20,7 +20,6 @@ package com.doubleyellow.scoreboard;
 import android.content.Context;
 
 import com.doubleyellow.android.view.ViewUtil;
-import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.ModelFactory;
@@ -28,24 +27,25 @@ import com.doubleyellow.scoreboard.model.SportType;
 import com.doubleyellow.scoreboard.model.TieBreakFormat;
 import com.doubleyellow.scoreboard.prefs.*;
 import com.doubleyellow.util.Feature;
-import com.doubleyellow.util.ListUtil;
-import com.doubleyellow.util.MapUtil;
-import com.doubleyellow.util.Params;
+import com.doubleyellow.util.JsonUtil;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.AbstractMap;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public enum Brand
 {
-    Squore          (SportType.Squash     , R.string.app_name_short_brand__Squash          , 0, 0/*R.drawable.brand_squore*/    , R.id.sb_branded_logo_ar150, R.color.brand_squore_bg_color          , R.string.REMOTE_DISPLAY_APP_ID_brand_squore          , R.array.colorSchema            , 0                                            , 3000, "https://squore.double-yellow.be"   , "8da78f9d-f7dd-437c-8b7d-d5bc231f92ec", R.raw.changelog),
-  //Tabletennis     (SportType.Tabletennis, R.string.app_name_short_brand__Tabletennis     , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_tabletennis_bg_color     , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema__Tabletennis, 0                                            , 3000, "https://tabletennis.double-yellow.be", "e35d8fcb-a7c0-4c2a-9c74-cc3f6e1e6a41", R.raw.changelog_tabletennis),
-  //Badminton       (SportType.Badminton  , R.string.app_name_short_brand__Badminton       , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_badminton_bg_color       , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema__Badminton  , 0                                            , 3000, "https://badminton.double-yellow.be", "18be497c-ddfa-4851-9b43-0a5866605252", R.raw.changelog_badminton),
-  //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand__Racketlon       , 0, 0/*R.drawable.brand_squore*/              , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_racketlon       , R.array.colorSchema__Racketlon  , 0                                            , 3000, "https://racketlon.double-yellow.be", "6ffc7128-6fd5-46d1-b79c-46e4c613cba5", R.raw.changelog_racketlon),
-  //TennisPadel     (SportType.TennisPadel, R.string.app_name_short_brand__TennisPadel     , 0, R.drawable.logo_brand_tennispadel         , R.id.sb_branded_logo_ar400, R.color.brand_padel_bg_color           , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema__TennisPadel      , 0                              , 4000, "https://tennispadel.double-yellow.be", "239ad8ef-0cdd-490c-8f01-4d50dd4e7c6b", R.raw.changelog_tennispadel),
-  //Racquetball     (SportType.Racquetball, R.string.app_name_short_brand__Racquetball     , 0, 0/*R.drawable.brand_squore*/              , R.id.sb_branded_logo_ar150, 0                                      , R.string.REMOTE_DISPLAY_APP_ID_brand__Racquetball     , R.array.colorSchema__Racquetball, 0                                            , 3000, "https://racquetball.double-yellow.be", R.raw.changelog),
+    Squore          (SportType.Squash     , R.string.app_name_short_brand__Squash          , 0, 0/*R.drawable.brand_squore*/    , R.id.sb_branded_logo_ar150, R.color.brand_squore_bg_color          , R.string.REMOTE_DISPLAY_APP_ID_brand_squore          , R.array.colorSchema                                                        , 3000, "https://squore.double-yellow.be"   , "8da78f9d-f7dd-437c-8b7d-d5bc231f92ec", R.raw.changelog),
+  //Tabletennis     (SportType.Tabletennis, R.string.app_name_short_brand__Tabletennis     , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_tabletennis_bg_color     , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema__Tabletennis                                            , 3000, "https://tabletennis.double-yellow.be", "e35d8fcb-a7c0-4c2a-9c74-cc3f6e1e6a41", R.raw.changelog_tabletennis),
+  //Badminton       (SportType.Badminton  , R.string.app_name_short_brand__Badminton       , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_badminton_bg_color       , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema__Badminton                                              , 3000, "https://badminton.double-yellow.be", "18be497c-ddfa-4851-9b43-0a5866605252", R.raw.changelog_badminton),
+  //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand__Racketlon       , 0, 0/*R.drawable.brand_squore*/              , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.REMOTE_DISPLAY_APP_ID_brand_racketlon       , R.array.colorSchema__Racketlon                                              , 3000, "https://racketlon.double-yellow.be", "6ffc7128-6fd5-46d1-b79c-46e4c613cba5", R.raw.changelog_racketlon),
+  //TennisPadel     (SportType.TennisPadel, R.string.app_name_short_brand__TennisPadel     , 0, R.drawable.logo_brand_tennispadel         , R.id.sb_branded_logo_ar400, R.color.brand_padel_bg_color           , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared         , R.array.colorSchema__TennisPadel                                    , 4000, "https://tennispadel.double-yellow.be", "239ad8ef-0cdd-490c-8f01-4d50dd4e7c6b", R.raw.changelog_tennispadel),
+  //Racquetball     (SportType.Racquetball, R.string.app_name_short_brand__Racquetball     , 0, 0/*R.drawable.brand_squore*/              , R.id.sb_branded_logo_ar150, 0                                      , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared     , R.array.colorSchema__Racquetball                                            , 3000, "https://racquetball.double-yellow.be", R.raw.changelog),
+
     ;
     Brand( SportType sport
          , int iShortNameResId
@@ -55,7 +55,6 @@ public enum Brand
          , int iBgColorResId
          , int iRemoteDisplayAppIdResId
          , int iColorsResId
-         , int iREColorPalette
          , int iSplashDuration
          , String sBaseURL
          , String sUUID
@@ -68,7 +67,6 @@ public enum Brand
         this.iBgColorResId            = iBgColorResId;
         this.iRemoteDisplayAppIdResId = iRemoteDisplayAppIdResId;
         this.iColorsResId             = iColorsResId;
-      //this.iREColorPalette          = iREColorPalette;
         this.iSplashDuration          = iSplashDuration;
         this.sBaseURL                 = sBaseURL;
         this.uuid                     = UUID.fromString(sUUID); // https://www.uuidgenerator.net/version4
@@ -85,7 +83,6 @@ public enum Brand
     private int imageViewResId;
     private int iBgColorResId;
     private int iColorsResId;
-  //private int iREColorPalette;
     private int iRemoteDisplayAppIdResId;
     private int iChangeLogResId;
     private int iTurnedOffFlags;
@@ -93,34 +90,29 @@ public enum Brand
     private UUID uuid;
 
     public SportType getSportType()         { return eSport; }
-  //public int getREColorPalette()          { return iREColorPalette;}
     /* @deprecated */
     //public int getRemoteDisplayAppIdResId() { return iRemoteDisplayAppIdResId;}
 
-    private static Params m_mCastConfig = null;
-    public static void setCastConfig(Map mCastConfig) {
+    private static JSONObject m_mCastConfig = null;
+    public static void setCastConfig(JSONObject mCastConfig) {
         //if ( true ) { return; } // TODO: for now don't use webconfig
-        m_mCastConfig = new Params(mCastConfig);
-        PreferenceValues.setCastRestartRequired();
+        m_mCastConfig = mCastConfig;
     }
     public static boolean hasWebConfig() {
-        return MapUtil.isNotEmpty(m_mCastConfig);
+        return ( m_mCastConfig != null ) && ( 0 < m_mCastConfig.length() );
     }
+/*
+    public static JSONObject getWebConfig() {
+        return m_mCastConfig;
+    }
+*/
     public Map.Entry<String, String> getRemoteDisplayAppId2Info(Context ctx) {
         if ( m_mCastConfig != null ) {
-            List<String> lDefaults = m_mCastConfig.getOptionalList("Default");
-            List<String> lBrand    = m_mCastConfig.getOptionalList(this.toString());
-            if (ListUtil.isNotEmpty(lDefaults) && ListUtil.isNotEmpty(lBrand) ) {
-                lBrand.addAll(lDefaults);
-                ListUtil.removeDuplicates(lBrand);
-            }
-            if (ListUtil.isNotEmpty(lDefaults) && ListUtil.isEmpty(lBrand) ) {
-                lBrand = lDefaults;
-            }
+            JSONArray lBrand = getCastListForBrandFromConfig(true);
             int iIdx = PreferenceValues.useCastScreen(ctx);
-            iIdx = iIdx % ListUtil.size(lBrand);
-            String sCastId = lBrand.get(iIdx);
-            return new AbstractMap.SimpleEntry<String, String>(sCastId, m_mCastConfig.getOptionalString(sCastId, sCastId));
+            iIdx = iIdx % JsonUtil.size(lBrand);
+            String sCastId = lBrand.optString(iIdx);
+            return new AbstractMap.SimpleEntry<String, String>(sCastId, m_mCastConfig.optString(sCastId, sCastId));
         }
 
         int iFixedResId = iRemoteDisplayAppIdResId;
@@ -133,6 +125,50 @@ public enum Brand
 
         String sResName = ctx.getResources().getResourceName(iFixedResId);
         return new AbstractMap.SimpleEntry<String, String>(ctx.getString(iFixedResId), sResName);
+    }
+
+    public JSONArray getCastListForBrandFromConfig(boolean bReturnKey) {
+        JSONArray lDefaults = m_mCastConfig.optJSONArray("Default");
+        JSONArray lBrand    = m_mCastConfig.optJSONArray(this.toString());
+        if (JsonUtil.isNotEmpty(lDefaults) && JsonUtil.isNotEmpty(lBrand) ) {
+            lBrand = clone(lBrand); // do not modify the array part of the config
+            for (int i = 0; i < lDefaults.length(); i++) {
+                lBrand.put(lDefaults.optString(i));
+            }
+            //ListUtil.removeDuplicates(lBrand);
+        }
+        if ( JsonUtil.isNotEmpty(lDefaults) && JsonUtil.isEmpty(lBrand) ) {
+            lBrand = lDefaults;
+        }
+
+        // translate to human readable
+        if ( bReturnKey ) {
+
+        } else {
+            lBrand = translate(lBrand, m_mCastConfig);
+        }
+
+        return lBrand;
+    }
+
+    private static JSONArray clone(JSONArray ja) {
+        JSONArray arReturn = new JSONArray();
+        for ( int i = 0; i < ja.length(); i++ ) {
+            arReturn.put(ja.opt(i));
+        }
+        return arReturn;
+    }
+    private static JSONArray translate(JSONArray ja, JSONObject translations) {
+        JSONArray arReturn = new JSONArray();
+        for ( int i = 0; i < ja.length(); i++ ) {
+            if ( translations == null ) {
+                arReturn.put(ja.opt(i));
+            } else {
+                String sValue = String.valueOf(ja.opt(i));
+                arReturn.put(translations.optString(sValue, sValue));
+            }
+        }
+        return arReturn;
     }
 
     public static final int[] imageViewIds = { R.id.sb_branded_logo_ar400, R.id.sb_branded_logo_ar150 };
@@ -159,12 +195,14 @@ public enum Brand
         }
 */
 
-        // do NOT start intro or changelog based on version
-        try {
-            int logCheck = RWValues.getVersionCodeForChangeLogCheck(ctx);
-            PreferenceValues.setNumber(PreferenceKeys.viewedChangelogVersion, ctx, logCheck);
-        } catch (Exception e) {
-            //e.printStackTrace();
+        if ( false ) {
+            try {
+                // do NOT start intro or changelog based on version
+                int logCheck = RWValues.getVersionCodeForChangeLogCheck(ctx);
+                PreferenceValues.setNumber(PreferenceKeys.viewedChangelogVersion, ctx, logCheck);
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
         }
 
         //ColorPrefs.activeColorSchema(ctx, Brand.brand.getREColorPalette());
@@ -327,4 +365,8 @@ public enum Brand
     /** For now only used for Splash screen. Constructor specifies the color resource id. But this method already returns the actual color */
     public static int getBgColor(Context ctx)      { return brand.iBgColorResId==0?0:ctx.getResources().getColor(brand.iBgColorResId) ;}
     public static int getSplashDuration()          { return brand.iSplashDuration;}
+
+    public static int getGameSetBallPoint_ResourceId() {
+        return ( Brand.isRacketlon() || Brand.isGameSetMatch() ) ? R.string.oa_set_ball : ( Brand.isBadminton()? R.string.oa_gamepoint : R.string.oa_gameball );
+    }
 }

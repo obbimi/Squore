@@ -74,7 +74,7 @@ public class BadmintonModel extends Model
     // serve side/sequence
     //-------------------------------
 
-    @Override void setServerAndSide(Player newServer, ServeSide side, DoublesServe doublesServe) {
+    @Override void setServerAndSide(Player newServer, ServeSide side, DoublesServe doublesServe, boolean bForUndo) {
         if ( (doublesServe != null) && (doublesServe.equals(DoublesServe.NA) == false) && (side != null) ) {
             // for both teams keep R=O and L=I and in sync
             if ( doublesServe.ordinal() == side.ordinal() ) {
@@ -82,7 +82,7 @@ public class BadmintonModel extends Model
             }
         }
 
-        super.setServerAndSide(newServer, side, doublesServe);
+        super.setServerAndSide(newServer, side, doublesServe, bForUndo);
     }
 
     @Override DoublesServe determineDoublesReceiver(DoublesServe serverOfOppositeTeam, ServeSide serveSide) {
@@ -144,7 +144,7 @@ public class BadmintonModel extends Model
             }
             int i = score % 2;
             ServeSide nextServeSide  = ServeSide.values()[i];
-            setServerAndSide(pNewServer, nextServeSide, m_in_out);
+            setServerAndSide(pNewServer, nextServeSide, m_in_out, true);
         }
         //setLastPointWasHandout(false);
     }

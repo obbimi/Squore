@@ -118,7 +118,10 @@ public class PreferenceValues extends RWValues
     }
 
     private static boolean m_castRestartRequired = false;
-    public static void setCastRestartRequired() {
+    public static void setCastRestartRequired(Context ctx) {
+        if ( m_castRestartRequired == false ) {
+            //Toast.makeText(ctx, R.string.for_this_to_take_effect_a_restart_is_required, Toast.LENGTH_SHORT).show();
+        }
         m_castRestartRequired = true;
     }
     public static boolean isCastRestartRequired() {
@@ -441,6 +444,27 @@ public class PreferenceValues extends RWValues
         }
         return getEnum(PreferenceKeys.useShareFeature, context, Feature.class, R.string.useShareFeature_default);
     }
+    public static boolean useSpeechFeature(Context context) {
+        if ( ViewUtil.isWearable(context) ) {
+            return false;
+        }
+        return getBoolean(PreferenceKeys.useSpeechFeature, context, false);
+    }
+    public static float getSpeechPitch(Context context) {
+        int iValue0To100 = getIntegerR(PreferenceKeys.speechPitch, context, R.integer.speechPitch_default);
+        return zeroToHundredToFloat0To1(iValue0To100);
+    }
+    public static float getSpeechRate(Context context) {
+        int iValue0To100 = getIntegerR(PreferenceKeys.speechRate, context, R.integer.speechRate_default);
+        return zeroToHundredToFloat0To1(iValue0To100);
+    }
+
+    public static float zeroToHundredToFloat0To1(final int iValue0To100) {
+        float fValue0To100 = Math.min((float) iValue0To100, 100f);
+        fValue0To100 = Math.max(0f, fValue0To100);
+        return (fValue0To100 / 100f);
+    }
+
     public static ShareMatchPrefs getShareAction(Context context) {
         return getEnum(PreferenceKeys.shareAction, context, ShareMatchPrefs.class, ShareMatchPrefs.LinkWithFullDetails);
     }
@@ -484,6 +508,10 @@ public class PreferenceValues extends RWValues
     }
     public static AnnouncementLanguage officialAnnouncementsLanguage(Context context) {
         return getEnum(PreferenceKeys.officialAnnouncementsLanguage, context, AnnouncementLanguage.class, R.string.officialAnnouncementsLanguage_default);
+    }
+    public static Locale announcementsLocale(Context context) {
+        AnnouncementLanguage language =officialAnnouncementsLanguage(context);
+        return new Locale(language.toString());
     }
     public static void setAnnouncementLanguage(AnnouncementLanguage languageNew, Context context) {
         AnnouncementLanguage languageCur = officialAnnouncementsLanguage(context);
@@ -1782,7 +1810,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-05-10"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-05-31"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

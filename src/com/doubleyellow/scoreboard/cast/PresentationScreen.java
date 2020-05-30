@@ -179,7 +179,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
     // ----------------------------------------------------
 
     private class SpecialScoreChangeListener implements Model.OnSpecialScoreChangeListener {
-        @Override public void OnGameBallChange(Player[] players, boolean bHasGameBall) {
+        @Override public void OnGameBallChange(Player[] players, boolean bHasGameBall, boolean bForUndo) {
             iBoard.updateGameBallMessage(players, bHasGameBall);
         }
 
@@ -256,7 +256,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
     }
     private CountDownTimer m_ctRemoveHandoutChar = null;
     private class ServeSideChangeListener implements Model.OnServeSideChangeListener {
-        @Override public void OnServeSideChange(final Player p, final DoublesServe doublesServe, final ServeSide serveSide, boolean bIsHandout) {
+        @Override public void OnServeSideChange(final Player p, final DoublesServe doublesServe, final ServeSide serveSide, boolean bIsHandout, boolean bForUndo) {
             if ( (endOfGameView != null) && endOfGameView.bIsShowing ) {
                 initBoard();
             }

@@ -31,7 +31,7 @@
     <string name="oa_gameball">Game ball</string>
     <string name="oa_matchball">Match ball</string>
 
-    <string name="oa_n_all">%s-iguais</string>
+    <string name="oa_n_all">%d-iguais</string>
     <string name="oa_player_needs_2_clear_points">O jogador tem que vencer por 2 pontos</string>
 
     <string name="oa_change_sides"></string>

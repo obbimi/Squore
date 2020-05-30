@@ -81,7 +81,7 @@ public class SBTimerView implements TimerView
 
     @Override public void setWarnMessage(String s) {
         // toggle color to have visible feedback
-        if ( StringUtil.isEmpty(s) ) return;
+        if ( StringUtil.isEmpty(s) ) { return; }
         if ( bWarningMode == false ) {
             // only show toast message first time
             Direction d = ViewUtil.isLandscapeOrientation(context)? Direction.S:Direction.E; // ensure toast is not over clock that is still running

@@ -31,7 +31,7 @@
     <string name="oa_gameball">Satzball</string>
     <string name="oa_matchball">Spielball</string>
 
-    <string name="oa_n_all">%s beide</string>
+    <string name="oa_n_all">%d beide</string>
     <string name="oa_player_needs_2_clear_points">Ein Spieler muss mit 2 Punkten vorsprung gewinnen</string>
 
     <string name="oa_change_sides"></string>

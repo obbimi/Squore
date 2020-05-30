@@ -208,7 +208,7 @@ public class GSMModel extends Model
         if ( lastValidWithServer != null ) {
             pNewServer = lastValidWithServer.getServingPlayer();
         }
-        setServerAndSide(pNewServer, ssNew, null);
+        setServerAndSide(pNewServer, ssNew, null, true);
     }
 
     @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {
@@ -228,7 +228,7 @@ public class GSMModel extends Model
         return super.getServer();
     }
 */
-    @Override void setServerAndSide(Player player, ServeSide side, DoublesServe doublesServe) {
+    @Override void setServerAndSide(Player player, ServeSide side, DoublesServe doublesServe, boolean bForUndo) {
         int iNrOfPoints = getTotalGamePoints();
         ServeSide serveSideBasedOnPoints = ServeSide.values()[iNrOfPoints % 2];
         if ( isTieBreakGame() ) {
@@ -243,7 +243,7 @@ public class GSMModel extends Model
                 }
             }
         }
-        super.setServerAndSide(player, serveSideBasedOnPoints, doublesServe);
+        super.setServerAndSide(player, serveSideBasedOnPoints, doublesServe, bForUndo);
     }
 
     @Override public void changeSide(Player player) {

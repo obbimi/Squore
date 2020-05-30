@@ -77,6 +77,7 @@ import com.doubleyellow.scoreboard.share.MatchModelPoster;
 import com.doubleyellow.scoreboard.share.ResultPoster;
 import com.doubleyellow.scoreboard.share.ResultSender;
 import com.doubleyellow.scoreboard.share.ShareHelper;
+import com.doubleyellow.scoreboard.speech.Speak;
 import com.doubleyellow.scoreboard.timer.*;
 import com.doubleyellow.scoreboard.timer.Timer;
 import com.doubleyellow.scoreboard.history.MatchHistory;
@@ -1185,6 +1186,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
 
         onActivityResume_Cast();
+        onResumeSpeak();
 
         onResumeURL();
 
@@ -2199,6 +2201,7 @@ touch -t 01030000 LAST.sb
         persist(false);
         onNFCPause();
         onActivityPause_Cast();
+        onActivityPause_Speak();
         onPauseWearable();
 /*
         if ( baseDialog instanceof TwoTimerView ) {
@@ -2756,7 +2759,7 @@ touch -t 01030000 LAST.sb
             }
         }
 
-        @Override public void OnGameBallChange(Player[] players, boolean bHasGameBall) {
+        @Override public void OnGameBallChange(Player[] players, boolean bHasGameBall, boolean bForUndo) {
             if ( Brand.isGameSetMatch() ) {
                 if ( bHasGameBall ) {
                     // don't treat gameball as special, wait for SetBall in stead
@@ -2771,6 +2774,10 @@ touch -t 01030000 LAST.sb
 
             if ( bHasGameBall ) {
                 showMicrophoneFloatButton(false); // previous might have been tiebreak
+
+                if ( bForUndo == false ) {
+                    speakGameball();
+                }
             }
         }
 
@@ -2949,8 +2956,13 @@ touch -t 01030000 LAST.sb
             if ( matchModel.getMaxScore()==0 ) {
                 enableScoreButton(p);
             }
+
+            if ( iDelta == 1 ) {
+                speakScore();
+            }
         }
     }
+
 
     private class CallChangeListener implements Model.OnCallChangeListener {
         @Override public void OnCallChanged(Call call, Player appealingOrMisbehaving, Player pointAwardedTo, ConductType conductType) {
@@ -3001,12 +3013,15 @@ touch -t 01030000 LAST.sb
         }
     }
     private class ServeSideChangeListener implements Model.OnServeSideChangeListener {
-        @Override public void OnServeSideChange(Player p, DoublesServe doublesServe, ServeSide serveSide, boolean bIsHandout) {
+        @Override public void OnServeSideChange(Player p, DoublesServe doublesServe, ServeSide serveSide, boolean bIsHandout, boolean bForUndo) {
             if ( p == null ) { return; } // normally only e.g. for undo's of 'altered' scores
             iBoard.updateServeSide(p           ,doublesServe   , serveSide, bIsHandout);
             if ( Brand.supportChooseServeOrReceive() == false ) {
                 // remove any indication on receiver side
                 iBoard.updateReceiver(p.getOther(), DoublesServe.NA);
+            }
+            if ( (bForUndo == false) && matchModel.gameHasStarted() /* don't speak at zero zero */ ) {
+                speakHandout(bIsHandout);
             }
         }
         @Override public void OnReceiverChange(Player p, DoublesServe doublesServe) {
@@ -3357,7 +3372,7 @@ touch -t 01030000 LAST.sb
                 Type timerType = (Type) ctx;
                 //ViewType viewType  = (ViewType) ctx2;
                 doTimerFeedback(timerType, true);
-                if ( timerType.equals(Type.UntillStartOfNextGame) && matchModel.isPossibleGameVictory() ) {
+                if ( EnumSet.of(Type.UntillStartOfNextGame).contains(timerType) && matchModel.isPossibleGameVictory() ) {
                     endGame();
                 }
                 // fall through!!
@@ -6733,5 +6748,36 @@ touch -t 01030000 LAST.sb
             cdtInitCastDelayed.start();
         }
         return iInitCastDelayedRunCount > 0;
+    }
+    // ----------------------------------------------------
+    // --------------------- speech -----------------------
+    // ----------------------------------------------------
+
+    private Speak m_speak = null;
+    private void onResumeSpeak() {
+        if ( PreferenceValues.useSpeechFeature(this) == false ) { return; }
+
+        m_speak = Speak.getInstance();
+        m_speak.start(this);
+    }
+    private void onActivityPause_Speak() {
+        if ( m_speak != null ) {
+            m_speak.stop();
+        }
+    }
+    private void speakScore() {
+        if ( (m_speak != null) && (matchModel != null) ) {
+            m_speak.score(matchModel);
+        }
+    }
+    private void speakHandout(boolean bIsHandout) {
+        if ( (m_speak != null) && (matchModel != null) ) {
+            m_speak.handout(bIsHandout);
+        }
+    }
+    private void speakGameball() {
+        if ( (m_speak != null) && (matchModel != null) ) {
+            m_speak.gameBall(matchModel);
+        }
     }
 }

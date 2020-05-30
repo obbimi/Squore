@@ -24,6 +24,7 @@ import android.util.Log;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.GameTiming;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.speech.Speak;
 import com.doubleyellow.scoreboard.vico.IBoard;
 import com.doubleyellow.util.StringUtil;
 
@@ -82,9 +83,9 @@ public class Timer
 
         int iReminderMsgId = timerType.getHalftTimeMsgResId();
         if ( iReminderMsgId != 0 ) {
-            this.sReminderText = PreferenceValues.getOAString(scoreBoard, iReminderMsgId, formatTime(iReminderAt, true)) ;
+            Timer.sReminderText = PreferenceValues.getOAString(scoreBoard, iReminderMsgId, formatTime(iReminderAt, true)) ;
         } else {
-            this.sReminderText = "";
+            Timer.sReminderText = "";
         }
 
         countDownTimer = new SBCountDownTimer(iSeconds);
@@ -206,9 +207,14 @@ public class Timer
     private static void updateTimerView(SBCountDownTimer countDownTimer, TimerView timerView) {
         timerView.setTime(Timer.formatTime(countDownTimer.secsLeft, false));
         timerView.setTime(Timer.iSecondsInitial, countDownTimer.secsLeft, Timer.iReminderAtSecs);
-        int iAtLeastLeft = Math.max(iReminderAtSecs - 10, iReminderAtSecs / 3 * 2);
-        if ( (isAtOrPassedWarning()) && (countDownTimer.secsLeft >= iAtLeastLeft) ) {
-            timerView.setWarnMessage(Timer.sReminderText);
+        int iAtLeastLeft = Math.max(iReminderAtSecs - 10, iReminderAtSecs / 3 * 2); // safety region mainly for when having a speedup value
+        if ( isAtOrPassedWarning() ) {
+            if ( countDownTimer.secsLeft >= iAtLeastLeft ) {
+                timerView.setWarnMessage(Timer.sReminderText);
+            }
+            if ( countDownTimer.secsLeft == iReminderAtSecs ) {
+                Speak.getInstance().setTimerMessage(Timer.sReminderText);
+            }
         } else {
             //timerView.setWarnMessage("");
         }
@@ -257,6 +263,8 @@ public class Timer
                 }
             }
             secsLeft = 0;
+
+            Speak.getInstance().setTimerMessage(null);
         }
 
         public SBCountDownTimer restart(int iSecondsLeft) {

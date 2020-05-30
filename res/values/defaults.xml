@@ -127,6 +127,9 @@ http://developer.android.com/guide/practices/screens_support.html
 
     <integer name="timerInjury_default">180</integer>
 
+    <integer name="speechPitch_default">70</integer> <!-- 0 - 100 -->
+    <integer name="speechRate_default">70</integer> <!-- 0 - 100 -->
+
     <integer name="serveButtonTransparencyNonServer_default__Squash">60</integer> <!-- between 0 and 100 -->
     <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Squash">false</bool>
     <bool name="swapPlayersBetweenGames_default">true</bool>

@@ -31,7 +31,7 @@
     <string name="oa_gameball">Bola de Juego</string>
     <string name="oa_matchball">Bola de Partido</string>
 
-    <string name="oa_n_all">%1$s-%1$s</string>
+    <string name="oa_n_all">%1$d-%1$d</string>
     <string name="oa_player_needs_2_clear_points">Al jugador debe ganar por 2 puntos</string>
 
     <string name="oa_change_sides"></string>

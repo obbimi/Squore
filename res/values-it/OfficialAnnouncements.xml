@@ -34,7 +34,7 @@
     <string name="oa_gameball">Palla del gioco</string>
     <string name="oa_matchball">Palla dell\'incontro</string>
 
-    <string name="oa_n_all">%s Pari</string>
+    <string name="oa_n_all">%d Pari</string>
     <string name="oa_player_needs_2_clear_points">Due punti di vantaggio per vincere il gioco</string>
 
     <string name="oa_change_sides">Cambia lato!</string>

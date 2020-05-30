@@ -1349,7 +1349,7 @@ public class IBoard implements TimerViewContainer
             //return false;
         }
 
-        int iResId = ( Brand.isRacketlon() || Brand.isGameSetMatch() ) ? R.string.oa_set_ball : ( Brand.isBadminton()? R.string.oa_gamepoint : R.string.oa_gameball );
+        int iResId = Brand.getGameSetBallPoint_ResourceId();
         Player[] possibleMatchBallFor = matchModel.isPossibleMatchBallFor();
         if ( ListUtil.isNotEmpty(possibleMatchBallFor) && (matchModel.playAllGames() == false) ) {
             iResId = R.string.oa_matchball;

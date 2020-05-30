@@ -690,6 +690,54 @@
 
     </PreferenceScreen>
 
+    <PreferenceScreen android:key="Speech"
+                      android:icon="@android:drawable/ic_lock_silent_mode_off"
+                      android:title="@string/pref_Speech"
+                      android:summary="@string/pref_Speech_summary" >
+        <CheckBoxPreference
+            android:icon="@android:drawable/ic_lock_silent_mode_off"
+            android:key="useSpeechFeature"
+            android:title="@string/pref_Speech"
+            android:summary="@string/pref_Speech_summary"
+            android:defaultValue="@bool/useSpeechFeature_default"
+            />
+
+        <com.doubleyellow.prefs.SeekBarPreference android:key="speechPitch"
+            android:title="@string/pref_speechPitch"
+            android:summary="@string/pref_speechPitch_summary"
+            android:icon="@drawable/dummy"
+            dy:min="0"
+            dy:interval="5"
+            android:defaultValue="@integer/speechPitch_default"
+            android:max="100"
+            />
+        <com.doubleyellow.prefs.SeekBarPreference android:key="speechRate"
+            android:title="@string/pref_speechRate"
+            android:summary="@string/pref_speechRate_summary"
+            android:icon="@drawable/dummy"
+            dy:min="0"
+            dy:interval="5"
+            android:defaultValue="@integer/speechRate_default"
+            android:max="100"
+            />
+<!--
+        <EditTextPreference android:key="speechPitch"
+            android:icon="@drawable/dummy"
+            android:title="@string/pref_speechPitch"
+            android:summary="@string/pref_speechPitch_summary"
+            android:inputType="number"
+            android:defaultValue="@integer/speechPitch_default"
+            />
+        <EditTextPreference android:key="speechRate"
+            android:icon="@drawable/dummy"
+            android:title="@string/pref_speechRate"
+            android:summary="@string/pref_speechRate_summary"
+            android:inputType="number"
+            android:defaultValue="@integer/speechRate_default"
+            />
+-->
+    </PreferenceScreen>
+
     <PreferenceScreen android:key="Sharing"
                       android:icon="@android:drawable/ic_menu_share"
                       android:title="@string/pref_Sharing"
