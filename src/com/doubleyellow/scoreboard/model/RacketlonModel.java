@@ -178,7 +178,7 @@ public class RacketlonModel extends Model {
 
     /** in racketlon one person can have set ball while the other has match ball. Match ball is more important to show */
     @Override public Player[] isPossibleGameBallFor() {
-        Player[] pSetBall    = _isPossibleGameVictoryFor(When.ScoreOneMorePoint, false);
+        Player[] pSetBall    = _isPossibleGameVictoryFor(When.ScoreOneMorePoint, false, false);
         Player[] paMatchBall = _isPossibleMatchVictoryFor(When.ScoreOneMorePoint, pSetBall);
         if ( ListUtil.isNotEmpty(paMatchBall) ) {
             pSetBall = paMatchBall;
@@ -215,9 +215,9 @@ public class RacketlonModel extends Model {
                 case ScoreOneMorePoint:
                     // it can only be match ball in the LAST set (if diff=0)
                     if ( iSetInProgress1B == 4 ) {
-                        Player[] pSetIsFor = _isPossibleGameVictoryFor(When.Now, true);
+                        Player[] pSetIsFor = _isPossibleGameVictoryFor(When.Now, true, false);
                         if ( pSetBallFor == null ) {
-                            pSetBallFor = _isPossibleGameVictoryFor(When.ScoreOneMorePoint, true);
+                            pSetBallFor = _isPossibleGameVictoryFor(When.ScoreOneMorePoint, true, false);
                         }
                         if ( ListUtil.length(pSetIsFor) != 0 ) {
                             // diff=0 and last set has ended: gummi arm: both players have match ball
@@ -238,7 +238,7 @@ public class RacketlonModel extends Model {
             int iNrOfPointsTrailerCanStillScore        = iNrOfPointsTrailerCanScoreInComingSets
                     + Math.max(getScore(pLeader) + 2, nrOfPointsToWinSet)
                     - getScore(pTrailer);
-            Player[] pSetIsFor = _isPossibleGameVictoryFor(When.Now, true);
+            Player[] pSetIsFor = _isPossibleGameVictoryFor(When.Now, true, false);
             switch (when) {
                 case Now:
                     if ( (iSetInProgress1B == 4) && ( ListUtil.singleElementEquals(pSetIsFor, pLeader) ) ) {
@@ -258,7 +258,7 @@ public class RacketlonModel extends Model {
                         return getNoneOfPlayers();
                     }
                     if ( pSetBallFor == null ) {
-                        pSetBallFor = _isPossibleGameVictoryFor(When.ScoreOneMorePoint, true);
+                        pSetBallFor = _isPossibleGameVictoryFor(When.ScoreOneMorePoint, true, false);
                     }
                     int iNrOfPointsTrailerCanScoreAfterPointForLeader = iNrOfPointsTrailerCanStillScore + ((getScore(pLeader) >= nrOfPointsToWinSet-2)?1:0);
                     if ( iDiffTotal == iNrOfPointsTrailerCanScoreAfterPointForLeader ) {

@@ -90,12 +90,12 @@ public abstract class Model implements Serializable
     }
     public interface OnServeSideChangeListener extends OnModelChangeListener {
 		/** Invoked every time there is a change of where the next serve takes place */
-        void OnServeSideChange(Player p, DoublesServe doublesServe, ServeSide serveSide, boolean bIsHandout);
+        void OnServeSideChange(Player p, DoublesServe doublesServe, ServeSide serveSide, boolean bIsHandout, boolean bForUndo);
         void OnReceiverChange (Player p, DoublesServe doublesServe);
     }
     public interface OnSpecialScoreChangeListener extends OnModelChangeListener {
 		/** invoked each time a the score change implies 'GameBall' change: i.e. now having gameball, or no-longer having gameball */
-        void OnGameBallChange(Player[] players, boolean bHasGameBall);
+        void OnGameBallChange(Player[] players, boolean bHasGameBall, boolean bForUndo);
 		/** Invoked when both players reach a score one less than the score needed to win the game */
         void OnTiebreakReached(int iOccurrenceCount);
 		/** Invoked a score is reached that would mean on player has won the game */
@@ -201,7 +201,7 @@ public abstract class Model implements Serializable
         if ( changedListener instanceof OnServeSideChangeListener ) {
             OnServeSideChangeListener serveSideChangeListener = (OnServeSideChangeListener) changedListener;
             onServeSideChangeListener.add(serveSideChangeListener);
-            serveSideChangeListener.OnServeSideChange(m_pServer           , m_in_out         , m_nextServeSide, false);
+            serveSideChangeListener.OnServeSideChange(m_pServer           , m_in_out         , m_nextServeSide, false, false);
             if ( isDoubles() ) {
                 DoublesServe dsReceiver = determineDoublesReceiver(m_in_out, m_nextServeSide);
                 this.changeDoubleReceiver(dsReceiver, true);
@@ -260,7 +260,7 @@ public abstract class Model implements Serializable
         Player[] paGameBallFor = isPossibleGameBallFor();
         if ( ListUtil.length(paGameBallFor) != 0 ) {
             for(OnSpecialScoreChangeListener l: onSpecialScoreChangeListeners) {
-                l.OnGameBallChange(paGameBallFor, true);
+                l.OnGameBallChange(paGameBallFor, true, false);
             }
         }
     }
@@ -506,6 +506,9 @@ public abstract class Model implements Serializable
     }
 
     void setServerAndSide(Player player, ServeSide side, DoublesServe doublesServe) {
+        setServerAndSide(player, side, doublesServe, false);
+    }
+    void setServerAndSide(Player player, ServeSide side, DoublesServe doublesServe, boolean bForUndo) {
         boolean bChanged = false;
         if ( (player != null) && player.equals(m_pServer) == false ) {
             m_pServer = player;
@@ -524,7 +527,7 @@ public abstract class Model implements Serializable
             // inform listeners
             boolean lastPointHandout = isLastPointHandout();
             for(OnServeSideChangeListener l: onServeSideChangeListener) {
-                l.OnServeSideChange(m_pServer, m_in_out, m_nextServeSide, lastPointHandout);
+                l.OnServeSideChange(m_pServer, m_in_out, m_nextServeSide, lastPointHandout, bForUndo);
             }
         }
         if ( isDoubles() ) {
@@ -1023,7 +1026,7 @@ public abstract class Model implements Serializable
                     m_iHandoutCountDoubles = -1;
                 }
 
-                Player[] gameBallFor = isPossibleGameBallFor();
+                Player[] gameBallFor = isPossibleGameBallFor(true);
             }
         }
     }
@@ -3014,7 +3017,7 @@ public abstract class Model implements Serializable
             m_bLastPointWasHandout = b;
             // to remove the optional question mark
             for(OnServeSideChangeListener l: onServeSideChangeListener) {
-                l.OnServeSideChange(m_pServer, m_in_out, m_nextServeSide, m_bLastPointWasHandout);
+                l.OnServeSideChange(m_pServer, m_in_out, m_nextServeSide, m_bLastPointWasHandout, false);
             }
         }
     }
@@ -3188,11 +3191,11 @@ public abstract class Model implements Serializable
     abstract Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom /*Only checked when running for Racketlon*/ );
 
     /** If game format has no tie-break (sudden death), it can be game ball for both players simultaneously */
-    final Player[] _isPossibleGameVictoryFor(When when, boolean bFromIsMatchBallFrom) {
+    final Player[] _isPossibleGameVictoryFor(When when, boolean bFromIsMatchBallFrom, boolean bForUndo) {
         Player[] players = m_possibleGameFor.get(when);
         if ( players == null ) {
             players = calculateIsPossibleGameVictoryFor(when, getScoreOfGameInProgress(), bFromIsMatchBallFrom);
-            setGameVictoryFor(when, players);
+            setGameVictoryFor(when, players, bForUndo);
         } else {
           //Log.w(TAG, "[_isPossibleGameVictoryFor] Taken from cache " + players);
         }
@@ -3200,7 +3203,10 @@ public abstract class Model implements Serializable
     }
 
     public Player[] isPossibleGameBallFor() {
-        return _isPossibleGameVictoryFor(When.ScoreOneMorePoint, false);
+        return isPossibleGameBallFor(false);
+    }
+    private Player[] isPossibleGameBallFor(boolean bForUndo) {
+        return _isPossibleGameVictoryFor(When.ScoreOneMorePoint, false, bForUndo);
     }
 
     public final boolean isPossibleGameBallFor(Player p) {
@@ -3210,7 +3216,7 @@ public abstract class Model implements Serializable
     }
 
     /** Triggers listeners */
-    private void setGameVictoryFor(When when, Player[] gameballForNew) {
+    private void setGameVictoryFor(When when, Player[] gameballForNew, boolean bForUndo) {
         // store the new value
         m_possibleGameFor.put(when, gameballForNew);
 
@@ -3231,14 +3237,14 @@ public abstract class Model implements Serializable
             if ( ListUtil.isNotEmpty(gameballForOld) && (bGameBallFor_Unchanged == false) ) {
                 // no longer game ball for...
                 for (OnSpecialScoreChangeListener l : onSpecialScoreChangeListeners) {
-                    l.OnGameBallChange(gameballForOld, false);
+                    l.OnGameBallChange(gameballForOld, false, bForUndo);
                 }
             }
 
             if ( ListUtil.isNotEmpty(gameballForNew) ) {
                 // now gameball for
                 for(OnSpecialScoreChangeListener l: onSpecialScoreChangeListeners) {
-                    l.OnGameBallChange(gameballForNew, true);
+                    l.OnGameBallChange(gameballForNew, true, bForUndo);
                 }
             }
         }
@@ -3265,14 +3271,14 @@ public abstract class Model implements Serializable
             if ( ListUtil.isNotEmpty(matchballForOld) && (bMatchBallFor_Unchanged == false) ) {
                 // no longer matchball for...
                 for(OnSpecialScoreChangeListener l: onSpecialScoreChangeListeners) {
-                    l.OnGameBallChange(matchballForOld, false);
+                    l.OnGameBallChange(matchballForOld, false, false);
                 }
             }
 
             if ( ListUtil.isNotEmpty(matchballForNew) ) {
                 // now matchball for
                 for(OnSpecialScoreChangeListener l: onSpecialScoreChangeListeners) {
-                    l.OnGameBallChange(matchballForNew, true);
+                    l.OnGameBallChange(matchballForNew, true, false);
                 }
             }
         }
@@ -3308,7 +3314,7 @@ public abstract class Model implements Serializable
         return isPossibleGameVictoryFor()!=null;
     }
     public Player isPossibleGameVictoryFor() {
-        Player[] players = _isPossibleGameVictoryFor(When.Now, false);
+        Player[] players = _isPossibleGameVictoryFor(When.Now, false, false);
         return ListUtil.length(players)==1?players[0]:null;
     }
 
@@ -3549,7 +3555,7 @@ public abstract class Model implements Serializable
         Map<Player, Integer> gameInProgressFor = new HashMap<>();
         Player[] possible = null;
         if ( getMaxScore() > 0 ) {
-            possible = _isPossibleGameVictoryFor(when, true);
+            possible = _isPossibleGameVictoryFor(when, true, false);
             if ( ListUtil.isEmpty(possible) ) { return possible; }
             for(Player p: possible) {
                 gameInProgressFor.put(p, 1);
@@ -3743,7 +3749,7 @@ public abstract class Model implements Serializable
             // first thing in the match is a call for a let: adjust date and time if appropriate
             adjustTheWhenObjectIfAppropriate(GameTiming.ChangedBy.FirstScoreOfGameEntered);
         }
-        final Player[] wasGameBallFor = _isPossibleGameVictoryFor(When.Now, false);
+        final Player[] wasGameBallFor = _isPossibleGameVictoryFor(When.Now, false, false);
 
         ScoreLine slCall = new ScoreLine(appealing, call);
         addScoreLine(slCall, true);
