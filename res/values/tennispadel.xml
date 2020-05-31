@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="sb_deuce">Deuce</string>
+    <string name="sb_advantage">Advantage</string>
+
     <string name="best_of_x_games_to_y_2__TennisPadel">Sets to</string>
     <string name="sb_official_rules__TennisPadel">Official rules</string>
 

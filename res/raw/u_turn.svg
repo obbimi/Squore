@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"
+    stroke="#D3D3D3">
+    <!--
+    This svg is not used as such, but converted to png files:
+
+    stroke colors: #D3D3D3, #111111
+
+    export suffix='_black' #111111
+    export suffix=''       #D3D3D3
+    convert -background none -size  72x72  u_turn.svg ../drawable-hdpi/u_turn${suffix}.png
+    convert -background none -size  96x96  u_turn.svg ../drawable-xhdpi/u_turn${suffix}.png
+    convert -background none -size 144x144 u_turn.svg ../drawable-xxhdpi/u_turn${suffix}.png
+    convert -background none -size 192x192 u_turn.svg ../drawable-xxxhdpi/u_turn${suffix}.png
+    -->
+
+    <path id="bottom"  stroke-width="10" fill="none" stroke-linecap="round"
+        d="M20,90  L 70,90
+                   A 30,30 0 1,0 70,30
+                   L 40,30"
+        />
+
+    <polyline id="point" stroke-linecap="round" points="60,15
+                                                        40,30
+                                                        60,45" stroke-width="10" fill="none"/>
+
+</svg>

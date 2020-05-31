@@ -55,7 +55,7 @@ public class RestartScore extends BaseAlertDialog
         }
         adb.setPositiveButton(R.string.cmd_yes          , dialogClickListener)
            .setNegativeButton(R.string.cmd_no           , dialogClickListener)
-           .setIcon          (R.drawable.ic_action_refresh)
+           .setIcon          (R.drawable.circle_2arrows)
            .setMessage       (sMessage)
            .setOnKeyListener(getOnBackKeyListener(BTN_NO_RESTART));
         dialog = adb.show();

@@ -19,7 +19,7 @@
 
         <!-- move menu items below here if you want to simulate overflow even for devices that do normally do not have it (because the have a hardware menu button) -->
         <menu>
-            <item android:id="@+id/refresh"   app:showAsAction="never" android:icon="@drawable/ic_action_refresh"    android:title="@string/refresh" />
+            <item android:id="@+id/refresh"   app:showAsAction="never" android:icon="@drawable/circle_2arrows"    android:title="@string/refresh" />
 
             <!-- only for previous/stored -->
             <item android:id="@+id/cmd_delete_all"   app:showAsAction="never" android:icon="@android:drawable/ic_menu_delete"  android:title="@string/cmd_delete_all" />

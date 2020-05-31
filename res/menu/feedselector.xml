@@ -19,7 +19,7 @@
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/refresh"   app:showAsAction="always" android:icon="@drawable/ic_action_refresh"                   android:title="@string/refresh" />
+    <item android:id="@+id/refresh"   app:showAsAction="always" android:icon="@drawable/circle_2arrows"                   android:title="@string/refresh" />
     <item android:id="@+id/filter"    app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_search"              android:title="@string/filter" />
 
     <!-- for android 4.4.2 -->

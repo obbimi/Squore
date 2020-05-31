@@ -78,7 +78,7 @@
             <item android:id="@+id/mt_cmd_import"     app:showAsAction="never" android:title="@string/Import_elipses"                                                      android:visible="false"/>
 
             <!-- for all but 'manual' -->
-            <item android:id="@+id/mt_refresh"      app:showAsAction="never" android:icon="@drawable/ic_action_refresh"        android:title="@string/refresh" />
+            <item android:id="@+id/mt_refresh"      app:showAsAction="never" android:icon="@drawable/circle_2arrows"        android:title="@string/refresh" />
 
             <!-- for all: never show close button in action bar: user should be accustomed to using the back button -->
             <item android:id="@+id/close"     app:showAsAction="never" android:icon="@android:drawable/ic_menu_close_clear_cancel"      android:title="@string/cmd_close" />

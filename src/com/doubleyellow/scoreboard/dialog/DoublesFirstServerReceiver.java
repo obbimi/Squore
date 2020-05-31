@@ -73,7 +73,7 @@ public abstract class DoublesFirstServerReceiver extends BaseAlertDialog
         if (StringUtil.isNotEmpty(sMessage) ) {
             adb.setMessage       (sMessage);
         }
-        adb.setIcon          (R.drawable.ic_action_refresh)
+        adb.setIcon          (R.drawable.circle_2arrows)
            .setPositiveButton(saNames[0], dialogClickListener)
            .setNegativeButton(saNames[1], dialogClickListener)
            ;

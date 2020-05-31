@@ -422,7 +422,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     private void confirmUndoLastForNonScorer(final Player p) {
         AlertDialog.Builder cfunls = new MyDialogBuilder(this);
         cfunls.setTitle(R.string.uc_undo)
-                .setIcon(R.drawable.circle_2arrows)
+                .setIcon(R.drawable.u_turn)
                 .setTitle(getString(R.string.sb_remove_last_score_for_x, matchModel.getName(p) ))
                 .setPositiveButton(R.string.cmd_yes, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
@@ -757,7 +757,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         AlertDialog.Builder ab = new MyDialogBuilder(this);
         ab.setMessage   (R.string.sb_choose_team)
-                .setIcon(R.drawable.ic_action_refresh)
+                .setIcon(R.drawable.circle_2arrows)
                 .setPositiveButton(Player.A.toString()    , dialogClickListener)
                 .setNegativeButton(Player.B.toString()    , dialogClickListener)
                 .setNeutralButton (android.R.string.cancel, dialogClickListener)
@@ -825,7 +825,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             addItem(R.id.sb_select_feed_match   , R.string.sb_select_feed_match    ,         R.drawable.ic_action_web_site    , R.bool.useMatchFromFeed__Default  );
             addItem(R.id.sb_enter_doubles_match , R.string.sb_new_doubles_match    ,         R.drawable.circled_plus          );
         startSection(R.string.uc_edit   );
-            addItem(R.id.sb_clear_score         , R.string.sb_clear_score          ,         R.drawable.ic_action_refresh   );
+            addItem(R.id.sb_clear_score         , R.string.sb_clear_score          ,         R.drawable.circle_2arrows   );
             addItem(R.id.sb_adjust_score        , R.string.sb_adjust_score         , android.R.drawable.ic_menu_edit        );
             addItem(R.id.sb_edit_event_or_player, R.string.sb_edit_event_or_player , android.R.drawable.ic_menu_edit        );
             addItem(R.id.change_match_format    , R.string.pref_MatchFormat        ,         R.drawable.ic_action_mouse     );
@@ -1341,7 +1341,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 case UndoScore: {
                     AlertDialog.Builder cfun = new MyDialogBuilder(this);
                     cfun.setTitle(R.string.uc_undo)
-                        .setIcon(R.drawable.circle_2arrows)
+                        .setIcon(R.drawable.u_turn)
                         .setPositiveButton(R.string.cmd_yes, new DialogInterface.OnClickListener() {
                             @Override public void onClick(DialogInterface dialog, int which) {
                                 handleMenuItem(R.id.dyn_undo_last);
@@ -2344,7 +2344,7 @@ touch -t 01030000 LAST.sb
     private void showUndoFloatButton(boolean bVisible) {
         if ( undoButton == null ) {
             float fMargin = 0;
-            int iResImage = R.drawable.circle_2arrows;
+            int iResImage = R.drawable.u_turn;
 
             ColorPrefs.ColorTarget colorKey = ColorPrefs.ColorTarget.speakButtonBackgroundColor;
             Integer iBG = mColors.get(colorKey);
@@ -2352,7 +2352,7 @@ touch -t 01030000 LAST.sb
                 // if we use a light background for the microphone button... switch to the black icon version
                 int blackOrWhiteFor = ColorUtil.getBlackOrWhiteFor(iBG);
                 if ( blackOrWhiteFor == Color.BLACK ) {
-                    iResImage = R.drawable.circle_2arrows_black;
+                    iResImage = R.drawable.u_turn_black;
                 }
             }
             undoButton = getFloatingActionButton(R.id.float_undo_last, fMargin, iResImage, ColorPrefs.ColorTarget.speakButtonBackgroundColor, null);
