@@ -69,6 +69,16 @@
     <string name="pref_BehaviourOfficial">For official usage</string>
     <string name="pref_Sharing">Sharing</string>
     <string name="pref_Sharing_summary">By Facebook, SMS or Email</string>
+
+    <string name="pref_Speech">Speech</string>
+    <string name="pref_Speech_summary">Announce score via speakers (computer voice)</string>
+    <string name="pref_speechPitch">Pitch</string>
+    <string name="pref_speechPitch_summary">Lower values for lower voice (0–100)</string>
+    <string name="pref_speechRate">Rate</string>
+    <string name="pref_speechRate_summary">Lower values for slower speech (0–100)</string>
+    <string name="pref_speechPauseBetweenParts">Pause between score parts</string>
+    <string name="pref_speechPauseBetweenParts_summary">Higher values for more pause between words (0–1500)</string>
+
     <string name="pref_Other">Misc</string>
     <string name="pref_Appearance">Appearance</string>
     <string name="pref_Appearance_summary">Colors. Flags. Action bar.</string>

@@ -47,8 +47,11 @@ public class Speak
 
         m_textToSpeech = new TextToSpeech(m_context, onInitListener);
 
+        m_bEnabled = PreferenceValues.useSpeechFeature(m_context);
         float speechPitch = PreferenceValues.getSpeechPitch(context);
         float speechRate  = PreferenceValues.getSpeechRate(context);
+        Speak.I_DELAY_BETWEEN_TWO_RELATED = PreferenceValues.getSpeechPauseBetweenWords(context);
+
         m_textToSpeech.setPitch     (speechPitch); // lower values for lower tone
         m_textToSpeech.setSpeechRate(speechRate);  // to clearly hear to score, a little lower than 1.0 is better
 
@@ -93,11 +96,22 @@ public class Speak
 
         return true;
     }
+
+    private boolean m_bEnabled = false;
+    public boolean isEnabled() {
+        return m_bEnabled;
+    }
+    public void setEnabled(boolean b) {
+        m_bEnabled = b;
+    }
     public void setPitch(float fSpeechPitch) {
         m_textToSpeech.setPitch(fSpeechPitch);
     }
     public void setSpeechRate(float fSpeechRate) {
         m_textToSpeech.setSpeechRate(fSpeechRate);
+    }
+    public void setPauseBetweenParts(int iPauseInMS) {
+        I_DELAY_BETWEEN_TWO_RELATED = iPauseInMS;
     }
     public void test(String s) {
         speak(s, SpeechType.Other);
@@ -105,40 +119,67 @@ public class Speak
 
     public void score(Model model) {
         if ( isStarted() == false ) { return; }
+        if ( isEnabled() == false ) { return; }
 
         Player server = model.getServer();
         int iServer   = model.getScore(server);
         int iReceiver = model.getScore(server.getOther());
 
-        addToQueue(SpeechType.ScoreServer  , iServer);
+        String sServer   = String.valueOf(iServer);
+        String sReceiver = String.valueOf(iReceiver);
+
+        GSMModel gsmModel = null;
+        if ( model instanceof GSMModel ) {
+            gsmModel = (GSMModel) model;
+            sServer   = gsmModel.translateScore(server           , iServer);
+            sReceiver = gsmModel.translateScore(server.getOther(), iReceiver);
+        }
+        if ( Brand.isSquash() || Brand.isGameSetMatch() ) {
+            if ( iServer == 0 ) {
+                sServer   = getResourceString(R.string.oa_love);
+            }
+            if ( iReceiver == 0 ) {
+                sReceiver = getResourceString(R.string.oa_love);
+            }
+        }
+
         if ( iReceiver == iServer ) {
             String s_X_All = getResourceString(R.string.oa_n_all, iServer);
-            String sAll  = s_X_All.replaceAll("[0-9]+", "").trim();
-            if ( model instanceof GSMModel && (iServer >= 3) ) {
+            String sAll    = s_X_All.replaceAll("[0-9]+", "").trim();
+            if ( (gsmModel != null) && (iServer >= 3) ) {
                 addToQueue(SpeechType.ScoreServer  , getResourceString(R.string.sb_deuce));
+                addToQueue(SpeechType.ScoreReceiver, "");
             } else {
-                addToQueue(SpeechType.ScoreServer  , iServer);
+                addToQueue(SpeechType.ScoreServer  , sServer);
                 addToQueue(SpeechType.ScoreReceiver, sAll);
             }
         } else {
-            if ( model instanceof GSMModel  ) {
-                GSMModel gsmModel = (GSMModel) model;
+            if ( gsmModel != null  ) {
                 if ( Math.max(iReceiver, iServer) > 3 ) {
                     if ( Math.abs(iServer - iReceiver) == 1 ) {
                         addToQueue(SpeechType.ScoreServer, getResourceString(R.string.sb_advantage));
+                        addToQueue(SpeechType.ScoreReceiver, "");
                         // advantage Server
                         // advantage Receiver
                     } else {
                         // game has been won
                         addToQueue(SpeechType.ScoreServer, getResourceString(R.string.oa_game));
+                        addToQueue(SpeechType.ScoreReceiver, "");
                     }
                 } else {
                     // not yet reached 40, different score
-                    addToQueue(SpeechType.ScoreServer  , iServer);
-                    addToQueue(SpeechType.ScoreReceiver, iReceiver);
+                    addToQueue(SpeechType.ScoreServer  , sServer);
+                    addToQueue(SpeechType.ScoreReceiver, sReceiver);
                 }
             } else {
-                addToQueue(SpeechType.ScoreReceiver, iReceiver);
+                addToQueue(SpeechType.ScoreServer  , sServer);
+                addToQueue(SpeechType.ScoreReceiver, sReceiver);
+
+                if ( Brand.isNotSquash() && model.isPossibleGameVictory() ) {
+                    // say score of winner of game first (not by default the server)
+                    addToQueue(SpeechType.ScoreServer  , Math.max(iServer, iReceiver));
+                    addToQueue(SpeechType.ScoreReceiver, Math.max(iServer, iReceiver));
+                }
             }
         }
     }
@@ -150,6 +191,12 @@ public class Speak
 
     public void handout(boolean bIsHandout) {
         if ( isStarted() == false ) { return; }
+        if ( isEnabled() == false ) { return; }
+
+        if ( Brand.isNotSquash() ) {
+            // TODO: service-over ??
+            return;
+        }
 
         if ( bIsHandout ) {
             addToQueue(SpeechType.Handout, getResourceString(R.string.handout));
@@ -159,6 +206,8 @@ public class Speak
     }
     public void gameBall(Model model) {
         if ( isStarted() == false ) { return; }
+        if ( isEnabled() == false ) { return; }
+        if ( Brand.isNotSquash() ) { return; }
 
         int iResId = Brand.getGameSetBallPoint_ResourceId();
         String sText = getResourceString(iResId);
@@ -167,6 +216,7 @@ public class Speak
 
     public void setTimerMessage(String s) {
         if ( isStarted() == false ) { return; }
+        if ( isEnabled() == false ) { return; }
 
         if ( s == null ) {
             s = getResourceString(R.string.oa_time);
@@ -187,7 +237,7 @@ public class Speak
         Other,
     }
     private static final int I_DELAY_START               = 500;
-    private static final int I_DELAY_BETWEEN_TWO_RELATED = 500;
+    private static       int I_DELAY_BETWEEN_TWO_RELATED = 500;
 
     private String[] m_sText = new String[SpeechType.values().length];
     private void addToQueue(SpeechType type, Object oText) {
@@ -240,7 +290,9 @@ public class Speak
                         }
                     }
                     if ( ListUtil.isNotEmpty(lUnavailable) ) {
-                        Toast.makeText(m_context, String.format("Language %s not available to perform 'text to speech'. Using %s...", lUnavailable, m_locale.getDisplayLanguage()), Toast.LENGTH_LONG).show();
+                        if ( m_bEnabled ) {
+                            Toast.makeText(m_context, String.format("Language %s not available to perform 'text to speech'. Using %s...", lUnavailable, m_locale.getDisplayLanguage()), Toast.LENGTH_LONG).show();
+                        }
                         m_textToSpeech.setLanguage(Locale.ENGLISH);
                     }
                     break;

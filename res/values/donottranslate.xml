@@ -63,6 +63,7 @@
     <string name="swapPlayersHalfwayGame_default">Suggest</string>
     <string name="useTossFeature_default">Suggest</string>
     <string name="useShareFeature_default">Suggest</string>
+    <bool   name="useSpeechFeature_default">false</bool>
     <string name="showGamePausedDialog_default">Suggest</string>
     <string name="useChangeSidesFeature_default">Suggest</string>
     <string name="KeepScreenOnWhen_default">MatchIsInProgress</string>

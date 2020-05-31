@@ -439,34 +439,23 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         break;
                     case useSpeechFeature:
                         boolean bUseSpeech = prefs.getBoolean(key, true);
-                        PreferenceKeys [] keys = new PreferenceKeys[] { PreferenceKeys.speechPitch, PreferenceKeys.speechRate };
+                        Speak.getInstance().setEnabled(bUseSpeech);
+                        PreferenceKeys [] keys = new PreferenceKeys[] { PreferenceKeys.speechPitch, PreferenceKeys.speechRate, PreferenceKeys.speechPauseBetweenParts };
                         for(PreferenceKeys keyOfPrefToToggle: keys) {
                             final Preference pref = settingsFragment.findPreference(keyOfPrefToToggle);
                             if ( pref != null ) {
                                 pref.setEnabled(bUseSpeech);
                             }
                         }
+                        if ( bUseSpeech ) {
+                            playSpeechSample();
+                        }
                         break;
                     case speechPitch:
                     case speechRate:
-                        if ( true ) {
-                            // speak a small piece of text to allow user to finetune voice right here
-                            Speak instance = Speak.getInstance();
-                            if ( false && (instance.isStarted() == false)) {
-                                instance.start(Preferences.this);
-                            }
-                            instance.setPitch     (PreferenceValues.getSpeechPitch(Preferences.this));
-                            instance.setSpeechRate(PreferenceValues.getSpeechRate(Preferences.this));
-                            //instance.test("ScoreThis is a test");
-                            if ( Brand.isSquash() ) {
-                                instance.handout(ScoreBoard.matchModel.isLastPointHandout());
-                            }
-                            instance.score(ScoreBoard.matchModel);
-                            Player[] possibleGameBallFor = ScoreBoard.matchModel.isPossibleGameBallFor();
-                            if ( (possibleGameBallFor != null) && (possibleGameBallFor.length != 0) ) {
-                                instance.gameBall(ScoreBoard.matchModel);
-                            }
-                        }
+                    case speechPauseBetweenParts:
+                        // speak a small piece of text to allow user to finetune voice right here
+                        playSpeechSample();
                         break;
                     default:
                         //Log.d(TAG, "Not handling case for " + eKey);
@@ -499,6 +488,25 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 ColorPrefs.setColorSchemaIcon (settingsFragment.findPreference(PreferenceKeys.Colors));
                 ColorPrefs.setColorSchemaIcon (settingsFragment.findPreference(PreferenceKeys.colorSchema));
                 ColorPrefs.setColorTargetIcons(settingsFragment);
+            }
+        }
+
+        public void playSpeechSample() {
+            Speak instance = Speak.getInstance();
+            if ( instance.isStarted() == false ) {
+                instance.start(Preferences.this);
+            }
+            instance.setPitch     (PreferenceValues.getSpeechPitch(Preferences.this));
+            instance.setSpeechRate(PreferenceValues.getSpeechRate(Preferences.this));
+            instance.setPauseBetweenParts(PreferenceValues.getSpeechPauseBetweenWords(Preferences.this));
+            //instance.test("ScoreThis is a test");
+            if ( Brand.isSquash() ) {
+                instance.handout(ScoreBoard.matchModel.isLastPointHandout());
+            }
+            instance.score(ScoreBoard.matchModel);
+            Player[] possibleGameBallFor = ScoreBoard.matchModel.isPossibleGameBallFor();
+            if ( (possibleGameBallFor != null) && (possibleGameBallFor.length != 0) ) {
+                instance.gameBall(ScoreBoard.matchModel);
             }
         }
 
@@ -580,13 +588,18 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 List<CharSequence> lLetUserSelectFrom   = new ArrayList();
                 List<CharSequence> lLetUserSelectFromHR = new ArrayList();
                 JSONArray jaDisplayIds = Brand.brand.getCastListForBrandFromConfig(false);
-                for (int i = 0; i < jaDisplayIds.length(); i++) {
-                    lLetUserSelectFrom  .add(String.valueOf(i));
-                    lLetUserSelectFromHR.add(jaDisplayIds.optString(i));
-                }
+                if ( jaDisplayIds != null ) {
+                    castScreen.setEnabled(true);
+                    for (int i = 0; i < jaDisplayIds.length(); i++) {
+                        lLetUserSelectFrom  .add(String.valueOf(i));
+                        lLetUserSelectFromHR.add(jaDisplayIds.optString(i));
+                    }
 
-                castScreen.setEntryValues(lLetUserSelectFrom  .toArray(new CharSequence[0])); // actual values
-                castScreen.setEntries    (lLetUserSelectFromHR.toArray(new CharSequence[0])); // human readable
+                    castScreen.setEntryValues(lLetUserSelectFrom  .toArray(new CharSequence[0])); // actual values
+                    castScreen.setEntries    (lLetUserSelectFromHR.toArray(new CharSequence[0])); // human readable
+                } else {
+                    castScreen.setEnabled(false);
+                }
             }
 
             // remove some brand preferences if required
@@ -763,7 +776,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
 
             // disable 'speech' controllers if 'use speech = false'
             boolean bUseSpeech = PreferenceValues.useSpeechFeature(getActivity());
-            PreferenceKeys [] keys = new PreferenceKeys[] { PreferenceKeys.speechPitch, PreferenceKeys.speechRate };
+            PreferenceKeys [] keys = new PreferenceKeys[] { PreferenceKeys.speechPitch, PreferenceKeys.speechRate, PreferenceKeys.speechPauseBetweenParts };
             for(PreferenceKeys keyOfPrefToToggle: keys) {
                 final Preference pref = this.findPreference(keyOfPrefToToggle);
                 if ( pref != null ) {

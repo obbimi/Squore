@@ -6756,8 +6756,6 @@ touch -t 01030000 LAST.sb
 
     private Speak m_speak = null;
     private void onResumeSpeak() {
-        if ( PreferenceValues.useSpeechFeature(this) == false ) { return; }
-
         m_speak = Speak.getInstance();
         m_speak.start(this);
     }

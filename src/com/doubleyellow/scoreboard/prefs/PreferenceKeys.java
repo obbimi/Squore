@@ -181,6 +181,7 @@ public enum PreferenceKeys {
     useSpeechFeature,
         speechPitch,
         speechRate,
+        speechPauseBetweenParts,
     useShareFeature,
         shareAction,
     //showOfficalAnnouncements,

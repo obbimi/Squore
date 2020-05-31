@@ -128,6 +128,8 @@ public enum Brand
     }
 
     public JSONArray getCastListForBrandFromConfig(boolean bReturnKey) {
+        if ( m_mCastConfig == null ) { return null; }
+
         JSONArray lDefaults = m_mCastConfig.optJSONArray("Default");
         JSONArray lBrand    = m_mCastConfig.optJSONArray(this.toString());
         if (JsonUtil.isNotEmpty(lDefaults) && JsonUtil.isNotEmpty(lBrand) ) {

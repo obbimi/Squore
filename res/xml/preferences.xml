@@ -720,6 +720,15 @@
             android:defaultValue="@integer/speechRate_default"
             android:max="100"
             />
+        <com.doubleyellow.prefs.SeekBarPreference android:key="speechPauseBetweenParts"
+            android:title="@string/pref_speechPauseBetweenParts"
+            android:summary="@string/pref_speechPauseBetweenParts_summary"
+            android:icon="@drawable/dummy"
+            dy:min="0"
+            dy:interval="100"
+            android:defaultValue="@integer/speechPauseBetweenParts_default"
+            android:max="1500"
+            />
 <!--
         <EditTextPreference android:key="speechPitch"
             android:icon="@drawable/dummy"

@@ -459,6 +459,11 @@ public class PreferenceValues extends RWValues
         return zeroToHundredToFloat0To1(iValue0To100);
     }
 
+    public static int getSpeechPauseBetweenWords(Context context) {
+        int iValueMS = getIntegerR(PreferenceKeys.speechPauseBetweenParts, context, R.integer.speechPauseBetweenParts_default);
+        return iValueMS;
+    }
+
     public static float zeroToHundredToFloat0To1(final int iValue0To100) {
         float fValue0To100 = Math.min((float) iValue0To100, 100f);
         fValue0To100 = Math.max(0f, fValue0To100);
@@ -1810,7 +1815,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-05-31"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-06-01"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
