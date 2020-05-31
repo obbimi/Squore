@@ -2201,7 +2201,6 @@ touch -t 01030000 LAST.sb
         persist(false);
         onNFCPause();
         onActivityPause_Cast();
-        onActivityPause_Speak();
         onPauseWearable();
 /*
         if ( baseDialog instanceof TwoTimerView ) {
@@ -2237,6 +2236,7 @@ touch -t 01030000 LAST.sb
         persist(true);
         MatchTabbed.persist(this);
         ArchiveTabbed.persist(this);
+      //cleanup_Speak();
 /*
         Log.d(TAG, "XActivity.status: " + XActivity.status);
         boolean bChangeOrientation = OrientationStatus.ChangingOrientation.equals(XActivity.status);
@@ -4027,6 +4027,7 @@ touch -t 01030000 LAST.sb
             case R.id.sb_exit:
                 persist(true);
                 turnOffBlueToothIfTurnedOnByApp();
+                cleanup_Speak();
                 System.exit(0);
                 return true;
             case android.R.id.home: {
@@ -6760,7 +6761,7 @@ touch -t 01030000 LAST.sb
         m_speak = Speak.getInstance();
         m_speak.start(this);
     }
-    private void onActivityPause_Speak() {
+    private void cleanup_Speak() {
         if ( m_speak != null ) {
             m_speak.stop();
         }

@@ -51,6 +51,7 @@ import com.doubleyellow.scoreboard.model.FinalSetFinish;
 import com.doubleyellow.scoreboard.model.GSMModel;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.TieBreakFormat;
+import com.doubleyellow.scoreboard.speech.Speak;
 import com.doubleyellow.util.*;
 
 import org.json.JSONArray;
@@ -443,6 +444,27 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             final Preference pref = settingsFragment.findPreference(keyOfPrefToToggle);
                             if ( pref != null ) {
                                 pref.setEnabled(bUseSpeech);
+                            }
+                        }
+                        break;
+                    case speechPitch:
+                    case speechRate:
+                        if ( true ) {
+                            // speak a small piece of text to allow user to finetune voice right here
+                            Speak instance = Speak.getInstance();
+                            if ( false && (instance.isStarted() == false)) {
+                                instance.start(Preferences.this);
+                            }
+                            instance.setPitch     (PreferenceValues.getSpeechPitch(Preferences.this));
+                            instance.setSpeechRate(PreferenceValues.getSpeechRate(Preferences.this));
+                            //instance.test("ScoreThis is a test");
+                            if ( Brand.isSquash() ) {
+                                instance.handout(ScoreBoard.matchModel.isLastPointHandout());
+                            }
+                            instance.score(ScoreBoard.matchModel);
+                            Player[] possibleGameBallFor = ScoreBoard.matchModel.isPossibleGameBallFor();
+                            if ( (possibleGameBallFor != null) && (possibleGameBallFor.length != 0) ) {
+                                instance.gameBall(ScoreBoard.matchModel);
                             }
                         }
                         break;
