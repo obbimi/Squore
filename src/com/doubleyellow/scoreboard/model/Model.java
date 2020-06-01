@@ -3311,7 +3311,9 @@ public abstract class Model implements Serializable
     }
 
     public boolean isPossibleGameVictory() {
-        return isPossibleGameVictoryFor()!=null;
+        Player player = isPossibleGameVictoryFor();
+        //Log.d(TAG, "[isPossibleGameVictory] player : " + player + " " + m_lPlayer2EndPointsOfGames);
+        return player !=null;
     }
     public Player isPossibleGameVictoryFor() {
         Player[] players = _isPossibleGameVictoryFor(When.Now, false, false);
@@ -3424,7 +3426,9 @@ public abstract class Model implements Serializable
     }
 
     public boolean gameHasStarted() {
-        return ListUtil.isNotEmpty(getGameScoreHistory());
+        List<ScoreLine> gameScoreHistory = getGameScoreHistory();
+      //Log.d(TAG, "[gameHasStarted] " + gameScoreHistory);
+        return ListUtil.isNotEmpty(gameScoreHistory);
     }
     public boolean hasStarted() {
         boolean bHasStarted = getNrOfFinishedGames() > 0 || gameHasStarted();

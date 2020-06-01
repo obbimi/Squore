@@ -6762,6 +6762,7 @@ touch -t 01030000 LAST.sb
 
     private Speak m_speak = null;
     private void onResumeSpeak() {
+        if ( m_speak != null ) { return; }
         m_speak = Speak.getInstance();
         m_speak.start(this);
     }
@@ -6772,7 +6773,7 @@ touch -t 01030000 LAST.sb
     }
     private void speakScore() {
         if ( (m_speak != null) && (matchModel != null) ) {
-            m_speak.playAllDelayed();
+            m_speak.playAllDelayed(-1);
         }
     }
 }

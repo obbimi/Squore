@@ -501,12 +501,13 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             instance.setPitch     (PreferenceValues.getSpeechPitch(Preferences.this));
             instance.setSpeechRate(PreferenceValues.getSpeechRate(Preferences.this));
             instance.setPauseBetweenParts(PreferenceValues.getSpeechPauseBetweenWords(Preferences.this));
-            if ( EnumSet.of(Feature.Suggest, Feature.Automatic).contains(PreferenceValues.useOfficialAnnouncementsFeature(Preferences.this))) {
+            Feature fSpeach = PreferenceValues.useOfficialAnnouncementsFeature(Preferences.this);
+            if ( PreferenceValues.useFeatureYesNo(fSpeach) ) {
                 instance.setLocale(PreferenceValues.announcementsLocale(Preferences.this));
             }
 
             // feed current score
-            instance.playAll(ScoreBoard.matchModel);
+            instance.playAllDelayed(200);
         }
 
         private void showShareWarning(String sMsg) {

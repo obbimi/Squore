@@ -249,7 +249,7 @@ public class Speak
         // only say handout 'between' points in a game, so not at zero-zero and not if game is won by someone
         boolean bGameNotStarted = model.gameHasStarted() == false;
         boolean bGameEnded      = model.isPossibleGameVictory();
-        Log.d(TAG, String.format("GameNotStarted: %s, GameEnded : %s", bGameNotStarted, bGameEnded));
+      //Log.d(TAG, String.format("GameNotStarted: %s, GameEnded : %s", bGameNotStarted, bGameEnded));
         if ( bGameNotStarted ) { bIsHandout = false; }
         if ( bGameEnded      ) { bIsHandout = false; }
 
@@ -294,14 +294,17 @@ public class Speak
     }
 
     /** for automatic playing of score */
-    public void playAllDelayed() {
+    public void playAllDelayed(int iDelay) {
         if ( isStarted() == false ) { return; }
-        if ( Feature.Automatic.equals(m_Feature) ) { return; }
+        if ( Feature.Automatic.equals(m_Feature) == false ) { return; }
 
         // 'delayed' to allow model to
         //    1) complete all eventhandlers, and
         //    2) allow user to change score quickly without all scores actually being spoken
-        emptySpeechQueue_Delayed(RECALC_BEFORE_START, I_DELAY_START);
+        if ( iDelay <= 0 ) {
+            iDelay = I_DELAY_START;
+        }
+        emptySpeechQueue_Delayed(RECALC_BEFORE_START, iDelay);
     }
 
     /** for playing of score on request */
