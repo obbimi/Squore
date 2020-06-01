@@ -6646,7 +6646,7 @@ touch -t 01030000 LAST.sb
         if ( castHelper == null ) {
             Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(this);
             String sResInfo = remoteDisplayAppId2Info.getValue();
-            if ( sResInfo.contains("REMOTE_DISPLAY") || sResInfo.contains("PresentationScreen") ) { // e.g com.doubleyellow.scoreboard:string/REMOTE_DISPLAY_APP_ID_brand_squore
+            if ( sResInfo.contains("REMOTE_DISPLAY") || sResInfo.matches(".*Presentation\\s*Screen.*") ) { // e.g com.doubleyellow.scoreboard:string/REMOTE_DISPLAY_APP_ID_brand_squore
                 castHelper = new com.doubleyellow.scoreboard.cast.CastHelper(); // old
             } else {
                 // R.string.CUSTOM_RECEIVER_xxxx

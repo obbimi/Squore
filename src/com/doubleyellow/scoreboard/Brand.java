@@ -17,6 +17,8 @@
 
 package com.doubleyellow.scoreboard;
 
+import com.doubleyellow.scoreboard.R; // don't remove this line, required to compile different 'brands'
+
 import android.content.Context;
 
 import com.doubleyellow.android.view.ViewUtil;

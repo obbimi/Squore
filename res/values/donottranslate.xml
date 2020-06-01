@@ -189,7 +189,7 @@
     <string name="REMOTE_DISPLAY_APP_ID_brand_squore">35BA3487</string>
     <string name="REMOTE_DISPLAY_APP_ID_brand_racketlon">590DBED9</string>
     <string name="REMOTE_DISPLAY_APP_ID_brand_tabletennis">DD0036E8</string>
-    <string name="REMOTE_DISPLAY_APP_ID_brand_courtcare">BF2E4D1B</string>
+<!--    <string name="REMOTE_DISPLAY_APP_ID_brand_courtcare">BF2E4D1B</string>-->
     <!--<string name="REMOTE_DISPLAY_APP_ID_brand_uniofnotthingham">E6F9858F</string> Accidentally Unregistered-->
 
     <!-- https://developers.google.com/cast/docs/debugging -->

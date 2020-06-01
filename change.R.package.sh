@@ -111,8 +111,12 @@ if ! egrep -q "${tobranded}.*SportType" com/doubleyellow/scoreboard/Brand.java; 
 fi
 
 # derive current package by looking for .R reference in Brand.java
-pkgFrom=$(egrep 'import[ ]+.*\.R;' com/doubleyellow/scoreboard/Brand.java | perl -ne 's~import\s+([\w\.]+)\.R;~\1~; print')
+pkgFrom=$(egrep 'import[ ]+.*\.R;' com/doubleyellow/scoreboard/main/ScoreBoard.java | perl -ne 's~import\s+([\w\.]+)\.R;~\1~; print')
 read -t 2 -p "From package ${pkgFrom}"
+if [[ -z "${pkgFrom}" ]]; then
+    echo "Could not determine 'from' package"
+    exit 1
+fi
 
 if [[ "$tobranded" = "Squore" ]]; then
     # comment out all brands ...
@@ -143,7 +147,7 @@ printf "Change to '${tobranded}'\n"
 #for f in $(egrep -irl 'com\.doubleyellow\.[a-z]+\.R[^a-z]' *); do
 #    cat ${f} | perl -ne "s~com\.doubleyellow\.(?!base.R)[a-z]+\.R([^A-Za-z'])~com.doubleyellow.${tobrandedLC}.R\$1~; print" > ${f}.1.txt
 for f in $(egrep -irl "${pkgFrom}\.R[^a-z]" *); do
-    cat ${f} | perl -ne "s~${pkgFrom}\.R([^A-Za-z'])~${brandPkg}.R\$1~; print" > ${f}.1.txt
+    cat ${f} | perl -ne "s~(import\s+|\()${pkgFrom}\.R([^A-Za-z'])~\$1${brandPkg}.R\$2~; print" > ${f}.1.txt
     if [[ -n "$(diff ${f} ${f}.1.txt)" ]]; then
         printf "File %-72s to %s \n" ${f} ${tobranded}
         mv ${f}.1.txt ${f} #.2.txt
