@@ -2775,9 +2775,6 @@ touch -t 01030000 LAST.sb
             if ( bHasGameBall ) {
                 showMicrophoneFloatButton(false); // previous might have been tiebreak
 
-                if ( bForUndo == false ) {
-                    speakGameball();
-                }
             }
         }
 
@@ -3019,9 +3016,6 @@ touch -t 01030000 LAST.sb
             if ( Brand.supportChooseServeOrReceive() == false ) {
                 // remove any indication on receiver side
                 iBoard.updateReceiver(p.getOther(), DoublesServe.NA);
-            }
-            if ( (bForUndo == false) && matchModel.gameHasStarted() /* don't speak at zero zero */ ) {
-                speakHandout(bIsHandout);
             }
         }
         @Override public void OnReceiverChange(Player p, DoublesServe doublesServe) {
@@ -3634,7 +3628,7 @@ touch -t 01030000 LAST.sb
             }
         } else if ( matchModel.matchHasEnded() ) {
             long lMatchEnd = matchModel.getMatchEnd();
-            lShowIds.add(R.id.dyn_score_details);
+            lShowIds.add((Integer) R.id.dyn_score_details);
             int lMinutes = DateUtil.convertToMinutes(System.currentTimeMillis() - lMatchEnd);
             if ( lMinutes >= 0 /*10*/ ) {
                 // old match is still displayed, presume 'new match' is preferred
@@ -3645,18 +3639,27 @@ touch -t 01030000 LAST.sb
         } else if ( matchModel.gameHasStarted() == false ) {
             if ( PreferenceValues.useTimersFeature(this).equals(Feature.Suggest) ) {
                 // timer buttons is already there as floating
-                lShowIds.add(R.id.dyn_score_details);
+                lShowIds.add((Integer) R.id.dyn_score_details);
             } else {
-                lShowIds.add(R.id.dyn_timer);
+                lShowIds.add((Integer) R.id.dyn_timer);
             }
         } else {
-            lHideIds.add(R.id.dyn_timer);
-            lShowIds.add(R.id.dyn_end_game);
+            lHideIds.add((Integer) R.id.dyn_timer);
+            lShowIds.add((Integer) R.id.dyn_end_game);
         }
         if ( Brand.isGameSetMatch() ) {
             lShowIds.remove((Integer) R.id.dyn_score_details);
             lShowIds.remove((Integer) R.id.dyn_end_game);
         }
+        if ( PreferenceValues.useFeatureYesNo(PreferenceValues.useSpeechFeature(this)) ) {
+            // add dyn speak in favor
+            lShowIds.add(0, (Integer) R.id.dyn_speak);
+            lShowIds.remove((Integer) R.id.dyn_end_game);
+        }
+
+        // ===================
+        // hide and show based on values in different lists
+        // ===================
         if ( ListUtil.isNotEmpty(lHideIds) ) {
             for ( Integer iIdHide: lHideIds ) {
                 setMenuItemVisibility(iIdHide, false);
@@ -3730,6 +3733,9 @@ touch -t 01030000 LAST.sb
                 Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
                 startActivity(settingsActivity);
                 return true;
+            case R.id.dyn_speak:
+                Speak.getInstance().playAll(matchModel);
+                break;
             case R.id.dyn_end_game:
             case R.id.end_game:
                 if ( warnModelIsLocked(id, ctx) ) { return false; }
@@ -6766,17 +6772,7 @@ touch -t 01030000 LAST.sb
     }
     private void speakScore() {
         if ( (m_speak != null) && (matchModel != null) ) {
-            m_speak.score(matchModel);
-        }
-    }
-    private void speakHandout(boolean bIsHandout) {
-        if ( (m_speak != null) && (matchModel != null) ) {
-            m_speak.handout(bIsHandout);
-        }
-    }
-    private void speakGameball() {
-        if ( (m_speak != null) && (matchModel != null) ) {
-            m_speak.gameBall(matchModel);
+            m_speak.playAllDelayed();
         }
     }
 }

@@ -4,6 +4,7 @@
     <string name="oa_halftime">Polovina času (Half-time)!</string>
     <string name="oa_time">Čas!</string>
     <string name="oal_pause">Přestávka</string>
+    <string name="oa_handout">Ztráta</string>
 
     <string name="oa_best_of_x_games_to_y">Na nejvýše %1$s sety(ů) do %2$s</string>
     <string name="oa_best_of_x_games">Na nejvýše %1$s sety(ů)</string>

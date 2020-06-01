@@ -35,6 +35,7 @@
     <!--<item android:id="@+id/dyn_bluetooth"     app:showAsAction="ifRoom" android:icon="@android:drawable/stat_sys_data_bluetooth" android:visible="false" android:title="Bluetooth" />-->
     <item android:id="@+id/dyn_undo_last"     app:showAsAction="ifRoom" android:icon="@drawable/u_turn"                  android:visible="false" android:title="@string/uc_undo" />
     <item android:id="@+id/dyn_end_game"      app:showAsAction="ifRoom" android:icon="@drawable/arrow_right"             android:visible="false" android:title="@string/end_game__Default" />
+    <item android:id="@+id/dyn_speak"         app:showAsAction="ifRoom" android:icon="@android:drawable/ic_lock_silent_mode_off" android:visible="false" />
     <item android:id="@+id/dyn_timer"         app:showAsAction="ifRoom" android:icon="@drawable/timer"                   android:visible="false" android:title="@string/sb_nbsp_timer"/>
     <item android:id="@+id/dyn_score_details" app:showAsAction="ifRoom" android:icon="@drawable/ic_action_chart_line"    android:visible="false" android:title="@string/sb_score_details" />
     <item android:id="@+id/dyn_new_match"     app:showAsAction="ifRoom" android:icon="@drawable/circled_plus"            android:visible="false" android:title="@string/sb_new_match" />

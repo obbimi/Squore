@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+
+        <string name="OfficialRulesURLs_default__Squash"><![CDATA[/help/rules.of.singles.squash.php
+\nhttps://dsqv.de/wp-content/uploads/2020/02/200228_DSQV_Spielregeln_SRA2020_final.pdf
+]]></string>
+
+</resources>

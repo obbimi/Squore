@@ -4,6 +4,7 @@
     <string name="oa_halftime">Metà-tempo!</string>
     <string name="oa_time">Tempo!</string>
     <string name="oal_pause">Pausa</string>
+    <string name="oa_handout">Cambio</string>
 
     <string name="oa_best_of_x_games_to_y">Al meglio di %1$s giochi al punteggio di %2$s</string>
     <string name="oa_best_of_x_games">Al meglio di %1$s giochi</string>

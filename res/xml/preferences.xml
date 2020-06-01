@@ -694,6 +694,16 @@
                       android:icon="@android:drawable/ic_lock_silent_mode_off"
                       android:title="@string/pref_Speech"
                       android:summary="@string/pref_Speech_summary" >
+
+        <com.doubleyellow.prefs.EnumListPreference android:key="useSpeechFeature"
+            android:title="@string/pref_Speech"
+            android:summary="@string/pref_Speech_summary"
+            android:icon="@android:drawable/ic_lock_silent_mode_off"
+            android:defaultValue="@string/useSpeechFeature_default"
+            dy:displayValues="@array/FeatureDisplayValues_DoAuto"
+            dy:enumClass="com.doubleyellow.util.Feature"
+            />
+<!--
         <CheckBoxPreference
             android:icon="@android:drawable/ic_lock_silent_mode_off"
             android:key="useSpeechFeature"
@@ -701,6 +711,7 @@
             android:summary="@string/pref_Speech_summary"
             android:defaultValue="@bool/useSpeechFeature_default"
             />
+-->
 
         <com.doubleyellow.prefs.SeekBarPreference android:key="speechPitch"
             android:title="@string/pref_speechPitch"
@@ -729,22 +740,13 @@
             android:defaultValue="@integer/speechPauseBetweenParts_default"
             android:max="1500"
             />
-<!--
-        <EditTextPreference android:key="speechPitch"
+        <com.doubleyellow.prefs.EnumListPreference
             android:icon="@drawable/dummy"
-            android:title="@string/pref_speechPitch"
-            android:summary="@string/pref_speechPitch_summary"
-            android:inputType="number"
-            android:defaultValue="@integer/speechPitch_default"
+            android:key="officialAnnouncementsLanguage"
+            android:title="@string/pref_officialAnnouncementsLanguage"
+            android:defaultValue="@string/officialAnnouncementsLanguage_default"
+            dy:enumClass="com.doubleyellow.scoreboard.prefs.AnnouncementLanguage"
             />
-        <EditTextPreference android:key="speechRate"
-            android:icon="@drawable/dummy"
-            android:title="@string/pref_speechRate"
-            android:summary="@string/pref_speechRate_summary"
-            android:inputType="number"
-            android:defaultValue="@integer/speechRate_default"
-            />
--->
     </PreferenceScreen>
 
     <PreferenceScreen android:key="Sharing"

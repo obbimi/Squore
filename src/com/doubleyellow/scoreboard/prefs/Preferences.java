@@ -426,6 +426,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         break;
                     case officialAnnouncementsLanguage:
                         PreferenceValues.clearOACache();
+                        playSpeechSample();
                         break;
                     case hapticFeedbackOnGameEnd:
                     case hapticFeedbackPerPoint:
@@ -438,8 +439,9 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         PreferenceValues.setCastRestartRequired(Preferences.this);
                         break;
                     case useSpeechFeature:
-                        boolean bUseSpeech = prefs.getBoolean(key, true);
-                        Speak.getInstance().setEnabled(bUseSpeech);
+                        Feature fUseSpeech = PreferenceValues.useSpeechFeature(Preferences.this);
+                        boolean bUseSpeech = PreferenceValues.useFeatureYesNo(fUseSpeech);
+                        Speak.getInstance().setFeature(fUseSpeech);
                         PreferenceKeys [] keys = new PreferenceKeys[] { PreferenceKeys.speechPitch, PreferenceKeys.speechRate, PreferenceKeys.speechPauseBetweenParts };
                         for(PreferenceKeys keyOfPrefToToggle: keys) {
                             final Preference pref = settingsFragment.findPreference(keyOfPrefToToggle);
@@ -499,15 +501,12 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             instance.setPitch     (PreferenceValues.getSpeechPitch(Preferences.this));
             instance.setSpeechRate(PreferenceValues.getSpeechRate(Preferences.this));
             instance.setPauseBetweenParts(PreferenceValues.getSpeechPauseBetweenWords(Preferences.this));
-            //instance.test("ScoreThis is a test");
-            if ( Brand.isSquash() ) {
-                instance.handout(ScoreBoard.matchModel.isLastPointHandout());
+            if ( EnumSet.of(Feature.Suggest, Feature.Automatic).contains(PreferenceValues.useOfficialAnnouncementsFeature(Preferences.this))) {
+                instance.setLocale(PreferenceValues.announcementsLocale(Preferences.this));
             }
-            instance.score(ScoreBoard.matchModel);
-            Player[] possibleGameBallFor = ScoreBoard.matchModel.isPossibleGameBallFor();
-            if ( (possibleGameBallFor != null) && (possibleGameBallFor.length != 0) ) {
-                instance.gameBall(ScoreBoard.matchModel);
-            }
+
+            // feed current score
+            instance.playAll(ScoreBoard.matchModel);
         }
 
         private void showShareWarning(String sMsg) {
@@ -775,7 +774,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             }
 
             // disable 'speech' controllers if 'use speech = false'
-            boolean bUseSpeech = PreferenceValues.useSpeechFeature(getActivity());
+            Feature fUseSpeech = PreferenceValues.useSpeechFeature(getActivity());
+            boolean bUseSpeech = PreferenceValues.useFeatureYesNo(fUseSpeech);
             PreferenceKeys [] keys = new PreferenceKeys[] { PreferenceKeys.speechPitch, PreferenceKeys.speechRate, PreferenceKeys.speechPauseBetweenParts };
             for(PreferenceKeys keyOfPrefToToggle: keys) {
                 final Preference pref = this.findPreference(keyOfPrefToToggle);

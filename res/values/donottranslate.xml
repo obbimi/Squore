@@ -68,6 +68,7 @@
     <string name="useChangeSidesFeature_default">Suggest</string>
     <string name="KeepScreenOnWhen_default">MatchIsInProgress</string>
     <string name="VolumeKeysBehaviour_default">None</string>
+    <string name="useSpeechFeature_default">DoNotUse</string>
 
     <string name="handicapFormat_default">None</string>
     <string name="feedFeedsURL_default">/feed/feeds.php</string>

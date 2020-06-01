@@ -4,6 +4,7 @@
     <string name="oa_halftime">Half-time!</string>
     <string name="oa_time">Time!</string>
     <string name="oal_pause">Pause</string>
+    <string name="oa_handout">Hand-out</string>
 
     <string name="oa_best_of_x_games_to_y">Best of %1$s games to %2$s</string>
     <string name="oa_best_of_x_games">Best of %1$s games</string>

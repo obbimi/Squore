@@ -51,6 +51,7 @@ import com.doubleyellow.scoreboard.feed.Authentication;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
+import com.doubleyellow.scoreboard.speech.Speak;
 import com.doubleyellow.scoreboard.timer.ViewType;
 import com.doubleyellow.scoreboard.view.PreferenceCheckBox;
 import com.doubleyellow.util.*;
@@ -444,11 +445,12 @@ public class PreferenceValues extends RWValues
         }
         return getEnum(PreferenceKeys.useShareFeature, context, Feature.class, R.string.useShareFeature_default);
     }
-    public static boolean useSpeechFeature(Context context) {
-        if ( ViewUtil.isWearable(context) ) {
-            return false;
-        }
-        return getBoolean(PreferenceKeys.useSpeechFeature, context, false);
+    public static Feature useSpeechFeature(Context context) {
+        return getEnum(PreferenceKeys.useSpeechFeature, context, Feature.class, R.string.useSpeechFeature_default);
+    }
+    public static boolean useFeatureYesNo(Feature f) {
+        return EnumSet.of(Feature.Suggest, Feature.Automatic).contains(f);
+        //return getBoolean(PreferenceKeys.useSpeechFeature, context, false);
     }
     public static float getSpeechPitch(Context context) {
         int iValue0To100 = getIntegerR(PreferenceKeys.speechPitch, context, R.integer.speechPitch_default);
@@ -520,9 +522,11 @@ public class PreferenceValues extends RWValues
     }
     public static void setAnnouncementLanguage(AnnouncementLanguage languageNew, Context context) {
         AnnouncementLanguage languageCur = officialAnnouncementsLanguage(context);
-        if (languageCur.equals(languageNew) == false ) {
+        if ( languageCur.equals(languageNew) == false ) {
             PreferenceValues.setEnum(PreferenceKeys.officialAnnouncementsLanguage, context, languageNew);
             PreferenceValues.clearOACache();
+
+            Speak.getInstance().setLocale(new Locale(languageNew.toString()));
         }
     }
     public static boolean announcementLanguageDeviates(Context ctx) {
@@ -1842,14 +1846,6 @@ public class PreferenceValues extends RWValues
 
                 return StartupAction.QuickIntro;
 
-            }
-            if ( versionCodeForChangeLogCheck == 427 ) {
-                // first time run after adding Italian translation
-                AnnouncementLanguage al = officialAnnouncementsLanguage(context);
-                String deviceLanguage = RWValues.getDeviceLanguage(context);
-                if ( AnnouncementLanguage.en.equals(al) && (deviceLanguage != null) && deviceLanguage.startsWith("it") ) {
-                    setAnnouncementLanguage(AnnouncementLanguage.it, context);
-                }
             }
 
             //setNumber(PreferenceKeys.viewedChangelogVersion, context, packageInfo.versionCode);

@@ -4,6 +4,7 @@
     <string name="oa_halftime">Halbzeit!</string>
     <string name="oa_time">Zeit!</string>
     <string name="oal_pause">Pause</string>
+    <string name="oa_handout">Aufschlagwechsel</string>
 
     <string name="oa_best_of_x_games_to_y">%1$s Satzspiel bis %2$s</string>
     <string name="oa_best_of_x_games">%1$s Satzspiel</string>
