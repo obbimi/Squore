@@ -4365,13 +4365,15 @@ touch -t 01030000 LAST.sb
             shareScoreSheetDelayed(1000);
         }
 
-        if ( Brand.supportChooseServeOrReceive() ) {
+        if ( Brand.supportChooseSide() ) {
             if ( isWearable() == false ) {
                 // TODO: dialog has to long texts for wearable
                 SideToss sideToss = new SideToss(this, matchModel, this);
                 addToDialogStack(sideToss);
             }
+        }
 
+        if ( Brand.supportChooseServeOrReceive() ) {
             if ( matchModel.isDoubles() ) {
                 DoublesFirstServer firstServer = new DoublesFirstServer(this, matchModel, this);
                 addToDialogStack(firstServer);
@@ -6723,9 +6725,10 @@ touch -t 01030000 LAST.sb
 
     private CountDownTimer cdtInitCastDelayed       = null; // delayed mainly to wait for webconfig being available
     private int            iInitCastDelayedRunCount = 2;
+    /** returns true if initialization was delayed */
     private boolean initCastDelayed() {
         //if ( true ) { return true; }
-        //if ( true ) { return false; }
+        if ( true ) { return false; } /* delayed initialization was tried to solve issue with cast button only appearing after at least on rotate. But it did not help */
 
         if ( cdtInitCastDelayed == null ) {
             cdtInitCastDelayed = new CountDownTimer(30000, 500) {

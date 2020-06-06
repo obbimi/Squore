@@ -24,6 +24,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.core.view.MenuItemCompat;
+import androidx.mediarouter.app.MediaRouteActionProvider;
+import androidx.mediarouter.media.MediaRouteSelector;
+
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.URLFeedTask;
@@ -46,7 +50,9 @@ import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastOptions;
 import com.google.android.gms.cast.framework.CastSession;
+import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.cast.framework.CastStateListener;
 import com.google.android.gms.cast.framework.SessionManager;
 import com.google.android.gms.cast.framework.SessionManagerListener;
@@ -76,7 +82,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 {
     private static final String TAG = "SB." + CastHelper.class.getSimpleName();
 
-    private Activity    m_activity     = null;
+    private Context     m_context      = null;
     private CastContext m_castContext  = null; /* has nothing to do with android.content.Context */
     /** there does NOT need to be a session already for the cast button to show up */
     private CastSession m_castSession  = null;
@@ -84,20 +90,27 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     private MenuItem    m_mediaRouteMenuItem = null;
 
     @Override public void initCasting(Activity activity) {
-        m_activity     = activity;
-        m_sPackageName = m_activity.getPackageName();
+        m_context      = activity.getApplicationContext();
+        m_sPackageName = m_context.getPackageName();
 
-        createCastContext(activity);
+        createCastContext();
         setUpListeners(m_castContext);
 
         //checkPlayServices();
     }
 
-    private void createCastContext(Activity activity) {
+    private void createCastContext() {
         if ( m_castContext == null ) {
             try {
-                m_castContext = CastContext.getSharedInstance(activity); // requires com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME to be specified in Manifest.xml
-                Log.d(TAG, "CastContext created");
+                m_castContext = CastContext.getSharedInstance(m_context); // requires com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME to be specified in Manifest.xml
+                Log.d(TAG, "CastContext created: " + m_castContext);
+
+                // Initially the ReceiverAppId is set via CastOptionsProvider
+                // But fortunately we can change the ID after e.g. user changed different 'cast target' from preferences
+                Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(m_context);
+                Log.d(TAG, "remoteDisplayAppId2Info : " + remoteDisplayAppId2Info);
+                CastOptions castOptions = m_castContext.getCastOptions();
+                castOptions.setReceiverApplicationId(remoteDisplayAppId2Info.getKey());
             } catch (Exception e) {
                 Log.w(TAG, "No casting ..." + e.getMessage());
                 //e.printStackTrace(); // com.google.android.gms.dynamite.DynamiteModule$LoadingException: No acceptable module found. Local version is 0 and remote version is 0 (Samsung S4 with custom ROM 8.1)
@@ -107,19 +120,33 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
     private boolean checkPlayServices() {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
-        int result = googleAPI.isGooglePlayServicesAvailable(m_activity);
+        int result = googleAPI.isGooglePlayServicesAvailable(m_context);
         if ( result != ConnectionResult.SUCCESS ) {
             //Google Play Services app is not available or version is not up to date. Error the error condition here
             return false;
         }
         return true;
     }
+    private static int m_iInvalidatesLeft = 0;
     @Override public void initCastMenu(Activity activity, Menu menu) {
-        Log.d(TAG, "initCastMenu");
+        m_mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(activity.getApplicationContext(), menu, R.id.media_route_menu_item);
+        Log.d(TAG, String.format("initCastMenu: %s (%s)", m_mediaRouteMenuItem, m_mediaRouteMenuItem.isVisible()));
 
-        m_mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(activity, menu, R.id.media_route_menu_item);
+        if ( false ) {
+            // just testing some stuff
+            MediaRouteActionProvider actionProvider = (MediaRouteActionProvider) MenuItemCompat.getActionProvider(m_mediaRouteMenuItem);
+            Log.d(TAG, String.format("initCastMenu actionProvider: %s ", actionProvider));
+            MediaRouteSelector routeSelector = actionProvider.getRouteSelector();
+            Log.d(TAG, String.format("initCastMenu routeSelector: %s ", routeSelector));
+        }
+
         m_mediaRouteMenuItem.setVisible(true);
         m_mediaRouteMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        if ( m_iInvalidatesLeft > 0 ) {
+            m_iInvalidatesLeft--;
+            activity.invalidateOptionsMenu(); // NOT a fix ... for castbutton only show up after rotation
+        }
 /*
         MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
         mediaRouteActionProvider.setRouteSelector(mediaRouteSelector);
@@ -158,19 +185,21 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             m_castSession = sessionManager.getCurrentCastSession();
             Log.d(TAG, "Cast session from cast context: " + m_castSession); // returns null of user has not started a session yet
 
-            updateViewWithColorAndScore(m_activity, m_matchModel);
+            updateViewWithColorAndScore(m_context, m_matchModel);
         }
     }
 
     private void setUpListeners(CastContext castContext) {
         if ( castContext == null ) { return; }
+        castContext.addCastStateListener(m_castStateListener);
+
         SessionManager sessionManager = castContext.getSessionManager();
         sessionManager.addSessionManagerListener(m_sessionManagerListener, CastSession.class);
-
-        castContext.addCastStateListener(m_castStateListener);
     }
     private void removeListeners(CastContext castContext) {
         if ( castContext == null ) { return; }
+        castContext.removeCastStateListener(m_castStateListener);
+
         SessionManager sessionManager = castContext.getSessionManager();
         sessionManager.removeSessionManagerListener(m_sessionManagerListener, CastSession.class);
     }
@@ -178,14 +207,16 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     /** Has no real functionality, just some logging */
     private CastStateListener m_castStateListener = new CastStateListener() {
         @Override public void onCastStateChanged(int iStatus) {
-            String sState = "";
+            String sState = CastState.toString(iStatus);
             switch ( iStatus ) {
-                case 2: sState = "Stopped"   ; {
+                case CastState.NO_DEVICES_AVAILABLE: break;
+                case CastState.NOT_CONNECTED: {
                     dumpMessages();
                     break;
                 }
-                case 3: sState = "Connecting"; break;
-                case 4: sState = "Connected" ; {
+                case CastState.CONNECTING:
+                    break;
+                case CastState.CONNECTED : {
                     // TODO: send match status via m_castSession
                     break;
                 }
@@ -193,7 +224,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
                     sState = iStatus + "?";
                     break;
             }
-            Log.d(TAG, "onCastStateChanged: " + sState); // seen 2 (stopped) and 3 (connecting) and 4 (connected)
+            Log.d(TAG, "onCastStateChanged: " + sState);
         }
     };
 
@@ -208,7 +239,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         if ( (matchModel != m_matchModel) && (matchModel != null)) {
             m_matchModel = matchModel;
         }
-        updateViewWithColorAndScore(m_activity, m_matchModel);
+        updateViewWithColorAndScore(m_context, m_matchModel);
     }
 
     private void sendMessage(Integer iBoardResId, Object oValue) {
@@ -220,7 +251,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         if ( iBoardResId == null ) {
             return false;
         }
-        Resources resources = m_activity.getResources();
+        Resources resources = m_context.getResources();
         try {
             String sResName = resources.getResourceName(iBoardResId);
                    sResName = sResName.replaceFirst(".*/", "");
@@ -309,11 +340,11 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         return false;
     }
     private void dumpMessages() {
-        if (PreferenceValues.isBrandTesting(m_activity) && ListUtil.isNotEmpty(m_lMessages) ) {
+        if (PreferenceValues.isBrandTesting(m_context) && ListUtil.isNotEmpty(m_lMessages) ) {
             // dump messages for easy replay testing
             //Log.d(TAG, "" + ListUtil.join(m_lMessages, "\n"));
             try {
-                File dir = m_activity.getFilesDir();
+                File dir = m_context.getFilesDir();
                 File fMessages = new File(dir, "cast_messages.txt");
                 FileUtil.writeTo(fMessages, ListUtil.join(m_lMessages, "\n"));
                 m_lMessages.clear();
@@ -346,7 +377,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
                 bIsShowing = false;
             }
             @Override public void timeIsUp() {
-                String sTime = m_activity.getString(R.string.oa_time);
+                String sTime = m_context.getString(R.string.oa_time);
                 sendMessage(R.id.btn_timer, sTime);
             }
             @Override public void show() {
@@ -384,7 +415,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     private  IBoard      iBoard   = null;
     public void setIBoard(IBoard iBoard) {
         this.iBoard = iBoard;
-        updateViewWithColorAndScore(m_activity, m_matchModel);
+        updateViewWithColorAndScore(m_context, m_matchModel);
     }
 
     /** Listener is to get hold of castSession. Cast session is used for sending messages */
@@ -393,14 +424,14 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             Log.d(TAG, "Cast session started: " + session + " " + s);
             m_castSession = session;
 
-            updateViewWithColorAndScore(m_activity, m_matchModel);
+            updateViewWithColorAndScore(m_context, m_matchModel);
         }
 
         @Override public void onSessionResumed(CastSession session, boolean b) {
             Log.d(TAG, "Cast session resumed " + session + " " + b);
             m_castSession = session;
 
-            updateViewWithColorAndScore(m_activity, m_matchModel);
+            updateViewWithColorAndScore(m_context, m_matchModel);
         }
 
         @Override public void onSessionSuspended(CastSession session, int i) { }
@@ -433,8 +464,8 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
                     try {
                         JSONObject mMessage = new JSONObject(sMsg);
-                        if ( m_activity instanceof ScoreBoard ) {
-                            ScoreBoard sb = (ScoreBoard) m_activity;
+                        if ( m_context instanceof ScoreBoard ) {
+                            ScoreBoard sb = (ScoreBoard) m_context;
                             sb.handleMessageFromCast(mMessage);
                         }
                     } catch (Exception e) {

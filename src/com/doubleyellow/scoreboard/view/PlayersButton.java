@@ -31,6 +31,7 @@ import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.demo.DrawTouch;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
+import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.ShowCountryAs;
 import com.doubleyellow.util.Direction;
@@ -70,7 +71,7 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
     public PlayersButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         if ( isInEditMode() ) {
-            setPlayers("Player A", false);
+            setPlayers("Player A", false, Player.A);
             setTextColor(Color.WHITE);
             setCountry("BEL", true, true);
             setClub("DY");
@@ -87,7 +88,7 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
     private List<ImageView>      flagImages   = new ArrayList<ImageView>(); // for now only just the one (even for doubles)
     private List<ImageView>      avatarImages = new ArrayList<ImageView>(); // for now only just the one (even for doubles)
     private boolean              m_bIsDoubles = false;
-    public void setPlayers(String players, boolean bIsDoubles) {
+    public void setPlayers(String players, boolean bIsDoubles, Player p) {
         if ( m_bIsDoubles != bIsDoubles ) {
             nameButtons  = new ArrayList<>();
             serveButtons = new ArrayList<>();
@@ -299,10 +300,10 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         }
 
         if ( DoublesServe.NA.equals(m_doublesServe) == false) {
-            setServer(m_doublesServe, m_serveSide, m_isHandout, m_sServerDisplayValueOverwrite);
+            setServer(m_doublesServe, m_serveSide, m_isHandout, m_sServerDisplayValueOverwrite, p);
         }
         if ( DoublesServe.NA.equals(m_doublesReceiver) == false) {
-            setReceiver(m_doublesReceiver);
+            setReceiver(m_doublesReceiver, p);
         }
         //this.setOnTouchListener(new TouchBothListener(clickBothListener));
     }
@@ -311,7 +312,7 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
     private boolean bHasClub    = false;
 
     public void setCountry(String sCountryCode, boolean bShowAsText, boolean bShowFlag) {
-        for ( TextView tv : nameButtons) {
+        for ( TextView tv : nameButtons ) {
             String sOld = tv.getText().toString();
                    sOld = sOld.replaceAll(FeedMatchSelector.sCountry, "").trim();
             if ( StringUtil.isEmpty(sCountryCode) ) {
@@ -450,7 +451,7 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         }
 */
         }
-        for ( TextView tv : nameButtons) {
+        for ( TextView tv : nameButtons ) {
             String sOld = tv.getText().toString();
                    sOld = sOld.replaceAll("[\\[\\(](.*)[\\]\\)]\\s*$", "").trim(); // remove either country or previous club
             lHasCountry.remove(ShowCountryAs.AbbreviationAfterName);
@@ -582,46 +583,61 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
     }
 
     private int textColorServer = Color.YELLOW;
-    public void setTextColorServer(int color) {
+    public void setTextColorServer(int color, Player p) {
         this.textColorServer = color;
         for(TextView b: serveButtons) {
             b.setTextColor(this.textColorServer);
         }
-        setServerOrReceiver();
+        setServerOrReceiver(p);
     }
 
     private int bgColorServer = Color.BLACK;
-    public void setBackgroundColorServer(int color) {
+    public void setBackgroundColorServer(int color, Player p) {
         this.bgColorServer = color;
         for (TextView b : serveButtons) {
             ColorUtil.setBackground(b, this.bgColorServer);
         }
-        setServerOrReceiver();
+        setServerOrReceiver(p);
     }
 
-    private void setServerOrReceiver() {
+    private void setServerOrReceiver(Player p) {
         if (DoublesServe.NA.equals(m_doublesServe) == false) {
-            setServer(m_doublesServe, m_serveSide, m_isHandout, m_sServerDisplayValueOverwrite);
+            setServer(m_doublesServe, m_serveSide, m_isHandout, m_sServerDisplayValueOverwrite, p);
         } else if (DoublesServe.NA.equals(m_doublesReceiver) == false) {
-            setReceiver(m_doublesReceiver);
+            setReceiver(m_doublesReceiver, p);
         }
     }
 
-    private DoublesServe m_doublesServe = DoublesServe.NA;
-    private ServeSide    m_serveSide    = ServeSide.R;
-    private boolean      m_isHandout    = true;
+    private DoublesServe m_doublesServe    = DoublesServe.NA;
+    private DoublesServe m_doublesReceiver = DoublesServe.NA;
+    private ServeSide    m_serveSide       = ServeSide.R;
+    private boolean      m_isHandout       = true;
     private String       m_sServerDisplayValueOverwrite = null;
-    public void setServer(DoublesServe dsServer, ServeSide serveSide, boolean bIsHandout, String sDisplayValueOverwrite) {
-        m_doublesServe = dsServer;
+    private boolean setDS(DoublesServe dsServer) {
+        if ( (m_doublesServe != null) && (m_doublesServe.equals(dsServer) == false) ) {
+            m_doublesServe = dsServer;
+            return true;
+        }
+        return false;
+    }
+    private boolean setDR(DoublesServe dsReceiver) {
+        if ( (m_doublesReceiver != null) && (m_doublesReceiver.equals(dsReceiver) == false) ) {
+            m_doublesReceiver = dsReceiver;
+            return true;
+        }
+        return false;
+    }
+    public void setServer(DoublesServe dsServer, ServeSide serveSide, boolean bIsHandout, String sDisplayValueOverwrite, Player p) {
+        setDS(dsServer);
         if ( DoublesServe.NA.equals(m_doublesServe) == false ) {
-            m_doublesReceiver = DoublesServe.NA; // can not be receiver and server at the same time
+            setDR(DoublesServe.NA); // can not be receiver and server at the same time
         }
         m_serveSide    = serveSide;
         m_isHandout    = bIsHandout;
 
         updateNameButtonColorsForServeReceive(dsServer, true);
 
-        for(int i=0; i < serveButtons.size(); i++) {
+        for ( int i=0; i < serveButtons.size(); i++ ) {
             TextView b = serveButtons.get(i);
             if ( b == null ) { continue; } // should not be happening
             String sText = " ";
@@ -633,21 +649,30 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
                     sText = serveSide.toString() + (bIsHandout ? "?" : "");
                 }
             }
-            String sOldText = b.getText().toString();
-            if ( StringUtil.isNotEmpty(sOldText) && (sOldText.equals(sText) == false) ) {
-                //Log.d(TAG, "Overwriting previous char " + sOldText);
+
+            // trouble shooting code: TODO remove
+            if ( false ) {
+                String sOldText = b.getText().toString();
+
+                String resourceName = getContext().getResources().getResourceName(getId());
+                String msg = "Changing server   from " + sOldText + " to " + sText + " for " + p + "[" + i + "] " + resourceName;
+                if ( StringUtil.isEmpty(sText) && StringUtil.isNotEmpty(sOldText) ) {
+                    msg = msg + " [clear]";
+                }
+                if ( sOldText.equals(sText) == false ) {
+                    Log.d(TAG, msg);
+                }
             }
             b.setText(sText);
         }
     }
 
     private final String sReceiverSymbol = "\u25CB";
-    private DoublesServe m_doublesReceiver = DoublesServe.NA;
-    public void setReceiver(DoublesServe dsReceiver) {
-        m_doublesReceiver = dsReceiver;
+    public void setReceiver(DoublesServe dsReceiver, Player p) {
+        setDR(dsReceiver);
         if ( DoublesServe.NA.equals(m_doublesReceiver) == false ) {
-            m_doublesServe = DoublesServe.NA; // can not be receiver and server at the same time
-            //m_serveSide    = null;
+            setDS(DoublesServe.NA); // can not be receiver and server at the same time
+            //m_serveSide    = null; // 20200606: commented in
         }
         updateNameButtonColorsForServeReceive(dsReceiver, false);
         for ( int i=0; i < serveButtons.size(); i++ ) {
@@ -656,6 +681,20 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
             String sText = " ";
             if ( i == dsReceiver.ordinal() ) {
                 sText = sReceiverSymbol;
+            }
+
+            // trouble shooting code: TODO remove
+            if ( false ) {
+                String sOldText = b.getText().toString();
+
+                String resourceName = getContext().getResources().getResourceName(getId());
+                String msg = "Changing receiver from " + sOldText + " to " + sText + " for " + p + "[" + i + "] " + resourceName;
+                if ( StringUtil.isEmpty(sText) && StringUtil.isNotEmpty(sOldText) ) {
+                    msg = msg + " [clear]";
+                }
+                if ( sOldText.equals(sText) == false ) {
+                    Log.d(TAG, msg);
+                }
             }
             b.setText(sText);
         }

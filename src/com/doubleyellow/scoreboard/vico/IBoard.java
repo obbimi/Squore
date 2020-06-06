@@ -196,7 +196,7 @@ public class IBoard implements TimerViewContainer
                 ((TextView) view).setText(sName);
             } else if (view instanceof PlayersButton) {
                 PlayersButton pb = (PlayersButton) view;
-                pb.setPlayers(sName, bIsDoubles);
+                pb.setPlayers(sName, bIsDoubles, p);
                 if ( true || isPresentation() ) { // TODO: make this a enum pref: 1) as big as possible but not bigger than the other, 2) as big as possible
                     pb.addListener(keepSizeInSyncTextResizeListener);
                 }
@@ -530,7 +530,7 @@ public class IBoard implements TimerViewContainer
                     }
                 }
             }
-            pbReceiver.setReceiver(dsReceiver);
+            pbReceiver.setReceiver(dsReceiver, player);
         }
         castChangeViewTextMessage(iReceiveId, ""); // TODO: how about doubles and receiver indication
     }
@@ -564,7 +564,7 @@ public class IBoard implements TimerViewContainer
                 }
             }
 
-            pbServer.setServer(doublesServe, nextServeSide, bIsHandout, sDisplayValueOverwrite);
+            pbServer.setServer(doublesServe, nextServeSide, bIsHandout, sDisplayValueOverwrite, player);
         }
         castChangeViewTextMessage(iServeId, sDisplayValueOverwrite);
 /*
@@ -855,8 +855,8 @@ public class IBoard implements TimerViewContainer
                     PlayersButton v = (PlayersButton) view;
                     v.setBackgroundColor      (pbBgColor);
                     v.setTextColor            (pbTxtColor);
-                    v.setBackgroundColorServer(mColors.get(ColorPrefs.ColorTarget.serveButtonBackgroundColor));
-                    v.setTextColorServer      (mColors.get(ColorPrefs.ColorTarget.serveButtonTextColor));
+                    v.setBackgroundColorServer(mColors.get(ColorPrefs.ColorTarget.serveButtonBackgroundColor), player);
+                    v.setTextColorServer      (mColors.get(ColorPrefs.ColorTarget.serveButtonTextColor), player);
 
                     castSendChangeViewMessage(id, pbBgColor , "background-color");
                     castSendChangeViewMessage(id, pbTxtColor, "color");
@@ -982,7 +982,8 @@ public class IBoard implements TimerViewContainer
         }
 
         String sField = matchModel.getEventDivision();
-        if ( ViewUtil.isWearable(context) && Brand.isRacketlon() ) {
+        if ( false && ViewUtil.isWearable(context) && Brand.isRacketlon() ) { // disabled to have Racketlon app be 'approved' for wearable
+            // for racketlon show discipline
             RacketlonModel rm = (RacketlonModel) this.matchModel;
             Sport sportForSet = rm.getSportForSetInProgress();
             sField = String.valueOf(sportForSet); // TODO: internationalize?
@@ -1297,8 +1298,8 @@ public class IBoard implements TimerViewContainer
         } else if ( view instanceof PlayersButton ) {
             PlayersButton button = (PlayersButton) view;
             if (bgColorDefKey.equals(ColorPrefs.ColorTarget.serveButtonBackgroundColor)) {
-                button.setTextColorServer(iTxtColor);
-                button.setBackgroundColorServer(iBgColor);
+                button.setTextColorServer(iTxtColor, p);
+                button.setBackgroundColorServer(iBgColor, p);
             } else {
                 setTextColor(button, iTxtColor);
                 button.setBackgroundColor(iBgColor);

@@ -17,7 +17,7 @@
 
 package com.doubleyellow.scoreboard;
 
-import com.doubleyellow.scoreboard.R; // don't remove this line, required to compile different 'brands'
+import com.doubleyellow.scoreboard.R; // don't remove this line, required to still compile when using different 'brand'
 
 import android.content.Context;
 
@@ -302,6 +302,10 @@ public enum Brand
     }
     public static boolean supportChooseServeOrReceive() {
         return isTabletennis() || isBadminton()
+        ;
+    }
+    public static boolean supportChooseSide() {
+        return isTabletennis() || isBadminton() || isGameSetMatch()
         ;
     }
     public static boolean supportsDoubleServeSequence() {

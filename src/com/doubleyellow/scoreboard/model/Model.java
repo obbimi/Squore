@@ -246,9 +246,11 @@ public abstract class Model implements Serializable
 
     /** for updating ALL screen elements to have correct data from the model */
     public void triggerListeners() {
+/*
         for(OnComplexChangeListener l:onComplexChangeListeners) {
             l.OnChanged();
         }
+*/
         for(Player p: getPlayers()) {
             for(OnPlayerChangeListener l: onPlayerChangeListeners) {
                 l.OnNameChange   (p, getName(p), getCountry(p), getAvatar(p), getClub(p), isDoubles());
@@ -256,6 +258,10 @@ public abstract class Model implements Serializable
               //l.OnCountryChange(p, getCountry(p));
                 l.OnColorChange  (p, getColor(p), null);
             }
+        }
+        // 20200606 move this AFTER OnPlayerChangeListener triggers to have correct doubles server/receiver indicated
+        for(OnComplexChangeListener l:onComplexChangeListeners) {
+            l.OnChanged();
         }
         Player[] paGameBallFor = isPossibleGameBallFor();
         if ( ListUtil.length(paGameBallFor) != 0 ) {

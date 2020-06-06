@@ -1,3 +1,9 @@
+## 4.35 (may 2020)
+
+- allowing the score to be spoken with 'text-to-speech' functionality
+    - needs to be specifically enabled via _Settings_/_Speech_
+    - first version with speech: let me know if you experience issues
+
 ## 4.32 (april 2020)
 
 - WearOS version of the app is now available

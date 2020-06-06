@@ -30,7 +30,7 @@
             xmlns:app="http://schemas.android.com/apk/res/android"
     -->
 
-    <item android:id="@+id/media_route_menu_item" app:showAsAction="always" android:title="@string/media_route_menu_title" android:visible="true" app:actionProviderClass="androidx.mediarouter.app.MediaRouteActionProvider"/>
+    <item android:id="@+id/media_route_menu_item" app:showAsAction="always" android:title="@string/media_route_menu_title" app:actionProviderClass="androidx.mediarouter.app.MediaRouteActionProvider"/>
 
     <!--<item android:id="@+id/dyn_bluetooth"     app:showAsAction="ifRoom" android:icon="@android:drawable/stat_sys_data_bluetooth" android:visible="false" android:title="Bluetooth" />-->
     <item android:id="@+id/dyn_undo_last"     app:showAsAction="ifRoom" android:icon="@drawable/u_turn"                  android:visible="false" android:title="@string/uc_undo" />
