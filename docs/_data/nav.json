@@ -26,6 +26,7 @@
             { "title": "Warmup/Toss     ", "url" : "3.0.warmup.toss"      },
             { "title": "Scoring         ", "url" : "3.1.scoring"          },
             { "title": "Timers          ", "url" : "3.2.timers"           },
+            { "title": "Speech          ", "url" : "3.3.speech"           },
             { "title": "Calls           ", "url" : "3.5.appeals.conducts" },
             { "title": "Announcements   ", "url" : "3.7.announcements"    }
         ]
@@ -43,7 +44,8 @@
         "title": "Tournament",
         "pages": [
             { "title": "LiveScore       ", "url" : "5.1.livescore"        },
-            { "title": "ChromeCast      ", "url" : "5.2.chromecast"       }
+            { "title": "ChromeCast      ", "url" : "5.2.chromecast"       },
+            { "title": "BlueTooth Mirror", "url" : "5.3.bluetooth.mirror.md" }
         ]
     },
     {
