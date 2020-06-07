@@ -162,7 +162,13 @@ public class Speak
         }
         if ( ListUtil.isNotEmpty(lUnavailable) ) {
             if ( isEnabled() ) {
-                Toast.makeText(m_context, String.format("Language %s not available to perform 'text to speech'. Using %s...", lUnavailable, m_locale.getDisplayLanguage()), Toast.LENGTH_LONG).show();
+                String sMsg;
+                if ( m_locale != null ) {
+                    sMsg = String.format("Language %s not available to perform 'text to speech'. Using %s...", lUnavailable, m_locale.getDisplayLanguage());
+                } else {
+                    sMsg = String.format("Language %s not available to perform 'text to speech'.", lUnavailable);
+                }
+                Toast.makeText(m_context, sMsg, Toast.LENGTH_LONG).show();
             }
             //m_textToSpeech.setLanguage(Locale.ENGLISH);
             return false;

@@ -457,7 +457,9 @@ public class GSMModel extends Model
             iSetNrZB--;
         }
         GameTiming gtLast = ListUtil.getLast(lastSet);
-        GameTiming gtTmp = new GameTiming(0, gtFirst.getStart(), gtLast.getEnd());
+        long start = (gtFirst != null) ? gtFirst.getStart() : 0L;
+        long end   = (gtLast  != null) ? gtLast .getEnd  () : 0L;
+        GameTiming gtTmp = new GameTiming(0, start, end);
         return gtTmp.getDurationMM();
     }
 
