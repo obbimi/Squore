@@ -105,7 +105,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         setContentView(R.layout.percentage);
 
         vRoot = (ViewGroup) findViewById(android.R.id.content);
-        matchModel = ScoreBoard.matchModel;
+        matchModel = ScoreBoard.getMatchModel();
         Context context = getContext();
 
         iBoard = new IBoard(matchModel, context, getDisplay(), vRoot, null);

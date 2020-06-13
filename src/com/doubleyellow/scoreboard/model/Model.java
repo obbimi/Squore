@@ -511,13 +511,13 @@ public abstract class Model implements Serializable
         return DoublesServe.NA;
     }
 
-    void setServerAndSide(Player player, ServeSide side, DoublesServe doublesServe) {
-        setServerAndSide(player, side, doublesServe, false);
+    void setServerAndSide(Player server, ServeSide side, DoublesServe doublesServe) {
+        setServerAndSide(server, side, doublesServe, false);
     }
-    void setServerAndSide(Player player, ServeSide side, DoublesServe doublesServe, boolean bForUndo) {
+    void setServerAndSide(Player server, ServeSide side, DoublesServe doublesServe, boolean bForUndo) {
         boolean bChanged = false;
-        if ( (player != null) && player.equals(m_pServer) == false ) {
-            m_pServer = player;
+        if ( (server != null) && server.equals(m_pServer) == false ) {
+            m_pServer = server;
             bChanged = true;
         }
         if ( (side != null) && side.equals(m_nextServeSide) == false ) {
@@ -2430,7 +2430,12 @@ public abstract class Model implements Serializable
                         ServeSide serveSide = scoreLine.getServeSide();
                         nextServeSide = serveSide == null ? ServeSide.R : serveSide.getOther();
                     }
-                    setServerAndSide(scoringPlayer, nextServeSide, null);
+                    SportType sport = this.getSport();
+                    if ( EnumSet.of(SportType.Racketlon, SportType.Tabletennis).contains(sport) ) {
+                        this.determineServerAndSide_TT_RL(false, sport);
+                    } else {
+                        setServerAndSide(scoringPlayer, nextServeSide, null);
+                    }
                 } else {
                     //call or broken equipment
                 }
@@ -3693,10 +3698,12 @@ public abstract class Model implements Serializable
                     Player server = determineServerForNextGame_TT_RL(iSetZB, false);
                     int nrOfServesPerPlayer = getNrOfServesPerPlayer();
                     int iServerSwitches = (int) Math.floor(iTotalInGame / nrOfServesPerPlayer);
+                    ServeSide nextServeSide = ServeSide.values()[iTotalInGame % 2];
                     for( int i = 0; i < iServerSwitches; i++ ) {
                         server = server.getOther();
                     }
-                    setServerAndSide(server, m_nextServeSide.getOther() /* dirty trick to always ensure listeners are triggered to */, dsIO);
+                    m_nextServeSide = nextServeSide.getOther(); /* dirty trick to always ensure listeners are triggered to */
+                    setServerAndSide(server, nextServeSide , dsIO);
                     break;
             }
         }

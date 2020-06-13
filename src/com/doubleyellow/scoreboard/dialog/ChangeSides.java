@@ -27,6 +27,7 @@ import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 
+/** @deprecated Using float button is preferred now */
 public class ChangeSides extends BaseAlertDialog
 {
     public ChangeSides(Context context, Model matchModel, ScoreBoard scoreBoard) {

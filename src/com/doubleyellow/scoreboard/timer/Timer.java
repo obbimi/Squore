@@ -233,9 +233,9 @@ public class Timer
                     timerView.show();
                 }
             }
-            if ( ScoreBoard.matchModel.hasStarted() == false ) {
+            if ( ScoreBoard.getMatchModel().hasStarted() == false ) {
                 // set chrono's to zero and stop counting
-                ScoreBoard.matchModel.timestampStartOfGame(GameTiming.ChangedBy.TimerStarted);
+                ScoreBoard.getMatchModel().timestampStartOfGame(GameTiming.ChangedBy.TimerStarted);
             }
         }
 

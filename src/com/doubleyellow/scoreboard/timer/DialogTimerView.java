@@ -158,7 +158,7 @@ public class DialogTimerView implements TimerView
     {
         IBoard.setBlockToasts(true);
 
-        final Model matchModel = ScoreBoard.matchModel;
+        final Model matchModel = ScoreBoard.getMatchModel();
         Map<ColorPrefs.ColorTarget, Integer> colors = scoreBoard.getColors();
 
       //int iShowTimersCnt = PreferenceValues.getRunCount(scoreBoard, PreferenceKeys.useTimersFeature);

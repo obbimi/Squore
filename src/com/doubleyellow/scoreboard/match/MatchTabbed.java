@@ -556,8 +556,8 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
 
     private Intent _getSinglesOrDoublesIntent(boolean bBackPressed) {
 /*
-        if ( ScoreBoard.matchModel.getName(Player.A).equals("Throw E") ) {
-            throw new NullPointerException("For player Throw E and " + ScoreBoard.matchModel.getName(Player.B));
+        if ( ScoreBoard.getMatchModel().getName(Player.A).equals("Throw E") ) {
+            throw new NullPointerException("For player Throw E and " + ScoreBoard.getMatchModel().getName(Player.B));
         }
 */
         Intent intent = null;

@@ -167,7 +167,7 @@ if [[ ${iStep} -le 2 ]]; then
         echo "############### No devices found to install the app..."
     fi
 
-    rm tmp.adb.install
+    rm tmp.adb.install 2> /dev/null
 fi
 # install a shortcut
 #    pkg=com.doubleyellow.scoreboard

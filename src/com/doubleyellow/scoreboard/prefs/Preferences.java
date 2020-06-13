@@ -342,45 +342,45 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         break;
                     case numberOfGamesToWinMatch:
                         int iGames = PreferenceValues.getInteger(prefs, eKey, 3);
-                        if ( ScoreBoard.matchModel != null ) {
-                            ScoreBoard.matchModel.setNrOfGamesToWinMatch(iGames);
+                        if ( ScoreBoard.getMatchModel() != null ) {
+                            ScoreBoard.getMatchModel().setNrOfGamesToWinMatch(iGames);
                         }
                         break;
                     case numberOfPointsToWinGame:
 /*
-                        if ( ScoreBoard.matchModel instanceof GSMModel ) {
+                        if ( ScoreBoard.getMatchModel() instanceof GSMModel ) {
                             // should always be 4
                             break;
                         }
 */
                         int iEndScore = PreferenceValues.getInteger(prefs, eKey, 11);
-                        if ( ScoreBoard.matchModel != null ) {
-                            List<Map<Player, Integer>> endScoreOfPreviousGames = ScoreBoard.matchModel.getEndScoreOfPreviousGames();
+                        if ( ScoreBoard.getMatchModel() != null ) {
+                            List<Map<Player, Integer>> endScoreOfPreviousGames = ScoreBoard.getMatchModel().getEndScoreOfPreviousGames();
                             if ( ListUtil.size(endScoreOfPreviousGames) == 0 ) {
                                 // no finished games yet, assume user also want to change preference for current match
-                                ScoreBoard.matchModel.setNrOfPointsToWinGame(iEndScore);
+                                ScoreBoard.getMatchModel().setNrOfPointsToWinGame(iEndScore);
                             } else {
                                 // there are finished games: only change if the new value matches already finished games
                                 final Map<Player, Integer> firstGame = endScoreOfPreviousGames.get(0);
                                 int iMax = MapUtil.getMaxValue(firstGame);
                                 if ( iMax == iEndScore) {
-                                    ScoreBoard.matchModel.setNrOfPointsToWinGame(iEndScore);
+                                    ScoreBoard.getMatchModel().setNrOfPointsToWinGame(iEndScore);
                                 }
                             }
                         }
                         break;
                     case useHandInHandOutScoring:
                         boolean bUseEnglishScoring = PreferenceValues.getBoolean(prefs, eKey, false);
-                        ScoreBoard.matchModel.setEnglishScoring(bUseEnglishScoring);
+                        ScoreBoard.getMatchModel().setEnglishScoring(bUseEnglishScoring);
                         break;
                     case tieBreakFormat:
                         TieBreakFormat tieBreakFormat = PreferenceValues.getTiebreakFormat(Preferences.this);
-                        ScoreBoard.matchModel.setTiebreakFormat(tieBreakFormat);
+                        ScoreBoard.getMatchModel().setTiebreakFormat(tieBreakFormat);
                         break;
                     case finalSetFinish:
-                        if ( ScoreBoard.matchModel instanceof GSMModel) {
+                        if ( ScoreBoard.getMatchModel() instanceof GSMModel) {
                             FinalSetFinish finalSetFinish = PreferenceValues.getFinalSetFinish(Preferences.this);
-                            ((GSMModel) ScoreBoard.matchModel).setFinalSetFinish(finalSetFinish);
+                            ((GSMModel) ScoreBoard.getMatchModel()).setFinalSetFinish(finalSetFinish);
                         }
                         break;
                     case lockMatchMV:
@@ -1062,8 +1062,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
     }
 
     static void setModelDirty() {
-        if ( ScoreBoard.matchModel == null) { return; }
-        ScoreBoard.matchModel.setDirty();
+        if ( ScoreBoard.getMatchModel() == null) { return; }
+        ScoreBoard.getMatchModel().setDirty();
     }
 
     private void clearPPA() {

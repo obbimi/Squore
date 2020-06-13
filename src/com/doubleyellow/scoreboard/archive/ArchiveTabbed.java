@@ -282,7 +282,7 @@ public class ArchiveTabbed extends XActivity implements NfcAdapter.CreateNdefMes
     }
     @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState); // on rotate: handleRelaunchActivity
-        DialogManager.getInstance().restoreInstanceState(savedInstanceState, this, ScoreBoard.matchModel, null);
+        DialogManager.getInstance().restoreInstanceState(savedInstanceState, this, ScoreBoard.getMatchModel(), null);
     }
 
     @Override protected void onCreate(Bundle savedInstanceState) {

@@ -228,13 +228,13 @@ public class GSMModel extends Model
         return super.getServer();
     }
 */
-    @Override void setServerAndSide(Player player, ServeSide side, DoublesServe doublesServe, boolean bForUndo) {
+    @Override void setServerAndSide(Player server, ServeSide side, DoublesServe doublesServe, boolean bForUndo) {
         int iNrOfPoints = getTotalGamePoints();
         ServeSide serveSideBasedOnPoints = ServeSide.values()[iNrOfPoints % 2];
         if ( isTieBreakGame() ) {
             // swap server every two points (when scoring is odd)
             if ( iNrOfPoints % 2 == 1 ) {
-                player = player.getOther();
+                server = server.getOther();
                 if ( isDoubles() && (doublesServe != null) ) {
                     // swap player within team
                     if ( iNrOfPoints % 4 == 1 ) {
@@ -243,7 +243,7 @@ public class GSMModel extends Model
                 }
             }
         }
-        super.setServerAndSide(player, serveSideBasedOnPoints, doublesServe, bForUndo);
+        super.setServerAndSide(server, serveSideBasedOnPoints, doublesServe, bForUndo);
     }
 
     @Override public void changeSide(Player player) {

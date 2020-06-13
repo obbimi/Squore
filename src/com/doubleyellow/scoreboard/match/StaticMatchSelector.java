@@ -722,8 +722,8 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                     File fCorrespondingRecentMatch = null;
 
                     // try to add result of recent match if present
-                    if ( MapUtil.isNotEmpty(lastFewHoursMatches) && (ScoreBoard.matchModel != null) ) {
-                        String sKeyCurrent = PreviousMatchSelector.getKeyFromNames(ScoreBoard.matchModel.getName(Player.A),ScoreBoard.matchModel.getName(Player.B));
+                    if ( MapUtil.isNotEmpty(lastFewHoursMatches) && (ScoreBoard.getMatchModel() != null) ) {
+                        String sKeyCurrent = PreviousMatchSelector.getKeyFromNames(ScoreBoard.getMatchModel().getName(Player.A),ScoreBoard.getMatchModel().getName(Player.B));
                         FeedMatchSelector.getMatchDetailsFromMatchString(mRecycle, sMatch, context, false);
                       //if ( MapUtil.isNotEmpty(mDetails) ) {
                             String sKey = PreviousMatchSelector.getKeyFromNames(mRecycle.getName(Player.A),mRecycle.getName(Player.B));

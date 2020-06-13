@@ -99,8 +99,12 @@ public class Speak
         @Override public void onInit(int status) {
             m_iStatus = status;
 
-            Set<Voice> voices = m_textToSpeech.getVoices();
-            Log.d(TAG, "Available voices (listener): " + voices);
+            if ( m_textToSpeech != null ) {
+                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP /* 21 */ ) {
+                    Set<Voice> voices = m_textToSpeech.getVoices();
+                    Log.d(TAG, "Available voices (listener): " + voices);
+                }
+            }
 
             switch (status) {
                 case TextToSpeech.SUCCESS:
@@ -239,7 +243,7 @@ public class Speak
                 if ( Brand.isNotSquash() && model.isPossibleGameVictory() ) {
                     // say score of winner of game first (not by default the server)
                     setTextToSpeak(SpeechType.ScoreServer  , Math.max(iServer, iReceiver));
-                    setTextToSpeak(SpeechType.ScoreReceiver, Math.max(iServer, iReceiver));
+                    setTextToSpeak(SpeechType.ScoreReceiver, Math.min(iServer, iReceiver));
                 }
             }
         }
@@ -411,7 +415,7 @@ public class Speak
             @Override public void onTick(long millisUntilFinished) { }
             @Override public void onFinish() {
                 if ( iStartAtStep == RECALC_BEFORE_START ) {
-                    playAll(ScoreBoard.matchModel);
+                    playAll(ScoreBoard.getMatchModel());
                 }
                 emptySpeechQueue(iStartAtStep);
             }

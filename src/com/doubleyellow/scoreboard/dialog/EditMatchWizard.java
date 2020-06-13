@@ -315,8 +315,8 @@ public class EditMatchWizard extends BaseAlertDialog
             Log.d(TAG, "Match : " + sJson);
             Model m = Brand.getModel();
             m.fromJsonString(sJson);
-            m.registerListeners(ScoreBoard.matchModel);
-            ScoreBoard.matchModel = m;
+            m.registerListeners(ScoreBoard.getMatchModel());
+            ScoreBoard.setMatchModel(m);
             scoreBoard.initScoreBoard(null);
             dismiss();
         }

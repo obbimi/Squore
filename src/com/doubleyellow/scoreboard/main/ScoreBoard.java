@@ -116,7 +116,19 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 {
     private static final String TAG = "SB." + ScoreBoard.class.getSimpleName();
 
-    public  static         Model                matchModel ;
+    private  static         Model                matchModel ;
+    public static Model getMatchModel() {
+        if ( matchModel == null ) {
+            Log.w(TAG, "matchModel is null");
+        }
+        return matchModel;
+    }
+    public static void setMatchModel(Model m) {
+        if ( m == null ) {
+            Log.w(TAG, "setting matchModel to null");
+        }
+        matchModel = m;
+    }
 
     //-------------------------------------------------------------------------
     // Permission granting callback
@@ -554,7 +566,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 // switch to a different color schema
                 int i = PreferenceValues.getInteger(PreferenceKeys.colorSchema, ScoreBoard.this, 0);
                 PreferenceValues.setNumber(PreferenceKeys.colorSchema, ScoreBoard.this, i + 1);
-                ScoreBoard.matchModel.setDirty();
+                ScoreBoard.getMatchModel().setDirty();
                 ColorPrefs.clearColorCache();
                 ScoreBoard.this.onRestart();
                 return true;
@@ -684,8 +696,12 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             case DoNotUse:
                 return false;
             case Suggest:
-                if ( Brand.isGameSetMatch() ) {
-                    showChangeSideFloatButton(true);
+                if ( Brand.supportChooseSide() /*Brand.isGameSetMatch()*/ ) {
+                    if ( isLandscape() ) {
+                        showChangeSideFloatButton(true);
+                    } else {
+                        _confirmChangeSides(null);
+                    }
                 } else {
                     if ( Brand.isRacketlon() ) {
                         // no change side in squash discipline
@@ -715,6 +731,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         return false;
     }
 
+    /** @deprecated */
     private void _confirmChangeSides(Player leader) {
         ChangeSides changeSides = new ChangeSides(this, matchModel, this);
         changeSides.init(leader);
@@ -1976,7 +1993,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         Model previous = matchModel;
 
         if ( fJson == null || matchModel == null ) { // 20140315: invoked from onCreate() after e.g. a dialog or screen orientation switch
-            matchModel = null;
+            setMatchModel(null);
 
             bReadFromJsonOK = initMatchModel(fJson);
         }
@@ -2040,7 +2057,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     private boolean initMatchModel(File fJson) {
         boolean bReadFromJsonOK = false;
         if ( matchModel == null ) {
-            matchModel = Brand.getModel();
+            setMatchModel(Brand.getModel());
 
             matchModel.setNrOfPointsToWinGame(PreferenceValues.numberOfPointsToWinGame(this));
             matchModel.setNrOfGamesToWinMatch(PreferenceValues.numberOfGamesToWinMatch(this));
@@ -2262,7 +2279,7 @@ touch -t 01030000 LAST.sb
         }
         PersistHelper.persist(matchModel, this);
         if ( bDestroyModel ) {
-            matchModel = null;
+            setMatchModel(null);
         }
     }
 
@@ -3391,14 +3408,15 @@ touch -t 01030000 LAST.sb
                 return false;
             }
             case officialAnnouncementClosed: {
-                if ( matchModel.gameHasStarted() == false ) {
+                boolean gameHasStarted = (matchModel != null) && matchModel.gameHasStarted();
+                if ( gameHasStarted == false ) {
                     timestampStartOfGame(GameTiming.ChangedBy.DialogClosed);
                     cancelTimer();
                 }
                 showMicrophoneFloatButton(false);
                 showNewMatchFloatButton(false);
                 showNextDialog();
-                if ( matchModel.gameHasStarted() == false ) {
+                if ( gameHasStarted == false ) {
                     // assume first ball is about to be served
                     showTossFloatButton(false);
                     showTimerFloatButton(false);
@@ -4608,7 +4626,7 @@ touch -t 01030000 LAST.sb
                         bChanged = matchModel.setTiebreakFormat(m.getTiebreakFormat());
                     } else {
                         m.registerListeners(matchModel);
-                        matchModel = m;
+                        setMatchModel(m);
                         setPlayerNames(new String[] { matchModel.getName(Player.A), matchModel.getName(Player.B) });
 
                         initScoreBoard(null);
@@ -4625,7 +4643,7 @@ touch -t 01030000 LAST.sb
                     File f = (File) extras.get(sOldMatch);
                     if ( f == null ) { return; }
 
-                    matchModel = null;
+                    setMatchModel(null);
                     initScoreBoard(f);
 
                     // ensure selected match is also LAST_MATCH file
@@ -6132,7 +6150,7 @@ touch -t 01030000 LAST.sb
                             File fJson = PersistHelper.getLastMatchFile(this);
                             FileUtil.writeTo(fJson, sFileContent);
 
-                            matchModel = null;
+                            setMatchModel(null);
                             boolean bReadOK = this.initScoreBoard(fJson);
                             if ( bReadOK ) {
                                 matchModel.triggerListeners();

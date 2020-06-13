@@ -58,13 +58,13 @@ public class MatchReceivedUtil implements DialogInterface.OnClickListener
                     // load the received match in scoreboard for continuation
 
                     // first store currently loaded match
-                    PersistHelper.storeAsPrevious(scoreBoard, ScoreBoard.matchModel, false);
+                    PersistHelper.storeAsPrevious(scoreBoard, ScoreBoard.getMatchModel(), false);
 
                     // put content of url into LAST match sb file
                     File f = PersistHelper.getLastMatchFile(scoreBoard);
                     FileUtil.writeTo(f, model.toJsonString(scoreBoard));
 
-                    ScoreBoard.matchModel = null;
+                    ScoreBoard.setMatchModel(null);
                     scoreBoard.initScoreBoard(f);
                     break;
                 }
