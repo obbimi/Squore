@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="lbl_Scoring_PointWhenServing__Squash">Hand-in/hand-out</string>
+
+    <string name="lbl_marker">Marcador</string>
+
+    <string name="no_let_abbreviation">NL</string>
+    <string name="yes_let_abbreviation">YL</string>
+    <string name="stroke_abbreviation">ST</string>
+    <string name="conduct_warning_abbreviation">CW</string>
+    <string name="conduct_stroke_abbreviation">CS</string>
+    <string name="conduct_game_abbreviation">CG</string>
+    <string name="conduct_match_abbreviation">CM</string>
+
+    <string name="broken_string_abbreviation">BS</string>
+    <string name="broken_ball_abbreviation">BB</string>
+    <string name="broken_racket_abbreviation">BR</string>
+
+    <string name="sb_injury_type">Tipo de lesión</string>
+
+    <string name="sb_did_you_mean_conduct_game">Si es \'Conducta de juego\', haga un clic largo en el jugador que se está portando mal y seleccione la opción adecuada allí.</string>
+
+    <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-todo - Receptor %2$s elige jugar en%3$s o en %4$s</string>
+    <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-Todo - Receptor %2$s elige puntuación ganadora</string>
+
+    <string name="sb_official_rules__Squash">Reglas oficiales de squash</string>
+    <string name="sb_possible_conducts">Posibles conductas</string>
+    <string name="sb_self_inflicted_injury">Lesión autoinfligida</string>
+    <string name="sb_opponent_inflicted_injury">Lesión infligida por el oponente</string>
+    <string name="sb_contributed_injury">Lesión contribuida</string>
+
+    <!-- source: http://www.worldsquash.org/referees-info/conduct-on-court/ -->
+    <string name="conducts_guidelines_default"><![CDATA[
+\n- Abuse of equipment (racket, ball or other equipment):
+\nMinor offence (e.g. throwing the racket onto the floor after losing a game, hitting the ball hard after the rally is over): Conduct Warning
+\nMajor offence (e.g. deliberately breaking the racket; smashing the racket against the wall; hitting the ball or throwing the racket out of the court): Conduct Stroke
+\n
+\n- Audible or Visible Obscenity:
+\nMinor offence (e.g. muttered expletive; blaspheming): Conduct Warning
+\nMajor offence (e.g. audible obscenity): Conduct Stroke
+\n
+\n- Time-wasting:
+\nMinor offence (e.g. a few seconds late back on court; taking excessive time to serve): Conduct Warning
+\nMajor offence (e.g. very late back on court; prolonged discussion with Referee): Conduct Stroke
+\n
+\n- Dissent:
+\nMinor offence (e.g. questioning a decision): Conduct Warning
+\nMajor offence (e.g. prolonged or repeated questioning of or disagreement with decisions): Conduct Stroke
+\n
+\n- Abuse of Official:
+\nMinor offence (e.g. unflattering comments about official or decisions): Conduct Warning
+\nMajor offence (e.g. pejorative comments about official or decisions): Conduct Stroke
+\nSevere offence (e.g. hitting ball at official or into spectators; throwing racket at official or into spectators): Conduct Game or Match (depending on the severity of the offence and the danger caused)
+\n
+\n- Excessive physical contact:
+\nMinor offence (e.g. running into the opponent): Conduct warning
+\nMajor offence (e.g. physical abuse of the opponent): Conduct Stroke
+\nSevere offence (e.g. deliberately injuring the opponent; dangerous play that injures the opponent): Conduct Game or Match (depending on the severity of the offence and the extent of the injury caused)
+\n
+\n- Unsporting conduct:
+\nMinor offence (e.g. making negative comments to the opponent): Conduct Warning
+\nMajor offence (e.g. repeated negative or pejorative comments to the opponent; any attempt at intimidation of the opponent): Conduct Stroke
+\nSevere offence (e.g. extreme behaviour that brings the game into disrepute): Conduct Game or Match (depending on the severity of the offence)
+\n
+\n- Coaching:
+\nFirst occurrence: Conduct Warning
+\nSecond occurrence: Conduct Stroke and expulsion of offending person
+\n
+\n- Repeated and excessive bad conduct:
+\nWhen, in the Referee’s opinion, the player is guilty of repeated acts of unacceptable conduct on court following the imposition of the penalties outlined above, the Referee may impose for the next occurrence of the offence either the same penalty for the second offence or a more severe penalty than the one already imposed. However, if a Conduct Warning has been given for both the first and the second offences, for the third offence of a similar nature a Conduct Stroke must be applied. (Example: If a player has received a Conduct Warning for Dissent, on the next occurrence of this offence, either a Conduct Warning or a Conduct Stroke may be imposed. On the third occurrence, however, a Conduct Stroke is mandatory.)
+\n
+    ]]></string>
+</resources>

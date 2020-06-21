@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="scv_side_buttons__Tabletennis">Los __botones de servicio__ indica
+        \n
+        \n- quien debe servir
+        \n- si el jugador puede servir dos veces (Ⅱ) o solo una vez más (Ⅰ) antes de que el servicio cambie al oponente
+        \n\nLa indicación de servicio cambia automáticamente después de cada punto anotado.
+    </string>
+    <!--
+        \n\nIf required (but normally it is not), you can toggle player by tapping it.
+    -->
+    <string name="scv_timer_button__Tabletennis">Este botón le permitirá iniciar un __temporizador__.
+        \n\n Solo aparecerá cuando sea apropiado
+        \n
+        \n- Calentamiento antes del partido
+        \n- Entre juegos
+        \n- Retirada
+    </string>
+    <string name="scv_shirt_color__Tabletennis">Opcionalmente, puede __entrar un color__ para ambos jugadores / equipos.
+        \n\n Haga un clic largo en el botón lateral de servir para seleccionar un color.</string>
+    <string name="scv_game_scores__Tabletennis">Los puntajes de __juegos anteriores__ son visibles aquí.
+        \n\n Toque para ver todos los detalles de los juegos anteriores.</string>
+    <!--
+    <string name="scv_overflow_submenu__Tabletennis">More options are available from the menu. You can for example:
+        \n
+        \n- Customize appearance and behaviour of the app via \'Settings\'
+        \n- Show details of previously reffed matches
+        \n- Start an injury timer
+        \n- Export/import all your reffed matches to/from a zip file
+        \n- Consult an elaborate help page for this app
+        \n- Consult the official racketlon rules
+    </string>
+    -->
+    <string name="scv_new_match_button__Tabletennis">__Eso es. Disfruta de tu partida .__
+        \n\n Comienza una nueva partida tocando este botón.</string>
+</resources>

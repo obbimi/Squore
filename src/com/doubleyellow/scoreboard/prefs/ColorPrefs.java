@@ -197,7 +197,7 @@ public class ColorPrefs
         }
 
         String sColorPrevTarget = null;
-        for(ColorTarget colorTarget: ColorTarget.values() ) { // this loop asumes that background color and text color of the same 'element' are directly next to each other in the enumeration
+        for ( ColorTarget colorTarget: ColorTarget.values() ) { // this loop assumes that background color and text color of the same 'element' are directly next to each other in the enumeration
             String sColorKey = getColor(colorTarget, context);
             String sColor    = fixColorString(mKey2Color.get(sColorKey));
             int    iColor    = Color.parseColor(sColor);

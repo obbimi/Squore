@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="press_back_again_to_exit_intro">Pulsar \'Atras\' de nuevo para salir de la introducción</string>
+    <string name="scv_got_it">ENTENDIDO</string>
+    <string name="scv_first_run">¿Quieres una introducción rápida para aprender las características principales de la app?
+        \n
+        \nLe mostrará cómo puede usar la app en diferentes situaciones durante varias etapas de un partida.
+        \n
+        \nPuede cancelar la introducción en cualquier momento presionando el botón _Atras_ en su dispositivo.
+        \n
+        \nO vuelva a iniciarlo desde el menú _Ayuda / Introducción rápida_.</string>
+    <string name="scv_toss">\nAl comienzo de una partida, normalmente se realiza un __sorteo__.
+        \n\nPresione este botón para:
+        \n
+        \n- introduce fácilmente el resultado del sorteo
+        \n- deja que la app haga el sorteo por ti
+    </string>
+    <string name="scv_big_buttons">Presione los botones grandes para realizarlanotación de los puntos de cada jugador.</string>
+    <string name="scv_undo_last">
+        \n
+        \nSi accidentalmente se equivoco de anotación, puede corregirlo presionando el botón __deshacer__.
+        \n
+        \nOtra forma de deshacer la ultima anotación, es deslizando el dedo sobre el botón de marcador que aumentó accidentalmente.
+    </string>
+<!--
+    <string name="scv_score_details">This button will allow you to review all details of a match.
+        \n
+        \n- Complete score sheet including timings
+        \n- Scoring sequence in a graph
+        \n- No let/Yes let/Stroke totals
+      </string>
+-->
+    <string name="scv_share_button">Este botón aparece una vez que se completa una partida. Te permite compartir el resultado.
+        \n\nPuedes configurarlo para
+        \n
+        \n- Comparte un enlace con todos los detalles de la partida
+        \n- Comparte un breve resumen
+        \n- Publique el resultado en la web
+        \n- Enviar por un email la hoja de puntuación
+      </string>
+    <string name="scv_toggle_action_bar">Si quieres __esconder la barra de acción__ (p.ej. para maximizar el uso de la pantalla, o por razones estéticas)
+       puede hacerlo fácilmente: simplemente haga clic largo en el __marcador de juegos__. Otro clic largo lo hará visible nuevamente.
+        \n
+        \nTenga en cuenta que si oculta la barra de acción, el \'Deshacer deslizando\' ¡aún está disponible!
+          </string>
+    <string name="scv_few_more_good_to_knows">Un poco mas \'Es bueno saberlo\':
+        \n
+        \n- Puede mostrar fácilmente el marcador en una gran pantalla de TV con Chrome Cast.
+        \n- Puedes especificar un país por jugador. Se mostrarán las banderas de los países elegidos.
+        \n- Puede usar los botones de volumen para que sean sus botones de \'puntuación\' (debe activarse a través de la configuración).
+        \n- Puede transferir una partida de un dispositivo Android a otro usando NFC.
+          </string>
+</resources>

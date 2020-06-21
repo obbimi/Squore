@@ -70,6 +70,7 @@
     <string name="pref_Sharing">Sharing</string>
     <string name="pref_Sharing_summary">By Facebook, SMS or Email</string>
 
+    <!-- Speech -->
     <string name="pref_Speech">Speech</string>
     <string name="pref_Speech_summary">Announce score via speakers (computer voice)</string>
     <string name="pref_speechPitch">Pitch</string>

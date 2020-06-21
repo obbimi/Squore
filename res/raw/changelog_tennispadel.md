@@ -1,3 +1,7 @@
+## 4.36 (april 2020)
+
+- The app has been translated into Spanish. Thank you very much Salvador Martinez!
+
 ## 4.33 (april 2020)
 
 - added option for final set

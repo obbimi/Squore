@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="sb_remove_last_score_for_x">Eliminar el último punto anotado para %s ?</string>
+
+    <string name="Poule">Poule - Múltiples partidos por jugador</string>
+    <string name="TeamVsTeam_OneMatchPerPlayer">Equipo contra equipo: un partido por jugador</string>
+    <string name="TeamVsTeam_XMatchesPlayer">Equipo contra equipo: múltiples partidos por jugador</string>
+
+<!-- <string name="facebook_app_id">504690753001960</string> -->
+    <string name="msg_enter_both_player_names">Por favor ingrese ambos nombres de jugadores</string>
+    <string name="msg_enter_all_player_names">Por favor ingrese todos los nombres de jugadores</string>
+    <string name="msg_enter_authentication_details">Ingrese los detalles de autenticación</string>
+
+    <!-- Score board -->
+    <string name="sb_not_a_valid_endscore">El marcador actual no parece ser un final válido de un juego.</string>
+    <string name="sb_start_next_game_confirm_message">¿Comenzar el próximo juego?</string>
+    <string name="Quick_intro">Introducción rápida</string>
+    <string name="Start_game">Empezar juego</string>
+    <string name="sb_end_game_and_match_message">Fin del juego y partido.</string>
+    <string name="sb_enter_player_names">Rellenar los nombres de los jugadores</string>
+    <string name="hms_delete_all">Eliminar todos los resultados almacenados</string>
+    <string name="hms_delete_selected">Eliminar los resultados selecionados</string>
+    <string name="sb_online_sheet_available">Hoja de puntuación en línea disponible</string>
+    <string name="sb_online_sheet_updated">Hoja de puntuación en línea actualizada</string>
+    <string name="sb_doublesServeSequence">Secuencia de servicio</string>
+    <string name="sb_Duration_Warmup_and_Pauses">Duración calentamiento &amp; Pausa (s)</string>
+    <string name="sb_Duration_Warmup">Duración calentamiento</string>
+    <string name="sb_Duration__and_Pauses">Pausa</string>
+    <string name="sb_tiebreak">Tie Break</string>
+    <string name="sb_who_will_start_to_serve">¿Quién comenzará a servir?</string>
+    <string name="sb_cmd_toss">Sorteo</string>
+    <string name="choose_winner_of_toss_or_perform_toss">Elija el ganador del sorteo o lo elige la app</string>
+    <string name="sb_toss_won_by_x">Sorteo ganado por %1$s</string>
+    <string name="sb_players_choice">Elección de los jugadores:</string>
+    <string name="sb_makeThisTheDefault">Por defecto</string>
+    <string name="sb_delete_group_of_matches_confirm">Eliminar grupo de partidas\'%s\'?</string>
+    <string name="sb_cmd_ok_and_skip_timer">OK (skip timer)</string>
+    <string name="sb_cmd_ok_and_start_timer">OK (start timer)</string>
+    <string name="sb_cmd_ok_plus">OK +</string>
+
+    <string name="uc_matchlayout_all_small_font">Fuente más pequeña (Todos los campos)</string>
+    <string name="uc_matchlayout_simple_large_font">Fuente más grande (campos comunes)</string>
+
+    <string name="uc_clear_all_fields">Borrar todos los campos</string>
+    <string name="uc_clear_player_fields">Borrar campos de jugador</string>
+    <string name="uc_clear_country_fields">Borrar campos del país</string>
+    <string name="uc_clear_club_fields">Borrar los campos del club</string>
+    <string name="uc_clear_event_fields">Borrar campos del evento</string>
+    <string name="uc_clear_referee_fields">Borrar campos del arbitro</string>
+    <string name="sb_clear_score_confirm_message">¿Quieres reiniciar el marcador?</string>
+    <string name="sb_clear_score_confirm_message_2">El historial del marcador del partido actual se perderá.</string>
+    <string name="cmd_change_format">Cambiar formato</string>
+    <string name="please_select_a_value_for_x">Por favor seleccione un valor para \'%1$s\'</string>
+    <string name="sb_select_match">Seleccionar partido</string>
+    <string name="sb_static_match">Mi lista</string>
+    <string name="sb_select_static_match">Seleccionar de mi lista</string>
+<!--
+    <string name="sb_whatsapp_match_summary">Share match result via WhatsApp</string>
+    <string name="sb_twitter_match_summary">Share match result via Twitter</string>
+-->
+    <string name="sb_share_match_summary_using_x">Compartir el resultado de la partida a través de %s</string>
+    <string name="sb_put_match_summary_on_clipboard">Copiar el resultado de la partida en el portapapeles</string>
+    <string name="sb_send_match_result">Mensaje del resulatado de la partida</string>
+    <string name="sb_post_match_result">Publicar el resultado de la partida en el sitio</string>
+    <string name="sb_post_match_result_q">Publicar el resultado de la partida en el sitio \'%s\'?</string>
+    <string name="sb_post_match_result_no_more">No mostrar \'Publicar resulatdo de la partida\' diálogo automáticamente</string>
+    <string name="sb_email_match_result">Email resultado de la partida</string>
+    <string name="sb_share_score_sheet">Compartir puntuación</string>
+    <string name="Conduct">Conducta</string>
+    <string name="Appeal">Apelación</string>
+    <string name="Call">Llamada</string>
+    <string name="Type">Tipo</string>
+    <string name="Detail">Detalle</string>
+    <string name="Home">Home</string>
+    <string name="Away">Fuera</string>
+    <string name="score_sheet">Hoja de puntuación</string>
+    <string name="graph_game_x">Grafico del juego %d</string>
+    <string name="graph_x">Grafico %s</string>
+    <string name="Summary">Resumen</string>
+    <string name="sb_share_match_summary">Compartir resumen de puntuación</string>
+    <string name="sb_share_matches_summary">Compartir resumen de las partidas</string>
+    <string name="sb_edit_players">Editar nombres de jugadores</string>
+    <string name="sb_swap_double_players">Intercambiar jugadores de dobles</string>
+    <string name="sb_change_sides">Cambiar de lado</string>
+    <string name="sb_choose_player">¿Para qué jugador?</string>
+    <string name="sb_choose_players">Elegir jugadores</string>
+    <string name="sb_choose_team">¿Para que equipo?</string>
+    <string name="sb_edit_event_or_player">Editar evento / jugador</string>
+    <string name="sb_new_match">Nuevo partido</string>
+    <string name="sb_matches">Partidos</string>
+    <string name="sb_new_singles_match">Nueva partida de individuales</string>
+    <string name="sb_new_doubles_match">Nueva partida de dobles</string>
+    <string name="sb_clear_score">Reiniciar marcador</string>
+    <string name="sb_adjust_score">Ajustar marcador</string>
+    <string name="sb_handicap_score">Indicar marcador de desventaja</string>
+    <string name="sb_sub_share_match">Compartir partida…</string>
+    <string name="sb_timer">Tiempo</string>
+    <string name="sb_nbsp_timer">\u00A0Timer</string> <!-- added non-breaking space in front for action bar -->
+    <string name="sb_injury_timer">Tiempo por lesión</string>
+    <string name="sb_score_details">Detalles de puntación</string>
+    <string name="Live_Score">Puntuación en vivo</string>
+    <string name="sb_official_announcement">Anuncio oficial</string>
+    <!--<string name="sb_untill_next_game">Next game starts in</string>-->
+    <string name="sb_remove_match_from_my_list">Eliminar partida \'%s\' de \'mi lista\'</string>
+    <string name="sb_delete_item">Eliminar elemento \'%s\'</string>
+    <string name="sb_delete_section">Eliminar sección\'%s\'</string>
+    <string name="sb_delete_group">Eliminar grupo</string>
+    <string name="sb_edit_item">Editar elemento\'%s\'</string>
+    <string name="sb_new_item">Nuevo\'%s\' elemento</string>
+    <string name="end_game__Default">Fin del juego</string>
+    <string name="end_match">Fin de la partida</string>
+    <string name="sb_match_history">Historial de la partida</string>
+    <string name="sb_stored_matches">Historico de las partidas</string>
+    <string name="no_matches_selected">No hay partidas seleccionadas</string>
+    <string name="sb_recent_matches">Partidas recientes</string>
+    <string name="sb_preferences">Ajustes de la App</string>
+    <string name="sb_no_matches_stored">No se encontraron partidas</string>
+    <string name="sb_no_recent_matches_stored">No se encontraron partidas recientes</string>
+    <string name="match_has_finished">La partida ha terminado.</string>
+    <string name="press_again_to_undo_last_score">Presione el historial de puntuación nuevamente para deshacer la última puntación</string>
+    <string name="unable_to_interpret_entered_text_as_2_names">Lo sentimos, no pudimos interpretar el texto introducido como 2 nombres separados</string>
+
+    <string name="total_of_x_games__play_remaining_y_games">Como jugamos \'Total de %1$d juegos\' los restantes %2$d juegos también se jugaran.</string>
+    <string name="total_of_x_games__play_remaining_last_game">Como jugamos \'Total de %1$d juegos\' también se jugará el último juego.</string>
+    <string name="total_of_x_games_to_y">Total de %1$s juegos a %2$s</string>
+    <string name="total_of_x_games_to_y_1">Total de</string>
+
+    <string name="best_of_x_games_to_y_1">El mejor</string>
+    <string name="best_of_x_games_to_y_2__Default">juegos a</string>
+    <string name="lbl_court__Default">Corte</string>
+
+    <string name="no_statistics_recorded_for_this_match">No se registraron estadísticas (ganadores / errores) para esta partida</string>
+
+    <string name="nfc_match_send">Partida enviada!</string>
+    <string name="nfc_something_went_wrong">Algo salió mal al transferir la partida %s</string>
+    <string name="nfc_opening_match">Partida inaugural desde NFC beam : \n %1$s - %2$s</string>
+    <string name="nfc_saved_match">Partida almacenada desde NFC beam : \n %1$s - %2$s</string>
+
+    <string name="url_match_show_details">Mostrar detalles de la partida desde URL: \n %1$s - %2$s</string>
+    <string name="url_match_continue">Partida inaugural de URL: \n %1$s - %2$s</string>
+
+    <string name="player_names_swapped">Los nombres de los jugadores han sido intercambiados</string>
+    <string name="teams_have_swapped_sides">Los equipos han cambiado de campo</string>
+
+    <string name="double_player_names_of_team_x_swapped">Se han cambiado los nombres de los jugadores del equipo %1$s</string>
+    <string name="match_is_locked__unlock_to_allow_modifications">Esta partida está bloqueada (%s). Elija Desbloquear para permitir realizar modificaciones en el marcador. O comenzar una nueva partida</string>
+    <string name="match_is_locked">Esta partida está bloqueada (%s). Puedes comenzar una nueva partida si quieres.</string>
+    <string name="match_is_now_locked">La partida ahora está bloqueada</string>
+    <string name="match_is__locked">La partida está bloqueada</string>
+    <string name="match_is_now_unlocked">La partida ahora está desbloqueada</string>
+
+    <string name="Uncompleted">Incompleto</string>
+    <string name="Completed">Completado</string>
+    <string name="s1_match_s2_retrieved_from_the_web">%1$s match \'%2$s\' retrieved from the web.</string>
+    <string name="s1_match_s2_received_via_nfc">%1$s match \'%2$s\' received from beam.</string>
+    <string name="what_do_you_want_to_do_with_it">Que quieres hacer con esto?</string>
+    <string name="cmd_store_for_later_usage">Almacenar para uso posterior</string>
+    <string name="cmd_show_detail">Mostrar detalles de la partida</string>
+    <string name="cmd_open_match_and_continue">Abrir y continuar anotando</string>
+    <string name="q_use_entered_match_details">¿Usar los detalles de la partida introducida?</string>
+
+    <string name="creating_url_for_sharing_match_details">Crear un enlace para compartir detalles de la partida…</string>
+    <string name="select_reason_and_winner">Seleccione el motivo y haga clic en ganador</string>
+
+    <!-- additional toss options (TT BM TN PD) -->
+    <string name="sb_what_side_will_x_start_to_y">En qué lado final %1$s empezara a %2$s?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_player_be">¿De qué lado del marcador debería estar inicialmente?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_team_be">¿De qué lado del marcador debe estar inicialmente el equipo?</string>
+    <string name="sb_which_player_of_team_will_start_to_x">¿Qué jugador comenzará a %1$s?</string>
+
+    <string name="timeout">Descanso</string> <!-- TT 3.4.4.2.4 On receiving a valid request for a time-out the umpire shall suspend play and shall hold up a white card with the hand on the side of the player or pair who requested it; the white card or another appropriate marker shall be placed on the court of that player or pair. -->
+    <string name="Resume_game">Resumen del juego</string>
+
+    <string name="Score">Puntuación</string>
+    <string name="Game">Juego</string>
+
+    <string name="left_serveside_single_char">R</string>
+    <string name="right_serveside_single_char">D</string>
+
+    <string name="handout">Hand-out</string>
+    <string name="lbl_all_games">Todos los juegos</string>
+    <!--<string name="lbl_game">Game</string>-->
+    <string name="lbl_players">Jugadores</string>
+    <string name="lbl_event_and_players">Evento y Jugadores</string>
+    <string name="lbl_player">Jugador</string>
+    <string name="lbl_player_A">Jugador A</string>
+    <string name="lbl_playerA1">Jugador A1</string>
+    <string name="lbl_playerA2">Jugador A2</string>
+    <string name="lbl_player_B">Jugador B</string>
+    <string name="lbl_playerB1">Jugador B1</string>
+    <string name="lbl_playerB2">Jugador B2</string>
+    <string name="lbl_player_x">Jugador %s</string>
+    <string name="lbl_countries">Paises</string>
+    <string name="lbl_country_A">País A</string>
+    <string name="lbl_country_B">País B</string>
+    <string name="lbl_color_A">Color A</string>
+    <string name="lbl_color_B">Color B</string>
+    <string name="lbl_clubs">Clubs</string>
+    <string name="lbl_club_A">Club A</string>
+    <string name="lbl_club_B">Club B</string>
+    <string name="add_x_matches">Añadir %d partidas</string>
+    <string name="lbl_event">Evento</string>
+    <string name="lbl_division">Division</string>
+    <string name="lbl_round">Ronda</string>
+    <string name="lbl_location">Lugar</string>
+    <string name="lbl_referee">Arbitro</string>
+    <string name="lbl_versus">vs</string>
+
+    <string name="lbl_broken_equipment">Equipo roto reportado por %s</string>
+    <string name="point_awarded_to_p">Punto otorgado a %s</string>
+    <string name="point">Puntos</string>
+    <string name="points">Puntos</string>
+    <string name="lbl_warning">Advertencia</string>
+    <!--
+        <string name="last_game__score_x_induration_y_z">Last game: %s in %s %s</string>
+        <string name="last_game__score_x_induration_y_z__2lines">Last game: %s\nin %s %s</string>
+    -->
+    <string name="game_ended">Juego terminado</string>
+    <string name="match_ended">Partida terminada</string>
+
+</resources>

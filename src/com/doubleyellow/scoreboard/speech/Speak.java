@@ -147,6 +147,7 @@ public class Speak
 
     /** Returns false if first in sequence is not used */
     public boolean setOneOfLocales(Locale[] aLocales) {
+        if ( m_textToSpeech == null ) { return false; }
         LinkedHashSet<String> lUnavailable = new LinkedHashSet<>();
         for ( Locale locale: aLocales ) {
             if ( locale == null ) { continue; }

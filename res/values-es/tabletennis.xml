@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="pref_category_expediteSystem">Regla de aceleración</string>
+    <string name="pref_autoShow_activeExpediteSystem_dialog">Auto-mostrar \'Activar regla de aceleración \' dialogo</string>
+    <string name="pref_autoShow_activeExpediteSystem_dialog_after_X_mins">Mostrar \'Activar aceleración\' diálogo después de X minutos</string>
+
+    <string name="pref_category_towelingDown">Toweling down</string><!-- 3.4.4.1.2 brief intervals for towelling after every 6 points from the start of each game and at the change of ends in the last possible game of an individual match. -->
+    <string name="pref_towelingDown_timer">\'Toweling down\' temporizador</string>
+    <string name="pref_autoShow_towelingDown_timer_after_X_points">Mostrar\'Toweling down\' temporizador después de cada X puntos</string>
+    <string name="toweling_down">Toweling</string>
+
+    <string name="pref_swapPlayersHalfwayGame__Tabletennis">Intercambia jugadores a mitad del juego decisivo</string>
+
+    <string name="activate_mode__Tabletennis">Activar regla de aceleración</string>
+    <string name="activate_mode_description__Tabletennis">Pasaron más de %s minutos desde el comienzo del juego. ¿Activar regla de aceleración?</string>
+    <string name="deactivate_mode__Tabletennis">Desactivar regla de aceleración</string>
+
+    <string name="lbl_court__Tabletennis">Table</string>
+
+    <string name="sb_official_rules__Tabletennis">Reglas oficiales de tenis de mesa</string><!--  -->
+
+    <string name="OfficialRulesURLs_default__Tabletennis"><![CDATA[http://www.ittf.com/?media-alias=2017_ITTF_Handbook
+\nhttp://pongworld.com/table-tennis-sport/official-rules
+]]></string>
+
+</resources>

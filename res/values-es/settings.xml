@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright (C) 2017  Iddo Hoeve
+**
+** Squore is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="pref_ColorTargets_Background">Fondo</string>
+    <string name="pref_ColorTargets_Player_Button_Background">Fondo del botón del jugador</string>
+    <string name="pref_ColorTargets_Score_Button_Background">Fondo del botón del marcador</string>
+    <string name="pref_ColorTargets_Serve_Button_Background">Fondo del botón del servicio</string>
+    <string name="pref_ColorTargets_History_Background">Fondo de campos</string>
+
+    <string name="pref_ColorTargets_Main_Text">Texto principal</string>
+    <string name="pref_ColorTargets_Player_Button_Text">Texto del botón del jugador</string>
+    <string name="pref_ColorTargets_Score_Button_Text" >Texto del botón del marcador</string>
+    <string name="pref_ColorTargets_Serve_Button_Text" >Texto del botón del servicio</string>
+    <string name="pref_ColorTargets_History_Text">Texto de campos</string>
+
+    <string name="pref_Category_Layout">Diseño</string>
+    <string name="pref_Category_Brand">Marca</string>
+    <string name="pref_Category_Technical">Técnica</string>
+    <string name="pref_Category_End_of_Game">Fin del juego</string>
+    <string name="pref_Category_End_of_Game__TennisPadel">Fin del set</string>
+    <string name="pref_Category_Others">Otros</string>
+    <string name="pref_Category_Live_Score_ChromeCast">Live Score/ChromeCast</string>
+    <string name="pref_Category_ChromeCast">ChromeCast</string>
+    <string name="pref_Category_Directory_for_import_export">Directorio para importar/exportar</string>
+    <string name="pref_Category_Contacts">Contactos</string>
+    <string name="pref_Category_Event">Evento</string>
+    <string name="pref_Category_Feeds">Feeds</string>
+    <string name="pref_Category_Import_Export_Settings">Configuración de importación / exportación</string>
+    <string name="pref_Make_your_choice">Haz tu elección</string>
+
+    <string name="pref_feedFeedsURL">feedFeedsURL</string>
+    <string name="pref_feedFeedsURL_summary">Solo para desarrolladores</string>
+    <string name="pref_MaximumCacheAgeFeeds">Maximum Cache Age Feeds</string>
+    <string name="pref_MaximumCacheAgeFeeds_summary">En minutos</string>
+    <string name="pref_feedReadTimeout">Read timeout for feeds</string>
+    <string name="pref_feedReadTimeout_summary">
+Número de segundos antes de leer un feed se cancela automáticamente</string>
+    <string name="pref_maximumCacheAgeFlags">Maximum Cache Age Flags</string>
+    <string name="pref_maximumCacheAgeFlags_summary">En minutos</string>
+
+    <string name="pref_Show_logo_on_scoreboard">Mostrar logo en el marcador</string>
+    <string name="pref_Hide_logo_when_game_in_progress">Ocultar logo cuando el juego está en progreso</string>
+    <string name="pref_Hide_division_field_when_game_in_progress">Ocultar campo de división cuando el juego está en progreso</string>
+
+    <string name="pref_x_changed_to_y">Ajuste
+        \n %1$s
+        \n cambiado a
+        \n %2$s</string>
+    <string name="pref_Behaviour">Comportamiento</string>
+    <string name="pref_Behaviour_summary">Comportamiento preferido de elementos visuales. Anuncios oficiales</string>
+    <string name="pref_BehaviourConvenience">Conveniencia</string>
+    <string name="pref_BehaviourOfficial">Para uso oficial</string>
+    <string name="pref_Sharing">Compartir</string>
+    <string name="pref_Sharing_summary">por Facebook, SMS o Email</string>
+
+    <!-- Speech -->
+    <string name="pref_Speech">Speech</string>                                                                       <!-- TODO: new entry -->
+    <string name="pref_Speech_summary">Announce score via speakers (computer voice)</string>                         <!-- TODO: new entry -->
+    <string name="pref_speechPitch">Pitch</string>                                                                   <!-- TODO: new entry -->
+    <string name="pref_speechPitch_summary">Lower values for lower voice (0–100)</string>                            <!-- TODO: new entry -->
+    <string name="pref_speechRate">Rate</string>                                                                     <!-- TODO: new entry -->
+    <string name="pref_speechRate_summary">Lower values for slower speech (0–100)</string>                           <!-- TODO: new entry -->
+    <string name="pref_speechPauseBetweenParts">Pause between score parts</string>                                   <!-- TODO: new entry -->
+    <string name="pref_speechPauseBetweenParts_summary">Higher values for more pause between words (0–1500)</string> <!-- TODO: new entry -->
+
+    <string name="pref_Other">Misc</string>
+    <string name="pref_Appearance">Apariencia</string>
+    <string name="pref_Appearance_summary">Colores. Banderas. Barra de acciones.</string>
+    <string name="pref_Colors">Colores</string>
+    <string name="pref_Colors_summary">Controla los colores de los elementos de Squore Board</string>
+    <string name="pref_Avatars">Avatar de jugadores</string>
+    <string name="pref_Avatars_summary">Imagen pequeña del jugador especificada en feed</string>
+    <string name="pref_showAvatarOn">Mostrar imagen en</string>
+    <string name="pref_hideAvatarForSameImage">Ocultar avatar si es idéntico</string>
+    <string name="pref_CountryFlags">Países / Banderas</string>
+    <string name="pref_CountryFlags_summary">Controla cómo se muestran los países / banderas</string>
+    <string name="pref_showCountryAs">Mostrar país como</string>
+    <string name="pref_hideFlagForSameCountry">Ocultar banderas para la misma nacionalidad</string>
+    <string name="pref_prefetchFlags">Captación previa imágenes de banderas</string>
+    <string name="pref_prefetchFlags_summary">Toma entre 2 y 3 MB de almacenamiento</string>
+    <string name="pref_TextSize_summary">Controla el tamaño del texto de los elementos de Squore Board</string>
+    <string name="pref_Statistics">Estadísticas de punto ganador / error</string>
+    <string name="pref_Statistics_summary">Comportamiento de la app para registrar puntos ganadores / errores</string>
+    <string name="pref_ColorPalette">Paleta de color</string>
+    <string name="pref_ColorPalette_summary">Elija un conjunto de colores (que se pueden elegir para establecer colores de fondo y texto)</string>
+    <string name="pref_ColorTargets_Backgrounds">Fondos</string>
+    <string name="pref_ColorTargets_Texts">Textos</string>
+    <string name="pref_textColorDetermination">Determinación del color del texto</string>
+    <string name="pref_textColorDetermination_summary">Dependiendo del color de fondo o manualmente</string>
+    <string name="pref_PlayerColor">Color del jugador</string>
+    <string name="pref_showPlayerColorOn">Mostrar color del jugador</string>
+    <string name="pref_showPlayerColorOn_summary">Determine en qué elementos de la GUIA se muestra el color del jugador elegido</string>
+    <string name="pref_serveButtonTransparencyNonServer">Transparencia del botón de servicio</string>
+    <string name="pref_serveButtonTransparencyNonServer_summary">Los valores altos (máximo 100) hacen que el botón del receptor sea menos visible</string>
+    <!--
+        <string name="pref_Colors_TextDynamically">Text Color Dynamically</string>
+        <string name="pref_Colors_TextDynamically_summary">Automatic black or white depending on the chosen background color</string>
+    <string name="pref_TextSize">Text Size</string>
+    -->
+    <string name="pref_TextSizePlayerName">Nombres de los jugadores</string>
+    <string name="pref_TextSizeServeSide">Lado de servicio</string>
+    <string name="pref_TextSizeScore">Botones de puntuación</string>
+    <string name="pref_TextSizeHistory">Historial de puntuación</string>
+    <string name="pref_TextSizeScoreAsBigAsPossible">Texto en los botones de puntuación lo más grande posible</string>
+    <string name="pref_TextSizeScoreAsBigAsPossible_summary">En algunos dispositivos, ir a dos dígitos hace que los dígitos desaparezcan si se usa esta opción.</string>
+    <string name="pref_ActionBar">Barra de acciones</string>
+    <string name="pref_showActionBar">Mostrar barra de acción</string>
+    <string name="pref_showActionBar_summary">Sin la barra de acción, hay más espacio disponible para usar un tamaño de fuente más grande para la puntación (requiere reinicio)</string>
+    <string name="pref_showTextInActionBar">Mostrar texto en los botones de la barra de acción</string>
+    <string name="pref_showFullScreen">Mostrar pantalla completa</string>
+    <string name="pref_showScoringHistoryInMainScreen">Mostrar historial de puntuación en el marcador</string>
+    <string name="pref_gameScoresAppearance">Cómo mostrar los juegos en el marcador</string>
+    <string name="pref_gameScoresAppearance_summary">Escoger entre \'corto\' como 1–0, 2–0, 2–1 vs \'puntuación de juegos completos\' como 11–8, 11–7, 5–11</string>
+    <string name="pref_scorelineLayout">Diseño de línea de puntuación</string>
+    <string name="pref_showSideButtonsWithinScoreButtons">Botones laterales dentro de los botones de Puntuación</string>
+    <string name="pref_showSideButtonsWithinScoreButtons_summary">Para hacer \'Botones de puntuación \' aún más grande.</string>
+    <string name="pref_AppealHandGestureIconSize">Tamaño del icono en el cuadro de diálogo \'Appeal \'</string>
+    <string name="pref_AppealHandGestureIconSize_summary">
+Tamaño del icono en el cuadro de diálogo \'Appeal\'. Establezca cero si no desea ver los iconos.</string>
+    <string name="pref_newMatchLayout">Nuevo diseño del partido</string>
+    <string name="pref_newMatchLayout_summary">Para tener solo un número limitado de campos para completar, elija \'Simple\'</string>
+    <string name="pref_showChoosenDecisionShortly">Mostrar decisión como mensaje</string>
+    <string name="pref_showChoosenDecisionShortly_summary">Mostrar un mensaje corto con el comunicado oficial (después de la apelación o mala conducta)</string>
+    <string name="pref_BackKeyBehaviour">\'tecla de retroceso\' comportamiento</string>
+    <string name="pref_VolumeKeysBehaviour">\'Teclas de volumen\' comportamiento</string>
+    <string name="pref_VolumeKeysBehaviour_summary">\'Sube el volumen\' anota un punto para el jugador A, \'Bajar volumen\' para B</string>
+    <string name="pref_VolumeKeysBehaviour_question">¿Desea usar los botones de volumen para anotar la puntuación con el dispositivo en orientación vertical?\n(La opción se puede desactivar nuevamente en \'Configuraciones / Comportamiento\')</string>
+    <string name="pref_StartupAction">Acción de inicio</string>
+    <string name="pref_StartupAction_summary">La acción que se realizará automáticamente cuando se inicie la aplicación.</string>
+    <string name="pref_changeSides">Cambiar de lado / cambiar jugadores</string>
+    <string name="pref_changeSides_short">Cambiar lados</string>
+    <string name="pref_changeSides_summary">Cómo reflejar / activar el cambio de lados en el marcador</string>
+    <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape">Intercambia jugadores cuando el dispositivo gira 180 grados</string>
+    <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary">Permite intercambiar jugadores en la pantalla girando el dispositivo, o mostrando la puntuación a los jugadores volteando el dispositivo hacia los jugadores</string>
+    <string name="pref_swapPlayersBetweenGames">Intercambia jugadores al comienzo de un nuevo juego</string>
+    <string name="pref_useChangeSidesFeature">Cambiar la función de lados</string>
+    <string name="pref_changeSidesWhen_GSM">Cuándo intercambiar jugadores / equipos</string>
+    <string name="pref_swapPlayersBetweenGames__TennisPadel">Intercambia jugadores después de cada juego impar</string>
+    <string name="pref_showDetailsAtEndOfGameAutomatically">Auto mostrar detalles del juego</string>
+    <string name="pref_showDetailsAtEndOfGameAutomatically__TennisPadel">Mostrar automáticamente detalles del set</string>
+    <string name="pref_showDetailsAtEndOfGameAutomatically_summary">Cuando un juego termina, abre automáticamente la pantalla para mostrar la representación gráfica</string>
+    <string name="pref_showTips">Mostrar \'Consejos\'</string>
+    <string name="pref_recordRallyEndStatsAfterEachScore">Mostrar \'Ganados/Fallados\' diálogo después de cada punto</string>
+    <string name="pref_recordRallyEndStatsAfterEachScore_summary">Para mantener estadísticas de ganados / perdidos por jugador</string>
+    <string name="pref_recordRallyEndStatsDetails">Detalles para grabar</string>
+    <string name="pref_recordRallyEndStatsDetails_summary">BH/FH, delantero/Volley/Atras, Dirección de pelota, Trayectoria de pelota</string>
+    <string name="pref_showTips_no_more">No mostrar \'Consejos\' nunca más</string>
+    <string name="pref_useTossFeature">Utilizar \'Sortear\' función</string>
+    <string name="pref_useTossFeature_summary">Cualquiera \'Sugerir\' para mostrar el botón flotante, \'Automatico\' para mostrar directamente al comienzo del partido, o \'No usar\'</string>
+    <string name="pref_useShareFeature">Usar \'Compartir\' función</string>
+    <string name="pref_useShareFeature_summary">Cualquiera \'Sugerir\' para mostrar el botón flotante, \'Automatico\' para mostrar directamente al final del partido, o \'No usar\'</string>
+    <string name="pref_shareAction">Acción para compartir</string>
+    <string name="pref_shareAction_summary">Compartir acción para ejecutar al final de un partido cuando \'Compartir\' la función está establecida en  \'Sugerir\' o \'Automatico\'</string>
+    <string name="pref_useOfficialAnnouncementsFeature_summary">Anuncios oficiales: Cualquiera \'Sugerir\' mostar en botón flotante, \'Automatico\' mostrar directamente cuando sea aplicable, o \'No usar\'</string>
+    <string name="pref_useTimersFeature_summary">Cualquiera \'Sugerir\' mostrar en botón flotante, \'Automatico\' mostrar directamente cuando sea aplicable, o \'No usar\'</string>
+    <string name="pref_endGameSuggestion">Fin del juego</string>
+    <string name="pref_endGameSuggestion_summary">Cualquiera \'Sugerir\' para mostrar el diálogo, \'Automatico\' para finalizar el juego directamente cuando corresponda, o \'No usar\'</string>
+    <string name="pref_lockMatch">Partida bloqueada</string>
+    <string name="pref_lockMatch_summary">Partida bloqueada para prevenir cambios accidentales</string>
+    <string name="pref_lockMatchMV_summary">Cuándo bloquear la partida para evitar cambios accidentales</string>
+    <string name="pref_useOfficialAnnouncementsFeature">Utilizar \'Anuncios\' funciones</string>
+    <string name="pref_officialAnnouncementsLanguage">Idioma de anuncios</string>
+    <string name="pref_officialAnnouncementsLanguage_summary">Idioma en el que se deben sugerir \'Anuncios\'</string>
+    <string name="pref_useTimersFeature">Utilizar \'Tiempos\' función</string>
+    <string name="pref_MatchGameDuration">Duración del juego/partida</string>
+    <string name="pref_showMatchDurationChronoOn">Mostrar \'Duración de la partida\' on</string>
+    <string name="pref_showLastGameDurationChronoOn">Mostar \'Duración del juego\' on</string>
+    <string name="pref_showLastGameDurationChronoOn__TennisPadel">Mostar \'Duración del set\' on</string>
+    <string name="pref_showFieldDivisionOn">Mostrar \'Campo o división\' on</string>
+    <string name="pref_timerViewType">Tipo de tiempo</string>
+    <string name="pref_hapticFeedbackPerPoint">Haptic feedback per point</string>
+    <string name="pref_hapticFeedbackPerPoint_summary">Vibra brevemente cada vez que se agrega un punto, juego terminado o se deshace una acción</string>
+    <string name="pref_hapticFeedbackOnGameEnd">Haptic feedback on game end</string>
+    <string name="pref_hapticFeedbackOnGameEnd_summary">Vibra brevemente si se ha alcanzado la puntuación final del juego</string>
+    <string name="pref_numberOfMinutesAfterWhichToLockMatch">Número de minutos antes del autobloqueo</string>
+    <string name="pref_numberOfMinutesAfterWhichToLockMatch_summary">Si la partida no cambia durante este número de minutos, se bloquea automáticamente</string>
+    <string name="pref_indicateGameBall">Indique \'Bola de juego\' en los botones de puntuación</string>
+    <string name="pref_indicateGameBall_summary">Haga comentarios visuales en los botones de puntuación sobre el hecho de que el próximo rally puede conducir a ganar un juego</string>
+    <string name="pref_floatingMessageForGameBall">Mostrar\'Bola de juego\' mensaje</string>
+    <string name="pref_floatingMessageForGameBall__TennisPadel">Mostrar\'Bola de set\' mensaje</string>
+    <string name="pref_floatingMessageForGameBall_summary">Muestra un \'mensaje flotante\' cuando se trata de un juego o una bola de partido</string>
+    <string name="pref_showNewMatchFloatButton">Mostrar\'Nueva partida\' botón flotante</string>
+    <string name="pref_showNewMatchFloatButton_summary">Mostrar botón flotante conveniente para iniciar un nuevo partido (cuando corresponda)</string>
+    <string name="pref_keepScreenOn">
+Mantener la pantalla encendida</string>
+    <string name="pref_keepScreenOn_summary">Evitar que la pantalla se vaya se apague durante el arbitraje de una partida</string>
+    <string name="pref_Timers">Tiempos</string>
+    <string name="pref_TimerDialog">Dialogo de tiempo</string>
+    <string name="pref_Timers_summary">Mostrar automáticamente Duración. Reproduzca sonido y / o vibre cuando termine.</string>
+    <string name="pref_Players">Jugadores</string>
+    <string name="pref_Players_summary">Administre qué valores se usan para Autocompletar cuando ingresa nombres de jugadores con el teclado.</string>
+    <string name="pref_MatchFormat">Formato de partido</string>
+    <string name="pref_MatchFormat_summary">Número de juegos para jugar, a cuántos puntos, mecanismo de puntuación</string>
+    <string name="pref_showLastGameInfoInTimer">Mostrar información de los últimos juegos en el diálogo del tiempo</string>
+    <string name="pref_OfficialSquashRulesURLs">Reglas oficiales de squash URLs</string>
+    <string name="pref_OfficialSquashRulesURLs_summary">La primera de las URL se usa desde \'Mostrar/Reglas oficiales de squash\' opción de menú</string>
+    <string name="pref_FlagsURLs">Banderas URLs</string>
+    <string name="pref_FlagsURLs_summary">La primera de las URL se usa para recuperar banderas si se especifican países.</string>
+    <string name="pref_AutomateAsMuchAsPossible">Automatización</string>
+    <string name="pref_AutomateAsMuchAsPossible_dialog">Uso de: sorteo, temporizador, anuncios, final del juego</string>
+    <string name="pref_ScreenLayoutPrefs">Uso de la pantalla</string>
+    <string name="pref_ScreenLayoutPrefs_dialog">Opciones de ajuste: botón lateral dentro del botón de puntuación, pantalla completa, barra de acción para maximizar el uso de la pantalla</string>
+
+    <string name="pref_useSoundNotificationInTimer">Usar notificaciones de audio</string>
+    <string name="pref_useAudioNotifications">Usar notificaciones de audio</string>
+    <string name="pref_useSoundNotificationInTimer_summary">Reproduzca el sonido de notificación cuando finalice el temporizador (y cuando queden 15 segundos de pausa, y al medio tiempo de calentamiento)</string>
+    <string name="pref_showPauseButtonOnTimer">Mostrar botón para pausar el temporizador</string>
+    <string name="pref_cancelTimerWhenTimeIsUp">Ocultar temporizador cuando se acabe el tiempo</string>
+    <string name="pref_showTimeIsAlreadyUpFor_Chrono">Muestre un pequeño temporizador que muestre cuánto tiempo \'Tiempo!\'  se muestra</string>
+    <string name="pref_showAdjustTimeButtonsInTimer">Mostrar ajustar botones de tiempo restante</string>
+    <string name="pref_showUseAudioCheckboxInTimer">Mostrar casilla de verificación de audio en el temporizador</string>
+    <string name="pref_archive_summary">Agrupación y clasificación de partidos archivados</string>
+    <string name="pref_groupArchivedMatchesBy">Agrupar partidas archivadas por</string>
+    <string name="pref_sortOrderOfArchivedMatches">Orden de clasificación de partidas archivadas</string>
+    <string name="pref_useVibrationNotificationInTimer">Usar vibración en notificaciones</string>
+    <string name="pref_useVibrationNotificationInTimer_summary">
+Deje que el dispositivo vibre cuando termine el temporizador (y cuando queden 15 segundos de pausa, y al medio tiempo de calentamiento)</string>
+    <string name="pref_timerWarmup">Número de segundos para el calentamiento.</string>
+    <string name="pref_timerWarmup_summary">La cantidad de segundos que los jugadores obtienen para un calentamiento en la pista. Oficialmente 4 minutos: 2 minutos por lado</string>
+    <string name="pref_timerPauseBetweenGames">El número de segundos entre juegos</string>
+    <string name="pref_timerPauseBetweenGames_summary">El número de segundos antes de que comience el próximo juego. Oficialmente 90 segundos. (PSA: 120)</string>
+    <string name="pref_timerPauseBetweenGames_values">Valores seleccionables para el tiempo entre juegos</string>
+    <string name="pref_timerPauseBetweenGames_values_summary">
+Valores seleccionables al comienzo de una nueva partida para la cantidad de segundos entre juegos para esa partida (generalmente 90 o 120)</string>
+    <string name="pref_timerWarmup_values">Valores seleccionables para calentamiento</string>
+    <string name="pref_timerWarmup_values_summary">Valores seleccionables para el calentamiento al comienzo de una nueva partida</string>
+    <string name="pref_timerInjury">El número de segundos para recuperarse de una lesión.</string>
+    <string name="pref_timerInjury_summary">El número de segundos que un jugador tiene para recuperarse y reanudar el juego después de una lesión. Oficialmente 180 segundos.</string>
+<!--
+    <string name="pref_landscapeOrientationOnly">Landscape only</string>
+    <string name="pref_landscapeOrientationOnly_summary">Show the scoreboard in landscape orientation only. Portrait is less intuitive.</string>
+-->
+    <string name="pref_OrientationPreference">Orientaciones</string>
+    <string name="pref_OrientationPreference_summary">
+Qué orientaciones usar. El vertical es menos intuitivo pero más fácil con una sola mano.</string>
+    <string name="pref_saveMatchesForLaterUsage">Guardar partidos</string>
+    <string name="pref_saveMatchesForLaterUsage_summary">Guarde los partidos para volver a consultar los resultados más tarde</string>
+    <string name="pref_gameEndScore">Puntos para ganar el juego</string>
+    <string name="pref_gameEndScore_summary">Número de puntos para ganar el juego. Oficialmente es 11.</string>
+    <string name="pref_numberOfGamesToWin">Numero de juegos ganados</string>
+    <string name="pref_numberOfGamesToWin_summary">Número de juegos para ganar el partido. Oficialmente es 3.</string>
+    <string name="pref_handicapFormat">Permitir especificar una desventaja</string>
+    <string name="pref_handicapFormat_summary">Para comenzar un puntaje que no sea 0–0</string>
+    <string name="pref_playAllGames">Juega todos los juegos</string>
+    <string name="pref_playAllGames_summary">Juegue \'Total-de-x-juegos\' en lugar de \'El mejor-de-x-juegos\'</string>
+    <string name="pref_useEnglishScoring">Puntuación de entrada / salida</string>
+    <string name="pref_useEnglishScoring_summary">\'Antiguo\' formato de puntuación. El jugador solo puede anotar si sirve.</string>
+    <string name="pref_finalSetFinish">Final Set Finish</string> <!-- Tennis/Padel -->
+    <string name="pref_tiebreakFormat">Tie-break formato</string>
+    <string name="pref_tiebreakFormat_summary">Qué regla seguir en caso de tie-break</string>
+    <string name="pref_web_integration">Internet</string>
+    <string name="pref_web_integration_summary">Feed URL para la selección de partido. Publicar el resultado del partido en el sitio web. Compartir el resultado del partido.</string>
+    <string name="pref_playerList">Lista de jugadores</string>
+    <string name="pref_playerList_summary">Para autocompletar al escribir nombres de jugadores</string>
+    <string name="pref_clubList">Listado de clubes</string>
+    <string name="pref_clubList_summary">Para autocompletar al escribir el nombre del club de jugadores</string>
+    <string name="pref_AutoComplete">Autocompletar</string>
+    <string name="pref_numberOfCharactersBeforeAutocomplete">Número de caracteres para autocompletar</string>
+    <string name="pref_numberOfCharactersBeforeAutocomplete_summary">El número de caracteres que necesita escribir antes de que se complete automáticamente para sugerir posibles nombres de jugadores</string>
+    <string name="pref_numberOfCharactersBeforeAutocompleteCountry">Número de caracteres para autocompletar el país</string>
+    <string name="pref_numberOfCharactersBeforeAutocompleteCountry_summary">El número de caracteres que debe escribir antes de que se complete automáticamente para sugerir posibles nombres de países</string>
+    <string name="pref_maxNumberOfPlayersInGroup">Número de jugadores en un grupo / equipo</string>
+    <string name="pref_maxNumberOfPlayersInGroup_summary">Número máximo de jugadores en un grupo. P.ej. para agregar los 6 partidos para un grupo de 4 jugadores en \'Mi lista\'</string>
+    <string name="pref_removeMatchFromMyListWhenSelected">Eliminar partido de mi lista</string>
+    <string name="pref_removeMatchFromMyListWhenSelected_summary">Cuando finaliza una partida seleccionada de la lista, la aplicación puede sugerir eliminarla de \'Mi lista\'</string>
+    <string name="pref_continueRecentMatch">Continuar partido reciente</string>
+    <string name="pref_continueRecentMatch_summary">Si existe un resultado reciente para una partida seleccionada de \'Mi lista\', use ese resultado como punto de comienzo</string>
+    <string name="pref_matchList">Lista de partidos</string>
+    <string name="pref_matchList_summary">Lista fija de partidas para una fácil selección</string>
+    <string name="pref_matchList_not_set">Si necesita refinar múltiples partidas, puede definirlas aquí por adelantado para una fácil selección más adelante. También puede controlar esta lista ingresando (copiando / pegando) texto plano en la sección \'%1$s\' de la pantalla \'%2$s\'.</string>
+    <string name="pref_eventList">Lista de eventos</string>
+    <string name="pref_eventList_summary">Lista de eventos para \'Autocompletar\'</string>
+    <string name="pref_roundList">Lista de ronda</string>
+    <string name="pref_roundList_summary">Lista de rondas para \'Autocompletar\'</string>
+    <string name="pref_feedPostUrls">Feed seleccionable URLs</string>
+    <string name="pref_feedPostUrls_summary">Configure URLs here that serve as Feed (and optionally Post) urls. Format is Name=displayname,FeedMatches=http://input,PostResult=http://post (serves as possible values for \'Active URLs\')</string>
+    <string name="pref_feedPostUrl">Active URLs</string>
+    <string name="pref_feedPostUrl_summary">URL actual utilizadas cuando\'Seleccionar nuevo partida\' esta elegido (y si una publicada URL para \'Publicar resultado\')</string>
+    <string name="pref_postDataPreference">Determinar qué datos se publican</string>
+    <string name="pref_postDataPreference_summary">Publicar JSON proporciona más detalles, pero los datos exactos pueden cambiar con las nuevas versiones de la app.</string>
+    <string name="pref_useFeedNameAsEventName">Usar nombre de feed como nombre de evento</string>
+    <string name="pref_useFeedNameAsEventName_summary">Use el nombre del feed cuando seleccione una partida como nombre de evento para esa partida</string>
+    <string name="pref_useGroupNameAsEventData">Usar nombre de grupo como datos de evento</string>
+    <string name="pref_useGroupNameAsEventData_summary">Use el nombre del grupo cuando seleccione una partida como Nombre del evento y Ronda para esa partida</string>
+    <string name="pref_feedPostUrl_not_set">Puede controlar qué partidas aparecen aquí al cambiar Feed presionando el botón \'Globe\'. También puede agregar su propio feed al proporcionar una o más URL en la sección \'%1$s\' de la pantalla \'%2$s\'. Consulte las páginas de ayuda para más información.</string>
+    <string name="posturl_tip">Puede especificar en qué sitio se publica el resultado del partido. En cooperación con, ej. su webmaster de clubes de squash, los resultados de los partidos pueden estar disponibles en línea directamente. Consulte las páginas de ayuda para más información..</string>
+    <string name="pref_readContactsForAutoCompletion">Usar contactos para autocompletar</string>
+    <string name="pref_readContactsForAutoCompletion_summary">Lea los nombres de los contactos y úselos para la funcionalidad \'Autocompletar \' cuando ingrese los nombres de los jugadores. </string>
+    <string name="pref_readContactsForAutoCompletion_max">Número máximo de contactos para leer para autocompletar</string>
+    <string name="pref_readContactsForAutoCompletion_max_summary">Aumente bajo su propio riesgo si realmente tiene más contactos que este número</string>
+    <string name="if_you_have_a_lot_of_contacts_dot_dot_dot">
+        Si su dispositivo tiene muchos contactos, esto puede hacer que la app se vuelva lento
+        \n - Al inicio
+        \n - Al escribir manualmente los nombres de los jugadores.
+        \n
+        \nEste dispositivo contiene %1$d contactos</string>
+    <string name="pref_onlyForContactGroups">Solo use contactos en grupo</string>
+    <string name="pref_onlyForContactGroups_summary">Leer solo los nombres de mis contactos que están en este \'Grupo de contactos\'</string>
+    <string name="pref_suggestToPostResult">Sugerir para publicar el resultado del partido</string>
+    <string name="pref_suggestToPostResult_summary">Sugiera publicar el resultado del partido cuando un partido haya finalizado. Si no está marcado, aún puede publicar un resultado del partido a través de \'Publicar el resultado del partido en el sitio \'</string>
+    <string name="pref_showCompletedMatchesFromFeed">Mostrar partidas completadas</string>
+    <string name="pref_VisibilityOfNewTournaments">Seleccionable de torneos</string>
+    <string name="pref_tournamentWasBusy_DaysBack">Final del torneo</string>
+    <string name="pref_tournamentWasBusy_DaysBack_summary">El torneo terminó máximo hace x días</string>
+    <string name="pref_tournamentWillStartIn_DaysAhead">Inicio del torneo</string>
+    <string name="pref_tournamentWillStartIn_DaysAhead_summary">El torneo comenzará en x días o menos.</string>
+    <string name="pref_tournamentMaxDuration_InDays">Duración del torneo</string>
+    <string name="pref_tournamentMaxDuration_InDays_summary">El torneo durará x días como máximo</string>
+    <string name="pref_hideCompletedMatchesFromFeed">Ocultar partidas completadas</string>
+    <string name="pref_hideCompletedMatchesFromFeed_summary">Un feed puede contener partidos ya jugados (incluyendo el resultado). Si no desea ver estas coincidencias, marque esta opción</string>
+    <string name="pref_groupMatchesInFeedByCourt">Agrupar por corte</string>
+    <string name="pref_groupMatchesInFeedByCourt_summary">Un feed puede especificar en qué cancha se juega (se supone que se juega) un partido. Si es así, y esta opción está activa, las coincidencias se agruparán por pista</string>
+    <string name="pref_removeSeedingAfterMatchSelection">Eliminar la lista de los nombres de los jugadores</string>
+    <string name="pref_removeSeedingAfterMatchSelection_summary">Eliminar, por ejemplo. la cadena de inicialización [5/8] después de seleccionar una partida de un feed</string>
+    <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Cambiar a la lista de jugadores si la lista de partidas del feed está vacía</string>
+    <string name="pref_smsResultToNr">Número de teléfono prederterminado para la acción </string>
+    <string name="pref_smsResultToNr_summary">El número de teléfono que se completará previamente cuando elija la opción de menú \'Compartir / Mensaje resultado de partido\'</string>
+    <!--<string name="pref_smsResultToNr_not_set">You can set a default recipient in the \'%1$s\' screen of \'%2$s\'</string>-->
+    <string name="pref_refereeName">Nombre del arbitro</string>
+    <string name="pref_refereeName_summary">
+Nombre del árbitro como aparecerá en la \'Hoja de puntaje\' si lo comparte</string>
+    <string name="pref_refereeList">
+Lista de Árbitros</string>
+    <string name="pref_refereeList_summary">Para autocompletar al escribir nombres de árbitro / marcador</string>
+    <string name="pref_Mail">Mail</string>
+    <string name="pref_mailResultTo">Dirección de email predeterminada para \'Resultado de correo\' action</string>
+    <string name="pref_mailResultTo_summary">La dirección de email que se completará previamente cuando elija la opción de menú \'Resultado de correo\'</string>
+    <string name="pref_mailFullScoringSheet">Envíe la hoja de puntuación completa</string>
+    <string name="pref_mailFullScoringSheet_summary">El email compuesto incluirá una hoja de puntuación completa</string>
+    <string name="pref_mailResultTo_not_set">Puede establecer un destinatario de correo predeterminado en el \'%1$s\' pantalla de \'%2$s\'</string>
+
+    <string name="pref_live_score_summary">Optimice y vea Live Score</string>
+    <string name="pref_live_score_url">live?lang=en</string>
+    <string name="pref_live_score_url_summary">Use esta URL para ver todas las coincidencias compartidas con esta app, e.p. relacionado con tu evento</string>
+    <string name="pref_LiveScorePrefs">Apoyar puntuación en vivo</string>
+    <string name="pref_updateLiveScore">Actualizar puntuación en vivo</string>
+    <string name="pref_LiveScorePrefs_dialog">Ajuste las opciones: use la función Compartir (a automático) y Acción para compartir (para coincidir con los detalles después de cada mitad de un juego) para optimizar el soporte de puntuación en vivo</string>
+    <string name="pref_Cast_ShowGraphDuringTimer">Muestra la puntación del juego y el gráfico de puntuación del último juego entre juegos y al final del partido</string>
+    <string name="pref_castScreenLogoUrl">URL del logo para pantalla de transmisión</string>
+    <string name="pref_castScreenSponsorUrl">URL del patrocinador para Cast Screen</string>
+    <string name="pref_useCastScreen">Transmitir pantalla para usar</string>
+    <string name="pref_useCastScreen_summary">No es necesario cambiar manualmente. Principalmente para pruebas</string>
+
+    <string name="for_this_to_take_effect_a_restart_is_required">Para que esto surta efecto es necesario reiniciar</string>
+    <string name="pref_reset_title">Restablecer a los predeterminados</string>
+    <string name="pref_reset_message">¿Revertir todos los valores a sus valores predeterminados?</string>
+    <string name="pref_reset_all">Si, RESTABLECER todos los valores</string>
+    <string name="pref_reset_no_keep">No, MANTENER valores actuales</string>
+    <string name="pref_import_prefs">Importar configuraciones</string>
+    <string name="pref_export_prefs">Exportar configuraciones</string>
+
+    <!-- TT RL -->
+    <string name="pref_numberOfServiceCountUpOrDown">Cantidad de saques. Contar</string>
+    <string name="pref_numberOfServiceCountUpOrDown_summary">Abajo: número de servicios restantes. Arriba: servicios consecutivos a realizar</string>
+    <string name="number_of_serves_per_player">Número de saques por jugador</string>
+
+</resources>

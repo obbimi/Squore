@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="bt_pull_or_push">Escoger</string>
+    <string name="bt_pull">Pull</string>
+    <string name="bt_push">Push</string>
+    <string name="bt_pull_in_match_from_device_x_or_push_to">Pull match from device %1$s in (to display on this device), or
+        push match from this device to %1$s (to display there) ?</string>
+
+    <string name="bt_match_received_by_X">Partido recibido por %1$s</string>
+    <string name="bt_bluetooth_mirror">Mirror score (Bluetooth)</string>
+
+    <string name="bt_connection_to_device_X_was_lost">Se perdió la conexión Bluetooth con %s </string>
+    <string name="bt_connected_to_device_X">Conectado al dispositivo %s</string>
+    <string name="bt_already_connected_to_X">Ya conectado a %s</string>
+
+    <string name="bt_unable_to_connect_device_X">No se puede conectar el dispositivo %s</string>
+    <string name="bt_unable_to_connect_device_info"><![CDATA[<html>Asegúrese de que en el dispositivo de destino seleccionado %1$s
+    <ul>
+    <li>bluetooth está encendido</li>
+    <li>este dispositivo está (todavía) listado como dispositivo emparejado</li>
+    <li>%2$s is running</li>
+    </ul>
+</html>]]></string>
+
+    <string name="bt_select_device">Seleccione el dispositivo</string>
+    <string name="bt_select_device_for_scoreboard_mirroring">Seleccionar dispositivo para duplicar el marcador</string>
+
+    <string name="bt_no_bluetooth_on_device">No hay bluetooth en este dispositivo</string>
+    <string name="bt_no_bluetooth_on_device_info">No es posible duplicar el marcador en este dispositivo a otro dispositivo (o viceversa) a través de bluetooth.</string>
+
+    <string name="bt_bluetooth_turning_on_elipses">Encendiendo Bluetooth …</string>
+    <string name="bt_bluetooth_has_been_turned_on">Bluetooth ha sido activado</string>
+    <string name="bt_bluetooth_turning_off_elipses">La app %s activó bluetooth. Desactivar bluetooth ahora…</string>
+
+    <string name="bt_bluetooth_turned_off">Bluetooth está apagado</string>
+    <string name="bt_bluetooth_turned_off_info">Bluetooth debe estar encendido para poder reflejar la pantalla en otro dispositivo.</string>
+
+    <string name="bt_no_paired">No hay dispositivos emparejados</string>
+    <string name="bt_how_to_pair_info"><![CDATA[<html>Debe emparejar este dispositivo con otro dispositivo que ejecute %1$s para poder reflejar la pantalla del marcador.
+    Por lo general, esto se realiza realizando pasos a lo largo del camino de:
+<ul>
+    <li>en ambos dispositivos, abra la pantalla de configuración de bluetooth</li>
+    <li>asegúrese de que en el dispositivo de destino
+        <ul>
+            <li>bluetooth está activado\'On\'</li>
+            <li>el dispositivo es (temporal) visible para otros dispositivos</li>
+        </ul>
+    </li>
+    <li>
+en este dispositivo seleccione \'Emparejar dispositivo nuevo\'</li>
+    <li>el dispositivo de destino debería aparecer debajo \'Dispositivos disponibles\': selecciónalo</li>
+    <li>Confirme el emparejamiento en ambos dispositivos</li>
+</ul>
+</html>]]></string>
+
+    <string name="bt_no_appropriate_paired_devices_found">No se encontraron dispositivos emparejados apropiados</string>
+    <!--<string name="bt_no_appropriate_paired_devices_found_info">This device is only paired with devices that do not support mirroring screens. Please pair this devices with a phone or tablet.</string>-->
+
+</resources>

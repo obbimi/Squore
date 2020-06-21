@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="scv_side_buttons__Squash">Los __ botones laterales de servicio__ indican
+        \n
+        \n- quien debe servir
+        \n- de que lado (R/D)
+        \n- if it is a handout (?)
+        \n\nEl lado o jugador cambia automáticamente después de cada punto anotado.
+        \n\nSi es necesario, puede alternar lado / jugador tocándolo.
+    </string>
+    <string name="scv_player_buttons_appeal__Squash">Seguir __Stroke/Yes Let/No let__ decisiones tocando el nombre del jugador que solicita un let.
+        \nIngrese su decisión en el cuadro de diálogo que aparece.
+    </string>
+    <string name="scv_player_buttons_misconduct__Squash">También puede realizar un seguimiento de __Advertencia de conducta/Stroke__ decisiones.
+        \n
+        \nMantenga presionado el botón de un jugador para _Mala conducta_ diálogo.</string>
+    <string name="scv_old_fashioned_scoring__Squash">An \'old fasioned\' la hoja de puntaje es visible en la pantalla para su conveniencia.
+        \n\nEsto se puede desactivar a través de \'Configuraciones\'.</string>
+    <string name="scv_announcement_button__Squash">Este botón aparecerá cuando un__anuncio oficial__ esta en orden:
+        \n
+        \n - Comienzo del juego / partido
+        \n - Fin del juego / partido
+        \n - Primer tiebreak
+        \n\nPresiónelo para ver el anuncio.</string>
+    <string name="scv_shirt_color__Squash">Si está a punto de referir a dos jugadores que nunca conoció antes y le cuesta recordar sus nombres,
+        Puedes __entrar un color__ para ambos.
+        \n\nHaga clic largo en el botón lateral de servir para seleccionar un color.</string>
+    <string name="scv_game_scores__Squash">El número de juegos ya ganados por cada jugador son visibles aquí.
+        \n
+        \nToque para ver los puntajes exactos de los juegos anteriores.</string>
+    <string name="scv_timer_button__Squash">Este botón le permitirá iniciar un __temporizador__.
+        \n\n Solo aparecerá cuando sea apropiado
+        \n
+        \n- Calentar
+        \n- Antes del comienzo del primer juego.
+        \n- Entre juegos
+        \n
+        \nSi necesita un temporizador de lesiones en algún lugar a lo largo de un partido, puede comenzar uno a través del menú.
+      </string>
+    <string name="scv_overflow_submenu__Squash">Hay más opciones disponibles en el menú. Puedes por ejemplo:
+        \n
+        \n- Personaliza la apariencia y el comportamiento de la app a través de \'Configuraciones\'
+        \n- Mostrar detalles de partidos previamente 
+        \n- Comience un cronómetro de lesiones
+        \n- Exporte / importe todas sus coincidencias a / desde un archivo zip
+        \n- Consulte una página de ayuda elaborada para esta app
+        \n- Consulta las reglas oficiales de squash
+        \n- Habilite las opciones para grabar fácilmente FH/BH estadísticas de ganados / fallados (p.ej. para entrenadores / entrenadores mientras observan el partido de sus alumnos)
+          </string>
+    <string name="scv_few_more_gui_hints__Squash">Algunas sugerencias más de GUI:
+        \n
+        \n__Botones del jugador__
+        \n
+        \n- Toca con dos dedos para grabar un evento de rotura de bola / cuerdas / raqueta 
+        \n- Desliza hacia adelante y hacia atrás sobre uno para editar (o proporcionar más) detalles del partido
+        \n- Deslice hacia la izquierda sobre el nombre del servidor para cambiar el lado del servicio a la izquierda, idem para la derecha
+        \n
+        \n__Botones de puntuación__
+        \n
+        \n- Toque ambos al mismo tiempo para ingresar un puntaje de inicio (referir un partido que ya comenzó)
+        \n- Mantenga presionados ambos para verificar el formato del partido en progreso
+        \n- Deslice diagonalmente hacia adelante y hacia atrás sobre un botón de puntaje para reiniciar opcionalmente el puntaje (por ejemplo, después de mostrar la aplicación a otros miembros del club)
+          </string>
+    <string name="scv_new_match_button__Squash">__That\'s it. Happy squashing, happy reffing.__
+        \n\nComienza una nueva partida tocando este botón.</string>
+</resources>

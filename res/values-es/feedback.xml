@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="cmd_feedback">Feedback</string>
+
+    <string name="lbl_do_you_like_this_app">¿Te gusta esta app?</string>
+    <string name="cmd_yes_i_like">Si</string>
+    <string name="cmd_no_there_is_a_problem">No, hay un problema</string>
+    <string name="lbl_take_a_minute_to_support">Si te gusta, tómate un minuto para valorar la app.</string>
+    <string name="cmd_rate_the_app">Califica la app</string>
+    <string name="cmd_share">Compartir</string>
+    <string name="cmd_share_with_friends">Compartir con amigos</string>
+    <string name="cmd_like_on_facebook">Me gusta en facebook</string>
+    <string name="lbl_please_describe_the_problem">Describa el problema lo más detallado posible.</string>
+    <string name="cmd_email_the_developer">Email al desarrollador</string>
+</resources>

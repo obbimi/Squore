@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright (C) 2018  Iddo Hoeve
+**
+** Squore is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- display values for java enumeration values -->
+
+    <string-array name="DownUp_NrOfServes_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.DownUp -->
+        <item>Arriba</item>
+        <item>Bajo</item>
+    </string-array>
+    <string-array name="EndMatchManuallyBecause_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.EndMatchManuallyBecause -->
+        <item>Retirada por lesión</item>
+        <item>Conducta de partido</item>
+    </string-array>
+    <string-array name="BrokenEquipment_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.BrokenEquipment -->
+        <item>Cuerda rota</item>
+        <item>Raqueta rota</item>
+        <item>Pelota rota</item>
+    </string-array>
+    <string-array name="OrientationPreference_DisplayValues">
+        <item>Horizontal</item>
+        <item>Vertical</item>
+    </string-array>
+    <string-array name="PostDataPreferenceDisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.PostDataPreference -->
+        <item>Envia solo los datos más relevantes</item>
+        <item>Envia solo los datos más relevantes + json={}</item>
+        <item>Envia solo datos json data en el contenido</item>
+    </string-array>
+    <string-array name="LockState_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.LockState -->
+        <item>Desbloqueado (inalterable)</item>
+        <item>Desbloqueado</item>
+        <item>Desbloqueado (Manual)</item>
+        <item>Desbloqueado (Final del juego)</item>
+        <item>Bloqueado (Manual)</item>
+        <item>Bloqueado (Manual)</item>
+        <item>Bloqueado (Final del partido)</item>
+        <item>Bloqueado (Terminado manualmente el partido)</item>
+        <item>Bloqueado (Tiempo de inactividad)</item>
+        <item>Partido terminado compartido</item>
+        <item>Bloqueado (Retirado)</item>
+        <item>Bloqueado (Conducta de partido)</item>
+    </string-array>
+    <string-array name="DetermineTextColor_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.DetermineTextColor -->
+        <item>Elegir automáticamente negro o blanco</item>
+        <item>Elegir automáticamente paleta de colores</item>
+        <item>Manualmente</item>
+    </string-array>
+    <string-array name="KeepScreenOnWhen_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.KeepScreenOnWhen -->
+        <item>Siempre</item>
+        <item>Partido en juego</item>
+        <item>Nunca</item>
+    </string-array>
+    <string-array name="BackKeyBehaviour_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.BackKeyBehaviour -->
+        <item>Pulsar dos veces para salir</item>
+        <item>Pulsar una vez para salir</item>
+        <item>Retroceder marcador (confirmar)</item>
+        <item>Retroceder marcador (no confirmar)</item>
+        <item>Activar lado de servicio</item>
+    </string-array>
+    <string-array name="VolumeKeysBehaviour_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.VolumeKeysBehaviour -->
+        <item>Ninguno</item>
+        <item>Ajustar marcador</item>
+        <item>Ajustar marcador (en posición vertical solamente)</item>
+    </string-array>
+    <string-array name="RallyEndStatsPrefs_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.RallyEndStatsPrefs -->
+        <item>Swing side (BH/FH)</item>
+        <item>Posisión de ataque</item>
+        <item>Dirección de la pelota</item>
+        <item>Trajectoria de la pelota</item>
+    </string-array>
+    <string-array name="RacketSide_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.RacketSide -->
+        <item>Revés</item>
+        <item>Derecha</item>
+    </string-array>
+    <string-array name="BallDirection_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.BallDirection -->
+        <item>Straight</item>
+        <item>Cross</item>
+        <item>Boast</item>
+    </string-array>
+    <string-array name="BallTrajectory_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.BallTrajectory -->
+        <item>Length</item>
+        <item>Drop</item>
+        <item>Lob</item>
+    </string-array>
+    <string-array name="Position_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.Position -->
+        <item>Front</item>
+        <item>Volley</item>
+        <item>Back</item>
+    </string-array>
+    <string-array name="ConductType_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.ConductType -->
+        <item>Abuse of equipment</item>
+        <item>Obscenity</item>
+        <item>Time wasting</item>
+        <item>Dissent</item>
+        <item>Abuse of official</item>
+        <item>Physical contact</item>
+        <item>Unsporting</item>
+        <item>Coaching</item>
+    </string-array>
+    <string-array name="timerViewType_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.timer.ViewType -->
+        <item>Popup con circulo</item>
+        <item>Entre botones del marcador (solo digitos)</item>
+    </string-array>
+
+    <string-array name="GroupMatchesByDisplayValues">
+        <item>Evento</item>
+        <item>Fecha</item>
+    </string-array>
+    <string-array name="SortOrderDisplayValues">
+        <item>Ascendente</item>
+        <item>Descendente</item>
+    </string-array>
+    <string-array name="OnlineSheetActionDisplayValues">
+        <item>Compartir enlace</item>
+        <item>Avance</item>
+        <item>Ver en el navegador</item>
+        <item>Copiar al portapapeles</item>
+        <item>Eliminar del servidor</item>
+    </string-array>
+    <string-array name="FeatureDisplayValues">
+        <item>No usar</item>
+        <item>Sugerir</item>
+        <item>Mostrar automáticamente</item>
+    </string-array>
+    <string-array name="FeatureDisplayValues_DoAuto">
+        <item>No</item>
+        <item>Sugerir</item>
+        <item>Automáticamente</item>
+    </string-array>
+    <string-array name="ShareMatchPrefsDisplayValues">
+        <item>Compartir enlace con todos los detalles del partido</item>
+        <item>Compartir detalles del partido después de cada juego</item>
+        <item>Compartir detalles del partido después de cada mitad del juego</item>
+        <item>Compartir detalles del partido después de cada punto</item>
+        <item>Compartir resumen del partido</item>
+        <item>Compartir resumen de partidos</item>
+        <item>Texto del resumen del partido a un numero determinado</item>
+        <item>Enviar detalles del partido a la web</item>
+        <item>Enviar hoja de puntación como texto por email</item>
+    </string-array>
+    <string-array name="EndGameDisplayValues">
+        <item>No sugerir</item>
+        <item>Sugerir</item>
+        <item>Terminar automáticamente</item>
+    </string-array>
+    <string-array name="AutoLockContextDisplayValues">
+        <item>Cuando el partido se ha terminado</item>
+        <item>Cuando el partido no tiene cambios por X minutos</item>
+    </string-array>
+    <string-array name="ShowPlayerColorOnDisplayValues">
+        <item>Borde del botón del marcador</item>
+        <item>Botón del lado de servicio</item>
+        <item>Botón del jugador</item>
+        <item>Aviso bola de partido</item>
+        <item>Grafico de la puntación del juego</item>
+    </string-array>
+    <string-array name="ShowCountryAsDisplayValues">
+        <item>Abreviatura</item>
+        <item>Bandera junto al nombre (en dispositivo)</item>
+        <item>Bandera junto al nombre (Chrome Cast)</item>
+    </string-array>
+    <string-array name="ShowOnScreen_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ShowOnScreen -->
+        <item>en Dispositivo</item>
+        <item>en ChromeCast</item>
+    </string-array>
+    <string-array name="GameScoresAppearance_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.GameScoresAppearance -->
+        <item>Mostrar juegos ganados (en el dispositivo y Chromecast)</item>
+        <item>Mostrar marcador completo (en el dispositivo y Chromecast)</item>
+        <item>Mostrar juegos ganados en el dispositivo, Marcador completo en Chromecast</item>
+        <item>Mostrar marcador completo en el dispositivo, Marcador completo en Chromecast</item>
+    </string-array>
+    <string-array name="ScorelineLayout_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ScorelineLayout -->
+        <item>Dígitos a la derecha</item>
+        <item>Dígitos en el centro</item>
+        <item>Ocultar lado de servicio</item>
+    </string-array>
+    <string-array name="NewMatchLayout_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.NewMatchLayout -->
+        <item>Todos los campos (incl. país, club, event, arbitro)</item>
+        <item>Mínimo (Nombre de jugadores, formato). Fuente más grande</item>
+    </string-array>
+    <string-array name="ShowAvatarOnDisplayValues">
+        <item>En el dispositivo</item>
+        <item>En Chrome Cast</item>
+    </string-array>
+    <string-array name="StartupActionDisplayValues">
+        <item>Nunca</item>
+        <!-- all other values presume enum names are choosen wisely to represent readable english -->
+    </string-array>
+    <string-array name="tiebreakFormatDisplayValues">
+        <item>Dos puntos</item>
+        <item>Receiver selects 1 or 2</item>
+        <item>Receiver selects 1,2 or 3</item>
+        <item>Receiver selects 1 or 3</item> <!-- http://en.allexperts.com/q/Squash-Racquetball-1548/few-rules.htm : US Colleges and PSA old scoring -->
+        <item>Muerte súbita</item>
+    </string-array>
+    <string-array name="handicapFormatDisplayValues">
+        <item>Ninguna</item>
+        <item>Espesificar una estrella en cada partido</item>
+        <item>Especificar una estrella en cada juego</item>
+    </string-array>
+    <string-array name="doublesServeSequence">
+        <item>A1/B1/A2/B2</item>               <!-- DSS_1_1_2_2__8 -->
+        <item>A2/B1/B2 entonces A1/A2/B1/B2</item> <!-- DSS_2_12_12__6 -->
+        <item>A1/B1/B2 entonces A1/A2/B1/B2</item> <!-- DSS_1_12_12__6 -->
+        <item>A1/A2/B1/B2</item>               <!-- DSS___12_12__6 -->
+        <item>A1/B1/A1/B1</item>               <!-- DSS___1_1____4 -->
+    </string-array>
+
+    <string-array name="changeSidesWhen_GSM_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ChangeSidesWhen_GSM -->
+        <item>Después de juegos impares</item>
+        <item>Despúes de juegos pares</item>
+        <item>Despúes de 6 puntos en el Tiebreak</item>
+        <item>Despúes de cada set</item>
+    </string-array>
+</resources>

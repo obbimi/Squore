@@ -705,7 +705,7 @@ public class PreferenceValues extends RWValues
             for(int iRes: iaOAResString) {
                 mOACache.put(iRes, ctx.getResources().getString(iRes));
             }
-            if ( announcementLanguageDeviates(ctx) ) {
+            if ( announcementLanguageDeviates(ctx) && (Brand.isGameSetMatch() == false) ) {
                 mOACache.put(R.string.left_serveside_single_char , sLeftRight_Symbols[0]);
                 mOACache.put(R.string.right_serveside_single_char, sLeftRight_Symbols[1]);
             }
@@ -1819,7 +1819,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-06-07"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-06-14"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
@@ -1846,6 +1846,18 @@ public class PreferenceValues extends RWValues
 
                 return StartupAction.QuickIntro;
 
+            }
+            if ( (versionCodeForChangeLogCheck == 436) && Brand.isNotSquash() ) {
+                // spanish introduced: set announcement language to spanish
+                AnnouncementLanguage language = officialAnnouncementsLanguage(context);
+                String deviceLanguage = RWValues.getDeviceLanguage(context);
+                Log.d(TAG, "CURRENT AnnouncementLanguage: " + language +"CURRENT deviceLanguage: " + deviceLanguage);
+                if ( announcementLanguageDeviates(context) ) {
+                    if ( "es".equals(deviceLanguage) ) {
+                        Log.d(TAG, "Changing announcement language");
+                        setAnnouncementLanguage(AnnouncementLanguage.es, context);
+                    }
+                }
             }
 
             //setNumber(PreferenceKeys.viewedChangelogVersion, context, packageInfo.versionCode);

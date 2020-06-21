@@ -5,6 +5,7 @@ The following people were so kind to volunteer to translate Squore into their pr
 - Sébastien Lepley (French)
 - Filip Hurta (Czech)
 - Lior Lotem (Italian) 
+- Salvador Martinez (Spanish/Español)
 
 ## User Help and Suggestions
 
@@ -18,6 +19,7 @@ The following users of Squore have made valuable suggestions/help:
 - Brian T. French
 - Jean-Marie Evrard from [Squash Romandie](http://squashromandie.ch)
 - Lior Lotem
+- Salvador Martinez
 
 ## Credits
 

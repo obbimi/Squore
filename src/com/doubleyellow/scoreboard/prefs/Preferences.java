@@ -649,8 +649,10 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 hideRemovePreference(psgApp, PreferenceKeys.scorelineLayout);                  // not interesting enough for racketlon, badminton and tabletennis
 
                 hideRemovePreference(psgBeh, PreferenceKeys.useOfficialAnnouncementsFeature); // not really for racketlon and tabletennis
-                hideRemovePreference(psgBeh, PreferenceKeys.officialAnnouncementsLanguage);   // not really for racketlon and tabletennis
                 hideRemovePreference(psgBeh, PreferenceKeys.showChoosenDecisionShortly);      // not really for racketlon and tabletennis
+                if ( PreferenceValues.announcementLanguageDeviates(getContext()) == false ) {
+                    hideRemovePreference(psgBeh, PreferenceKeys.officialAnnouncementsLanguage);   // not really for racketlon and tabletennis
+                }
             }
             if ( Brand.isSquash() ) {
                 hideRemovePreference(psgBeh, PreferenceKeys.changeSides);                     // several 'change sides' options: not for squash

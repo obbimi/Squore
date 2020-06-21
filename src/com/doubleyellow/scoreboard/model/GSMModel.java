@@ -493,6 +493,7 @@ public class GSMModel extends Model
     @Override public long getMatchStart() {
         if ( ListUtil.isEmpty(m_lGamesTiming_PerSet) ) {
             Log.w(TAG, "No game timing per set");
+            return super.getMatchStart();
         }
         List<GameTiming> gameTimings = m_lGamesTiming_PerSet.get(0);
         GameTiming gameTiming = gameTimings.get(0);
