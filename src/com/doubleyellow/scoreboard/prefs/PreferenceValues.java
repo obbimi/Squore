@@ -837,6 +837,10 @@ public class PreferenceValues extends RWValues
     public static EnumSet<ShowAvatarOn> showAvatarOn(Context context) {
         return getEnumSet(PreferenceKeys.showAvatarOn, context, ShowAvatarOn.class, EnumSet.of(ShowAvatarOn.OnDevice, ShowAvatarOn.OnChromeCast));
     }
+    public static int getPreferWhiteOverBlackThreshold(Context context) {
+        int iResDef = getSportSpecificSuffixedResId(context, R.integer.preferWhiteOverBlackThreshold);
+        return getIntegerR(ColorPrefs.ColorTarget.preferWhiteOverBlackThreshold, context, iResDef);
+    }
     public static boolean hideFlagForSameCountry(Context context) {
         return getBoolean(PreferenceKeys.hideFlagForSameCountry, context, R.bool.hideFlagForSameCountry_default);
     }
@@ -1819,7 +1823,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-06-14"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-06-23"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

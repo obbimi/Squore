@@ -1,6 +1,5 @@
 \.gradle
 local.properties
-gradle.properties
 gradlew.bat
 gradlew
 Squore.iml
@@ -9,3 +8,6 @@ build
 gradle
 *.sh
 *.log
+AndroidManifestUniOfNotthingham.xml
+AndroidManifestCourtCare.xml
+AndroidManifestWinnerPadel.xml

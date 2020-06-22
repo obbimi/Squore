@@ -291,8 +291,8 @@ public class IBoard implements TimerViewContainer
 
     public void updateGameAndMatchDurationChronos() {
         updateGameDurationChrono();
-        updateMatchDurationChrono();
         updateSetDurationChrono(); // GSM
+        updateMatchDurationChrono();
     }
 
     public void stopMatchDurationChrono() {
@@ -1181,9 +1181,23 @@ public class IBoard implements TimerViewContainer
         Integer iPlayerColor = null;
         Integer iTxtColor    = null;
         if ( StringUtil.isNotEmpty(sColor) ) {
-            iPlayerColor  = Color.parseColor(sColor);
+            iPlayerColor = Color.parseColor(sColor);
             // switch color of text to black or white depending on chosen color
-            iTxtColor = ColorUtil.getBlackOrWhiteFor(sColor);
+            long lPreferWhiteOverBlackStrength = PreferenceValues.getPreferWhiteOverBlackThreshold(context);
+            iTxtColor = ColorUtil.getBlackOrWhiteFor(sColor, lPreferWhiteOverBlackStrength);
+
+            if ( p.equals(m_firstPlayerOnScreen) && ViewUtil.isLandscapeOrientation(context) ) {
+                Chronometer tvMatchTime = (Chronometer) findViewById(R.id.sb_match_duration);
+                if ( tvMatchTime != null ) {
+                    tvMatchTime.setTextColor(iTxtColor);
+                }
+                if ( Brand.isGameSetMatch() ) {
+                    Chronometer tvSetTime = (Chronometer) findViewById(R.id.sb_set_duration);
+                    if ( tvSetTime != null ) {
+                        tvSetTime.setTextColor(iTxtColor);
+                    }
+                }
+            }
         }
 
         if ( colorOns.contains(ShowPlayerColorOn.ServeSideButton) ) {
@@ -1205,6 +1219,7 @@ public class IBoard implements TimerViewContainer
                 } else {
                     if ( colorOns.contains(ShowPlayerColorOn.ScoreButton) ) {
                         setBackgroundAndBorder(view, iPlayerColor       , iPlayerColor);
+                        setTextColor(view, iTxtColor);
                     } else {
                         setBackgroundAndBorder(view, iScoreButtonBgColor, iPlayerColor);
                     }

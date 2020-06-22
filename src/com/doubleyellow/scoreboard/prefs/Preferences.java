@@ -1017,7 +1017,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
 
     private static void setListPreferenceEntriesForColors(SettingsFragment settingsFragment) {
         CharSequence[] values = null;
-        for(ColorPrefs.ColorTarget colorTarget: ColorPrefs.ColorTarget.values() ) {
+        for ( ColorPrefs.ColorTarget colorTarget: ColorPrefs.ColorTarget.values() ) {
             ListPreference lp = (ListPreference) settingsFragment.findPreference(colorTarget);
             values = ColorPrefs.setListPreferenceEntries(lp, values, colorTarget);
         }

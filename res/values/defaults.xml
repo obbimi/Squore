@@ -37,6 +37,8 @@
     <integer name="TextSizeHistory_default_ls">18</integer>
     <integer name="AppealHandGestureIconSize_default">48</integer>
 
+    <integer name="preferWhiteOverBlackThreshold">0</integer>
+
     <integer name="TextSizeCalls_default">12</integer>
     <integer name="TextSizeTabStrip">18</integer>
     <integer name="TextSizeShowCase">14</integer>
@@ -205,6 +207,16 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="hideAvatarForSameImage_default">false</bool>
     <bool name="hideBrandLogoWhenGameInProgress_default">true</bool>
     <bool name="hideFieldDivisionWhenGameInProgress_default">true</bool>
+
+    <!-- com.doubleyellow.scoreboard.prefs.DetermineTextColor -->
+    <string name="AutoChooseBlackOrWhite__Default">AutoChooseBlackOrWhite</string>
+
+    <string name="pref_ColorTargets_Main_Text_color__Default">Color0</string>
+    <string name="pref_ColorTargets_Player_Button_Text_color__Default">Color0</string>
+    <string name="pref_ColorTargets_Score_Button_Text_color__Default" >Color2</string>
+    <string name="pref_ColorTargets_Serve_Button_Text_color__Default" >Color0</string>
+    <string name="pref_ColorTargets_History_Text_color__Default">Color2</string>
+
 
     <integer name="numberOfServesPerPlayer_default">2</integer>
     <integer name="readContactsForAutoCompletion_max_default">500</integer>

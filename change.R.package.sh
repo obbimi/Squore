@@ -54,7 +54,7 @@ function correctSportSpecificResource {
     let keptCnt=0
     # list all renamed USED resource names and ...
     for res in $(egrep -r '@(array|bool|fraction|integer|integer-array|string|string-array).*__[A-Z][A-Za-z]+' * | perl -ne 's~.*@(array|bool|fraction|integer|integer-array|string|string-array)\/(\w+__\w+).*~$2~; print' | sort -u); do
-        # ... check the appropriate res definition exists
+        # ... check that the appropriate res definition exists
         if egrep -q -r "name=.${res}." *; then
             if echo ${res} | grep -q "__${from}"; then
                 nrOfOccurrences=$(egrep -h -c -r "@.*${res}" * | egrep -v '^0$' | xargs | sed -e 's/\ /+/g' | bc) # bc is calculator
@@ -176,7 +176,7 @@ for f in $(egrep -rl "@(string|fraction).*__${fromSuffix}\""); do
 
     cat ${f} | perl -ne "s~__${fromSuffix}\"~__${toSuffix}\"~; print" > ${f}.1.xml
     if [[ -n "$(diff ${f} ${f}.1.xml)" ]]; then
-        printf "File %-30s to %s strings\n" $f $tobranded
+        printf "File %-30s to %s strings\n" ${f} ${tobranded}
         #meld         ${f} ${f}.1.xml
         #rm -v ${f}.1.xml # TEMP
         mv ${f}.1.xml ${f}

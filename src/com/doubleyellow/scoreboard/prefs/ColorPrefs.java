@@ -75,6 +75,8 @@ public class ColorPrefs
         historyBackgroundColor,
         historyTextColor,
 
+        preferWhiteOverBlackThreshold,
+
         black,
         darkest,
         middlest,

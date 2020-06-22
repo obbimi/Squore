@@ -95,7 +95,7 @@
                     android:key="textColorDetermination"
                     android:title="@string/pref_textColorDetermination"
                     android:summary="@string/pref_textColorDetermination_summary"
-                    android:defaultValue="AutoChooseBlackOrWhite"
+                    android:defaultValue="@string/AutoChooseBlackOrWhite__Default"
                     dy:displayValues="@array/DetermineTextColor_DisplayValues"
                     dy:enumClass="com.doubleyellow.scoreboard.prefs.DetermineTextColor"
                     />
@@ -112,23 +112,23 @@
                 <ListPreference android:key="mainTextColor"
                                 android:title="@string/pref_ColorTargets_Main_Text"
                                 android:entryValues="@array/ColorKeys"
-                                android:defaultValue="Color0"/>
+                                android:defaultValue="@string/pref_ColorTargets_Main_Text_color__Default"/>
                 <ListPreference android:key="playerButtonTextColor"
                                 android:title="@string/pref_ColorTargets_Player_Button_Text"
                                 android:entryValues="@array/ColorKeys"
-                                android:defaultValue="Color0"/>
+                                android:defaultValue="@string/pref_ColorTargets_Player_Button_Text_color__Default"/>
                 <ListPreference android:key="scoreButtonTextColor"
                                 android:title="@string/pref_ColorTargets_Score_Button_Text"
                                 android:entryValues="@array/ColorKeys"
-                                android:defaultValue="Color2"/>
+                                android:defaultValue="@string/pref_ColorTargets_Score_Button_Text_color__Default"/>
                 <ListPreference android:key="serveButtonTextColor"
                                 android:title="@string/pref_ColorTargets_Serve_Button_Text"
                                 android:entryValues="@array/ColorKeys"
-                                android:defaultValue="Color0"/>
+                                android:defaultValue="@string/pref_ColorTargets_Serve_Button_Text_color__Default"/>
                 <ListPreference android:key="historyTextColor"
                                 android:title="@string/pref_ColorTargets_History_Text"
                                 android:entryValues="@array/ColorKeys"
-                                android:defaultValue="Color2"/>
+                                android:defaultValue="@string/pref_ColorTargets_History_Text_color__Default"/>
             </PreferenceCategory>
 
             <EditTextPreference
