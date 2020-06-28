@@ -1,3 +1,7 @@
+## 4.36 (june 2020)
+
+- The app has been translated into Spanish. Thank you very much Salvador Martinez!
+
 ## 4.32 (april 2020)
 
 - support for Wearables

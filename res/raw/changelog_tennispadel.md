@@ -1,4 +1,4 @@
-## 4.36 (april 2020)
+## 4.36 (june 2020)
 
 - The app has been translated into Spanish. Thank you very much Salvador Martinez!
 

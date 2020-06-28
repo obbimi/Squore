@@ -74,7 +74,6 @@ public class GSMModel extends Model
             }
         }
     }
-
     //------------------------
     // Final set finish
     //------------------------
@@ -183,6 +182,17 @@ public class GSMModel extends Model
         m_lSetWinner       = new ArrayList<Player>();
         m_lSetCountHistory = new ArrayList<Map<Player, Integer>>();
         m_lSetCountHistory.add(getZeroZeroMap());
+    }
+
+    @Override public void clear() {
+        super.clear();
+
+        this.m_lGamesScorelineHistory_PerSet  .clear();
+        this.m_lPlayer2GamesWon_PerSet        .clear();
+        this.m_lPlayer2EndPointsOfGames_PerSet.clear();
+        this.m_lGamesTiming_PerSet            .clear();
+        this.m_lSetCountHistory               .clear();
+        this.m_lSetWinner                     .clear();
     }
 
     //------------------------

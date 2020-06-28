@@ -23,6 +23,7 @@ import android.os.Bundle;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.android.view.MarkDownView;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 
 public class Credits extends BaseAlertDialog
 {
@@ -40,7 +41,10 @@ public class Credits extends BaseAlertDialog
 
     @Override public void show() {
         MarkDownView webView = new MarkDownView(context, null);
-        webView.init( ( Brand.isNotSquash() ) ? R.raw.credits_tabletennis : R.raw.credits);
+        int iResId = R.raw.credits;
+        iResId = PreferenceValues.getSportSpecificSuffixedResId(context, iResId);
+
+        webView.init( iResId );
 
         dialog = adb
                 .setTitle("Credits")

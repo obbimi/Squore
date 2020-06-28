@@ -1752,12 +1752,12 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 case R.id.float_timer:
                     PreferenceValues.setOverwrite(PreferenceKeys.showHideButtonOnTimer, false);
                     if ( matchModel.isPossibleGameVictory() == false ) {
-                        matchModel.setGameScore_Json(0, nrOfPointsToWinGame, nrOfPointsToWinGame - 4, 5);
+                        matchModel.setGameScore_Json(0, nrOfPointsToWinGame, nrOfPointsToWinGame - 4, 5, false);
                         endGame();
                     }
                     break;
                 case R.id.sb_official_announcement:
-                    matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6);
+                    matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6, false);
                     endGame();
                     break;
                 case R.id.gamescores:
@@ -1775,6 +1775,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     break;
                 case R.id.dyn_score_details:
                 case R.id.float_match_share:
+                    boolean bDontChangePast = true;
                     if ( Brand.isNotSquash() ) {
                         if ( Brand.isGameSetMatch() ) {
                             // TODO: ensure match is ended
@@ -1782,27 +1783,32 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                             //matchModel.setSetScore_Json(); // TODO
                         } else {
                             // trigger model changes that are not triggered by user step (sb_official_announcement), because some show case screens are skipped for e.g. Racketlon
-                            matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6);
+                            matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6, bDontChangePast);
                             endGame();
                         }
                     }
                     if ( matchModel.matchHasEnded() == false) {
                         IBoard.setBlockToasts(true);
-                        matchModel.setGameScore_Json(2, nrOfPointsToWinGame,  nrOfPointsToWinGame -5, 5);
+                        matchModel.setGameScore_Json(2, nrOfPointsToWinGame,  nrOfPointsToWinGame -5, 5, bDontChangePast);
                         if ( Brand.isRacketlon() ) {
                             // add a score that ends the racketlon match by points
-                            matchModel.setGameScore_Json(3, 15, 11, 8);
+                            matchModel.setGameScore_Json(3, 15, 11, 8, bDontChangePast);
                         } else if ( Brand.isTabletennis() ) {
                             // add a score that ends the tabletennis match
-                            matchModel.setGameScore_Json(3, nrOfPointsToWinGame+2, nrOfPointsToWinGame, 8);
-                            matchModel.setGameScore_Json(4, nrOfPointsToWinGame, nrOfPointsToWinGame-4, 7);
+                            matchModel.setGameScore_Json(3, nrOfPointsToWinGame+2, nrOfPointsToWinGame, 8, bDontChangePast);
+                            matchModel.setGameScore_Json(4, nrOfPointsToWinGame, nrOfPointsToWinGame-4, 7, bDontChangePast);
                         } else if ( Brand.isBadminton() ) {
                             // add a score that ends the badminton match
                             // best of 3, nothing to do
                         } else if ( Brand.isGameSetMatch() ) {
                             // TODO: add a score that ends the tennis/padel match
                         } else {
-                            matchModel.setGameScore_Json(3, nrOfPointsToWinGame +2, nrOfPointsToWinGame, 8);
+                            int iGameInProgress1B = matchModel.getGameNrInProgress();
+                            while ( matchModel.matchHasEnded() == false ) {
+                                matchModel.setGameScore_Json(iGameInProgress1B-1, nrOfPointsToWinGame +2, nrOfPointsToWinGame, 8, bDontChangePast);
+                                iGameInProgress1B++;
+                                if ( iGameInProgress1B >= matchModel.getNrOfGamesToWinMatch() * 2 ) { break; } // additional safety precaution
+                            }
                         }
                         endGame();
                         showShareFloatButton(true, true);
@@ -5818,6 +5824,7 @@ touch -t 01030000 LAST.sb
 
     private boolean undoLast() {
         if ( warnModelIsLocked() ) { return false; }
+        if ( matchModel == null ) { return false; }
         enableScoreButton(matchModel.getServer());
         matchModel.undoLast();
         bGameEndingHasBeenCancelledThisGame = false;

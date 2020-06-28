@@ -548,10 +548,16 @@ public class PreferenceValues extends RWValues
             sNewResName = mOrgResId2BrandResId.get(sResName);
         } else {
             sNewResName = sResName + "__" + Brand.brand;
+            if ( sResType.equals("raw") ) {
+                sNewResName = sNewResName.toLowerCase();
+            }
         }
         int iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
         if ( iNewResId == 0 ) {
             sNewResName = sResName + "__" + Brand.getSport();
+            if ( sResType.equals("raw") ) {
+                sNewResName = sNewResName.toLowerCase();
+            }
             iNewResId = context.getResources().getIdentifier(sNewResName, sResType, context.getPackageName());
         }
         if ( iNewResId != 0 ) {

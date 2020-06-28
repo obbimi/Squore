@@ -1981,6 +1981,9 @@ public abstract class Model implements Serializable
     }
 
     public boolean fromJsonString(File f) {
+        return fromJsonString(f, false);
+    }
+    public boolean fromJsonString(File f, boolean bStopAfterEventNamesDateTimeResult) {
         if ( (f == null) || (f.exists() == false) ) {
             // normally only when switching brand in DEMO mode
             Log.w(TAG, "Not an existing file : " + f);
@@ -1993,13 +1996,13 @@ public abstract class Model implements Serializable
             e.printStackTrace();
             return false;
         }
-        JSONObject jo    = fromJsonString(sJson, false);
+        JSONObject jo    = fromJsonString(sJson, bStopAfterEventNamesDateTimeResult);
         m_tsLastJsonOperation = f.lastModified();
         return (jo != null);
     }
 
     /** used for 'adjusting' the score. E.g. starting halfway a match or for demo purposes */
-    public void setGameScore_Json(final int iGameZB, final int iPointsA, final int iPointsB, int iGameDuration) {
+    public boolean setGameScore_Json(final int iGameZB, final int iPointsA, final int iPointsB, int iGameDuration, boolean bDontChangePast) {
         boolean bIsSquash         = getSport().equals(SportType.Squash);
         boolean bDummyServeSides  = iGameDuration!=0 && bIsSquash;
         boolean bAddRandomAppeals = bDummyServeSides && bIsSquash; // e.g. no random appeals for racketlon demo
@@ -2007,7 +2010,11 @@ public abstract class Model implements Serializable
 
         List<ScoreLine> scoreLines;
         int pA, pB;
-        if ( getGameNrInProgress() > iGameZB ) {
+        int gameNrInProgressZB = getGameNrInProgress() - 1;
+        if ( gameNrInProgressZB > iGameZB ) {
+            if ( bDontChangePast ) {
+                return false;
+            }
             // discard part of the already entered score
             scoreLines = m_lGamesScorelineHistory.get(iGameZB);
             List<Map<Player, Integer>> player2EndPointsOfGames = getPlayer2EndPointsOfGames();
@@ -2135,13 +2142,29 @@ public abstract class Model implements Serializable
         } else {
             m_lGamesScorelineHistory.add(scoreLines);
         }
+        m_sResultFast = null;
+        {
+            Map<Player, Integer> player2EndpointOfGame = null;
+            if (m_lPlayer2EndPointsOfGames.size() > iGameZB) {
+                player2EndpointOfGame = m_lPlayer2EndPointsOfGames.get(iGameZB);
+            } else {
+                player2EndpointOfGame = new HashMap<>();
+                m_lPlayer2EndPointsOfGames.add(player2EndpointOfGame);
+            }
+            player2EndpointOfGame.put(Player.A, iPointsA);
+            player2EndpointOfGame.put(Player.B, iPointsB);
+        }
+
+        // reinit all internal variables by serializing and deserializing to json
         String sJson = toJsonString();
+        this.clear();
         this.fromJsonString(sJson, false);
         setDirty(true);
 
         for(OnComplexChangeListener l:onComplexChangeListeners) {
             l.OnChanged();
         }
+        return true;
     }
 
     public JSONObject fromJsonString(String sJson) {
@@ -3540,6 +3563,12 @@ public abstract class Model implements Serializable
         m_player2Country.clear();
         m_player2Club   .clear();
         m_player2Color  .clear();
+
+        m_lGamesScorelineHistory  .clear();
+        m_lPlayer2GamesWon        .clear();
+        m_lPlayer2EndPointsOfGames.clear();
+        m_lGameWinner             .clear();
+        m_lGameTimings            .clear();
 
         this.setEvent(null, null, null, null);
 

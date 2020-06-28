@@ -299,7 +299,7 @@ public class AdjustScore extends BaseAlertDialog {
                         break;
                     }
                     GameHistoryView.dontShowForToManyPoints(iPointsA + iPointsB);
-                    matchModel.setGameScore_Json(s-1, iPointsA, iPointsB, 0);
+                    matchModel.setGameScore_Json(s-1, iPointsA, iPointsB, 0, false);
                 }
                 PersistHelper.persist(matchModel, context);
 

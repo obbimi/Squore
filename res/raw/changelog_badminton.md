@@ -1,3 +1,7 @@
+## 4.36 (june 2020)
+
+- The app has been translated into Spanish. Thank you very much Salvador Martinez!
+
 ## 4.35 (may 2020)
 
 - allowing the score to be spoken with 'text-to-speech' functionality

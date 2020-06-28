@@ -99,12 +99,16 @@ public class Speak
         @Override public void onInit(int status) {
             m_iStatus = status;
 
+/*
             if ( m_textToSpeech != null ) {
-                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP /* 21 */ ) {
+                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M */
+/* 22 *//*
+ ) {
                     Set<Voice> voices = m_textToSpeech.getVoices();
                     Log.d(TAG, "Available voices (listener): " + voices);
                 }
             }
+*/
 
             switch (status) {
                 case TextToSpeech.SUCCESS:

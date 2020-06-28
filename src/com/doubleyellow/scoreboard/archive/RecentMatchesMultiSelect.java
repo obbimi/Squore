@@ -136,14 +136,18 @@ public class RecentMatchesMultiSelect extends Fragment {
         }
         final Map<String, File> mMatches = new TreeMap<>();
         if ( ListUtil.isNotEmpty(lMatches) ) {
-            for(File f: lMatches) {
+            for ( File f: lMatches ) {
                 Model match = ModelFactory.getTemp();
                 try {
-                    match.fromJsonString(f);
+                    match.fromJsonString(f, true);
                 } catch (Exception e) {
                     continue;
                 }
                 Date dMatchDate      = match.getMatchDate();
+                if ( DateUtil.convertToDays(System.currentTimeMillis() - dMatchDate.getTime()) > 14 ) {
+                    Log.d(TAG, "Modification date of file does not match matchdate " + dMatchDate);
+                    continue;
+                }
                 DateFormat sdf       = android.text.format.DateFormat.getDateFormat(getActivity());
                 if (sdf instanceof SimpleDateFormat) {
                     // remove the year
