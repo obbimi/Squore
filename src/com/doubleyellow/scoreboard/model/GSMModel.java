@@ -187,12 +187,12 @@ public class GSMModel extends Model
     @Override public void clear() {
         super.clear();
 
-        this.m_lGamesScorelineHistory_PerSet  .clear();
-        this.m_lPlayer2GamesWon_PerSet        .clear();
-        this.m_lPlayer2EndPointsOfGames_PerSet.clear();
-        this.m_lGamesTiming_PerSet            .clear();
-        this.m_lSetCountHistory               .clear();
-        this.m_lSetWinner                     .clear();
+        if ( m_lGamesScorelineHistory_PerSet   != null) { m_lGamesScorelineHistory_PerSet  .clear(); }
+        if ( m_lPlayer2GamesWon_PerSet         != null) { m_lPlayer2GamesWon_PerSet        .clear(); }
+        if ( m_lPlayer2EndPointsOfGames_PerSet != null) { m_lPlayer2EndPointsOfGames_PerSet.clear(); }
+        if ( m_lGamesTiming_PerSet             != null) { m_lGamesTiming_PerSet            .clear(); }
+        if ( m_lSetCountHistory                != null) { m_lSetCountHistory               .clear(); }
+        if ( m_lSetWinner                      != null) { m_lSetWinner                     .clear(); }
     }
 
     //------------------------

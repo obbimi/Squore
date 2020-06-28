@@ -153,6 +153,23 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     iMenuToRepeatOnPermissionGranted = 0;
                     oaMenuCtxForRepeat               = null;
                 }
+
+                // for testing purposes, copy a zip file with around 30 matches to the location where backups of matches are stored
+                if ( key.equals(PreferenceKeys.targetDirForImportExport) && Brand.isSquash() ) {
+                    File file = PreferenceValues.targetDirForImportExport(this, true);
+                    try {
+                        InputStream inputStream = this.getResources().openRawResource(R.raw.squore_iddo);
+                        FileOutputStream fo = new FileOutputStream(new File(file, "Squore.stored.matches.test.zip"));
+                        byte[] baRead = new byte[1024];
+                        while(inputStream.read(baRead)>0) {
+                            fo.write(baRead);
+                        }
+                        fo.close();
+                        inputStream.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             } else {
                 // permission denied. Disable the functionality that depends on this permission.
                 Log.d(TAG, String.format("Permission denied: %s (%s)", key, grantResults));

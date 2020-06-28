@@ -223,7 +223,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
 
             // start separate task to ensure loading message is actually shown
             rsmTask = new ReadStoredMatches(PreviousMatchSelector.this, this, bUseCacheIfPresent);
-            if ( m_iLoadCount == 0 ) {
+            if ( m_iLoadCount == -1 /* -1 ensures it is never run as an async task */ ) {
                 AsyncTask<String, Void, Integer> task = rsmTask.execute(TAG);// doing this in background works initially with nice progress message, but sorting no longer works?!
                 AsyncTask.Status status = task.getStatus();
                 Log.d(TAG, "Status = " + status); // returns RUNNING, even when bug manifests itself on 27 and before

@@ -3564,11 +3564,11 @@ public abstract class Model implements Serializable
         m_player2Club   .clear();
         m_player2Color  .clear();
 
-        m_lGamesScorelineHistory  .clear();
-        m_lPlayer2GamesWon        .clear();
-        m_lPlayer2EndPointsOfGames.clear();
-        m_lGameWinner             .clear();
-        m_lGameTimings            .clear();
+        if ( m_lGamesScorelineHistory   != null ) { m_lGamesScorelineHistory  .clear(); }
+        if ( m_lPlayer2GamesWon         != null ) { m_lPlayer2GamesWon        .clear(); }
+        if ( m_lPlayer2EndPointsOfGames != null ) { m_lPlayer2EndPointsOfGames.clear(); }
+        if ( m_lGameWinner              != null ) { m_lGameWinner             .clear(); }
+        if ( m_lGameTimings             != null ) { m_lGameTimings            .clear(); }
 
         this.setEvent(null, null, null, null);
 

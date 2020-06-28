@@ -100,7 +100,7 @@ class ReadStoredMatches extends AsyncTask<String /* Params: input of execute() *
                     populate(lAllMatchFiles, m_storeOnlyAdapter);
                     bRefreshed = true;
                 }
-                if (bRefreshed) {
+                if ( bRefreshed ) {
                     final boolean bCacheCreated = m_storeOnlyAdapter.createCache(fCache);
                     Log.i(TAG, "Cache created " + fCache.getPath());
                 }
