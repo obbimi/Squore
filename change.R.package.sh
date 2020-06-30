@@ -57,7 +57,8 @@ function correctSportSpecificResource {
         # ... check that the appropriate res definition exists
         if egrep -q -r "name=.${res}." *; then
             if echo ${res} | grep -q "__${from}"; then
-                nrOfOccurrences=$(egrep -h -c -r "@.*${res}" * | egrep -v '^0$' | xargs | sed -e 's/\ /+/g' | bc) # bc is calculator
+                nrOfOccurrencesAsExpr=$(egrep -h -c -r "@.*${res}" * | egrep -v '^0$' | xargs | sed -e 's/\ /+/g')
+                nrOfOccurrences=$((${nrOfOccurrencesAsExpr}))
                 #read -t 3 -p "Nr of occurrences of valid ${res} : ${nrOfOccurrences}"
                 let keptCnt=keptCnt+nrOfOccurrences
                 printf "%2d (+%d) %-72s OK \n" ${keptCnt} ${nrOfOccurrences} ${res} >> notcorrected.txt
