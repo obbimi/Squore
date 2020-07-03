@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.Voice;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,7 +22,6 @@ import com.doubleyellow.util.StringUtil;
 
 import java.util.LinkedHashSet;
 import java.util.Locale;
-import java.util.Set;
 
 public class Speak
 {
@@ -319,7 +317,7 @@ public class Speak
         if ( iDelay <= 0 ) {
             iDelay = I_DELAY_START;
         }
-        emptySpeechQueue_Delayed(RECALC_BEFORE_START, iDelay);
+        emptySpeechQueue_Delayed(RECALC_BEFORE_START, iDelay, 0);
     }
 
     /** for playing of score on request */
@@ -334,7 +332,7 @@ public class Speak
 
         this.gameBall(matchModel);
 
-        emptySpeechQueue(0);
+        emptySpeechQueue(0, 0);
     }
 
     /** get text from correct locale */
@@ -389,7 +387,7 @@ public class Speak
         }
     }
 
-    private void emptySpeechQueue(int iStartAtStep) {
+    private void emptySpeechQueue(int iStartAtStep, int iFromDelayed) {
         if ( isStarted() == false ) { return; }
 
         for(SpeechType type: SpeechType.values() ) {
@@ -400,19 +398,21 @@ public class Speak
             }
             if ( m_textToSpeech.isSpeaking() ) {
                 // retry in a half a second, starting at the same index
-                emptySpeechQueue_Delayed(type.ordinal(), m_iDelayBetweenTwoPieces);
+                if ( iFromDelayed < 10 ) {
+                    emptySpeechQueue_Delayed(type.ordinal(), m_iDelayBetweenTwoPieces, iFromDelayed+1);
+                }
                 return;
             }
 
             m_sText[type.ordinal()] = null;
             Log.d(TAG, String.format("Speaking %s : %s", type, sToSpeak));
             speak(sToSpeak, type);
-            emptySpeechQueue_Delayed(type.ordinal() + 1, m_iDelayBetweenTwoPieces);
+            emptySpeechQueue_Delayed(type.ordinal() + 1, m_iDelayBetweenTwoPieces, 0);
             return;
         }
     }
     private static CountDownTimer m_cdtEmptySpeechQueue = null;
-    private void emptySpeechQueue_Delayed(final int iStartAtStep, int iDelayMs) {
+    private void emptySpeechQueue_Delayed(final int iStartAtStep, int iDelayMs, final int iDelayedBecauseStillSpeaking) {
         if ( m_cdtEmptySpeechQueue != null) {
             m_cdtEmptySpeechQueue.cancel();
         }
@@ -422,7 +422,7 @@ public class Speak
                 if ( iStartAtStep == RECALC_BEFORE_START ) {
                     playAll(ScoreBoard.getMatchModel());
                 }
-                emptySpeechQueue(iStartAtStep);
+                emptySpeechQueue(iStartAtStep, iDelayedBecauseStillSpeaking);
             }
         };
         m_cdtEmptySpeechQueue.start();

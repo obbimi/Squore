@@ -346,16 +346,16 @@ public class IBoard implements TimerViewContainer
 
         if ( bShowSetTimer ) {
             GSMModel matchModel = (GSMModel) this.matchModel;
-            int setNrInProgress = matchModel.getSetNrInProgress();
-            String sFormat = getSetDurationFormat(setNrInProgress);
+            int setNrInProgress1B = matchModel.getSetNrInProgress();
+            String sFormat = getSetDurationFormat(setNrInProgress1B);
             tvSetTime.setFormat(sFormat);
 
             long elapsedRealtime = SystemClock.elapsedRealtime();
             long lBootTime       = System.currentTimeMillis() - elapsedRealtime;
-            long lStartTime      = matchModel.getSetStart(setNrInProgress);
+            long lStartTime      = matchModel.getSetStart(setNrInProgress1B);
             long calculatedBase  = lStartTime - lBootTime;
             if ( matchModel.matchHasEnded() /*|| matchModel.isLocked()*/ ) {
-                long duration = matchModel.getSetDuration(setNrInProgress);
+                long duration = matchModel.getSetDuration(setNrInProgress1B);
                 String sDuration = DateUtil.convertDurationToHHMMSS_Colon(duration);
                 tvSetTime.setText(String.format(sFormat, sDuration));
                 tvSetTime.stop();

@@ -312,7 +312,7 @@ public class GSMModel extends Model
 
     /** One-based */
     public int getSetNrInProgress() {
-        return ListUtil.size(m_lGamesScorelineHistory_PerSet);
+        return Math.max(ListUtil.size(m_lGamesScorelineHistory_PerSet), 1);
     }
     public List<List<ScoreLine>> getGameScoreLinesOfSet(int iSetNrZB) {
         if ( iSetNrZB > ListUtil.size(m_lGamesScorelineHistory_PerSet) ) { return null; }
@@ -417,14 +417,14 @@ public class GSMModel extends Model
     // Date/Time
     //-------------------------------
 
-    public long getSetStart(int setNr) {
+    public long getSetStart(int setNr1B) {
 /*
-        if ( setNr == 1 ) {
+        if ( setNr1B == 1 ) {
             return super.getMatchStart();
         }
 */
-        if ( ListUtil.size(m_lGamesTiming_PerSet) > setNr - 1 ) {
-            List<GameTiming> gameTimings = m_lGamesTiming_PerSet.get(setNr - 1);
+        if ( ListUtil.size(m_lGamesTiming_PerSet) > setNr1B - 1 ) {
+            List<GameTiming> gameTimings = m_lGamesTiming_PerSet.get(setNr1B - 1);
             if ( ListUtil.isNotEmpty(gameTimings) ) {
                 GameTiming gameTiming = gameTimings.get(0);
                 return gameTiming.getStart();

@@ -650,7 +650,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
 
                 hideRemovePreference(psgBeh, PreferenceKeys.useOfficialAnnouncementsFeature); // not really for racketlon and tabletennis
                 hideRemovePreference(psgBeh, PreferenceKeys.showChoosenDecisionShortly);      // not really for racketlon and tabletennis
-                if ( PreferenceValues.announcementLanguageDeviates(getContext()) == false ) {
+                if ( PreferenceValues.announcementLanguageDeviates(getActivity()) == false ) {
                     hideRemovePreference(psgBeh, PreferenceKeys.officialAnnouncementsLanguage);   // not really for racketlon and tabletennis
                 }
             }
