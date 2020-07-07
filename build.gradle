@@ -77,10 +77,14 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("/osshare/code/DoubleYellow/DoubleYellow.keystore")
-            storePassword "this2hib"
-            keyAlias "DoubleYellow"
-            keyPassword "this2hib"
+            try {
+                storeFile file(KEYSTORE_PATH)
+                storePassword  KEYSTORE_PASSWORD
+                keyAlias       KEY_ALIAS
+                keyPassword    KEY_PASSWORD
+            } catch (ex) {
+                throw new InvalidUserDataException("Please define KEYSTORE_PATH, KEYSTORE_PASSWORD, KEY_ALIAS and KEY_PASSWORD in $HOME/.gradle/gradle.properties for creating signed apk's. \nOr comment out 'signingConfig signingConfigs.release' in build.gradle to continue with unsigned apk's")
+            }
         }
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
@@ -107,7 +111,7 @@ android {
     }
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release // comment out this line if you are just trying a simple build that does need to be signed
             //embedMicroApp true
 
             //minifyEnabled true // somehow this makes my app crash

@@ -17,7 +17,7 @@ relapk=$(find . -name "*${productFlavor}-release.apk")
 if [[ -e ${relapk} ]]; then
     changedFiles="$(find . -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml|md|gradle)' | egrep -v '(\.idea/|/\.gradle/|/generated/|/reports/)')"
 else
-    changedFiles="No apk to compare with"
+    changedFiles="No release apk to compare with"
 fi
 
 if [[ ${versionCodeX} -ne ${vcFromManifest} ]]; then
@@ -100,7 +100,13 @@ if [[ ${iStep} -le 1 ]]; then
             mergedManifest=$(find build/intermediates/merged_manifests/${productFlavor}Release -name AndroidManifest.xml)
             versionCode=$(head ${mergedManifest} | grep versionCode | sed -e 's~[^0-9]~~g')
 
-            cp -v -p --backup ${relapk} ${targetdir}/Score-${brand}.${productFlavor}-${versionCode}.apk
+            if [[ -e ${relapk} ]]; then
+                cp -v -p --backup ${relapk} ${targetdir}/Score-${brand}.${productFlavor}-${versionCode}.apk
+            else
+                echo "No release file. Maybe because no signingconfig?!"
+                cp -v -p --backup ${dbgapk} ${targetdir}/Score-${brand}.${productFlavor}-${versionCode}.DEBUG_NO_RELEASE.apk
+            fi
+
             #read -p "Does copy look ok"
             if [[ 1 -eq 2 ]]; then
                 if [[ -n "${relapk}" ]]; then
