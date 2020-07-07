@@ -83,7 +83,7 @@ android {
                 keyAlias       KEY_ALIAS
                 keyPassword    KEY_PASSWORD
             } catch (ex) {
-                throw new InvalidUserDataException("Please define KEYSTORE_PATH, KEYSTORE_PASSWORD, KEY_ALIAS and KEY_PASSWORD in $HOME/.gradle/gradle.properties for creating signed apk's. \nOr comment out 'signingConfig signingConfigs.release' in build.gradle to continue with unsigned apk's")
+                throw new InvalidUserDataException("Please do one of the following:\n 1) define KEYSTORE_PATH, KEYSTORE_PASSWORD, KEY_ALIAS and KEY_PASSWORD in \$HOME/.gradle/gradle.properties for creating signed apk's. Or, \n 2) Comment out the line 'signingConfig signingConfigs.release' in the file build.gradle to continue with unsigned apk's")
             }
         }
     }
