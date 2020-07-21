@@ -63,10 +63,7 @@ if [[ 1 -eq 2 ]]; then
     exit 1
 fi
 
-targetdir=/osshare/doc/squash/www.double-yellow.be/app
-if [[ ! -e ${targetdir} ]]; then
-    targetdir=/osshare/code/DoubleYellow/wwwdoubleyellow/app
-fi
+targetdir=/osshare/code/gitlab/double-yellow.be/app
 
 iStep=${2:-1}
 echo "Changed files : $changedFiles"

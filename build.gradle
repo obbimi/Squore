@@ -50,7 +50,7 @@ android {
         //applicationId "com.doubleyellow"
         manifestPlaceholders = [versionNameTabletennis: "4.36", versionCodeSuffixTabletennis: "0449"
                                ,versionNameBadminton  : "4.36", versionCodeSuffixBadminton  : "0449"
-                               ,versionNameTennisPadel: "4.36", versionCodeSuffixTennisPadel: "0449"
+                               ,versionNameTennisPadel: "4.36", versionCodeSuffixTennisPadel: "0450"
                                ,versionNameSquore     : "4.36", versionCodeSuffixSquore     : "0449"
                                ,versionNameRacketlon  : "4.36", versionCodeSuffixRacketlon  : "0449"
                                ]
@@ -114,7 +114,7 @@ android {
             signingConfig signingConfigs.release // comment out this line if you are just trying a simple build that does need to be signed
             //embedMicroApp true
 
-            //minifyEnabled true // somehow this makes my app crash
+            //minifyEnabled true // somehow this makes the app crash
             //shrinkResources true // can not be done without minifyEnabled
 
 //            proguardFiles 'proguard-android-optimize.txt',

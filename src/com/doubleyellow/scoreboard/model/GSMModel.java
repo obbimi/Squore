@@ -659,9 +659,11 @@ public class GSMModel extends Model
     @Override public String getResultShort() {
         StringBuilder sb = new StringBuilder();
         Map<Player, Integer> mSetsWon = ListUtil.getLast(m_lSetCountHistory);
-        for ( Player p: Player.values() ) {
-            if ( p.ordinal() > 0 ) sb.append("-");
-            sb.append(mSetsWon.get(p));
+        if ( mSetsWon != null ) {
+            for ( Player p: Player.values() ) {
+                if ( p.ordinal() > 0 ) sb.append("-");
+                sb.append(mSetsWon.get(p));
+            }
         }
         if ( false ) {
             sb.append(" : ");
