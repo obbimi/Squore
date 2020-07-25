@@ -1203,7 +1203,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         updateTimerFloatButton();
         iBoard.updateGameBallMessage();
         iBoard.updateGameAndMatchDurationChronos();
-        showShareFloatButton(matchModel.isPossibleGameVictory(), matchModel.matchHasEnded()); // icon may have changed
+        if ( matchModel != null ) {
+            showShareFloatButton(matchModel.isPossibleGameVictory(), matchModel.matchHasEnded()); // icon may have changed
+        }
 
         initModelListeners();
 
@@ -3570,10 +3572,12 @@ touch -t 01030000 LAST.sb
 
         showAppropriateMenuItemInActionBar();
 
-        setMenuItemEnabled(R.id.sb_swap_double_players, matchModel.isDoubles());
-        ViewUtil.toggleMenuItems(mainMenu, R.id.sb_unlock, R.id.sb_lock, matchModel.isLocked());
-        if ( matchModel.isUnlockable() == false ) {
-            setMenuItemVisibility(R.id.sb_unlock, false);
+        if ( matchModel != null ) {
+            setMenuItemEnabled(R.id.sb_swap_double_players, matchModel.isDoubles());
+            ViewUtil.toggleMenuItems(mainMenu, R.id.sb_unlock, R.id.sb_lock, matchModel.isLocked());
+            if ( matchModel.isUnlockable() == false ) {
+                setMenuItemVisibility(R.id.sb_unlock, false);
+            }
         }
 
         String sPostUrl = PreferenceValues.getPostResultToURL(this);
@@ -3983,7 +3987,7 @@ touch -t 01030000 LAST.sb
                 return true;
             case R.id.sb_clear_score:
                 if ( warnModelIsLocked(id, ctx) ) { return false; }
-                if ( matchModel.hasStarted() ) {
+                if ( (matchModel != null) && matchModel.hasStarted() ) {
                     confirmRestart();
                 } else {
                     initScoreBoard(null);
@@ -4448,7 +4452,7 @@ touch -t 01030000 LAST.sb
         if ( matchModel.gameHasStarted()==false || matchModel.isPossibleGameVictory() ) {
             _showOfficialStartOrEndOfGameAnnouncement(trigger, bManuallyRequested);
         } else if ( matchModel.isStartOfTieBreak() ) {
-            _showTieBreakDialog(trigger, matchModel.getTiebreakOccurence() );
+            _showTieBreakDialog(trigger, matchModel.getTiebreakOccurrence() );
         } else {
             if ( trigger == null ) {
                 // show toast that the score is so that no official announcement is applicable

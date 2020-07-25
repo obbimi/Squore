@@ -383,29 +383,6 @@ public abstract class Model implements Serializable
         }
         return m_lPlayer2EndPointsOfGames;
     }
-    final List<GameTiming> getGamesTiming() {
-        if ( m_lGameTimings == null ) {
-            ListWrapper<GameTiming> l = new ListWrapper<GameTiming>(false);
-            l.setName("GameTiming Set 1");
-            setGamesTiming(l);
-        }
-        return m_lGameTimings;
-    }
-    /** For overwriting by GSMModel */
-    final void setGamesTiming(List<GameTiming> l) {
-        if ( m_lGameTimings != null ) {
-            //Log.w(TAG, "m_lGameTimings : Setting to a new array");
-        }
-        m_lGameTimings = l;
-        if ( ListUtil.isEmpty(m_lGameTimings) ) {
-            long lNow = System.currentTimeMillis();
-            GameTiming gameTimingOne = new GameTiming(0, lNow, lNow, onTimingChangedListeners);
-            m_lGameTimings.add(gameTimingOne);
-        }
-    }
-    final GameTiming getGameTimingCurrent() {
-        return ListUtil.getLast(m_lGameTimings);
-    }
 /*
     void setPlayer2GamesWon(Map<Player, Integer> m) {
         m_player2GamesWon = m;
@@ -437,7 +414,6 @@ public abstract class Model implements Serializable
 
     private List<Player>                        m_lGameWinner           = null; // TODO: add one for set end in GSM
 
-  //transient private GameTiming                m_gameTimingCurrent     = null;
     /** game timing of all games including the one about to start/started */
     transient private List<GameTiming>          m_lGameTimings          = null;
 
@@ -655,6 +631,7 @@ public abstract class Model implements Serializable
     public boolean isLastPointHandout() {
         return m_bLastPointWasHandout;
     }
+
     //-------------------------------
     // conduct/appeal
     //-------------------------------
@@ -1386,7 +1363,7 @@ public abstract class Model implements Serializable
     public int getNrOfFinishedGames() {
         Map<Player, Integer> last = ListUtil.getLast(m_lPlayer2GamesWon);
         if ( MapUtil.isEmpty(last) ) { return 0; }
-        return last.get(Player.A) + last.get(Player.B);
+        return MapUtil.getInt(last, Player.A, 0) + MapUtil.getInt(last, Player.B, 0);
     }
 
     // -----------------------------------------
@@ -1516,6 +1493,32 @@ public abstract class Model implements Serializable
     // Date/Time/Duration
     //-------------------------------
 
+    final List<GameTiming> getGamesTiming() {
+        if ( m_lGameTimings == null ) {
+            ListWrapper<GameTiming> l = new ListWrapper<GameTiming>(false);
+            l.setName("GameTiming Set 1");
+            setGamesTiming(l);
+        }
+        return m_lGameTimings;
+    }
+    /** For overwriting by GSMModel */
+    final void setGamesTiming(List<GameTiming> l) {
+        if ( m_lGameTimings != null ) {
+            //Log.w(TAG, "m_lGameTimings : Setting to a new array");
+        }
+        m_lGameTimings = l;
+        if ( ListUtil.isEmpty(m_lGameTimings) ) {
+            addNewGameTiming(0);
+        }
+    }
+    final GameTiming getGameTimingCurrent() {
+        if ( ListUtil.isEmpty(m_lGameTimings) ) {
+            addNewGameTiming(0);
+        }
+
+        return ListUtil.getLast(m_lGameTimings);
+    }
+
     public String getMatchDateYYYYMMDD_DASH() {
         return m_matchDate;
     }
@@ -1627,6 +1630,43 @@ public abstract class Model implements Serializable
             m_matchTime = DateUtil.formatDate2String(lStart, DateUtil.HHMMSSXXX_COLON);
         }
     }
+
+    public void timestampStartOfGame(GameTiming.ChangedBy changedBy) {
+        if ( gameHasStarted() == false ) {
+            // ref deliberately pressed announcement/timer button while score at 0-0 so first rally is still to start
+            int iNrOfFinishedGames = getNrOfFinishedGames();
+            if ( ListUtil.size(m_lGameTimings) <= iNrOfFinishedGames) {
+                addNewGameTiming(iNrOfFinishedGames);
+            } else {
+                getGameTimingCurrent().updateStart(0, changedBy);
+            }
+        }
+    }
+
+    private void addNewGameTiming(int iNrOfFinishedGames) {
+        long lNow = System.currentTimeMillis();
+        GameTiming gameTimingCurrent = new GameTiming(iNrOfFinishedGames, lNow, lNow, onTimingChangedListeners);
+        m_lGameTimings.add(gameTimingCurrent);
+    }
+
+    public List<GameTiming> getTimes() {
+        return m_lGameTimings;
+    }
+
+    public List<String> getFormattedTimes() {
+        List<String> lTimes = new ArrayList<String>();
+        for(GameTiming gt: m_lGameTimings) {
+            lTimes.add(DateUtil.formatDate2String(gt.getStart(), Model.jsonTimeFormat));
+            lTimes.add(DateUtil.formatDate2String(gt.getEnd()  , Model.jsonTimeFormat));
+        }
+        return lTimes;
+    }
+
+    private String removeTimezone(String sTimeHHMMSSXXX) {
+        if ( sTimeHHMMSSXXX == null ) { return null; }
+        return sTimeHHMMSSXXX.replaceAll("[+-]\\d\\d:\\d\\d$", "");
+    }
+
 
     //-------------------------------
     // Source
@@ -1973,11 +2013,6 @@ public abstract class Model implements Serializable
         String sDateName = m_matchDate.replace("-", "") + "." + (StringUtil.isNotEmpty(sTimeHHMMSS) ? (sTimeHHMMSS + ".") : "") + sNames;
         sDateName = sDateName.replaceAll("[^A-za-z0-9\\-\\.]", "");
         return new File(fParentDir, sDateName + ".sb");
-    }
-
-    private String removeTimezone(String sTimeHHMMSSXXX) {
-        if ( sTimeHHMMSSXXX == null ) { return null; }
-        return sTimeHHMMSSXXX.replaceAll("[+-]\\d\\d:\\d\\d$", "");
     }
 
     public boolean fromJsonString(File f) {
@@ -3160,34 +3195,8 @@ public abstract class Model implements Serializable
         m_halfwayStatus = Halfway.Before;
     }
 
-    public void timestampStartOfGame(GameTiming.ChangedBy changedBy) {
-        if ( gameHasStarted() == false ) {
-            // ref deliberately pressed announcement/timer button while score at 0-0 so first rally is still to start
-            int iNrOfFinishedGames = getNrOfFinishedGames();
-            if ( ListUtil.size(m_lGameTimings) <= iNrOfFinishedGames) {
-                GameTiming gameTimingCurrent = new GameTiming(iNrOfFinishedGames, System.currentTimeMillis(), System.currentTimeMillis(), onTimingChangedListeners);
-                m_lGameTimings.add(gameTimingCurrent);
-            } else {
-                getGameTimingCurrent().updateStart(0, changedBy);
-            }
-        }
-    }
-
-    public List<GameTiming> getTimes() {
-        return m_lGameTimings;
-    }
-
-    public List<String> getFormattedTimes() {
-        List<String> lTimes = new ArrayList<String>();
-        for(GameTiming gt: m_lGameTimings) {
-            lTimes.add(DateUtil.formatDate2String(gt.getStart(), Model.jsonTimeFormat));
-            lTimes.add(DateUtil.formatDate2String(gt.getEnd()  , Model.jsonTimeFormat));
-        }
-        return lTimes;
-    }
-
     private int m_iNrOfTiebreaks = 0;// TODO: initialize this variable correctly if match is read from json
-    public int getTiebreakOccurence() {
+    public int getTiebreakOccurrence() {
         return m_iNrOfTiebreaks;
     }
     public boolean isStartOfTieBreak()

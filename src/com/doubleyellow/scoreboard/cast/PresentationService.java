@@ -58,8 +58,11 @@ public class PresentationService extends CastRemoteDisplayLocalService
         if (mPresentation != null) {
             mPresentation.dismiss();
             mPresentation = null;
-            int iRemoved = ScoreBoard.getMatchModel().clearListeners(".*PresentationService.*");
-            Log.d(TAG, "Removed listeners " + iRemoved);
+            Model matchModel = ScoreBoard.getMatchModel();
+            if ( matchModel != null ) {
+                int iRemoved = matchModel.clearListeners(".*PresentationService.*");
+                Log.d(TAG, "Removed listeners " + iRemoved);
+            }
         }
     }
 

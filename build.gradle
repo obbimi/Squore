@@ -24,8 +24,6 @@ buildscript {
 // Run ./gradlew -q :dependencies
 android {
 
-    // 25, 26
-    //compileSdkVersion 25
     compileSdkVersion 29
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
     //buildToolsVersion '28.0.3'
@@ -48,11 +46,11 @@ android {
 
         //testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
         //applicationId "com.doubleyellow"
-        manifestPlaceholders = [versionNameTabletennis: "4.36", versionCodeSuffixTabletennis: "0449"
-                               ,versionNameBadminton  : "4.36", versionCodeSuffixBadminton  : "0449"
+        manifestPlaceholders = [versionNameTabletennis: "4.36", versionCodeSuffixTabletennis: "0450"
+                               ,versionNameBadminton  : "4.36", versionCodeSuffixBadminton  : "0450"
                                ,versionNameTennisPadel: "4.36", versionCodeSuffixTennisPadel: "0450"
-                               ,versionNameSquore     : "4.36", versionCodeSuffixSquore     : "0449"
-                               ,versionNameRacketlon  : "4.36", versionCodeSuffixRacketlon  : "0449"
+                               ,versionNameSquore     : "4.36", versionCodeSuffixSquore     : "0450"
+                               ,versionNameRacketlon  : "4.36", versionCodeSuffixRacketlon  : "0450"
                                ]
     }
     sourceSets {
@@ -93,7 +91,7 @@ android {
         phoneTabletPre22 {
             dimension "devicetype"
             minSdkVersion 19
-          //targetSdkVersion 22 // if specified to low, google play rejects the APK
+            //targetSdkVersion 29 // if specified to low, google play will reject the APK
             manifestPlaceholders = [versionCodePrefix:"1915"]
         }
         phoneTabletPost23 {
