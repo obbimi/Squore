@@ -35,7 +35,6 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.activity.XActivity;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
-import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.URLsKeys;
@@ -291,7 +290,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                     }
                 }
             });
-            task.execute();
+            task.myExecute();
         }
 
         SortOrder m_sortOrder = SortOrder.Ascending;

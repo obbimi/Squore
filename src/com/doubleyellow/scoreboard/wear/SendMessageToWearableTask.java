@@ -47,6 +47,12 @@ class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
         m_messageClient = Wearable.getMessageClient(ctx);
         m_nodeClient    = Wearable.getNodeClient(ctx);
     }
+    public AsyncTask<Object, Void, String> myExecute(Object... params) {
+        //AsyncTask<Object, Void, String> executing = super.execute(params);
+        AsyncTask<Object, Void, String> executing = super.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+        return executing;
+    }
+
     @Override protected String doInBackground(Object[] objects) {
         if ( m_nodeClient == null ) {
             Log.d(TAG, "No instance of " + NodeClient.class.getName());

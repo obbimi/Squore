@@ -117,7 +117,7 @@ public class PlayerTextView extends AppCompatAutoCompleteTextView implements Con
         if ( StringUtil.isNotEmpty(playersFeedURL) ) {
             URLFeedTask task = new URLFeedTask(getContext(), playersFeedURL);
             task.setContentReceiver(this);
-            task.execute();
+            task.myExecute();
         } else {
             List<String> playerList = PreferenceValues.getPlayerListAndContacts(getContext());
             setAutoCompleteAdapter(playerList);

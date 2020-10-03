@@ -160,6 +160,15 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         m_sNoMatchesInFeed = getString(R.string.No_matches_in_feed);
     }
 
+    @Override public void onDestroy() {
+        super.onDestroy();
+        if ( emsAdapter != null ) {
+            if ( emsAdapter.m_task != null ) {
+                emsAdapter.m_task.cancel(true);
+            }
+        }
+    }
+
     @Override protected void setGuiDefaults(List<String> lExpanded) {
         String feedPostName = PreferenceValues.getFeedPostName(context);
         if ( StringUtil.isEmpty(feedPostName) ) {
@@ -820,7 +829,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
 
             m_task.setContentReceiver(this);
-            m_task.execute();
+            m_task.myExecute();
+            Log.d(TAG, "Started download task ... ");
         }
 
         @Override public void cancel() {

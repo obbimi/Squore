@@ -235,7 +235,7 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
         }
 
         task.setContentReceiver(this);
-        task.execute();
+        task.myExecute();
     }
 
     @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent)

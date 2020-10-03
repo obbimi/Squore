@@ -52,7 +52,7 @@ public class URLFeedTask extends URLTask
     public URLFeedTask(Context ctx, String sUrl) {
         this(ctx, sUrl, PreferenceValues.getFeedReadTimeout(ctx) * 1000);
     }
-    public URLFeedTask(Context ctx, String sUrl, int iReadTimeoutMS) {
+    private URLFeedTask(Context ctx, String sUrl, int iReadTimeoutMS) {
         super(ctx, sUrl, sUrl.replace(Brand.getBaseURL(), "").replaceAll("(.)/","$1.").replaceAll("[^a-zA-Z0-9\\.]", "") + ".txt", "(<html|<HTML|Undefined index)");
         this.iReadTimeoutMS = iReadTimeoutMS;
     }

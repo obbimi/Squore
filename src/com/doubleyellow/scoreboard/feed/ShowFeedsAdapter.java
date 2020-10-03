@@ -80,13 +80,19 @@ class ShowFeedsAdapter extends SimpleELAdapter {
     @Override public void load(boolean bUseCacheIfPresent) {
         this.clear();
         ShowFeedsTask showFeedsTask = new ShowFeedsTask();
-        //showFeedsTask.execute(m_sName); // execute in separate thread on AsyncTask.SERIAL_EXECUTOR
-        showFeedsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, m_sName);
+        showFeedsTask.myExecute(m_sName);
     }
 
     private JSONArray m_feeds = null;
 
-    private /*static*/ class ShowFeedsTask extends AsyncTask<String, Void, List<String>> {
+    private /*static*/ class ShowFeedsTask extends AsyncTask<String, Void, List<String>>
+    {
+        public AsyncTask<String, Void, List<String>> myExecute(String... params) {
+            //AsyncTask<String, Void, List<String>> executing = super.execute(params);
+            AsyncTask<String, Void, List<String>> executing = super.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+            return executing;
+        }
+
         @Override protected List<String> doInBackground(String[] sName) {
             int iEndWasDaysBackMax     = PreferenceValues.getTournamentWasBusy_DaysBack     (m_context);
             int iStartIsDaysAheadMax   = PreferenceValues.getTournamentWillStartIn_DaysAhead(m_context);
