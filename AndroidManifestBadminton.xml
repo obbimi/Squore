@@ -3,6 +3,8 @@
           package="com.doubleyellow.badminton"
           android:versionName="${versionNameBadminton}"
           android:versionCode="${versionCodePrefix}${versionCodeSuffixBadminton}">
+<!-- PlayStoreID=4974076001360456618 -->
+
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
     <uses-feature android:name="android.permission.INTERNET" android:required="true" />

@@ -3,6 +3,7 @@
     package="com.doubleyellow.scoreboard"
     android:versionName="${versionNameSquore}"
     android:versionCode="${versionCodePrefix}${versionCodeSuffixSquore}">
+    <!-- PlayStoreID=4972255383319852172 -->
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
     <uses-feature android:name="android.permission.INTERNET" android:required="true" />
@@ -129,6 +130,7 @@
             <intent-filter> <data android:scheme="https" android:host="squore.double-yellow.be"         android:pathPattern="/.*20.*"               /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="https" android:host="squore.double-yellow.be"         android:pathPattern="/show/.*20.*"          /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="https" android:host="squore.double-yellow.be"         android:pathPattern="/uploads/.*.zip"       /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
+            <intent-filter> <data android:scheme="https" android:host="squore.double-yellow.be"         android:pathPattern="/tournamentsoftware/*" /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
 
             <intent-filter> <data android:scheme="http"  android:host="squash.nl"                       android:pathPattern="/sport/tournament.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="https" android:host="squash.nl"                       android:pathPattern="/sport/tournament.aspx"/> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>

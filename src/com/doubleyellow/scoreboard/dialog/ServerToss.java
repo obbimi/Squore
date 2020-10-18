@@ -55,6 +55,7 @@ public class ServerToss extends BaseAlertDialog
     }
 
     @Override public void show() {
+        if ( matchModel == null ) { return; }
         String sPlayerA = matchModel.getName(Player.A);
         String sPlayerB = matchModel.getName(Player.B);
         adb.setTitle         (R.string.sb_who_will_start_to_serve);

@@ -3,6 +3,7 @@
           package="com.doubleyellow.tennispadel"
           android:versionName="${versionNameTennisPadel}"
           android:versionCode="${versionCodePrefix}${versionCodeSuffixTennisPadel}">
+    <!-- PlayStoreID=4972207514792479457 -->
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
     <uses-feature android:name="android.permission.INTERNET" android:required="true" />

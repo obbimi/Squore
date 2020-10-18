@@ -1,3 +1,9 @@
+## 4.37 (okt 2020)
+
+- new options for the final set
+  - no games - tie break to 7 (or 10)
+  - games to 12 - followed by tie break to 7 (or 10)
+
 ## 4.36 (june 2020)
 
 - The app has been translated into Spanish. Thank you very much Salvador Martinez!

@@ -10,11 +10,11 @@
     <string-array name="finalSetFinishDisplayValues"> <!-- keep in sync with com.doubleyellow.scoreboard.model.FinalSetFinish -->
         <item>TieBreak Tot 7</item>
         <item>TieBreak Tot 10</item>
-        <!--
+        <item>Geen games - Gelijk TieBreak Tot 7</item>
+        <item>Geen games - Gelijk TieBreak Tot 10</item>
         <item>Games Tot 12 - Dan TieBreak Tot 7</item>
         <item>Games Tot 12 - Dan TieBreak Tot 10</item>
         <item>Geen Tie-Break</item>
-        -->
     </string-array>
 
 </resources>

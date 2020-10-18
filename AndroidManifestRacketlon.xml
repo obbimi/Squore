@@ -3,6 +3,7 @@
     package="com.doubleyellow.racketlon"
     android:versionName="${versionNameRacketlon}"
     android:versionCode="${versionCodePrefix}${versionCodeSuffixRacketlon}">
+    <!-- PlayStoreID=4973204554147732137 -->
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
     <uses-feature android:name="android.permission.INTERNET" android:required="true" />

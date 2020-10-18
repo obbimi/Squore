@@ -17,12 +17,27 @@
 package com.doubleyellow.scoreboard.model;
 
 /** For GSMModel only */
-public enum FinalSetFinish {
-    TieBreakTo7,
-    TieBreakTo10,
-/* TODO:
-    GamesTo12ThenTieBreakTo7,
-    GamesTo12ThenTieBreakTo10,
-    NoTieBreak,
-*/
+public enum FinalSetFinish
+{
+    TieBreakTo7              (GSMModel.FS_NR_GAMES_AS_OTHER_SETS, 7),
+    TieBreakTo10             (GSMModel.FS_NR_GAMES_AS_OTHER_SETS, 10),
+    NoGames_TieBreakTo7      ( 0, 7),
+    NoGames_TieBreakTo10     ( 0, 10),
+    GamesTo12ThenTieBreakTo7 (12, 7),
+    GamesTo12ThenTieBreakTo10(12, 10),
+    NoTieBreak(GSMModel.FS_UNLIMITED_NR_OF_GAMES, GSMModel.NOT_APPLICABLE),
+    ;
+    private int m_iNrOfGamesToWinSet = GSMModel.FS_NR_GAMES_AS_OTHER_SETS; // not deviating, -2 unlimited
+    private int m_iNrOfPointsToWinTiebreak = 7;
+    FinalSetFinish(int iNrOfGames, int iNrOfPointsToWinTiebreak) {
+        m_iNrOfGamesToWinSet = iNrOfGames;
+        m_iNrOfPointsToWinTiebreak = iNrOfPointsToWinTiebreak;
+    }
+    public int numberOfGamesToWinSet() {
+        return m_iNrOfGamesToWinSet;
+    }
+    public int numberOfPointsToWinTiebreak() {
+        return m_iNrOfPointsToWinTiebreak;
+    }
+
 }

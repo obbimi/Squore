@@ -38,6 +38,10 @@ import java.util.Map;
 /** Model for basis of Game-Set-Match (GSM) models: Padel and Tennis */
 public class GSMModel extends Model
 {
+    public final static int FS_NR_GAMES_AS_OTHER_SETS   = -1;
+    public final static int FS_UNLIMITED_NR_OF_GAMES    = -2;
+    public final static int NOT_APPLICABLE              = -9;
+
     @Override public SportType getSport() {
         return SportType.TennisPadel;
     }
@@ -90,8 +94,8 @@ public class GSMModel extends Model
     //------------------------
 
     /**  0-15-30-40-Game */
-    private static final int NUMBER_OF_POINTS_TO_WIN_GAME     = 4;
-    /** Number of points in a 'normal' tie-break (super tiebreak would be 10) */
+    private static final int NUMBER_OF_POINTS_TO_WIN_GAME     = 4; // 1=15, 2=30, 3=40, 4=Game
+    /** Number of points in a 'normal' tie-break (tiebreak e.g. in final set could be 10 = 'super tiebreak') */
     private static final int NUMBER_OF_POINTS_TO_WIN_TIEBREAK = 7;
 
     /** nr of games needed to win a set  */
@@ -134,6 +138,18 @@ public class GSMModel extends Model
     }
 
     public int getNrOfGamesToWinSet() {
+        // TODO
+        if ( isFinalSet() ) {
+            int iNrOfGamesToWinSet = m_finalSetFinish.numberOfGamesToWinSet();
+            switch (iNrOfGamesToWinSet) {
+                case FS_NR_GAMES_AS_OTHER_SETS:
+                    return m_iNrOfGamesToWinSet;
+                case FS_UNLIMITED_NR_OF_GAMES:
+                    return m_iNrOfGamesToWinSet;
+                default:
+                    return iNrOfGamesToWinSet;
+            }
+        }
         return m_iNrOfGamesToWinSet;
     }
 
@@ -144,22 +160,34 @@ public class GSMModel extends Model
 
     private int _getNrOfPointsToWinGame() {
         if ( isTieBreakGame() ) {
-            int setNrInProgress = getSetNrInProgress();
-            if ( setNrInProgress == m_iNrOfSetsToWinMatch * 2 - 1 ) {
+            boolean bIsFinalSet = isFinalSet();
+            if ( bIsFinalSet ) {
+                return m_finalSetFinish.numberOfPointsToWinTiebreak();
+/*
                 switch ( m_finalSetFinish ) {
                     case TieBreakTo7:
+                    case GamesTo12ThenTieBreakTo7:
+                    case NoGames_TieBreakTo7:
                         return 7;
                     case TieBreakTo10:
+                    case GamesTo12ThenTieBreakTo10:
+                    case NoGames_TieBreakTo10:
                         return 10;
                     default:
                         return NUMBER_OF_POINTS_TO_WIN_TIEBREAK;
                 }
+*/
             } else {
                 return NUMBER_OF_POINTS_TO_WIN_TIEBREAK;
             }
         } else {
-            return NUMBER_OF_POINTS_TO_WIN_GAME; // 1=15, 2=30, 3=40, 4=Game
+            return NUMBER_OF_POINTS_TO_WIN_GAME;
         }
+    }
+
+    private boolean isFinalSet() {
+        int setNrInProgress = getSetNrInProgress();
+        return setNrInProgress == m_iNrOfSetsToWinMatch * 2 - 1;
     }
 
     private final String TAG = "SB." + this.getClass().getSimpleName();
@@ -693,9 +721,9 @@ public class GSMModel extends Model
         int iGamesTrailer = MapUtil.getInt(player2GamesWon, pLeader.getOther(), 0);
 
         boolean bEndSet = false;
-        if ( iGamesLeader == m_iNrOfGamesToWinSet ) {
+        if ( iGamesLeader == getNrOfGamesToWinSet() ) {
             bEndSet = iGamesLeader - iGamesTrailer >= 2;
-        } else if ( iGamesLeader > m_iNrOfGamesToWinSet ) {
+        } else if ( iGamesLeader > getNrOfGamesToWinSet() ) {
             bEndSet = iGamesLeader - iGamesTrailer >= 1;
         }
         if ( bEndSet ) {
@@ -739,9 +767,16 @@ public class GSMModel extends Model
     private boolean isTieBreakGame() {
         int iGameInProgress = getGameNrInProgress();
         if ( iGameInProgress % 2 == 0 ) {
+            // game in progress is even: can not be a tiebreak
             return false;
         }
-        if ( iGameInProgress >= (m_iNrOfGamesToWinSet * 2 + 1) ) {
+        if ( isFinalSet() ) {
+            if ( m_finalSetFinish.numberOfGamesToWinSet() == GSMModel.FS_UNLIMITED_NR_OF_GAMES) {
+                return false;
+            }
+        }
+
+        if ( iGameInProgress >= (getNrOfGamesToWinSet() * 2 + 1) ) {
             return true;
         } else {
             return false;

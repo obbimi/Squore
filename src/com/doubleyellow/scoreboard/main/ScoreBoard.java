@@ -3373,7 +3373,7 @@ touch -t 01030000 LAST.sb
                 return true;
             case tossDialogEnded:
                 showTossFloatButton(false);
-                if ( matchModel.hasStarted() == false ) {
+                if ( (matchModel != null) && matchModel.hasStarted() == false ) {
                     timestampStartOfGame(GameTiming.ChangedBy.DialogClosed);
                 }
                 showNextDialog();
@@ -3394,7 +3394,7 @@ touch -t 01030000 LAST.sb
                     // assume only the inline timer is shown: hide it so timer is better visible
                     showTossFloatButton(false);
                 }
-                if ( matchModel.gameHasStarted() == false ) {
+                if ( (matchModel != null) && matchModel.gameHasStarted() == false ) {
                     timestampStartOfGame(GameTiming.ChangedBy.TimerStarted);
                 }
                 return true;
@@ -3416,14 +3416,16 @@ touch -t 01030000 LAST.sb
                 timerType = (Type) ctx;
                 //viewType  = (ViewType) ctx2;
                 if ( EnumSet.of(Type.UntillStartOfNextGame, Type.Warmup).contains(timerType) ) {
-                    if ( matchModel.gameHasStarted() == false ) {
+                    if ( (matchModel != null) && matchModel.gameHasStarted() == false ) {
                         timestampStartOfGame(GameTiming.ChangedBy.TimerEnded);
                     }
                 }
                 hidePresentationEndOfGame();
                 showAppropriateMenuItemInActionBar();
-                showTimerFloatButton(Type.Warmup.equals(timerType) && (matchModel.gameHasStarted() == false));
-                showTossFloatButton (Type.Warmup.equals(timerType) && (matchModel.hasStarted()     == false));
+                if ( matchModel != null ) {
+                    showTimerFloatButton(Type.Warmup.equals(timerType) && (matchModel.gameHasStarted() == false));
+                    showTossFloatButton (Type.Warmup.equals(timerType) && (matchModel.hasStarted()     == false));
+                }
                 updateMicrophoneFloatButton();
                 showNextDialog();
 
@@ -3459,7 +3461,7 @@ touch -t 01030000 LAST.sb
             case restartScoreDialogEnded:
             case endMatchDialogEnded: // fall through
             case endGameDialogEnded: {
-                if ( matchModel.matchHasEnded() ) {
+                if ( (matchModel != null) && matchModel.matchHasEnded() ) {
                     // if the match has ended the OnlineSheetAvailableChoice dialog may be on the stack
                     showNextDialog();
                 } else {
@@ -3615,7 +3617,7 @@ touch -t 01030000 LAST.sb
           //setMenuItemVisibility(R.id.sb_swap_double_players  , false);
         }
         if ( Brand.isTabletennis() ) {
-            boolean bIsInNormalMode = matchModel.isInNormalMode();
+            boolean bIsInNormalMode = (matchModel == null) || matchModel.isInNormalMode();
             setMenuItemVisibility(R.id.tt_activate_mode  , bIsInNormalMode == true );
             setMenuItemVisibility(R.id.tt_deactivate_mode, bIsInNormalMode == false);
             if ( PreferenceValues.isBrandTesting(this) ) {
@@ -3807,7 +3809,7 @@ touch -t 01030000 LAST.sb
             case R.id.sb_change_sides:
             case R.id.float_changesides:
                 swapSides(Toast.LENGTH_LONG, null);
-                if ( Brand.isBadminton() && matchModel.isDoubles() ) {
+                if ( Brand.isBadminton() && (matchModel != null) && matchModel.isDoubles() ) {
                     _swapDoublePlayers(Player.values(), false);
                 }
                 return true;
@@ -5821,9 +5823,11 @@ touch -t 01030000 LAST.sb
         if ( ListUtil.length(ctx) != 0 ) {
             lockState = (LockState) ctx[0];
         }
-        matchModel.setLockState(lockState);
+        if ( matchModel != null ) {
+            matchModel.setLockState(lockState);
 
-        writeMethodToBluetooth(BTMethods.lock);
+            writeMethodToBluetooth(BTMethods.lock);
+        }
     }
     private void unlockMatch() {
         LockState current = matchModel.getLockState();
@@ -5865,6 +5869,7 @@ touch -t 01030000 LAST.sb
     }
     private boolean endGame(boolean bBTDelayed) {
         if ( warnModelIsLocked() ) { return false; }
+        if ( matchModel == null ) { return false; }
         matchModel.endGame();
 
         if ( BTRole.Master.equals(m_blueToothRole) ) {
@@ -5892,6 +5897,7 @@ touch -t 01030000 LAST.sb
         writeMethodToBluetooth(BTMethods.recordConduct, pMisbehaving, call, conductType);
     }
     public void timestampStartOfGame(GameTiming.ChangedBy changedBy) {
+        if ( matchModel == null ) { return; }
         matchModel.timestampStartOfGame(changedBy);
 
         writeMethodToBluetooth(BTMethods.timestampStartOfGame, changedBy);
@@ -6007,8 +6013,10 @@ touch -t 01030000 LAST.sb
                 m_cdtSendMatchToOther = new CountDownTimer(iDelayMs, 500) {
                     @Override public void onTick(long millisUntilFinished) { }
                     @Override public void onFinish() {
-                        String sJson = matchModel.toJsonString(ScoreBoard.this);
-                        mBluetoothControlService.write( sJson.length() + ":" + sJson );
+                        if ( matchModel != null ) {
+                            String sJson = matchModel.toJsonString(ScoreBoard.this);
+                            mBluetoothControlService.write(sJson.length() + ":" + sJson);
+                        }
                     }
                 };
                 m_cdtSendMatchToOther.start();
@@ -6017,8 +6025,10 @@ touch -t 01030000 LAST.sb
             }
         }
 
-        String sJson = matchModel.toJsonString(this);
-        sendMatchFromToWearable(sJson);
+        if ( matchModel != null ) {
+            String sJson = matchModel.toJsonString(this);
+            sendMatchFromToWearable(sJson);
+        }
     }
 
     public void sendFlagToOtherBluetoothDevice(Context ctx, String sCountryCode) {
@@ -6259,26 +6269,28 @@ touch -t 01030000 LAST.sb
             // or old version communicating with new version with new method
             //e.printStackTrace();
         }
-        if ( btMethod == null ) {
+        if ( matchModel == null ) {
+            Log.w(TAG, "Matchmodel is null"); // should not happen normally
+        } else if ( btMethod == null ) {
             Log.w(TAG, String.format("Could not derive btMethod from message %s (%s) [#%d]", sMethod, readMessage.substring(0, Math.min(20, readMessage.length())) + "...", readMessage.length()));
         } else {
             switch (btMethod) {
                 case changeScore: {
-                    if ( sMethodNArgs.length > 1 ) {
+                    if ( sMethodNArgs.length > 1 && (matchModel != null) ) {
                         Player player = Player.valueOf(sMethodNArgs[1]);
                         matchModel.changeScore(player);
                     }
                     break;
                 }
                 case changeSide: {
-                    if ( sMethodNArgs.length > 1 ) {
+                    if ( sMethodNArgs.length > 1 && (matchModel != null) ) {
                         Player player = Player.valueOf(sMethodNArgs[1]);
                         matchModel.changeSide(player);
                     }
                     break;
                 }
                 case changeColor: {
-                    if ( sMethodNArgs.length > 1 ) {
+                    if ( sMethodNArgs.length > 1 && (matchModel != null) ) {
                         Player player = Player.valueOf(sMethodNArgs[1]);
                         matchModel.setPlayerColor(player, sMethodNArgs.length>2?sMethodNArgs[2]:null);
                     }
@@ -6289,7 +6301,7 @@ touch -t 01030000 LAST.sb
                     break;
                 }
                 case undoLastForScorer: {
-                    if ( sMethodNArgs.length > 1 ) {
+                    if ( sMethodNArgs.length > 1 && (matchModel != null) ) {
                         Player nonScorer = Player.valueOf(sMethodNArgs[1]);
                         matchModel.undoLastForScorer(nonScorer);
                     }
@@ -6300,7 +6312,7 @@ touch -t 01030000 LAST.sb
                     break;
                 }
                 case timestampStartOfGame: {
-                    if ( sMethodNArgs.length > 1 ) {
+                    if ( sMethodNArgs.length > 1 && (matchModel != null) ) {
                         GameTiming.ChangedBy changedBy = GameTiming.ChangedBy.valueOf(sMethodNArgs[1]);
                         matchModel.timestampStartOfGame(changedBy);
                     }
@@ -6326,7 +6338,7 @@ touch -t 01030000 LAST.sb
                     }
                 }
                 case recordAppealAndCall: {
-                    if ( sMethodNArgs.length > 2 ) {
+                    if ( sMethodNArgs.length > 2 && (matchModel != null) ) {
                         Player player = Player.valueOf(sMethodNArgs[1]);
                         Call   call   = Call  .valueOf(sMethodNArgs[2]);
                         matchModel.recordAppealAndCall(player, call);
@@ -6334,7 +6346,7 @@ touch -t 01030000 LAST.sb
                     break;
                 }
                 case recordConduct: {
-                    if ( sMethodNArgs.length > 3 ) {
+                    if ( sMethodNArgs.length > 3 && (matchModel != null) ) {
                         Player      player      = Player     .valueOf(sMethodNArgs[1]);
                         Call        call        = Call       .valueOf(sMethodNArgs[2]);
                         ConductType conductType = ConductType.valueOf(sMethodNArgs[3]);
