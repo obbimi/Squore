@@ -12,6 +12,7 @@
     <string name="conduct_game_abbreviation">CG</string>
     <string name="conduct_match_abbreviation">CM</string>
 
+    <string name="timeout_string_abbreviation">TO</string>
     <string name="broken_string_abbreviation">BS</string>
     <string name="broken_ball_abbreviation">BB</string>
     <string name="broken_racket_abbreviation">BR</string>

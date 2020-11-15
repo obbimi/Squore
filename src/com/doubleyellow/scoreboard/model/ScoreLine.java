@@ -41,6 +41,7 @@ public class ScoreLine implements Serializable
     private Player    callTargetPlayer = null;
             Call      call             = null;
             BrokenEquipment equipment  = null;
+            Misc      misc             = null;
 
     public ScoreLine(Player player, Call call) {
         this.callTargetPlayer = player;
@@ -52,11 +53,22 @@ public class ScoreLine implements Serializable
         this.equipment        = equipment;
         m_line                = null;
     }
+    public ScoreLine(Player player, Misc misc) {
+        this.callTargetPlayer = player;
+        this.misc             = misc;
+        m_line                = null;
+    }
     public boolean isBrokenEquipment() {
         return ( this.equipment != null );
     }
     public boolean isCall() {
         return ( this.callTargetPlayer != null ) && ( this.call != null );
+    }
+    public boolean isMisc() {
+        return ( this.callTargetPlayer != null ) && ( this.misc != null );
+    }
+    public boolean isTimeout() {
+        return ( this.callTargetPlayer != null ) && ( Misc.TO.equals(this.misc) );
     }
     public boolean isAppealWithPoint() {
         return ( this.callTargetPlayer != null ) && ( this.call != null ) && (this.call.hasScoreAffect());
@@ -168,6 +180,18 @@ public class ScoreLine implements Serializable
                 } else {
                     lReturn.add(3, sEquipment);
                 }
+            } else if ( this.misc != null ) {
+                String sMisc = null;
+                if (ctx != null ) {
+                    sMisc = ctx.getString(this.misc.getResourceIdAbbreviation());
+                } else {
+                    sMisc = misc.toString();
+                }
+                if (this.callTargetPlayer.equals(Player.A)) {
+                    lReturn.add(1, sMisc);
+                } else {
+                    lReturn.add(3, sMisc);
+                }
             }
             return lReturn;
         }
@@ -227,6 +251,12 @@ public class ScoreLine implements Serializable
                 } else {
                     sb.append("--").append("(").append(equipment).append(")");
                 }
+            } else if ( misc != null ) {
+                if (callTargetPlayer.equals(Player.A)) {
+                    sb.append("(").append(misc).append(")").append("--");
+                } else {
+                    sb.append("--").append("(").append(misc).append(")");
+                }
             }
             return sb.toString();
         }
@@ -264,6 +294,10 @@ public class ScoreLine implements Serializable
     private static final Pattern pEquipment = Pattern.compile(""
                                                  +"(--|" + ListUtil.join(BrokenEquipment.class, "|") + ")"
                                                  +"(--|" + ListUtil.join(BrokenEquipment.class, "|") + ")"
+    );
+    private static final Pattern pMisc      = Pattern.compile(""
+                                                 +"(--|" + ListUtil.join(Misc.class, "|") + ")"
+                                                 +"(--|" + ListUtil.join(Misc.class, "|") + ")"
     );
     public ScoreLine(String sScoreLine) {
         Matcher m = p.matcher(sScoreLine);
@@ -325,6 +359,23 @@ public class ScoreLine implements Serializable
                     if (g2.equals("--") == false) {
                         this.equipment = BrokenEquipment.valueOf(g2);
                         this.callTargetPlayer = Player.B;
+                    }
+                } else {
+                    // broken equipment
+                    // BB,BS or BR
+                    Matcher mMisc = pMisc.matcher(sScoreLine);
+                    if ( mMisc.find() ) {
+                        String g1 = mMisc.group(1);
+                        String g2 = mMisc.group(2);
+
+                        if (g1.equals("--") == false) {
+                            this.misc = Misc.valueOf(g1);
+                            this.callTargetPlayer = Player.A;
+                        }
+                        if (g2.equals("--") == false) {
+                            this.misc = Misc.valueOf(g2);
+                            this.callTargetPlayer = Player.B;
+                        }
                     }
                 }
             }

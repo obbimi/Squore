@@ -34,4 +34,5 @@
     <integer name="serveButtonTransparencyNonServer_default__Tabletennis">90</integer> <!-- between 0 and 100 -->
     <string name="NewMatchesType_default__Tabletennis">TeamVsTeam_XMatchesPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
 
+    <bool name="usePlayerTimeoutTimers__Tabletennis">true</bool>
 </resources>

@@ -97,6 +97,7 @@
     <string name="sb_timer">Timer</string>
     <string name="sb_nbsp_timer">\u00A0Timer</string> <!-- added non-breaking space in front for action bar -->
     <string name="sb_injury_timer">Injury Timer</string>
+    <string name="sb_player_timeout_timer">Team/Player timeout</string>
     <string name="sb_score_details">Score Details</string>
     <string name="Live_Score">Live Score</string>
     <string name="sb_official_announcement">Official announcement</string>

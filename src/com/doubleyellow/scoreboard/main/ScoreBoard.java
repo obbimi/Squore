@@ -867,6 +867,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             addItem(R.id.sb_toss                , R.string.sb_cmd_toss             ,         R.drawable.toss_white          );
             addItem(R.id.sb_timer               , R.string.sb_timer                ,         R.drawable.timer               );
             addItem(R.id.sb_injury_timer        , R.string.sb_injury_timer         ,         R.drawable.timer               , R.bool.useInjuryTimers__Squash);
+            addItem(R.id.sb_player_timeout_timer, R.string.sb_player_timeout_timer ,         R.drawable.timer               , R.bool.usePlayerTimeoutTimers__Squash);
             addItem(R.id.sb_score_details       , R.string.sb_score_details        ,         R.drawable.ic_action_chart_line);
         startSection(R.string.goto_help );
             addItem(R.id.sb_quick_intro         , R.string.Quick_intro             , android.R.drawable.ic_dialog_info         );
@@ -3348,6 +3349,7 @@ touch -t 01030000 LAST.sb
         restartScoreDialogEnded,
         officialAnnouncementClosed,
         injuryTypeClosed,
+        playerTimeoutClosed,
         bluetoothDeviceSelectionClosed,
         //rallyEndStatsClosed,
         //specifyHandicapClosed,
@@ -3447,6 +3449,14 @@ touch -t 01030000 LAST.sb
                     // assume first ball is about to be served
                     showTossFloatButton(false);
                     showTimerFloatButton(false);
+                }
+                break;
+            }
+            case playerTimeoutClosed: {
+                Player p = (Player) ctx;
+                if ( p != null ) {
+                    matchModel.recordTimeout(p, true);
+                    showTimer(Type.Timeout, false);
                 }
                 break;
             }
@@ -4019,6 +4029,9 @@ touch -t 01030000 LAST.sb
                 }
                 showTimer(lastTimerType, false);
                 return true;
+            case R.id.sb_player_timeout_timer:
+                _showPlayerTimeoutPlayerChooser();
+                break;
             case R.id.sb_injury_timer:
                 _showInjuryTypeChooser();
                 return true;
@@ -4391,6 +4404,10 @@ touch -t 01030000 LAST.sb
     // official announcements
     // ------------------------------------------------------
 
+    private void _showPlayerTimeoutPlayerChooser() {
+        PlayerTimeout playerTimeout = new PlayerTimeout(this, matchModel, this);
+        show(playerTimeout);
+    }
     private void _showInjuryTypeChooser() {
         InjuryType injuryType = new InjuryType(this, matchModel, this);
         show(injuryType);

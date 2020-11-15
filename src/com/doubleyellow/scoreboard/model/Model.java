@@ -305,6 +305,7 @@ public abstract class Model implements Serializable
     private Map<Player, String>                 m_player2Club           = new HashMap<Player, String>();
     /** Contains list of player names as the appeared in JSON. e.g. ${seq}:${id}:{LastName}, ${FirstName} */
     private Map<Player, String>                 m_player2Avatar         = new HashMap<Player, String>();
+    private Map<Player, String>                 m_player2TimeoutInfo    = new HashMap<Player, String>();
     private String                              m_matchDate             = DateUtil.getCurrentYYYY_MM_DD();   // up to apk 202 DateUtil.getCurrentYYYYMMDD()
     private String                              m_matchTime             = DateUtil.getCurrentHHMMSS_Colon() + DateUtil.getTimezoneXXX(); // up to apk 202 DateUtil.getCurrentHHMMSS()
 
@@ -648,6 +649,31 @@ public abstract class Model implements Serializable
     public Map<String,String> getConduct(int i) {
         String sCallData = lConductCalls.get(i);
         return MapUtil.parseToMap(sCallData);
+    }
+
+    //-------------------------------
+    // timeout
+    //-------------------------------
+    public void recordTimeout(Player p, boolean bAddScoreline) {
+        String sAtScore = getResultShort() + "," + getScore(Player.A) + "-" + getScore(Player.B);
+        String sOld = m_player2TimeoutInfo.put(p, sAtScore);
+        if ( sOld != null ) {
+            m_player2TimeoutInfo.put(p, sOld + ";" + sAtScore);
+        }
+        if ( bAddScoreline ) {
+            addScoreLine(new ScoreLine(p, Misc.TO), true);
+        }
+    }
+    public String getTimeoutInfo(Player p) {
+        return m_player2TimeoutInfo.get(p);
+    }
+    public String getLastTimeoutInfo(Player p) {
+        String sTimeoutInfo = m_player2TimeoutInfo.get(p);
+        if ( StringUtil.isNotEmpty(sTimeoutInfo) ) {
+            String[] strings = StringUtil.singleCharacterSplit(sTimeoutInfo, ";");
+            return strings[strings.length-1];
+        }
+        return null;
     }
 
     //-------------------------------
@@ -2294,6 +2320,9 @@ public abstract class Model implements Serializable
             try {
                 // read match format
                 JSONObject joFormat = joMatch.optJSONObject(JSONKey.format.toString());
+                if ( joFormat == null ) {
+                    Log.d(TAG, "NO FORMAT SECTION IN JSON"); // happens when e.g. match is selected from MyList
+                } else {
                 int numberOfPointsToWinGame = joFormat.optInt(PreferenceKeys.numberOfPointsToWinGame.toString(), UNDEFINED_VALUE);
                 int nrOfGamesToWinMatch     = joFormat.optInt(JSONKey.nrOfGamesToWinMatch.toString(), UNDEFINED_VALUE); // old... keep for now for stored matches
                     nrOfGamesToWinMatch     = joFormat.optInt(PreferenceKeys.numberOfGamesToWinMatch.toString(), nrOfGamesToWinMatch); // optional for e.g. racketlon
@@ -2356,6 +2385,7 @@ public abstract class Model implements Serializable
                 }
                 if ( joFormat.has(JSONKey.mode.toString())) {
                     m_sMode = joFormat.optString(JSONKey.mode.toString());
+                }
                 }
             } catch (Exception e) {
                 // not really an error, most likely last match stored did not use these keys
@@ -2669,6 +2699,9 @@ public abstract class Model implements Serializable
                     }
                 }
                 addScoreLine(scoreLine, false);
+                if ( scoreLine.isTimeout() ) {
+                    recordTimeout(scoreLine.getCallTargetPlayer(), false);
+                }
 
               //MapUtil.increaseCounter(m_scoreOfGameInProgress, scoreLine.getScoringPlayer()); // this does not work if we 'adjust' the score
                 if ( scoreLine.isCall() == false && scoreLine.isBrokenEquipment() == false ) {
@@ -3051,7 +3084,7 @@ public abstract class Model implements Serializable
             for (int i = 0; i < lScoreHistory.size(); i++) {
                 ScoreLine sl = lScoreHistory.get(i);
                 String sScoreLine = sl.toString();
-                if ( sl.isCall() || sl.isBrokenEquipment() ) {
+                if ( sl.isCall() || sl.isBrokenEquipment() || sl.isMisc() ) {
                     sScoreLine = sScoreLine.replace("  ", "--").replaceAll(" ", "");
                 }
                 game.put(i, sScoreLine);
