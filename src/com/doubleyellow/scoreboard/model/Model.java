@@ -27,6 +27,7 @@ import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.util.ListWrapper;
 import com.doubleyellow.util.*;
 import org.json.JSONArray;
@@ -2970,6 +2971,15 @@ public abstract class Model implements Serializable
         if ( context != null ) {
             jsonObject.put(JSONKey.appName   .toString(), Brand.getShortName(context)); // TODO: read this as well, and keep the name while match is locked
             jsonObject.put(JSONKey.appPackage.toString(), context.getPackageName());
+
+            try {
+                String liveScoreDeviceId = PreferenceValues.getLiveScoreDeviceId(context);
+                if ( StringUtil.isNotEmpty(liveScoreDeviceId) ) {
+                    jsonObject.put(PreferenceKeys.liveScoreDeviceId.toString(), liveScoreDeviceId);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         JSONObject metaData = new JSONObject();
@@ -2979,6 +2989,20 @@ public abstract class Model implements Serializable
         if ( StringUtil.isNotEmpty(m_shareUrl) ) {
             metaData.put(JSONKey.shareURL.toString(), m_shareUrl);
         }
+
+        // send a few 'unique' values for the device: this is mainly for the livescore page to allow filtering on matches only from a certain device
+/*
+        try {
+            JSONObject device = new JSONObject();
+            long lLastStartup = System.currentTimeMillis() - SystemClock.uptimeMillis();
+            String sUpSince   = DateUtil.formatDate2String(lLastStartup, DateUtil.YYYYMMDDHHMMSS);
+            device.put("UP_SINCE"    , sUpSince);
+            device.put("BRAND"       , Build.BRAND);
+            device.put("MANUFACTURER", Build.MANUFACTURER);
+            metaData.put(JSONKey.device.toString(), device);
+        } catch (Exception e) {}
+*/
+
         if ( context != null ) {
             try {
                 String packageName = context.getPackageName();
@@ -3001,7 +3025,7 @@ public abstract class Model implements Serializable
                 }
                 final int ipAddress = wifiInfo.getIpAddress(); // ipadress assigned to device by e.g. router
                 wifi.put("ipaddress"   , Placeholder.Misc.IntegerToIPAddress.execute(String.valueOf(ipAddress), null, null));
-                wifi.put("ssid"        , ssid);
+                wifi.put("ssid"        , ssid); // Typical values... so not useful : "ipaddress":"0.0.0.0","ssid":"unknownssid","mac":"02:00:00:00:00:00"
                 wifi.put("mac"         , androidDeviceMacAddress);
                 JsonUtil.removeEmpty(wifi);
                 metaData.put(JSONKey.wifi.toString(), wifi);

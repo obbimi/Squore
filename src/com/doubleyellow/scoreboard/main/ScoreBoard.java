@@ -2969,7 +2969,7 @@ touch -t 01030000 LAST.sb
             if ( (bInitializingModelListeners == false) && (iTotal != 0) && ShareMatchPrefs.LinkWithFullDetailsEachPoint.equals(m_liveScoreShare) && (matchModel.isLocked() == false) ) {
                 //shareScoreSheet(ScoreBoard.this, matchModel, false);
                 // start timer to post in e.g. x seconds. Restart this timer as soon as another point is scored
-                shareScoreSheetDelayed(1000);
+                shareScoreSheetDelayed(600);
             }
 
             if ( (iDelta == 1) ) {
@@ -4237,7 +4237,9 @@ touch -t 01030000 LAST.sb
     }
 
     private void showLiveScore() {
-        openInBrowser(this, getString(R.string.pref_live_score_url));
+        String sURL = getString(R.string.pref_live_score_url);
+        String sLivescoreId = PreferenceValues.getLiveScoreDeviceId(this);
+        openInBrowser(this, sURL);
     }
     private void showHelp() {
         openInBrowser(this, "/help");
@@ -4630,6 +4632,20 @@ touch -t 01030000 LAST.sb
                     PreferenceValues.setString  (PreferenceKeys.courtLast              , this, m.getCourt());
                     PreferenceValues.setString  (PreferenceKeys.locationLast           , this, m.getEventLocation());
                     PreferenceValues.setEnum    (PreferenceKeys.handicapFormat         , this, m.getHandicapFormat());
+
+                    if ( EnumSet.of(PlayerColorsNewMatch.TakeFromPreviousMatch, PlayerColorsNewMatch.TakeFromPreferences).contains(PreferenceValues.playerColorsNewMatch(this)) ) {
+                        // if colors are specified and no 'pref colors' yet, take these values as pref colors
+                        for ( Player p: Player.values() ) {
+                            String sPrefKey = PreferenceKeys.PlayerColorsNewMatch.toString() + p;
+                            String sPrefColor = PreferenceValues.getString(sPrefKey, null, this);
+                            if ( StringUtil.isEmpty(sPrefColor) ) {
+                                String sMatchColor = m.getColor(p);
+                                if ( StringUtil.isNotEmpty(sMatchColor) ) {
+                                    PreferenceValues.setString(sPrefKey, this, sMatchColor);
+                                }
+                            }
+                        }
+                    }
                     if ( Brand.isSquash() && m.isDoubles() ) {
                         DoublesServeSequence eDSS = m.getDoubleServeSequence();
                         if ( eDSS.equals(DoublesServeSequence.NA) == false ) {

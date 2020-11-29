@@ -316,7 +316,7 @@
     <string name="pref_live_score_url">live?lang=nl</string>
     <string name="pref_live_score_url_summary">Gebruik deze URL om alle wedstrijd te zien die gedeeld zijn met deze app, e.g. voor uw toernooi</string>
     <string name="pref_LiveScorePrefs">Ondersteuning live score</string>
-    <string name="pref_LiveScorePrefs_dialog">Gebruik van: Use Share Feature (Automatisch) en Action For Share (Match Details Na Elke Halve Game) voor live score ondersteuning</string>
+    <string name="pref_LiveScorePrefs_dialog">Gebruik van: Use Share Feature (Automatisch) en Action For Share (Match Details Na Elke Punt) voor live score ondersteuning</string>
     <string name="pref_Cast_ShowGraphDuringTimer">Toon game scores en scoreverloop grafiek van laatste game tussen games en aan einde van de match</string>
 
     <string name="for_this_to_take_effect_a_restart_is_required">Om dit effectief te maken moet herstart worden</string>

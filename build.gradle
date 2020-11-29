@@ -46,11 +46,11 @@ android {
 
         //testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
         //applicationId "com.doubleyellow"
-        manifestPlaceholders = [versionNameTabletennis: "4.36", versionCodeSuffixTabletennis: "0452"
-                               ,versionNameBadminton  : "4.36", versionCodeSuffixBadminton  : "0452"
-                               ,versionNameTennisPadel: "4.37", versionCodeSuffixTennisPadel: "0452"
-                               ,versionNameSquore     : "4.36", versionCodeSuffixSquore     : "0452"
-                               ,versionNameRacketlon  : "4.36", versionCodeSuffixRacketlon  : "0452"
+        manifestPlaceholders = [versionNameTabletennis: "4.38", versionCodeSuffixTabletennis: "0453"
+                               ,versionNameBadminton  : "4.38", versionCodeSuffixBadminton  : "0453"
+                               ,versionNameTennisPadel: "4.38", versionCodeSuffixTennisPadel: "0453"
+                               ,versionNameSquore     : "4.38", versionCodeSuffixSquore     : "0453"
+                               ,versionNameRacketlon  : "4.38", versionCodeSuffixRacketlon  : "0453"
                                ]
     }
     sourceSets {

@@ -325,7 +325,7 @@
     <string name="pref_live_score_url_summary">Usa questo URL per visualizzare tutti gli incontri condivisi con questa app, es. relativamente al tuo evento</string>
     <string name="pref_LiveScorePrefs">Supporta punteggio in diretta (Live Score)</string>
     <string name="pref_updateLiveScore">Aggiorna punteggio in diretta (Live Score)</string>
-    <string name="pref_LiveScorePrefs_dialog">Regola opzioni: Usa la funzione Condividi (su Automatico) e Azione per la Condivisione (su Dettagli dell\'incontro dopo ogni metà gioco) per ottimizzare il supporto del punteggio in diretta (Live Score)</string>
+    <string name="pref_LiveScorePrefs_dialog">Regola opzioni: Usa la funzione Condividi (su Automatico) e Azione per la Condivisione (su Dettagli dell\'incontro dopo ogni punto) per ottimizzare il supporto del punteggio in diretta (Live Score)</string>
     <string name="pref_Cast_ShowGraphDuringTimer">Mostra il punteggio dei giochi ed un grafico di punteggio dell\'ultimo gioco tra un gioco e l\'altro ed al termine dell\'incontro</string>
 
     <string name="for_this_to_take_effect_a_restart_is_required">Per rendere questa opzione attiva occorre un riavvio dell\'app</string>

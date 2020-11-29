@@ -23,7 +23,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.DialogPreference;
 import android.preference.Preference;
 import android.util.AttributeSet;
-import com.doubleyellow.scoreboard.main.ScoreBoard;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -54,6 +53,8 @@ abstract class MultiPrefsDialog extends DialogPreference
             Object oValue = preferencesToSet.get(key);
             if ( oValue instanceof Boolean) {
                 updatePrefAndTitle(key, (Boolean) oValue);
+            } else if ( oValue instanceof String) {
+                updatePrefAndTitle(key, (String) oValue);
             } else if ( oValue instanceof Enum) {
                 updatePrefAndTitle(key, (Enum) oValue);
             } else if ( oValue instanceof EnumSet) {
@@ -85,6 +86,12 @@ abstract class MultiPrefsDialog extends DialogPreference
 
         Preference pref = this.findPreferenceInHierarchy(prefKey.toString());
         PreferenceValues.updatePreferenceTitle(pref, val);
+    }
+    private void updatePrefAndTitle(PreferenceKeys prefKey, String val) {
+        PreferenceValues.setString(prefKey, context, val);
+
+        Preference pref = this.findPreferenceInHierarchy(prefKey.toString());
+        PreferenceValues.updatePreferenceTitle(pref, val, context);
     }
     private void updatePrefAndTitle(PreferenceKeys prefKey, boolean val) {
         PreferenceValues.setBoolean(prefKey, context, val);

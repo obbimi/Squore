@@ -1,3 +1,8 @@
+## 4.38 (nov 2020)
+
+- Re-use chosen colors for players in subsequent matches ( Settings > Appearance > Colors )
+- Introduction of 'Livescore Device Id' to allow more precise filtering on 'Live Score' web page
+
 ## 4.36 (june 2020)
 
 - The app has been translated into Spanish. Thank you very much Salvador Martinez!

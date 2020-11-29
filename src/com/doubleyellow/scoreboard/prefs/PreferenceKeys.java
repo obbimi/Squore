@@ -250,6 +250,10 @@ public enum PreferenceKeys {
         textColorDetermination,
         textColors,
         showPlayerColorOn,
+            PlayerColorsNewMatch,
+                //PlayerColorsNewMatchA,
+                //PlayerColorsNewMatchB,
+            showPlayerColorOn_Text,
 
     Misc,
         resetPrefs,
@@ -258,6 +262,7 @@ public enum PreferenceKeys {
 
     LiveScorePrefs,
         LiveScoreOpenURL,
+        liveScoreDeviceId,
 
     /* not really preferences but makes them manageable from 'parent' app */
     FromParent,

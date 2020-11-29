@@ -159,6 +159,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="showCircularCountdownInTimer_default">true</bool>
     <bool name="cancelTimerWhenTimeIsUp_default">false</bool>
     <bool name="showTieBreakDialog_default">true</bool>
+    <bool name="showPlayerColorOn_Text_default">false</bool>
 
     <bool name="showWhoServesFAB_default">true</bool>
     <bool name="showOfficialAnnouncementsFAB_default">true</bool>
@@ -182,6 +183,8 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="isPublicApp__Default">true</bool>
     <bool name="useSinglesMatch__Default">true</bool>
     <bool name="useInjuryTimers__Squash">true</bool>
+    <bool name="usePlayerTimeoutTimers__Squash">false</bool>
+    <bool name="usePlayerTimeoutTimers__Default">false</bool>
     <bool name="useInjuryTimers__Default">false</bool>
     <bool name="allowTrustAllCertificatesAndHosts_default">false</bool>
     <bool name="sortMatchesByEvent_default">true</bool>

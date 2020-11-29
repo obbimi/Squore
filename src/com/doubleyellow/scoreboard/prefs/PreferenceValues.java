@@ -70,10 +70,10 @@ public class PreferenceValues extends RWValues
         if ( preference == null ) { return 0; }
 
         if (preference instanceof PreferenceScreen) {
-            // extension of preferencegroup
+            // extension of PreferenceGroup
         }
         if (preference instanceof PreferenceCategory) {
-            // extension of preferencegroup
+            // extension of PreferenceGroup
         }
         int iChanged = 0;
         if (preference instanceof PreferenceGroup) {
@@ -84,7 +84,7 @@ public class PreferenceValues extends RWValues
         }
 
         int titleRes = preference.getTitleRes();
-        if ( titleRes == R.string.pref_floatingMessageForGameBall) {
+        if ( titleRes == R.string.pref_liveScoreDeviceId) {
             Log.d(TAG, "SHOULD WORK");
         }
         Integer newTitleResId = getSportSpecificSuffixedResId(context, titleRes);
@@ -481,8 +481,11 @@ public class PreferenceValues extends RWValues
         }
         return getEnum(PreferenceKeys.useOfficialAnnouncementsFeature, context, Feature.class, R.string.useOfficialAnnouncementsFeature_default);
     }
-    public static void initForLiveScoring(Context ctx, boolean bTmp) {
-        if ( bTmp ) {
+    public static String getLiveScoreDeviceId(Context context) {
+        return RWValues.getString(PreferenceKeys.liveScoreDeviceId, null, context);
+    }
+    public static void initForLiveScoring(Context ctx, boolean bOnlyTemporary) {
+        if ( bOnlyTemporary ) {
             setOverwrite(PreferenceKeys.shareAction    , LiveScorePrefs.theOneForLiveScoring);
             setOverwrite(PreferenceKeys.useShareFeature, Feature.Automatic);
         } else {
@@ -490,6 +493,11 @@ public class PreferenceValues extends RWValues
             removeOverwrite(PreferenceKeys.useShareFeature);
             setEnum(PreferenceKeys.shareAction    , ctx, LiveScorePrefs.theOneForLiveScoring);
             setEnum(PreferenceKeys.useShareFeature, ctx, Feature.Automatic);
+        }
+        String sliveScoreDeviceId = PreferenceValues.getLiveScoreDeviceId(ctx);
+        if ( StringUtil.isEmpty(sliveScoreDeviceId) ) {
+            sliveScoreDeviceId = LiveScoreIdPref.generateNewLivescoreId();
+            setString(PreferenceKeys.liveScoreDeviceId, ctx, sliveScoreDeviceId);
         }
     }
     public static void initForNoLiveScoring(Context ctx) {
@@ -835,6 +843,12 @@ public class PreferenceValues extends RWValues
     }
     public static EnumSet<ShowPlayerColorOn> showPlayerColorOn(Context context) {
         return getEnumSet(PreferenceKeys.showPlayerColorOn, context, ShowPlayerColorOn.class, EnumSet.allOf(ShowPlayerColorOn.class)); // ShowPlayerColorOn__Default
+    }
+    public static PlayerColorsNewMatch playerColorsNewMatch(Context context) {
+        return getEnum(PreferenceKeys.PlayerColorsNewMatch, context, PlayerColorsNewMatch.class, R.string.PlayerColorsNewMatch__Default);
+    }
+    public static boolean showPlayerColorOn_Text(Context context) {
+        return getBoolean(PreferenceKeys.showPlayerColorOn_Text, context, R.bool.showPlayerColorOn_Text_default);
     }
     public static EnumSet<ShowCountryAs> showCountryAs(Context context) {
         EnumSet<ShowCountryAs> esDefault = EnumSet.of(ShowCountryAs.FlagNextToNameOnDevice, ShowCountryAs.FlagNextToNameChromeCast); // ShowCountryAs_DefaultValues in xml takes precedence
@@ -1829,7 +1843,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-10-19"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-12-01"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

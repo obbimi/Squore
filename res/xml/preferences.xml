@@ -52,6 +52,37 @@
                         />
             </PreferenceCategory>
 
+            <PreferenceCategory android:title="@string/pref_PlayerColorsNewMatch">
+                <com.doubleyellow.prefs.EnumListPreference
+                        android:key="PlayerColorsNewMatch"
+                        android:title="@string/pref_PlayerColorsNewMatch"
+                        android:summary="@string/pref_PlayerColorsNewMatch_summary"
+                        android:defaultValue="@string/PlayerColorsNewMatch__Default"
+                        dy:displayValues="@array/PlayerColorsNewMatchDisplayValues"
+                        dy:enumClass="com.doubleyellow.scoreboard.prefs.PlayerColorsNewMatch"
+                        />
+                <EditTextPreference
+                    android:icon="@drawable/dummy"
+                    android:key="PlayerColorsNewMatchA"
+                    android:title="@string/lbl_color_A"
+                    />
+                <EditTextPreference
+                    android:icon="@drawable/dummy"
+                    android:key="PlayerColorsNewMatchB"
+                    android:title="@string/lbl_color_B"
+                    />
+            </PreferenceCategory>
+
+<!--
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="showPlayerColorOn_Text"
+                android:title="@string/pref_showPlayerColorOn_Text"
+                android:defaultValue="@bool/showPlayerColorOn_Text_default"
+                android:visibility="invisible"
+                />
+-->
+
             <PreferenceCategory android:title="@string/pref_ColorPalette">
                 <com.doubleyellow.prefs.DynamicListPreference
                         android:key="colorSchema"
@@ -824,6 +855,14 @@
                 <intent android:action="android.intent.action.VIEW"
                         android:data="@string/pref_live_score_url" />
             </Preference>
+
+            <com.doubleyellow.scoreboard.prefs.LiveScoreIdPref
+                android:key="liveScoreDeviceId"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_liveScoreDeviceId"
+                android:summary="@string/pref_liveScoreDeviceId_summary"
+                />
+
         </PreferenceCategory>
 
         <PreferenceCategory android:title="@string/pref_Category_ChromeCast" android:key="ChromeCast">

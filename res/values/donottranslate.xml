@@ -89,6 +89,7 @@
         <item>WhenMatchIsUnchangeForX_Minutes</item>
     </string-array>
 
+    <string name="PlayerColorsNewMatch__Default">TakeFromPreferences</string>
     <string-array name="ShowPlayerColorOn__Default" tools:ignore="InconsistentArrays">
         <item>ScoreButtonBorder</item>
         <!--

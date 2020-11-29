@@ -890,7 +890,8 @@ public class MatchView extends SBRelativeLayout
                 }
             } else {
                 // new match
-                iInitialColor = ColorPrefs.getInitialPlayerColor(getContext(), p, iInitialColor);
+                PlayerColorsNewMatch playerColorsNewMatch = PreferenceValues.playerColorsNewMatch(getContext());
+                iInitialColor = ColorPrefs.getInitialPlayerColor(getContext(), p, iInitialColor, playerColorsNewMatch);
             }
             btnColor.setTag(iInitialColor);
             ColorUtil.setBackground(btnColor, iInitialColor); // todo: already coming from feed, e.g. a club color

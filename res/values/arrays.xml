@@ -187,6 +187,11 @@
         <item>Game ball Message</item>
         <item>Game Scoring Graph</item>
     </string-array>
+    <string-array name="PlayerColorsNewMatchDisplayValues">
+        <item>No Colors</item>
+        <item>Take From Previous Match</item>
+        <item>Take From Preferences</item>
+    </string-array>
     <string-array name="ShowCountryAsDisplayValues">
         <item>Abbreviation In Name</item>
         <item>Flag Next To Name (On Device)</item>

@@ -315,7 +315,7 @@
     <string name="pref_live_score_url">live?lang=fr</string>
     <string name="pref_live_score_url_summary">Utilisez cette adresse pour voir tous les matchs partagés avec Squore, par exemple liées à votre événement de squash</string>
     <string name="pref_LiveScorePrefs">Supporter live scoring</string> <!-- TODO -->
-    <string name="pref_LiveScorePrefs_dialog">Ajuster les options: Utiliser Les Fonctions De Partage (Automatique) et Action de Partage (Partager les details après chaque demi jeu) pour supporter live score</string> <!-- TODO -->
+    <string name="pref_LiveScorePrefs_dialog">Ajuster les options: Utiliser Les Fonctions De Partage (Automatique) et Action de Partage (Partager les details après chaque point) pour supporter live score</string> <!-- TODO -->
     <string name="pref_Cast_ShowGraphDuringTimer">Afficher les scores des jeux et le score graphique de dernier jeu entre les jeux et à la fin du match</string> <!-- TODO -->
 
     <string name="for_this_to_take_effect_a_restart_is_required">Pour que cela prenne effet, un redémarrage de l\'application est nécessaire</string>

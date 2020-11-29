@@ -352,7 +352,7 @@ Lista de Árbitros</string>
     <string name="pref_live_score_url_summary">Use esta URL para ver todas las coincidencias compartidas con esta app, e.p. relacionado con tu evento</string>
     <string name="pref_LiveScorePrefs">Apoyar puntuación en vivo</string>
     <string name="pref_updateLiveScore">Actualizar puntuación en vivo</string>
-    <string name="pref_LiveScorePrefs_dialog">Ajuste las opciones: use la función Compartir (a automático) y Acción para compartir (para coincidir con los detalles después de cada mitad de un juego) para optimizar el soporte de puntuación en vivo</string>
+    <string name="pref_LiveScorePrefs_dialog">Ajuste las opciones: use la función Compartir (a automático) y Acción para compartir (para coincidir con los detalles después de cada punto) para optimizar el soporte de puntuación en vivo</string>
     <string name="pref_Cast_ShowGraphDuringTimer">Muestra la puntación del juego y el gráfico de puntuación del último juego entre juegos y al final del partido</string>
     <string name="pref_castScreenLogoUrl">URL del logo para pantalla de transmisión</string>
     <string name="pref_castScreenSponsorUrl">URL del patrocinador para Cast Screen</string>

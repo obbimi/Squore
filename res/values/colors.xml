@@ -44,6 +44,7 @@
         <item>|Tabletennis Rubbers   |#000001|#C3161C|#DDDDDD|#FFFFFF|</item><!-- black|red|grey ... -->
         <item>|ITTF Light            |#000000|#005043|#E3E5E4|#FFFFFF|</item><!-- black|green|light grey on white... -->
         <item>|ITTF Dark             |#FFFFFF|#005043|#E3E5E4|#000000|</item><!-- white|green|light grey on black... -->
+        <item>|Yellow Red White on Black|#00FC08|#FBFBFB|#FE0000|#000000|</item><!-- yellow|white|red on black... -->
         <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
         <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
@@ -74,6 +75,7 @@
                                <!-- scorebtn|name+sht|serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|PSA                   |#141414|#4CA3D9|#D3D3D3|#FFFFFF|</item><!-- dark|blue|light grey ... -->
+        <item>|Yellow Red White on Black|#00FC08|#FBFBFB|#FE0000|#000000|</item><!-- yellow|white|red on black... -->
         <item>|World Squash Light    |#000001|#ff0000|#dddddd|#FFFFFF|</item><!-- black|red|grey ... -->
         <item>|World Squash Dark     |#FFFFFF|#ff0000|#dddddd|#000001|</item><!-- black|red|grey ... -->
         <item>|Squash Skills Light   |#414141|#919191|#f9aa00|#FFFFFF|</item><!-- dark grey|light grey|yellow ... -->

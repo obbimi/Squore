@@ -84,6 +84,7 @@ public enum JSONKey {
 		shareURL,
 		additionalPostParams,
 	wifi,
+	device,
 
   //player,    // duplicate
 	  //name,  // duplicate

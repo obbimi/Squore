@@ -37,6 +37,8 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.XActivity;
 import com.doubleyellow.scoreboard.dialog.ButtonUpdater;
+import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.util.*;
 import com.doubleyellow.android.util.ColorUtil;
@@ -318,7 +320,19 @@ public class ColorPrefs
         }
         mTarget2Color.put(ColorTarget.actionBarBackgroundColor, clActionBar);
 
+        if ( PreferenceValues.showPlayerColorOn_Text(context) ) {
+            swapColors(mTarget2Color, ColorTarget.playerButtonTextColor, ColorTarget.playerButtonBackgroundColor);
+            swapColors(mTarget2Color, ColorTarget.scoreButtonTextColor , ColorTarget.scoreButtonBackgroundColor );
+            swapColors(mTarget2Color, ColorTarget.serveButtonTextColor , ColorTarget.serveButtonBackgroundColor );
+        }
+
         return mTarget2Color;
+    }
+    private static void swapColors(Map<ColorTarget, Integer> map, ColorTarget a, ColorTarget b) {
+        int iA = map.get(a);
+        int iB = map.get(b);
+        map.put(b, iA);
+        map.put(a, iB);
     }
 
     /** TODO: to ColorUtil class */
@@ -436,27 +450,50 @@ public class ColorPrefs
         return false;
     }
 */
-    public static int getInitialPlayerColor(Context context, Player p, int iDefault) {
+    public static int getInitialPlayerColor(Context context, Player p, int iDefault, PlayerColorsNewMatch playerColorsNewMatch) {
         int iResBrandSpecific = PreferenceValues.getSportTypeSpecificResId(context, R.array.initialPlayerColor__Default);
         if ( iResBrandSpecific != 0 ) {
+            String sColor = null;
+
+            // mainly to specify different A and B values for a specific Brand. Introduced for WinnerPadel
             String[] sColors = context.getResources().getStringArray(iResBrandSpecific);
             if ( sColors.length == 2 ) {
-                String sColor = sColors[p.ordinal()];
-                if ( StringUtil.isEmpty(sColor) ) { return iDefault; }
+                sColor = sColors[p.ordinal()];
+            }
+
+            switch( playerColorsNewMatch ) {
+                case None:
+                    break;
+                case TakeFromPreferences:
+                    sColor = PreferenceValues.getString(PreferenceKeys.PlayerColorsNewMatch.toString() + p, sColor, context);
+                    break;
+                case TakeFromPreviousMatch:
+                    Model mPrev = ScoreBoard.getMatchModel();
+                    if ( mPrev != null ) {
+                        String sColorPrev = mPrev.getColor(p);
+                        if ( StringUtil.isNotEmpty(sColorPrev) ) {
+                            sColor = sColorPrev;
+                        }
+                    }
+                    break;
+            }
+
+            if ( StringUtil.isEmpty(sColor) ) { return iDefault; }
+
+            // if the specified color is a 'target' key, try and translate it
+            try {
+                ColorTarget colorTarget = ColorTarget.valueOf(sColor);
+                int iColor = getTarget2colorMapping(context).get(colorTarget);
+                return iColor;
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
+            if ( StringUtil.isNotEmpty(sColor) ) {
                 try {
-                    ColorTarget colorTarget = ColorTarget.valueOf(sColor);
-                    int iColor = getTarget2colorMapping(context).get(colorTarget);
+                    int iColor = Color.parseColor(sColor);
                     return iColor;
                 } catch (Exception e) {
-                    //e.printStackTrace();
-                }
-                if ( StringUtil.isNotEmpty(sColor) ) {
-                    try {
-                        int iColor = Color.parseColor(sColor);
-                        return iColor;
-                    } catch (Exception e) {
-                        return iDefault;
-                    }
+                    return iDefault;
                 }
             }
         }
@@ -568,6 +605,12 @@ public class ColorPrefs
         }
     }
 
+    static void setColorTargetPreferenceIcon(String sColor, Preference preference) {
+        int iColor = Color.parseColor(sColor);
+        GradientDrawable icon = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, new int[]{iColor, iColor});
+        icon.setSize(ICON_SIZE, ICON_SIZE);
+        preference.setIcon(icon);
+    }
     static void setColorTargetPreferenceIcon(ColorTarget colorTarget, String sColor, Preference preference) {
         if ( mTarget2Color == null ) { return; }
         try {

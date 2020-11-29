@@ -29,7 +29,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.*;
+import android.preference.Preference;
+import android.preference.EditTextPreference;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
+import android.preference.ListPreference;
+import android.preference.CheckBoxPreference;
+import android.preference.PreferenceScreen;
+import android.preference.PreferenceCategory;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.TypedValue;
@@ -196,14 +203,15 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             Toast.makeText(Preferences.this, sMsg, Toast.LENGTH_LONG).show();
                         }
                         break;
+                    case showPlayerColorOn_Text:
                     case colorSchema:
                         bReinitColors = true;
                         // update value between brackets
                         ColorPrefs.clearColorCache();
                         ColorPrefs.getTarget2colorMapping(Preferences.this);
                         setListPreferenceEntriesForColors(settingsFragment);
-                        PreferenceValues.updatePreferenceTitle(settingsFragment.findPreference(PreferenceKeys.backgroundColors));
-                        PreferenceValues.updatePreferenceTitle(settingsFragment.findPreference(PreferenceKeys.textColors));
+                        RWValues.updatePreferenceTitle(settingsFragment.findPreference(PreferenceKeys.backgroundColors));
+                        RWValues.updatePreferenceTitle(settingsFragment.findPreference(PreferenceKeys.textColors));
                         break;
 /*
                     case textColorDynamically:
@@ -479,6 +487,10 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             } catch (Exception e) {
                 // not a colortarget preference
             }
+            if ( key.startsWith(PreferenceKeys.PlayerColorsNewMatch.toString()) && preference instanceof EditTextPreference) {
+                String sColor = RWValues.getString(key, null, Preferences.this);
+                ColorPrefs.setColorTargetPreferenceIcon(sColor, preference);
+            }
 
             // not required... does not change from within app itself
             //setFlagIcon(Preferences.this, settingsFragment.findPreference(PreferenceKeys.showCountryAs));
@@ -716,6 +728,17 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             ColorPrefs.setColorSchemaIcon(screen.findPreference(PreferenceKeys.Colors.toString()));
                             ColorPrefs.setColorSchemaIcon(screen.findPreference(PreferenceKeys.colorSchema.toString()));
                             ColorPrefs.setColorTargetIcons(screen);
+
+                            for(Player p: Player.values()) {
+                                String key = PreferenceKeys.PlayerColorsNewMatch.toString() + p;
+                                Preference preference = findPreference(key);
+                                if ( preference != null ) {
+                                    String sColor = RWValues.getString(key, null, getContext());
+                                    if ( StringUtil.isNotEmpty(sColor) ) {
+                                        ColorPrefs.setColorTargetPreferenceIcon(sColor, preference);
+                                    }
+                                }
+                            }
                         }
                         EnumSet<PreferenceKeys> flagKeys = EnumSet.of(PreferenceKeys.showCountryAs, PreferenceKeys.maximumCacheAgeFlags, PreferenceKeys.prefetchFlags, PreferenceKeys.hideFlagForSameCountry);
                         for(PreferenceKeys key: flagKeys) {
@@ -914,10 +937,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             super.onResume();
             PreferenceScreen screen = getPreferenceScreen();
             if ( screen == null ) { return; }
-            for (int i = 0; i < screen.getPreferenceCount(); ++i) {
-                Preference preference = screen.getPreference(i);
-                PreferenceValues.updatePreferenceTitle(preference);
-            }
+            RWValues.updatePreferenceTitle(screen, null, getContext());
 
             //setFlagIcon(getActivity(), screen.findPreference(PreferenceKeys.showCountryAs.toString()));
             //setFlagIcon(getActivity(), screen.findPreference(PreferenceKeys.maximumCacheAgeFlags.toString()));

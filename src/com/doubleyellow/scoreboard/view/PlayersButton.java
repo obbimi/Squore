@@ -566,39 +566,50 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         }
     }
 
+    //-------------------------------------------------------------
+    // COLOR
+    //-------------------------------------------------------------
     private int textColor = Color.WHITE;
     public void setTextColor(int color) {
         this.textColor = color;
-        for(TextView b: nameButtons) {
-            b.setTextColor(this.textColor);
-        }
+        _setColor(nameButtons, this.textColor, true);
     }
 
     private int bgColor = Color.BLACK;
     @Override public void setBackgroundColor(int color) {
         this.bgColor = color;
-        for(TextView b: nameButtons) {
-            ColorUtil.setBackground(b, this.bgColor);
-        }
+        _setColor(nameButtons, this.bgColor, false);
     }
 
     private int textColorServer = Color.YELLOW;
     public void setTextColorServer(int color, Player p) {
         this.textColorServer = color;
-        for(TextView b: serveButtons) {
-            b.setTextColor(this.textColorServer);
-        }
+        _setColor(serveButtons, this.textColorServer, true);
         setServerOrReceiver(p);
     }
 
     private int bgColorServer = Color.BLACK;
     public void setBackgroundColorServer(int color, Player p) {
         this.bgColorServer = color;
-        for (TextView b : serveButtons) {
-            ColorUtil.setBackground(b, this.bgColorServer);
-        }
+        _setColor(serveButtons, this.bgColorServer, false);
         setServerOrReceiver(p);
     }
+
+    private void _setColor(List<TextView> tvs, int iColor, boolean bTrueTextFalseBg ) {
+        if ( false && PreferenceValues.showPlayerColorOn_Text(getContext()) ) {
+            bTrueTextFalseBg = ! bTrueTextFalseBg;
+        }
+        for (TextView b : serveButtons) {
+            if ( bTrueTextFalseBg ) {
+                b.setTextColor(this.textColorServer);
+            } else {
+                ColorUtil.setBackground(b, this.bgColorServer);
+            }
+        }
+    }
+    //-------------------------------------------------------------
+    // SERVER RECEIVER
+    //-------------------------------------------------------------
 
     private void setServerOrReceiver(Player p) {
         if (DoublesServe.NA.equals(m_doublesServe) == false) {

@@ -1,3 +1,7 @@
+## 4.38 (nov 2020)
+
+- Re-use chosen colors for players in subsequent matches ( Settings > Appearance > Colors )
+
 ## 4.37 (okt 2020)
 
 - new options for the final set
