@@ -44,9 +44,11 @@ fi
 if [[ -z "${hasNewVersionCode}" ]]; then
     if [[ -n "$(grep versionCode build.gradle | grep -i ${brand})" ]]; then
         echo "Specify new version code for ${brand}"
-        read -p "Open build.gradle ?"
-        vi +/${brand} build.gradle
-        exit 1
+        read -p "Open build.gradle [Y/n] ?" ANWSER
+        if [[ "${ANWSER:-y}" = "y" ]]; then
+            vi +/${brand} build.gradle
+            exit 1
+        fi
     else
         read -t 10 -p "Warning : continue without changing version code for ${brand} ?"
     fi
