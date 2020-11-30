@@ -733,7 +733,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                                 String key = PreferenceKeys.PlayerColorsNewMatch.toString() + p;
                                 Preference preference = findPreference(key);
                                 if ( preference != null ) {
-                                    String sColor = RWValues.getString(key, null, getContext());
+                                    String sColor = RWValues.getString(key, null, preference.getContext());
                                     if ( StringUtil.isNotEmpty(sColor) ) {
                                         ColorPrefs.setColorTargetPreferenceIcon(sColor, preference);
                                     }
@@ -937,7 +937,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             super.onResume();
             PreferenceScreen screen = getPreferenceScreen();
             if ( screen == null ) { return; }
-            RWValues.updatePreferenceTitle(screen, null, getContext());
+            RWValues.updatePreferenceTitle(screen, null, screen.getContext());
 
             //setFlagIcon(getActivity(), screen.findPreference(PreferenceKeys.showCountryAs.toString()));
             //setFlagIcon(getActivity(), screen.findPreference(PreferenceKeys.maximumCacheAgeFlags.toString()));

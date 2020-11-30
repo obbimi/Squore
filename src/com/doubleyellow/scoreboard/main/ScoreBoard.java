@@ -4608,6 +4608,33 @@ touch -t 01030000 LAST.sb
                             nm.putExtra(IntentKeys.NewMatch.toString(), sJson);
                             startActivityForResult(nm, 1);
                             return;
+                        } else {
+                            // see if we have to set colors
+                            PlayerColorsNewMatch playerColorsNewMatch = PreferenceValues.playerColorsNewMatch(this);
+                            for(Player p : Player.values() ) {
+                                String sColor = m.getColor(p);
+                                if ( StringUtil.isEmpty(sColor) ) {
+                                    switch( playerColorsNewMatch ) {
+                                        case None:
+                                            break;
+                                        case TakeFromPreferences:
+                                            sColor = PreferenceValues.getString(PreferenceKeys.PlayerColorsNewMatch.toString() + p, sColor, this);
+                                            break;
+                                        case TakeFromPreviousMatch:
+                                            Model mPrev = ScoreBoard.getMatchModel();
+                                            if ( mPrev != null ) {
+                                                String sColorPrev = mPrev.getColor(p);
+                                                if ( StringUtil.isNotEmpty(sColorPrev) ) {
+                                                    sColor = sColorPrev;
+                                                }
+                                            }
+                                            break;
+                                    }
+                                    if ( StringUtil.isNotEmpty(sColor) ) {
+                                        m.setPlayerColor(p, sColor);
+                                    }
+                                }
+                            }
                         }
                     } else /*if ( extras.containsKey(sEditMatch) )*/ {
                         bEditMatchInProgress = true;

@@ -883,10 +883,14 @@ public class MatchView extends SBRelativeLayout
 
             Integer iInitialColor = m_iNoColor;
             if ( m_model != null ) {
-                // e.g. when editing a match in progress
+                // e.g. when editing a match in progress, or getting settings from mylist or feed
                 String sPlayerColor = m_model.getColor(p);
                 if ( StringUtil.isNotEmpty(sPlayerColor) ) {
                     iInitialColor = Color.parseColor(sPlayerColor);
+                } else if ( m_model.hasStarted() == false ) {
+                    // new manual match
+                    PlayerColorsNewMatch playerColorsNewMatch = PreferenceValues.playerColorsNewMatch(getContext());
+                    iInitialColor = ColorPrefs.getInitialPlayerColor(getContext(), p, iInitialColor, playerColorsNewMatch);
                 }
             } else {
                 // new match
