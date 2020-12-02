@@ -606,6 +606,7 @@ public class ColorPrefs
     }
 
     static void setColorTargetPreferenceIcon(String sColor, Preference preference) {
+        if ( StringUtil.isEmpty(sColor) ) { return; }
         int iColor = Color.parseColor(sColor);
         GradientDrawable icon = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, new int[]{iColor, iColor});
         icon.setSize(ICON_SIZE, ICON_SIZE);

@@ -299,13 +299,19 @@ public class ResultSender {
                     // both clubs specified but neither of them for all matches
                     if ( sClubA.matches(sREHomeOrAway) ) {
                         // correct A to be a club specified as A in another match
-                        sClubA = mPlayer2ClubsNoHA.getList(Player.A, null, true).get(0);
-                        mHAClubs.put(fS.getName() + "__" + Player.A, sClubA);
+                        List<String> list = mPlayer2ClubsNoHA.getList(Player.A, null, false);
+                        if ( ListUtil.isNotEmpty(list) ) {
+                            sClubA = list.get(0);
+                            mHAClubs.put(fS.getName() + "__" + Player.A, sClubA);
+                        }
                     }
                     if ( sClubB.matches(sREHomeOrAway) ) {
                         // correct B to be a club specified as B in another match
-                        sClubB = mPlayer2ClubsNoHA.getList(Player.B, null, true).get(0);
-                        mHAClubs.put(fS.getName() + "__" + Player.B, sClubB);
+                        List<String> list = mPlayer2ClubsNoHA.getList(Player.B, null, false);
+                        if ( ListUtil.isNotEmpty(list) ) {
+                            sClubB = list.get(0);
+                            mHAClubs.put(fS.getName() + "__" + Player.B, sClubB);
+                        }
                     }
                 }
             }

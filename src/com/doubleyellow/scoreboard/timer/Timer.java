@@ -71,7 +71,7 @@ public class Timer
         m_lToLateBase = 0L;
     }
 
-    /** points the the currently active instance of the TimerView */
+    /** points to the currently active instance of the TimerView */
     private static Map<String, TimerView> timerViews = new HashMap<>();
 
     public Timer(final ScoreBoard scoreBoard, final Type timerType, int iSecondsInitial, int iSeconds, int iReminderAt, boolean bAutoTriggered) {
