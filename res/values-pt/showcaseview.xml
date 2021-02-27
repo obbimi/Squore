@@ -1,0 +1,39 @@
+<resources>
+<string name="press_back_again_to_exit_intro">Pressione \'Voltar\' novamente para sair da introdução</string>
+    <string name="scv_got_it">ENTENDI</string>
+    <string name="scv_first_run">Quer uma introdução rápida para aprender os principais recursos da aplicação?
+        \n
+        \nEla mostrará como você pode usar a aplicação em diferentes situações durante vários situações de uma partida.
+        \n
+        \nVocê pode cancelar a introdução a qualquer momento pressionando o botão _Voltar_ no seu dispositivo.
+        \n
+        \nOu inicie novamente a partir do menu _Ajuda/Introdução rápida_.</string>
+    <string name="scv_toss">\nNo início de uma partida, é normalmente executado um __sorteio__.
+        \n\nPressione este botão para:
+        \n
+        \n- insirir facilmente o resultado do sorteio
+        \n- deixe que a app faça o sorteio</string>
+    <string name="scv_big_buttons">Pressione os botões grandes para controlar os pontos marcados por cada jogador.</string>
+    <string name="scv_undo_last">\n
+        \nSe você acidentalmente inserir um ponto para o jogador errado, você pode corrigi-lo pressionando o botão __Undo__.
+        \n
+        \nOutra maneira de desfazer a última pontuação é passar o dedo sobre o botão de pontuação que você acidentalmente aumentou.</string>
+
+    <string name="scv_share_button">Este botão aparece quando um encontro é concluído. Ele permite que você partilhe o resultado.
+        \n\nVocê pode configurá-lo para
+        \n
+        \n- Partilhe um link com todos os detalhes da partida
+        \n- Partilhe um breve resumo
+        \n- Publicar o resultado num site
+        \n- Enviar uma folha de pontuação por e-mail</string>
+    <string name="scv_toggle_action_bar">Se você desejar __ocultar a barra de ação__ (por exemplo, para maximizar o uso da tela ou por razões estéticas)
+        você pode fazer isso facilmente: basta clicar longamente nas  __pontuações de jogos__. Outro clique longo vai torná-la visível novamente.
+        \n
+        \nObserve que, se você ocultar a barra de ação, a opção \'Desfazer deslizando o dedo\' ainda estará disponível!</string>
+    <string name="scv_few_more_good_to_knows">Mais algumas notas:
+        \n
+        \n- Você pode exibir a pontuação facilmente num ecrã de TV usando o Chrome Cast.
+        \n- Você pode especificar um país por jogador. Serão exibidas bandeiras para os países escolhidos.
+        \n- Você pode usar os botões de volume para serem os botões de \'pontuação\' (deve ser ativado por meio das configurações).
+        \n- Você pode transferir um encontro de um dispositivo Android para outro usando NFC.</string>
+</resources>

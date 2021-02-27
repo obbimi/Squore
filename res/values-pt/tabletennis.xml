@@ -1,0 +1,26 @@
+<resources>
+
+<string name="pref_category_expediteSystem">Sistema de aceleração</string>
+    <string name="pref_autoShow_activeExpediteSystem_dialog">Mostrar automaticamente a caixa de diálogo \'Ativar sistema de aceleração\'</string>
+    <string name="pref_autoShow_activeExpediteSystem_dialog_after_X_mins">Mostrar caixa de diálogo \'Ativar sistema de aceleração\' após X minutos</string>
+
+    <string name="pref_category_towelingDown">Limpeza</string>
+    <string name="pref_towelingDown_timer">Temporizador de \'limpeza\'</string>
+    <string name="pref_autoShow_towelingDown_timer_after_X_points">Mostrar cronômetro de \'limpeza\' após cada X pontos</string>
+    <string name="toweling_down">Limpeza</string>
+
+    <string name="pref_swapPlayersHalfwayGame__Tabletennis">Troca de jogadores a meio do jogo decisivo</string>
+
+    <string name="activate_mode__Tabletennis">Ativar o sistema de aceleração</string>
+    <string name="activate_mode_description__Tabletennis">Mais de %s minutos passaram desde o início do jogo. Ativar o o sistema de aceleração?</string>
+    <string name="deactivate_mode__Tabletennis">Desativar aceleração</string>
+
+    <string name="lbl_court__Tabletennis">Mesa</string>
+
+    <string name="sb_official_rules__Tabletennis">Regras oficiais de tênis de mesa</string>
+
+    <string name="OfficialRulesURLs_default__Tabletennis"><![CDATA[http: //www.ittf.com/? media-alias = 2017_ITTF_Handbook
+\nhttp: //pongworld.com/table-tennis-sport/official-rules
+]]></string>
+
+</resources>

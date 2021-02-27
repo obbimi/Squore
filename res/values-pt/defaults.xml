@@ -5,4 +5,33 @@
 \nhttp://www.worldsquash.org/wp-content/uploads/2019/02/190101_Regras-squash-portugu%C3%AAs-2019-V1-1.pdf
 ]]></string>
 
+    <!--
+    http://www.psaworldtour.com/page/WorldRankings
+    http://wsaworldtour.com/
+    -->
+    <string name="eventList_default"><![CDATA[Interclube
+\nTorneio
+\nAmigável
+]]></string>
+    <string translatable="false" name="emptyList_default"/>
+    <string translatable="false" name="emptyString"/>
+    <string name="divisionList_default"><![CDATA[Rapazes
+\nRaparigas
+\nHomens A
+\nHomens B
+\nHomens C
+\nSenhoras A
+\nSenhoras B
+\nElite
+]]></string>
+    <string name="roundList_default"><![CDATA[Ronda 1
+\nRonda 2
+\nRonda 3
+\nQuartos de final
+\nSemi Final
+\nFinal
+]]></string>
+
+    <string translatable="false" name="playerList_default"/>
+
 </resources>

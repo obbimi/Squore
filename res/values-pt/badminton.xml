@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="lbl_Scoring_PointWhenServing__Badminton">Classico</string>
+
+    <string name="pref_swapPlayersHalfwayGame__Badminton">Trocar jogadores a meio do jogo decisivo</string>
+
+    <!-- badminton -->
+    <string name="oa_matchpoint">Match point</string>
+    <string name="oa_gamepoint">Game point</string>
+
+    <string name="sb_official_rules__Badminton">Regras oficiais de Badminton</string><!--  -->
+
+    <string name="OfficialRulesURLs_default__Badminton"><![CDATA[http://www.worldbadminton.com/rules/
+\nhttps://web.mst.edu/~ima/rules/Badmintonrules.html
+]]></string>
+
+    <string name="sb_service_over">Fim de serviço</string>
+
+</resources>

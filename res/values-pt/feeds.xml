@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="sb_feed">Feed</string>
+    <string name="sb_select_feed_match">Selecionar do Feed</string>
+    <string name="back_to_list_of_matches">Voltar à lista</string>
+
+    <string name="Switch_feed_elipses">Mudar feed…</string>
+    <string name="add_new_feed">Selecionar novo feed público…</string>
+    <string name="feed_x_already_exist_with_name_y">O feed %1$s já está na sua lista de feeds sob o nome \'%2$s\'</string>
+    <string name="Could_not_read_feed_x__y__Using_cached_content_aged_z_minutes">Não foi possível ler o feed %1$s.\n\n%2$s\n\nA utilizar conteudo em cache (atualizado há %3$d minutos).</string>
+
+    <string name="No_matches_in_feed">Não existem encontros no feed</string>
+    <string name="Error_no_feeds_in_feed">Não existem feeds no feed</string>
+    <string name="No_active_feed">Nenhum feed activo</string>
+    <string name="Select_one_by_pressing_the_globe_button">Selecione um pressionando o botão \'globe\'</string>
+</resources>

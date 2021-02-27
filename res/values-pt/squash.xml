@@ -1,0 +1,75 @@
+<resources>
+
+<string name="lbl_Scoring_PointWhenServing__Squash">Hand-in/hand-out</string>
+
+    <string name="lbl_marker">Marcador</string>
+
+    <string name="no_let_abbreviation">NL</string>
+    <string name="yes_let_abbreviation">YL</string>
+    <string name="stroke_abbreviation">ST</string>
+    <string name="conduct_warning_abbreviation">CW</string>
+    <string name="conduct_stroke_abbreviation">CS</string>
+    <string name="conduct_game_abbreviation">CG</string>
+    <string name="conduct_match_abbreviation">CM</string>
+
+    <string name="timeout_string_abbreviation">TO</string>
+    <string name="broken_string_abbreviation">BS</string>
+    <string name="broken_ball_abbreviation">BB</string>
+    <string name="broken_racket_abbreviation">BR</string>
+
+    <string name="sb_injury_type">Tipo de lesão</string>
+
+    <string name="sb_did_you_mean_conduct_game">Se for \'Jogo por má conduta\', clique longamente no jogador que se comportou mal e selecione a opção apropriada.</string>
+
+    <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-iguais - Resposta %2$s escolhe jogar para %3$s ou para %4$s</string>
+    <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-iguais - Resposta %2$s escolhe resultado vencedor</string>
+
+    <string name="sb_official_rules__Squash">Regras oficiais de squash</string>
+    <string name="sb_possible_conducts">Possíveis más-condutas</string>
+    <string name="sb_self_inflicted_injury">Lesão Autoinfligida</string>
+    <string name="sb_opponent_inflicted_injury">Lesão causada pelo adversário</string>
+    <string name="sb_contributed_injury">Lesão Contribuída</string>
+
+    
+    <string name="conducts_guidelines_default"><![CDATA[
+\n- Abuso de equipamento (raquete, bola ou outro equipamento):
+\nOfensa menor (por exemplo, jogar a raquete no chão depois de perder um jogo, acertar a bola com força após o término da jogada): Aviso por má conduta
+\nOfensa grave (por exemplo, partir a raquete deliberadamente; mandar a raquete contra a parede; acertar na bola ou mandar a raquete para fora do campo): Penalização por má conduta
+\n
+\n- Obscenidade audível ou visível:
+\nOfensa menor (por exemplo, palavrão murmurado; blasfêmia): Aviso por má conduta
+\nOfensa grave (por exemplo, obscenidade audível): Penalização por má conduta
+\n
+\n- Perdendo tempo:
+\nOfensa menor (por exemplo, alguns segundos atrasado de volta ao campo; demorar muito para servir): Aviso por má conduta
+\nOfensa grave (por exemplo, muito tarde de volta à quadra; discussão prolongada com o Árbitro): Penalização por má conduta
+\n
+\n- Divergência:
+\nOfensa menor (por exemplo, questionar uma decisão): Aviso por má conduta
+\nOfensa grave (por exemplo, questionamento prolongado ou repetido ou desacordo com as decisões): Penalização por má conduta
+\n
+\n- Abuso de arbitro:
+\nOfensa menor (por exemplo, comentários pouco lisonjeiros sobre arbitros ou decisões): Aviso por má conduta
+\nOfensa grave (por exemplo, comentários pejorativos sobre arbitros ou decisões): Penalização por Conduta
+\nOfensa grave (por exemplo, bater a bola contra o árbitro ou contra os espectadores; mandar a raquete contra árbitro ou contra os espectadores): Jogo ou encontro por má conduta (dependendo da gravidade da ofensa e do perigo causado)
+\n
+\n- Contacto físico excessivo:
+\nOfensa menor (por exemplo, correr contra o adversário): Aviso por má conduta
+\nOfensa grave (por exemplo, abuso físico do oponente): Penalização por má conduta
+\nOfensa grave (por exemplo, ferir deliberadamente o adversário; jogo perigoso que fere o adversário): Jogo ou encontro por má conduta (dependendo da gravidade da ofensa e da extensão da lesão causada)
+\n
+\n- Conduta anti-desportiva:
+\nOfensa menor (por exemplo, fazer comentários negativos ao adversário): Aviso por má conduta
+\nOfensa grave (por exemplo, comentários negativos ou pejorativos repetidos ao adversário; qualquer tentativa de intimidação do adversário): Penalização por má conduta
+\nOfensa grave (por exemplo, comportamento extremo que leva o jogo a descrédito): Conduza o jogo ou partida (dependendo da gravidade da ofensa)
+\n
+\n- Coaching:
+\nPrimeira ocorrência: Aviso por má conduta
+\nSegunda ocorrência: Penalização por má conduta e expulsão do ofensor
+\n
+\n- Má conduta repetida e excessiva:
+\nQuando, na opinião do Árbitro, o jogador é culpado de atos repetidos de conduta inaceitável em campo após a imposição das penalidades descritas acima, o Árbitro pode impor para a próxima ocorrência da ofensa a mesma penalidade para a segunda ofensa ou um pena mais severa do que a já imposta. No entanto, se um Aviso por má Conduta foi dado para a primeira e para a segunda ofensas, para a terceira ofensa de natureza semelhante uma penalização por má conduta deve ser aplicada. (Exemplo: Se um jogador recebeu um Aviso por má conduta por Divergência, na próxima ocorrência desta ofensa, um Aviso por má Conduta ou uma penalização por má conduta pode ser imposta. Na terceira ocorrência, no entanto, uma penalização por má conduta é obrigatória.)
+\n
+    ]]></string>
+
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="Export">Exportar</string>
+    <string name="Export_elipses">Exportar…</string>
+    <string name="Import">Importar</string>
+    <string name="Import_elipses">Importar…</string>
+    <string name="ImportExport_elipses">Importar/Exportar…</string>
+    <string name="Select_file">Selecionar ficheiro</string>
+    <string name="import_matches">Importar jogos</string>
+    <string name="export_matches">Exportar jogos</string>
+    <string name="upload_export_to_server">Fazer upload da exportação para o servidor squore</string>
+    <string name="upload_to_server_failed__x">Upload para o servidor squore falhou: %s</string>
+    <string name="uploaded_to_server__x">Upload para o servidor squore OK:\n\n%s\n\n(o URL foi copiado para a área de transferência)</string>
+
+    <string name="Exported_to_x">Exportado para %s</string>
+    <string name="File_x_has_been_imported__Cnt_y">O ficheiro %1$s foi importado (# %2$s)</string>
+    <string name="Source_x__Target_y">Origem: %1$s\nDestino: %2$s</string>
+    <string name="Source_x">Origem: %s</string>
+    <string name="Target_y">Destino: %s</string>
+    <string name="no_appropriate_zip_files_found_in_x">Não foram encontrados ficheiros zip válidos em %s</string> 
+    <string name="no_read_rights_for_x">Não tem privilégios de leitura para %s</string> 
+    <string name="no_write_rights_for_x">Não tem privilégios de escrita para %s</string>
+    <string name="could_not_determine_external_storage_location">Não foi possível determinar a localização do armazenamento externo</string>
+
+    <string name="Archive">Arquivo</string>
+    <string name="Delete_file">Eliminar ficheiro</string>
+    <string name="Filename">Nome do ficheiro</string>
+
+    <string name="x_stored_in_y">\'%1$s\' guardado em \'%2$s\'</string>
+    <string name="x_restored_from_y">\'%1$s\' restaurado de \'%2$s\'</string>
+    <string name="could_not_find_file_x">Não foi possível encontrar o ficheiro %s.</string>
+    <string name="did_you_already_perform_an_export_of_x">Já fez a exportação de %s?</string>
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="oa_gummiarm_point">Gummiarm point</string>
+    <string name="end_game__Racketlon">Final de set</string>
+
+    <string name="pref_swapPlayersHalfwayGame__Racketlon">Mudar jogadores a meio do jogo (para TT, BM e TN, não para SQ)</string>
+
+    <string name="sb_official_rules__Racketlon">Regras oficiais de racketlon</string>
+    <string name="best_of_x_games_to_y_2__Racketlon">Sets a</string>
+    <string name="discipline_order">Ordem de modalidades</string>
+    <string name="start_with_discipline">Começar com a modalidade</string>
+    <string name="start_with_x">Começar com: %1$s</string>
+    <string name="moving_from_discipline_x_to_y">A mover de %1$s para %2$s</string>
+    <string name="moving_from_discipline_x_to">A moder de %1$s para</string>
+    <string name="if_player_x_wins_discipline_y_he_wins_the_match">Caso o jogador %1$s ganhe o %2$s ganha o encontro</string>
+    <string name="player_x_needs_1_more_point_to_win">O jogador %1$s necessita de mais 1 ponto para ganhar</string>
+    <string name="player_x_needs_y_more_points_to_win">O jogador %1$s necessita de mais %2$s pontos para ganhar</string>
+    <string name="discipline_x_does_not_need_to_be_played">A modalidade %1$s não necessita ser jogada</string>
+    <string name="x_is_winner_Difference_is_y">%1$s vence. O resultado é +%2$s</string>
+
+    <string name="OfficialRulesURLs_default__Racketlon"><![CDATA[http://www.racketlon.net/sites/default/files/FIR%20-%20Rules%20of%20Racketlon%20(2017-01-01),%20FINAL.pdf
+\nhttp://www.racketlon.com/rackrules.Db.pdf
+]]></string>
+
+</resources>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="bt_pull_or_push">Escolher</string>
+    <string name="bt_pull">Puxar</string>
+    <string name="bt_push">Transmitir</string>
+    <string name="bt_pull_in_match_from_device_x_or_push_to">Puxar encontro do dispositivo %1$s (para mostrar neste dispositivo), ou transmitir encontro deste dispositivo para %1$s (para mostrar naquele dispositivo) ?</string>
+
+    <string name="bt_match_received_by_X">Encontro recebido por %1$s</string>
+    <string name="bt_bluetooth_mirror">Espelhar resultado (Bluetooth)</string>
+
+    <string name="bt_connection_to_device_X_was_lost">Conexão Bluetooth para %s foi perdida</string>
+    <string name="bt_connected_to_device_X">Ligado ao dispositivo %s</string>
+    <string name="bt_already_connected_to_X">Já está ligado a %s</string>
+
+    <string name="bt_unable_to_connect_device_X">Não foi possível ligar a %s</string>
+    <string name="bt_unable_to_connect_device_info"><![CDATA[<html>Verifique que no dispositivo %1$s
+    <ul>
+    <li>o bluetooth está ligado</li>
+    <li>este dispositivo está (ainda) listado como dispositivo emparelhado</li>
+    <li>%2$s está a correr</li>
+    </ul>
+</html>]]></string>
+
+    <string name="bt_select_device">Selecionar dispositivo</string>
+    <string name="bt_select_device_for_scoreboard_mirroring">Selecionar dispositivo para espelhar o resultado</string>
+
+    <string name="bt_no_bluetooth_on_device">Este dispositivo não tem o Bluetooth ativado</string>
+    <string name="bt_no_bluetooth_on_device_info">Espelhar o resultados neste dispositivo para outro dispositivo (ou vice versa) via bluetooth não é possível.</string>
+
+    <string name="bt_bluetooth_turning_on_elipses">A ligar Bluetooth …</string>
+    <string name="bt_bluetooth_has_been_turned_on">Bluetooth ligado</string>
+    <string name="bt_bluetooth_turning_off_elipses">Aplicação %s ligou o bluetooth. A desligar o bluetooth agora…</string>
+
+    <string name="bt_bluetooth_turned_off">Bluetooth desligado</string>
+    <string name="bt_bluetooth_turned_off_info">O Bluetooth necessita de estar ligado para espelhar o resultado noutro dispositivo.</string>
+
+    <string name="bt_no_paired">Sem dispositivos emparelhados</string>
+    <string name="bt_how_to_pair_info"><![CDATA[<html>Você necessita de emparelhar este dispositivo com outro dispositivo a correr %1$s para ser possível espelhar o resultado.
+    Normalmente isto é conseguido aplicando os seguintes passos:
+<ul>
+    <li>em ambos os dispositivos, abrir as opções de bluetooth</li>
+    <li>garantir que no dispositivo alvo
+        <ul>
+            <li>o bluetooth está ligado \'On\'</li>
+            <li>o dispositivo está (temporariamente) visivel para outros dispositivos</li>
+        </ul>
+    </li>
+    <li>neste dispositivo selecione \'Emparelhar novo dispositivo\'</li>
+    <li>o dispositivo que pretende emparelhar deve aparecer em \'dispositivos disponíveis\': selecione-o</li>
+    <li>Confirmar o emparelhamento em ambos os dispositivos</li>
+</ul>
+</html>]]></string>
+
+    <string name="bt_no_appropriate_paired_devices_found">Não foram encontrados dispositivos apropriados emparelhados</string>
+    <!--<string name="bt_no_appropriate_paired_devices_found_info">Este dispositivo está apenas emparelhado com dispositivos que não suportam o espelhamento do ecrã. Por favor emparelhe este dispositivo com um telefone ou tablet.</string>-->
+
+</resources>

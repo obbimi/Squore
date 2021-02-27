@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="lbl_left">Esquerda</string>
+    <string name="lbl_right">Direita</string>
+
+    <string name="lbl_Scoring">Marcar</string>
+    <string name="lbl_Scoring_PointPerRally">Point-per-rally</string>
+
+    <string name="fetching_data">A carregar dados…</string>
+    <string name="loading">A carregar…</string>
+    <string name="loading_of_x">A carregar %1$s… (%2$s)</string>
+    <string name="posting">A postar…</string>
+    <string name="possible_cause">Possível causa: </string>
+    <string name="could_not_load_feed_x">Não foi possível ler o Feed (%s)</string>
+    <string name="yesterday">Ontem</string>
+    <string name="today">Hoje</string>
+    <string name="tomorrow">Amanhã</string>
+    <string name="confirm">Confirmar</string>
+
+    <!-- buttons -->
+    <string name="name">Nome</string>
+    <string name="date">Data</string>
+    <string name="time">Horas</string>
+    <string name="timeunit">Unidade horária</string>
+    <string name="minutes">minutos</string>
+    <string name="seconds">segundos</string>
+    <string name="filename">Nome do ficheiro</string>
+    <string name="lock">Bloquear</string>
+    <string name="locked">Bloqueado</string>
+    <string name="unlock">Desbloquear</string>
+    <string name="total">Total</string>
+    <string name="overview">Visão geral</string>
+    <string name="statistics">Estatisticas</string>
+    <string name="handicap">Handicap</string>
+    <string name="no_handicap">Sem Handicap</string>
+    <string name="cmd_yes">Sim</string>
+    <string name="cmd_no">Não</string>
+    <string name="cmd_ok">OK</string>
+    <string name="cmd_start">Iniciar</string>
+    <string name="cmd_automatic">Automatico</string>
+    <string name="cmd_suggest">Sugerir</string>
+    <string name="cmd_maximize">Maximizar</string>
+    <string name="cmd_normal">Normal</string>
+    <string name="cmd_cancel">Cancelar</string>
+    <string name="cmd_none">Nenhum</string>
+    <string name="cmd_add">Adicionar</string>
+    <string name="cmd_previous">Anterior</string>
+    <string name="cmd_next">Seguinte</string>
+    <string name="cmd_add_x_seconds">Adicionar %s segs</string>
+    <string name="cmd_subtract_x_seconds">Subtrair %s segs</string>
+    <string name="cmd_keep">Manter</string>
+    <string name="cmd_delete">Eliminar</string>
+    <string name="cmd_delete_all">Eliminar tudo…</string>
+    <string name="cmd_edit">Editar</string>
+    <string name="cmd_open">Abrir</string>
+    <string name="cmd_hide">Esconder</string>
+    <string name="cmd_sort">Organizar</string>
+    <string name="lbl_group_by">Agrupar por</string>
+    <string name="cmd_pause">Pausa</string>
+    <string name="msg_paused">Pausado</string>
+    <string name="cmd_resume">Resumir</string>
+    <string name="cmd_save">Guardar</string>
+    <string name="cmd_close">Fechar</string>
+    <string name="cmd_new_group">Novo grupo</string>
+    <string name="cmd_new_match">Novo encontro</string>
+    <string name="cmd_new_matches">Novos encontros</string>
+    <string name="cmd_new_matches_with">Novos encontros com</string>
+    <string name="cmd_rebuild">Reconstruir</string>
+    <string name="uc_exit">Sair</string>
+    <string name="press_back_again_to_exit">Pressionar \'Back\' novamente para sair</string>
+    <string name="goto_help">Ajuda</string>
+    <string name="Help_elipses">Ajuda…</string>
+    <string name="privacy_and_terms">Pivacidade e Termos</string>
+    <string name="about">Sobre</string>
+    <string name="refresh">Refrescar</string>
+    <string name="filter">Filtrar</string>
+    <string name="expand_all">Expandir tudo</string>
+    <string name="collapse_all">Colapsar tudo</string>
+<!--
+    <string name="show_graph">Show Graph</string>
+-->
+    <string name="tip">Dica</string>
+    <string name="settings">Opções</string>
+    <string name="do_not_show_this_dialog_anymore">Não voltar a mostrar este diálogo</string>
+    <string name="lbl_fixed">Fixo</string>
+    <string name="lbl_none">Nenhum</string>
+
+    <!-- network -->
+    <string name="no_fully_functional_connection_error">Não existe uma rede funcional. Talvez necessite de iniciar sessão no seu operador?</string>
+    <string name="connection_error">Erro de ligação %1$s %2$s</string>
+    <string name="unknown_error">Erro desconhecido %s</string>
+
+    <string name="uc_more">Mais…</string>
+    <string name="uc_sort">Organizar…</string>
+    <string name="uc_undo">Desfazer</string>
+    <string name="uc_new">Novo…</string>
+    <string name="uc_edit">Editar…</string>
+    <string name="uc_showing_x_elipses">A mostrar %s …</string>
+    <string name="uc_show_elipses">Mostrar…</string>
+    <string name="uc_show">Mostrar</string>
+    <string name="uc_delete">Eliminar</string>
+    <string name="uc_email">Email</string>
+    <string name="uc_select">Selecionar</string>
+    <string name="uc_details">Detalhes</string>
+    <string name="uc_copy">Copiar</string>
+    <string name="lbl_color">Cor</string>
+    <string name="username">Nome de utilizador</string>
+    <string name="password">Palavra passe</string>
+    <string name="save_password">Guardar palavra passe</string>
+
+</resources>

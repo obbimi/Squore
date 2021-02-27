@@ -1,0 +1,31 @@
+<resources>
+
+<string name="scv_side_buttons__Racketlon">Os __botões de lado de serviço__ indicam
+        \n
+        \n- quem deve servir
+        \n- de que lado (E /D) (badminton, squash, ténis)
+        \n- se o jogador pode servir duas vezes (Ⅱ) ou apenas mais uma vez (Ⅰ) antes de trocar para o adversário (ténis de mesa)
+        \n\nO lado ou jogador muda automaticamente após cada ponto inserido.
+        \n\nSe necessário (mas normalmente não é), você pode alternar o lado/jogador tocando nele.</string>
+    <string name="scv_timer_button__Racketlon">Este botão permitirá que você inicie um __cronômetro__.
+        \n\nEle só aparecerá quando apropriado
+        \n
+        \n- Entre sets
+        \n- Aquecimento para cada set</string>
+    <string name="scv_shirt_color__Racketlon">Você pode opcionalmente __inserir uma cor__ para ambos os jogadores /equipes.
+        \n\nClique longamente no botão do lado de serviço para selecionar uma cor.</string>
+    <string name="scv_game_scores__Racketlon">As pontuações dos __sets anteriores__, bem como a diferença de pontos, são visíveis aqui.
+        \n\nToque para ver os detalhes dos sets anteriores num gráfico.</string>
+    <string name="scv_overflow_submenu__Racketlon">Mais opções estão disponíveis no menu. Você pode, por exemplo:
+        \n
+        \n- Personalizar a aparência e o comportamento da aplicação em \'Configurações\'
+        \n- Mostrar detalhes de partidas arbitradas anteriormente
+        \n- Iniciar um cronômetro de lesões
+        \n- Exportar/importar todos os seus encontros arbitrados de/para um arquivo zip
+        \n- Consultar uma página de ajuda desta aplicação
+        \n- Consultar as regras oficiais do racketlon</string>
+    <string name="scv_new_match_button__Racketlon">__É isso. Aproveite o seu racketlon.__
+        \n\nInicie uma nova partida tocando neste botão.</string>
+
+
+</resources>

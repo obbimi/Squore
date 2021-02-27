@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="rmm_title">Avaliar</string>
+    <string name="rmm_message">Parece que você gosta desta aplicação, porque já a usou %s vezes! Seria fantástico se tirasse um momento para a avaliar.</string>
+    <string name="rmm_later">Talvez mais tarde</string>
+    <string name="rmm_never">Não nunca</string>
+</resources>

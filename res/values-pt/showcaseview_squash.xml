@@ -1,0 +1,62 @@
+<resources>
+           -->
+<string name="scv_side_buttons__Squash">Os __botões de lado de serviço__ indicam
+        \n
+        \n- quem deve servir
+        \n- de que lado (L /R)
+        \n- se for um handout (?)
+        \n\nO lado ou jogador muda automaticamente após cada ponto inserido.
+        \n\nSe necessário, você pode alternar o lado/jogador tocando nele.</string>
+    <string name="scv_player_buttons_appeal__Squash">Acompanhe as decisões de __Stroke/Yes Let/No let__ tocando no nome do jogador que está solicitando um let.
+        \nInsira sua decisão na caixa de diálogo que aparece.</string>
+    <string name="scv_player_buttons_misconduct__Squash">Você também pode acompanhar as decisões de __Conduct Warning/Stroke__ decisions.
+        \n
+        \nPrima longamente um botão de jogador para uma caixa de diálogo de _Má conduta_.</string>
+    <string name="scv_old_fashioned_scoring__Squash">Uma folha de pontuação \'à moda antiga\' é visível no ecrã para sua conveniência.
+        \n\nIsso pode ser desativado em \'Configurações\'.</string>
+    <string name="scv_announcement_button__Squash">Este botão aparecerá quando um __anúncio oficial__ for apropriado:
+        \n
+        \n- Início do jogo/partida
+        \n- Fim do jogo/partida
+        \n- Primeiro tiebreak
+        \n\nPressione para ver o anúncio.</string>
+    <string name="scv_shirt_color__Squash">Se você está prestes a arbitrar dois jogadores que nunca conheceu antes e tem dificuldade em lembrar os seus nomes,
+        você pode __inserir uma cor__ para cada um.
+        \n\nClique longamente no botão do lado de serviço para selecionar uma cor.</string>
+    <string name="scv_game_scores__Squash">O número de jogos já ganhos por cada jogador pode ser visto aqui.
+        \n
+        \nToque para ver a pontuação exata dos jogos anteriores.</string>
+    <string name="scv_timer_button__Squash">Este botão permitirá que você inicie um __cronômetro__.
+        \n\nEle só aparecerá quando apropriado
+        \n
+        \n- Aquecimento
+        \n- Antes do início do primeiro jogo
+        \n- Entre jogos
+        \n
+        \nSe precisar de um cronômetro de lesões em algum momento de uma partida, você pode iniciar um através do menu.</string>
+    <string name="scv_overflow_submenu__Squash">Mais opções estão disponíveis no menu. Você pode, por exemplo:
+        \n
+        \n- Personalize a aparência e o comportamento da aplicação em \'Configurações \'
+        \n- Mostrar detalhes de partidas arbitradas anteriormente
+        \n- Iniciar um cronômetro de lesões
+        \n- Exportar/importar todos os seus encontros arbitrados de/para um arquivo zip
+        \n- Consultar uma página de ajuda desta aplicação
+        \n- Consulte as regras oficiais de squash
+        \n- Ative as opções para registrar facilmente estatísticas de Winner/Erro de FH/BH (por exemplo, para treinadores enquanto observam a partida dos seus alunos)</string>
+    <string name="scv_few_more_gui_hints__Squash">Mais algumas dicas de GUI:
+        \n
+        \n__Botões do jogador__
+        \n
+        \n- Toque com dois dedos para registrar um evento de bola/cordas/raquete partida
+        \n- Deslize para frente e para trás sobre um para editar (ou fornecer mais) detalhes do encontro
+        \n- Deslize para a esquerda sobre o nome do servidor para alternar o lado do serviço para a esquerda, idem para a direita
+        \n
+        \n__Botões de pontuação__
+        \n
+        \n- Toque em ambos ao mesmo tempo para inserir uma pontuação inicial (arbitrando uma partida que já começou)
+        \n- Toque longamente em ambos para verificar o formato da partida em andamento
+        \n- Deslize diagonalmente para frente e para trás sobre um botão de pontuação para, opcionalmente, reiniciar a pontuação (por exemplo, depois de mostrar a aplicação a outros membros do clube)</string>
+    <string name="scv_new_match_button__Squash">__É isso. Divirta-se com o seu squash, arbitragem feliz .__
+        \n\nInicie uma nova partida tocando neste botão.</string>
+
+</resources>

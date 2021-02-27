@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="sb_deuce">Iguais</string>
+    <string name="sb_advantage">Vantagem</string>
+
+    <string name="best_of_x_games_to_y_2__TennisPadel">Sets para</string>
+    <string name="sb_official_rules__TennisPadel">Regras oficias</string>
+
+    <string name="OfficialRulesURLs_default__TennisPadel"><![CDATA[https://www.padelfip.com/wp-content/uploads/2017/06/Rules-of-Padel.pdf
+\nhttp://www.Padel.com/
+]]></string>
+
+    <string name="sb_FinalSetFinish">Final do último set</string>
+    <string-array name="finalSetFinishDisplayValues"> <!-- keep in sync with com.doubleyellow.scoreboard.model.FinalSetFinish -->
+        <item>TieBreak até 7</item>
+        <item>TieBreak até 10</item>
+        <item>Sem jogos - TieBreak até 7</item>
+        <item>Sem jogos - TieBreak até 10</item>
+        <item>Jogos até 12 - Depois TieBreak até 7</item>
+        <item>Jogos até 12 - Depois TieBreak até 10</item>
+        <item>Sem Tie-Break</item>
+    </string-array>
+
+</resources>

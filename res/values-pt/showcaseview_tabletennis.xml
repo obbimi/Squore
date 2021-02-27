@@ -1,0 +1,23 @@
+<resources>
+
+<string name="scv_side_buttons__Tabletennis">Os __botoões de serviço__ indicam
+        \n
+        \n- quem deve servir
+        \n- se o jogador pode servir duas vezes (Ⅱ) ou apenas mais uma vez (Ⅰ) antes de trocar para o adversário
+        \n\nA indicação do serviço muda automaticamente após cada ponto inserido.</string>
+    
+    <string name="scv_timer_button__Tabletennis">Este botão permitirá que você inicie um __cronômetro__.
+        \n\nEle só aparecerá quando apropriado
+        \n
+        \n- Aquecimento antes da partida
+        \n- Entre jogos
+        \n- Limpeza</string>
+    <string name="scv_shirt_color__Tabletennis">Você pode opcionalmente __inserir uma cor__ para ambos os jogadores/equipas.
+        \n\nClique longamente no botão do lado de serviço para selecionar uma cor.</string>
+    <string name="scv_game_scores__Tabletennis">As pontuações de __jogos anteriores__ são visíveis aqui.
+        \n\nToque para ver todos os detalhes dos jogos anteriores.</string>
+    
+    <string name="scv_new_match_button__Tabletennis">__É isso. Aproveite o seu tênis de mesa .__
+        \n\nInicie uma nova partida tocando neste botão.</string>
+
+</resources>
