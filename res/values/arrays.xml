@@ -252,7 +252,8 @@
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ChangeSidesWhen_GSM -->
         <item>After Odd Games</item>
         <item>After Even Games</item>
-        <item>Every 6 Points In a Tiebreak</item>
         <item>Between Sets</item>
+        <item>Every 6 Points In a Tiebreak</item>
+        <item>Every 4 Points In a Tiebreak</item>
     </string-array>
 </resources>

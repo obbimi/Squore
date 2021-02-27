@@ -247,7 +247,8 @@
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ChangeSidesWhen_GSM -->
         <item>Después de juegos impares</item>
         <item>Despúes de juegos pares</item>
-        <item>Despúes de 6 puntos en el Tiebreak</item>
         <item>Despúes de cada set</item>
+        <item>Despúes de 6 puntos en el Tiebreak</item>
+        <item>Despúes de 4 puntos en el Tiebreak</item>
     </string-array>
 </resources>

@@ -958,6 +958,9 @@ public class PreferenceValues extends RWValues
     public static boolean useHandInHandOutScoring(Context context) {
         return getBoolean(PreferenceKeys.useHandInHandOutScoring, context, R.bool.useEnglishScoring_default);
     }
+    public static boolean useGoldenPoint(Context context) {
+        return getBoolean(PreferenceKeys.goldenPointToWinGame, context, R.bool.useGoldenPointToWinGame_default);
+    }
     public static KeepScreenOnWhen keepScreenOnWhen(Context context) {
         return getEnum(PreferenceKeys.keepScreenOnWhen, context, KeepScreenOnWhen.class, KeepScreenOnWhen.MatchIsInProgress);
     }
@@ -1843,7 +1846,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-12-01"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-12-02"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

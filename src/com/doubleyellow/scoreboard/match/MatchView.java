@@ -418,6 +418,7 @@ public class MatchView extends SBRelativeLayout
     private Spinner              spDoublesServeSequence;
     private CompoundButton       cbUseEnglishScoring;
     private CheckBox             cbUseLiveScoring;
+    private CompoundButton       cbUseGoldenPoint;
     private PreferenceACTextView txtRefereeName;
     private PreferenceACTextView txtMarkerName;
     private PreferenceACTextView txtEventName;
@@ -846,6 +847,9 @@ public class MatchView extends SBRelativeLayout
 
         cbUseEnglishScoring = (CompoundButton) findViewById(R.id.useHandInHandOutScoring);
         cbUseEnglishScoring.setChecked(PreferenceValues.useHandInHandOutScoring(context));
+
+        cbUseGoldenPoint = (CompoundButton) findViewById(R.id.useGoldenPoint);
+        cbUseGoldenPoint.setChecked(PreferenceValues.useGoldenPoint(context));
 
         // initialize checkboxes array for 'Change Sides When'
         Feature ffChangesSide = PreferenceValues.useChangeSidesFeature(context);
@@ -1289,6 +1293,7 @@ public class MatchView extends SBRelativeLayout
                 FinalSetFinish fsf = FinalSetFinish.values()[spFinalSetFinish.getSelectedItemPosition()];
                 gsmModel.setFinalSetFinish(fsf);
             }
+            gsmModel.setGoldenPointToWinGame(cbUseGoldenPoint!= null && cbUseGoldenPoint.isChecked());
         } else {
             model.setNrOfPointsToWinGame(iNrOfPoints2Win);
             model.setNrOfGamesToWinMatch(iNrOfGamesToWinMatch);

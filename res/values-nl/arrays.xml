@@ -195,7 +195,8 @@
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ChangeSidesWhen_GSM -->
         <item>Na Oneven Games</item>
         <item>Na Even Games</item>
-        <item>Elke 6 punten in een tiebreak</item>
         <item>Tussen elke set</item>
+        <item>Elke 6 punten in een tiebreak</item>
+        <item>Elke 4 punten in een tiebreak</item>
     </string-array>
 </resources>

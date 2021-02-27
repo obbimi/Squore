@@ -1330,14 +1330,16 @@ public class IBoard implements TimerViewContainer
     // -----------------game ball/match ball message ------
     // ----------------------------------------------------
     private FloatingMessage gameBallMessage = null;
-    public boolean updateGameBallMessage() {
-        return updateGameBallMessage(null, null);
+    public boolean updateGameBallMessage(String sContext) {
+        return updateGameBallMessage(sContext, null, null);
     }
-    public boolean updateGameBallMessage(Player[] gameBallFor, Boolean bShow) {
+    public boolean updateGameBallMessage(String sContext, Player[] gameBallFor, Boolean bShow) {
         if ( gameBallFor == null ) {
             gameBallFor = matchModel.isPossibleGameBallFor();
             bShow       = ListUtil.isNotEmpty(gameBallFor);
+            Log.d(TAG, "Update game ball message - recalculated " + Arrays.asList(gameBallFor));
         }
+        Log.d(TAG, "updateGameBallMessage [" + sContext + "] " + Arrays.asList(gameBallFor) + " ==> show : " + bShow);
 /*
         if ( bShow ) {
             final String sSSFilename = Util.filenameForAutomaticScreenshot(context, matchModel, showOnScreen, -1, -1, null);
@@ -1355,7 +1357,7 @@ public class IBoard implements TimerViewContainer
         return showGameBallMessage(bShow, gameBallFor);
     }
 
-    private boolean showGameBallMessage(boolean bVisible, Player[] pGameBallFor) {
+    public boolean showGameBallMessage(boolean bVisible, Player[] pGameBallFor) {
         if ( PreferenceValues.floatingMessageForGameBall(context, isPresentation()) == false ) {
             if ( gameBallMessage != null ) { gameBallMessage.setHidden(true); } // e.g. preferences where changed
             return false;

@@ -129,7 +129,7 @@
             android:id="@+id/llPauseDuration"
             android:layout_below="@id/ll_doubleServeSequence"
             android:orientation="horizontal"
-            android:gravity="left"
+            android:gravity="start"
             android:visibility="visible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -199,7 +199,6 @@
             android:layout_margin="2dp"
             />
         <ToggleButton
-            android:layout_below="@id/llPauseDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/useHandInHandOutScoring"
@@ -207,6 +206,31 @@
             android:text="@string/lbl_Scoring"
             android:textOff="@string/lbl_Scoring_PointPerRally"
             android:textOn="@string/lbl_Scoring_PointWhenServing__Squash"
+            android:textSize="@dimen/txt_small"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llGoldenPoint"
+        android:layout_below="@id/llPauseDuration"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView android:inputType="none"
+            android:id="@+id/lblUseGoldenPoint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_GoldenPoint"
+            android:textSize="@dimen/txt_small"
+            android:layout_margin="2dp"
+            />
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/useGoldenPoint"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/lbl_GoldenPoint"
             android:textSize="@dimen/txt_small"
             />
     </LinearLayout>

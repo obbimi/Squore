@@ -90,6 +90,18 @@ public class GSMModel extends Model
     }
 
     //------------------------
+    // Golden point
+    //------------------------
+    private boolean m_bGoldenPointToWinGame = false;
+    public void setGoldenPointToWinGame(boolean v) {
+        m_bGoldenPointToWinGame = v;
+    }
+    public boolean getGoldenPointToWinGame() {
+        return m_bGoldenPointToWinGame;
+    }
+
+
+    //------------------------
     // Match Format / Player/Time Details
     //------------------------
 
@@ -543,7 +555,7 @@ public class GSMModel extends Model
     //-------------------------------------
 
     @Override protected void handout(Player scorer, boolean bScoreChangeTrue_bNewGameFalse) {
-        Log.d(TAG, "No handout in GSM");
+        //Log.d(TAG, "No handout in GSM");
     }
 
     private static List<String> lTranslatedScores = Arrays.asList("0", "15", "30", "40", "AD");
@@ -819,31 +831,74 @@ public class GSMModel extends Model
 
     @Override Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom) {
         int iNrOfPointsToWinGame = _getNrOfPointsToWinGame();
-        Player[] playersGB = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore, iNrOfPointsToWinGame);
-        Player[] pLayersSB =       calculateIsPossibleSetVictoryFor(playersGB, when, getPlayer2GamesWon());
+        Player[] playersGB = new Player[]{};
+
+        // e.g Beach Tennis has this option, Padel is known to use it from time to time
+        if ( m_bGoldenPointToWinGame && (isInTieBreak_TT_RL() == false) ) {
+            int maxScore  = getMaxScore();
+            if ( maxScore >= _getNrOfPointsToWinGame() -1 ) {
+                int diffScore = getDiffScore();
+                Player pLeader = getLeaderInCurrentGame();
+
+                switch ( when ) {
+                    case Now:
+                        if ( maxScore == _getNrOfPointsToWinGame() && diffScore > 0 ) {
+                            playersGB =  new Player[] { pLeader } ;
+                        }
+                        break;
+                    case ScoreOneMorePoint:
+                        if ( maxScore >= _getNrOfPointsToWinGame() -1 ) {
+                            if ( diffScore == 0 ) {
+                                playersGB = getPlayers();
+                            } else {
+                                playersGB = new Player[] { pLeader } ;
+                            }
+                        }
+                        break;
+                }
+            }
+        } else {
+            playersGB = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore, iNrOfPointsToWinGame);
+        }
+
+        Player[] playersSB_Prev = m_possibleSetForPrev.get(when);
+        Player[] playersSB = calculateIsPossibleSetVictoryFor(playersGB, when, getPlayer2GamesWon());
+
+        boolean bSetBallFor_Unchanged0 = ListUtil.length(playersSB) == 0
+                                      && ListUtil.length(playersSB_Prev) == 0;
+        boolean bSetBallFor_Unchanged1 = ListUtil.length(playersSB) == 1
+                                      && ListUtil.length(playersSB_Prev) == 1
+                                      && playersSB_Prev[0].equals(playersSB[0]);
+        boolean bSetBallFor_Unchanged2 = ListUtil.length(playersSB) == 2
+                                      && ListUtil.length(playersSB_Prev) == 2;
+
+        boolean bSetBallFor_Unchanged = bSetBallFor_Unchanged0 || bSetBallFor_Unchanged1 || bSetBallFor_Unchanged2;
 
         switch ( when ) {
             case Now:
                 // TODO: check
-                if ( ListUtil.isNotEmpty(pLayersSB) ) {
+                if ( ListUtil.isNotEmpty(playersSB) ) {
                     for( OnSetChangeListener l: onSetChangeListeners ) {
-                        l.OnSetEnded(pLayersSB[0]);
+                        l.OnSetEnded(playersSB[0]);
                     }
                 }
                 break;
             case ScoreOneMorePoint:
-                //if ( ListUtil.isNotEmpty(pLayersSB) ) {
+                if ( bSetBallFor_Unchanged == false ) {
                     for( OnSetChangeListener l: onSetChangeListeners ) {
-                        l.OnSetBallChange(pLayersSB, ListUtil.isNotEmpty(pLayersSB));
+                        boolean isSetBall = ListUtil.isNotEmpty(playersSB);
+                        l.OnSetBallChange(playersSB, isSetBall);
                     }
-                //}
+                }
                 break;
         }
+        m_possibleSetForPrev.put(when, playersSB);
+
         return playersGB;
     }
 
-/*
     private Map<When, Player[]> m_possibleSetForPrev  = new HashMap<>();
+/*
     private Map<When, Player[]> m_possibleSetFor      = new HashMap<>();
 
     // Triggers listeners
@@ -946,13 +1001,16 @@ public class GSMModel extends Model
     //-------------------------------
 
     @Override void addFormatSettings(JSONObject joFormat) throws JSONException {
-        joFormat.put(PreferenceKeys.finalSetFinish.toString(), m_finalSetFinish);
+        joFormat.put(PreferenceKeys.finalSetFinish      .toString(), m_finalSetFinish);
+        joFormat.put(PreferenceKeys.goldenPointToWinGame.toString(), m_bGoldenPointToWinGame);
     }
     @Override void readFormatSettings(JSONObject joFormat) throws JSONException {
         String s = joFormat.optString(PreferenceKeys.finalSetFinish.toString());
         if (StringUtil.isNotEmpty(s) ) {
             setFinalSetFinish(FinalSetFinish.valueOf(s));
         }
+        boolean b = joFormat.optBoolean(PreferenceKeys.goldenPointToWinGame.toString());
+        setGoldenPointToWinGame(b);
     }
 
     @Override protected JSONArray scoreHistoryToJson(List lSetScoreHistory) throws JSONException {

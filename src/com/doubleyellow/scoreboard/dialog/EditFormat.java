@@ -29,11 +29,13 @@ import android.widget.ToggleButton;
 
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.EnumSpinner;
+import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.match.MatchView;
 import com.doubleyellow.scoreboard.model.DoublesServeSequence;
+import com.doubleyellow.scoreboard.model.GSMModel;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.TieBreakFormat;
@@ -49,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Displays the edit format dialog to the user.
+ * Displays the edit match format dialog to the user.
  */
 public class EditFormat extends BaseAlertDialog {
 
@@ -71,6 +73,7 @@ public class EditFormat extends BaseAlertDialog {
     private ToggleButton                      cbWarmpupDuration;
     private Spinner                           spPauseDuration;
     private ToggleButton                      cbPauseDuration;
+    private CompoundButton                    cbGoldenPoint;
     private ToggleButton                      tbBestOf_or_TotalOf;
     private EnumSpinner<TieBreakFormat>       spTieBreakFormat;
     private EnumSpinner<DoublesServeSequence> spDoublesServeSequence;
@@ -148,6 +151,17 @@ public class EditFormat extends BaseAlertDialog {
         cbUseEnglishScoring.setChecked(bHandInHandOut);
         cbUseEnglishScoring.setEnabled(iNewNrOfPointsToWinGame==0);
 
+        cbGoldenPoint = (CompoundButton) vg.findViewById(R.id.useGoldenPoint);
+        if ( cbGoldenPoint != null ) {
+            if ( Brand.isGameSetMatch() ) {
+                boolean bUseGoldenPoint = PreferenceValues.useGoldenPoint(context);
+                cbGoldenPoint.setChecked(bUseGoldenPoint);
+                ViewUtil.hideViews(vg, R.id.llScoringType);
+            } else {
+                ViewUtil.hideViews(vg, R.id.llGoldenPoint);
+            }
+        }
+
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, int which) {
                 handleButtonClick(which);
@@ -181,6 +195,14 @@ public class EditFormat extends BaseAlertDialog {
                     boolean bUseEnglishScoring = cbUseEnglishScoring.isChecked();
                     matchModel.setEnglishScoring(bUseEnglishScoring);
                     PreferenceValues.setBoolean(PreferenceKeys.useHandInHandOutScoring, context, bUseEnglishScoring);
+                }
+                if ( Brand.isGameSetMatch() ) {
+                    GSMModel gsmModel = (GSMModel) matchModel;
+                    if ( (cbGoldenPoint != null) && cbGoldenPoint.isEnabled() ) {
+                        boolean bUseGoldenPoint = cbGoldenPoint.isChecked();
+                        gsmModel.setGoldenPointToWinGame(bUseGoldenPoint);
+                        PreferenceValues.setBoolean(PreferenceKeys.goldenPointToWinGame, context, bUseGoldenPoint);
+                    }
                 }
 
                 TieBreakFormat tbf = TieBreakFormat.values()[spTieBreakFormat.getSelectedItemPosition()];

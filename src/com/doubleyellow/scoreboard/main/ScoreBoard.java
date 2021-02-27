@@ -434,6 +434,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             Player player = IBoard.m_id2player.get(view.getId());
             if ( matchModel.isPossibleGameBallFor(player) && (bGameEndingHasBeenCancelledThisGame == false) ) {
                 // score will go to game-end, and most likely a dialog will be build and show. Prevent any accidental score changes while dialog is about to be shown
+                // mainly to prevent odd behaviour of the app for when people are 'quickly' entering a score by tapping rappidly on score buttons
                 disableScoreButton(view);
             }
             if ( dialogManager.dismissIfTwoTimerView() /*cancelTimer()*/ ) {
@@ -1202,7 +1203,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         updateMicrophoneFloatButton();
         updateTimerFloatButton();
-        iBoard.updateGameBallMessage();
+        iBoard.updateGameBallMessage("onResume");
         iBoard.updateGameAndMatchDurationChronos();
         if ( matchModel != null ) {
             showShareFloatButton(matchModel.isPossibleGameVictory(), matchModel.matchHasEnded()); // icon may have changed
@@ -2050,8 +2051,11 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             matchModel.setAdditionalPostParams(previous.getAdditionalPostParams());
             matchModel.setReferees            (previous.getReferee(), previous.getMarker());
             if ( matchModel instanceof GSMModel ) {
-                FinalSetFinish finalSetFinish = ((GSMModel) previous).getFinalSetFinish();
-                ((GSMModel) matchModel).setFinalSetFinish(finalSetFinish);
+                GSMModel gsmModelPrev = (GSMModel) previous;
+                GSMModel gsmModelNew = (GSMModel) ScoreBoard.matchModel;
+                FinalSetFinish finalSetFinish = gsmModelPrev.getFinalSetFinish();
+                gsmModelNew.setFinalSetFinish(finalSetFinish);
+                gsmModelNew.setGoldenPointToWinGame(gsmModelPrev.getGoldenPointToWinGame());
             }
 /*
             for ( Player p: Model.getPlayers() ) {
@@ -2777,7 +2781,7 @@ touch -t 01030000 LAST.sb
     private class SpecialScoreChangeListener implements Model.OnSpecialScoreChangeListener, GSMModel.OnSetChangeListener
     {
         @Override public void OnSetBallChange(Player[] players, boolean bHasSetBall) {
-            iBoard.updateGameBallMessage(players, bHasSetBall);
+            iBoard.updateGameBallMessage("OnSetBallChange", players, bHasSetBall);
         }
         @Override public void OnSetEnded(Player winningPlayer) {
             EnumSet<ChangeSidesWhen_GSM> playersWhen = PreferenceValues.changeSidesWhen_GSM(ScoreBoard.this);
@@ -2790,11 +2794,13 @@ touch -t 01030000 LAST.sb
         }
 
         @Override public void OnXPointsPlayedInTiebreak(int iTotalPoints) {
-            if ( iTotalPoints % 6 == 0 ) {
-                EnumSet<ChangeSidesWhen_GSM> playersWhen = PreferenceValues.changeSidesWhen_GSM(ScoreBoard.this);
-                if ( playersWhen.contains(ChangeSidesWhen_GSM.EverySixPointsInTiebreak) ) {
-                    swapSides_BOP(null);
-                }
+
+            EnumSet<ChangeSidesWhen_GSM> playersWhen = PreferenceValues.changeSidesWhen_GSM(ScoreBoard.this);
+
+            if ( playersWhen.contains(ChangeSidesWhen_GSM.EveryFourPointsInTiebreak) && (iTotalPoints % 4 == 0) ) {
+                swapSides_BOP(null);
+            } else if ( playersWhen.contains(ChangeSidesWhen_GSM.EverySixPointsInTiebreak) && (iTotalPoints % 6 == 0) ) {
+                swapSides_BOP(null);
             } else {
                 if ( Brand.isGameSetMatch() ) {
                     showChangeSideFloatButton(false);
@@ -2813,11 +2819,10 @@ touch -t 01030000 LAST.sb
             }
 
             //iBoard.doGameBallColorSwitch(player, bHasGameBall);
-            iBoard.updateGameBallMessage(players, bHasGameBall);
+            iBoard.updateGameBallMessage("OnGameBallChange", players, bHasGameBall);
 
             if ( bHasGameBall ) {
                 showMicrophoneFloatButton(false); // previous might have been tiebreak
-
             }
         }
 
@@ -2834,7 +2839,7 @@ touch -t 01030000 LAST.sb
             }
             updateMicrophoneFloatButton();
             updateTimerFloatButton();
-            iBoard.updateGameBallMessage();
+            iBoard.updateGameBallMessage("OnGameEndReached", new Player[] {leadingPlayer}, false);
             showShareFloatButton(true, matchModel.matchHasEnded());
             updateNewMatchFloatButton();
 
@@ -2925,7 +2930,7 @@ touch -t 01030000 LAST.sb
             showShareFloatButton(false, false);
             showChangeSideFloatButton(false);
 
-            iBoard.updateGameBallMessage();
+            iBoard.updateGameBallMessage("OnFirstPointOfGame");
             iBoard.updateBrandLogoBasedOnScore();
             iBoard.updateFieldDivisionBasedOnScore();
         }
@@ -3046,7 +3051,12 @@ touch -t 01030000 LAST.sb
             updateTossFloatButton();
             updateMicrophoneFloatButton();
             showShareFloatButton(matchModel.isPossibleGameVictory(), matchModel.matchHasEnded());
-            iBoard.updateGameBallMessage();
+            if ( Brand.isGameSetMatch() ) {
+                // to prevent 'set ball' being show while it is gameball, if we go back from 0-0 into e.g. 40-30 of previous game
+                iBoard.showGameBallMessage(false, null);
+            } else {
+                iBoard.updateGameBallMessage("ComplexChangeListener.OnChanged");
+            }
             iBoard.updateGameAndMatchDurationChronos();
 
             showAppropriateMenuItemInActionBar();
@@ -3136,8 +3146,11 @@ touch -t 01030000 LAST.sb
                 // uncommon tiebreak format: but do not highlight in this case
                 iBoard.undoGameBallColorSwitch();
             }
-            //iBoard.showGameBallMessage(false, null);
-            iBoard.updateGameBallMessage(); // in rare case in racketlon a 0-0 score may be a matchball in set 3 or 4
+            if ( Brand.isRacketlon() ) {
+                iBoard.updateGameBallMessage("OnGameEnded"); // in rare case in racketlon a 0-0 score may be a matchball in set 3 or 4
+            } else {
+                iBoard.showGameBallMessage(false, null);
+            }
 
             if ( matchModel.isDoubles() && Brand.supportChooseServeOrReceive() ) {
                 if ( matchModel.matchHasEnded() == false ) {

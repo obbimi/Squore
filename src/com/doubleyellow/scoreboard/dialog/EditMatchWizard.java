@@ -367,6 +367,12 @@ public class EditMatchWizard extends BaseAlertDialog
                         ((GSMModel) m_tmp).setFinalSetFinish(finalSetFinish);
                         break;
                     }
+                    case goldenPointToWinGame: {
+                        SelectObjectToggle<String> tb = (SelectObjectToggle<String>) current;
+                        boolean bGoldenPoint = tb.getSelectedIndex() == 1;
+                        ((GSMModel) m_tmp).setGoldenPointToWinGame(bGoldenPoint);
+                        break;
+                    }
                     case disciplineSequence: {
                         SelectObjectToggle<Integer> tb = (SelectObjectToggle<Integer>) current;
                         Sport sport = Sport.values()[tb.getSelectedIndex()];

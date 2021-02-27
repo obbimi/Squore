@@ -20,7 +20,8 @@ package com.doubleyellow.scoreboard.prefs;
 public enum ChangeSidesWhen_GSM {
     AfterOddGames,
     AfterEvenGames,
-    EverySixPointsInTiebreak,
     BetweenSets,
+    EverySixPointsInTiebreak,
+    EveryFourPointsInTiebreak,
     // AfterTieBreak, // for now consider this an 'odd game'
 }

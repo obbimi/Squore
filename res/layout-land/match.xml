@@ -666,6 +666,30 @@
     </LinearLayout>
     <LinearLayout
         android:layout_below="@id/llScoringType"
+        android:id="@+id/llScoringTypeGSM"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:inputType="none"
+            android:id="@+id/lblUseGoldenPoint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_GoldenPoint"
+            android:textSize="@dimen/txt_small"
+            android:layout_margin="2dp"
+            />
+        <ToggleButton
+            android:id="@+id/useGoldenPoint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/txt_small"
+            android:layoutMode="opticalBounds"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_below="@id/llScoringTypeGSM"
         android:id="@+id/llHandicapFormat"
         android:orientation="horizontal"
         android:layout_alignParentStart="true"

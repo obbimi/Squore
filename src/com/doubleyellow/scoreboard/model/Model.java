@@ -2781,9 +2781,13 @@ public abstract class Model implements Serializable
             jsonObject.put(JSONKey.server   .toString(), getServer());
             jsonObject.put(JSONKey.serveSide.toString(), getNextServeSide(getServer()));
             if ( this instanceof SquashModel ) {
-                jsonObject.put(JSONKey.isHandOut.toString(), isLastPointHandout());
+                Player[] possibleMatchBallFor = isPossibleMatchBallFor();
+                jsonObject.put(JSONKey.isHandOut   .toString(), isLastPointHandout());
+                jsonObject.put(JSONKey.isGameBall  .toString(), isPossibleGameBallFor(Player.A) || isPossibleGameBallFor(Player.B));
+                jsonObject.put(JSONKey.isMatchBall .toString(), (possibleMatchBallFor != null) && (possibleMatchBallFor.length!=0) );
             }
         }
+        jsonObject.put(JSONKey.isVictoryFor.toString(), isPossibleMatchVictoryFor() );
         JsonUtil.removeEmpty(jsonObject);
 
         // conducts
@@ -3222,6 +3226,8 @@ public abstract class Model implements Serializable
                 }
             }
         }
+
+        setDirty(true);
     }
 
     /** Invoked when model is created and when a game is ended */
@@ -3290,14 +3296,14 @@ public abstract class Model implements Serializable
     abstract Player[] calculatePossibleMatchVictoryFor (When when, Player[] paGameVictoryFor);
     abstract Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom /*Only checked when running for Racketlon*/ );
 
-    /** If game format has no tie-break (sudden death), it can be game ball for both players simultaneously */
+    /** If game format has no tie-break (sudden death) or 'golden point' in e.g. a game of beach tennis/padel, it can be game ball for both players simultaneously */
     final Player[] _isPossibleGameVictoryFor(When when, boolean bFromIsMatchBallFrom, boolean bForUndo) {
         Player[] players = m_possibleGameFor.get(when);
         if ( players == null ) {
             players = calculateIsPossibleGameVictoryFor(when, getScoreOfGameInProgress(), bFromIsMatchBallFrom);
             setGameVictoryFor(when, players, bForUndo);
         } else {
-          //Log.w(TAG, "[_isPossibleGameVictoryFor] Taken from cache " + players);
+          Log.d(TAG, "[_isPossibleGameVictoryFor] " + when + ": Taken from cache " + getPlayersAsList(players) );
         }
         return players;
     }
@@ -3311,30 +3317,39 @@ public abstract class Model implements Serializable
 
     public final boolean isPossibleGameBallFor(Player p) {
         Player[] pa = isPossibleGameBallFor();
+        if ( pa.length == 0 ) { return false; }
         return ( pa.length >= 1 && pa[0].equals(p) )
             || ( pa.length >= 2 && pa[1].equals(p) );
     }
 
-    /** Triggers listeners */
-    private void setGameVictoryFor(When when, Player[] gameballForNew, boolean bForUndo) {
+    /** Triggers listeners if gamevictory for change */
+    private boolean setGameVictoryFor(When when, Player[] gameballForNew, boolean bForUndo) {
         // store the new value
         m_possibleGameFor.put(when, gameballForNew);
 
         final Player[] gameballForOld = m_possibleGameForPrev.get(when);
         if ( gameballForNew == gameballForOld ) {
-            return;
+            //Log.d(TAG, "No change in game ball. No need to trigger listeners");
+            return false;
         } else {
             m_possibleGameForPrev.remove(when);
         }
-        boolean bGameBallFor_Unchanged = ListUtil.length(gameballForNew) == 1
-                                      && ListUtil.length(gameballForOld) == 1
-                                      && gameballForOld[0].equals(gameballForNew[0]);
+        boolean bGameBallFor_Unchanged0 = ListUtil.length(gameballForNew) == 0
+                                       && ListUtil.length(gameballForOld) == 0;
+        boolean bGameBallFor_Unchanged1 = ListUtil.length(gameballForNew) == 1
+                                       && ListUtil.length(gameballForOld) == 1
+                                       && gameballForOld[0].equals(gameballForNew[0]);
+        boolean bGameBallFor_Unchanged2 = ListUtil.length(gameballForNew) == 2
+                                       && ListUtil.length(gameballForOld) == 2;
+
+        boolean bGameBallFor_Unchanged = bGameBallFor_Unchanged0 || bGameBallFor_Unchanged1 || bGameBallFor_Unchanged2;
+
         if ( bGameBallFor_Unchanged == false ) {
-            //Log.d(TAG, String.format("Gameball %s changed from %s to %s", when, getPlayersAsList(gameballForOld), getPlayersAsList(gameballForNew)));
+            Log.d(TAG, String.format("Gameball %s changed from %s to %s", when, getPlayersAsList(gameballForOld), getPlayersAsList(gameballForNew)));
         }
 
-        if ( when.equals(When.ScoreOneMorePoint) ) {
-            if ( ListUtil.isNotEmpty(gameballForOld) && (bGameBallFor_Unchanged == false) ) {
+        if ( when.equals(When.ScoreOneMorePoint) && (bGameBallFor_Unchanged == false) ) {
+            if ( ListUtil.isNotEmpty(gameballForOld) ) {
                 // no longer game ball for...
                 for (OnSpecialScoreChangeListener l : onSpecialScoreChangeListeners) {
                     l.OnGameBallChange(gameballForOld, false, bForUndo);
@@ -3348,6 +3363,7 @@ public abstract class Model implements Serializable
                 }
             }
         }
+        return (bGameBallFor_Unchanged == false);
     }
 
     private void setMatchVictoryFor(When when, Player[] matchballForNew) {
@@ -3356,13 +3372,21 @@ public abstract class Model implements Serializable
 
         final Player[] matchballForOld = m_possibleMatchForPrev.get(when);
         if ( matchballForNew == matchballForOld ) {
+            //Log.i(TAG, "No change in match ball. No need to trigger listeners");
             return;
         } else {
             m_possibleMatchForPrev.remove(when);
         }
-        boolean bMatchBallFor_Unchanged = ListUtil.length(matchballForNew) == 1
-                && ListUtil.length(matchballForOld) == 1
-                && matchballForOld[0].equals(matchballForNew[0]);
+        boolean bMatchBallFor_Unchanged1 = ListUtil.length(matchballForNew) == 1
+                                        && ListUtil.length(matchballForOld) == 1
+                                        && matchballForOld[0].equals(matchballForNew[0]);
+
+        boolean bMatchBallFor_Unchanged2 = ListUtil.length(matchballForNew) == 2
+                                        && ListUtil.length(matchballForOld) == 2;
+        boolean bMatchBallFor_Unchanged0 = ListUtil.length(matchballForNew) == 0
+                                        && ListUtil.length(matchballForOld) == 0;
+
+        boolean bMatchBallFor_Unchanged = bMatchBallFor_Unchanged0 || bMatchBallFor_Unchanged1 || bMatchBallFor_Unchanged2;
         if ( bMatchBallFor_Unchanged == false ) {
             //Log.d(TAG, String.format("Matchball %s changed from %s to %s", when, getPlayersAsList(matchballForOld), getPlayersAsList(matchballForNew)));
         }

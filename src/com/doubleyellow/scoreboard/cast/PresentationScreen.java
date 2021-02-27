@@ -180,7 +180,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
 
     private class SpecialScoreChangeListener implements Model.OnSpecialScoreChangeListener {
         @Override public void OnGameBallChange(Player[] players, boolean bHasGameBall, boolean bForUndo) {
-            iBoard.updateGameBallMessage(players, bHasGameBall);
+            iBoard.updateGameBallMessage("PS:OnGameBallChange", players, bHasGameBall);
         }
 
         @Override public void OnTiebreakReached(int iOccurrenceCount) {
@@ -188,7 +188,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         }
 
         @Override public void OnGameEndReached(Player leadingPlayer) {
-            iBoard.updateGameBallMessage();
+            iBoard.updateGameBallMessage("PS:OnGameEndReached");
         }
 
         @Override public void OnGameIsHalfwayChange(int iGameZB, int iScoreA, int iScoreB, Halfway hwStatus) {
@@ -202,7 +202,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
             if ( (endOfGameView != null) && endOfGameView.bIsShowing ) {
                 initBoard();
             }
-            iBoard.updateGameBallMessage();
+            iBoard.updateGameBallMessage("PS:OnFirstPointOfGame");
             iBoard.updateBrandLogoBasedOnScore();
             iBoard.updateFieldDivisionBasedOnScore();
             iBoard.updateGameAndMatchDurationChronos();
@@ -251,7 +251,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
                 iBoard.updateServeSide(p, matchModel.getNextDoubleServe(p), matchModel.getNextServeSide(p), matchModel.isLastPointHandout());
             }
             // for restart score and complex undo
-            iBoard.updateGameBallMessage();
+            iBoard.updateGameBallMessage("PS:Complex:OnChanged");
         }
     }
     private CountDownTimer m_ctRemoveHandoutChar = null;
@@ -303,7 +303,7 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
                 // uncommon tiebreak format: but do not highlight in this case
                 iBoard.undoGameBallColorSwitch();
             }
-            iBoard.updateGameBallMessage(); // in some cases in racketlon a 0-0 score may be a matchball in set 3 (unlikely) or 4 (more likely)
+            iBoard.updateGameBallMessage("PS:OnGameEnded"); // in some cases in racketlon a 0-0 score may be a matchball in set 3 (unlikely) or 4 (more likely)
 
             if ( bShowGraphDuringTimer ) {
                 if (endOfGameView == null) {
