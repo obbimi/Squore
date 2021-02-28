@@ -2,12 +2,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="sb_deuce">Deuce</string>
     <string name="sb_advantage">Advantage</string>
+    <string name="lbl_GoldenPoint">Golden Point (No AD)</string>
 
     <string name="best_of_x_games_to_y_2__TennisPadel">Sets to</string>
     <string name="sb_official_rules__TennisPadel">Official rules</string>
 
     <string name="OfficialRulesURLs_default__TennisPadel"><![CDATA[https://www.padelfip.com/wp-content/uploads/2017/06/Rules-of-Padel.pdf
-\nhttp://www.Padel.com/
+\nhttp://www.padel.com/
 ]]></string>
 
     <string name="sb_FinalSetFinish">Final Set Finish</string>

@@ -846,11 +846,15 @@ public class MatchView extends SBRelativeLayout
         }
 
         cbUseEnglishScoring = (CompoundButton) findViewById(R.id.useHandInHandOutScoring);
-        cbUseEnglishScoring.setChecked(PreferenceValues.useHandInHandOutScoring(context));
-
+        if ( cbUseEnglishScoring != null ) {
+            boolean useHandInHandOutScoring = PreferenceValues.useHandInHandOutScoring(context);
+            cbUseEnglishScoring.setChecked(useHandInHandOutScoring);
+        }
         cbUseGoldenPoint = (CompoundButton) findViewById(R.id.useGoldenPoint);
-        cbUseGoldenPoint.setChecked(PreferenceValues.useGoldenPoint(context));
-
+        if ( cbUseGoldenPoint != null ) {
+            boolean useGoldenPoint = PreferenceValues.useGoldenPoint(context);
+            cbUseGoldenPoint.setChecked(useGoldenPoint);
+        }
         // initialize checkboxes array for 'Change Sides When'
         Feature ffChangesSide = PreferenceValues.useChangeSidesFeature(context);
         if ( Feature.DoNotUse.equals(ffChangesSide) == false ) {
