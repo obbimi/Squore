@@ -52,7 +52,7 @@ public class CastOptionsProvider implements OptionsProvider
 
     @Override public CastOptions getCastOptions(Context context) {
         Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(context);
-        Log.d(TAG, "remoteDisplayAppId2Info : " + remoteDisplayAppId2Info);
+        Log.d(TAG, "[getCastOptions] remoteDisplayAppId2Info : " + remoteDisplayAppId2Info);
 
         NotificationOptions notificationOptions = new NotificationOptions.Builder()
                 .setActions(Arrays.asList(MediaIntentReceiver.ACTION_SKIP_NEXT,
@@ -61,23 +61,29 @@ public class CastOptionsProvider implements OptionsProvider
                 .setTargetActivityClassName(com.doubleyellow.scoreboard.activity.Feedback.class.getName())
                 .build();
 
-        CastMediaOptions mediaOptions = new CastMediaOptions.Builder()
-                .setImagePicker(new ImagePickerImpl())
-                .setNotificationOptions(notificationOptions)
-                .setExpandedControllerActivityClassName(com.doubleyellow.scoreboard.activity.Feedback.class.getName())
-                .build();
+        CastMediaOptions mediaOptions = null;
+        if ( false ) {
+            mediaOptions = new CastMediaOptions.Builder()
+                    .setImagePicker(new ImagePickerImpl())
+                    .setNotificationOptions(notificationOptions)
+                    .setExpandedControllerActivityClassName(com.doubleyellow.scoreboard.activity.Feedback.class.getName())
+                    .build();
+        }
 
         CastOptions.Builder builder = new CastOptions.Builder();
         String key = remoteDisplayAppId2Info.getKey();
         builder.setReceiverApplicationId(key);
+        Log.d(TAG, "[getCastOptions] create with receiver app id : " + key);
       //builder.setStopReceiverApplicationWhenEndingSession(true);
-        builder.setCastMediaOptions(mediaOptions);
+        if ( mediaOptions != null ) {
+            builder.setCastMediaOptions(mediaOptions);
+        }
         CastOptions options = builder.build();
         return options;
     }
 
     @Override public List<SessionProvider> getAdditionalSessionProviders(Context context) {
-        Log.d(TAG, "getAdditionalSessionProviders ... ?");
+        Log.d(TAG, "[getAdditionalSessionProviders] ... ? : " + context);
         return null;
     }
 

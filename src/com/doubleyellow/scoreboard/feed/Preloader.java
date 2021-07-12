@@ -203,7 +203,7 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                         final String C_CastConfig = "CastConfig";
                         if ( config.has(C_CastConfig) ) {
                             JSONObject castConfig = config.getJSONObject(C_CastConfig);
-                            Brand.setCastConfig(castConfig);
+                            Brand.setCastConfig(castConfig, m_context.getCacheDir());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

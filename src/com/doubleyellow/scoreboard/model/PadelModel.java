@@ -19,9 +19,11 @@ package com.doubleyellow.scoreboard.model;
 
 public class PadelModel extends GSMModel {
 
-    // TODO: sometimes a 'gold point' (no advantage) is used for deciding a game
     PadelModel() {
         super();
+
+        // sometimes a 'gold point' (no advantage) is used for deciding a game, but not in official rules
+        setGoldenPointToWinGame(false);
     }
     @Override public SportType getSport() {
         return SportType.Padel;

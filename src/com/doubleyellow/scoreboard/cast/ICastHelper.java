@@ -49,4 +49,32 @@ public interface ICastHelper {
     void castDurationChronos();
 
     void castGamesWonAppearance();
+
+    // Functions
+    String Avatar_update          =         "Avatar.update";
+    String Call_showDecision      =           "Call.showDecision";
+    String CountDownTimer_cancel  = "CountDownTimer.cancel";
+    String CountDownTimer_show    = "CountDownTimer.show";
+    String Country_update         =        "Country.update";
+    String GameGraph_Show         =      "GameGraph.show";
+    String GameScores_display     =     "GameScores.display";
+    String GameScores_update      =     "GameScores.update";
+    String LogoSponsor_setSponsor =    "LogoSponsor.setSponsor";
+    String LogoSponsor_setLogo    =    "LogoSponsor.setLogo";
+    String Server_update          =         "Server.update";
+    String GameChrono_update      =     "GameChrono.update";
+    String SetChrono_update       =      "SetChrono.update";
+    String MatchChrono_update     =    "MatchChrono.update";
+    String GameChrono_hide        =     "GameChrono.hide";
+    String SetChrono_hide         =      "SetChrono.hide";
+    String MatchChrono_hide       =    "MatchChrono.hide";
+    String Racketlon_updateDiscipline =    "Racketlon.updateDiscipline";
+
+    // properties
+    String Property_BGColor       = "background-color";
+    String Property_Color         = "color";
+    String Property_BGImage       = "background-image";
+    String Property_BorderColor   = "border-color";
+    String Property_Text          = "text";
+    String Property_Display       = "display";
 }

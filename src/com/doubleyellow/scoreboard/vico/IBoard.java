@@ -41,6 +41,7 @@ import com.doubleyellow.android.view.FloatingMessage;
 import com.doubleyellow.android.view.ViewUtil;
 
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.cast.ICastHelper;
 import com.doubleyellow.scoreboard.cast.framework.CastHelper;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Util;
@@ -165,7 +166,8 @@ public class IBoard implements TimerViewContainer
         if ( castChangeViewTextMessage(id, sScore) ) {
             // casting is working, also send data to update graph
             if ( Brand.isGameSetMatch() == false && matchModel.gameHasStarted() ) {
-                StringBuilder sb = new StringBuilder("GameGraph.show(");
+                StringBuilder sb = new StringBuilder(ICastHelper.GameGraph_Show);
+                sb.append("(");
                 sb.append(matchModel.getGameNrInProgress()).append(",");
                 sb.append(matchModel.getNrOfPointsToWinGame()).append(",");
 
@@ -185,6 +187,7 @@ public class IBoard implements TimerViewContainer
             }
         }
     }
+    
     public boolean updatePlayerName(Player p, String sName, boolean bIsDoubles) {
         if ( m_player2nameId == null ) {
             return true;
@@ -223,7 +226,7 @@ public class IBoard implements TimerViewContainer
     // if casting is ON (new way of casting)
     //-------------------------------------------
     private boolean castChangeViewTextMessage(Integer iBoardResId, Object oValue) {
-        return castSendChangeViewMessage(iBoardResId, oValue, "text");
+        return castSendChangeViewMessage(iBoardResId, oValue, ICastHelper.Property_Text);
     }
     private void castSendFunction(String s) {
         if ( castHelper == null ) { return; }
@@ -317,17 +320,25 @@ public class IBoard implements TimerViewContainer
             long lStartTime      = matchModel.getMatchStart();
             long calculatedBase  = lStartTime - lBootTime;
             if ( matchModel.matchHasEnded() /*|| matchModel.isLocked()*/ ) {
-                long duration = matchModel.getDuration();
-                String sDuration = DateUtil.convertDurationToHHMMSS_Colon(duration);
-                tvMatchTime.setText(String.format(sFormat, sDuration));
+                long duration        = matchModel.getDuration(); // fixed duration
+                String sDurationMM_SS = DateUtil.convertDurationToHHMMSS_Colon(duration);
+                tvMatchTime.setText(String.format(sFormat, sDurationMM_SS));
                 tvMatchTime.stop();
-            } else if ( ScoreBoard.timer != null && ScoreBoard.timer.isShowing() && (ScoreBoard.timer.timerType == Type.Warmup) ) {
+                castSendChronosFunction( ICastHelper.MatchChrono_update, DateUtil.convertToSeconds(duration) , false, sFormat, sDurationMM_SS);
+            } else if ( (ScoreBoard.timer != null) && ScoreBoard.timer.isShowing() && (ScoreBoard.timer.timerType == Type.Warmup) ) {
                 tvMatchTime.stop();
             } else {
-                tvMatchTime.setBase(roundToNearest1000(calculatedBase));
+                long base = roundToNearest1000(calculatedBase);
+                tvMatchTime.setBase(base);
                 tvMatchTime.start();
+                long duration = System.currentTimeMillis() - matchModel.getMatchStart(); // dynamic duration
+                String sDurationMM_SS = DateUtil.convertDurationToHHMMSS_Colon(duration);
+                castSendChronosFunction(ICastHelper.MatchChrono_update, DateUtil.convertToSeconds(duration), true, sFormat, sDurationMM_SS);
             }
+        } else {
+            castSendFunction(ICastHelper.MatchChrono_hide + "()");
         }
+
     }
     /** only for GSMModel matches */
     public void updateSetDurationChrono() {
@@ -354,23 +365,30 @@ public class IBoard implements TimerViewContainer
             long lBootTime       = System.currentTimeMillis() - elapsedRealtime;
             long lStartTime      = matchModel.getSetStart(setNrInProgress1B);
             long calculatedBase  = lStartTime - lBootTime;
+            long lSetDuration    = matchModel.getSetDuration(setNrInProgress1B);
+            String sDurationHH_MM = DateUtil.convertDurationToHHMMSS_Colon(lSetDuration);
             if ( matchModel.matchHasEnded() /*|| matchModel.isLocked()*/ ) {
-                long duration = matchModel.getSetDuration(setNrInProgress1B);
-                String sDuration = DateUtil.convertDurationToHHMMSS_Colon(duration);
-                tvSetTime.setText(String.format(sFormat, sDuration));
+                tvSetTime.setText(String.format(sFormat, sDurationHH_MM));
                 tvSetTime.stop();
+                castSendChronosFunction(ICastHelper.SetChrono_update, DateUtil.convertToSeconds(lSetDuration), false, sFormat, sDurationHH_MM);
             } else if ( ScoreBoard.timer != null && ScoreBoard.timer.isShowing() && (ScoreBoard.timer.timerType == Type.Warmup) ) {
                 tvSetTime.stop();
+                castSendChronosFunction(ICastHelper.SetChrono_update, DateUtil.convertToSeconds(lSetDuration), false, sFormat, sDurationHH_MM);
             } else {
                 tvSetTime.setBase(roundToNearest1000(calculatedBase));
                 tvSetTime.start();
+
+                castSendChronosFunction(ICastHelper.SetChrono_update, DateUtil.convertToSeconds(lSetDuration), true, sFormat, sDurationHH_MM);
             }
+        } else {
+            castSendFunction(ICastHelper.SetChrono_hide + "()");
         }
     }
 
     public void resumeGameDurationChrono() {
         Chronometer tvGameTime = (Chronometer) findViewById(R.id.sb_game_duration);
         if ( tvGameTime == null ) { return; }
+
         if ( Brand.supportsTimeout() && (m_lStoppedAt != 0L) ) {
             // adjust so no jump in time is visible and e.g. Expedite is not triggered to early.
             // TODO: this adjustment will not be visible in e.g. match overview. There timestamp of start and end of game are used to calculate game duration
@@ -395,6 +413,7 @@ public class IBoard implements TimerViewContainer
     public void stopGameDurationChrono() {
         Chronometer tvGameTime = (Chronometer) findViewById(R.id.sb_game_duration);
         if ( tvGameTime == null ) { return; }
+
         tvGameTime.stop();
         if ( Brand.supportsTimeout() ) {
             m_lStoppedAt = System.currentTimeMillis();
@@ -444,15 +463,25 @@ public class IBoard implements TimerViewContainer
                 if ( calculatedBase < 0 ) {
                     Log.w(TAG, "calculatedBase < 0 (" + calculatedBase + "). Using 0 ...");
                 }
-                tvGameTime.setBase(roundToNearest1000(calculatedBase));
+                long base = roundToNearest1000(calculatedBase);
+                tvGameTime.setBase(base);
                 if ( lPauseInProgress == 0 ) {
                     tvGameTime.start();
+                }
+                if ( castHelper != null ) {
+                    List<GameTiming> times = matchModel.getTimes();
+                    GameTiming last = ListUtil.getLast(times);
+                    long lDuration = System.currentTimeMillis() - last.getStart();
+                    long lDurationInSecs = DateUtil.convertToSeconds(lDuration);
+                    castSendChronosFunction(ICastHelper.GameChrono_update, lDurationInSecs, true, sFormat, DateUtil.convertDurationToHHMMSS_Colon(lDuration));
                 }
             }
 
             if ( m_gameTimerTickListener != null ) {
                 tvGameTime.setOnChronometerTickListener(m_gameTimerTickListener);
             }
+        } else {
+            castSendFunction(ICastHelper.GameChrono_hide + "()");
         }
     }
 
@@ -484,9 +513,32 @@ public class IBoard implements TimerViewContainer
             duration -= lPaused;
             duration = Math.max(duration, 0L);
         }
-        String sDuration = DateUtil.convertDurationToHHMMSS_Colon(duration);
+        String sDurationHH_MM_SS = DateUtil.convertDurationToHHMMSS_Colon(duration);
         tvGameTime.stop();
-        tvGameTime.setText(String.format(getGameDurationFormat(iGameNrZeroBased), sDuration));
+        String sFormat = getGameDurationFormat(iGameNrZeroBased);
+        tvGameTime.setText(String.format(sFormat, sDurationHH_MM_SS));
+
+        castSendChronosFunction(ICastHelper.GameChrono_update, DateUtil.convertToSeconds(duration), false, sFormat, sDurationHH_MM_SS);
+    }
+
+    private void castSendChronosFunction(String sFunc, long lDurationInSecs, boolean bStartTimer, String sFormat, String sDisplayValue)
+    {
+        boolean bShow = PreferenceValues.showMatchDuration(context, true);
+
+        //String sCharML = getOAString(context, R.string.oa_match_firstletter);
+        if ( sFunc.equals(ICastHelper.SetChrono_update) ) {
+            bShow = PreferenceValues.showLastGameDuration(context, true);
+            //sCharML = getOAString(context, R.string.oa_set_firstletter_GSM);
+        } else if (sFunc.equals(ICastHelper.GameChrono_update)) {
+            bShow = PreferenceValues.showLastGameDuration(context, true);
+            //sCharML = getOAString(context, R.string.oa_game_firstletter);
+        }
+
+        if ( bShow ) {
+            castSendFunction(sFunc + "(" + lDurationInSecs + "," + bStartTimer + ",'" + sFormat + "'" + ",'" + sDisplayValue + "'" + ")");
+        } else {
+            castSendFunction(sFunc.replaceFirst("update", "hide") + "()");
+        }
     }
 
     private String getGameDurationFormat(int iGameNrZeroBased) {
@@ -567,6 +619,10 @@ public class IBoard implements TimerViewContainer
             pbServer.setServer(doublesServe, nextServeSide, bIsHandout, sDisplayValueOverwrite, player);
         }
         castChangeViewTextMessage(iServeId, sDisplayValueOverwrite);
+        if ( player.equals(matchModel.getServer()) ) {
+            castSendFunction(ICastHelper.Server_update + "('" + matchModel.getServer() + "'" + ")");
+        }
+
 /*
         if ( matchModel.getDoubleServeSequence().equals(DoublesServeSequence.ABXY) ) {
             String sSSFilename = Util.filenameForAutomaticScreenshot(context, matchModel, showOnScreen, -1, -1, null);
@@ -612,7 +668,7 @@ public class IBoard implements TimerViewContainer
         if ( matchGameScores != null ) {
             matchGameScores.setVisibility(View.VISIBLE);
             MatchGameScoresView.ScoresToShow scoresToShow = matchGameScores.updateSetScoresToShow(bChange);
-            castSendFunction("GameScores.display(" + scoresToShow.equals(MatchGameScoresView.ScoresToShow.GamesWonPerSet) + ")");
+            castSendFunction(ICastHelper.GameScores_display + "(" + scoresToShow.equals(MatchGameScoresView.ScoresToShow.GamesWonPerSet) + ")");
             matchGameScores.update(matchModel, m_firstPlayerOnScreen);
 
             return scoresToShow;
@@ -637,7 +693,7 @@ public class IBoard implements TimerViewContainer
 
         // update casting screen
         boolean bShowGameScores = appearance.showGamesWon(true) == false;
-        castSendFunction("GameScores.display(" + bShowGameScores + ")");
+        castSendFunction(ICastHelper.GameScores_display + "(" + bShowGameScores + ")");
 
         MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
         if ( matchGameScores != null ) {
@@ -664,9 +720,12 @@ public class IBoard implements TimerViewContainer
 
         // update casting screen
         List<Map<Player, Integer>> endScoreOfPreviousGames = matchModel.getEndScoreOfPreviousGames();
+
+        Map<Player, Integer> setsWon = null;
         if ( Brand.isGameSetMatch() ) {
             GSMModel gsmModel = (GSMModel) matchModel;
             endScoreOfPreviousGames = gsmModel.getGamesWonPerSet();
+            setsWon = gsmModel.getSetsWon();
         }
         JSONArray lomPlayer2Score = new JSONArray();
         for(Map<Player, Integer> mEndScoreOfPrev: endScoreOfPreviousGames) {
@@ -678,11 +737,12 @@ public class IBoard implements TimerViewContainer
             loiGameDuration.put(time.getDurationMM());
         }
         boolean bSwapAAndB = Player.B.equals(m_firstPlayerOnScreen);
-        castSendFunction("GameScores.update(" + lomPlayer2Score.toString()
-                                           + "," + bSwapAAndB
-                                           + "," + loiGameDuration.toString()
-                                           + "," + matchModel.matchHasEnded()
-                                           + ")");
+        castSendFunction(ICastHelper.GameScores_update + "(" + lomPlayer2Score.toString()
+                                                          + "," + bSwapAAndB
+                                                          + "," + loiGameDuration.toString()
+                                                          + "," + matchModel.matchHasEnded()
+                                        + ((setsWon!=null)?("," + (new JSONObject(MapUtil.keysToString(setsWon))).toString() ) :"" )
+                                                          + ")");
 
         if ( (m_player2gamesWonId != null) && (matchModel != null) ) {
             Map<Player, Integer> gamesWon = matchModel.getGamesWon(false);
@@ -804,10 +864,10 @@ public class IBoard implements TimerViewContainer
                     setBackgroundColor(ssView, iBgColor);
                     setTextColor(ssView, iTxtColor);
 
-                    castSendChangeViewMessage(ssView.getId(), iTxtColor, "color");
+                    castSendChangeViewMessage(ssView.getId(), iTxtColor, ICastHelper.Property_Color);
                 } else {
-                    castSendChangeViewMessage(id, iBgColor, "background-color");
-                    castSendChangeViewMessage(id, iTxtColor, "color");
+                    castSendChangeViewMessage(id, iBgColor , ICastHelper.Property_BGColor);
+                    castSendChangeViewMessage(id, iTxtColor, ICastHelper.Property_Color);
                 }
             }
 
@@ -858,8 +918,8 @@ public class IBoard implements TimerViewContainer
                     v.setBackgroundColorServer(mColors.get(ColorPrefs.ColorTarget.serveButtonBackgroundColor), player);
                     v.setTextColorServer      (mColors.get(ColorPrefs.ColorTarget.serveButtonTextColor), player);
 
-                    castSendChangeViewMessage(id, pbBgColor , "background-color");
-                    castSendChangeViewMessage(id, pbTxtColor, "color");
+                    castSendChangeViewMessage(id, pbBgColor , ICastHelper.Property_BGColor);
+                    castSendChangeViewMessage(id, pbTxtColor, ICastHelper.Property_Color);
                 }
             }
 
@@ -982,11 +1042,12 @@ public class IBoard implements TimerViewContainer
         }
 
         String sField = matchModel.getEventDivision();
-        if ( false && ViewUtil.isWearable(context) && Brand.isRacketlon() ) { // disabled to have Racketlon app be 'approved' for wearable
+        if ( /*false && ViewUtil.isWearable(context) &&*/ Brand.isRacketlon() ) { // disabled to have Racketlon app be 'approved' for wearable
             // for racketlon show discipline
             RacketlonModel rm = (RacketlonModel) this.matchModel;
             Sport sportForSet = rm.getSportForSetInProgress();
             sField = String.valueOf(sportForSet); // TODO: internationalize?
+            castSendFunction(ICastHelper.Racketlon_updateDiscipline + "(\"" + sField + "\")");
         }
         m_tvFieldDivision.setText(sField);
         if ( StringUtil.isNotEmpty(sField) ) {
@@ -1141,13 +1202,13 @@ public class IBoard implements TimerViewContainer
         int iNrOnCast = (p.ordinal() + m_firstPlayerOnScreen.ordinal()) % 2 + 1;
         if ( countryPref.contains(ShowCountryAs.FlagNextToNameChromeCast) && (bHideBecauseSameCountry == false) ) {
             String sFlagURL = PreferenceValues.getFlagURL(sCountry, context);
-            castSendChangeViewMessage("img_flag" + iNrOnCast, String.format("url(%s)", sFlagURL), "background-image");
+            castSendChangeViewMessage("img_flag" + iNrOnCast, String.format("url(%s)", sFlagURL), ICastHelper.Property_BGImage);
         } else {
-            castSendChangeViewMessage("img_flag" + iNrOnCast, String.format("url(%s)", ""      ), "background-image");
+            castSendChangeViewMessage("img_flag" + iNrOnCast, String.format("url(%s)", ""      ), ICastHelper.Property_BGImage);
         }
 
         boolean bSwapAAndB = Player.B.equals(m_firstPlayerOnScreen);
-        castSendFunction("Country.update('" + p + "','" + (sCountry!=null?sCountry:"") + "'," + bSwapAAndB + ")");
+        castSendFunction(ICastHelper.Country_update + "('" + p + "','" + (sCountry!=null?sCountry:"") + "'," + bSwapAAndB + ")");
     }
     public void updatePlayerAvatar(Player p, String sAvatar) {
         EnumSet<ShowAvatarOn> avatarPref = PreferenceValues.showAvatarOn(context);
@@ -1166,15 +1227,14 @@ public class IBoard implements TimerViewContainer
         // send message to update cast screen
         int iNrOnCast = (p.ordinal() + m_firstPlayerOnScreen.ordinal()) % 2 + 1;
         if ( avatarPref.contains(ShowAvatarOn.OnChromeCast) ) {
-            castSendChangeViewMessage("img_avatar" + iNrOnCast, String.format("url(%s)", sAvatar), "background-image");
+            castSendChangeViewMessage("img_avatar" + iNrOnCast, String.format("url(%s)", sAvatar), ICastHelper.Property_BGImage);
         } else {
-            castSendChangeViewMessage("img_avatar" + iNrOnCast, String.format("url(%s)", ""     ), "background-image");
+            castSendChangeViewMessage("img_avatar" + iNrOnCast, String.format("url(%s)", ""     ), ICastHelper.Property_BGImage);
         }
 
         boolean bSwapAAndB = Player.B.equals(m_firstPlayerOnScreen);
-        castSendFunction("Avatar.update('" + p + "','" + (sAvatar!=null?sAvatar:"") + "'," + bSwapAAndB + ")");
+        castSendFunction(ICastHelper.Avatar_update + "('" + p + "','" + (sAvatar!=null?sAvatar:"") + "'," + bSwapAAndB + ")");
     }
-
     public void initPerPlayerColors(Player p, String sColor, String sColorPrev) {
         EnumSet<ShowPlayerColorOn> colorOns = PreferenceValues.showPlayerColorOn(context);
 
@@ -1215,7 +1275,7 @@ public class IBoard implements TimerViewContainer
                 if ( iPlayerColor == null ) {
                     //setBackgroundColor(view, iScoreButtonBgColor);
                     setBackgroundAndBorder(view, iScoreButtonBgColor, iScoreButtonBgColor);
-                    castSendChangeViewMessage(view.getId(), iScoreButtonBgColor, "border-color");
+                    castSendChangeViewMessage(view.getId(), iScoreButtonBgColor, ICastHelper.Property_BorderColor);
                 } else {
                     if ( colorOns.contains(ShowPlayerColorOn.ScoreButton) ) {
                         setBackgroundAndBorder(view, iPlayerColor       , iPlayerColor);
@@ -1255,14 +1315,14 @@ public class IBoard implements TimerViewContainer
             ((PlayersButton)view).setTextColor(iTxtColor);
         }
 
-        castSendChangeViewMessage(view.getId(), iTxtColor, "color");
+        castSendChangeViewMessage(view.getId(), iTxtColor, ICastHelper.Property_Color);
     }
     private void setBackgroundColor(View view, Integer iBgColor) {
         //Log.d(TAG, "change bgcolor of " + view + " = " + iBgColor);
         //ColorUtil.setBackground(view, iBgColor);
         setBackgroundAndBorder(view, iBgColor, mViewId2BorderColor.get(view.getId()));
 
-        castSendChangeViewMessage(view.getId(), iBgColor, "background-color");
+        castSendChangeViewMessage(view.getId(), iBgColor, ICastHelper.Property_BGColor);
     }
 
     private Map<Integer, Integer> mViewId2BorderColor = new HashMap<>();
@@ -1286,8 +1346,8 @@ public class IBoard implements TimerViewContainer
         view.setBackground(gd);
         view.invalidate();
 
-        castSendChangeViewMessage(view.getId(), iBgColor    , "background-color");
-        castSendChangeViewMessage(view.getId(), iBorderColor, "border-color"); // TODO: thickness
+        castSendChangeViewMessage(view.getId(), iBgColor    , ICastHelper.Property_BGColor);
+        castSendChangeViewMessage(view.getId(), iBorderColor, ICastHelper.Property_BorderColor); // TODO: thickness
     }
     /** invoked several times for different elements */
     private void initPerPlayerViewWithColors(Player p, Map<Player, Integer> mPlayer2ViewId, Integer iBgColor, Integer iTxtColor, ColorPrefs.ColorTarget bgColorDefKey, ColorPrefs.ColorTarget txtColorDefKey) {
@@ -1300,8 +1360,8 @@ public class IBoard implements TimerViewContainer
         Integer id = mPlayer2ViewId.get(p);
         if ( (id == null) || (iBgColor == null) || (iTxtColor == null) ) { return; }
 
-        castSendChangeViewMessage(id, iBgColor , "background-color");
-        castSendChangeViewMessage(id, iTxtColor, "color");
+        castSendChangeViewMessage(id, iBgColor , ICastHelper.Property_BGColor);
+        castSendChangeViewMessage(id, iTxtColor, ICastHelper.Property_Color);
 
         View view = findViewById(id);
         if (view == null) { return; }
@@ -1413,7 +1473,7 @@ public class IBoard implements TimerViewContainer
             }
         }
         if ( bVisible ) {
-            castSendChangeViewMessage("gameBallMessage", sMsg, "text");
+            castSendChangeViewMessage("gameBallMessage", sMsg, ICastHelper.Property_Text);
         }
 
         EnumSet<ShowPlayerColorOn> colorOns = PreferenceValues.showPlayerColorOn(context);
@@ -1425,14 +1485,14 @@ public class IBoard implements TimerViewContainer
                     int iBgColor  = Color.parseColor(sColor);
                     int iTxtColor = ColorUtil.getBlackOrWhiteFor(sColor);
                     gameBallMessage.setColors(iBgColor, iTxtColor);
-                    castSendChangeViewMessage("gameBallMessage", iTxtColor, "color");
-                    castSendChangeViewMessage("gameBallMessage", iBgColor , "background-color");
+                    castSendChangeViewMessage("gameBallMessage", iTxtColor, ICastHelper.Property_Color);
+                    castSendChangeViewMessage("gameBallMessage", iBgColor , ICastHelper.Property_BGColor);
                 }
             }
         }
 
         gameBallMessage.setHidden(bVisible == false);
-        castSendChangeViewMessage("gameBallMessage", bVisible?"block":"none", "display");
+        castSendChangeViewMessage("gameBallMessage", bVisible?"block":"none", ICastHelper.Property_Display);
         return bVisible;
     }
 
@@ -1493,11 +1553,11 @@ public class IBoard implements TimerViewContainer
         }
         if ( bHide == false ) {
             // cast should take care of hiding the message itself
-            castSendFunction("Call.showDecision(" + "'" + sMsg + "'"
-                                               + ","       + fmIdx
-                                               + "," + "'" + call + "'"
-                                               + ","       + call.isConduct()
-                                               + ")");
+            castSendFunction(ICastHelper.Call_showDecision + "(" + "'" + sMsg + "'"
+                                                           + ","       + fmIdx
+                                                           + "," + "'" + call + "'"
+                                                           + ","       + call.isConduct()
+                                                           + ")");
         }
 
         decisionMessages[fmIdx].setHidden(bHide);

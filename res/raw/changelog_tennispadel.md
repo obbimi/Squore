@@ -1,3 +1,8 @@
+## 4.39 (feb 2021)
+
+- Portuguese translation. Thanks to Gonçalo Afonso.
+- Allow to play games with a golden point: decisive point when 40-40 (no AD)
+
 ## 4.38 (nov 2020)
 
 - Re-use chosen colors for players in subsequent matches ( Settings > Appearance > Colors )

@@ -3303,7 +3303,7 @@ public abstract class Model implements Serializable
             players = calculateIsPossibleGameVictoryFor(when, getScoreOfGameInProgress(), bFromIsMatchBallFrom);
             setGameVictoryFor(when, players, bForUndo);
         } else {
-          Log.d(TAG, "[_isPossibleGameVictoryFor] " + when + ": Taken from cache " + getPlayersAsList(players) );
+            //Log.d(TAG, "[_isPossibleGameVictoryFor] " + when + ": Taken from cache " + getPlayersAsList(players) );
         }
         return players;
     }

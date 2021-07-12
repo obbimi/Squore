@@ -99,7 +99,7 @@ public class GameTiming implements Serializable
             return l;
         }
     */
-    long getStart() {
+    public long getStart() {
         return this.start;
     }
     long getEnd() {

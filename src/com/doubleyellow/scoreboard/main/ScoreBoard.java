@@ -1145,8 +1145,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         initCasting(); // also onresume!!
         setModelForCast(matchModel);
 
-        Timer.addTimerView(true, getCastTimerView());
-
         initScoreBoard(PersistHelper.getLastMatchFile(this));
 
         initPlayerButtons();
@@ -1219,7 +1217,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( PreferenceValues.isCastRestartRequired() ) {
             onActivityStop_Cast();
             castHelper         = null;
-            cdtInitCastDelayed = null;
+            //cdtInitCastDelayed = null;
             initCasting();
         }
 
@@ -6769,9 +6767,6 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
     private com.doubleyellow.scoreboard.cast.ICastHelper castHelper = null;
     private void initCasting() {
-        if ( initCastDelayed() ) {
-            return;
-        }
         createCastHelper();
     }
 
@@ -6779,16 +6774,20 @@ touch -t 01030000 LAST.sb
         if ( castHelper == null ) {
             Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(this);
             String sResInfo = remoteDisplayAppId2Info.getValue();
-            if ( sResInfo.contains("REMOTE_DISPLAY") || sResInfo.matches(".*Presentation\\s*Screen.*") ) { // e.g com.doubleyellow.scoreboard:string/REMOTE_DISPLAY_APP_ID_brand_squore
+            if ( (sResInfo.contains("REMOTE_DISPLAY") || sResInfo.matches(".*Presentation\\s*Screen.*")) ) { // e.g com.doubleyellow.scoreboard:string/REMOTE_DISPLAY_APP_ID_brand_squore
                 castHelper = new com.doubleyellow.scoreboard.cast.CastHelper(); // old
             } else {
                 // R.string.CUSTOM_RECEIVER_xxxx
                 castHelper = new CastHelper(); // new
             }
+            castHelper.initCasting(this);
             Log.d(TAG, "Cast helper created " + remoteDisplayAppId2Info);
         }
         if ( (iBoard != null) && (castHelper instanceof CastHelper) ) {
             iBoard.setCastHelper( (CastHelper) castHelper);
+        }
+        if ( matchModel != null ) {
+            castHelper.setModelForCast(matchModel);
         }
     }
 
@@ -6796,9 +6795,6 @@ touch -t 01030000 LAST.sb
         // TODO: present choice: e.g for layout, or simply show a message
     }
     private void initCastMenu() {
-        if ( initCastDelayed() ) {
-            return;
-        }
         if ( castHelper == null ) {
             Log.w(TAG, "initCastMenu SKIPPED");
             return;
@@ -6808,14 +6804,14 @@ touch -t 01030000 LAST.sb
         PreferenceValues.doesUserHavePermissionToCast(this, "Any device", true);
     }
     private void setModelForCast(Model matchModel) {
-        if ( castHelper == null || matchModel == null ) { return; }
+        if ( castHelper == null || matchModel == null ) {
+            Log.w(TAG, "[setModelForCast] castHelper:" + castHelper + ", matchModel:" + matchModel);
+            return;
+        }
         Log.d(TAG, "setModelForCast");
         castHelper.setModelForCast(matchModel);
     }
-    private TimerView getCastTimerView() {
-        if ( castHelper == null ) { return null; }
-        return castHelper.getTimerView();
-    }
+
     private void castColors(Map<ColorPrefs.ColorTarget, Integer> mColors) {
         if ( castHelper == null ) { return; }
         castHelper.castColors(mColors);
@@ -6828,9 +6824,6 @@ touch -t 01030000 LAST.sb
     }
 
     private void onActivityStart_Cast() {
-        if ( initCastDelayed() ) {
-            return;
-        }
         if ( castHelper == null ) { return; }
         castHelper.onActivityStart_Cast();
     }
@@ -6839,9 +6832,6 @@ touch -t 01030000 LAST.sb
         castHelper.onActivityStop_Cast();
     }
     private void onActivityResume_Cast() {
-        if ( initCastDelayed() ) {
-            return;
-        }
         if ( castHelper == null || matchModel == null ) {
             Log.w(TAG, String.format("onActivityResume_Cast SKIPPED (helper=%s, model=%s)", castHelper, matchModel));
             return;
@@ -6854,42 +6844,6 @@ touch -t 01030000 LAST.sb
         castHelper.onActivityPause_Cast();
     }
 
-    private CountDownTimer cdtInitCastDelayed       = null; // delayed mainly to wait for webconfig being available
-    private int            iInitCastDelayedRunCount = 2;
-    /** returns true if initialization was delayed */
-    private boolean initCastDelayed() {
-        //if ( true ) { return true; }
-        if ( true ) { return false; } /* delayed initialization was tried to solve issue with cast button only appearing after at least on rotate. But it did not help */
-
-        if ( cdtInitCastDelayed == null ) {
-            cdtInitCastDelayed = new CountDownTimer(30000, 500) {
-                @Override public void onTick(long millisUntilFinished) {
-                    if ( Brand.hasWebConfig() && (mainMenu != null) ) {
-                        createCastHelper();
-                        castHelper.initCasting(ScoreBoard.this);
-                        castHelper.initCastMenu(ScoreBoard.this, mainMenu);
-                        castHelper.onActivityStart_Cast();
-                        castHelper.onActivityResume_Cast();
-                        castHelper.setModelForCast(matchModel);
-                        Timer.addTimerView(true, getCastTimerView());
-                        this.cancel();
-                        iInitCastDelayedRunCount--;
-                        cdtInitCastDelayed = null;
-                        if ( iInitCastDelayedRunCount > 0 ) {
-                            initCastDelayed();
-                        }
-                    } else {
-                        Log.d(TAG, "Casting not yet initialized. No webconfig or menu");
-                    }
-                }
-                @Override public void onFinish() {
-                    iInitCastDelayedRunCount--;
-                }
-            };
-            cdtInitCastDelayed.start();
-        }
-        return iInitCastDelayedRunCount > 0;
-    }
     // ----------------------------------------------------
     // --------------------- speech -----------------------
     // ----------------------------------------------------

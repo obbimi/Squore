@@ -107,24 +107,33 @@ public class CastHelper implements ICastHelper
 
     private static String APP_ID = null;
 
+    public CastHelper() {
+        Log.w(TAG, "Old way of casting... discouraged by Google");
+    }
+
     @Override public void initCasting(Activity activity) {
         if (NOT_SUPPORTED_IN_SDK) { return; }
 
         Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(activity);
-        APP_ID = remoteDisplayAppId2Info.getKey();
+        String sNewAppId = remoteDisplayAppId2Info.getKey();
+        if ( (APP_ID != null) && APP_ID.equals(sNewAppId) ) {
+            Log.w(TAG, "Changing of APP_ID: from  " + APP_ID + " to " + sNewAppId);
+        }
+        APP_ID = sNewAppId;
 
         mediaRouterCallback = new MediaRouterCallback(activity);
 
         mediaRouter = MediaRouter.getInstance(activity);
+        String category = CastMediaControlIntent.categoryForCast(CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID); // com.google.android.gms.cast.CATEGORY_CAST/CC1AD845///ALLOW_IPV6
+        //       category = CastMediaControlIntent.categoryForCast(APP_ID);
         mediaRouteSelector = new MediaRouteSelector.Builder()
-                .addControlCategory(CastMediaControlIntent.categoryForCast(CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID))
+                .addControlCategory(category)
                 .build();
     }
 
     @Override public void initCastMenu(Activity activity, Menu menu) {
         if (NOT_SUPPORTED_IN_SDK) { return; }
 
-        Log.w(TAG, "Old way of casting... discouraged by Google");
         MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
         mediaRouteMenuItem.setVisible(true);
         mediaRouteMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -243,7 +252,7 @@ public class CastHelper implements ICastHelper
 
             @Override public void onRemoteDisplaySessionError(Status errorReason) {
                 //initError();
-                Log.d(TAG, "onRemoteDisplaySessionError " + errorReason);
+                Log.w(TAG, "onRemoteDisplaySessionError " + errorReason); // 20210628: Status{statusCode=unknown status code: 2202, resolution=null}
             }
 
             @Override public void onServiceCreated(CastRemoteDisplayLocalService castRemoteDisplayLocalService) {
@@ -253,6 +262,13 @@ public class CastHelper implements ICastHelper
             @Override public void onRemoteDisplaySessionEnded(CastRemoteDisplayLocalService castRemoteDisplayLocalService) {
                 Log.d(TAG, "onRemoteDisplaySessionEnded " + castRemoteDisplayLocalService);
             }
+/*
+
+            // com.google.android.gms:play-services-cast-framework:20.0.0
+            public void zza() {
+                Log.d(TAG, "zza ??");
+            }
+*/
         };
 
         try {

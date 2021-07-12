@@ -38,6 +38,7 @@ import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.timer.Timer;
 import com.doubleyellow.scoreboard.timer.TimerView;
 
 import com.doubleyellow.scoreboard.vico.IBoard;
@@ -82,16 +83,22 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 {
     private static final String TAG = "SB." + CastHelper.class.getSimpleName();
 
+    private static final String URN_X_CAST = "urn:x-cast:";
+
     private Context     m_context      = null;
     private CastContext m_castContext  = null; /* has nothing to do with android.content.Context */
     /** there does NOT need to be a session already for the cast button to show up */
     private CastSession m_castSession  = null;
-    private String      m_sPackageName = null; /* serves as Namespace */
+    public static String m_sMessageNamespace = null; /* serves as Namespace to exchange messages with cast receiver */
+    public static String m_sCastingToAppId   = null;
     private MenuItem    m_mediaRouteMenuItem = null;
 
     @Override public void initCasting(Activity activity) {
         m_context      = activity.getApplicationContext();
-        m_sPackageName = m_context.getPackageName();
+        if ( m_sMessageNamespace == null ) {
+            m_sMessageNamespace = m_context.getPackageName();
+        }
+        iConstructCastMessagesWhileNotEvenCasting = PreferenceValues.isBrandTesting(m_context)?1:0;
 
         createCastContext();
         setUpListeners(m_castContext);
@@ -103,14 +110,14 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         if ( m_castContext == null ) {
             try {
                 m_castContext = CastContext.getSharedInstance(m_context); // requires com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME to be specified in Manifest.xml
-                Log.d(TAG, "CastContext created: " + m_castContext);
+                Log.d(TAG, "[createCastContext] created: " + m_castContext);
 
                 // Initially the ReceiverAppId is set via CastOptionsProvider
                 // But fortunately we can change the ID after e.g. user changed different 'cast target' from preferences
                 Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(m_context);
-                Log.d(TAG, "remoteDisplayAppId2Info : " + remoteDisplayAppId2Info);
+                Log.d(TAG, "[createCastContext] remoteDisplayAppId2Info : " + remoteDisplayAppId2Info);
                 CastOptions castOptions = m_castContext.getCastOptions();
-                castOptions.setReceiverApplicationId(remoteDisplayAppId2Info.getKey());
+                castOptions.setReceiverApplicationId(remoteDisplayAppId2Info.getKey()); // not available for com.google.android.gms:play-services-cast-framework:20.0.0
             } catch (Exception e) {
                 Log.w(TAG, "No casting ..." + e.getMessage());
                 //e.printStackTrace(); // com.google.android.gms.dynamite.DynamiteModule$LoadingException: No acceptable module found. Local version is 0 and remote version is 0 (Samsung S4 with custom ROM 8.1)
@@ -123,6 +130,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         int result = googleAPI.isGooglePlayServicesAvailable(m_context);
         if ( result != ConnectionResult.SUCCESS ) {
             //Google Play Services app is not available or version is not up to date. Error the error condition here
+            Log.w(TAG, "[checkPlayServices] isGooglePlayServicesAvailable != 0 : " + result);
             return false;
         }
         return true;
@@ -130,9 +138,9 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     private static int m_iInvalidatesLeft = 0;
     @Override public void initCastMenu(Activity activity, Menu menu) {
         m_mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(activity.getApplicationContext(), menu, R.id.media_route_menu_item);
-        Log.d(TAG, String.format("initCastMenu: %s (%s)", m_mediaRouteMenuItem, m_mediaRouteMenuItem.isVisible()));
+        Log.d(TAG, String.format("initCastMenu: %s (visible: %s)", m_mediaRouteMenuItem, m_mediaRouteMenuItem.isVisible()));
 
-        if ( false ) {
+        if ( true ) {
             // just testing some stuff
             MediaRouteActionProvider actionProvider = (MediaRouteActionProvider) MenuItemCompat.getActionProvider(m_mediaRouteMenuItem);
             Log.d(TAG, String.format("initCastMenu actionProvider: %s ", actionProvider));
@@ -145,7 +153,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
         if ( m_iInvalidatesLeft > 0 ) {
             m_iInvalidatesLeft--;
-            activity.invalidateOptionsMenu(); // NOT a fix ... for castbutton only show up after rotation
+            activity.invalidateOptionsMenu(); // NOT a fix ... for castbutton only showing up after rotation
         }
 /*
         MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
@@ -184,24 +192,28 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             SessionManager sessionManager = m_castContext.getSessionManager();
             m_castSession = sessionManager.getCurrentCastSession();
             Log.d(TAG, "Cast session from cast context: " + m_castSession); // returns null of user has not started a session yet
-
-            updateViewWithColorAndScore(m_context, m_matchModel);
         }
+        updateViewWithColorAndScore(m_context, m_matchModel);
     }
 
     private void setUpListeners(CastContext castContext) {
-        if ( castContext == null ) { return; }
+        if ( castContext == null ) {
+            Log.w(TAG, "[setUpListeners] Castcontext = null. Not setting up cast listeners");
+            return;
+        }
+        Log.d(TAG, "[setUpListeners] setting up cast listener on castContext :" + castContext);
         castContext.addCastStateListener(m_castStateListener);
 
         SessionManager sessionManager = castContext.getSessionManager();
-        sessionManager.addSessionManagerListener(m_sessionManagerListener, CastSession.class);
+        sessionManager.addSessionManagerListener(m_sessionManagerListener, CastSession.class); // must be called from the main thread
     }
     private void removeListeners(CastContext castContext) {
         if ( castContext == null ) { return; }
+        Log.d(TAG, "[removeListeners] removing cast listener from castContext : " + castContext);
         castContext.removeCastStateListener(m_castStateListener);
 
         SessionManager sessionManager = castContext.getSessionManager();
-        sessionManager.removeSessionManagerListener(m_sessionManagerListener, CastSession.class);
+        sessionManager.removeSessionManagerListener(m_sessionManagerListener, CastSession.class); // must be called from the main thread
     }
 
     /** Has no real functionality, just some logging */
@@ -212,24 +224,28 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
                 case CastState.NO_DEVICES_AVAILABLE: break;
                 case CastState.NOT_CONNECTED: {
                     dumpMessages();
+                    Timer.removeTimerView(true, getTimerView());
                     break;
                 }
                 case CastState.CONNECTING:
                     break;
                 case CastState.CONNECTED : {
                     // TODO: send match status via m_castSession
+                    Timer.addTimerView(true, getTimerView());
                     break;
                 }
                 default:
                     sState = iStatus + "?";
                     break;
             }
-            Log.d(TAG, "onCastStateChanged: " + sState);
+            Log.d(TAG, "onCastStateChanged: " + sState); // CONNECTING, CONNECTED, NOT_CONNECTED
         }
     };
 
+    private int iConstructCastMessagesWhileNotEvenCasting = 0;
+
     @Override public boolean isCasting() {
-        return (m_castSession != null);
+        return (m_castSession != null) || ( iConstructCastMessagesWhileNotEvenCasting != 0 ); // temporary to see if we an only LOG message being send to cast without actually being in a cast session
     }
 
     private Model m_matchModel = null;
@@ -238,6 +254,8 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
       //Log.d(TAG, "New model for cast passed in : " + matchModel);
         if ( (matchModel != m_matchModel) && (matchModel != null)) {
             m_matchModel = matchModel;
+        } else {
+            Log.w(TAG, "[setModelForCast] not setting model : " + matchModel );
         }
         updateViewWithColorAndScore(m_context, m_matchModel);
     }
@@ -295,7 +313,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             //Log.d(TAG, "Waiting ... " + millisUntilFinished);
         }
         @Override public void onFinish() {
-            Log.d(TAG, "Posting ... ");
+            Log.d(TAG, "Posting ... with name space " + m_sMessageNamespace + " to device id " + m_sCastingToAppId);
             synchronized (m_lSendChangeViewDelayed) {
                 sendArrayAsJsonMessage(m_lSendChangeViewDelayed);
                 m_lSendChangeViewDelayed.clear();
@@ -331,7 +349,14 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             } else {
                 Log.w(TAG, "Not adding same message again :" + sMsg);
             }
-            m_castSession.sendMessage("urn:x-cast:" + m_sPackageName, sMsg);
+            if ( iConstructCastMessagesWhileNotEvenCasting != 0 ) {
+                iConstructCastMessagesWhileNotEvenCasting++;
+                if ( iConstructCastMessagesWhileNotEvenCasting % 5 == 1 ) {
+                    Log.w(TAG, "NOT CASTING JUST CONSTRUCTING MESSAGES ANYWAY");
+                }
+            } else {
+                m_castSession.sendMessage(URN_X_CAST + m_sMessageNamespace, sMsg);
+            }
             return true;
         } catch (Exception e) {
             // seen IllegalStateException crashing the app reported in PlayStore
@@ -373,7 +398,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             @Override public void setWarnMessage(String s) { }
             @Override public void setPausedMessage(String s) { }
             @Override public void cancel() {
-                sendFunction("CountDownTimer.cancel()");
+                sendFunction(CountDownTimer_cancel + "()");
                 bIsShowing = false;
             }
             @Override public void timeIsUp() {
@@ -382,7 +407,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             }
             @Override public void show() {
                 if ( iStartAt > 0 ) {
-                    sendFunction("CountDownTimer.show(" + this.iStartAt + ")");
+                    sendFunction(CountDownTimer_show + "(" + this.iStartAt + ")");
                     bIsShowing = true;
                 }
             }
@@ -420,15 +445,17 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
     /** Listener is to get hold of castSession. Cast session is used for sending messages */
     private SessionManagerListener<CastSession> m_sessionManagerListener = new SessionManagerListener<CastSession>() {
+        private static final String TAG = "SB.SessionMngListener";
         @Override public void onSessionStarted(CastSession session, String s) {
-            Log.d(TAG, "Cast session started: " + session + " " + s);
+            Log.d(TAG, "[onSessionStarted] " + session + " " + s);
             m_castSession = session;
+            iConstructCastMessagesWhileNotEvenCasting = 0;
 
             updateViewWithColorAndScore(m_context, m_matchModel);
         }
 
         @Override public void onSessionResumed(CastSession session, boolean b) {
-            Log.d(TAG, "Cast session resumed " + session + " " + b);
+            Log.d(TAG, "[onSessionResumed] " + session + " " + b);
             m_castSession = session;
 
             updateViewWithColorAndScore(m_context, m_matchModel);
@@ -436,29 +463,32 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
         @Override public void onSessionSuspended(CastSession session, int i) { }
         @Override public void onSessionStarting(CastSession session) {
-            Log.d(TAG, "Cast session starting...");
+            Log.d(TAG, "[onSessionStarting] Cast session starting..." + session);
         }
         @Override public void onSessionResuming(CastSession session, String s) { }
         @Override public void onSessionEnding(CastSession session) { }
         @Override public void onSessionEnded(CastSession session, int i) {
+            iConstructCastMessagesWhileNotEvenCasting = PreferenceValues.isBrandTesting(m_context) ? 1 : 0;
             cleanup();
         }
         @Override public void onSessionStartFailed(CastSession session, int i) {
             Log.w(TAG, "Cast session failed to start: " + i);
         }
         @Override public void onSessionResumeFailed(CastSession session, int i) {
-            Log.w(TAG, "Cast session failed to resume: " + i);
+            Log.w(TAG, "[onSessionResumeFailed] Cast session: " + session + ", i=" + i); // i=2005
         }
     };
 
     private void updateViewWithColorAndScore(Context context, Model matchModel) {
         if ( isCasting() == false || iBoard == null || matchModel == null ) {
-            Log.w(TAG, "Not updating (isCasting=" + isCasting() + ", iBoard=" + iBoard + ", model=" + matchModel + ")");
+            Log.w(TAG, "[updateViewWithColorAndScore] Not updating (isCasting=" + isCasting() + ", iBoard=" + iBoard + ", model=" + matchModel + ")");
             return;
         }
-        m_castSession.addCastListener(new CastListener());
+        CastSession castSession = m_castSession;
+        if ( castSession != null ) {
+        castSession.addCastListener(new CastListener());
         try {
-            m_castSession.setMessageReceivedCallbacks("urn:x-cast:" + m_sPackageName, new Cast.MessageReceivedCallback() {
+            castSession.setMessageReceivedCallbacks(URN_X_CAST + m_sMessageNamespace, new Cast.MessageReceivedCallback() {
                 @Override public void onMessageReceived(CastDevice castDevice, String sNamespace, String sMsg) {
                     Log.d(TAG, String.format("received message back from %s [%s] : %s", castDevice.getFriendlyName(), sNamespace, sMsg));
 
@@ -479,14 +509,14 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
 
         try {
-            CastDevice castDevice = m_castSession.getCastDevice();
+            CastDevice castDevice = castSession.getCastDevice();
             if ( castDevice != null ) {
                 String sFriendlyName = castDevice.getFriendlyName();
                 Log.d(TAG, "castDevice.getFriendlyName(): " + sFriendlyName); // e.g. Living
             }
-            Cast.ApplicationConnectionResult applicationConnectionResult = m_castSession.getApplicationConnectionResult();
+            Cast.ApplicationConnectionResult applicationConnectionResult = castSession.getApplicationConnectionResult();
 
-            ApplicationMetadata applicationMetadata = m_castSession.getApplicationMetadata();
+            ApplicationMetadata applicationMetadata = castSession.getApplicationMetadata();
             if ( applicationMetadata != null ) {
                 List<String> supportedNamespaces = applicationMetadata.getSupportedNamespaces(); // the namespaces added by the receiver using m_crContext.addCustomMessageListener(namespace)
                 Log.d(TAG, "Supported namespaces: " + ListUtil.join(supportedNamespaces, "\n") );
@@ -502,7 +532,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
                 // ]
             }
 
-            RemoteMediaClient remoteMediaClient = m_castSession.getRemoteMediaClient();
+            RemoteMediaClient remoteMediaClient = castSession.getRemoteMediaClient();
             if ( remoteMediaClient != null ) {
                 Log.d(TAG, "remoteMediaClient.getNamespace(): " + remoteMediaClient.getNamespace()); // urn:x-cast:com.google.cast.media
 /*
@@ -511,6 +541,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
         }
 
         //GoogleCast.EventEmitter.addListener();
@@ -530,8 +561,9 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         iBoard.updateGameBallMessage("PS:updateViewWithColorAndScore");
         if ( Brand.isGameSetMatch() ) {
             MatchGameScoresView.ScoresToShow scoresToShow = iBoard.updateSetScoresToShow(false);
-            sendFunction("GameScores.display(" + scoresToShow.equals(MatchGameScoresView.ScoresToShow.GamesWonPerSet) + ")");
+            sendFunction(GameScores_display + "(" + scoresToShow.equals(MatchGameScoresView.ScoresToShow.GamesWonPerSet) + ")");
         }
+        iBoard.updateGameAndMatchDurationChronos();
 
         for(Player p: Model.getPlayers()) {
             iBoard.updateScore        (p, matchModel.getScore(p));
@@ -552,7 +584,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             sSponsorURL = URLFeedTask.prefixWithBaseIfRequired(sSponsorURL);
             sSponsorURL = String.format(sSponsorURL, Brand.brand);
         }
-        sendFunction(String.format("LogoSponsor.setSponsor('%s')", sSponsorURL));
+        sendFunction(String.format(LogoSponsor_setSponsor + "('%s')", sSponsorURL));
     }
 
     private void updateLogo(Context context) {
@@ -561,7 +593,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             sLogoURL = URLFeedTask.prefixWithBaseIfRequired(sLogoURL);
             sLogoURL = String.format(sLogoURL, Brand.brand);
         }
-        sendFunction(String.format("LogoSponsor.setLogo('%s')", sLogoURL));
+        sendFunction(String.format(LogoSponsor_setLogo + "('%s')", sLogoURL));
     }
 
     /** Not invoked very consistently... it seems */

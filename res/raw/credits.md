@@ -1,15 +1,16 @@
 ## Translations
 
-The following people were so kind to volunteer to translate Squore into their preferred language:
+The following people were so kind to volunteer to translate the app into their preferred language:
 
 - Sébastien Lepley (French)
 - Filip Hurta (Czech)
 - Lior Lotem (Italian)
 - Salvador Martinez (Spanish/Español)
+- Gonçalo Afonso (Portuguese)
 
 ## User Help and Suggestions
 
-The following users of Squore have made valuable suggestions/help:
+The following users of have made valuable suggestions:
 
 - Marius Flage
 - Saqib Meer

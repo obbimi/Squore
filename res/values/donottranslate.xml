@@ -186,16 +186,24 @@
 
          https://youtu.be/g-MdVxoXGkg
     -->
-    <!-- https://developers.google.com/cast/docs/registration#RegisterDevice (To enable a newly bought Chrome Cast to be used for development ) -->
+    <!-- https://cast.google.com/publish (To enable a newly bought Chrome Cast to be used for development ) -->
     <string name="REMOTE_DISPLAY_APP_ID_brand_squore">35BA3487</string>
-    <string name="REMOTE_DISPLAY_APP_ID_brand_racketlon">590DBED9</string>
-    <string name="REMOTE_DISPLAY_APP_ID_brand_tabletennis">DD0036E8</string>
+<!--    <string name="REMOTE_DISPLAY_APP_ID_brand_racketlon">590DBED9</string>-->
+<!--    <string name="REMOTE_DISPLAY_APP_ID_brand_tabletennis">DD0036E8</string> Accidentally Unregistered-->
 <!--    <string name="REMOTE_DISPLAY_APP_ID_brand_courtcare">BF2E4D1B</string>-->
     <!--<string name="REMOTE_DISPLAY_APP_ID_brand_uniofnotthingham">E6F9858F</string> Accidentally Unregistered-->
 
     <!-- https://developers.google.com/cast/docs/debugging -->
-    <string name="CUSTOM_RECEIVER_APP_ID_brand_shared">55B51DEF</string> <!-- new: https://obbimi.github.io/Squore/cast/index.html -->
-    <string name="CUSTOM_RECEIVER_APP_ID_brand_test">775E79BC</string>   <!-- new: https://squore.double-yellow.be/cast/test -->
+    <!-- https://squore.double-yellow.be/config.json -->
+<!--    <string name="CUSTOM_RECEIVER_APP_ID_brand_shared">XX</string> &lt;!&ndash; new: https://obbimi.github.io/Squore/cast/index.html &ndash;&gt;-->
+    <string name="CUSTOM_RECEIVER_APP_ID_brand_test">775E79BC</string>   <!-- new: https://squore.double-yellow.be/cast/live1/shared -->
+    <string name="CUSTOM_RECEIVER_APP_ID_squore_fancy">ECED202C</string>
+    <string name="CUSTOM_RECEIVER_APP_ID_tabletennis_fancy">4AFCAD22</string>
+    <string name="CUSTOM_RECEIVER_APP_ID_badminton_fancy">666CC235</string>
+    <string name="CUSTOM_RECEIVER_APP_ID_tennispadel_fancy">94AB11DA</string>
+    <string name="CUSTOM_RECEIVER_APP_ID_racketlon_fancy">C28A63FA</string>
+<!--    <string name="CUSTOM_RECEIVER_APP_ID_brand_tabletennis">C7F4529A</string>   &lt;!&ndash; new: https://squore.double-yellow.be/cast/live1?package=com.doubleyellow.tabletennis &ndash;&gt;-->
+<!--    <string name="CUSTOM_RECEIVER_APP_ID_brand_tabletennis">4AFCAD22</string>   &lt;!&ndash; new: https://squore.double-yellow.be/cast/live2?package=com.doubleyellow.tabletennis &ndash;&gt;-->
 <!--  https:/cast-tse-demo.firebaseapp.com/sender/?appid=775E79BC -->
     <string name="media_route_menu_title">Route</string>
 
