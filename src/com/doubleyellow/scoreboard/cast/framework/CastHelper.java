@@ -67,6 +67,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -91,7 +93,6 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     private CastSession m_castSession  = null;
     public static String m_sMessageNamespace = null; /* serves as Namespace to exchange messages with cast receiver */
     public static String m_sCastingToAppId   = null;
-    private MenuItem    m_mediaRouteMenuItem = null;
 
     @Override public void initCasting(Activity activity) {
         m_context      = activity.getApplicationContext();
@@ -135,9 +136,8 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         }
         return true;
     }
-    private static int m_iInvalidatesLeft = 0;
     @Override public void initCastMenu(Activity activity, Menu menu) {
-        m_mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(activity.getApplicationContext(), menu, R.id.media_route_menu_item);
+        MenuItem m_mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(activity.getApplicationContext(), menu, R.id.media_route_menu_item);
         Log.d(TAG, String.format("initCastMenu: %s (visible: %s)", m_mediaRouteMenuItem, m_mediaRouteMenuItem.isVisible()));
 
         if ( true ) {
@@ -150,16 +150,6 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
         m_mediaRouteMenuItem.setVisible(true);
         m_mediaRouteMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        if ( m_iInvalidatesLeft > 0 ) {
-            m_iInvalidatesLeft--;
-            activity.invalidateOptionsMenu(); // NOT a fix ... for castbutton only showing up after rotation
-        }
-/*
-        MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
-        mediaRouteActionProvider.setRouteSelector(mediaRouteSelector);
-*/
-        //createCastContext(activity);
     }
 
     @Override public void onActivityStart_Cast() {
@@ -216,7 +206,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         sessionManager.removeSessionManagerListener(m_sessionManagerListener, CastSession.class); // must be called from the main thread
     }
 
-    /** Has no real functionality, just some logging */
+    /** only for the timerview for now */
     private CastStateListener m_castStateListener = new CastStateListener() {
         @Override public void onCastStateChanged(int iStatus) {
             String sState = CastState.toString(iStatus);
@@ -230,7 +220,6 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
                 case CastState.CONNECTING:
                     break;
                 case CastState.CONNECTED : {
-                    // TODO: send match status via m_castSession
                     Timer.addTimerView(true, getTimerView());
                     break;
                 }
@@ -281,7 +270,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         return false;
     }
 
-    private final List<Map> m_lSendChangeViewDelayed = new ArrayList<>(); // make null if you do not want to use delayed
+    private final Map<String, Map> m_mSendChangeViewDelayed = new LinkedHashMap<>(); // make null if you do not want to use delayed
 
     public boolean sendChangeViewMessage(String sResName, Object oValue, String sProperty) {
         if ( isCasting() == false ) { return false; }
@@ -289,12 +278,15 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             oValue = ColorUtil.getRGBString((Integer) oValue);
         }
         Map map = MapUtil.getMap("id", sResName, "property", sProperty, "value", oValue);
-        if ( m_lSendChangeViewDelayed != null ) {
-            synchronized (m_lSendChangeViewDelayed) {
+        if ( m_mSendChangeViewDelayed != null ) {
+            synchronized (m_mSendChangeViewDelayed) {
                 if ( m_cdtDelayedSendChangeViewMessages != null ) {
                     m_cdtDelayedSendChangeViewMessages.cancel();
                 }
-                m_lSendChangeViewDelayed.add(map);
+                Map mReplaced = m_mSendChangeViewDelayed.put(sResName + sProperty, map);
+                if ( mReplaced != null ) {
+                    //Log.d(TAG, "Discarding : " + mReplaced);
+                }
                 m_cdtDelayedSendChangeViewMessages = new DelayedChangeViewCountDown(300);
                 m_cdtDelayedSendChangeViewMessages.start();
             }
@@ -314,9 +306,9 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         }
         @Override public void onFinish() {
             Log.d(TAG, "Posting ... with name space " + m_sMessageNamespace + " to device id " + m_sCastingToAppId);
-            synchronized (m_lSendChangeViewDelayed) {
-                sendArrayAsJsonMessage(m_lSendChangeViewDelayed);
-                m_lSendChangeViewDelayed.clear();
+            synchronized (m_mSendChangeViewDelayed) {
+                sendListAsJsonMessage(m_mSendChangeViewDelayed);
+                m_mSendChangeViewDelayed.clear();
             }
         }
     }
@@ -334,7 +326,8 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         return sendJsonMessage(sMsg);
     }
 
-    private boolean sendArrayAsJsonMessage(List<Map> lMaps) {
+    private boolean sendListAsJsonMessage(Map<String, Map> mMaps) {
+        Collection<Map> lMaps = new ArrayList<>(mMaps.values());
         JSONArray jsonArray = new JSONArray(lMaps);
         String sMsg = jsonArray.toString();
         return sendJsonMessage(sMsg);

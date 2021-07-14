@@ -620,7 +620,8 @@ public class IBoard implements TimerViewContainer
         }
         castChangeViewTextMessage(iServeId, sDisplayValueOverwrite);
         if ( player.equals(matchModel.getServer()) ) {
-            castSendFunction(ICastHelper.Server_update + "('" + matchModel.getServer() + "'" + ")");
+            boolean bSwapAAndB = Player.B.equals(m_firstPlayerOnScreen);
+            castSendFunction(ICastHelper.Server_update + "('" + matchModel.getServer() + "'," + bSwapAAndB + ")");
         }
 
 /*
