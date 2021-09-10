@@ -283,6 +283,14 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
     JSONObject joRoot     = null;
     JSONObject joMetaData = null;
     private List<String> lKeys = new ArrayList<String>();
+
+    /**
+     * To present user with all category's we have for feeds. Like
+     * - TournamentSoftware - Tournaments
+     * - TournamentSoftware - Leagues
+     * - Sporty HQ
+     * - Sporty HQ Leagues
+     */
     private void fillWithRootEntries(String sContent) {
         lKeys.clear();
 
@@ -296,7 +304,7 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
         }
 
         // if there is a config section, use it
-        joMetaData = joRoot.optJSONObject(FeedKeys.FeedMetaData.toString());
+        joMetaData = joRoot.optJSONObject(FeedKeys.FeedMetaData.toString()); // feeds.config.json on server
         JSONArray types = joMetaData.optJSONArray(FeedKeys.Sequence.toString());
         if ( JsonUtil.isEmpty(types) ) {
             types = joRoot.names();

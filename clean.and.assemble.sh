@@ -10,7 +10,7 @@ if [[ -z "${mffile}" ]]; then
     echo "Could not determine manifest file by looking in build.gradle"
     exit 1
 fi
-pkg=$(grep package= ${mffile} | perl -ne 's~.*"([a-z\.]+)"~$1~; print')
+pkg=$(grep package= ${mffile} | perl -ne 's~.*"([a-z\.]+)".*~$1~; print')
 
 productFlavor="phoneTabletPost23"
 relapk=$(find . -name "*${productFlavor}-release.apk")
@@ -38,6 +38,7 @@ else
     if [[ -n "$(grep 'NO_SHOWCASE_FOR_VERSION_BEFORE ='  ./src/com/doubleyellow/scoreboard/prefs/PreferenceValues.java | grep -v ${todayYYYYMMDD})" ]]; then
         echo "Adapting NO_SHOWCASE_FOR_VERSION_BEFORE to $todayYYYYMMDD in PreferenceValues.java"
         sed -i "s~\(NO_SHOWCASE_FOR_VERSION_BEFORE\s*=\s*.\)[0-9-]*~\1${todayYYYYMMDD}~" ./src/com/doubleyellow/scoreboard/prefs/PreferenceValues.java
+        #echo "TEMPORARY NOT CHANGING DATE TO TEST CASTING AND CHRONOS"
     fi
 fi
 

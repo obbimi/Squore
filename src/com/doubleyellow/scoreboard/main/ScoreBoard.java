@@ -3421,7 +3421,7 @@ touch -t 01030000 LAST.sb
                 Type timerType = (Type) ctx;
                 //ViewType viewType  = (ViewType) ctx2;
                 doTimerFeedback(timerType, true);
-                if ( EnumSet.of(Type.UntillStartOfNextGame).contains(timerType) && matchModel.isPossibleGameVictory() ) {
+                if ( EnumSet.of(Type.UntillStartOfNextGame).contains(timerType) && (matchModel != null) && matchModel.isPossibleGameVictory() ) {
                     endGame();
                 }
                 // fall through!!
@@ -4026,7 +4026,7 @@ touch -t 01030000 LAST.sb
             case R.id.dyn_timer:
             case R.id.sb_timer:
                 cancelTimer();
-                if ( matchModel.hasStarted() ) {
+                if ( (matchModel != null) && matchModel.hasStarted() ) {
                     lastTimerType = Type.UntillStartOfNextGame;
                     if ( Brand.supportsTimeout() ) {
                         int iEachX = PreferenceValues.autoShowGamePausedDialogAfterXPoints(ScoreBoard.this);
@@ -4141,6 +4141,7 @@ touch -t 01030000 LAST.sb
     }
 
     private boolean showNewMatchWizard() {
+        if ( matchModel == null ) { return false; } // 20210910
         EditMatchWizard editMatchWizard = new EditMatchWizard(this, matchModel, this);
         editMatchWizard.show();
         return true;
@@ -4226,6 +4227,7 @@ touch -t 01030000 LAST.sb
     }
 
     private void showColorPicker(Player p) {
+        if ( matchModel == null ) { return; }
         ColorPicker colorPicker = new ColorPicker(this, matchModel, this);
         colorPicker.init(p, matchModel.getColor(p));
         show(colorPicker);
@@ -4481,6 +4483,7 @@ touch -t 01030000 LAST.sb
         Manual,
     }
     private void _showOfficialAnnouncement(AnnouncementTrigger trigger, boolean bManuallyRequested) {
+        if ( matchModel == null ) { return; }
         if ( matchModel.gameHasStarted()==false || matchModel.isPossibleGameVictory() ) {
             _showOfficialStartOrEndOfGameAnnouncement(trigger, bManuallyRequested);
         } else if ( matchModel.isStartOfTieBreak() ) {

@@ -30,7 +30,7 @@ Allowed are: ${allowedInput}
 " > /dev/stderr
 	exit
 else
-    brandPkg=$(grep package= ${brandMfFile} | perl -ne 's~.*"([a-z\.]+)"~$1~; print')
+    brandPkg=$(grep package= ${brandMfFile} | perl -ne 's~.*"([a-z\.]+)".*~$1~; print')
     read -t 2 -p "New package ${brandPkg}"
 fi
 

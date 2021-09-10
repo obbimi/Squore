@@ -493,7 +493,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             } catch (Exception e) {
                 // not a colortarget preference
             }
-            if ( key.startsWith(PreferenceKeys.PlayerColorsNewMatch.toString()) && preference instanceof EditTextPreference) {
+            if ( (key != null) && key.startsWith(PreferenceKeys.PlayerColorsNewMatch.toString()) && preference instanceof EditTextPreference) {
                 String sColor = RWValues.getString(key, null, Preferences.this);
                 ColorPrefs.setColorTargetPreferenceIcon(sColor, preference);
             }

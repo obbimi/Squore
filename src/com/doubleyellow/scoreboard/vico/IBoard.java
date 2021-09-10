@@ -470,10 +470,12 @@ public class IBoard implements TimerViewContainer
                 }
                 if ( castHelper != null ) {
                     List<GameTiming> times = matchModel.getTimes();
-                    GameTiming last = ListUtil.getLast(times);
-                    long lDuration = System.currentTimeMillis() - last.getStart();
-                    long lDurationInSecs = DateUtil.convertToSeconds(lDuration);
-                    castSendChronosFunction(ICastHelper.GameChrono_update, lDurationInSecs, true, sFormat, DateUtil.convertDurationToHHMMSS_Colon(lDuration));
+                    if ( ListUtil.isNotEmpty(times) ) {
+                        GameTiming last = ListUtil.getLast(times);
+                        long lDuration = System.currentTimeMillis() - last.getStart();
+                        long lDurationInSecs = DateUtil.convertToSeconds(lDuration);
+                        castSendChronosFunction(ICastHelper.GameChrono_update, lDurationInSecs, true, sFormat, DateUtil.convertDurationToHHMMSS_Colon(lDuration));
+                    }
                 }
             }
 
