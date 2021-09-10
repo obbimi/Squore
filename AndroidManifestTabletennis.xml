@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-          package="com.doubleyellow.tabletennis"
+          package="com.doubleyellow.tabletennis">
+<!--
           android:versionName="${versionNameTabletennis}"
-          android:versionCode="${versionCodePrefix}${versionCodeSuffixTabletennis}">
+          android:versionCode="${versionCodePrefix}${versionCodeSuffixTabletennis}"
+-->
     <!-- PlayStoreID=4975506867766261096 -->
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />

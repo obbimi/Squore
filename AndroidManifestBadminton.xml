@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-          package="com.doubleyellow.badminton"
+          package="com.doubleyellow.badminton">
+<!--
           android:versionName="${versionNameBadminton}"
-          android:versionCode="${versionCodePrefix}${versionCodeSuffixBadminton}">
+          android:versionCode="${versionCodePrefix}${versionCodeSuffixBadminton}"
+-->
 <!-- PlayStoreID=4974076001360456618 -->
 
 <!--

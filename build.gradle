@@ -17,17 +17,17 @@ buildscript {
         jcenter()
     }
     dependencies {
-     classpath 'com.android.tools.build:gradle:3.6.4'
+     //classpath 'com.android.tools.build:gradle:3.6.4'
      //classpath 'com.android.tools.build:gradle:4.0.0' // java.security.NoSuchAlgorithmException: EC KeyFactory not available
      //classpath 'com.android.tools.build:gradle:4.1.0' // java.lang.NumberFormatException: For input string: "${versionCodePrefix}${versionCodeSuffixTennisPadel}"
       //classpath 'com.android.tools.build:gradle:4.1.2' // java.lang.NumberFormatException: For input string: "${versionCodePrefix}${versionCodeSuffixTennisPadel}"
-      //classpath 'com.android.tools.build:gradle:4.1.3' // java.lang.NumberFormatException: For input string: "${versionCodePrefix}${versionCodeSuffixTennisPadel}"
+      classpath 'com.android.tools.build:gradle:4.1.3' // java.lang.NumberFormatException: For input string: "${versionCodePrefix}${versionCodeSuffixTennisPadel}"
     }
 }
 // Run ./gradlew -q :dependencies
 android {
 
-    compileSdkVersion 29
+    compileSdkVersion 30
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
     //buildToolsVersion '28.0.3'
 
@@ -49,12 +49,14 @@ android {
 
         //testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
         //applicationId "com.doubleyellow"
-        manifestPlaceholders = [ versionNameTabletennis: "4.39", versionCodeSuffixTabletennis: "0458"
-                               , versionNameBadminton  : "4.39", versionCodeSuffixBadminton  : "0458"
-                               , versionNameTennisPadel: "4.39", versionCodeSuffixTennisPadel: "0459"
-                               , versionNameSquore     : "4.39", versionCodeSuffixSquore     : "0458"
-                               , versionNameRacketlon  : "4.39", versionCodeSuffixRacketlon  : "0458"
+/*
+        manifestPlaceholders = [ versionNameTabletennis: "4.39", versionCodeSuffixTabletennis: "0461"
+                               , versionNameBadminton  : "4.39", versionCodeSuffixBadminton  : "0461"
+                               , versionNameTennisPadel: "4.39", versionCodeSuffixTennisPadel: "0461"
+                               , versionNameSquore     : "4.39", versionCodeSuffixSquore     : "0462"
+                               , versionNameRacketlon  : "4.39", versionCodeSuffixRacketlon  : "0461"
                                ]
+*/
     }
     sourceSets {
         main {
@@ -95,20 +97,23 @@ android {
             dimension "devicetype"
             minSdkVersion 19
             //targetSdkVersion 28 // if specified to low, google play will reject the APK
-            targetSdkVersion 29
-            manifestPlaceholders = [versionCodePrefix:"1915"]
+            targetSdkVersion 30
+            versionCode 1915 * 10000 + 462
+            versionName "4.40"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
-            targetSdkVersion 29
-            manifestPlaceholders = [versionCodePrefix:"2315"]
+            targetSdkVersion 30
+            versionCode 2315 * 10000 + 462
+            versionName "4.40"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
-            targetSdkVersion 29
-            manifestPlaceholders = [versionCodePrefix:"2501"]
+            targetSdkVersion 30
+            versionCode 2501 * 10000 + 462
+            versionName "4.40"
         }
     }
     buildTypes {
@@ -164,8 +169,8 @@ dependencies {
 
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
 
-  //implementation 'androidx.legacy:legacy-support-v4:1.0.0'   // v4 not required for building
-    implementation 'androidx.appcompat:appcompat:1.3.0'
+//    implementation 'androidx.legacy:legacy-support-v4:1.0.0'   // v4 not required for building
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     // not required for building, BUT required for runtime when using newer gradle (20191022)
 
   //implementation 'androidx.legacy:legacy-support-v13:1.0.0'
@@ -193,9 +198,9 @@ dependencies {
     phoneTabletPost23Implementation   'com.google.android.support:wearable:2.8.1'
     wearOsImplementation              'com.google.android.support:wearable:2.8.1'
 
-    phoneTabletPre22Implementation    'com.google.android.wearable:wearable:2.8.1'
-    phoneTabletPost23Implementation   'com.google.android.wearable:wearable:2.8.1'
-    wearOsImplementation              'com.google.android.wearable:wearable:2.8.1'
+    phoneTabletPre22CompileOnly    'com.google.android.wearable:wearable:2.8.1'
+    phoneTabletPost23CompileOnly   'com.google.android.wearable:wearable:2.8.1'
+    wearOsCompileOnly              'com.google.android.wearable:wearable:2.8.1'
 
     //wearApp project(':wear:base') // applies to all other variants
 }

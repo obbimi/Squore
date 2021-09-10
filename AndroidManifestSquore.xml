@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-    package="com.doubleyellow.scoreboard"
+    package="com.doubleyellow.scoreboard">
+<!--
     android:versionName="${versionNameSquore}"
-    android:versionCode="${versionCodePrefix}${versionCodeSuffixSquore}">
+    android:versionCode="${versionCodePrefix}${versionCodeSuffixSquore}"
+-->
     <!-- PlayStoreID=4972255383319852172 -->
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
