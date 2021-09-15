@@ -25,7 +25,7 @@ import com.doubleyellow.android.view.SelectObjectView;
 
 import java.util.List;
 
-public class SelectDeviceView extends SelectObjectView<BluetoothDevice> {
+class SelectDeviceView extends SelectObjectView<BluetoothDevice> {
     public SelectDeviceView(Context context, List<BluetoothDevice> devices, BluetoothDevice fChecked) {
         super(context, devices, fChecked);
     }

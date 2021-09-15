@@ -24,6 +24,7 @@ public enum BTMethods {
     recordConduct      (true),
     undoLast           (true),
     undoLastForScorer  (true),
+    /** = ServeSide */
     changeSide         (false),
     swapDoublePlayers  (false),
     /* TODO: rename to switchSides */
@@ -53,6 +54,7 @@ public enum BTMethods {
 
     lock(false),
     unlock(false),
+    updatePreference(false),
     ;
     private boolean bVerifyScore = false;
     BTMethods(boolean verifyScore) {

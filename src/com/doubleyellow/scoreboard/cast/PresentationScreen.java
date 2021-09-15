@@ -38,7 +38,7 @@ import com.doubleyellow.scoreboard.vico.IBoard;
 import com.google.android.gms.cast.CastPresentation;
 
 import java.util.Map;
-
+/** @deprecated  */
 class PresentationScreen extends CastPresentation implements TimerViewContainer
 {
     //-----------------------------

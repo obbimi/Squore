@@ -214,6 +214,7 @@ public class IBoard implements TimerViewContainer
     //-------------------------------------------
 
     private ShowOnScreen showOnScreen = null;
+    /** @deprecated */
     public boolean isPresentation() {
         if ( showOnScreen == null ) {
             // Presentation.class here since it was only introducted in API 17 JELLY_BEAN_MR1

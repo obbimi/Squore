@@ -1000,6 +1000,15 @@ public class PreferenceValues extends RWValues
     public static boolean Cast_ShowGraphDuringTimer(Context context) {
         return getBoolean(PreferenceKeys.Cast_ShowGraphDuringTimer, context, R.bool.Cast_ShowGraphDuringTimer_default);
     }
+
+    public static boolean BTSync_keepLROnConnectedDeviceMirrored(Context context) {
+        int iResDefault = getSportTypeSpecificResId(context, R.bool.BTSync_keepLROnConnectedDeviceMirrored_default__Squash);
+        return getBoolean(PreferenceKeys.BTSync_keepLROnConnectedDeviceMirrored, context, iResDefault);
+    }
+    public static boolean BTSync_showFullScreenTimer(Context context) {
+        int iResDefault = getSportTypeSpecificResId(context, R.bool.BTSync_showFullScreenTimer_default__Squash);
+        return getBoolean(PreferenceKeys.BTSync_showFullScreenTimer, context, iResDefault);
+    }
 /*
     public static boolean showGraphDuringTimer(Context context, boolean bIsPresentation) {
         EnumSet<ShowOnScreen> showOnScreens = showGraphDuringTimerOn(context);
@@ -1822,7 +1831,7 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.mailFullScoringSheet, context, R.bool.mailFullScoringSheet_default);
     }
 
-    /** returns configured directory. But if external and (no longer) writabe, the internal storage dir is returned */
+    /** returns configured directory. But if external and (no longer) writable, the internal storage dir is returned */
     public static File targetDirForImportExport(Context context, boolean bForImport) {
         requestPermission(context, PreferenceKeys.targetDirForImportExport, Manifest.permission.WRITE_EXTERNAL_STORAGE, true);
 
@@ -1841,12 +1850,12 @@ public class PreferenceValues extends RWValues
             //setString(PreferenceKeys.targetDirForImportExport, context, fDir.getAbsolutePath());
         }
         if ( bForImport && bPreferredDirIsReadOnly ) {
-            Toast.makeText(context, "Returning read only directory for import that can NOT be used for export.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, String.format("Returning read only directory %s for import that can NOT be used for export.", fDir.getAbsolutePath()), Toast.LENGTH_LONG).show();
         }
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2020-12-02"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2021-09-17"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

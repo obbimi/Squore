@@ -32,7 +32,6 @@ Used by EndOfGameView
     <com.doubleyellow.scoreboard.history.MatchGameScoresView
         android:id="@+id/peog_gamescores"
         android:layout_centerInParent="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         dy:bgColorLoser="@color/dy_dark"
@@ -49,7 +48,6 @@ Used by EndOfGameView
     />
     <com.doubleyellow.scoreboard.history.GameGraphView
         android:id="@+id/peog_gamegraph"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@id/peog_gamescores"
         app:layout_marginTopPercent="@fraction/peog_margin"
@@ -63,7 +61,6 @@ Used by EndOfGameView
     <!-- timer -->
     <com.doubleyellow.android.view.AutoResizeTextView
         android:id="@+id/peog_timer"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@id/peog_gamegraph"
         android:layout_below="@id/peog_gamescores"
@@ -81,11 +78,11 @@ Used by EndOfGameView
 
     <!-- logo -->
     <ImageView
+        android:contentDescription="Logo aspect ratio 150"
         android:id="@+id/sb_branded_logo_ar150"
         android:src="@drawable/brand_squore"
         android:background="@color/dy_white"
         android:visibility="visible"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@id/peog_timer"
         app:layout_marginRightPercent="@fraction/peog_margin"
@@ -96,11 +93,11 @@ Used by EndOfGameView
         android:layout_height="0dp"
     />
     <ImageView
+        android:contentDescription="Logo aspect ratio 400"
         android:id="@+id/sb_branded_logo_ar400"
         android:src="@drawable/brand_courtcare"
         android:background="@color/dy_white"
         android:visibility="visible"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@id/peog_timer"
         app:layout_marginRightPercent="@fraction/peog_margin"
