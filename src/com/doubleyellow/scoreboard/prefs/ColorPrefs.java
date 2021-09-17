@@ -697,7 +697,7 @@ public class ColorPrefs
             bHasItemTag   = Tags.item  .equals(parentTagContains);
             bHasHeaderTag = Tags.header.equals(parentTagContains);
         }
-        if (v instanceof TextView) {
+        if (v instanceof TextView)/* includes RadioButton */ {
             TextView textView = (TextView) v;
 /*
             if (textView instanceof AutoCompleteTextView) {
@@ -747,7 +747,7 @@ public class ColorPrefs
                                         mTarget2Color.get(ColorTarget.playerButtonBackgroundColor)
                                 }
                         );
-                        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+                        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP /* 21 */ ) {
                             aSwitch.getThumbDrawable().setTintList(buttonStates);
                             aSwitch.getTrackDrawable().setTintList(buttonStates);
                         }
@@ -767,10 +767,14 @@ public class ColorPrefs
                         } else {
                             setBackground(button, mTarget2Color.get(ColorTarget.playerButtonBackgroundColor), tag);
                             button.setTextColor(mTarget2Color.get(ColorTarget.playerButtonTextColor));
+                            //setBackground(button, mTarget2Color.get(ColorTarget.scoreButtonBackgroundColor), tag);
+                            //button.setTextColor(mTarget2Color.get(ColorTarget.scoreButtonTextColor));
                         }
                     } else {
-                        setBackground(textView, mTarget2Color.get(ColorTarget.backgroundColor), tag);
+                        setBackground(textView, mTarget2Color.get(ColorTarget.backgroundColor), tag); // activity like Edit Event/Player
                         textView.setTextColor(mTarget2Color.get(ColorTarget.mainTextColor));
+                        //setBackground(textView, mTarget2Color.get(ColorTarget.scoreButtonBackgroundColor), tag);
+                        //textView.setTextColor(mTarget2Color.get(ColorTarget.scoreButtonTextColor));
                     }
                     if ( bHasMainTextColorTag ) {
                         textView.setTextColor(mTarget2Color.get(ColorTarget.mainTextColor));

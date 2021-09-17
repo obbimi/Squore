@@ -37,8 +37,9 @@
     <string name="pref_Category_End_of_Game">End of Game</string>
     <string name="pref_Category_End_of_Game__TennisPadel">End of Set</string>
     <string name="pref_Category_Others">Others</string>
-    <string name="pref_Category_Live_Score_ChromeCast">Live Score/ChromeCast</string>
+    <string name="pref_Category_Live_Score_ChromeCast">Live Score/ChromeCast/Bluetooth Mirror</string>
     <string name="pref_Category_ChromeCast">ChromeCast</string>
+    <string name="pref_Category_BlueToothSync">BlueTooth Mirror</string>
     <string name="pref_Category_Directory_for_import_export">Directory for import/export</string>
     <string name="pref_Category_Contacts">Contacts</string>
     <string name="pref_Category_Event">Event</string>
@@ -356,6 +357,9 @@
     <string name="pref_castScreenSponsorUrl">URL of sponsor for Cast Screen</string>
     <string name="pref_useCastScreen">Cast screen to use</string>
     <string name="pref_useCastScreen_summary">No need to change manually. Mainly for testing</string>
+
+    <string name="pref_BTSync_keepLROnConnectedDeviceMirrored">Show player sides swapped on \'Slave\'</string>
+    <string name="pref_BTSync_showFullScreenTimer">Show full screen timer on \'Slave\'</string>
 
     <string name="for_this_to_take_effect_a_restart_is_required">For this to take effect a restart is required</string>
     <string name="pref_reset_title">Reset to default</string>

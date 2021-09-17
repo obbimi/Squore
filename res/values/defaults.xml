@@ -168,7 +168,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="longClickScoreButtonTriggersAdjustScore_default">false</bool>
 -->
     <bool name="showNewMatchFloatButton_default">true</bool>
-    <bool name="useSoundNotificationInTimer_default">true</bool>
+    <bool name="useSoundNotificationInTimer_default">false</bool>
     <bool name="useVibrationNotificationInTimer_default">true</bool>
     <bool name="showAdjustTimeButtonsInTimer_default">true</bool>
     <bool name="showUseAudioCheckboxInTimer_default">true</bool>
@@ -203,6 +203,11 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="useGroupNameAsEventData_default">true</bool>
     <bool name="savePasswords_default">false</bool>
     <bool name="readContactsForAutoCompletion_default">false</bool>
+
+    <bool name="BTSync_showFullScreenTimer_default__Squash">false</bool>
+    <bool name="BTSync_showFullScreenTimer_default__Default">true</bool>
+    <bool name="BTSync_keepLROnConnectedDeviceMirrored_default__Squash">false</bool>
+    <bool name="BTSync_keepLROnConnectedDeviceMirrored_default__Default">true</bool>
 
     <bool name="Cast_ShowGraphDuringTimer_default">true</bool>
     <bool name="prefetchFlags_default">false</bool>

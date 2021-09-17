@@ -18,13 +18,13 @@
 package com.doubleyellow.scoreboard.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.ParcelUuid;
 import android.util.Log;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import com.doubleyellow.scoreboard.Brand;
@@ -32,8 +32,10 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.BaseAlertDialog;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
+import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.view.PreferenceCheckBox;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
 
@@ -59,6 +61,8 @@ public class SelectDeviceDialog extends BaseAlertDialog
     }
 
     private SelectDeviceView sfv;
+  //private CheckBox         cbLRMirror;
+    private CheckBox         cbFSTimer;
 
     @Override public void show() {
         adb     .setTitle  (        getString(R.string.bt_select_device) )
@@ -69,11 +73,41 @@ public class SelectDeviceDialog extends BaseAlertDialog
               //.setNegativeButton(R.string.refresh       , listener)
                 ;
 
+        if ( StringUtil.isNotEmpty(scoreBoard.getOtherBluetoothDeviceAddressName()) ) {
+            adb.setNegativeButton(R.string.bt_disconnect, listener);
+        }
+
         // add a view with all possible devices and let user choose one
         // Get the local Bluetooth adapter
         LinearLayout ll = refreshSelectList(m_lPairedDevicesChecked);
         if (ll == null) return;
+
+        LinearLayout llCb = new LinearLayout(context);
+        llCb.setOrientation(LinearLayout.VERTICAL);
+
+        // select how LR is applied on 'slave'
+        boolean bKeepLRMirrored = PreferenceValues.BTSync_keepLROnConnectedDeviceMirrored(context);
+        if ( Brand.isNotSquash() || bKeepLRMirrored ) {
+            //cbLRMirror = new CheckBox(context);
+            int iResDefault = PreferenceValues.getSportTypeSpecificResId(context, R.bool.BTSync_keepLROnConnectedDeviceMirrored_default__Squash);
+            PreferenceCheckBox cbLRMirror = new PreferenceCheckBox(context, PreferenceKeys.BTSync_keepLROnConnectedDeviceMirrored, iResDefault);
+            cbLRMirror.setText(R.string.pref_BTSync_keepLROnConnectedDeviceMirrored);
+            cbLRMirror.setChecked(bKeepLRMirrored);
+            cbLRMirror.setTag(ColorPrefs.Tags.header);
+
+            llCb.addView(cbLRMirror);
+        }
+
+        cbFSTimer = new CheckBox(context);
+        cbFSTimer.setText(R.string.pref_BTSync_showFullScreenTimer);
+        cbFSTimer.setChecked(PreferenceValues.BTSync_showFullScreenTimer(context));
+        cbFSTimer.setTag(ColorPrefs.Tags.header);
+
+        llCb.addView(cbFSTimer);
+        ll.addView(llCb);
+
         adb.setView(ll);
+        ColorPrefs.setColor(llCb);
 
         dialog = adb.show();
     }
@@ -125,16 +159,7 @@ public class SelectDeviceDialog extends BaseAlertDialog
         if ( ListUtil.isEmpty(pairedDevices) ) {
             return new int[] { R.string.bt_no_paired, R.string.bt_how_to_pair_info };
         }
-
-        List<BluetoothDevice> lPairedDevicesFilteredOnNWService = new ArrayList<>();
-        // If there are paired devices, check if the device supports networking
-        if ( ListUtil.isNotEmpty(pairedDevices) ) {
-            for (BluetoothDevice device : pairedDevices) {
-                if ( device.getBluetoothClass().hasService(BluetoothClass.Service.NETWORKING) ) {
-                    lPairedDevicesFilteredOnNWService.add(device);
-                }
-            }
-        }
+        List<BluetoothDevice> lPairedDevicesFilteredOnNWService = BluetoothControlService.filtered(pairedDevices);
         if ( ListUtil.isEmpty(lPairedDevicesFilteredOnNWService) ) {
             return new int[] { R.string.bt_no_appropriate_paired_devices_found, R.string.bt_how_to_pair_info };
         }
@@ -166,6 +191,8 @@ public class SelectDeviceDialog extends BaseAlertDialog
             }
         }
         m_lPairedDevicesChecked = lPairedDevicesChecked;
+
+        // returning NO error messages, all is OK
         return null;
     }
 
@@ -175,26 +202,37 @@ public class SelectDeviceDialog extends BaseAlertDialog
         }
     };
 
-    public static final int BNT_IMPORT  = DialogInterface.BUTTON_POSITIVE;
-    public static final int BNT_REFRESH = DialogInterface.BUTTON_NEGATIVE;
     @Override public void handleButtonClick(int which) {
         BluetoothDevice dChecked = sfv.getChecked();
 
         switch (which) {
-            case BNT_IMPORT:
+            case DialogInterface.BUTTON_POSITIVE:
+                //if ( cbLRMirror != null ) {
+                //    PreferenceValues.setBoolean(PreferenceKeys.BTSync_keepLROnConnectedDeviceMirrored, context, cbLRMirror.isChecked());
+                //}
+                if ( cbFSTimer != null ) {
+                    // this value is to be communicated to Slave device, so it is actually used there
+                    PreferenceValues.setBoolean(PreferenceKeys.BTSync_showFullScreenTimer, context, cbFSTimer.isChecked());
+                }
+
                 String sDeviceName    = dChecked.getName();
                 String sDeviceAddress = dChecked.getAddress();
                 scoreBoard.connectBluetoothDevice(sDeviceAddress);
                 break;
             case DialogInterface.BUTTON_NEUTRAL:
                 break;
-            case BNT_REFRESH:
-                getBluetoothDevices(true);
+            case DialogInterface.BUTTON_NEGATIVE:
+                if ( true ) {
+                    scoreBoard.disconnectBluetoothDevice();
+                } else {
+                    // refresh
+                    getBluetoothDevices(true);
 
-                LinearLayout ll = refreshSelectList(m_lPairedDevicesChecked);
-                if (ll == null) return;
-                adb.setView(ll);
-                break;
+                    LinearLayout ll = refreshSelectList(m_lPairedDevicesChecked);
+                    if (ll == null) return;
+                    adb.setView(ll);
+                    break;
+                }
         }
         scoreBoard.triggerEvent(ScoreBoard.SBEvent.bluetoothDeviceSelectionClosed, this);
     }
