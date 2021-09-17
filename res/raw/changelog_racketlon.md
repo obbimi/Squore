@@ -1,3 +1,9 @@
+## 4.40 (sep 2021)
+
+- Improvements in bluetooth mirroring
+    - Allow for full screen timer on 'Slave'
+    - Other minor improvements
+
 ## 4.38 (nov 2020)
 
 - Re-use chosen colors for players in subsequent matches ( Settings > Appearance > Colors )

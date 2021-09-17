@@ -50,11 +50,11 @@ android {
         //testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
         //applicationId "com.doubleyellow"
 /*
-        manifestPlaceholders = [ versionNameTabletennis: "4.39", versionCodeSuffixTabletennis: "0462"
-                               , versionNameBadminton  : "4.39", versionCodeSuffixBadminton  : "0462"
-                               , versionNameTennisPadel: "4.39", versionCodeSuffixTennisPadel: "0462"
-                               , versionNameSquore     : "4.39", versionCodeSuffixSquore     : "0462"
-                               , versionNameRacketlon  : "4.39", versionCodeSuffixRacketlon  : "0462"
+        manifestPlaceholders = [ versionNameTabletennis: "4.40", versionCodeSuffixTabletennis: "0463"
+                               , versionNameBadminton  : "4.40", versionCodeSuffixBadminton  : "0463"
+                               , versionNameTennisPadel: "4.40", versionCodeSuffixTennisPadel: "0463"
+                               , versionNameSquore     : "4.40", versionCodeSuffixSquore     : "0463"
+                               , versionNameRacketlon  : "4.40", versionCodeSuffixRacketlon  : "0463"
                                ]
 */
     }
@@ -98,22 +98,22 @@ android {
             minSdkVersion 19
             //targetSdkVersion 28 // if specified to low, google play will reject the APK
             targetSdkVersion 30
-            versionCode 1915 * 10000 + 462
-            versionName "4.39"
+            versionCode 1915 * 10000 + 463
+            versionName "4.40"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 30
-            versionCode 2315 * 10000 + 462
-            versionName "4.39"
+            versionCode 2315 * 10000 + 463
+            versionName "4.40"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 30
-            versionCode 2501 * 10000 + 462
-            versionName "4.39"
+            versionCode 2501 * 10000 + 463
+            versionName "4.40"
         }
     }
     buildTypes {

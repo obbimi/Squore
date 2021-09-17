@@ -162,7 +162,9 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                         loadTypesAdapter.load(false);
                         break;
                     case SelectFeed:
-                        showFeedsAdapter.load(false);
+                        if ( showFeedsAdapter != null ) {
+                            showFeedsAdapter.load(false);
+                        }
                         break;
                 }
 

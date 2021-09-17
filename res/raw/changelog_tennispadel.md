@@ -1,3 +1,9 @@
+## 4.40 (sep 2021)
+
+- Improvements in bluetooth mirroring
+    - Allow for full screen timer on 'Slave'
+    - Other minor improvements
+
 ## 4.39 (feb 2021)
 
 - Portuguese translation. Thanks to Gonçalo Afonso.
