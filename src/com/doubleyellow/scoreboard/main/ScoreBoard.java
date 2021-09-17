@@ -61,6 +61,7 @@ import com.doubleyellow.scoreboard.bluetooth.BTState;
 import com.doubleyellow.scoreboard.bluetooth.BluetoothControlService;
 import com.doubleyellow.scoreboard.bluetooth.BluetoothHandler;
 import com.doubleyellow.scoreboard.bluetooth.SelectDeviceDialog;
+import com.doubleyellow.scoreboard.cast.FullScreenTimer;
 import com.doubleyellow.scoreboard.cast.EndOfGameView;
 import com.doubleyellow.scoreboard.cast.framework.CastHelper;
 import com.doubleyellow.scoreboard.demo.*;
@@ -100,7 +101,6 @@ import org.json.JSONObject;
 import com.doubleyellow.android.showcase.ShowcaseView;
 import com.doubleyellow.android.showcase.ShowcaseConfig;
 import com.doubleyellow.android.showcase.ShowcaseSequence;
-import com.google.android.gms.cast.framework.CastButtonFactory;
 
 import java.io.*;
 import java.util.*;
@@ -124,7 +124,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         return matchModel;
     }
     public static void setMatchModel(Model m) {
-        if ( m == null ) {
+        if ( (m == null) && (matchModel != null) ) {
             Log.w(TAG, "setting matchModel to null");
         }
         matchModel = m;
@@ -136,6 +136,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     private int      iMenuToRepeatOnPermissionGranted = 0;
     private Object[] oaMenuCtxForRepeat               = null;
     @Override public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PreferenceKeys key = null;
         try {
             key = PreferenceKeys.values()[requestCode];
@@ -145,7 +146,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         if ( key != null ) {
             // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if ( (grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED) ) {
                 // permission was granted, yay! Do the task you need to do.
                 Log.d(TAG, String.format("Permission granted: %s (%s)", key, grantResults[0]));
                 if ( false && (iMenuToRepeatOnPermissionGranted != 0) ) {
@@ -771,7 +772,16 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             String sMsg = getString( matchModel.isDoubles()? R.string.teams_have_swapped_sides : R.string.player_names_swapped); // + " (" + pFirst + ")";
             Toast.makeText(this, sMsg, iToastLength).show();
         }
-        writeMethodToBluetooth(BTMethods.swapPlayers, pFirst);
+        swapSidesOnBT(pFirst);
+    }
+
+    private void swapSidesOnBT(Player pFirst) {
+        Player pFirstOnBTConnected = pFirst;
+        boolean bKeepLROnConnectedDeviceMirrored = PreferenceValues.BTSync_keepLROnConnectedDeviceMirrored(this);
+        if ( bKeepLROnConnectedDeviceMirrored ) {
+            pFirstOnBTConnected = pFirstOnBTConnected.getOther();
+        }
+        writeMethodToBluetooth(BTMethods.swapPlayers, pFirstOnBTConnected);
     }
 
     private void swapDoublePlayers() {
@@ -2633,7 +2643,8 @@ touch -t 01030000 LAST.sb
                 bShowDialog = _confirmGameEnding(leadingPlayer);
                 break;
             case Automatic:
-                endGame(true); // skip bluetooth because 'changeScore' has not even been send if this method triggered by 'changeScore'
+                //endGame(true); // skip bluetooth because 'changeScore' has not even been send if this method triggered by 'changeScore'
+                endGame(false);
                 break;
         }
         return bShowDialog;
@@ -2983,7 +2994,7 @@ touch -t 01030000 LAST.sb
                     switch (showGamePausedDialog) {
                         case Automatic: {
                             // show pause dialog
-                            _showTimer(Type.TowelingDown, true);
+                            _showTimer(Type.TowelingDown, true, null, null);
                             break;
                         }
                         case Suggest: {
@@ -3473,12 +3484,18 @@ touch -t 01030000 LAST.sb
             }
             case injuryTypeClosed: {
                 Type injuryType = (Type) ctx;
-                if (injuryType != null) {
+                if ( injuryType != null ) {
                     showTimer(injuryType, false);
                 }
                 break;
             }
             case bluetoothDeviceSelectionClosed:
+                // communicate FullScreenTimer preference to slave device
+                if ( false ) {
+                    boolean bShowFS = PreferenceValues.BTSync_showFullScreenTimer(this);
+                    writeMethodToBluetoothDelayed(BTMethods.updatePreference, PreferenceKeys.BTSync_showFullScreenTimer, bShowFS);
+                }
+                // fall through
             case restartScoreDialogEnded:
             case endMatchDialogEnded: // fall through
             case endGameDialogEnded: {
@@ -4323,9 +4340,11 @@ touch -t 01030000 LAST.sb
             shareScoreSheetDelayed(1000);
         }
     }
-
-    public void _showTimer(Type timerType, boolean bAutoTriggered) {
-        int iInitialSecs = PreferenceValues.getInteger(timerType.getPrefKey(), this, timerType.getDefaultSecs());
+    /** Invoked by TwoTimerView and interpretReceivedMessage() */
+    public void _showTimer(Type timerType, boolean bAutoTriggered, ViewType viewType, Integer iInitialSecs) {
+        if ( iInitialSecs == null ) {
+            iInitialSecs = PreferenceValues.getInteger(timerType.getPrefKey(), this, timerType.getDefaultSecs());
+        }
         int iResId       = PreferenceValues.getSportTypeSpecificResId(this, R.integer.timerPauseBetweenGames_reminder_at__Squash);
         int iReminderAt  = getResources().getInteger(iResId);
         boolean bIsResume = (timer != null);
@@ -4365,25 +4384,41 @@ touch -t 01030000 LAST.sb
                     break;
             }
         }
-        ViewType viewType = PreferenceValues.timerViewType(this);
-        Timer.addTimerView(iBoard.isPresentation(), iBoard); // always add this one, so it is always up to date if the Popup one is made hidden
-        if ( viewType.equals(ViewType.Popup) ) {
-            Timer.addTimerView(false, getDialogTimerView()); // this will actually trigger the dialog to open
+        if ( viewType == null ) {
+            viewType = PreferenceValues.timerViewType(this);
         }
-
-        if ( isLandscape() && timerType.equals(Type.UntillStartOfNextGame) ) {
-            if ( "Iddo T".equals(matchModel.getName(Player.A)) || BTRole.Slave.equals(m_blueToothRole) ) {
-                // for now this is just for me to be able to view the layout on the device while no chromecast available
-                showPresentationModeOfEndOfGame();
+        if ( viewType.equals(ViewType.FullScreen) ) {
+            Log.d(TAG, "Showing full screen timer");
+            showFullScreenTimer();
+        } else {
+            if ( fullScreenTimer == null ) {
+                Log.d(TAG, "Showing normal timer(s)");
+                Timer.addTimerView(iBoard.isPresentation(), iBoard); // always add this one, so it is always up to date if the Popup one is made hidden
+                if ( viewType.equals(ViewType.Popup) ) {
+                    Timer.addTimerView(false, getDialogTimerView()); // this will actually trigger the dialog to open
+                }
             }
         }
 
-        //timer.show();
+        EnumSet<Type> esTimerTypes = EnumSet.of(Type.UntillStartOfNextGame, Type.Timeout);
+        if ( "Iddo T".equals(matchModel.getName(Player.A)) ) {
+            // TESTING
+            if ( isLandscape() && esTimerTypes.contains(timerType) ) {
+                boolean bShowBigTimer = PreferenceValues.BTSync_showFullScreenTimer(this);
+                if ( bShowBigTimer ) {
+                    showFullScreenTimer();
+                } else {
+                    showPresentationModeOfEndOfGame(); // score, graph and timer
+                }
+            }
+        }
 
         if ( bIsResume == false ) {
             triggerEvent(SBEvent.timerStarted, viewType);
         }
-        writeMethodToBluetooth(BTMethods.startTimer, timerType, bAutoTriggered); // added to ensure Toweling and Injury timeouts show up on connected device
+        boolean bShowBigTimer = PreferenceValues.BTSync_showFullScreenTimer(this);
+        ViewType vtMirror = bShowBigTimer ? ViewType.FullScreen : viewType;
+        writeMethodToBluetooth(BTMethods.startTimer, timerType, bAutoTriggered, vtMirror, iInitialSecs ); // added to ensure Toweling and Injury timeouts show up on connected device (TODO: test)
     }
 
     private EndOfGameView endOfGameView = null;
@@ -4404,15 +4439,34 @@ touch -t 01030000 LAST.sb
         ViewGroup presentationFrame = (ViewGroup) findViewById(R.id.presentation_frame);
         if ( presentationFrame == null ) { return; }
         int presentationFrameVisibility = presentationFrame.getVisibility();
+
         boolean pEndOfGameViewShowing = (presentationFrameVisibility == View.VISIBLE);
-      //Log.d(TAG, "[hidePresentationEndOfGame] pEndOfGameViewShowing " + pEndOfGameViewShowing);
+        Log.d(TAG, "[hidePresentationEndOfGame] pEndOfGameViewShowing " + pEndOfGameViewShowing);
         if ( pEndOfGameViewShowing ) {
             presentationFrame.setVisibility(View.GONE);
             findViewById(R.id.content_frame).setVisibility(View.VISIBLE);
             if ( endOfGameView != null ) {
                 Timer.removeTimerView(iBoard.isPresentation(), endOfGameView.getTimerView());
+                endOfGameView = null;
+            }
+            if ( fullScreenTimer != null ) {
+                Timer.removeTimerView(iBoard.isPresentation(), fullScreenTimer.getTimerView());
+                fullScreenTimer = null;
             }
         }
+    }
+
+    private FullScreenTimer fullScreenTimer = null;
+    private void showFullScreenTimer() {
+        getXActionBar().hide();
+
+        ViewGroup presentationFrame = (ViewGroup) findViewById(R.id.presentation_frame);
+        presentationFrame.removeAllViews();
+
+        fullScreenTimer = new FullScreenTimer(this, iBoard, matchModel);
+        fullScreenTimer.show(presentationFrame);
+        presentationFrame.setVisibility(View.VISIBLE);
+        findViewById(R.id.content_frame).setVisibility(View.GONE);
     }
 
     // ------------------------------------------------------
@@ -4900,6 +4954,11 @@ touch -t 01030000 LAST.sb
         return m_bChildActivityShowing;
     }
     private synchronized boolean addToDialogStack(BaseAlertDialog dialog) {
+/*
+        if ( BTRole.Slave.equals(m_blueToothRole) ) {
+            Log.w(TAG, "Not adding dialog to stack for BT Slave : " + dialog.getClass().getName());
+        }
+*/
         return dialogManager.addToDialogStack(dialog);
     }
     private synchronized void show(BaseAlertDialog dialog) {
@@ -5772,7 +5831,16 @@ touch -t 01030000 LAST.sb
                     mBluetoothControlService = new BluetoothControlService(Brand.getUUID(), Brand.getShortName(this));
                 }
                 mBluetoothControlService.setHandler(mBluetoothHandler);
-                setBluetoothIconVisibility(mBluetoothControlService.getState().equals(BTState.CONNECTED)?View.VISIBLE:View.INVISIBLE);
+                if ( mBluetoothControlService.getState().equals(BTState.CONNECTED) ) {
+                    setBluetoothIconVisibility(View.VISIBLE);
+                    Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
+                    List<BluetoothDevice> lPairedDevicesFilteredOnNWService = BluetoothControlService.filtered(bondedDevices);
+                    if ( ListUtil.size(lPairedDevicesFilteredOnNWService) == 1 ) {
+                        mBluetoothHandler.storeBTDeviceConnectedTo(bondedDevices.iterator().next());
+                    }
+                } else {
+                    setBluetoothIconVisibility(View.INVISIBLE);
+                }
             } else {
                 Log.d(TAG, "Bluetooth not turned on");
                 setBluetoothIconVisibility(View.INVISIBLE);
@@ -5944,8 +6012,8 @@ touch -t 01030000 LAST.sb
     private boolean endGame(boolean bBTDelayed) {
         if ( warnModelIsLocked() ) { return false; }
         if ( matchModel == null ) { return false; }
-        matchModel.endGame();
 
+        // first send endgame (because 'startNewGame' may stop a possible timer to be started)
         if ( BTRole.Master.equals(m_blueToothRole) ) {
             if ( bBTDelayed ) {
                 writeMethodToBluetoothDelayed(BTMethods.endGame);
@@ -5953,6 +6021,9 @@ touch -t 01030000 LAST.sb
                 writeMethodToBluetooth(BTMethods.endGame);
             }
         }
+
+        matchModel.endGame();
+
         return true;
     }
 
@@ -6023,9 +6094,6 @@ touch -t 01030000 LAST.sb
                 .setNegativeButton(R.string.bt_push, new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         sendMatchToOtherBluetoothDevice( false, 200);
-
-                        // sync 'first player on screen'
-                        //writeMethodToBluetooth(BTMethods.swapSides, iBoard.m_firstPlayerOnScreen);
                     }
                 })
                 .setNeutralButton(R.string.cmd_cancel, null)
@@ -6049,7 +6117,7 @@ touch -t 01030000 LAST.sb
     static {
         mBtPrefSlaveSettings.put(PreferenceKeys.useOfficialAnnouncementsFeature, String.valueOf(Feature.DoNotUse ));
         mBtPrefSlaveSettings.put(PreferenceKeys.useShareFeature                , String.valueOf(Feature.DoNotUse ));
-        mBtPrefSlaveSettings.put(PreferenceKeys.useTimersFeature               , String.valueOf(Feature.Automatic));
+        mBtPrefSlaveSettings.put(PreferenceKeys.useTimersFeature               , String.valueOf(Feature.DoNotUse ));
         mBtPrefSlaveSettings.put(PreferenceKeys.endGameSuggestion              , String.valueOf(Feature.DoNotUse ));
         mBtPrefSlaveSettings.put(PreferenceKeys.useSoundNotificationInTimer    , String.valueOf(false            ));
         mBtPrefSlaveSettings.put(PreferenceKeys.useVibrationNotificationInTimer, String.valueOf(false            ));
@@ -6069,7 +6137,7 @@ touch -t 01030000 LAST.sb
         if ( role.equals(m_blueToothRole) == false ) {
             String sMsg = String.format("Bluetooth connection. Device switched from %s to %s (%s)", m_blueToothRole, role, oReason);
             //Toast.makeText(this, sMsg, Toast.LENGTH_SHORT).show();
-            Log.d(TAG, sMsg);
+            Log.v(TAG, sMsg);
             m_blueToothRole = role;
         }
     }
@@ -6130,12 +6198,13 @@ touch -t 01030000 LAST.sb
         }
     }
 
-    private StringBuilder m_sbBTDelayed = new StringBuilder();
     private void writeMethodToBluetoothDelayed(BTMethods method, Object... args) {
-        addMethodAndArgs(m_sbBTDelayed, method, args);
+        StringBuilder sbBTDelayed = new StringBuilder();
+        addMethodAndArgs(sbBTDelayed, method, args);
+        mBluetoothControlService.sendDelayed(sbBTDelayed.toString());
     }
 
-    private void writeMethodToBluetooth(BTMethods method, Object... args) {
+    private synchronized void writeMethodToBluetooth(BTMethods method, Object... args) {
         boolean bDoSend = true;
         // DO not send some if Slave
         switch (method) {
@@ -6159,7 +6228,7 @@ touch -t 01030000 LAST.sb
         }
 
         if ( bDoSend == false ) {
-            Log.d(TAG, "Not sending " + method);
+            //Log.d(TAG, "Not sending " + method + " (as Slave)");
             return;
         }
 
@@ -6170,14 +6239,8 @@ touch -t 01030000 LAST.sb
 
         if ( mBluetoothControlService != null) {
             if ( mBluetoothControlService.getState().equals(BTState.CONNECTED) ) {
-                Log.d(TAG, "About to write BT message " + sMessage.trim());
+                //Log.d(TAG, "About to write BT message " + sMessage.trim());
                 mBluetoothControlService.write(sMessage);
-
-                // write optionally delayed method
-                if ( m_sbBTDelayed.length() > 0 ) {
-                    mBluetoothControlService.write(m_sbBTDelayed.toString());
-                    m_sbBTDelayed.setLength(0);
-                }
             }
         }
 
@@ -6206,7 +6269,7 @@ touch -t 01030000 LAST.sb
             }
         }
 
-        sb.append(")\n");
+        sb.append(")");
     }
 
     /** length of file to be read */
@@ -6216,7 +6279,7 @@ touch -t 01030000 LAST.sb
     public synchronized void interpretReceivedMessage(String readMessage, boolean bTrueWearable_FalsePairedBluetooth) {
 
         if ( readMessage.startsWith(BTMethods.requestCompleteJsonOfMatch.toString())) {
-            // don't blindly pass on this type of message
+            // don't blindly pass on this type of message to wearable
         } else {
             if ( bTrueWearable_FalsePairedBluetooth ) {
                 // message came from wearable, if also connected manually via bluetooth
@@ -6237,6 +6300,7 @@ touch -t 01030000 LAST.sb
                 // first part of a long message being received
                 String sLength = readMessage20.replaceFirst(":.*", "");
                 iReceivingBTFileLength = Integer.parseInt(sLength);
+                Log.d(TAG, "Receiving file content with length:" + iReceivingBTFileLength);
                 readMessage = readMessage.substring(sLength.length() + 1);
                 if ( bTrueWearable_FalsePairedBluetooth ) {
                     //setWearableRole(WearRole.Equal);
@@ -6256,6 +6320,7 @@ touch -t 01030000 LAST.sb
                     iReceivingBTFileLength = 0;
 
                     if ( sFileContent.startsWith("{") && sFileContent.endsWith("}") ) {
+                        Log.d(TAG, "Parsing received match...");
                         try {
                             PersistHelper.storeAsPrevious(this, matchModel, false);
                             //persist(true);
@@ -6264,11 +6329,10 @@ touch -t 01030000 LAST.sb
 
                             setMatchModel(null);
                             boolean bReadOK = this.initScoreBoard(fJson);
+                            Log.d(TAG, "Parsing: " + bReadOK);
                             if ( bReadOK ) {
                                 matchModel.triggerListeners();
                                 if ( BTRole.Slave.equals(m_blueToothRole) ) {
-                                    writeMethodToBluetooth(BTMethods.Toast, R.string.bt_match_received_by_X);
-
                                     String bluetooth_name = Settings.Secure.getString(getContentResolver(), "bluetooth_name");
                                     if ( StringUtil.isEmpty(bluetooth_name) && mBluetoothAdapter != null ) {
                                         bluetooth_name = mBluetoothAdapter.getName();
@@ -6276,6 +6340,7 @@ touch -t 01030000 LAST.sb
                                     if ( StringUtil.isEmpty(bluetooth_name) ) {
                                         bluetooth_name = Build.MODEL;
                                     }
+                                    writeMethodToBluetooth(BTMethods.jsonMatchReceived, true);
                                     writeMethodToBluetooth(BTMethods.Toast, getString(R.string.bt_match_received_by_X, bluetooth_name));
                                 }
                                 bluetoothRequestCountryFile(2000);
@@ -6289,11 +6354,12 @@ touch -t 01030000 LAST.sb
                             e.printStackTrace();
                             writeMethodToBluetooth(BTMethods.Toast, "Could not read json. Exception: " + e.getMessage());
 
-                            // re-requesting complete match if exception occured
+                            // re-requesting complete match if exception occurred
                         }
                     } else {
                         // assume base64 encoded image
                         if ( sFileContent.startsWith(BTFileType.CountryFlag + ":") ) {
+                            Log.d(TAG, "Parsing flag...");
                             int    iFirstColon  = sFileContent.indexOf(":");
                             int    iSecondColon = sFileContent.indexOf(":", iFirstColon + 1);
                             String sCountryCode = null;
@@ -6323,6 +6389,8 @@ touch -t 01030000 LAST.sb
                                 Toast.makeText(this, String.format("Could not interpret file as image for %s", sCountryCode), Toast.LENGTH_LONG).show();
                                 writeMethodToBluetooth(BTMethods.Toast, "Receiver could not interpret image for " + sCountryCode);
                             }
+                        } else {
+                            Log.w(TAG, "Parsing what ??...");
                         }
                     }
                 } else {
@@ -6332,239 +6400,280 @@ touch -t 01030000 LAST.sb
             }
         }
 
-        // read what model.method() to invoke with what arguments
-        String[] sMethodNArgs = readMessage.trim().split("[\\(\\),]");
-        String    sMethod     = sMethodNArgs[0];
-        BTMethods btMethod    = null;
-        try {
-            btMethod = BTMethods.valueOf(sMethod);
-        } catch (Exception e) {
-            // might happen if connection is broken unexpectedly
-            // or old version communicating with new version with new method
-            //e.printStackTrace();
+        // if messages were queued on the 'Master'/sender, ensure we split them back here
+        String[] saReadMethods = readMessage.trim().split("\n");
+        if ( saReadMethods.length > 1 ) {
+            Log.w(TAG, "Multiple methods received: " + saReadMethods.length);
         }
-        if ( matchModel == null ) {
-            Log.w(TAG, "Matchmodel is null"); // should not happen normally
-        } else if ( btMethod == null ) {
-            Log.w(TAG, String.format("Could not derive btMethod from message %s (%s) [#%d]", sMethod, readMessage.substring(0, Math.min(20, readMessage.length())) + "...", readMessage.length()));
-        } else {
-            switch (btMethod) {
-                case changeScore: {
-                    if ( sMethodNArgs.length > 1 && (matchModel != null) ) {
-                        Player player = Player.valueOf(sMethodNArgs[1]);
-                        matchModel.changeScore(player);
+
+        for(String sMethodNArgs: saReadMethods) {
+
+            // read what model.method() to invoke with what arguments
+            String[] saMethodNArgs = sMethodNArgs.trim().split("[\\(\\),]");
+            String    sMethod     = saMethodNArgs[0];
+            BTMethods btMethod    = null;
+            try {
+                btMethod = BTMethods.valueOf(sMethod);
+            } catch (Exception e) {
+                // might happen if connection is broken unexpectedly
+                // or old version communicating with new version with new method
+                //e.printStackTrace();
+            }
+            if ( matchModel == null ) {
+                Log.w(TAG, "Matchmodel is null"); // should not happen normally
+            } else if ( btMethod == null ) {
+                Log.w(TAG, String.format("Could not derive btMethod from message %s [#%d]", sMethodNArgs.substring(0, Math.min(20, sMethodNArgs.length())) + "...", sMethodNArgs.length()));
+                //Toast.makeText(this, String.format("Could not derive btMethod from message %s", sMethod), Toast.LENGTH_LONG).show();
+            } else {
+                if ( sMethodNArgs.trim().endsWith(")") == false ) {
+                    Log.w(TAG, "method received but with incomplete arguments: " + sMethodNArgs); // should not happen normally
+                    if ( BTRole.Slave.equals(m_blueToothRole) ) {
+                        //Toast.makeText(this, "method received but with incomplete arguments: " + sMethodNArgs, Toast.LENGTH_LONG).show();
                     }
-                    break;
                 }
-                case changeSide: {
-                    if ( sMethodNArgs.length > 1 && (matchModel != null) ) {
-                        Player player = Player.valueOf(sMethodNArgs[1]);
-                        matchModel.changeSide(player);
-                    }
-                    break;
-                }
-                case changeColor: {
-                    if ( sMethodNArgs.length > 1 && (matchModel != null) ) {
-                        Player player = Player.valueOf(sMethodNArgs[1]);
-                        matchModel.setPlayerColor(player, sMethodNArgs.length>2?sMethodNArgs[2]:null);
-                    }
-                    break;
-                }
-                case undoLast: {
-                    matchModel.undoLast();
-                    break;
-                }
-                case undoLastForScorer: {
-                    if ( sMethodNArgs.length > 1 && (matchModel != null) ) {
-                        Player nonScorer = Player.valueOf(sMethodNArgs[1]);
-                        matchModel.undoLastForScorer(nonScorer);
-                    }
-                    break;
-                }
-                case endGame: {
-                    matchModel.endGame();
-                    break;
-                }
-                case timestampStartOfGame: {
-                    if ( sMethodNArgs.length > 1 && (matchModel != null) ) {
-                        GameTiming.ChangedBy changedBy = GameTiming.ChangedBy.valueOf(sMethodNArgs[1]);
-                        matchModel.timestampStartOfGame(changedBy);
-                    }
-                    break;
-                }
-                case cancelTimer: {
-                    cancelTimer();
-                    break;
-                }
-                case startTimer: {
-                    if ( sMethodNArgs.length > 1 ) {
-                        //Type timerType = Type.valueOf(sMethodNArgs[1]); // might be empty string in rare cases
-                        Type timerType = Params.getEnumValueFromString(Type.class,sMethodNArgs[1]);
-                        boolean bAutoStarted = (sMethodNArgs.length>2) ? Boolean.valueOf(sMethodNArgs[2]) : false;
-                        _showTimer(timerType, bAutoStarted);
-                    }
-                    break;
-                }
-                case restartTimerWithSecondsLeft: {
-                    if ( sMethodNArgs.length > 1 ) {
-                        DialogTimerView.restartTimerWithSecondsLeft(Integer.parseInt(sMethodNArgs[1]));
+                switch (btMethod) {
+                    case updatePreference: {
+                        if ( saMethodNArgs.length >= 3 ) {
+                            PreferenceKeys key    = PreferenceKeys.valueOf(saMethodNArgs[1]);
+                            String         sValue = saMethodNArgs[2];
+                            if ( sValue.matches("true|false") ) {
+                                PreferenceValues.setBoolean(key, this, Boolean.parseBoolean(sValue));
+                            } else if ( StringUtil.isInteger(sValue) ) {
+                                PreferenceValues.setNumber(key, this, Integer.parseInt(sValue));
+                            } else {
+                                PreferenceValues.setString(key, this, sValue);
+                            }
+                            Toast.makeText(this, String.format("Updated pref over bluetooth %s=%s", key, sValue), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(this, String.format("Could not handle %s,%s,%s", (Object[]) saMethodNArgs), Toast.LENGTH_LONG).show();
+                        }
                         break;
                     }
-                }
-                case recordAppealAndCall: {
-                    if ( sMethodNArgs.length > 2 && (matchModel != null) ) {
-                        Player player = Player.valueOf(sMethodNArgs[1]);
-                        Call   call   = Call  .valueOf(sMethodNArgs[2]);
-                        matchModel.recordAppealAndCall(player, call);
-                    }
-                    break;
-                }
-                case recordConduct: {
-                    if ( sMethodNArgs.length > 3 && (matchModel != null) ) {
-                        Player      player      = Player     .valueOf(sMethodNArgs[1]);
-                        Call        call        = Call       .valueOf(sMethodNArgs[2]);
-                        ConductType conductType = ConductType.valueOf(sMethodNArgs[3]);
-                        matchModel.recordConduct(player, call, conductType);
-                    }
-                    break;
-                }
-                case restartScore: {
-                    restartScore();
-                    break;
-                }
-                case requestCompleteJsonOfMatch: {
-                    sendMatchToOtherBluetoothDevice(false, 2000);
-                    break;
-                }
-                case requestCountryFlag: {
-                    if ( sMethodNArgs.length > 1 ) {
-                        sendFlagToOtherBluetoothDevice(this, sMethodNArgs[1]);
-                    }
-                    break;
-                }
-                case swapPlayers: {
-                    if ( sMethodNArgs.length > 1 ) {
-                        Player pFirst = Player.valueOf(sMethodNArgs[1]);
-                        swapSides(Toast.LENGTH_LONG, pFirst);
-                    }
-                    break;
-                }
-                case swapDoublePlayers: {
-                    if ( sMethodNArgs.length > 1 ) {
-                        Player player = Player.valueOf(sMethodNArgs[1]);
-                        _swapDoublePlayers(player);
-                    }
-                    break;
-                }
-                case toggleGameScoreView: {
-                    if ( Brand.isGameSetMatch() ) {
-                        toggleSetScoreView();
-                    } else {
-                        toggleGameScoreView();
-                    }
-                    break;
-                }
-                case Toast: {
-                    if ( sMethodNArgs.length > 1 ) {
-                        String sMsg = sMethodNArgs[1];
-                        if ( StringUtil.isInteger(sMsg) ) {
-                            // a resource id was send
-                            try {
-                                sMsg = getString(Integer.parseInt(sMsg), (mBluetoothHandler.getOtherDeviceName()) );
-                            } catch (Exception e) {
-                                //e.printStackTrace();
-                            }
+                    case changeScore: {
+                        if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
+                            Player player = Player.valueOf(saMethodNArgs[1]);
+                            matchModel.changeScore(player);
                         }
-                        Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
+                        break;
                     }
-                    break;
-                }
-                case resume: // fall through
-                case resume_confirmed: {
-                    String sJson = matchModel.toJsonString(null, null);
-                    int iJsonLengthHere = sJson.length();
+                    case changeSide: {
+                        if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
+                            Player player = Player.valueOf(saMethodNArgs[1]);
+                            matchModel.changeSide(player);
+                        }
+                        break;
+                    }
+                    case changeColor: {
+                        if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
+                            Player player = Player.valueOf(saMethodNArgs[1]);
+                            matchModel.setPlayerColor(player, saMethodNArgs.length>2?saMethodNArgs[2]:null);
+                        }
+                        break;
+                    }
+                    case undoLast: {
+                        matchModel.undoLast();
+                        break;
+                    }
+                    case undoLastForScorer: {
+                        if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
+                            Player nonScorer = Player.valueOf(saMethodNArgs[1]);
+                            matchModel.undoLastForScorer(nonScorer);
+                        }
+                        break;
+                    }
+                    case endGame: {
+                        matchModel.endGame();
+                        break;
+                    }
+                    case timestampStartOfGame: {
+                        if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
+                            GameTiming.ChangedBy changedBy = GameTiming.ChangedBy.valueOf(saMethodNArgs[1]);
+                            matchModel.timestampStartOfGame(changedBy);
+                        }
+                        break;
+                    }
+                    case cancelTimer: {
+                        cancelTimer();
+                        break;
+                    }
+                    case startTimer: {
+                        if ( saMethodNArgs.length > 1 ) {
+                            //Type timerType = Type.valueOf(saMethodNArgs[1]); // might be empty string in rare cases
+                            Type timerType = Params.getEnumValueFromString(Type.class,saMethodNArgs[1]);
+                            boolean  bAutoStarted = (saMethodNArgs.length>2) ? Boolean.valueOf(saMethodNArgs[2]) : false;
+                            ViewType viewType     = (saMethodNArgs.length>3) ? Params.getEnumValueFromString(ViewType.class,saMethodNArgs[3]): null;
+                            Integer  iInitialSecs = (saMethodNArgs.length>4) ? Integer.parseInt(saMethodNArgs[4]) : null;
 
-                    setWearableRole(WearRole.AppRunningOnBoth);
-
-                    if ( btMethod.equals(BTMethods.resume) ) {
-                        sendMessageToWearablesUnchecked(BTMethods.resume_confirmed + "(" + matchModel.getMatchStartTimeHHMMSSXXX() + "," + iJsonLengthHere + ")");
-                    } else {
-                        String sMatchStartTimeHere        = matchModel.getMatchStartTimeHHMMSSXXX();
-                        String sMatchStartTimeCounterPart = ( sMethodNArgs.length > 1 ) ? sMethodNArgs[1]: null;
-                        int    iMatchJsonLengthOther      = ( sMethodNArgs.length > 2 ) ? Integer.parseInt(sMethodNArgs[2]) : 0;
-                        Log.d(TAG, String.format("Match times (here - counterpart): %s - %s", sMatchStartTimeHere, sMatchStartTimeCounterPart));
-                        if ( sMatchStartTimeHere.equals(sMatchStartTimeCounterPart) ) {
-                            Log.d(TAG, String.format("Match json length (here - counterpart) : %d - %d", iJsonLengthHere, iMatchJsonLengthOther));
-                            // sync has happened before, keep them in sync. Take json from device that is 'biggest'
-                            if ( iJsonLengthHere > iMatchJsonLengthOther ) {
-                                sendMatchFromToWearable(sJson);
-                            } else if ( iJsonLengthHere < iMatchJsonLengthOther ) {
-                                sendMessageToWearablesUnchecked(BTMethods.requestCompleteJsonOfMatch);
-                            } else {
-                                // assume matches are still in sync
-                            }
-                        } else if ( isWearable() == false ) {
-                            pullOrPushMatchOverBluetoothWearable( isWearable() ? "Handheld" : "Wearable");
+                            _showTimer(timerType, bAutoStarted, viewType, iInitialSecs);
+                        }
+                        break;
+                    }
+                    case restartTimerWithSecondsLeft: {
+                        if ( saMethodNArgs.length > 1 ) {
+                            DialogTimerView.restartTimerWithSecondsLeft(Integer.parseInt(saMethodNArgs[1]));
+                            break;
                         }
                     }
-                    break;
-                }
-                case paused: {
-                    setWearableRole(WearRole.Paused);
-                    break;
-                }
-/*
-                case openSuggestMatchSyncDialogOnOtherPaired: {
-                    pullOrPushMatchOverBluetoothWearable( isWearable() ? "Handheld" : "Wearable");
-                    break;
-                }
-*/
-                case lock: {
-                    handleMenuItem(R.id.sb_lock);
-                    break;
-                }
-                case unlock: {
-                    handleMenuItem(R.id.sb_unlock);
-                    break;
-                }
-                default:
-                    Log.w(TAG, "Not handling method " + btMethod);
-                    break;
-            }
-            if ( bTrueWearable_FalsePairedBluetooth ) {
-                // message is coming from paired wearable
-                if ( btMethod.verifyScore() ) {
-                    String sScoreReceived = sMethodNArgs[sMethodNArgs.length - 1];
-                    String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
-                    if ( sModelScore.equals(sScoreReceived) == false ) {
-                        Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
-                        boolean bRequestModel = true;
-                        if ( matchModel.isPossibleGameVictory() && sScoreReceived.equals("0-0") ) {
-                            if ( dialogManager.isDialogShowing() ) {
-                                if ( dialogManager.baseDialog instanceof EndGame ) {
-                                    EndGame endGame = (EndGame) dialogManager.baseDialog;
-                                    endGame.handleButtonClick(EndGame.BTN_END_GAME_PLUS_TIMER);
-                                    bRequestModel = false;
+                    case recordAppealAndCall: {
+                        if ( saMethodNArgs.length > 2 && (matchModel != null) ) {
+                            Player player = Player.valueOf(saMethodNArgs[1]);
+                            Call   call   = Call  .valueOf(saMethodNArgs[2]);
+                            matchModel.recordAppealAndCall(player, call);
+                        }
+                        break;
+                    }
+                    case recordConduct: {
+                        if ( saMethodNArgs.length > 3 && (matchModel != null) ) {
+                            Player      player      = Player     .valueOf(saMethodNArgs[1]);
+                            Call        call        = Call       .valueOf(saMethodNArgs[2]);
+                            ConductType conductType = ConductType.valueOf(saMethodNArgs[3]);
+                            matchModel.recordConduct(player, call, conductType);
+                        }
+                        break;
+                    }
+                    case restartScore: {
+                        restartScore();
+                        break;
+                    }
+                    case jsonMatchReceived: {
+                        // do not actually swap sides, but make sure mirrored device displays LR as desired
+                        swapSidesOnBT(iBoard.m_firstPlayerOnScreen);
+                        break;
+                    }
+                    case requestCompleteJsonOfMatch: {
+                        sendMatchToOtherBluetoothDevice(false, 2000);
+                        break;
+                    }
+                    case requestCountryFlag: {
+                        if ( saMethodNArgs.length > 1 ) {
+                            sendFlagToOtherBluetoothDevice(this, saMethodNArgs[1]);
+                        }
+                        break;
+                    }
+                    case swapPlayers: {
+                        if ( saMethodNArgs.length > 1 ) {
+                            Player pFirst = Player.valueOf(saMethodNArgs[1]);
+                            swapSides(Toast.LENGTH_LONG, pFirst);
+                        }
+                        break;
+                    }
+                    case swapDoublePlayers: {
+                        if ( saMethodNArgs.length > 1 ) {
+                            Player player = Player.valueOf(saMethodNArgs[1]);
+                            _swapDoublePlayers(player);
+                        }
+                        break;
+                    }
+                    case toggleGameScoreView: {
+                        if ( Brand.isGameSetMatch() ) {
+                            toggleSetScoreView();
+                        } else {
+                            toggleGameScoreView();
+                        }
+                        break;
+                    }
+                    case Toast: {
+                        if ( saMethodNArgs.length > 1 ) {
+                            String sMsg = saMethodNArgs[1];
+                            if ( StringUtil.isInteger(sMsg) ) {
+                                // a resource id was send
+                                try {
+                                    sMsg = getString(Integer.parseInt(sMsg), (mBluetoothHandler.getOtherDeviceName()) );
+                                } catch (Exception e) {
+                                    //e.printStackTrace();
                                 }
                             }
+                            Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                         }
-                        if ( bRequestModel ) {
-                            sendMessageToWearablesUnchecked(BTMethods.requestCompleteJsonOfMatch);
+                        break;
+                    }
+                    case resume: // fall through
+                    case resume_confirmed: {
+                        String sJson = matchModel.toJsonString(null, null);
+                        int iJsonLengthHere = sJson.length();
+
+                        setWearableRole(WearRole.AppRunningOnBoth);
+
+                        if ( btMethod.equals(BTMethods.resume) ) {
+                            sendMessageToWearablesUnchecked(BTMethods.resume_confirmed + "(" + matchModel.getMatchStartTimeHHMMSSXXX() + "," + iJsonLengthHere + ")");
+                        } else {
+                            String sMatchStartTimeHere        = matchModel.getMatchStartTimeHHMMSSXXX();
+                            String sMatchStartTimeCounterPart = ( saMethodNArgs.length > 1 ) ? saMethodNArgs[1]: null;
+                            int    iMatchJsonLengthOther      = ( saMethodNArgs.length > 2 ) ? Integer.parseInt(saMethodNArgs[2]) : 0;
+                            Log.d(TAG, String.format("Match times (here - counterpart): %s - %s", sMatchStartTimeHere, sMatchStartTimeCounterPart));
+                            if ( sMatchStartTimeHere.equals(sMatchStartTimeCounterPart) ) {
+                                Log.d(TAG, String.format("Match json length (here - counterpart) : %d - %d", iJsonLengthHere, iMatchJsonLengthOther));
+                                // sync has happened before, keep them in sync. Take json from device that is 'biggest'
+                                if ( iJsonLengthHere > iMatchJsonLengthOther ) {
+                                    sendMatchFromToWearable(sJson);
+                                } else if ( iJsonLengthHere < iMatchJsonLengthOther ) {
+                                    sendMessageToWearablesUnchecked(BTMethods.requestCompleteJsonOfMatch);
+                                } else {
+                                    // assume matches are still in sync
+                                }
+                            } else if ( isWearable() == false ) {
+                                pullOrPushMatchOverBluetoothWearable( isWearable() ? "Handheld" : "Wearable");
+                            }
                         }
+                        break;
+                    }
+                    case paused: {
+                        setWearableRole(WearRole.Paused);
+                        break;
+                    }
+    /*
+                    case openSuggestMatchSyncDialogOnOtherPaired: {
+                        pullOrPushMatchOverBluetoothWearable( isWearable() ? "Handheld" : "Wearable");
+                        break;
+                    }
+    */
+                    case lock: {
+                        handleMenuItem(R.id.sb_lock);
+                        break;
+                    }
+                    case unlock: {
+                        handleMenuItem(R.id.sb_unlock);
+                        break;
+                    }
+                    default:
+                        Log.w(TAG, "Not handling method " + btMethod);
+                        break;
+                }
+                if ( bTrueWearable_FalsePairedBluetooth ) {
+                    // message is coming from paired wearable
+                    if ( btMethod.verifyScore() ) {
+                        String sScoreReceived = saMethodNArgs[saMethodNArgs.length - 1];
+                        String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
+                        if ( sModelScore.equals(sScoreReceived) == false ) {
+                            Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
+                            boolean bRequestModel = true;
+                            if ( matchModel.isPossibleGameVictory() && sScoreReceived.equals("0-0") ) {
+                                if ( dialogManager.isDialogShowing() ) {
+                                    if ( dialogManager.baseDialog instanceof EndGame ) {
+                                        EndGame endGame = (EndGame) dialogManager.baseDialog;
+                                        endGame.handleButtonClick(EndGame.BTN_END_GAME_PLUS_TIMER);
+                                        bRequestModel = false;
+                                    }
+                                }
+                            }
+                            if ( bRequestModel ) {
+                                sendMessageToWearablesUnchecked(BTMethods.requestCompleteJsonOfMatch);
+                            }
+                        }
+                    } else {
+                        //Log.d(TAG, "[WEAR] verify score not required for " + btMethod);
                     }
                 } else {
-                    //Log.d(TAG, "[WEAR] verify score not required for " + btMethod);
-                }
-            } else {
-                if ( BTRole.Slave.equals(m_blueToothRole) && btMethod.verifyScore() ) {
-                    // verify score of model against score received. If not equal request complete matchmodel to get in sync
-                    String sScoreReceived = sMethodNArgs[sMethodNArgs.length - 1];
-                    String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
-                    if ( sModelScore.equals(sScoreReceived) == false ) {
-                        Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
-                        writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
+                    if ( BTRole.Slave.equals(m_blueToothRole) && btMethod.verifyScore() ) {
+                        // verify score of model against score received. If not equal request complete matchmodel to get in sync
+                        String sScoreReceived = saMethodNArgs[saMethodNArgs.length - 1];
+                        String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
+                        if ( sModelScore.equals(sScoreReceived) == false ) {
+                            Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
+                            writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
+                        }
+                        //hidePresentationEndOfGame();
                     }
-                    //hidePresentationEndOfGame();
                 }
             }
         }
@@ -6702,12 +6811,17 @@ touch -t 01030000 LAST.sb
         }
         // Get the BluetoothDevice object
         BluetoothDevice btDeviceOther = mBluetoothAdapter.getRemoteDevice(address);
-        // Attempt to connect to the device
 
         setBluetoothRole(BTRole.Master, "Connecting...");
+        // Attempt to connect to the device
         mBluetoothControlService.connect(btDeviceOther);
     }
-
+    public String getOtherBluetoothDeviceAddressName() {
+        return mBluetoothHandler.getOtherDeviceAddressName();
+    }
+    public void disconnectBluetoothDevice() {
+        mBluetoothControlService.stop();
+    }
     // ----------------------------------------------------
     // --------------------- Wearable ---------------------
     // ----------------------------------------------------
@@ -6811,7 +6925,7 @@ touch -t 01030000 LAST.sb
             Log.w(TAG, "[setModelForCast] castHelper:" + castHelper + ", matchModel:" + matchModel);
             return;
         }
-        Log.d(TAG, "setModelForCast");
+        //Log.v(TAG, "setModelForCast");
         castHelper.setModelForCast(matchModel);
     }
 

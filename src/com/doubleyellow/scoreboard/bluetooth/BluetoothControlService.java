@@ -16,6 +16,7 @@
 package com.doubleyellow.scoreboard.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
@@ -23,10 +24,14 @@ import android.os.Message;
 import android.util.Log;
 
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.util.ListUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -76,7 +81,8 @@ public class BluetoothControlService
     private synchronized void setState(BTState state, BluetoothDevice device) {
         mState = state;
         // Give the new state to the Handler so the UI Activity can update
-        mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), state.ordinal(), 0, device).sendToTarget();
+        Message message = mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), state.ordinal(), 0, device);
+        message.sendToTarget();
     }
 
     /**
@@ -190,6 +196,8 @@ public class BluetoothControlService
         setState(BTState.NONE, null);
     }
 
+    private static final String MSG_SEPARATOR = "\n";
+
     /**
      * Write to the ConnectedThread (in a synchronized manner!)
      */
@@ -202,16 +210,28 @@ public class BluetoothControlService
             return;
         }
         write(s.getBytes());
+
+        if ( m_sbSendDelayed.length() > 0 ) {
+            Log.d(TAG, "Sending 'delayed' : " + m_sbSendDelayed);
+            write(m_sbSendDelayed.toString().getBytes());
+            m_sbSendDelayed.setLength(0);
+        }
+    }
+
+    private final StringBuffer m_sbSendDelayed = new StringBuffer();
+    public synchronized void sendDelayed(String s) {
+        m_sbSendDelayed.append(s);
     }
     private void write(byte[] out) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
-        synchronized (this ) {
+        synchronized ( this ) {
             if (mState.equals(BTState.CONNECTED)==false) return;
             r = mConnectedThread;
 
             r.write(out);
+            r.write(MSG_SEPARATOR.getBytes());
         }
     }
 
@@ -223,6 +243,8 @@ public class BluetoothControlService
         // Send the name of the connected device back to the UI Activity
         Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.bt_connected_to_device_X, 0, device);
         mHandler.sendMessage(msg);
+
+        //writeMethodToBluetooth(BTMethods.updatePreference, PreferenceKeys.BTSync_showFullScreenTimer, PreferenceValues.BTSync_showFullScreenTimer(this));
     }
     /**
      * Indicate that the connection attempt failed and notify the UI Activity.
@@ -387,14 +409,34 @@ public class BluetoothControlService
         @Override public void run() {
             byte[] buffer = new byte[1024];
             int bytes;
+            StringBuilder sbBufferComplete = new StringBuilder();
             // Keep listening to the InputStream while connected
             while (true) {
                 try {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
+                    Log.v(TAG, "read from input stream: " + bytes);
                     // Send the obtained bytes to the UI Activity
-                    Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), bytes, -1, buffer);
-                    message.sendToTarget();
+                    String sBuffer = new String(buffer, 0 , bytes);
+                    sbBufferComplete.append(sBuffer);
+                    int iIdx = sbBufferComplete.indexOf(MSG_SEPARATOR);
+                    if ( iIdx > 0 ) {
+                        while (iIdx > 0 ) {
+                            String sToInterpret = sbBufferComplete.substring(0, iIdx);
+                            // reconstruct StringBuilder without message to interpret
+                            String sRemaining = sbBufferComplete.substring(iIdx + MSG_SEPARATOR.length());
+                            sbBufferComplete.setLength(0);
+                            sbBufferComplete.append(sRemaining);
+
+                            byte[] baToInterpret = sToInterpret.getBytes();
+                            Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), baToInterpret.length, -1, baToInterpret);
+                            message.sendToTarget();
+
+                            iIdx = sbBufferComplete.indexOf(MSG_SEPARATOR);
+                        }
+                    } else {
+                        Log.v(TAG, "Waiting for more data from input stream: " + sbBufferComplete);
+                    }
                 } catch (IOException e) {
                     connectionLost();
                     BluetoothControlService.this.breakConnectionAndListenForNew();
@@ -425,5 +467,18 @@ public class BluetoothControlService
             } catch (IOException e) {
             }
         }
+    }
+
+    public static List<BluetoothDevice> filtered(Set<BluetoothDevice> pairedDevices) {
+        List<BluetoothDevice> lPairedDevicesFilteredOnNWService = new ArrayList<>();
+        // If there are paired devices, check if the device supports networking
+        if ( ListUtil.isNotEmpty(pairedDevices) ) {
+            for (BluetoothDevice device : pairedDevices) {
+                if ( device.getBluetoothClass().hasService(BluetoothClass.Service.NETWORKING) ) {
+                    lPairedDevicesFilteredOnNWService.add(device);
+                }
+            }
+        }
+        return lPairedDevicesFilteredOnNWService;
     }
 }

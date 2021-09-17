@@ -64,7 +64,7 @@ public abstract class TwoTimerView extends BaseAlertDialog
 
     Type     m_timerType = null;
     @Override public void show() {
-        scoreBoard._showTimer(m_timerType, m_bAutoTriggered);
+        scoreBoard._showTimer(m_timerType, m_bAutoTriggered, null, null);
     }
 
     @Override public boolean isShowing() {

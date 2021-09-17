@@ -42,6 +42,7 @@ public enum BTMethods {
     toggleGameScoreView(false),
 
     requestCompleteJsonOfMatch(false),
+    jsonMatchReceived(false),
     requestCountryFlag(false),
 
     /** mainly used to be send from wearable to more userfriendly handheld */

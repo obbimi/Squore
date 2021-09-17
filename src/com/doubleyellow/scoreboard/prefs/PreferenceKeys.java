@@ -290,6 +290,11 @@ public enum PreferenceKeys {
             castScreenSponsorUrl,
             Cast_ShowGraphDuringTimer,
 
+    // BT mirror/sync
+    /** e.g. for table tennis: referee holding 'controlling' device with A on left and B on right, while on mirrored device (tablet on referee table but facing the players) A is on the right and B is on the left */
+    BTSync_keepLROnConnectedDeviceMirrored,
+    BTSync_showFullScreenTimer,
+
     enableScoringByBluetoothConnection,
         lastConnectedBluetoothDevice,
 

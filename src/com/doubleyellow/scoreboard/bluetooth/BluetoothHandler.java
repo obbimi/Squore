@@ -18,6 +18,7 @@ package com.doubleyellow.scoreboard.bluetooth;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +39,7 @@ public class BluetoothHandler extends Handler
 
     private ScoreBoard sb = null;
     public BluetoothHandler(ScoreBoard scoreBoard) {
+        super(Looper.getMainLooper());
         sb = scoreBoard;
     }
 
@@ -71,7 +73,7 @@ public class BluetoothHandler extends Handler
                 String writeMessage = new String(writeBuf);
                 Log.d(TAG, "writeMessage: " + writeMessage);
                 if ( BTRole.Slave.equals(sb.m_blueToothRole)
-                  && writeMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + "|" + BTMethods.requestCountryFlag + ").*") == false
+                  && writeMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + "|" + BTMethods.jsonMatchReceived + "|" + BTMethods.requestCountryFlag + ").*") == false
                    )
                 {
                     // become master
@@ -81,9 +83,9 @@ public class BluetoothHandler extends Handler
             case READ:
                 byte[] readBuf = (byte[]) msg.obj;
                 String readMessage = new String(readBuf, 0, msg.arg1); // msg.arg1 contains number of bytes actually having valid info
-                Log.d(TAG, "readMessage: (#" + msg.arg1 + "):" + readMessage);
+                Log.d(TAG, "readMessage: (#" + msg.arg1 + "): " + readMessage);
                 if ( BTRole.Master.equals(sb.m_blueToothRole)
-                  && readMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + "|" + BTMethods.requestCountryFlag + ").*") == false
+                  && readMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + "|" + BTMethods.jsonMatchReceived + "|" + BTMethods.requestCountryFlag + ").*") == false
                    )
                 {
                     // become slave
@@ -110,7 +112,7 @@ public class BluetoothHandler extends Handler
         return m_bHandlingBluetoothMessageInProgress;
     }
 
-    private void storeBTDeviceConnectedTo(Object o) {
+    public void storeBTDeviceConnectedTo(Object o) {
         if ( o instanceof BluetoothDevice ) {
             m_btDeviceOther = (BluetoothDevice) o;
             m_sDeviceNameLastConnected = m_btDeviceOther.getName();

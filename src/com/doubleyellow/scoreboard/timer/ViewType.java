@@ -20,4 +20,6 @@ package com.doubleyellow.scoreboard.timer;
 public enum ViewType {
     Popup,
     Inline,
+    /** for now only used on bluetooth 'Slave' */
+    FullScreen,
 }

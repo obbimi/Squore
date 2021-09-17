@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
 
+    <string name="bt_disconnect">Disconnect</string>
     <string name="bt_pull_or_push">Choose</string>
     <string name="bt_pull">Pull</string>
     <string name="bt_push">Push</string>

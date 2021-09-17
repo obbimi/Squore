@@ -138,9 +138,9 @@ public class DialogManager {
             BaseAlertDialog bad = (BaseAlertDialog) o;
             boolean remove = baseDialogs.remove(bad);
             if ( remove ) {
-                Log.d(TAG, "dialog removed from the stack " + bad.getClass());
+                Log.v(TAG, "dialog removed from the stack " + bad.getClass());
             } else {
-                Log.d(TAG, "dialog was (no longer) on the stack " + bad.getClass());
+                Log.d(TAG, "dialog was not (or no longer) on the stack " + bad.getClass());
             }
             return remove;
         } else {

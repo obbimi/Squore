@@ -1401,9 +1401,9 @@ public class IBoard implements TimerViewContainer
         if ( gameBallFor == null ) {
             gameBallFor = matchModel.isPossibleGameBallFor();
             bShow       = ListUtil.isNotEmpty(gameBallFor);
-            Log.d(TAG, "Update game ball message - recalculated " + Arrays.asList(gameBallFor));
+            Log.v(TAG, "Update game ball message - recalculated " + Arrays.asList(gameBallFor));
         }
-        Log.d(TAG, "updateGameBallMessage [" + sContext + "] " + Arrays.asList(gameBallFor) + " ==> show : " + bShow);
+        //Log.d(TAG, "updateGameBallMessage [" + sContext + "] " + Arrays.asList(gameBallFor) + " ==> show : " + bShow);
 /*
         if ( bShow ) {
             final String sSSFilename = Util.filenameForAutomaticScreenshot(context, matchModel, showOnScreen, -1, -1, null);

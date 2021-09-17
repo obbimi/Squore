@@ -900,6 +900,19 @@
                                 android:defaultValue="@bool/Cast_ShowGraphDuringTimer_default"
             />
         </PreferenceCategory>
+
+        <PreferenceCategory android:title="@string/pref_Category_BlueToothSync" android:key="BlueToothSync">
+            <CheckBoxPreference android:key="BTSync_keepLROnConnectedDeviceMirrored"
+                                android:title="@string/pref_BTSync_keepLROnConnectedDeviceMirrored"
+                                android:icon="@android:drawable/stat_sys_data_bluetooth"
+                                android:defaultValue="@bool/BTSync_keepLROnConnectedDeviceMirrored_default__Squash"
+            />
+            <CheckBoxPreference android:key="BTSync_showFullScreenTimer"
+                                android:title="@string/pref_BTSync_showFullScreenTimer"
+                                android:icon="@drawable/digital_clock32x32"
+                                android:defaultValue="@bool/BTSync_showFullScreenTimer_default__Squash"
+            />
+        </PreferenceCategory>
     </PreferenceScreen>
 
     <PreferenceScreen android:key="Timers"

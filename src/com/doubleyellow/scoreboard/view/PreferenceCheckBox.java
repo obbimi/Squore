@@ -51,6 +51,9 @@ public class PreferenceCheckBox extends CheckBox
         attributes.recycle();
     }
 
+    public PreferenceCheckBox(Context context, PreferenceKeys preferenceKey, int iResDefault) {
+        this(context, preferenceKey, iResDefault, false);
+    }
     public PreferenceCheckBox(Context context, PreferenceKeys preferenceKey, int iResDefault, boolean bStoreInverted) {
         super(context);
         init(context, preferenceKey, context.getResources().getBoolean(iResDefault), bStoreInverted);
