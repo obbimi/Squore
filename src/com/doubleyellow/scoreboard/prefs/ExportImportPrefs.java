@@ -66,7 +66,7 @@ public class ExportImportPrefs extends DialogPreference
 
     public static boolean importSettings(Context context) {
         File fSettings = getSettingsBinaryFile(context, true);
-        if ( fSettings.exists() == false ) {
+        if ( (fSettings == null) || (fSettings.exists() == false) ) {
             String sMsg  =        context.getString(R.string.could_not_find_file_x                 , fSettings.getAbsolutePath());
                    sMsg += "\n" + context.getString(R.string.did_you_already_perform_an_export_of_x, context.getString(R.string.sb_preferences));
             Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
@@ -121,11 +121,18 @@ public class ExportImportPrefs extends DialogPreference
         if ( bWritten ) {
             String sMsg = context.getString(R.string.x_stored_in_y, context.getString(R.string.sb_preferences), fSettings.getAbsolutePath());
             Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+        } else {
+            String sMsg = String.format("Could not store settings in %s", fSettings.getAbsolutePath());
+            Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
         }
     }
 
     public static File getSettingsBinaryFile(Context context, boolean bForImport) {
         File externalStorageDirectory = PreferenceValues.targetDirForImportExport(context, bForImport); // typically '/storage/emulated/0'
+        if ( externalStorageDirectory.canWrite() == false ) {
+            Toast.makeText(context, context.getString(R.string.no_write_rights_for_x, externalStorageDirectory.getPath()), Toast.LENGTH_LONG).show();
+            return null;
+        }
         ExportImport.MountState mountStateExternalStorage = ExportImport.getMountStateExternalStorage();
         if ( externalStorageDirectory == null || mountStateExternalStorage.equals(ExportImport.MountState.UnMounted) ) {
             Toast.makeText(context, R.string.could_not_determine_external_storage_location, Toast.LENGTH_LONG).show();

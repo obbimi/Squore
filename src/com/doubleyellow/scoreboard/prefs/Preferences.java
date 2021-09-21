@@ -881,10 +881,26 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             if ( lpTargetDir != null ) {
                 Collection<String> sdCardPaths       = ExportImport.getSDCardPaths(false);
               //Collection<String> sdCardPathsExport = ExportImport.getSDCardPaths(true);
+/*
                 File storageDirectory = Environment.getExternalStorageDirectory();
+                String externalStorageState = Environment.getExternalStorageState();
                 if ( (storageDirectory != null) && (sdCardPaths.contains(storageDirectory.getAbsolutePath()) == false) ) {
                     sdCardPaths.add(storageDirectory.getAbsolutePath());
                 }
+*/
+                File storageDirectory2 = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+                if ( (storageDirectory2 != null) && (sdCardPaths.contains(storageDirectory2.getAbsolutePath()) == false) ) {
+                    sdCardPaths.add(storageDirectory2.getAbsolutePath());
+                }
+
+                // the next directory is not ideal. Files are deleted if app is uninstalled...
+/*
+                File storageDir3 = getContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+                if ( (storageDir3 != null) && (sdCardPaths.contains(storageDir3.getAbsolutePath()) == false) ) {
+                    sdCardPaths.add(storageDir3.getAbsolutePath());
+                }
+*/
+
                 if ( ListUtil.size(sdCardPaths) >= 1 ) {
                     String[] entries = sdCardPaths.toArray(new String[0]);
                     lpTargetDir.setEntries    (entries);
@@ -897,8 +913,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         sCurrentValue = null;
                     }
                 }
-                if ( StringUtil.isEmpty(sCurrentValue) && (storageDirectory != null) ) {
-                    lpTargetDir.setValue(storageDirectory.getAbsolutePath());
+                if ( StringUtil.isEmpty(sCurrentValue) && (storageDirectory2 != null) ) {
+                    lpTargetDir.setValue(storageDirectory2.getAbsolutePath());
                 }
                 if (ListUtil.size(sdCardPaths) > 1 ) {
                     lpTargetDir.setEnabled(true);
