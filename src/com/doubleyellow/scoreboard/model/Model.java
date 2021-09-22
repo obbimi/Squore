@@ -970,6 +970,9 @@ public abstract class Model implements Serializable
                 }
             }
 
+            if ( (slRemoved != null) && slRemoved.isTimeout() ) {
+                this.m_player2TimeoutInfo.remove(slRemoved.getCallTargetPlayer());
+            }
             if ( (slRemoved != null) && slRemoved.isCall() ) {
                 // usually only a 'just let' or 'conduct warning'
                 if ( slRemoved.call.isConduct() ) {
@@ -3345,7 +3348,7 @@ public abstract class Model implements Serializable
         boolean bGameBallFor_Unchanged = bGameBallFor_Unchanged0 || bGameBallFor_Unchanged1 || bGameBallFor_Unchanged2;
 
         if ( bGameBallFor_Unchanged == false ) {
-            Log.d(TAG, String.format("Gameball %s changed from %s to %s", when, getPlayersAsList(gameballForOld), getPlayersAsList(gameballForNew)));
+            Log.v(TAG, String.format("Gameball %s changed from %s to %s", when, getPlayersAsList(gameballForOld), getPlayersAsList(gameballForNew)));
         }
 
         if ( when.equals(When.ScoreOneMorePoint) && (bGameBallFor_Unchanged == false) ) {
