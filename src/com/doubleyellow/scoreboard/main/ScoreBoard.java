@@ -33,7 +33,11 @@ import android.nfc.tech.NfcF;
 import android.os.*;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+
+import androidx.core.view.InputDeviceCompat;
+import androidx.core.view.MotionEventCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.util.Base64;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -249,6 +253,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
 
         @Override public boolean onSwipe(View view, Direction direction, float maxD, float percentageOfView) {
+            if ( ViewUtil.isWearable(ScoreBoard.this) ) {
+                // wearable screen is typically to small to interpret swipe events
+                return false;
+            }
             int viewId = getXmlIdOfParent(view);
             Player player = IBoard.m_id2player.get(viewId);
             dbgmsg("Swipe to " + direction +" of " + maxD + " (%=" + percentageOfView + ",p=" + player + ")", viewId, 0);
@@ -261,12 +269,12 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     if ( EnumSet.of(Direction.E, Direction.W).contains(direction) ) {
                         if ( Brand.isSquash() && isServer ) {
                             // perform undo if swiped horizontally over server score button (= person who scored last)
-                            handleMenuItem(R.id.sb_undo_last);
+                            handleMenuItem(R.id.dyn_undo_last);
                         } else {
                             Player pLastScorer = matchModel.getLastScorer();
                             if ( player.equals(pLastScorer) ) {
                                 // perform undo if swiped horizontally over last scorer
-                                handleMenuItem(R.id.sb_undo_last);
+                                handleMenuItem(R.id.dyn_undo_last);
                             } else {
                                 if ( matchModel.getScore(player) > 0 ) {
                                     // present user with dialog to remove last scoreline for other than latest scorer ...
@@ -650,7 +658,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 toast.show();
                 lLastClickTime = currentTime;
             } else {
-                handleMenuItem(R.id.sb_undo_last); // TODO: enough 'undo' options, we can use something else here
+                handleMenuItem(R.id.dyn_undo_last); // TODO: enough 'undo' options, we can use something else here
                 lLastClickTime = 0;
                 if ( toast != null ) {
                     toast.cancel();
@@ -716,7 +724,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 return false;
             case Suggest:
                 if ( Brand.supportChooseSide() /*Brand.isGameSetMatch()*/ ) {
-                    if ( isLandscape() ) {
+                    if ( isLandscape() || ViewUtil.isWearable(this) ) {
                         showChangeSideFloatButton(true);
                     } else {
                         _confirmChangeSides(null);
@@ -1264,8 +1272,66 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( PreferenceValues.swapPlayersOn180DegreesRotationOfDeviceInLandscape(this) && isLandscape() ) {
             initForSwapPlayersOn180Rotation();
         }
+    }
 
-        //Log.d(TAG, "onResume DONE");
+    private long lLastRotaryEventHandled = 0L;
+    private long lMinTimeBetweenHandling2RotaryEvents = 3000L;
+
+    private long lLastRotaryEventAdded = 0L;
+    private long lMaxTimeBetweenAdding2Deltas         = 300L;
+    private float lRotationDeltaCumulative = 0.0f;
+
+    private float lMinimumRotationToScorePoint = 2.5f; // TODO: sensitivity as setting
+    @Override public boolean onGenericMotionEvent(MotionEvent event) {
+      //Log.d(TAG, "[onGenericMotionEvent] rotary : event : " + event);
+        if (   ViewUtil.isWearable(this)
+            && ( event.getAction() == MotionEvent.ACTION_SCROLL )
+            && event.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)
+           ) {
+            long lNow = System.currentTimeMillis();
+
+            // keep the total rotation in certain direction up to date
+            {
+                float lRotationDelta = event.getAxisValue(MotionEventCompat.AXIS_SCROLL);
+
+                long lTimeSinceLastRotaryEvent = lNow - lLastRotaryEventAdded;
+                if ( lTimeSinceLastRotaryEvent > lMaxTimeBetweenAdding2Deltas ) {
+                    lRotationDeltaCumulative = 0; // restart counting from zero
+                }
+                lRotationDeltaCumulative += lRotationDelta;
+                //Log.d(TAG, "[onGenericMotionEvent] rotary : lRotationDeltaCumulative : " + lRotationDeltaCumulative);
+            }
+
+            lLastRotaryEventAdded = lNow;
+
+            long lTimeSinceLastRotaryChangeScore = lNow - lLastRotaryEventHandled;
+            if ( lTimeSinceLastRotaryChangeScore > lMinTimeBetweenHandling2RotaryEvents ) {
+                if ( Math.abs(lRotationDeltaCumulative) > lMinimumRotationToScorePoint ) {
+                    Player player = Player.B;
+                    if ( lRotationDeltaCumulative > 0 ) {
+                        player = Player.A;
+                    }
+                    boolean bFlipRotaryRotation = false; // TODO: setting, but wearable has no easily accessible setting screen yes
+                    if ( bFlipRotaryRotation ) {
+                        player = player.getOther();
+                    }
+                    Log.d(TAG, "Handling rotary event to change score for " + player);
+                    changeScore(player);
+                    lLastRotaryEventHandled = lNow;
+                    lRotationDeltaCumulative = 0;
+
+                    // typically this type of scoring is done on a wearable without looking at the device. Give short vibration to indicate the point scoring was registered
+                    SystemUtil.doVibrate(ScoreBoard.this, 200);
+                    return true;
+                } else {
+                  //Log.d(TAG, "Ignoring rotary event: to little deltaCum " + lRotationDeltaCumulative + " < " + lMinimumRotationToScorePoint);
+                }
+            } else {
+              //Log.d(TAG, "Ignoring rotary event: to soon: " + lTimeSinceLastRotaryChangeScore + " < " + lMinTimeBetweenHandling2RotaryEvents);
+            }
+        }
+
+        return super.onGenericMotionEvent(event);
     }
 
     private void keepScreenOn(boolean bOn) {
@@ -6884,6 +6950,7 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
     private com.doubleyellow.scoreboard.cast.ICastHelper castHelper = null;
     private void initCasting() {
+        if ( ViewUtil.isWearable(this) ) { return; }
         createCastHelper();
     }
 
@@ -6922,7 +6989,7 @@ touch -t 01030000 LAST.sb
     }
     private void setModelForCast(Model matchModel) {
         if ( castHelper == null || matchModel == null ) {
-            Log.w(TAG, "[setModelForCast] castHelper:" + castHelper + ", matchModel:" + matchModel);
+            //Log.w(TAG, "[setModelForCast] castHelper:" + castHelper + ", matchModel:" + matchModel);
             return;
         }
         //Log.v(TAG, "setModelForCast");
