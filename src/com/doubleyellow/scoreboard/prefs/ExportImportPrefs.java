@@ -67,7 +67,7 @@ public class ExportImportPrefs extends DialogPreference
     public static boolean importSettings(Context context) {
         File fSettings = getSettingsBinaryFile(context, true);
         if ( (fSettings == null) || (fSettings.exists() == false) ) {
-            String sMsg  =        context.getString(R.string.could_not_find_file_x                 , fSettings.getAbsolutePath());
+            String sMsg  =        context.getString(R.string.could_not_find_file_x                 , (fSettings==null?"":fSettings.getAbsolutePath()) );
                    sMsg += "\n" + context.getString(R.string.did_you_already_perform_an_export_of_x, context.getString(R.string.sb_preferences));
             Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
             return false;
