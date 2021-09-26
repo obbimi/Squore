@@ -224,7 +224,7 @@ public class EditMatchWizard extends BaseAlertDialog
 
         {
             LinearLayout llBrandSpecific = new LinearLayout(context);
-            llBrandSpecific.setOrientation(LinearLayout.HORIZONTAL);
+            llBrandSpecific.setOrientation(LinearLayout.VERTICAL);
 
             if ( Brand.isGameSetMatch() )
             {
@@ -240,6 +240,22 @@ public class EditMatchWizard extends BaseAlertDialog
                 tbBestOf_or_TotalOf.setSelectedIndex(finalSetFinish.ordinal());
 
                 llBrandSpecific.addView(tbBestOf_or_TotalOf, lpCC);
+            }
+            if ( Brand.isGameSetMatch() )
+            {
+                // golden point or not
+                String[] fsfDescriptions = { getString(R.string.cmd_no), getString(R.string.cmd_yes) };
+                List<String> lValues = new ArrayList<>();
+                for(String sDescription: fsfDescriptions ) {
+                    lValues.add(getString(R.string.lbl_GoldenPoint) + ": " + sDescription);
+                }
+                SelectObjectToggle<String> tbGoldenPoint = new SelectObjectToggle<String>(context, lValues);
+                tbGoldenPoint.setTag(PreferenceKeys.goldenPointToWinGame);
+                GSMModel gsmModel = (GSMModel) matchModel;
+                boolean bGoldenPoint = gsmModel.getGoldenPointToWinGame();
+                tbGoldenPoint.setSelectedIndex(bGoldenPoint?1:0);
+
+                llBrandSpecific.addView(tbGoldenPoint, lpCC);
             }
             if ( Brand.isRacketlon() ) {
                 // initial discipline

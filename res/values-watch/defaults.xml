@@ -6,6 +6,8 @@
     <string name="endGameSuggestion_default__Tabletennis">Automatic</string>
     <string name="endGameSuggestion_default__Badminton">Automatic</string>
 
-<!--    <dimen name="sb_button_radius">10dp</dimen>-->
+    <bool name="useFeedAndPostFunctionality_default">false</bool>
+
+    <!--    <dimen name="sb_button_radius">10dp</dimen>-->
 
 </resources>
