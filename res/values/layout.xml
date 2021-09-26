@@ -53,10 +53,14 @@
     <integer name="wear_round_boxedEdges__TennisPadel">@integer/wear_round_boxedEdges_TOPBOTTOM</integer>
     <integer name="wear_round_boxedEdges__Squash">@integer/wear_round_boxedEdges_TOPBOTTOM</integer>
     <integer name="wear_round_boxedEdges__Badminton">@integer/wear_round_boxedEdges_TOPBOTTOM</integer>
+    <integer name="wear_round_boxedEdges__Tabletennis">@integer/wear_round_boxedEdges_TOPBOTTOM</integer>
+    <integer name="wear_round_boxedEdges__Racketlon">@integer/wear_round_boxedEdges_TOPBOTTOM</integer>
 
     <!-- temporary to get it approved for round screens -->
+<!--
     <integer name="wear_round_boxedEdges__Tabletennis">@integer/wear_round_boxedEdges_ALL</integer>
     <integer name="wear_round_boxedEdges__Racketlon">@integer/wear_round_boxedEdges_ALL</integer>
+-->
 
     <!--
         <fraction name="room_between_btn_score_2x">0.0%</fraction>

@@ -92,13 +92,19 @@ public class TabletennisModel extends Model
     @Override DoublesServe determineDoublesReceiver(DoublesServe serverOfOppositeTeam, ServeSide serveSide) {
         int iTotalPointsScored  = getTotalGamePoints();
         int nrOfServesPerPlayer = getNrOfServesPerPlayer();
-        int iPointsScoredSinceEveryBodyHadServedSameNrOfTimes = iTotalPointsScored % (nrOfServesPerPlayer * 4 /*nr of players*/);
-
         int iIntervalZB = 0;
-        while ( iPointsScoredSinceEveryBodyHadServedSameNrOfTimes >= nrOfServesPerPlayer) {
-            iPointsScoredSinceEveryBodyHadServedSameNrOfTimes -= nrOfServesPerPlayer;
+
+        int iPnts = 0;
+        while ( iPnts + nrOfServesPerPlayer <= iTotalPointsScored) {
+            iPnts += nrOfServesPerPlayer;
             iIntervalZB++;
+            if ( iPnts >= getNrOfPointsToWinGame() * 2 - 2 ) {
+                // we are in a tiebreak
+                nrOfServesPerPlayer=1;
+            }
         }
+        iIntervalZB = iIntervalZB % 4;
+
         DoublesServe dsServer   = m_lDSPassesFromTo.get(iIntervalZB);
         DoublesServe dsReceiver = m_lDSPassesFromTo.get(iIntervalZB+1);
 

@@ -3916,6 +3916,11 @@ touch -t 01030000 LAST.sb
                 if ( Brand.isBadminton() && (matchModel != null) && matchModel.isDoubles() ) {
                     _swapDoublePlayers(Player.values(), false);
                 }
+                if ( Brand.isTabletennis() && (matchModel != null) && matchModel.isDoubles()
+                   && (matchModel.getMaxScore() * 2 + 1 == matchModel.getNrOfPointsToWinGame()) ) {
+                    // ensure receiver is swapped
+                    _swapDoublePlayers(new Player[] { matchModel.getReceiver() }, true);
+                }
                 return true;
             case R.id.sb_swap_double_players:
                 swapDoublePlayers();
