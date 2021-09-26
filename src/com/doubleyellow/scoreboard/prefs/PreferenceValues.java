@@ -433,6 +433,9 @@ public class PreferenceValues extends RWValues
     public static ViewType timerViewType(Context context) {
         return getEnum(PreferenceKeys.timerViewType, context, ViewType.class, R.string.timerViewType_default);
     }
+    public static boolean setTimerViewType(Context context, ViewType viewType) {
+        return PreferenceValues.setEnum(PreferenceKeys.timerViewType, context, viewType);
+    }
     public static Feature useTossFeature(Context context) {
         return getEnum(PreferenceKeys.useTossFeature, context, Feature.class, R.string.useTossFeature_default);
     }
@@ -1855,7 +1858,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2021-09-19"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2021-09-22"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

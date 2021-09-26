@@ -35,7 +35,6 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
-import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.vico.IBoard;
 import com.doubleyellow.util.StringUtil;
@@ -46,6 +45,7 @@ import java.util.Map;
 
 /**
  * TimerView that is an actual dialog (on top of the main scoreboard scoreBoard) with a circular progressbar.
+ * Also controls to modify the time left are available.
  *
  * An alternative (non-modal) TimerView is defined in the main scoreBoard 'ScoreBoard' itself.
  */
@@ -269,7 +269,7 @@ public class DialogTimerView implements TimerView
         }
 
         AlertDialog.Builder db = new MyDialogBuilder(scoreBoard);
-        int iResIDCancelCaption = R.string.cmd_cancel;
+        int iResIDCancelCaption = R.string.cmd_cancel_timer;
         if ( Type.UntillStartOfNextGame.equals(Timer.timerType) ) {
             iResIDCancelCaption = R.string.Start_game;
         } else if (EnumSet.of(Type.TowelingDown, Type.Timeout).contains(Timer.timerType) ) {
@@ -330,7 +330,7 @@ public class DialogTimerView implements TimerView
 
         try {
             alertDialog.show();
-            PreferenceValues.setEnum(PreferenceKeys.timerViewType, scoreBoard, ViewType.Popup);
+            //PreferenceValues.setTimerViewType(scoreBoard, ViewType.Popup);
         } catch (Exception e) {
             // this may fail if activity has been in the background, seen during casting (android.view.WindowManager$BadTokenException: Unable to add window -- token android.os.BinderProxy@860c8b3 is not valid; is your activity running?)
             e.printStackTrace();
@@ -386,7 +386,7 @@ public class DialogTimerView implements TimerView
             switch (which) {
                 case DialogTimerView.BTN_HIDE:
                     // 'Hide' is pressed: change viewType
-                    PreferenceValues.setEnum(PreferenceKeys.timerViewType, scoreBoard, ViewType.Inline);
+                    //PreferenceValues.setTimerViewType(scoreBoard, ViewType.Inline); // or FullScreen
                     Timer.removeTimerView(false, DialogTimerView.this);
                     dialog.cancel();
                     break;

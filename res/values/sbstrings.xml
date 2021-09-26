@@ -95,6 +95,7 @@
     <string name="sb_handicap_score">Provide handicap score</string>
     <string name="sb_sub_share_match">Share match…</string>
     <string name="sb_timer">Timer</string>
+    <string name="cmd_cancel_timer">Cancel Timer</string>
     <string name="sb_nbsp_timer">\u00A0Timer</string> <!-- added non-breaking space in front for action bar -->
     <string name="sb_injury_timer">Injury Timer</string>
     <string name="sb_player_timeout_timer">Team/Player timeout</string>

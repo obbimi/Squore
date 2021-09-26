@@ -91,6 +91,7 @@
     <string name="sb_handicap_score">Geef handicap score in</string>
     <string name="sb_sub_share_match">Deel wedstrijd…</string>
     <string name="sb_timer">Timer</string>
+    <string name="cmd_cancel_timer">Timer annuleren</string>
     <string name="sb_nbsp_timer">\u00A0Timer</string>
     <string name="sb_injury_timer">Blessure Timer</string>
     <string name="sb_score_details">Score verloop</string>

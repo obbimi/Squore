@@ -93,6 +93,7 @@
     <string name="sb_handicap_score">Fornisci punteggio con handicap</string>
     <string name="sb_sub_share_match">Condividi incontro…</string>
     <string name="sb_timer">Cronometro</string>
+    <string name="cmd_cancel_timer">Cancella Cronometro</string>
     <string name="sb_nbsp_timer">\u00A0Cronometro</string> <!-- added non-breaking space in front for action bar -->
     <string name="sb_injury_timer">Cronometro d\'infortunio</string>
     <string name="sb_score_details">Dettagli di Punteggio</string>
