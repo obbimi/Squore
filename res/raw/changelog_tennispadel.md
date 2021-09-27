@@ -1,3 +1,9 @@
+## 4.41 (okt 2021)
+
+- Improvement for wearables:
+    - allow scoring points with the rotary/bezel
+    - allow to specify 'Golden point' when entering new match
+
 ## 4.40 (sep 2021)
 
 - Improvements in bluetooth mirroring

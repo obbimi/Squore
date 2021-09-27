@@ -2784,11 +2784,11 @@ public abstract class Model implements Serializable
             jsonObject.put(JSONKey.server   .toString(), getServer());
             jsonObject.put(JSONKey.serveSide.toString(), getNextServeSide(getServer()));
             if ( this instanceof SquashModel ) {
-                Player[] possibleMatchBallFor = isPossibleMatchBallFor();
                 jsonObject.put(JSONKey.isHandOut   .toString(), isLastPointHandout());
-                jsonObject.put(JSONKey.isGameBall  .toString(), isPossibleGameBallFor(Player.A) || isPossibleGameBallFor(Player.B));
-                jsonObject.put(JSONKey.isMatchBall .toString(), (possibleMatchBallFor != null) && (possibleMatchBallFor.length!=0) );
             }
+            Player[] possibleMatchBallFor = isPossibleMatchBallFor();
+            jsonObject.put(JSONKey.isGameBall  .toString(), isPossibleGameBallFor(Player.A) || isPossibleGameBallFor(Player.B));
+            jsonObject.put(JSONKey.isMatchBall .toString(), (possibleMatchBallFor != null) && (possibleMatchBallFor.length!=0) );
         }
         jsonObject.put(JSONKey.isVictoryFor.toString(), isPossibleMatchVictoryFor() );
         JsonUtil.removeEmpty(jsonObject);

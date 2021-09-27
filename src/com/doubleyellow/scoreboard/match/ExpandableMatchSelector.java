@@ -27,6 +27,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
@@ -137,6 +139,11 @@ public abstract class ExpandableMatchSelector extends Fragment
 
         // Retain this fragment across configuration changes.
         setRetainInstance(true);
+    }
+
+    @Override public void onDestroy() {
+        Log.d(TAG, "Destroying ");
+        super.onDestroy();
     }
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

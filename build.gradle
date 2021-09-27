@@ -50,11 +50,11 @@ android {
         //testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
         //applicationId "com.doubleyellow"
 /*
-        manifestPlaceholders = [ versionNameTabletennis: "4.40", versionCodeSuffixTabletennis: "0464"
-                               , versionNameBadminton  : "4.40", versionCodeSuffixBadminton  : "0464"
-                               , versionNameTennisPadel: "4.40", versionCodeSuffixTennisPadel: "0464"
-                               , versionNameSquore     : "4.40", versionCodeSuffixSquore     : "0464"
-                               , versionNameRacketlon  : "4.40", versionCodeSuffixRacketlon  : "0464"
+        manifestPlaceholders = [ versionNameTabletennis: "4.41", versionCodeSuffixTabletennis: "0465"
+                               , versionNameBadminton  : "4.41", versionCodeSuffixBadminton  : "0465"
+                               , versionNameTennisPadel: "4.41", versionCodeSuffixTennisPadel: "0465"
+                               , versionNameSquore     : "4.41", versionCodeSuffixSquore     : "0465"
+                               , versionNameRacketlon  : "4.41", versionCodeSuffixRacketlon  : "0465"
                                ]
 */
     }
@@ -96,24 +96,23 @@ android {
         phoneTabletPre22 {
             dimension "devicetype"
             minSdkVersion 19
-            //targetSdkVersion 28 // if specified to low, google play will reject the APK
             targetSdkVersion 30
-            versionCode 1915 * 10000 + 464
-            versionName "4.40"
+            versionCode 1915 * 10000 + 465
+            versionName "4.41"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 30
-            versionCode 2315 * 10000 + 464
-            versionName "4.40"
+            versionCode 2315 * 10000 + 465
+            versionName "4.41"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 30
-            versionCode 2501 * 10000 + 464
-            versionName "4.40"
+            versionCode 2501 * 10000 + 465
+            versionName "4.41"
         }
     }
     buildTypes {

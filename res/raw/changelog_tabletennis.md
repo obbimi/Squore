@@ -1,3 +1,11 @@
+## 4.41 (okt 2021)
+
+- Fix in doubles receiver indication
+    - In 'tie break'
+    - Halfway last game
+- Improvement for wearables:
+    - allow scoring points with the rotary/bezel
+
 ## 4.40 (sep 2021)
 
 - Improvements in bluetooth mirroring

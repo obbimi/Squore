@@ -29,6 +29,7 @@ import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Model;
@@ -58,14 +59,20 @@ public class ServerToss extends BaseAlertDialog
         if ( matchModel == null ) { return; }
         String sPlayerA = matchModel.getName(Player.A);
         String sPlayerB = matchModel.getName(Player.B);
-        adb.setTitle         (R.string.sb_who_will_start_to_serve);
         if ( Brand.supportChooseServeOrReceive() ) {
-            adb.setTitle(R.string.sb_cmd_toss);
-            adb.setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive) + "\n"
-                         + getString(R.string.choose_winner_of_toss_or_perform_toss)  ); // for gotoStage_ChooseServeReceive() we need to set something for the message that is set there to be visible
+            if ( isWearable() ) {
+                adb.setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive));
+            } else {
+                adb.setTitle(R.string.sb_cmd_toss);
+                adb.setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive) + "\n"
+                             + getString(R.string.choose_winner_of_toss_or_perform_toss)  ); // for gotoStage_ChooseServeReceive() we need to set something for the message that is set there to be visible
+            }
         }
-        adb.setIcon          (R.drawable.toss_white)
-           .setPositiveButton(sPlayerA            , null /*dialogClickListener*/)
+        if ( isNotWearable() ) {
+            adb.setIcon          (R.drawable.toss_white);
+            adb.setTitle         (R.string.sb_who_will_start_to_serve);
+        }
+        adb.setPositiveButton(sPlayerA            , null /*dialogClickListener*/)
            .setNeutralButton (R.string.sb_cmd_toss, null)
            .setNegativeButton(sPlayerB            ,null /*dialogClickListener*/)
            .setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -258,8 +265,14 @@ public class ServerToss extends BaseAlertDialog
         // show message who won the toss
         // change buttons in 'serve' and 'receive', winner may choose to receive
         String sWinnerOfToss = matchModel.getName(m_winnerOfToss);
-        dialog.setTitle  (getString(R.string.sb_toss_won_by_x, sWinnerOfToss));
-        dialog.setMessage(getString(R.string.sb_players_choice));
+        if ( isWearable() ) {
+            dialog.setTitle(null);
+            dialog.setIcon(null);
+            dialog.setMessage(getString(R.string.sb_toss_won_by_x, sWinnerOfToss) + "\n" + getString(R.string.sb_players_choice));
+        } else {
+            dialog.setTitle  (getString(R.string.sb_toss_won_by_x, sWinnerOfToss));
+            dialog.setMessage(getString(R.string.sb_players_choice));
+        }
         btnToss.setVisibility(VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE);
         btnA.setEnabled(true); btnA.setText(R.string.sb_serve);
         btnB.setEnabled(true); btnB.setText(R.string.sb_receive);

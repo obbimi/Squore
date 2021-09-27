@@ -42,6 +42,7 @@ import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.util.DateUtil;
 import com.doubleyellow.util.Direction;
 import com.doubleyellow.util.StringUtil;
 
@@ -283,7 +284,7 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
     }
 
     protected boolean isWearable() {
-        return ViewUtil.isWearable(context);
+        return ViewUtil.isWearable(context) /*|| DateUtil.getCurrentYYYYMMDD().equals("20210927")*/;
     }
     protected boolean isNotWearable() {
         return isWearable() == false;
