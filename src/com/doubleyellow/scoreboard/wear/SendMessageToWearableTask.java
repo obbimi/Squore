@@ -18,6 +18,7 @@ package com.doubleyellow.scoreboard.wear;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
 import com.doubleyellow.util.ListUtil;
@@ -29,6 +30,7 @@ import com.google.android.gms.wearable.NodeClient;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.List;
+import java.util.concurrent.Executors;
 
 /**
  * To send message in an asynchronous way to paired device.
@@ -48,9 +50,13 @@ class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
         m_nodeClient    = Wearable.getNodeClient(ctx);
     }
     public AsyncTask<Object, Void, String> myExecute(Object... params) {
-        //AsyncTask<Object, Void, String> executing = super.execute(params);
-        AsyncTask<Object, Void, String> executing = super.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
-        return executing;
+        if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P /* 28 */ ) {
+            Log.d(TAG, "Started ShowFeedsTask using Executors.newSingleThreadExecutor... ");
+            return executeOnExecutor(Executors.newSingleThreadExecutor(), params);
+        } else {
+            Log.d(TAG, "Started ShowFeedsTask ... ");
+            return executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+        }
     }
 
     @Override protected String doInBackground(Object[] objects) {

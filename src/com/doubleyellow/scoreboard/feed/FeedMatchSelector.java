@@ -22,6 +22,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
@@ -55,6 +57,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,6 +72,8 @@ import java.util.regex.Pattern;
  */
 public class FeedMatchSelector extends ExpandableMatchSelector
 {
+    private static final String TAG = "SB." + FeedMatchSelector.class.getSimpleName();
+
     private static String SETTING_REGEXP = null;
     static {
         StringBuilder sbAllOpsAsRegExp = new StringBuilder();
@@ -161,11 +166,23 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     }
 
     @Override public void onDestroy() {
+        Log.d(TAG, "destroying activity");
         super.onDestroy();
         if ( emsAdapter != null ) {
-            if ( emsAdapter.m_task != null ) {
-                emsAdapter.m_task.cancel(true);
+            if ( /*emsAdapter.*/m_task != null ) {
+                Log.d(TAG, "Cancelling emsAdapter.m_task");
+                /*emsAdapter.*/m_task.cancel(true);
+            } else {
+                Log.d(TAG, "No m_task to cancel (1)");
             }
+        } else {
+            Log.d(TAG, "No emsadapter to cancel");
+        }
+        if ( m_task != null ) {
+            Log.d(TAG, "Cancelling emsAdapter.m_task");
+            m_task.cancel(true);
+        } else {
+            Log.d(TAG, "No m_task to cancel (2)");
         }
     }
 
@@ -741,6 +758,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         m_sDisplayFormat_Players = DisplayFormat_PlayerDefault;
     }
 
+    private URLTask m_task = null; // 20210930: move this object outside of the EMSAdapter: when activity was started for 2nd time with API 27 it was not cancellable because reference was gone
+
     private class EMSAdapter extends SimpleELAdapter implements ContentReceiver
     {
         private EMSAdapter(LayoutInflater inflater, String sFetchingMessage)
@@ -748,7 +767,6 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             super(inflater, R.layout.expandable_match_selector_group, R.layout.expandable_match_selector_item, sFetchingMessage, bAutoLoad);
         }
 
-        URLTask m_task              = null;
         int     m_iMatchesWithCourt = 0;
         int     m_iMatchesWithOutResultWithCourt = 0;
         boolean m_bGroupByCourt     = false;
@@ -829,8 +847,13 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
 
             m_task.setContentReceiver(this);
-            m_task.myExecute();
-            Log.d(TAG, "Started download task ... ");
+            if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P /* 28 */ ) {
+                m_task.executeOnExecutor(Executors.newSingleThreadExecutor());
+                Log.d(TAG, "Started download task using Executors.newSingleThreadExecutor... ");
+            } else {
+                m_task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                Log.d(TAG, "Started download task ... ");
+            }
         }
 
         @Override public void cancel() {
@@ -838,13 +861,17 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 Log.d(TAG, "Canceling download task ... ");
                 m_task.cancel(true);
                 m_task = null;
+            } else {
+                Log.d(TAG, "No download task to cancel ... ");
             }
         }
 
         @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent)
         {
-            Log.i(TAG, String.format("Fetched (from cache %s)", lCacheAge));
+            Log.i(TAG, String.format("Fetched (from cache %s) %s", lCacheAge, result));
             if ( m_task != null ) {
+                m_task.cancel(true);
+                Log.d(TAG, "Setting m_task to null");
                 m_task = null;
             }
             if ( context == null ) {

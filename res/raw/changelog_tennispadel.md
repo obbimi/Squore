@@ -1,8 +1,9 @@
-## 4.41 (okt 2021)
+## 4.42 (okt 2021)
 
 - Improvement for wearables:
     - allow scoring points with the rotary/bezel
     - allow to specify 'Golden point' when entering new match
+- Bugfix for feeds for Android Pie (Android 9, 2018, SDK 28) and older
 
 ## 4.40 (sep 2021)
 

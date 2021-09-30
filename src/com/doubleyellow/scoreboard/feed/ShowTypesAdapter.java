@@ -23,6 +23,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.LocaleList;
 import android.util.Log;
@@ -52,6 +53,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
 /**
  * Adapter used to show all categories of feeds (TournamentSoftware, SportyHQ, RankedIn).
@@ -235,7 +237,13 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
         }
 
         task.setContentReceiver(this);
-        task.myExecute();
+        if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P /* 28 */ ) {
+            task.executeOnExecutor(Executors.newSingleThreadExecutor());
+            Log.d(TAG, "Started download task using Executors.newSingleThreadExecutor... ");
+        } else {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            Log.d(TAG, "Started download task ... ");
+        }
     }
 
     @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent)

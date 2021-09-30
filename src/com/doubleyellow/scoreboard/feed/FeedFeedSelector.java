@@ -22,6 +22,8 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -45,6 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.*;
+import java.util.concurrent.Executors;
 
 /**
  * Activity that allows the user to select a item (in this case a feed) from an internet feed
@@ -292,7 +295,13 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                     }
                 }
             });
-            task.myExecute();
+            if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P /* 28 */ ) {
+                task.executeOnExecutor(Executors.newSingleThreadExecutor());
+                Log.d(TAG, "Started task using Executors.newSingleThreadExecutor... ");
+            } else {
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                Log.d(TAG, "Started task ... ");
+            }
         }
 
         SortOrder m_sortOrder = SortOrder.Ascending;

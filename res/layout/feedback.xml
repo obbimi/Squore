@@ -73,6 +73,7 @@
         <Button
                 android:id="@+id/cmd_like_on_facebook"
                 android:tag="item"
+                android:visibility="invisible"
                 android:text="@string/cmd_like_on_facebook"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"

@@ -19,6 +19,8 @@ package com.doubleyellow.scoreboard.view;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -46,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 /**
  * Generic extension of an 'auto complete' text view for easy entering of player names.
@@ -117,7 +120,13 @@ public class PlayerTextView extends AppCompatAutoCompleteTextView implements Con
         if ( StringUtil.isNotEmpty(playersFeedURL) ) {
             URLFeedTask task = new URLFeedTask(getContext(), playersFeedURL);
             task.setContentReceiver(this);
-            task.myExecute();
+            if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P /* 28 */ ) {
+                task.executeOnExecutor(Executors.newSingleThreadExecutor());
+                Log.d(TAG, "Started download task using Executors.newSingleThreadExecutor... ");
+            } else {
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                Log.d(TAG, "Started download task ... ");
+            }
         } else {
             List<String> playerList = PreferenceValues.getPlayerListAndContacts(getContext());
             setAutoCompleteAdapter(playerList);

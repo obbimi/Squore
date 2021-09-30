@@ -1,5 +1,6 @@
-## 4.41 (okt 2021)
+## 4.42 (okt 2021)
 
+- Bugfix for feeds for Android Pie (Android 9, 2018, SDK 28) and older
 - Improvement for wearables:
     - allow scoring points with the rotary/bezel
 

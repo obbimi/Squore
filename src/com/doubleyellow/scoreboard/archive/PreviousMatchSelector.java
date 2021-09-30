@@ -198,7 +198,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
     }
 
     // on api 29 this bug does not seem to manifest itself
-    private static int m_iLoadCount = 0; // using this to decide between between sync and async because on API 26 only first time all goes well async
+    private static int m_iLoadCount = 0; // using this to decide between between sync and async because on API 26/27/28 only first time all goes well async
     private class EMSAdapter extends SimpleELAdapter
     {
         private EMSAdapter(LayoutInflater inflater)

@@ -1,10 +1,11 @@
-## 4.41 (okt 2021)
+## 4.42 (okt 2021)
 
 - Fix in doubles receiver indication
     - In 'tie break'
     - Halfway last game
 - Improvement for wearables:
     - allow scoring points with the rotary/bezel
+- Bugfix for feeds for Android Pie (Android 9, 2018, SDK 28) and older
 
 ## 4.40 (sep 2021)
 

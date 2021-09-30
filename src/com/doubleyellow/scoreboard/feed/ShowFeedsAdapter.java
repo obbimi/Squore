@@ -19,6 +19,7 @@ package com.doubleyellow.scoreboard.feed;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 import com.doubleyellow.android.util.AndroidPlaceholder;
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 /**
  * Adapter used to present available feeds in FeedFeedSelector.
@@ -80,19 +82,19 @@ class ShowFeedsAdapter extends SimpleELAdapter {
     @Override public void load(boolean bUseCacheIfPresent) {
         this.clear();
         ShowFeedsTask showFeedsTask = new ShowFeedsTask();
-        showFeedsTask.myExecute(m_sName);
+        if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P /* 28 */ ) {
+            showFeedsTask.executeOnExecutor(Executors.newSingleThreadExecutor(), m_sName);
+            Log.d(TAG, "Started ShowFeedsTask using Executors.newSingleThreadExecutor... ");
+        } else {
+            showFeedsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, m_sName);
+            Log.d(TAG, "Started ShowFeedsTask ... ");
+        }
     }
 
     private JSONArray m_feeds = null;
 
     private /*static*/ class ShowFeedsTask extends AsyncTask<String, Void, List<String>>
     {
-        public AsyncTask<String, Void, List<String>> myExecute(String... params) {
-            //AsyncTask<String, Void, List<String>> executing = super.execute(params);
-            AsyncTask<String, Void, List<String>> executing = super.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
-            return executing;
-        }
-
         @Override protected List<String> doInBackground(String[] sName) {
             int iEndWasDaysBackMax     = PreferenceValues.getTournamentWasBusy_DaysBack     (m_context);
             int iStartIsDaysAheadMax   = PreferenceValues.getTournamentWillStartIn_DaysAhead(m_context);

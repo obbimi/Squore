@@ -1,3 +1,9 @@
+## 4.42 (okt 2021)
+
+- Bugfix for feeds for Android Pie (Android 9, 2018, SDK 28) and older
+- Improvement for wearables:
+    - allow scoring points with the rotary/bezel
+
 ## 4.40 (sep 2021)
 
 - Improvements in bluetooth mirroring
