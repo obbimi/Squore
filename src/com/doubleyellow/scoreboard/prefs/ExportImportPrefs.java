@@ -115,6 +115,11 @@ public class ExportImportPrefs extends DialogPreference
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         Map<String, ?> buAll = preferences.getAll();
 
+        if ( fSettings == null ) {
+            String sMsg = String.format("Could not store settings in %s", "No writable location");
+            Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+            return;
+        }
         // TODO: remove the settings that have not changed anyway (so that unchanged properties are not transferred from one device to another with e.g. different resolution)
 
         boolean bWritten = FileUtil.writeObjectToFile(fSettings, buAll);

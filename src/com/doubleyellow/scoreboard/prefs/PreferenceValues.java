@@ -507,7 +507,11 @@ public class PreferenceValues extends RWValues
         removeOverwrite(PreferenceKeys.shareAction);
         removeOverwrite(PreferenceKeys.useShareFeature);
         setEnum(PreferenceKeys.shareAction    , ctx, ShareMatchPrefs.LinkWithFullDetails);
-        setEnum(PreferenceKeys.useShareFeature, ctx, Feature.Suggest);
+        if ( PreferenceValues.useShareFeature(ctx).equals(Feature.Automatic) ) {
+            setEnum(PreferenceKeys.useShareFeature, ctx, Feature.Suggest);
+        } else {
+            // do not change if Feature.DoNotUse
+        }
     }
     public static ShareMatchPrefs isConfiguredForLiveScore(Context ctx) {
         Feature shareFeature = useShareFeature(ctx);
@@ -1000,9 +1004,11 @@ public class PreferenceValues extends RWValues
     public static String castScreenSponsorUrl(Context context) {
         return RWValues.getString(PreferenceKeys.castScreenSponsorUrl, "", context);
     }
+/*
     public static boolean Cast_ShowGraphDuringTimer(Context context) {
         return getBoolean(PreferenceKeys.Cast_ShowGraphDuringTimer, context, R.bool.Cast_ShowGraphDuringTimer_default);
     }
+*/
 
     public static boolean BTSync_keepLROnConnectedDeviceMirrored(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.bool.BTSync_keepLROnConnectedDeviceMirrored_default__Squash);
@@ -1858,7 +1864,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2021-09-22"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2021-10-02"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
@@ -2249,7 +2255,7 @@ public class PreferenceValues extends RWValues
         if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.P /* = 28 */ ) {
             permission = Permission.Granted;
         } else {
-            permission = requestPermission(context, PreferenceKeys.Cast_ShowGraphDuringTimer, Manifest.permission.FOREGROUND_SERVICE, bRequestIfRequired);
+            permission = requestPermission(context, PreferenceKeys.useCastScreen, Manifest.permission.FOREGROUND_SERVICE, bRequestIfRequired);
         }
 
         if ( RWValues.Permission.Granted.equals(permission) == false ) {

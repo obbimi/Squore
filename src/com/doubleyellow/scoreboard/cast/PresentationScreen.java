@@ -50,14 +50,13 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
     private IBoard        iBoard                = null;
 
     private Model         matchModel            = null;
-    private boolean       bShowGraphDuringTimer = true;
+  //private boolean       bShowGraphDuringTimer = true;
     private int           m_iRemoveHandoutCharAfterXSeconds = 5;
 
     PresentationScreen(Context context, Display display) {
         super(context, display);
 
-        //bShowGraphDuringTimer = PreferenceValues.showGraphDuringTimer(context, true);
-        bShowGraphDuringTimer = PreferenceValues.Cast_ShowGraphDuringTimer(context);
+      //bShowGraphDuringTimer = PreferenceValues.Cast_ShowGraphDuringTimer(context);
 
         m_iRemoveHandoutCharAfterXSeconds = 5; // TODO: PreferenceValues only for Squash
     }
@@ -139,9 +138,11 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
         iBoard.initColors(mColors);
 
+/*
         if ( bShowGraphDuringTimer ) {
             iBoard.getTimerView().cancel();
         }
+*/
 
         for(Player p: Model.getPlayers()) {
             iBoard.updateScore(p, matchModel.getScore(p));
@@ -305,28 +306,20 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
             }
             iBoard.updateGameBallMessage("PS:OnGameEnded"); // in some cases in racketlon a 0-0 score may be a matchball in set 3 (unlikely) or 4 (more likely)
 
+/*
             if ( bShowGraphDuringTimer ) {
                 if (endOfGameView == null) {
                     endOfGameView = new EndOfGameView(getContext(), iBoard, matchModel);
                 }
                 try {
                     endOfGameView.show(PresentationScreen.this);
-/*
-                    final String sSSFilename = Util.filenameForAutomaticScreenshot(getContext(), matchModel, ShowOnScreen.OnChromeCast, -1, -1, null);
-                    if ( sSSFilename!=null ) {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override public void run() {
-                                ViewUtil.takeScreenShot(getContext(), Brand.brand, sSSFilename, endOfGameView.root);
-                            }
-                        }, 1000 + (2000 * matchModel.getGameCountHistory().size()));
-                    }
-*/
                 } catch (Exception e) {
                     // sometimes while casting, android.content.res.Resources$NotFoundException was thrown
                     e.printStackTrace();
                 }
 
             }
+*/
         }
     }
     private class PlayerChangeListener implements Model.OnPlayerChangeListener {

@@ -1316,7 +1316,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         player = player.getOther();
                     }
                     Log.d(TAG, "Handling rotary event to change score for " + player);
-                    changeScore(player);
+                    handleMenuItem(R.id.pl_change_score, player);
                     lLastRotaryEventHandled = lNow;
                     lRotationDeltaCumulative = 0;
 
@@ -4498,6 +4498,7 @@ touch -t 01030000 LAST.sb
         getXActionBar().hide();
 
         ViewGroup presentationFrame = (ViewGroup) findViewById(R.id.presentation_frame);
+        if ( presentationFrame == null ) { return; }
         presentationFrame.removeAllViews();
 
         endOfGameView = new EndOfGameView(this, iBoard, matchModel);
@@ -4532,6 +4533,7 @@ touch -t 01030000 LAST.sb
         getXActionBar().hide();
 
         ViewGroup presentationFrame = (ViewGroup) findViewById(R.id.presentation_frame);
+        if ( presentationFrame == null ) { return; }
         presentationFrame.removeAllViews();
 
         fullScreenTimer = new FullScreenTimer(this, iBoard, matchModel);
@@ -7006,9 +7008,11 @@ touch -t 01030000 LAST.sb
         castHelper.castColors(mColors);
     }
     public void castDurationChronos() {
+        if ( castHelper == null ) { return; }
         castHelper.castDurationChronos();
     }
     public void castGamesWonAppearance() {
+        if ( castHelper == null ) { return; }
         castHelper.castGamesWonAppearance();
     }
 

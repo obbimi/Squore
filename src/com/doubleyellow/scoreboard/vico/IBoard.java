@@ -1245,7 +1245,11 @@ public class IBoard implements TimerViewContainer
         Integer iPlayerColor = null;
         Integer iTxtColor    = null;
         if ( StringUtil.isNotEmpty(sColor) ) {
-            iPlayerColor = Color.parseColor(sColor);
+            try {
+                iPlayerColor = Color.parseColor(sColor);
+            } catch (IllegalArgumentException e) {
+                return;
+            }
             // switch color of text to black or white depending on chosen color
             long lPreferWhiteOverBlackStrength = PreferenceValues.getPreferWhiteOverBlackThreshold(context);
             iTxtColor = ColorUtil.getBlackOrWhiteFor(sColor, lPreferWhiteOverBlackStrength);

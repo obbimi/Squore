@@ -894,11 +894,13 @@
                 android:entryValues="@array/colorSchema"
                 android:defaultValue="0"
                 />
+<!--
             <CheckBoxPreference android:key="Cast_ShowGraphDuringTimer"
                                 android:title="@string/pref_Cast_ShowGraphDuringTimer"
                                 android:icon="@drawable/ic_chromecast"
                                 android:defaultValue="@bool/Cast_ShowGraphDuringTimer_default"
             />
+-->
         </PreferenceCategory>
 
         <PreferenceCategory android:title="@string/pref_Category_BlueToothSync" android:key="BlueToothSync">

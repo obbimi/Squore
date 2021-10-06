@@ -1748,6 +1748,19 @@ public abstract class Model implements Serializable
     }
     public String getColor(Player player) {
         String sColor = m_player2Color.get(player);
+/*
+        try {
+            if ( sColor != null ) {
+                Color.parseColor(sColor);
+            }
+            return sColor;
+        } catch (IllegalArgumentException e) {
+            Log.w(TAG, "Not a valid color " + sColor);
+            sColor = null;
+            m_player2Color.remove(player);
+            return null;
+        }
+*/
         return sColor;
     }
     public String getCountry(Player player) {
