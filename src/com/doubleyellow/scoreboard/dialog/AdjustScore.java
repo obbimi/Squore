@@ -305,7 +305,7 @@ public class AdjustScore extends BaseAlertDialog {
 
                 // if last game entered was also a victory for someone: end the game
                 if ( matchModel.isPossibleGameVictory() ) {
-                    scoreBoard.endGame();
+                    scoreBoard.endGame(true);
                 }
                 scoreBoard.sendMatchToOtherBluetoothDevice( true, 1000);
                 break;

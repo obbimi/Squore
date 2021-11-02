@@ -80,7 +80,7 @@ public class EndGameChoice extends BaseAlertDialog
         switch ( which ) {
             case BTN_END_GAME:
                 PreferenceValues.setOverwrite(PreferenceKeys.endGameSuggestion, Feature.DoNotUse.toString());
-                scoreBoard.endGame();
+                scoreBoard.endGame(true);
                 PreferenceValues.removeOverwrite(PreferenceKeys.endGameSuggestion);
                 break;
             case BTN_CANCEL:

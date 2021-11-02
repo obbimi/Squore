@@ -42,6 +42,7 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.IntentKeys;
 import com.doubleyellow.scoreboard.dialog.ButtonUpdater;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
+import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.prefs.*;
 import com.doubleyellow.scoreboard.view.PlayerTextView;
@@ -841,8 +842,7 @@ public class MatchView extends SBRelativeLayout
 
         cbUseLiveScoring = (CheckBox) findViewById(R.id.cbUseLivescore);
         if ( cbUseLiveScoring != null ) {
-            ShareMatchPrefs forLiveScore = PreferenceValues.isConfiguredForLiveScore(context);
-            cbUseLiveScoring.setChecked(forLiveScore!=null);
+            cbUseLiveScoring.setChecked(PreferenceValues.isConfiguredForLiveScore(context));
         }
 
         cbUseEnglishScoring = (CompoundButton) findViewById(R.id.useHandInHandOutScoring);
@@ -1410,6 +1410,7 @@ public class MatchView extends SBRelativeLayout
         } else {
             PreferenceValues.initForNoLiveScoring(getContext());
         }
+        PreferenceValues.setOverwrites(FeedMatchSelector.mFeedPrefOverwrites);
 
         // for doubles
         if ( m_bIsDoubles ) {

@@ -43,9 +43,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Helper class for posting the match model to a website.
- * To share a match result.
- * Simple php that might receive the post may look like (see bottom of this class)
+ * Helper class for posting the match model to the main website.
+ * To share a match result/support livescore.
+ *
+ * A simple php that might receive the post may look like (see bottom of this class)
  */
 public class MatchModelPoster implements ContentReceiver
 {
@@ -59,12 +60,14 @@ public class MatchModelPoster implements ContentReceiver
 
     private static Params  mCategorizedToFromMap = null;
     private        String  sName;
-    private        boolean m_bAutoShareTriggeredBeforeEndOfMatch = false;
-    public void post(Context context, Model matchModel, JSONObject oSettings)
+    private        boolean m_bAutoShareTriggeredForliveScore     = false;
+    private        boolean m_bFromMenu                           = false;
+    public void post(Context context, Model matchModel, JSONObject oSettings, boolean bFromMenu)
     {
         m_context = context;
         m_model   = matchModel;
-        m_bAutoShareTriggeredBeforeEndOfMatch = autoShareTriggeredBeforeEndOfMatch(matchModel);
+        m_bAutoShareTriggeredForliveScore = autoShareTriggeredForLiveScore();
+        m_bFromMenu                       = bFromMenu;
 
         sShowURL = matchModel.getShareURL();
         if ( StringUtil.isNotEmpty(sShowURL) ) {
@@ -72,7 +75,7 @@ public class MatchModelPoster implements ContentReceiver
             presentChoice(sShowURL);
         } else {
 
-            if ( m_bAutoShareTriggeredBeforeEndOfMatch == false ) {
+            if ( (m_bAutoShareTriggeredForliveScore == false) || m_bFromMenu ) {
                 showProgress(R.string.creating_url_for_sharing_match_details);
             }
 
@@ -102,17 +105,8 @@ public class MatchModelPoster implements ContentReceiver
             sName = DateUtil.formatDate2String(date, DateUtil.YYYYMMDD_HHMM) + "_" + sPlayerNamesAscii;
             sName = sName.replaceAll("[^a-zA-Z0-9_]", "");
 
-            // TODO: allow to take base URL from settings
-            String sURL = Brand.getBaseURL() + "/store/" + sName;
-/*
-        boolean bAddNameToURL = false;
-        if ( bAddNameToURL ) {
-            sURL += ("?" + NAME + "=" + sName );
-        }
-*/
-            if ( ScoreBoard.isInPromoMode() ) {
-                sURL += (sURL.contains("?") ? "&" : "?") + "noemail=1";
-            }
+            final String sURL = Brand.getBaseURL() + "/store/" + sName;
+
             PostTask postTask = new PostTask(context, sURL);
             postTask.setContentReceiver(this);
 
@@ -146,7 +140,7 @@ public class MatchModelPoster implements ContentReceiver
             Log.i(TAG, "Match shared. " + sShowURL);
             presentChoice(sShowURL);
         } else {
-            if ( m_bAutoShareTriggeredBeforeEndOfMatch == false ) {
+            if ( (m_bAutoShareTriggeredForliveScore == false) || m_bFromMenu ) {
                 String sTitle = "Sharing failed";
                 String sMess  = String.format("Something went wrong while preparing link for sharing. Sorry. Please try again later. (%s)", result);
                 DialogManager dialogManager = DialogManager.getInstance();
@@ -168,17 +162,15 @@ public class MatchModelPoster implements ContentReceiver
     }
 
     private void presentChoice(String sShowURL) {
-        if ( m_bAutoShareTriggeredBeforeEndOfMatch ) {
+        if ( m_bFromMenu == false ) {
             // presume auto triggered
-            ShareMatchPrefs liveScore = PreferenceValues.isConfiguredForLiveScore(m_context);
-            if ( ShareMatchPrefs.LinkWithFullDetailsEachPoint.equals(liveScore) == false ) {
-                // do not show toast if sheet is updated every point
-                Toast.makeText(m_context, R.string.sb_online_sheet_updated, Toast.LENGTH_SHORT).show();
-            } else {
-                // only show it once in a while
+            if ( m_bAutoShareTriggeredForliveScore ) {
+                // only show Toast once in a while
                 if ( (m_model.getMaxScore() + m_model.getMinScore()) % 5 == 0  ) {
                     Toast.makeText(m_context, R.string.sb_online_sheet_updated, Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(m_context, R.string.sb_online_sheet_updated, Toast.LENGTH_SHORT).show();
             }
             return;
         }
@@ -200,10 +192,15 @@ public class MatchModelPoster implements ContentReceiver
         dialogManager.addToDialogStack(sheetAvailableChoice);
     }
 
-    private boolean autoShareTriggeredBeforeEndOfMatch(Model matchModel) {
+    private boolean XautoShareTriggeredBeforeEndOfMatch(Model matchModel) {
         ShareMatchPrefs shareHowAndWhen = PreferenceValues.getShareAction(m_context);
-        Feature         shareFeature    = PreferenceValues.useShareFeature(m_context);
-        return shareFeature.equals(Feature.Automatic) && shareHowAndWhen.alsoBeforeMatchEnd() && (matchModel.matchHasEnded() == false);
+        boolean         bForLiveScore   = PreferenceValues.isConfiguredForLiveScore(m_context);
+        //return shareFeature.equals(Feature.Automatic) && shareHowAndWhen.alsoBeforeMatchEnd() && (matchModel.matchHasEnded() == false);
+        return bForLiveScore && (matchModel.matchHasEnded() == false);
+    }
+
+    private boolean autoShareTriggeredForLiveScore() {
+        return PreferenceValues.isConfiguredForLiveScore(m_context);
     }
 
     private class PostTask extends URLTask {

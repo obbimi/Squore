@@ -1187,7 +1187,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
     }
 
-    private ShareMatchPrefs m_liveScoreShare = null;
+    private boolean m_liveScoreShare = false;
 
     /** e.g. after settings screen has been entered and closed, matchdetails have been viewed. also after orientation switch (but onrestoreinstance is called first) */
     @Override protected void onResume() {
@@ -1223,6 +1223,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         iBoard.updateGameAndMatchDurationChronos();
         if ( matchModel != null ) {
             showShareFloatButton(matchModel.isPossibleGameVictory(), matchModel.matchHasEnded()); // icon may have changed
+            String modelSource = matchModel.getSource();
+            if ( StringUtil.isNotEmpty(modelSource) ) {
+                PreferenceValues.guessShareAction(modelSource, this);
+            }
         }
 
         initModelListeners();
@@ -1848,12 +1852,12 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     PreferenceValues.setOverwrite(PreferenceKeys.showHideButtonOnTimer, false);
                     if ( matchModel.isPossibleGameVictory() == false ) {
                         matchModel.setGameScore_Json(0, nrOfPointsToWinGame, nrOfPointsToWinGame - 4, 5, false);
-                        endGame();
+                        endGame(true);
                     }
                     break;
                 case R.id.sb_official_announcement:
                     matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6, false);
-                    endGame();
+                    endGame(true);
                     break;
                 case R.id.gamescores:
                     break;
@@ -1879,7 +1883,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                         } else {
                             // trigger model changes that are not triggered by user step (sb_official_announcement), because some show case screens are skipped for e.g. Racketlon
                             matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6, bDontChangePast);
-                            endGame();
+                            endGame(true);
                         }
                     }
                     if ( matchModel.matchHasEnded() == false) {
@@ -1905,7 +1909,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                                 if ( iGameInProgress1B >= matchModel.getNrOfGamesToWinMatch() * 2 ) { break; } // additional safety precaution
                             }
                         }
-                        endGame();
+                        endGame(true);
                         showShareFloatButton(true, true);
                         IBoard.setBlockToasts(false);
                         matchModel.setLockState(LockState.LockedEndOfMatch);
@@ -2286,13 +2290,15 @@ touch -t 01030000 LAST.sb
 
     private ResultPoster initResultPoster() {
         String sPostURL = PreferenceValues.getPostResultToURL(this);
-        sPostURL = URLFeedTask.prefixWithBaseIfRequired(sPostURL);
+               sPostURL = URLFeedTask.prefixWithBaseIfRequired(sPostURL);
 
         String sUrlName = PreferenceValues.getFeedPostName(this);
         final Authentication authentication = PreferenceValues.getFeedPostAuthentication(this);
         PostDataPreference postDataPreference = PreferenceValues.getFeedPostDataPreference(this);
         if ( StringUtil.isNotEmpty(sPostURL) ) {
             return new ResultPoster(sPostURL, sUrlName, postDataPreference, null, authentication);
+        } else {
+            Toast.makeText(this, "No posting URL configured.", Toast.LENGTH_SHORT).show();
         }
         return null;
     }
@@ -2710,7 +2716,7 @@ touch -t 01030000 LAST.sb
                 break;
             case Automatic:
                 //endGame(true); // skip bluetooth because 'changeScore' has not even been send if this method triggered by 'changeScore'
-                endGame(false);
+                _endGame(false, false);
                 break;
         }
         return bShowDialog;
@@ -2945,8 +2951,8 @@ touch -t 01030000 LAST.sb
             } else {
                 enableScoreButton(leadingPlayer); // we only disabled if button of leader was pressed on gameball
             }
-            if ( m_liveScoreShare != null ) {
-                shareScoreSheet(ScoreBoard.this, matchModel, true);
+            if ( m_liveScoreShare ) {
+                postMatchModel(ScoreBoard.this, matchModel, true, false);
             }
         }
 
@@ -2978,16 +2984,20 @@ touch -t 01030000 LAST.sb
                     showChangeSideFloatButton(false);
                 }
             }
+/*
             if ( hwStatus.isHalfway() && ShareMatchPrefs.LinkWithFullDetailsEachHalf.equals(m_liveScoreShare) ) {
                 shareScoreSheet(ScoreBoard.this, matchModel, false);
             }
+*/
         }
 
         @Override public void OnFirstPointOfGame() {
+/*
             if ( matchModel.getGameNrInProgress()==1 && ShareMatchPrefs.LinkWithFullDetailsEachHalf.equals(m_liveScoreShare) ) {
                 // share if livescoring is 'Semi-On' to let the match appear in the list a.s.a.p.
                 shareScoreSheet(ScoreBoard.this, matchModel, false);
             }
+*/
 
             showAppropriateMenuItemInActionBar();
           //bNonIntrusiveGameEndingPerformed = false;
@@ -3046,7 +3056,7 @@ touch -t 01030000 LAST.sb
                 }
             }
 
-            if ( (bInitializingModelListeners == false) && (iTotal != 0) && ShareMatchPrefs.LinkWithFullDetailsEachPoint.equals(m_liveScoreShare) && (matchModel.isLocked() == false) ) {
+            if ( (bInitializingModelListeners == false) && (iTotal != 0) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
                 //shareScoreSheet(ScoreBoard.this, matchModel, false);
                 // start timer to post in e.g. x seconds. Restart this timer as soon as another point is scored
                 shareScoreSheetDelayed(600);
@@ -3156,9 +3166,11 @@ touch -t 01030000 LAST.sb
             if ( m_bHapticFeedbackOnGameEnd ) {
                 SystemUtil.doVibrate(ScoreBoard.this, 200);
             }
+/*
             if ( EnumSet.of(ShareMatchPrefs.LinkWithFullDetailsEachGame, ShareMatchPrefs.LinkWithFullDetailsEachHalf).contains(m_liveScoreShare) ) {
                 shareScoreSheet(ScoreBoard.this, matchModel, true);
             }
+*/
 
             showAppropriateMenuItemInActionBar();
 
@@ -3499,7 +3511,7 @@ touch -t 01030000 LAST.sb
                 //ViewType viewType  = (ViewType) ctx2;
                 doTimerFeedback(timerType, true);
                 if ( EnumSet.of(Type.UntillStartOfNextGame).contains(timerType) && (matchModel != null) && matchModel.isPossibleGameVictory() ) {
-                    endGame();
+                    endGame(false);
                 }
                 // fall through!!
             case timerCancelled: {
@@ -3891,7 +3903,7 @@ touch -t 01030000 LAST.sb
             case R.id.end_game:
                 if ( warnModelIsLocked(id, ctx) ) { return false; }
                 if ( matchModel.isPossibleGameVictory() ) {
-                    endGame();
+                    endGame(false);
                 } else {
                     areYouSureGameEnding();
                 }
@@ -4066,7 +4078,7 @@ touch -t 01030000 LAST.sb
             case R.id.float_match_share:
             case R.id.dyn_match_share:
             case R.id.sb_share_score_sheet:
-                shareScoreSheet(this, matchModel, true);
+                postMatchModel(this, matchModel, true, true);
                 if ( shareButton != null ) {
                     shareButton.setHidden(true);
                 }
@@ -4346,7 +4358,6 @@ touch -t 01030000 LAST.sb
         openInBrowser(this, "/help");
     }
 
-    /** To share to 'Live' score on a regular basis without user interaction */
     private void autoShare() {
         if ( PreferenceValues.useShareFeature(this).equals(Feature.Automatic) == false ) {
             return;
@@ -4407,7 +4418,7 @@ touch -t 01030000 LAST.sb
         addToDialogStack(twoTimerView);
 
         // ensure the match shows up in the list of live score a.s.a.p. so e.g. when warmup timer is started
-        if ( ( matchModel.hasStarted() == false ) && ShareMatchPrefs.LinkWithFullDetailsEachPoint.equals(m_liveScoreShare) && (matchModel.isLocked() == false) ) {
+        if ( ( matchModel.hasStarted() == false ) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
             shareScoreSheetDelayed(1000);
         }
     }
@@ -4563,11 +4574,12 @@ touch -t 01030000 LAST.sb
     }
 
     private boolean _showWhoServesDialog() {
+        if ( matchModel == null ) { return false; }
         ServerToss serverToss = new ServerToss(this, matchModel, this);
         addToDialogStack(serverToss);
 
         // ensure the match shows up in the list of live score a.s.a.p. so e.g. when toss dialog is started
-        if ( ( matchModel.hasStarted() == false ) && ShareMatchPrefs.LinkWithFullDetailsEachPoint.equals(m_liveScoreShare) && (matchModel.isLocked() == false) ) {
+        if ( ( matchModel.hasStarted() == false ) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
             shareScoreSheetDelayed(1000);
         }
 
@@ -4915,6 +4927,7 @@ touch -t 01030000 LAST.sb
         handleMenuItem(R.id.sb_stored_matches, ArchiveTabbed.SelectTab.PreviousMultiSelect);
     }
 
+    /** mainly to post actually finished matches to configured target */
     private void postMatchResult() {
         final String feedPostName = PreferenceValues.getFeedPostName(this);
         final Authentication authentication = PreferenceValues.getFeedPostAuthentication(this);
@@ -4934,11 +4947,15 @@ touch -t 01030000 LAST.sb
             postMatchResult(null, null, null);
         }
     }
+
+    /** mainly to post actually finished matches to configured target */
     public void postMatchResult(Authentication authentication, String sUserName, String sPassword) {
         ResultPoster resultPoster = initResultPoster();
         if ( resultPoster != null ) {
             showProgress(R.string.posting);
             resultPoster.post(this, matchModel, authentication, sUserName, sPassword);
+        } else {
+            showShareFloatButton(false, false);
         }
     }
     /** for livescore */
@@ -4951,10 +4968,11 @@ touch -t 01030000 LAST.sb
         }
         @Override public void onFinish() {
             Log.d(TAG, "Posting ... ");
-            shareScoreSheet(ScoreBoard.this, matchModel, false);
+            postMatchModel(ScoreBoard.this, matchModel, false, false);
         }
     }
     private DelayedModelPoster m_delayedModelPoster = null;
+    /** To share to 'Live' score on a regular basis without user interaction */
     private synchronized void shareScoreSheetDelayed(int iMilliSeconds) {
         if ( m_delayedModelPoster != null ) {
             m_delayedModelPoster.cancel();
@@ -4964,17 +4982,11 @@ touch -t 01030000 LAST.sb
     }
     private static boolean m_bShareStarted_DemoThread = false;
     /** invoked on: GameEndReached, GameEnded, FirstPointChange, GameIsHalfway, ScoreChange. Mainly for livescore */
-    public static void shareScoreSheet(Context context, Model matchModel, boolean bAllowEndGameIfApplicable) {
+    public static void postMatchModel(Context context, Model matchModel, boolean bAllowEndGameIfApplicable, boolean bFromMenu) {
         Player possibleMatchVictoryFor = matchModel.isPossibleMatchVictoryFor();
         if ( bAllowEndGameIfApplicable ) {
-/*
-            if ( matchModel.isPossibleGameVictory() ) {
-                // why is this done again? Comment out for now 20170713, only do for last game (code below)
-                matchModel.endGame(false); // don't notify listeners: might popup a disturbing dialog like 'Post to site?'
-            }
-*/
             if ( possibleMatchVictoryFor != null ) {
-                matchModel.endGame(false, true); // don't notify listeners: might popup a disturbing dialog like 'Post to site?'
+                matchModel.endGame(true, true); // 20211102: DO notify listeners (OLD: don't notify listeners: might popup a disturbing dialog like 'Post to site?')
             }
         }
         JSONObject oSettings = null;
@@ -5009,7 +5021,7 @@ touch -t 01030000 LAST.sb
                 e.printStackTrace();
             }
         }
-        matchModelPoster.post(context, matchModel, oSettings);
+        matchModelPoster.post(context, matchModel, oSettings, bFromMenu);
     }
 
     // ------------------------------------------------------
@@ -6045,6 +6057,7 @@ touch -t 01030000 LAST.sb
         }
     }
     private void unlockMatch() {
+        if ( matchModel == null ) { return; }
         LockState current = matchModel.getLockState();
         LockState lsNew   = LockState.UnlockedManual;
         if ( (
@@ -6079,11 +6092,11 @@ touch -t 01030000 LAST.sb
         }
         return bOK;
     }
-    public boolean endGame() {
-        return endGame(false);
+    public boolean endGame(boolean bFromDialog) {
+        return _endGame(bFromDialog, false);
     }
-    private boolean endGame(boolean bBTDelayed) {
-        if ( warnModelIsLocked() ) { return false; }
+    private boolean _endGame(boolean bFromDialog, boolean bBTDelayed) {
+        if ( (bFromDialog == false) && warnModelIsLocked() ) { return false; }
         if ( matchModel == null ) { return false; }
 
         // first send endgame (because 'startNewGame' may stop a possible timer to be started)
