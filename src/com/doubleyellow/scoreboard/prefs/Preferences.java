@@ -429,9 +429,6 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                                     showShareInfo((String.format("This option will prepare a text message with the match summary for number '%s'", sSmsTo)));
                                 }
                                 break;
-                            case LinkWithFullDetailsEachGame:
-                                // this feature works best with 'Automatic' sharing
-                                break;
                             default:
                                 break;
                         }

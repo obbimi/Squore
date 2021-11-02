@@ -130,9 +130,11 @@
     </string-array>
     <string-array name="ShareMatchPrefsDisplayValues">
         <item>Partager le lien du match détaillé</item>
-        <item>Partager les details après chaque jeu</item> <!-- TODO -->
-        <item>Partager les details après chaque demi jeu</item> <!-- TODO -->
-        <item>Partager les details après chaque point</item> <!-- TODO -->
+<!--
+        <item>Partager les details après chaque jeu</item>
+        <item>Partager les details après chaque demi jeu</item>
+        <item>Partager les details après chaque point</item>
+-->
         <item>Partager le résumé du match</item>
         <item>Partager le résumé des matches</item> <!-- TODO -->
         <item>SMS du résumé du match au no par défaut</item>

@@ -162,9 +162,11 @@
     </string-array>
     <string-array name="ShareMatchPrefsDisplayValues">
         <item>Share link with full match details</item>
+<!--
         <item>Share match details after each game</item>
         <item>Share match details after each half of a game</item>
         <item>Share match details after each point</item>
+-->
         <item>Share match summary</item>
         <item>Share matches summary</item>
         <item>Text match summary to default number</item>

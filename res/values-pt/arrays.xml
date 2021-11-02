@@ -162,9 +162,11 @@
     </string-array>
     <string-array name="ShareMatchPrefsDisplayValues">
         <item>Partilhar link com todos os detalhes do encontro</item>
+<!--
         <item>Partilhar detalhes do encontro após cada jogo</item>
         <item>Partilhar detalhes do encontro após cada metade de jogo</item>
         <item>Partilhar detalhes do encontro após cada ponto</item>
+-->
         <item>Partilhar resumo do encontro</item>
         <item>Partilhar resumo dos jogos</item>
         <item>Partilhar sumário do encontro com o número predefinido</item>

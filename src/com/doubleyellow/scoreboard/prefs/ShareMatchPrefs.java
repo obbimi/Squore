@@ -29,9 +29,9 @@ import com.doubleyellow.scoreboard.R;
 public enum ShareMatchPrefs {
     /** Keep values/arrays-xx/string-array[@name='ShareMatchPrefsDisplayValues'] in sync */
     LinkWithFullDetails        (R.id.sb_share_score_sheet             , android.R.drawable.ic_menu_share     , false),
-    LinkWithFullDetailsEachGame(R.id.sb_share_score_sheet             , android.R.drawable.ic_menu_share     , true),
-    LinkWithFullDetailsEachHalf(R.id.sb_share_score_sheet             , android.R.drawable.ic_menu_share     , true),
-    LinkWithFullDetailsEachPoint(R.id.sb_share_score_sheet            , android.R.drawable.ic_menu_share     , true),
+//    LinkWithFullDetailsEachGame(R.id.sb_share_score_sheet             , android.R.drawable.ic_menu_share     , true),
+//    LinkWithFullDetailsEachHalf(R.id.sb_share_score_sheet             , android.R.drawable.ic_menu_share     , true),
+//    LinkWithFullDetailsEachPoint(R.id.sb_share_score_sheet            , android.R.drawable.ic_menu_share     , true),
     Summary                    (R.id.sb_share_match_summary           , android.R.drawable.ic_menu_share     , false),
     SummaryMultiple            (R.id.sb_share_matches_summary         , android.R.drawable.ic_menu_share     , false),
     SummaryToDefault           (R.id.sb_send_match_result             ,         R.drawable.ic_action_send_now, false), // only if default sms recipient specified

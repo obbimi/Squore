@@ -80,11 +80,6 @@ public class EditMatchWizard extends BaseAlertDialog
         LinearLayout.LayoutParams lpPC = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams lpCC = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-/*
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.matchwizard, null);
-*/
-
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
         int iMainBgColor   = mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
         int iLabelTxt      = mColors.get(ColorPrefs.ColorTarget.playerButtonTextColor);

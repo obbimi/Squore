@@ -487,15 +487,17 @@ public class PreferenceValues extends RWValues
     public static String getLiveScoreDeviceId(Context context) {
         return RWValues.getString(PreferenceKeys.liveScoreDeviceId, null, context);
     }
+/*
     public static void initForLiveScoring(Context ctx, boolean bOnlyTemporary) {
         if ( bOnlyTemporary ) {
+            // typically only to 'turn it on by default' for NewMatch Activity
             setOverwrite(PreferenceKeys.shareAction    , LiveScorePrefs.theOneForLiveScoring);
-            setOverwrite(PreferenceKeys.useShareFeature, Feature.Automatic);
+            setOverwrite(PreferenceKeys.useShareFeature, LiveScorePrefs.theFeatureForLiveScoring);
         } else {
-            removeOverwrite(PreferenceKeys.shareAction);
-            removeOverwrite(PreferenceKeys.useShareFeature);
-            setEnum(PreferenceKeys.shareAction    , ctx, LiveScorePrefs.theOneForLiveScoring);
-            setEnum(PreferenceKeys.useShareFeature, ctx, Feature.Automatic);
+            if ( FeedMatchSelector.mFeedPrefOverwrites.containsKey(PreferenceKeys.shareAction) == false ) {
+                setEnum(PreferenceKeys.shareAction    , ctx, LiveScorePrefs.theOneForLiveScoring);
+                setEnum(PreferenceKeys.useShareFeature, ctx, LiveScorePrefs.theFeatureForLiveScoring);
+            }
         }
         String sliveScoreDeviceId = PreferenceValues.getLiveScoreDeviceId(ctx);
         if ( StringUtil.isEmpty(sliveScoreDeviceId) ) {
@@ -504,9 +506,10 @@ public class PreferenceValues extends RWValues
         }
     }
     public static void initForNoLiveScoring(Context ctx) {
-        removeOverwrite(PreferenceKeys.shareAction);
-        removeOverwrite(PreferenceKeys.useShareFeature);
-        setEnum(PreferenceKeys.shareAction    , ctx, ShareMatchPrefs.LinkWithFullDetails);
+        if ( RWValues.isNotOverwritten(PreferenceKeys.shareAction) ) {
+            setEnum(PreferenceKeys.shareAction    , ctx, ShareMatchPrefs.LinkWithFullDetails);
+        }
+        //removeOverwrite(PreferenceKeys.useShareFeature);
         if ( PreferenceValues.useShareFeature(ctx).equals(Feature.Automatic) ) {
             setEnum(PreferenceKeys.useShareFeature, ctx, Feature.Suggest);
         } else {
@@ -522,6 +525,21 @@ public class PreferenceValues extends RWValues
             }
         }
         return null;
+    }
+*/
+    public static void initForLiveScoring(Context ctx, boolean bOnlyTemporary) {
+        if ( bOnlyTemporary) {
+            setOverwrite(PreferenceKeys.postEveryChangeToSupportLiveScore, true);
+        } else {
+            setBoolean(PreferenceKeys.postEveryChangeToSupportLiveScore, ctx, true);
+        }
+    }
+    public static void initForNoLiveScoring(Context ctx) {
+        removeOverwrite(PreferenceKeys.postEveryChangeToSupportLiveScore);
+        setBoolean(PreferenceKeys.postEveryChangeToSupportLiveScore, ctx, false);
+    }
+    public static boolean isConfiguredForLiveScore(Context ctx) {
+        return getBoolean(PreferenceKeys.postEveryChangeToSupportLiveScore, ctx, false);
     }
 
     // TODO: add to preferences.xml
@@ -1497,6 +1515,23 @@ public class PreferenceValues extends RWValues
     private static PostDataPreference getPostDataPreference(Context context) {
         return getEnum(PreferenceKeys.postDataPreference, context, PostDataPreference.class, PostDataPreference.Basic);
     }
+
+    public static boolean guessShareAction(String sModelSource, Context context) {
+        String s = getPostResultToURL(context);
+        if ( StringUtil.isEmpty(s) ) {
+            // e.g. tournamentsoftware has no post URL
+            boolean bChanged = setEnum(PreferenceKeys.shareAction, context, ShareMatchPrefs.LinkWithFullDetails);
+            return bChanged;
+        }
+        final int iLengthToCheck = 20;
+        if ( s.substring(0, iLengthToCheck).equalsIgnoreCase(sModelSource.substring(0, iLengthToCheck))) {
+            // assume match is from a feed that contains a post URL
+            boolean bChanged = setEnum(PreferenceKeys.shareAction, context, ShareMatchPrefs.PostResult);
+            return bChanged;
+        }
+        return false;
+    }
+
     /**
      * Actually persist some passed in values
      */
@@ -1794,6 +1829,13 @@ public class PreferenceValues extends RWValues
             removeOverwrite(key);
         }
     }
+/*
+    private static boolean bHasFeedOverwrites = false;
+    public static void setFeedOverwrites(Map<PreferenceKeys, String> values) {
+        bHasFeedOverwrites = MapUtil.isNotEmpty(values);
+        setOverwrites(values);
+    }
+*/
     public static void setOverwrites(Map<PreferenceKeys, String> values) {
         if ( values == null ) { return; }
         for(PreferenceKeys key: values.keySet() ) {
@@ -1864,7 +1906,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2021-10-02"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2021-11-03"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

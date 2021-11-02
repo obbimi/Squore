@@ -117,9 +117,11 @@
     </string-array>
     <string-array name="ShareMatchPrefsDisplayValues">
         <item>Share link met alle match details</item>
+<!--
         <item>Share match details na elke game</item>
         <item>Share match details na elke halve game</item>
         <item>Share match details na elk punt</item>
+-->
         <item>Share wedstrijd samenvatting</item>
         <item>Share wedstrijden samenvatting</item>
         <item>SMS match samenvatting naar default nummer</item>

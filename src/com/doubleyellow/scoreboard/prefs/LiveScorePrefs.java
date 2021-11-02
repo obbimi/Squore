@@ -28,7 +28,8 @@ import java.util.Map;
  */
 public class LiveScorePrefs extends MultiPrefsDialog
 {
-    static ShareMatchPrefs theOneForLiveScoring = ShareMatchPrefs.LinkWithFullDetailsEachPoint;
+    //public static ShareMatchPrefs theOneForLiveScoring = ShareMatchPrefs.LinkWithFullDetailsEachPoint;
+    //public static Feature         theFeatureForLiveScoring = Feature.Automatic;
 
     public LiveScorePrefs(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -36,8 +37,9 @@ public class LiveScorePrefs extends MultiPrefsDialog
 
     @Override public void getPreferencesToSet(Map<PreferenceKeys, Object> mReturn, boolean bPositive) {
         if ( bPositive ) {
-            mReturn.put(PreferenceKeys.shareAction    , theOneForLiveScoring);
-            mReturn.put(PreferenceKeys.useShareFeature, Feature.Automatic);
+            mReturn.put(PreferenceKeys.postEveryChangeToSupportLiveScore, true);
+            //mReturn.put(PreferenceKeys.shareAction    , theOneForLiveScoring);
+            //mReturn.put(PreferenceKeys.useShareFeature, theFeatureForLiveScoring);
         } else {
             // TODO: back to defaults??
         }

@@ -162,9 +162,11 @@
     </string-array>
     <string-array name="ShareMatchPrefsDisplayValues">
         <item>Condividi colegamento con completi dettagli dell\'incontro</item>
+<!--
         <item>Condividi dettagli dell\'incontro dopo ogni gioco</item>
         <item>Condividi dettagli dell\'incontro dopo ogni metà di gioco</item>
         <item>Condividi dettagli dell\'incontro dopo ogni punto</item>
+-->
         <item>Condividi riassunto dell\'incontro</item>
         <item>Condividi riassunto degli incontri</item>
         <item>Invia un SMS con il riassunto dell\'incontro ad un numero predefinito</item>

@@ -264,6 +264,7 @@ public enum PreferenceKeys {
     LiveScorePrefs,
         LiveScoreOpenURL,
         liveScoreDeviceId,
+        postEveryChangeToSupportLiveScore,
 
     /* not really preferences but makes them manageable from 'parent' app */
     FromParent,

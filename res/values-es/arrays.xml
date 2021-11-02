@@ -162,9 +162,11 @@
     </string-array>
     <string-array name="ShareMatchPrefsDisplayValues">
         <item>Compartir enlace con todos los detalles del partido</item>
+<!--
         <item>Compartir detalles del partido después de cada juego</item>
         <item>Compartir detalles del partido después de cada mitad del juego</item>
         <item>Compartir detalles del partido después de cada punto</item>
+-->
         <item>Compartir resumen del partido</item>
         <item>Compartir resumen de partidos</item>
         <item>Texto del resumen del partido a un numero determinado</item>
