@@ -160,7 +160,7 @@ if [[ ${iStep} -le 2 ]]; then
             # uninstall previous app
             adb -s ${dvc} uninstall ${pkg}
 
-            echo 'Installing new version ${hasNewVersionCode} (after uninstall) ...'
+            echo "Installing new version ${hasNewVersionCode} (after uninstall) ..."
             adb -s ${dvc} install -r ${apkFile} 2> tmp.adb.install
         fi
 

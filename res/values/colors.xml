@@ -25,18 +25,30 @@
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|IPF Light             |#1C3755|#D63E2D|#7BB0E7|#FFFFFF|</item><!-- purple|red|blue... -->
         <item>|IPF Dark              |#1C3755|#D63E2D|#7BB0E7|#000000|</item><!-- purple|red|blue... -->
+        <item>|Grey-Scale Light      |#CCCCCC|#AAAAAA|#999999|#FFFFFF|</item>
+        <item>|Grey-Scale Dark       |#666666|#444444|#222222|#000000|</item>
+        <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
+        <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
     <string-array name="colorSchema__Racketlon" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|FIR Light             |#004071|#C30D14|#D6D6D6|#FFFFFF|</item><!-- purple|red|grey... -->
         <item>|FIR Dark              |#004071|#C30D14|#D6D6D6|#000000|</item><!-- purple|red|grey... -->
+        <item>|Grey-Scale Light      |#CCCCCC|#AAAAAA|#999999|#FFFFFF|</item>
+        <item>|Grey-Scale Dark       |#666666|#444444|#222222|#000000|</item>
+        <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
+        <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
     <string-array name="colorSchema__Racquetball" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|Light                 |#004071|#C30D14|#D6D6D6|#FFFFFF|</item><!-- purple|red|grey... -->
         <item>|Dark                  |#004071|#C30D14|#D6D6D6|#000000|</item><!-- purple|red|grey... -->
+        <item>|Grey-Scale Light      |#CCCCCC|#AAAAAA|#999999|#FFFFFF|</item>
+        <item>|Grey-Scale Dark       |#666666|#444444|#222222|#000000|</item>
+        <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
+        <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
     <string-array name="colorSchema__Tabletennis" translatable="false">
                                 <!-- scorebtn|name  |serveside|backgrn -->
@@ -45,6 +57,8 @@
         <item>|ITTF Light            |#000000|#005043|#E3E5E4|#FFFFFF|</item><!-- black|green|light grey on white... -->
         <item>|ITTF Dark             |#FFFFFF|#005043|#E3E5E4|#000000|</item><!-- white|green|light grey on black... -->
         <item>|Yellow Red White on Black|#00FC08|#FBFBFB|#FE0000|#000000|</item><!-- yellow|white|red on black... -->
+        <item>|Grey-Scale Light      |#CCCCCC|#AAAAAA|#999999|#FFFFFF|</item>
+        <item>|Grey-Scale Dark       |#666666|#444444|#222222|#000000|</item>
         <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
         <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
@@ -52,21 +66,24 @@
                                 <!-- scorebtn|name  |serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|BWF                   |#000001|#DF2027|#DDDDDD|#FFFFFF|</item><!-- black|red|grey ... -->
+        <item>|Grey-Scale Light      |#CCCCCC|#AAAAAA|#999999|#FFFFFF|</item>
+        <item>|Grey-Scale Dark       |#666666|#444444|#222222|#000000|</item>
         <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
         <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
-    <string-array name="colorSchema_CourtCare" translatable="false">
-                               <!-- scorebtn|name+sht|serveside|backgrn -->
+
+    <!-- black|red|grey ... -->
+    <string-array name="colorSchema__CourtCare" translatable="false">
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
-        <item>|Court Care Black Light|#000001|#ff0000|#dddddd|#FFFFFF|</item><!-- black|red|grey ... -->
+        <item>|Court Care Black Light|#000001|#ff0000|#dddddd|#FFFFFF|</item>
         <item>|Court Care White Dark |#FFFFFF|#ff0000|#dddddd|#000001|</item>
         <item>|Court Care Red Light  |#ff0000|#000001|#dddddd|#FFFFFF|</item>
         <item>|Court Care Red Dark   |#ff0000|#FFFFFF|#dddddd|#000001|</item>
     </string-array>
-    <string-array name="colorSchema_UoN" translatable="false">
-                               <!-- scorebtn|name+sht|serveside|backgrn -->
+    <!-- green|gold|dark grey ... University of Notthingham -->
+    <string-array name="colorSchema__UoN" translatable="false">
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
-        <item>|UoN Green Light       |#005f36|#deb408|#4f4f4f|#FFFFFF|</item><!-- green|gold|dark grey ... University of Notthingham -->
+        <item>|UoN Green Light       |#005f36|#deb408|#4f4f4f|#FFFFFF|</item>
         <item>|UoN Green Dark        |#005f36|#deb408|#4f4f4f|#000001|</item>
         <item>|UoN Gold  Light       |#deb408|#005f36|#4f4f4f|#FFFFFF|</item>
         <item>|UoN Gold  Dark        |#deb408|#005f36|#4f4f4f|#000001|</item>

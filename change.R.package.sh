@@ -242,5 +242,7 @@ oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
 cat ${f} | perl -ne "s~(srcFile\s+')AndroidManifest[A-Z][a-z][A-Za-z]+.xml~\1${brandMfFile}~; print" > ${f}.tmp
 if [[ -n "$(diff ${f}.tmp ${f})" ]]; then
     mv ${f}.tmp ${f}
+else
+    rm ${f}.tmp
 fi
 touch -t "${oldFileTime}" ${f}
