@@ -4,7 +4,6 @@
 #export JAVA_HOME=/usr/lib/jvm/java-10-openjdk
 export JAVA_HOME=/osshare/software/oracle/java-8-oracle
 
-#set -x
 mffile=$(grep Manifest build.gradle | egrep -v '(ALL)' | grep -v '//' | cut -d "'" -f 2)
 if [[ -z "${mffile}" ]]; then
     echo "Could not determine manifest file by looking in build.gradle"
@@ -12,28 +11,26 @@ if [[ -z "${mffile}" ]]; then
 fi
 pkg=$(grep package= ${mffile} | perl -ne 's~.*"([a-z\.]+)".*~$1~; print')
 
+# check if a new version code for the brand for which we will be creating an apk is specified
+brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
+hasNewVersionCode=$(git diff build.gradle | egrep '^\+' | grep versionCode | sed 's~.*0000\s*+\s*~~' | sort | tail -1) # holds only the last 3 digits
+echo "hasNewVersionCode: $hasNewVersionCode"
+BU_DIR=/osshare/code/gitlab/double-yellow.be/app
+
 productFlavor="phoneTabletPost23"
 relapk=$(find . -name "*${productFlavor}-release.apk")
-if [[ -e ${relapk} ]]; then
-    oldFileTime=$(find ${relapk} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
+if [[ ! -e ${relapk} ]]; then
+    relapk=$(find ${BU_DIR} -name "Score-${brand}.${productFlavor}*${hasNewVersionCode}.apk")
+fi
 
-    echo "Comparing changetime of files against ${relapk} (${oldFileTime})"
+if [[ -e ${relapk} ]]; then
+    apkFileTime=$(find ${relapk} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
+
+    echo "Comparing changetime of files against ${relapk} (${apkFileTime})"
     changedFiles="$(find . -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml|md|gradle)' | egrep -v '(\.idea/|/\.gradle/|/generated/|/reports/)')"
 else
     changedFiles="No release apk to compare with"
 fi
-
-if [[ ${versionCodeX} -ne ${vcFromManifest} ]]; then
-    echo "Not changing MANIFEST anymore" > /dev/null
-    #sed -i "s~\(versionCode=.\)[0-9]*\(.\)~\1${versionCodeX}\2~" ${mffile}
-fi
-
-# check if a new version code for the brand for which we will be creating an apk is specified
-brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
-#hasNewVersionCode=$(git diff build.gradle | egrep '^\+' | grep versionCode | grep -i ${brand})
-hasNewVersionCode=$(git diff build.gradle | egrep '^\+' | grep versionCode)
-
-echo "hasNewVersionCode: $hasNewVersionCode"
 
 # make a small modification in preferences date value so 'Quick Intro' will not play for 1 or 2 days (to allow better PlayStore automated testing)
 #if grep -q ${mffile} .gitignore; then
@@ -72,7 +69,6 @@ if [[ 1 -eq 2 ]]; then
     exit 1
 fi
 
-targetdir=/osshare/code/gitlab/double-yellow.be/app
 
 iStep=${2:-1}
 echo "Changed files : $changedFiles"
@@ -107,10 +103,10 @@ if [[ ${iStep} -le 1 ]]; then
             versionCode=$(head ${mergedManifest} | grep versionCode | sed -e 's~[^0-9]~~g')
 
             if [[ -e ${relapk} ]]; then
-                cp -v -p --backup ${relapk} ${targetdir}/Score-${brand}.${productFlavor}-${versionCode}.apk
+                cp -v -p --backup ${relapk} ${BU_DIR}/Score-${brand}.${productFlavor}-${versionCode}.apk
             else
                 echo "No release file. Maybe because no signingconfig?!"
-                cp -v -p --backup ${dbgapk} ${targetdir}/Score-${brand}.${productFlavor}-${versionCode}.DEBUG_NO_RELEASE.apk
+                cp -v -p --backup ${dbgapk} ${BU_DIR}/Score-${brand}.${productFlavor}-${versionCode}.DEBUG_NO_RELEASE.apk
             fi
 
             #read -p "Does copy look ok"
@@ -131,13 +127,11 @@ if [[ ${iStep} -le 1 ]]; then
         exit 1
     fi
 fi
-#set -x
 if [[ ${iStep} -le 2 ]]; then
     devices="$(adb devices | egrep -v '(List of|^$)' | sed 's~ *device~~')"
     for dvc in ${devices}; do
-        #set -x
-        build_version_sdk=$(adb -s ${dvc} shell getprop ro.build.version.sdk | sed -e 's~[^0-9]~~')
-        build_product_model=$(adb -s ${dvc} shell getprop ro.product.model)
+        build_version_sdk=$(    adb -s ${dvc} shell getprop ro.build.version.sdk | sed -e 's~[^0-9]~~')
+        build_product_model=$(  adb -s ${dvc} shell getprop ro.product.model)
         build_characteristics=$(adb -s ${dvc} shell getprop ro.build.characteristics) # "emulator,nosdcard,watch",default
 
         productFlavor="phoneTabletPost23"
@@ -150,15 +144,15 @@ if [[ ${iStep} -le 2 ]]; then
         if [[ "${build_characteristics}" =~ "watch" ]]; then
             productFlavor="wearOs"
         fi
-        mergedManifest=$(find build/intermediates/merged_manifests/${productFlavor}Release -name AndroidManifest.xml)
-        versionCode=$(head ${mergedManifest} | grep versionCode | sed -e 's~[^0-9]~~g')
+        #mergedManifest=$(find build/intermediates/merged_manifests/${productFlavor}Release -name AndroidManifest.xml)
+        #versionCode=$(head ${mergedManifest} | grep versionCode | sed -e 's~[^0-9]~~g')
 
-        set +x
-        echo "Installing new ${productFlavor} version on device ${dvc}..."
-        apkFile=${targetdir}/Score-${brand}.${productFlavor}-${versionCode}.apk
+        #apkFile=${BU_DIR}/Score-${brand}.${productFlavor}-${versionCode}.apk
+        apkFile=${BU_DIR}/Score-${brand}.${productFlavor}*${hasNewVersionCode}.apk
+        echo "Installing new ${productFlavor} version ${hasNewVersionCode} on device ${dvc}... (${apkFile})"
 
-echo "[TMP] Uninstalling previous version of ${pkg} ..."
-adb -s ${dvc} uninstall ${pkg}
+#echo "[TMP] Uninstalling previous version of ${pkg} ..."
+#adb -s ${dvc} uninstall ${pkg}
 
         adb -s ${dvc} install -r ${apkFile} 2> tmp.adb.install # 1> /dev/null
         if grep failed tmp.adb.install; then
@@ -166,13 +160,12 @@ adb -s ${dvc} uninstall ${pkg}
             # uninstall previous app
             adb -s ${dvc} uninstall ${pkg}
 
-            echo 'Installing new version (after uninstall) ...'
+            echo 'Installing new version ${hasNewVersionCode} (after uninstall) ...'
             adb -s ${dvc} install -r ${apkFile} 2> tmp.adb.install
         fi
 
         # launch the app
         echo "Launching the app ${pkg} ..."
-        #set -x
         adb -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1 > /dev/null 2> /dev/null
         set +x
         # adb -s ${dvc} logcat
