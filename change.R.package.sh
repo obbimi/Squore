@@ -74,8 +74,14 @@ function correctSportSpecificResource {
                     #    echo "================>>>>>>>>>>>>>>>> ${nrToCorrect} corrections for ${res} to ${newRes} in ${f}"
                     #fi
 
+                    # remember current modification time of file
+                    oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
+
                     sed -i "s~${res}~${newRes}~" ${f}
                     let correctedCnt=correctedCnt+nrToCorrect
+
+                    # restore modification time of file
+                    touch -t "${oldFileTime}" ${f}
 
                     printf "%2d (+%d) Corrected %-72s from %-32s to %-32s \n" ${correctedCnt} ${nrToCorrect} ${f} ${res} ${newRes} >> corrected.txt
                 done
@@ -119,21 +125,28 @@ if [[ -z "${pkgFrom}" ]]; then
     exit 1
 fi
 
+####################################################
+# Change Brand.java
+####################################################
+f=com/doubleyellow/scoreboard/Brand.java
+
+oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
 if [[ "$tobranded" = "Squore" ]]; then
     # comment out all brands ...
-    sed -i 's~^\(\s*\)\(\w\+\s*(\s*SportType\.\)~\1//\2~'         com/doubleyellow/scoreboard/Brand.java
+    sed -i 's~^\(\s*\)\(\w\+\s*(\s*SportType\.\)~\1//\2~'         ${f}
     # ... and uncomment Squore (always required)
-    sed -i "s~^\(\s\+\)//\(Squore\s*(.*R.string.app_name\)~\1\2~" com/doubleyellow/scoreboard/Brand.java
+    sed -i "s~^\(\s\+\)//\(Squore\s*(.*R.string.app_name\)~\1\2~" ${f}
 fi
 # ensure the chosen brand is uncommented in the Brands.java file (Squore brand should ALWAYS be uncommented)
 if [[ "$tobranded" != "Squore" ]]; then
-    sed -i "s~^\(\s\+\)//\(${tobranded}\s*(.*R.string.app_name\)~\1\2~" com/doubleyellow/scoreboard/Brand.java
+    sed -i "s~^\(\s\+\)//\(${tobranded}\s*(.*R.string.app_name\)~\1\2~" ${f}
 fi
 
 # simply actually set the active brand like Brand.brand = Brand.Squore
-sed -i "s~Brand.\w\+;~Brand.${tobranded};~"                      com/doubleyellow/scoreboard/Brand.java
-#vi +/Brand.                                                     com/doubleyellow/scoreboard/Brand.java
+sed -i "s~Brand.\w\+;~Brand.${tobranded};~"                      ${f}
+#vi +/Brand.                                                     ${f}
 
+touch -t "${oldFileTime}" ${f}
 
 ####################################################
 # Change <other>.java
@@ -148,6 +161,7 @@ printf "Change to '${tobranded}'\n"
 #for f in $(egrep -irl 'com\.doubleyellow\.[a-z]+\.R[^a-z]' *); do
 #    cat ${f} | perl -ne "s~com\.doubleyellow\.(?!base.R)[a-z]+\.R([^A-Za-z'])~com.doubleyellow.${tobrandedLC}.R\$1~; print" > ${f}.1.txt
 for f in $(egrep -irl "${pkgFrom}\.R[^a-z]" *); do
+    oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
     cat ${f} | perl -ne "s~(import\s+|\()${pkgFrom}\.R([^A-Za-z'])~\$1${brandPkg}.R\$2~; print" > ${f}.1.txt
     if [[ -n "$(diff ${f} ${f}.1.txt)" ]]; then
         printf "File %-72s to %s \n" ${f} ${tobranded}
@@ -155,6 +169,7 @@ for f in $(egrep -irl "${pkgFrom}\.R[^a-z]" *); do
     else
         rm ${f}.1.txt
     fi
+    touch -t "${oldFileTime}" ${f}
 done
 echo '=================================='
 #read -t 10 -p ' Java files changed. Continue ... ? '
@@ -174,6 +189,7 @@ if [[ "$tobranded" = "Squore" ]] ; then
     toSuffix=Squash
 fi
 for f in $(egrep -rl "@(string|fraction).*__${fromSuffix}\""); do
+    oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
 
     cat ${f} | perl -ne "s~__${fromSuffix}\"~__${toSuffix}\"~; print" > ${f}.1.xml
     if [[ -n "$(diff ${f} ${f}.1.xml)" ]]; then
@@ -185,6 +201,7 @@ for f in $(egrep -rl "@(string|fraction).*__${fromSuffix}\""); do
         rm ${f}.1.xml
     fi
     #read -t 10 -p ' Continue ? '
+    touch -t "${oldFileTime}" ${f}
 done
 echo '=================================='
 #read -t 10 -p 'menu/layout/preferences files processed. Continue ? '
@@ -218,8 +235,12 @@ fi
 
 cd ..
 
+f=build.gradle
+oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
+
 # change manifest file name to one of brand we want to generate apk for
-cat build.gradle | perl -ne "s~(srcFile\s+')AndroidManifest[A-Z][a-z][A-Za-z]+.xml~\1${brandMfFile}~; print" > build.gradle.tmp
-if [[ -n "$(diff build.gradle.tmp build.gradle)" ]]; then
-    mv build.gradle.tmp build.gradle
+cat ${f} | perl -ne "s~(srcFile\s+')AndroidManifest[A-Z][a-z][A-Za-z]+.xml~\1${brandMfFile}~; print" > ${f}.tmp
+if [[ -n "$(diff ${f}.tmp ${f})" ]]; then
+    mv ${f}.tmp ${f}
 fi
+touch -t "${oldFileTime}" ${f}

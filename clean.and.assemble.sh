@@ -15,6 +15,9 @@ pkg=$(grep package= ${mffile} | perl -ne 's~.*"([a-z\.]+)".*~$1~; print')
 productFlavor="phoneTabletPost23"
 relapk=$(find . -name "*${productFlavor}-release.apk")
 if [[ -e ${relapk} ]]; then
+    oldFileTime=$(find ${relapk} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
+
+    echo "Comparing changetime of files against ${relapk} (${oldFileTime})"
     changedFiles="$(find . -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml|md|gradle)' | egrep -v '(\.idea/|/\.gradle/|/generated/|/reports/)')"
 else
     changedFiles="No release apk to compare with"
@@ -27,7 +30,10 @@ fi
 
 # check if a new version code for the brand for which we will be creating an apk is specified
 brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
-hasNewVersionCode=$(git diff build.gradle | egrep '^\+' | grep versionCode | grep -i ${brand})
+#hasNewVersionCode=$(git diff build.gradle | egrep '^\+' | grep versionCode | grep -i ${brand})
+hasNewVersionCode=$(git diff build.gradle | egrep '^\+' | grep versionCode)
+
+echo "hasNewVersionCode: $hasNewVersionCode"
 
 # make a small modification in preferences date value so 'Quick Intro' will not play for 1 or 2 days (to allow better PlayStore automated testing)
 #if grep -q ${mffile} .gitignore; then
@@ -150,6 +156,10 @@ if [[ ${iStep} -le 2 ]]; then
         set +x
         echo "Installing new ${productFlavor} version on device ${dvc}..."
         apkFile=${targetdir}/Score-${brand}.${productFlavor}-${versionCode}.apk
+
+echo "[TMP] Uninstalling previous version of ${pkg} ..."
+adb -s ${dvc} uninstall ${pkg}
+
         adb -s ${dvc} install -r ${apkFile} 2> tmp.adb.install # 1> /dev/null
         if grep failed tmp.adb.install; then
             echo "Uninstalling previous version of ${pkg} to install new version ..."

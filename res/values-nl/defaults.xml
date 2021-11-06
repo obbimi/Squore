@@ -32,8 +32,8 @@
 \nAuthentication=Basic
 \n
 \nName=Double Yellow
-\nFeedMatches=http://www.double-yellow.be/box/matches.txt.php
-\nFeedPlayers=http://www.double-yellow.be/box/players.txt.php
+\nFeedMatches=https://www.double-yellow.be/box/matches.json.php
+\nFeedPlayers=https://www.double-yellow.be/box/players.txt.php
 ]]></string>
 
     <string name="OfficialRulesURLs_default__Squash"><![CDATA[/help/rules.of.singles.squash.php?lang-nl
