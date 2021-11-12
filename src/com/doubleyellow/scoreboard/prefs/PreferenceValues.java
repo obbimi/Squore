@@ -1524,6 +1524,11 @@ public class PreferenceValues extends RWValues
             return bChanged;
         }
         final int iLengthToCheck = 20;
+        int iMinLength = Math.min(StringUtil.size(sModelSource), StringUtil.size(s));
+        if ( iMinLength < iLengthToCheck ) {
+            // prevent StringIndexOutOfBounds
+            return false;
+        }
         if ( s.substring(0, iLengthToCheck).equalsIgnoreCase(sModelSource.substring(0, iLengthToCheck))) {
             // assume match is from a feed that contains a post URL
             boolean bChanged = setEnum(PreferenceKeys.shareAction, context, ShareMatchPrefs.PostResult);
