@@ -3,6 +3,15 @@
 #export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
 #export JAVA_HOME=/usr/lib/jvm/java-10-openjdk
 export JAVA_HOME=/osshare/software/oracle/java-8-oracle
+if [[ ! -e $JAVA_HOME ]]; then
+    export JAVA_HOME=/cygdrive/c/localapps/jdk1.8.0_231
+fi
+if [[ ! -e $JAVA_HOME ]]; then
+    # ubuntu shell
+    #export JAVA_HOME=/mnt/c/localapps/jdk1.8.0_231
+    #export JAVA_HOME=C:/localapps/jdk1.8.0_231
+    export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+fi
 
 mffile=$(grep Manifest build.gradle | egrep -v '(ALL)' | grep -v '//' | cut -d "'" -f 2)
 if [[ -z "${mffile}" ]]; then
@@ -13,12 +22,18 @@ pkg=$(grep package= ${mffile} | perl -ne 's~.*"([a-z\.]+)".*~$1~; print')
 
 # check if a new version code for the brand for which we will be creating an apk is specified
 brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
+echo "Manifest file : ${mffile}"
+echo "Package       : ${pkg}"
+echo "Brand         : ${brand}"
 hasNewVersionCode=$(git diff build.gradle | egrep '^\+' | grep versionCode | sed 's~.*0000\s*+\s*~~' | sort | tail -1) # holds only the last 3 digits
 echo "hasNewVersionCode: $hasNewVersionCode"
 BU_DIR=/osshare/code/gitlab/double-yellow.be/app
+if [[ ! -e ${BU_DIR} ]]; then
+	  BU_DIR=/mnt/c/code/gitlab/double-yellow.be/app
+fi
 
 productFlavor="phoneTabletPost23"
-relapk=$(find . -name "*${productFlavor}-release.apk")
+relapk=$(find . -name "*${productFlavor}-Xrelease.apk")
 if [[ ! -e ${relapk} ]]; then
     relapk=$(find ${BU_DIR} -name "Score-${brand}.${productFlavor}*${hasNewVersionCode}.apk")
 fi
@@ -86,6 +101,7 @@ else
     fi
 fi
 
+ADB_COMMAND=$(which adb || which adb.exe)
 if [[ ${iStep} -le 1 ]]; then
     echo "Cleaning ... ${pkg}"
     ./gradlew clean
@@ -99,25 +115,31 @@ if [[ ${iStep} -le 1 ]]; then
             dbgapk=$(find . -name "*-${productFlavor}-debug.apk")
 
             # determine correct version number from manifest
-            mergedManifest=$(find build/intermediates/merged_manifests/${productFlavor}Release -name AndroidManifest.xml)
-            versionCode=$(head ${mergedManifest} | grep versionCode | sed -e 's~[^0-9]~~g')
+            if [[ -e build/intermediates/merged_manifests/${productFlavor}Release ]]; then
+                mergedManifest=$(find build/intermediates/merged_manifests/${productFlavor}Release -name AndroidManifest.xml)
+                versionCode=$(head ${mergedManifest} | grep versionCode | sed -e 's~[^0-9]~~g')
 
-            if [[ -e ${relapk} ]]; then
-                cp -v -p --backup ${relapk} ${BU_DIR}/Score-${brand}.${productFlavor}-${versionCode}.apk
-            else
-                echo "No release file. Maybe because no signingconfig?!"
-                cp -v -p --backup ${dbgapk} ${BU_DIR}/Score-${brand}.${productFlavor}-${versionCode}.DEBUG_NO_RELEASE.apk
+                if [[ -e ${BU_DIR} ]]; then
+                    if [[ -e ${relapk} ]]; then
+                        cp -v -p --backup ${relapk} ${BU_DIR}/Score-${brand}.${productFlavor}-${versionCode}.apk
+                    else
+                        echo "No release file. Maybe because no signingconfig in build.gradle ?!"
+                        cp -v -p --backup ${dbgapk} ${BU_DIR}/Score-${brand}.${productFlavor}-${versionCode}.DEBUG_NO_RELEASE.apk
+                    fi
+                else
+                    echo "NOT making backup in non existing directory ${BU_DIR}"
+                fi
             fi
 
             #read -p "Does copy look ok"
             if [[ 1 -eq 2 ]]; then
                 if [[ -n "${relapk}" ]]; then
                     ls -l ${relapk}
-                    echo "adb -s \${device} install -r Squore/${relapk}"
+                    echo "${ADB_COMMAND} -s \${device} install -r Squore/${relapk}"
                 fi
                 if [[ -n "${dbgapk}" ]]; then
                     ls -l ${dbgapk}
-                    echo "adb -s \${device} install -r Squore/${dbgapk}"
+                    echo "${ADB_COMMAND} -s \${device} install -r Squore/${dbgapk}"
                 fi
             fi
 
@@ -128,12 +150,16 @@ if [[ ${iStep} -le 1 ]]; then
     fi
 fi
 if [[ ${iStep} -le 2 ]]; then
-    devices="$(adb devices | egrep -v '(List of|^$)' | sed 's~ *device~~')"
+    devices="$(${ADB_COMMAND} devices | egrep -v '(List of|^$)' | sed 's~ *device~~')"
+    echo "Devices: ${devices}"
     for dvc in ${devices}; do
-        build_version_sdk=$(    adb -s ${dvc} shell getprop ro.build.version.sdk | sed -e 's~[^0-9]~~')
-        build_product_model=$(  adb -s ${dvc} shell getprop ro.product.model)
-        build_characteristics=$(adb -s ${dvc} shell getprop ro.build.characteristics) # "emulator,nosdcard,watch",default
-
+        if [[ -z "${dvc}" ]]; then
+            continue 
+        fi
+        build_version_sdk=$(    ${ADB_COMMAND} -s ${dvc} shell getprop ro.build.version.sdk | sed -e 's~[^0-9]~~')
+        build_product_model=$(  ${ADB_COMMAND} -s ${dvc} shell getprop ro.product.model)
+        build_characteristics=$(${ADB_COMMAND} -s ${dvc} shell getprop ro.build.characteristics) # "emulator,nosdcard,watch",default
+        echo "Device ${dvc} : Version= ${build_version_sdk}, Model= ${build_product_model}, Characteristicts= ${build_characteristics}"
         productFlavor="phoneTabletPost23"
         if [[ ${build_version_sdk} -lt 23 ]]; then
             productFlavor="phoneTabletPre22"
@@ -153,23 +179,23 @@ if [[ ${iStep} -le 2 ]]; then
 
 #echo "[TMP] Uninstalling previous version of ${pkg} ..."
 #adb -s ${dvc} uninstall ${pkg}
-
-        adb -s ${dvc} install -r ${apkFile} 2> tmp.adb.install # 1> /dev/null
+        apkFile=$(echo ${apkFile} | sed 's~/mnt/c~c:~') # in ubuntu shell the apk should be passed without the /mnt/c path
+        ${ADB_COMMAND} -s ${dvc} install -r ${apkFile} 2> tmp.adb.install # 1> /dev/null
         if grep failed tmp.adb.install; then
             echo "Uninstalling previous version of ${pkg} to install new version ..."
             # uninstall previous app
-            adb -s ${dvc} uninstall ${pkg}
+            ${ADB_COMMAND} -s ${dvc} uninstall ${pkg}
 
             echo "Installing new version ${hasNewVersionCode} (after uninstall) ..."
-            adb -s ${dvc} install -r ${apkFile} 2> tmp.adb.install
+            ${ADB_COMMAND} -s ${dvc} install -r ${apkFile} 2> tmp.adb.install
         fi
 
         # launch the app
         echo "Launching the app ${pkg} ..."
-        adb -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1 > /dev/null 2> /dev/null
+        ${ADB_COMMAND} -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1 > /dev/null 2> /dev/null
         set +x
         # adb -s ${dvc} logcat
-        echo "adb -s ${dvc} logcat | egrep '(SB|doubleyellow)' | egrep -v '(AutoResize)'"
+        echo "${ADB_COMMAND} -s ${dvc} logcat | egrep '(SB|doubleyellow)' | egrep -v '(AutoResize)'"
     done
 
     if [[ -z "${devices}" ]]; then

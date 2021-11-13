@@ -1517,19 +1517,21 @@ public class PreferenceValues extends RWValues
     }
 
     public static boolean guessShareAction(String sModelSource, Context context) {
-        String s = getPostResultToURL(context);
-        if ( StringUtil.isEmpty(s) ) {
+        String sPostURL = getPostResultToURL(context);
+        if ( StringUtil.isEmpty(sPostURL) ) {
             // e.g. tournamentsoftware has no post URL
             boolean bChanged = setEnum(PreferenceKeys.shareAction, context, ShareMatchPrefs.LinkWithFullDetails);
             return bChanged;
         }
         final int iLengthToCheck = 20;
-        int iMinLength = Math.min(StringUtil.size(sModelSource), StringUtil.size(s));
+        int iMinLength = Math.min(StringUtil.size(sModelSource), StringUtil.size(sPostURL));
         if ( iMinLength < iLengthToCheck ) {
             // prevent StringIndexOutOfBounds
             return false;
         }
-        if ( s.substring(0, iLengthToCheck).equalsIgnoreCase(sModelSource.substring(0, iLengthToCheck))) {
+        String sStartPostURL     = sPostURL.substring(0, iLengthToCheck);
+        String sStartModelSource = sModelSource.substring(0, iLengthToCheck);
+        if ( sStartPostURL.equalsIgnoreCase(sStartModelSource)) {
             // assume match is from a feed that contains a post URL
             boolean bChanged = setEnum(PreferenceKeys.shareAction, context, ShareMatchPrefs.PostResult);
             return bChanged;
@@ -1911,7 +1913,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2021-11-03"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2021-11-13"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
