@@ -1895,7 +1895,7 @@ public abstract class Model implements Serializable
         m_player2Id.put(player, sId);
     }
     /**
-     * Will only return something if it was e.g. a team match was selected from a feed, and ref did select actual players from a list of team_players.
+     * Will only return something if it was e.g. a team match was selected from a feed, and ref did select actual players from a list of teamPlayers.
      * This will 'fail' if player name was modified afterwards...
      */
     public String getPlayerId(Player player) {
@@ -2864,7 +2864,7 @@ public abstract class Model implements Serializable
         }
 /*
         if ( JsonUtil.isNotEmpty(joTeamPlayers) ) {
-            jsonObject.put(JSONKey.team_players.toString(), joTeamPlayers);
+            jsonObject.put(JSONKey.teamPlayers.toString(), joTeamPlayers);
         }
 */
 

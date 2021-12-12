@@ -473,9 +473,9 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         bNamesPopulated = false;
 
                         // check of list of names of players is available
-                        JSONArray aPlayers = jsonObject.optJSONArray(JSONKey.team_players.toString());
+                        JSONArray aPlayers = jsonObject.optJSONArray(JSONKey.teamPlayers.toString());
                         if ( aPlayers == null ) {
-                            String sTeamId = jsonObject.optString(JSONKey.teamid.toString());
+                            String sTeamId = jsonObject.optString(JSONKey.teamId.toString());
                             if ( StringUtil.isNotEmpty(sTeamId) ) {
                                 // get teams from global part of feed config
                                 if ( m_joTeamPlayers != null ) {
@@ -483,10 +483,18 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                                 }
                             }
                         }
-                        //model.setTeamPlayers(p, JsonUtil.asListOfStrings(aPlayers)); // to show dialog where ref can select players of both teams
                         setTeamPlayers(context, p, aPlayers); // to show dialog where ref can select players of both teams
                     }
-                    model.setPlayerClub   (p, jsonObject.optString(JSONKey.club   .toString()));
+                    String sClub = jsonObject.optString(JSONKey.club.toString());
+                    model.setPlayerClub   (p, sClub);
+                    String sAbbreviation = jsonObject.optString(JSONKey.abbreviation.toString());
+                    if ( StringUtil.isNotEmpty(sAbbreviation) && StringUtil.isNotEmpty(sClub) && (sClub.matches(".+\\]$") == false) ) {
+                        model.setPlayerClub(p, sClub + " [" + sAbbreviation + "]");
+                    }
+                    String sColor = jsonObject.optString(JSONKey.color.toString());
+                    if ( StringUtil.isNotEmpty(sColor) ) {
+                        model.setPlayerColor(p, sColor);
+                    }
                     model.setPlayerCountry(p, jsonObject.optString(JSONKey.country.toString()));
                     String sAvatar = jsonObject.optString(JSONKey.avatar.toString());
 
@@ -553,7 +561,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     }
 
     private static File getTeamPlayersCacheFile(Context context, Player team) {
-        return new File(context.getCacheDir(), "team_players." + team + ".json");
+        return new File(context.getCacheDir(), "teamPlayers." + team + ".json");
     }
 
     private void setMatchFormat(Model model, JSONObject joMatch) throws JSONException {
@@ -1061,7 +1069,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
 
             // for feeds where matches between teams are listed, for each team a list of players may be specified
-            m_joTeamPlayers = joRoot.optJSONObject(JSONKey.team_players.toString());
+            m_joTeamPlayers = joRoot.optJSONObject(JSONKey.teamPlayers.toString());
 
             int    iEntriesCnt             = 0;
             String sActualNameFromFeed     = null;
@@ -1349,7 +1357,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     }
 
     public static String canonicalizeJsonKeys(String sContent) {
-        // allow the feed to specify keys in CamelCase, we will be using all lower: (TODO: convert to lower in one go with a regexp)
+        // allow the feed to specify keys in CamelCase, we will be using camelcase with first letter lowercase
         sContent = sContent
                 .replaceAll("\\bDivision\\b", JSONKey.division.toString())
                 .replaceAll("\\bField\\b"   , JSONKey.field   .toString())
@@ -1360,9 +1368,13 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 .replaceAll("\\bDate\\b"    , JSONKey.date    .toString())
                 .replaceAll("\\bTime\\b"    , JSONKey.time    .toString())
                 .replaceAll("\\bID\\b"      , JSONKey.id      .toString())
+                .replaceAll("\\bId\\b"      , JSONKey.id      .toString())
                 .replaceAll("\\bName\\b"    , JSONKey.name    .toString())
                 .replaceAll("\\bClub\\b"    , JSONKey.club    .toString())
                 .replaceAll("\\bCountry\\b" , JSONKey.country .toString())
+                //translate old (legacy) keys (all lower and/or with underscores) to new more consistent camelCase ones
+                .replaceAll("\\bteam_players\\b", JSONKey.teamPlayers.toString())
+                .replaceAll("\\bteamid\\b"      , JSONKey.teamId.toString())
         ;
         return sContent;
     }

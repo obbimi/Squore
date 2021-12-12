@@ -4363,13 +4363,15 @@ touch -t 01030000 LAST.sb
             return;
         }
         ShareMatchPrefs prefs = PreferenceValues.getShareAction(this);
-        if ( prefs.equals(ShareMatchPrefs.PostResult) && PreferenceValues.autoSuggestToPostResult(this) ) {
+        if ( (prefs != null) && prefs.equals(ShareMatchPrefs.PostResult) && PreferenceValues.autoSuggestToPostResult(this) ) {
             // ensure dialog to 'suggest' posting is NOT also triggered
             PreferenceValues.setOverwrite(PreferenceKeys.autoSuggestToPostResult, false);
         }
-        ChildActivity ca = new ChildActivity(this, null, this);
-        ca.init(prefs.getMenuId());
-        addToDialogStack(ca);
+        if ( prefs != null ) {
+            ChildActivity ca = new ChildActivity(this, null, this);
+            ca.init(prefs.getMenuId());
+            addToDialogStack(ca);
+        }
     }
     private void autoShowGameDetails() {
         if ( PreferenceValues.showDetailsAtEndOfGameAutomatically(this) == false ) { return; }
@@ -5133,7 +5135,7 @@ touch -t 01030000 LAST.sb
 
         if ( PreferenceValues.useShareFeature(this).equals(Feature.Automatic) ) {
             ShareMatchPrefs prefs = PreferenceValues.getShareAction(this);
-            if ( prefs.equals(ShareMatchPrefs.PostResult) ) {
+            if ( ShareMatchPrefs.PostResult.equals(prefs) ) {
                 // match will be automatically posted, do not show the 'suggest' dialog
                 return;
             }
@@ -5652,7 +5654,11 @@ touch -t 01030000 LAST.sb
     private static boolean m_bNFCReceived = false;
     private void onResumeNFC() {
         if ( B_ONE_INSTANCE_FROM_NFC && (mNfcAdapter != null) ) {
-            mNfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFiltersArray, techListsArray);
+            try {
+                mNfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFiltersArray, techListsArray);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         if ( m_bNFCReceived ) { return; }

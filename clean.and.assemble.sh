@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 #export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
-#export JAVA_HOME=/usr/lib/jvm/java-10-openjdk
-export JAVA_HOME=/osshare/software/oracle/java-8-oracle
+export JAVA_HOME=/usr/lib/jvm/java-10-openjdk
+#export JAVA_HOME=/osshare/software/oracle/java-8-oracle
 if [[ ! -e $JAVA_HOME ]]; then
     export JAVA_HOME=/cygdrive/c/localapps/jdk1.8.0_231
 fi

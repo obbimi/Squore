@@ -1490,11 +1490,14 @@ public class IBoard implements TimerViewContainer
                 Player p = pGameBallFor[0];
                 String sColor = matchModel.getColor(p);
                 if ( StringUtil.isNotEmpty(sColor) ) {
-                    int iBgColor  = Color.parseColor(sColor);
-                    int iTxtColor = ColorUtil.getBlackOrWhiteFor(sColor);
-                    gameBallMessage.setColors(iBgColor, iTxtColor);
-                    castSendChangeViewMessage("gameBallMessage", iTxtColor, ICastHelper.Property_Color);
-                    castSendChangeViewMessage("gameBallMessage", iBgColor , ICastHelper.Property_BGColor);
+                    try {
+                        int iBgColor  = Color.parseColor(sColor);
+                        int iTxtColor = ColorUtil.getBlackOrWhiteFor(sColor);
+                        gameBallMessage.setColors(iBgColor, iTxtColor);
+                        castSendChangeViewMessage("gameBallMessage", iTxtColor, ICastHelper.Property_Color);
+                        castSendChangeViewMessage("gameBallMessage", iBgColor , ICastHelper.Property_BGColor);
+                    } catch (IllegalArgumentException e) {
+                    }
                 }
             }
         }

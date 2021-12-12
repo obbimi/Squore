@@ -23,6 +23,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.GameTiming;
+import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.speech.Speak;
 import com.doubleyellow.scoreboard.vico.IBoard;
@@ -233,9 +234,10 @@ public class Timer
                     timerView.show();
                 }
             }
-            if ( ScoreBoard.getMatchModel().hasStarted() == false ) {
+            Model matchModel = ScoreBoard.getMatchModel();
+            if ( (matchModel != null) && matchModel.hasStarted() == false ) {
                 // set chrono's to zero and stop counting
-                ScoreBoard.getMatchModel().timestampStartOfGame(GameTiming.ChangedBy.TimerStarted);
+                matchModel.timestampStartOfGame(GameTiming.ChangedBy.TimerStarted);
             }
         }
 

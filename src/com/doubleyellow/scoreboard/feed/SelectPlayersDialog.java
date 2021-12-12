@@ -134,7 +134,7 @@ public class SelectPlayersDialog extends BaseAlertDialog
             // create view where user can select player from
             JSONArray aTeamPlayers = FeedMatchSelector.getTeamPlayers(context, p);
             if ( JsonUtil.isNotEmpty(aTeamPlayers) && aTeamPlayers.opt(0) instanceof JSONObject) {
-                // each player specified with a smal json object
+                // each player specified with a small json object
                 List<Map> teamPlayers = JsonUtil.toListOfMaps(aTeamPlayers);
                 Map mChecked = teamPlayers.get(0);
                 if ( radioButtonDecorator == null ) {
@@ -314,8 +314,9 @@ public class SelectPlayersDialog extends BaseAlertDialog
             for(Player p: Player.values()) {
                 SelectObjectView selectObjectView = m_p2select.get(p);
                 Object oData = selectObjectView.getChecked();
-                String sName = null;
-                String sId   = null;
+                String sName   = null;
+                String sId     = null;
+                String sAvatar = null;
                 if ( oData instanceof String ) {
                     sName = (String) oData;
                     String[] split = sName.split(":");
@@ -329,8 +330,9 @@ public class SelectPlayersDialog extends BaseAlertDialog
                     }
                 } else if (oData instanceof Map ) {
                     Map mData = (Map) oData;
-                    sName = (String) mData.get(JSONKey.name.toString());
-                    sId   = (String) mData.get(JSONKey.id.toString());
+                    sName   = (String) mData.get(JSONKey.name.toString());
+                    sId     = (String) mData.get(JSONKey.id.toString());
+                    sAvatar = (String) mData.get(JSONKey.avatar.toString());
                     if ( StringUtil.isEmpty(sName) ) {
                         sName = mData.get(JSONKey.lastName.toString()) + ", " + mData.get(JSONKey.firstName.toString());
                     }
@@ -346,8 +348,9 @@ public class SelectPlayersDialog extends BaseAlertDialog
                             break;
                     }
                 }
-                matchModel.setPlayerName(p, sName);
-                matchModel.setPlayerId  (p, sId);
+                matchModel.setPlayerName  (p, sName);
+                matchModel.setPlayerId    (p, sId);
+                matchModel.setPlayerAvatar(p, sAvatar);
                 if ( StringUtil.isNotEmpty(sName) ) {
                     iPlayersSelected++;
                 }

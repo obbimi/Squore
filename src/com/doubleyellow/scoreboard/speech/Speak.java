@@ -328,9 +328,10 @@ public class Speak
         if ( Brand.isSquash() ) {
             this.handout(matchModel);
         }
-        this.score(matchModel);
-
-        this.gameBall(matchModel);
+        if ( matchModel != null ) {
+            this.score(matchModel);
+            this.gameBall(matchModel);
+        }
 
         emptySpeechQueue(0, 0);
     }

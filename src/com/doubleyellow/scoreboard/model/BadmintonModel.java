@@ -115,7 +115,7 @@ public class BadmintonModel extends Model
                 // assume going back to 0-0
                 setNextDoubleServe(m_in_out         .getOther());
                 m_in_out_receiver = m_in_out_receiver.getOther();
-                if ( pNewServer.equals(pScorer) ) {
+                if ( (pNewServer != null) && pNewServer.equals(pScorer) ) {
                     swapDoublesPlayerNames(pNewServer);
                 } else {
                     // point entered was a handout, no swapping of players happened, so no swapping for undo either

@@ -31,6 +31,7 @@ import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.demo.DrawTouch;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
+import com.doubleyellow.scoreboard.model.JSONKey;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.ShowCountryAs;
@@ -420,11 +421,13 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
             sClub = sClub.replaceAll("\\.", " "); // abbreviations with dot, make them into one letter words. Logic further on will only take the letters
             String sAbbr = sClub;
 
-            String sRegExp = ".*[\\[\\(]([A-Za-z0-9_-]{2,4})[\\]\\)]\\s*$";
+            int iMaxLengthOfClubAbbreviation = 6;
+            final String sRegExp = ".*[\\[\\(]([A-Za-z0-9_\\s\\.-]{2," + iMaxLengthOfClubAbbreviation + "})[\\]\\)]\\s*$";
             if ( sClub.matches(sRegExp) ) {
                 // abbreviation between brackets at the end
+                Object oDoneEgWithSquareBracketsWhenSpecifiedWithJSONKey = JSONKey.abbreviation;
                 sAbbr = sClub.replaceAll(sRegExp, "$1");
-            } else if ( sClub.matches(".*\\-\\s*[A-Za-z0-9_]{2,4}$") ) {
+            } else if ( sClub.matches(".*\\-\\s*[A-Za-z0-9_\\.]{2," + iMaxLengthOfClubAbbreviation + "}$") ) {
                 // abbreviation after a dash at the end
                 sAbbr = sClub.substring(sClub.lastIndexOf("-") + 1).trim();
             } else {
@@ -438,7 +441,7 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
                     sAbbr = sTst;
                 }
             }
-            sClub = sAbbr.substring(0,Math.min(4, sAbbr.length()));
+            sClub = sAbbr.substring(0,Math.min(iMaxLengthOfClubAbbreviation, sAbbr.length()));
         }
 
         this.bHasClub = StringUtil.isNotEmpty(sClubFull);

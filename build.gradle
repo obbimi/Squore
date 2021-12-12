@@ -97,21 +97,21 @@ android {
             dimension "devicetype"
             minSdkVersion 19
             targetSdkVersion 30
-            versionCode 1915 * 10000 + 468
+            versionCode 1915 * 10000 + 471
             versionName "4.42"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 30
-            versionCode 2315 * 10000 + 468
+            versionCode 2315 * 10000 + 471
             versionName "4.42"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 30
-            versionCode 2501 * 10000 + 468
+            versionCode 2501 * 10000 + 471
             versionName "4.42"
         }
     }

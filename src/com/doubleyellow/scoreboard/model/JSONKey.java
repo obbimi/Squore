@@ -39,9 +39,9 @@ public enum JSONKey {
 		firstName,
 		lastName,
 	format,
-	  //numberOfPointsToWinGame,
-	  //numberOfGamesToWinMatch,
-			/** total-of-x-games in stead of best-of-x-games */
+	  //numberOfPointsToWinGame, // = PreferenceKeys
+	  //numberOfGamesToWinMatch, // = PreferenceKeys
+			/** total-of-x-games (true) in stead of best-of-x-games (false) */
 			playAllGames,
 		mode,
 		// tabletennis specific key
@@ -92,9 +92,11 @@ public enum JSONKey {
   //player,    // duplicate
 	  //name,  // duplicate
 	    club,  // club (tournament) or team (league)
-			teamid,
-			team_players,
+			abbreviation, // team/club abbreviation to show between brackets in the name
+			teamId,
+			teamPlayers,
 				seqNo,
+			color,
 	    country,
 	    seed,
 	    avatar,
