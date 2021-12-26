@@ -55,7 +55,9 @@ import java.io.Serializable;
  * - whether or not to use a handicap system
  *
  * Used after a match is selected from 'Feed' or 'My matches'
- * Also used to 'edit' a match properties
+ * Also used to 'edit' a match properties.
+ *
+ * Uses the MatchView view.
  */
 public class Match extends XActivity implements MenuHandler
 {

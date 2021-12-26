@@ -264,6 +264,12 @@
     <string name="pref_finalSetFinish">Final Set Finish</string> <!-- Tennis/Padel -->
     <string name="pref_tiebreakFormat">Tie-break format</string>
     <string name="pref_tiebreakFormat_summary">What rule to follow in case of a tie-break</string>
+
+    <string name="pref_web_wearable">Wearable</string>
+    <string name="pref_wearable_syncColorPrefs">Sync Color Settings</string>
+    <string name="pref_wearable_allowScoringWithHardwareButtons">Allow Scoring With Wearable Hardware Buttons</string>
+    <string name="pref_wearable_allowScoringWithRotary">Allow Scoring With Wearable Rotary</string>
+
     <string name="pref_web_integration">Internet</string>
     <string name="pref_web_integration_summary">Feed URLs for match selection. Post match result to web site. Share match result.</string>
     <string name="pref_playerList">Player List</string>

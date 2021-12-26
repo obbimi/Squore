@@ -105,21 +105,13 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
         settingsFragment.getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(spChange);
     }
 
-    private SPChange spChange = new SPChange();
+    private final SPChange spChange = new SPChange();
     private class SPChange implements SharedPreferences.OnSharedPreferenceChangeListener
     {
         /** To be able to change multiple preferences by code without this listener doing anything */
         private boolean bIgnorePrefChanges = false;
 
         @Override public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-          //Log.d(TAG, "Selected = " + key); // dyaccount
-            // text size changes
-/*
-            if ( key.startsWith("TextSize")) {
-                setModelDirty(); // to trigger a redraw
-            }
-*/
-
             if ( bIgnorePrefChanges ) {
                 return;
             }
@@ -193,6 +185,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         PreferenceGroup textColors = (PreferenceGroup) settingsFragment.findPreference(PreferenceKeys.textColors);
                         PreferenceValues.initTextColors(textColors, determineTextColor.equals(DetermineTextColor.Manual));
                         bReinitColors = true;
+                        m_lColorSettingsChanged.add(eKey.toString());
                         break;
                     case targetDirForImportExport:
                         String sDir = RWValues.getString(eKey, 0, Preferences.this);
@@ -205,6 +198,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         break;
                     case showPlayerColorOn_Text:
                     case colorSchema:
+                        m_lColorSettingsChanged.add(eKey.toString());
                         bReinitColors = true;
                         // update value between brackets
                         ColorPrefs.clearColorCache();
@@ -446,6 +440,10 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             SystemUtil.doVibrate(Preferences.this, 200);
                         }
                         break;
+                    case wearable_allowScoringWithHardwareButtons:
+                    case wearable_allowScoringWithRotary:
+                        m_lWearableSettingsChanged.add(eKey.toString());
+                        break;
                     case useCastScreen:
                         PreferenceValues.setCastRestartRequired(Preferences.this);
                         break;
@@ -487,6 +485,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 String sColor = charSequence.toString();
                 ColorPrefs.setColorTargetPreferenceIcon(colorTarget, sColor, preference);
                 bReinitColors = true;
+                m_lColorSettingsChanged.add(key);
             } catch (Exception e) {
                 // not a colortarget preference
             }
@@ -1106,6 +1105,20 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
     static void setModelDirty() {
         if ( ScoreBoard.getMatchModel() == null) { return; }
         ScoreBoard.getMatchModel().setDirty();
+    }
+
+    private static List<String> m_lColorSettingsChanged = new ArrayList<>();
+    public static List<String> getChangedColorSettings() {
+        List<String> lReturn = new ArrayList<>(m_lColorSettingsChanged);
+        m_lColorSettingsChanged.clear();
+        return lReturn;
+    }
+
+    private static List<String> m_lWearableSettingsChanged = new ArrayList<>();
+    public static List<String> getWearableSettingsChanged() {
+        List<String> lReturn = new ArrayList<>(m_lWearableSettingsChanged);
+        m_lWearableSettingsChanged.clear();
+        return lReturn;
     }
 
     private void clearPPA() {

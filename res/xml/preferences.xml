@@ -1279,6 +1279,26 @@
 
     </PreferenceScreen>
 
+    <PreferenceScreen android:key="wearable"
+                      android:icon="@drawable/wearos"
+                      android:title="@string/pref_web_wearable"
+                      >
+        <CheckBoxPreference android:key="wearable_syncColorPrefs"
+            android:icon="@drawable/dummy"
+            android:title="@string/pref_wearable_syncColorPrefs"
+            android:defaultValue="@bool/wearable_syncColorPrefs_default"
+            />
+        <CheckBoxPreference android:key="wearable_allowScoringWithHardwareButtons"
+            android:icon="@drawable/dummy"
+            android:title="@string/pref_wearable_allowScoringWithHardwareButtons"
+            android:defaultValue="@bool/wearable_allowScoringWithHardwareButtons_default"
+            />
+        <CheckBoxPreference android:key="wearable_allowScoringWithRotary"
+            android:icon="@drawable/dummy"
+            android:title="@string/pref_wearable_allowScoringWithRotary"
+            android:defaultValue="@bool/wearable_allowScoringWithRotary_default"
+            />
+    </PreferenceScreen>
     <PreferenceScreen android:key="webIntegration"
                       android:icon="@drawable/ic_action_web_site"
                       android:title="@string/pref_web_integration"

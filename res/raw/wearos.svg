@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520"
+    fill="#D3D3D3" stroke="#D3D3D3">
+    <!--
+    This svg is not used as such, but converted to png files:
+
+    stroke colors: #D3D3D3, #111111
+
+    export suffix='_black' #111111
+    export suffix=''       #D3D3D3
+    convert -background none -size 48x48 wearos.svg ../drawable-hdpi/wearos${suffix}.png
+    convert -background none -size 64x64 wearos.svg ../drawable-xhdpi/wearos${suffix}.png
+    convert -background none -size 96x96 wearos.svg ../drawable-xxhdpi/wearos${suffix}.png
+    convert -background none -size 96x96 wearos.svg ../drawable-xxxhdpi/wearos${suffix}.png
+    -->
+
+    <circle id="disc" cx="260" cy="260" r="160" stroke-width="30" fill="none"/>
+    <polyline id="hands" stroke-linecap="round" points="260,145 260,260 330,330" stroke-width="15" fill="none"/>
+
+    <path id="band-ur"  stroke-width="20" fill="none" stroke-linecap="round" d="M390,167 Q 300, 60 300, 10" />
+    <path id="band-ul"  stroke-width="20" fill="none" stroke-linecap="round" d="M130,167 Q 220, 60 220, 10" />
+    <path id="band-bl"  stroke-width="20" fill="none" stroke-linecap="round" d="M130,353 Q 220,460 220,510" />
+    <path id="band-ul"  stroke-width="20" fill="none" stroke-linecap="round" d="M390,353 Q 300,460 300,510" />
+
+    <path id="rotary"    stroke-width="20" fill="none" stroke-linecap="round" d="M 445,245 445,275" />
+    <path id="button-tl" stroke-width="25" fill="none" stroke-linecap="round" d="M 412,165 414,166" />
+    <path id="button-tl" stroke-width="25" fill="none" stroke-linecap="round" d="M 412,355 410,353" />
+
+</svg>

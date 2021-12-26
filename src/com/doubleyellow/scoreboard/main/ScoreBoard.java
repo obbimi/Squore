@@ -113,6 +113,9 @@ import java.util.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
 
+// Wearable
+import androidx.wear.input.WearableButtons; // requires api >= 25
+
 /**
  * The main Activity of the scoreboard app.
  */
@@ -1094,6 +1097,45 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         if ( bOrientationChangeRequested == false ) {
             if ( isWearable() ) {
                 setContentView(R.layout.percentage); // triggers onContentChanged()
+
+                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1 /* 25 */ ) {
+                    int count = WearableButtons.getButtonCount(this);
+                    Log.d(TAG, String.format("Wearable button count : %d ", count)); // always returns at least 1 for the OS? (unless in an emulator?)
+                    if ( count >= 3 ) { // we need at least 2 knowing we can not use the one specifically for the OS
+                        int[] iCheckButtons = new int[] {KeyEvent.KEYCODE_STEM_1, KeyEvent.KEYCODE_STEM_2, KeyEvent.KEYCODE_STEM_3/*, KeyEvent.KEYCODE_STEM_PRIMARY*/};
+                        Params mX2wearableButton = new Params();
+                        Player pToChangeScoreFor = Player.A;
+                        for( int iCheckButton: iCheckButtons ) {
+                            WearableButtons.ButtonInfo buttonInfo = WearableButtons.getButtonInfo(this, iCheckButton);
+                            if (buttonInfo != null) {
+                                mX2wearableButton.addToList(buttonInfo.getX(), iCheckButton, true);
+                                Log.d(TAG, String.format("%d buttonLabel()                : %s", iCheckButton, WearableButtons.getButtonLabel(this, iCheckButton))); // Top right, Bottom right, Center Right
+                                m_wearableButtonToPlayer.put(iCheckButton, pToChangeScoreFor);
+                                pToChangeScoreFor = pToChangeScoreFor.getOther();
+                                // how to ensure OS one is not in here?:
+                                // For my fossil count returns 3 and I can actually use stem1 and stem2 in the app, KEYCODE_STEM_PRIMARY is for the OS, stem3 does not exits
+                            } else {
+                                Log.d(TAG, String.format("No such button %d", iCheckButton));
+                            }
+                        }
+                        if ( m_wearableButtonToPlayer.size() > 2 ) {
+                            // more than 2 usable buttons found: atempt to have at least symmetrical placed buttons to opposite players
+                            for(Object IXpos: mX2wearableButton.keySet() ) {
+                                List lButtonKeys = mX2wearableButton.getList(IXpos, ",", true);
+                                if ( (count>2) && lButtonKeys.size() == 2 ) {
+                                    // assume we have found 2 buttons on a 'round' wearable: one above and one below the 'main' button in the center
+                                    Player player = Player.A;
+                                    for(Object oKey: lButtonKeys) {
+                                        int iKey = Integer.parseInt(String.valueOf(oKey));
+                                        m_wearableButtonToPlayer.put(iKey, player);
+                                        player = player.getOther();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
             } else {
                 setContentView(R.layout.mainwithmenudrawer);
                 drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -1288,54 +1330,81 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     private float lMinimumRotationToScorePoint = 2.5f; // TODO: sensitivity as setting
     @Override public boolean onGenericMotionEvent(MotionEvent event) {
       //Log.d(TAG, "[onGenericMotionEvent] rotary : event : " + event);
-        if (   ViewUtil.isWearable(this)
-            && ( event.getAction() == MotionEvent.ACTION_SCROLL )
-            && event.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)
-           ) {
-            long lNow = System.currentTimeMillis();
+        if ( ViewUtil.isWearable(this) ) {
+            if ( PreferenceValues.wearable_allowScoringWithRotary(this) ) {
+                // modify score using rotary/bezel
+                if ( ( event.getAction() == MotionEvent.ACTION_SCROLL )
+                    && event.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)
+                   ) {
+                    long lNow = System.currentTimeMillis();
 
-            // keep the total rotation in certain direction up to date
-            {
-                float lRotationDelta = event.getAxisValue(MotionEventCompat.AXIS_SCROLL);
+                    // keep the total rotation in certain direction up to date
+                    {
+                        float lRotationDelta = event.getAxisValue(MotionEventCompat.AXIS_SCROLL);
 
-                long lTimeSinceLastRotaryEvent = lNow - lLastRotaryEventAdded;
-                if ( lTimeSinceLastRotaryEvent > lMaxTimeBetweenAdding2Deltas ) {
-                    lRotationDeltaCumulative = 0; // restart counting from zero
-                }
-                lRotationDeltaCumulative += lRotationDelta;
-                //Log.d(TAG, "[onGenericMotionEvent] rotary : lRotationDeltaCumulative : " + lRotationDeltaCumulative);
-            }
-
-            lLastRotaryEventAdded = lNow;
-
-            long lTimeSinceLastRotaryChangeScore = lNow - lLastRotaryEventHandled;
-            if ( lTimeSinceLastRotaryChangeScore > lMinTimeBetweenHandling2RotaryEvents ) {
-                if ( Math.abs(lRotationDeltaCumulative) > lMinimumRotationToScorePoint ) {
-                    Player player = Player.B;
-                    if ( lRotationDeltaCumulative > 0 ) {
-                        player = Player.A;
+                        long lTimeSinceLastRotaryEvent = lNow - lLastRotaryEventAdded;
+                        if ( lTimeSinceLastRotaryEvent > lMaxTimeBetweenAdding2Deltas ) {
+                            lRotationDeltaCumulative = 0; // restart counting from zero
+                        }
+                        lRotationDeltaCumulative += lRotationDelta;
+                        //Log.d(TAG, "[onGenericMotionEvent] rotary : lRotationDeltaCumulative : " + lRotationDeltaCumulative);
                     }
-                    boolean bFlipRotaryRotation = false; // TODO: setting, but wearable has no easily accessible setting screen yes
-                    if ( bFlipRotaryRotation ) {
-                        player = player.getOther();
-                    }
-                    Log.d(TAG, "Handling rotary event to change score for " + player);
-                    handleMenuItem(R.id.pl_change_score, player);
-                    lLastRotaryEventHandled = lNow;
-                    lRotationDeltaCumulative = 0;
 
-                    // typically this type of scoring is done on a wearable without looking at the device. Give short vibration to indicate the point scoring was registered
-                    SystemUtil.doVibrate(ScoreBoard.this, 200);
-                    return true;
-                } else {
-                  //Log.d(TAG, "Ignoring rotary event: to little deltaCum " + lRotationDeltaCumulative + " < " + lMinimumRotationToScorePoint);
+                    lLastRotaryEventAdded = lNow;
+
+                    long lTimeSinceLastRotaryChangeScore = lNow - lLastRotaryEventHandled;
+                    if ( lTimeSinceLastRotaryChangeScore > lMinTimeBetweenHandling2RotaryEvents ) {
+                        if ( Math.abs(lRotationDeltaCumulative) > lMinimumRotationToScorePoint ) {
+                            Player player = Player.B;
+                            if ( lRotationDeltaCumulative > 0 ) {
+                                player = Player.A;
+                            }
+                            boolean bFlipRotaryRotation = false; // TODO: setting, but wearable has no easily accessible setting screen yes
+                            if ( bFlipRotaryRotation ) {
+                                player = player.getOther();
+                            }
+                            Log.d(TAG, "Handling rotary event to change score for " + player);
+                            handleMenuItem(R.id.pl_change_score, player);
+                            lLastRotaryEventHandled = lNow;
+                            lRotationDeltaCumulative = 0;
+
+                            // typically this type of scoring is done on a wearable without looking at the device. Give short vibration to indicate the point scoring was registered
+                            SystemUtil.doVibrate(ScoreBoard.this, 200);
+                            return true;
+                        } else {
+                          //Log.d(TAG, "Ignoring rotary event: to little deltaCum " + lRotationDeltaCumulative + " < " + lMinimumRotationToScorePoint);
+                        }
+                    } else {
+                      //Log.d(TAG, "Ignoring rotary event: to soon: " + lTimeSinceLastRotaryChangeScore + " < " + lMinTimeBetweenHandling2RotaryEvents);
+                    }
                 }
-            } else {
-              //Log.d(TAG, "Ignoring rotary event: to soon: " + lTimeSinceLastRotaryChangeScore + " < " + lMinTimeBetweenHandling2RotaryEvents);
             }
         }
 
         return super.onGenericMotionEvent(event);
+    }
+
+    private final Map<Integer,Player> m_wearableButtonToPlayer = new HashMap<>();
+
+    @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ( isWearable() ) {
+            if ( PreferenceValues.wearable_allowScoringWithHardwareButtons(this) ) {
+                // modify score using hardware buttons
+                Log.d (TAG,"onKeyDown: " + keyCode + ", repeat count: " + event.getRepeatCount());
+                if ( event.getRepeatCount() == 0 ) { // to ensure if long-pressed, we don't react more than once to the same press
+                    if ( m_wearableButtonToPlayer.size() >= 2 ) {
+                        Player player = m_wearableButtonToPlayer.get(keyCode);
+                        if ( player != null ) {
+                            handleMenuItem(R.id.pl_change_score, player);
+                            // typically this type of scoring is done on a wearable without looking at the device. Give short vibration to indicate the point scoring was registered
+                            SystemUtil.doVibrate(ScoreBoard.this, 200);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void keepScreenOn(boolean bOn) {
@@ -1478,28 +1547,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             }
         }
     }
-
-// This works as well, but something on the volume is still triggered. My phone kept making a noise */
-/*
-    @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ( bUseVolumebuttonsForScoring ) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_VOLUME_UP: {
-                    matchModel.changeScore(Player.A);
-                    return true;
-                }
-                case KeyEvent.KEYCODE_VOLUME_DOWN: {
-                    matchModel.changeScore(Player.B);
-                    return true;
-                }
-                default: {
-                    return super.onKeyDown(keyCode, event);
-                }
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-*/
 
     /** using dispatchKeyEvent() seems to work fine: we check on KeyEvent.ACTION_UP deliberately. KeyEvent.ACTION_DOWN is triggered very often if you HOLD the volume button */
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
@@ -2016,6 +2063,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             iBoard.updatePlayerClub   (p, matchModel.getClub   (p));
         }
     }
+    /** called onCreate and onRestart */
     private void initColors()
     {
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(this);
@@ -3894,7 +3942,7 @@ touch -t 01030000 LAST.sb
             case R.id.sb_settings:
                 if ( isWearable() ) { return false; }
                 Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
-                startActivity(settingsActivity);
+                startActivityForResult(settingsActivity, id);
                 return true;
             case R.id.dyn_speak:
                 Speak.getInstance().playAll(matchModel);
@@ -3983,7 +4031,7 @@ touch -t 01030000 LAST.sb
             case R.id.sb_edit_event_or_player: {
                     Intent nm = new Intent(this, Match.class);
                     nm.putExtra(IntentKeys.EditMatch.toString(), matchModel);
-                    startActivityForResult(nm, 1);
+                    startActivityForResult(nm, id);
                 }
                 return true;
             case R.id.sb_stored_matches: {
@@ -3993,35 +4041,35 @@ touch -t 01030000 LAST.sb
                 }
                 ArchiveTabbed.setDefaultTab(selectTab);
                 Intent nm = new Intent(this, ArchiveTabbed.class);
-                startActivityForResult(nm, 1); // see onActivityResult()
+                startActivityForResult(nm, id); // see onActivityResult()
                 return true;
             }
             case R.id.sb_select_feed_match: {
                 if ( isWearable() ) { return false; }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.Feed);
                 Intent nm = new Intent(this, MatchTabbed.class);
-                startActivityForResult(nm, 1); // see onActivityResult()
+                startActivityForResult(nm, id); // see onActivityResult()
                 return true;
             }
             case R.id.sb_select_static_match: {
                 if ( isWearable() ) { return false; }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.Mine);
                 Intent nm = new Intent(this, MatchTabbed.class);
-                startActivityForResult(nm, 1); // see onActivityResult()
+                startActivityForResult(nm, id); // see onActivityResult()
                 return true;
             }
             case R.id.sb_enter_singles_match: {
                 if ( isWearable() ) { return showNewMatchWizard(); }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.Manual);
                 Intent nm = new Intent(this, MatchTabbed.class);
-                startActivityForResult(nm, 1); // see onActivityResult()
+                startActivityForResult(nm, id); // see onActivityResult()
                 return true;
             }
             case R.id.sb_enter_doubles_match: {
                 if ( isWearable() ) { return showNewMatchWizard(); }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.ManualDbl);
                 Intent nm = new Intent(this, MatchTabbed.class);
-                startActivityForResult(nm, 1); // see onActivityResult()
+                startActivityForResult(nm, id); // see onActivityResult()
                 return true;
             }
             case R.id.float_new_match:
@@ -4036,7 +4084,7 @@ touch -t 01030000 LAST.sb
                     showNewMatchWizard();
                 } else {
                     Intent nm = new Intent(this, MatchTabbed.class);
-                    startActivityForResult(nm, 1); // see onActivityResult
+                    startActivityForResult(nm, id); // see onActivityResult
                 }
 
                 return true;
@@ -4068,6 +4116,22 @@ touch -t 01030000 LAST.sb
                 return true;
             case R.id.cmd_export_settings:
                 ExportImportPrefs.exportSettings(this);
+                return true;
+            case R.id.send_settings_to_wearable:
+                List<String> lPrefKeys = null;
+                if ( (ctx != null) && (ctx.length > 0) ) {
+                    lPrefKeys = (List<String>) ctx[0];
+                } else {
+                    lPrefKeys = Arrays.asList(PreferenceKeys.colorSchema.toString());
+                }
+                for(String sKey: lPrefKeys) {
+                    String sValue = PreferenceValues.getString(sKey, null, this); // default 'false' is for preferences that are boolean
+                    if ( sValue == null ) {
+                        boolean aBoolean = PreferenceValues.getBoolean(sKey, this, false);
+                        sValue = String.valueOf(aBoolean);
+                    }
+                    writeMethodToBluetooth(BTMethods.updatePreference, sKey, sValue);
+                }
                 return true;
             case R.id.cmd_import_matches:
                 selectFilenameForImport();
@@ -4217,7 +4281,7 @@ touch -t 01030000 LAST.sb
                 } else {
                     // so that clicking on icon also allows for selecting new match
                     Intent sm = new Intent(this, MatchTabbed.class);
-                    startActivityForResult(sm, 1); // see onActivityResult
+                    startActivityForResult(sm, id); // see onActivityResult
                 }
                 return false;
             }
@@ -4708,14 +4772,33 @@ touch -t 01030000 LAST.sb
 
     boolean m_bChildActivityShowing = false;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override public void startActivityForResult(Intent intent, int requestCode) {
         m_bChildActivityShowing = true;
         super.startActivityForResult(intent, requestCode);
     }
 
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override protected void onActivityResult(int requestCode_MenuId, int resultCode, Intent data) {
+        Log.d(TAG, "Returning from activity. requestCode:" + requestCode_MenuId + ", resultCode:" + resultCode + ", " + getResourceEntryName(requestCode_MenuId));
+
         m_bChildActivityShowing = false;
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode_MenuId, resultCode, data);
+
+        if ( requestCode_MenuId == R.id.sb_settings ) {
+            // returning from settings
+            List<String> lColorSettingChanged = Preferences.getChangedColorSettings();
+            if ( ListUtil.isNotEmpty(lColorSettingChanged) ) {
+                if ( PreferenceValues.wearable_syncColorPrefs( this ) ) {
+                    handleMenuItem(R.id.send_settings_to_wearable, lColorSettingChanged);
+                }
+            }
+            List<String> lWearableSettingChanged = Preferences.getWearableSettingsChanged();
+            if ( ListUtil.isNotEmpty(lWearableSettingChanged) ) {
+                handleMenuItem(R.id.send_settings_to_wearable, lWearableSettingChanged);
+            }
+        }
 
         // Check which request we're responding to
 /*
@@ -4727,7 +4810,7 @@ touch -t 01030000 LAST.sb
         //fbOnActivityResult(requestCode, resultCode, data);
         if ( data == null) { return; }
 
-        if ( StringUtil.isInteger(data.getAction()) ) {
+        if ( StringUtil.isInteger( data.getAction() ) ) {
             // most likely back was pressed after selecting match from list... go back to the list to select a different match
             int iAction = Integer.parseInt(data.getAction());
             handleMenuItem(iAction);
@@ -4761,7 +4844,7 @@ touch -t 01030000 LAST.sb
                             // now let user to specify match format
                             Intent nm = new Intent(this, Match.class);
                             nm.putExtra(IntentKeys.NewMatch.toString(), sJson);
-                            startActivityForResult(nm, 1);
+                            startActivityForResult(nm, R.id.sb_edit_event_or_player);
                             return;
                         } else {
                             // see if we have to set colors
@@ -6301,6 +6384,7 @@ touch -t 01030000 LAST.sb
         // DO not send some if Slave
         switch (method) {
             // do not invoke for 'Slave' connection
+            case updatePreference:
             case swapPlayers:
             case swapDoublePlayers:
             case cancelTimer:
@@ -6526,16 +6610,34 @@ touch -t 01030000 LAST.sb
                 switch (btMethod) {
                     case updatePreference: {
                         if ( saMethodNArgs.length >= 3 ) {
-                            PreferenceKeys key    = PreferenceKeys.valueOf(saMethodNArgs[1]);
-                            String         sValue = saMethodNArgs[2];
-                            if ( sValue.matches("true|false") ) {
-                                PreferenceValues.setBoolean(key, this, Boolean.parseBoolean(sValue));
-                            } else if ( StringUtil.isInteger(sValue) ) {
-                                PreferenceValues.setNumber(key, this, Integer.parseInt(sValue));
-                            } else {
-                                PreferenceValues.setString(key, this, sValue);
+                            try {
+                                PreferenceKeys key    = PreferenceKeys.valueOf(saMethodNArgs[1]);
+                                String         sValue = saMethodNArgs[2];
+                                if ( sValue.matches("true|false") ) {
+                                    PreferenceValues.setBoolean(key, this, Boolean.parseBoolean(sValue));
+                                } else if ( StringUtil.isInteger(sValue) ) {
+                                    PreferenceValues.setNumber(key, this, Integer.parseInt(sValue));
+                                } else {
+                                    PreferenceValues.setString(key, this, sValue);
+                                }
+                                Toast.makeText(this, String.format("Updated pref over bluetooth %s=%s", key, sValue), Toast.LENGTH_LONG).show();
+                                if (saMethodNArgs[1].toLowerCase().contains("color") ) {
+                                    ColorPrefs.clearColorCache();
+                                    initColors();
+                                }
+                            } catch (IllegalArgumentException e) {
+                                // most likely com.doubleyellow.scoreboard.prefs.ColorPrefs.ColorTarget
+                                try {
+                                    ColorPrefs.ColorTarget key    = ColorPrefs.ColorTarget.valueOf(saMethodNArgs[1]);
+                                    String         sValue = saMethodNArgs[2];
+                                    PreferenceValues.setString(key, this, sValue);
+                                    Toast.makeText(this, String.format("Updated color pref over bluetooth %s=%s", key, sValue), Toast.LENGTH_LONG).show();
+                                    ColorPrefs.clearColorCache();
+                                    initColors();
+                                } catch (IllegalArgumentException e2) {
+                                    // most likely com.doubleyellow.scoreboard.prefs.ColorPrefs.ColorTarget
+                                }
                             }
-                            Toast.makeText(this, String.format("Updated pref over bluetooth %s=%s", key, sValue), Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(this, String.format("Could not handle %s,%s,%s", (Object[]) saMethodNArgs), Toast.LENGTH_LONG).show();
                         }
@@ -6710,7 +6812,7 @@ touch -t 01030000 LAST.sb
                         break;
                     }
                     case paused: {
-                        setWearableRole(WearRole.Paused);
+                        setWearableRole(WearRole.PausedOnOther);
                         break;
                     }
     /*

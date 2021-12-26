@@ -79,9 +79,10 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         }
     }
 
-    private final boolean m_bReuseFlagForAvatar = true;
-    private float   m_fAspectRatio_Flag   = 1.6f;
-    private float   m_fAspectRatio_Avatar = 1.0f;
+    private final static boolean m_bReuseFlagForAvatar = true;
+    private final static float   m_fAspectRatio_Flag   = 1.6f;
+    private final static float   m_fAspectRatio_Avatar = 1.0f;
+    public        static float   m_fAspectRatio_Default = m_fAspectRatio_Flag;
 
     public static final String SUBBUTTON = "SUBBUTTON";
     private List<TextView>       nameButtons  = new ArrayList<TextView>();
@@ -196,7 +197,7 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
                     PercentLayoutHelper.PercentLayoutInfo info = rlp.getPercentLayoutInfo();
                     info.heightPercent =  1.0f;
                   //info.widthPercent  = -1.0f; // the default
-                    info.aspectRatio   =  m_fAspectRatio_Flag; // TODO: dynamic dependant of where we retrieve images from
+                    info.aspectRatio   =  m_fAspectRatio_Default; // TODO: dynamic dependant of where we retrieve images from
 
                     ImageView ivFlag = new ImageView(getContext());
                   //ivFlag.setVisibility(GONE);
@@ -217,28 +218,6 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
                     }
                 }
 
-                if ( m_bReuseFlagForAvatar == false) {
-                    PercentRelativeLayout.LayoutParams rlp = new PercentRelativeLayout.LayoutParams(getContext(), null);
-                    rlp.addRule(avatarLRofFlag, iFlagImageID);
-
-                    PercentLayoutHelper.PercentLayoutInfo info = rlp.getPercentLayoutInfo();
-                    info.heightPercent =  1.0f;
-                  //info.widthPercent  = -1.0f; // the default
-                    info.aspectRatio   =  m_fAspectRatio_Avatar;
-
-                    ImageView ivAvatar = new ImageView(getContext());
-                  //ivAvatar.setVisibility(GONE);
-                    ivAvatar.setScaleType(ImageView.ScaleType.CENTER_INSIDE); // FIT_START
-                    ivAvatar.setId(iAvatarImageID);
-                    //ivAvatar.setBackgroundResource(R.drawable.image_border);
-                    super.addView(ivAvatar, rlp);
-                    avatarImages.add(ivAvatar);
-
-                    if (onTouchListenerNames != null) {
-                        ivAvatar.setOnTouchListener(onTouchListenerNames);
-                    }
-                    //ivAvatar.setOnTouchListener(onTouchGONE);
-                }
             }
 
             TextView b = null;
@@ -371,35 +350,49 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         PercentRelativeLayout.LayoutParams plParams = (PercentRelativeLayout.LayoutParams) layoutParams;
         PercentLayoutHelper.PercentLayoutInfo info = plParams.getPercentLayoutInfo();
         if ( info.aspectRatio != fNew ) {
+
             info.aspectRatio = fNew;
 
-/*
             // attempts to force a redraw... all seem to have no effect... after screen rotation everything is layed-out OK, though
+            // issue only seems to manifest itself on first usage of avatars...
+            m_fAspectRatio_Default = fNew;
+            int iRedrawAttempt = 0;
 
-            // attempt 1
-            imageView.setVisibility(GONE);// if actual image is successfully downloaded (or taken from cache) visibility will be set back to View.VISIBLE
-
-            // attempt 2
-            if ( imageView.isInLayout() == false ) { // API 18 and higher
-                imageView.requestLayout();
-                imageView.getParent().requestLayout();
-                requestLayout();
-                imageView.setLayoutParams(plParams);
+            if ( (iRedrawAttempt & 1) == 1) {
+                // attempt 1
+                imageView.setVisibility(GONE);// if actual image is successfully downloaded (or taken from cache) visibility will be set back to View.VISIBLE
             }
 
-            // attempt 3.a
-            imageView.invalidateOutline(); // API 21 and higher
+            if ( (iRedrawAttempt & 2) == 2) {
+                // attempt 2
+                if ( imageView.isInLayout() == false ) { // API 18 and higher
+                    imageView.requestLayout();
+                    imageView.getParent().requestLayout();
+                    requestLayout();
+                    imageView.setLayoutParams(plParams);
+                }
+            }
 
-            // attempt 3.b
-            invalidateOutline();
+            if ((iRedrawAttempt & 4) == 4) {
+                // attempt 3.a
+                imageView.invalidateOutline(); // API 21 and higher
+            }
 
-            // attempt 4.a
-            imageView.invalidate();
+            if ((iRedrawAttempt & 8) == 8) {
+                // attempt 3.b
+                invalidateOutline();
+            }
 
-            // attempt 5.b
-            imageView.postInvalidate();
+            if ((iRedrawAttempt & 16) == 16) {
+                // attempt 4.a
+                imageView.invalidate();
+            }
 
-*/
+            if ((iRedrawAttempt & 32) == 32) {
+                // attempt 5.b
+                imageView.postInvalidate();
+            }
+
         }
     }
 
@@ -602,11 +595,11 @@ public class PlayersButton extends SBRelativeLayout implements DrawTouch
         if ( false && PreferenceValues.showPlayerColorOn_Text(getContext()) ) {
             bTrueTextFalseBg = ! bTrueTextFalseBg;
         }
-        for (TextView b : serveButtons) {
+        for (TextView b : tvs) {
             if ( bTrueTextFalseBg ) {
-                b.setTextColor(this.textColorServer);
+                b.setTextColor(iColor);
             } else {
-                ColorUtil.setBackground(b, this.bgColorServer);
+                ColorUtil.setBackground(b, iColor);
             }
         }
     }

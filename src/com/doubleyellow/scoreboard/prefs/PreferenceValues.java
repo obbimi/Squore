@@ -1036,6 +1036,18 @@ public class PreferenceValues extends RWValues
         int iResDefault = getSportTypeSpecificResId(context, R.bool.BTSync_showFullScreenTimer_default__Squash);
         return getBoolean(PreferenceKeys.BTSync_showFullScreenTimer, context, iResDefault);
     }
+    public static boolean wearable_syncColorPrefs(Context context) {
+        int iResDefault = getSportTypeSpecificResId(context, R.bool.wearable_syncColorPrefs_default);
+        return getBoolean(PreferenceKeys.wearable_syncColorPrefs, context, iResDefault);
+    }
+    public static boolean wearable_allowScoringWithHardwareButtons(Context context) {
+        int iResDefault = getSportTypeSpecificResId(context, R.bool.wearable_allowScoringWithHardwareButtons_default);
+        return getBoolean(PreferenceKeys.wearable_allowScoringWithHardwareButtons, context, iResDefault);
+    }
+    public static boolean wearable_allowScoringWithRotary(Context context) {
+        int iResDefault = getSportTypeSpecificResId(context, R.bool.wearable_allowScoringWithRotary_default);
+        return getBoolean(PreferenceKeys.wearable_allowScoringWithRotary, context, iResDefault);
+    }
 /*
     public static boolean showGraphDuringTimer(Context context, boolean bIsPresentation) {
         EnumSet<ShowOnScreen> showOnScreens = showGraphDuringTimerOn(context);
@@ -1913,7 +1925,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2021-11-13"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2021-12-27"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

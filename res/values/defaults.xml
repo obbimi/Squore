@@ -204,6 +204,10 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="savePasswords_default">false</bool>
     <bool name="readContactsForAutoCompletion_default">false</bool>
 
+    <bool name="wearable_syncColorPrefs_default">true</bool>
+    <bool name="wearable_allowScoringWithHardwareButtons_default">true</bool>
+    <bool name="wearable_allowScoringWithRotary_default">true</bool>
+
     <bool name="BTSync_showFullScreenTimer_default__Squash">false</bool>
     <bool name="BTSync_showFullScreenTimer_default__Default">true</bool>
     <bool name="BTSync_keepLROnConnectedDeviceMirrored_default__Squash">false</bool>

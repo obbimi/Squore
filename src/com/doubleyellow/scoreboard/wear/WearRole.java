@@ -19,5 +19,5 @@ package com.doubleyellow.scoreboard.wear;
 public enum WearRole {
     Unknown,
     AppRunningOnBoth,
-    Paused,
+    PausedOnOther,
 }

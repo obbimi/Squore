@@ -299,4 +299,8 @@ public enum PreferenceKeys {
     enableScoringByBluetoothConnection,
         lastConnectedBluetoothDevice,
 
+    wearable,
+        wearable_syncColorPrefs,
+        wearable_allowScoringWithHardwareButtons,
+        wearable_allowScoringWithRotary,
 }

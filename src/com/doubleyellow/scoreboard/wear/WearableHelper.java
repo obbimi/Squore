@@ -251,8 +251,8 @@ public class WearableHelper
         }
         if ( sMessage.startsWith(BTMethods.requestCompleteJsonOfMatch.toString() ) )  {
             // independent of current wearable role, send anyways
-        } else if ( m_wearableRole.equals(WearRole.AppRunningOnBoth) == false ) {
-            //Log.d(TAG, "App not running on both devices. Not sending: " + sMessage);
+        } else if ( m_wearableRole.equals(WearRole.Unknown) ) {
+            Log.d(TAG, "App not running on both devices. Not sending: " + sMessage);
             return;
         }
         SendMessageToWearableTask task = new SendMessageToWearableTask(context);

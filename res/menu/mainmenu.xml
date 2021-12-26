@@ -155,6 +155,7 @@
                         <item android:id="@+id/cmd_import_matches"     app:showAsAction="never"  android:icon="@android:drawable/stat_sys_download" android:title="@string/import_matches" />
                         <item android:id="@+id/cmd_export_matches"     app:showAsAction="never"  android:icon="@android:drawable/ic_menu_upload"    android:title="@string/export_matches" />
                     </group>
+                    <item android:id="@+id/send_settings_to_wearable" app:showAsAction="never"  android:icon="@drawable/wearos"      android:title="@string/send_settings_to_wearable" android:visible="false" />
                 </menu>
             </item>
 
@@ -177,7 +178,7 @@
                     <item android:id="@+id/sb_download_posted_to_squore_matches" app:showAsAction="never"                                       android:title="Download posted to Squore zip" android:visible="false" />
                     <item android:id="@+id/sb_download_zip"          app:showAsAction="never"                                       android:title="Download zip" android:visible="false" />
 
-                    <item android:id="@+id/sb_open_store_on_wearable" app:showAsAction="never" android:icon="@android:drawable/stat_sys_data_bluetooth" android:title="Open PlayStore On Wearable" />
+                    <item android:id="@+id/sb_open_store_on_wearable" app:showAsAction="never" android:icon="@drawable/wearos" android:title="Open PlayStore On Wearable" />
                 </menu>
             </item>
 
