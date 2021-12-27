@@ -117,8 +117,18 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
                 // But fortunately we can change the ID after e.g. user changed different 'cast target' from preferences
                 Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(m_context);
                 Log.d(TAG, "[createCastContext] remoteDisplayAppId2Info : " + remoteDisplayAppId2Info);
-                CastOptions castOptions = m_castContext.getCastOptions();
-                castOptions.setReceiverApplicationId(remoteDisplayAppId2Info.getKey()); // not available for com.google.android.gms:play-services-cast-framework:20.0.0
+
+                //CastOptions castOptions = m_castContext.getCastOptions();
+                // setReceiverApplicationId() available in 19.0.0, no longer available in com.google.android.gms:play-services-cast-framework:20.0.0
+                //castOptions.setReceiverApplicationId(remoteDisplayAppId2Info.getKey());
+                // but the 'accidentally?' public method zzb() in 21.0.0 achieves the same ?!
+                //castOptions.zzb(remoteDisplayAppId2Info.getKey());
+                m_castContext.setReceiverApplicationId(remoteDisplayAppId2Info.getKey());
+
+                if ( false ) {
+                    CastOptions.Builder builder = new CastOptions.Builder();
+                    builder.setReceiverApplicationId(remoteDisplayAppId2Info.getKey());
+                }
             } catch (Exception e) {
                 Log.w(TAG, "No casting ..." + e.getMessage());
                 //e.printStackTrace(); // com.google.android.gms.dynamite.DynamiteModule$LoadingException: No acceptable module found. Local version is 0 and remote version is 0 (Samsung S4 with custom ROM 8.1)

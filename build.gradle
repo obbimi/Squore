@@ -17,11 +17,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-     //classpath 'com.android.tools.build:gradle:3.6.4'
-     //classpath 'com.android.tools.build:gradle:4.0.0' // java.security.NoSuchAlgorithmException: EC KeyFactory not available
-     //classpath 'com.android.tools.build:gradle:4.1.0' // java.lang.NumberFormatException: For input string: "${versionCodePrefix}${versionCodeSuffixTennisPadel}"
-      //classpath 'com.android.tools.build:gradle:4.1.2' // java.lang.NumberFormatException: For input string: "${versionCodePrefix}${versionCodeSuffixTennisPadel}"
-      classpath 'com.android.tools.build:gradle:4.1.3' // java.lang.NumberFormatException: For input string: "${versionCodePrefix}${versionCodeSuffixTennisPadel}"
+      classpath 'com.android.tools.build:gradle:4.1.3'
     }
 }
 // Run ./gradlew -q :dependencies
@@ -50,18 +46,6 @@ android {
         // https://en.wikipedia.org/wiki/Android_version_history
         //minSdkVersion 19 // 4.4 android.os.Build.VERSION_CODES.KITKAT, for wear at least 23 is required
         //minSdkVersion 23 // 6.0 android.os.Build.VERSION_CODES.M, for wear at least 23 is required, wear2.0 needs 25
-        // next property is not required for building... but should be specified for publishing in play-store
-
-        //testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
-        //applicationId "com.doubleyellow"
-/*
-        manifestPlaceholders = [ versionNameTabletennis: "4.42", versionXCodeSuffixTabletennis: "0466"
-                               , versionNameBadminton  : "4.42", versionXCodeSuffixBadminton  : "0466"
-                               , versionNameTennisPadel: "4.42", versionXCodeSuffixTennisPadel: "0466"
-                               , versionNameSquore     : "4.42", versionXCodeSuffixSquore     : "0466"
-                               , versionNameRacketlon  : "4.42", versionXCodeSuffixRacketlon  : "0466"
-                               ]
-*/
     }
     sourceSets {
         main {
@@ -79,8 +63,8 @@ android {
             }
         }
         phoneTabletPre22  { manifest { srcFile 'AndroidManifestALLPhoneTabletPre22.xml' } }
-        phoneTabletPost23 { manifest { srcFile 'AndroidManifestALLPhoneTablet.xml' } }
-        wearOs            { manifest { srcFile 'AndroidManifestALLWearOS.xml'      } }
+        phoneTabletPost23 { manifest { srcFile 'AndroidManifestALLPhoneTablet.xml'      } }
+        wearOs            { manifest { srcFile 'AndroidManifestALLWearOS.xml'           } }
     }
 
     signingConfigs {
@@ -102,21 +86,21 @@ android {
             dimension "devicetype"
             minSdkVersion 19
             targetSdkVersion 30
-            versionCode 1915 * 10000 + 472
+            versionCode 1915 * 10000 + 473
             versionName "4.44"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 30
-            versionCode 2315 * 10000 + 472
+            versionCode 2315 * 10000 + 473
             versionName "4.44"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 30
-            versionCode 2501 * 10000 + 472
+            versionCode 2501 * 10000 + 473
             versionName "4.44"
         }
     }
@@ -162,12 +146,11 @@ dependencies {
     implementation 'com.doubleyellow:AndroidBase@aar'
     // uncommenting this while in Android Studio creates a subdir AndroidBase with an .iml file in it
 
-    phoneTabletPre22Implementation  'androidx.wear:wear:1.2.0'
-    phoneTabletPost23Implementation 'androidx.wear:wear:1.2.0' // minSdk=23 for 1.[0-2].0
-    wearOsImplementation            'androidx.wear:wear:1.2.0'
-    phoneTabletPre22Implementation  'androidx.wear:wear-input:1.1.0'// comment out this line temporarily what code will lead to errors when invocation is not prevented using Build.VERSION.SDK_INT > Build.VERSION_CODES.?
-    phoneTabletPost23Implementation 'androidx.wear:wear-input:1.1.0'// minSdk=25 
-    wearOsImplementation            'androidx.wear:wear-input:1.1.0'
+    implementation 'androidx.wear:wear:1.2.0'       // minSdk=23 for 1.[0-2].0
+    implementation 'androidx.wear:wear-input:1.1.0' // minSdk=25
+    //phoneTabletPre22Implementation  'androidx.wear:wear-input:1.1.0'// comment out this line temporarily what code will lead to errors when invocation is not prevented using Build.VERSION.SDK_INT > Build.VERSION_CODES.?
+    //phoneTabletPost23Implementation 'androidx.wear:wear-input:1.1.0'// minSdk=25
+    //wearOsImplementation            'androidx.wear:wear-input:1.1.0'
 
     //wearOsImplementation 'androidx.wear:wear:1.0.0' // needs minSdkVersion=23
     //implementation 'com.android.support:wear:28.0.0' // needs minSdkVersion=23
@@ -183,29 +166,25 @@ dependencies {
   //implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 
     // ChromeCast (new with Custom Receiver)
-    phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:19.0.0'
-    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:19.0.0'
-    wearOsImplementation            'com.google.android.gms:play-services-cast-framework:19.0.0'
-/*
-    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:20.0.0'
-    wearOsImplementation            'com.google.android.gms:play-services-cast-framework:20.0.0'
-*/
+    phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:21.0.0'
+    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:21.0.0'
+    wearOsCompileOnly               'com.google.android.gms:play-services-cast-framework:21.0.0'
 
     // allow communication between handheld device and wearable
     phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:17.1.0' // compileOnly is good enough for API < 23
     phoneTabletPost23Implementation   'com.google.android.gms:play-services-wearable:17.1.0'
     wearOsImplementation              'com.google.android.gms:play-services-wearable:17.1.0'
 
-    // Required for e.g. com/google/android/gms/wearable/CapabilityClient$OnCapabilityChangedListener
-    //compileOnly    'com.google.android.wearable:wearable:2.5.0' // compileOnly sufficient for devices with API < 23
 
     phoneTabletPre22CompileOnly       'com.google.android.support:wearable:2.8.1'
     phoneTabletPost23Implementation   'com.google.android.support:wearable:2.8.1'
     wearOsImplementation              'com.google.android.support:wearable:2.8.1'
 
-    phoneTabletPre22CompileOnly    'com.google.android.wearable:wearable:2.8.1'
-    phoneTabletPost23CompileOnly   'com.google.android.wearable:wearable:2.8.1'
-    wearOsCompileOnly              'com.google.android.wearable:wearable:2.8.1'
+    // Required when using 'com.google.android.support:wearable:2.8.1' for e.g. com/google/android/gms/wearable/CapabilityClient$OnCapabilityChangedListener
+    compileOnly       'com.google.android.wearable:wearable:2.8.1' // compileOnly sufficient for devices with API < 23
+  //phoneTabletPre22CompileOnly       'com.google.android.wearable:wearable:2.8.1'
+  //phoneTabletPost23CompileOnly      'com.google.android.wearable:wearable:2.8.1'
+  //wearOsCompileOnly                 'com.google.android.wearable:wearable:2.8.1'
 
     //wearApp project(':wear:base') // applies to all other variants
 }

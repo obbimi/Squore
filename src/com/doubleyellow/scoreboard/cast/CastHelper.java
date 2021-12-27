@@ -262,13 +262,11 @@ public class CastHelper implements ICastHelper
             @Override public void onRemoteDisplaySessionEnded(CastRemoteDisplayLocalService castRemoteDisplayLocalService) {
                 Log.d(TAG, "onRemoteDisplaySessionEnded " + castRemoteDisplayLocalService);
             }
-/*
 
-            // com.google.android.gms:play-services-cast-framework:20.0.0
-            public void zza() {
-                Log.d(TAG, "zza ??");
+            // since com.google.android.gms:play-services-cast-framework:21.0.0
+            public void onRemoteDisplayMuteStateChanged(boolean b) {
+                Log.d(TAG, "onRemoteDisplayMuteStateChanged " + b);
             }
-*/
         };
 
         try {
