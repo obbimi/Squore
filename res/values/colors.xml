@@ -73,6 +73,7 @@
     </string-array>
 
     <!-- black|red|grey ... -->
+<!--
     <string-array name="colorSchema__CourtCare" translatable="false">
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|Court Care Black Light|#000001|#ff0000|#dddddd|#FFFFFF|</item>
@@ -80,7 +81,9 @@
         <item>|Court Care Red Light  |#ff0000|#000001|#dddddd|#FFFFFF|</item>
         <item>|Court Care Red Dark   |#ff0000|#FFFFFF|#dddddd|#000001|</item>
     </string-array>
+-->
     <!-- green|gold|dark grey ... University of Notthingham -->
+<!--
     <string-array name="colorSchema__UoN" translatable="false">
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|UoN Green Light       |#005f36|#deb408|#4f4f4f|#FFFFFF|</item>
@@ -88,7 +91,8 @@
         <item>|UoN Gold  Light       |#deb408|#005f36|#4f4f4f|#FFFFFF|</item>
         <item>|UoN Gold  Dark        |#deb408|#005f36|#4f4f4f|#000001|</item>
     </string-array>
-    <string-array name="colorSchema" translatable="false">
+-->
+    <string-array name="colorSchema__Squash" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|PSA                   |#141414|#4CA3D9|#D3D3D3|#FFFFFF|</item><!-- dark|blue|light grey ... -->

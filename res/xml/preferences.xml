@@ -88,8 +88,8 @@
                         android:key="colorSchema"
                         android:title="@string/pref_ColorPalette"
                         android:summary="@string/pref_ColorPalette_summary"
-                        android:entries="@array/colorSchema"
-                        android:entryValues="@array/colorSchema"
+                        android:entries="@array/colorSchema__Squash"
+                        android:entryValues="@array/colorSchema__Squash"
                         android:defaultValue="0"
                         />
             </PreferenceCategory>
@@ -890,8 +890,8 @@
                 android:key="useCastScreen"
                 android:title="@string/pref_useCastScreen"
                 android:summary="@string/pref_useCastScreen_summary"
-                android:entries="@array/colorSchema"
-                android:entryValues="@array/colorSchema"
+                android:entries="@array/colorSchema_new"
+                android:entryValues="@array/colorSchema_new"
                 android:defaultValue="0"
                 />
 <!--

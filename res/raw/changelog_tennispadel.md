@@ -1,3 +1,16 @@
+## 4.44 (jan 2022)
+
+- Improvement for wearables:
+    - allow scoring points with hardware buttons (if 2 additional hardware buttons are available besides the main OS button)
+- Color preferences from phone synced to wearable (experimental)    
+- Other minor improvements
+
+## 4.43 (dec 2021)
+
+- feed improvements for team vs team: 
+    - allow specifying player `teamPlayers.avatar`
+    - allow specifying team `team.abbreviation` and team `team.color`
+
 ## 4.42 (okt 2021)
 
 - Improvement for wearables:

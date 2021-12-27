@@ -281,15 +281,16 @@ public class MatchView extends SBRelativeLayout
         if ( Brand.supportsTiebreakFormat() == false ) {
             ViewUtil.hideViewsForEver(this, R.id.llTieBreakFormat);
         }
-        if ( Brand.isGameSetMatch() == false ) {
-            ViewUtil.hideViewsForEver(this, R.id.llFinalSetFinish);
-            ViewUtil.hideViewsForEver(this, R.id.llChangesSidesWhen);
-        } else {
+        if ( Brand.isGameSetMatch() ) {
             ViewUtil.hideViewsForEver(this, R.id.llHandicapFormat);
             ViewUtil.hideViewsForEver(this, R.id.llScoringType);
             ViewUtil.hideViewsForEver(this, R.id.llDisciplineStart);
             ViewUtil.hideViewsForEver(this, R.id.llNumberOfServesPerPlayer);
             ViewUtil.hideViewsForEver(this, R.id.ll_AnnouncementLanguage);
+        } else {
+            ViewUtil.hideViewsForEver(this, R.id.llFinalSetFinish);
+            ViewUtil.hideViewsForEver(this, R.id.llChangesSidesWhen);
+            ViewUtil.hideViewsForEver(this, R.id.llScoringTypeGSM);
         }
         if ( PreferenceValues.useWarmup(getContext()) == false ) {
             ViewUtil.hideViewsForEver(this, R.id.lblWarmupDuration);

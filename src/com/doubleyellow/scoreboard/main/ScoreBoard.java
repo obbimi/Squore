@@ -4788,15 +4788,17 @@ touch -t 01030000 LAST.sb
 
         if ( requestCode_MenuId == R.id.sb_settings ) {
             // returning from settings
-            List<String> lColorSettingChanged = Preferences.getChangedColorSettings();
-            if ( ListUtil.isNotEmpty(lColorSettingChanged) ) {
-                if ( PreferenceValues.wearable_syncColorPrefs( this ) ) {
-                    handleMenuItem(R.id.send_settings_to_wearable, lColorSettingChanged);
+            if ( m_wearableHelper != null ) {
+                List<String> lColorSettingChanged = Preferences.getChangedColorSettings();
+                if ( ListUtil.isNotEmpty(lColorSettingChanged) ) {
+                    if ( PreferenceValues.wearable_syncColorPrefs( this ) ) {
+                        handleMenuItem(R.id.send_settings_to_wearable, lColorSettingChanged);
+                    }
                 }
-            }
-            List<String> lWearableSettingChanged = Preferences.getWearableSettingsChanged();
-            if ( ListUtil.isNotEmpty(lWearableSettingChanged) ) {
-                handleMenuItem(R.id.send_settings_to_wearable, lWearableSettingChanged);
+                List<String> lWearableSettingChanged = Preferences.getWearableSettingsChanged();
+                if ( ListUtil.isNotEmpty(lWearableSettingChanged) ) {
+                    handleMenuItem(R.id.send_settings_to_wearable, lWearableSettingChanged);
+                }
             }
         }
 

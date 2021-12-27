@@ -26,6 +26,11 @@ buildscript {
 }
 // Run ./gradlew -q :dependencies
 android {
+    compileOptions {
+        // added when going from 1.1.9 to androidx.wear:wear:1.2.0
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 
     compileSdkVersion 31
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
@@ -73,7 +78,7 @@ android {
                 // exclude '**/layout-watch/**' // e.g. for non-wear does not work for resources
             }
         }
-        phoneTabletPre22  { manifest { srcFile 'AndroidManifestALLPhoneTablet.xml' } }
+        phoneTabletPre22  { manifest { srcFile 'AndroidManifestALLPhoneTabletPre22.xml' } }
         phoneTabletPost23 { manifest { srcFile 'AndroidManifestALLPhoneTablet.xml' } }
         wearOs            { manifest { srcFile 'AndroidManifestALLWearOS.xml'      } }
     }
@@ -97,22 +102,22 @@ android {
             dimension "devicetype"
             minSdkVersion 19
             targetSdkVersion 30
-            versionCode 1915 * 10000 + 471
-            versionName "4.42"
+            versionCode 1915 * 10000 + 472
+            versionName "4.44"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 30
-            versionCode 2315 * 10000 + 471
-            versionName "4.42"
+            versionCode 2315 * 10000 + 472
+            versionName "4.44"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 30
-            versionCode 2501 * 10000 + 471
-            versionName "4.42"
+            versionCode 2501 * 10000 + 472
+            versionName "4.44"
         }
     }
     buildTypes {
@@ -157,9 +162,13 @@ dependencies {
     implementation 'com.doubleyellow:AndroidBase@aar'
     // uncommenting this while in Android Studio creates a subdir AndroidBase with an .iml file in it
 
-    //implementation 'com.google.android.material:material:1.2.0-alpha05'
+    phoneTabletPre22Implementation  'androidx.wear:wear:1.2.0'
+    phoneTabletPost23Implementation 'androidx.wear:wear:1.2.0' // minSdk=23 for 1.[0-2].0
+    wearOsImplementation            'androidx.wear:wear:1.2.0'
+    phoneTabletPre22Implementation  'androidx.wear:wear-input:1.1.0'// comment out this line temporarily what code will lead to errors when invocation is not prevented using Build.VERSION.SDK_INT > Build.VERSION_CODES.?
+    phoneTabletPost23Implementation 'androidx.wear:wear-input:1.1.0'// minSdk=25 
+    wearOsImplementation            'androidx.wear:wear-input:1.1.0'
 
-    implementation 'androidx.wear:wear:1.1.0' // does somehow not compile with wear 1.2.0. can not be set to compileOnly for Pre22 somehow because of boxedEdges in res/layout-watch/percentage.xml
     //wearOsImplementation 'androidx.wear:wear:1.0.0' // needs minSdkVersion=23
     //implementation 'com.android.support:wear:28.0.0' // needs minSdkVersion=23
     //implementation 'com.google.protobuf:protobuf-java:3.5.1'
@@ -168,15 +177,12 @@ dependencies {
 
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
 
-//    implementation 'androidx.legacy:legacy-support-v4:1.0.0'   // v4 not required for building
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.3.1' // moving from 1.3.1 to 1.4.0 makes e.g. android wear in emulator fail
     // not required for building, BUT required for runtime when using newer gradle (20191022)
 
   //implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 
     // ChromeCast (new with Custom Receiver)
-    //compile 'com.android.support:appcompat-v7:28.0.0'   // Multiple dex files define Landroid/support/v13/view/DragAndDropPermissionsCompat
-    //compile 'com.android.support:mediarouter-v7:28.0.0' // Multiple dex files define Landroid/support/v13/view/DragAndDropPermissionsCompat
     phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:19.0.0'
     phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:19.0.0'
     wearOsImplementation            'com.google.android.gms:play-services-cast-framework:19.0.0'
