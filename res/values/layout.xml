@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <fraction name="ls_fr_vertical_margin_3x">0.01</fraction>
+    <fraction name="ls_fr_horizontal_margin_4x">0.005</fraction>
+    <fraction name="ls_fr_name_height">0.18</fraction>
+    <fraction name="ls_fr_name_width_2x">0.43</fraction>
+    <fraction name="ls_fr_gamescores_width">0.12</fraction>
+    <fraction name="ls_fr_timer_height">0.20</fraction>   <!-- for tiny chrono to be readable 20, else 16 may be better -->
+    <fraction name="ls_fr_to_late_height">0.05</fraction>
+    <fraction name="ls_fr_bluetooth_icon_height">0.05</fraction>
+    <fraction name="ls_fr_match_timer_width">0.17</fraction>
+    <fraction name="ls_fr_side_height">0.18</fraction> <!-- for nice visuals, close to ls_name_height -->
+    <fraction name="ls_fr_gameswon_width">0.48</fraction>
+    <fraction name="ls_fr_branded_logo_ar150">0.11</fraction>
+    <fraction name="ls_fr_branded_logo_ar400">0.30</fraction>
+
+    <fraction name="pt_fr_vertical_margin_6x">0.004</fraction>
+    <fraction name="pt_fr_name_height_2x">0.10</fraction>
+    <fraction name="pt_fr_gamescores_height">0.11</fraction>
+    <fraction name="pt_fr_timer_widthratio">0.45</fraction>
+    <fraction name="pt_fr_to_late_height">0.03</fraction>
+    <fraction name="pt_fr_bluetooth_icon_height">0.03</fraction>
+    <fraction name="pt_fr_match_timer_height">0.06</fraction> <!-- game and match chronos -->
+    <fraction name="pt_fr_match_timer_width">0.30</fraction>
+    <fraction name="pt_fr_timer_topbottom_margin">0.01</fraction>
+    <fraction name="pt_fr_gameswon_height">0.48</fraction> <!-- must be inline with pt_gamescores_height -->
+    <fraction name="pt_fr_horizontal_margin_2x">0.004</fraction>
+
     <!-- landscape -->
 
     <!-- these 3 must sum to 100% -->

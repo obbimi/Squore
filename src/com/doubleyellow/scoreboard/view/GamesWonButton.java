@@ -26,7 +26,7 @@ import com.doubleyellow.android.view.AutoResizeTextView;
  * GamesWon button that indicates
  * - number of games won on the main board
  */
-public class GamesWonButton extends /*SBRelativeLayout*/ AutoResizeTextView
+public class GamesWonButton extends AutoResizeTextView
 {
 /*
     public GamesWonButton(Context context) {

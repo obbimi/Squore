@@ -35,7 +35,7 @@ import com.doubleyellow.util.StringUtil;
  * - side and handout for Squash
  * - number of serves left for tabletennis
  */
-public class ServeButton extends /*SBRelativeLayout*/ AutoResizeTextView
+public class ServeButton extends AutoResizeTextView
 {
     /** 1 based */
     private static int i_maxForCountDown = 0;
