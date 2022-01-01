@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.percentlayout.widget.PercentRelativeLayout;
+
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.R;
@@ -15,7 +18,7 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.Direction;
 import com.doubleyellow.util.ListUtil;
-import com.doubleyellow.view.SBRelativeLayout;
+import com.doubleyellow.view.DrawArrows;
 
 /**
  * Supports in creating a relatively short promo movie.
@@ -218,9 +221,9 @@ public class PromoThread extends Thread
         handler.post( new Runnable(){
             public void run(){
                 View rootView = activity.findViewById(android.R.id.content);
-                SBRelativeLayout sbRelativeLayout = ViewUtil.getFirstView(rootView, SBRelativeLayout.class);
-                if ( sbRelativeLayout != null ) {
-                    sbRelativeLayout.drawArrow(iRelatedResId, directions, bgColor);
+                PercentRelativeLayout sbRelativeLayout = ViewUtil.getFirstView(rootView, PercentRelativeLayout .class);
+                if ( sbRelativeLayout instanceof DrawArrows ) {
+                    ((DrawArrows)sbRelativeLayout).drawArrow(iRelatedResId, directions, bgColor);
                 }
             }
         });
@@ -232,9 +235,9 @@ public class PromoThread extends Thread
         handler.post( new Runnable(){
             public void run(){
                 View rootView = activity.findViewById(android.R.id.content);
-                SBRelativeLayout sbRelativeLayout = ViewUtil.getFirstView(rootView, SBRelativeLayout.class);
-                if ( sbRelativeLayout != null ) {
-                    sbRelativeLayout.hideArrows();
+                PercentRelativeLayout sbRelativeLayout = ViewUtil.getFirstView(rootView, PercentRelativeLayout.class);
+                if ( sbRelativeLayout instanceof DrawArrows ) {
+                    ((DrawArrows)sbRelativeLayout).hideArrows();
                 }
             }
         });

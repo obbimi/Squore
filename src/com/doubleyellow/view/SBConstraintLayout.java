@@ -18,39 +18,56 @@
 package com.doubleyellow.view;
 
 import android.content.Context;
-import androidx.percentlayout.widget.PercentRelativeLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.doubleyellow.android.view.ArrowView;
 import com.doubleyellow.android.view.TouchBothListener;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.util.Direction;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Extended to
  * - have more flexible touch event handling (touchBothListener)
  * - allow drawing arrows for educational/demo purposes
- *
- * @deprecated
  */
-public class SBRelativeLayout extends PercentRelativeLayout /* deprecated in 26.1.0, TODO: migrate to SBConstraintLayout */  implements DrawArrows {
+public class SBConstraintLayout extends ConstraintLayout implements DrawArrows {
 
-    public SBRelativeLayout(Context context) {
+    public SBConstraintLayout(Context context) {
         super(context);
     }
 
-    public SBRelativeLayout(Context context, AttributeSet attrs) {
+    public SBConstraintLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SBRelativeLayout(Context context, AttributeSet attrs, int defStyle) {
+    public SBConstraintLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+    }
+
+    protected void showViews(List<Integer> lViewsToShow) {
+        Iterator it = lViewsToShow.iterator();
+
+        while(it.hasNext()) {
+            Integer iToHide = (Integer)it.next();
+            if (iToHide != null) {
+                View vToHide = this.findViewById(iToHide);
+                if (vToHide != null) {
+                    vToHide.setVisibility(VISIBLE);
+                }
+            }
+        }
     }
 
     @Override public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -68,7 +85,7 @@ public class SBRelativeLayout extends PercentRelativeLayout /* deprecated in 26.
     private TouchBothListener touchBothListener = null;
 
     private boolean bInterceptTouchEvents = false;
-    @Override public void setOnTouchListener(View.OnTouchListener l) {
+    @Override public void setOnTouchListener(OnTouchListener l) {
         if ( l instanceof TouchBothListener) {
             touchBothListener = (TouchBothListener) l;
         }
@@ -103,8 +120,8 @@ public class SBRelativeLayout extends PercentRelativeLayout /* deprecated in 26.
         if ( vRelatedGuiElements.length == 5 ) {
             // special case, e.g. used by NewMatch_FB_Announcement
             LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.addRule(vRelatedGuiElements[0]       , vRelatedGuiElements[1]);
-            params.addRule(vRelatedGuiElements[2]       , vRelatedGuiElements[3]);
+            //params.addRule(vRelatedGuiElements[0]       , vRelatedGuiElements[1]);
+            //params.addRule(vRelatedGuiElements[2]       , vRelatedGuiElements[3]);
             Direction d = Direction.values()[vRelatedGuiElements[4]];
             showArrow(0, params, d, bgColor);
             return;
@@ -186,11 +203,10 @@ public class SBRelativeLayout extends PercentRelativeLayout /* deprecated in 26.
     private LayoutParams calculateLayoutParams(View vRelatedGuiElement/*, Direction bHasXMirror, Direction bHasYMirror*/, Direction direction)
     {
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+/*
         switch(direction) {
             case N:
                 params.addRule(RelativeLayout.BELOW       , vRelatedGuiElement.getId());
-                //params.addRule(RelativeLayout.ALIGN_LEFT  , vRelatedGuiElement.getId());
-                //params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
                 break;
             case NE:
                 params.addRule(RelativeLayout.BELOW       , vRelatedGuiElement.getId());
@@ -198,8 +214,6 @@ public class SBRelativeLayout extends PercentRelativeLayout /* deprecated in 26.
                 break;
             case E:
                 params.addRule(RelativeLayout.LEFT_OF     , vRelatedGuiElement.getId());
-                //params.addRule(RelativeLayout.ALIGN_TOP   , vRelatedGuiElement.getId());
-                //params.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
                 break;
             case SE:
                 params.addRule(RelativeLayout.LEFT_OF     , vRelatedGuiElement.getId());
@@ -207,8 +221,6 @@ public class SBRelativeLayout extends PercentRelativeLayout /* deprecated in 26.
                 break;
             case S:
                 params.addRule(RelativeLayout.ABOVE       , vRelatedGuiElement.getId());
-                //params.addRule(RelativeLayout.ALIGN_RIGHT , vRelatedGuiElement.getId());
-                //params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
                 break;
             case SW:
                 params.addRule(RelativeLayout.RIGHT_OF    , vRelatedGuiElement.getId());
@@ -216,26 +228,25 @@ public class SBRelativeLayout extends PercentRelativeLayout /* deprecated in 26.
                 break;
             case W:
                 params.addRule(RelativeLayout.RIGHT_OF    , vRelatedGuiElement.getId());
-                //params.addRule(RelativeLayout.ALIGN_BOTTOM, vRelatedGuiElement.getId());
-                //params.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
                 break;
             case NW:
                 params.addRule(RelativeLayout.RIGHT_OF    , vRelatedGuiElement.getId());
                 params.addRule(RelativeLayout.BELOW       , vRelatedGuiElement.getId());
                 break;
         }
+*/
 
         // let the center of the arrow be centered with the element it is pointing to
         int iWHHalf = ArrowView.getWH() / 2;
         switch(direction) {
             case N:
             case S:
-                params.addRule(RelativeLayout.ALIGN_LEFT, vRelatedGuiElement.getId());
+                //params.addRule(RelativeLayout.ALIGN_LEFT, vRelatedGuiElement.getId());
                 params.leftMargin = (vRelatedGuiElement.getWidth() / 2) - iWHHalf;
                 break;
             case E:
             case W:
-                params.addRule(RelativeLayout.ALIGN_TOP, vRelatedGuiElement.getId());
+                //params.addRule(RelativeLayout.ALIGN_TOP, vRelatedGuiElement.getId());
                 params.topMargin = (vRelatedGuiElement.getHeight() / 2) - iWHHalf;
                 break;
         }
@@ -247,30 +258,6 @@ public class SBRelativeLayout extends PercentRelativeLayout /* deprecated in 26.
             case W: params.rightMargin  = - iWHHalf / 4; break;
         }
 
-/*
-        int iAlign = 0;
-        if (direction.toString().length()==1) {
-            switch (bHasXMirror) {
-                case E:
-                    iAlign = direction.getAngle()%180==0?RelativeLayout.ALIGN_RIGHT:RelativeLayout.ALIGN_TOP;
-                    break;
-                case W:
-                    iAlign = direction.getAngle()%180==0?RelativeLayout.ALIGN_LEFT:RelativeLayout.ALIGN_TOP;
-                    break;
-            }
-            switch (bHasYMirror) {
-                case N:
-                    iAlign = direction.getAngle()%180==0?RelativeLayout.ALIGN_RIGHT:RelativeLayout.ALIGN_TOP;
-                    break;
-                case S:
-                    iAlign = direction.getAngle()%180==0?RelativeLayout.ALIGN_RIGHT:RelativeLayout.ALIGN_BOTTOM;
-                    break;
-            }
-            if ( iAlign != 0 ) {
-                params.addRule(iAlign, vRelatedGuiElement.getId());
-            }
-        }
-*/
         return params;
     }
 

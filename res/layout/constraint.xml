@@ -154,6 +154,15 @@
         android:textStyle="bold"
         />
 
+    <Space android:id="@+id/space_side_player"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/txt_player1"
+        app:layout_constraintEnd_toStartOf="@id/btn_side1"
+        app:layout_constraintHeight_percent="@fraction/pt_fr_vertical_margin_6x"
+        app:layout_constraintWidth_percent="@fraction/pt_fr_horizontal_margin_2x"
+        />
+
     <!-- score buttons underneath/above names -->
     <com.doubleyellow.android.view.AutoResizeTextView
         android:id="@+id/btn_score1"
@@ -162,7 +171,7 @@
         app:layout_constraintTop_toTopOf="@id/btn_side1"
         app:layout_constraintBottom_toTopOf="@id/gamescores_container"
         app:layout_constraintStart_toStartOf="@id/txt_player1"
-        app:layout_constraintEnd_toStartOf="@id/btn_side1"
+        app:layout_constraintEnd_toStartOf="@id/space_side_player"
         android:clickable="true"
         android:includeFontPadding="false"
         android:text="11"
@@ -175,7 +184,7 @@
         app:layout_constraintTop_toBottomOf="@id/gamescores_container"
         app:layout_constraintBottom_toBottomOf="@id/btn_side2"
         app:layout_constraintStart_toStartOf="@id/btn_score1"
-        app:layout_constraintEnd_toStartOf="@id/btn_side2"
+        app:layout_constraintEnd_toStartOf="@id/space_side_player"
         android:clickable="true"
         android:includeFontPadding="false"
         android:text="9"
