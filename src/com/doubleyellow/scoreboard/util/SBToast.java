@@ -27,6 +27,7 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,21 +35,24 @@ import android.widget.Toast;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.prefs.Preferences;
 import com.doubleyellow.util.Direction;
-import com.doubleyellow.view.SBRelativeLayout;
+import androidx.percentlayout.widget.PercentRelativeLayout;
 import com.doubleyellow.android.view.SimpleGestureListener;
+import com.doubleyellow.view.DrawArrows;
 
 /** Toast that matches more with look and feel of the Squore app */
 public class SBToast extends Toast {
 
     private final String TAG = SBToast.class.getSimpleName();
 
-    private SBRelativeLayout sbRelativeLayout = null;
+    private ViewGroup percentRelativeLayout = null;
     private int bgColor = Color.BLACK;
 
     private class OnToastSwipeLister implements SimpleGestureListener.SwipeListener {
         @Override public boolean onSwipe(View v, Direction direction, float maxD, float percentageOfView) {
             SBToast.this.cancel();
-            //sbRelativeLayout.hideArrows();
+            if ( percentRelativeLayout instanceof DrawArrows ) {
+                ((DrawArrows)percentRelativeLayout).hideArrows();
+            }
             return true;
         }
     }
@@ -58,11 +62,11 @@ public class SBToast extends Toast {
         super(context);
 
         View rootView = activity.findViewById(android.R.id.content);
-        SBRelativeLayout sbRelativeLayout = ViewUtil.getFirstView(rootView, SBRelativeLayout.class);
+        PercentRelativeLayout percentRelativeLayout = ViewUtil.getFirstView(rootView, PercentRelativeLayout.class);
 
-        this.sbRelativeLayout    = sbRelativeLayout;
-        this.iRelatedGuiElements = iRelatedGuiElements;
-        this.bgColor             = bgColor;
+        this.percentRelativeLayout = percentRelativeLayout;
+        this.iRelatedGuiElements   = iRelatedGuiElements;
+        this.bgColor               = bgColor;
 
         LinearLayout ll = new LinearLayout(context);
         ll.setOnTouchListener(new SimpleGestureListener(new OnToastSwipeLister(), null, null, null));
@@ -106,8 +110,8 @@ public class SBToast extends Toast {
             this.keepAliveTimer.cancel();
             this.keepAliveTimer = null;
         }
-        if ( bHideArrowsWhenCancelled && (sbRelativeLayout != null) ) {
-            sbRelativeLayout.hideArrows();
+        if ( bHideArrowsWhenCancelled && (percentRelativeLayout instanceof DrawArrows) ) {
+            ((DrawArrows) percentRelativeLayout).hideArrows();
         }
 
         super.cancel();
@@ -122,8 +126,8 @@ public class SBToast extends Toast {
     public void show(int iSecs, boolean bDrawArrows, boolean bHideWhenCancelled) {
         this.bHideArrowsWhenCancelled = bHideWhenCancelled;
 
-        if ( bDrawArrows && (sbRelativeLayout != null)) {
-            sbRelativeLayout.hideArrows();
+        if ( bDrawArrows && (percentRelativeLayout instanceof DrawArrows)) {
+            ((DrawArrows) percentRelativeLayout).hideArrows();
         }
 
         if ( bReanimateByCallingShow == false ) {
@@ -141,8 +145,8 @@ public class SBToast extends Toast {
         this.keepAliveTimer = new KeepAliveTimer(1000 * iSecs, 1000);
         this.keepAliveTimer.start();
 
-        if ( bDrawArrows && (sbRelativeLayout != null) ) {
-            sbRelativeLayout.drawArrow(iRelatedGuiElements, this.bgColor);
+        if ( bDrawArrows && (percentRelativeLayout instanceof DrawArrows) ) {
+            ((DrawArrows) percentRelativeLayout).drawArrow(iRelatedGuiElements, this.bgColor);
         }
     }
 

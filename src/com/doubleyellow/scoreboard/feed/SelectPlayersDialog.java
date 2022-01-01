@@ -90,7 +90,6 @@ public class SelectPlayersDialog extends BaseAlertDialog
         Disable,
         EnableWithValidation,
     }
-    
     private final Map<Player, SelectObjectView<String>> m_p2select     = new HashMap<>();
     private       SelectEnumView<NamePart>              m_evNamePart   = null;
     private       List<View>                            m_vaPostParams = new ArrayList<>();
@@ -178,11 +177,17 @@ public class SelectPlayersDialog extends BaseAlertDialog
                 String       sDefaultVal = joPostParam.optString   (URLsKeys.DefaultValue .toString()); // no default only works for radio button for now
                 boolean      bOptional   = joPostParam.optBoolean  (URLsKeys.Optional     .toString());
                 String       ppCaption   = joPostParam.optString   (URLsKeys.Caption      .toString());
-                String       ppType      = joPostParam.optString   (URLsKeys.DisplayType  .toString(), "RadioButton");
+                String       ppType      = joPostParam.optString   (URLsKeys.DisplayType  .toString(), PostParameterType.RadioButton.toString());
                 String       ppPostAs    = joPostParam.optString   (URLsKeys.PostAs       .toString(), ppCaption.toLowerCase().replaceAll(" ", ""));
                 List<String> lValues     = JsonUtil.asListOfStrings(ppValues);
+                if ( lValues == null ) {
+                    lValues = new ArrayList<>();
+                }
+                if ( StringUtil.isNotEmpty(sDefaultVal) && (lValues.contains(sDefaultVal) == false) ) {
+                    lValues.add(sDefaultVal);
+                }
 
-                if ( "SelectList".equalsIgnoreCase(ppType) ) {
+                if ( PostParameterType.SelectList.toString().equalsIgnoreCase(ppType) ) {
                     // select list
                     Spinner spinner = new Spinner(context);
                     if ( StringUtil.isEmpty(sDefaultVal) ) {
@@ -207,7 +212,7 @@ public class SelectPlayersDialog extends BaseAlertDialog
                     ArrayAdapter<String> dataAdapter = EnumSpinner.getStringArrayAdapter(context, lValues, iTextSizeInPx, null);
                     spinner.setAdapter(dataAdapter);
                     m_vaPostParams.add(spinner);
-                } else if ( "RadioButton".equalsIgnoreCase(ppType) ) {
+                } else if ( PostParameterType.RadioButton.toString().equalsIgnoreCase(ppType) ) {
                     // radio button
                     SelectObjectView<String> selectObjectView = new SelectObjectView<>(context, lValues, sDefaultVal, null, HVD.Horizontal);
                     selectObjectView.setTextSize(TypedValue.COMPLEX_UNIT_PX, iTextSizeInPx);
@@ -230,7 +235,7 @@ public class SelectPlayersDialog extends BaseAlertDialog
                             }
                         });
                     }
-                } else if ( "ToggleButton".equalsIgnoreCase(ppType) ) {
+                } else if ( PostParameterType.ToggleButton.toString().equalsIgnoreCase(ppType) ) {
                     // toggle button
                     ToggleButton toggleButton = new ToggleButton(context);
                     if ( ListUtil.size(lValues) == 2 ) {

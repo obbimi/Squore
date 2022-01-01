@@ -97,7 +97,7 @@ import com.doubleyellow.scoreboard.prefs.*;
 import com.doubleyellow.scoreboard.wear.WearRole;
 import com.doubleyellow.scoreboard.wear.WearableHelper;
 import com.doubleyellow.util.*;
-import com.doubleyellow.view.SBRelativeLayout;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1137,6 +1137,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 }
 
             } else {
+                // not wearable
                 setContentView(R.layout.mainwithmenudrawer);
                 drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawerView   = (ListView)     findViewById(R.id.left_drawer);
@@ -1154,7 +1155,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
                 FrameLayout frameLayout = (FrameLayout) findViewById(R.id.content_frame);
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View view = inflater.inflate(R.layout.percentage, null);
+                View view = inflater.inflate(R.layout.constraint, null);
+                //View view = inflater.inflate(R.layout.percentage, null);
                 frameLayout.addView(view);
             }
         }
@@ -1189,12 +1191,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         ViewGroup view   = (ViewGroup) findViewById(android.R.id.content);
         ViewGroup layout = (ViewGroup) view.getChildAt(0); // the relative layout
-        while ( (layout != null) &&  (layout instanceof SBRelativeLayout)==false ) {
+        while ( (layout != null) &&  (layout.getId()!= R.id.squoreboard_root_view) ) {
             layout = (ViewGroup) layout.getChildAt(0);
         }
-        if ( layout instanceof SBRelativeLayout ) {
-            layout.setOnTouchListener(new TouchBothListener(clickBothListener, longClickBothListener));
-        }
+        layout.setOnTouchListener(new TouchBothListener(clickBothListener, longClickBothListener));
 
         m_bHapticFeedbackPerPoint  = PreferenceValues.hapticFeedbackPerPoint(ScoreBoard.this);
         m_bHapticFeedbackOnGameEnd = PreferenceValues.hapticFeedbackOnGameEnd(ScoreBoard.this);
@@ -4988,6 +4988,7 @@ touch -t 01030000 LAST.sb
         return setPlayerNames(saPlayers, true);
     }
     private boolean setPlayerNames(String[] saPlayers, boolean bAddToPrefList) {
+        if ( matchModel == null ) { return false; }
         int i = 0;
         boolean bChanged = false;
         for(Player player: Model.getPlayers()) {
@@ -5225,9 +5226,9 @@ touch -t 01030000 LAST.sb
                 return;
             }
         }
-        int iShowPostToSiteDialogCnt = PreferenceValues.getRunCount(this, PreferenceKeys.autoSuggestToPostResult);
-        boolean bIsOverwritten = PreferenceValues.getOverwritten(PreferenceKeys.autoSuggestToPostResult)!=null;
-        boolean bShowWithNoMoreCheckBox = PreferenceValues.autoSuggestToPostResult(this) && (iShowPostToSiteDialogCnt < 5) && (bIsOverwritten == false);
+        int     iShowPostToSiteDialogCnt = PreferenceValues.getRunCount(this, PreferenceKeys.autoSuggestToPostResult);
+        boolean bIsOverwritten           = PreferenceValues.getOverwritten(PreferenceKeys.autoSuggestToPostResult)!=null;
+        boolean bShowWithNoMoreCheckBox  = PreferenceValues.autoSuggestToPostResult(this) && (iShowPostToSiteDialogCnt < 5) && (bIsOverwritten == false);
 
         PostMatchResult postMatchResult = new PostMatchResult(this, matchModel, this);
         postMatchResult.init(bShowWithNoMoreCheckBox);
