@@ -17,976 +17,1131 @@
 ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 -->
-<com.doubleyellow.view.SBRelativeLayout
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:dy="http://double-yellow.be"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:id="@+id/ll_match"
-              android:layout_margin="5dp"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dy="http://double-yellow.be"
+    android:id="@+id/ll_match"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dp">
 
-    <LinearLayout
-        android:id="@+id/match_splitterP"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/border_dark"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"/>
-
-    <androidx.percentlayout.widget.PercentRelativeLayout
-        android:layout_below="@id/match_splitterP"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_match_singles"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView android:inputType="none"
-                android:id="@+id/lblPlayersS"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/lbl_players"
-                android:textSize="@dimen/txt_medium"
-                android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- just a layout that is center in the parent to allow aligning to -->
-        <LinearLayout
-            android:id="@+id/match_splitterPS"
-            android:orientation="vertical"
-            android:layout_centerInParent="true"
-            android:layout_alignParentTop="true"
-            android:layout_width="2dp"
-            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/lblPlayersS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:text="@string/lbl_players"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/txt_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button android:id="@+id/match_colorA"
-            android:layout_below="@id/lblPlayersS"
-            android:layout_alignEnd="@id/match_splitterPS"
-            android:layout_marginStart="@dimen/sb_playername_leftpadding"
-            android:layout_marginEnd="@dimen/sb_playername_leftpadding"
-            android:layout_alignTop="@id/match_playerA"
-            android:layout_alignBottom="@id/match_playerA"
+        <com.doubleyellow.scoreboard.view.PlayerTextView
+            android:id="@+id/match_playerA"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_toStartOf="@id/match_colorA"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_player_A"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:nextFocusDown="@+id/match_playerB"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lblPlayersS"
+            app:layout_constraintWidth_percent="0.37" />
+
+        <Button
+            android:id="@+id/match_colorA"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:hint="@string/lbl_color_A"
-            android:textSize="@dimen/txt_smaller"
-            app:layout_widthPercent="12%"
             android:tag="item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button android:id="@+id/match_colorB"
-            android:layout_below="@id/lblPlayersS"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="@dimen/sb_playername_leftpadding"
-            android:layout_marginEnd="@dimen/sb_playername_leftpadding"
-            android:layout_alignTop="@id/match_playerA"
-            android:layout_alignBottom="@id/match_playerA"
-            android:hint="@string/lbl_color_B"
             android:textSize="@dimen/txt_smaller"
-            app:layout_widthPercent="12%"
-            android:tag="item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <com.doubleyellow.scoreboard.view.PlayerTextView
-                android:id="@+id/match_playerA"
-                android:hint="@string/lbl_player_A"
-                android:textSize="@dimen/txt_small"
-                android:textCursorDrawable="@null"
-                android:paddingStart="@dimen/sb_playername_leftpadding"
-                android:background="@drawable/button_dark"
-                android:tag="item"
-                android:layout_below="@id/lblPlayersS"
-                android:layout_toStartOf="@id/match_colorA"
-                android:layout_alignParentStart="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/sb_playername_leftpadding"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:nextFocusDown="@+id/match_playerB"
-                android:imeOptions="actionNext"
-                android:layout_gravity="center_horizontal"/>
-        <com.doubleyellow.scoreboard.view.PlayerTextView
-                android:id="@id/match_playerB"
-                android:hint="@string/lbl_player_B"
-                android:textSize="@dimen/txt_small"
-                android:textCursorDrawable="@null"
-                android:paddingStart="@dimen/sb_playername_leftpadding"
-                android:background="@drawable/button_dark"
-                android:tag="item"
-                android:layout_below="@id/lblPlayersS"
-                android:layout_alignStart="@+id/match_splitterPS"
-                android:layout_toStartOf="@id/match_colorB"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/sb_playername_leftpadding"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:imeOptions="actionDone"
-                android:layout_gravity="center_horizontal"/>
-    </androidx.percentlayout.widget.PercentRelativeLayout>
+            app:layout_constraintBottom_toBottomOf="@id/match_playerA"
+            app:layout_constraintStart_toEndOf="@id/match_playerA"
+            app:layout_constraintTop_toTopOf="@id/match_playerA"
+            app:layout_constraintWidth_percent="0.12" />
 
-    <androidx.percentlayout.widget.PercentRelativeLayout
-        android:layout_below="@id/ll_match_singles"
+        <com.doubleyellow.scoreboard.view.PlayerTextView
+            android:id="@id/match_playerB"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_toStartOf="@id/match_colorB"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_player_B"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintBottom_toBottomOf="@id/match_playerA"
+            app:layout_constraintStart_toEndOf="@+id/match_colorA"
+            app:layout_constraintTop_toTopOf="@id/match_playerA"
+            app:layout_constraintWidth_percent="0.37" />
+
+        <Button
+            android:id="@+id/match_colorB"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:hint="@string/lbl_color_B"
+            android:tag="item"
+            android:textSize="@dimen/txt_smaller"
+            app:layout_constraintBottom_toBottomOf="@id/match_playerA"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/match_playerB"
+            app:layout_constraintTop_toTopOf="@id/match_playerA" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_match_doubles"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView android:inputType="none"
-                android:id="@+id/lblPlayersD"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/lbl_players"
-                android:textSize="@dimen/txt_medium"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/ll_match_singles">
 
-        <TextView android:inputType="none"
-                android:id="@+id/lblAB"
-                app:layout_widthPercent="10%"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/lblPlayersD"
-                android:layout_alignParentStart="true"
-                android:layout_margin="@dimen/sb_playername_leftpadding"
-                android:text="A1/A2"
-                android:textSize="@dimen/txt_small"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+        <TextView
+            android:id="@+id/lblPlayersD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:text="@string/lbl_players"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/txt_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/lblAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/sb_playername_leftpadding"
+            android:inputType="none"
+            android:text="A1/A2"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lblPlayersD"
+            app:layout_constraintWidth_percent="0.10" />
+
         <com.doubleyellow.scoreboard.view.PlayerTextView
-                android:id="@+id/match_playerA1"
-                android:hint="@string/lbl_playerA1"
-                android:textSize="@dimen/txt_small"
-                android:textCursorDrawable="@null"
-                android:background="@drawable/button_dark"
-                android:tag="item"
-                android:layout_below="@id/lblPlayersD"
-                android:layout_toEndOf="@id/lblAB"
-                android:layout_alignTop="@id/lblAB"
-                app:layout_widthPercent="37%"
-                android:layout_marginStart="@dimen/sb_playername_leftpadding"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:nextFocusDown="@+id/match_playerA2"
-                android:nextFocusForward="@+id/match_playerA2"
-                android:imeOptions="actionNext"
-                android:layout_gravity="center_horizontal"/>
+            android:id="@+id/match_playerA1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/sb_playername_leftpadding"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_playerA1"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:nextFocusDown="@+id/match_playerA2"
+            android:nextFocusForward="@+id/match_playerA2"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toEndOf="@id/lblAB"
+            app:layout_constraintTop_toTopOf="@id/lblAB"
+            app:layout_constraintWidth_percent="0.37" />
+
         <com.doubleyellow.scoreboard.view.PlayerTextView
-                android:id="@+id/match_playerA2"
-                android:hint="@string/lbl_playerA2"
-                android:textSize="@dimen/txt_small"
-                android:textCursorDrawable="@null"
-                android:background="@drawable/button_dark"
-                android:tag="item"
-                android:layout_below="@id/lblPlayersD"
-                android:layout_toEndOf="@id/match_playerA1"
-                android:layout_marginStart="@dimen/sb_playername_leftpadding"
-                android:layout_alignTop="@id/lblAB"
-                app:layout_widthPercent="37%"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:nextFocusDown="@+id/match_playerB1"
-                android:nextFocusForward="@+id/match_playerB1"
-                android:imeOptions="actionNext"
-                android:layout_gravity="center_horizontal"/>
-        <Button android:id="@+id/match_colorA12"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@id/match_playerA2"
-            android:layout_alignBottom="@id/match_playerA2"
-            android:layout_toEndOf="@id/match_playerA2"
+            android:id="@+id/match_playerA2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/sb_playername_leftpadding"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_playerA2"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:nextFocusDown="@+id/match_playerB1"
+            android:nextFocusForward="@+id/match_playerB1"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toEndOf="@id/match_playerA1"
+            app:layout_constraintTop_toTopOf="@id/lblAB"
+            app:layout_constraintWidth_percent="0.37" />
+
+        <Button
+            android:id="@+id/match_colorA12"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="@dimen/sb_playername_leftpadding"
             android:hint="@string/lbl_color_A"
-            android:textSize="@dimen/txt_smaller"
             android:tag="item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView android:inputType="none"
-                android:id="@+id/lblXY"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/lblAB"
-                android:layout_alignStart="@id/lblAB"
-                android:layout_alignEnd="@id/lblAB"
-                android:text="B1/B2"
-                android:textSize="@dimen/txt_small"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-        <com.doubleyellow.scoreboard.view.PlayerTextView
-                android:id="@+id/match_playerB1"
-                android:hint="@string/lbl_playerB1"
-                android:textSize="@dimen/txt_small"
-                android:textCursorDrawable="@null"
-                android:background="@drawable/button_dark"
-                android:tag="item"
-                android:layout_below="@id/match_playerA1"
-                android:layout_alignStart="@id/match_playerA1"
-                android:layout_alignEnd="@id/match_playerA1"
-                android:layout_toEndOf="@id/lblXY"
-                android:layout_alignTop="@id/lblXY"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:nextFocusDown="@+id/match_playerB2"
-                android:nextFocusForward="@+id/match_playerB2"
-                android:imeOptions="actionNext"
-                android:layout_gravity="center_horizontal"/>
-        <com.doubleyellow.scoreboard.view.PlayerTextView
-                android:id="@+id/match_playerB2"
-                android:hint="@string/lbl_playerB2"
-                android:textSize="@dimen/txt_small"
-                android:textCursorDrawable="@null"
-                android:background="@drawable/button_dark"
-                android:tag="item"
-                android:layout_below="@id/match_playerA2"
-                android:layout_alignStart="@id/match_playerA2"
-                android:layout_alignEnd="@id/match_playerA2"
-                android:layout_alignTop="@id/lblXY"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:imeOptions="actionDone"
-                android:layout_gravity="center_horizontal"/>
-        <Button android:id="@+id/match_colorB12"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@id/match_playerB2"
-            android:layout_alignBottom="@id/match_playerB2"
-            android:layout_toEndOf="@id/match_playerB2"
-            android:layout_marginStart="@dimen/sb_playername_leftpadding"
-            android:tag="item"
-            android:hint="@string/lbl_color_B"
             android:textSize="@dimen/txt_smaller"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </androidx.percentlayout.widget.PercentRelativeLayout>
+            app:layout_constraintBottom_toBottomOf="@id/match_playerA2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/match_playerA2"
+            app:layout_constraintTop_toTopOf="@id/match_playerA2" />
 
-    <RelativeLayout
-        android:layout_below="@id/ll_match_doubles"
+        <TextView
+            android:id="@+id/lblXY"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sb_playername_leftpadding"
+            android:inputType="none"
+            android:text="B1/B2"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintEnd_toEndOf="@id/lblAB"
+            app:layout_constraintStart_toStartOf="@id/lblAB"
+            app:layout_constraintTop_toBottomOf="@id/lblAB" />
+
+        <com.doubleyellow.scoreboard.view.PlayerTextView
+            android:id="@+id/match_playerB1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_playerB1"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:nextFocusDown="@+id/match_playerB2"
+            android:nextFocusForward="@+id/match_playerB2"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintEnd_toEndOf="@id/match_playerA1"
+            app:layout_constraintStart_toStartOf="@id/match_playerA1"
+            app:layout_constraintTop_toTopOf="@id/lblXY" />
+
+        <com.doubleyellow.scoreboard.view.PlayerTextView
+            android:id="@+id/match_playerB2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_playerB2"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintEnd_toEndOf="@id/match_playerA2"
+            app:layout_constraintStart_toStartOf="@id/match_playerA2"
+            app:layout_constraintTop_toTopOf="@id/lblXY" />
+
+        <Button
+            android:id="@+id/match_colorB12"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/sb_playername_leftpadding"
+            android:hint="@string/lbl_color_B"
+            android:tag="item"
+            android:textSize="@dimen/txt_smaller"
+            app:layout_constraintBottom_toBottomOf="@id/match_playerB2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/match_playerB2"
+            app:layout_constraintTop_toTopOf="@id/match_playerB2" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_match_clubs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView android:inputType="none"
-                  android:id="@+id/lblClubs"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="@string/lbl_clubs"
-                  android:textSize="@dimen/txt_medium"
-                  android:textAppearance="?android:attr/textAppearanceLarge"/>
-        <!-- just an layout that is center in the parent to allow aligning to -->
-        <LinearLayout
-                android:id="@+id/match_splitterPCB"
-                android:orientation="vertical"
-                android:layout_centerInParent="true"
-                android:layout_alignParentTop="true"
-                android:layout_width="2dp"
-                android:layout_height="wrap_content"/>
-        <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                android:id="@+id/match_clubA"
-                android:hint="@string/lbl_club_A"
-                android:textSize="@dimen/txt_small"
-                android:textCursorDrawable="@null"
-                android:paddingStart="@dimen/sb_playername_leftpadding"
-                android:background="@drawable/button_dark"
-                android:tag="item"
-                android:layout_below="@id/lblClubs"
-                android:layout_toStartOf="@id/match_splitterPCB"
-                android:layout_alignParentStart="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/sb_playername_leftpadding"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:nextFocusDown="@+id/match_clubB"
-                android:imeOptions="actionNext"
-                android:layout_gravity="center_horizontal"
-                dy:PreferenceKeys="clubList,clubListLastA"
-                dy:defaultACValues="@string/emptyList_default"/>
-        <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                android:id="@+id/match_clubB"
-                android:hint="@string/lbl_club_B"
-                android:textSize="@dimen/txt_small"
-                android:textCursorDrawable="@null"
-                android:paddingStart="@dimen/sb_playername_leftpadding"
-                android:background="@drawable/button_dark"
-                android:tag="item"
-                android:layout_below="@id/lblClubs"
-                android:layout_toEndOf="@+id/match_clubA"
-                android:layout_alignParentEnd="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/sb_playername_leftpadding"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:nextFocusDown="@+id/spNumberOfGamesToWin"
-                android:imeOptions="actionDone"
-                android:layout_gravity="center_horizontal"
-                dy:PreferenceKeys="clubList,clubListLastX"
-                dy:defaultACValues="@string/emptyList_default"/>
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sb_playername_leftpadding"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/ll_match_doubles">
 
-    <RelativeLayout
-        android:layout_below="@id/ll_match_clubs"
+        <TextView
+            android:id="@+id/lblClubs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:text="@string/lbl_clubs"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/txt_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <!-- just an layout that is center in the parent to allow aligning to -->
+        <Space
+            android:id="@+id/match_splitterPCB"
+            android:layout_width="2dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.doubleyellow.scoreboard.view.PreferenceACTextView
+            android:id="@+id/match_clubA"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/sb_playername_leftpadding"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_club_A"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:nextFocusDown="@+id/match_clubB"
+            android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintEnd_toStartOf="@id/match_splitterPCB"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lblClubs"
+            dy:PreferenceKeys="clubList,clubListLastA"
+            dy:defaultACValues="@string/emptyList_default" />
+
+        <com.doubleyellow.scoreboard.view.PreferenceACTextView
+            android:id="@+id/match_clubB"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/sb_playername_leftpadding"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_club_B"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:nextFocusDown="@+id/spNumberOfGamesToWin"
+            android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/match_splitterPCB"
+            app:layout_constraintTop_toBottomOf="@id/lblClubs"
+            dy:PreferenceKeys="clubList,clubListLastX"
+            dy:defaultACValues="@string/emptyList_default" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_match_countries"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView android:inputType="none"
-                  android:id="@+id/lblCountries"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="@string/lbl_countries"
-                  android:textSize="@dimen/txt_medium"
-                  android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sb_playername_leftpadding"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/ll_match_clubs">
+
+        <TextView
+            android:id="@+id/lblCountries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:text="@string/lbl_countries"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/txt_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <!-- just an layout that is center in the parent to allow aligning to -->
-        <LinearLayout
+        <Space
             android:id="@+id/match_splitterPCT"
-            android:orientation="vertical"
-            android:layout_centerInParent="true"
-            android:layout_alignParentTop="true"
             android:layout_width="2dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <!-- both CountryTextView have android:imeOptions="actionDone" so a popup with autocomplete countries appear when 'keyboard' is close by done -->
         <com.doubleyellow.android.view.CountryTextView
             android:id="@+id/match_countryA"
-            android:hint="@string/lbl_country_A"
-            android:textSize="@dimen/txt_small"
-            android:textCursorDrawable="@null"
-            android:paddingStart="@dimen/sb_playername_leftpadding"
-            android:background="@drawable/button_dark"
-            android:tag="item"
-            android:layout_below="@id/lblCountries"
-            android:layout_toStartOf="@id/match_splitterPCT"
-            android:layout_alignParentStart="true"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/sb_playername_leftpadding"
-            android:singleLine="true"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_country_A"
+            android:imeOptions="actionDone"
             android:maxLines="1"
             android:nextFocusDown="@+id/match_countryB"
-            android:imeOptions="actionDone"
-            android:layout_gravity="center_horizontal"/>
+            android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintEnd_toStartOf="@id/match_splitterPCT"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lblCountries" />
+
         <com.doubleyellow.android.view.CountryTextView
             android:id="@+id/match_countryB"
-            android:hint="@string/lbl_country_B"
-            android:textSize="@dimen/txt_small"
-            android:textCursorDrawable="@null"
-            android:paddingStart="@dimen/sb_playername_leftpadding"
-            android:background="@drawable/button_dark"
-            android:tag="item"
-            android:layout_below="@id/lblCountries"
-            android:layout_toEndOf="@+id/match_countryA"
-            android:layout_alignParentEnd="true"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/sb_playername_leftpadding"
-            android:singleLine="true"
+            android:layout_marginTop="@dimen/sb_playername_leftpadding"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_country_B"
+            android:imeOptions="actionDone"
             android:maxLines="1"
             android:nextFocusDown="@+id/spNumberOfGamesToWin"
-            android:imeOptions="actionDone"
-            android:layout_gravity="center_horizontal"/>
-    </RelativeLayout>
+            android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/match_splitterPCT"
+            app:layout_constraintTop_toBottomOf="@id/lblCountries" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
-        android:layout_below="@id/ll_match_countries"
-        android:id="@+id/match_splitterF"
-        android:orientation="horizontal"
-        android:background="@drawable/border_dark"
-        android:layout_width="match_parent"
-        android:layout_marginTop="4dp"
-        android:layout_height="2dp"/>
-
-    <TextView android:inputType="none"
+    <TextView
         android:id="@+id/lblFormat"
-        android:layout_below="@id/match_splitterF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:inputType="none"
         android:text="@string/pref_MatchFormat"
-        android:textSize="@dimen/txt_medium"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        />
+        android:textSize="@dimen/txt_medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_match_countries" />
 
-    <LinearLayout
-        android:layout_below="@id/lblFormat"
+    <!--    <LinearLayout android:orientation="horizontal-->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llPoints"
-        android:orientation="horizontal"
-        android:layout_alignParentStart="true"
-        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="visible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblFormat">
+
         <ToggleButton
             android:id="@+id/tbBestOf_or_TotalOf"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
             android:textOff="@string/best_of_x_games_to_y_1"
             android:textOn="@string/total_of_x_games_to_y_1"
-            android:textSize="@dimen/txt_small" />
-<!--
-        <TextView
-            android:id="@+id/lblMatch_BestOf"
-            android:inputType="none"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:text="@string/best_of_x_games_to_y_1"
-            android:textSize="@dimen/txt_small" />
--->
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25" />
+
         <Spinner
             android:id="@+id/spNumberOfGamesToWin"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:nextFocusDown="@+id/spGameEndScore"
-            android:orientation="vertical"/>
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/tbBestOf_or_TotalOf"
+            app:layout_constraintStart_toEndOf="@id/tbBestOf_or_TotalOf"
+            app:layout_constraintTop_toTopOf="@+id/tbBestOf_or_TotalOf"
+            app:layout_constraintWidth_percent="0.15" />
+
         <TextView
             android:id="@+id/lblMatch_GamesTo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:gravity="center"
             android:inputType="none"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/best_of_x_games_to_y_2__Default"
+            android:textAlignment="center"
             android:textSize="@dimen/txt_small"
-            android:layout_margin="2dp" />
+            app:layout_constraintBottom_toBottomOf="@+id/tbBestOf_or_TotalOf"
+            app:layout_constraintStart_toEndOf="@id/spNumberOfGamesToWin"
+            app:layout_constraintTop_toTopOf="@+id/tbBestOf_or_TotalOf"
+            app:layout_constraintWidth_percent="0.25" />
+
         <Spinner
             android:id="@+id/spGameEndScore"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:nextFocusDown="@+id/useHandInHandOutScoring"
-            android:orientation="vertical" />
-    </LinearLayout>
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/tbBestOf_or_TotalOf"
+            app:layout_constraintStart_toEndOf="@id/lblMatch_GamesTo"
+            app:layout_constraintTop_toTopOf="@+id/tbBestOf_or_TotalOf"
+            app:layout_constraintWidth_percent="0.15" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
-        android:layout_below="@id/llPoints"
-        android:id="@+id/llTieBreakFormat"
-        android:orientation="horizontal"
-        android:layout_alignParentStart="true"
-        android:gravity="center"
-        android:visibility="visible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView android:id="@+id/lblTieBreakFormat"
-                android:inputType="none"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sb_tiebreak"
-                android:textSize="@dimen/txt_small"
-                android:layout_margin="2dp"
-                />
-        <Spinner android:id="@+id/spTieBreakFormat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:nextFocusDown="@+id/useHandInHandOutScoring"
-                android:layoutMode="opticalBounds"
-                android:orientation="vertical"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@id/llTieBreakFormat"
-        android:id="@+id/llFinalSetFinish"
-        android:orientation="horizontal"
-        android:layout_alignParentStart="true"
-        android:gravity="center"
-        android:visibility="visible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView android:id="@+id/lblFinalSetFinish"
-                android:inputType="none"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sb_FinalSetFinish"
-                android:textSize="@dimen/txt_small"
-                android:layout_margin="2dp"
-                />
-        <Spinner android:id="@+id/spFinalSetFinish"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:nextFocusDown="@+id/useHandInHandOutScoring"
-                android:layoutMode="opticalBounds"
-                android:orientation="vertical"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@+id/llFinalSetFinish"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llPauseDuration"
-        android:orientation="horizontal"
-        android:layout_alignParentStart="true"
-        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="visible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llPoints">
+
         <TextView
-            android:inputType="none"
             android:id="@+id/lblWarmupDuration"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:inputType="none"
             android:text="@string/sb_Duration_Warmup"
             android:textSize="@dimen/txt_small"
-            android:layout_margin="1dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25" />
+
+        <!-- spinner or toggle button depending on number of values -->
         <Spinner
             android:id="@+id/spWarmupDuration"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:nextFocusDown="@+id/spPauseDuration"
-            android:layoutMode="opticalBounds"
             android:layout_marginEnd="1dp"
-            android:orientation="vertical"/>
+            android:layoutMode="opticalBounds"
+            android:nextFocusDown="@+id/spPauseDuration"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/lblWarmupDuration"
+            app:layout_constraintStart_toEndOf="@+id/lblWarmupDuration"
+            app:layout_constraintTop_toTopOf="@+id/lblWarmupDuration"
+            app:layout_constraintWidth_percent="0.15" />
+
         <ToggleButton
             android:id="@+id/cbWarmupDuration"
-            android:nextFocusDown="@+id/spPauseDuration"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:nextFocusDown="@+id/spPauseDuration"
             android:textOff="241"
             android:textOn="301"
-            android:textSize="@dimen/txt_small" />
-        <TextView android:inputType="none"
+            android:textSize="@dimen/txt_small"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/lblWarmupDuration"
+            app:layout_constraintStart_toEndOf="@+id/lblWarmupDuration"
+            app:layout_constraintTop_toTopOf="@+id/lblWarmupDuration"
+            app:layout_constraintWidth_percent="0.15" />
+
+        <TextView
             android:id="@+id/lblPauseDuration2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:gravity="end"
+            android:inputType="none"
             android:text="@string/sb_Duration__and_Pauses"
             android:textSize="@dimen/txt_small"
-            android:layout_margin="1dp" />
+            app:layout_constraintBottom_toBottomOf="@+id/cbWarmupDuration"
+            app:layout_constraintStart_toEndOf="@+id/cbWarmupDuration"
+            app:layout_constraintTop_toTopOf="@+id/cbWarmupDuration"
+            app:layout_constraintWidth_percent="0.25" />
+
+        <!-- toggle button is used if there are only 2 values, otherwise spinner is used -->
         <Spinner
             android:id="@+id/spPauseDuration"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:nextFocusDown="@+id/spHandicapFormat"
             android:layoutMode="opticalBounds"
-            android:orientation="vertical"/>
+            android:nextFocusDown="@+id/spHandicapFormat"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/lblPauseDuration2"
+            app:layout_constraintStart_toEndOf="@+id/lblPauseDuration2"
+            app:layout_constraintTop_toTopOf="@+id/lblPauseDuration2"
+            app:layout_constraintWidth_percent="0.15" />
+
         <ToggleButton
             android:id="@+id/cbPauseDuration"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textOff="91"
             android:textOn="121"
-            android:textSize="@dimen/txt_small" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@id/llPauseDuration"
-        android:id="@+id/llDisciplineStart"
-        android:orientation="horizontal"
-        android:layout_alignParentStart="true"
-        android:gravity="center"
-        android:visibility="visible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView android:inputType="none"
-                android:id="@+id/lblDisciplineStart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/start_with_discipline"
-                android:textSize="@dimen/txt_small"
-                android:layout_margin="2dp"
-                />
-        <Spinner
-                android:id="@+id/spDisciplineStart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layoutMode="opticalBounds"
-                android:orientation="vertical"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@+id/llPauseDuration"
-        android:id="@+id/llNumberOfServesPerPlayer"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:visibility="visible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView android:inputType="none"
-                  android:id="@+id/lblNumberOfServesPerPlayer"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="@string/number_of_serves_per_player"
-                  android:textSize="@dimen/txt_small"
-                  android:layout_margin="2dp" />
-        <Spinner
-                android:id="@+id/spNumberOfServesPerPlayer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layoutMode="opticalBounds"
-                android:orientation="vertical"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@id/llNumberOfServesPerPlayer"
-        android:id="@+id/ll_doubleServeSequence"
-        android:orientation="horizontal"
-        android:layout_alignParentStart="true"
-        android:gravity="center"
-        android:visibility="visible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView android:inputType="none"
-                android:id="@+id/lblDoublesServeSequence"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sb_doublesServeSequence"
-                android:textSize="@dimen/txt_small"
-                android:layout_margin="2dp"
-                />
-        <Spinner
-                android:id="@+id/spDoublesServeSequence"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:nextFocusDown="@+id/useHandInHandOutScoring"
-                android:layoutMode="opticalBounds"
-                android:orientation="vertical"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@id/ll_doubleServeSequence"
-        android:id="@+id/llScoringType"
-        android:orientation="horizontal"
-        android:visibility="visible"
-        android:layout_alignParentStart="true"
+            android:textSize="@dimen/txt_small"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/lblPauseDuration2"
+            app:layout_constraintStart_toEndOf="@+id/lblPauseDuration2"
+            app:layout_constraintTop_toTopOf="@+id/lblPauseDuration2"
+            app:layout_constraintWidth_percent="0.15" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llTieBreakFormat"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView android:inputType="none"
-            android:id="@+id/lblUseHandInHandOutScoring"
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llPauseDuration">
+
+        <TextView
+            android:id="@+id/lblTieBreakFormat"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:inputType="none"
+            android:text="@string/sb_tiebreak"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25" />
+
+        <Spinner
+            android:id="@+id/spTieBreakFormat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layoutMode="opticalBounds"
+            android:nextFocusDown="@+id/useHandInHandOutScoring"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/lblTieBreakFormat"
+            app:layout_constraintStart_toEndOf="@+id/lblTieBreakFormat"
+            app:layout_constraintTop_toTopOf="@+id/lblTieBreakFormat"
+            app:layout_constraintWidth_percent="0.55" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llFinalSetFinish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llTieBreakFormat">
+
+        <TextView
+            android:id="@+id/lblFinalSetFinish"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:inputType="none"
+            android:text="@string/sb_FinalSetFinish"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25" />
+
+        <Spinner
+            android:id="@+id/spFinalSetFinish"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layoutMode="opticalBounds"
+            android:nextFocusDown="@+id/useHandInHandOutScoring"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/lblFinalSetFinish"
+            app:layout_constraintStart_toEndOf="@+id/lblFinalSetFinish"
+            app:layout_constraintTop_toTopOf="@+id/lblFinalSetFinish"
+            app:layout_constraintWidth_percent="0.55" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llDisciplineStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llFinalSetFinish">
+
+        <TextView
+            android:id="@+id/lblDisciplineStart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:inputType="none"
+            android:text="@string/start_with_discipline"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25" />
+
+        <Spinner
+            android:id="@+id/spDisciplineStart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layoutMode="opticalBounds"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/lblDisciplineStart"
+            app:layout_constraintStart_toEndOf="@+id/lblDisciplineStart"
+            app:layout_constraintTop_toTopOf="@+id/lblDisciplineStart"
+            app:layout_constraintWidth_percent="0.55" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llNumberOfServesPerPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llDisciplineStart">
+
+        <TextView
+            android:id="@+id/lblNumberOfServesPerPlayer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:inputType="none"
+            android:text="@string/number_of_serves_per_player"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25" />
+
+        <Spinner
+            android:id="@+id/spNumberOfServesPerPlayer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layoutMode="opticalBounds"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/lblNumberOfServesPerPlayer"
+            app:layout_constraintStart_toEndOf="@+id/lblNumberOfServesPerPlayer"
+            app:layout_constraintTop_toTopOf="@+id/lblNumberOfServesPerPlayer"
+            app:layout_constraintWidth_percent="0.15" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ll_doubleServeSequence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llNumberOfServesPerPlayer">
+
+        <TextView
+            android:id="@+id/lblDoublesServeSequence"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:inputType="none"
+            android:text="@string/sb_doublesServeSequence"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25" />
+
+        <Spinner
+            android:id="@+id/spDoublesServeSequence"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layoutMode="opticalBounds"
+            android:nextFocusDown="@+id/useHandInHandOutScoring"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/lblDoublesServeSequence"
+            app:layout_constraintStart_toEndOf="@+id/lblDoublesServeSequence"
+            app:layout_constraintTop_toTopOf="@+id/lblDoublesServeSequence"
+            app:layout_constraintWidth_percent="0.55" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llScoringType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sb_playername_leftpadding"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_doubleServeSequence">
+
+        <TextView
+            android:id="@+id/lblUseHandInHandOutScoring"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:inputType="none"
             android:text="@string/lbl_Scoring"
             android:textSize="@dimen/txt_small"
-            android:layout_margin="2dp"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25" />
+
         <ToggleButton
             android:id="@+id/useHandInHandOutScoring"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:text="@string/lbl_Scoring"
             android:textOff="@string/lbl_Scoring_PointPerRally"
             android:textOn="@string/lbl_Scoring_PointWhenServing__Squash"
             android:textSize="@dimen/txt_small"
-            />
-<!--
-        <CheckBox
-                android:id="@+id/useHandInHandOutScoring"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:text="@string/pref_useEnglishScoring"
-                android:textSize="@dimen/txt_small"
-                />
--->
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@id/llScoringType"
+            app:layout_constraintBottom_toBottomOf="@+id/lblUseHandInHandOutScoring"
+            app:layout_constraintStart_toEndOf="@+id/lblUseHandInHandOutScoring"
+            app:layout_constraintTop_toTopOf="@+id/lblUseHandInHandOutScoring"
+            app:layout_constraintWidth_percent="0.55" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llScoringTypeGSM"
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="visible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llScoringType">
+
         <TextView
-            android:inputType="none"
             android:id="@+id/lblUseGoldenPoint"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:inputType="none"
             android:text="@string/lbl_GoldenPoint"
             android:textSize="@dimen/txt_small"
-            android:layout_margin="2dp"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25" />
+
         <ToggleButton
             android:id="@+id/useGoldenPoint"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/txt_small"
             android:layoutMode="opticalBounds"
-            />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@id/llScoringTypeGSM"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintBottom_toBottomOf="@+id/lblUseGoldenPoint"
+            app:layout_constraintStart_toEndOf="@+id/lblUseGoldenPoint"
+            app:layout_constraintTop_toTopOf="@+id/lblUseGoldenPoint"
+            app:layout_constraintWidth_percent="0.55" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llHandicapFormat"
-        android:orientation="horizontal"
-        android:layout_alignParentStart="true"
-        android:gravity="center"
-        android:visibility="visible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView android:inputType="none"
-            android:id="@+id/lblHandicapFormat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/handicap"
-            android:textSize="@dimen/txt_small"
-            android:layout_margin="2dp"
-            />
-        <Spinner
-            android:id="@+id/spHandicapFormat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:nextFocusDown="@+id/useHandInHandOutScoring"
-            android:layoutMode="opticalBounds"
-            android:orientation="vertical"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@id/llHandicapFormat"
-        android:id="@+id/llChangesSidesWhen"
-        android:orientation="horizontal"
-        android:layout_alignParentStart="true"
-        android:visibility="visible"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView android:inputType="none"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pref_changeSides_short"
-            android:textSize="@dimen/txt_small"
-            android:layout_margin="2dp"
-            />
-        <LinearLayout
-            android:id="@+id/llChangesSidesCheckboxes"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:visibility="visible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@id/llChangesSidesWhen"
-        android:id="@+id/llLiveScore"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:visibility="visible"
-        android:layout_alignParentStart="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <CheckBox
-                android:id="@+id/cbUseLivescore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:text="@string/pref_updateLiveScore"
-                android:textSize="@dimen/txt_small"
-                />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@id/llLiveScore"
-        android:id="@+id/match_splitterE"
-        android:orientation="vertical"
-        android:layout_centerInParent="true"
-        android:layout_width="2dp"
-        android:layout_height="wrap_content"/>
-
-        <TextView android:inputType="none"
-                  android:layout_below="@id/match_splitterE"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="@string/lbl_event"
-                  android:textSize="@dimen/txt_medium"
-                  android:textAppearance="?android:attr/textAppearanceLarge"
-                  android:id="@+id/lblEvent"/>
-        <LinearLayout
-            android:layout_below="@id/lblEvent"
-            android:id="@+id/ll_match_event_texts1"
-            android:orientation="horizontal"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_toStartOf="@id/match_splitterE"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                    android:id="@+id/match_event"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_dark"
-                    android:textCursorDrawable="@null"
-                    android:paddingStart="@dimen/sb_playername_leftpadding"
-                    android:hint="@string/name"
-                    android:textSize="@dimen/txt_small"
-                    android:tag="item"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/sb_playername_leftpadding"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:nextFocusDown="@id/match_division"
-                    android:imeOptions="actionNext"
-                    android:layout_gravity="center_horizontal"
-                    dy:PreferenceKeys="eventList,eventLast"
-                    dy:defaultACValues="@string/eventList_default"/>
-            <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                    android:id="@+id/match_division"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_dark"
-                    android:textCursorDrawable="@null"
-                    android:paddingStart="@dimen/sb_playername_leftpadding"
-                    android:hint="@string/lbl_division"
-                    android:textSize="@dimen/txt_small"
-                    android:tag="item"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/sb_playername_leftpadding"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:nextFocusDown="@id/match_round"
-                    android:imeOptions="actionNext"
-                    android:layout_gravity="center_horizontal"
-                    dy:PreferenceKeys="divisionList,divisionLast"
-                    dy:defaultACValues="@string/divisionList_default"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_below="@id/ll_match_event_texts1"
-            android:id="@+id/ll_match_event_texts2"
-            android:orientation="horizontal"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_toStartOf="@id/match_splitterE"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                    android:id="@+id/match_round"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_dark"
-                    android:textCursorDrawable="@null"
-                    android:paddingStart="@dimen/sb_playername_leftpadding"
-                    android:hint="@string/lbl_round"
-                    android:textSize="@dimen/txt_small"
-                    android:tag="item"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/sb_playername_leftpadding"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:nextFocusDown="@id/match_location"
-                    android:imeOptions="actionNext"
-                    android:layout_gravity="center_horizontal"
-                    dy:PreferenceKeys="roundList,roundLast"
-                    dy:defaultACValues="@string/roundList_default"/>
-            <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                    android:id="@+id/match_location"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_dark"
-                    android:textCursorDrawable="@null"
-                    android:paddingStart="@dimen/sb_playername_leftpadding"
-                    android:hint="@string/lbl_location"
-                    android:textSize="@dimen/txt_small"
-                    android:tag="item"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/sb_playername_leftpadding"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:nextFocusDown="@id/match_court"
-                    android:imeOptions="actionNext"
-                    android:layout_gravity="center_horizontal"
-                    dy:PreferenceKeys="locationList,locationLast"
-                    dy:defaultACValues="@string/emptyList_default"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_below="@id/ll_match_event_texts2"
-            android:id="@+id/ll_match_event_texts3"
-            android:orientation="horizontal"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_toStartOf="@id/match_splitterE"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                android:id="@+id/match_court"
-                android:background="@drawable/button_dark"
-                android:textCursorDrawable="@null"
-                android:paddingStart="@dimen/sb_playername_leftpadding"
-                android:hint="@string/lbl_court__Default"
-                android:textSize="@dimen/txt_small"
-                android:tag="item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/sb_playername_leftpadding"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:imeOptions="actionNext"
-                android:layout_gravity="center_horizontal"
-                dy:PreferenceKeys="courtList,courtLast"
-                dy:defaultACValues="@string/emptyList_default"/>
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/match_id"
-                android:hint="Match ID/Source ID"
-                android:text="Match ID/Source ID"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textSize="@dimen/txt_medium"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_below="@id/ll_match_event_texts3"
-            android:id="@+id/match_splitterR"
-            android:orientation="horizontal"
-            android:background="@drawable/border_dark"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llScoringTypeGSM">
 
         <TextView
-            android:layout_below="@id/match_splitterR"
-            android:id="@+id/lblReferee"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/lbl_referee"
+            android:id="@+id/lblHandicapFormat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:inputType="none"
+            android:text="@string/handicap"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25" />
+
+        <Spinner
+            android:id="@+id/spHandicapFormat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layoutMode="opticalBounds"
+            android:nextFocusDown="@+id/useHandInHandOutScoring"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/lblHandicapFormat"
+            app:layout_constraintStart_toEndOf="@+id/lblHandicapFormat"
+            app:layout_constraintTop_toTopOf="@+id/lblHandicapFormat"
+            app:layout_constraintWidth_percent="0.55" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llChangesSidesWhen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llHandicapFormat">
+
+        <TextView
+            android:id="@+id/lblChangeSidesWhen"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:inputType="none"
+            android:text="@string/pref_changeSides_short"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25" />
+
+        <LinearLayout
+            android:id="@+id/llChangesSidesCheckboxes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/lblChangeSidesWhen"
+            app:layout_constraintStart_toEndOf="@+id/lblChangeSidesWhen"
+            app:layout_constraintTop_toTopOf="@+id/lblChangeSidesWhen"
+            app:layout_constraintWidth_percent="0.40">
+            <!-- programmatically filled -->
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llLiveScore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llChangesSidesWhen">
+
+        <CheckBox
+            android:id="@+id/cbUseLivescore"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@string/pref_updateLiveScore"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.50" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Space
+        android:id="@+id/match_splitterE"
+        android:layout_width="2dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llLiveScore" />
+
+    <TextView
+        android:id="@+id/lblEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="none"
+        android:text="@string/lbl_event"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="@dimen/txt_medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/match_splitterE" />
+
+    <LinearLayout
+        android:id="@+id/ll_match_event_texts1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblEvent">
+
+        <com.doubleyellow.scoreboard.view.PreferenceACTextView
+            android:id="@+id/match_event"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/sb_playername_leftpadding"
+            android:layout_weight="1"
+            android:background="@drawable/button_dark"
+            android:hint="@string/name"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:nextFocusDown="@id/match_division"
+            android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            dy:PreferenceKeys="eventList,eventLast"
+            dy:defaultACValues="@string/eventList_default" />
+
+        <com.doubleyellow.scoreboard.view.PreferenceACTextView
+            android:id="@+id/match_division"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/sb_playername_leftpadding"
+            android:layout_weight="1"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_division"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:nextFocusDown="@id/match_round"
+            android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            dy:PreferenceKeys="divisionList,divisionLast"
+            dy:defaultACValues="@string/divisionList_default" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_match_event_texts2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/match_splitterE"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_match_event_texts1">
+
+        <com.doubleyellow.scoreboard.view.PreferenceACTextView
+            android:id="@+id/match_round"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/sb_playername_leftpadding"
+            android:layout_weight="1"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_round"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:nextFocusDown="@id/match_location"
+            android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            dy:PreferenceKeys="roundList,roundLast"
+            dy:defaultACValues="@string/roundList_default" />
+
+        <com.doubleyellow.scoreboard.view.PreferenceACTextView
+            android:id="@+id/match_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/sb_playername_leftpadding"
+            android:layout_weight="1"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_location"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:nextFocusDown="@id/match_court"
+            android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            dy:PreferenceKeys="locationList,locationLast"
+            dy:defaultACValues="@string/emptyList_default" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_match_event_texts3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/match_splitterE"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_match_event_texts2">
+
+        <com.doubleyellow.scoreboard.view.PreferenceACTextView
+            android:id="@+id/match_court"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/sb_playername_leftpadding"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_court__Default"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            dy:PreferenceKeys="courtList,courtLast"
+            dy:defaultACValues="@string/emptyList_default" />
+
+        <TextView
+            android:id="@+id/match_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:hint="Match ID/Source ID"
+            android:text=""
             android:textSize="@dimen/txt_medium"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-        <LinearLayout
-            android:layout_below="@id/lblReferee"
-            android:id="@+id/ll_referees"
-            android:orientation="horizontal"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/match_splitterR"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/border_dark"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/ll_match_event_texts3" />
+
+    <TextView
+        android:id="@+id/lblReferee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_referee"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="@dimen/txt_medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/match_splitterR" />
+
+    <LinearLayout
+        android:id="@+id/ll_referees"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/lblReferee">
+
+        <com.doubleyellow.scoreboard.view.PreferenceACTextView
+            android:id="@+id/match_referee"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                android:id="@+id/match_referee"
-                android:background="@drawable/button_dark"
-                android:textCursorDrawable="@null"
-                android:paddingStart="@dimen/sb_playername_leftpadding"
-                android:hint="@string/lbl_referee"
-                android:textSize="@dimen/txt_small"
-                android:tag="item"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/sb_playername_leftpadding"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:nextFocusDown="@id/match_marker"
-                android:imeOptions="actionNext"
-                android:layout_gravity="center_horizontal"
-                dy:PreferenceKeys="refereeList,refereeName"
-                dy:defaultACValues=""/>
-            <com.doubleyellow.scoreboard.view.PreferenceACTextView
-                android:id="@+id/match_marker"
-                android:background="@drawable/button_dark"
-                android:textCursorDrawable="@null"
-                android:paddingStart="@dimen/sb_playername_leftpadding"
-                android:hint="@string/lbl_marker"
-                android:textSize="@dimen/txt_small"
-                android:tag="item"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/sb_playername_leftpadding"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:imeOptions="actionDone"
-                android:layout_gravity="center_horizontal"
-                dy:PreferenceKeys="refereeList,markerName"
-                dy:defaultACValues=""/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_below="@id/ll_referees"
-            android:id="@+id/ll_AnnouncementLanguage"
-            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/sb_playername_leftpadding"
+            android:layout_weight="1"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_referee"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:nextFocusDown="@id/match_marker"
+            android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            dy:PreferenceKeys="refereeList,refereeName"
+            dy:defaultACValues="" />
+
+        <com.doubleyellow.scoreboard.view.PreferenceACTextView
+            android:id="@+id/match_marker"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:inputType="none"
-                android:id="@+id/lblAnnouncementLanguage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pref_officialAnnouncementsLanguage"
-                android:textSize="@dimen/txt_small"
-                android:layout_margin="2dp" />
-            <Spinner
-                android:id="@+id/spAnnouncementLanguage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layoutMode="opticalBounds"
-                android:orientation="vertical"/>
-        </LinearLayout>
-</com.doubleyellow.view.SBRelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/sb_playername_leftpadding"
+            android:layout_weight="1"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_marker"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            dy:PreferenceKeys="refereeList,markerName"
+            dy:defaultACValues="" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_AnnouncementLanguage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/ll_referees">
+
+        <TextView
+            android:id="@+id/lblAnnouncementLanguage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:inputType="none"
+            android:text="@string/pref_officialAnnouncementsLanguage"
+            android:textSize="@dimen/txt_small" />
+
+        <Spinner
+            android:id="@+id/spAnnouncementLanguage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layoutMode="opticalBounds"
+            android:orientation="vertical" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

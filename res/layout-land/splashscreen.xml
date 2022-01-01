@@ -1,29 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.doubleyellow.view.SBRelativeLayout
-        android:id="@+id/splash_root_view"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@android:color/black"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<androidx.percentlayout.widget.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/splash_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
 
     <ImageView
         android:id="@+id/splash_logo"
-        android:scaleType="centerInside"
-        app:layout_heightPercent="90%"
-        app:layout_aspectRatio="100%"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/brand_squore" />
+        android:scaleType="centerInside"
+        android:src="@drawable/brand_squore"
+        app:layout_aspectRatio="100%"
+        app:layout_heightPercent="90%" />
 
-<!--
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:textSize="12dp"
-        android:textColor="#454545"
-        android:gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:text="www.androidhive.info" />
--->
-</com.doubleyellow.view.SBRelativeLayout>
+</androidx.percentlayout.widget.PercentRelativeLayout>

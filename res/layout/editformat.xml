@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.doubleyellow.view.SBRelativeLayout
+<androidx.percentlayout.widget.PercentRelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
               android:id="@+id/ll_match"
               android:layout_margin="5dp"
-              android:layout_marginRight="2dp"
               android:layout_marginEnd="2dp"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -235,4 +234,4 @@
             />
     </LinearLayout>
 
-</com.doubleyellow.view.SBRelativeLayout>
+</androidx.percentlayout.widget.PercentRelativeLayout>

@@ -38,7 +38,7 @@ import com.doubleyellow.scoreboard.prefs.ShowCountryAs;
 import com.doubleyellow.util.Direction;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
-import com.doubleyellow.view.SBRelativeLayout;
+import androidx.percentlayout.widget.PercentRelativeLayout;
 
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.DoublesServe;
@@ -57,7 +57,7 @@ import java.util.Set;
  * If countries are specified this class can also display flags.
  * If avatars are specified this class can also display an avatar.
  */
-public class PlayersButton extends SBRelativeLayout implements DrawTouch
+public class PlayersButton extends PercentRelativeLayout implements DrawTouch
 {
     private static final String TAG = "SB." + PlayersButton.class.getSimpleName();
 

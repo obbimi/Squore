@@ -1,103 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.doubleyellow.view.SBRelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:dy="http://double-yellow.be"
-        android:tag="mainBackgroundColor"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<androidx.percentlayout.widget.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dy="http://double-yellow.be"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:tag="mainBackgroundColor">
 
-    <com.doubleyellow.view.SBRelativeLayout
-            android:id="@+id/circle_and_message"
-            android:layout_margin="@dimen/sb_button_padding"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            app:layout_widthPercent="80%"
-            app:layout_aspectRatio="100%"
-    >
+    <androidx.percentlayout.widget.PercentRelativeLayout
+        android:id="@+id/circle_and_message"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/sb_button_padding"
+        android:gravity="center"
+        app:layout_aspectRatio="100%"
+        app:layout_widthPercent="80%">
+
         <com.doubleyellow.android.view.CircularProgressBar
-                android:id="@+id/circular_progress"
-                app:arc_stroke_width="@dimen/timer_circular_stroke_width"
-                app:marker_stroke_width="@dimen/timer_circular_stroke_width"
-                app:layout_heightPercent="100%"
-                app:layout_widthPercent="100%"
-        />
+            android:id="@+id/circular_progress"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:arc_stroke_width="@dimen/timer_circular_stroke_width"
+            app:layout_heightPercent="100%"
+            app:layout_widthPercent="100%"
+            app:marker_stroke_width="@dimen/timer_circular_stroke_width" />
+
         <com.doubleyellow.android.view.AutoResizeTextView
-                android:id="@+id/timerMessage"
-                android:text="@string/oa_fifteen_seconds"
-                android:tag="noBackgroundColor mainTextColor"
-                android:background="@android:color/transparent"
-                android:layout_centerInParent="true"
-                android:layout_alignBaseline="@id/circular_progress"
-                app:layout_heightPercent="30%"
-                app:layout_widthPercent="70%"
-        />
-        <Chronometer android:id="@+id/to_late_timer"
-                     app:layout_heightPercent="10%"
-                     app:layout_widthPercent="30%"
-                     android:layout_below="@id/timerMessage"
-                     android:layout_centerInParent="true"
-                     android:background="@android:color/white"
-                     android:textColor="@android:color/holo_red_dark"
-                     android:gravity="center"
-                     android:format="%s"
-                     android:visibility="visible"
-        />
-    </com.doubleyellow.view.SBRelativeLayout>
+            android:id="@+id/timerMessage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_alignBaseline="@id/circular_progress"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:tag="noBackgroundColor mainTextColor"
+            android:text="@string/oa_fifteen_seconds"
+            app:layout_heightPercent="30%"
+            app:layout_widthPercent="70%" />
+
+        <Chronometer
+            android:id="@+id/to_late_timer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_below="@id/timerMessage"
+            android:layout_centerInParent="true"
+            android:background="@android:color/white"
+            android:format="%s"
+            android:gravity="center"
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="visible"
+            app:layout_heightPercent="10%"
+            app:layout_widthPercent="30%" />
+    </androidx.percentlayout.widget.PercentRelativeLayout>
 
     <!-- add after CircularProgressBar to have it appear 'on top' of the CircularProgressBar -->
     <com.doubleyellow.scoreboard.history.MatchGameScoresView
-            android:id="@+id/timer_gamescores"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            app:layout_heightPercent="15%"
-            app:layout_widthPercent="80%"
-            dy:backgroundColor="@color/dy_yellow"
-            dy:textColor="@color/dy_dark"
-            dy:leftToRight="true"
-            dy:showNames="true"
-            dy:showTimes="true"
-    />
-    <com.doubleyellow.view.SBRelativeLayout
-            android:id="@+id/ll_timer_add_remove_buttons"
-            android:layout_alignTop="@id/circular_progress"
-            android:layout_alignBottom="@id/circular_progress"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/sb_button_padding"
-            app:layout_widthPercent="12%"
-            app:layout_heightPercent="100%"
-    >
-        <com.doubleyellow.android.view.AutoResizeTextView style="@style/SBButton"
-              android:id="@+id/remove_secs"
-              android:layout_alignParentTop="true"
-              android:text=" -10 "
-              android:tag="-10 item"
-              app:layout_widthPercent="100%"
-              app:layout_aspectRatio="100%"
-        />
-        <com.doubleyellow.android.view.AutoResizeTextView style="@style/SBButton"
-              android:id="@+id/add_secs"
-              android:layout_marginBottom="@dimen/main_button_margin"
-              android:layout_alignParentBottom="true"
-              android:text=" +10 "
-              android:tag="+10 item"
-              app:layout_widthPercent="100%"
-              app:layout_aspectRatio="100%"
-        />
-    </com.doubleyellow.view.SBRelativeLayout>
+        android:id="@+id/timer_gamescores"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentStart="true"
+        app:layout_heightPercent="15%"
+        app:layout_widthPercent="80%"
+        dy:backgroundColor="@color/dy_yellow"
+        dy:leftToRight="true"
+        dy:showNames="true"
+        dy:showTimes="true"
+        dy:textColor="@color/dy_dark" />
+
+    <androidx.percentlayout.widget.PercentRelativeLayout
+        android:id="@+id/ll_timer_add_remove_buttons"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignTop="@id/circular_progress"
+        android:layout_alignBottom="@id/circular_progress"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/sb_button_padding"
+        app:layout_heightPercent="100%"
+        app:layout_widthPercent="12%">
+
+        <com.doubleyellow.android.view.AutoResizeTextView
+            android:id="@+id/remove_secs"
+            style="@style/SBButton"
+            android:layout_alignParentTop="true"
+            android:tag="-10 item"
+            android:text=" -10 "
+            app:layout_aspectRatio="100%"
+            app:layout_widthPercent="100%" />
+
+        <com.doubleyellow.android.view.AutoResizeTextView
+            android:id="@+id/add_secs"
+            style="@style/SBButton"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/main_button_margin"
+            android:tag="+10 item"
+            android:text=" +10 "
+            app:layout_aspectRatio="100%"
+            app:layout_widthPercent="100%" />
+    </androidx.percentlayout.widget.PercentRelativeLayout>
 
     <com.doubleyellow.scoreboard.view.PreferenceCheckBox
-            android:id="@+id/use_audio"
-            android:text="@string/pref_useAudioNotifications"
-            android:textSize="@dimen/sb_history"
-            android:tag="noBackgroundColor mainTextColor"
-            android:background="@android:color/transparent"
-            android:layout_alignParentBottom="true"
-            app:preference_key="useSoundNotificationInTimer"
-            app:preference_key_default_value="@bool/useSoundNotificationInTimer_default"
-            app:store_inverted="false"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            />
-</com.doubleyellow.view.SBRelativeLayout>
+        android:id="@+id/use_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
+        android:tag="noBackgroundColor mainTextColor"
+        android:text="@string/pref_useAudioNotifications"
+        android:textSize="@dimen/sb_history"
+        app:preference_key="useSoundNotificationInTimer"
+        app:preference_key_default_value="@bool/useSoundNotificationInTimer_default"
+        app:store_inverted="false" />
+</androidx.percentlayout.widget.PercentRelativeLayout>

@@ -20,7 +20,7 @@
 <!--
 Used by EndOfGameView
 -->
-<com.doubleyellow.view.SBRelativeLayout
+<androidx.percentlayout.widget.PercentRelativeLayout
     android:id="@+id/presentation_eog_root_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -107,4 +107,4 @@ Used by EndOfGameView
         android:layout_width="0dp"
         android:layout_height="0dp"
     />
-</com.doubleyellow.view.SBRelativeLayout>
+</androidx.percentlayout.widget.PercentRelativeLayout>

@@ -17,7 +17,7 @@
 ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 -->
-<com.doubleyellow.view.SBRelativeLayout
+<androidx.percentlayout.widget.PercentRelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:dy="http://double-yellow.be"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -220,100 +220,6 @@
             android:layout_height="wrap_content"/>
     </androidx.percentlayout.widget.PercentRelativeLayout>
 
-<!--
-    <LinearLayout android:id="@+id/ll_match_doubles"
-            android:layout_below="@id/ll_match_singles"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <TextView
-                android:id="@+id/lblPlayersD"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/lbl_players"
-                android:textSize="@dimen/txt_medium"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                />
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-            <com.doubleyellow.scoreboard.view.PlayerTextView
-                    android:id="@+id/match_playerA1"
-                    android:hint="@string/lbl_playerA1"
-                    android:textSize="@dimen/txt_small"
-                    android:textCursorDrawable="@null"
-                    android:paddingStart="@dimen/sb_playername_leftpadding"
-                    android:background="@drawable/button_dark"
-                    android:tag="item"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/sb_playername_leftpadding"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:nextFocusDown="@+id/match_playerA2"
-                    android:imeOptions="actionNext"
-                    android:layout_gravity="center_horizontal"/>
-            <com.doubleyellow.scoreboard.view.PlayerTextView
-                    android:id="@+id/match_playerA2"
-                    android:hint="@string/lbl_playerA2"
-                    android:textSize="@dimen/txt_small"
-                    android:textCursorDrawable="@null"
-                    android:paddingStart="@dimen/sb_playername_leftpadding"
-                    android:background="@drawable/button_dark"
-                    android:tag="item"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/sb_playername_leftpadding"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:nextFocusDown="@+id/match_playerB1"
-                    android:imeOptions="actionNext"
-                    android:layout_gravity="center_horizontal"/>
-            <LinearLayout
-                    android:id="@+id/match_splitterD"
-                    android:orientation="horizontal"
-                    android:background="@drawable/border_dark"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"/>
-
-            <com.doubleyellow.scoreboard.view.PlayerTextView
-                    android:id="@+id/match_playerB1"
-                    android:hint="@string/lbl_playerB1"
-                    android:textSize="@dimen/txt_small"
-                    android:textCursorDrawable="@null"
-                    android:paddingStart="@dimen/sb_playername_leftpadding"
-                    android:background="@drawable/button_dark"
-                    android:tag="item"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/sb_playername_leftpadding"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:nextFocusDown="@+id/match_playerB2"
-                    android:imeOptions="actionNext"
-                    android:layout_gravity="center_horizontal"/>
-            <com.doubleyellow.scoreboard.view.PlayerTextView
-                    android:id="@+id/match_playerB2"
-                    android:hint="@string/lbl_playerB2"
-                    android:textSize="@dimen/txt_small"
-                    android:textCursorDrawable="@null"
-                    android:paddingStart="@dimen/sb_playername_leftpadding"
-                    android:background="@drawable/button_dark"
-                    android:tag="item"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/sb_playername_leftpadding"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:nextFocusDown="@+id/match_countryA"
-                    android:imeOptions="actionNext"
-                    android:layout_gravity="center_horizontal"/>
-        </LinearLayout>
-    </LinearLayout>
--->
-
     <LinearLayout android:id="@+id/ll_match_clubs"
             android:layout_below="@id/ll_match_doubles"
             android:orientation="horizontal"
@@ -337,6 +243,7 @@
                     android:textSize="@dimen/txt_small"
                     android:textCursorDrawable="@null"
                     android:paddingStart="@dimen/sb_playername_leftpadding"
+                    android:paddingEnd="@dimen/sb_playername_leftpadding"
                     android:background="@drawable/button_dark"
                     android:tag="item"
                     android:layout_width="match_parent"
@@ -355,6 +262,7 @@
                     android:textSize="@dimen/txt_small"
                     android:textCursorDrawable="@null"
                     android:paddingStart="@dimen/sb_playername_leftpadding"
+                    android:paddingEnd="@dimen/sb_playername_leftpadding"
                     android:background="@drawable/button_dark"
                     android:tag="item"
                     android:layout_width="match_parent"
@@ -392,7 +300,7 @@
             android:hint="@string/lbl_country_A"
             android:textSize="@dimen/txt_small"
             android:textCursorDrawable="@null"
-            android:paddingLeft="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
             android:paddingStart="@dimen/sb_playername_leftpadding"
             android:background="@drawable/button_dark"
             android:tag="item"
@@ -410,6 +318,7 @@
             android:textSize="@dimen/txt_small"
             android:textCursorDrawable="@null"
             android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
             android:background="@drawable/button_dark"
             android:tag="item"
             android:layout_width="match_parent"
@@ -813,7 +722,7 @@
         <LinearLayout
             android:id="@+id/llChangesSidesWhen"
             android:orientation="horizontal"
-            android:gravity="right"
+            android:gravity="end"
             android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -836,11 +745,8 @@
         <LinearLayout
                 android:id="@+id/llLiveScore"
                 android:orientation="horizontal"
-                android:gravity="right"
+                android:gravity="end"
                 android:visibility="visible"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@id/llScoringType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <CheckBox
@@ -885,6 +791,7 @@
                             android:background="@drawable/button_dark"
                             android:textCursorDrawable="@null"
                             android:paddingStart="@dimen/sb_playername_leftpadding"
+                            android:paddingEnd="@dimen/sb_playername_leftpadding"
                             android:hint="@string/name"
                             android:textSize="@dimen/txt_small"
                             android:tag="item"
@@ -903,6 +810,7 @@
                             android:background="@drawable/button_dark"
                             android:textCursorDrawable="@null"
                             android:paddingStart="@dimen/sb_playername_leftpadding"
+                            android:paddingEnd="@dimen/sb_playername_leftpadding"
                             android:hint="@string/lbl_division"
                             android:textSize="@dimen/txt_small"
                             android:tag="item"
@@ -921,6 +829,7 @@
                             android:background="@drawable/button_dark"
                             android:textCursorDrawable="@null"
                             android:paddingStart="@dimen/sb_playername_leftpadding"
+                            android:paddingEnd="@dimen/sb_playername_leftpadding"
                             android:hint="@string/lbl_round"
                             android:textSize="@dimen/txt_small"
                             android:tag="item"
@@ -939,6 +848,7 @@
                             android:background="@drawable/button_dark"
                             android:textCursorDrawable="@null"
                             android:paddingStart="@dimen/sb_playername_leftpadding"
+                            android:paddingEnd="@dimen/sb_playername_leftpadding"
                             android:hint="@string/lbl_location"
                             android:textSize="@dimen/txt_small"
                             android:tag="item"
@@ -958,6 +868,7 @@
                     android:background="@drawable/button_dark"
                     android:textCursorDrawable="@null"
                     android:paddingStart="@dimen/sb_playername_leftpadding"
+                    android:paddingEnd="@dimen/sb_playername_leftpadding"
                     android:hint="@string/lbl_court__Default"
                     android:textSize="@dimen/txt_small"
                     android:tag="item"
@@ -997,7 +908,7 @@
                     android:id="@+id/match_referee"
                     android:background="@drawable/button_dark"
                     android:textCursorDrawable="@null"
-                    android:paddingLeft="@dimen/sb_playername_leftpadding"
+                    android:paddingEnd="@dimen/sb_playername_leftpadding"
                     android:paddingStart="@dimen/sb_playername_leftpadding"
                     android:hint="@string/lbl_referee"
                     android:textSize="@dimen/txt_small"
@@ -1018,6 +929,7 @@
                     android:background="@drawable/button_dark"
                     android:textCursorDrawable="@null"
                     android:paddingStart="@dimen/sb_playername_leftpadding"
+                    android:paddingEnd="@dimen/sb_playername_leftpadding"
                     android:hint="@string/lbl_marker"
                     android:textSize="@dimen/txt_small"
                     android:tag="item"
@@ -1053,4 +965,4 @@
                 android:layoutMode="opticalBounds"
                 android:orientation="vertical"/>
     </LinearLayout>
-</com.doubleyellow.view.SBRelativeLayout>
+</androidx.percentlayout.widget.PercentRelativeLayout>

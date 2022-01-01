@@ -1,48 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.doubleyellow.view.SBRelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        >
-<!--
+<androidx.percentlayout.widget.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <com.doubleyellow.android.view.AutoResizeTextView
-            android:id="@+id/score_dash"
-            android:layout_centerInParent="true"
-            android:layout_alignParentTop="true"
-            app:layout_widthPercent="10%"
-            android:text="-"
-            android:includeFontPadding="false"
-            android:gravity="center"
-            android:clickable="true"
-            android:layout_height="match_parent"/>
+        android:id="@+id/score_player_1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:gravity="center"
+        android:includeFontPadding="true"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="15"
+        app:layout_widthPercent="50%" />
 
-            android:layout_toLeftOf="@id/score_dash"
-            android:layout_toStartOf="@id/score_dash"
-
-            android:layout_toRightOf="@id/score_dash"
-            android:layout_toEndOf="@id/score_dash"
--->
     <com.doubleyellow.android.view.AutoResizeTextView
-            android:id="@+id/score_player_1"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            app:layout_widthPercent="50%"
-            android:text="15"
-            android:includeFontPadding="true"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:gravity="center"
-            android:layout_height="match_parent"/>
-    <com.doubleyellow.android.view.AutoResizeTextView
-            android:id="@+id/score_player_2"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            app:layout_widthPercent="50%"
-            android:text="12"
-            android:includeFontPadding="true"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:gravity="center"
-            android:layout_height="match_parent"/>
-</com.doubleyellow.view.SBRelativeLayout>
+        android:id="@+id/score_player_2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:includeFontPadding="true"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="12"
+        app:layout_widthPercent="50%" />
+</androidx.percentlayout.widget.PercentRelativeLayout>

@@ -791,12 +791,15 @@ public class ColorPrefs
                 //imageButton.setBackgroundColor(mTarget2Color.get(ColorTarget.playerButtonBackgroundColor));
                 setBackground(imageButton, mTarget2Color.get(ColorTarget.playerButtonBackgroundColor), tag);
             }
-        } else if ( v instanceof Spinner) {
+        } else if ( v instanceof Spinner /* = ViewGroup */) {
             Spinner spinner = (Spinner) v;
             spinner.setBackgroundColor(mTarget2Color.get(ColorTarget.playerButtonBackgroundColor));
-        } else if ( v instanceof NumberPicker) {
+        } else if ( v instanceof NumberPicker /* = LinearLayout */) {
             NumberPicker numberPicker = (NumberPicker) v;
             numberPicker.setBackgroundColor(mTarget2Color.get(ColorTarget.playerButtonBackgroundColor));
+            if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q /* 29 */ ) {
+                numberPicker.setTextColor(mTarget2Color.get(ColorTarget.playerButtonTextColor));
+            }
         } else if ( v instanceof ExpandableListView) {
             //ExpandableListView lv = (ExpandableListView) v;
             // each item must receive colors when expanding

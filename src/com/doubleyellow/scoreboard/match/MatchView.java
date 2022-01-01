@@ -52,7 +52,6 @@ import com.doubleyellow.util.JsonUtil;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
 import com.doubleyellow.view.NextFocusDownListener;
-import com.doubleyellow.view.SBRelativeLayout;
 
 import org.json.JSONArray;
 
@@ -70,7 +69,7 @@ import java.util.List;
  * - referee details
  * - optionally player colors
  */
-public class MatchView extends SBRelativeLayout
+public class MatchView extends ScrollView
 {
     private static final String TAG = "SB." + MatchView.class.getSimpleName();
 
@@ -215,7 +214,7 @@ public class MatchView extends SBRelativeLayout
     private boolean hideElementsBasedOnSport() {
         // hide some elements base on sport
         SportType sportType = Brand.getSport();
-        boolean bTrueGoneFalseInvisible = ViewUtil.isPortraitOrientation(getContext()) || m_layout.equals(NewMatchLayout.Simple); // in portrait each element is on a single line, layout is not screwed up when GONE is used. In landscape layout IS screwed up
+        boolean bTrueGoneFalseInvisible = true || ViewUtil.isPortraitOrientation(getContext()) || m_layout.equals(NewMatchLayout.Simple); // in portrait each element is on a single line, layout is not screwed up when GONE is used. In landscape layout IS screwed up
         switch (sportType) {
             case Badminton:
                 ViewUtil.hideViewsForEver(this, bTrueGoneFalseInvisible
@@ -564,22 +563,25 @@ public class MatchView extends SBRelativeLayout
         m_model = model;
 
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        // wrap it into a scroll view so that user with small screens and large fonts.... yada yada
-        ScrollView sv = new ScrollView(context);
-        inflater.inflate(m_layout.getLayoutResId(), sv, true);
-        this.addView(sv);
+        inflater.inflate(m_layout.getLayoutResId(), this, true);
 
         List<Integer> lViewsToHide = new ArrayList<Integer>();
+        List<Integer> lViewsToShow = new ArrayList<Integer>();
+        lViewsToShow.add(R.id.ll_match_clubs);
+        lViewsToShow.add(R.id.ll_match_countries);
         if ( bIsDoubles ) {
             lViewsToHide.add(R.id.ll_match_singles);
+            lViewsToShow.add(R.id.ll_match_doubles);
             if ( Brand.supportsDoubleServeSequence() == false ) {
                 lViewsToHide.add(R.id.ll_doubleServeSequence);
             }
         } else {
+            lViewsToShow.add(R.id.ll_match_singles);
             lViewsToHide.add(R.id.ll_match_doubles);
             lViewsToHide.add(R.id.ll_doubleServeSequence);
         }
         ViewUtil.hideViews(this, lViewsToHide);
+        //showViews(lViewsToShow);
 
         // get references for late use
         txtEventName     = (PreferenceACTextView) findViewById(R.id.match_event);
@@ -859,9 +861,9 @@ public class MatchView extends SBRelativeLayout
         // initialize checkboxes array for 'Change Sides When'
         Feature ffChangesSide = PreferenceValues.useChangeSidesFeature(context);
         if ( Feature.DoNotUse.equals(ffChangesSide) == false ) {
-            LinearLayout llChangesSidesWhen = findViewById(R.id.llChangesSidesWhen);
+            ViewGroup llChangesSidesWhen = findViewById(R.id.llChangesSidesWhen);
             if ( llChangesSidesWhen != null ) {
-                LinearLayout llChangesSidesCheckboxes = llChangesSidesWhen.findViewById(R.id.llChangesSidesCheckboxes);
+                ViewGroup llChangesSidesCheckboxes = llChangesSidesWhen.findViewById(R.id.llChangesSidesCheckboxes);
                 if ( llChangesSidesCheckboxes != null ) {
                     EnumSet<ChangeSidesWhen_GSM> checkedValues = PreferenceValues.changeSidesWhen_GSM(context);
                     ChangeSidesWhen_GSM[] values = ChangeSidesWhen_GSM.values();
