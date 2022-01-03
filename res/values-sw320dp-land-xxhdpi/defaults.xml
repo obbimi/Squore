@@ -13,6 +13,7 @@
     <dimen name="txt_large">36sp</dimen>
 
 
+    <integer name="TextSizeHistory_default_ls">48</integer>
 
 
 

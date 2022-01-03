@@ -702,7 +702,7 @@ public class IBoard implements TimerViewContainer
         MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
         if ( matchGameScores != null ) {
             if ( appearance.showGamesWon(isPresentation()) ) {
-                matchGameScores.setVisibility(View.INVISIBLE);
+                matchGameScores.setVisibility(View.GONE); // gone ensures, if many games have been played, more room becomes available for timer/oldfahsined paper scoring
             } else {
                 matchGameScores.setVisibility(View.VISIBLE);
                 matchGameScores.refreshDrawableState();
@@ -1099,9 +1099,10 @@ public class IBoard implements TimerViewContainer
             // give game scores a little more space for default best of 7 of tabletennis
             View view = findViewById(R.id.gamescores);
             if ( view != null ) {
-                PercentRelativeLayout.LayoutParams plParams = (PercentRelativeLayout.LayoutParams) view.getLayoutParams();
+                ViewGroup.LayoutParams loParams = (ViewGroup.LayoutParams) view.getLayoutParams();
                 // This will currently return null, if it was not constructed from XML.
-                if ( plParams != null ) {
+                if ( loParams instanceof PercentRelativeLayout.LayoutParams ) { // TODO: can be removed in future now we are switching to ConstraintLayout
+                    PercentRelativeLayout.LayoutParams plParams = (PercentRelativeLayout.LayoutParams) loParams;
                     PercentLayoutHelper.PercentLayoutInfo info = plParams.getPercentLayoutInfo();
                     if ( ViewUtil.isPortraitOrientation(context) ) {
                         // height is set to fixed percentage: increase w/h aspect ratio from 300% to 450 to make it wider
@@ -1114,11 +1115,12 @@ public class IBoard implements TimerViewContainer
                 }
             }
 
-            // now that gamescores has more room, timer has to little if we keep the xml setting: change it so timer is rightalligned to parent
+            // now that gamescores has more room, timer has to little room if we keep the xml setting: change it so timer is right-aligned to parent
             view = findViewById(R.id.btn_timer);
             if ( view != null ) {
-                RelativeLayout.LayoutParams rlParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                if ( rlParams != null ) {
+                ViewGroup.LayoutParams loParams = (ViewGroup.LayoutParams) view.getLayoutParams();
+                if ( loParams instanceof RelativeLayout.LayoutParams ) { // TODO: can be removed in future now we are switching to ConstraintLayout
+                    RelativeLayout.LayoutParams rlParams = (RelativeLayout.LayoutParams) loParams;
                     if ( ViewUtil.isPortraitOrientation(context) ) {
                         rlParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         rlParams.removeRule(RelativeLayout.ALIGN_RIGHT);

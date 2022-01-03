@@ -47,21 +47,26 @@
         app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/space_topleft1"
         app:layout_constraintWidth_percent="@fraction/ls_fr_gamescores_width"
-        app:layout_constraintDimensionRatio="H,2:5"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         >
         <com.doubleyellow.scoreboard.history.MatchGameScoresView
             android:id="@+id/gamescores"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             dy:backgroundColor="@color/dy_yellow"
             dy:textColor="@color/dy_dark"
             dy:leftToRight="false"
+            dy:previewScores="11-8,7-11,10-12,13-11,11-1,11-2,11-3,11-4"
+            dy:previewRowHeight="121"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             />
 
         <com.doubleyellow.scoreboard.view.GamesWonButton
             style="@style/SBButton"
+            android:visibility="gone"
             android:id="@+id/btn_gameswon1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -74,6 +79,7 @@
              />
         <com.doubleyellow.scoreboard.view.GamesWonButton
             style="@style/SBButton"
+            android:visibility="gone"
             android:id="@+id/btn_gameswon2"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -85,6 +91,14 @@
             android:layout_width="0dp" android:layout_height="0dp"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <Space android:id="@+id/space_gamescores_container_bottom"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/gamescores_container"
+        app:layout_constraintStart_toStartOf="@id/gamescores_container"
+        app:layout_constraintHeight_percent="@fraction/ls_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="0"
+        />
 
     <!-- playernames: one on each side of previous game scores -->
     <com.doubleyellow.scoreboard.view.PlayersButton
@@ -181,17 +195,30 @@
         android:layout_width="0dp" android:layout_height="0dp"
         />
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/bottom_barrier_gamescores_container__btn_side1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="space_gamescores_container_bottom,btn_side1" />
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/top_barrier_gamescores_container__btn_side1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="space_gamescores_container_bottom,btn_side1" />
+
     <com.doubleyellow.scoreboard.view.GameHistoryView
         android:id="@+id/scorehistorytable"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bottom_barrier_gamescores_container__btn_side1"
         app:layout_constraintBottom_toBottomOf="@id/btn_score1"
         dy:textSizePx="@integer/TextSizeHistory_default_ls"
         dy:backgroundColor="@color/dy_yellow"
         dy:textColor="@color/dy_dark"
+        dy:nrOfPreviewLines="8"
         android:layout_width="wrap_content"
-        app:layout_constraintHeight_percent="0.50"
-        app:layout_marginBottomPercent="@fraction/ls_fr_vertical_margin_3x"
         android:layout_height="0dp"
     />
 
@@ -203,7 +230,6 @@
         app:layout_constraintBottom_toBottomOf="@id/btn_score1"
         app:layout_constraintWidth_percent="@fraction/ls_fr_branded_logo_ar150"
         app:layout_constraintDimensionRatio="H,3:2"
-        app:layout_marginBottomPercent="@fraction/ls_fr_vertical_margin_3x"
         android:src="@drawable/brand_squore"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -218,7 +244,6 @@
         app:layout_constraintBottom_toBottomOf="@id/btn_score1"
         app:layout_constraintWidth_percent="@fraction/ls_fr_branded_logo_ar400"
         app:layout_constraintDimensionRatio="H,4:1"
-        app:layout_marginBottomPercent="0%"
         android:src="@drawable/brand_courtcare"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -239,10 +264,11 @@
 
     <com.doubleyellow.android.view.AutoResizeTextView
         style="@style/SBButton"
+        android:visibility="visible"
         android:id="@+id/btn_timer"
         app:layout_constraintStart_toStartOf="@id/btn_side1"
         app:layout_constraintEnd_toEndOf="@id/btn_side2"
-        app:layout_constraintTop_toBottomOf="@id/btn_side1"
+        app:layout_constraintTop_toBottomOf="@id/bottom_barrier_gamescores_container__btn_side1"
         app:layout_constraintHeight_percent="@fraction/ls_fr_timer_height"
         android:textSize="@dimen/sb_sidebutton"
         android:text="01:30"

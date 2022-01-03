@@ -435,7 +435,7 @@ public class MatchGameScoresView extends LinearLayout
                 int height = mInstanceOrientation2RowHeight.get(instanceKey);
                 if ( (height == 0) && isInEditMode() ) {
                     //if ( height == 0) throw new RuntimeException(instanceKey + " Temp " + this.getWidth() + "," + this.getHeight() + "," + ViewUtil.getScreenHeightWidthMaximum(getContext()));
-                    height = mInstanceOrientation2RowHeight.get(0);
+                    height = mInstanceOrientation2RowHeight.get(m_iPreviewInstanceId);
                 }
                 lpT2B_wmp_hwc.height = height;
             }
@@ -653,7 +653,7 @@ public class MatchGameScoresView extends LinearLayout
             } else {
                 Integer width = mInstanceOrientation2ColWidth.get(instanceKey);
                 if ( (width == 0) && isInEditMode() ) {
-                    width = mInstanceOrientation2ColWidth.get(0);
+                    width = mInstanceOrientation2ColWidth.get(m_iPreviewInstanceId);
                 }
                 lpL2R_wwc_hmp.width = width;
             }
@@ -771,7 +771,7 @@ public class MatchGameScoresView extends LinearLayout
     private void setValuesFromXml(AttributeSet attrs) {
         if ( attrs == null ) { return; }
         //textSizePx      = getResources().getInteger(attrs.getAttributeResourceValue(APPLICATION_NS, "textSizePx" , textSizePx));
-        m_sPreviewScores= attrs.getAttributeValue       (APPLICATION_NS, "previewScores");
+        m_sPreviewScores   = attrs.getAttributeValue    (APPLICATION_NS, "previewScores");
         m_iPreviewRowHeight= attrs.getAttributeIntValue (APPLICATION_NS, "previewRowHeight", m_iPreviewRowHeight);
         m_iPreviewColWidth = attrs.getAttributeIntValue (APPLICATION_NS, "previewColWidth" , m_iPreviewColWidth);
 
@@ -827,14 +827,15 @@ public class MatchGameScoresView extends LinearLayout
     private String m_sPreviewScores    = null;
     private int    m_iPreviewRowHeight = 50;
     private int    m_iPreviewColWidth  = 50;
+    private final int m_iPreviewInstanceId= 0;
 
     private void doIDEPreview() {
         if ( super.isInEditMode() ) {
             if ( StringUtil.isEmpty(m_sPreviewScores) ) {
                 m_sPreviewScores = "2-11,11-3,11-4";
             }
-            mInstanceOrientation2RowHeight.put(0,m_iPreviewRowHeight);
-            mInstanceOrientation2ColWidth .put(0,m_iPreviewColWidth);
+            mInstanceOrientation2RowHeight.put(m_iPreviewInstanceId, m_iPreviewRowHeight);
+            mInstanceOrientation2ColWidth .put(m_iPreviewInstanceId, m_iPreviewColWidth);
 
             Map<Player, Integer> pi = new HashMap<>();
             List<Map<Player, Integer>> gameScores = new ArrayList<Map<Player, Integer>>();

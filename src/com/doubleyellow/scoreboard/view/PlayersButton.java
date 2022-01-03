@@ -72,10 +72,17 @@ public class PlayersButton extends PercentRelativeLayout implements DrawTouch
     public PlayersButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         if ( isInEditMode() ) {
-            setPlayers("Player A", false, Player.A);
-            setTextColor(Color.WHITE);
-            setCountry("BEL", true, true);
-            setClub("DY");
+            if ( this.getId() == R.id.txt_player2 ) {
+                setPlayers("Player B", false, Player.B);
+                setTextColor(Color.YELLOW);
+                setCountry("HOL", true, true);
+                setClub("YD");
+            } else {
+                setPlayers("Player A", false, Player.A);
+                setTextColor(Color.WHITE);
+                setCountry("BEL", true, true);
+                setClub("DY");
+            }
         }
     }
 
@@ -113,10 +120,6 @@ public class PlayersButton extends PercentRelativeLayout implements DrawTouch
         if ( bIsDoubles ) {
             saPlayers = StringUtil.singleCharacterSplit("/" + players + "/"); // TODO: improve
         }
-        //if ( fReduceFactor == 1.0f && bIsDoubles) {
-        //    fReduceFactor = 0.75f; // TODO: customizable
-             //this.fTxtSize = this.fTxtSize * fReduceFactor;
-        //}
 
         for ( int n=0; n < saPlayers.length; n++ ) {
             // portrait and first in landscape: flag, avatar, name, serve
@@ -285,7 +288,6 @@ public class PlayersButton extends PercentRelativeLayout implements DrawTouch
         if ( DoublesServe.NA.equals(m_doublesReceiver) == false) {
             setReceiver(m_doublesReceiver, p);
         }
-        //this.setOnTouchListener(new TouchBothListener(clickBothListener));
     }
 
     private Set<ShowCountryAs> lHasCountry = EnumSet.noneOf(ShowCountryAs.class);

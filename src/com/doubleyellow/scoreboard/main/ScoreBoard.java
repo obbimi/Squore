@@ -853,27 +853,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         private MenuDrawerAdapter() {
             inflater = (LayoutInflater)ScoreBoard.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-/*
-        id2Seq.add(R.id.uc_new );
-            id2Seq.add(R.id.sb_enter_singles_match );
-            id2Seq.add(R.id.sb_select_static_match );
-            id2Seq.add(R.id.sb_select_feed_match   );
-        id2Seq.add(R.id.uc_edit );
-            id2Seq.add(R.id.sb_adjust_score        );
-            id2Seq.add(R.id.sb_edit_event_or_player);
-        id2Seq.add(R.id.uc_show );
-            id2Seq.add(R.id.sb_toss                );
-            id2Seq.add(R.id.sb_timer               );
-            id2Seq.add(R.id.sb_injury_timer        );
-        id2Seq.add(R.id.sb_sub_help );
-            id2Seq.add(R.id.sb_quick_intro         );
-            id2Seq.add(R.id.sb_help                );
-            id2Seq.add(R.id.sb_feedback            );
-        id2Seq.add(R.id.sb_overflow_submenu );
-            id2Seq.add(R.id.sb_stored_matches      );
-            id2Seq.add(R.id.sb_settings            );
-*/
-
             int iOfficialRulesResId = PreferenceValues.getSportTypeSpecificResId(ScoreBoard.this, R.string.sb_official_rules__Squash, 0);
         startSection(R.string.uc_new   );
             addItem(R.id.sb_enter_singles_match , R.string.sb_new_singles_match    ,         R.drawable.circled_plus          , R.bool.useSinglesMatch__Default   );

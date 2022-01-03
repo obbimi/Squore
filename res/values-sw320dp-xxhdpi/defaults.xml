@@ -17,6 +17,7 @@
     <dimen name="txt_normal">22sp</dimen>
     <dimen name="txt_large">27sp</dimen>
 
+    <integer name="TextSizeHistory_default_pt">60</integer>
 
 
 
