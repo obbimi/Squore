@@ -252,7 +252,7 @@ public class MatchHistory extends XActivity implements MenuHandler
                 // TODO: graphs for Tennis/Padel ?!
             } else {
                 int nrOfFinishedGames = matchModel.getNrOfFinishedGames();
-                iCount += nrOfFinishedGames + ListUtil.size(preGraphTabsToShow());
+                iCount += nrOfFinishedGames;
                 if ( matchModel.gameHasStarted() && (matchModel.isPossibleGameVictory() == false)) {
                     // add a tab for a game in progress
                     iCount++;

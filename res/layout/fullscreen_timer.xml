@@ -17,10 +17,9 @@
 ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 -->
-<androidx.percentlayout.widget.PercentRelativeLayout
+<android.widget.RelativeLayout
     android:id="@+id/presentation_eog_root_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 >
@@ -33,10 +32,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         style="@style/SBButton"
-        app:layout_marginTopPercent="@fraction/peog_margin"
-        app:layout_marginRightPercent="@fraction/peog_margin"
-        app:layout_heightPercent="95%"
-        app:layout_widthPercent="95%"
         android:text="01:30"
         android:includeFontPadding="false"
         android:paddingTop="0px"
@@ -44,4 +39,4 @@
         android:layout_height="0dp"
     />
 
-</androidx.percentlayout.widget.PercentRelativeLayout>
+</android.widget.RelativeLayout>

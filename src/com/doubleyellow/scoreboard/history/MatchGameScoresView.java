@@ -380,7 +380,7 @@ public class MatchGameScoresView extends LinearLayout
             iRow++;
             Player gameWinner = Util.getWinner(scores);
 
-            final RelativeLayout tr = (RelativeLayout) inflater.inflate(R.layout.scores_horizontal, null);
+            final ViewGroup tr = (ViewGroup) inflater.inflate(R.layout.scores_horizontal, null);
             tr.setBackgroundColor(bgColorLoser);
 
             AutoResizeTextView txtMax = null;
@@ -433,8 +433,9 @@ public class MatchGameScoresView extends LinearLayout
                 txtMax.addOnResizeListener(onTextResizeListener);
             } else {
                 int height = mInstanceOrientation2RowHeight.get(instanceKey);
-                if ( height == 0 && isInEditMode() ) {
-                    height = 20;
+                if ( (height == 0) && isInEditMode() ) {
+                    //if ( height == 0) throw new RuntimeException(instanceKey + " Temp " + this.getWidth() + "," + this.getHeight() + "," + ViewUtil.getScreenHeightWidthMaximum(getContext()));
+                    height = mInstanceOrientation2RowHeight.get(0);
                 }
                 lpT2B_wmp_hwc.height = height;
             }
@@ -590,7 +591,7 @@ public class MatchGameScoresView extends LinearLayout
             iRow++;
             Player gameWinner = Util.getWinner(scores);
 
-            final RelativeLayout col = (RelativeLayout) inflater.inflate(iResIdInflate, null);
+            final ViewGroup col = (ViewGroup) inflater.inflate(iResIdInflate, null);
             col.setBackgroundColor(bgColorLoser);
 
             AutoResizeTextView txtMax = null;
@@ -651,8 +652,8 @@ public class MatchGameScoresView extends LinearLayout
                 txtMax.addOnResizeListener(onTextResizeListener);
             } else {
                 Integer width = mInstanceOrientation2ColWidth.get(instanceKey);
-                if ( width == 0 && isInEditMode() ) {
-                    width = 20;
+                if ( (width == 0) && isInEditMode() ) {
+                    width = mInstanceOrientation2ColWidth.get(0);
                 }
                 lpL2R_wwc_hmp.width = width;
             }
@@ -770,6 +771,10 @@ public class MatchGameScoresView extends LinearLayout
     private void setValuesFromXml(AttributeSet attrs) {
         if ( attrs == null ) { return; }
         //textSizePx      = getResources().getInteger(attrs.getAttributeResourceValue(APPLICATION_NS, "textSizePx" , textSizePx));
+        m_sPreviewScores= attrs.getAttributeValue       (APPLICATION_NS, "previewScores");
+        m_iPreviewRowHeight= attrs.getAttributeIntValue (APPLICATION_NS, "previewRowHeight", m_iPreviewRowHeight);
+        m_iPreviewColWidth = attrs.getAttributeIntValue (APPLICATION_NS, "previewColWidth" , m_iPreviewColWidth);
+
         m_leftToRight   = attrs.getAttributeBooleanValue(APPLICATION_NS, "leftToRight", m_leftToRight);
         m_showNames     = attrs.getAttributeBooleanValue(APPLICATION_NS, "showNames"  , m_showNames);
         m_showTimes     = attrs.getAttributeBooleanValue(APPLICATION_NS, "showTimes"  , m_showTimes);
@@ -819,23 +824,40 @@ public class MatchGameScoresView extends LinearLayout
         update(m_players, m_gamesScores, m_playerNames, m_countries, m_gameTimes, m_eventDivision, m_pointsDiff);
     }
 
+    private String m_sPreviewScores    = null;
+    private int    m_iPreviewRowHeight = 50;
+    private int    m_iPreviewColWidth  = 50;
+
     private void doIDEPreview() {
         if ( super.isInEditMode() ) {
+            if ( StringUtil.isEmpty(m_sPreviewScores) ) {
+                m_sPreviewScores = "2-11,11-3,11-4";
+            }
+            mInstanceOrientation2RowHeight.put(0,m_iPreviewRowHeight);
+            mInstanceOrientation2ColWidth .put(0,m_iPreviewColWidth);
+
+            Map<Player, Integer> pi = new HashMap<>();
             List<Map<Player, Integer>> gameScores = new ArrayList<Map<Player, Integer>>();
+            String[] saScores = m_sPreviewScores.split("[,-]");
+            Player p = Player.A;
+            for(String sScore: saScores) {
+                pi.put(p, Integer.parseInt(sScore));
+                p = p.getOther();
+                if ( MapUtil.size(pi) == 2 ) {
+                    gameScores.add(pi);
+                    pi = new HashMap<>();
+                }
+            }
 
-            Map<Player, Integer> pi;
-
-            pi = new HashMap<Player, Integer>();
-            pi.put(Player.A, 15);
-            pi.put(Player.B, 13);
-            gameScores.add(pi);
-
-            pi = new HashMap<Player, Integer>();
-            pi.put(Player.A, 3);
-            pi.put(Player.B, 15);
-            gameScores.add(pi);
-
-            update(Player.values(), gameScores, new String[] { "Squash", "Referee" }, new String[] {"ENG", "EGY"}, Arrays.asList(new GameTiming(0, 0,7), new GameTiming(1, 0,6)), "Field 2", null);
+            update(Player.values()
+                    , gameScores
+                    , new String[] { "Squash", "Referee" }
+                    , new String[] {"ENG", "EGY"}
+                    , Arrays.asList(new GameTiming(0, 0,7)
+                    , new GameTiming(1, 0,6))
+                    , "Field 2"
+                    , new HashMap<>());
+            setProperties(Color.YELLOW, Color.BLACK, Color.BLUE, Color.GRAY);
             //throw new RuntimeException("Test only " + gameScores.toString());
             //throw new RuntimeException("Using " + com.doubleyellow.R.color.dy_yellow + " and " + com.doubleyellow.R.color.dy_dark);
         }

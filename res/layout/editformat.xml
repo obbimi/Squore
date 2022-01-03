@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.percentlayout.widget.PercentRelativeLayout
+<android.widget.RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
               android:id="@+id/ll_match"
@@ -72,7 +72,7 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:visibility="visible"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <TextView
                 android:id="@+id/lblTieBreakFormat"
@@ -101,7 +101,7 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:visibility="visible"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <TextView
                 android:id="@+id/lblDoublesServeSequence"
@@ -210,7 +210,7 @@
     </LinearLayout>
     <LinearLayout
         android:id="@+id/llGoldenPoint"
-        android:layout_below="@id/llPauseDuration"
+        android:layout_below="@id/llScoringType"
         android:orientation="horizontal"
         android:gravity="center"
         android:visibility="visible"
@@ -234,4 +234,4 @@
             />
     </LinearLayout>
 
-</androidx.percentlayout.widget.PercentRelativeLayout>
+</android.widget.RelativeLayout>

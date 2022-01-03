@@ -34,9 +34,11 @@
     <string name="pref_Category_Brand">Brand</string>
     <string name="pref_Category_Technical">Technisch</string>
     <string name="pref_Category_End_of_Game">Game Einde</string>
+    <string name="pref_Category_End_of_Game__TennisPadel">Set Einde</string>
     <string name="pref_Category_Others">Others</string>
     <string name="pref_Category_Live_Score_ChromeCast">Live Score/ChromeCast</string>
     <string name="pref_Category_ChromeCast">ChromeCast</string>
+    <string name="pref_Category_BlueToothSync">BlueTooth Mirror</string>
     <string name="pref_Category_Directory_for_import_export">Folder voor import/export</string>
     <string name="pref_Category_Contacts">Contacten</string>
     <string name="pref_Category_Event">Eventen</string>
@@ -67,6 +69,17 @@
     <string name="pref_BehaviourOfficial">Voor officieel gebruik</string>
     <string name="pref_Sharing">Delen</string>
     <string name="pref_Sharing_summary">Via Facebook, SMS of Email</string>
+
+    <!-- Speech -->
+    <string name="pref_Speech">Spraak</string>
+    <string name="pref_Speech_summary">Aankondiging score via speakers (computer stem)</string>
+    <string name="pref_speechPitch">Stem hoogte</string>
+    <string name="pref_speechPitch_summary">Lagere waardes voor lagere stem (0–100)</string>
+    <string name="pref_speechRate">Snelheid</string>
+    <string name="pref_speechRate_summary">Lagere waardes voor tragere stem (0–100)</string>
+    <string name="pref_speechPauseBetweenParts">Pause tussen score onderdelen</string>
+    <string name="pref_speechPauseBetweenParts_summary">Hogere waardes voor langere pause tussen woorden (0–1500)</string>
+
     <string name="pref_Other">Overige</string>
     <string name="pref_Appearance">Aanzicht</string>
     <string name="pref_Appearance_summary">Kleur. Vlaggen. Actie bar.</string>
@@ -116,6 +129,8 @@
     <string name="pref_showSideButtonsWithinScoreButtons_summary">Om \'Score buttons\' nog groter te maken. Alleen voor \'landscape\'</string>
     <string name="pref_AppealHandGestureIconSize">Afmeting van icoon in \'Appeal\' dialoog</string>
     <string name="pref_AppealHandGestureIconSize_summary">Zet op nul om geen icoon weer te geven</string>
+    <string name="pref_newMatchLayout">Nieuwe wedstrijd layout</string>
+    <string name="pref_newMatchLayout_summary">Om slechts een beperkt aantal velden te tonen, selecteer \'Simple\'</string>
     <string name="pref_showChoosenDecisionShortly">Toon genomen beslissing</string>
     <string name="pref_showChoosenDecisionShortly_summary">Toon kort bericht met officiele aankondiging van de genomen beslissing (na Appeal of Conduct)</string>
     <string name="pref_BackKeyBehaviour">\'Back Key\' gedrag</string>
@@ -132,7 +147,9 @@
     <string name="pref_swapPlayersBetweenGames">Verwissel spelers bij de start van een nieuwe game</string>
     <string name="pref_useChangeSidesFeature">Wissel van kant optie</string>
     <string name="pref_changeSidesWhen_GSM">Spelers/teams wisselen van kant</string>
+    <string name="pref_swapPlayersBetweenGames__TennisPadel">Wissel na elke oneven game</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically">Toon details van game automatisch</string>
+    <string name="pref_showDetailsAtEndOfGameAutomatically__TennisPadel">Toon details van set automatisch</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically_summary">Als de game wordt beëindigd, toon dan automatisch de grafiek met het scoreverloop</string>
     <string name="pref_showTips">Toon \'Tips\'</string>
     <string name="pref_recordRallyEndStatsAfterEachScore">Toon \'Winner/Error\'dialoog na elk punt</string>
@@ -160,6 +177,7 @@
     <string name="pref_MatchGameDuration">Game/Wedstrijd duur</string>
     <string name="pref_showMatchDurationChronoOn">Toon \'Duur van de wedstrijd\' op</string>
     <string name="pref_showLastGameDurationChronoOn">Toon \'Duur van de game\' op</string>
+    <string name="pref_showLastGameDurationChronoOn__TennisPadel">Toon \'Duur van de set\' op</string>
     <string name="pref_showFieldDivisionOn">Toon \'Veld of divisie\' op</string>
     <string name="pref_timerViewType">Timer type</string>
     <string name="pref_hapticFeedbackPerPoint">Haptic terugkoppeling per punt</string>
@@ -171,6 +189,7 @@
     <string name="pref_indicateGameBall">Geef \'game bal\' aan</string>
     <string name="pref_indicateGameBall_summary">Geef visuele feedback in score buttons over het feit dat volgende rally game winst kan betekenen</string>
     <string name="pref_floatingMessageForGameBall">Toon \'game bal\' bericht</string>
+    <string name="pref_floatingMessageForGameBall__TennisPadel">Toon \'set bal\' bericht</string>
     <string name="pref_floatingMessageForGameBall_summary">Geef een \'floating\' bericht over het feit dat volgende rally game en/of match winst kan betekenen</string>
     <string name="pref_showNewMatchFloatButton">Toon \'zwevende\' knop voor het starten van een nieuwe wedstrijd</string>
     <string name="pref_showNewMatchFloatButton_summary">Toon indien van toepassing</string>
@@ -212,6 +231,8 @@
     <string name="pref_timerPauseBetweenGames_summary">Het aantal seconden dat de spelers mogen rusten tussen 2 games. Officieel 90 seconden. (PSA: 120)</string>
     <string name="pref_timerPauseBetweenGames_values">Waarden voor de tijd tussen 2 games</string>
     <string name="pref_timerPauseBetweenGames_values_summary">Selecteerbare waarden bij aanvang van een match voor het aantal seconden tussen 2 games (standaard 90 of 120)</string>
+    <string name="pref_timerWarmup_values">Selecteerbare waarden voor warmup</string>
+    <string name="pref_timerWarmup_values_summary">Selecteerbare waarden voor warmup aan het begin van een wedstrijd</string>
     <string name="pref_timerInjury">Aantal seconden voor een blessure time-out</string>
     <string name="pref_timerInjury_summary">Het aantal seconden dat de spelers mogen gebruiken om verder te spelen indien een zich een blessure voor doet. Officieel 180 seconden.</string>
 <!--
@@ -234,6 +255,12 @@
     <string name="pref_useEnglishScoring_summary">\'Oude\' telling waarbij alleen gescoord kan worden als men opslag heeft</string>
     <string name="pref_tiebreakFormat">Tie-break regel</string>
     <string name="pref_tiebreakFormat_summary">Welke regel wordt gevolgd in het geval van een tie-break</string>
+
+    <string name="pref_web_wearable">Wearable</string>
+    <string name="pref_wearable_syncColorPrefs">Sync Kleur Instellingen</string>
+    <string name="pref_wearable_allowScoringWithHardwareButtons">Score kan aangepast worden met Wearable Hardware knoppen</string>
+    <string name="pref_wearable_allowScoringWithRotary">Score kan aangepast worden met de Wearable Rotary</string>
+
     <string name="pref_web_integration">Internet</string>
     <string name="pref_web_integration_summary">Feed URLs voor wedstrijd selectie. Post uitslag naar web site. Share wedstrijd uitslag.</string>
     <string name="pref_playerList">Spelers Lijst</string>
@@ -284,13 +311,6 @@
     <string name="pref_suggestToPostResult">Stel voor om resultaat te posten</string>
     <string name="pref_suggestToPostResult_summary">Stel voor om de uitslag van een wedstrijd naar de website te posten wanneer een wedstrijd is beëindigd.</string>
     <string name="pref_showCompletedMatchesFromFeed">Toon reeds gespeelde wedstrijden</string>
-    <string name="pref_hideCompletedMatchesFromFeed">Verberg reeds gespeelde wedstrijden</string>
-    <string name="pref_hideCompletedMatchesFromFeed_summary">Een feed kan ook reeds gespeeld wedstrijden bevatten (door het resultaat te vermelden). Als je deze wedstrijden niet wilt zien vink dan deze optie aan.</string>
-    <string name="pref_groupMatchesInFeedByCourt">Groepeer bij court</string>
-    <string name="pref_groupMatchesInFeedByCourt_summary">In een feed kan per match worden aangegeven op welke court de wedstrijd gespeeld wordt. Als dit zo is, en deze optie is actief, zullen de matches per court gegroepeerd worden</string>
-    <string name="pref_removeSeedingAfterMatchSelection">Verwijder plaatsing van spelers naam</string>
-    <string name="pref_removeSeedingAfterMatchSelection_summary">Verwijder eg. de [5/8] plaatsing string na het selecteren van een match van een feed</string>
-    <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Toon speler lijst als match lijst (nog) leeg is</string>
     <string name="pref_VisibilityOfNewTournaments">Selecteerbaarheid toernooien</string>
     <string name="pref_tournamentWasBusy_DaysBack">Toernooi einde</string>
     <string name="pref_tournamentWasBusy_DaysBack_summary">Het toernooi eindige maximaal x dagen geleden</string>
@@ -298,6 +318,13 @@
     <string name="pref_tournamentWillStartIn_DaysAhead_summary">Het toernooi start over x dagen of minder</string>
     <string name="pref_tournamentMaxDuration_InDays">Toernooi duur</string>
     <string name="pref_tournamentMaxDuration_InDays_summary">Het toernooi duurt minder dan x dagen</string>
+    <string name="pref_hideCompletedMatchesFromFeed">Verberg reeds gespeelde wedstrijden</string>
+    <string name="pref_hideCompletedMatchesFromFeed_summary">Een feed kan ook reeds gespeeld wedstrijden bevatten (door het resultaat te vermelden). Als je deze wedstrijden niet wilt zien vink dan deze optie aan.</string>
+    <string name="pref_groupMatchesInFeedByCourt">Groepeer bij court</string>
+    <string name="pref_groupMatchesInFeedByCourt_summary">In een feed kan per match worden aangegeven op welke court de wedstrijd gespeeld wordt. Als dit zo is, en deze optie is actief, zullen de matches per court gegroepeerd worden</string>
+    <string name="pref_removeSeedingAfterMatchSelection">Verwijder plaatsing van spelers naam</string>
+    <string name="pref_removeSeedingAfterMatchSelection_summary">Verwijder eg. de [5/8] plaatsing string na het selecteren van een match van een feed</string>
+    <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Toon speler lijst als match lijst (nog) leeg is</string>
     <string name="pref_smsResultToNr">Default telefoon nummer voor \'Verstuur uitslag per SMS\'</string>
     <string name="pref_smsResultToNr_summary">Het telefoonnummer dat vooringevuld is als je menu optie \'Verstuur uitslag per SMS\' kiest</string>
     <!--<string name="pref_smsResultToNr_not_set">Je kan een default ontvanger ingeven in het \'%1$s\' scherm van \'%2$s\'</string>-->

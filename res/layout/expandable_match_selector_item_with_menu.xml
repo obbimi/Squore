@@ -4,7 +4,7 @@
               android:layout_height="wrap_content"
               android:tag="item"
               android:layout_alignParentTop="true"
-              android:layout_alignParentLeft="true"
+              android:layout_alignParentStart="true"
               android:descendantFocusability="blocksDescendants"
               >
     <!-- style="@style/card.header_compound_view" -->
@@ -12,7 +12,7 @@
     <TextView
             android:id="@+id/lblListItem"
             android:tag="item"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:padding="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,8 +20,8 @@
             android:textStyle="normal"
             android:textSize="@dimen/txt_small"
             android:textColor="@color/dy_dark"
-            android:layout_marginLeft="20dp"
-            android:gravity="left|center"/>
+            android:layout_marginStart="20dp"
+            android:gravity="start|center"/>
     <ImageButton
             style="@style/explist.item_overflow"
             android:tag="header"

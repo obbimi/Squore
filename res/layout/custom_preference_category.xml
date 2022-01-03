@@ -5,6 +5,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
     <!--
+    Use by preferences.xml
+
     The default:
     /osshare/software/google/platforms/android-23/data/res/layout/preference_category.xml
     does not have a category in its layout...
@@ -19,6 +21,7 @@
             android:id="@android:id/summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:paddingStart="5dp"/>
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+        />
 </LinearLayout>

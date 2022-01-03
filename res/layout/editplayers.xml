@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.percentlayout.widget.PercentRelativeLayout
+<android.widget.RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:dy="http://double-yellow.be"
               android:id="@+id/ll_match"
@@ -107,7 +107,7 @@
                     android:maxLines="1"
                     android:nextFocusDown="@+id/match_playerB"
                     android:imeOptions="actionNext"
-                    android:text="Player A"
+                    android:text="@string/lbl_player_A"
                     android:layout_gravity="center_horizontal"/>
             <com.doubleyellow.scoreboard.view.PlayerTextView
                     android:id="@id/match_playerB"
@@ -124,9 +124,9 @@
                     android:singleLine="true"
                     android:maxLines="1"
                     android:imeOptions="actionDone"
-                    android:text="Player B"
+                    android:text="@string/lbl_player_B"
                     android:layout_gravity="center_horizontal"/>
         </LinearLayout>
     </LinearLayout>
 
-</androidx.percentlayout.widget.PercentRelativeLayout>
+</android.widget.RelativeLayout>

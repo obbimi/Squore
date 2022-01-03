@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:tag="mainBackgroundColor"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <TextView android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-        android:text="@string/select_reason_and_winner"
-    />
-    <com.doubleyellow.android.view.SelectEnumView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/evReason"
-        app:enum_class="com.doubleyellow.scoreboard.model.EndMatchManuallyBecause"
-        app:enum_display_values="@array/EndMatchManuallyBecause_DisplayValues"
-        app:enum_columns="1"
-        android:background="@color/dy_dark"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:tag="mainBackgroundColor">
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="@string/select_reason_and_winner" />
+
+    <com.doubleyellow.android.view.SelectEnumView
+        android:id="@+id/evReason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dy_dark"
+        app:enum_class="com.doubleyellow.scoreboard.model.EndMatchManuallyBecause"
+        app:enum_columns="1"
+        app:enum_display_values="@array/EndMatchManuallyBecause_DisplayValues" />
 </LinearLayout>

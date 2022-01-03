@@ -16,4 +16,6 @@
         android:maxLines="1"
         android:imeOptions="actionNext"
         android:text="Player A"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal">
+    <!-- Used by StaticMatchSelector -->
+</com.doubleyellow.scoreboard.view.PlayerTextView>

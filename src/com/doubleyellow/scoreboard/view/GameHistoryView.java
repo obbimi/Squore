@@ -263,15 +263,20 @@ public class GameHistoryView extends ScrollView
         tableLayout.setGravity(Gravity.CENTER);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         this.addView(tableLayout, layoutParams);
+        if ( isInEditMode() ) {
+            initPreview(tableLayout);
+            //throw new RuntimeException("Temp test");
+        }
     }
 
     private static final String APPLICATION_NS = "http://double-yellow.be";
     private void setValuesFromXml(AttributeSet attrs) {
         if ( attrs == null ) { return; }
         Resources resources = getResources();
-        textSizePx      = resources.getInteger(attrs.getAttributeResourceValue(APPLICATION_NS, "textSizePx" , textSizePx));
 
         try {
+            iNrOfPreviewLines=attrs.getAttributeIntValue(APPLICATION_NS, "nrOfPreviewLines" , iNrOfPreviewLines);
+            textSizePx      = resources.getInteger(attrs.getAttributeResourceValue(APPLICATION_NS, "textSizePx" , textSizePx));
             backgroundColor = attrs.getAttributeResourceValue(APPLICATION_NS, "backgroundColor", backgroundColor);
             textColor       = attrs.getAttributeResourceValue(APPLICATION_NS, "textColor"      , textColor);
 
@@ -301,21 +306,29 @@ public class GameHistoryView extends ScrollView
         update(false);
     }
 
-    @Override public void addView(View child, ViewGroup.LayoutParams params) {
-      //Log.i(TAG, "adding child");
+    private int iNrOfPreviewLines = 10;
+    private void initPreview(TableLayout child) {
+        setAutoScrollDown(false);
+        tableLayout = child;
+        history = new ArrayList<ScoreLine>();
+        int[] iaScores = new int[] {0,0};
+        Player pPrev = Player.A;
+        ServeSide[] serveSide = new ServeSide[] { ServeSide.R, null};
+        for ( int i=0; i< iNrOfPreviewLines; i++ ) {
+            int i0or1 = (int) Math.round(Math.random());
+            Player pScorer = Player.values()[i0or1];
+            iaScores[i0or1]++;
+            ScoreLine sl = new ScoreLine(serveSide[0], i0or1==0?iaScores[0]:null, serveSide[1], i0or1==1?iaScores[1]:null);
+            history.add(sl);
 
-        super.addView(child, params); // invoke second if a child is defined in the xml layout file
-        if ( child.isInEditMode() ) {
-            setAutoScrollDown(false);
-            tableLayout = (TableLayout) child;
-            history = new ArrayList<ScoreLine>();
-            history.add(new ScoreLine("R1--"));
-            history.add(new ScoreLine("L--1"));
-            history.add(new ScoreLine("--R2"));
-            history.add(new ScoreLine("-2L-"));
-
-            update(false);
+            serveSide[i0or1] = serveSide[i0or1]==null?ServeSide.R:serveSide[i0or1].getOther();
+            if ( pScorer.equals(pPrev) == false ) {
+                serveSide[pScorer.getOther().ordinal()] = null;
+            }
+            pPrev = pScorer;
         }
+
+        update(false);
     }
 
     public void setStretchAllColumns(boolean bValue) {
