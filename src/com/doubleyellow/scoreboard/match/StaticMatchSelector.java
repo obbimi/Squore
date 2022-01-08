@@ -559,12 +559,13 @@ public class StaticMatchSelector extends ExpandableMatchSelector
             return true;
         }
 
-        String   sPlayers  = sText.replaceAll("^[^A-Z]*", ""); // remove time/date/day and numbers from start of string (until first capital)
+        String   sPlayers  = sText; //.replaceAll("^[^A-Z]*", ""); // remove time/date/day and numbers from start of string (until first capital)
         String[] saPlayers = sPlayers.split("\\Q" + NAMES_SPLITTER + "\\E");
         if ( saPlayers.length < 2 ) {
-            saPlayers = sPlayers.split("\\s*-\\s*");
+            saPlayers = sText.split("\\s*-\\s*");
         }
         if ( saPlayers.length < 2 ) {
+            Toast.makeText(context, "Sorry, could not determine player names from selected line : " + sText, Toast.LENGTH_SHORT).show();
             activity.finish();
             return false;
         }

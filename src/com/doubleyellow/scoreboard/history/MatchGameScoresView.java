@@ -287,11 +287,11 @@ public class MatchGameScoresView extends LinearLayout
             this.gsv = gsv;
             this.gsv.setVisibility(View.INVISIBLE);
             View parent = (View) gsv.getParent();
-            while( parent.getParent() instanceof View ) {
+            while( (parent != null) && parent.getParent() instanceof View ) {
                 parent = (View) parent.getParent();
             }
           //Log.d(TAG, "MGSV parent :" + parent);
-            View sbRootView = parent.findViewById(R.id.squoreboard_root_view);
+            View sbRootView = parent==null?null:parent.findViewById(R.id.squoreboard_root_view);
           //Log.d(TAG, "MGSV parent :" + sbRootView);
             this.m_iRestoreVisibilityTo = View.VISIBLE;
             GameScoresAppearance gameScoresAppearance = PreferenceValues.getGameScoresAppearance(getContext());
