@@ -27,6 +27,11 @@ import android.database.Cursor;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
+import android.media.session.MediaSession;
+import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.nfc.*;
 import android.nfc.tech.NfcF;
@@ -1006,6 +1011,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
+        //onResume_BluetoothMediaControlButtons();
+
         // one-of correct incorrect default
         if ( Brand.isSquash() ) {
             if ( PreferenceValues.getAppVersionCode(this) == 156 ) {
@@ -1256,6 +1263,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         onResumeNFC();
         onResumeBlueTooth();
+        onResume_BluetoothMediaControlButtons();
         onResumeWearable();
         if ( PreferenceValues.isCastRestartRequired() ) {
             onActivityStop_Cast();
@@ -7160,4 +7168,165 @@ touch -t 01030000 LAST.sb
             m_speak.playAllDelayed(-1);
         }
     }
+
+    // ----------------------------------------------------
+    // --- control via bluetooth media player buttons -----
+    // ----------------------------------------------------
+    private MediaSession ms;
+    private boolean onResume_BluetoothMediaControlButtons() {
+        if ( isWearable() ) { return false; }
+
+        boolean bInitialize = PreferenceValues.initializeForScoringWithMediaControlButtons(this);
+        if ( bInitialize ) {
+            // https://stackoverflow.com/questions/54414333/mediasession-onmediabuttonevent-works-for-a-few-seconds-then-quits-android
+            // work if bluetooth connection is already established
+
+            if ( ms == null ) {
+                ms = new MediaSession(getApplicationContext(), getPackageName());
+
+                // this is required or else some for some devices some buttons presses don't make it here (e.g. Plantronic headphone)
+                PlaybackState.Builder mStateBuilder = new PlaybackState.Builder()
+                        .setActions( PlaybackState.ACTION_PLAY
+                                   | PlaybackState.ACTION_PAUSE
+                                   | PlaybackState.ACTION_SKIP_TO_PREVIOUS
+                                   | PlaybackState.ACTION_SKIP_TO_NEXT
+                                   | PlaybackState.ACTION_PLAY_PAUSE);
+                ms.setPlaybackState(mStateBuilder.build());
+
+                ms.setCallback(new MediaSession.Callback() {
+                    boolean bHandleNextDown = true;
+                    @Override public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
+                        Bundle extras1 = mediaButtonIntent.getExtras();
+                        KeyEvent keyEvent = (KeyEvent) extras1.get(Intent.EXTRA_KEY_EVENT);
+                        int keyCode = keyEvent.getKeyCode();
+                        Log.i(TAG, "[onMediaButtonEvent] keyCode " + keyCode + " [" + (keyEvent.getAction() == KeyEvent.ACTION_UP?"up":"down") + "]");
+                        if ( keyEvent.getAction() == KeyEvent.ACTION_DOWN ) {
+                            switch (keyCode) {
+                                case KeyEvent.KEYCODE_MEDIA_PLAY:
+                                case KeyEvent.KEYCODE_MEDIA_PAUSE: // only triggered for down not for up?
+                                    // often the same button
+                                    handleMenuItem(R.id.dyn_undo_last);
+                                    return true;
+                                case KeyEvent.KEYCODE_MEDIA_REWIND:       // long press 'previous'
+                                case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                                case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD: // long press 'next'
+                                case KeyEvent.KEYCODE_MEDIA_NEXT:
+                                    if ( bHandleNextDown ) {
+                                        bHandleNextDown = false;
+                                        if ( isDialogShowing() ) {
+                                            // TODO: test
+                                            dialogManager.baseDialog.handleButtonClick(DialogInterface.BUTTON_POSITIVE);
+                                            return true;
+                                        } else {
+                                            boolean bIsBack = keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS || keyCode == KeyEvent.KEYCODE_MEDIA_REWIND;
+                                            Player player = bIsBack ? Player.A : Player.B;
+                                            handleMenuItem(R.id.pl_change_score, player);
+                                            return true;
+                                        }
+                                    }
+                            }
+                        } else if ( keyEvent.getAction() == KeyEvent.ACTION_UP ) {
+                            bHandleNextDown = true;
+                            // up is only triggered for 'short' press. Long press means something different?!
+                            switch (keyCode) {
+/*
+                                case KeyEvent.KEYCODE_MEDIA_REWIND:       // long press 'previous'
+                                case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                                case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD: // long press 'next'
+                                case KeyEvent.KEYCODE_MEDIA_NEXT:
+                                    if ( isDialogShowing() ) {
+                                        // TODO: test
+                                        dialogManager.baseDialog.handleButtonClick(DialogInterface.BUTTON_POSITIVE);
+                                        return true;
+                                    } else {
+                                        boolean bIsBack = keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS || keyCode == KeyEvent.KEYCODE_MEDIA_REWIND;
+                                        Player player = bIsBack ? Player.A : Player.B;
+                                        handleMenuItem(R.id.pl_change_score, player);
+                                        return true;
+                                    }
+*/
+                            }
+                        }
+                        return super.onMediaButtonEvent(mediaButtonIntent);
+                    }
+
+/*
+                    @Override public void onSkipToNext() {
+                        Log.i(TAG, "[onSkipToNext]"); // typically invoked between single-down-followed-by-an-up sequence
+                        super.onSkipToNext();
+                    }
+
+                    @Override public void onSkipToPrevious() {
+                        Log.i(TAG, "[onSkipToPrevious]");
+                        super.onSkipToPrevious();
+                    }
+
+                    @Override public void onPlay() {
+                        Log.i(TAG, "[onPlay]");
+                        super.onPlay();
+                    }
+                    @Override public void onPause() {
+                        Log.i(TAG, "[onPause]");
+                        super.onPause();
+                    }
+
+                    @Override public void onFastForward() {
+                        Log.i(TAG, "[onFastForward]");
+                        super.onFastForward();
+                    }
+
+                    @Override public void onRewind() {
+                        Log.i(TAG, "[onRewind]");
+                        super.onRewind();
+                    }
+*/
+                });
+                ms.setActive(true);
+            }
+
+            // play dummy audio: todo: redo this every x seconds?
+            AudioTrack at = new AudioTrack( AudioManager.STREAM_MUSIC
+                    , 48000
+                    , AudioFormat.CHANNEL_OUT_STEREO
+                    , AudioFormat.ENCODING_PCM_16BIT
+                    , AudioTrack.getMinBufferSize(48000, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT)
+                    , AudioTrack.MODE_STREAM
+            );
+            at.play();
+
+            // a little sleep
+            at.stop();
+            at.release();
+
+/*
+            BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
+            if ( defaultAdapter != null ) {
+                defaultAdapter.getProfileProxy(this, serviceListener, BluetoothProfile.HEADSET);
+            }
+*/
+
+        }
+        return true;
+    }
+
+/*
+    private BluetoothProfile.ServiceListener serviceListener = new BluetoothProfile.ServiceListener()
+    {
+        @Override public void onServiceDisconnected(int profile)
+        {
+            Log.i("onServiceDisconnected", "|" + profile + ")");
+        }
+
+        @Override public void onServiceConnected(int profile, BluetoothProfile proxy)
+        {
+            for (BluetoothDevice device : proxy.getConnectedDevices())
+            {
+                String name = device.getName();
+                String address = device.getAddress();
+                int connectionState = proxy.getConnectionState(device);
+                Log.i("onServiceConnected", "|" + name + " | " + address + " | " + (connectionState ==BluetoothProfile.STATE_CONNECTED?"Connected":"Not conneted"));
+            }
+        }
+    };
+*/
 }

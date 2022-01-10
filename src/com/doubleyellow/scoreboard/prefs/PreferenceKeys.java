@@ -298,6 +298,8 @@ public enum PreferenceKeys {
 
     enableScoringByBluetoothConnection,
         lastConnectedBluetoothDevice,
+    /** e.g use 'Previous song' for scoring for player A, and 'Next song' for scoring for B, and play/pause for 'Undo' */
+    allowForScoringWithBlueToothConnectedMediaControlButtons,
 
     wearable,
         wearable_syncColorPrefs,

@@ -66,6 +66,7 @@
         \n %2$s</string>
     <string name="pref_Behaviour">Behaviour</string>
     <string name="pref_Behaviour_summary">Preferred behaviour of visual elements. Official announcements.</string>
+    <string name="pref_MediaPlaybackButtons">Scoring by Media Playback Buttons</string>
     <string name="pref_BehaviourConvenience">Convenience</string>
     <string name="pref_BehaviourOfficial">For official usage</string>
     <string name="pref_Sharing">Sharing</string>
@@ -199,6 +200,8 @@
     <string name="pref_floatingMessageForGameBall">Show \'game ball\' message</string>
     <string name="pref_floatingMessageForGameBall__TennisPadel">Show \'set ball\' message</string>
     <string name="pref_floatingMessageForGameBall_summary">Show a \'floating message\' when it is game- or match ball</string>
+    <string name="pref_allowForScoringWithBlueToothConnectedMediaControlButtons">Allow scoring via media playback control buttons</string>
+    <string name="pref_allowForScoringWithBlueToothConnectedMediaControlButtons_summary">e.g use \'Previous song\' for scoring for player A, and \'Next song\' for scoring for B, and \'Play/Pause\' for Undo</string>
     <string name="pref_showNewMatchFloatButton">Show \'New Match\' floating button</string>
     <string name="pref_showNewMatchFloatButton_summary">Show conventient floating button to start a new match (when appropriate)</string>
     <string name="pref_keepScreenOn">Keep screen on</string>

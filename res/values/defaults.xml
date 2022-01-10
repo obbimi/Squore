@@ -167,6 +167,7 @@ http://developer.android.com/guide/practices/screens_support.html
 <!--
     <bool name="longClickScoreButtonTriggersAdjustScore_default">false</bool>
 -->
+    <bool name="allowForScoringWithBlueToothConnectedMediaControlButtons_default">false</bool>
     <bool name="showNewMatchFloatButton_default">true</bool>
     <bool name="useSoundNotificationInTimer_default">false</bool>
     <bool name="useVibrationNotificationInTimer_default">true</bool>

@@ -429,6 +429,16 @@
             android:persistent="false"
             />
 
+        <PreferenceCategory android:title="@string/pref_MediaPlaybackButtons">
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="allowForScoringWithBlueToothConnectedMediaControlButtons"
+                android:title="@string/pref_allowForScoringWithBlueToothConnectedMediaControlButtons"
+                android:summary="@string/pref_allowForScoringWithBlueToothConnectedMediaControlButtons_summary"
+                android:defaultValue="@bool/allowForScoringWithBlueToothConnectedMediaControlButtons_default"
+                />
+        </PreferenceCategory>
+
         <PreferenceCategory android:title="@string/pref_BehaviourConvenience">
             <CheckBoxPreference
                 android:icon="@drawable/dummy"
