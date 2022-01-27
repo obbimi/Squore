@@ -879,11 +879,22 @@
             <EditTextPreference android:key="castScreenLogoUrl"
                 android:icon="@drawable/ic_chromecast"
                 android:title="@string/pref_castScreenLogoUrl"
-                android:defaultValue="/cast/logo/%s"
+                android:defaultValue=""
+                />
+            <CheckBoxPreference android:key="castScreenShowLogo"
+                android:title="@string/pref_castScreenShowLogo"
+                android:icon="@drawable/dummy"
+                android:defaultValue="true"
                 />
             <EditTextPreference android:key="castScreenSponsorUrl"
                 android:icon="@drawable/ic_chromecast"
                 android:title="@string/pref_castScreenSponsorUrl"
+                android:defaultValue=""
+                />
+            <CheckBoxPreference android:key="castScreenShowSponsor"
+                android:title="@string/pref_castScreenShowSponsor"
+                android:icon="@drawable/dummy"
+                android:defaultValue="true"
                 />
 
 <!--

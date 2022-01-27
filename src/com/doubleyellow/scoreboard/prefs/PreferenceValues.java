@@ -1019,8 +1019,14 @@ public class PreferenceValues extends RWValues
     public static String castScreenLogoUrl(Context context) {
         return RWValues.getString(PreferenceKeys.castScreenLogoUrl, "", context);
     }
+    public static boolean castScreenShowLogo(Context context) {
+        return RWValues.getBoolean(PreferenceKeys.castScreenShowLogo, context, true);
+    }
     public static String castScreenSponsorUrl(Context context) {
         return RWValues.getString(PreferenceKeys.castScreenSponsorUrl, "", context);
+    }
+    public static boolean castScreenShowSponsor(Context context) {
+        return RWValues.getBoolean(PreferenceKeys.castScreenShowSponsor, context, true);
     }
 /*
     public static boolean Cast_ShowGraphDuringTimer(Context context) {

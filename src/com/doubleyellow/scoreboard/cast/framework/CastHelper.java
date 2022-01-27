@@ -489,62 +489,62 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         }
         CastSession castSession = m_castSession;
         if ( castSession != null ) {
-        castSession.addCastListener(new CastListener());
-        try {
-            castSession.setMessageReceivedCallbacks(URN_X_CAST + m_sMessageNamespace, new Cast.MessageReceivedCallback() {
-                @Override public void onMessageReceived(CastDevice castDevice, String sNamespace, String sMsg) {
-                    Log.d(TAG, String.format("received message back from %s [%s] : %s", castDevice.getFriendlyName(), sNamespace, sMsg));
+            castSession.addCastListener(new CastListener());
+            try {
+                castSession.setMessageReceivedCallbacks(URN_X_CAST + m_sMessageNamespace, new Cast.MessageReceivedCallback() {
+                    @Override public void onMessageReceived(CastDevice castDevice, String sNamespace, String sMsg) {
+                        Log.d(TAG, String.format("received message back from %s [%s] : %s", castDevice.getFriendlyName(), sNamespace, sMsg));
 
-                    try {
-                        JSONObject mMessage = new JSONObject(sMsg);
-                        if ( m_context instanceof ScoreBoard ) {
-                            ScoreBoard sb = (ScoreBoard) m_context;
-                            sb.handleMessageFromCast(mMessage);
+                        try {
+                            JSONObject mMessage = new JSONObject(sMsg);
+                            if ( m_context instanceof ScoreBoard ) {
+                                ScoreBoard sb = (ScoreBoard) m_context;
+                                sb.handleMessageFromCast(mMessage);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            try {
+                CastDevice castDevice = castSession.getCastDevice();
+                if ( castDevice != null ) {
+                    String sFriendlyName = castDevice.getFriendlyName();
+                    Log.d(TAG, "castDevice.getFriendlyName(): " + sFriendlyName); // e.g. Living
                 }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                Cast.ApplicationConnectionResult applicationConnectionResult = castSession.getApplicationConnectionResult();
 
+                ApplicationMetadata applicationMetadata = castSession.getApplicationMetadata();
+                if ( applicationMetadata != null ) {
+                    List<String> supportedNamespaces = applicationMetadata.getSupportedNamespaces(); // the namespaces added by the receiver using m_crContext.addCustomMessageListener(namespace)
+                    Log.d(TAG, "Supported namespaces: " + ListUtil.join(supportedNamespaces, "\n") );
+                    // [ urn:x-cast:com.google.cast.cac
+                    // , urn:x-cast:com.google.cast.debugoverlay
+                    // , urn:x-cast:com.google.cast.debuglogger
+                    // , urn:x-cast:com.doubleyellow.scoreboard
+                    // , urn:x-cast:com.doubleyellow.badminton
+                    // , urn:x-cast:com.doubleyellow.tennispadel
+                    // , urn:x-cast:com.doubleyellow.tabletennis
+                    // , urn:x-cast:com.google.cast.broadcast
+                    // , urn:x-cast:com.google.cast.media
+                    // ]
+                }
 
-        try {
-            CastDevice castDevice = castSession.getCastDevice();
-            if ( castDevice != null ) {
-                String sFriendlyName = castDevice.getFriendlyName();
-                Log.d(TAG, "castDevice.getFriendlyName(): " + sFriendlyName); // e.g. Living
+                RemoteMediaClient remoteMediaClient = castSession.getRemoteMediaClient();
+                if ( remoteMediaClient != null ) {
+                    Log.d(TAG, "remoteMediaClient.getNamespace(): " + remoteMediaClient.getNamespace()); // urn:x-cast:com.google.cast.media
+    /*
+                    remoteMediaClient.registerCallback(new RemoteMediaClient.Callback() { });
+    */
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            Cast.ApplicationConnectionResult applicationConnectionResult = castSession.getApplicationConnectionResult();
-
-            ApplicationMetadata applicationMetadata = castSession.getApplicationMetadata();
-            if ( applicationMetadata != null ) {
-                List<String> supportedNamespaces = applicationMetadata.getSupportedNamespaces(); // the namespaces added by the receiver using m_crContext.addCustomMessageListener(namespace)
-                Log.d(TAG, "Supported namespaces: " + ListUtil.join(supportedNamespaces, "\n") );
-                // [ urn:x-cast:com.google.cast.cac
-                // , urn:x-cast:com.google.cast.debugoverlay
-                // , urn:x-cast:com.google.cast.debuglogger
-                // , urn:x-cast:com.doubleyellow.scoreboard
-                // , urn:x-cast:com.doubleyellow.badminton
-                // , urn:x-cast:com.doubleyellow.tennispadel
-                // , urn:x-cast:com.doubleyellow.tabletennis
-                // , urn:x-cast:com.google.cast.broadcast
-                // , urn:x-cast:com.google.cast.media
-                // ]
-            }
-
-            RemoteMediaClient remoteMediaClient = castSession.getRemoteMediaClient();
-            if ( remoteMediaClient != null ) {
-                Log.d(TAG, "remoteMediaClient.getNamespace(): " + remoteMediaClient.getNamespace()); // urn:x-cast:com.google.cast.media
-/*
-                remoteMediaClient.registerCallback(new RemoteMediaClient.Callback() { });
-*/
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         }
 
         //GoogleCast.EventEmitter.addListener();
@@ -583,18 +583,24 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
     private void updateSponsor(Context context) {
         String sSponsorURL = PreferenceValues.castScreenSponsorUrl(context);
-        if ( StringUtil.isNotEmpty(sSponsorURL) ) {
+        boolean bShow   = PreferenceValues.castScreenShowSponsor(context);
+        if ( bShow && StringUtil.isNotEmpty(sSponsorURL) ) {
             sSponsorURL = URLFeedTask.prefixWithBaseIfRequired(sSponsorURL);
             sSponsorURL = String.format(sSponsorURL, Brand.brand);
+        } else {
+            sSponsorURL = "";
         }
         sendFunction(String.format(LogoSponsor_setSponsor + "('%s')", sSponsorURL));
     }
 
     private void updateLogo(Context context) {
         String sLogoURL = PreferenceValues.castScreenLogoUrl(context);
-        if ( StringUtil.isNotEmpty(sLogoURL) ) {
+        boolean bShow   = PreferenceValues.castScreenShowLogo(context);
+        if ( bShow && StringUtil.isNotEmpty(sLogoURL) ) {
             sLogoURL = URLFeedTask.prefixWithBaseIfRequired(sLogoURL);
             sLogoURL = String.format(sLogoURL, Brand.brand);
+        } else {
+            sLogoURL = "";
         }
         sendFunction(String.format(LogoSponsor_setLogo + "('%s')", sLogoURL));
     }

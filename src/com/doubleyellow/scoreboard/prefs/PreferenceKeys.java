@@ -288,7 +288,9 @@ public enum PreferenceKeys {
     ChromeCast,
         useCastScreen,
             castScreenLogoUrl,
+                castScreenShowLogo,
             castScreenSponsorUrl,
+                castScreenShowSponsor,
           //Cast_ShowGraphDuringTimer,
 
     // BT mirror/sync
