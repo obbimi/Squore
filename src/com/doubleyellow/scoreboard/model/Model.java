@@ -1207,6 +1207,10 @@ public abstract class Model implements Serializable
     public int getMaxScore() {
         return Math.max( this.getScore(Player.A), this.getScore(Player.B) );
     }
+    /** maximum score of player A or B of the game given */
+    int getMaxScore(Map<Player, Integer> gameScore) {
+        return MapUtil.getMaxValue( gameScore );
+    }
     /** minimum score of player A or B of the game in progress */
     public int getMinScore() {
         return Math.min( this.getScore(Player.A), this.getScore(Player.B) );
@@ -1214,6 +1218,10 @@ public abstract class Model implements Serializable
     /** score difference between player A and B of the game in progress */
     public int getDiffScore() {
         return Math.abs( this.getScore(Player.A) - this.getScore(Player.B) );
+    }
+    /** score difference between player A and B of the game given */
+    int getDiffScore(Map<Player, Integer> gameScore) {
+        return Math.abs( MapUtil.getMaxValue( gameScore ) - MapUtil.getMinValue( gameScore ) );
     }
     /** score difference between passed player and opponent */
     int getDiffScore(Player p) {
@@ -1225,6 +1233,17 @@ public abstract class Model implements Serializable
             return null;
         }
         if ( getScore(Player.A) == getMaxScore() ) {
+            return Player.A;
+        } else {
+            return Player.B;
+        }
+    }
+    Player getLeaderInGivenGame(Map<Player, Integer> gameScore) {
+        int iDiff = getDiffScore(gameScore);
+        if ( iDiff == 0 ) {
+            return null;
+        }
+        if ( MapUtil.getInt(gameScore, Player.A, 0) == getMaxScore(gameScore) ) {
             return Player.A;
         } else {
             return Player.B;
@@ -3316,7 +3335,8 @@ public abstract class Model implements Serializable
     final Player[] _isPossibleGameVictoryFor(When when, boolean bFromIsMatchBallFrom, boolean bForUndo) {
         Player[] players = m_possibleGameFor.get(when);
         if ( players == null ) {
-            players = calculateIsPossibleGameVictoryFor(when, getScoreOfGameInProgress(), bFromIsMatchBallFrom);
+            Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress();
+            players = calculateIsPossibleGameVictoryFor(when, scoreOfGameInProgress, bFromIsMatchBallFrom);
             setGameVictoryFor(when, players, bForUndo);
         } else {
             //Log.d(TAG, "[_isPossibleGameVictoryFor] " + when + ": Taken from cache " + getPlayersAsList(players) );

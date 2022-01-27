@@ -470,7 +470,11 @@ public class IBoard implements TimerViewContainer
                     tvGameTime.start();
                 }
                 if ( castHelper != null ) {
-                    List<GameTiming> times = matchModel.getTimes();
+                    List<GameTiming> times = matchModel.getTimes(); // returns setTimes for GSM
+                    if ( Brand.isGameSetMatch() ) {
+                        GSMModel gsmModel = (GSMModel) matchModel;
+                        times = gsmModel.getGameTimes();
+                    }
                     if ( ListUtil.isNotEmpty(times) ) {
                         GameTiming last = ListUtil.getLast(times);
                         long lDuration = System.currentTimeMillis() - last.getStart();
@@ -754,11 +758,12 @@ public class IBoard implements TimerViewContainer
                 for(Player player: Player.values() ) {
                     int iNameId = m_player2gamesWonId.get(player);
                     View view = findViewById(iNameId);
+                    Integer iGamesWon = gamesWon.get(player);
                     if ( view instanceof GamesWonButton ) {
                         GamesWonButton v = (GamesWonButton) view;
-                        v.setGamesWon(gamesWon.get(player));
+                        v.setGamesWon(iGamesWon);
                     }
-                    castChangeViewTextMessage(iNameId, gamesWon.get(player));
+                    castChangeViewTextMessage(iNameId, iGamesWon);
                 }
             } else {
                 // set both to zero?

@@ -487,6 +487,14 @@ public class GSMModel extends Model
         }
         return lSetTimings;
     }
+    public List<GameTiming> getGameTimes() {
+        return super.getTimes();
+    }
+/*
+    public List<GameTiming> getSetTimes() {
+        return this.getTimes();
+    }
+*/
 
     @Override public int getDurationInMinutes() {
         if ( ListUtil.isEmpty(m_lGamesTiming_PerSet) ) { return 0; }
@@ -835,19 +843,19 @@ public class GSMModel extends Model
 
         // e.g Beach Tennis has this option, Padel is known to use it from time to time
         if ( m_bGoldenPointToWinGame && (isInTieBreak_TT_RL() == false) ) {
-            int maxScore  = getMaxScore();
-            if ( maxScore >= _getNrOfPointsToWinGame() -1 ) {
-                int diffScore = getDiffScore();
-                Player pLeader = getLeaderInCurrentGame();
+            int maxScore  = getMaxScore(gameScore);
+            if ( maxScore >= iNrOfPointsToWinGame - 1 ) {
+                int diffScore = getDiffScore(gameScore);
+                Player pLeader = getLeaderInGivenGame(gameScore);
 
                 switch ( when ) {
                     case Now:
-                        if ( maxScore == _getNrOfPointsToWinGame() && diffScore > 0 ) {
+                        if ( maxScore == iNrOfPointsToWinGame && diffScore > 0 ) {
                             playersGB =  new Player[] { pLeader } ;
                         }
                         break;
                     case ScoreOneMorePoint:
-                        if ( maxScore >= _getNrOfPointsToWinGame() -1 ) {
+                        if ( maxScore >= iNrOfPointsToWinGame - 1 ) {
                             if ( diffScore == 0 ) {
                                 playersGB = getPlayers();
                             } else {
