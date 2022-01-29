@@ -38,6 +38,13 @@ android {
         // Or, if you prefer, you can continue to check for errors in release builds, but continue the build even when errors are found:
         abortOnError false
         //deprecation true
+
+        // Normally lint will analyze all dependencies along with each module; this ensures
+        // that lint can correctly (for example) determine if a resource declared in a library
+        // is unused; checking only the library in isolation would not be able to identify this
+        // problem. However, this leads to quite a bit of extra computation; a library is
+        // analyzed repeatedly, for each module that it is used in.
+        //checkDependencies false
     }
     defaultConfig {
         // must match (or be larger than) minSdkVersion of AndroidBase
@@ -86,22 +93,22 @@ android {
             dimension "devicetype"
             minSdkVersion 19
             targetSdkVersion 30
-            versionCode 1915 * 10000 + 473
-            versionName "4.44"
+            versionCode 1915 * 10000 + 474
+            versionName "4.45"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 30
-            versionCode 2315 * 10000 + 473
-            versionName "4.44"
+            versionCode 2315 * 10000 + 474
+            versionName "4.45"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 30
-            versionCode 2501 * 10000 + 473
-            versionName "4.44"
+            versionCode 2501 * 10000 + 474
+            versionName "4.45"
         }
     }
     buildTypes {
@@ -159,8 +166,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar']) // AndroidBase and Graph
 
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
     implementation 'androidx.appcompat:appcompat:1.3.1' // moving from 1.3.1 to 1.4.0 makes e.g. android wear in emulator fail
     // not required for building, BUT required for runtime when using newer gradle (20191022)
@@ -168,9 +175,9 @@ dependencies {
   //implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 
     // ChromeCast (new with Custom Receiver)
-    phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:21.0.0'
-    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:21.0.0'
-    wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.0.0' // wearOs can not cast but to run it still needs 'Impementation' to not have 'ClassNotFound' exceptions
+    phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:21.0.1'
+    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:21.0.1'
+    wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.0.1' // wearOs can not cast but to run it still needs 'Impementation' to not have 'ClassNotFound' exceptions
 
     // allow communication between handheld device and wearable
     phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:17.1.0' // compileOnly is good enough for API < 23

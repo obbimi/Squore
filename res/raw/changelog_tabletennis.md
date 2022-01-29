@@ -1,3 +1,12 @@
+## 4.45 (jan 2022)
+
+- Allow scoring via media playback control buttons. e.g.
+    - use 'Previous song' for scoring for player A, 
+    - use 'Next song' for scoring for B, 
+    - and 'Play/Pause' for Undo
+    - You need to specifically enable this options in 'Settings > Behaviour'
+- Improvements for casting 
+
 ## 4.44 (jan 2022)
 
 - Improvement for wearables:
