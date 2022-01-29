@@ -327,6 +327,7 @@ public class GameHistoryView extends ScrollView
             }
             pPrev = pScorer;
         }
+        history.add(new ScoreLine(null, textSizePx, null, null));
 
         update(false);
     }

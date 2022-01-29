@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <fraction name="image_item_ratio">10%</fraction>
+    <fraction name="matchformat_label_width">0.25</fraction>
 </resources>

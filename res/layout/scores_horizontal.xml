@@ -15,8 +15,9 @@
         android:singleLine="true"
         android:text="15"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintDimensionRatio="H,9:8"
+        app:layout_constraintDimensionRatio="H,10:7"
         app:layout_constraintWidth_percent="0.5" />
 
     <com.doubleyellow.android.view.AutoResizeTextView
@@ -30,7 +31,8 @@
         android:singleLine="true"
         android:text="12"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintDimensionRatio="H,9:8"
+        app:layout_constraintDimensionRatio="H,10:7"
         app:layout_constraintWidth_percent="0.5" />
 </androidx.constraintlayout.widget.ConstraintLayout>

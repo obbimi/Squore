@@ -34,14 +34,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         >
+
         <com.doubleyellow.scoreboard.history.MatchGameScoresView
             android:id="@+id/gamescores"
-            dy:backgroundColor="@color/dy_yellow"
-            dy:textColor="@color/dy_dark"
-            dy:leftToRight="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            />
+            dy:backgroundColor="@color/dy_yellow"
+            dy:leftToRight="false"
+            dy:textColor="@color/dy_dark" />
 
         <com.doubleyellow.scoreboard.view.GamesWonButton
             style="@style/SBButton"
@@ -173,17 +173,16 @@
                 android:layout_alignRight="@id/gamescores"
     -->
     <com.doubleyellow.scoreboard.view.GameHistoryView
-            android:id="@+id/scorehistorytable"
-            android:layout_centerInParent="true"
-            android:layout_alignBottom="@id/btn_score1"
-            dy:textSizePx="@integer/TextSizeHistory_default_ls"
-            dy:backgroundColor="@color/dy_yellow"
-            dy:textColor="@color/dy_dark"
-            android:layout_width="wrap_content"
-            app:layout_heightPercent="50%"
-            app:layout_marginBottomPercent="@fraction/ls_vertical_margin_3x"
-            android:layout_height="0dp"
-    />
+        android:id="@+id/scorehistorytable"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_alignBottom="@id/btn_score1"
+        android:layout_centerInParent="true"
+        app:layout_heightPercent="50%"
+        app:layout_marginBottomPercent="@fraction/ls_vertical_margin_3x"
+        dy:backgroundColor="@color/dy_yellow"
+        dy:textColor="@color/dy_dark"
+        dy:textSizePx="@integer/TextSizeHistory_default_ls" />
 
     <ImageView
             android:id="@+id/sb_branded_logo_ar150"

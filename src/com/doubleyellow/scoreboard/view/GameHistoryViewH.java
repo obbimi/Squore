@@ -291,9 +291,9 @@ public class GameHistoryViewH extends HorizontalScrollView
     private void setValuesFromXml(AttributeSet attrs) {
         if ( attrs == null ) { return; }
         Resources resources = getResources();
-        textSizePx      = resources.getInteger(attrs.getAttributeResourceValue(APPLICATION_NS, "textSizePx" , textSizePx));
 
         try {
+            textSizePx      = resources.getInteger(attrs.getAttributeResourceValue(APPLICATION_NS, "textSizePx" , textSizePx));
             backgroundColor = attrs.getAttributeResourceValue(APPLICATION_NS, "backgroundColor", backgroundColor);
             textColor       = attrs.getAttributeResourceValue(APPLICATION_NS, "textColor"      , textColor);
 
@@ -336,7 +336,9 @@ public class GameHistoryViewH extends HorizontalScrollView
             history.add(new ScoreLine("L--1"));
             history.add(new ScoreLine("--R2"));
             history.add(new ScoreLine("-2L-"));
-
+            if ( m_scorelineLayout == null ) {
+                m_scorelineLayout = ScorelineLayout.DigitsInside;
+            }
             update(false);
         }
     }

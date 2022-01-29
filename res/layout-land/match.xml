@@ -432,7 +432,7 @@
             android:textSize="@dimen/txt_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.25" />
+            app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
 
         <Spinner
             android:id="@+id/spNumberOfGamesToWin"
@@ -493,7 +493,7 @@
             android:textSize="@dimen/txt_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.25" />
+            app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
 
         <!-- spinner or toggle button depending on number of values -->
         <Spinner
@@ -586,7 +586,7 @@
             android:textSize="@dimen/txt_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.25" />
+            app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
 
         <Spinner
             android:id="@+id/spTieBreakFormat"
@@ -619,7 +619,7 @@
             android:textSize="@dimen/txt_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.25" />
+            app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
 
         <Spinner
             android:id="@+id/spFinalSetFinish"
@@ -652,7 +652,7 @@
             android:textSize="@dimen/txt_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.25" />
+            app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
 
         <Spinner
             android:id="@+id/spDisciplineStart"
@@ -684,7 +684,7 @@
             android:textSize="@dimen/txt_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.25" />
+            app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
 
         <Spinner
             android:id="@+id/spNumberOfServesPerPlayer"
@@ -716,7 +716,7 @@
             android:textSize="@dimen/txt_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.25" />
+            app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
 
         <Spinner
             android:id="@+id/spDoublesServeSequence"
@@ -750,7 +750,7 @@
             android:textSize="@dimen/txt_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.25" />
+            app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
 
         <ToggleButton
             android:id="@+id/useHandInHandOutScoring"
@@ -785,7 +785,7 @@
             android:textSize="@dimen/txt_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.25" />
+            app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
 
         <ToggleButton
             android:id="@+id/useGoldenPoint"
@@ -817,7 +817,7 @@
             android:textSize="@dimen/txt_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.25" />
+            app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
 
         <Spinner
             android:id="@+id/spHandicapFormat"
@@ -850,7 +850,7 @@
             android:textSize="@dimen/txt_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.25" />
+            app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
 
         <LinearLayout
             android:id="@+id/llChangesSidesCheckboxes"
@@ -859,10 +859,10 @@
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@+id/lblChangeSidesWhen"
-            app:layout_constraintStart_toEndOf="@+id/lblChangeSidesWhen"
             app:layout_constraintTop_toTopOf="@+id/lblChangeSidesWhen"
-            app:layout_constraintWidth_percent="0.40">
+            app:layout_constraintStart_toEndOf="@+id/lblChangeSidesWhen"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
             <!-- programmatically filled -->
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

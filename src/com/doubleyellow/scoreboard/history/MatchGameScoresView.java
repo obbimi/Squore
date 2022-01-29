@@ -454,7 +454,7 @@ public class MatchGameScoresView extends LinearLayout
            && MapUtil.isNotEmpty(m_pointsDiff)
            && ListUtil.isNotEmpty(gameScores)
            ) {
-            final RelativeLayout tr = (RelativeLayout) inflater.inflate(R.layout.scores_horizontal, null);
+            final ViewGroup tr = (ViewGroup) inflater.inflate(R.layout.scores_horizontal, null);
             tr.setBackgroundColor(bgColorLoser);
 
             Player pLeader = MapUtil.getMaxKey(m_pointsDiff, Player.B);
@@ -518,7 +518,7 @@ public class MatchGameScoresView extends LinearLayout
                                  || (countryPref.contains(ShowCountryAs.FlagNextToNameOnDevice  ) && (isPresentation()==false));
                 if ( bAddFlags && ListUtil.length(m_countries) > 0 ) {
 
-                    final RelativeLayout colImg = (RelativeLayout) inflater.inflate(iResIdImages, null);
+                    final ViewGroup colImg = (ViewGroup) inflater.inflate(iResIdImages, null);
                     colImg.setBackgroundColor(iTransparent);
                     for (Player p : players) {
                         String sCountryCode = m_countries[p.ordinal()];
@@ -537,7 +537,7 @@ public class MatchGameScoresView extends LinearLayout
             }
 
             // add the names of the players
-            final RelativeLayout colPlayers = (RelativeLayout) inflater.inflate(iResIdInflate, null);
+            final ViewGroup colPlayers = (ViewGroup) inflater.inflate(iResIdInflate, null);
             colPlayers.setBackgroundColor(iTransparent);
             for(Player p: players) {
                 boolean            bTopRow = p.equals(players[0]);
@@ -699,7 +699,7 @@ public class MatchGameScoresView extends LinearLayout
         }
 
         if ( (bOrientationFirstTime == false) && Brand.isRacketlon() && MapUtil.isNotEmpty(m_pointsDiff) && ListUtil.isNotEmpty(gameScores) ) {
-            final RelativeLayout tr = (RelativeLayout) inflater.inflate(iResIdInflate, null);
+            final ViewGroup tr = (ViewGroup) inflater.inflate(iResIdInflate, null);
             tr.setBackgroundColor(bgColorLoser);
 
             Player pLeader = MapUtil.getMaxKey(m_pointsDiff, Player.B);
@@ -723,7 +723,7 @@ public class MatchGameScoresView extends LinearLayout
             TextView txt = new AutoResizeTextView(getContext());
             txt.setText(m_eventDivision);
             setSizeAndColors(txt, true, iTxtSizeForInstanceAndOrientation, instanceKey);
-            RelativeLayout tr = new RelativeLayout(getContext());
+            ViewGroup tr = new RelativeLayout(getContext());
             if ( tr != null ) {
                 tr.setBackgroundColor(bgColorLoser);
                 tr.addView(txt, new ViewGroup.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
