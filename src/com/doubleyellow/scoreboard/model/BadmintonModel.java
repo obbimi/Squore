@@ -173,14 +173,14 @@ public class BadmintonModel extends Model
         if ( getNrOfPointsToWinGame() == 21 ) {
             switch (when) {
                 case Now:
-                    if ( getMaxScore() == 30 && getDiffScore() != 0 ) {
+                    if ( getMaxScore(gameScore) == 30 && getDiffScore(gameScore) != 0 ) {
                         Player pLeadingPlayer = MapUtil.getMaxKey(gameScore, null);
                         return new Player[] { pLeadingPlayer };
                     }
                     break;
                 case ScoreOneMorePoint:
                     // At 29 all, the side scoring the 30th point, wins that game.
-                    if ( getMaxScore() == 29 && getDiffScore() == 0 ) {
+                    if ( getMaxScore(gameScore) == 29 && getDiffScore(gameScore) == 0 ) {
                         return new Player[] { Player.A, Player.B };
                     }
                     break;
