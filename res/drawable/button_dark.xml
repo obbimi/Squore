@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- actually only used as background for PlayerTextView and PreferenceACTextView elements -->
     <item android:state_enabled="true" android:state_pressed="false">
         <shape android:shape="rectangle">
-            <gradient android:startColor="@color/dy_dark"
-                      android:endColor="@color/dy_dark"
+            <gradient android:startColor="@color/dy_gray"
+                      android:endColor="@color/dy_gray"
                       android:angle="45"/>
             <stroke android:width="2px" android:color="@color/dy_dark"/>
         </shape>
     </item>
+<!--
     <item android:state_enabled="false" >
         <shape android:shape="rectangle">
-            <gradient android:startColor="@color/dy_gray"
-                      android:endColor="@color/dy_gray"
+            <gradient android:startColor="@color/dy_dark"
+                      android:endColor="@color/dy_dark"
                       android:angle="45"/>
             <stroke android:width="2px" android:color="@color/dy_dark"/>
         </shape>
@@ -24,4 +26,5 @@
             <stroke android:width="2px" android:color="@color/dy_yellow"/>
         </shape>
     </item>
+-->
 </selector>

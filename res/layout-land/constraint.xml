@@ -58,8 +58,8 @@
             dy:backgroundColor="@color/dy_yellow"
             dy:textColor="@color/dy_dark"
             dy:leftToRight="false"
-            dy:previewScores="11-8,7-11,10-12,13-11,11-1,11-2,11-3,11-4"
-            dy:previewRowHeight="121"
+            dy:previewScores="11-8,7-11,10-12,13-11,1-11,11-2,3-11,11-4"
+            dy:previewRowHeight="82"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />

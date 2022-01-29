@@ -9,6 +9,7 @@
             <stroke android:width="2px" android:color="@color/dy_dark"/>
         </shape>
     </item>
+<!--
     <item android:state_enabled="false" >
         <shape android:shape="rectangle">
             <gradient android:startColor="@color/dy_gray"
@@ -27,4 +28,5 @@
             <stroke android:width="2px" android:color="@color/dy_yellow"/>
         </shape>
     </item>
+-->
 </selector>
