@@ -69,6 +69,7 @@ import com.doubleyellow.scoreboard.bluetooth.BTRole;
 import com.doubleyellow.scoreboard.bluetooth.BTState;
 import com.doubleyellow.scoreboard.bluetooth.BluetoothControlService;
 import com.doubleyellow.scoreboard.bluetooth.BluetoothHandler;
+import com.doubleyellow.scoreboard.bluetooth.MessageSource;
 import com.doubleyellow.scoreboard.bluetooth.SelectDeviceDialog;
 import com.doubleyellow.scoreboard.cast.FullScreenTimer;
 import com.doubleyellow.scoreboard.cast.EndOfGameView;
@@ -81,6 +82,8 @@ import com.doubleyellow.scoreboard.dialog.announcement.EndMatchAnnouncement;
 import com.doubleyellow.scoreboard.dialog.announcement.StartGameAnnouncement;
 import com.doubleyellow.scoreboard.feed.Authentication;
 import com.doubleyellow.scoreboard.feed.Preloader;
+import com.doubleyellow.scoreboard.firebase.PusherHandler;
+import com.doubleyellow.scoreboard.firebase.PusherMessagingService;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.share.MatchModelPoster;
@@ -1201,6 +1204,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         registerNfc();
         onCreateInitBluetooth();
+
     }
 
     private void initCountryList() {
@@ -1262,6 +1266,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         initScoreHistory();
 
         onResumeNFC();
+        onResumeFCM();
         onResumeBlueTooth();
         onResume_BluetoothMediaControlButtons();
         onResumeWearable();
@@ -2384,7 +2389,7 @@ touch -t 01030000 LAST.sb
         }
     }
 
-    /** also invoked if child scoreBoard is activated. Invoked before onDestroy() */
+    /** Invoked when device is rotated. Invoked before onDestroy(). But also if child scoreBoard activity is created?! */
     @Override protected void onStop() {
         onActivityStop_Cast();
         super.onStop();
@@ -2392,7 +2397,7 @@ touch -t 01030000 LAST.sb
         createNotificationTimer();
     }
 
-    /** is called when the Activity is being destroyed either by the system, or by the user, say by hitting back, until the app exits, device rotate. But also if child scoreBoard is created?! */
+    /** is called when the Activity is being destroyed either by the system, or by the user, say by hitting back, until the app exits, device rotate. */
     @Override protected void onDestroy() {
         super.onDestroy();
         persist(true);
@@ -2407,6 +2412,8 @@ touch -t 01030000 LAST.sb
         }
 */
         stopBlueTooth();
+
+        PusherHandler.getInstance().cleanup();
     }
 
     private void createNotificationTimer() {
@@ -4142,6 +4149,9 @@ touch -t 01030000 LAST.sb
             case R.id.sb_live_score:
                 showLiveScore();
                 return false;
+            case R.id.sb_fcm_info:
+                openFCMInfoUrl();
+                return false;
             case R.id.sb_official_rules:
                 showOfficialSquashRules();
                 return false;
@@ -4404,6 +4414,10 @@ touch -t 01030000 LAST.sb
         String sURL = getString(R.string.pref_live_score_url);
         String sLivescoreId = PreferenceValues.getLiveScoreDeviceId(this);
         openInBrowser(this, sURL);
+    }
+    private void openFCMInfoUrl() {
+        String sFCMDeviceId = PreferenceValues.getFCMDeviceId(this);
+        openInBrowser(this, "fcm/" + sFCMDeviceId + "/help");
     }
     private void showHelp() {
         openInBrowser(this, "/help");
@@ -6442,18 +6456,21 @@ touch -t 01030000 LAST.sb
     private int           iReceivingBTFileLength = 0;
     /** Buffer with file content */
     private StringBuilder sbReceivingBTFile      = new StringBuilder();
-    public synchronized void interpretReceivedMessage(String readMessage, boolean bTrueWearable_FalsePairedBluetooth) {
+    public synchronized void interpretReceivedMessageOnUiThread(String readMessage, MessageSource source) {
+        runOnUiThread(() -> interpretReceivedMessage(readMessage, source));
+    }
+    public synchronized void interpretReceivedMessage(String readMessage, MessageSource source) {
 
         if ( readMessage.startsWith(BTMethods.requestCompleteJsonOfMatch.toString())) {
             // don't blindly pass on this type of message to wearable
         } else {
-            if ( bTrueWearable_FalsePairedBluetooth ) {
+            if ( source.equals(MessageSource.Wearable) ) {
                 // message came from wearable, if also connected manually via bluetooth
                 if ( mBluetoothControlService != null) {
                     mBluetoothControlService.write(readMessage);
                 }
             } else {
-                // message came from bluetooth, also pass on to wearable
+                // message did not come from wearable: also pass on to wearable
                 sendMessageToWearables(readMessage);
             }
         }
@@ -6468,9 +6485,6 @@ touch -t 01030000 LAST.sb
                 iReceivingBTFileLength = Integer.parseInt(sLength);
                 Log.d(TAG, "Receiving file content with length:" + iReceivingBTFileLength);
                 readMessage = readMessage.substring(sLength.length() + 1);
-                if ( bTrueWearable_FalsePairedBluetooth ) {
-                    //setWearableRole(WearRole.Equal);
-                }
             }
             if ( iReceivingBTFileLength > 0 ) {
                 // in the process of reading a file
@@ -6823,7 +6837,7 @@ touch -t 01030000 LAST.sb
                         Log.w(TAG, "Not handling method " + btMethod);
                         break;
                 }
-                if ( bTrueWearable_FalsePairedBluetooth ) {
+                if ( source.equals(MessageSource.Wearable) ) {
                     // message is coming from paired wearable
                     if ( btMethod.verifyScore() ) {
                         String sScoreReceived = saMethodNArgs[saMethodNArgs.length - 1];
@@ -6847,7 +6861,7 @@ touch -t 01030000 LAST.sb
                     } else {
                         //Log.d(TAG, "[WEAR] verify score not required for " + btMethod);
                     }
-                } else {
+                } else if ( source.equals(MessageSource.BluetoothMirror) ) {
                     if ( BTRole.Slave.equals(m_blueToothRole) && btMethod.verifyScore() ) {
                         // verify score of model against score received. If not equal request complete matchmodel to get in sync
                         String sScoreReceived = saMethodNArgs[saMethodNArgs.length - 1];
@@ -7309,6 +7323,38 @@ touch -t 01030000 LAST.sb
         return true;
     }
 
+    // ----------------------------------------------------
+    // --- control via Firebase/Pusher messages       -----
+    // ----------------------------------------------------
+    private void onResumeFCM() {
+        if ( ViewUtil.isWearable(this)  ) { return; }
+
+        boolean bStopStartServicesIfRequired = true;
+        if ( bStopStartServicesIfRequired ) {
+            Intent intent = new Intent(this, PusherMessagingService.class);
+            try {
+                if ( PreferenceValues.isFCMEnabled(this) ) {
+                    Log.d(TAG, "Starting service " + PusherMessagingService.class.getName());
+                    ComponentName componentName = this.startService(intent);
+                } else {
+                    boolean bStopping = this.stopService(intent);
+                    Log.d(TAG, "Stopping service " + PusherMessagingService.class.getName() + " " + bStopping); // typically false on startup of app
+                }
+            } catch (Exception e) {
+                Log.w(TAG, "Unable to start/stop service via 'start/stopService()");
+                e.printStackTrace();
+            }
+        }
+
+        PusherHandler pusherHandler = PusherHandler.getInstance();
+        if ( PreferenceValues.isFCMEnabled(this) && (Brand.getUUIDPusher() != null) ) {
+            pusherHandler.init(this, Brand.getUUIDPusher(), matchModel.getName(Player.A) + matchModel.getName(Player.B));
+
+            // TODO: for brands with dialogs... suppress them as much as possible, auto-end game etc...
+        } else {
+            pusherHandler.cleanup();
+        }
+    }
 /*
     private BluetoothProfile.ServiceListener serviceListener = new BluetoothProfile.ServiceListener()
     {
@@ -7324,7 +7370,7 @@ touch -t 01030000 LAST.sb
                 String name = device.getName();
                 String address = device.getAddress();
                 int connectionState = proxy.getConnectionState(device);
-                Log.i("onServiceConnected", "|" + name + " | " + address + " | " + (connectionState ==BluetoothProfile.STATE_CONNECTED?"Connected":"Not conneted"));
+                Log.i("onServiceConnected", "|" + name + " | " + address + " | " + (connectionState ==BluetoothProfile.STATE_CONNECTED?"Connected":"Not connected"));
             }
         }
     };

@@ -28,15 +28,17 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * Preference to generate a new Live Score Device ID.
+ * Preference to generate a new Live Score Device ID or FCM Device ID.
+ *
+ * TODO: rename to DeviceIdPref
  */
 public class LiveScoreIdPref extends MultiPrefsDialog
 {
     @Override protected void showDialog(Bundle state) {
-        String sCurrent = PreferenceValues.getLiveScoreDeviceId(context);
-        sDeviceIdNew = generateNewLivescoreId();
+        String sCurrent = PreferenceValues.getString(getKey(), "", context);
+        sDeviceIdNew = generateNewId();
 
-        String sOKButton = context.getString(R.string.pref_liveScoreDeviceId_use_new__x, sDeviceIdNew);
+        String sOKButton = context.getString(R.string.pref_DeviceId_use_new__x, sDeviceIdNew);
         this.setNegativeButtonText("Keep current " + sCurrent);
         this.setPositiveButtonText(sOKButton);
 
@@ -50,11 +52,13 @@ public class LiveScoreIdPref extends MultiPrefsDialog
 
     @Override public void getPreferencesToSet(Map<PreferenceKeys, Object> mReturn, boolean bPositive) {
         if ( bPositive ) {
-            mReturn.put(PreferenceKeys.liveScoreDeviceId, sDeviceIdNew);
+            //PreferenceKeys preferenceKeys = PreferenceKeys.liveScoreDeviceId;
+            PreferenceKeys preferenceKeys = PreferenceKeys.valueOf(getKey());
+            mReturn.put(preferenceKeys, sDeviceIdNew);
         }
     }
 
-    public static String generateNewLivescoreId () {
+    public static String generateNewId () {
         Random random = new Random(SystemClock.uptimeMillis());
         StringBuilder sb = new StringBuilder();
         while ( sb.length() < 6 ) {

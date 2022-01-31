@@ -468,6 +468,14 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         // speak a small piece of text to allow user to finetune voice right here
                         playSpeechSample();
                         break;
+                    case FCMEnabled:
+                        // if no FCM device id yet, generate one
+                        String sFCMDeviceId = PreferenceValues.getFCMDeviceId(Preferences.this);
+                        Preference pFCMId = settingsFragment.findPreference(PreferenceKeys.FCMDeviceId);
+                        if ( pFCMId != null ) {
+                            PreferenceValues.updatePreferenceTitleResId(pFCMId, Preferences.this);
+                        }
+                        break;
                     default:
                         //Log.d(TAG, "Not handling case for " + eKey);
                         break;

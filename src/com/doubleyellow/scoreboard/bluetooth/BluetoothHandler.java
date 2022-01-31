@@ -92,7 +92,7 @@ public class BluetoothHandler extends Handler
                     sb.setBluetoothRole(BTRole.Slave, readMessage.trim());
                 }
                 m_bHandlingBluetoothMessageInProgress = true;
-                sb.interpretReceivedMessage(readMessage, false);
+                sb.interpretReceivedMessage(readMessage, MessageSource.BluetoothMirror);
                 m_bHandlingBluetoothMessageInProgress = false;
                 break;
             case INFO:

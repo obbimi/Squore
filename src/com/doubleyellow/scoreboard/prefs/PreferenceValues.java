@@ -84,9 +84,6 @@ public class PreferenceValues extends RWValues
         }
 
         int titleRes = preference.getTitleRes();
-        if ( titleRes == R.string.pref_liveScoreDeviceId) {
-            Log.d(TAG, "SHOULD WORK");
-        }
         Integer newTitleResId = getSportSpecificSuffixedResId(context, titleRes);
         if ( (newTitleResId != null) && (newTitleResId != 0) && (newTitleResId.equals(titleRes) == false) ) {
             Log.d(TAG, "replace: " + context.getString(titleRes));
@@ -485,7 +482,21 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.useOfficialAnnouncementsFeature, context, Feature.class, R.string.useOfficialAnnouncementsFeature_default);
     }
     public static String getLiveScoreDeviceId(Context context) {
-        return RWValues.getString(PreferenceKeys.liveScoreDeviceId, null, context);
+        return getDeviceId(PreferenceKeys.liveScoreDeviceId, context, false);
+    }
+    public static boolean isFCMEnabled(Context context) {
+        return getBoolean(PreferenceKeys.FCMEnabled, context, R.bool.FCMEnabled_default);
+    }
+    public static String getFCMDeviceId(Context context) {
+        return getDeviceId(PreferenceKeys.FCMDeviceId, context, true);
+    }
+    private static String getDeviceId(PreferenceKeys key, Context context, boolean bGenerateIfNull) {
+        String sID = RWValues.getString(key, null, context);
+        if ( bGenerateIfNull && StringUtil.isEmpty(sID) ) {
+            sID = LiveScoreIdPref.generateNewId();
+            RWValues.setString(key, context, sID);
+        }
+        return sID;
     }
 /*
     public static void initForLiveScoring(Context ctx, boolean bOnlyTemporary) {
@@ -1933,7 +1944,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2022-01-12"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2022-01-31"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

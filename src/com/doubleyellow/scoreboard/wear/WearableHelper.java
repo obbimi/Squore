@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.bluetooth.BTMethods;
+import com.doubleyellow.scoreboard.bluetooth.MessageSource;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -142,7 +143,7 @@ public class WearableHelper
 
             // received a message from the handheld-wearable counterpart: handle change here
             m_bHandlingWearableMessageInProgress = true;
-            m_scoreBoard.interpretReceivedMessage(sData, true);
+            m_scoreBoard.interpretReceivedMessage(sData, MessageSource.Wearable);
             m_bHandlingWearableMessageInProgress = false;
         }
     };

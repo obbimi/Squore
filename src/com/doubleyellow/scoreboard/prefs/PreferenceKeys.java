@@ -266,6 +266,11 @@ public enum PreferenceKeys {
         liveScoreDeviceId,
         postEveryChangeToSupportLiveScore,
 
+    FCMPrefs,
+        FCMEnabled,
+        FCMDeviceId,
+        fcmURL,
+
     /* not really preferences but makes them manageable from 'parent' app */
     FromParent,
         //hideStartNewMatch,
