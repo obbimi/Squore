@@ -878,6 +878,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             addItem(R.id.sb_injury_timer        , R.string.sb_injury_timer         ,         R.drawable.timer               , R.bool.useInjuryTimers__Squash);
             addItem(R.id.sb_player_timeout_timer, R.string.sb_player_timeout_timer ,         R.drawable.timer               , R.bool.usePlayerTimeoutTimers__Squash);
             addItem(R.id.sb_score_details       , R.string.sb_score_details        ,         R.drawable.ic_action_chart_line);
+            if ( false && PreferenceValues.isFCMEnabled(ScoreBoard.this)) {
+                // TODO: allow disable/enable on items in menudrawer
+                addItem(R.id.sb_fcm_info, R.string.FCM_Info, R.drawable.dummy);
+            }
         startSection(R.string.goto_help );
             addItem(R.id.sb_quick_intro         , R.string.Quick_intro             , android.R.drawable.ic_dialog_info         );
             addItem(R.id.sb_help                , R.string.goto_help               , android.R.drawable.ic_menu_help           );
@@ -1183,7 +1187,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         while ( (layout != null) &&  (layout.getId()!= R.id.squoreboard_root_view) ) {
             layout = (ViewGroup) layout.getChildAt(0);
         }
-        layout.setOnTouchListener(new TouchBothListener(clickBothListener, longClickBothListener));
+        if ( layout != null ) {
+            layout.setOnTouchListener(new TouchBothListener(clickBothListener, longClickBothListener));
+        }
 
         m_bHapticFeedbackPerPoint  = PreferenceValues.hapticFeedbackPerPoint(ScoreBoard.this);
         m_bHapticFeedbackOnGameEnd = PreferenceValues.hapticFeedbackOnGameEnd(ScoreBoard.this);
@@ -1453,6 +1459,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
     private static OnBackPressExitHandler onBackPressHandler = null;
     private void handleBackPressed() {
+        if ( matchModel == null ) { return; }
         if ( scSequence != null ) {
             if (onBackPressHandler == null) {
                 onBackPressHandler = new OnBackPressExitHandler();
@@ -2369,6 +2376,7 @@ touch -t 01030000 LAST.sb
         onNFCPause();
         onActivityPause_Cast();
         onPauseWearable();
+        onPause_BluetoothMediaControlButtons();
 /*
         if ( baseDialog instanceof TwoTimerView ) {
             Log.w(TAG, "onPause: A timer is running");
@@ -3743,6 +3751,8 @@ touch -t 01030000 LAST.sb
         String sPostUrl = PreferenceValues.getPostResultToURL(this);
         setMenuItemEnabled(R.id.sb_post_match_result, StringUtil.isNotEmpty(sPostUrl));
 
+        setMenuItemEnabled(R.id.sb_fcm_info, PreferenceValues.isFCMEnabled(this));
+
         boolean bStoreMatches = PreferenceValues.saveMatchesForLaterUsage(this);
         setMenuItemsEnabled(new int[] { R.id.sb_stored_matches, R.id.cmd_export_matches, R.id.cmd_import_matches }, bStoreMatches);
         //mainMenu.findItem(R.id.sb_overflow_submenu).getSubMenu().findItem(R.id.uc_import_export).getSubMenu().setGroupVisible(R.id.grp_import_export_matches, bStoreMatches);
@@ -3901,8 +3911,8 @@ touch -t 01030000 LAST.sb
         setMenuItemsEnabled(new int[] { iId }, bEnabled);
     }
     private void setMenuItemsEnabled(int [] iIds, boolean bEnabled) {
-        ViewUtil.setMenuItemsVisibility(mainMenu, iIds, bEnabled);
-        //ViewUtil.setMenuItemsEnabled(mainMenu, iIds, bEnabled); // the disabled menu items do not appear very disabled visually... so hide them for now
+        //ViewUtil.setMenuItemsVisibility(mainMenu, iIds, bEnabled);
+        ViewUtil.setMenuItemsEnabled(mainMenu, iIds, bEnabled); // the disabled menu items do not appear very disabled visually... so hide them for now
     }
 
     @Override public void drawTouch(Direction direction, int id, int iColor) {
@@ -5072,6 +5082,7 @@ touch -t 01030000 LAST.sb
     private static boolean m_bShareStarted_DemoThread = false;
     /** invoked on: GameEndReached, GameEnded, FirstPointChange, GameIsHalfway, ScoreChange. Mainly for livescore */
     public static void postMatchModel(Context context, Model matchModel, boolean bAllowEndGameIfApplicable, boolean bFromMenu) {
+        if ( matchModel == null) { return; }
         Player possibleMatchVictoryFor = matchModel.isPossibleMatchVictoryFor();
         if ( bAllowEndGameIfApplicable ) {
             if ( possibleMatchVictoryFor != null ) {
@@ -6459,12 +6470,12 @@ touch -t 01030000 LAST.sb
     public synchronized void interpretReceivedMessageOnUiThread(String readMessage, MessageSource source) {
         runOnUiThread(() -> interpretReceivedMessage(readMessage, source));
     }
-    public synchronized void interpretReceivedMessage(String readMessage, MessageSource source) {
+    public synchronized void interpretReceivedMessage(String readMessage, MessageSource msgSource) {
 
         if ( readMessage.startsWith(BTMethods.requestCompleteJsonOfMatch.toString())) {
             // don't blindly pass on this type of message to wearable
         } else {
-            if ( source.equals(MessageSource.Wearable) ) {
+            if ( msgSource.equals(MessageSource.Wearable) ) {
                 // message came from wearable, if also connected manually via bluetooth
                 if ( mBluetoothControlService != null) {
                     mBluetoothControlService.write(readMessage);
@@ -6837,41 +6848,47 @@ touch -t 01030000 LAST.sb
                         Log.w(TAG, "Not handling method " + btMethod);
                         break;
                 }
-                if ( source.equals(MessageSource.Wearable) ) {
-                    // message is coming from paired wearable
-                    if ( btMethod.verifyScore() ) {
-                        String sScoreReceived = saMethodNArgs[saMethodNArgs.length - 1];
-                        String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
-                        if ( sModelScore.equals(sScoreReceived) == false ) {
-                            Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
-                            boolean bRequestModel = true;
-                            if ( matchModel.isPossibleGameVictory() && sScoreReceived.equals("0-0") ) {
-                                if ( dialogManager.isDialogShowing() ) {
-                                    if ( dialogManager.baseDialog instanceof EndGame ) {
-                                        EndGame endGame = (EndGame) dialogManager.baseDialog;
-                                        endGame.handleButtonClick(EndGame.BTN_END_GAME_PLUS_TIMER);
-                                        bRequestModel = false;
+                switch (msgSource) {
+                    case Wearable:
+                        // message is coming from paired wearable
+                        if ( btMethod.verifyScore() ) {
+                            String sScoreReceived = saMethodNArgs[saMethodNArgs.length - 1];
+                            String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
+                            if ( sModelScore.equals(sScoreReceived) == false ) {
+                                Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
+                                boolean bRequestModel = true;
+                                if ( matchModel.isPossibleGameVictory() && sScoreReceived.equals("0-0") ) {
+                                    if ( dialogManager.isDialogShowing() ) {
+                                        if ( dialogManager.baseDialog instanceof EndGame ) {
+                                            EndGame endGame = (EndGame) dialogManager.baseDialog;
+                                            endGame.handleButtonClick(EndGame.BTN_END_GAME_PLUS_TIMER);
+                                            bRequestModel = false;
+                                        }
                                     }
                                 }
+                                if ( bRequestModel ) {
+                                    sendMessageToWearablesUnchecked(BTMethods.requestCompleteJsonOfMatch);
+                                }
                             }
-                            if ( bRequestModel ) {
-                                sendMessageToWearablesUnchecked(BTMethods.requestCompleteJsonOfMatch);
+                        } else {
+                            //Log.d(TAG, "[WEAR] verify score not required for " + btMethod);
+                        }
+                        break;
+                    case BluetoothMirror:
+                        if ( BTRole.Slave.equals(m_blueToothRole) && btMethod.verifyScore() ) {
+                            // verify score of model against score received. If not equal request complete matchmodel to get in sync
+                            String sScoreReceived = saMethodNArgs[saMethodNArgs.length - 1];
+                            String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
+                            if ( sModelScore.equals(sScoreReceived) == false ) {
+                                Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
+                                writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
                             }
+                            //hidePresentationEndOfGame();
                         }
-                    } else {
-                        //Log.d(TAG, "[WEAR] verify score not required for " + btMethod);
-                    }
-                } else if ( source.equals(MessageSource.BluetoothMirror) ) {
-                    if ( BTRole.Slave.equals(m_blueToothRole) && btMethod.verifyScore() ) {
-                        // verify score of model against score received. If not equal request complete matchmodel to get in sync
-                        String sScoreReceived = saMethodNArgs[saMethodNArgs.length - 1];
-                        String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
-                        if ( sModelScore.equals(sScoreReceived) == false ) {
-                            Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
-                            writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
-                        }
-                        //hidePresentationEndOfGame();
-                    }
+                        break;
+                    case FirebaseCloudMessage:
+                        Toast.makeText(this, "Score changed by FCM message", Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         }
@@ -7186,7 +7203,13 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
     // --- control via bluetooth media player buttons -----
     // ----------------------------------------------------
-    private MediaSession ms;
+    private MediaSession ms = null;
+    private void onPause_BluetoothMediaControlButtons() {
+        if ( ms != null ) {
+            ms.release();
+            ms = null;
+        }
+    }
     private boolean onResume_BluetoothMediaControlButtons() {
         if ( isWearable() ) { return false; }
 
@@ -7210,8 +7233,8 @@ touch -t 01030000 LAST.sb
                 ms.setCallback(new MediaSession.Callback() {
                     boolean bHandleNextDown = true;
                     @Override public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
-                        Bundle extras1 = mediaButtonIntent.getExtras();
-                        KeyEvent keyEvent = (KeyEvent) extras1.get(Intent.EXTRA_KEY_EVENT);
+                        Bundle extras = mediaButtonIntent.getExtras();
+                        KeyEvent keyEvent = (KeyEvent) extras.get(Intent.EXTRA_KEY_EVENT);
                         int keyCode = keyEvent.getKeyCode();
                         Log.i(TAG, "[onMediaButtonEvent] keyCode " + keyCode + " [" + (keyEvent.getAction() == KeyEvent.ACTION_UP?"up":"down") + "]");
                         if ( keyEvent.getAction() == KeyEvent.ACTION_DOWN ) {
@@ -7295,6 +7318,30 @@ touch -t 01030000 LAST.sb
                     }
 */
                 });
+
+/*
+                MediaController mediaController = ms.getController();
+                mediaController.registerCallback(new MediaController.Callback() {
+                    @Override public void onAudioInfoChanged(MediaController.PlaybackInfo info) {
+                        Log.i(TAG, "[onAudioInfoChanged] " + info);
+                        super.onAudioInfoChanged(info);
+                    }
+                }, new Handler(Looper.getMainLooper()));
+*/
+/*
+                VolumeProvider volumeProvider = getSystemService(VolumeProvider.class);// null
+                AudioManager mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+                //mAudioManager.registerMediaButtonEventReceiver();
+                ms.setPlaybackToRemote(new VolumeProvider(0,10, 5) {
+                    @Override public void onSetVolumeTo(int volume) {
+                        super.onSetVolumeTo(volume);
+                    }
+                    @Override public void onAdjustVolume(int direction) {
+                        super.onAdjustVolume(direction);
+                    }
+                });
+*/
+
                 ms.setActive(true);
             }
 

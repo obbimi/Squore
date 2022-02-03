@@ -34,6 +34,9 @@ import java.util.Map;
  */
 public class AutomateWhatCanBeAutomatedPrefs extends MultiPrefsDialog
 {
+    /** */
+    public static EnumSet<PreferenceKeys> dialog_AutomateOrSuggest_prefKeys = EnumSet.of(PreferenceKeys.useTossFeature, PreferenceKeys.useTimersFeature, PreferenceKeys.useOfficialAnnouncementsFeature, PreferenceKeys.endGameSuggestion);
+
     public AutomateWhatCanBeAutomatedPrefs(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -41,10 +44,9 @@ public class AutomateWhatCanBeAutomatedPrefs extends MultiPrefsDialog
     @Override public void getPreferencesToSet(Map<PreferenceKeys, Object> mReturn, boolean bPositive) {
         Feature feature = bPositive ? Feature.Automatic : Feature.Suggest;
 
-        mReturn.put(PreferenceKeys.useTossFeature                 , feature);
-        mReturn.put(PreferenceKeys.useTimersFeature               , feature);
-        mReturn.put(PreferenceKeys.useOfficialAnnouncementsFeature, feature);
-        mReturn.put(PreferenceKeys.endGameSuggestion              , feature);
+        for(PreferenceKeys key: dialog_AutomateOrSuggest_prefKeys) {
+            mReturn.put(key, feature);
+        }
 
         if ( feature.equals(Feature.Automatic) ) {
             mReturn.put(PreferenceKeys.indicateGameBall          , true);

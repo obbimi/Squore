@@ -1392,6 +1392,31 @@
             />
 
         </PreferenceCategory>
+
+        <PreferenceCategory android:title="@string/pref_FCM" android:key="FCMPrefs">
+            <CheckBoxPreference android:key="FCMEnabled"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_FCMEnabled"
+                android:summary="@string/pref_FCMEnabled_summary"
+                android:defaultValue="@bool/FCMEnabled_default"
+                />
+            <com.doubleyellow.scoreboard.prefs.LiveScoreIdPref
+                android:key="FCMDeviceId"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_FCMDeviceId"
+                android:summary="@string/pref_FCMDeviceId_summary"
+                />
+<!--
+            <Preference android:title="@string/FCM_Info_URL"
+                android:icon="@drawable/dummy"
+                android:key="fcmURL"
+                android:summary="@string/pref_fcmURL_summary">
+                <intent android:action="android.intent.action.VIEW"
+                    android:data="@string/pref_live_score_url" />
+            </Preference>
+-->
+        </PreferenceCategory>
+
         <PreferenceCategory android:title="@string/pref_VisibilityOfNewTournaments">
             <EditTextPreference android:key="tournamentWasBusy_DaysBack"
                 android:icon="@drawable/dummy"

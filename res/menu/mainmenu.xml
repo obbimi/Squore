@@ -116,6 +116,8 @@
                     <item android:id="@+id/sb_live_score"            app:showAsAction="never"                                                         android:title="@string/Live_Score" />
                     <item android:id="@+id/sb_possible_conductsA"    app:showAsAction="never" android:icon="@android:drawable/ic_dialog_alert"        android:title="@string/sb_possible_conducts" />
                     <item android:id="@+id/sb_official_rules"        app:showAsAction="never" android:icon="@android:drawable/ic_menu_search"         android:title="@string/sb_official_rules__Squash" />
+
+                    <item android:id="@+id/sb_fcm_info"              app:showAsAction="never" android:icon="@drawable/dummy"                          android:title="@string/FCM_Info" />
                 </menu>
             </item>
 

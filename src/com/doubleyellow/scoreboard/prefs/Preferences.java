@@ -475,6 +475,12 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         if ( pFCMId != null ) {
                             PreferenceValues.updatePreferenceTitleResId(pFCMId, Preferences.this);
                         }
+                        if ( PreferenceValues.isFCMEnabled(Preferences.this) ) {
+                            // assume score is fully controlled remotely by limited options so prevent any dialogs
+                            for(PreferenceKeys aKey : AutomateWhatCanBeAutomatedPrefs.dialog_AutomateOrSuggest_prefKeys) {
+                                PreferenceValues.setEnum(aKey, Preferences.this, Feature.Automatic);
+                            }
+                        }
                         break;
                     default:
                         //Log.d(TAG, "Not handling case for " + eKey);
@@ -687,7 +693,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 hideRemovePreference(psgBeh, PreferenceKeys.endGameSuggestion); // should be always Automatic. very common score in tennispadel/tennis
                 hideRemovePreference(psgBeh, PreferenceKeys.showDetailsAtEndOfGameAutomatically); // TODO: make details about sets, not games
                 hideRemovePreference(psgBeh, PreferenceKeys.hapticFeedbackOnGameEnd);
-                hideRemovePreference(psgBeh, "AutomateWhatCanBeAutomatedPrefs");
+                hideRemovePreference(psgBeh, PreferenceKeys.AutomateWhatCanBeAutomatedPrefs);
 
                 hideRemovePreference(psgBeh, PreferenceKeys.swapPlayersBetweenGames);
                 hideRemovePreference(psgBeh, PreferenceKeys.swapPlayersHalfwayGame);

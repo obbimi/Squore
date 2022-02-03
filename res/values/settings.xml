@@ -359,7 +359,17 @@
     <string name="pref_updateLiveScore">Update live score</string>
     <string name="pref_liveScoreDeviceId">Live Score - Device Unique Id</string>
     <string name="pref_liveScoreDeviceId_summary">This ID can be used to get only matches from this device on the Live Score webpage</string>
-    <string name="pref_liveScoreDeviceId_use_new__x">Use new: %1$s</string>
+
+    <string name="pref_FCM">FCM (Firebase Cloud Messaging)</string>
+    <string name="FCM_Info">FCM - Info</string>
+    <string name="FCM_Service">Ensure Firebase Cloud messages can be used and interpreted to e.g. change the score</string>
+    <string name="pref_FCMEnabled">FCM - Enable</string>
+    <string name="pref_FCMEnabled_summary">Allow changing the score on the device by accessing certain URLs. Once enabled use Menu > Show > FCM - Info</string>
+    <string name="pref_FCMDeviceId">FCM - Device Unique Id</string>
+    <string name="pref_FCMDeviceId_summary">This ID is used to uniquely identify this device. It will be part of the FCM URL (URL that can be used to change the score on this device)</string>
+
+    <string name="pref_DeviceId_use_new__x">Use new: %1$s</string>
+
     <string name="pref_LiveScorePrefs_dialog">Adjust options: Use Share Feature (to Automatic) and Action For Share (to Match Details After Each Point) to optimize live score support</string>
     <string name="pref_Cast_ShowGraphDuringTimer">Show game scores and score graph of last game between games and at end of match</string>
     <string name="pref_castScreenLogoUrl">URL of logo for Cast Screen</string>

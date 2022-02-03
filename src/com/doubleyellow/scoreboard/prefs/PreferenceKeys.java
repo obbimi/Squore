@@ -312,4 +312,6 @@ public enum PreferenceKeys {
         wearable_syncColorPrefs,
         wearable_allowScoringWithHardwareButtons,
         wearable_allowScoringWithRotary,
+
+    AutomateWhatCanBeAutomatedPrefs,
 }
