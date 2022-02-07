@@ -18,12 +18,9 @@
 package com.doubleyellow.scoreboard.prefs;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.preference.DialogPreference;
-import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import com.doubleyellow.scoreboard.main.ScoreBoard;
+
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.util.Feature;
 
 import java.util.EnumSet;
@@ -35,7 +32,17 @@ import java.util.Map;
 public class AutomateWhatCanBeAutomatedPrefs extends MultiPrefsDialog
 {
     /** */
-    public static EnumSet<PreferenceKeys> dialog_AutomateOrSuggest_prefKeys = EnumSet.of(PreferenceKeys.useTossFeature, PreferenceKeys.useTimersFeature, PreferenceKeys.useOfficialAnnouncementsFeature, PreferenceKeys.endGameSuggestion);
+    public static EnumSet<PreferenceKeys> dialog_AutomateOrSuggest_prefKeys =
+            EnumSet.of( PreferenceKeys.useTossFeature
+                      , PreferenceKeys.useTimersFeature
+                      , PreferenceKeys.useOfficialAnnouncementsFeature
+                      , PreferenceKeys.endGameSuggestion
+            );
+    static {
+        if ( Brand.isNotSquash() ) {
+            dialog_AutomateOrSuggest_prefKeys.add(PreferenceKeys.useChangeSidesFeature);
+        }
+    }
 
     public AutomateWhatCanBeAutomatedPrefs(Context context, AttributeSet attrs) {
         super(context, attrs);

@@ -189,5 +189,14 @@
             <!--<meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />-->
         </activity>
 
+<!--
+        If using pusher, and notifications even need to be received if app is in the background, we need a service
+-->
+        <service android:name="com.doubleyellow.scoreboard.firebase.PusherMessagingService" android:enabled="true"
+                 android:description="@string/FCM_Info">
+            <intent-filter android:priority="1">
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 </manifest>

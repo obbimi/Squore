@@ -42,44 +42,38 @@ public class PusherMessagingService extends MessagingService
         }
     }
 
-    // =============================================
-    // TEMP METHODS FOR LOGGING ONLY
-    // =============================================
+    /** called when service has been declared in the AndroidManifest and used for the first time (e.g. first notification?! or when startService is called), device wakeup with app in foreground */
+    @Override public void onCreate() {
+        Log.i(TAG, "Service created");
+        PusherHandler.getInstance().setInForegroundOnly(false);
+        super.onCreate();
+    }
+    /** when device goes to sleep */
+    @Override public void onDestroy() {
+        Log.i(TAG, "Service destroyed");
+        PusherHandler.getInstance().setInForegroundOnly(true);
+        super.onDestroy();
+    }
 
     /** invoked only if started with startService */
     @Override public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         Log.i(TAG, "onStartCommand. intent: " + intent);
         return super.onStartCommand(intent, flags, startId);
     }
-    /** called when service has been declared in the androidmanifest and used for the first time (e.g. first notification?! or when startService is called) */
-    @Override public void onCreate() {
-        Log.i(TAG, "Service created");
-        PusherHandler.getInstance().setInForegroundOnly(false);
-        super.onCreate();
-    }
 
-    @Override public void onDestroy() {
-        Log.i(TAG, "Service destroyed");
-        super.onDestroy();
-    }
+    // =============================================
+    // TEMP METHODS FOR LOGGING ONLY
+    // =============================================
+
     /** invoked on message received (first one only!) */
-    public IBinder onBind(Intent arg0) {
-        Log.i(TAG, "onBind()" );
-        return super.onBind(arg0);
+    public IBinder onBind(Intent arg) {
+        Log.i(TAG, "onBind() : " + arg );
+        return super.onBind(arg);
     }
 
     /** ?? */
-    public boolean onUnbind(Intent arg0) {
-        Log.i(TAG, "onUnBind()");
-        return super.onUnbind(arg0);
+    public boolean onUnbind(Intent arg) {
+        Log.i(TAG, "onUnBind() : " + arg);
+        return super.onUnbind(arg);
     }
-
-/*
-    public void onStop() {
-        Log.i(TAG, "onStop()");
-    }
-    public void onPause() {
-        Log.i(TAG, "onPause()");
-    }
-*/
 }

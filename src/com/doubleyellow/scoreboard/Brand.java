@@ -46,12 +46,12 @@ import java.util.UUID;
 
 public enum Brand
 {
-    Squore          (SportType.Squash     , R.string.app_name_short_brand__Squash          , 0, 0/*R.drawable.brand_squore*/    , R.id.sb_branded_logo_ar150, R.color.brand_squore_bg_color          , R.string.CUSTOM_RECEIVER_APP_ID_squore_fancy          , R.array.colorSchema__Squash                                             , 3000, "https://squore.double-yellow.be"   , "8da78f9d-f7dd-437c-8b7d-d5bc231f92ec", R.raw.changelog),
-  //Tabletennis     (SportType.Tabletennis, R.string.app_name_short_brand__Tabletennis     , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_tabletennis_bg_color     , R.string.CUSTOM_RECEIVER_APP_ID_tabletennis_fancy         , R.array.colorSchema__Tabletennis                                            , 3000, "https://tabletennis.double-yellow.be", "e35d8fcb-a7c0-4c2a-9c74-cc3f6e1e6a41", R.raw.changelog_tabletennis),
-  //Badminton       (SportType.Badminton  , R.string.app_name_short_brand__Badminton       , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_badminton_bg_color       , R.string.CUSTOM_RECEIVER_APP_ID_badminton_fancy         , R.array.colorSchema__Badminton                                              , 3000, "https://badminton.double-yellow.be", "18be497c-ddfa-4851-9b43-0a5866605252", R.raw.changelog_badminton),
-  //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand__Racketlon       , 0, 0/*R.drawable.brand_squore*/              , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.CUSTOM_RECEIVER_APP_ID_racketlon_fancy       , R.array.colorSchema__Racketlon                                              , 3000, "https://racketlon.double-yellow.be", "6ffc7128-6fd5-46d1-b79c-46e4c613cba5", R.raw.changelog_racketlon),
-  //TennisPadel     (SportType.TennisPadel, R.string.app_name_short_brand__TennisPadel     , 0, R.drawable.logo_brand_tennispadel         , R.id.sb_branded_logo_ar400, R.color.brand_padel_bg_color           , R.string.CUSTOM_RECEIVER_APP_ID_tennispadel_fancy         , R.array.colorSchema__TennisPadel                                    , 4000, "https://tennispadel.double-yellow.be", "239ad8ef-0cdd-490c-8f01-4d50dd4e7c6b", R.raw.changelog_tennispadel),
-  //Racquetball     (SportType.Racquetball, R.string.app_name_short_brand__Racquetball     , 0, 0/*R.drawable.brand_squore*/              , R.id.sb_branded_logo_ar150, 0                                      , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared     , R.array.colorSchema__Racquetball                                            , 3000, "https://racquetball.double-yellow.be", R.raw.changelog),
+    Squore          (SportType.Squash     , R.string.app_name_short_brand__Squash          , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_squore_bg_color          , R.string.CUSTOM_RECEIVER_APP_ID_squore_fancy      , R.array.colorSchema__Squash      , 3000, "https://squore.double-yellow.be"     , "8da78f9d-f7dd-437c-8b7d-d5bc231f92ec", R.raw.changelog),
+  //Tabletennis     (SportType.Tabletennis, R.string.app_name_short_brand__Tabletennis     , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_tabletennis_bg_color     , R.string.CUSTOM_RECEIVER_APP_ID_tabletennis_fancy , R.array.colorSchema__Tabletennis , 3000, "https://tabletennis.double-yellow.be", "e35d8fcb-a7c0-4c2a-9c74-cc3f6e1e6a41", R.raw.changelog_tabletennis),
+  //Badminton       (SportType.Badminton  , R.string.app_name_short_brand__Badminton       , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_badminton_bg_color       , R.string.CUSTOM_RECEIVER_APP_ID_badminton_fancy   , R.array.colorSchema__Badminton   , 3000, "https://badminton.double-yellow.be"  , "18be497c-ddfa-4851-9b43-0a5866605252", R.raw.changelog_badminton),
+  //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand__Racketlon       , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.CUSTOM_RECEIVER_APP_ID_racketlon_fancy   , R.array.colorSchema__Racketlon   , 3000, "https://racketlon.double-yellow.be"  , "6ffc7128-6fd5-46d1-b79c-46e4c613cba5", R.raw.changelog_racketlon),
+  //TennisPadel     (SportType.TennisPadel, R.string.app_name_short_brand__TennisPadel     , 0, R.drawable.logo_brand_tennispadel       , R.id.sb_branded_logo_ar400, R.color.brand_padel_bg_color           , R.string.CUSTOM_RECEIVER_APP_ID_tennispadel_fancy , R.array.colorSchema__TennisPadel , 4000, "https://tennispadel.double-yellow.be", "239ad8ef-0cdd-490c-8f01-4d50dd4e7c6b", R.raw.changelog_tennispadel),
+  //Racquetball     (SportType.Racquetball, R.string.app_name_short_brand__Racquetball     , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, 0                                      , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared      , R.array.colorSchema__Racquetball , 3000, "https://racquetball.double-yellow.be", null                                  , R.raw.changelog),
 
     ;
     Brand( SportType sport
@@ -82,7 +82,7 @@ public enum Brand
     };
 
     public  static/*final*/Brand brand = Brand.Squore;
-
+    private static final String sSharedPusherId = "964ea544-59d3-4698-a5dd-2bcdb8b7f93d";
     private SportType eSport;
     private int iShortNameResId;
     private int iSplashDuration;
@@ -394,6 +394,8 @@ public enum Brand
     public static String getBaseURL()              { return brand.sBaseURL;}
     /** Only used for BlueTooth connections for now */
     public static UUID   getUUID()                 { return brand.uuid;}
+    /** uuid of pusher beam https://dashboard.pusher.com/beams/instances */
+    public static UUID   getUUIDPusher()           { return UUID.fromString(Brand.sSharedPusherId);}
 
     public static int getImageViewResId()          { return brand.imageViewResId;}
     public static int getLogoResId()               { return brand.iLogoResId;}
