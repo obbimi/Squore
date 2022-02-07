@@ -1258,6 +1258,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         updateMicrophoneFloatButton();
         updateTimerFloatButton();
         iBoard.updateGameBallMessage("onResume");
+        if ( Brand.isGameSetMatch() ) {
+            // to prevent 'set ball' being show while it is gameball: TODO: still show if actual setball
+            iBoard.showGameBallMessage(false, null);
+        }
         iBoard.updateGameAndMatchDurationChronos();
         if ( matchModel != null ) {
             showShareFloatButton(matchModel.isPossibleGameVictory(), matchModel.matchHasEnded()); // icon may have changed
@@ -4938,7 +4942,8 @@ touch -t 01030000 LAST.sb
                     }
                     if ( Brand.isGameSetMatch() ) {
                         GSMModel gsmModel = (GSMModel) m;
-                        PreferenceValues.setEnum(PreferenceKeys.finalSetFinish, this, gsmModel.getFinalSetFinish());
+                        PreferenceValues.setEnum   (PreferenceKeys.finalSetFinish      , this, gsmModel.getFinalSetFinish());
+                        PreferenceValues.setBoolean(PreferenceKeys.goldenPointToWinGame, this, gsmModel.getGoldenPointToWinGame());
                     }
                     if ( MapUtil.isNotEmpty(RWValues.getOverwritten() ) ) {
                         Log.w(TAG, "remaining overwrites " + RWValues.getOverwritten());
@@ -6887,7 +6892,9 @@ touch -t 01030000 LAST.sb
                         }
                         break;
                     case FirebaseCloudMessage:
-                        Toast.makeText(this, "Score changed by FCM message", Toast.LENGTH_SHORT).show();
+                        if ( PreferenceValues.showToastMessageForEveryFCMMessage(this)) {
+                            Toast.makeText(this, "Score changed by FCM message: " + readMessage, Toast.LENGTH_SHORT).show();
+                        }
                         break;
                 }
             }
