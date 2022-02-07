@@ -31,3 +31,20 @@ Other 'less commonly used' features are:
 It can be installed from the [google play store](https://play.google.com/store/apps/details?id=com.doubleyellow.scoreboard "Squore - Squash Ref Tool")
 
 Extensive help on supported features can be found [here](http://squore.double-yellow.be)
+
+The source is also used as source for the 'Badminton', 'Tabletennis', 'Tennis/Padel' and 'Racketlon' apps with the same look and feel.
+
+These logically can also be installed from the play store
+
+* [badminton](https://play.google.com/store/apps/details?id=com.doubleyellow.badminton "Score Badminton")
+* [tabletennis](https://play.google.com/store/apps/details?id=com.doubleyellow.tabletennis "Score Table Tennis")
+* [Tennis/Padel](https://play.google.com/store/apps/details?id=com.doubleyellow.tennispadel "Score Tennis/Padel")
+* [Racketlon](https://play.google.com/store/apps/details?id=com.doubleyellow.racketlon "Score Racketlon")
+
+and have their own help pages
+
+* [Badminton](http://badminton.double-yellow.be)
+* [Tabletennis](http://tabletennis.double-yellow.be)
+* [Tennis/Padel](http://tennispadel.double-yellow.be)
+* [Racketlon](http://racketlon.double-yellow.be)
+ 

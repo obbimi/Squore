@@ -841,7 +841,7 @@ public class GSMModel extends Model
         int iNrOfPointsToWinGame = _getNrOfPointsToWinGame();
         Player[] playersGB = new Player[]{};
 
-        // e.g Beach Tennis has this option, Padel is known to use it from time to time
+        // e.g Beach Tennis has this option, Padel is known to use it quite regularly
         if ( m_bGoldenPointToWinGame && (isInTieBreak_TT_RL() == false) ) {
             int maxScore  = getMaxScore(gameScore);
             if ( maxScore >= iNrOfPointsToWinGame - 1 ) {
