@@ -57,8 +57,12 @@ public class ResultMailer {
         Map<Player, Integer> gameCount = matchModel.getGamesWon();
         sbSubject.append(" : ").append(gameCount.get(Player.A)).append(" - ").append(gameCount.get(Player.B));
 
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:")); // only email apps should handle this
         String sendMatchResultTo = PreferenceValues.getDefaultMailTo(context);
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", sendMatchResultTo, null));
+        if ( StringUtil.isNotEmpty(sendMatchResultTo) ) {
+            emailIntent.putExtra(Intent.EXTRA_EMAIL  , new String[] { sendMatchResultTo });
+        }
 
         if ( bHtml ) {
           //Map<ColorPrefs.ColorTarget, Integer> target2colorMapping = ColorPrefs.getTarget2colorMapping(context);
