@@ -364,6 +364,8 @@
     <string name="FCM_Info">FCM - Info</string>
     <string name="FCM_Service">Ensure Firebase Cloud messages can be used and interpreted to e.g. change the score</string>
     <string name="pref_FCMEnabled">FCM - Enable</string>
+    <string name="pref_showToastMessageForEveryReceivedFCMMessage">Show toast for received FCM message</string>
+    <string name="pref_showToastMessageForEveryReceivedFCMMessage_summary">Show a toast message for every received FCM message</string>
     <string name="pref_FCMEnabled_summary">Allow changing the score on the device by accessing certain URLs. Once enabled use Menu > Show > FCM - Info</string>
     <string name="pref_FCMDeviceId">FCM - Device Unique Id</string>
     <string name="pref_FCMDeviceId_summary">This ID is used to uniquely identify this device. It will be part of the FCM URL (URL that can be used to change the score on this device)</string>

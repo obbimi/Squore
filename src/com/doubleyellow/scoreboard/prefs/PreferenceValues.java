@@ -487,6 +487,9 @@ public class PreferenceValues extends RWValues
     public static boolean isFCMEnabled(Context context) {
         return getBoolean(PreferenceKeys.FCMEnabled, context, R.bool.FCMEnabled_default);
     }
+    public static boolean showToastMessageForEveryReceivedFCMMessage(Context context) {
+        return getBoolean(PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, context, R.bool.showToastMessageForEveryReceivedFCMMessage_default);
+    }
     public static String getFCMDeviceId(Context context) {
         return getDeviceId(PreferenceKeys.FCMDeviceId, context, true);
     }
@@ -1944,7 +1947,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2022-01-31"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2022-02-06"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

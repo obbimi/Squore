@@ -144,7 +144,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         }
                         break;
                     case showBrandLogoOn:
-                        final Preference psHideBrandLogoWhenGameInProgress = settingsFragment.findPreference(PreferenceKeys.hideBrandLogoWhenGameInProgress.toString());
+                        final Preference psHideBrandLogoWhenGameInProgress = settingsFragment.findPreference(PreferenceKeys.hideBrandLogoWhenGameInProgress);
                         if ( psHideBrandLogoWhenGameInProgress != null ) {
                             psHideBrandLogoWhenGameInProgress.setEnabled(ListUtil.isNotEmpty(PreferenceValues.showBrandLogoOn(Preferences.this)));
                         }
@@ -170,7 +170,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         setModelDirty();
                         break;
                     case showFieldDivisionOn:
-                        final Preference pshideFieldDivisionWhenGameInProgress = settingsFragment.findPreference(PreferenceKeys.hideFieldDivisionWhenGameInProgress.toString());
+                        final Preference pshideFieldDivisionWhenGameInProgress = settingsFragment.findPreference(PreferenceKeys.hideFieldDivisionWhenGameInProgress);
                         if ( pshideFieldDivisionWhenGameInProgress != null ) {
                             pshideFieldDivisionWhenGameInProgress.setEnabled(ListUtil.isNotEmpty(PreferenceValues.showFieldDivisionOn(Preferences.this)));
                         }
@@ -475,12 +475,14 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         if ( pFCMId != null ) {
                             PreferenceValues.updatePreferenceTitleResId(pFCMId, Preferences.this);
                         }
-                        if ( PreferenceValues.isFCMEnabled(Preferences.this) ) {
+                        boolean fcmEnabled = PreferenceValues.isFCMEnabled(Preferences.this);
+                        if (fcmEnabled) {
                             // assume score is fully controlled remotely by limited options so prevent any dialogs
                             for(PreferenceKeys aKey : AutomateWhatCanBeAutomatedPrefs.dialog_AutomateOrSuggest_prefKeys) {
                                 PreferenceValues.setEnum(aKey, Preferences.this, Feature.Automatic);
                             }
                         }
+                        settingsFragment.setEnabledForPrefKeys(fcmEnabled, PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, PreferenceKeys.FCMDeviceId);
                         break;
                     default:
                         //Log.d(TAG, "Not handling case for " + eKey);
@@ -581,15 +583,15 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             }
 
             // 'hack' to be able to update the Icon of the 'PreferenceScreen key="Colors"' when returning from it
-            final PreferenceGroup  psAppearance = (PreferenceGroup ) this.findPreference(PreferenceKeys.Appearance    .toString());
-            final PreferenceGroup  psInternet   = (PreferenceGroup ) this.findPreference(PreferenceKeys.webIntegration.toString());
-            final PreferenceScreen psColors     = (PreferenceScreen) this.findPreference(PreferenceKeys.Colors        .toString());
+            final PreferenceGroup  psAppearance = (PreferenceGroup ) this.findPreference(PreferenceKeys.Appearance    );
+            final PreferenceGroup  psInternet   = (PreferenceGroup ) this.findPreference(PreferenceKeys.webIntegration);
+            final PreferenceScreen psColors     = (PreferenceScreen) this.findPreference(PreferenceKeys.Colors        );
             if ( psColors != null ) {
                 if (/*Brand.getREColorPalette() !=0 && */ false ) {
                     psAppearance.removePreference(psColors);
                     psColors.setEnabled(false);
                 } else {
-                    DynamicListPreference colorSchema = (DynamicListPreference) this.findPreference(PreferenceKeys.colorSchema.toString());
+                    DynamicListPreference colorSchema = (DynamicListPreference) this.findPreference(PreferenceKeys.colorSchema);
                     if ( colorSchema != null ) {
                         colorSchema.setAllowNew( (Brand.brand == Brand.Squore) || Brand.isNotSquash() );
                     }
@@ -851,7 +853,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 }
             }
 
-            ResetPrefs resetPrefs = (ResetPrefs) findPreference(PreferenceKeys.resetPrefs.toString());
+            ResetPrefs resetPrefs = (ResetPrefs) findPreference(PreferenceKeys.resetPrefs);
             if ( resetPrefs != null ) {
                 resetPrefs.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                     @Override public boolean onPreferenceChange(Preference preference, Object o) {
@@ -885,6 +887,11 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     cbVibrate.setChecked(false);
                     cbVibrate.setEnabled(false);
                 }
+            }
+
+            // FCM
+            if ( PreferenceValues.isFCMEnabled(getActivity()) == false ) {
+                setEnabledForPrefKeys(false, PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, PreferenceKeys.FCMDeviceId);
             }
 
             ListPreference lpTargetDir = (ListPreference) findPreference(PreferenceKeys.targetDirForImportExport);
@@ -954,11 +961,11 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             }
 
             // update titles with more sport specific titles
-            Preference preference = this.findPreference(PreferenceKeys.SBPreferences.toString());
+            Preference preference = this.findPreference(PreferenceKeys.SBPreferences);
             PreferenceValues.updatePreferenceTitleResId(preference, getActivity());
 
             if ( ScoreBoard.isInSpecialMode() == false ) {
-                final PreferenceGroup psFeeds = (PreferenceGroup) this.findPreference(PreferenceKeys.webIntegration.toString());
+                final PreferenceGroup psFeeds = (PreferenceGroup) this.findPreference(PreferenceKeys.webIntegration);
                 if ( psFeeds != null ) {
                     psFeeds.removePreference(findPreference(PreferenceKeys.FeedFeedsURL));
                     //psFeeds.removePreference(findPreference("Technical"));
@@ -1006,6 +1013,17 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             return super.onPreferenceTreeClick(preferenceScreen, preference);
         }
 */
+        private int setEnabledForPrefKeys(boolean bEnabled, PreferenceKeys... keys) {
+            int iFoundAndSet = 0;
+            for( PreferenceKeys key: keys ) {
+                Preference pref = findPreference(key);
+                if ( pref != null ) {
+                    pref.setEnabled(bEnabled);
+                    iFoundAndSet++;
+                }
+            }
+            return iFoundAndSet;
+        }
 
         private void initFeedURLs(ListPreference listPreference, String sURLs) {
             if ( listPreference == null ) { return; }

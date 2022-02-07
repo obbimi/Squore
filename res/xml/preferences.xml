@@ -1406,15 +1406,12 @@
                 android:title="@string/pref_FCMDeviceId"
                 android:summary="@string/pref_FCMDeviceId_summary"
                 />
-<!--
-            <Preference android:title="@string/FCM_Info_URL"
+            <CheckBoxPreference android:key="showToastMessageForEveryReceivedFCMMessage"
                 android:icon="@drawable/dummy"
-                android:key="fcmURL"
-                android:summary="@string/pref_fcmURL_summary">
-                <intent android:action="android.intent.action.VIEW"
-                    android:data="@string/pref_live_score_url" />
-            </Preference>
--->
+                android:title="@string/pref_showToastMessageForEveryReceivedFCMMessage"
+                android:summary="@string/pref_showToastMessageForEveryReceivedFCMMessage_summary"
+                android:defaultValue="@bool/showToastMessageForEveryReceivedFCMMessage_default"
+                />
         </PreferenceCategory>
 
         <PreferenceCategory android:title="@string/pref_VisibilityOfNewTournaments">

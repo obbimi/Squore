@@ -269,7 +269,7 @@ public enum PreferenceKeys {
     FCMPrefs,
         FCMEnabled,
         FCMDeviceId,
-        fcmURL,
+        showToastMessageForEveryReceivedFCMMessage,
 
     /* not really preferences but makes them manageable from 'parent' app */
     FromParent,

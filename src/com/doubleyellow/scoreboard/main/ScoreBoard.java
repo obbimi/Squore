@@ -6892,7 +6892,7 @@ touch -t 01030000 LAST.sb
                         }
                         break;
                     case FirebaseCloudMessage:
-                        if ( PreferenceValues.showToastMessageForEveryFCMMessage(this)) {
+                        if ( PreferenceValues.showToastMessageForEveryReceivedFCMMessage(this)) {
                             Toast.makeText(this, "Score changed by FCM message: " + readMessage, Toast.LENGTH_SHORT).show();
                         }
                         break;
