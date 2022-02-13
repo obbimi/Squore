@@ -159,7 +159,7 @@ public class SelectDeviceDialog extends BaseAlertDialog
         if ( ListUtil.isEmpty(pairedDevices) ) {
             return new int[] { R.string.bt_no_paired, R.string.bt_how_to_pair_info };
         }
-        List<BluetoothDevice> lPairedDevicesFilteredOnNWService = BluetoothControlService.filtered(pairedDevices);
+        List<BluetoothDevice> lPairedDevicesFilteredOnNWService = BluetoothControlService.filtered_Network(pairedDevices);
         if ( ListUtil.isEmpty(lPairedDevicesFilteredOnNWService) ) {
             return new int[] { R.string.bt_no_appropriate_paired_devices_found, R.string.bt_how_to_pair_info };
         }

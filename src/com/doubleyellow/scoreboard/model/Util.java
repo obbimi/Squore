@@ -19,6 +19,7 @@ package com.doubleyellow.scoreboard.model;
 
 import java.net.NetworkInterface;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+
 import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
@@ -158,4 +161,12 @@ public class Util {
         return Uri.parse(helpUrl);
     }
 
+    public static Map bundleToMap(Bundle bundle) {
+        if ( bundle == null ) { return null; }
+        Map mReturn = new HashMap();
+        for(String sKey: bundle.keySet()) {
+            mReturn.put(sKey, bundle.get(sKey));
+        }
+        return mReturn;
+    }
 }

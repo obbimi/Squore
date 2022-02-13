@@ -598,7 +598,10 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         boolean bShow   = PreferenceValues.castScreenShowLogo(context);
         if ( bShow && StringUtil.isNotEmpty(sLogoURL) ) {
             sLogoURL = URLFeedTask.prefixWithBaseIfRequired(sLogoURL);
-            sLogoURL = String.format(sLogoURL, Brand.brand);
+            try {
+                sLogoURL = String.format(sLogoURL, Brand.brand);
+            } catch (Exception e) {
+            }
         } else {
             sLogoURL = "";
         }

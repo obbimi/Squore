@@ -471,12 +471,18 @@ public class BluetoothControlService
         }
     }
 
-    public static List<BluetoothDevice> filtered(Set<BluetoothDevice> pairedDevices) {
+    public static List<BluetoothDevice> filtered_Network(Set<BluetoothDevice> pairedDevices) {
+        return filtered(pairedDevices, BluetoothClass.Service.NETWORKING);
+    }
+    public static List<BluetoothDevice> filtered_Audio(Set<BluetoothDevice> pairedDevices) {
+        return filtered(pairedDevices, BluetoothClass.Service.AUDIO);
+    }
+    public static List<BluetoothDevice> filtered(Set<BluetoothDevice> pairedDevices, int iBluetoothClass_Service) {
         List<BluetoothDevice> lPairedDevicesFilteredOnNWService = new ArrayList<>();
         // If there are paired devices, check if the device supports networking
         if ( ListUtil.isNotEmpty(pairedDevices) ) {
             for (BluetoothDevice device : pairedDevices) {
-                if ( device.getBluetoothClass().hasService(BluetoothClass.Service.NETWORKING) ) {
+                if ( device.getBluetoothClass().hasService(iBluetoothClass_Service) ) {
                     lPairedDevicesFilteredOnNWService.add(device);
                 }
             }

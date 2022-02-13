@@ -24,7 +24,7 @@ import android.widget.RadioButton;
 import com.doubleyellow.android.view.SelectObjectView;
 
 import java.util.List;
-
+/** Used by SelectDeviceDialog */
 class SelectDeviceView extends SelectObjectView<BluetoothDevice> {
     public SelectDeviceView(Context context, List<BluetoothDevice> devices, BluetoothDevice fChecked) {
         super(context, devices, fChecked);
