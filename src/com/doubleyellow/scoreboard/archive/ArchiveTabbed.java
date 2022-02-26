@@ -356,27 +356,6 @@ public class ArchiveTabbed extends XActivity implements NfcAdapter.CreateNdefMes
     }
 */
 
-/*
-    private boolean initAllowedOrientation() {
-        int orientation = this.getResources().getConfiguration().orientation;
-        try {
-            setRequestedOrientation(orientation);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            boolean bIsPortrait = isLandscape(this);
-            if (bIsPortrait) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // 0
-            } else {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 1
-                //USER = 2
-            }
-        }
-        return true;
-    }
-*/
-
     @Override public void onBackPressed() {
         if ( ScoreBoard.isInDemoMode() ) {
             ScoreBoard.demoThread.cancelDemoMessage();

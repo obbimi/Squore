@@ -80,13 +80,11 @@ public class Conduct extends BaseAlertDialog
         final View view = myLayout.inflate(R.layout.conduct, null);
         sv = (SelectEnumView<ConductType>) view.findViewById(R.id.selectConductType);
 
-        if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT /*19 */ ) {
-            // radiobutton has dark edge... on dark background ... hard to see
-            // set background color to 'middlest' so that dark circles and white text are visible
-            Map<ColorPrefs.ColorTarget, Integer> target2colorMapping = ColorPrefs.getTarget2colorMapping(context);
-            Integer color = target2colorMapping.get(ColorPrefs.ColorTarget.middlest);
-            sv.setBackgroundColor(color);
-        }
+        // radiobutton has dark edge... on dark background ... hard to see
+        // set background color to 'middlest' so that dark circles and white text are visible
+        Map<ColorPrefs.ColorTarget, Integer> target2colorMapping = ColorPrefs.getTarget2colorMapping(context);
+        Integer color = target2colorMapping.get(ColorPrefs.ColorTarget.middlest);
+        sv.setBackgroundColor(color);
 
         // add a view with all possible Conducts and let user choose one
         //sv = new SelectEnumView(context, ConductType.class);

@@ -94,12 +94,11 @@ import java.util.Map;
  *
  * @deprecated
  */
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class CastHelper implements ICastHelper
 {
     private static final String TAG = "SB.OLD." + CastHelper.class.getSimpleName();
 
-    private static final boolean NOT_SUPPORTED_IN_SDK = Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1;
+    private static final boolean NOT_SUPPORTED_IN_SDK = false;
 
     private MediaRouter          mediaRouter         = null;
     private MediaRouteSelector   mediaRouteSelector  = null;

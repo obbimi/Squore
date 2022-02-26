@@ -227,11 +227,7 @@ public class EditPlayers extends BaseAlertDialog
                 lCountries.add(txtCountry);
                 if (PreferenceValues.useCountries(context)) {
                     lpPC.weight = 1;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        llLabelPlayerAndCountry.addView(txtCountry, new LinearLayout.LayoutParams(lpPC));
-                    } else {
-                        llLabelPlayerAndCountry.addView(txtCountry, new LinearLayout.LayoutParams(lpPC.width, lpPC.height));
-                    }
+                    llLabelPlayerAndCountry.addView(txtCountry, new LinearLayout.LayoutParams(lpPC));
                 } else {
                     txtCountry.setVisibility(View.GONE);
                 }
@@ -244,11 +240,7 @@ public class EditPlayers extends BaseAlertDialog
                 lClubs.add(txtClub);
                 if ( true ) {
                     lpPC.weight = 1;
-                    if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
-                        llLabelPlayerAndCountry.addView(txtClub, new LinearLayout.LayoutParams(lpPC));
-                    } else {
-                        llLabelPlayerAndCountry.addView(txtClub, new LinearLayout.LayoutParams(lpPC.width, lpPC.height));
-                    }
+                    llLabelPlayerAndCountry.addView(txtClub, new LinearLayout.LayoutParams(lpPC));
                 } else {
                     txtClub.setVisibility(View.GONE);
                 }

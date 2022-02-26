@@ -62,10 +62,6 @@ public class ScoreSheetOnline extends AppCompatActivity {
         String myUserAgentString = URLTask.getMyUserAgentString(this);
         settings.setUserAgentString("Android WebView " + myUserAgentString);
 /*
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ) {
-            settings.setAllowUniversalAccessFromFileURLs(true);
-            settings.setAllowFileAccessFromFileURLs(true);
-        }
         settings.setBlockNetworkLoads(false);
 */
         settings.setLoadsImagesAutomatically(true);
