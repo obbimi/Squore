@@ -921,9 +921,7 @@ public abstract class Model implements Serializable
 
         if ( ListUtil.size(lGameScoreHistory) < JsonUtil.size(m_rallyEndStatsGIP) ) {
             // TODO: for now I only remove statistics if the number of statistics is simply to large: this can be improved
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
-                m_rallyEndStatsGIP.remove(m_rallyEndStatsGIP.length() - 1);
-            }
+            m_rallyEndStatsGIP.remove(m_rallyEndStatsGIP.length() - 1);
         }
 
         // inform listeners
@@ -966,9 +964,7 @@ public abstract class Model implements Serializable
 
             if ( ListUtil.size(lGameScoreHistory) < JsonUtil.size(m_rallyEndStatsGIP) ) {
                 // TODO: for now I only remove statistics if the number of statistics is simply to large: this can be improved
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ) {
-                    m_rallyEndStatsGIP.remove(m_rallyEndStatsGIP.length() - 1);
-                }
+                m_rallyEndStatsGIP.remove(m_rallyEndStatsGIP.length() - 1);
             }
 
             if ( (slRemoved != null) && slRemoved.isTimeout() ) {
@@ -3749,7 +3745,15 @@ public abstract class Model implements Serializable
                 gameInProgressFor.put(p, 1);
             }
         } else {
-            possible = getPlayers();
+            switch (when) {
+                case Now:
+                    possible = getPlayers();
+                    break;
+                case ScoreOneMorePoint:
+                    // 0-0: typically not a match ball (unless 'not realistic' it is best of x games to 1)
+                    possible = getNoneOfPlayers();
+                    break;
+            }
         }
 
         List<Player> lReturn = null;
