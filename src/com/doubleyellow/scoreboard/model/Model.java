@@ -513,6 +513,7 @@ public abstract class Model implements Serializable
             for(OnServeSideChangeListener l: onServeSideChangeListener) {
                 l.OnServeSideChange(m_pServer, m_in_out, m_nextServeSide, lastPointHandout, bForUndo);
             }
+            setDirty(); // e.g. to ensure after rotate, same server is remembered
         }
         if ( isDoubles() ) {
             DoublesServe dsReceiver = determineDoublesReceiver(m_in_out, m_nextServeSide);
@@ -2359,69 +2360,69 @@ public abstract class Model implements Serializable
                 if ( joFormat == null ) {
                     Log.d(TAG, "NO FORMAT SECTION IN JSON"); // happens when e.g. match is selected from MyList
                 } else {
-                int numberOfPointsToWinGame = joFormat.optInt(PreferenceKeys.numberOfPointsToWinGame.toString(), UNDEFINED_VALUE);
-                int nrOfGamesToWinMatch     = joFormat.optInt(JSONKey.nrOfGamesToWinMatch.toString(), UNDEFINED_VALUE); // old... keep for now for stored matches
-                    nrOfGamesToWinMatch     = joFormat.optInt(PreferenceKeys.numberOfGamesToWinMatch.toString(), nrOfGamesToWinMatch); // optional for e.g. racketlon
-                if ( numberOfPointsToWinGame != UNDEFINED_VALUE ) {
-                    setNrOfPointsToWinGame(numberOfPointsToWinGame);
-                }
-                if ( nrOfGamesToWinMatch > 0 ) {
-                    setNrOfGamesToWinMatch(nrOfGamesToWinMatch);
-                }
-                if ( joFormat.optBoolean(JSONKey.playAllGames.toString()) ) {
-                    setPlayAllGames(true);
-                }
-
-                bMatchFormatIsSet = true;
-                if ( joFormat.has(JSONKey.useHandInHandOutScoring.toString()) ) {
-                    // if not specified it may still default to true e.g. for Racquetball. So do not shorten this with using optBoolean()
-                    boolean b = joFormat.getBoolean(JSONKey.useHandInHandOutScoring.toString());
-                    setEnglishScoring(b);
-                }
-                String s = joFormat.optString(JSONKey.tiebreakFormat.toString());
-                if ( StringUtil.isNotEmpty(s) ) {
-                    setTiebreakFormat(TieBreakFormat.valueOf(s));
-                }
-                readFormatSettings(joFormat);
-
-                if ( joFormat.has(JSONKey.doublesServeSequence.toString()) ) {
-                    String ss = joFormat.getString(JSONKey.doublesServeSequence.toString());
-                    DoublesServeSequence dsq;
-                    if ( Model.mOldDSS2New.containsKey(ss) ) {
-                        dsq = Model.mOldDSS2New.get(ss);
-                        Log.w(TAG, String.format("Translated old %s to new %s", ss, dsq));
-                    } else {
-                        dsq = DoublesServeSequence.valueOf(ss);
+                    int numberOfPointsToWinGame = joFormat.optInt(PreferenceKeys.numberOfPointsToWinGame.toString(), UNDEFINED_VALUE);
+                    int nrOfGamesToWinMatch     = joFormat.optInt(JSONKey.nrOfGamesToWinMatch.toString(), UNDEFINED_VALUE); // old... keep for now for stored matches
+                        nrOfGamesToWinMatch     = joFormat.optInt(PreferenceKeys.numberOfGamesToWinMatch.toString(), nrOfGamesToWinMatch); // optional for e.g. racketlon
+                    if ( numberOfPointsToWinGame != UNDEFINED_VALUE ) {
+                        setNrOfPointsToWinGame(numberOfPointsToWinGame);
                     }
-                    _setDoublesServeSequence(dsq);
-                }
-
-                String h = joFormat.optString(JSONKey.handicapFormat.toString());
-                if ( StringUtil.isNotEmpty(h) ) {
-                    setHandicapFormat(HandicapFormat.valueOf(h));
-                    JSONArray joOffset = joFormat.optJSONArray(JSONKey.gameStartScoreOffset.toString());
-                    for(int g=0; g < JsonUtil.size(joOffset); g++) {
-                        JSONObject joGame;
-                        try {
-                            joGame = joOffset.getJSONObject(g);
-                        } catch (Exception e) {
-                            // this should no longer be necessary
-                            joGame = new JSONObject(joOffset.optString(g)) ;
-                        }
-/*
-                        if ( g > 0 && m_startScoreOfGameInProgress != null) {
-                            m_deviatingStartScoreOfGames.add(m_startScoreOfGameInProgress);
-                        }
-*/
-                        HashMap<Player, Integer> startScoreOfGameInProgress = new HashMap<Player, Integer>();
-                        startScoreOfGameInProgress.put(Player.A, joGame.optInt(Player.A.toString(), 0));
-                        startScoreOfGameInProgress.put(Player.B, joGame.optInt(Player.B.toString(), 0));
-                        setDeviatingScore(g, startScoreOfGameInProgress);
+                    if ( nrOfGamesToWinMatch > 0 ) {
+                        setNrOfGamesToWinMatch(nrOfGamesToWinMatch);
                     }
-                }
-                if ( joFormat.has(JSONKey.mode.toString())) {
-                    m_sMode = joFormat.optString(JSONKey.mode.toString());
-                }
+                    if ( joFormat.optBoolean(JSONKey.playAllGames.toString()) ) {
+                        setPlayAllGames(true);
+                    }
+
+                    bMatchFormatIsSet = true;
+                    if ( joFormat.has(JSONKey.useHandInHandOutScoring.toString()) ) {
+                        // if not specified it may still default to true e.g. for Racquetball. So do not shorten this with using optBoolean()
+                        boolean b = joFormat.getBoolean(JSONKey.useHandInHandOutScoring.toString());
+                        setEnglishScoring(b);
+                    }
+                    String s = joFormat.optString(JSONKey.tiebreakFormat.toString());
+                    if ( StringUtil.isNotEmpty(s) ) {
+                        setTiebreakFormat(TieBreakFormat.valueOf(s));
+                    }
+                    readFormatSettings(joFormat);
+
+                    if ( joFormat.has(JSONKey.doublesServeSequence.toString()) ) {
+                        String ss = joFormat.getString(JSONKey.doublesServeSequence.toString());
+                        DoublesServeSequence dsq;
+                        if ( Model.mOldDSS2New.containsKey(ss) ) {
+                            dsq = Model.mOldDSS2New.get(ss);
+                            Log.w(TAG, String.format("Translated old %s to new %s", ss, dsq));
+                        } else {
+                            dsq = DoublesServeSequence.valueOf(ss);
+                        }
+                        _setDoublesServeSequence(dsq);
+                    }
+
+                    String h = joFormat.optString(JSONKey.handicapFormat.toString());
+                    if ( StringUtil.isNotEmpty(h) ) {
+                        setHandicapFormat(HandicapFormat.valueOf(h));
+                        JSONArray joOffset = joFormat.optJSONArray(JSONKey.gameStartScoreOffset.toString());
+                        for(int g=0; g < JsonUtil.size(joOffset); g++) {
+                            JSONObject joGame;
+                            try {
+                                joGame = joOffset.getJSONObject(g);
+                            } catch (Exception e) {
+                                // this should no longer be necessary
+                                joGame = new JSONObject(joOffset.optString(g)) ;
+                            }
+    /*
+                            if ( g > 0 && m_startScoreOfGameInProgress != null) {
+                                m_deviatingStartScoreOfGames.add(m_startScoreOfGameInProgress);
+                            }
+    */
+                            HashMap<Player, Integer> startScoreOfGameInProgress = new HashMap<Player, Integer>();
+                            startScoreOfGameInProgress.put(Player.A, joGame.optInt(Player.A.toString(), 0));
+                            startScoreOfGameInProgress.put(Player.B, joGame.optInt(Player.B.toString(), 0));
+                            setDeviatingScore(g, startScoreOfGameInProgress);
+                        }
+                    }
+                    if ( joFormat.has(JSONKey.mode.toString())) {
+                        m_sMode = joFormat.optString(JSONKey.mode.toString());
+                    }
                 }
             } catch (Exception e) {
                 // not really an error, most likely last match stored did not use these keys
@@ -2562,6 +2563,18 @@ public abstract class Model implements Serializable
                     }
                 } else {
                     //call or broken equipment
+                }
+            } else {
+                if ( joMatch.has(JSONKey.server.toString()) ) {
+                    String s = joMatch.getString(JSONKey.server.toString());
+                    Player pServer = Player.valueOf(s);
+                    ServeSide side = null;
+                    if ( joMatch.has(JSONKey.serveSide.toString()) ) {
+                        String ss = joMatch.getString(JSONKey.serveSide.toString());
+                        side = ServeSide.valueOf(ss);
+                    }
+
+                    setServerAndSide(pServer, side, null);
                 }
             }
 
@@ -2821,6 +2834,11 @@ public abstract class Model implements Serializable
             Player[] possibleMatchBallFor = isPossibleMatchBallFor();
             jsonObject.put(JSONKey.isGameBall  .toString(), isPossibleGameBallFor(Player.A) || isPossibleGameBallFor(Player.B));
             jsonObject.put(JSONKey.isMatchBall .toString(), (possibleMatchBallFor != null) && (possibleMatchBallFor.length!=0) );
+        }
+        if ( hasStarted() == false ) {
+            Player server = getServer();
+            jsonObject.put(JSONKey.server   .toString(), server);
+            jsonObject.put(JSONKey.serveSide.toString(), getNextServeSide(server));
         }
         jsonObject.put(JSONKey.isVictoryFor.toString(), isPossibleMatchVictoryFor() );
         JsonUtil.removeEmpty(jsonObject);

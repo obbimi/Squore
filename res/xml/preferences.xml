@@ -1217,7 +1217,7 @@
                             android:title="@string/pref_maxNumberOfPlayersInGroup"
                             android:summary="@string/pref_maxNumberOfPlayersInGroup_summary"
                             android:inputType="number"
-                            android:defaultValue="@integer/maxNumberOfPlayersInGroup_default"
+                            android:defaultValue="@integer/maxNumberOfPlayersInGroup_default__Default"
                 />
 
         <PreferenceCategory android:title="@string/pref_Category_Contacts" android:key="Contacts">

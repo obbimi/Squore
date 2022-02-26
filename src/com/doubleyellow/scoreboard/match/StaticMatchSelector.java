@@ -54,7 +54,6 @@ import com.doubleyellow.scoreboard.view.PlayerTextView;
 import com.doubleyellow.util.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -282,7 +281,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
         txtNrOfPlayers.setInputType(InputType.TYPE_CLASS_NUMBER);
         //txtNrOfPlayers.setText(String.valueOf(PreferenceValues.maxNumberOfPlayersInGroup(context)));
         txtNrOfPlayers.setTag(ColorPrefs.Tags.item);
-        txtNrOfPlayers.setHint(getString(R.string.pref_maxNumberOfPlayersInGroup) + " (" + PreferenceValues.maxNumberOfPlayersInGroup(context) + ")" );
+        txtNrOfPlayers.setHint(PreferenceValues.maxNumberOfPlayersInGroup(context) + " : " + getString(R.string.pref_maxNumberOfPlayersInGroup) );
 
         // allow to choose between 'poule' vs 'team vs team'
         final SelectEnumView sevType;
@@ -321,7 +320,8 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                                 // after adding a new group assume at least a match will be added
                                 String sNrOfMatches = txtNrOfPlayers.getText().toString();
                                 if ( StringUtil.isEmpty(sNrOfMatches) ) {
-                                    sNrOfMatches = String.valueOf(PreferenceValues.maxNumberOfPlayersInGroup(context));
+                                    int iUseNrAsInHint = PreferenceValues.maxNumberOfPlayersInGroup(context);
+                                    sNrOfMatches = String.valueOf(iUseNrAsInHint);
                                 }
                                 Integer iNrOfNamesToEnter = 4;
                                 if ( StringUtil.isInteger(sNrOfMatches) ) {
@@ -500,7 +500,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
         storeAndRefresh(lFixedNew);
     }
 */
-
+    /** also used as callback for DialogOnClickListener */
     public void storeAndRefresh(List<String> lFixedNew) {
         store(lFixedNew);
 

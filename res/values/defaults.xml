@@ -43,7 +43,8 @@
     <integer name="TextSizeTabStrip">18</integer>
     <integer name="TextSizeShowCase">14</integer>
     <integer name="maxNumberOfLinesToUseForGameEndScores">5</integer>
-    <integer name="maxNumberOfPlayersInGroup_default">5</integer>
+    <integer name="maxNumberOfPlayersInGroup_default__Default">5</integer>
+    <integer name="maxNumberOfPlayersInGroup_default__Tabletennis">3</integer>
     <integer name="showChoosenDecisionDuration_Conduct_default">5</integer>
     <integer name="showChoosenDecisionDuration_Appeal_default">2</integer>
 

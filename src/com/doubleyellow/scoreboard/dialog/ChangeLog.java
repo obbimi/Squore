@@ -28,8 +28,6 @@ import android.webkit.WebViewClient;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.Feedback;
-import com.doubleyellow.scoreboard.main.DialogManager;
-import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.android.view.MarkDownView;
 
 public class ChangeLog extends BaseAlertDialog
