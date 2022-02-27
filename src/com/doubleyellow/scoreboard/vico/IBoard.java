@@ -217,7 +217,6 @@ public class IBoard implements TimerViewContainer
     /** @deprecated */
     public boolean isPresentation() {
         if ( showOnScreen == null ) {
-            // Presentation.class here since it was only introducted in API 17 JELLY_BEAN_MR1
             showOnScreen = context.getClass().getName().contains("android.app.Presentation") ? ShowOnScreen.OnChromeCast : ShowOnScreen.OnDevice;
         }
         return showOnScreen.equals(ShowOnScreen.OnChromeCast);

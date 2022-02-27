@@ -1551,7 +1551,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         }
     }
 
-    /** using dispatchKeyEvent() seems to work fine: we check on KeyEvent.ACTION_UP deliberately. KeyEvent.ACTION_DOWN is triggered very often if you HOLD the volume button */
+    /** using dispatchKeyEvent() seems to work fine for hardware related actions/keys: we check on KeyEvent.ACTION_UP deliberately. KeyEvent.ACTION_DOWN is triggered very often if you HOLD the volume button */
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
         int keyCode = event.getKeyCode();
         int action  = event.getAction();
@@ -5898,7 +5898,7 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
     // --------------------- download a zip with matches --
     // ----------------------------------------------------
-    private BroadcastReceiver m_downloadComleted = new BroadcastReceiver() {
+    private BroadcastReceiver m_downloadCompleted = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ( DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action) == false ) {
@@ -5981,7 +5981,7 @@ touch -t 01030000 LAST.sb
         if ( dm == null ) {
             dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 
-            registerReceiver(m_downloadComleted, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+            registerReceiver(m_downloadCompleted, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
             iMenuToRepeatOnPermissionGranted = R.id.sb_download_zip;
             oaMenuCtxForRepeat = new Object[] { sURL, ztDownLoadShortname };
         }
@@ -6028,7 +6028,7 @@ touch -t 01030000 LAST.sb
                 if ( mBluetoothControlService.getState().equals(BTState.CONNECTED) ) {
                     setBluetoothIconVisibility(View.VISIBLE);
                     Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
-                    List<BluetoothDevice> lPairedDevicesFilteredOnNWService = BluetoothControlService.filtered(bondedDevices);
+                    List<BluetoothDevice> lPairedDevicesFilteredOnNWService = BluetoothControlService.filtered_Network(bondedDevices);
                     if ( ListUtil.size(lPairedDevicesFilteredOnNWService) == 1 ) {
                         mBluetoothHandler.storeBTDeviceConnectedTo(bondedDevices.iterator().next());
                     }
@@ -6038,6 +6038,8 @@ touch -t 01030000 LAST.sb
             } else {
                 Log.d(TAG, "Bluetooth not turned on");
                 setBluetoothIconVisibility(View.INVISIBLE);
+                // request to turn on bluetooth: to 'intrusive'
+                //startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), BluetoothAdapter.ACTION_REQUEST_ENABLE.hashCode()); // requires android.permission.BLUETOOTH_CONNECT
             }
         } else {
             // no bluetooth: hide menu option
@@ -7221,63 +7223,47 @@ touch -t 01030000 LAST.sb
         if ( isWearable() ) { return false; }
 
         boolean bInitialize = PreferenceValues.initializeForScoringWithMediaControlButtons(this);
-        if ( bInitialize ) {
-            // https://stackoverflow.com/questions/54414333/mediasession-onmediabuttonevent-works-for-a-few-seconds-then-quits-android
-            // work if bluetooth connection is already established
+        if ( bInitialize == false ) { return false; }
 
-            if ( ms == null ) {
-                ms = new MediaSession(getApplicationContext(), getPackageName());
+        // https://stackoverflow.com/questions/54414333/mediasession-onmediabuttonevent-works-for-a-few-seconds-then-quits-android
+        // work if bluetooth connection is already established
 
-                // this is required or else some for some devices some buttons presses don't make it here (e.g. Plantronic headphone)
-                PlaybackState.Builder mStateBuilder = new PlaybackState.Builder()
-                        .setActions( PlaybackState.ACTION_PLAY
-                                   | PlaybackState.ACTION_PAUSE
-                                   | PlaybackState.ACTION_SKIP_TO_PREVIOUS
-                                   | PlaybackState.ACTION_SKIP_TO_NEXT
-                                   | PlaybackState.ACTION_PLAY_PAUSE);
-                ms.setPlaybackState(mStateBuilder.build());
+        if ( ms == null ) {
+            ms = new MediaSession(getApplicationContext(), getPackageName());
 
-                ms.setCallback(new MediaSession.Callback() {
-                    boolean bHandleNextDown = true;
-                    @Override public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
-                        Bundle extras = mediaButtonIntent.getExtras();
-                        KeyEvent keyEvent = (KeyEvent) extras.get(Intent.EXTRA_KEY_EVENT);
-                        int keyCode = keyEvent.getKeyCode();
-                        Log.i(TAG, "[onMediaButtonEvent] keyCode " + keyCode + " [" + (keyEvent.getAction() == KeyEvent.ACTION_UP?"up":"down") + "]");
-                        if ( keyEvent.getAction() == KeyEvent.ACTION_DOWN ) {
-                            switch (keyCode) {
-                                case KeyEvent.KEYCODE_MEDIA_PLAY:
-                                case KeyEvent.KEYCODE_MEDIA_PAUSE: // only triggered for down not for up?
-                                    // often the same button
-                                    handleMenuItem(R.id.dyn_undo_last);
-                                    return true;
-                                case KeyEvent.KEYCODE_MEDIA_REWIND:       // long press 'previous'
-                                case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                                case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD: // long press 'next'
-                                case KeyEvent.KEYCODE_MEDIA_NEXT:
-                                    if ( bHandleNextDown ) {
-                                        bHandleNextDown = false;
-                                        if ( isDialogShowing() ) {
-                                            // TODO: test
-                                            dialogManager.baseDialog.handleButtonClick(DialogInterface.BUTTON_POSITIVE);
-                                            return true;
-                                        } else {
-                                            boolean bIsBack = keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS || keyCode == KeyEvent.KEYCODE_MEDIA_REWIND;
-                                            Player player = bIsBack ? Player.A : Player.B;
-                                            handleMenuItem(R.id.pl_change_score, player);
-                                            return true;
-                                        }
-                                    }
-                            }
-                        } else if ( keyEvent.getAction() == KeyEvent.ACTION_UP ) {
-                            bHandleNextDown = true;
-                            // up is only triggered for 'short' press. Long press means something different?!
-                            switch (keyCode) {
-/*
-                                case KeyEvent.KEYCODE_MEDIA_REWIND:       // long press 'previous'
-                                case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                                case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD: // long press 'next'
-                                case KeyEvent.KEYCODE_MEDIA_NEXT:
+            // this is required or else some for some devices some buttons presses don't make it here (e.g. Plantronic headphone)
+            PlaybackState.Builder mStateBuilder = new PlaybackState.Builder()
+                    .setActions( PlaybackState.ACTION_PLAY
+//                             | PlaybackState.ACTION_PLAY_FROM_MEDIA_ID
+//                             | PlaybackState.ACTION_PREPARE_FROM_MEDIA_ID
+                               | PlaybackState.ACTION_PAUSE
+                               | PlaybackState.ACTION_SKIP_TO_PREVIOUS
+                               | PlaybackState.ACTION_SKIP_TO_NEXT
+                               | PlaybackState.ACTION_PLAY_PAUSE);
+//          mStateBuilder.setState(PlaybackState.STATE_PLAYING, 0, 1);
+            ms.setPlaybackState(mStateBuilder.build());
+//          ms.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+
+            ms.setCallback(new MediaSession.Callback() {
+                boolean bHandleNextDown = true;
+                @Override public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
+                    Bundle extras = mediaButtonIntent.getExtras();
+                    KeyEvent keyEvent = (KeyEvent) extras.get(Intent.EXTRA_KEY_EVENT);
+                    int keyCode = keyEvent.getKeyCode();
+                    Log.i(TAG, "[onMediaButtonEvent] keyCode " + keyCode + " [" + (keyEvent.getAction() == KeyEvent.ACTION_UP?"up":"down") + "]");
+                    if ( keyEvent.getAction() == KeyEvent.ACTION_DOWN ) {
+                        switch (keyCode) {
+                            case KeyEvent.KEYCODE_MEDIA_PLAY:
+                            case KeyEvent.KEYCODE_MEDIA_PAUSE: // only triggered for down not for up?
+                                // often the same button
+                                handleMenuItem(R.id.dyn_undo_last);
+                                return true;
+                            case KeyEvent.KEYCODE_MEDIA_REWIND:       // long press 'previous'
+                            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD: // long press 'next'
+                            case KeyEvent.KEYCODE_MEDIA_NEXT:
+                                if ( bHandleNextDown ) {
+                                    bHandleNextDown = false;
                                     if ( isDialogShowing() ) {
                                         // TODO: test
                                         dialogManager.baseDialog.handleButtonClick(DialogInterface.BUTTON_POSITIVE);
@@ -7288,92 +7274,113 @@ touch -t 01030000 LAST.sb
                                         handleMenuItem(R.id.pl_change_score, player);
                                         return true;
                                     }
-*/
-                            }
+                                }
                         }
-                        return super.onMediaButtonEvent(mediaButtonIntent);
+                    } else if ( keyEvent.getAction() == KeyEvent.ACTION_UP ) {
+                        bHandleNextDown = true;
+                        // up is only triggered for 'short' press. Long press means something different?!
+                        switch (keyCode) {
+/*
+                            case KeyEvent.KEYCODE_MEDIA_REWIND:       // long press 'previous'
+                            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD: // long press 'next'
+                            case KeyEvent.KEYCODE_MEDIA_NEXT:
+                                if ( isDialogShowing() ) {
+                                    // TODO: test
+                                    dialogManager.baseDialog.handleButtonClick(DialogInterface.BUTTON_POSITIVE);
+                                    return true;
+                                } else {
+                                    boolean bIsBack = keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS || keyCode == KeyEvent.KEYCODE_MEDIA_REWIND;
+                                    Player player = bIsBack ? Player.A : Player.B;
+                                    handleMenuItem(R.id.pl_change_score, player);
+                                    return true;
+                                }
+*/
+                        }
                     }
+                    return super.onMediaButtonEvent(mediaButtonIntent);
+                }
 
 /*
-                    @Override public void onSkipToNext() {
-                        Log.i(TAG, "[onSkipToNext]"); // typically invoked between single-down-followed-by-an-up sequence
-                        super.onSkipToNext();
-                    }
+                @Override public void onSkipToNext() {
+                    Log.i(TAG, "[onSkipToNext]"); // typically invoked between single-down-followed-by-an-up sequence
+                    super.onSkipToNext();
+                }
 
-                    @Override public void onSkipToPrevious() {
-                        Log.i(TAG, "[onSkipToPrevious]");
-                        super.onSkipToPrevious();
-                    }
+                @Override public void onSkipToPrevious() {
+                    Log.i(TAG, "[onSkipToPrevious]");
+                    super.onSkipToPrevious();
+                }
 
-                    @Override public void onPlay() {
-                        Log.i(TAG, "[onPlay]");
-                        super.onPlay();
-                    }
-                    @Override public void onPause() {
-                        Log.i(TAG, "[onPause]");
-                        super.onPause();
-                    }
+                @Override public void onPlay() {
+                    Log.i(TAG, "[onPlay]");
+                    super.onPlay();
+                }
+                @Override public void onPause() {
+                    Log.i(TAG, "[onPause]");
+                    super.onPause();
+                }
 
-                    @Override public void onFastForward() {
-                        Log.i(TAG, "[onFastForward]");
-                        super.onFastForward();
-                    }
+                @Override public void onFastForward() {
+                    Log.i(TAG, "[onFastForward]");
+                    super.onFastForward();
+                }
 
-                    @Override public void onRewind() {
-                        Log.i(TAG, "[onRewind]");
-                        super.onRewind();
-                    }
+                @Override public void onRewind() {
+                    Log.i(TAG, "[onRewind]");
+                    super.onRewind();
+                }
 */
-                });
+            });
 
 /*
-                MediaController mediaController = ms.getController();
-                mediaController.registerCallback(new MediaController.Callback() {
-                    @Override public void onAudioInfoChanged(MediaController.PlaybackInfo info) {
-                        Log.i(TAG, "[onAudioInfoChanged] " + info);
-                        super.onAudioInfoChanged(info);
-                    }
-                }, new Handler(Looper.getMainLooper()));
+            MediaController mediaController = ms.getController();
+            mediaController.registerCallback(new MediaController.Callback() {
+                @Override public void onAudioInfoChanged(MediaController.PlaybackInfo info) {
+                    Log.i(TAG, "[onAudioInfoChanged] " + info);
+                    super.onAudioInfoChanged(info);
+                }
+            }, new Handler(Looper.getMainLooper()));
 */
 /*
-                VolumeProvider volumeProvider = getSystemService(VolumeProvider.class);// null
-                AudioManager mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-                //mAudioManager.registerMediaButtonEventReceiver();
-                ms.setPlaybackToRemote(new VolumeProvider(0,10, 5) {
-                    @Override public void onSetVolumeTo(int volume) {
-                        super.onSetVolumeTo(volume);
-                    }
-                    @Override public void onAdjustVolume(int direction) {
-                        super.onAdjustVolume(direction);
-                    }
-                });
+            VolumeProvider volumeProvider = getSystemService(VolumeProvider.class);// null
+            AudioManager mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+            //mAudioManager.registerMediaButtonEventReceiver();
+            ms.setPlaybackToRemote(new VolumeProvider(0,10, 5) {
+                @Override public void onSetVolumeTo(int volume) {
+                    super.onSetVolumeTo(volume);
+                }
+                @Override public void onAdjustVolume(int direction) {
+                    super.onAdjustVolume(direction);
+                }
+            });
 */
 
-                ms.setActive(true);
-            }
-
-            // play dummy audio: todo: redo this every x seconds?
-            AudioTrack at = new AudioTrack( AudioManager.STREAM_MUSIC
-                    , 48000
-                    , AudioFormat.CHANNEL_OUT_STEREO
-                    , AudioFormat.ENCODING_PCM_16BIT
-                    , AudioTrack.getMinBufferSize(48000, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT)
-                    , AudioTrack.MODE_STREAM
-            );
-            at.play();
-
-            // a little sleep
-            at.stop();
-            at.release();
-
-/*
-            BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
-            if ( defaultAdapter != null ) {
-                defaultAdapter.getProfileProxy(this, serviceListener, BluetoothProfile.HEADSET);
-            }
-*/
-
+            ms.setActive(true);
         }
+
+        // play dummy audio: todo: redo this every x seconds?
+        AudioTrack at = new AudioTrack( AudioManager.STREAM_MUSIC
+                , 48000
+                , AudioFormat.CHANNEL_OUT_STEREO
+                , AudioFormat.ENCODING_PCM_16BIT
+                , AudioTrack.getMinBufferSize(48000, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT)
+                , AudioTrack.MODE_STREAM
+        );
+        at.play();
+
+        // a little sleep
+        at.stop();
+        at.release();
+
+/*
+        BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
+        if ( defaultAdapter != null ) {
+            boolean bHeadSet = defaultAdapter.getProfileProxy(this, serviceListener, BluetoothProfile.HEADSET);
+            boolean bA2dp    = defaultAdapter.getProfileProxy(this, serviceListener, BluetoothProfile.A2DP);
+        }
+*/
+
         return true;
     }
 
@@ -7412,19 +7419,20 @@ touch -t 01030000 LAST.sb
 /*
     private BluetoothProfile.ServiceListener serviceListener = new BluetoothProfile.ServiceListener()
     {
+        // No idea when this is invoked
         @Override public void onServiceDisconnected(int profile)
         {
-            Log.i("onServiceDisconnected", "|" + profile + ")");
+            Log.i(TAG,"[onServiceDisconnected] " + profile);
         }
-
+        // E.g. invoked when device is rotated. Works for headphone, but not for sound box (a2dp)
         @Override public void onServiceConnected(int profile, BluetoothProfile proxy)
         {
             for (BluetoothDevice device : proxy.getConnectedDevices())
             {
-                String name = device.getName();
-                String address = device.getAddress();
-                int connectionState = proxy.getConnectionState(device);
-                Log.i("onServiceConnected", "|" + name + " | " + address + " | " + (connectionState ==BluetoothProfile.STATE_CONNECTED?"Connected":"Not connected"));
+                String name            = device.getName();
+                String address         = device.getAddress();
+                int    connectionState = proxy.getConnectionState(device);
+                Log.i(TAG, "[onServiceConnected] |" + profile + " | " + name + " | " + address + " | " + (connectionState ==BluetoothProfile.STATE_CONNECTED?"Connected":"Not connected"));
             }
         }
     };
