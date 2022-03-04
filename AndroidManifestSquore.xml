@@ -93,7 +93,7 @@
                 </activity>
         -->
 
-        <activity android:name="com.doubleyellow.scoreboard.main.ScoreBoard" android:label="@string/app_name_short_brand__Squash">
+        <activity android:name="com.doubleyellow.scoreboard.main.ScoreBoard" android:label="@string/app_name_short_brand__Squash" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -117,6 +117,12 @@
                 <data android:scheme="market" android:host="squore.double-yellow.be" />
             </intent-filter>
 
+            <!-- test to see if media button intent will give more info -->
+<!--
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+-->
 
             <intent-filter> <data android:scheme="http"  android:host="squore.double-yellow.be"         android:pathPattern="/.*20.*"               /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
             <intent-filter> <data android:scheme="http"  android:host="squore.double-yellow.be"         android:pathPattern="/show/.*20.*"          /> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> </intent-filter>
@@ -289,7 +295,7 @@
 <!--
         If using pusher, and notifications even need to be received if app is in the background, we need a service
 -->
-        <service android:name="com.doubleyellow.scoreboard.firebase.PusherMessagingService" android:enabled="true"
+        <service android:name="com.doubleyellow.scoreboard.firebase.PusherMessagingService" android:enabled="true" android:exported="false"
                  android:description="@string/FCM_Info">
             <intent-filter android:priority="1">
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

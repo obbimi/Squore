@@ -935,7 +935,8 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.NewMatchesType, context, NewMatchesType.class, iResDefault);
     }
     public static int maxNumberOfPlayersInGroup(Context context) {
-        return getIntegerR(PreferenceKeys.maxNumberOfPlayersInGroup, context, R.integer.maxNumberOfPlayersInGroup_default);
+        int iResDefault = getSportTypeSpecificResId(context, R.integer.maxNumberOfPlayersInGroup_default__Default);
+        return getIntegerR(PreferenceKeys.maxNumberOfPlayersInGroup, context, iResDefault);
     }
     public static int getTournamentWasBusy_DaysBack(Context context) {
         return getIntegerR(PreferenceKeys.tournamentWasBusy_DaysBack, context, R.integer.tournamentWasBusy_DaysBack_default);
@@ -1947,7 +1948,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2022-02-06"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2022-03-06"; // auto adjusted by shell script 'clean.and.assemble.sh'
     private static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

@@ -51,7 +51,6 @@ android {
     }
     defaultConfig {
         // must match (or be larger than) minSdkVersion of AndroidBase
-        //minSdkVersion 14 // 4.0: ICE_CREAM_SANDWICH = 14, JELLY_BEAN = 16, JELLY_BEAN_MR1 = 17, JELLY_BEAN_MR2 = 18
         // https://www.androidpolice.com/2018/10/28/android-platform-distribution-numbers-updated-october-pie-still-missing/
         // https://en.wikipedia.org/wiki/Android_version_history
         //minSdkVersion 19 // 4.4 android.os.Build.VERSION_CODES.KITKAT, for wear at least 23 is required
@@ -98,21 +97,21 @@ android {
             minSdkVersion 19
             targetSdkVersion 30
             multiDexEnabled true // required since using firebase
-            versionCode 1915 * 10000 + 475
+            versionCode 1915 * 10000 + 477
             versionName "4.45"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
-            targetSdkVersion 30
-            versionCode 2315 * 10000 + 475
+            targetSdkVersion 30 // target 31 requires android:export="(true|false)", but pusher dependency add something in our manifest without this attribute
+            versionCode 2315 * 10000 + 477
             versionName "4.45"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 30
-            versionCode 2501 * 10000 + 475
+            versionCode 2501 * 10000 + 477
             versionName "4.45"
         }
     }
@@ -189,25 +188,23 @@ dependencies {
     phoneTabletPost23Implementation   'com.google.android.gms:play-services-wearable:17.1.0'
     wearOsImplementation              'com.google.android.gms:play-services-wearable:17.1.0'
 
-    phoneTabletPre22CompileOnly       'com.google.android.support:wearable:2.8.1'
-    phoneTabletPost23Implementation   'com.google.android.support:wearable:2.8.1'
-    wearOsImplementation              'com.google.android.support:wearable:2.8.1'
+    phoneTabletPre22CompileOnly       'com.google.android.support:wearable:2.9.0'
+    phoneTabletPost23Implementation   'com.google.android.support:wearable:2.9.0'
+    wearOsImplementation              'com.google.android.support:wearable:2.9.0'
 
-    // Required when using 'com.google.android.support:wearable:2.8.1' for e.g. com/google/android/gms/wearable/CapabilityClient$OnCapabilityChangedListener
-    compileOnly       'com.google.android.wearable:wearable:2.8.1' // compileOnly sufficient for devices with API < 23
-  //phoneTabletPre22CompileOnly       'com.google.android.wearable:wearable:2.8.1'
-  //phoneTabletPost23CompileOnly      'com.google.android.wearable:wearable:2.8.1'
-  //wearOsCompileOnly                 'com.google.android.wearable:wearable:2.8.1'
+    // Required when using 'com.google.android.support:wearable:2.9.0' for e.g. com/google/android/gms/wearable/CapabilityClient$OnCapabilityChangedListener
+    compileOnly       'com.google.android.wearable:wearable:2.9.0' // compileOnly sufficient for devices with API < 23
+  //phoneTabletPre22CompileOnly       'com.google.android.wearable:wearable:2.9.0'
+  //phoneTabletPost23CompileOnly      'com.google.android.wearable:wearable:2.9.0'
+  //wearOsCompileOnly                 'com.google.android.wearable:wearable:2.9.0'
 
     //wearApp project(':wear:base') // applies to all other variants
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation platform('com.google.firebase:firebase-bom:29.0.4')
+    implementation platform('com.google.firebase:firebase-bom:29.1.0')
     implementation 'com.google.firebase:firebase-core'
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-iid'
-
-    compileOnly 'com.pusher:push-notifications-android:1.6.2'
 
     // For an optimal experience using FCM, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.
