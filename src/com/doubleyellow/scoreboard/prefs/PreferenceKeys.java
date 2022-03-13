@@ -220,6 +220,7 @@ public enum PreferenceKeys {
 
     Visuals,
         indicateGameBall,
+        indicateGoldenPoint,
         //floatingMessageForGameBall,
         floatingMessageForGameBallOn,
         keepScreenOn,

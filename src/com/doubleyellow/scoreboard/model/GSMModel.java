@@ -106,7 +106,7 @@ public class GSMModel extends Model
     //------------------------
 
     /**  0-15-30-40-Game */
-    private static final int NUMBER_OF_POINTS_TO_WIN_GAME     = 4; // 1=15, 2=30, 3=40, 4=Game
+    public static final int NUMBER_OF_POINTS_TO_WIN_GAME     = 4; // 1=15, 2=30, 3=40, 4=Game
     /** Number of points in a 'normal' tie-break (tiebreak e.g. in final set could be 10 = 'super tiebreak') */
     private static final int NUMBER_OF_POINTS_TO_WIN_TIEBREAK = 7;
 
@@ -434,7 +434,6 @@ public class GSMModel extends Model
                 l3.setName("Timing Set " + (1 + ListUtil.size(m_lGamesTiming_PerSet)));
                 super.setGamesTiming(l3);
                 m_lGamesTiming_PerSet.add(l3);
-
             }
         }
     }
@@ -554,8 +553,12 @@ public class GSMModel extends Model
             return super.getMatchStart();
         }
         List<GameTiming> gameTimings = m_lGamesTiming_PerSet.get(0);
-        GameTiming gameTiming = gameTimings.get(0);
-        return gameTiming.getStart();
+        if ( ListUtil.isNotEmpty(gameTimings) ) {
+            GameTiming gameTiming = gameTimings.get(0);
+            return gameTiming.getStart();
+        } else {
+            return super.getMatchStart();
+        }
     }
 
     //-------------------------------------
@@ -1041,7 +1044,7 @@ public class GSMModel extends Model
         return jaSetTimings;
     }
 
-    @Override protected ScoreLine scoreHistoryFromJSON(boolean bMatchFormatIsSet, JSONArray sets) throws JSONException {
+    @Override public ScoreLine scoreHistoryFromJSON(boolean bMatchFormatTakenFromJson, JSONArray sets) throws JSONException {
         ScoreLine scoreLine = null;
         for ( int s=0; s < sets.length(); s++ ) {
             JSONArray games = sets.getJSONArray(s);
@@ -1067,7 +1070,7 @@ public class GSMModel extends Model
             addNewSetScoreDetails(true);
             startNewGame();
 
-            scoreLine = super.scoreHistoryFromJSON(bMatchFormatIsSet, games);
+            scoreLine = super.scoreHistoryFromJSON(bMatchFormatTakenFromJson, games);
         }
 
         return scoreLine;

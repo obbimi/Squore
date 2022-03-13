@@ -561,6 +561,12 @@
         <PreferenceCategory android:title="@string/pref_Category_End_of_Game">
             <CheckBoxPreference
                 android:icon="@drawable/dummy"
+                android:key="indicateGoldenPoint"
+                android:title="@string/pref_indicateGoldenPoint"
+                android:defaultValue="@bool/indicateGameBall_default"
+                />
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
                 android:key="indicateGameBall"
                 android:title="@string/pref_indicateGameBall"
                 android:summary="@string/pref_indicateGameBall_summary"

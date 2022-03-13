@@ -2946,7 +2946,11 @@ touch -t 01030000 LAST.sb
         @Override public void OnGameBallChange(Player[] players, boolean bHasGameBall, boolean bForUndo) {
             if ( Brand.isGameSetMatch() ) {
                 if ( bHasGameBall ) {
-                    // don't treat gameball as special, wait for SetBall in stead
+                    // don't treat gameball unless it is golden point, as special, wait for SetBall in stead
+                    GSMModel gsmModel= (GSMModel) matchModel;
+                    if ( gsmModel.getGoldenPointToWinGame() && gsmModel.getMaxScore()==gsmModel.getMinScore() ) {
+                        iBoard.updateGameBallMessage("OnGoldenPoint", players, bHasGameBall);
+                    }
                     return;
                 } else {
                     // no more gameball: hence also no more setball: continue

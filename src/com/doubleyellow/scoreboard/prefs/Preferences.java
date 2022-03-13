@@ -391,6 +391,11 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             ((GSMModel) ScoreBoard.getMatchModel()).setGoldenPointToWinGame(bGoldenPoint);
                         }
                         break;
+                    case indicateGoldenPoint:
+                        // simply keep 'indicateGameBall' in sync. Different pref key for different descriptions
+                        boolean bIndicateGoldenPoint = RWValues.getBoolean(eKey, Preferences.this, false);
+                        RWValues.setBoolean(PreferenceKeys.indicateGameBall, Preferences.this, bIndicateGoldenPoint);
+                        break;
                     case lockMatchMV:
                         Set<String> set = prefs.getStringSet(key, null);
                         Preference pNrOfMins = settingsFragment.findPreference(PreferenceKeys.numberOfMinutesAfterWhichToLockMatch);
@@ -704,6 +709,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 hideRemovePreference(psgMF, PreferenceKeys.changeSidesWhen_GSM);
                 hideRemovePreference(psgMF, PreferenceKeys.finalSetFinish);
                 hideRemovePreference(psgMF, PreferenceKeys.goldenPointToWinGame);
+                hideRemovePreference(psgBeh, PreferenceKeys.indicateGoldenPoint);
             }
 /*
             if ( false && Brand.isGameSetMatch() ) {

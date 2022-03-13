@@ -1461,6 +1461,10 @@ public class IBoard implements TimerViewContainer
                 }
             }
         }
+        if ( (pGameBallFor != null) && (pGameBallFor.length == 2) && Brand.isGameSetMatch() && bVisible ) {
+            iResId = R.string.oa_golden_point;
+        }
+
         String sMsg = PreferenceValues.getOAString(context, iResId);
         if ( gameBallMessage == null ) {
             ColorPrefs.ColorTarget bgColor  = ColorPrefs.ColorTarget.serveButtonBackgroundColor;

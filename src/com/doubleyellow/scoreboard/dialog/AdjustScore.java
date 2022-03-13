@@ -37,14 +37,19 @@ import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.PersistHelper;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.model.GSMModel;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.model.ScoreLine;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.view.GameHistoryView;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -74,6 +79,7 @@ public class AdjustScore extends BaseAlertDialog {
 
     private LinkedHashMap<Integer, Boolean>  m_lModified;
     private LinkedHashMap<Integer, EditText> m_lTexts;
+    /** For GSM this contains nr of games to win set */
     private int                              m_iNrOfGames = -1;
 
     @Override public void show() {
@@ -151,7 +157,14 @@ public class AdjustScore extends BaseAlertDialog {
 
                 // give a default value
                 if ( matchModel.hasStarted() ) {
-                    List<Map<Player, Integer>> gameCountHistory = matchModel.getGameScoresIncludingInProgress();
+                    List<Map<Player, Integer>> gameCountHistory;
+                    if ( Brand.isGameSetMatch() ) {
+                        GSMModel gsmModel = (GSMModel) matchModel;
+                        gameCountHistory = gsmModel.getGamesWonPerSet();
+                    } else {
+                        gameCountHistory = matchModel.getGameScoresIncludingInProgress();
+                    }
+
                     if ( ListUtil.size(gameCountHistory) > s - 1 ) {
                         txtPoints.setText("" + gameCountHistory.get(s-1).get(p));
                     } else {
@@ -159,14 +172,6 @@ public class AdjustScore extends BaseAlertDialog {
                     }
                 } else {
                     txtPoints.setText("0");
-/*
-                    // dummy content for easy testing
-                    if ( (s + p.ordinal()) %2==0 ) {
-                        n.setText("" + matchModel.getNrOfPointsToWinGame());
-                    } else {
-                        n.setText("" + (s * 2 + p.ordinal()) );
-                    }
-*/
                 }
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 params.leftMargin = 3;
@@ -274,6 +279,7 @@ public class AdjustScore extends BaseAlertDialog {
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
                 //initScoreBoard(null); // allow modifying when score is already in progress
+                JSONArray gsmSets = new JSONArray();
                 for ( int s=1; s <= m_iNrOfGames; s++ ) {
                     int id = s * 100 + Player.A.ordinal();
                     if ( m_lModified.get(id) ==false && m_lModified.get(id+1) == false ) { continue; }
@@ -299,7 +305,42 @@ public class AdjustScore extends BaseAlertDialog {
                         break;
                     }
                     GameHistoryView.dontShowForToManyPoints(iPointsA + iPointsB);
-                    matchModel.setGameScore_Json(s-1, iPointsA, iPointsB, 0, false);
+                    if ( Brand.isGameSetMatch() ) {
+                        int iGamesA = iPointsA;
+                        int iGamesB = iPointsB;
+                        if ( iGamesA + iGamesB == 0 ) { break; }
+                        Player pLeader  = iPointsA > iPointsB ? Player.A : Player.B;
+                        Player pTrailer = pLeader.getOther();
+                        int iGamesLeader  = pLeader .equals(Player.A)?iGamesA:iGamesB;
+                        int iGamesTrailer = pTrailer.equals(Player.A)?iGamesA:iGamesB;
+                        Player[] players = new Player[] {pTrailer, pLeader};
+                        JSONArray setGames = new JSONArray();
+                        for(Player pl: players ) {
+                            int iGamesWon = pl.equals(pTrailer)? iGamesTrailer: iGamesLeader;
+                            for(int g=1; g <= iGamesWon; g++ ){
+                                JSONArray game = new JSONArray();
+                                for ( int p=1; p <= GSMModel.NUMBER_OF_POINTS_TO_WIN_GAME; p++ ) {
+                                    String sScoreLine = new ScoreLine(null, pl.equals(Player.A)?p:null , null, pl.equals(Player.B)?p:null).toString();
+                                    game.put(sScoreLine);
+                                }
+                                setGames.put(game);
+                            }
+                        }
+                        gsmSets.put(setGames);
+                    } else {
+                        matchModel.setGameScore_Json(s-1, iPointsA, iPointsB, 0, false);
+                    }
+                }
+                if ( Brand.isGameSetMatch() ) {
+                    GSMModel gsmModel= (GSMModel) matchModel;
+                    try {
+                        gsmModel.scoreHistoryFromJSON(true, gsmSets);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //JSONObject jsonObject = matchModel.getJsonObject(context, null);
+                    //jsonObject.set(JSONKey.score.toString(), gsmSets);
+                    //matchModel.fromJsonString(jsonObject.toString());
                 }
                 PersistHelper.persist(matchModel, context);
 

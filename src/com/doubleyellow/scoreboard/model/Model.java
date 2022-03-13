@@ -1633,7 +1633,8 @@ public abstract class Model implements Serializable
 */
             return d.getTime();
         }
-        return m_lGameTimings.get(0).getStart();
+        GameTiming gameTiming = m_lGameTimings.get(0);
+        return gameTiming.getStart();
     }
     public long getLastGameStart() {
         if ( ListUtil.size(m_lGameTimings) == 0 ) { return getMatchStart(); }
@@ -2117,7 +2118,7 @@ public abstract class Model implements Serializable
                 pA = mScoreOfGameWeModify.get(Player.A);
                 pB = mScoreOfGameWeModify.get(Player.B);
             } else {
-                Log.w(TAG, "WTF");
+                //Log.w(TAG, "WTF");
                 pA = 0;//pA = m_scoreOfGameInProgress.get(Player.A);
                 pB = 0;//pB = m_scoreOfGameInProgress.get(Player.B);
             }
@@ -2349,7 +2350,7 @@ public abstract class Model implements Serializable
                 return joMatch;
             }
 
-            boolean bMatchFormatIsSet = false;
+            boolean bMatchFormatTakenFromJson = false;
             try {
                 // read match format
                 JSONObject joFormat = joMatch.optJSONObject(JSONKey.format.toString());
@@ -2369,7 +2370,7 @@ public abstract class Model implements Serializable
                         setPlayAllGames(true);
                     }
 
-                    bMatchFormatIsSet = true;
+                    bMatchFormatTakenFromJson = true;
                     if ( joFormat.has(JSONKey.useHandInHandOutScoring.toString()) ) {
                         // if not specified it may still default to true e.g. for Racquetball. So do not shorten this with using optBoolean()
                         boolean b = joFormat.getBoolean(JSONKey.useHandInHandOutScoring.toString());
@@ -2485,7 +2486,7 @@ public abstract class Model implements Serializable
             ScoreLine scoreLine = null;
             JSONArray games = joMatch.optJSONArray(JSONKey.score.toString());
             if ( JsonUtil.isNotEmpty(games) ) {
-                scoreLine = scoreHistoryFromJSON(bMatchFormatIsSet, games);
+                scoreLine = scoreHistoryFromJSON(bMatchFormatTakenFromJson, games);
 /*
                 if ( isPossibleGameVictory() ) {
                     endGame(false, true); // introduced for graph not having nr of games correctly, does screw up for GSMModel if
@@ -2682,7 +2683,7 @@ public abstract class Model implements Serializable
         }
         return lGameTimings;
     }
-    protected ScoreLine scoreHistoryFromJSON(boolean bMatchFormatIsSet, JSONArray games) throws JSONException {
+    protected ScoreLine scoreHistoryFromJSON(boolean bMatchFormatTakenFromJson, JSONArray games) throws JSONException {
         Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress();
 
         ScoreLine scoreLine = null;
@@ -2706,7 +2707,7 @@ public abstract class Model implements Serializable
                 if ( bGameIsStarted ) {
                     addGameScore(scoreOfGameInProgress, false);
 
-                    if ( bMatchFormatIsSet == false ) {
+                    if ( bMatchFormatTakenFromJson == false ) {
                         if ( getNrOfFinishedGames() == 1 ) {
                             setNrOfPointsToWinGame(max);
                         } else {
