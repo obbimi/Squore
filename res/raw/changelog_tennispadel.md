@@ -1,3 +1,11 @@
+## 4.46 (march 2022)
+
+- Improvements
+    - show floating message when Golden Point is played
+    - allow to adjust score to easily pick up in the middle of a match already in progress
+- Bugfix
+    - App sometimes froze on setball for certain settings    
+
 ## 4.45 (jan 2022)
 
 - Allow scoring via media playback control buttons. e.g.

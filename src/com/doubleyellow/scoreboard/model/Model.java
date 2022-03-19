@@ -246,7 +246,13 @@ public abstract class Model implements Serializable
     }
 
     /** for updating ALL screen elements to have correct data from the model */
-    public void triggerListeners() {
+    boolean bTriggerListenersInProgress = false;
+
+    public boolean triggerListeners() {
+        if ( bTriggerListenersInProgress ) {
+            return false;
+        }
+        bTriggerListenersInProgress = true;
 /*
         for(OnComplexChangeListener l:onComplexChangeListeners) {
             l.OnChanged();
@@ -270,6 +276,8 @@ public abstract class Model implements Serializable
                 l.OnGameBallChange(paGameBallFor, true, false);
             }
         }
+        bTriggerListenersInProgress = false;
+        return true;
     }
 
     private static final boolean NEXT_SERVE_SIDE_FROM_COUNT = false;

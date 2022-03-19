@@ -81,14 +81,13 @@ public class DialogManager {
         }
         if ( bAlreadyOnTheStack == false ) {
             baseDialogs.add(dialog);
-        }
-        if ( baseDialogs.size() == 1 ) {
-            dialog.show();
-            baseDialog = dialog;
-        } else {
-            if ( (baseDialog == null) || (baseDialog.isModal() == false) ) { // e.g. to still start the timer if statistics are showing
-                showNextDialog();
+            if ( baseDialogs.size() == 1 ) {
+                dialog.show();
+                baseDialog = dialog;
             }
+        }
+        if ( (baseDialog == null) || (baseDialog.isModal() == false) ) { // e.g. to still start the timer if statistics are showing
+            showNextDialog();
         }
         return (bAlreadyOnTheStack==false);
     }

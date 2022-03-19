@@ -68,15 +68,17 @@ public class GSMModel extends Model
         }
     }
 
-    @Override public void triggerListeners() {
-        super.triggerListeners();
-
-        Player[] paSetBallFor = null; // isPossibleGameAndSetBallFor();
-        if ( ListUtil.length(paSetBallFor) != 0 ) {
-            for(OnSetChangeListener l: onSetChangeListeners) {
-                l.OnSetBallChange(paSetBallFor, true);
+    @Override public boolean triggerListeners() {
+        if ( super.triggerListeners() ) {
+            Player[] paSetBallFor = null; // isPossibleGameAndSetBallFor();
+            if ( ListUtil.length(paSetBallFor) != 0 ) {
+                for(OnSetChangeListener l: onSetChangeListeners) {
+                    l.OnSetBallChange(paSetBallFor, true);
+                }
             }
+            return true;
         }
+        return false;
     }
     //------------------------
     // Final set finish
@@ -888,9 +890,13 @@ public class GSMModel extends Model
         switch ( when ) {
             case Now:
                 // TODO: check
-                if ( ListUtil.isNotEmpty(playersSB) ) {
-                    for( OnSetChangeListener l: onSetChangeListeners ) {
-                        l.OnSetEnded(playersSB[0]);
+                if ( bSetBallFor_Unchanged == false ) {
+                    if ( ListUtil.isNotEmpty(playersSB) ) {
+                        for( OnSetChangeListener l: onSetChangeListeners ) {
+                            l.OnSetEnded(playersSB[0]);
+                        }
+                    } else {
+                        Log.d(TAG, "No longer set ball");
                     }
                 }
                 break;
