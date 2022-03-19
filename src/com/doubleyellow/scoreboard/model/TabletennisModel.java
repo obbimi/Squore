@@ -18,9 +18,13 @@
 package com.doubleyellow.scoreboard.model;
 
 import android.content.Context;
+
+import com.doubleyellow.util.ListUtil;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -162,6 +166,31 @@ public class TabletennisModel extends Model
         } else {
             super.determineServerAndSide_TT_RL(bForUndo, sportType);
         }
+    }
+
+    public void changeInitialServer() {
+        List<List<ScoreLine>> lGamesScorelineHistory = getGamesScoreHistory();
+        List<List<ScoreLine>> lGamesScorelineHistoryNew = new ArrayList<>();
+        // determine server by means of looking who served in a previous set (preferably going back to the first set)
+        for (int iSetZBTmp = 0; iSetZBTmp < ListUtil.size (lGamesScorelineHistory); iSetZBTmp++ ) {
+            List<ScoreLine> scoreLines = lGamesScorelineHistory.get(iSetZBTmp);
+            if ( ListUtil.isEmpty(scoreLines) ) { break; }
+            List<ScoreLine> scoreLinesNew = new ArrayList<>();
+            lGamesScorelineHistoryNew.add(scoreLinesNew);
+            for( ScoreLine sl : scoreLines ) {
+                int iScore = sl.getScore();
+                Player server = sl.getServingPlayer();
+                Player scorer = sl.getScoringPlayer();
+
+                ServeSide serveSide = sl.getServeSide();
+                ScoreLine slNew = new ScoreLine(serveSide, Player.A.equals(scorer) ? iScore: null, null, Player.B.equals(scorer) ? iScore: null);
+                if ( Player.A.equals(server) ) {
+                    slNew = new ScoreLine(null, Player.A.equals(scorer) ? iScore: null, serveSide, Player.B.equals(scorer) ? iScore: null);
+                }
+                scoreLinesNew.add(slNew);
+            }
+        }
+        setGamesScoreHistory(lGamesScorelineHistoryNew);
     }
 
     //-------------------------------

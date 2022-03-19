@@ -81,6 +81,7 @@
     <string name="sb_share_matches_summary">Share summary of matches</string>
     <string name="sb_edit_players">Edit player names</string>
     <string name="sb_swap_double_players">Swap double players</string>
+    <string name="sb_swap_server">Swap server</string>
     <string name="sb_change_sides">Change sides</string>
     <string name="sb_choose_player">For which player?</string>
     <string name="sb_choose_players">Choose players</string>

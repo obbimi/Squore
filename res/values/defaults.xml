@@ -48,6 +48,9 @@
     <integer name="showChoosenDecisionDuration_Conduct_default">5</integer>
     <integer name="showChoosenDecisionDuration_Appeal_default">2</integer>
 
+    <bool name="showSwapServerMenu__Default">false</bool>
+    <bool name="showSwapServerMenu__Tabletennis">true</bool>
+
     <!--
 ldpi: Low-density screens; approximately 120dpi.
 mdpi: Medium-density (on traditional HVGA) screens; approximately 160dpi.

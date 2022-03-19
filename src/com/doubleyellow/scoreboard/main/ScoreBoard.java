@@ -3940,7 +3940,14 @@ touch -t 01030000 LAST.sb
         }
     }
 
+    private int m_menuIdBeingHandled = 0;
     public boolean handleMenuItem(int id, Object... ctx) {
+        if ( m_menuIdBeingHandled == id ) {
+            Log.d(TAG, "Same menu item again: " + id + " " + getResources().getResourceName(id));
+            //return false;
+        }
+        m_menuIdBeingHandled = id;
+        try {
         switch (id) {
 /*
             case R.id.sb_display_settings:
@@ -3992,6 +3999,16 @@ touch -t 01030000 LAST.sb
                    && (matchModel.getMaxScore() * 2 + 1 == matchModel.getNrOfPointsToWinGame()) ) {
                     // ensure receiver is swapped
                     _swapDoublePlayers(new Player[] { matchModel.getReceiver() }, true);
+                }
+                return true;
+            case R.id.sb_swap_server:
+                // typically only for Tabletennis if initially choosen server was incorrect
+                if ( Brand.isTabletennis() ) {
+                    TabletennisModel tabletennisModel = (TabletennisModel) matchModel;
+                    tabletennisModel.changeInitialServer();
+
+                    changeScore(Player.A);
+                    undoLast();
                 }
                 return true;
             case R.id.sb_swap_double_players:
@@ -4315,6 +4332,9 @@ touch -t 01030000 LAST.sb
                     }
                 }
                 break;
+        }
+        } finally {
+            m_menuIdBeingHandled = 0;
         }
         return false;
     }

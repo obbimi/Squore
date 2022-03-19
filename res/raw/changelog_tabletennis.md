@@ -1,3 +1,8 @@
+## 4.46 (march 2022)
+
+- Improvements
+    - Allow to correct server if initial server indication was accidentally incorrect (Menu > Edit > Swap Server)
+
 ## 4.45 (jan 2022)
 
 - Allow scoring via media playback control buttons. e.g.

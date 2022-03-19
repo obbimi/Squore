@@ -89,6 +89,7 @@
                     <item android:id="@+id/sb_undo_last"            app:showAsAction="never" android:icon="@drawable/u_turn"               android:title="@string/uc_undo" />
                     <item android:id="@+id/sb_undo_last_for_non_scorer" app:showAsAction="never" android:icon="@drawable/circle_2arrows"   android:title="@string/sb_remove_last_score_for_x" android:visible="false"/>
                     <item android:id="@+id/sb_swap_double_players"  app:showAsAction="never" android:icon="@drawable/circle_2arrows"    android:title="@string/sb_swap_double_players" android:visible="false" />
+                    <item android:id="@+id/sb_swap_server"          app:showAsAction="never" android:icon="@drawable/circle_2arrows"    android:title="@string/sb_swap_server" android:visible="@bool/showSwapServerMenu__Default" />
                     <item android:id="@+id/sb_change_sides"           app:showAsAction="never" android:icon="@drawable/change_sides"         android:title="@string/sb_change_sides" android:visible="true" />
 
                     <item android:id="@+id/sb_lock"                 app:showAsAction="never" android:icon="@android:drawable/ic_lock_lock" android:title="@string/lock" />
