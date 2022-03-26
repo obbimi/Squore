@@ -1,3 +1,7 @@
+## 4.46 (march 2022)
+
+Minor bugfixes.
+
 ## 4.45 (jan 2022)
 
 - Allow scoring via media playback control buttons. e.g.

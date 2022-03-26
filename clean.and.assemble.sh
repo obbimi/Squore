@@ -42,7 +42,7 @@ if [[ -e ${relapk} ]]; then
     apkFileTime=$(find ${relapk} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
 
     echo "Comparing changetime of files against ${relapk} (${apkFileTime})"
-    changedFiles="$(find . -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml|md|gradle)' | egrep -v '(\.idea/|/\.gradle/|/generated/|/reports/)')"
+    changedFiles="$(find . -type f -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml|md|gradle)' | egrep -v '(\.idea/|/\.gradle/|/generated/|/reports/)')"
 else
     changedFiles="No release apk to compare with"
 fi
