@@ -88,7 +88,11 @@ public class GameHistoryView extends ScrollView
             lScorelines = new ArrayList<ScoreLine>(lScorelines);
             lScorelines.add(0, new ScoreLine( null, iStartScoreA, null, iStartScoreB));
         }
-        this.history = new ArrayList<ScoreLine>(lScorelines); // to prevent 'java.util.ConcurrentModificationException' seen when using chrome cast
+        if ( lScorelines == null ) {
+            this.history = new ArrayList<ScoreLine>();
+        } else {
+            this.history = new ArrayList<ScoreLine>(lScorelines); // to prevent 'java.util.ConcurrentModificationException' seen when using chrome cast
+        }
     }
 
     public void setTiming(GameTiming s) {

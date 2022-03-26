@@ -30,6 +30,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.model.GSMModel;
 import com.doubleyellow.scoreboard.model.ModelFactory;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.Model;
@@ -168,15 +169,33 @@ public class ResultSender {
     private static String getMatchSummary(Context context, Model matchModel, String sPointsSeparator, String sGameScoreSeparator, boolean bIncludeTimeStamp, boolean bIncludeSharedURL) {
         StringBuilder sbMsg = new StringBuilder();
         Map<Player, Integer> gameCount = matchModel.getGamesWon();
-        List<Map<Player, Integer>> lGameScores = matchModel.getGameScoresIncludingInProgress();
 
+        // names and score summary
         sbMsg.append(             matchModel.getName(Player.A)).append(" - ").append(matchModel.getName(Player.B));
         sbMsg.append(" : ").append(gameCount.get(    Player.A)).append(" - ").append( gameCount.get    (Player.B));
         sbMsg.append("\n");
 
+        // game details/set details
         sbMsg.append(sGameScoreSeparator);
-        for(Map<Player, Integer> mGameScore: lGameScores) {
-            sbMsg.append(mGameScore.get(Player.A)).append(sPointsSeparator).append(mGameScore.get(Player.B)).append(sGameScoreSeparator);
+        if ( Brand.isGameSetMatch() ) {
+            GSMModel gsmModel = (GSMModel) matchModel;
+            List<Map<Player, Integer>> gamesWonPerSet = gsmModel.getGamesWonPerSet();
+            for(Map<Player, Integer> mSetScore: gamesWonPerSet) {
+                if ( MapUtil.getMaxValue(mSetScore) == 0 ) {
+                    // mainly to make sure last set if not played is not included
+                    continue;
+                }
+                sbMsg.append(mSetScore.get(Player.A)).append(sPointsSeparator).append(mSetScore.get(Player.B)).append(sGameScoreSeparator);
+            }
+        } else {
+            List<Map<Player, Integer>> lGameScores = matchModel.getGameScoresIncludingInProgress();
+            for(Map<Player, Integer> mGameScore: lGameScores) {
+                if ( MapUtil.getMaxValue(mGameScore) == 0 ) {
+                    // mainly to make sure last set if not played is not included
+                    continue;
+                }
+                sbMsg.append(mGameScore.get(Player.A)).append(sPointsSeparator).append(mGameScore.get(Player.B)).append(sGameScoreSeparator);
+            }
         }
 
         sbMsg.append(sGameScoreSeparator);
