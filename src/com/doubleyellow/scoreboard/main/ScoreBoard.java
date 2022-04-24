@@ -7320,7 +7320,17 @@ touch -t 01030000 LAST.sb
                             case KeyEvent.KEYCODE_MEDIA_PAUSE: // only triggered for down not for up? Seen e.g. on my Trust music cube
                             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                                 // often the same button
-                                handleMenuItem(R.id.dyn_undo_last);
+                                if ( isDialogShowing() ) {
+                                    try {
+                                        //dialogManager.baseDialog.handleButtonClick(DialogInterface.BUTTON_NEGATIVE); // don't: sometimes result in yet another dialog: e.g. MatchFormat
+                                        dialogManager.baseDialog.dismiss();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    return true;
+                                } else {
+                                    handleMenuItem(R.id.dyn_undo_last);
+                                }
                                 return true;
                             case KeyEvent.KEYCODE_MEDIA_REWIND:       // can often be triggered by long pressing 'previous'
                             case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
@@ -7333,8 +7343,12 @@ touch -t 01030000 LAST.sb
                                 if ( bHandleNextDown ) {
                                     bHandleNextDown = false;
                                     if ( isDialogShowing() ) {
-                                        // TODO: test
-                                        dialogManager.baseDialog.handleButtonClick(DialogInterface.BUTTON_POSITIVE);
+                                        try {
+                                            dialogManager.baseDialog.handleButtonClick(DialogInterface.BUTTON_POSITIVE);
+                                            dialogManager.baseDialog.dismiss();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                         return true;
                                     } else {
                                         boolean bIsBack = (keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS) || (keyCode == KeyEvent.KEYCODE_MEDIA_REWIND)|| (keyCode == KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD)|| (keyCode == KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD);
