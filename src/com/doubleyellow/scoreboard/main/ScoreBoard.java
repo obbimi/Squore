@@ -4412,6 +4412,7 @@ touch -t 01030000 LAST.sb
 
     private void showConduct(Player misbehavingPlayer) {
         if ( Brand.isNotSquash() ) { return; }
+        if ( matchModel == null ) { return; }
         Conduct conduct = new Conduct(this, matchModel, this);
         conduct.init(misbehavingPlayer);
         show(conduct);
@@ -4588,7 +4589,7 @@ touch -t 01030000 LAST.sb
         }
 
         EnumSet<Type> esTimerTypes = EnumSet.of(Type.UntillStartOfNextGame, Type.Timeout);
-        if ( "Iddo T".equals(matchModel.getName(Player.A)) ) {
+        if ( (matchModel != null) && "Iddo T".equals(matchModel.getName(Player.A)) ) {
             // TESTING
             if ( isLandscape() && esTimerTypes.contains(timerType) ) {
                 boolean bShowBigTimer = PreferenceValues.BTSync_showFullScreenTimer(this);
@@ -5908,7 +5909,7 @@ touch -t 01030000 LAST.sb
         } else {
             rmm.setPromptMinimums(20, 15, 20, 20);
         }
-        if ( bUseRateMeMaybe ) {
+        if ( bUseRateMeMaybe && (ViewUtil.isWearable(this) == false) ) {
             bShowAtEndOfMatch = rmm.increaseCountersAndCheckIfShowingIsApplicable();
         }
         if ( bShowAtEndOfMatch ) {
@@ -6647,7 +6648,7 @@ touch -t 01030000 LAST.sb
                 Log.w(TAG, String.format("Could not derive btMethod from message %s [#%d]", sMethodNArgs.substring(0, Math.min(20, sMethodNArgs.length())) + "...", sMethodNArgs.length()));
                 //Toast.makeText(this, String.format("Could not derive btMethod from message %s", sMethod), Toast.LENGTH_LONG).show();
             } else {
-                if ( sMethodNArgs.trim().endsWith(")") == false ) {
+                if ( sMethodNArgs.trim().contains("(") && sMethodNArgs.trim().endsWith(")") == false ) {
                     Log.w(TAG, "method received but with incomplete arguments: " + sMethodNArgs); // should not happen normally
                     if ( BTRole.Slave.equals(m_blueToothRole) ) {
                         //Toast.makeText(this, "method received but with incomplete arguments: " + sMethodNArgs, Toast.LENGTH_LONG).show();
@@ -6834,8 +6835,11 @@ touch -t 01030000 LAST.sb
 
                         setWearableRole(WearRole.AppRunningOnBoth);
 
+                        Log.d(TAG, "[resume|resume_confirmed] Received " + btMethod);
                         if ( btMethod.equals(BTMethods.resume) ) {
-                            sendMessageToWearablesUnchecked(BTMethods.resume_confirmed + "(" + matchModel.getMatchStartTimeHHMMSSXXX() + "," + iJsonLengthHere + ")");
+                            String sMessage = BTMethods.resume_confirmed + "(" + matchModel.getMatchStartTimeHHMMSSXXX() + "," + iJsonLengthHere + ")";
+                            Log.d(TAG, "Send " + sMessage);
+                            sendMessageToWearablesUnchecked(sMessage);
                         } else {
                             String sMatchStartTimeHere        = matchModel.getMatchStartTimeHHMMSSXXX();
                             String sMatchStartTimeCounterPart = ( saMethodNArgs.length > 1 ) ? saMethodNArgs[1]: null;
@@ -6853,6 +6857,8 @@ touch -t 01030000 LAST.sb
                                 }
                             } else if ( isWearable() == false ) {
                                 pullOrPushMatchOverBluetoothWearable( isWearable() ? "Handheld" : "Wearable");
+                            } else {
+                                Log.d(TAG, "Not auto syncing for wearable");
                             }
                         }
                         break;
@@ -7236,6 +7242,30 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
     // --- control via bluetooth media player buttons -----
     // ----------------------------------------------------
+    private static Map<Integer, String> msMediaPlayBackDesc = new HashMap<>();
+    static {
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_PLAY        , "KEYCODE_MEDIA_PLAY          ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_PAUSE       , "KEYCODE_MEDIA_PAUSE         ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE  , "KEYCODE_MEDIA_PLAY_PAUSE    ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_STOP        , "KEYCODE_MEDIA_STOP          ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_CLOSE       , "KEYCODE_MEDIA_CLOSE         ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_EJECT       , "KEYCODE_MEDIA_EJECT         ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_RECORD      , "KEYCODE_MEDIA_RECORD        ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_AUDIO_TRACK , "KEYCODE_MEDIA_AUDIO_TRACK   ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_TOP_MENU    , "KEYCODE_MEDIA_TOP_MENU      ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MUTE              , "KEYCODE_MUTE                ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_HEADSETHOOK       , "KEYCODE_HEADSETHOOK         ");
+
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_REWIND       , "KEYCODE_MEDIA_REWIND       ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD, "KEYCODE_MEDIA_SKIP_BACKWARD");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD, "KEYCODE_MEDIA_STEP_BACKWARD");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_PREVIOUS     , "KEYCODE_MEDIA_PREVIOUS     ");
+
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD , "KEYCODE_MEDIA_SKIP_FORWARD ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_STEP_FORWARD , "KEYCODE_MEDIA_STEP_FORWARD ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_NEXT         , "KEYCODE_MEDIA_NEXT         ");
+        msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_FAST_FORWARD , "KEYCODE_MEDIA_FAST_FORWARD ");
+    }
     private MediaSession ms = null;
     private void onPause_BluetoothMediaControlButtons() {
         if ( ms != null ) {
@@ -7257,35 +7287,49 @@ touch -t 01030000 LAST.sb
 
             // this is required or else some for some devices some buttons presses don't make it here (e.g. Plantronic headphone)
             PlaybackState.Builder mStateBuilder = new PlaybackState.Builder()
-                    .setActions( PlaybackState.ACTION_PLAY
-//                             | PlaybackState.ACTION_PLAY_FROM_MEDIA_ID
-//                             | PlaybackState.ACTION_PREPARE_FROM_MEDIA_ID
-                               | PlaybackState.ACTION_PAUSE
-                               | PlaybackState.ACTION_SKIP_TO_PREVIOUS
-                               | PlaybackState.ACTION_SKIP_TO_NEXT
-                               | PlaybackState.ACTION_PLAY_PAUSE);
+                    .setActions( PlaybackState.ACTION_PLAY               | PlaybackState.ACTION_PAUSE
+                               | PlaybackState.ACTION_STOP               | PlaybackState.ACTION_PLAY_PAUSE
+                               | PlaybackState.ACTION_SKIP_TO_PREVIOUS   | PlaybackState.ACTION_REWIND
+                               | PlaybackState.ACTION_SKIP_TO_NEXT       | PlaybackState.ACTION_FAST_FORWARD
+                               | PlaybackState.ACTION_SEEK_TO
+//                             | PlaybackState.ACTION_PLAY_FROM_MEDIA_ID | PlaybackState.ACTION_PREPARE_FROM_MEDIA_ID
+                               );
 //          mStateBuilder.setState(PlaybackState.STATE_PLAYING, 0, 1);
-            ms.setPlaybackState(mStateBuilder.build());
-//          ms.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+            PlaybackState playbackState = mStateBuilder.build();
+            ms.setPlaybackState(playbackState);
+//          ms.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS); // no longer required according to documentation
 
             ms.setCallback(new MediaSession.Callback() {
                 boolean bHandleNextDown = true;
                 @Override public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
-                    Bundle extras = mediaButtonIntent.getExtras();
+                    Bundle   extras   = mediaButtonIntent.getExtras();
                     KeyEvent keyEvent = (KeyEvent) extras.get(Intent.EXTRA_KEY_EVENT);
-                    int keyCode = keyEvent.getKeyCode();
-                    Log.i(TAG, "[onMediaButtonEvent] keyCode " + keyCode + " [" + (keyEvent.getAction() == KeyEvent.ACTION_UP?"up":"down") + "]");
+                    int      keyCode  = keyEvent.getKeyCode();
+
+                    String sUpDown = keyEvent.getAction() == KeyEvent.ACTION_UP ? "up" : "down";
+                    String sDesc   = msMediaPlayBackDesc.get(keyCode);
+                    String sMsg    = String.format("[onMediaButtonEvent] %s %s (%d)", sDesc, sUpDown, keyCode);
+                    Log.i(TAG, sMsg);
+                    if ( PreferenceValues.currentDateIsTestDate() ) {
+                        //Toast.makeText(ScoreBoard.this, sMsg,Toast.LENGTH_LONG ).show();
+                    }
                     if ( keyEvent.getAction() == KeyEvent.ACTION_DOWN ) {
                         switch (keyCode) {
+                            case KeyEvent.KEYCODE_MEDIA_STOP:
                             case KeyEvent.KEYCODE_MEDIA_PLAY:
-                            case KeyEvent.KEYCODE_MEDIA_PAUSE: // only triggered for down not for up?
+                            case KeyEvent.KEYCODE_MEDIA_PAUSE: // only triggered for down not for up? Seen e.g. on my Trust music cube
+                            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                                 // often the same button
                                 handleMenuItem(R.id.dyn_undo_last);
                                 return true;
-                            case KeyEvent.KEYCODE_MEDIA_REWIND:       // long press 'previous'
+                            case KeyEvent.KEYCODE_MEDIA_REWIND:       // can often be triggered by long pressing 'previous'
                             case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD: // long press 'next'
+                            case KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD:
+                            case KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD:
+                            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD: // can often be triggered by long pressing 'next'
                             case KeyEvent.KEYCODE_MEDIA_NEXT:
+                            case KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD:
+                            case KeyEvent.KEYCODE_MEDIA_STEP_FORWARD:
                                 if ( bHandleNextDown ) {
                                     bHandleNextDown = false;
                                     if ( isDialogShowing() ) {
@@ -7293,34 +7337,18 @@ touch -t 01030000 LAST.sb
                                         dialogManager.baseDialog.handleButtonClick(DialogInterface.BUTTON_POSITIVE);
                                         return true;
                                     } else {
-                                        boolean bIsBack = keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS || keyCode == KeyEvent.KEYCODE_MEDIA_REWIND;
+                                        boolean bIsBack = (keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS) || (keyCode == KeyEvent.KEYCODE_MEDIA_REWIND)|| (keyCode == KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD)|| (keyCode == KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD);
                                         Player player = bIsBack ? Player.A : Player.B;
                                         handleMenuItem(R.id.pl_change_score, player);
                                         return true;
                                     }
                                 }
+                            default:
+                                Log.i(TAG, "[onMediaButtonEvent] Not handling keycode " + keyCode);
                         }
                     } else if ( keyEvent.getAction() == KeyEvent.ACTION_UP ) {
                         bHandleNextDown = true;
                         // up is only triggered for 'short' press. Long press means something different?!
-                        switch (keyCode) {
-/*
-                            case KeyEvent.KEYCODE_MEDIA_REWIND:       // long press 'previous'
-                            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD: // long press 'next'
-                            case KeyEvent.KEYCODE_MEDIA_NEXT:
-                                if ( isDialogShowing() ) {
-                                    // TODO: test
-                                    dialogManager.baseDialog.handleButtonClick(DialogInterface.BUTTON_POSITIVE);
-                                    return true;
-                                } else {
-                                    boolean bIsBack = keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS || keyCode == KeyEvent.KEYCODE_MEDIA_REWIND;
-                                    Player player = bIsBack ? Player.A : Player.B;
-                                    handleMenuItem(R.id.pl_change_score, player);
-                                    return true;
-                                }
-*/
-                        }
                     }
                     return super.onMediaButtonEvent(mediaButtonIntent);
                 }

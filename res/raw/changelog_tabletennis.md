@@ -1,4 +1,10 @@
-## 4.46 (march 2022)
+## 4.47 (april 2022)
+
+Improvements in 
+- Scoring via media playback control buttons (bluetooth)
+- My List and default match format
+
+## 4.47 (march 2022)
 
 - Improvements
     - Allow to correct server if initial server indication was accidentally incorrect (Menu > Edit > Swap Server)

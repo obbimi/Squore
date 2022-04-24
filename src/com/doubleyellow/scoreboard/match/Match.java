@@ -32,6 +32,7 @@ import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
+import com.doubleyellow.scoreboard.model.ModelFactory;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.NewMatchLayout;
@@ -107,7 +108,8 @@ public class Match extends XActivity implements MenuHandler
             if ( intent != null ) {
                 String sJson = intent.getStringExtra(IntentKeys.NewMatch.toString());
                 if ( StringUtil.isNotEmpty(sJson) ) {
-                    model = Brand.getModel();
+                    //model = Brand.getModel();
+                    model = ModelFactory.getTemp();
                     model.fromJsonString(sJson);
                 } else {
                     Serializable srlModel = intent.getSerializableExtra(IntentKeys.EditMatch.toString());

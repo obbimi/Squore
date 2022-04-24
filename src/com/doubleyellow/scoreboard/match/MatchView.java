@@ -554,7 +554,7 @@ public class MatchView extends ScrollView
     /**
      * @param model is null when used on MatchFragment
      */
-    public void init(boolean bIsDoubles, final Model model) {
+    private void init(boolean bIsDoubles, final Model model) {
         final Context context = getContext();
 
         //iForceTextSize = IBoard.iTxtSizePx_FinishedGameScores;
@@ -917,7 +917,7 @@ public class MatchView extends ScrollView
         }
     }
 
-    private OnClickListener m_onColorButtonClicker = new OnClickListener() {
+    private final OnClickListener m_onColorButtonClicker = new OnClickListener() {
         private Player m_forPlayer = null;
         private String m_sColor    = null;
         private int    m_iColor    = 0;

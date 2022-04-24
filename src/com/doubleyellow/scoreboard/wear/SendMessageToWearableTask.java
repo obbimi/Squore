@@ -51,10 +51,10 @@ class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
     }
     public AsyncTask<Object, Void, String> myExecute(Object... params) {
         if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P /* 28 */ ) {
-            Log.d(TAG, "Started ShowFeedsTask using Executors.newSingleThreadExecutor... ");
+            Log.d(TAG, "Started using Executors.newSingleThreadExecutor... ");
             return executeOnExecutor(Executors.newSingleThreadExecutor(), params);
         } else {
-            Log.d(TAG, "Started ShowFeedsTask ... ");
+            Log.d(TAG, "Started ... ");
             return executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
         }
     }

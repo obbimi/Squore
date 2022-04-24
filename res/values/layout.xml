@@ -40,8 +40,15 @@
     <fraction name="ls_gamescores_width">12%</fraction>
 
 
+<!--
     <fraction name="wear_gamescores_width">16%</fraction>
-    <fraction name="wear_margin_to_show_gamescores_between_buttons_SHOW">8%</fraction> <!-- in sync with wear_gamescores_width -->
+    <fraction name="wear_margin_to_show_gamescores_between_buttons_SHOW">8%</fraction>
+    <fraction name="wear_gameswon_margin_V">5%</fraction>
+-->
+    <fraction name="wear_gamescores_width">24%</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_buttons_SHOW">12%</fraction> <!-- in sync with wear_gamescores_width -->
+    <fraction name="wear_gameswon_margin_V">1%</fraction>
+
     <fraction name="wear_margin_to_show_gamescores_between_buttons_HIDE">1%</fraction>
     <fraction name="wear_margin_to_show_gamescores_below_playerbuttons_SHOW">18.0%</fraction> <!-- in sync with ls_name_height -->
     <fraction name="wear_margin_to_show_gamescores_below_playerbuttons_HIDE">0.5%</fraction>

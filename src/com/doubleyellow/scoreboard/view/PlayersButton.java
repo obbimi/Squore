@@ -331,6 +331,8 @@ public class PlayersButton extends PercentRelativeLayout implements DrawTouch
     }
 
     public void setAvatar(String sAvatar) {
+        if ( ViewUtil.isWearable(getContext()) ) { return; } // to small for wearables
+
         if ( ListUtil.size(avatarImages) > 0 ) {
             ImageView imageView = avatarImages.get(0);
             if ( StringUtil.isEmpty(sAvatar) ) {

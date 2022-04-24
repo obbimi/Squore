@@ -19,9 +19,9 @@ package com.doubleyellow.scoreboard.model;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.graphics.Color;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.util.Log;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
@@ -1405,7 +1405,7 @@ public abstract class Model implements Serializable
     public final List<List<ScoreLine>> getGamesScoreHistory() {
         if ( m_lGamesScorelineHistory == null ) {
             setGamesScoreHistory(new ArrayList<List<ScoreLine>>());
-            //addNewGameScoreDetails();
+            addNewGameScoreDetails(); // re-activated 2022-04-03
         }
         return m_lGamesScorelineHistory;
     }
@@ -2451,7 +2451,14 @@ public abstract class Model implements Serializable
                     for (Player p : getPlayers()) {
                         if ( joColors.has(p.toString()) ) {
                             String sColor = joColors.getString(p.toString());
-                            m_player2Color.put(p, sColor);
+                            if ( StringUtil.isNotEmpty(sColor) ) {
+                                try {
+                                    Color.parseColor(sColor);
+                                    m_player2Color.put(p, sColor);
+                                } catch (Exception e) {
+                                    // color could not be parsed. Do not use it
+                                }
+                            }
                         }
                     }
                 }

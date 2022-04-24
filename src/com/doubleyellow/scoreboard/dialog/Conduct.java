@@ -59,8 +59,8 @@ public class Conduct extends BaseAlertDialog
     private SelectEnumView<ConductType> sv;
 
     @Override public void show() {
-
-        String sTitle = getString(R.string.oal_misconduct_by, matchModel.getName_no_nbsp(missbehavingPlayer, false));
+        String name_no_nbsp = matchModel.getName_no_nbsp(missbehavingPlayer, false);
+        String sTitle = getString(R.string.oal_misconduct_by, name_no_nbsp);
         if ( isNotWearable() ) {
             adb.setTitle(sTitle);
             adb.setIcon (R.drawable.microphone);
