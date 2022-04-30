@@ -42,7 +42,6 @@ import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
-import com.doubleyellow.util.DateUtil;
 import com.doubleyellow.util.Direction;
 import com.doubleyellow.util.StringUtil;
 
@@ -53,7 +52,7 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
     protected ScoreBoard  scoreBoard = null;
 
     protected MyDialogBuilder adb    = null;
-    protected AlertDialog                dialog = null;
+    protected AlertDialog     dialog = null;
 
     protected final LinearLayout.LayoutParams llpMargin1Weight1;
 
@@ -286,7 +285,42 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
     protected boolean isWearable() {
         return ViewUtil.isWearable(context) /*|| DateUtil.getCurrentYYYYMMDD().equals("20210927")*/;
     }
+    protected boolean isLeanback_AndroidTV() {
+        return ViewUtil.isLeanback_AndroidTV(context);
+    }
     protected boolean isNotWearable() {
         return isWearable() == false;
     }
+    AlertDialog.Builder setTitle(int iRes) {
+        return adb.setTitle(iRes);
+    }
+    AlertDialog.Builder setIcon(int iRes) {
+        return adb.setIcon(iRes);
+    }
+    AlertDialog.Builder setMessage(String s) {
+        return adb.setMessage(s);
+    }
+    AlertDialog.Builder setPositiveButton(String s) {
+        DialogInterface.OnClickListener onClickListener = null;
+        return adb.setPositiveButton(s, onClickListener);
+    }
+    AlertDialog.Builder setNegativeButton(String s) {
+        DialogInterface.OnClickListener onClickListener = null;
+        return adb.setNegativeButton(s, onClickListener);
+    }
+    AlertDialog.Builder setNeutralButton(int s) {
+        DialogInterface.OnClickListener onClickListener = null;
+        return adb.setNeutralButton(s, onClickListener);
+    }
+
+    public AlertDialog create() {
+        dialog = adb.create();
+        return dialog;
+    }
+    protected Button getButton(/*AlertDialog alertDialog, */int iButton) {
+        //return alertDialog.getButton(iButton);
+        return dialog.getButton(iButton);
+    }
+
+
 }
