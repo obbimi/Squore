@@ -249,6 +249,13 @@ public class GSMModel extends Model
         return DoublesServeSequence.A1B1A2B2; // TODO: check always one and the same server in a game
     }
 
+    @Override protected void undoBackOneGame() {
+        super.undoBackOneGame();
+        if ( isDoubles() && getNrOfFinishedGames() % 2 == 0 ) {
+            setNextDoubleServe(m_in_out         .getOther());
+        }
+    }
+
     @Override void determineServerAndSideForUndoFromPreviousScoreLine(ScoreLine lastValidWithServer, ScoreLine slRemoved) {
         // TODO: improve
         ServeSide serveSideRemoved = slRemoved.getServeSide();

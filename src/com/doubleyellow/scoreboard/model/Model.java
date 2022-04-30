@@ -956,8 +956,8 @@ public abstract class Model implements Serializable
         }
 
         List<ScoreLine> lGameScoreHistory = getGameScoreHistory();
-        final int gameNrInProgress = getGameNrInProgress();
         if ( lGameScoreHistory.size() == 0 ) {
+            final int gameNrInProgress = getGameNrInProgress();
             if ( gameNrInProgress <= 1 ) {
                 // nothing to undo. we have not started yet
                 return;
@@ -1049,7 +1049,7 @@ public abstract class Model implements Serializable
         }
     }
 
-    private void undoBackOneGame() {
+    protected void undoBackOneGame() {
         ListUtil.removeLast(m_lGamesScorelineHistory); // no from gsm
         ListUtil.removeLast(m_lPlayer2GamesWon); // TODO: not required if it is the zero-zero one?
         ListUtil.removeLast(m_rallyEndStatistics);
