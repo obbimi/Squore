@@ -37,6 +37,7 @@ import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.StringUtil;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -58,15 +59,23 @@ public class Handicap extends BaseAlertDialog {
     @Override public boolean storeState(Bundle outState) {
         outState.putSerializable(HandicapFormat.class.getSimpleName(), handicapFormat);
         outState.putInt(PreferenceKeys.numberOfPointsToWinGame.toString(), iNrOfPointsToWinGame);
+        for(int id: lTexts.keySet()) {
+            TextView tv = lTexts.get(id);
+            CharSequence charSequence = tv.getText();
+            m_entered.put(id, charSequence);
+        }
         return true;
     }
 
     @Override public boolean init(Bundle outState) {
-        init((HandicapFormat) outState.getSerializable(HandicapFormat.class.getSimpleName()), outState.getInt(PreferenceKeys.numberOfPointsToWinGame.toString()));
+        HandicapFormat handicapFormat      = (HandicapFormat) outState.getSerializable(HandicapFormat.class.getSimpleName());
+        int            nrOfPointsToWinGame =                  outState.getInt(PreferenceKeys.numberOfPointsToWinGame.toString());
+        init(handicapFormat, nrOfPointsToWinGame);
         return true;
     }
 
     private LinkedHashMap<Integer, EditText> lTexts;
+    private static Map<Integer, CharSequence> m_entered = new HashMap<>(); // attempt to retain values when 'rotating' screen happens
     private int iTotalNrOfPreviousGames = 0;
     private HandicapFormat handicapFormat = null;
     private int iNrOfPointsToWinGame = 11;
@@ -142,7 +151,8 @@ public class Handicap extends BaseAlertDialog {
                 ColorUtil.setBackground(n, iSelectTxt);
                 n.setTextColor(iInputTxtColor);
 
-                n.setText("" + matchModel.getGameStartScoreOffset(p, iPrevGame));
+                String iScoreOffsetDefault = "" + matchModel.getGameStartScoreOffset(p, iPrevGame);
+                n.setText(iScoreOffsetDefault);
 
                 llGameScore.addView(n, params);
             }
@@ -187,7 +197,12 @@ public class Handicap extends BaseAlertDialog {
             n.setTextColor(iInputTxtColor);
 
             // give
-            n.setText("" + matchModel.getGameStartScoreOffset(p, iTotalNrOfPreviousGames));
+            CharSequence iScoreOffsetDefault = "" + matchModel.getGameStartScoreOffset(p, iTotalNrOfPreviousGames);
+            CharSequence sEnteredAlready = m_entered.get(id);
+            if ( StringUtil.isNotEmpty(sEnteredAlready) ) {
+                iScoreOffsetDefault = sEnteredAlready;
+            }
+            n.setText(iScoreOffsetDefault);
             llGameScore.addView(n, params);
 
             // for when user is finished

@@ -359,10 +359,14 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
             if ( changed == GameTiming.Changed.Start || changed == GameTiming.Changed.Both ) {
                 // most likely reset duration of game to 00:00
                 iBoard.updateGameDurationChrono();
+                iBoard.updateSetDurationChrono();
             }
             if ( changed == GameTiming.Changed.End  || changed == GameTiming.Changed.Both ) {
                 if ( matchModel.isPossibleGameVictory() ) {
                     iBoard.stopGameDurationChrono();
+                    if ( Brand.isGameSetMatch() ) {
+                        iBoard.stopSetDurationChrono();
+                    }
                 }
             }
             iBoard.updateMatchDurationChrono(); // after screen 'switch' from pause screen to scoreboard screen
