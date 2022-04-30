@@ -340,6 +340,19 @@ public class IBoard implements TimerViewContainer
         }
 
     }
+    public void stopSetDurationChrono() {
+        Chronometer tvSetTime = (Chronometer) findViewById(R.id.sb_set_duration);
+        if ( tvSetTime == null ) { return; }
+
+        tvSetTime.stop();
+        if ( Brand.supportsTimeout() ) {
+            m_lStoppedAt = System.currentTimeMillis();
+            Log.d(TAG, "[Set] Stopped at " + m_lStoppedAt + " " + new Date(m_lStoppedAt).toString());
+        }
+        if ( matchModel.matchHasEnded() ) {
+            showDurationOfLastSet(tvSetTime);
+        }
+    }
     /** only for GSMModel matches */
     public void updateSetDurationChrono() {
         Chronometer tvSetTime = (Chronometer) findViewById(R.id.sb_set_duration);
@@ -525,6 +538,29 @@ public class IBoard implements TimerViewContainer
         tvGameTime.setText(String.format(sFormat, sDurationHH_MM_SS));
 
         castSendChronosFunction(ICastHelper.GameChrono_update, DateUtil.convertToSeconds(duration), false, sFormat, sDurationHH_MM_SS);
+    }
+
+    /** sets set duration to static value using model data, not Chrono data */
+    private void showDurationOfLastSet(Chronometer tvSetTime) {
+        if ( Brand.isGameSetMatch() == false ) { return; }
+
+        GSMModel matchModel = (GSMModel) this.matchModel;
+        int setNrInProgress1B = matchModel.getSetNrInProgress();
+        String sFormat = getSetDurationFormat(setNrInProgress1B);
+        //tvSetTime.setFormat(sFormat);
+
+/*
+        long elapsedRealtime = SystemClock.elapsedRealtime();
+        long lBootTime       = System.currentTimeMillis() - elapsedRealtime;
+        long lStartTime      = matchModel.getSetStart(setNrInProgress1B);
+        long calculatedBase  = lStartTime - lBootTime;
+*/
+        long lSetDuration    = matchModel.getSetDuration(setNrInProgress1B);
+        String sDurationHH_MM_SS = DateUtil.convertDurationToHHMMSS_Colon(lSetDuration);
+        tvSetTime.stop();
+        tvSetTime.setText(String.format(sFormat, sDurationHH_MM_SS));
+
+        castSendChronosFunction(ICastHelper.SetChrono_update, DateUtil.convertToSeconds(lSetDuration), false, sFormat, sDurationHH_MM_SS);
     }
 
     private void castSendChronosFunction(String sFunc, long lDurationInSecs, boolean bStartTimer, String sFormat, String sDisplayValue)
@@ -799,6 +835,9 @@ public class IBoard implements TimerViewContainer
                 gameHistoryView.setTextSizePx(iPaperScoreTextSize);
             }
             int[] iIds = new int[] {R.id.sb_match_duration, R.id.sb_game_duration};
+            if ( Brand.isGameSetMatch() ) {
+                iIds = new int[] {R.id.sb_match_duration, R.id.sb_game_duration, R.id.sb_set_duration};
+            }
             for(int iResId: iIds) {
                 Chronometer cm = (Chronometer) findViewById(iResId);
                 if ( cm != null ) {
@@ -973,6 +1012,9 @@ public class IBoard implements TimerViewContainer
                                          );
         }
         int[] iIds = new int[] {R.id.sb_match_duration, R.id.sb_game_duration};
+        if ( Brand.isGameSetMatch() ) {
+            iIds = new int[] {R.id.sb_match_duration, R.id.sb_game_duration, R.id.sb_set_duration};
+        }
         for(int iResId: iIds) {
             Chronometer cm = (Chronometer) findViewById(iResId);
             if ( cm == null ) { continue; }

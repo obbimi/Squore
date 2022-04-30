@@ -2078,7 +2078,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         iBoard.initColors(mColors);
 
         // there is a pretty dark color, for ecstatic reasons, make actionbar the same color
-        setActiorBarBGColor(mColors.get(ColorPrefs.ColorTarget.actionBarBackgroundColor));
+        setActionBarBGColor(mColors.get(ColorPrefs.ColorTarget.actionBarBackgroundColor));
 
         initFloaterColors();
     }
@@ -3377,9 +3377,13 @@ touch -t 01030000 LAST.sb
             }
             if ( locked ) {
                 iBoard.stopGameDurationChrono();
+                if ( Brand.isGameSetMatch() ) {
+                    iBoard.stopSetDurationChrono();
+                }
                 //iBoard.stopMatchDurationChrono();
             } else {
                 iBoard.updateGameDurationChrono();
+                iBoard.updateSetDurationChrono();
                 //iBoard.updateMatchDurationChrono();
             }
         }
@@ -3393,7 +3397,7 @@ touch -t 01030000 LAST.sb
             if ( changed == GameTiming.Changed.Start || changed == GameTiming.Changed.Both ) {
                 // most likely reset duration of game to 00:00
                 iBoard.updateGameDurationChrono();
-                iBoard.updateSetDurationChrono(); // GSM
+                iBoard.updateSetDurationChrono();
             }
             if ( changed == GameTiming.Changed.End   || changed == GameTiming.Changed.Both ) {
                 if ( matchModel.isPossibleGameVictory() ) {
@@ -3405,6 +3409,9 @@ touch -t 01030000 LAST.sb
                 iBoard.stopGameDurationChrono();
                 if ( matchModel.hasStarted() == false ) {
                     iBoard.stopMatchDurationChrono();
+                    if ( Brand.isGameSetMatch() ) {
+                        iBoard.stopSetDurationChrono();
+                    }
                 }
             }
         }
