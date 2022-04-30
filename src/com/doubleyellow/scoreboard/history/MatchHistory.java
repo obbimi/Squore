@@ -115,7 +115,7 @@ public class MatchHistory extends XActivity implements MenuHandler
         setHomeButtonEnabledOnActionBar();
         setActionBarVisibility(ScoreBoard.bUseActionBar== ToggleResult.setToTrue);
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(this);
-        setActiorBarBGColor(mColors.get(ColorPrefs.ColorTarget.actionBarBackgroundColor));
+        setActionBarBGColor(mColors.get(ColorPrefs.ColorTarget.actionBarBackgroundColor));
 
         ScoreBoard.updateDemoThread(this);
         mhTimerView = new MHTimerView();

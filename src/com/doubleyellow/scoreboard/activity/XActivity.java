@@ -71,7 +71,7 @@ public abstract class XActivity extends /*Activity*/ AppCompatActivity /* For Im
             }
         }
     }
-    public void setActiorBarBGColor(Integer iBgColor) {
+    public void setActionBarBGColor(Integer iBgColor) {
         ActionBar bar = getXActionBar();
         if ( (bar != null) && (iBgColor != null)) {
             ColorDrawable cd = new ColorDrawable(iBgColor);

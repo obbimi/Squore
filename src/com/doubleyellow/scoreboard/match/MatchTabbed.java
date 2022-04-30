@@ -682,7 +682,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         viewPager.setAdapter(mAdapter);
 
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(this);
-        setActiorBarBGColor(mColors.get(ColorPrefs.ColorTarget.actionBarBackgroundColor));
+        setActionBarBGColor(mColors.get(ColorPrefs.ColorTarget.actionBarBackgroundColor));
 
         setHomeButtonEnabledOnActionBar();
 

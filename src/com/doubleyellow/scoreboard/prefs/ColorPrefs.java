@@ -644,7 +644,7 @@ public class ColorPrefs
             Integer color = mTarget2Color.get(ColorTarget.actionBarBackgroundColor);
             if ( activity instanceof XActivity ) {
                 XActivity xActivity = (XActivity) activity;
-                xActivity.setActiorBarBGColor(color);
+                xActivity.setActionBarBGColor(color);
             } else {
                 ActionBar actionBar = activity.getActionBar();
                 if (actionBar != null) {
