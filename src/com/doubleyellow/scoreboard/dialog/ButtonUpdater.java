@@ -31,7 +31,6 @@ import android.widget.TextView;
 
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.ViewUtil;
-import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 
 /**
  * Used to give a button
@@ -51,7 +50,6 @@ public class ButtonUpdater implements DialogInterface.OnShowListener {
 
     public static void setPlayerColor(Integer iColor) {
         if ( iColor == null ) { return; }
-        Object a = ColorPrefs.ColorTarget.playerButtonBackgroundColor;
         iPlayerButtonColor = iColor; //ColorPrefs.getTarget2colorMapping(context).get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
         iaColorNeutral     = new int[] { DialogInterface.BUTTON_NEUTRAL, iPlayerButtonColor };
         iaColorAll         = new int[] { DialogInterface.BUTTON_POSITIVE, iPlayerButtonColor ,DialogInterface.BUTTON_NEGATIVE, iPlayerButtonColor ,DialogInterface.BUTTON_NEUTRAL, iPlayerButtonColor };
@@ -112,7 +110,7 @@ public class ButtonUpdater implements DialogInterface.OnShowListener {
                     continue;
                 }
                 int iColor = iaButton2Color[i + 1];
-                ColorUtil.setBackground(button, iColor);
+                ColorUtil.setBackground(button, iColor, ViewUtil.isLeanback_AndroidTV(context));
                 button.setTextColor(ColorUtil.getBlackOrWhiteFor(iColor));
 
                 if ( iColor == iPlayerButtonColor ) {
@@ -120,7 +118,9 @@ public class ButtonUpdater implements DialogInterface.OnShowListener {
                     ViewParent parent = button.getParent();
                     if (parent instanceof ViewGroup) {
                         ViewGroup vg = (ViewGroup) parent;
-                        ColorUtil.setBackground(vg, Color.BLACK);
+                        if ( (ViewUtil.isLeanback_AndroidTV(context) == false) && (MyDialogBuilder.iDialogTheme == AlertDialog.THEME_TRADITIONAL ) ) {
+                            ColorUtil.setBackground(vg, Color.BLACK); // TODO: improve not for Android TV?! what is the default 'theme'?
+                        }
                     }
                 }
             }

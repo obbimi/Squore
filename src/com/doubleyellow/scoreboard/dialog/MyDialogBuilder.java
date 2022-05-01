@@ -24,6 +24,7 @@ import android.util.Log;
 import android.webkit.WebView;
 
 import com.doubleyellow.android.util.ColorUtil;
+import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.util.StringUtil;
@@ -40,7 +41,9 @@ public class MyDialogBuilder extends AlertDialog.Builder {
     //private static final int iDialogTheme = android.R.style.Theme_Translucent_NoTitleBar_Fullscreen; // this does not work, we need to specify a theme, not a style
     //private static final int iDialogTheme = R.style.SBDialog;
     //private static final int iDialogTheme = android.R.style.Theme_Dialog;
-    private static final int iDialogTheme = AlertDialog.THEME_TRADITIONAL;   // white titles on black background, spacing around buttons
+    private static final int iDialogTheme_Depr  = AlertDialog.THEME_TRADITIONAL; // white titles on black background, spacing around buttons
+    private static final int iDialogTheme_Newer = android.R.style.Theme_Material_Dialog_Alert;   // white titles on grey background, Neutral button on left, Pos and Neg buttons together on right
+    public static final int iDialogTheme  = iDialogTheme_Depr;
     //private static final int iDialogTheme = AlertDialog.THEME_HOLO_LIGHT;  // blue titles on white background, no spacing around buttons
     //private static final int iDialogTheme = AlertDialog.THEME_HOLO_DARK;   // blue titles on dark grey background, no spacing around buttons
     //private static final int iDialogTheme = AlertDialog.THEME_DEVICE_DEFAULT_LIGHT; // dark titles on light background, no spacing around buttons/ buttons borders not visible
@@ -49,7 +52,8 @@ public class MyDialogBuilder extends AlertDialog.Builder {
     private Map<ColorPrefs.ColorTarget, Integer> target2colorMapping;
 
     public MyDialogBuilder(Context context) {
-        super(context, iDialogTheme);
+        super(context, ViewUtil.isLeanback_AndroidTV(context)?iDialogTheme_Newer:iDialogTheme);
+        //super(context, iDialogTheme);
         target2colorMapping = ColorPrefs.getTarget2colorMapping(getContext());
     }
 
@@ -74,8 +78,7 @@ public class MyDialogBuilder extends AlertDialog.Builder {
     }
 
     @Override public AlertDialog.Builder setIcon(int iconId) {
-        AlertDialog.Builder builder = super.setIcon(iconId);
-        return builder;
+        return super.setIcon(iconId);
     }
 
     @Override public AlertDialog create() {

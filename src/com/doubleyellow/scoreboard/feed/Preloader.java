@@ -242,10 +242,10 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        doNext(0);
                     } else {
-
+                        doNext(1);
                     }
-                    doNext(0);
                     break;
                 }
             case NoNetwork:
