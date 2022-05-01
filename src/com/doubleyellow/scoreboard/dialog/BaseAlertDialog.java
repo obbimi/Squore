@@ -292,24 +292,36 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
         return isWearable() == false;
     }
     AlertDialog.Builder setTitle(int iRes) {
+        if ( dialog != null ) {
+            dialog.setTitle(iRes);
+        }
         return adb.setTitle(iRes);
     }
+    AlertDialog.Builder setTitle(String s) {
+        if ( dialog != null ) {
+            dialog.setTitle(s);
+        }
+        return adb.setTitle(s);
+    }
     AlertDialog.Builder setIcon(int iRes) {
+        if ( dialog != null ) {
+            dialog.setIcon(iRes);
+        }
         return adb.setIcon(iRes);
     }
     AlertDialog.Builder setMessage(String s) {
+        if ( dialog != null ) {
+            dialog.setMessage(s);
+        }
         return adb.setMessage(s);
     }
-    AlertDialog.Builder setPositiveButton(String s) {
-        DialogInterface.OnClickListener onClickListener = null;
+    AlertDialog.Builder setPositiveButton(String s, DialogInterface.OnClickListener onClickListener) {
         return adb.setPositiveButton(s, onClickListener);
     }
-    AlertDialog.Builder setNegativeButton(String s) {
-        DialogInterface.OnClickListener onClickListener = null;
+    AlertDialog.Builder setNegativeButton(String s, DialogInterface.OnClickListener onClickListener) {
         return adb.setNegativeButton(s, onClickListener);
     }
-    AlertDialog.Builder setNeutralButton(int s) {
-        DialogInterface.OnClickListener onClickListener = null;
+    AlertDialog.Builder setNeutralButton(int s, DialogInterface.OnClickListener onClickListener) {
         return adb.setNeutralButton(s, onClickListener);
     }
 

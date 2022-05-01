@@ -42,6 +42,7 @@ import com.doubleyellow.scoreboard.vico.IBoard;
  * - enter the which end (side of the table in tabletennis) the receiver will start receiving (or server start serving if toss winner decided to receive)
  * - let the app perform a toss
  */
+//public class SideToss extends BaseCustomDialog
 public class SideToss extends BaseAlertDialog
 {
     public SideToss(Context context, Model matchModel, ScoreBoard scoreBoard) {
@@ -65,19 +66,19 @@ public class SideToss extends BaseAlertDialog
             sTitle   = context.getString(R.string.sb_what_side_will_x_start_to_y, sServer, getString(R.string.sb_serve  )  );
         }
         int iResMessage = matchModel.isDoubles() ? R.string.sb_on_what_side_of_the_scoreboard_should_team_be : R.string.sb_on_what_side_of_the_scoreboard_should_player_be;
-        adb.setTitle         (sTitle)
-           .setMessage       ("(" + getString(iResMessage) + ")")
-           .setIcon          (R.drawable.change_sides)
-           .setPositiveButton(R.string.lbl_left           , dialogClickListener)
-         //.setNeutralButton (R.string.sb_cmd_toss, null)
-           .setNegativeButton(R.string.lbl_right          , dialogClickListener)
-           .setOnKeyListener(new DialogInterface.OnKeyListener() {
+        setTitle         (sTitle);
+        setMessage       ("(" + getString(iResMessage) + ")");
+        setIcon          (R.drawable.change_sides);
+        setPositiveButton(getString(R.string.lbl_left), dialogClickListener);
+         //setNeutralButton (R.string.sb_cmd_toss, null)
+        setNegativeButton(getString(R.string.lbl_right), dialogClickListener);
+        adb.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override public boolean onKey(DialogInterface dialogI, int keyCode, KeyEvent event) {
                 int action  = event.getAction();
                 if (keyCode == KeyEvent.KEYCODE_BACK /* = 4 */ && action == KeyEvent.ACTION_UP) {
                     AlertDialog dialog = (AlertDialog) dialogI;
-                    final Button btnLeft  = dialog.getButton(BTN_LOOSER_OF_TOSS_STARTS_LEFT);
-                    final Button btnRight = dialog.getButton(BTN_LOOSER_OF_TOSS_STARTS_RIGHT);
+                    final Button btnLeft  = getButton(BTN_LOOSER_OF_TOSS_STARTS_LEFT);
+                    final Button btnRight = getButton(BTN_LOOSER_OF_TOSS_STARTS_RIGHT);
                     if ( btnLeft.isEnabled() == false ) {
                         // toss is performed and RIGHT was selected
                         handleButtonClick(BTN_LOOSER_OF_TOSS_STARTS_RIGHT);
@@ -107,7 +108,9 @@ public class SideToss extends BaseAlertDialog
             e.printStackTrace();
         }
 */
-        dialog = adb.show();
+        dialog = create();
+        dialog.setOnShowListener(new ButtonUpdater(context));
+        dialog.show();
     }
 
     private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {

@@ -40,7 +40,8 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
  * - choose the server (after a toss has been performed on court, e.g. by means of spinning a racket)
  * - let the app perform a toss
  */
-public class ServerToss extends /*BaseCustomDialog*/ BaseAlertDialog
+//public class ServerToss extends BaseCustomDialog
+public class ServerToss extends BaseAlertDialog
 {
     public ServerToss(Context context, Model matchModel, ScoreBoard scoreBoard) {
         super(context, matchModel, scoreBoard);
@@ -71,9 +72,9 @@ public class ServerToss extends /*BaseCustomDialog*/ BaseAlertDialog
             setIcon          (R.drawable.toss_white);
             setTitle         (R.string.sb_who_will_start_to_serve);
         }
-        setPositiveButton(sPlayerA            );
-        setNeutralButton (R.string.sb_cmd_toss);
-        setNegativeButton(sPlayerB            );
+        setPositiveButton(sPlayerA            , null);
+        setNeutralButton (R.string.sb_cmd_toss, null);
+        setNegativeButton(sPlayerB            , null);
         adb.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override public boolean onKey(DialogInterface dialogI, int keyCode, KeyEvent event) {
                 int action  = event.getAction();
@@ -105,7 +106,7 @@ public class ServerToss extends /*BaseCustomDialog*/ BaseAlertDialog
         try {
             OnShowListener listener = new OnShowListener(context, ButtonUpdater.iaColorNeutral);
             //dialog = adb.show(listener, true); // have had report that this throws android.view.WindowManager$BadTokenException, everything automated?: warmup timer+toss dialog
-            create();
+            dialog = create();
             dialog.setOnShowListener(listener);
             dialog.show();
         } catch (Exception e) {
@@ -269,12 +270,12 @@ public class ServerToss extends /*BaseCustomDialog*/ BaseAlertDialog
         // change buttons in 'serve' and 'receive', winner may choose to receive
         String sWinnerOfToss = matchModel.getName(m_winnerOfToss);
         if ( isWearable() ) {
-            dialog.setTitle(null);
-            dialog.setIcon(null);
-            dialog.setMessage(getString(R.string.sb_toss_won_by_x, sWinnerOfToss) + "\n" + getString(R.string.sb_players_choice));
+            setTitle(0);
+            setIcon(0);
+            setMessage(getString(R.string.sb_toss_won_by_x, sWinnerOfToss) + "\n" + getString(R.string.sb_players_choice));
         } else {
-            dialog.setTitle  (getString(R.string.sb_toss_won_by_x, sWinnerOfToss));
-            dialog.setMessage(getString(R.string.sb_players_choice));
+            setTitle  (getString(R.string.sb_toss_won_by_x, sWinnerOfToss));
+            setMessage(getString(R.string.sb_players_choice));
         }
         btnToss.setVisibility(VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE);
         btnA.setEnabled(true); btnA.setText(R.string.sb_serve);

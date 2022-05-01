@@ -43,6 +43,7 @@ import java.util.Map;
 import static com.doubleyellow.scoreboard.main.ScoreBoard.AnnouncementTrigger;
 
 public class StartEndAnnouncement extends BaseAlertDialog
+//public class StartEndAnnouncement extends BaseCustomDialog
 {
     private static final String TAG = "SB." + StartEndAnnouncement.class.getSimpleName();
 
@@ -78,11 +79,11 @@ public class StartEndAnnouncement extends BaseAlertDialog
         if ( ListUtil.size(messages) == 0 ) { return; }
 
         int iResIdCaption = bIncludeToServe && (matchModel.matchHasEnded()==false) ? R.string.cmd_start : R.string.cmd_ok;
-        adb.setIcon(R.drawable.microphone)
-           .setTitle(messages.remove(0))
-           .setMessage(ListUtil.join(messages, "\n\n"))
-           .setPositiveButton(iResIdCaption, onClickListener)
-           .setOnKeyListener(getOnBackKeyListener(DialogInterface.BUTTON_POSITIVE)); // 20161228 change from NEUTRAL to POSITIVE so that start of game gets 'set' no mather how dialog is dismissed
+        setIcon(R.drawable.microphone);
+        setTitle(messages.remove(0));
+        setMessage(ListUtil.join(messages, "\n\n"));
+        setPositiveButton(getString(iResIdCaption), onClickListener);
+        adb.setOnKeyListener(getOnBackKeyListener(DialogInterface.BUTTON_POSITIVE)); // 20161228 change from NEUTRAL to POSITIVE so that start of game gets 'set' no mather how dialog is dismissed
 
         Feature featureUseTimers = PreferenceValues.useTimersFeature(context);
         boolean bAutoShowTimer   = featureUseTimers.equals(Feature.Automatic);
@@ -92,7 +93,7 @@ public class StartEndAnnouncement extends BaseAlertDialog
             CountDownTimer countDownTimer = new CountDownTimer(iAutoCloseInXToStartTimer * 1000, 1000) {
                 @Override public void onTick(long millisUntilFinished) {
                     // give some feedback
-                    Button btnOK = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    Button btnOK = getButton(DialogInterface.BUTTON_POSITIVE);
                     String sCaption = btnOK.getText().toString().replaceFirst("\\(\\d+\\)", "").trim();
                     sCaption += " (" + Integer.toString((int)(millisUntilFinished/1000))  + ")";
                     btnOK.setText(sCaption);
@@ -107,7 +108,9 @@ public class StartEndAnnouncement extends BaseAlertDialog
 
         // in a try catch to prevent crashing if somehow scoreBoard is not showing any longer
         try {
-            dialog = adb.show();
+            dialog = create();
+            dialog.setOnShowListener(new ButtonUpdater(context));
+            dialog.show();
         } catch (Exception e) {
             //Log.e(TAG, "Could not show official announcement");
             e.printStackTrace();
