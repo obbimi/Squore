@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+    Picked up in
+    - values-television
+
+
+    Picked up in
+    - values-tvdpi
+    folder, but not just by tv's, also e.g. by nexus 5x
+
+
+    Not picked up by Android TV (720p) AVD
+    - values-tvdpi-notouch
+
+    -->
+    <!-- to make score in the 'middle' (game/set scores) bigger on TV's -->
+    <fraction name="ls_fr_name_width_2x">0.37</fraction>
+    <fraction name="ls_fr_gamescores_width">0.24</fraction>
+    <fraction name="ls_fr_name_height">0.22</fraction>
+</resources>
