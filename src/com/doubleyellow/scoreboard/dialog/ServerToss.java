@@ -29,7 +29,6 @@ import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Model;
@@ -41,7 +40,7 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
  * - choose the server (after a toss has been performed on court, e.g. by means of spinning a racket)
  * - let the app perform a toss
  */
-public class ServerToss extends BaseAlertDialog
+public class ServerToss extends /*BaseCustomDialog*/ BaseAlertDialog
 {
     public ServerToss(Context context, Model matchModel, ScoreBoard scoreBoard) {
         super(context, matchModel, scoreBoard);
@@ -61,27 +60,27 @@ public class ServerToss extends BaseAlertDialog
         String sPlayerB = matchModel.getName(Player.B);
         if ( Brand.supportChooseServeOrReceive() ) {
             if ( isWearable() ) {
-                adb.setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive));
+                setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive));
             } else {
-                adb.setTitle(R.string.sb_cmd_toss);
-                adb.setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive) + "\n"
+                setTitle(R.string.sb_cmd_toss);
+                setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive) + "\n"
                              + getString(R.string.choose_winner_of_toss_or_perform_toss)  ); // for gotoStage_ChooseServeReceive() we need to set something for the message that is set there to be visible
             }
         }
         if ( isNotWearable() ) {
-            adb.setIcon          (R.drawable.toss_white);
-            adb.setTitle         (R.string.sb_who_will_start_to_serve);
+            setIcon          (R.drawable.toss_white);
+            setTitle         (R.string.sb_who_will_start_to_serve);
         }
-        adb.setPositiveButton(sPlayerA            , null /*dialogClickListener*/)
-           .setNeutralButton (R.string.sb_cmd_toss, null)
-           .setNegativeButton(sPlayerB            ,null /*dialogClickListener*/)
-           .setOnKeyListener(new DialogInterface.OnKeyListener() {
+        setPositiveButton(sPlayerA            );
+        setNeutralButton (R.string.sb_cmd_toss);
+        setNegativeButton(sPlayerB            );
+        adb.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override public boolean onKey(DialogInterface dialogI, int keyCode, KeyEvent event) {
                 int action  = event.getAction();
                 if (keyCode == KeyEvent.KEYCODE_BACK /* = 4 */ && action == KeyEvent.ACTION_UP) {
                     AlertDialog dialog = (AlertDialog) dialogI;
-                    final Button btnA = dialog.getButton(BTN_A_WINS_TOSS);
-                    final Button btnB = dialog.getButton(BTN_B_WINS_TOSS);
+                    final Button btnA = getButton(BTN_A_WINS_TOSS);
+                    final Button btnB = getButton(BTN_B_WINS_TOSS);
                     if ( btnA.isEnabled() == false ) {
                         // toss is performed and B was selected
                         handleButtonClick(BTN_B_WINS_TOSS);
@@ -105,7 +104,10 @@ public class ServerToss extends BaseAlertDialog
         });
         try {
             OnShowListener listener = new OnShowListener(context, ButtonUpdater.iaColorNeutral);
-            dialog = adb.show(listener); // have had report that this throws android.view.WindowManager$BadTokenException, everything automated?: warmup timer+toss dialog
+            //dialog = adb.show(listener, true); // have had report that this throws android.view.WindowManager$BadTokenException, everything automated?: warmup timer+toss dialog
+            create();
+            dialog.setOnShowListener(listener);
+            dialog.show();
         } catch (Exception e) {
             // this may fail if activity has been in the background, seen during casting (android.view.WindowManager$BadTokenException: Unable to add window -- token android.os.BinderProxy@860c8b3 is not valid; is your activity running?)
             e.printStackTrace();
@@ -140,9 +142,9 @@ public class ServerToss extends BaseAlertDialog
 
     private static final int VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE = View.INVISIBLE;
     @Override public void handleButtonClick(int which) {
-        final Button btnToss = dialog.getButton(BTN_DO_TOSS );
+        final Button btnToss = getButton(BTN_DO_TOSS );
         if (    Brand.supportChooseServeOrReceive()
-             && dialog.getButton(BTN_DO_TOSS).getVisibility() == VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE
+             && getButton(BTN_DO_TOSS).getVisibility() == VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE
            )
         {
             // serve or receive
@@ -178,8 +180,8 @@ public class ServerToss extends BaseAlertDialog
             // optionally go to next 'stage' of dialog
             if ( m_winnerOfToss != null ) {
                 if ( Brand.supportChooseServeOrReceive() ) {
-                    final Button btnA = dialog.getButton(BTN_A_WINS_TOSS);
-                    final Button btnB = dialog.getButton(BTN_B_WINS_TOSS);
+                    final Button btnA = getButton(BTN_A_WINS_TOSS);
+                    final Button btnB = getButton(BTN_B_WINS_TOSS);
                     gotoStage_ChooseServeReceive(btnToss, btnA, btnB);
                 } else {
                     this.dismiss();
@@ -188,6 +190,7 @@ public class ServerToss extends BaseAlertDialog
         }
     }
 
+    /** introduced to install OnClickListeners on the 3 buttons */
     private class OnShowListener extends ButtonUpdater {
         private OnShowListener(Context context, int... iButton2Color) {
             super(context, iButton2Color);
@@ -196,7 +199,7 @@ public class ServerToss extends BaseAlertDialog
             super.onShow(dialogInterface);
 
             AlertDialog alertDialog = (AlertDialog) dialogInterface;
-            final Button btnToss = alertDialog.getButton(BTN_DO_TOSS);
+            final Button btnToss = getButton(BTN_DO_TOSS);
             if ( btnToss == null ) {
                 return;
             }
@@ -213,15 +216,15 @@ public class ServerToss extends BaseAlertDialog
             // ensure that when toss button is clicked player buttons are toggled a couple of times then only one remains enabled
             btnToss.setOnClickListener(onClickTossListener);
 
-            alertDialog.getButton(BTN_A_WINS_TOSS).setOnClickListener(new LeftRightButtonClickListener(BTN_A_WINS_TOSS));
-            alertDialog.getButton(BTN_B_WINS_TOSS).setOnClickListener(new LeftRightButtonClickListener(BTN_B_WINS_TOSS));
+            getButton(BTN_A_WINS_TOSS).setOnClickListener(new LeftRightButtonClickListener(BTN_A_WINS_TOSS));
+            getButton(BTN_B_WINS_TOSS).setOnClickListener(new LeftRightButtonClickListener(BTN_B_WINS_TOSS));
         }
     }
 
     private void simulateToss() {
-        final Button btnToss = dialog.getButton(BTN_DO_TOSS );
-        final Button btnA    = dialog.getButton(BTN_A_WINS_TOSS);
-        final Button btnB    = dialog.getButton(BTN_B_WINS_TOSS);
+        final Button btnToss = getButton(BTN_DO_TOSS );
+        final Button btnA    = getButton(BTN_A_WINS_TOSS);
+        final Button btnB    = getButton(BTN_B_WINS_TOSS);
         btnToss.setEnabled(false);
         if ( (btnA == null) || (btnB == null) ) return;
 
