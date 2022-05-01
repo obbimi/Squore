@@ -28,7 +28,8 @@
             { "title": "Timers          ", "url" : "3.2.timers"           },
             { "title": "Speech          ", "url" : "3.3.speech"           },
             { "title": "Calls           ", "url" : "3.5.appeals.conducts" },
-            { "title": "Announcements   ", "url" : "3.7.announcements"    }
+            { "title": "Announcements   ", "url" : "3.7.announcements"    },
+            { "title": "BlueTooth Media Buttons", "url" : "8.1.bluetooth.mediabuttons" }
         ]
     },
     {
