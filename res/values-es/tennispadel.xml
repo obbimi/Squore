@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="oa_golden_point">Punto de oro</string>
+    <string name="pref_indicateGoldenPoint">Indicate \'Punto de oro\' in score buttons</string>
+
+    <string name="oa_deuce">Iguales</string>
+    <string name="sb_advantage">Ventaja</string>
+    <string name="sb_no_advantage">Sin ventaja</string>
+    <string name="lbl_GoldenPoint">Punto de oro (Sin ventaja)</string>
+
     <string name="best_of_x_games_to_y_2__TennisPadel">Sets a</string>
     <string name="sb_official_rules__TennisPadel">Reglas Oficiales</string>
 
-    <string name="OfficialRulesURLs_default__TennisPadel"><![CDATA[https://www.padelfip.com/wp-content/uploads/2017/06/Rules-of-Padel.pdf
-\nhttp://www.Padel.com/
+    <string name="OfficialRulesURLs_default__TennisPadel"><![CDATA[https://www.padelfip.com/wp-content/uploads/2021/05/2-Reglamento-Juego.pdf
+\nhttps://www.padelfip.com/wp-content/uploads/2017/06/Rules-of-Padel.pdf
+\nhttps://www.padelfip.com/es/rules/
+\nhttps://www.Padel.com/
 ]]></string>
 
     <string name="sb_FinalSetFinish">Final Set Finish</string>

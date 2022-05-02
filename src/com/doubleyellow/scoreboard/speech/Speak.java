@@ -215,7 +215,9 @@ public class Speak
             String s_X_All = getResourceString(R.string.oa_n_all, iServer);
             String sAll    = s_X_All.replaceAll("[0-9]+", "").trim();
             if ( (gsmModel != null) && (iServer >= 3) ) {
-                setTextToSpeak(SpeechType.ScoreServer  , getResourceString(R.string.sb_deuce));
+                int iResGoldenPointOrDeuce = gsmModel.getGoldenPointToWinGame() ? R.string.oa_golden_point : R.string.oa_deuce;
+                String sDeuceOrGoldenPoint = getResourceString(iResGoldenPointOrDeuce);
+                setTextToSpeak(SpeechType.ScoreServer  , sDeuceOrGoldenPoint);
                 setTextToSpeak(SpeechType.ScoreReceiver, "");
             } else {
                 setTextToSpeak(SpeechType.ScoreServer  , sServer);
@@ -226,7 +228,15 @@ public class Speak
                 if ( Math.max(iReceiver, iServer) > 3 ) {
                     if ( Math.abs(iServer - iReceiver) == 1 ) {
                         setTextToSpeak(SpeechType.ScoreServer, getResourceString(R.string.sb_advantage));
-                        setTextToSpeak(SpeechType.ScoreReceiver, "");
+                        String sAdvWho = null;
+                        if ( iServer > iReceiver ) {
+                            sAdvWho = gsmModel.getName(gsmModel.getServer());
+                            //sAdvWho = getResourceString(R.string.sb_server);
+                        } else {
+                            sAdvWho = gsmModel.getName(gsmModel.getReceiver());
+                            //sAdvWho = getResourceString(R.string.sb_receiver);
+                        }
+                        setTextToSpeak(SpeechType.ScoreReceiver, sAdvWho);
                         // advantage Server
                         // advantage Receiver
                     } else {

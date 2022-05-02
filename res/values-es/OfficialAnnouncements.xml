@@ -23,7 +23,7 @@
     <string name="oa_x_games_TO_y">para</string>
     <string name="oa_x_th_game">%s juego</string>
     <string name="oa_x_to_serve">%s al servicio</string>
-    <string name="oa_love">love</string>
+    <string name="oa_love">0</string>
 
     <!-- tiny timers/chronos -->
     <string name="oa_match_firstletter">M</string>

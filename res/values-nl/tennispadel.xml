@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="sb_deuce">Gelijk</string>
+    <string name="oa_deuce">Gelijk</string>
     <string name="sb_advantage">Voordeel</string>
 
     <string name="best_of_x_games_to_y_2__TennisPadel">Sets tot</string>

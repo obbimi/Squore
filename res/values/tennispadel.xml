@@ -3,8 +3,9 @@
     <string name="oa_golden_point">Golden point</string>
     <string name="pref_indicateGoldenPoint">Indicate \'Golden Point\' in score buttons</string>
 
-    <string name="sb_deuce">Deuce</string>
+    <string name="oa_deuce">Deuce</string>
     <string name="sb_advantage">Advantage</string>
+    <string name="sb_no_advantage">No advantage</string>
     <string name="lbl_GoldenPoint">Golden Point (No AD)</string>
 
     <string name="best_of_x_games_to_y_2__TennisPadel">Sets to</string>
