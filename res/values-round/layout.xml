@@ -9,6 +9,4 @@
     <fraction name="border_margin_playerButton_wear_round__Tabletennis">@fraction/border_margin_playerButton_wear_round_10</fraction>
     <fraction name="border_margin_playerButton_wear_round__Racketlon">@fraction/border_margin_playerButton_wear_round_10</fraction>
 -->
-
-    <fraction name="wear_score_width_2x">44%</fraction>
 </resources>

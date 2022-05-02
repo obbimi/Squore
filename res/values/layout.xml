@@ -50,6 +50,7 @@
     <fraction name="wear_gameswon_margin_V">1%</fraction>
 
     <fraction name="wear_margin_to_show_gamescores_between_buttons_HIDE">1%</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_buttons_HIDE_SCREENSHOT_STORE">8%</fraction>
     <fraction name="wear_margin_to_show_gamescores_below_playerbuttons_SHOW">18.0%</fraction> <!-- in sync with ls_name_height -->
     <fraction name="wear_margin_to_show_gamescores_below_playerbuttons_HIDE">0.5%</fraction>
 
@@ -131,7 +132,6 @@
     <fraction name="ls_side_margin_V">2.5%</fraction> <!-- double of ls_vertical_margin_3x -->
     <fraction name="ls_side_margin_H">1.5%</fraction> <!-- double of ls_horizontal_margin_4x -->
 
-    <fraction name="wear_score_width_2x">44%</fraction> <!-- overwritten only for round screens -->
     <fraction name="ls_score_width_2x">44%</fraction>
     <fraction name="ls_scorehistorytable">50%</fraction>
 

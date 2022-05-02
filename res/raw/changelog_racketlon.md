@@ -1,6 +1,13 @@
+## 4.48 (may 2022)
+
+Improvements for 
+
+- Dialogs on android television
+
 ## 4.47 (april 2022)
 
 Improvements in 
+
 - Scoring via media playback control buttons (bluetooth)
 - My List and default match format
 

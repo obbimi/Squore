@@ -1,6 +1,15 @@
+## 4.48 (may 2022)
+
+Improvements for
+ 
+- Undo back into previous game
+- Spoken scores (speech)
+- Dialogs on android television
+
 ## 4.47 (april 2022)
 
 Improvements in 
+
 - Scoring via media playback control buttons (bluetooth)
 - My List and default match format
 
