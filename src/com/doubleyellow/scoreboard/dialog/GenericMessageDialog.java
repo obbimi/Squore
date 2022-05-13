@@ -24,6 +24,7 @@ import com.doubleyellow.scoreboard.model.Player;
 
 /**
  * Dialog that simply shows a title and a message.
+ * Used e.g. for messages coming 'back' from posting a match result to the internet.
  */
 public class GenericMessageDialog extends BaseMessageDialog
 {

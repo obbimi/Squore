@@ -110,7 +110,8 @@ public class ButtonUpdater implements DialogInterface.OnShowListener {
                     continue;
                 }
                 int iColor = iaButton2Color[i + 1];
-                ColorUtil.setBackground(button, iColor, ViewUtil.isLeanback_AndroidTV(context));
+                boolean bDontUseBackground = ViewUtil.isLeanback_AndroidTV(context) || MyDialogBuilder.iDialogTheme != AlertDialog.THEME_TRADITIONAL;
+                ColorUtil.setBackground(button, iColor, bDontUseBackground);
                 button.setTextColor(ColorUtil.getBlackOrWhiteFor(iColor));
 
                 if ( iColor == iPlayerButtonColor ) {
