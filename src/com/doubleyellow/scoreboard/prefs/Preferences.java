@@ -56,6 +56,7 @@ import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.FinalSetFinish;
 import com.doubleyellow.scoreboard.model.GSMModel;
+import com.doubleyellow.scoreboard.model.NewBalls;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.TieBreakFormat;
 import com.doubleyellow.scoreboard.speech.Speak;
@@ -385,6 +386,12 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             ((GSMModel) ScoreBoard.getMatchModel()).setFinalSetFinish(finalSetFinish);
                         }
                         break;
+                    case newBalls:
+                        if ( ScoreBoard.getMatchModel() instanceof GSMModel) {
+                            NewBalls newBalls = PreferenceValues.getNewBalls(Preferences.this);
+                            ((GSMModel) ScoreBoard.getMatchModel()).setNewBalls(newBalls);
+                        }
+                        break;
                     case goldenPointToWinGame:
                         if ( ScoreBoard.getMatchModel() instanceof GSMModel) {
                             boolean bGoldenPoint = PreferenceValues.useGoldenPoint(Preferences.this);
@@ -708,6 +715,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 PreferenceGroup  psgMF = (PreferenceGroup)    ps.findPreference(PreferenceKeys.MatchFormat.toString());
                 hideRemovePreference(psgMF, PreferenceKeys.changeSidesWhen_GSM);
                 hideRemovePreference(psgMF, PreferenceKeys.finalSetFinish);
+                hideRemovePreference(psgMF, PreferenceKeys.newBalls);
                 hideRemovePreference(psgMF, PreferenceKeys.goldenPointToWinGame);
                 hideRemovePreference(psgBeh, PreferenceKeys.indicateGoldenPoint);
             }

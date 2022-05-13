@@ -32,8 +32,8 @@ import com.doubleyellow.util.StringUtil;
 
 /**
  * Dialog presented to the user to
- * - just let him anounce the tie-break
- * - or, if required, allowes referee to enter the choice of one of the players (usually the receiver) about how many more points to play
+ * - just let him announce the tie-break
+ * - or, if required, allows referee to enter the choice of one of the players (usually the receiver) about how many more points to play
  */
 public class TieBreak extends BaseAlertDialog
 {
@@ -47,7 +47,7 @@ public class TieBreak extends BaseAlertDialog
     }
 
     @Override public boolean init(Bundle outState) {
-        //show(false); // deliberatly not triggered here: when 10-10 is reached and screen is rotated... it will show because onCreate will triggers it again
+        //show(false); // deliberately not triggered here: when 10-10 is reached and screen is rotated... it will show because onCreate will triggers it again
         init(outState.getInt(TieBreak.class.getSimpleName(), 1));
         return true;
     }
@@ -64,7 +64,7 @@ public class TieBreak extends BaseAlertDialog
         int iPointsEach = matchModel.getScore(Player.A);
         if ( tiebreakFormat.needsTwoClearPoints() ) {
             // simple announcement : x-all, player needs 2 clear points
-            adb.setTitle  (PreferenceValues.getOAString(context, R.string.oa_n_all, iPointsEach))
+            adb.setTitle  (PreferenceValues.getOAString(context, R.string.oa_n_all__or__n_equal, iPointsEach))
                .setIcon   (R.drawable.microphone)
                .setPositiveButton(R.string.cmd_ok, onClickListener);
             if ( m_iOccurrenceCount <= 1 ) {

@@ -36,7 +36,7 @@
     <string name="oa_sets">sets</string>
     <string name="oa_set_ball">Set bal</string>
 
-    <string name="oa_n_all">%d Gelijk</string>
+    <string name="oa_n_all__or__n_equal">%d Gelijk</string>
     <string name="oa_player_needs_2_clear_points">Een speler moet winnen met twee punten verschil</string>
 
     <string name="oa_change_sides">Wisselen van kant</string>

@@ -26,4 +26,11 @@
         <item>No Tie-Break</item>
     </string-array>
 
+    <string name="sb_NewBalls">New Balls</string>
+    <string-array name="NewBallsDisplayValues"> <!-- keep in sync with com.doubleyellow.scoreboard.model.NewBalls -->
+        <item>After First  7, Then Each  9</item>
+        <item>After First  9, Then Each 11</item>
+        <item>After First 11, Then Each 13</item>
+    </string-array>
+
 </resources>

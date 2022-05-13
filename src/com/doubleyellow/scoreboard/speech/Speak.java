@@ -212,8 +212,9 @@ public class Speak
         }
 
         if ( iReceiver == iServer ) {
-            String s_X_All = getResourceString(R.string.oa_n_all, iServer);
-            String sAll    = s_X_All.replaceAll("[0-9]+", "").trim();
+            // score is equal
+            String s_X_All__or__X_Equal = getResourceString(R.string.oa_n_all__or__n_equal, iServer);
+            String sXAll__or_sXEqual    = s_X_All__or__X_Equal.replaceAll("[0-9]+", "").trim();
             if ( (gsmModel != null) && (iServer >= 3) ) {
                 int iResGoldenPointOrDeuce = gsmModel.getGoldenPointToWinGame() ? R.string.oa_golden_point : R.string.oa_deuce;
                 String sDeuceOrGoldenPoint = getResourceString(iResGoldenPointOrDeuce);
@@ -221,7 +222,7 @@ public class Speak
                 setTextToSpeak(SpeechType.ScoreReceiver, "");
             } else {
                 setTextToSpeak(SpeechType.ScoreServer  , sServer);
-                setTextToSpeak(SpeechType.ScoreReceiver, sAll);
+                setTextToSpeak(SpeechType.ScoreReceiver, sXAll__or_sXEqual);
             }
         } else {
             if ( gsmModel != null  ) {

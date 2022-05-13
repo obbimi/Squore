@@ -80,6 +80,7 @@ public class GSMModel extends Model
         }
         return false;
     }
+
     //------------------------
     // Final set finish
     //------------------------
@@ -89,6 +90,17 @@ public class GSMModel extends Model
     }
     public FinalSetFinish getFinalSetFinish() {
         return m_finalSetFinish;
+    }
+
+    //------------------------
+    // New Balls Announcement after
+    //------------------------
+    private NewBalls m_newBalls = NewBalls.AfterFirst7ThenEach9;
+    public void setNewBalls(NewBalls v) {
+        m_newBalls = v;
+    }
+    public NewBalls getNewBalls() {
+        return m_newBalls;
     }
 
     //------------------------
@@ -359,6 +371,41 @@ public class GSMModel extends Model
         return lReturn;
     }
 
+    public int totalNrOfGamesPlayed() {
+        int iReturn = 0;
+        if ( ListUtil.isNotEmpty(m_lPlayer2GamesWon_PerSet) ) {
+            for(List<Map<Player, Integer>> player2GamesWonInSet :m_lPlayer2GamesWon_PerSet) {
+                Map<Player, Integer> mPlayer2GamesWonLast = ListUtil.getLast(player2GamesWonInSet);
+                if ( mPlayer2GamesWonLast != null ) {
+                    iReturn += MapUtil.getInt(mPlayer2GamesWonLast, Player.A, 0);
+                    iReturn += MapUtil.getInt(mPlayer2GamesWonLast, Player.B, 0);
+                }
+            }
+        }
+        return iReturn;
+    }
+
+    public boolean newBalls(int iAddXGames) {
+        boolean bReturn = false;
+
+        NewBalls newBalls = getNewBalls();
+        int iEachX = newBalls.afterEachXgames();
+        if ( iEachX != GSMModel.NOT_APPLICABLE ) {
+            int iGames = totalNrOfGamesPlayed() + iAddXGames;
+            int iAfterFirstX = newBalls.afterFirstXgames();
+            if ( (iGames - iAfterFirstX) % iEachX == 0 ) {
+                bReturn = true;
+            }
+        } else {
+            int iAtStartOfSetX = newBalls.atStartOfSetX();
+            int iSetInProgress = getSetNrInProgress();
+            if ( iSetInProgress == iAtStartOfSetX ) {
+                bReturn = true;
+            }
+        }
+        return bReturn;
+    }
+
     /** One-based */
     public int getSetNrInProgress() {
         return Math.max(ListUtil.size(m_lGamesScorelineHistory_PerSet), 1);
@@ -579,6 +626,7 @@ public class GSMModel extends Model
     }
 
     private static List<String> lTranslatedScores = Arrays.asList("0", "15", "30", "40", "AD");
+    /** internally score is still 0,1,2,3. For display/speech, we need it as 0,15,30 */
     public String translateScore(Player player, int iScore) {
         if ( isTieBreakGame() ) {
             return String.valueOf(iScore);
@@ -1026,12 +1074,17 @@ public class GSMModel extends Model
 
     @Override void addFormatSettings(JSONObject joFormat) throws JSONException {
         joFormat.put(PreferenceKeys.finalSetFinish      .toString(), m_finalSetFinish);
+        joFormat.put(PreferenceKeys.newBalls            .toString(), m_newBalls);
         joFormat.put(PreferenceKeys.goldenPointToWinGame.toString(), m_bGoldenPointToWinGame);
     }
     @Override void readFormatSettings(JSONObject joFormat) throws JSONException {
         String s = joFormat.optString(PreferenceKeys.finalSetFinish.toString());
         if (StringUtil.isNotEmpty(s) ) {
             setFinalSetFinish(FinalSetFinish.valueOf(s));
+        }
+        String s2 = joFormat.optString(PreferenceKeys.newBalls.toString());
+        if (StringUtil.isNotEmpty(s2) ) {
+            setNewBalls(NewBalls.valueOf(s2));
         }
         boolean b = joFormat.optBoolean(PreferenceKeys.goldenPointToWinGame.toString());
         setGoldenPointToWinGame(b);

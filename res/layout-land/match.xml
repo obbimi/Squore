@@ -635,6 +635,39 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llNewBalls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llFinalSetFinish">
+
+        <TextView
+            android:id="@+id/lblNewBalls"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:inputType="none"
+            android:text="@string/sb_NewBalls"
+            android:textSize="@dimen/txt_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
+
+        <Spinner
+            android:id="@+id/spNewBalls"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layoutMode="opticalBounds"
+            android:nextFocusDown="@+id/useHandInHandOutScoring"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/lblNewBalls"
+            app:layout_constraintStart_toEndOf="@+id/lblNewBalls"
+            app:layout_constraintTop_toTopOf="@+id/lblNewBalls"
+            app:layout_constraintWidth_percent="0.55" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llDisciplineStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

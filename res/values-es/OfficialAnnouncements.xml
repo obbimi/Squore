@@ -39,7 +39,7 @@
     <string name="oa_sets">sets</string>
     <string name="oa_set_ball">Bola de set</string>
 
-    <string name="oa_n_all">%s todo</string>
+    <string name="oa_n_all__or__n_equal">%s Iguales</string>
     <string name="oa_player_needs_2_clear_points">Un jugador debe ganar por dos puntos.</string>
 
     <string name="oa_change_sides">¡Cambia de lado!</string>

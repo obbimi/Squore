@@ -170,6 +170,7 @@ public class MatchView extends ScrollView
         lToggleFormatViews.add(R.id.llPoints);
         lToggleFormatViews.add(R.id.llTieBreakFormat);
         lToggleFormatViews.add(R.id.llFinalSetFinish);
+        lToggleFormatViews.add(R.id.llNewBalls);
         lToggleFormatViews.add(R.id.llPauseDuration);
         lToggleFormatViews.add(R.id.llScoringType);
         lToggleFormatViews.add(R.id.llLiveScore);
@@ -200,6 +201,7 @@ public class MatchView extends ScrollView
         }
         if ( Brand.isGameSetMatch() == false ) {
             lToggleFormatViews.remove((Integer) R.id.llFinalSetFinish );
+            lToggleFormatViews.remove((Integer) R.id.llNewBalls );
         }
 
 /*
@@ -286,8 +288,13 @@ public class MatchView extends ScrollView
             ViewUtil.hideViewsForEver(this, R.id.llDisciplineStart);
             ViewUtil.hideViewsForEver(this, R.id.llNumberOfServesPerPlayer);
             ViewUtil.hideViewsForEver(this, R.id.ll_AnnouncementLanguage);
+            Feature feature = PreferenceValues.useOfficialAnnouncementsFeature(getContext());
+            if ( feature.equals(Feature.DoNotUse) ) {
+                ViewUtil.hideViewsForEver(this, R.id.llNewBalls);
+            }
         } else {
             ViewUtil.hideViewsForEver(this, R.id.llFinalSetFinish);
+            ViewUtil.hideViewsForEver(this, R.id.llNewBalls);
             ViewUtil.hideViewsForEver(this, R.id.llChangesSidesWhen);
             ViewUtil.hideViewsForEver(this, R.id.llScoringTypeGSM);
         }
@@ -408,6 +415,7 @@ public class MatchView extends ScrollView
     private Spinner              spNumberOfServesPerPlayer;
     private Spinner              spTieBreakFormat;
     private Spinner              spFinalSetFinish;
+    private Spinner              spNewBalls;
     private Spinner              spHandicap;
     private Spinner              spDisciplineStart;
     private Spinner              spWarmupDuration;
@@ -747,6 +755,20 @@ public class MatchView extends ScrollView
                 }
             }
         }
+        {
+            NewBalls fsfPref = PreferenceValues.getNewBalls(context);
+            spNewBalls = (Spinner) findViewById(R.id.spNewBalls);
+            if ( spNewBalls != null ) {
+                // Currently instanceof Spinner, not EnumSpinner
+                if ( spNewBalls instanceof EnumSpinner ) {
+                    EnumSpinner<NewBalls> sp = (EnumSpinner<NewBalls>) spNewBalls;
+                    sp.setSelected(fsfPref);
+                } else {
+                    int[] iaDisabled = null;
+                    initEnumSpinner(spNewBalls, NewBalls.class, fsfPref, null, R.array.NewBallsDisplayValues, iaDisabled);
+                }
+            }
+        }
 
         int iTotNrOfValuesToSelectFrom = 0;
         {
@@ -782,7 +804,8 @@ public class MatchView extends ScrollView
         }
 
         {
-            if ( PreferenceValues.useOfficialAnnouncementsFeature(context).equals(Feature.DoNotUse) ) {
+            if ( PreferenceValues.useOfficialAnnouncementsFeature(context).equals(Feature.DoNotUse)
+              && PreferenceValues.useSpeechFeature(context).equals(Feature.DoNotUse) ) {
                 ViewUtil.hideViewsForEver(this, R.id.ll_AnnouncementLanguage);
             } else {
                 spAnnouncementLanguage = (Spinner) findViewById(R.id.spAnnouncementLanguage);
@@ -1299,6 +1322,10 @@ public class MatchView extends ScrollView
             if ( (spFinalSetFinish != null) && (spFinalSetFinish.getVisibility() != View.GONE) && ( spFinalSetFinish.getSelectedItemPosition() != -1) ) {
                 FinalSetFinish fsf = FinalSetFinish.values()[spFinalSetFinish.getSelectedItemPosition()];
                 gsmModel.setFinalSetFinish(fsf);
+            }
+            if ( (spNewBalls != null) && (spNewBalls.getVisibility() != View.GONE) && ( spNewBalls.getSelectedItemPosition() != -1) ) {
+                NewBalls fsf = NewBalls.values()[spNewBalls.getSelectedItemPosition()];
+                gsmModel.setNewBalls(fsf);
             }
             gsmModel.setGoldenPointToWinGame(cbUseGoldenPoint!= null && cbUseGoldenPoint.isChecked());
         } else {
