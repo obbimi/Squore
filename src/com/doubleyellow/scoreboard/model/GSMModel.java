@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,10 @@ public class GSMModel extends Model
     public final static int FS_NR_GAMES_AS_OTHER_SETS   = -1;
     public final static int FS_UNLIMITED_NR_OF_GAMES    = -2;
     public final static int NOT_APPLICABLE              = -9;
+
+    private enum JsonKey {
+        lastBallChangeOccurredAtStartOfGame,
+    }
 
     @Override public SportType getSport() {
         return SportType.TennisPadel;
@@ -95,7 +100,7 @@ public class GSMModel extends Model
     //------------------------
     // New Balls Announcement after
     //------------------------
-    private NewBalls m_newBalls = NewBalls.AfterFirst7ThenEach9;
+    private NewBalls m_newBalls = NewBalls.AfterFirst9ThenEach11;
     public void setNewBalls(NewBalls v) {
         m_newBalls = v;
     }
@@ -385,6 +390,10 @@ public class GSMModel extends Model
         return iReturn;
     }
 
+    private int m_iLastBallChangeOccurredAtStartOfGame = 0;
+    private void setLastBallChangeOccurredAtStartOfGame(int i) {
+        m_iLastBallChangeOccurredAtStartOfGame = i;
+    }
     public int newBallsInXgames() {
         if ( gameHasStarted() || matchHasEnded() ) {
             return GSMModel.NOT_APPLICABLE;
@@ -397,23 +406,41 @@ public class GSMModel extends Model
             final int iGamesPlayed = totalNrOfGamesPlayed();
             final int iAfterFirstX = newBalls.afterFirstXgames();
 
-            if ( iGamesPlayed <= iAfterFirstX ) {
-                iInXGames = iAfterFirstX - iGamesPlayed;
-                return iInXGames;
+            if ( m_iLastBallChangeOccurredAtStartOfGame == 0 ) {
+                iInXGames = m_iLastBallChangeOccurredAtStartOfGame + iAfterFirstX - iGamesPlayed;
+            } else if ( m_iLastBallChangeOccurredAtStartOfGame >= iGamesPlayed ) {
+                // special case AFTER a tiebreak where at start of tiebreak it was time to change balls
+                iInXGames = m_iLastBallChangeOccurredAtStartOfGame - iGamesPlayed;
+            } else {
+                iInXGames = m_iLastBallChangeOccurredAtStartOfGame + iEachX       - iGamesPlayed;
             }
-            int iGamesTmp = iGamesPlayed - iAfterFirstX;
-            while ( iGamesTmp > iEachX ) {
-                iGamesTmp -= iEachX;
+            if ( iInXGames == 0 ) {
+                if ( isTieBreakGame() ) {
+                    // not before tiebreak itself, but after tiebreak+first game in next set
+                    iInXGames = 2;
+                    m_iLastBallChangeOccurredAtStartOfGame = iGamesPlayed + iInXGames;
+                } else {
+                    m_iLastBallChangeOccurredAtStartOfGame = iGamesPlayed;
+                }
             }
-            return iEachX - iGamesTmp;
+            if ( false && getSetNrInProgress() == m_iNrOfSetsToWinMatch * 2 - 1 ) {
+                // todo: if last ball change can only be at in FINAL set just before the tiebreak, there will never be a ball change
+                if ( EnumSet.of(FinalSetFinish.TieBreakTo7, FinalSetFinish.TieBreakTo10).contains(getFinalSetFinish()) ) {
+                    if ( getNrOfGamesToWinSet() == 6 ) {
+                    }
+                } else if ( EnumSet.of(FinalSetFinish.GamesTo12ThenTieBreakTo7, FinalSetFinish.GamesTo12ThenTieBreakTo10).contains(getFinalSetFinish()) ) {
+
+                }
+            }
+            return iInXGames;
         } else {
             int iAtStartOfSetX = newBalls.atStartOfSetX();
             int iSetInProgress = getSetNrInProgress();
             if ( iSetInProgress == iAtStartOfSetX ) {
                 iInXGames = 0;
             }
+            return iInXGames;
         }
-        return iInXGames;
     }
 
     /** One-based */
@@ -1085,6 +1112,7 @@ public class GSMModel extends Model
     @Override void addFormatSettings(JSONObject joFormat) throws JSONException {
         joFormat.put(PreferenceKeys.finalSetFinish      .toString(), m_finalSetFinish);
         joFormat.put(PreferenceKeys.newBalls            .toString(), m_newBalls);
+        joFormat.put(JsonKey.lastBallChangeOccurredAtStartOfGame.toString(), m_iLastBallChangeOccurredAtStartOfGame);
         joFormat.put(PreferenceKeys.goldenPointToWinGame.toString(), m_bGoldenPointToWinGame);
     }
     @Override void readFormatSettings(JSONObject joFormat) throws JSONException {
@@ -1092,10 +1120,14 @@ public class GSMModel extends Model
         if (StringUtil.isNotEmpty(s) ) {
             setFinalSetFinish(FinalSetFinish.valueOf(s));
         }
+
         String s2 = joFormat.optString(PreferenceKeys.newBalls.toString());
         if (StringUtil.isNotEmpty(s2) ) {
             setNewBalls(NewBalls.valueOf(s2));
         }
+        int i = joFormat.optInt(JsonKey.lastBallChangeOccurredAtStartOfGame.toString(), 0);
+        setLastBallChangeOccurredAtStartOfGame(i);
+
         boolean b = joFormat.optBoolean(PreferenceKeys.goldenPointToWinGame.toString());
         setGoldenPointToWinGame(b);
     }

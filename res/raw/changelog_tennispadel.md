@@ -1,5 +1,10 @@
 ## 4.48 (may 2022)
 
+Allow indication for when it is time for 'New balls'
+- After First  7, Then Each  9th game
+- After First  9, Then Each 11th game
+- Before Set 3
+
 Improvements for
  
 - Undo back into previous game

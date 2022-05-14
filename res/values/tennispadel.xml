@@ -4,8 +4,11 @@
     <string name="pref_indicateGoldenPoint">Indicate \'Golden Point\' in score buttons</string>
 
     <string name="oa_deuce">Deuce</string>
+
     <string name="oa_new_balls_please">New balls please</string>
+    <string name="oa_ballchange_in_1_game">Ballchange in 1 game</string>
     <string name="oa_ballchange_in_x_games">Ballchange in %d game(s)</string>
+
     <string name="sb_advantage">Advantage</string>
     <string name="sb_no_advantage">No advantage</string>
     <string name="lbl_GoldenPoint">Golden Point (No AD)</string>
@@ -30,9 +33,9 @@
 
     <string name="sb_NewBalls">New Balls</string>
     <string-array name="NewBallsDisplayValues"> <!-- keep in sync with com.doubleyellow.scoreboard.model.NewBalls -->
-        <item>After First  7, Then Each  9</item>
-        <item>After First  9, Then Each 11</item>
-        <item>After First 11, Then Each 13</item>
+        <item>After First  7, Then Each  9th game</item>
+        <item>After First  9, Then Each 11th game</item>
+        <item>Before Set 3</item>
     </string-array>
 
 </resources>

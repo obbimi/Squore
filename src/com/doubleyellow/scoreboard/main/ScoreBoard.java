@@ -2184,11 +2184,8 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 GSMModel gsmModelNew = (GSMModel) ScoreBoard.matchModel;
                 FinalSetFinish finalSetFinish = gsmModelPrev.getFinalSetFinish();
                 gsmModelNew.setFinalSetFinish(finalSetFinish);
-
-                NewBalls NewBalls = gsmModelPrev.getNewBalls();
-                gsmModelNew.setNewBalls(NewBalls);
-
                 gsmModelNew.setGoldenPointToWinGame(gsmModelPrev.getGoldenPointToWinGame());
+                gsmModelNew.setNewBalls(gsmModelPrev.getNewBalls());
             }
 /*
             for ( Player p: Model.getPlayers() ) {
@@ -4764,8 +4761,12 @@ touch -t 01030000 LAST.sb
         if ( matchModel == null ) { return; }
         if ( matchModel instanceof GSMModel ) {
             GSMModel gsmModel = (GSMModel) matchModel;
-            int i = gsmModel.newBallsInXgames();
-            _showNewBallsMessage(i);
+            int newBallsInXgames = gsmModel.newBallsInXgames();
+            final int iShowUpFront = PreferenceValues.newBallsXGamesUpFront(this);
+            boolean bShowSpeakFAB = (newBallsInXgames >= 0) && (newBallsInXgames <= iShowUpFront);
+            if ( bShowSpeakFAB ) {
+                _showNewBallsMessage(newBallsInXgames);
+            }
         }
 
         if ( matchModel.gameHasStarted()==false || matchModel.isPossibleGameVictory() ) {
@@ -4856,10 +4857,16 @@ touch -t 01030000 LAST.sb
         if ( iInXGames < 0 ) {
             return false;
         }
-        if ( iInXGames == 0 ) {
-            iBoard.showGuidelineMessage_FadeInOut(10, R.string.oa_new_balls_please);
-        } else {
-            iBoard.showGuidelineMessage_FadeInOut(10, R.string.oa_ballchange_in_x_games, iInXGames);
+        switch (iInXGames) {
+            case 0:
+                iBoard.showGuidelineMessage_FadeInOut(10, R.string.oa_new_balls_please);
+                break;
+            case 1:
+                iBoard.showGuidelineMessage_FadeInOut(10, R.string.oa_ballchange_in_1_game);
+                break;
+            default:
+                iBoard.showGuidelineMessage_FadeInOut(10, R.string.oa_ballchange_in_x_games, iInXGames);
+                break;
         }
         return true;
     }
@@ -5023,6 +5030,7 @@ touch -t 01030000 LAST.sb
                         GSMModel gsmModel = (GSMModel) m;
                         PreferenceValues.setEnum   (PreferenceKeys.finalSetFinish      , this, gsmModel.getFinalSetFinish());
                         PreferenceValues.setBoolean(PreferenceKeys.goldenPointToWinGame, this, gsmModel.getGoldenPointToWinGame());
+                        PreferenceValues.setEnum   (PreferenceKeys.newBalls            , this, gsmModel.getNewBalls());
                     }
                     if ( MapUtil.isNotEmpty(RWValues.getOverwritten() ) ) {
                         Log.w(TAG, "remaining overwrites " + RWValues.getOverwritten());

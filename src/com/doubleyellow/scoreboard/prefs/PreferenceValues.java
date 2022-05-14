@@ -341,7 +341,7 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.finalSetFinish, context, FinalSetFinish.class, FinalSetFinish.TieBreakTo7);
     }
     public static NewBalls getNewBalls(Context context) {
-        return getEnum(PreferenceKeys.newBalls, context, NewBalls.class, NewBalls.AfterFirst7ThenEach9);
+        return getEnum(PreferenceKeys.newBalls, context, NewBalls.class, NewBalls.AfterFirst9ThenEach11);
     }
     public static int newBallsXGamesUpFront(Context context) {
         return getIntegerR(PreferenceKeys.newBallsXGamesUpFront, context, R.integer.newBallsXGamesUpFront__Default);

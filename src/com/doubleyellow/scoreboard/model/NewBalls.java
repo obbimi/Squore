@@ -28,7 +28,7 @@ public enum NewBalls
     AfterFirst9ThenEach11 (9, 11, GSMModel.NOT_APPLICABLE),
     BeforeSet3            (GSMModel.NOT_APPLICABLE, GSMModel.NOT_APPLICABLE, 3),
 
-    AfterFirst1ThenEach3  (1, 3, GSMModel.NOT_APPLICABLE), // TODO: only for testing
+    //AfterFirst1ThenEach3_TestingOnly  (1, 3, GSMModel.NOT_APPLICABLE), // TODO: only for testing
     ;
     private int m_iFirstX        = GSMModel.NOT_APPLICABLE;
     private int m_iEachX         = GSMModel.NOT_APPLICABLE;
