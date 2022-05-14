@@ -211,6 +211,10 @@ class PresentationScreen extends CastPresentation implements TimerViewContainer
     }
     private class ScoreChangeListener implements Model.OnScoreChangeListener
     {
+        @Override public void OnNewGameInitialized() {
+
+        }
+
         @Override public void OnScoreChange(Player p, int iTotal, int iDelta, Call call) {
             iBoard.updateScore(p, iTotal);
             iBoard.updateScoreHistory(iDelta == 1);

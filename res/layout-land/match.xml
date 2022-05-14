@@ -673,7 +673,7 @@
         android:layout_height="wrap_content"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llFinalSetFinish">
+        app:layout_constraintTop_toBottomOf="@id/llNewBalls">
 
         <TextView
             android:id="@+id/lblDisciplineStart"

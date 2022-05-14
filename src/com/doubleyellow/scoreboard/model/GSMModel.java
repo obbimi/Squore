@@ -386,7 +386,7 @@ public class GSMModel extends Model
     }
 
     public int newBallsInXgames() {
-        if ( gameHasStarted() ) {
+        if ( gameHasStarted() || matchHasEnded() ) {
             return GSMModel.NOT_APPLICABLE;
         }
         int iInXGames = -1;

@@ -3093,6 +3093,12 @@ touch -t 01030000 LAST.sb
 
     private class ScoreChangeListener implements Model.OnScoreChangeListener
     {
+        @Override public void OnNewGameInitialized() {
+            if ( matchModel instanceof GSMModel ) {
+                autoShowOfficialAnnouncement(AnnouncementTrigger.StartOfGame); // new ball message
+            }
+        }
+
         @Override public void OnScoreChange(Player p, int iTotal, int iDelta, Call call) {
             if ( m_bHapticFeedbackPerPoint ) {
                 int lDuration = iDelta == 1 ? 200 : 500;
@@ -4847,6 +4853,9 @@ touch -t 01030000 LAST.sb
     }
 
     private boolean _showNewBallsMessage(int iInXGames) {
+        if ( iInXGames < 0 ) {
+            return false;
+        }
         if ( iInXGames == 0 ) {
             iBoard.showGuidelineMessage_FadeInOut(10, R.string.oa_new_balls_please);
         } else {

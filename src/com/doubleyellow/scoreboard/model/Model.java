@@ -76,6 +76,7 @@ public abstract class Model implements Serializable
     public interface OnScoreChangeListener extends OnModelChangeListener {
 		/** Invoked for every score change */
         void OnScoreChange(Player p, int iTotal, int iDelta, Call call);
+        void OnNewGameInitialized();
     }
     public interface OnPlayerChangeListener extends OnModelChangeListener {
 		/** Invoked if the name of the player stored in the model is changed */
@@ -3317,6 +3318,7 @@ public abstract class Model implements Serializable
         for(OnScoreChangeListener l:onScoreChangeListeners) {
             l.OnScoreChange(Player.A, MapUtil.getInt(player2EndPointsNewGame, Player.A, 0), 0, null);
             l.OnScoreChange(Player.B, MapUtil.getInt(player2EndPointsNewGame, Player.B, 0), 0, null);
+            l.OnNewGameInitialized();
         }
 
         m_iTieBreakPlusX = 0; // reset value that might have been set for tie-break
