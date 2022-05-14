@@ -132,10 +132,10 @@ public class ServerToss extends BaseAlertDialog
     };
 
 
-    public static final int BTN_SERVE       = DialogInterface.BUTTON_POSITIVE;
-    public static final int BTN_RECEIVE     = DialogInterface.BUTTON_NEGATIVE;
-    public static final int BTN_A_WINS_TOSS = DialogInterface.BUTTON_POSITIVE;
-    public static final int BTN_B_WINS_TOSS = DialogInterface.BUTTON_NEGATIVE;
+    public              int BTN_SERVE       = DialogInterface.BUTTON_POSITIVE;
+    public              int BTN_RECEIVE     = DialogInterface.BUTTON_NEGATIVE;
+    public              int BTN_A_WINS_TOSS = DialogInterface.BUTTON_POSITIVE;
+    public              int BTN_B_WINS_TOSS = DialogInterface.BUTTON_NEGATIVE;
     public static final int BTN_DO_TOSS     = DialogInterface.BUTTON_NEUTRAL;
 
             static Player  m_winnerOfToss          = null; // used by SideToss
@@ -149,13 +149,10 @@ public class ServerToss extends BaseAlertDialog
            )
         {
             // serve or receive
-            switch (which) {
-                case BTN_SERVE:
-                    m_winnerChooseToReceive = false;
-                    break;
-                case BTN_RECEIVE:
-                    m_winnerChooseToReceive = true;
-                    break;
+            if ( which == BTN_SERVE ) {
+                m_winnerChooseToReceive = false;
+            } else if ( which == BTN_RECEIVE) {
+                m_winnerChooseToReceive = true;
             }
             if ( m_winnerChooseToReceive ) {
                 if ( m_winnerOfToss != null ) {
@@ -166,13 +163,10 @@ public class ServerToss extends BaseAlertDialog
             this.dismiss();
         } else {
             final Player server = matchModel.getServer();
-            switch (which){
-                case BTN_A_WINS_TOSS:
-                    m_winnerOfToss = Player.A;
-                    break;
-                case BTN_B_WINS_TOSS:
-                    m_winnerOfToss = Player.B;
-                    break;
+            if (which == BTN_A_WINS_TOSS) {
+                m_winnerOfToss = Player.A;
+            } else if ( which == BTN_B_WINS_TOSS ) {
+                m_winnerOfToss = Player.B;
             }
             if ( (m_winnerOfToss != null) && (m_winnerOfToss.equals(server) == false) ) {
                 scoreBoard.changeSide(m_winnerOfToss);
@@ -280,5 +274,15 @@ public class ServerToss extends BaseAlertDialog
         btnToss.setVisibility(VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE);
         btnA.setEnabled(true); btnA.setText(R.string.sb_serve);
         btnB.setEnabled(true); btnB.setText(R.string.sb_receive);
+    }
+
+    /** for newer theme this should be switched for consistency */
+    @Override protected boolean swapPosNegButtons(Context context) {
+        if ( MyDialogBuilder.isUsingNewerTheme(context) == false ) { return false; }
+        BTN_SERVE       = DialogInterface.BUTTON_NEGATIVE;
+        BTN_RECEIVE     = DialogInterface.BUTTON_POSITIVE;
+        BTN_A_WINS_TOSS = DialogInterface.BUTTON_NEGATIVE;
+        BTN_B_WINS_TOSS = DialogInterface.BUTTON_POSITIVE;
+        return true;
     }
 }

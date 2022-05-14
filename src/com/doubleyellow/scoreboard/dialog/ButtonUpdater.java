@@ -110,7 +110,7 @@ public class ButtonUpdater implements DialogInterface.OnShowListener {
                     continue;
                 }
                 int iColor = iaButton2Color[i + 1];
-                boolean bDontUseBackground = ViewUtil.isLeanback_AndroidTV(context) || MyDialogBuilder.iDialogTheme != AlertDialog.THEME_TRADITIONAL;
+                boolean bDontUseBackground = MyDialogBuilder.isUsingNewerTheme(context);
                 ColorUtil.setBackground(button, iColor, bDontUseBackground);
                 button.setTextColor(ColorUtil.getBlackOrWhiteFor(iColor));
 
@@ -119,7 +119,7 @@ public class ButtonUpdater implements DialogInterface.OnShowListener {
                     ViewParent parent = button.getParent();
                     if (parent instanceof ViewGroup) {
                         ViewGroup vg = (ViewGroup) parent;
-                        if ( (ViewUtil.isLeanback_AndroidTV(context) == false) && (MyDialogBuilder.iDialogTheme == AlertDialog.THEME_TRADITIONAL ) ) {
+                        if ( MyDialogBuilder.isUsingNewerTheme(context) == false ) {
                             ColorUtil.setBackground(vg, Color.BLACK); // TODO: improve not for Android TV?! what is the default 'theme'?
                         }
                     }

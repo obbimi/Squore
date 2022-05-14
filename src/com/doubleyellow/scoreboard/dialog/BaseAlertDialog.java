@@ -66,7 +66,12 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
         llpMargin1Weight1.setMargins(1, 1, 1, 1);
 
         this.adb = new MyDialogBuilder(context);
+        swapPosNegButtons(context);
     }
+
+    /** for newer theme some buttons should be switched for consistency */
+    protected boolean swapPosNegButtons(Context context) { return false; }
+
     protected String getString(int resId) {
         return context.getString(resId);
     }
@@ -316,9 +321,15 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
         return adb.setMessage(s);
     }
     AlertDialog.Builder setPositiveButton(String s, DialogInterface.OnClickListener onClickListener) {
+        if ( swapPosNegButtons(context) ) {
+            return adb.setNegativeButton(s, onClickListener);
+        }
         return adb.setPositiveButton(s, onClickListener);
     }
     AlertDialog.Builder setNegativeButton(String s, DialogInterface.OnClickListener onClickListener) {
+        if ( swapPosNegButtons(context) ) {
+            return adb.setPositiveButton(s, onClickListener);
+        }
         return adb.setNegativeButton(s, onClickListener);
     }
     AlertDialog.Builder setNeutralButton(int s, DialogInterface.OnClickListener onClickListener) {

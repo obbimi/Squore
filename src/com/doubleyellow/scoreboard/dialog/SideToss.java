@@ -100,14 +100,6 @@ public class SideToss extends BaseAlertDialog
                 scoreBoard.triggerEvent(ScoreBoard.SBEvent.sideTossDialogEnded, SideToss.this);
             }
         });
-/*
-        try {
-            OnShowListener listener = new OnShowListener(context, ButtonUpdater.iaColorNeutral);
-            dialog = adb.show(listener);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-*/
         dialog = create();
         dialog.setOnShowListener(new ButtonUpdater(context));
         dialog.show();
@@ -119,27 +111,30 @@ public class SideToss extends BaseAlertDialog
         }
     };
 
-    public static final int BTN_LOOSER_OF_TOSS_STARTS_LEFT  = DialogInterface.BUTTON_POSITIVE;
-    public static final int BTN_LOOSER_OF_TOSS_STARTS_RIGHT = DialogInterface.BUTTON_NEGATIVE;
-//  public static final int BTN_DO_TOSS      = DialogInterface.BUTTON_NEUTRAL;
+    private int BTN_LOOSER_OF_TOSS_STARTS_LEFT  = DialogInterface.BUTTON_POSITIVE;
+    private int BTN_LOOSER_OF_TOSS_STARTS_RIGHT = DialogInterface.BUTTON_NEGATIVE;
     @Override public void handleButtonClick(int which) {
         boolean bLooserOfTossIsRight = IBoard.m_firstPlayerOnScreen.equals(ServerToss.m_winnerOfToss);
         Boolean bLooserShouldBeRight = null;
-        switch (which){
-            case BTN_LOOSER_OF_TOSS_STARTS_LEFT:
-                bLooserShouldBeRight = false;
-                break;
-            case BTN_LOOSER_OF_TOSS_STARTS_RIGHT:
-                bLooserShouldBeRight = true;
-                break;
+        if ( which == BTN_LOOSER_OF_TOSS_STARTS_LEFT ) {
+            bLooserShouldBeRight = false;
+        } else if ( which == BTN_LOOSER_OF_TOSS_STARTS_RIGHT ) {
+            bLooserShouldBeRight = true;
         }
-        if ( (bLooserShouldBeRight != null) && (bLooserShouldBeRight != bLooserOfTossIsRight)) {
+        if ( (bLooserShouldBeRight != null) && (bLooserShouldBeRight != bLooserOfTossIsRight) ) {
             // swap teams
             scoreBoard.swapSides(null, null);
         }
         if ( bLooserShouldBeRight != null ) {
             this.dismiss();
         }
+    }
+    
+    @Override protected boolean swapPosNegButtons(Context context) {
+        if ( MyDialogBuilder.isUsingNewerTheme(context) == false ) { return false; }
+        BTN_LOOSER_OF_TOSS_STARTS_LEFT  = DialogInterface.BUTTON_NEGATIVE;
+        BTN_LOOSER_OF_TOSS_STARTS_RIGHT = DialogInterface.BUTTON_POSITIVE;
+        return true;
     }
 
 }

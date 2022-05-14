@@ -42,18 +42,30 @@ public class MyDialogBuilder extends AlertDialog.Builder {
     //private static final int iDialogTheme = R.style.SBDialog;
     //private static final int iDialogTheme = android.R.style.Theme_Dialog;
     private static final int iDialogTheme_Depr  = AlertDialog.THEME_TRADITIONAL; // white titles on black background, spacing around buttons
-    private static final int iDialogTheme_Newer = android.R.style.Theme_Material_Dialog_Alert;   // white titles on grey background, Neutral button on left, Pos and Neg buttons together on right
-    public static final int iDialogTheme  = iDialogTheme_Depr;
+    //public static final int iDialogTheme_Newer = android.R.style.Theme_Material_Dialog_Alert;   // white titles on grey background, Neutral button on left, Pos and Neg buttons together on right
+    private static final int iDialogTheme_Newer = android.R.style.Theme_Material_Light_Dialog_Alert; // black titles on white background, Neutral button on left, Pos and Neg buttons together on right
     //private static final int iDialogTheme = AlertDialog.THEME_HOLO_LIGHT;  // blue titles on white background, no spacing around buttons
     //private static final int iDialogTheme = AlertDialog.THEME_HOLO_DARK;   // blue titles on dark grey background, no spacing around buttons
     //private static final int iDialogTheme = AlertDialog.THEME_DEVICE_DEFAULT_LIGHT; // dark titles on light background, no spacing around buttons/ buttons borders not visible
     //private static final int iDialogTheme = AlertDialog.THEME_DEVICE_DEFAULT_DARK; // white titles on dark grey background, no spacing around buttons/ buttons borders not visible
 
+    public static boolean isUsingNewerTheme(Context context) {
+        boolean leanback_androidTV = ViewUtil.isLeanback_AndroidTV(context);
+        return leanback_androidTV;
+    }
+    public static int getDialogTheme(Context context) {
+        return isUsingNewerTheme(context) ?iDialogTheme_Newer:iDialogTheme_Depr;
+    }
+
     private Map<ColorPrefs.ColorTarget, Integer> target2colorMapping;
+    private int iDialogTheme = 0;
 
     public MyDialogBuilder(Context context) {
-        super(context, ViewUtil.isLeanback_AndroidTV(context)?iDialogTheme_Newer:iDialogTheme);
-        //super(context, iDialogTheme);
+        this(context, getDialogTheme(context));
+    }
+    protected MyDialogBuilder(Context context, int iTheme) {
+        super(context, iTheme);
+        iDialogTheme  = iTheme;
         target2colorMapping = ColorPrefs.getTarget2colorMapping(getContext());
     }
 

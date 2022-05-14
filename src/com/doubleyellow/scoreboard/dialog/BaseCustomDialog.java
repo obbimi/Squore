@@ -12,14 +12,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.util.StringUtil;
-
-import static com.doubleyellow.scoreboard.dialog.MyDialogBuilder.iDialogTheme;
-import static com.doubleyellow.scoreboard.dialog.MyDialogBuilder.iDialogTheme_Newer;
 
 /**
  * TODO: ensure not to big on e.g. Wearable
@@ -38,7 +34,7 @@ public abstract class BaseCustomDialog extends BaseAlertDialog {
     public BaseCustomDialog(Context context, Model matchModel, ScoreBoard scoreBoard) {
         super(context, matchModel, scoreBoard);
 
-        adb = new AlertDialog.Builder(context, ViewUtil.isLeanback_AndroidTV(context)?iDialogTheme_Newer:iDialogTheme);
+        adb = new AlertDialog.Builder(context, MyDialogBuilder.getDialogTheme(context));
         customLayout = LayoutInflater.from(context).inflate(R.layout.custom_dialog,null);
         adb.setView(customLayout);
 
