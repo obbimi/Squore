@@ -1650,6 +1650,9 @@ public class IBoard implements TimerViewContainer
         showDecisionMessage(null, info_message_dummycall, null, -1); // use CW here as well
     }
 
+    public void showGuidelineMessage_FadeInOut(int iMessageDuration, int iMsgResId, Object ... formats) {
+        showDecisionMessage(null, Call.CG, getOAString(iMsgResId, formats), iMessageDuration);
+    }
     // ------------------------------------------------------
     // Decisions
     // ------------------------------------------------------

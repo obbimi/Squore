@@ -4,6 +4,8 @@
     <string name="pref_indicateGoldenPoint">Indicate \'Golden Point\' in score buttons</string>
 
     <string name="oa_deuce">Deuce</string>
+    <string name="oa_new_balls_please">New balls please</string>
+    <string name="oa_ballchange_in_x_games">Ballchange in %d game(s)</string>
     <string name="sb_advantage">Advantage</string>
     <string name="sb_no_advantage">No advantage</string>
     <string name="lbl_GoldenPoint">Golden Point (No AD)</string>

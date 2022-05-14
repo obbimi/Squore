@@ -340,6 +340,12 @@ public class PreferenceValues extends RWValues
     public static FinalSetFinish getFinalSetFinish(Context context) {
         return getEnum(PreferenceKeys.finalSetFinish, context, FinalSetFinish.class, FinalSetFinish.TieBreakTo7);
     }
+    public static NewBalls getNewBalls(Context context) {
+        return getEnum(PreferenceKeys.newBalls, context, NewBalls.class, NewBalls.AfterFirst7ThenEach9);
+    }
+    public static int newBallsXGamesUpFront(Context context) {
+        return getIntegerR(PreferenceKeys.newBallsXGamesUpFront, context, R.integer.newBallsXGamesUpFront__Default);
+    }
     public static NewMatchLayout getNewMatchLayout(Context context) {
         if ( ViewUtil.isWearable(context) ) {
             //return NewMatchLayout.Simple; // font to big
@@ -476,10 +482,8 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.shareAction, context, ShareMatchPrefs.class, ShareMatchPrefs.LinkWithFullDetails);
     }
     public static Feature useOfficialAnnouncementsFeature(Context context) {
-        if ( Brand.isGameSetMatch() ) {
-            return Feature.DoNotUse;
-        }
-        return getEnum(PreferenceKeys.useOfficialAnnouncementsFeature, context, Feature.class, R.string.useOfficialAnnouncementsFeature_default);
+        int iRes = getSportTypeSpecificResId(context, R.string.useOfficialAnnouncementsFeature_default__Squash);
+        return getEnum(PreferenceKeys.useOfficialAnnouncementsFeature, context, Feature.class, iRes);
     }
     public static String getLiveScoreDeviceId(Context context) {
         return getDeviceId(PreferenceKeys.liveScoreDeviceId, context, false);
@@ -703,7 +707,7 @@ public class PreferenceValues extends RWValues
             R.string.oa_games,
             R.string.oa_gameball,
             R.string.oa_matchball,
-            R.string.oa_n_all,
+            R.string.oa_n_all__or__n_equal,
             R.string.oa_player_needs_2_clear_points,
             R.string.oa_halftime,
             R.string.oa_change_sides,
@@ -743,24 +747,35 @@ public class PreferenceValues extends RWValues
     }
     public static String getOAString(Context ctx, int iResId, Object ... formats) {
         if ( mOACache == null ) {
-            AnnouncementLanguage language = officialAnnouncementsLanguage(ctx);
+            AnnouncementLanguage langAnnouncements = officialAnnouncementsLanguage(ctx);
+
+            String sL_DeviceLanguage = ctx.getString(R.string.left_serveside_single_char);
+            String sR_DeviceLanguage = ctx.getString(R.string.right_serveside_single_char);
 
             Resources     res    = ctx.getResources();
             Configuration resCfg = res.getConfiguration();
-            Locale localeRestore = null;
-            if ( resCfg.locale.getLanguage().equals(language.toString()) == false ) {
+            Locale localeRestore = null; // locale to restore to later
+            if ( resCfg.locale.getLanguage().equals(langAnnouncements.toString()) == false ) {
                 localeRestore = resCfg.locale;
-                Locale locale = new Locale(language.toString());
+                Locale locale = new Locale(langAnnouncements.toString());
                 res = newResources(res, locale);
             }
 
             mOACache = new SparseArray<String>();
             for(int iRes: iaOAResString) {
-                mOACache.put(iRes, ctx.getResources().getString(iRes));
+                String sCache = res.getString(iRes);
+                mOACache.put(iRes, sCache);
             }
             if ( announcementLanguageDeviates(ctx) && (Brand.isGameSetMatch() == false) ) {
-                mOACache.put(R.string.left_serveside_single_char , sLeftRight_Symbols[0]);
-                mOACache.put(R.string.right_serveside_single_char, sLeftRight_Symbols[1]);
+                String sL_AnnouncementLanguage = res.getString(R.string.left_serveside_single_char);
+                String sR_AnnouncementLanguage = res.getString(R.string.right_serveside_single_char);
+                if ( (sL_AnnouncementLanguage + sR_AnnouncementLanguage).equals(sL_DeviceLanguage + sR_DeviceLanguage) ) {
+                    // keep using e.g. L and R if L and R of announcement language match those of device language
+                    // dutch/german/english al have RL
+                } else {
+                    mOACache.put(R.string.left_serveside_single_char , sLeftRight_Symbols[0]);
+                    mOACache.put(R.string.right_serveside_single_char, sLeftRight_Symbols[1]);
+                }
             }
 
             mOAArrayCache = new SparseArray<String[]>();
@@ -1948,8 +1963,8 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2022-03-06"; // auto adjusted by shell script 'clean.and.assemble.sh'
-    private static boolean currentDateIsTestDate() {
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2022-05-14"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
 

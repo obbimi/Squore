@@ -385,25 +385,35 @@ public class GSMModel extends Model
         return iReturn;
     }
 
-    public boolean newBalls(int iAddXGames) {
-        boolean bReturn = false;
+    public int newBallsInXgames() {
+        if ( gameHasStarted() ) {
+            return GSMModel.NOT_APPLICABLE;
+        }
+        int iInXGames = -1;
 
         NewBalls newBalls = getNewBalls();
-        int iEachX = newBalls.afterEachXgames();
+        final int iEachX = newBalls.afterEachXgames();
         if ( iEachX != GSMModel.NOT_APPLICABLE ) {
-            int iGames = totalNrOfGamesPlayed() + iAddXGames;
-            int iAfterFirstX = newBalls.afterFirstXgames();
-            if ( (iGames - iAfterFirstX) % iEachX == 0 ) {
-                bReturn = true;
+            final int iGamesPlayed = totalNrOfGamesPlayed();
+            final int iAfterFirstX = newBalls.afterFirstXgames();
+
+            if ( iGamesPlayed <= iAfterFirstX ) {
+                iInXGames = iAfterFirstX - iGamesPlayed;
+                return iInXGames;
             }
+            int iGamesTmp = iGamesPlayed - iAfterFirstX;
+            while ( iGamesTmp > iEachX ) {
+                iGamesTmp -= iEachX;
+            }
+            return iEachX - iGamesTmp;
         } else {
             int iAtStartOfSetX = newBalls.atStartOfSetX();
             int iSetInProgress = getSetNrInProgress();
             if ( iSetInProgress == iAtStartOfSetX ) {
-                bReturn = true;
+                iInXGames = 0;
             }
         }
-        return bReturn;
+        return iInXGames;
     }
 
     /** One-based */

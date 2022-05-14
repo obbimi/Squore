@@ -215,6 +215,7 @@ public enum PreferenceKeys {
         /** GSMModel*/
         finalSetFinish, // also used as JSONKey
         newBalls,       // also used as JSONKey
+            newBallsXGamesUpFront,
         goldenPointToWinGame, // also used as JSONKey
 
     StartupAction,

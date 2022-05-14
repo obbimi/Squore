@@ -638,7 +638,7 @@
                     android:title="@string/pref_useOfficialAnnouncementsFeature"
                     android:summary="@string/pref_useOfficialAnnouncementsFeature_summary"
                     android:icon="@drawable/microphone"
-                    android:defaultValue="@string/useOfficialAnnouncementsFeature_default"
+                    android:defaultValue="@string/useOfficialAnnouncementsFeature_default__Squash"
                     dy:displayValues="@array/FeatureDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
                     />

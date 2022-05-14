@@ -2184,6 +2184,10 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 GSMModel gsmModelNew = (GSMModel) ScoreBoard.matchModel;
                 FinalSetFinish finalSetFinish = gsmModelPrev.getFinalSetFinish();
                 gsmModelNew.setFinalSetFinish(finalSetFinish);
+
+                NewBalls NewBalls = gsmModelPrev.getNewBalls();
+                gsmModelNew.setNewBalls(NewBalls);
+
                 gsmModelNew.setGoldenPointToWinGame(gsmModelPrev.getGoldenPointToWinGame());
             }
 /*
@@ -2481,7 +2485,15 @@ touch -t 01030000 LAST.sb
     private FloatingActionButton speakButton = null;
     private void updateMicrophoneFloatButton() {
         if ( matchModel == null ) { return; }
-        boolean bShowSpeakFAB = matchModel.gameHasStarted() == false || matchModel.isStartOfTieBreak() || matchModel.isPossibleGameVictory();
+        boolean bShowSpeakFAB = false;
+        if ( matchModel instanceof GSMModel ) {
+            GSMModel gsmModel = (GSMModel) matchModel;
+            int newBallsInXgames = gsmModel.newBallsInXgames();
+            final int iShowUpFront = PreferenceValues.newBallsXGamesUpFront(this);
+            bShowSpeakFAB = (newBallsInXgames >= 0) && (newBallsInXgames <= iShowUpFront);
+        } else {
+            bShowSpeakFAB = matchModel.gameHasStarted() == false || matchModel.isStartOfTieBreak() || matchModel.isPossibleGameVictory();
+        }
         showMicrophoneFloatButton(bShowSpeakFAB);
     }
     private void showMicrophoneFloatButton(boolean bVisible) {
@@ -3861,7 +3873,7 @@ touch -t 01030000 LAST.sb
             lShowIds.add((Integer) R.id.dyn_score_details);
             int lMinutes = DateUtil.convertToMinutes(System.currentTimeMillis() - lMatchEnd);
             if ( lMinutes >= 0 /*10*/ ) {
-                // old match is still displayed, presume 'new match' is preferred
+                // old match is still displayed, presume starting a 'new match' is preferred
                 lShowIds.add(0, R.id.dyn_new_match);
             }
         } else if ( matchModel.isLocked() ) {
@@ -3897,10 +3909,18 @@ touch -t 01030000 LAST.sb
         }
         if ( ListUtil.isNotEmpty(lShowIds) ) {
             setMenuItemVisibility(m_idOfVisibleActionBarItem, false);
+            if ( lShowIds.contains(R.id.dyn_new_match) ) {
+                showNewMatchFloatButton( true );
+            } else {
+                showNewMatchFloatButton( false );
+            }
+
+            // only show dyn menu item for one (else to crowded)
             int iIdShow = lShowIds.remove(0);
-            showNewMatchFloatButton(iIdShow == R.id.dyn_new_match);
-            if ( iIdShow == R.id.dyn_new_match ) {
+            boolean bShowDynNewMatch = iIdShow == R.id.dyn_new_match;
+            if ( bShowDynNewMatch ) {
                 if ( lShowIds.size() !=0 ) {
+                    // we already have the option to start new match with floating button, use another in the action bar
                     iIdShow = lShowIds.remove(0);
                 }
             }
@@ -4736,6 +4756,12 @@ touch -t 01030000 LAST.sb
     }
     private void _showOfficialAnnouncement(AnnouncementTrigger trigger, boolean bManuallyRequested) {
         if ( matchModel == null ) { return; }
+        if ( matchModel instanceof GSMModel ) {
+            GSMModel gsmModel = (GSMModel) matchModel;
+            int i = gsmModel.newBallsInXgames();
+            _showNewBallsMessage(i);
+        }
+
         if ( matchModel.gameHasStarted()==false || matchModel.isPossibleGameVictory() ) {
             _showOfficialStartOrEndOfGameAnnouncement(trigger, bManuallyRequested);
         } else if ( matchModel.isStartOfTieBreak() ) {
@@ -4756,7 +4782,10 @@ touch -t 01030000 LAST.sb
                 cancelTimer();
             }
         }
-
+        if ( Brand.isGameSetMatch() ) {
+            // TODO: not for now. We have to construct message for set-progress as well.
+            return;
+        }
         StartEndAnnouncement startEndAnnouncement;
         switch (trigger) {
             case StartOfGame:
@@ -4814,6 +4843,15 @@ touch -t 01030000 LAST.sb
         TieBreak tieBreak = new TieBreak(this, matchModel, this);
         tieBreak.init(iOccurrenceCount);
         addToDialogStack(tieBreak);
+        return true;
+    }
+
+    private boolean _showNewBallsMessage(int iInXGames) {
+        if ( iInXGames == 0 ) {
+            iBoard.showGuidelineMessage_FadeInOut(10, R.string.oa_new_balls_please);
+        } else {
+            iBoard.showGuidelineMessage_FadeInOut(10, R.string.oa_ballchange_in_x_games, iInXGames);
+        }
         return true;
     }
 
