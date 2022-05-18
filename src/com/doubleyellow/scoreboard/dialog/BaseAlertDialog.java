@@ -297,6 +297,10 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
         return isWearable() == false;
     }
     AlertDialog.Builder setTitle(int iRes) {
+        if ( iRes == 0 ) {
+            setTitle("");
+            return adb.setTitle("");
+        }
         if ( dialog != null ) {
             dialog.setTitle(iRes);
         }
@@ -309,6 +313,9 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
         return adb.setTitle(s);
     }
     AlertDialog.Builder setIcon(int iRes) {
+        if ( iRes == 0 ) {
+            return adb;
+        }
         if ( dialog != null ) {
             dialog.setIcon(iRes);
         }

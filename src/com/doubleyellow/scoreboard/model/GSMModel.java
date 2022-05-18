@@ -310,7 +310,12 @@ public class GSMModel extends Model
         if ( isTieBreakGame() ) {
             // swap server every two points (when scoring is odd)
             if ( iNrOfPoints % 2 == 1 ) {
-                server = server.getOther();
+                if ( server == null ) {
+                    // prevent NPE
+                    server = Player.A;
+                } else {
+                    server = server.getOther();
+                }
                 if ( isDoubles() && (doublesServe != null) ) {
                     // swap player within team
                     if ( iNrOfPoints % 4 == 1 ) {
@@ -1110,12 +1115,15 @@ public class GSMModel extends Model
     //-------------------------------
 
     @Override void addFormatSettings(JSONObject joFormat) throws JSONException {
+        super.addFormatSettings(joFormat);
         joFormat.put(PreferenceKeys.finalSetFinish      .toString(), m_finalSetFinish);
         joFormat.put(PreferenceKeys.newBalls            .toString(), m_newBalls);
         joFormat.put(JsonKey.lastBallChangeOccurredAtStartOfGame.toString(), m_iLastBallChangeOccurredAtStartOfGame);
         joFormat.put(PreferenceKeys.goldenPointToWinGame.toString(), m_bGoldenPointToWinGame);
     }
     @Override void readFormatSettings(JSONObject joFormat) throws JSONException {
+        super.readFormatSettings(joFormat);
+
         String s = joFormat.optString(PreferenceKeys.finalSetFinish.toString());
         if (StringUtil.isNotEmpty(s) ) {
             setFinalSetFinish(FinalSetFinish.valueOf(s));

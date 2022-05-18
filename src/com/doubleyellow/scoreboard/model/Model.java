@@ -404,7 +404,23 @@ public abstract class Model implements Serializable
     //------------------------
 
     Map<Player, Integer> getScoreOfGameInProgress() {
-        return ListUtil.getLast(getPlayer2EndPointsOfGames());
+        List<Map<Player, Integer>> endPointsOfGames = getPlayer2EndPointsOfGames();
+        Map<Player, Integer> last = ListUtil.getLast(endPointsOfGames);
+
+        // 2022-05-18
+        if ( (m_HandicapFormat != null) && (m_HandicapFormat.equals(HandicapFormat.None) == false) ) {
+            if ( (last != null) && MapUtil.getMaxValue(last) == 0 ) {
+                List<Map<Player, Integer>> deviatingStartScoreOfGames = getDeviatingStartScoreOfGames();
+                Map<Player, Integer> deviationForGame = ListUtil.getLast(deviatingStartScoreOfGames);
+                if ( MapUtil.isNotEmpty(deviationForGame) && (MapUtil.getMaxValue(deviationForGame) != 0) ) {
+                    Log.v(TAG, "Correcting score for handicap");
+                    for(Player p: deviationForGame.keySet() ) {
+                        last.put(p, deviationForGame.get(p));
+                    }
+                }
+            }
+        }
+        return last;
     }
     /** end scores of all games [ {A=11,B=9},{A=4,B=11}, {A=5, B=8} ]. So does hold game in progress. length should always be equal to the number of games finished */
     private List<Map<Player, Integer>>          m_lPlayer2EndPointsOfGames   = null;
@@ -1131,6 +1147,7 @@ public abstract class Model implements Serializable
                 l.OnChanged();
             }
         }
+        setDirty();
     }
     /** Returns a copy if the internal map */
     public List<Map<Player, Integer>> getGameStartScoreOffsets() {
