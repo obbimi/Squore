@@ -277,6 +277,30 @@
                 android:orientation="vertical"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/llFinalSetFinish"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/lblFinalSetFinish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:text="@string/sb_FinalSetFinish"
+                android:textSize="@dimen/txt_medium" />
+
+            <Spinner
+                android:id="@+id/spFinalSetFinish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutMode="opticalBounds"
+                android:nextFocusDown="@+id/spNewBalls"
+                android:orientation="vertical" />
+        </LinearLayout>
+        <LinearLayout
             android:id="@+id/llPauseDuration"
             android:layout_marginBottom="2dp"
             android:orientation="horizontal"
@@ -416,6 +440,55 @@
                 android:text="@string/pref_useEnglishScoring"
                 android:textSize="@dimen/txt_large" />
 -->
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llScoringTypeGSM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/lblUseGoldenPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:inputType="none"
+                android:text="@string/lbl_GoldenPoint"
+                android:textSize="@dimen/txt_medium" />
+
+            <ToggleButton
+                android:id="@+id/useGoldenPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layoutMode="opticalBounds"
+                android:textSize="@dimen/txt_large" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llChangesSidesWhen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:inputType="none"
+                android:text="@string/pref_changeSides_short"
+                android:textSize="@dimen/txt_medium" />
+
+            <LinearLayout
+                android:id="@+id/llChangesSidesCheckboxes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible">
+                <!-- programmatically filled -->
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
