@@ -886,7 +886,7 @@ public class GSMModel extends Model
       //return ListUtil.size(m_endScoreOfPreviousGames); // TODO: required
     }
 
-    private boolean isTieBreakGame() {
+    public boolean isTieBreakGame() {
         int iGameInProgress = getGameNrInProgress();
         if ( iGameInProgress % 2 == 0 ) {
             // game in progress is even: can not be a tiebreak

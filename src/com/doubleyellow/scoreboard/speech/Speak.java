@@ -215,7 +215,7 @@ public class Speak
             // score is equal
             String s_X_All__or__X_Equal = getResourceString(R.string.oa_n_all__or__n_equal, iServer);
             String sXAll__or_sXEqual    = s_X_All__or__X_Equal.replaceAll("[0-9]+", "").trim();
-            if ( (gsmModel != null) && (iServer >= 3) ) {
+            if ( (gsmModel != null) && (iServer >= 3) && (gsmModel.isTieBreakGame() == false) ) {
                 int iResGoldenPointOrDeuce = gsmModel.getGoldenPointToWinGame() ? R.string.oa_golden_point : R.string.oa_deuce;
                 String sDeuceOrGoldenPoint = getResourceString(iResGoldenPointOrDeuce);
                 setTextToSpeak(SpeechType.ScoreServer  , sDeuceOrGoldenPoint);
@@ -226,7 +226,7 @@ public class Speak
             }
         } else {
             if ( gsmModel != null  ) {
-                if ( Math.max(iReceiver, iServer) > 3 ) {
+                if ( (Math.max(iReceiver, iServer) > 3) && (gsmModel.isTieBreakGame() == false) ) {
                     if ( Math.abs(iServer - iReceiver) == 1 ) {
                         setTextToSpeak(SpeechType.ScoreServer, getResourceString(R.string.sb_advantage));
                         String sAdvWho = null;
