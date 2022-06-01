@@ -1042,6 +1042,14 @@ public class GSMModel extends Model
     }
 */
 
+    public Player[] isPossibleSetVictoryFor(){
+        Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress();
+        When scoreOneMorePoint = When.ScoreOneMorePoint;
+        Player[] playersGB = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(scoreOneMorePoint, scoreOfGameInProgress, _getNrOfPointsToWinGame());
+        Map<Player, Integer> player2GamesWon       = getPlayer2GamesWon();
+        return calculateIsPossibleSetVictoryFor(playersGB, scoreOneMorePoint, player2GamesWon);
+    }
+
     private Player[] calculateIsPossibleSetVictoryFor(Player[] playersWinningGame, When when, Map<Player, Integer> player2GamesWon){
         Player pPossibleSetBallFor = null;
         if ( playersWinningGame.length == 1 ) {

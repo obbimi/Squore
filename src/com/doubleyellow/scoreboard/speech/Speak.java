@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.dialog.StartEndAnnouncement;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.GSMModel;
 import com.doubleyellow.scoreboard.model.Model;
@@ -18,10 +19,13 @@ import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.Feature;
 import com.doubleyellow.util.ListUtil;
+import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class Speak
 {
@@ -215,14 +219,52 @@ public class Speak
             // score is equal
             String s_X_All__or__X_Equal = getResourceString(R.string.oa_n_all__or__n_equal, iServer);
             String sXAll__or_sXEqual    = s_X_All__or__X_Equal.replaceAll("[0-9]+", "").trim();
+
+            if ( (iReceiver == 0) && (iServer == 0) ) {
+                // also speak the number of games won at the start of a new game
+                Map<Player, Integer> gamesWonLastSet = null;
+                if ( gsmModel != null ) {
+                    List<Map<Player, Integer>> gamesWonPerSet = gsmModel.getGamesWonPerSet();
+                    gamesWonLastSet = ListUtil.getLast(gamesWonPerSet);
+                } else {
+                    gamesWonLastSet = model.getGamesWon();
+                }
+                if (MapUtil.getMaxValue(gamesWonLastSet) > 0 ) {
+                    Player pLeaderInGames = MapUtil.getMaxKey(gamesWonLastSet, Player.A);
+                    int iGamesLeader  = gamesWonLastSet.get(pLeaderInGames);
+                    int iGamesTrailer = gamesWonLastSet.get(pLeaderInGames.getOther());
+                    String sGamesScoreText = null;
+                    if ( iGamesLeader == iGamesTrailer ) {
+                        sGamesScoreText = (iGamesLeader==1) ? PreferenceValues.getOAString(m_context, R.string.oa_1_game_all) : PreferenceValues.getOAString(m_context, R.string.oa_x_games_all, iGamesLeader);
+                    } else {
+                        String sLeader    = model.getName(pLeaderInGames);
+                        String sGameScore = StartEndAnnouncement.x_GamesTo_y(iGamesLeader, iGamesTrailer, m_context);
+                        if ( model.matchHasEnded() ) {
+                            if ( gsmModel != null ) {
+                                // todo
+                            } else {
+                                sGamesScoreText = getResourceString(R.string.oa_a_wins_xGamesToy , sLeader, sGameScore);
+                            }
+                        } else {
+                            sGamesScoreText = getResourceString(R.string.oa_a_leads_xGamesToy, sLeader, sGameScore);
+                        }
+                    }
+                    setTextToSpeak(SpeechType.GSMGamesScore, sGamesScoreText); // todo
+                }
+            }
+
             if ( (gsmModel != null) && (iServer >= 3) && (gsmModel.isTieBreakGame() == false) ) {
                 int iResGoldenPointOrDeuce = gsmModel.getGoldenPointToWinGame() ? R.string.oa_golden_point : R.string.oa_deuce;
                 String sDeuceOrGoldenPoint = getResourceString(iResGoldenPointOrDeuce);
                 setTextToSpeak(SpeechType.ScoreServer  , sDeuceOrGoldenPoint);
                 setTextToSpeak(SpeechType.ScoreReceiver, "");
             } else {
-                setTextToSpeak(SpeechType.ScoreServer  , sServer);
-                setTextToSpeak(SpeechType.ScoreReceiver, sXAll__or_sXEqual);
+                if ( model.matchHasEnded() ) {
+                    // 0-0 no longer needs to be announced
+                } else {
+                    setTextToSpeak(SpeechType.ScoreServer, sServer);
+                    setTextToSpeak(SpeechType.ScoreReceiver, sXAll__or_sXEqual);
+                }
             }
         } else {
             if ( gsmModel != null  ) {
@@ -290,7 +332,7 @@ public class Speak
 
     private void gameBall(Model model)
     {
-        if ( Brand.isNotSquash() ) { return; }
+        //if ( Brand.isNotSquash() ) { return; }
 
         Player[] possibleGameBallFor = model.isPossibleGameBallFor();
         Boolean bIsGameball = (possibleGameBallFor != null) && (possibleGameBallFor.length != 0);
@@ -298,7 +340,27 @@ public class Speak
         String sText = "";
         if ( bIsGameball ) {
             int iResId = Brand.getGameSetBallPoint_ResourceId();
-            sText = getResourceString(iResId);
+            if ( model instanceof GSMModel ) {
+                // in tennis/padel 'Game ball' is not spoken
+            } else {
+                sText = getResourceString(iResId);
+            }
+
+            if ( model instanceof GSMModel ) {
+                GSMModel gsmModel = (GSMModel) model;
+                // TODO: set ball
+                Player[] possibleSetBallFor = gsmModel.isPossibleSetVictoryFor();
+                Boolean bIsSetBall = (possibleSetBallFor != null) && (possibleSetBallFor.length != 0);
+                if ( bIsSetBall ) {
+                    sText = getResourceString(R.string.oa_set_ball);
+                }
+            }
+
+            Player[] possibleMatchBallFor = model.isPossibleMatchBallFor();
+            Boolean bIsMatchBall = (possibleMatchBallFor != null) && (possibleMatchBallFor.length != 0);
+            if ( bIsMatchBall ) {
+                sText = getResourceString(R.string.oa_matchball);
+            }
         }
         setTextToSpeak(SpeechType.Gameball, sText);
     }
@@ -362,6 +424,7 @@ public class Speak
       //Call,
       //StartAnnouncement,
         Handout,
+        GSMGamesScore,
         ScoreServer,
         ScoreReceiver,
         Gameball,

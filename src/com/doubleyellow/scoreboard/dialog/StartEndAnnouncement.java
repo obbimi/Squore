@@ -342,7 +342,7 @@ public class StartEndAnnouncement extends BaseAlertDialog
         return lMsgs;
     }
 
-    private static String x_GamesTo_y(int iGamesLeader, int iGamesTrailer, Context ctx) {
+    public static String x_GamesTo_y(int iGamesLeader, int iGamesTrailer, Context ctx) {
         //return iGamesA + "-" + iGamesB;
         return iGamesLeader
         + " " + (iGamesLeader==1?PreferenceValues.getOAString(ctx, R.string.oa_game):PreferenceValues.getOAString(ctx, R.string.oa_games))
