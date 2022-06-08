@@ -597,6 +597,7 @@ public class GSMModel extends Model
         if ( ListUtil.isEmpty(m_lGamesTiming_PerSet) ) { return 0; }
 
         List<GameTiming> firstSet = m_lGamesTiming_PerSet.get(0);
+        if ( ListUtil.isEmpty(firstSet) ) { return 0; }
         GameTiming gtFirst = firstSet.get(0);
 
         List<GameTiming> lastSet = null;

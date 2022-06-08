@@ -49,6 +49,8 @@ public class Util {
     public static final String MY_DEVICE_MODEL = "GT-I9505,SM-G930F"; // samsung S4, samsung S7
 
     public static Player getWinner(Map<Player, Integer> scores) {
+        if ( scores == null ) { return null; }
+
         // no winner?
         if ( scores.get(Player.A) == scores.get(Player.B) ) { return null; }
 
