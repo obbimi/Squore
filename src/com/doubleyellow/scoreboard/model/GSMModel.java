@@ -288,7 +288,7 @@ public class GSMModel extends Model
     }
 
     @Override Player determineServerForNextGame(int iGameZB, int iScoreA, int iScoreB) {
-        // determine server by means of looking who served in a previous game
+        // TODO: never invoked for current implementation of GSMModel
         return determineServerForNextGame_TT_RL(iGameZB, true);
     }
 
@@ -465,9 +465,26 @@ public class GSMModel extends Model
 
         addNewSetScoreDetails(false);
 
-        // TODO
-        //Player serverForNextSet = determineServerForNextSet(getGameNrInProgress()-1, iScoreA, iScoreB);
-        //setServerAndSide(serverForNextSet, null, null);
+        // determineServerForNextSet
+        int setNrInProgressZB = getSetNrInProgress() - 1;
+        if ( setNrInProgressZB > 0 ) {
+            List<Map<Player, Integer>> maps = m_lPlayer2GamesWon_PerSet.get(setNrInProgressZB - 1);
+            if ( ListUtil.size(maps) > getNrOfGamesToWinSet() * 2 ) {
+                // after a tie-break, determine server based on first server in previous set
+                List<List<ScoreLine>> gameScoreLinesOfPreviousSet = getGameScoreLinesOfSet(setNrInProgressZB - 1);
+                if ( ListUtil.isNotEmpty(gameScoreLinesOfPreviousSet)) {
+                    List<ScoreLine> scoreLinesOfFirstGameOfPreviousSet = gameScoreLinesOfPreviousSet.get(0);
+                    if ( ListUtil.isNotEmpty(scoreLinesOfFirstGameOfPreviousSet) ) {
+                        ScoreLine scoreLine = scoreLinesOfFirstGameOfPreviousSet.get(0);
+                        Player servingPlayerAtStartOfPreviousSet = scoreLine.getServingPlayer();
+                        if ( servingPlayerAtStartOfPreviousSet != null ) {
+                            Player server = servingPlayerAtStartOfPreviousSet.getOther();
+                            setServerAndSide(server, null, null);
+                        }
+                    }
+                }
+            }
+        }
 
         clearPossibleGSM();
         if ( bNotifyListeners ) {
