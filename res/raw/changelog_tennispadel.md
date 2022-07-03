@@ -1,3 +1,10 @@
+## 4.49 (july 2022)
+
+Improvements in:
+- Indicate details of tiebreak score
+- Allow indication for when it is time for 'New balls': additional optin
+  - After First 11, Then Each 13th game
+
 ## 4.49 (may 2022)
 
 Improvements in:
