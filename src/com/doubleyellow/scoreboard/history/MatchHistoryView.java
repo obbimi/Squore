@@ -20,6 +20,7 @@ package com.doubleyellow.scoreboard.history;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
@@ -63,8 +64,8 @@ public class MatchHistoryView extends LinearLayout
             // long games
             textSize = (textSize * 4) / 5; // a bit smaller than on the main score board
         }
-        TableLayout llEvent = new TableLayout(context);
-        this.addView(llEvent);
+        TableLayout tbEvent = new TableLayout(context);
+        this.addView(tbEvent, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         List<Map<Player, Integer>> previousGamesEndScores = matchModel.getEndScoreOfGames();
         Map<Player, Integer>       gamesWon               = matchModel.getGamesWon();
@@ -85,15 +86,19 @@ public class MatchHistoryView extends LinearLayout
         String sDivision = matchModel.getEventDivision();
         String sRound    = matchModel.getEventRound();
         if ( StringUtil.hasNonEmpty(sEvent, sDivision, sRound) ) {
-            llEvent.addView(getLabelAndTextView(R.string.lbl_event   , sEvent));
-            llEvent.addView(getLabelAndTextView(R.string.lbl_division, sDivision));
-            llEvent.addView(getLabelAndTextView(R.string.lbl_round   , sRound));
+            tbEvent.addView(getLabelAndTextView(R.string.lbl_event   , sEvent));
+            tbEvent.addView(getLabelAndTextView(R.string.lbl_division, sDivision));
+            tbEvent.addView(getLabelAndTextView(R.string.lbl_round   , sRound));
+            tbEvent.addView(getLabelAndTextView(" "   , " ")); // splitter
         }
+
+        TableLayout tbSummary = new TableLayout(context);
+        this.addView(tbSummary);
 
         // summary
         for(Player p: Model.getPlayers() ) {
-            LinearLayout tr = getLabelAndTextView(context.getString(R.string.lbl_player) + " " + p, matchModel.getName(p, true, true));
-            llEvent.addView(tr);
+            LinearLayout tr = getLabelAndTextView(/*context.getString(R.string.lbl_player) +*/ " " + p + " ", matchModel.getName(p, true, true));
+            tbSummary.addView(tr);
 
             Integer iGames      = gamesWon.get(p);
             Integer iGamesOther = gamesWon.get(p.getOther());
@@ -112,7 +117,7 @@ public class MatchHistoryView extends LinearLayout
             }
         }
         LinearLayout trTimes = getLabelAndTextView("", "");
-        llEvent.addView(trTimes);
+        tbSummary.addView(trTimes);
         final int durationInMinutes = matchModel.getDurationInMinutes();
         String sDuration = null;
         if (durationInMinutes > 0) {
