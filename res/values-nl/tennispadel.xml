@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="oa_golden_point">Golden point</string>
+    <string name="pref_indicateGoldenPoint">Geef \'Golden Point\' aan in score buttons</string>
+
     <string name="oa_deuce">Gelijk</string>
+
+    <string name="oa_new_balls_please">Nieuwe ballen a.u.b</string>
+    <string name="oa_ballchange_in_1_game">Nieuwe ballen in 1 game</string>
+    <string name="oa_ballchange_in_x_games">Nieuwe ballen in %d games</string>
+
     <string name="sb_advantage">Voordeel</string>
+    <string name="lbl_GoldenPoint">Golden Point (Geen Voordeel)</string>
 
     <string name="best_of_x_games_to_y_2__TennisPadel">Sets tot</string>
     <string name="sb_official_rules__TennisPadel">Officiele regels</string>
@@ -15,6 +24,14 @@
         <item>Games Tot 12 - Dan TieBreak Tot 7</item>
         <item>Games Tot 12 - Dan TieBreak Tot 10</item>
         <item>Geen Tie-Break</item>
+    </string-array>
+
+    <string name="sb_NewBalls">Nieuwe Ballen</string>
+    <string-array name="NewBallsDisplayValues"> <!-- keep in sync with com.doubleyellow.scoreboard.model.NewBalls -->
+        <item>Na eerste  7, dan elke  9e game</item>
+        <item>Na eerste  9, dan elke 11e game</item>
+        <item>Na eerste 11, dan elke 13e game</item>
+        <item>Voor Set 3</item>
     </string-array>
 
 </resources>

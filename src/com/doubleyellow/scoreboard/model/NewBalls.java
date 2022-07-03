@@ -26,6 +26,7 @@ public enum NewBalls
 {
     AfterFirst7ThenEach9  (7, 9, GSMModel.NOT_APPLICABLE),
     AfterFirst9ThenEach11 (9, 11, GSMModel.NOT_APPLICABLE),
+    AfterFirst11ThenEach13(11, 13, GSMModel.NOT_APPLICABLE),
     BeforeSet3            (GSMModel.NOT_APPLICABLE, GSMModel.NOT_APPLICABLE, 3),
 
     //AfterFirst1ThenEach3_TestingOnly  (1, 3, GSMModel.NOT_APPLICABLE), // TODO: only for testing
