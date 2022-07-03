@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.doubleyellow.android.view.AutoResizeTextView
+        android:id="@+id/score_player_1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:includeFontPadding="true"
+        android:padding="0dp"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="6"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintDimensionRatio="H,10:7"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <com.doubleyellow.android.view.AutoResizeTextView
+        android:id="@+id/score_player_2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:includeFontPadding="true"
+        android:padding="0dp"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="7"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="H,10:7"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <com.doubleyellow.android.view.AutoResizeTextView
+        android:id="@+id/sub_score_player_1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="0dp"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="4"
+        app:layout_constraintTop_toTopOf="@id/score_player_1"
+        app:layout_constraintEnd_toEndOf="@id/score_player_1"
+        app:layout_constraintDimensionRatio="H,10:7"
+        app:layout_constraintWidth_percent="0.25" />
+    <com.doubleyellow.android.view.AutoResizeTextView
+        android:id="@+id/sub_score_player_2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="0dp"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="7"
+        app:layout_constraintTop_toTopOf="@id/score_player_2"
+        app:layout_constraintEnd_toEndOf="@id/score_player_2"
+        app:layout_constraintDimensionRatio="H,10:7"
+        app:layout_constraintWidth_percent="0.25" />
+</androidx.constraintlayout.widget.ConstraintLayout>

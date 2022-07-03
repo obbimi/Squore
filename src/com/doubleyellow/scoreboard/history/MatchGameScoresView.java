@@ -123,11 +123,35 @@ public class MatchGameScoresView extends LinearLayout
         if ( Brand.isGameSetMatch() ) {
             GSMModel gsmModel = (GSMModel) matchModel;
             if ( m_scoresToShow.equals(ScoresToShow.PointsWonPerGame) ) {
-                // switch over to GSM valid value
+                // PointsWonPerGame is not for GSM: switch over to GSM valid value
                 m_scoresToShow = ScoresToShow.GamesWonPerSet; // TODO: configurable
             }
             if ( m_scoresToShow.equals(ScoresToShow.GamesWonPerSet) ) {
                 endScores = gsmModel.getGamesWonPerSet();
+                // for all 7-6 scores: turn into 7-<negative value of points reached in tiebreak)
+                int iNrOfSets = ListUtil.size(endScores);
+                if ( iNrOfSets > 0 ) {
+                    int iSetNrZB = -1;
+                    for(Map<Player, Integer> setScore: endScores) {
+                        iSetNrZB++;
+                        if ( MapUtil.getMaxValue(setScore) == 7 ) {
+                            Player pSetWinner = MapUtil.getMaxKey(setScore, Player.A);
+                            Player pSetLoser =  pSetWinner.getOther();
+                            if ( setScore.get(pSetLoser) == 6 ) {
+                                // still not 100% it was a tiebreak if it is the set in progress
+                                List<List<ScoreLine>> gameScoreLinesOfSet = gsmModel.getGameScoreLinesOfSet(iSetNrZB);
+                                List<ScoreLine> tieBreakScorelines = ListUtil.getLast(gameScoreLinesOfSet);
+                                int iScoreOfLoser = 0;
+                                for(ScoreLine line: tieBreakScorelines) {
+                                    if ( pSetLoser.equals(line.getScoringPlayer()) ) {
+                                        iScoreOfLoser = line.getScore();
+                                    }
+                                }
+                                setScore.put(pSetLoser, -1 * iScoreOfLoser);
+                            }
+                        }
+                    }
+                }
             } else {
                 endScores = new ArrayList<>();
                 Map<Player, Integer> setsWon  = gsmModel.getSetsWon();
@@ -374,13 +398,17 @@ public class MatchGameScoresView extends LinearLayout
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         super.setOrientation(VERTICAL);
 
+        int iResLayoutPerRow = R.layout.scores_horizontal;
+        if ( Brand.isGameSetMatch() ) {
+            iResLayoutPerRow = R.layout.scores_horizontal_gsm;
+        }
       //final List<ViewGroup> rows = new ArrayList<ViewGroup>();
         int iRow = 0;
         for ( Map<Player, Integer> scores: gameScores ) {
             iRow++;
             Player gameWinner = Util.getWinner(scores);
 
-            final ViewGroup tr = (ViewGroup) inflater.inflate(R.layout.scores_horizontal, null);
+            final ViewGroup tr = (ViewGroup) inflater.inflate(iResLayoutPerRow, null);
             tr.setBackgroundColor(bgColorLoser);
 
             AutoResizeTextView txtMax = null;
@@ -388,7 +416,7 @@ public class MatchGameScoresView extends LinearLayout
                 boolean  bLeftColumn = p.equals(players[0]);
                 int      iResId      = bLeftColumn ? R.id.score_player_1 : R.id.score_player_2;
                 TextView txt         = (TextView) tr.findViewById(iResId);
-                boolean bInvert = p.equals(gameWinner);
+                boolean  bInvert     = p.equals(gameWinner);
                 if ( Brand.isGameSetMatch() ) {
                     switch (m_scoresToShow) {
                         case GamesWonPerSet:
@@ -403,9 +431,30 @@ public class MatchGameScoresView extends LinearLayout
                 }
                 setSizeAndColors(txt, bInvert, iTxtSizeForInstanceAndOrientation, instanceKey);
                 //txt.setText(StringUtil.pad(String.valueOf(scores.get(p)), ' ', 3, bLeftColumn) );
-                txt.setText(String.valueOf(scores.get(p)) );
+                Integer iScorePlayer = scores.get(p);
+                Integer iScoreOther  = scores.get(p.getOther());
+                String sScorePlayer = String.valueOf(iScorePlayer);
+                if ( Brand.isGameSetMatch() ) {
+                    int iResIdSub = bLeftColumn ? R.id.sub_score_player_1 : R.id.sub_score_player_2;
+                    TextView txtSub = tr.findViewById(iResIdSub);
+                    if ( txtSub != null ) {
+                        txtSub.setText("");
+                    }
+                    if ( (iScorePlayer <= 0) && (iScoreOther == 7) ) {
+                        int iNrOfGamesWonByLoser = 6; // TODO: can be 12 in special set
+                        // assume it is the number of points scored in the tiebreak by the loser of the set
+                        if ( txtSub != null ) {
+                            txtSub.setText("" + Math.abs(iScorePlayer));
+                            txtSub.setTextColor(bgColorWinner); // background should remain 'transparent
+                            sScorePlayer = "" + iNrOfGamesWonByLoser;
+                        } else {
+                            sScorePlayer = iNrOfGamesWonByLoser + " (" + (-1 * iScorePlayer) + ")";
+                        }
+                    }
+                }
+                txt.setText(sScorePlayer);
 
-                if ( txtMax == null || scores.get(p) > scores.get(p.getOther()) ) {
+                if ( txtMax == null || iScorePlayer > iScoreOther) {
                     txtMax = (AutoResizeTextView) txt;
                 }
             }
@@ -454,7 +503,7 @@ public class MatchGameScoresView extends LinearLayout
            && MapUtil.isNotEmpty(m_pointsDiff)
            && ListUtil.isNotEmpty(gameScores)
            ) {
-            final ViewGroup tr = (ViewGroup) inflater.inflate(R.layout.scores_horizontal, null);
+            final ViewGroup tr = (ViewGroup) inflater.inflate(iResLayoutPerRow, null);
             tr.setBackgroundColor(bgColorLoser);
 
             Player pLeader = MapUtil.getMaxKey(m_pointsDiff, Player.B);
@@ -500,6 +549,9 @@ public class MatchGameScoresView extends LinearLayout
 
         int iResIdImages  = 0;
         int iResIdInflate = R.layout.scores_vertical;
+        if ( Brand.isGameSetMatch() ) {
+            iResIdInflate = R.layout.scores_vertical_gsm;
+        }
         if ( m_showTimes && ( m_gameTimes != null ) ) {
             iResIdInflate = R.layout.scores_vertical_times;
             iResIdImages  = R.layout.scores_vertical_countryflags;
@@ -615,9 +667,31 @@ public class MatchGameScoresView extends LinearLayout
                 setSizeAndColors(txt, bInvert, iTxtSizeForInstanceAndOrientation, instanceKey);
                 //txt.setText(StringUtil.pad(String.valueOf(scores.get(p)), ' ', 2, bLeftColumn) );
                 //txt.setText(" " + scores.get(p) + " "); // add a space just for spacing (on both sides for centering)
-                txt.setText(String.valueOf(scores.get(p)));
+                Integer iScorePlayer   = scores.get(p);
+                Integer iScoreOther = scores.get(p.getOther());
 
-                if ( txtMax == null || scores.get(p) > scores.get(p.getOther()) ) {
+                String sScorePlayer = String.valueOf(iScorePlayer);
+                if ( Brand.isGameSetMatch() ) {
+                    int iResIdSub = bTopRow ? R.id.sub_score_player_1 : R.id.sub_score_player_2;
+                    TextView txtSub = col.findViewById(iResIdSub);
+                    if ( txtSub != null ) {
+                        txtSub.setText("");
+                    }
+                    if ( (iScorePlayer <= 0) && (iScoreOther == 7) ) {
+                        int iNrOfGamesWonByLoser = 6; // TODO: can be 12 in special set
+                        // assume it is the number of points scored in the tiebreak by the loser of the set
+                        if ( txtSub != null ) {
+                            txtSub.setText("" + Math.abs(iScorePlayer));
+                            txtSub.setTextColor(bgColorWinner); // background should remain 'transparent
+                            sScorePlayer = "" + iNrOfGamesWonByLoser;
+                        } else {
+                            sScorePlayer = iNrOfGamesWonByLoser + " (" + (-1 * iScorePlayer) + ")";
+                        }
+                    }
+                }
+                txt.setText(sScorePlayer);
+
+                if ( txtMax == null || iScorePlayer > iScoreOther) {
                     txtMax = (AutoResizeTextView) txt;
                 }
             }
