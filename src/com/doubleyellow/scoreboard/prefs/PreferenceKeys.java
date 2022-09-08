@@ -217,6 +217,7 @@ public enum PreferenceKeys {
         newBalls,       // also used as JSONKey
             newBallsXGamesUpFront,
         goldenPointToWinGame, // also used as JSONKey
+        StartTiebreakOneGameEarly, // also used as JSONKey
 
     StartupAction,
 

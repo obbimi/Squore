@@ -2185,6 +2185,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 FinalSetFinish finalSetFinish = gsmModelPrev.getFinalSetFinish();
                 gsmModelNew.setFinalSetFinish(finalSetFinish);
                 gsmModelNew.setGoldenPointToWinGame(gsmModelPrev.getGoldenPointToWinGame());
+                gsmModelNew.setStartTiebreakOneGameEarly(gsmModelPrev.getStartTiebreakOneGameEarly());
                 gsmModelNew.setNewBalls(gsmModelPrev.getNewBalls());
             }
 /*
@@ -5028,9 +5029,10 @@ touch -t 01030000 LAST.sb
                     }
                     if ( Brand.isGameSetMatch() ) {
                         GSMModel gsmModel = (GSMModel) m;
-                        PreferenceValues.setEnum   (PreferenceKeys.finalSetFinish      , this, gsmModel.getFinalSetFinish());
-                        PreferenceValues.setBoolean(PreferenceKeys.goldenPointToWinGame, this, gsmModel.getGoldenPointToWinGame());
-                        PreferenceValues.setEnum   (PreferenceKeys.newBalls            , this, gsmModel.getNewBalls());
+                        PreferenceValues.setEnum   (PreferenceKeys.finalSetFinish           , this, gsmModel.getFinalSetFinish());
+                        PreferenceValues.setBoolean(PreferenceKeys.goldenPointToWinGame     , this, gsmModel.getGoldenPointToWinGame());
+                        PreferenceValues.setBoolean(PreferenceKeys.StartTiebreakOneGameEarly, this, gsmModel.getStartTiebreakOneGameEarly());
+                        PreferenceValues.setEnum   (PreferenceKeys.newBalls                 , this, gsmModel.getNewBalls());
                     }
                     if ( MapUtil.isNotEmpty(RWValues.getOverwritten() ) ) {
                         Log.w(TAG, "remaining overwrites " + RWValues.getOverwritten());

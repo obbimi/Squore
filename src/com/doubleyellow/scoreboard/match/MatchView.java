@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -427,6 +428,7 @@ public class MatchView extends ScrollView
     private Spinner              spDoublesServeSequence;
     private CompoundButton       cbUseEnglishScoring;
     private CheckBox             cbUseLiveScoring;
+    private CheckBox             cbStartTieBreakOnGameEarlyGSM;
     private CompoundButton       cbUseGoldenPoint;
     private PreferenceACTextView txtRefereeName;
     private PreferenceACTextView txtMarkerName;
@@ -697,9 +699,15 @@ public class MatchView extends ScrollView
             npGameEndScore.setWrapSelectorWheel(false);
         }
 */
+        {
+            cbStartTieBreakOnGameEarlyGSM = findViewById(R.id.cbStartTieBreakOnGameEarlyGSM);
+            if ( cbStartTieBreakOnGameEarlyGSM != null ) {
+                cbStartTieBreakOnGameEarlyGSM.setVisibility(iGameEndPref < GSMModel.NUMBER_OF_GAMES_TO_WIN_SET_DEFAULT ? VISIBLE: GONE);
+            }
+        }
 
         spGameEndScore = (Spinner) findViewById(R.id.spGameEndScore);
-        initGameEndScore(context, spGameEndScore, iGameEndPref, 2, txtPlayerA);
+        initGameEndScore(context, spGameEndScore, iGameEndPref, 2, txtPlayerA, cbStartTieBreakOnGameEarlyGSM);
 
         int max = Math.max(iNrOfGamesToWinPref, 11);
 /*
@@ -1131,14 +1139,14 @@ public class MatchView extends ScrollView
             }
         }
     }
-    /** Invoked from EditFormat as well */
-    public static void initGameEndScore(Context context, final Spinner spGameEndScore, int iGameEndPref, int iValueOfset, TextView refTxtSize) {
+    /** Invoked from EditFormat as well. For GSM this is 'nr of games to win set' */
+    public static void initGameEndScore(Context context, final Spinner spGameEndScore, int iGameEndPref, int iValueOffset, TextView refTxtSize, CheckBox cbStartTieBreakOnGameEarlyGSM) {
         if ( spGameEndScore == null ) { return; }
 
         List<String> list = new ArrayList<String>();
         int iSelectedIndex = 0;
         for (int iIdx = 0; iIdx <= Math.max(19, iGameEndPref); iIdx++) {
-            int iValue = iIdx + iValueOfset;
+            int iValue = iIdx + iValueOffset;
             if (iValue == iGameEndPref) {
                 iSelectedIndex = iIdx;
             }
@@ -1161,6 +1169,12 @@ public class MatchView extends ScrollView
                         dataAdapter.add(sMORE);
                         dataAdapter.notifyDataSetChanged();
                     }
+                    if ( Brand.isGameSetMatch() ) {
+                        boolean bAllowStartTiebreakOneGameEarly = position + iValueOffset < GSMModel.NUMBER_OF_GAMES_TO_WIN_SET_DEFAULT;
+                        if ( cbStartTieBreakOnGameEarlyGSM != null ) {
+                            cbStartTieBreakOnGameEarlyGSM.setVisibility( bAllowStartTiebreakOneGameEarly ? View.VISIBLE : View.GONE);
+                        }
+                    }
                 }
             }
 
@@ -1168,7 +1182,7 @@ public class MatchView extends ScrollView
         });
     }
 
-    /** Invoked from EditFormat as well */
+    /** Invoked from EditFormat as well. For GSM this is number of sets to win match */
     public static void initNumberOfGamesToWin(Context context, Spinner spNumberOfGamesToWin, int iNrOfGamesToWinPref, int max, TextView refTxtSize) {
         if ( spNumberOfGamesToWin == null ) { return; }
         List<String> list = new ArrayList<String>();
@@ -1328,6 +1342,9 @@ public class MatchView extends ScrollView
                 gsmModel.setNewBalls(fsf);
             }
             gsmModel.setGoldenPointToWinGame(cbUseGoldenPoint!= null && cbUseGoldenPoint.isChecked());
+            gsmModel.setStartTiebreakOneGameEarly(   cbStartTieBreakOnGameEarlyGSM!= null
+                                                  && cbStartTieBreakOnGameEarlyGSM.getVisibility() == View.VISIBLE
+                                                  && cbStartTieBreakOnGameEarlyGSM.isChecked());
         } else {
             model.setNrOfPointsToWinGame(iNrOfPoints2Win);
             model.setNrOfGamesToWinMatch(iNrOfGamesToWinMatch);

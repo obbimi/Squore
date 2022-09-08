@@ -87,6 +87,17 @@ public class GSMModel extends Model
     }
 
     //------------------------
+    // Start tiebreak one game early (E.g. in Youth format in Belgium)
+    //------------------------
+    boolean m_bStartTiebreakOneGameEarly = false;
+    public void setStartTiebreakOneGameEarly(boolean b) {
+        m_bStartTiebreakOneGameEarly = b;
+    }
+    public boolean getStartTiebreakOneGameEarly() {
+        return m_bStartTiebreakOneGameEarly;
+    }
+
+    //------------------------
     // Final set finish
     //------------------------
     private FinalSetFinish m_finalSetFinish = FinalSetFinish.TieBreakTo7;
@@ -128,9 +139,10 @@ public class GSMModel extends Model
     public static final int NUMBER_OF_POINTS_TO_WIN_GAME     = 4; // 1=15, 2=30, 3=40, 4=Game
     /** Number of points in a 'normal' tie-break (tiebreak e.g. in final set could be 10 = 'super tiebreak') */
     private static final int NUMBER_OF_POINTS_TO_WIN_TIEBREAK = 7;
+    public  static final int NUMBER_OF_GAMES_TO_WIN_SET_DEFAULT = 6;
 
     /** nr of games needed to win a set  */
-    private int                                 m_iNrOfGamesToWinSet    = 6; // in sync with m_iNrOfPointsToWinGame
+    private int                                 m_iNrOfGamesToWinSet    = NUMBER_OF_GAMES_TO_WIN_SET_DEFAULT; // in sync with m_iNrOfPointsToWinGame
     /** nr of sets needed to win a match */
     private int                                 m_iNrOfSetsToWinMatch   = 2; // in sync with m_iNrOfGamesToWinMatch of super class
 
@@ -431,7 +443,7 @@ public class GSMModel extends Model
             if ( false && getSetNrInProgress() == m_iNrOfSetsToWinMatch * 2 - 1 ) {
                 // todo: if last ball change can only be at in FINAL set just before the tiebreak, there will never be a ball change
                 if ( EnumSet.of(FinalSetFinish.TieBreakTo7, FinalSetFinish.TieBreakTo10).contains(getFinalSetFinish()) ) {
-                    if ( getNrOfGamesToWinSet() == 6 ) {
+                    if ( getNrOfGamesToWinSet() == NUMBER_OF_GAMES_TO_WIN_SET_DEFAULT ) {
                     }
                 } else if ( EnumSet.of(FinalSetFinish.GamesTo12ThenTieBreakTo7, FinalSetFinish.GamesTo12ThenTieBreakTo10).contains(getFinalSetFinish()) ) {
 
@@ -863,6 +875,10 @@ public class GSMModel extends Model
         boolean bEndSet = false;
         if ( iGamesLeader == getNrOfGamesToWinSet() ) {
             bEndSet = iGamesLeader - iGamesTrailer >= 2;
+            if ( this.getStartTiebreakOneGameEarly() ) {
+                // special case e.g. sets won with 4 games, but tiebreak already played at 3-3
+                bEndSet = iGamesLeader - iGamesTrailer >= 1;
+            }
         } else if ( iGamesLeader > getNrOfGamesToWinSet() ) {
             bEndSet = iGamesLeader - iGamesTrailer >= 1;
         }
@@ -919,6 +935,11 @@ public class GSMModel extends Model
         if ( iGameInProgress >= (getNrOfGamesToWinSet() * 2 + 1) ) {
             return true;
         } else {
+            if ( m_bStartTiebreakOneGameEarly ) {
+                if ( iGameInProgress >= (getNrOfGamesToWinSet() * 2 - 1) ) {
+                    return true;
+                }
+            }
             return false;
         }
     }
@@ -1091,6 +1112,8 @@ public class GSMModel extends Model
                         // typically : at least 6 games won in set to 6
                         if ( iGamesWon > iGamesWonOpp ) {
                             if ( iGamesWon - iGamesWonOpp >= 2 ) {
+                                return new Player[]{pPossibleSetBallFor};
+                            } else if ( this.getStartTiebreakOneGameEarly() && (iGamesWon - iGamesWonOpp >= 1) ) {
                                 return new Player[] { pPossibleSetBallFor};
                             } else {
                                 if ( iGamesWon == 7 ) {
@@ -1146,6 +1169,9 @@ public class GSMModel extends Model
         joFormat.put(PreferenceKeys.newBalls            .toString(), m_newBalls);
         joFormat.put(JsonKey.lastBallChangeOccurredAtStartOfGame.toString(), m_iLastBallChangeOccurredAtStartOfGame);
         joFormat.put(PreferenceKeys.goldenPointToWinGame.toString(), m_bGoldenPointToWinGame);
+        if ( m_bStartTiebreakOneGameEarly ) {
+            joFormat.put(PreferenceKeys.StartTiebreakOneGameEarly.toString(), m_bStartTiebreakOneGameEarly);
+        }
     }
     @Override void readFormatSettings(JSONObject joFormat) throws JSONException {
         super.readFormatSettings(joFormat);
@@ -1164,6 +1190,9 @@ public class GSMModel extends Model
 
         boolean b = joFormat.optBoolean(PreferenceKeys.goldenPointToWinGame.toString());
         setGoldenPointToWinGame(b);
+
+        boolean b2 = joFormat.optBoolean(PreferenceKeys.StartTiebreakOneGameEarly.toString());
+        setStartTiebreakOneGameEarly(b2);
     }
 
     @Override protected JSONArray scoreHistoryToJson(List lSetScoreHistory) throws JSONException {

@@ -398,6 +398,12 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             ((GSMModel) ScoreBoard.getMatchModel()).setGoldenPointToWinGame(bGoldenPoint);
                         }
                         break;
+                    case StartTiebreakOneGameEarly:
+                        if ( ScoreBoard.getMatchModel() instanceof GSMModel) {
+                            boolean bStartTiebreakOneGameEarly = PreferenceValues.startTiebreakOneGameEarly(Preferences.this);
+                            ((GSMModel) ScoreBoard.getMatchModel()).setStartTiebreakOneGameEarly(bStartTiebreakOneGameEarly);
+                        }
+                        break;
                     case indicateGoldenPoint:
                         // simply keep 'indicateGameBall' in sync. Different pref key for different descriptions
                         boolean bIndicateGoldenPoint = RWValues.getBoolean(eKey, Preferences.this, false);

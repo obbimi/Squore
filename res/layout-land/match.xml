@@ -601,13 +601,26 @@
             app:layout_constraintWidth_percent="0.55" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <CheckBox
+        android:id="@+id/cbStartTieBreakOnGameEarlyGSM"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:visibility="gone"
+        android:text="@string/pref_StartTieBreakOneGameEarly"
+        android:textSize="@dimen/txt_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llTieBreakFormat" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llFinalSetFinish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llTieBreakFormat">
+        app:layout_constraintTop_toBottomOf="@id/cbStartTieBreakOnGameEarlyGSM">
 
         <TextView
             android:id="@+id/lblFinalSetFinish"
