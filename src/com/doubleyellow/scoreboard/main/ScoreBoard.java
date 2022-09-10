@@ -349,6 +349,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
     private TouchBothListener.LongClickBothListener longClickBothListener = new TouchBothListener.LongClickBothListener() {
         @Override public boolean onLongClickBoth(View view1, View view2) {
             dbgmsg("Long Clicked both", view1.getId(), view2.getId());
+            if ( matchModel == null ) { return false; }
 
             List<Integer> lIds = Arrays.asList(view1.getId(), view2.getId());
             if ( lIds.containsAll(Arrays.asList(R.id.txt_player1, R.id.txt_player2)) ) {
@@ -684,6 +685,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             int viewId = getXmlIdOfParent(view);
             Player pl = IBoard.m_id2player.get(viewId);
             if ( pl == null ) { return false; }
+            if ( matchModel == null ) { return false; }
 
             if ( matchModel.isDoubles() ) {
                 // toggle player names of the long clicked team
@@ -4555,7 +4557,7 @@ touch -t 01030000 LAST.sb
         addToDialogStack(twoTimerView);
 
         // ensure the match shows up in the list of live score a.s.a.p. so e.g. when warmup timer is started
-        if ( ( matchModel.hasStarted() == false ) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
+        if ( (matchModel != null) && ( matchModel.hasStarted() == false ) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
             shareScoreSheetDelayed(1000);
         }
     }
@@ -4872,20 +4874,20 @@ touch -t 01030000 LAST.sb
         return true;
     }
 
-    boolean m_bChildActivityShowing = false;
+    private int m_iChildActivityRequestCode = 0;
 
     /**
      * {@inheritDoc}
      */
     @Override public void startActivityForResult(Intent intent, int requestCode) {
-        m_bChildActivityShowing = true;
+        m_iChildActivityRequestCode = requestCode;
         super.startActivityForResult(intent, requestCode);
     }
 
     @Override protected void onActivityResult(int requestCode_MenuId, int resultCode, Intent data) {
         Log.d(TAG, "Returning from activity. requestCode:" + requestCode_MenuId + ", resultCode:" + resultCode + ", " + getResourceEntryName(requestCode_MenuId));
 
-        m_bChildActivityShowing = false;
+        m_iChildActivityRequestCode = 0;
         super.onActivityResult(requestCode_MenuId, resultCode, data);
 
         if ( requestCode_MenuId == R.id.sb_settings ) {
@@ -5229,8 +5231,8 @@ touch -t 01030000 LAST.sb
     public boolean isDialogShowing() {
         return dialogManager.isDialogShowing();
     }
-    public boolean isChildActivityShowing() {
-        return m_bChildActivityShowing;
+    public int childActivityRequestCode() {
+        return m_iChildActivityRequestCode;
     }
     private synchronized boolean addToDialogStack(BaseAlertDialog dialog) {
 /*
@@ -5255,6 +5257,7 @@ touch -t 01030000 LAST.sb
 
     /** If you start referee-ing a match that was already in progress */
     private void adjustScore() {
+        if ( matchModel == null ) { return; }
         AdjustScore adjustScore = new AdjustScore(this, matchModel, this);
         show(adjustScore);
     }
@@ -6566,6 +6569,7 @@ touch -t 01030000 LAST.sb
     public synchronized void interpretReceivedMessageOnUiThread(String readMessage, MessageSource source) {
         runOnUiThread(() -> interpretReceivedMessage(readMessage, source));
     }
+    /** Invoked by BluetoothHandler, WearableHelper.MessageListener and PusherHandler */
     public synchronized void interpretReceivedMessage(String readMessage, MessageSource msgSource) {
 
         if ( readMessage.startsWith(BTMethods.requestCompleteJsonOfMatch.toString())) {
@@ -6608,40 +6612,73 @@ touch -t 01030000 LAST.sb
 
                     if ( sFileContent.startsWith("{") && sFileContent.endsWith("}") ) {
                         Log.d(TAG, "Parsing received match...");
-                        try {
-                            PersistHelper.storeAsPrevious(this, matchModel, false);
-                            //persist(true);
-                            File fJson = PersistHelper.getLastMatchFile(this);
-                            FileUtil.writeTo(fJson, sFileContent);
+                        if ( msgSource.equals(MessageSource.FirebaseCloudMessage) ) {
+                            Model m = Brand.getModel();
+                            m.fromJsonString(sFileContent);
+                            boolean bStartNewMatchDialog = StringUtil.areAllNonEmpty(m.getName(Player.A), m.getName(Player.B));
+                            if ( bStartNewMatchDialog ) {
+                                Intent intent = new Intent();
+                                intent.putExtra(IntentKeys.NewMatch.toString(), sFileContent); // this is read by ScoreBoard.onActivityResult
+                                PreferenceValues.initForLiveScoring(this, true);
 
-                            setMatchModel(null);
-                            boolean bReadOK = this.initScoreBoard(fJson);
-                            Log.d(TAG, "Parsing: " + bReadOK);
-                            if ( bReadOK ) {
-                                matchModel.triggerListeners();
-                                if ( BTRole.Slave.equals(m_blueToothRole) ) {
-                                    String bluetooth_name = Settings.Secure.getString(getContentResolver(), "bluetooth_name");
-                                    if ( StringUtil.isEmpty(bluetooth_name) && mBluetoothAdapter != null ) {
-                                        bluetooth_name = mBluetoothAdapter.getName();
-                                    }
-                                    if ( StringUtil.isEmpty(bluetooth_name) ) {
-                                        bluetooth_name = Build.MODEL;
-                                    }
-                                    writeMethodToBluetooth(BTMethods.jsonMatchReceived, true);
-                                    writeMethodToBluetooth(BTMethods.Toast, getString(R.string.bt_match_received_by_X, bluetooth_name));
+                                if ( StringUtil.isEmpty(m.getSource()) ) {
+                                    String sSourceId = null; // DateUtil.getCurrentYYYYMMDDTHHMMSS();  // TODO
+                                    m.setSource(MessageSource.FirebaseCloudMessage.toString(), sSourceId);
+                                    String sFileContentEnriched = m.toJsonString(null);
+                                    intent.putExtra(IntentKeys.NewMatch.toString(), sFileContentEnriched);
                                 }
-                                bluetoothRequestCountryFile(2000);
+
+                                // assume json of a Model of a 'new match' to be reffed is being sent via an FCM message
+                                // act as if the match was selected from a feed
+                                final int iRequestCode = R.id.sb_select_feed_match;
+                                if ( childActivityRequestCode() == iRequestCode ) {
+                                    Toast.makeText(this, "Ignoring new match to ref received by FCM message: " + sFileContent + ".\nRelated child activity already open", Toast.LENGTH_LONG).show();
+                                } else {
+                                    onActivityResult(iRequestCode, 0 , intent);
+                                    if ( PreferenceValues.showToastMessageForEveryReceivedFCMMessage(this)) {
+                                        Toast.makeText(this, "New match to ref received by FCM message:\n" + sFileContent, Toast.LENGTH_LONG).show();
+                                    }
+                                }
                             } else {
-                                writeMethodToBluetooth(BTMethods.Toast, "Receiver could not read json...");
-                                if ( BTRole.Slave.equals(m_blueToothRole) ) {
-                                    writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
-                                }
+                                // TODO: implement other options. e.g. populate 'My List' and open 'My List'
+                                Toast.makeText(this, "JSON received via FCM is not valid to represent a match.\n" + sFileContent, Toast.LENGTH_LONG).show();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            writeMethodToBluetooth(BTMethods.Toast, "Could not read json. Exception: " + e.getMessage());
+                        } else {
+                            try {
+                                PersistHelper.storeAsPrevious(this, matchModel, false);
+                                //persist(true);
+                                File fJson = PersistHelper.getLastMatchFile(this);
+                                FileUtil.writeTo(fJson, sFileContent);
 
-                            // re-requesting complete match if exception occurred
+                                setMatchModel(null);
+                                boolean bReadOK = this.initScoreBoard(fJson);
+                                Log.d(TAG, "Parsing: " + bReadOK);
+                                if ( bReadOK ) {
+                                    matchModel.triggerListeners();
+                                    if ( BTRole.Slave.equals(m_blueToothRole) ) {
+                                        String bluetooth_name = Settings.Secure.getString(getContentResolver(), "bluetooth_name");
+                                        if ( StringUtil.isEmpty(bluetooth_name) && mBluetoothAdapter != null ) {
+                                            bluetooth_name = mBluetoothAdapter.getName();
+                                        }
+                                        if ( StringUtil.isEmpty(bluetooth_name) ) {
+                                            bluetooth_name = Build.MODEL;
+                                        }
+                                        writeMethodToBluetooth(BTMethods.jsonMatchReceived, true);
+                                        writeMethodToBluetooth(BTMethods.Toast, getString(R.string.bt_match_received_by_X, bluetooth_name));
+                                    }
+                                    bluetoothRequestCountryFile(2000);
+                                } else {
+                                    writeMethodToBluetooth(BTMethods.Toast, "Receiver could not read json...");
+                                    if ( BTRole.Slave.equals(m_blueToothRole) ) {
+                                        writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                writeMethodToBluetooth(BTMethods.Toast, "Could not read json. Exception: " + e.getMessage());
+
+                                // re-requesting complete match if exception occurred
+                            }
                         }
                     } else {
                         // assume base64 encoded image
@@ -6842,7 +6879,7 @@ touch -t 01030000 LAST.sb
                     }
                     case jsonMatchReceived: {
                         // do not actually swap sides, but make sure mirrored device displays LR as desired
-                        swapSidesOnBT(iBoard.m_firstPlayerOnScreen);
+                        swapSidesOnBT(iBoard.m_firstPlayerOnScreen); // ??
                         break;
                     }
                     case requestCompleteJsonOfMatch: {
