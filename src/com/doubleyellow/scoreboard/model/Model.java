@@ -1423,6 +1423,8 @@ public abstract class Model implements Serializable
     public final List<List<ScoreLine>> getGamesScoreHistory() {
         if ( m_lGamesScorelineHistory == null ) {
             setGamesScoreHistory(new ArrayList<List<ScoreLine>>());
+        }
+        if ( (m_lGamesScorelineHistory != null) && (m_lGamesScorelineHistory.size() == 0) ) {
             addNewGameScoreDetails(); // re-activated 2022-04-03
         }
         return m_lGamesScorelineHistory;

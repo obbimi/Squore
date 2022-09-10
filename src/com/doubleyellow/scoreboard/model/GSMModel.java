@@ -362,7 +362,11 @@ public class GSMModel extends Model
     private List<Player>                     m_lSetWinner           = null;
 
     public Map<Player, Integer> getSetsWon() {
-        return ListUtil.getLast(m_lSetCountHistory);
+        if ( ListUtil.isEmpty(m_lSetCountHistory) ) {
+            m_lSetCountHistory.add(getZeroZeroMap());
+        }
+        Map<Player, Integer> last = ListUtil.getLast(m_lSetCountHistory);
+        return last;
     }
     public List<Map<Player, Integer>> getSetCountHistory() {
         return m_lSetCountHistory;
@@ -571,7 +575,11 @@ public class GSMModel extends Model
         Player winner = Util.getWinner(setScore);
         m_lSetWinner.add(winner);
 
-        Map<Player, Integer> player2SetsWon = new HashMap<Player, Integer>(getSetsWon()); // clone to get current score before adding set
+        // clone to get current score before adding set
+        Map<Player, Integer> player2SetsWon = new HashMap<Player, Integer>();
+        Map<Player, Integer> prevSetsWon = getSetsWon();
+        player2SetsWon.putAll(prevSetsWon);
+
         MapUtil.increaseCounter(player2SetsWon, winner);
         m_lSetCountHistory.add(player2SetsWon);
 

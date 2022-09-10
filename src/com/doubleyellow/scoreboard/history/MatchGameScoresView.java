@@ -640,6 +640,7 @@ public class MatchGameScoresView extends LinearLayout
         // show end scores of all games
         int iRow = 0;
         for ( Map<Player, Integer> scores: gameScores ) {
+            if ( scores == null ) { continue; } // should not happen...
             iRow++;
             Player gameWinner = Util.getWinner(scores);
 
@@ -667,8 +668,8 @@ public class MatchGameScoresView extends LinearLayout
                 setSizeAndColors(txt, bInvert, iTxtSizeForInstanceAndOrientation, instanceKey);
                 //txt.setText(StringUtil.pad(String.valueOf(scores.get(p)), ' ', 2, bLeftColumn) );
                 //txt.setText(" " + scores.get(p) + " "); // add a space just for spacing (on both sides for centering)
-                Integer iScorePlayer   = scores.get(p);
-                Integer iScoreOther = scores.get(p.getOther());
+                Integer iScorePlayer = scores.get(p);
+                Integer iScoreOther  = scores.get(p.getOther());
 
                 String sScorePlayer = String.valueOf(iScorePlayer);
                 if ( Brand.isGameSetMatch() ) {
