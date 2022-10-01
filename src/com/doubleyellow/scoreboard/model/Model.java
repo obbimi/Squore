@@ -359,6 +359,19 @@ public abstract class Model implements Serializable
         }
         m_lGamesScorelineHistory = l;
     }
+    /** For drawing 'original' paper scoring. Contains all games including the one in progress */
+    public final List<List<ScoreLine>> getGamesScoreHistory() {
+        if ( m_lGamesScorelineHistory == null ) {
+            setGamesScoreHistory(new ArrayList<List<ScoreLine>>());
+            addNewGameScoreDetails(); // re-activated 2022-04-03
+        }
+        // tried this on 2022-09-10: endless loop
+        //if ( (m_lGamesScorelineHistory != null) && (m_lGamesScorelineHistory.size() == 0) ) {
+        //    addNewGameScoreDetails();
+        //}
+        return m_lGamesScorelineHistory;
+    }
+
     /** For overwriting by GSMModel */
     final void setPlayer2GamesWonHistory(final List<Map<Player, Integer>> l) {
         if ( m_lPlayer2GamesWon != null ) {
@@ -1070,8 +1083,6 @@ public abstract class Model implements Serializable
         ListUtil.removeLast(m_lGamesScorelineHistory); // no from gsm
         ListUtil.removeLast(m_lPlayer2GamesWon); // TODO: not required if it is the zero-zero one?
         ListUtil.removeLast(m_rallyEndStatistics);
-        //setGameScoreHistory(ListUtil.getLast(m_lGamesScorelineHistory));
-        //setPlayer2GamesWon(ListUtil.getLast(m_lPlayer2GamesWon));
         m_rallyEndStatsGIP      = ListUtil.getLast(m_rallyEndStatistics);
         ListUtil.removeLast(m_lGameWinner); // required from GSM
 
@@ -1417,17 +1428,6 @@ public abstract class Model implements Serializable
             if ( iB != null ) MapUtil.increaseCounter(pointsWon, Player.B, iB);
         }
         return pointsWon;
-    }
-
-    /** For drawing 'original' paper scoring. Contains all games including the one in progress */
-    public final List<List<ScoreLine>> getGamesScoreHistory() {
-        if ( m_lGamesScorelineHistory == null ) {
-            setGamesScoreHistory(new ArrayList<List<ScoreLine>>());
-        }
-        if ( (m_lGamesScorelineHistory != null) && (m_lGamesScorelineHistory.size() == 0) ) {
-            addNewGameScoreDetails(); // re-activated 2022-04-03
-        }
-        return m_lGamesScorelineHistory;
     }
 
     /** One-based */

@@ -74,6 +74,7 @@ public class EditFormat extends BaseAlertDialog {
     private Spinner                           spPauseDuration;
     private ToggleButton                      cbPauseDuration;
     private CompoundButton                    cbGoldenPoint;
+    private CompoundButton                    cbStartTiebreakOneGameEarly;
     private ToggleButton                      tbBestOf_or_TotalOf;
     private EnumSpinner<TieBreakFormat>       spTieBreakFormat;
     private EnumSpinner<DoublesServeSequence> spDoublesServeSequence;
@@ -113,7 +114,7 @@ public class EditFormat extends BaseAlertDialog {
             }
         }
         spGameEndScore = (Spinner) vg.findViewById(R.id.spGameEndScore);
-        MatchView.initGameEndScore(context, spGameEndScore, nrOfPointsToWinGame, Math.max(2,iNewNrOfPointsToWinGame), null);
+        MatchView.initGameEndScore(context, spGameEndScore, nrOfPointsToWinGame, Math.max(2,iNewNrOfPointsToWinGame), null, null);
         spGameEndScore.setEnabled(ListUtil.size(gameScoresIncludingInProgress)<=1); // only allow editing this if no games have ended yet
 
         TieBreakFormat tbfPref = PreferenceValues.getTiebreakFormat(context);
@@ -202,6 +203,11 @@ public class EditFormat extends BaseAlertDialog {
                         boolean bUseGoldenPoint = cbGoldenPoint.isChecked();
                         gsmModel.setGoldenPointToWinGame(bUseGoldenPoint);
                         PreferenceValues.setBoolean(PreferenceKeys.goldenPointToWinGame, context, bUseGoldenPoint);
+                    }
+                    if ( (cbStartTiebreakOneGameEarly != null) && cbStartTiebreakOneGameEarly.isEnabled() ) {
+                        boolean bStartTiebreakOneGameEarly = cbStartTiebreakOneGameEarly.isChecked();
+                        gsmModel.setStartTiebreakOneGameEarly(bStartTiebreakOneGameEarly);
+                        PreferenceValues.setBoolean(PreferenceKeys.StartTiebreakOneGameEarly, context, bStartTiebreakOneGameEarly);
                     }
                 }
 

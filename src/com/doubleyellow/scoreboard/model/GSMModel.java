@@ -363,6 +363,9 @@ public class GSMModel extends Model
 
     public Map<Player, Integer> getSetsWon() {
         if ( ListUtil.isEmpty(m_lSetCountHistory) ) {
+            if ( m_lSetCountHistory == null ) {
+                m_lSetCountHistory = new ArrayList<Map<Player, Integer>>();
+            }
             m_lSetCountHistory.add(getZeroZeroMap());
         }
         Map<Player, Integer> last = ListUtil.getLast(m_lSetCountHistory);
