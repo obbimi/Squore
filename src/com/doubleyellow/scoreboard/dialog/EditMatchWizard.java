@@ -413,7 +413,7 @@ public class EditMatchWizard extends BaseAlertDialog
     private int m_buttonSizePx = 0;
 
     private List<View>           lControls = new ArrayList<View>();
-    private Model                m_tmp = ModelFactory.getTemp();
+    private Model                m_tmp = ModelFactory.getModel(Brand.getSport());
 
     public final static int BTN_NEXT  = DialogInterface.BUTTON_POSITIVE;
     public final static int BTN_PREV  = DialogInterface.BUTTON_NEGATIVE;

@@ -4040,7 +4040,8 @@ touch -t 01030000 LAST.sb
                     TabletennisModel tabletennisModel = (TabletennisModel) matchModel;
                     tabletennisModel.changeInitialServer();
 
-                    changeScore(Player.A);
+                    //changeScore(Player.A); // NPE if match not yet started
+                    handleMenuItem(R.id.pl_change_score, Player.A);
                     undoLast();
                 }
                 return true;

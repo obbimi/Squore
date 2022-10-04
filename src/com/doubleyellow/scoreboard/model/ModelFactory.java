@@ -17,10 +17,14 @@
 
 package com.doubleyellow.scoreboard.model;
 
+import android.util.Log;
+
 import com.doubleyellow.scoreboard.Brand;
 
 public class ModelFactory
 {
+    private static final String TAG = "SB." + ModelFactory.class.getSimpleName();
+
     public static Model getModel(SportType type) {
         Model m = null;
         switch (type) {
@@ -56,7 +60,9 @@ public class ModelFactory
     private static RacquetballModel mTmpRacketball  = null;
     private static GSMModel         mGSMModel       = null;
     private static PadelModel       mPadelModel     = null;
-    public static Model getTemp() {
+    /** Returns an existing model and calls 'clean' on it. Use with care. Only to be used to communicate json between activities */
+    public static Model getTemp(String sPurpose) {
+        Log.i(TAG, "Using singleton tmp model " + sPurpose);
         return getTemp(Brand.brand);
     }
     private static Model getTemp(Brand type) {

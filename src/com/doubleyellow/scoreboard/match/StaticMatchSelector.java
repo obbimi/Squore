@@ -570,7 +570,8 @@ public class StaticMatchSelector extends ExpandableMatchSelector
             return false;
         }
 
-        Model  model = getModel(sGroup, sText, saPlayers);
+        Model model = ModelFactory.getTemp("Construct json to communicate back to main activity");
+        fillModel(sGroup, sText, saPlayers, model);
         String sJson = model.toJsonString(null);
         intent.putExtra(IntentKeys.NewMatch.toString(), sJson); // this is read by ScoreBoard.onActivityResult
         activity.setResult(Activity.RESULT_OK, intent);
@@ -578,9 +579,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
         return true;
     }
 
-    private Model getModel(String sGroup, String sText, String[] saPlayers) {
-        Model m = ModelFactory.getTemp();
-
+    private void fillModel(String sGroup, String sText, String[] saPlayers, Model m) {
         FeedMatchSelector.getMatchDetailsFromMatchString(m, sText, context, false);
         if ( m.isDirty() ) {
         } else {
@@ -650,7 +649,6 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                 e.printStackTrace();
             }
         }
-        return m;
     }
 
     @Override public AdapterView.OnItemLongClickListener getOnItemLongClickListener() {
@@ -710,7 +708,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
           //Log.d(TAG, "read list of matches: \n" + ListUtil.toNice(lFixedMatches, false));
             if ( ListUtil.isNotEmpty(lFixedMatches) ) {
                 String sHeader = context.getString(R.string.lbl_fixed); // for if configured/stored text does not contain a header as the first line
-                Model mRecycle = ModelFactory.getTemp();
+                Model mRecycle = ModelFactory.getTemp("Communicating names for static match selector");
                 for ( String sMatch: lFixedMatches ) {
                     if ( StringUtil.isEmpty(sMatch) ) {
                         continue;

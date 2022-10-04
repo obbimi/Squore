@@ -240,7 +240,7 @@ public class ResultSender {
 
     /**
      * Get a map with key 'filename + A|B' and value 'clubname' for files.
-     * Make corrections for matches where no clus are specified.
+     * Make corrections for matches where no clubs are specified.
      */
     private static Params getClubCorrections(List<File> lSelected, Context context) {
         final String sHome = context.getString(R.string.Home);
@@ -254,7 +254,7 @@ public class ResultSender {
         Params mPlayer2ClubsNoHA  = new Params();
 
         for(File fS: lSelected) {
-            Model m = ModelFactory.getTemp();
+            Model m = ModelFactory.getTemp("Parsing persisted JSON files");
             try {
                 m.fromJsonString(fS);
             } catch (Exception e) {
@@ -353,7 +353,7 @@ public class ResultSender {
             if ( fS == null  || fS.exists() == false ) {
                 continue;
             }
-            Model m = ModelFactory.getTemp();
+            Model m = ModelFactory.getTemp("Parsing persisted JSON files");
             try {
                 m.fromJsonString(fS);
             } catch (Exception e) {

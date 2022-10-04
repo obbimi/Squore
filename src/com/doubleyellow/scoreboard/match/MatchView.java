@@ -1328,7 +1328,9 @@ public class MatchView extends ScrollView
             iNrOfGamesToWinMatch = (Integer.parseInt(spNumberOfGamesToWin.getSelectedItem().toString()) + 1) / 2;
         }
         Intent intent = new Intent();
-        Model  model = getModel(/*iNrOfPoints2Win, iNrOfGamesToWinMatch*/);
+        Model model = ModelFactory.getTemp("To return match json with chosen options");
+        //Model model = ModelFactory.getModel(Brand.getSport()); // 2022-10-04 not using getTemp() here anymore. The additionalsettings are
+        fillModel(/*iNrOfPoints2Win, iNrOfGamesToWinMatch*/ model);
         if ( model instanceof GSMModel ) {
             GSMModel gsmModel = (GSMModel) model;
             gsmModel.setNrOfPointsToWinGame(iNrOfPoints2Win);
@@ -1362,8 +1364,7 @@ public class MatchView extends ScrollView
         return intent;
     }
 
-    private Model getModel(/*int iNrOfPoints2Win, int iNrOfGamesToWinMatch*/) {
-        Model m = ModelFactory.getTemp();
+    private void fillModel(/*int iNrOfPoints2Win, int iNrOfGamesToWinMatch*/Model m) {
         if ( m_bIsDoubles == false ) {
             m.setPlayerName(Player.A, txtPlayerA.getText().toString());
             m.setPlayerName(Player.B, txtPlayerB.getText().toString());
@@ -1490,8 +1491,6 @@ public class MatchView extends ScrollView
             }
             PreferenceValues.setStringSet(PreferenceKeys.changeSidesWhen_GSM, newPrefValues, getContext());
         }
-
-        return m;
     }
 
     public static void getValueFromSelectListOrToggleAndStoreAsPref(Context ctx, ToggleButton cbDuration, Spinner spDuration, PreferenceKeys prefKey, int iCurrentPrefValue) {

@@ -137,7 +137,7 @@ public class RecentMatchesMultiSelect extends Fragment {
         final Map<String, File> mMatches = new TreeMap<>();
         if ( ListUtil.isNotEmpty(lMatches) ) {
             for ( File f: lMatches ) {
-                Model match = ModelFactory.getTemp();
+                Model match = ModelFactory.getTemp("Parsing persisted JSON files");
                 try {
                     match.fromJsonString(f, true);
                 } catch (Exception e) {

@@ -1270,7 +1270,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 List<String> lExpanded = new ArrayList<String>();
                 String sHeader = getString(m_feedStatus.equals(FeedStatus.showingPlayers)?R.string.lbl_players:R.string.sb_matches); // default if no header follows in the feed
                 mFeedPrefOverwrites.clear();
-                Model mTmp = ModelFactory.getTemp();
+                Model mTmp = ModelFactory.getTemp("Storing parsing-result of a match from a feed");
                 for ( String sEntry : lInput ) {
                     sEntry = sEntry.trim();
                     if ( StringUtil.isEmpty(sEntry) ) {

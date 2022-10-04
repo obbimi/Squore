@@ -773,7 +773,8 @@ public abstract class Model implements Serializable
     }
 
     void addScoreLine(ScoreLine slCall, boolean bAddTiming) {
-        getGameScoreHistory().add(slCall);
+        List<ScoreLine> gameScoreHistory = getGameScoreHistory();
+        gameScoreHistory.add(slCall);
 
         if ( bAddTiming ) {
             GameTiming gameTimingCurrent = getGameTimingCurrent();
@@ -1770,7 +1771,9 @@ public abstract class Model implements Serializable
         return m_sAdditionalPostParams;
     }
     public void setAdditionalPostParams(String s) {
-        m_sAdditionalPostParams = s;
+        if ( m_sAdditionalPostParams == null || m_sAdditionalPostParams.equals(s) == false) {
+            m_sAdditionalPostParams = s;
+        }
     }
 
     //-------------------------------
@@ -3074,7 +3077,9 @@ public abstract class Model implements Serializable
         JSONObject metaData = new JSONObject();
         metaData.put(JSONKey.source  .toString(), m_sSource);
         metaData.put(JSONKey.sourceID.toString(), m_sSourceID);
-        metaData.put(JSONKey.additionalPostParams.toString(), m_sAdditionalPostParams);
+        if ( StringUtil.isNotEmpty(m_sAdditionalPostParams) ) {
+            metaData.put(JSONKey.additionalPostParams.toString(), m_sAdditionalPostParams);
+        }
         if ( StringUtil.isNotEmpty(m_shareUrl) ) {
             metaData.put(JSONKey.shareURL.toString(), m_shareUrl);
         }

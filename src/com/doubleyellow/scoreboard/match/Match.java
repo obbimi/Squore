@@ -108,8 +108,7 @@ public class Match extends XActivity implements MenuHandler
             if ( intent != null ) {
                 String sJson = intent.getStringExtra(IntentKeys.NewMatch.toString());
                 if ( StringUtil.isNotEmpty(sJson) ) {
-                    //model = Brand.getModel();
-                    model = ModelFactory.getTemp();
+                    model = Brand.getModel(); // 2022-10-04 reverted. do not use ModelFactory.getTemp(), because this because a class member variable in MatchView
                     model.fromJsonString(sJson);
                 } else {
                     Serializable srlModel = intent.getSerializableExtra(IntentKeys.EditMatch.toString());
