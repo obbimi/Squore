@@ -52,6 +52,8 @@ public enum Brand
   //Racketlon       (SportType.Racketlon  , R.string.app_name_short_brand__Racketlon       , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, R.color.brand_racketlon_bg_color       , R.string.CUSTOM_RECEIVER_APP_ID_racketlon_fancy   , R.array.colorSchema__Racketlon   , 3000, "https://racketlon.double-yellow.be"  , "6ffc7128-6fd5-46d1-b79c-46e4c613cba5", R.raw.changelog_racketlon),
   //TennisPadel     (SportType.TennisPadel, R.string.app_name_short_brand__TennisPadel     , 0, R.drawable.logo_brand_tennispadel       , R.id.sb_branded_logo_ar400, R.color.brand_padel_bg_color           , R.string.CUSTOM_RECEIVER_APP_ID_tennispadel_fancy , R.array.colorSchema__TennisPadel , 4000, "https://tennispadel.double-yellow.be", "239ad8ef-0cdd-490c-8f01-4d50dd4e7c6b", R.raw.changelog_tennispadel),
   //Racquetball     (SportType.Racquetball, R.string.app_name_short_brand__Racquetball     , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150, 0                                      , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared      , R.array.colorSchema__Racquetball , 3000, "https://racquetball.double-yellow.be", null                                  , R.raw.changelog),
+    
+  //WinnerPadel     (SportType.Padel      , R.string.app_name_short_brand__WinnerPadel     ,15, R.drawable.brand_padel_splash__winnerpadel, R.id.sb_branded_logo_ar400, R.color.brand_padel_bg_color         , R.string.CUSTOM_RECEIVER_APP_ID_brand_test      , R.array.colorSchema__WinnerPadel , 4000, "https://tennispadel.double-yellow.be", "06d7511e-f00a-4d82-b10b-2c8629e67dc8", R.raw.changelog_tennispadel),
 
     ;
     Brand( SportType sport

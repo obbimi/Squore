@@ -10,7 +10,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.1.3'
 
         // added for firebase to parse google-services.json
-        classpath 'com.google.gms:google-services:4.3.13'
+        classpath 'com.google.gms:google-services:4.3.14'
     }
 }
 repositories {
@@ -97,21 +97,21 @@ android {
             minSdkVersion 19
             targetSdkVersion 30
             multiDexEnabled true // required since using firebase
-            versionCode 1915 * 10000 + 486
+            versionCode 1915 * 10000 + 487
             versionName "4.49"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 30 // target 31 requires android:export="(true|false)", but pusher dependency adds something in our manifest without this attribute
-            versionCode 2315 * 10000 + 486
+            versionCode 2315 * 10000 + 487
             versionName "4.49"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 30
-            versionCode 2501 * 10000 + 486
+            versionCode 2501 * 10000 + 487
             versionName "4.49"
         }
     }
@@ -184,9 +184,9 @@ dependencies {
     wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.1.0' // wearOs can not cast but to run it still needs 'Impementation' to not have 'ClassNotFound' exceptions
 
     // allow communication between handheld device and wearable
-    phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:17.1.0' // compileOnly is good enough for API < 23
-    phoneTabletPost23Implementation   'com.google.android.gms:play-services-wearable:17.1.0'
-    wearOsImplementation              'com.google.android.gms:play-services-wearable:17.1.0'
+    phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:18.0.0' // compileOnly is good enough for API < 23
+    phoneTabletPost23Implementation   'com.google.android.gms:play-services-wearable:18.0.0'
+    wearOsImplementation              'com.google.android.gms:play-services-wearable:18.0.0'
 
     phoneTabletPre22CompileOnly       'com.google.android.support:wearable:2.9.0'
     phoneTabletPost23Implementation   'com.google.android.support:wearable:2.9.0'
@@ -201,7 +201,7 @@ dependencies {
     //wearApp project(':wear:base') // applies to all other variants
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation platform('com.google.firebase:firebase-bom:29.1.0')
+    implementation platform('com.google.firebase:firebase-bom:30.4.1')
     implementation 'com.google.firebase:firebase-core'
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-iid'
@@ -222,4 +222,4 @@ dependencies {
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
 }
 */
-apply plugin: 'com.google.gms.google-services' // for firebase
+apply plugin: 'com.google.gms.google-services' // for firebase, comment out for specially branded version of the app that are not in google-services.json
