@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
-    <string name="sb_remove_last_score_for_x">Remove last score marked for %s ?</string> <!-- TODO -->
+    <string name="sb_remove_last_score_for_x">Odeber poslední body označené %s ?</string>
 
-    <string name="Poule">Poule - Multiple matches per player</string> <!-- TODO -->
-    <string name="TeamVsTeam_OneMatchPerPlayer">Team vs Team - One match per team player</string> <!-- TODO -->
-    <string name="TeamVsTeam_XMatchesPlayer">Team vs Team - Multiple matches per team player</string> <!-- TODO -->
+    <string name="Poule">Poule - Více zápasů na hráče</string>
+    <string name="TeamVsTeam_OneMatchPerPlayer">Tým proti Týmu - Jeden zápas pro hráče týmu</string>
+    <string name="TeamVsTeam_XMatchesPlayer">Tým proti Týmu - Více zápasů pro hráče týmu</string>
 
 <!-- <string name="facebook_app_id">504690753001960</string> -->
     <string name="msg_enter_both_player_names">Zadejte prosím jména obou hráčů</string>
@@ -29,15 +29,17 @@
     <string name="sb_tiebreak">Zkrácená hra</string>
     <string name="sb_who_will_start_to_serve">Kdo začíná podávat?</string>
     <string name="sb_cmd_toss">Losovat</string>
-    <string name="choose_winner_of_toss_or_perform_toss">Choose winner of toss, or toss with the app</string> <!-- TODO-->
+    <string name="choose_winner_of_toss_or_perform_toss">Vyber vítěze hodu nebo hod pomocí aplikace</string> <!-- TODO-->
+    <string name="sb_toss_won_by_x">Hod vyhrál %1$s</string>
+    <string name="sb_players_choice">Hráčská volba:</string>
     <string name="sb_makeThisTheDefault">Nastavit jako výchozí</string>
     <string name="sb_delete_group_of_matches_confirm">Smazat skupinu zápasů \'%s\'?</string>
     <string name="sb_cmd_ok_and_skip_timer">OK (nestopovat čas)</string>
     <string name="sb_cmd_ok_and_start_timer">OK (spustit stopky)</string>
     <string name="sb_cmd_ok_plus">OK +</string>
 
-    <string name="uc_matchlayout_all_small_font">Smaller font (All fields)</string> <!-- TODO -->
-    <string name="uc_matchlayout_simple_large_font">Larger font (Common fields)</string> <!-- TODO -->
+    <string name="uc_matchlayout_all_small_font">Malý font (všechny pole)</string>
+    <string name="uc_matchlayout_simple_large_font">Velký font (Společná pole)</string>
 
     <string name="uc_clear_all_fields">Clear all fields</string>
     <string name="uc_clear_player_fields">Clear player fields</string>
@@ -48,7 +50,7 @@
     <string name="sb_clear_score_confirm_message">Do you want to restart the score?</string>
     <string name="sb_clear_score_confirm_message_2">The score history of the current match will be lost.</string>
     <string name="cmd_change_format">Change format</string>
-    <string name="please_select_a_value_for_x">Please select a value for \'%1$s\'</string> <!-- TODO -->
+    <string name="please_select_a_value_for_x">Prosím, vyber hodnotu pro \'%1$s\'</string>
     <string name="sb_select_match">Select match</string>
     <string name="sb_static_match">My List</string>
     <string name="sb_select_static_match">Select from My List</string>
@@ -79,9 +81,10 @@
     <string name="sb_share_matches_summary">Sdílet výsledky zápasuů</string>
     <string name="sb_edit_players">Upravit jména hráčů</string>
     <string name="sb_swap_double_players">Prohodit dvojice hráčů</string>
+    <string name="sb_swap_server">Swap server</string> <!-- TODO -->
     <string name="sb_change_sides">Prohodit hráče</string>
     <string name="sb_choose_player">Pro kterého hráče?</string>
-    <string name="sb_choose_players">Choose players</string> <!-- TODO -->
+    <string name="sb_choose_players">Výběr hráčů</string>
     <string name="sb_choose_team">Pro který tým?</string>
     <string name="sb_edit_event_or_player">Upravit soutěž/hráče</string>
     <string name="sb_new_match">Začít nový zápas</string>
@@ -96,6 +99,7 @@
     <string name="cmd_cancel_timer">Zrušit Časomíra</string>
     <string name="sb_nbsp_timer">\u00A0Časomíra</string> <!-- added non-breaking space in front for action bar -->
     <string name="sb_injury_timer">Časomíra při zranění</string>
+    <string name="sb_player_timeout_timer">Týmový/Hráčský timeout</string>
     <string name="sb_score_details">Podrobné výsledky</string>
     <string name="Live_Score">Skóre živě</string>
     <string name="sb_official_announcement">Hlášení rozhodčího</string>
@@ -114,15 +118,15 @@
     <string name="sb_recent_matches">Poslední zápasy</string>
     <string name="sb_preferences">Nastavení aplikace</string>
     <string name="sb_no_matches_stored">Nemáte uložené žádné zápasy</string>
-    <string name="sb_no_recent_matches_stored">Nemáte uložené žádné zápasy</string> <!-- TODO -->
+    <string name="sb_no_recent_matches_stored">Nemáte uložené žádné zápasy</string>
     <string name="match_has_finished">Zápas dohrán</string>
     <string name="press_again_to_undo_last_score">Pro odstranění posledního bodu stiskněte znovu vývoj zápasu</string>
     <string name="unable_to_interpret_entered_text_as_2_names">Zadaný text nelze rozpoznat jako dvě jména</string>
 
-    <string name="total_of_x_games__play_remaining_y_games">Because we play \'Total of %1$d games\' the remaining %2$d games will also be played.</string><!-- TODO -->
-    <string name="total_of_x_games__play_remaining_last_game">Because we play \'Total of %1$d games\' the last game will also be played.</string><!-- TODO -->
-    <string name="total_of_x_games_to_y">Total of %1$s games to %2$s</string><!-- TODO -->
-    <string name="total_of_x_games_to_y_1">Total of</string><!-- TODO -->
+    <string name="total_of_x_games__play_remaining_y_games">Protože hrajeme \'Celkem z %1$d her\' zbývající %2$d hry musí být také odehrány.</string>
+    <string name="total_of_x_games__play_remaining_last_game">Protože hrajeme \'Celkem z %1$d her\' poslední hra musí být také odehrána.</string>
+    <string name="total_of_x_games_to_y">Celkem z %1$s her do %2$s</string>
+    <string name="total_of_x_games_to_y_1">Celkem</string>
 
     <string name="best_of_x_games_to_y_1">Nejvýše</string>
     <string name="best_of_x_games_to_y_2__Default">sety(ů) do</string>
@@ -139,7 +143,8 @@
     <string name="url_match_continue">Otevírám zápas z URL: \n %1$s - %2$s</string>
 
     <string name="player_names_swapped">Jména hráčů prohozeny</string>
-    <string name="teams_have_swapped_sides">Tým prohozeny</string><!-- TODO -->
+    <string name="teams_have_swapped_sides">Změna stran</string>
+<!--    <string name="teams_have_swapped_sides">Tým prohozeny</string>-->
     <string name="double_player_names_of_team_x_swapped">Jména dvojic hráčů týmu %1$s prohozeny</string>
     <string name="match_is_locked__unlock_to_allow_modifications">Zápas je zamčený. Zvolte Odemknout, chcete-li upravit skóre. Nebo začněte nový zápas</string>
     <string name="match_is_locked">Zápas je zamčený (%s). Můžete začít nový zápas</string>
@@ -159,6 +164,15 @@
 
     <string name="creating_url_for_sharing_match_details">Vytvářím URL pro sdílení podrobností zápasu…</string>
     <string name="select_reason_and_winner">Vyberte důvod a klikněte na vítěze</string>
+
+    <!-- additional toss options (TT BM TN PD) -->
+    <string name="sb_what_side_will_x_start_to_y">Na které straně se skončí %1$s začně do %2$s?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_player_be">Na jaké straně počítadla by měl on/ona zpočátku být?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_team_be">Na jaké straně počítadla by měl tým zpočátku být?</string>
+    <string name="sb_which_player_of_team_will_start_to_x">Který hráč by měl začít do %1$s?</string>
+
+    <string name="timeout">Timeout</string>
+    <string name="Resume_game">Zpět do hry</string>
 
     <string name="Score">Skóre</string>
     <string name="Game">Set</string>

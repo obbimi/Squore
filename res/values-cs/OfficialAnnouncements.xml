@@ -28,12 +28,17 @@
 
     <!-- tiny timers/chronos -->
     <string name="oa_match_firstletter">Z</string>
-    <string name="oa_game_firstletter">S</string>
+    <string name="oa_game_firstletter">H</string>
+    <string name="oa_set_firstletter_GSM">S</string>
 
-    <string name="oa_game">:</string>
-    <string name="oa_games">:</string>
+    <string name="oa_game">Hra</string>
+    <string name="oa_games">Hras</string>
     <string name="oa_gameball">Setbol</string>
     <string name="oa_matchball">Mečbol</string>
+
+    <string name="oa_set">set</string>
+    <string name="oa_sets">sets</string>
+    <string name="oa_set_ball">Setbol</string>
 
     <string name="oa_n_all__or__n_equal">%d oba</string>
     <string name="oa_player_needs_2_clear_points">Hráč musí vyhrát o dva body</string>

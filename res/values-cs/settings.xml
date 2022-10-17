@@ -35,9 +35,11 @@
     <string name="pref_Category_Brand">Značka</string>
     <string name="pref_Category_Technical">Technické</string>
     <string name="pref_Category_End_of_Game">Konec setu</string>
+    <string name="pref_Category_End_of_Game__TennisPadel">Konec setu</string>
     <string name="pref_Category_Others">Ostatní</string>
     <string name="pref_Category_Live_Score_ChromeCast">Skóre živě/ChromeCast</string>
     <string name="pref_Category_ChromeCast">ChromeCast</string>
+    <string name="pref_Category_BlueToothSync">BlueTooth Mirror</string> <!-- TODO -->
     <string name="pref_Category_Directory_for_import_export">Složka pro import/export</string>
     <string name="pref_Category_Contacts">Kontakty</string>
     <string name="pref_Category_Event">Soutěže</string>
@@ -68,6 +70,17 @@
     <string name="pref_BehaviourOfficial">Práce rozhodčího</string>
     <string name="pref_Sharing">Sdílení</string>
     <string name="pref_Sharing_summary">Na Facebooku, SMS nebo Email</string>
+
+    <!-- Speech -->
+    <string name="pref_Speech">Řeč</string>
+    <string name="pref_Speech_summary">Oznámení skóre prostřednictvím reproduktorů (počítačový hlas)</string>
+    <string name="pref_speechPitch">Hřiště</string>
+    <string name="pref_speechPitch_summary">Nižší hodnota pro slabší zvuk (0–100)</string>
+    <string name="pref_speechRate">Rychlost</string>
+    <string name="pref_speechRate_summary">Nižší hodnota pro pomalejší řeč (0–100)</string>
+    <string name="pref_speechPauseBetweenParts">Pauza mezi částmi skóre</string>
+    <string name="pref_speechPauseBetweenParts_summary">Vyšší hodnota pro delší pauzu mezi slovy (0–1500)</string>
+
     <string name="pref_Other">Různé</string>
     <string name="pref_Appearance">Vzhled</string>
     <string name="pref_Appearance_summary">Barvy. Vlaječky. Tlačítková lišta</string>
@@ -95,6 +108,8 @@
     <string name="pref_PlayerColor">Podbarvení hráče</string>
     <string name="pref_showPlayerColorOn">Podbarvovat hráče</string>
     <string name="pref_showPlayerColorOn_summary">Určit, pro které vizuální prvky použít podbarvení hráče</string>
+    <string name="pref_PlayerColorsNewMatch">Počáteční barvy hráčů</string>
+    <string name="pref_PlayerColorsNewMatch_summary">Jaké použít počáteční barvy pro 2 hráče/týmy</string>
     <string name="pref_serveButtonTransparencyNonServer">Průhlednost tlačítka podání</string>
     <string name="pref_serveButtonTransparencyNonServer_summary">Vyšší hodnota (max 100) znamená větší průhlednost tlačítka přijímajícího hráče</string>
     <!--
@@ -114,21 +129,21 @@
     <string name="pref_showTextInActionBar">Zobrazovat texty na tlačítkách v tlačítkové liště</string>
     <string name="pref_showFullScreen">Na celou obrazovku</string>
     <string name="pref_showScoringHistoryInMainScreen">Zobrazovat průběh zápasu na panelu</string>
-    <string name="pref_gameScoresAppearance">How to show game scores on scoreboard</string> <!-- TODO -->
-    <string name="pref_gameScoresAppearance_summary">Choose between \'short\' like 1-0, 2-0, 2-1 vs \'full games scores\' like 11-8, 11-7, 5-11</string> <!-- TODO -->
+    <string name="pref_gameScoresAppearance">Jak zobrazit skóre hry na počítadle</string>
+    <string name="pref_gameScoresAppearance_summary">Vyber mezi \'krátké\' jako 1-0, 2-0, 2-1 nebo \'celé skóre\' jako 11-8, 11-7, 5-11</string>
     <string name="pref_scorelineLayout">Rozložení vývoje skóre</string>
     <string name="pref_showSideButtonsWithinScoreButtons">Side buttons within Score buttons</string>
     <string name="pref_showSideButtonsWithinScoreButtons_summary">Umožnit mít tlačítka skótre ještě větší</string>
     <string name="pref_AppealHandGestureIconSize">Velikost ikonky v dialogu "Odvolání"</string>
     <string name="pref_AppealHandGestureIconSize_summary">Zadejte 0 pokud nechcete zobrazovat ikonky</string>
-    <string name="pref_newMatchLayout">New match layout</string><!-- TODO -->
-    <string name="pref_newMatchLayout_summary">To have just a limited number of fields to fill, choose \'Simple\'</string><!-- TODO -->
+    <string name="pref_newMatchLayout">Nové uspořádání zápasu</string>
+    <string name="pref_newMatchLayout_summary">Pro omezený počet polí k vyplnění, vyber \'Jednoduchý\'</string>
     <string name="pref_showChoosenDecisionShortly">Zobrazovat rozhodnutí jako zprávu</string>
     <string name="pref_showChoosenDecisionShortly_summary">Zobrazovat krátkou zprávu s hlášením rozhodnutí rozhodčího (po odvolání nebo prohřešku hráče)</string>
     <string name="pref_BackKeyBehaviour">Systémové tlačítko \'Zpět\'</string>
     <string name="pref_VolumeKeysBehaviour">Přizpůsobit tlačítka hlasitosti</string>
     <string name="pref_VolumeKeysBehaviour_summary">\'Zesílit\' přidá bod hráči A, \'Zeslabit\' hráči B</string>
-    <string name="pref_VolumeKeysBehaviour_question">Do you want to use the volume buttons for entering the score with device in portrait orientation?\n(Option can be turned off again in \'Settings/Behaviour\')</string> <!-- TODO -->
+    <string name="pref_VolumeKeysBehaviour_question">Chceš použít tlačítka hlasitosti pro zadávání skóre pomocí zařízení v orientaci na výšku?\n(Volba může být opět vypnuta v \'Nastavení/Chování\')</string>
     <string name="pref_StartupAction">Akce po spuštění aplikace</string>
     <string name="pref_StartupAction_summary">Výběr akce, která bude provedena po spuštění aplikace</string>
     <string name="pref_changeSides">Změna stran/Prohození hráčů</string>
@@ -137,7 +152,11 @@
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape">Prohodit hráče při otočení zařízení vzhůru nohama (o 180 stupňů)</string>
     <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary">Umožní prohození hráčů na obrazovce otočením zařízení nebo zobrazení skóre hráčům otočením zařízení směrem k hráčům</string>
     <string name="pref_swapPlayersBetweenGames">Prohodit hráče na začátku dalšího setu</string>
+    <string name="pref_useChangeSidesFeature">Funkce změny stran</string>
+    <string name="pref_changeSidesWhen_GSM">Kdy změnit hráče/tým</string>
+    <string name="pref_swapPlayersBetweenGames__TennisPadel">Změnit hráče po každé liché hře</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically">Automaticky zobrazovat podrobnosti setu</string>
+    <string name="pref_showDetailsAtEndOfGameAutomatically__TennisPadel">Automaticky zobrazovat podrobnosti setu</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically_summary">Po ukončení setu zobrazovat graf průběhu</string>
     <string name="pref_showTips">Zobrazovat tipy</string>
     <string name="pref_recordRallyEndStatsAfterEachScore">Zobrazovat dialog \'Vítězné/Chyby\' po každém bodu</string>
@@ -165,6 +184,7 @@
     <string name="pref_MatchGameDuration">Délka setu/zápasu</string>
     <string name="pref_showMatchDurationChronoOn">Zobrazovat délku zápasu</string>
     <string name="pref_showLastGameDurationChronoOn">Zobrazovat délku setu</string>
+    <string name="pref_showLastGameDurationChronoOn__TennisPadel">Zobrazovat délku setu</string>
     <string name="pref_showFieldDivisionOn">Zobrazovat divizi</string>
     <string name="pref_timerViewType">Zobrazení časomíry</string>
     <string name="pref_hapticFeedbackPerPoint">Vibrační odezva při bodu</string>
@@ -176,7 +196,10 @@
     <string name="pref_indicateGameBall">Indikovat setbol v tlačítkách skóre</string>
     <string name="pref_indicateGameBall_summary">Upozorňovat v tlačítkách skóre, že následující výměna může vést k vítězství v setu</string>
     <string name="pref_floatingMessageForGameBall">Zobrazovat hlášení \'Setbol\'</string>
+    <string name="pref_floatingMessageForGameBall__TennisPadel">Zobrazovat hlášení \'Setbol\'</string>
     <string name="pref_floatingMessageForGameBall_summary">Při setbolu a mečbolu zobrazovat bublinu s hlášením</string>
+    <string name="pref_allowForScoringWithBlueToothConnectedMediaControlButtons">Povolit zápis bodů pomocí tlačítka media playback</string>
+    <string name="pref_allowForScoringWithBlueToothConnectedMediaControlButtons_summary">např.použí \'Předchozí píseň\' pro zápis bodu hráče A, a \'Další píseň\' pro zápis bodu hráče B, a \'Hraj/Pausa\' pro zpět</string>
     <string name="pref_showNewMatchFloatButton">Zobrazovat plovoucí tlačítko \'Nový zápas\'</string>
     <string name="pref_showNewMatchFloatButton_summary">Zobrazovat plovoucí tlačítko pro nový zápas (ve vhodných situacích)</string>
     <string name="pref_keepScreenOn">Nezhasínat displej</string>
@@ -217,8 +240,8 @@
     <string name="pref_timerPauseBetweenGames_summary">Doba do kdy musí začít další set (ve vteřinách). Oficiálně 90 vteřin. (PSA: 120)</string>
     <string name="pref_timerPauseBetweenGames_values">Přednastavené hodnoty pro dobu mezi sety</string>
     <string name="pref_timerPauseBetweenGames_values_summary">Přednastavené hodnoty dob mezi sety na začátku zápasu (jen pro tento zápas), typicky 90 nebo 120</string>
-    <string name="pref_timerWarmup_values">Selectable values for warmup</string> <!-- TODO -->
-    <string name="pref_timerWarmup_values_summary">Selectable values for warmup at the start of a new match</string> <!-- TODO -->
+    <string name="pref_timerWarmup_values">Volitelné hodnoty pro zahřátí</string>
+    <string name="pref_timerWarmup_values_summary">Volitelné hodnoty pro zahřátí na začátku nového zápasu</string>
     <string name="pref_timerInjury">Doba na zotavenou ze zranění (ve vteřinách)</string>
     <string name="pref_timerInjury_summary">Doba po zranění, za kterou musí hráč nastoupit k pokračování. Oficiálně 180 vteřin</string>
 <!--
@@ -235,12 +258,18 @@
     <string name="pref_numberOfGamesToWin_summary">Oficiálně 3</string>
     <string name="pref_handicapFormat">Nastavení hendikepu</string>
     <string name="pref_handicapFormat_summary">Umožnit na začátku zápasu skóre jiné než 0–0</string>
-    <string name="pref_playAllGames">Play all games</string> <!-- TODO -->
-    <string name="pref_playAllGames_summary">Play \'Total-of-x-games\' in stead of \'Best-of-x-games\'</string> <!-- TODO -->
+    <string name="pref_playAllGames">Hraj všechny zápasy</string>
+    <string name="pref_playAllGames_summary">Hraj \'Celkem-z-x-hry(her)\' místo \'Nejlepší-z-x-hry(her)\'</string>
     <string name="pref_useEnglishScoring">Počítání na ztráty</string>
     <string name="pref_useEnglishScoring_summary">Zastaralý typ počítání. Hráč může získat bod pouze pokud podával</string>
+    <string name="pref_finalSetFinish">Zakončení posledního setu</string>
     <string name="pref_tiebreakFormat">Formát zkrácené hry</string>
     <string name="pref_tiebreakFormat_summary">Pravidla pro zkrácenou hru - tiebreak (obvykle při 10-10)</string>
+
+    <string name="pref_web_wearable">Nositelné</string>
+    <string name="pref_wearable_syncColorPrefs">Synchronizuj barevné nastavení</string>
+    <string name="pref_wearable_allowScoringWithHardwareButtons">Povolit zápis bodů pomocí tlačítek nositelného hardwaru</string>
+    <string name="pref_wearable_allowScoringWithRotary">Povolit zápis bodů pomocí otočné lunety nositelného hardwaru</string>
     <string name="pref_web_integration">Internet</string>
     <string name="pref_web_integration_summary">Feed URLs pro výběr zápasů. Odesílat výsledky na web. Sdílení výsledků zápasů</string>
     <string name="pref_playerList">Seznam hráčů</string>
@@ -301,8 +330,8 @@
     <string name="pref_tournamentMaxDuration_InDays_summary">Délka soutěže je nejvýše X dní</string>
     <string name="pref_hideCompletedMatchesFromFeed">Skrýt ukončené soutěže</string>
     <string name="pref_hideCompletedMatchesFromFeed_summary">Feed může obsahovat již dohrané zápasy (obsahuje výsledky). Pokud nechcete zobrazovat tyto zápasy, zaškrtněte tuto volbu</string>
-    <string name="pref_groupMatchesInFeedByCourt">Seskupit podle kurt</string> <!-- TODO -->
-    <string name="pref_groupMatchesInFeedByCourt_summary">A feed may specify on which court a match is (supposed to be) played. If so, and this option is active, matches will be grouped per court</string> <!-- TODO -->
+    <string name="pref_groupMatchesInFeedByCourt">Seskupit podle kurtu</string>
+    <string name="pref_groupMatchesInFeedByCourt_summary">Ve feedu může být uvedeno, na kterém kurtu se zápas hraje (má hrát). Pokud ano a tato možnost je aktivní, budou zápasy seskupeny podle kurtů.</string>
     <string name="pref_removeSeedingAfterMatchSelection">Odstranit nasazení ze jmen hráčů</string>
     <string name="pref_removeSeedingAfterMatchSelection_summary">Odstraňovat nasazení, např. text [5/8], po vybrání zápasu z Feedu</string>
     <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Přepnout do seznamu hráčů je-li seznam zápasů prázdný</string>

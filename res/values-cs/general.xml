@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="lbl_left">Vlevo</string>
+    <string name="lbl_right">Vpravo pravo</string>
+    <string name="lbl_Scoring">Bodování</string>
+<!--    <string name="lbl_Scoring_PointPerRally">Bod za závod</string>-->
+
     <string name="fetching_data">Sathuji data…</string>
     <string name="loading">Nahrávám…</string>
     <string name="loading_of_x">Nahrávám z %1$s… (%2$s)</string>
@@ -75,6 +80,7 @@
 -->
     <string name="tip">Tip</string>
     <string name="settings">Nastavení</string>
+    <string name="send_settings_to_wearable">Send settings to wearable</string> <!-- TODO -->
     <string name="do_not_show_this_dialog_anymore">Tento dialog příště už nezobrazovat</string>
     <string name="lbl_fixed">Přesně</string>
     <string name="lbl_none">Žádný</string>
