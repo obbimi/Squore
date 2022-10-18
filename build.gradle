@@ -31,7 +31,7 @@ android {
         targetCompatibility 1.8
     }
 
-    compileSdkVersion 31
+    compileSdkVersion 33
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
     //buildToolsVersion '28.0.3'
 
@@ -97,22 +97,22 @@ android {
             minSdkVersion 19
             targetSdkVersion 30
             multiDexEnabled true // required since using firebase
-            versionCode 1915 * 10000 + 487
-            versionName "4.49"
+            versionCode 1915 * 10000 + 488
+            versionName "4.50"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 30 // target 31 requires android:export="(true|false)", but pusher dependency adds something in our manifest without this attribute
-            versionCode 2315 * 10000 + 487
-            versionName "4.49"
+            versionCode 2315 * 10000 + 488
+            versionName "4.50"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 30
-            versionCode 2501 * 10000 + 487
-            versionName "4.49"
+            versionCode 2501 * 10000 + 488
+            versionName "4.50"
         }
     }
     buildTypes {

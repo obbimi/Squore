@@ -2,11 +2,17 @@
 
 The following people were so kind to volunteer to translate the app into their preferred language:
 
-- Sébastien Lepley (French)
-- Filip Hurta (Czech)
-- Lior Lotem (Italian)
-- Salvador Martinez (Spanish/Español)
-- Gonçalo Afonso (Portuguese)
+- French
+  - Sébastien Lepley
+- Czech 
+  - Filip Hurta
+  - Josef Hohenberger (Update)
+- Italian
+  - Lior Lotem
+- Spanish/Español 
+  - Salvador Martinez
+- Portuguese 
+  - Gonçalo Afonso
 
 ## User Help and Suggestions
 
@@ -24,6 +30,7 @@ The following users of have made valuable suggestions:
 - Alexander Asyunkin
 - Steve Smith
 - Baggio Milan
+- Josef Hohenberger
 
 ## Credits
 

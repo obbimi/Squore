@@ -115,6 +115,7 @@ import com.doubleyellow.android.showcase.ShowcaseConfig;
 import com.doubleyellow.android.showcase.ShowcaseSequence;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /* ChromeCast */
@@ -362,10 +363,18 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 }
             }
             if ( lIds.containsAll(Arrays.asList(R.id.btn_score1, R.id.btn_score2)) ) {
-                if ( matchModel.hasStarted() ) {
-                    return handleMenuItem(R.id.sb_match_format);
+                if ( ViewUtil.isWearable(ScoreBoard.this) ) {
+                    // for convenience shortly display the current time on a wearable, so players can consult time by long pressing both score buttons
+                    // to see how long players still may remain on court if the have only a limited time to play
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                    String sCurrentTime = sdf.format(new Date());
+                    iBoard.showMessage(sCurrentTime, 3);
                 } else {
-                    return handleMenuItem(R.id.change_match_format);
+                    if ( matchModel.hasStarted() ) {
+                        return handleMenuItem(R.id.sb_match_format);
+                    } else {
+                        return handleMenuItem(R.id.change_match_format);
+                    }
                 }
             }
             // TODO: this only works if side buttons are NOT on top of score buttons (portrait only for now)

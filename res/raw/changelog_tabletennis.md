@@ -1,3 +1,9 @@
+## 4.50 (okt 2022)
+
+- on wearable, consult the current time without leaving the score app
+    - long press both score buttons
+- added a few missing Czech translations (thanks to Josef Hohenberger)
+
 ## 4.48 (may 2022)
 
 Improvements for 
