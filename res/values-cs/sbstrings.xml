@@ -31,7 +31,7 @@
     <string name="sb_cmd_toss">Losovat</string>
     <string name="choose_winner_of_toss_or_perform_toss">Vyber vítěze hodu nebo hod pomocí aplikace</string> <!-- TODO-->
     <string name="sb_toss_won_by_x">Hod vyhrál %1$s</string>
-    <string name="sb_players_choice">Hráčská volba:</string>
+    <string name="sb_players_choice">Hráčova volba:</string>
     <string name="sb_makeThisTheDefault">Nastavit jako výchozí</string>
     <string name="sb_delete_group_of_matches_confirm">Smazat skupinu zápasů \'%s\'?</string>
     <string name="sb_cmd_ok_and_skip_timer">OK (nestopovat čas)</string>
