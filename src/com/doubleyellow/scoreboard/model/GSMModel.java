@@ -146,6 +146,15 @@ public class GSMModel extends Model
     /** nr of sets needed to win a match */
     private int                                 m_iNrOfSetsToWinMatch   = 2; // in sync with m_iNrOfGamesToWinMatch of super class
 
+    /** TODO: playAllGames does not make sense: implement playAllSets */
+    @Override public void setPlayAllGames(boolean b) {
+        super.setPlayAllGames(false);
+    }
+    @Override public boolean playAllGames() {
+        super.playAllGames();
+        return false;
+    }
+
     @Override public boolean setNrOfPointsToWinGame(int i) {
         super.setNrOfPointsToWinGame(i);
         //Log.w(TAG, "Redirecting to setNrOfGamesToWinSet");

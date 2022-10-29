@@ -1374,7 +1374,8 @@ public abstract class Model implements Serializable
         Map<Player, Integer> mGamesWon = getZeroZeroMap();
 
         Map<Player, Integer> mInProgress = getScoreOfGameInProgress();
-        for(Map<Player, Integer> mGameScore: getPlayer2EndPointsOfGames()) {
+        List<Map<Player, Integer>> endPointsOfGames = getPlayer2EndPointsOfGames();
+        for(Map<Player, Integer> mGameScore: endPointsOfGames) {
             if (mInProgress == mGameScore && bIncludeGameInprogress == false) {
                 break;
             } // skip last 'in progress'
@@ -4248,10 +4249,6 @@ public abstract class Model implements Serializable
                         return getNoneOfPlayers();
                     }
                 }
-                if ( m_bEnglishScoring && diff > 0 ) {
-                    // assumption: tiebreak format is SelectOneOrTwo
-                    return new Player[]{ getServer() };
-                }
 
                 Player pLeader = (iScoreA > iScoreB) ? Player.A : Player.B;
                 return new Player[] { pLeader };
@@ -4273,12 +4270,12 @@ public abstract class Model implements Serializable
                             return getNoneOfPlayers();
                         } else {
                             // score for both is high enough to win game on next point. Only server can score
-                            return new Player[]{ getServer() }; // IH
+                            return new Player[]{ getServer() }; // TODO: using getServer() only makes sense for last game
                         }
                     } else {
                         // there is a leader with enough points. Only if he is serving there is game ball
                         Player pLeader = (iScoreA > iScoreB) ? Player.A : Player.B;
-                        if ( pLeader.equals(getServer())) {
+                        if ( pLeader.equals(getServer())) {    // TODO: using getServer() only makes sense for last game
                             return new Player[]{ getServer() };
                         } else {
                             return getNoneOfPlayers();
