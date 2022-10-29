@@ -66,7 +66,7 @@ public class SquashModel extends Model {
             ServeSide serversPreferredSide = MapUtil.getMaxKey(m_player2ServeSideCount.get(pServer), ServeSide.R);
             Player    lastServer           = lastValidWithServer.getServingPlayer();
             ServeSide lastServeSide        = lastValidWithServer.getServeSide();
-            // savety precaution... should not occur
+            // safety precaution... should not occur
             if ( lastServeSide == null ) {
                 lastServeSide = ServeSide.R;
             }

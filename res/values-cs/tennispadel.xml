@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="lbl_game_set_and_match">Hra, set a zápas.</string>
+    <string name="oa_golden_point">Zlatý bod (no AD)</string>
 </resources>

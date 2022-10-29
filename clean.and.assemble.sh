@@ -13,7 +13,7 @@ if [[ ! -e $JAVA_HOME ]]; then
     export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 fi
 
-mffile=$(grep Manifest build.gradle | egrep -v '(ALL)' | grep -v '//' | cut -d "'" -f 2)
+mffile=$(grep Manifest build.gradle | grep -E -v '(ALL)' | grep -v '//' | cut -d "'" -f 2)
 if [[ -z "${mffile}" ]]; then
     echo "Could not determine manifest file by looking in build.gradle"
     exit 1
@@ -21,11 +21,11 @@ fi
 pkg=$(grep package= ${mffile} | perl -ne 's~.*"([a-z\.]+)".*~$1~; print')
 
 # check if a new version code for the brand for which we will be creating an apk is specified
-brand=$(egrep 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
+brand=$(grep -E 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
 echo "Manifest file : ${mffile}"
 echo "Package       : ${pkg}"
 echo "Brand         : ${brand}"
-hasNewVersionCode=$(git diff build.gradle | egrep '^\+' | grep versionCode | sed 's~.*0000\s*+\s*~~' | sort | tail -1) # holds only the last 3 digits
+hasNewVersionCode=$(git diff build.gradle | grep -E '^\+' | grep versionCode | sed 's~.*0000\s*+\s*~~' | sort | tail -1) # holds only the last 3 digits
 echo "hasNewVersionCode: $hasNewVersionCode"
 BU_DIR=/osshare/code/gitlab/double-yellow.be/app
 if [[ ! -e ${BU_DIR} ]]; then
@@ -42,7 +42,7 @@ if [[ -e ${relapk} ]]; then
     apkFileTime=$(find ${relapk} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
 
     echo "Comparing changetime of files against ${relapk} (${apkFileTime})"
-    changedFiles="$(find . -type f -newer ${relapk} | egrep -v '(intermediates)' | egrep '\.(java|xml|md|gradle)' | egrep -v '(\.idea/|/\.gradle/|/generated/|/reports/)')"
+    changedFiles="$(find . -type f -newer ${relapk} | grep -E -v '(intermediates)' | grep -E '\.(java|xml|md|gradle)' | grep -E -v '(\.idea/|/\.gradle/|/generated/|/reports/)')"
 else
     changedFiles="No release apk to compare with"
 fi
@@ -150,7 +150,7 @@ if [[ ${iStep} -le 1 ]]; then
     fi
 fi
 if [[ ${iStep} -le 2 ]]; then
-    devices="$(${ADB_COMMAND} devices | egrep -v '(List of|^$)' | sed 's~ *device~~')"
+    devices="$(${ADB_COMMAND} devices | grep -E -v '(List of|^$)' | sed 's~ *device~~')"
     echo "Devices: ${devices}"
     for dvc in ${devices}; do
         if [[ -z "${dvc}" ]]; then
@@ -195,7 +195,7 @@ if [[ ${iStep} -le 2 ]]; then
         ${ADB_COMMAND} -s ${dvc} shell monkey -p ${pkg} -c android.intent.category.LAUNCHER 1 > /dev/null 2> /dev/null
         set +x
         # adb -s ${dvc} logcat
-        echo "${ADB_COMMAND} -s ${dvc} logcat | egrep '(SB|doubleyellow)' | egrep -v '(AutoResize)'"
+        echo "${ADB_COMMAND} -s ${dvc} logcat | grep -E '(SB|doubleyellow)' | grep -E -v '(AutoResize)'"
     done
 
     if [[ -z "${devices}" ]]; then

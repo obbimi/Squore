@@ -53,11 +53,11 @@ function correctSportSpecificResource {
     let correctedCnt=0
     let keptCnt=0
     # list all renamed USED resource names and ...
-    for res in $(egrep -r '@(array|bool|fraction|integer|integer-array|string|string-array).*__[A-Z][A-Za-z]+' * | perl -ne 's~.*@(array|bool|fraction|integer|integer-array|string|string-array)\/(\w+__\w+).*~$2~; print' | sort -u); do
+    for res in $(grep -E -r '@(array|bool|fraction|integer|integer-array|string|string-array).*__[A-Z][A-Za-z]+' * | perl -ne 's~.*@(array|bool|fraction|integer|integer-array|string|string-array)\/(\w+__\w+).*~$2~; print' | sort -u); do
         # ... check that the appropriate res definition exists
-        if egrep -q -r "name=.${res}." *; then
+        if grep -E -q -r "name=.${res}." *; then
             if echo ${res} | grep -q "__${from}"; then
-                nrOfOccurrencesAsExpr=$(egrep -h -c -r "@.*${res}" * | egrep -v '^0$' | xargs | sed -e 's/\ /+/g')
+                nrOfOccurrencesAsExpr=$(grep -E -h -c -r "@.*${res}" * | grep -E -v '^0$' | xargs | sed -e 's/\ /+/g')
                 nrOfOccurrences=$((${nrOfOccurrencesAsExpr}))
                 #read -t 3 -p "Nr of occurrences of valid ${res} : ${nrOfOccurrences}"
                 let keptCnt=keptCnt+nrOfOccurrences
@@ -109,16 +109,16 @@ cd src
 ####################################################
 
 # check it exists
-if ! egrep -q "${tobranded}.*SportType" com/doubleyellow/scoreboard/Brand.java; then
+if ! grep -E -q "${tobranded}.*SportType" com/doubleyellow/scoreboard/Brand.java; then
     echo "ERROR: Brand ${tobranded} not found in Brand.java" > /dev/stderr
 
-    egrep -l "${tobranded}.*SportType" ../res/values/*.xml
+    grep -E -l "${tobranded}.*SportType" ../res/values/*.xml
 
     exit 1
 fi
 
 # derive current package by looking for .R reference in Brand.java
-pkgFrom=$(egrep 'import[ ]+.*\.R;' com/doubleyellow/scoreboard/main/ScoreBoard.java | perl -ne 's~import\s+([\w\.]+)\.R;~\1~; print')
+pkgFrom=$(grep -E 'import[ ]+.*\.R;' com/doubleyellow/scoreboard/main/ScoreBoard.java | perl -ne 's~import\s+([\w\.]+)\.R;~\1~; print')
 read -t 2 -p "From package ${pkgFrom}"
 if [[ -z "${pkgFrom}" ]]; then
     echo "Could not determine 'from' package"
@@ -158,9 +158,9 @@ printf "Change to '${tobranded}'\n"
 #if [[ "$tobranded" = "Squore" ]]; then
 #    tobrandedLC='scoreboard'
 #fi
-#for f in $(egrep -irl 'com\.doubleyellow\.[a-z]+\.R[^a-z]' *); do
+#for f in $(grep -E -irl 'com\.doubleyellow\.[a-z]+\.R[^a-z]' *); do
 #    cat ${f} | perl -ne "s~com\.doubleyellow\.(?!base.R)[a-z]+\.R([^A-Za-z'])~com.doubleyellow.${tobrandedLC}.R\$1~; print" > ${f}.1.txt
-for f in $(egrep -irl "${pkgFrom}\.R[^a-z]" *); do
+for f in $(grep -E -irl "${pkgFrom}\.R[^a-z]" *); do
     oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
     cat ${f} | perl -ne "s~(import\s+|\()${pkgFrom}\.R([^A-Za-z'])~\$1${brandPkg}.R\$2~; print" > ${f}.1.txt
     if [[ -n "$(diff ${f} ${f}.1.txt)" ]]; then
@@ -188,7 +188,7 @@ if [[ "$tobranded" = "Squore" ]] ; then
     fromSuffix="[A-Z][a-z][A-Za-z]+"
     toSuffix=Squash
 fi
-for f in $(egrep -rl "@(string|fraction).*__${fromSuffix}\""); do
+for f in $(grep -E -rl "@(string|fraction).*__${fromSuffix}\""); do
     oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
 
     cat ${f} | perl -ne "s~__${fromSuffix}\"~__${toSuffix}\"~; print" > ${f}.1.xml
