@@ -97,21 +97,21 @@ android {
             minSdkVersion 19
             targetSdkVersion 30
             multiDexEnabled true // required since using firebase
-            versionCode 1915 * 10000 + 488
+            versionCode 1915 * 10000 + 489
             versionName "4.50"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 30 // target 31 requires android:export="(true|false)", but pusher dependency adds something in our manifest without this attribute
-            versionCode 2315 * 10000 + 488
+            versionCode 2315 * 10000 + 489
             versionName "4.50"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 30
-            versionCode 2501 * 10000 + 488
+            versionCode 2501 * 10000 + 489
             versionName "4.50"
         }
     }
@@ -179,9 +179,9 @@ dependencies {
   //implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 
     // ChromeCast (new with Custom Receiver)
-    phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:21.1.0'
-    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:21.1.0'
-    wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.1.0' // wearOs can not cast but to run it still needs 'Impementation' to not have 'ClassNotFound' exceptions
+    phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:21.2.0'
+    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:21.2.0'
+    wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.2.0' // wearOs can not cast but to run it still needs 'Implementation' to not have 'ClassNotFound' exceptions
 
     // allow communication between handheld device and wearable
     phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:18.0.0' // compileOnly is good enough for API < 23
@@ -211,7 +211,7 @@ dependencies {
     //implementation 'com.google.firebase:firebase-analytics'
 
     // firebase in combination with pusher
-    implementation 'com.pusher:push-notifications-android:1.6.2'
+    implementation 'com.pusher:push-notifications-android:1.9.0'
 }
 
 /*
