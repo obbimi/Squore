@@ -127,6 +127,7 @@ public class SquashModel extends Model {
     }
 
     @Override public void recordAppealAndCall(Player appealing, Call call) {
+        if ( call == null ) { return; }
         super.recordAppealAndCall_SQ_RL_RB(appealing, call);
     }
 }

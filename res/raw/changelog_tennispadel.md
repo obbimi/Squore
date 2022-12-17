@@ -7,6 +7,7 @@
 ## 4.49 (july 2022)
 
 Improvements in:
+
 - Indicate details of tiebreak score
 - Allow indication for when it is time for 'New balls': additional optin
   - After First 11, Then Each 13th game
@@ -14,12 +15,14 @@ Improvements in:
 ## 4.49 (may 2022)
 
 Improvements in:
+
 - 'Speech' during tiebreak
 - Fields in 'New match with larger font' screen
 
 ## 4.48 (may 2022)
 
 Allow indication for when it is time for 'New balls'
+
 - After First  7, Then Each  9th game
 - After First  9, Then Each 11th game
 - Before Set 3

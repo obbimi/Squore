@@ -231,6 +231,9 @@ public class FullDemoThread extends DemoThread {
                 iStep++;
                 iMessage = 0;
             }
+            if ( iStep > ListUtil.size(lView) ) {
+                return;
+            }
             final ListenerAndView lv = lView.get(iStep);
             final View viewById = scoreBoard.findViewById(lv.viewId);
 

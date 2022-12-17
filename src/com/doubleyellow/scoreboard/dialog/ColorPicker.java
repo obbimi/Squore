@@ -94,7 +94,15 @@ public class ColorPicker extends BaseAlertDialog
 
         ColorPickerView cpv = (ColorPickerView) view;
         if ( this.sColor != null ) {
-            cpv.setColor(Color.parseColor(this.sColor));
+            int iColor = 0;
+            try {
+                iColor = Color.parseColor(this.sColor);
+            } catch (IllegalArgumentException e) {
+                // unknown color
+                this.sColor = "#000000";
+                iColor = Color.BLACK;
+            }
+            cpv.setColor(iColor);
         }
         cpv.setOnColorChangedListener(colorChangedListener);
 
