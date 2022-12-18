@@ -238,7 +238,7 @@ public class CastHelper implements ICastHelper
     private static void runRemoteDisplayService(Context context, CastDevice selectedDevice) {
         Intent intent = new Intent(context, context.getClass());
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent notificationPendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        PendingIntent notificationPendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE); // PendingIntent.FLAG_IMMUTABLE added for targetSdkVersion >= 31
 
         CastRemoteDisplayLocalService.NotificationSettings.Builder builder = new CastRemoteDisplayLocalService.NotificationSettings.Builder();
         CastRemoteDisplayLocalService.NotificationSettings settings = builder.setNotificationPendingIntent(notificationPendingIntent).build();

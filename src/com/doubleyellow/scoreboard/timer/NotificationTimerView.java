@@ -61,7 +61,7 @@ public class NotificationTimerView implements TimerView
     /** prepare builder with properties that do not change */
     private void prepareBuilder() {
         Intent intent = new Intent(ctx, ScoreBoard.class);
-        PendingIntent pIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
+        PendingIntent pIntent = PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_IMMUTABLE); // PendingIntent.FLAG_IMMUTABLE added for targetSdkVersion >= 31
 
         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O /*26 */ ) {
             createNotificationChannel(ctx);

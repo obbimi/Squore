@@ -361,14 +361,17 @@ public abstract class Model implements Serializable
     }
     /** For drawing 'original' paper scoring. Contains all games including the one in progress */
     public final List<List<ScoreLine>> getGamesScoreHistory() {
+        return _getGamesScoreHistory(true);
+    }
+    private List<List<ScoreLine>> _getGamesScoreHistory(boolean bAddNewGameScoreDetailsIfEmpty) {
         if ( m_lGamesScorelineHistory == null ) {
             setGamesScoreHistory(new ArrayList<List<ScoreLine>>());
-            addNewGameScoreDetails(); // re-activated 2022-04-03
+            //addNewGameScoreDetails(); // re-activated 2022-04-03
         }
-        // tried this on 2022-09-10: endless loop
-        //if ( (m_lGamesScorelineHistory != null) && (m_lGamesScorelineHistory.size() == 0) ) {
-        //    addNewGameScoreDetails();
-        //}
+        // re-tried this on 2022-11-10
+        if ( (m_lGamesScorelineHistory != null) && (m_lGamesScorelineHistory.size() == 0) && bAddNewGameScoreDetailsIfEmpty ) {
+            addNewGameScoreDetails();
+        }
         return m_lGamesScorelineHistory;
     }
 
@@ -1209,7 +1212,7 @@ public abstract class Model implements Serializable
 
     /** return getPlayer2EndPointsNewGame */
     private Map<Player, Integer> addNewGameScoreDetails() {
-        List<List<ScoreLine>> gamesScoreHistory = getGamesScoreHistory();
+        List<List<ScoreLine>> gamesScoreHistory = _getGamesScoreHistory(false);
         List<ScoreLine> gameHistory;
         if ( gamesScoreHistory.size() == 0 ) {
             gameHistory = new ArrayList<>();
@@ -1226,9 +1229,13 @@ public abstract class Model implements Serializable
         // add zero-zero to
         List<Map<Player, Integer>> player2EndPointsOfGames = getPlayer2EndPointsOfGames();
         Map<Player, Integer> last = ListUtil.getLast(player2EndPointsOfGames);
-        if ( (last == null) || (MapUtil.getMaxValue(last) > 0) ) {
-            last = getPlayer2EndPointsNewGame();
-            player2EndPointsOfGames.add(last);
+        Map<Player, Integer> newLast = getPlayer2EndPointsNewGame();
+        if ( (last == null) || (MapUtil.getMaxValue(last) > MapUtil.getMaxValue(newLast)) ) {
+            player2EndPointsOfGames.add(newLast);
+            last = newLast;
+        } else {
+            // assume handicap game
+            Log.w(TAG, "Assume game score already correct");
         }
         return last;
     }
@@ -2438,11 +2445,6 @@ public abstract class Model implements Serializable
                                 // this should no longer be necessary
                                 joGame = new JSONObject(joOffset.optString(g)) ;
                             }
-    /*
-                            if ( g > 0 && m_startScoreOfGameInProgress != null) {
-                                m_deviatingStartScoreOfGames.add(m_startScoreOfGameInProgress);
-                            }
-    */
                             HashMap<Player, Integer> startScoreOfGameInProgress = new HashMap<Player, Integer>();
                             startScoreOfGameInProgress.put(Player.A, joGame.optInt(Player.A.toString(), 0));
                             startScoreOfGameInProgress.put(Player.B, joGame.optInt(Player.B.toString(), 0));
@@ -3666,6 +3668,9 @@ public abstract class Model implements Serializable
             sNvsN = (isDoubles()?"Doubles":"Singles") + ":" + nameA.substring(0,1) + "-" + nameB.substring(0,1);
         }
         String sAvsB = getScore(Player.A) + "-" + getScore(Player.B);
+        if ( true ) {
+            return sNvsN + sAvsB;
+        }
         if ( sAvsB.equals("0-0") ) {
             return "GtwM:" + getNrOfGamesToWinMatch() + ", PtwG:" + getNrOfPointsToWinGame() + ", " + getGameScores();
         }
@@ -3982,6 +3987,7 @@ public abstract class Model implements Serializable
     }
 
     void recordAppealAndCall_SQ_RL_RB(Player appealing, Call call) {
+        if ( call == null ) { return; }
         if ( ( gameHasStarted() == false ) && (ListUtil.size(m_lPlayer2GamesWon) <= 1)) {
             // first thing in the match is a call for a let: adjust date and time if appropriate
             adjustTheWhenObjectIfAppropriate(GameTiming.ChangedBy.FirstScoreOfGameEntered);

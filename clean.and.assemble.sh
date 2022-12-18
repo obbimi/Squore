@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 #export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
-export JAVA_HOME=/usr/lib/jvm/java-10-openjdk
+#export JAVA_HOME=/usr/lib/jvm/java-10-openjdk
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 #export JAVA_HOME=/osshare/software/oracle/java-8-oracle
 if [[ ! -e $JAVA_HOME ]]; then
     export JAVA_HOME=/cygdrive/c/localapps/jdk1.8.0_231
@@ -11,6 +12,10 @@ if [[ ! -e $JAVA_HOME ]]; then
     #export JAVA_HOME=/mnt/c/localapps/jdk1.8.0_231
     #export JAVA_HOME=C:/localapps/jdk1.8.0_231
     export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+fi
+if [[ ! -e $JAVA_HOME ]]; then
+    echo "java home not correctly configured: $JAVA_HOME"
+    exit 1
 fi
 
 mffile=$(grep Manifest build.gradle | grep -E -v '(ALL)' | grep -v '//' | cut -d "'" -f 2)
