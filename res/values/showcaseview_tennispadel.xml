@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="scv_side_buttons__TennisPadel">The __serve buttons__ indicate
+        \n
+        \n- what player or team should serve
+        \n- in case of doubles, what player of a team is serving
+        \n- in case of doubles, if the app initially indicates the wrong player as server, simply swap the player names by long clicking the team
+        \n\nThe serve indication changes to the other player and or team if applicable after a game.
+    </string>
+
     <string name="scv_new_match_button__TennisPadel">__That\'s it. Enjoy your games.__
         \n\nStart a new match by tapping this button.</string>
 
