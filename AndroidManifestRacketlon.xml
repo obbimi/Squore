@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
     package="com.doubleyellow.racketlon">
     <!-- PlayStoreID=4973204554147732137 -->
+
+    <!-- auto added by ?? so specifically remove it -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
+
 <!--
     <uses-feature android:name="android.permission.SEND_SMS" android:required="false" />
     <uses-feature android:name="android.permission.INTERNET" android:required="true" />
@@ -20,9 +24,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- bluetooth -->
+    <!-- bluetooth (Legacy up to Android 11) -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />   <!-- for initiating and cancelling device discovery, and initiating connections -->
+    <!-- bluetooth (Android 12 upwards) -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
     <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
 
     <!-- android 9 casting -->

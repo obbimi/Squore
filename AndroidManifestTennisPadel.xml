@@ -24,9 +24,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- bluetooth -->
+    <!-- bluetooth (Legacy up to Android 11) -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />   <!-- for initiating and cancelling device discovery, and initiating connections -->
+    <!-- bluetooth (Android 12 upwards) -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
     <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
 
     <!-- android 9 casting -->

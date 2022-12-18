@@ -97,21 +97,21 @@ android {
             minSdkVersion 19
             targetSdkVersion 33
             multiDexEnabled true // required since using firebase
-            versionCode 1915 * 10000 + 492
+            versionCode 1915 * 10000 + 493
             versionName "4.50"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 33
-            versionCode 2315 * 10000 + 492
+            versionCode 2315 * 10000 + 493
             versionName "4.50"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 33
-            versionCode 2501 * 10000 + 492
+            versionCode 2501 * 10000 + 493
             versionName "4.50"
         }
     }

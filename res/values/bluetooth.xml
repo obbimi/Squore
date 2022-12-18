@@ -15,6 +15,9 @@
     <string name="bt_connected_to_device_X">Connected to device %s</string>
     <string name="bt_already_connected_to_X">Already connected to %s</string>
 
+    <string name="bt_app_not_allowed_bluetooth_permission">The app seems not to have your permission to use bluetooth</string>
+    <string name="bt_app_not_allowed_bluetooth_permission_info">Please allow this manually</string>
+
     <string name="bt_unable_to_connect_device_X">Unable to connect device %s</string>
     <string name="bt_unable_to_connect_device_info"><![CDATA[<html>Ensure that on selected target device %1$s
     <ul>

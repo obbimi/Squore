@@ -155,7 +155,13 @@ public class SelectDeviceDialog extends BaseAlertDialog
         }
 
         // Get a set of currently paired devices
-        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+        Set<BluetoothDevice> pairedDevices = null; // requires android.permission.BLUETOOTH_CONNECT for targetSdkVersion 31+ (Android 12 upward)
+        try {
+            pairedDevices = mBtAdapter.getBondedDevices();
+        } catch (java.lang.SecurityException e) {
+            e.printStackTrace();
+            return new int[] { R.string.bt_app_not_allowed_bluetooth_permission, R.string.bt_app_not_allowed_bluetooth_permission_info };
+        }
         if ( ListUtil.isEmpty(pairedDevices) ) {
             return new int[] { R.string.bt_no_paired, R.string.bt_how_to_pair_info };
         }

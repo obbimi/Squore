@@ -7120,6 +7120,11 @@ touch -t 01030000 LAST.sb
         } else {
             // show dialog with info about how to solve/help/why
             MyDialogBuilder.dialogWithOkOnly(this, iResIds[0], iResIds[1], false);
+
+            PreferenceValues.Permission hasPermission = PreferenceValues.doesUserHavePermissionToBluetoothConnect(this, true);
+            if ( PreferenceValues.Permission.Granted.equals(hasPermission) == false ) {
+                return;
+            }
         }
 /*
         Intent nm = new Intent(this, DeviceListActivity.class);

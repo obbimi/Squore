@@ -24,10 +24,17 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- bluetooth -->
+    <!-- bluetooth (Legacy up to Android 11) -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />   <!-- for initiating and cancelling device discovery, and initiating connections -->
-    <!--<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />-->   <!-- added for target 33 ?? -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"  />   <!-- for initiating and cancelling device discovery, and initiating connections -->
+    <!-- TEST: added for target 31+ for mirror with bluetooth -->
+<!--
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+-->
+    <!-- bluetooth (Android 12 upwards) -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
     <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
 
     <!-- android 9 casting -->
