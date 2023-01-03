@@ -724,7 +724,9 @@ public class GSMModel extends Model
             return String.valueOf(iScore);
         } else {
             int iScoreOther = getScore(player.getOther());
-            if ( iScore < NUMBER_OF_POINTS_TO_WIN_GAME ) {
+            if ( iScore < 0 ) {
+                return String.valueOf(iScore); // ?? seen this happen according to playstore. negative handicap maybe?
+            } else if ( iScore < NUMBER_OF_POINTS_TO_WIN_GAME ) {
                 return lTranslatedScores.get(iScore);
             } else {
                 // compare with opponent

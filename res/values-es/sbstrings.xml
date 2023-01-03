@@ -175,8 +175,8 @@
     <string name="Score">Puntuación</string>
     <string name="Game">Juego</string>
 
-    <string name="left_serveside_single_char">R</string>
-    <string name="right_serveside_single_char">D</string>
+    <string name="left_serveside_single_char">I</string> <!-- Izquierda -->
+    <string name="right_serveside_single_char">D</string> <!-- Derecha -->
 
     <string name="oa_handout">Hand-out</string>
     <string name="lbl_all_games">Todos los juegos</string>

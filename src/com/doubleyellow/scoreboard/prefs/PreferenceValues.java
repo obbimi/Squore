@@ -1967,7 +1967,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2022-07-04"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2023-01-04"; // auto adjusted by shell script 'clean.and.assemble.sh'
     public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
@@ -2375,6 +2375,18 @@ public class PreferenceValues extends RWValues
     /** should automatically be granted according to documentation, but I have seen cases with SecurityException being thrown */
     public static Permission doesUserHavePermissionToBluetooth(Context context, boolean bRequestIfRequired) {
         return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH, bRequestIfRequired);
+    }
+    public static Permission doesUserHavePermissionToBluetoothConnect(Context context, boolean bRequestIfRequired) {
+        return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH_CONNECT, bRequestIfRequired);
+    }
+    public static Permission doesUserHavePermissionToBluetoothScan(Context context, boolean bRequestIfRequired) {
+        return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH_SCAN, bRequestIfRequired);
+    }
+    public static Permission doesUserHavePermissionToBluetoothAdvertise(Context context, boolean bRequestIfRequired) {
+        return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH_ADVERTISE, bRequestIfRequired);
+    }
+    public static Permission doesUserHavePermissionToBluetoothAdmin(Context context, boolean bRequestIfRequired) {
+        return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH_ADMIN, bRequestIfRequired);
     }
     public static boolean initializeForScoringWithMediaControlButtons(Context context) {
         return getBoolean(PreferenceKeys.allowForScoringWithBlueToothConnectedMediaControlButtons, context, false);

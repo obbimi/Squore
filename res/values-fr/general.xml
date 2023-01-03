@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="lbl_left">Gauche</string>
+    <string name="lbl_right">Droit</string>
+
     <string name="fetching_data">Récupération des données…</string>
     <string name="loading">Chargement en cours…</string>
     <string name="loading_of_x">Chargement de %1$s… (%2$s)</string>

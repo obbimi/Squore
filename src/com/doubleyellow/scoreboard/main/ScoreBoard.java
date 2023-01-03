@@ -7113,6 +7113,25 @@ touch -t 01030000 LAST.sb
             e.printStackTrace();
         }
 
+        PreferenceValues.Permission hasPermission = PreferenceValues.doesUserHavePermissionToBluetoothConnect(this, true);
+        if ( PreferenceValues.Permission.Granted.equals(hasPermission) == false ) {
+            return;
+        }
+        PreferenceValues.Permission hasPermission2 = PreferenceValues.doesUserHavePermissionToBluetoothScan(this, true);
+        if ( PreferenceValues.Permission.Granted.equals(hasPermission2) == false ) {
+            return;
+        }
+        PreferenceValues.Permission hasPermission3 = PreferenceValues.doesUserHavePermissionToBluetoothAdmin(this, true);
+        if ( PreferenceValues.Permission.Granted.equals(hasPermission3) == false ) {
+            return;
+        }
+/*
+        PreferenceValues.Permission hasPermission4 = PreferenceValues.doesUserHavePermissionToBluetoothAdvertise(this, true);
+        if ( PreferenceValues.Permission.Granted.equals(hasPermission4) == false ) {
+            return;
+        }
+*/
+
         SelectDeviceDialog selectDevice = new SelectDeviceDialog(this, matchModel, this);
         int[] iResIds = selectDevice.getBluetoothDevices(true);
         if ( iResIds == null ) {
@@ -7120,11 +7139,6 @@ touch -t 01030000 LAST.sb
         } else {
             // show dialog with info about how to solve/help/why
             MyDialogBuilder.dialogWithOkOnly(this, iResIds[0], iResIds[1], false);
-
-            PreferenceValues.Permission hasPermission = PreferenceValues.doesUserHavePermissionToBluetoothConnect(this, true);
-            if ( PreferenceValues.Permission.Granted.equals(hasPermission) == false ) {
-                return;
-            }
         }
 /*
         Intent nm = new Intent(this, DeviceListActivity.class);

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="lbl_left">Sinistra</string>
+    <string name="lbl_right">Destra</string>
+
     <string name="fetching_data">Recuperando dati…</string>
     <string name="loading">Caricamento in corso…</string>
     <string name="loading_of_x">Caricamento di %1$s… (%2$s)</string>

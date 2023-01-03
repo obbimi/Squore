@@ -586,7 +586,11 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         boolean bShow   = PreferenceValues.castScreenShowSponsor(context);
         if ( bShow && StringUtil.isNotEmpty(sSponsorURL) ) {
             sSponsorURL = URLFeedTask.prefixWithBaseIfRequired(sSponsorURL);
-            sSponsorURL = String.format(sSponsorURL, Brand.brand);
+            try {
+                sSponsorURL = String.format(sSponsorURL, Brand.brand);
+            } catch (Exception e) {
+                // Sorry, the sponsor url can not be used, message?
+            }
         } else {
             sSponsorURL = "";
         }
