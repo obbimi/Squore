@@ -988,7 +988,7 @@ public abstract class Model implements Serializable
                 setGameIsHalfway(Halfway.Before);
                 break;
         }
-
+        // scorelines of game in progress BEFORE undo
         List<ScoreLine> lGameScoreHistory = getGameScoreHistory();
         if ( lGameScoreHistory.size() == 0 ) {
             final int gameNrInProgress = getGameNrInProgress();
@@ -1012,6 +1012,9 @@ public abstract class Model implements Serializable
             if ( (slRemoved != null) && slRemoved.isTimeout() ) {
                 this.m_player2TimeoutInfo.remove(slRemoved.getCallTargetPlayer());
             }
+            // get score BEFORE undo
+            Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress(); // TMP NOTE: returns 0-0 of new set if moving back into previous set for GSM model
+                                                                                     // does not match with slRemoved
             if ( (slRemoved != null) && slRemoved.isCall() ) {
                 // usually only a 'just let' or 'conduct warning'
                 if ( slRemoved.call.isConduct() ) {
@@ -1027,7 +1030,7 @@ public abstract class Model implements Serializable
                     Player adjustScoreFor = slRemoved.getCallTargetPlayer().getOther();
                     for(ScoreLine l: lGameScoreHistory) {
                         if ( adjustScoreFor.equals(l.getScoringPlayer()) ) {
-                            getScoreOfGameInProgress().put(adjustScoreFor, l.getScore());
+                            scoreOfGameInProgress.put(adjustScoreFor, l.getScore());
                         }
                     }
                     // TODO: does not work if score went from zero directly to 11 for scoring player
@@ -1046,7 +1049,10 @@ public abstract class Model implements Serializable
                             iDelta = 0;
                         }
                     }
-                    int iReducedScore = MapUtil.increaseCounter(getScoreOfGameInProgress(), removeScoringPlayer, iDelta); // TODO: not below zero
+                    int iReducedScore = MapUtil.increaseCounter(scoreOfGameInProgress, removeScoringPlayer, iDelta); // TODO: not below zero
+                    if ( iReducedScore < 0 ) {
+                        Log.w(TAG, "Should not happen"); scoreOfGameInProgress.put(removeScoringPlayer, 0);
+                    }
                     for (OnScoreChangeListener l : onScoreChangeListeners) {
                         l.OnScoreChange(removeScoringPlayer, iReducedScore, iDelta, null);
                     }
@@ -1090,9 +1096,11 @@ public abstract class Model implements Serializable
         m_rallyEndStatsGIP      = ListUtil.getLast(m_rallyEndStatistics);
         ListUtil.removeLast(m_lGameWinner); // required from GSM
 
-        ListUtil.removeLast(getPlayer2EndPointsOfGames());
+        List<Map<Player, Integer>> player2EndPointsOfGames = getPlayer2EndPointsOfGames();
+        ListUtil.removeLast(player2EndPointsOfGames);
         if ( m_HandicapFormat.equals(HandicapFormat.DifferentForAllGames) ) {
-            ListUtil.removeLast(getDeviatingStartScoreOfGames());
+            List<Map<Player, Integer>> deviatingStartScoreOfGames = getDeviatingStartScoreOfGames();
+            ListUtil.removeLast(deviatingStartScoreOfGames);
         }
 
         if ( m_lGameTimings.size() > getGameNrInProgress() ) {
@@ -1242,7 +1250,8 @@ public abstract class Model implements Serializable
 
     /** score of the specified player of the game in progress */
     public int getScore(Player player) {
-        final int iScore = MapUtil.getInt(getScoreOfGameInProgress(), player, 0);
+        Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress();
+        final int iScore = MapUtil.getInt(scoreOfGameInProgress, player, 0);
         return iScore;
     }
     /** maximum score of player A or B of the game in progress */
@@ -3956,7 +3965,12 @@ public abstract class Model implements Serializable
     }
 
     public int getTotalGamePoints() {
-        return getMaxScore() + getMinScore();
+        int i = getMaxScore() + getMinScore();
+        if ( i < 0 ) {
+            Log.w(TAG, "getTotalGamePoints < 0 ??");
+            i = getMaxScore() + getMinScore();
+        }
+        return Math.max(i,0);
     }
 
     boolean isInTieBreak_TT_RL()

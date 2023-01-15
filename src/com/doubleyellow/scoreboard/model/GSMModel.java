@@ -725,7 +725,7 @@ public class GSMModel extends Model
         } else {
             int iScoreOther = getScore(player.getOther());
             if ( iScore < 0 ) {
-                return String.valueOf(iScore); // ?? seen this happen according to playstore. negative handicap maybe?
+                return String.valueOf(iScore); // ?? seen this happen according to playstore. bug elsewere when going back into previous set using undo
             } else if ( iScore < NUMBER_OF_POINTS_TO_WIN_GAME ) {
                 return lTranslatedScores.get(iScore);
             } else {
@@ -792,7 +792,14 @@ public class GSMModel extends Model
                     setPlayer2GamesWonHistory(lPlayer2GamesWon);
 
                     List<Map<Player, Integer>> shouldBeListWithZeroZeroOnly2 = ListUtil.removeLast(m_lPlayer2EndPointsOfGames_PerSet);
-                    setPlayer2EndPointsOfGames(ListUtil.getLast(m_lPlayer2EndPointsOfGames_PerSet));
+                    List<Map<Player, Integer>> player2EndPointsOfGamesLastSet = ListUtil.getLast(m_lPlayer2EndPointsOfGames_PerSet);
+
+                    // 2023-01-15: if a 0-0 was added as last game, remove it
+                    Map<Player, Integer> player2EndPointsOfLastGame = ListUtil.getLast(player2EndPointsOfGamesLastSet);
+                    if ( MapUtil.getMaxValue(player2EndPointsOfLastGame) == 0 ) {
+                        ListUtil.removeLast(player2EndPointsOfGamesLastSet);
+                    }
+                    setPlayer2EndPointsOfGames(player2EndPointsOfGamesLastSet);
 
                     List<GameTiming> shouldBeEmptyList2 = ListUtil.removeLast(m_lGamesTiming_PerSet);
                     setGamesTiming(ListUtil.getLast(m_lGamesTiming_PerSet));
