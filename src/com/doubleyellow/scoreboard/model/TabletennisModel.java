@@ -178,6 +178,7 @@ public class TabletennisModel extends Model
             List<ScoreLine> scoreLinesNew = new ArrayList<>();
             lGamesScorelineHistoryNew.add(scoreLinesNew);
             for( ScoreLine sl : scoreLines ) {
+                if ( sl == null ) { continue; }
                 int iScore = sl.getScore();
                 Player server = sl.getServingPlayer();
                 Player scorer = sl.getScoringPlayer();

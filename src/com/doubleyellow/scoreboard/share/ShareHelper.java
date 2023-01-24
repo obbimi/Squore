@@ -40,6 +40,7 @@ public class ShareHelper
 
     /** Sending match result as SMS message to e.g. the boxmaster */
     public static void shareMatchSummary(Context context, Model matchModel, String sPackage, String sDefaultRecipient) {
+        if ( matchModel == null ) { return; }
         ResultSender resultSender = new ResultSender();
         resultSender.send(context, matchModel, sPackage, sDefaultRecipient);
     }

@@ -49,6 +49,7 @@ public class EndMatchChoice extends BaseAlertDialog
     }
 
     @Override public void show() {
+        if ( matchModel == null ) { return; }
 
         LayoutInflater myLayout = LayoutInflater.from(context);
         ViewGroup ll = (ViewGroup) myLayout.inflate(R.layout.endmatch_reason, null);
