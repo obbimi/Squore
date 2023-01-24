@@ -447,13 +447,6 @@
                 android:summary="@string/pref_showNewMatchFloatButton_summary"
                 android:defaultValue="@bool/showNewMatchFloatButton_default"
                 />
-<!--
-            <CheckBoxPreference android:key="keepScreenOn"
-                                android:title="@string/pref_keepScreenOn"
-                                android:summary="@string/pref_keepScreenOn_summary"
-                                android:defaultValue="@bool/keepScreenOn_default"
-                    />
--->
             <com.doubleyellow.prefs.EnumListPreference
                     android:icon="@drawable/dummy"
                     android:key="keepScreenOnWhen"
@@ -1310,6 +1303,15 @@
                       android:icon="@drawable/wearos"
                       android:title="@string/pref_web_wearable"
                       >
+        <com.doubleyellow.prefs.EnumListPreference
+            android:icon="@drawable/dummy"
+            android:key="wearable_keepScreenOnWhen"
+            android:title="@string/pref_keepScreenOn"
+            android:summary="@string/pref_keepScreenOn_summary"
+            android:defaultValue="@string/KeepScreenOnWhen_default"
+            dy:displayValues="@array/KeepScreenOnWhen_DisplayValues"
+            dy:enumClass="com.doubleyellow.scoreboard.prefs.KeepScreenOnWhen"
+            />
         <CheckBoxPreference android:key="wearable_syncColorPrefs"
             android:icon="@drawable/dummy"
             android:title="@string/pref_wearable_syncColorPrefs"

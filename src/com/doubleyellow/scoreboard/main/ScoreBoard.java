@@ -4202,6 +4202,16 @@ touch -t 01030000 LAST.sb
                         boolean aBoolean = PreferenceValues.getBoolean(sKey, this, false);
                         sValue = String.valueOf(aBoolean);
                     }
+                    // send not wearable prefixed key if that is also a preference
+                    final String prefix = PreferenceKeys.wearable + "_";
+                    if ( sKey.startsWith(prefix) ) {
+                        try {
+                            PreferenceKeys pKeyNonPrefixed = PreferenceKeys.valueOf(sKey.substring(prefix.length()));
+                            sKey = pKeyNonPrefixed.toString();
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     writeMethodToBluetooth(BTMethods.updatePreference, sKey, sValue);
                 }
                 return true;

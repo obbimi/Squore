@@ -460,6 +460,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         break;
                     case wearable_allowScoringWithHardwareButtons:
                     case wearable_allowScoringWithRotary:
+                    case wearable_keepScreenOnWhen:
                         m_lWearableSettingsChanged.add(eKey.toString());
                         break;
                     case useCastScreen:
