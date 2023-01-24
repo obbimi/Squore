@@ -98,6 +98,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     /** global list of team players */
     private JSONObject m_joTeamPlayers    = null;
 
+    boolean m_bGroupByCourt     = false;
+    final String  m_sIfGroupByCourtUseSectionAs = JSONKey.division.toString();
     //-------------------------------------------------------------------
     // Feed Config
     //-------------------------------------------------------------------
@@ -228,7 +230,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             final Model model = Brand.getModel();
 
             SimpleELAdapter listAdapter  = getListAdapter(null);
-            String          sGroup       = (String) listAdapter.getGroup(groupPosition);
+            String          sGroup       = (String) listAdapter.getGroup(groupPosition); // Note: is court if m_bGroupByCourt is true
             Object          oMatch       = emsAdapter.getObject(groupPosition, childPosition);
             String          feedPostName = PreferenceValues.getFeedPostName(context);
             boolean bNamesPopulated = false;
@@ -517,6 +519,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
             setMatchFormat(model, joMatch);
 
+            if ( m_bGroupByCourt ) {
+                if ( joMatch.has(m_sIfGroupByCourtUseSectionAs) ) {
+                    sGroup = joMatch.getString(m_sIfGroupByCourtUseSectionAs);
+                }
+            }
             // use feed name and group name for event details
             setModelEvent(model, sGroup, feedPostName, joMatch);
 
@@ -773,11 +780,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         private EMSAdapter(LayoutInflater inflater, String sFetchingMessage)
         {
             super(inflater, R.layout.expandable_match_selector_group, R.layout.expandable_match_selector_item, sFetchingMessage, bAutoLoad);
+            m_bGroupByCourt = PreferenceValues.groupMatchesInFeedByCourt(context); // if set to true, matches must be sorted by date+time within the 'section', my feeds usually come in 'per field'
         }
 
         int     m_iMatchesWithCourt = 0;
         int     m_iMatchesWithOutResultWithCourt = 0;
-        boolean m_bGroupByCourt     = false;
         /** To keep the number of toast message to a certain minimum */
         int     m_iGroupByCourtMsg  = 0;
 
@@ -785,14 +792,17 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             super.clear();
 
             // will be 're-increased' by 'receive()'
-            m_iMatchesWithCourt = 0;
+            m_iMatchesWithCourt              = 0;
             m_iMatchesWithOutResultWithCourt = 0;
-
-            m_bGroupByCourt     = PreferenceValues.groupMatchesInFeedByCourt(context); // if set to true, matches must be sorted by date+time within the 'section', my feeds usually come in 'per field'
+            m_bGroupByCourt                  = PreferenceValues.groupMatchesInFeedByCourt(context);
         }
 
         @Override public void load(boolean bUseCacheIfPresent) {
             this.clear();
+
+            if ( true || m_bGroupByCourt ) {
+                sortHeaders(SortOrder.Ascending);
+            }
 
             if ( context == null ) {
                 return;
@@ -1200,9 +1210,9 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     Log.w(TAG, "Skipping match without players");
                     continue;
                 }
-                String sRoundOrDivision = joMatch.optString(JSONKey.division.toString(), sSection);
-                if ( StringUtil.isEmpty(sRoundOrDivision) || sRoundOrDivision.equals(sSection) ) {
-                    sRoundOrDivision = joMatch.optString(JSONKey.round.toString(), sSection);
+                String sRoundOrDivisionOrCourt = joMatch.optString(JSONKey.division.toString(), sSection);
+                if ( StringUtil.isEmpty(sRoundOrDivisionOrCourt) || sRoundOrDivisionOrCourt.equals(sSection) ) {
+                    sRoundOrDivisionOrCourt = joMatch.optString(JSONKey.round.toString(), sSection);
                 }
                 String sResult = joMatch.optString(JSONKey.result.toString());
                 if ( joMatch.has(JSONKey.court.toString() ) ) {
@@ -1211,7 +1221,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         m_iMatchesWithOutResultWithCourt++;
                     }
                     if ( m_bGroupByCourt ) {
-                        sRoundOrDivision = joMatch.optString(JSONKey.court.toString(), sRoundOrDivision);
+                        sRoundOrDivisionOrCourt = joMatch.optString(JSONKey.court.toString(), sRoundOrDivisionOrCourt);
+                        joMatch.put(m_sIfGroupByCourtUseSectionAs, sSection);
                     }
                 }
 
@@ -1225,10 +1236,10 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     case showingMatches: {
                         if ( m_bHideCompletedMatches ) {
                             if ( StringUtil.isEmpty(sResult) ) {
-                                super.addItem(sRoundOrDivision, sDisplayName, joMatch);
+                                super.addItem(sRoundOrDivisionOrCourt, sDisplayName, joMatch);
                             }
                         } else {
-                            super.addItem(sRoundOrDivision, sDisplayName, joMatch);
+                            super.addItem(sRoundOrDivisionOrCourt, sDisplayName, joMatch);
                         }
                         break;
                     }
