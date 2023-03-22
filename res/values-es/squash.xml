@@ -26,6 +26,7 @@
     <string name="sb_official_rules__Squash">Reglas oficiales de squash</string>
     <string name="sb_possible_conducts">Posibles conductas</string>
     <string name="sb_self_inflicted_injury">Lesión autoinfligida</string>
+    <string name="sb_self_inflicted_blood_injury">Lesión autoinfligida (Sangre)</string>
     <string name="sb_opponent_inflicted_injury">Lesión infligida por el oponente</string>
     <string name="sb_contributed_injury">Lesión contribuida</string>
 

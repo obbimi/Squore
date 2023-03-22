@@ -4562,6 +4562,7 @@ touch -t 01030000 LAST.sb
             case ContributedInjury:
             case OpponentInflictedInjury:
             case SelfInflictedInjury:
+            case SelfInflictedBloodInjury:
                 twoTimerView = new InjuryTimerView(this, matchModel, timerType);
                 break;
         }
@@ -4609,8 +4610,9 @@ touch -t 01030000 LAST.sb
                     }
                     timer = new Timer(this, timerType, iInitialSecs, iResumeAt, /*iSeconds/6*/ iReminderAt, bAutoTriggered); // squash: 15, badminton: reminder at 20 seconds
                     break;
-                case SelfInflictedInjury: // fall through
-                case ContributedInjury: // fall through
+                case SelfInflictedInjury:      // fall through
+                case SelfInflictedBloodInjury: // fall through
+                case ContributedInjury:        // fall through
                 case OpponentInflictedInjury:
                     // injury
                     timer = new Timer(this, timerType, iInitialSecs, iResumeAt, iReminderAt /*Math.max(15,iInitialSecs/6)*/, bAutoTriggered);

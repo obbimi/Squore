@@ -26,20 +26,22 @@ import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
  * - Pause between games
  * - Injury
  *      - Self Inflicted
+ *      - Self Inflicted (Blood)
  *      - Contributed
  *      - Opponent Inflicted
  */
 public enum Type {
-    Warmup                 (PreferenceKeys.timerWarmup                 , 300  , R.string.oal_warmup                  , R.string.oa_halftime ),
-    UntillStartOfNextGame  (PreferenceKeys.timerPauseBetweenGames      ,  90  , R.string.oal_pause                   , R.string.oa_fifteen_seconds ), // PSA: 120
+    Warmup                  (PreferenceKeys.timerWarmup                  , 300  , R.string.oal_warmup                    , R.string.oa_halftime ),
+    UntillStartOfNextGame   (PreferenceKeys.timerPauseBetweenGames       ,  90  , R.string.oal_pause                     , R.string.oa_fifteen_seconds ), // PSA: 120
 
     // squash
-    SelfInflictedInjury    (PreferenceKeys.timerSelfInflictedInjury    ,  3*60, R.string.sb_self_inflicted_injury    , R.string.oa_fifteen_seconds ),
-    ContributedInjury      (PreferenceKeys.timerContributedInjury      , 15*60, R.string.sb_contributed_injury       , R.string.oa_fifteen_seconds ),
-    OpponentInflictedInjury(PreferenceKeys.timerOpponentInflictedInjury, 15*60, R.string.sb_opponent_inflicted_injury, R.string.oa_fifteen_seconds ),
+    SelfInflictedInjury     (PreferenceKeys.timerSelfInflictedInjury     ,  3*60, R.string.sb_self_inflicted_injury      , R.string.oa_fifteen_seconds ), // 14.3.1
+    SelfInflictedBloodInjury(PreferenceKeys.timerSelfInflictedBloodInjury,  5*60, R.string.sb_self_inflicted_blood_injury, R.string.oa_fifteen_seconds ), // 14.4.1 (blood)
+    ContributedInjury       (PreferenceKeys.timerContributedInjury       , 15*60, R.string.sb_contributed_injury         , R.string.oa_fifteen_seconds ),
+    OpponentInflictedInjury (PreferenceKeys.timerOpponentInflictedInjury , 15*60, R.string.sb_opponent_inflicted_injury  , R.string.oa_fifteen_seconds ),
     // tabletennis
-    TowelingDown           (PreferenceKeys.timerTowelingDown           , 60   , R.string.toweling_down               , R.string.oa_fifteen_seconds ),
-    Timeout                (PreferenceKeys.timerTimeout                , 60   , R.string.timeout                     , R.string.oa_fifteen_seconds ),
+    TowelingDown            (PreferenceKeys.timerTowelingDown            , 60   , R.string.toweling_down                 , R.string.oa_fifteen_seconds ),
+    Timeout                 (PreferenceKeys.timerTimeout                 , 60   , R.string.timeout                       , R.string.oa_fifteen_seconds ),
     ;
     private final int            iSecs;
 //  private final int[]          iR;

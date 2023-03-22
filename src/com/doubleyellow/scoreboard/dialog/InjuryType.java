@@ -65,7 +65,7 @@ public class InjuryType extends BaseAlertDialog
         LinearLayout ll = new LinearLayout(context);
         ll.setOrientation(LinearLayout.VERTICAL);
         ll.setGravity(Gravity.CENTER);
-        EnumSet<Type> types = EnumSet.of(Type.SelfInflictedInjury, Type.ContributedInjury, Type.OpponentInflictedInjury);
+        EnumSet<Type> types = EnumSet.of(Type.SelfInflictedInjury, Type.SelfInflictedBloodInjury, Type.ContributedInjury, Type.OpponentInflictedInjury);
         for ( Type type: types ) {
             TextView view = getActionView(type.getNameResId(), type.ordinal(), iNoIconSize);
             ll.addView(view, llpMargin1Weight1);

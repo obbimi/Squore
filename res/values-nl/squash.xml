@@ -22,6 +22,7 @@
     <string name="sb_official_rules__Squash">Officiele squash regels</string>
     <string name="sb_possible_conducts">Mogelijke \'Conducts\'</string>
     <string name="sb_self_inflicted_injury">Zelf-veroorzaakte blessure</string>
+    <string name="sb_self_inflicted_blood_injury">Zelf-veroorzaakte bloed blessure</string>
     <string name="sb_opponent_inflicted_injury">Blessure door tegenstander</string>
     <string name="sb_contributed_injury">Blessure met gedeelde schuld</string>
 

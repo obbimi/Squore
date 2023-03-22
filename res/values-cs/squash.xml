@@ -24,6 +24,7 @@
     <string name="sb_official_rules__Squash">Oficiální pravidla squash</string>
     <string name="sb_possible_conducts">Možné tresty</string>
     <string name="sb_self_inflicted_injury">Samozaviněné zranění</string>
+    <string name="sb_self_inflicted_blood_injury">Samozaviněné zranění (Krev)</string>
     <string name="sb_opponent_inflicted_injury">Zranění způsobené protihráčem</string>
     <string name="sb_contributed_injury">Zranění s přispěním protihráče</string>
 

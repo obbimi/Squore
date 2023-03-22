@@ -163,6 +163,7 @@ public enum PreferenceKeys {
         timerPauseBetweenGames_values,
       //timerInjury,
             timerSelfInflictedInjury,
+            timerSelfInflictedBloodInjury,
             timerContributedInjury,
             timerOpponentInflictedInjury,
             // mid-game timers (tabletennis)
