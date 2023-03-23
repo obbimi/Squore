@@ -210,6 +210,22 @@ public class GSMModel extends Model
         return super.getNrOfPointsToWinGame();
     }
 
+    @Override public Map<Player, Integer> getTotalNumberOfPointsScored() {
+        Map<Player, Integer> pointsWon = new HashMap<Player, Integer>();
+        if ( ListUtil.isEmpty(m_lPlayer2EndPointsOfGames_PerSet)) { return pointsWon; }
+
+        for( List<Map<Player, Integer>> lPlayer2EndPointsOfGames: m_lPlayer2EndPointsOfGames_PerSet) {
+            if ( ListUtil.isEmpty(lPlayer2EndPointsOfGames)) { continue; }
+            for( Map<Player, Integer> mPlayer2PointsInGame : lPlayer2EndPointsOfGames) {
+                if ( MapUtil.isEmpty(mPlayer2PointsInGame)) { continue; }
+                for (Player p : Player.values() ) {
+                    MapUtil.increaseCounter(pointsWon, p, mPlayer2PointsInGame.get(p));
+                }
+            }
+        }
+        return pointsWon;
+    }
+
     private int _getNrOfPointsToWinGame() {
         if ( isTieBreakGame() ) {
             boolean bIsFinalSet = isFinalSet();
