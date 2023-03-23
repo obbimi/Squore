@@ -54,15 +54,17 @@ public class CastOptionsProvider implements OptionsProvider
         Map.Entry<String, String> remoteDisplayAppId2Info = Brand.brand.getRemoteDisplayAppId2Info(context);
         Log.d(TAG, "[getCastOptions] remoteDisplayAppId2Info : " + remoteDisplayAppId2Info);
 
-        NotificationOptions notificationOptions = new NotificationOptions.Builder()
-                .setActions(Arrays.asList(MediaIntentReceiver.ACTION_SKIP_NEXT,
-                                          MediaIntentReceiver.ACTION_TOGGLE_PLAYBACK,
-                                          MediaIntentReceiver.ACTION_STOP_CASTING), new int[]{1, 2})
-                .setTargetActivityClassName(com.doubleyellow.scoreboard.activity.Feedback.class.getName())
-                .build();
-
         CastMediaOptions mediaOptions = null;
         if ( false ) {
+            NotificationOptions notificationOptions = new NotificationOptions.Builder()
+/*
+                    .setActions(Arrays.asList(MediaIntentReceiver.ACTION_SKIP_NEXT,
+                                              MediaIntentReceiver.ACTION_TOGGLE_PLAYBACK,
+                                              MediaIntentReceiver.ACTION_STOP_CASTING), new int[]{1, 2})
+*/
+                    .setTargetActivityClassName(com.doubleyellow.scoreboard.activity.Feedback.class.getName())
+                    .build();
+
             mediaOptions = new CastMediaOptions.Builder()
                     .setImagePicker(new ImagePickerImpl())
                     .setNotificationOptions(notificationOptions)
@@ -73,6 +75,8 @@ public class CastOptionsProvider implements OptionsProvider
         CastOptions.Builder builder = new CastOptions.Builder();
         String key = remoteDisplayAppId2Info.getKey();
         builder.setReceiverApplicationId(key);
+        //builder.setSupportedNamespaces(Arrays.asList(CastHelper.URN_X_CAST + CastHelper.m_sMessageNamespace)); // limits shown devices
+
         Log.d(TAG, "[getCastOptions] create with receiver app id : " + key);
       //builder.setStopReceiverApplicationWhenEndingSession(true);
         if ( mediaOptions != null ) {

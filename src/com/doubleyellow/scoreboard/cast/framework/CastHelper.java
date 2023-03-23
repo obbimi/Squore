@@ -19,6 +19,7 @@ package com.doubleyellow.scoreboard.cast.framework;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.media.MediaRouter;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +27,7 @@ import android.view.MenuItem;
 
 import androidx.core.view.MenuItemCompat;
 import androidx.mediarouter.app.MediaRouteActionProvider;
+import androidx.mediarouter.media.MediaControlIntent;
 import androidx.mediarouter.media.MediaRouteSelector;
 
 import com.doubleyellow.android.util.ColorUtil;
@@ -49,6 +51,10 @@ import com.doubleyellow.util.StringUtil;
 import com.google.android.gms.cast.ApplicationMetadata;
 import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.CastDevice;
+import com.google.android.gms.cast.LaunchOptions;
+import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaLoadOptions;
+import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastOptions;
@@ -57,6 +63,7 @@ import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.cast.framework.CastStateListener;
 import com.google.android.gms.cast.framework.SessionManager;
 import com.google.android.gms.cast.framework.SessionManagerListener;
+import com.google.android.gms.cast.framework.media.CastMediaOptions;
 import com.google.android.gms.cast.framework.media.RemoteMediaClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -67,6 +74,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -85,7 +93,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 {
     private static final String TAG = "SB." + CastHelper.class.getSimpleName();
 
-    private static final String URN_X_CAST = "urn:x-cast:";
+    public static final String URN_X_CAST = "urn:x-cast:";
 
     private Context     m_context      = null;
     private CastContext m_castContext  = null; /* has nothing to do with android.content.Context */
@@ -110,7 +118,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     private void createCastContext() {
         if ( m_castContext == null ) {
             try {
-                m_castContext = CastContext.getSharedInstance(m_context); // requires com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME to be specified in Manifest.xml
+                m_castContext = CastContext.getSharedInstance(); // requires com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME to be specified in Manifest.xml
                 Log.d(TAG, "[createCastContext] created: " + m_castContext);
 
                 // Initially the ReceiverAppId is set via CastOptionsProvider
@@ -126,12 +134,52 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
                 m_castContext.setReceiverApplicationId(remoteDisplayAppId2Info.getKey());
 
                 if ( false ) {
+                    CastOptions castOptions = m_castContext.getCastOptions();
+                    CastMediaOptions castMediaOptions = castOptions.getCastMediaOptions();
+                    LaunchOptions launchOptions = castOptions.getLaunchOptions();
+
                     CastOptions.Builder builder = new CastOptions.Builder();
                     builder.setReceiverApplicationId(remoteDisplayAppId2Info.getKey());
+                    builder.setSupportedNamespaces(Arrays.asList("my-namespace"));
+                    CastOptions build = builder.build();
                 }
             } catch (Exception e) {
                 Log.w(TAG, "No casting ..." + e.getMessage());
                 //e.printStackTrace(); // com.google.android.gms.dynamite.DynamiteModule$LoadingException: No acceptable module found. Local version is 0 and remote version is 0 (Samsung S4 with custom ROM 8.1)
+            }
+        }
+    }
+
+    private static long lLastDummyContentSend = 0;
+    private void playFakeContent(String sMsg) {
+
+        if (null != m_castSession) {
+            MediaLoadOptions mediaLoadOptions = new MediaLoadOptions.Builder().setAutoplay(true).build();
+            RemoteMediaClient remoteMediaClient = m_castSession.getRemoteMediaClient();
+            if ( false ) {
+                String addr = Brand.getBaseURL() + "/images/google.play.high.res.logo.png";
+                Log.w(TAG, "Sending fake content to test keep-alive for NEW generation of chromecast dongles : " + addr);
+
+                MediaInfo mediaInfo = new MediaInfo.Builder(addr)
+                            .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                            .setContentType("image/png")
+                            .setMetadata(new MediaMetadata(MediaMetadata.MEDIA_TYPE_PHOTO)).build();
+                remoteMediaClient.load(mediaInfo, mediaLoadOptions);
+            }
+
+            if ( StringUtil.isNotEmpty(sMsg) && sMsg.contains("mp3") ) {
+                long lNow = System.currentTimeMillis();
+                if ( (lNow - lLastDummyContentSend) > 1000 * 60 * 5 ) { // wait at least 5 minutes before sending again
+                    lLastDummyContentSend = lNow;
+                    Log.w(TAG, "Sending fake mp3 to test keep-alive for NEW generation of chromecast dongles : " + sMsg);
+                    MediaInfo mediaInfo = new MediaInfo.Builder("https://www.double-yellow.be/cast/sound_example.mp3")
+                            .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                            .setContentType("audio/mpeg")
+                            .setMetadata(new MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK))
+                            .build();
+
+                    remoteMediaClient.load(mediaInfo, mediaLoadOptions);
+                }
             }
         }
     }
@@ -147,20 +195,42 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         return true;
     }
     @Override public void initCastMenu(Activity activity, Menu menu) {
-        MenuItem m_mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(activity.getApplicationContext(), menu, R.id.media_route_menu_item);
-        Log.d(TAG, String.format("initCastMenu: %s (visible: %s)", m_mediaRouteMenuItem, m_mediaRouteMenuItem.isVisible()));
+        MenuItem mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(activity.getApplicationContext(), menu, R.id.media_route_menu_item);
+        Log.d(TAG, String.format("initCastMenu: %s (visible: %s)", mediaRouteMenuItem, mediaRouteMenuItem.isVisible()));
 
-        if ( true ) {
+        if ( false ) {
             // just testing some stuff
-            MediaRouteActionProvider actionProvider = (MediaRouteActionProvider) MenuItemCompat.getActionProvider(m_mediaRouteMenuItem);
+
+            //MediaRouter router = MediaRouter.getInstance(activity.getApplicationContext());
+            MediaRouter router = (MediaRouter) activity.getApplicationContext().getSystemService(Context.MEDIA_ROUTER_SERVICE);
+            //List<MediaRouter.RouteInfo> routes = router.getRoutes();
+            //Log.d(TAG, String.format("initCastMenu routes: %s ", routes));
+            int routeCount = router.getRouteCount();
+            Log.d(TAG, String.format("initCastMenu routeCount: %s ", routeCount));
+
+            MediaRouteActionProvider actionProvider = (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
             Log.d(TAG, String.format("initCastMenu actionProvider: %s ", actionProvider));
             MediaRouteSelector routeSelector = actionProvider.getRouteSelector();
             Log.d(TAG, String.format("initCastMenu routeSelector: %s ", routeSelector));
+            List<String> controlCategories = routeSelector.getControlCategories();
+            Log.d(TAG, String.format("initCastMenu controlCategories: %s ", controlCategories));
+            if ( true ) {
+                mediaRouteSelector = new MediaRouteSelector.Builder()
+                        .addControlCategory(MediaControlIntent.CATEGORY_REMOTE_PLAYBACK) // attempt to show more than just ChromeCast dongles
+                        .addControlCategory(MediaControlIntent.CATEGORY_LIVE_AUDIO) // attempt to show more than just ChromeCast dongles
+                        .addControlCategory(MediaControlIntent.CATEGORY_LIVE_VIDEO) // attempt to show more than just ChromeCast dongles
+                        .addControlCategory(MediaControlIntent.ACTION_SEND_MESSAGE) // attempt to show more than just ChromeCast dongles
+                        .addControlCategory(MediaControlIntent.ACTION_START_SESSION) // attempt to show more than just ChromeCast dongles
+                        //.addControlCategory(category) // attempt to show more than just ChromeCast dongles
+                        .build();
+                actionProvider.setRouteSelector(mediaRouteSelector);
+            }
         }
 
-        m_mediaRouteMenuItem.setVisible(true);
-        m_mediaRouteMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        mediaRouteMenuItem.setVisible(true);
+        mediaRouteMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
+    private MediaRouteSelector   mediaRouteSelector  = null;
 
     @Override public void onActivityStart_Cast() {
 
@@ -360,6 +430,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             } else {
                 m_castSession.sendMessage(URN_X_CAST + m_sMessageNamespace, sMsg);
             }
+            //playFakeContent(sMsg);
             return true;
         } catch (Exception e) {
             // seen IllegalStateException crashing the app reported in PlayStore

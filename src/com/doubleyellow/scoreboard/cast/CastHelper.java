@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.os.Build;
 import androidx.core.view.MenuItemCompat;
 import androidx.mediarouter.app.MediaRouteActionProvider;
+import androidx.mediarouter.media.MediaControlIntent;
 import androidx.mediarouter.media.MediaRouteSelector;
 import androidx.mediarouter.media.MediaRouter;
 import android.util.Log;
@@ -126,7 +127,12 @@ public class CastHelper implements ICastHelper
         String category = CastMediaControlIntent.categoryForCast(CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID); // com.google.android.gms.cast.CATEGORY_CAST/CC1AD845///ALLOW_IPV6
         //       category = CastMediaControlIntent.categoryForCast(APP_ID);
         mediaRouteSelector = new MediaRouteSelector.Builder()
-                .addControlCategory(category)
+                //.addControlCategory(MediaControlIntent.CATEGORY_REMOTE_PLAYBACK) // attempt to show more than just ChromeCast dongles
+                //.addControlCategory(MediaControlIntent.CATEGORY_LIVE_AUDIO) // attempt to show more than just ChromeCast dongles
+                //.addControlCategory(MediaControlIntent.CATEGORY_LIVE_VIDEO) // attempt to show more than just ChromeCast dongles
+                //.addControlCategory(MediaControlIntent.ACTION_SEND_MESSAGE) // attempt to show more than just ChromeCast dongles
+                //.addControlCategory(MediaControlIntent.ACTION_START_SESSION) // attempt to show more than just ChromeCast dongles
+                .addControlCategory(category) // attempt to show more than just ChromeCast dongles
                 .build();
     }
 
