@@ -17,7 +17,7 @@
     <string name="Source_x__Target_y">Source: %1$s\nTarget: %2$s</string>
     <string name="Source_x">Source: %s</string>
     <string name="Target_y">Target: %s</string>
-    <string name="no_appropriate_zip_files_found_in_x">No appropriate zip files found in %s</string>
+    <string name="no_appropriate_zip_files_found_in_x">In %s: No zip with matches found</string>
     <string name="no_read_rights_for_x">No read rights for %s</string>
     <string name="no_write_rights_for_x">No write rights for %s</string>
     <string name="could_not_determine_external_storage_location">Could not determine external storage location</string>

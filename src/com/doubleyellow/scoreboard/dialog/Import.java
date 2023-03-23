@@ -74,7 +74,8 @@ public class Import extends BaseAlertDialog
                 .setNegativeButton(R.string.cmd_delete , listener);
 
         // add a view with all possible zip files and let user choose one
-        List<File> lFiles = ExportImport.listZipFiles(sourceDirectory, ".+\\.(sb|json)");
+        String sFilesInZipMatchingRegExp = ".+\\.(sb|json)";
+        List<File> lFiles = ExportImport.listZipFiles(sourceDirectory, sFilesInZipMatchingRegExp);
         if ( ListUtil.isEmpty(lFiles) ) {
             Collection<String> sdCardPaths = ExportImport.getSDCardPaths(false);
             if ( ListUtil.isNotEmpty(sdCardPaths) ) {
@@ -82,7 +83,7 @@ public class Import extends BaseAlertDialog
             }
             if ( ListUtil.isNotEmpty(sdCardPaths) ) {
                 File fBuSourceDirectory = new File(sdCardPaths.iterator().next());
-                lFiles = ExportImport.listZipFiles(fBuSourceDirectory, ".+\\.(sb|json)");
+                lFiles = ExportImport.listZipFiles(fBuSourceDirectory, sFilesInZipMatchingRegExp);
                 if ( ListUtil.isNotEmpty(lFiles) ) {
                     sourceDirectory = fBuSourceDirectory;
                 }

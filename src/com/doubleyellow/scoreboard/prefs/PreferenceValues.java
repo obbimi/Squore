@@ -1950,7 +1950,8 @@ public class PreferenceValues extends RWValues
     public static File targetDirForImportExport(Context context, boolean bForImport) {
         requestPermission(context, PreferenceKeys.targetDirForImportExport, Manifest.permission.WRITE_EXTERNAL_STORAGE, true);
 
-        File storageDirectory = Environment.getExternalStorageDirectory();
+      //File storageDirectory = Environment.getExternalStorageDirectory();
+        File storageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
         String sDir = getString(PreferenceKeys.targetDirForImportExport, (storageDirectory != null ? storageDirectory.getAbsolutePath() : null), context);
         if ( StringUtil.isEmpty(sDir) ) {
             return null;
@@ -1965,12 +1966,12 @@ public class PreferenceValues extends RWValues
             //setString(PreferenceKeys.targetDirForImportExport, context, fDir.getAbsolutePath());
         }
         if ( bForImport && bPreferredDirIsReadOnly ) {
-            Toast.makeText(context, String.format("Returning read only directory %s for import that can NOT be used for export.", fDir.getAbsolutePath()), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, String.format("Using %s read only directory, NOT suitable for export.", fDir.getAbsolutePath()), Toast.LENGTH_LONG).show();
         }
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2023-01-04"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2023-03-21"; // auto adjusted by shell script 'clean.and.assemble.sh'
     public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }
