@@ -559,6 +559,9 @@ public class PreferenceValues extends RWValues
     public static boolean isConfiguredForLiveScore(Context ctx) {
         return getBoolean(PreferenceKeys.postEveryChangeToSupportLiveScore, ctx, false);
     }
+    public static boolean turnOnLiveScoringForMatchesFromFeed(Context ctx) {
+        return getBoolean(PreferenceKeys.turnOnLiveScoringForMatchesFromFeed, ctx, R.bool.turnOnLiveScoringForMatchesFromFeed_default);
+    }
 
     // TODO: add to preferences.xml
     public static Feature switchToPlayerListIfMatchListOfFeedIsEmpty(Context context) {

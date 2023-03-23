@@ -7,6 +7,7 @@
     <string name="endGameSuggestion_default__Badminton">Automatic</string>
 
     <bool name="useFeedAndPostFunctionality_default">false</bool>
+    <bool name="turnOnLiveScoringForMatchesFromFeed_default">false</bool>
 
     <!--    <dimen name="sb_button_radius">10dp</dimen>-->
 

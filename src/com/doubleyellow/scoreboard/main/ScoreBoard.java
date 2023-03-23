@@ -4964,12 +4964,16 @@ touch -t 01030000 LAST.sb
                             String sSource = m.getSource();
                             if ( StringUtil.isNotEmpty(sSource) ) {
                                 if ( sSource.startsWith("http") || sSource.contains("tournamentsoftware") ) {
-                                    // user is allowed to specify to turn this off in a section of MatchView
-                                    PreferenceValues.initForLiveScoring(this, true);
+                                    if ( PreferenceValues.turnOnLiveScoringForMatchesFromFeed(this) ) {
+                                        // user is allowed to specify to turn this off in a section of MatchView
+                                        PreferenceValues.initForLiveScoring(this, true);
+                                    } else {
+                                        PreferenceValues.initForNoLiveScoring(this);
+                                    }
                                 }
                             }
 
-                            // now let user to specify match format
+                            // now let user specify/change suggested match format
                             Intent nm = new Intent(this, Match.class);
                             nm.putExtra(IntentKeys.NewMatch.toString(), sJson);
                             startActivityForResult(nm, R.id.sb_edit_event_or_player);

@@ -270,6 +270,7 @@ public enum PreferenceKeys {
         LiveScoreOpenURL,
         liveScoreDeviceId,
         postEveryChangeToSupportLiveScore,
+        turnOnLiveScoringForMatchesFromFeed,
 
     FCMPrefs,
         FCMEnabled,
