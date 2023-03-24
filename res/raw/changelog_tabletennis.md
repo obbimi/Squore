@@ -1,3 +1,7 @@
+## 4.51 (march 2023)
+
+- minor improvements for working with feeds
+
 ## 4.50 (okt 2022)
 
 - on wearable, consult the current time without leaving the score app

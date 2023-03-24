@@ -1,3 +1,7 @@
+## 4.51 (march 2023)
+
+- added new option in 'Injury Timers' to be compliant with new official Squash rules
+
 ## 4.50 (okt 2022)
 
 - on wearable, consult the current time without leaving the score app
