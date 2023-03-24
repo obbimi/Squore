@@ -733,6 +733,9 @@ public class MatchView extends ScrollView
         initNumberOfServesPerPlayer(context, spNumberOfServesPerPlayer, PreferenceValues.numberOfServesPerPlayer(context), 1, 5, txtPlayerA);
         {
             TieBreakFormat tbfPref = PreferenceValues.getTiebreakFormat(context);
+            if ( model != null ) {
+                tbfPref = model.getTiebreakFormat();
+            }
             spTieBreakFormat = (Spinner) findViewById(R.id.spTieBreakFormat);
             if ( spTieBreakFormat != null ) {
                 // Currently instanceof Spinner, not EnumSpinner
@@ -882,6 +885,9 @@ public class MatchView extends ScrollView
         cbUseEnglishScoring = (CompoundButton) findViewById(R.id.useHandInHandOutScoring);
         if ( cbUseEnglishScoring != null ) {
             boolean useHandInHandOutScoring = PreferenceValues.useHandInHandOutScoring(context);
+            if ( model != null ) {
+                useHandInHandOutScoring = model.isEnglishScoring();
+            }
             cbUseEnglishScoring.setChecked(useHandInHandOutScoring);
         }
         cbUseGoldenPoint = (CompoundButton) findViewById(R.id.useGoldenPoint);

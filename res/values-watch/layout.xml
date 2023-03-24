@@ -2,11 +2,9 @@
 <resources>
 <!--    <fraction name="ls_gamescores_width">20%</fraction>-->
 
-    <fraction name="wear_score_width_2x">48%</fraction>
-
     <!-- no margins, use as much room as possible on wearables -->
-    <fraction name="ls_vertical_margin_3x">0.0%</fraction>
-    <fraction name="ls_horizontal_margin_4x">0.0%</fraction>
+    <fraction name="ls_vertical_margin_3x">0.2%</fraction>
+    <fraction name="ls_horizontal_margin_4x">0.2%</fraction>
 
 <!--
     <fraction name="player_button_corner_radius">18%</fraction>
