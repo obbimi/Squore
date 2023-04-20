@@ -1,0 +1,56 @@
+sequenceDiagram
+participant User
+participant App
+participant AppServer
+participant YourSite
+link AppServer: Feed Types    @ https://squore.double-yellow.be/feed/feeds.php
+link AppServer: Documentation @ https://squore.double-yellow.be/2023-02-03.Integrate-Squore-with-your-website.odt
+link YourSite: Feeds           @ https://yoursite/feeds
+link YourSite: Premier Matches @ https://yoursite/feed/premier/matches
+link YourSite: Second Matches  @ https://yoursite/feed/second/matches
+link YourSite: Feeds Example   @ https://squore.double-yellow.be/demo/demo.feeds.partner.php
+link YourSite: Matches Example @ https://squore.double-yellow.be/partner/Region+B/Division/2A
+link YourSite: Mermaid         @ https://mermaid.js.org/syntax/sequenceDiagram.html
+
+User      ->>+App  : Select match from feed
+App       ->>-User : Present matches of 'active' feed
+
+User      ->>+App        : Select new feed
+App       ->>-AppServer  :List of feed types
+activate AppServer
+Note left of AppServer  : https://squore.double-yellow.be/feed/feeds.php
+AppServer ->>+App : JSON
+deactivate AppServer
+Note right of App : includes e.g.<br/>"YourType" : { "DisplayName: "Your Type"<br>,"URL": "https://yoursite/feeds"<br/>,"BGColor":"rrggbb"<br/>,"Image":"" }
+App       ->>-User: Present types 
+
+User      ->>+App: Selects "Your Type"
+App       ->>-YourSite:Fetch Your feeds from corresponding URL
+activate YourSite
+Note left of YourSite: e.g. https://yoursite/feeds
+YourSite  ->>+App  : JSON with all your feeds
+deactivate YourSite
+Note left of YourSite : e.g.<br> [{"Name": "Premier", "FeedMatches": "https://yoursite/feed/premier/matches"}<br>,{"Name": "Second", "FeedMatches": "https://yoursite/feed/second/matches"}]
+%%end
+App       ->>-User : Present leagues/tournaments
+
+User      ->>+App  : Select "Second"
+Note left of App: "Second" now becomes the 'Active' feed
+App       ->>-YourSite : Fetch Matches from URL specified with 'FeedMatches'
+activate YourSite
+Note left of YourSite: e.g. https://yoursite/feed/seond/matches
+YourSite  ->>+App  : JSON with all matches in feed "Second"
+deactivate YourSite
+Note left of YourSite: to receive the match result include:<br>{ config: { shareAction: PostResult<br>, PostResult: https://yoursite/receivematchresult }}
+App       ->>-User : Present matches
+
+User      ->>+App  : Select match
+App       ->>-User : Present 'New match' 
+Note left of App: prefilled with settings from JSON 
+
+User      ->>+App  : Confirm and Score app
+App       ->>-YourSite: If 'PostResult' is configured, POST match details to URL
+activate YourSite
+YourSite  ->>+App     : Send string to confirm match was received OK/NOK 
+deactivate YourSite
+App       ->>-User    : Show message with POST result
