@@ -49,6 +49,8 @@ import java.util.Map;
 /**
  * Helper class for posting the match result to a website.
  * Used e.g. to store match results for Double Yellow boxen.
+ *
+ * LiveScoring is done using {@link MatchModelPoster}
  */
 public class ResultPoster implements ContentReceiver
 {

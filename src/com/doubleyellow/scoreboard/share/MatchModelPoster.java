@@ -62,7 +62,7 @@ public class MatchModelPoster implements ContentReceiver
     private        String  sName;
     private        boolean m_bAutoShareTriggeredForliveScore     = false;
     private        boolean m_bFromMenu                           = false;
-    public void post(Context context, Model matchModel, JSONObject oSettings, boolean bFromMenu)
+    public void post(Context context, Model matchModel, JSONObject oSettings, JSONObject oTimerInfo, boolean bFromMenu)
     {
         m_context = context;
         m_model   = matchModel;
@@ -114,7 +114,7 @@ public class MatchModelPoster implements ContentReceiver
             if ( matchModel.matchHasEnded() ) {
                 matchModel.setLockState(LockState.SharedEndedMatch);
             }
-            String sJson = matchModel.toJsonString(context, oSettings);
+            String sJson = matchModel.toJsonString(context, oSettings, oTimerInfo);
             postTask.execute(URLTask.__BODY__, sJson);
             matchModel.setLockState(lsRestore);
         }
@@ -162,6 +162,7 @@ public class MatchModelPoster implements ContentReceiver
     }
 
     private void presentChoice(String sShowURL) {
+        Log.d(TAG, "Presenting choice...");
         if ( m_bFromMenu == false ) {
             // presume auto triggered
             if ( m_bAutoShareTriggeredForliveScore ) {

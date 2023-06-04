@@ -299,8 +299,8 @@ public class RacketlonModel extends Model {
     // JSON
     //-------------------------------
 
-    @Override public JSONObject getJsonObject(Context context, JSONObject oSettings) throws JSONException {
-        JSONObject jsonObject = super.getJsonObject(context, oSettings);
+    @Override public JSONObject getJsonObject(Context context, JSONObject oSettings, JSONObject oTimerInfo) throws JSONException {
+        JSONObject jsonObject = super.getJsonObject(context, oSettings, oTimerInfo);
 
         JSONArray joDisiplines = new JSONArray(ListUtil.elementsToString(getDisciplines()));
         jsonObject.put(JSONKey.disciplineSequence.toString(), joDisiplines); // TODO: only if deviating from default, and re-read

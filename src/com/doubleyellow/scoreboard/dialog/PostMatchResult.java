@@ -35,7 +35,7 @@ import com.doubleyellow.scoreboard.view.PreferenceCheckBox;
 
 /**
  * Dialog to suggest to the user to 'Post' the match result.
- * If user selects OK, class ResultPoster will be used to do the actual post.
+ * If user selects OK, class {@link ResultPoster} will be used to do the actual post.
  */
 public class PostMatchResult extends BaseAlertDialog
 {

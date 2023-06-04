@@ -231,8 +231,8 @@ public class TabletennisModel extends Model
     // JSON
     //-------------------------------
 
-    @Override public JSONObject getJsonObject(Context context, JSONObject oSettings) throws JSONException {
-        JSONObject jsonObject = super.getJsonObject(context, oSettings);
+    @Override public JSONObject getJsonObject(Context context, JSONObject oSettings, JSONObject oTimerInfo) throws JSONException {
+        JSONObject jsonObject = super.getJsonObject(context, oSettings, oTimerInfo);
 
         jsonObject.put(JSONKey.nrOfServersPerPlayer.toString(), getNrOfServesPerPlayer());
 

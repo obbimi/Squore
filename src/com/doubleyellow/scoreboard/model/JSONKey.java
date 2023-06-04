@@ -25,6 +25,7 @@ public enum JSONKey {
 		server,
 		serveSide,
 		isHandOut,
+		timerInfo,
 		isGameBall,
 		isMatchBall,
 		isVictoryFor,

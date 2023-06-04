@@ -2831,9 +2831,9 @@ public abstract class Model implements Serializable
         return toJsonString(null);
     }
     public String toJsonString(Context context) {
-        return toJsonString(context, null);
+        return toJsonString(context, null, null);
     }
-    public String toJsonString(Context context, JSONObject oSettings) {
+    public String toJsonString(Context context, JSONObject oSettings, JSONObject oTimerInfo) {
         try {
             GameTiming gameTimingCurrent = getGameTimingCurrent();
             if ( gameTimingCurrent != null ) {
@@ -2842,7 +2842,7 @@ public abstract class Model implements Serializable
                 }
             }
 
-            JSONObject jsonObject = getJsonObject(context, oSettings);
+            JSONObject jsonObject = getJsonObject(context, oSettings, oTimerInfo);
 
             String sJson = null;
             if ( ScoreBoard.isInSpecialMode() ) {
@@ -2858,7 +2858,7 @@ public abstract class Model implements Serializable
         return null;
     }
 
-    public JSONObject getJsonObject(Context context, JSONObject oSettings) throws JSONException {
+    public JSONObject getJsonObject(Context context, JSONObject oSettings, JSONObject oTimerInfo) throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
         // games
@@ -2881,6 +2881,10 @@ public abstract class Model implements Serializable
             Player[] possibleMatchBallFor = isPossibleMatchBallFor();
             jsonObject.put(JSONKey.isGameBall  .toString(), isPossibleGameBallFor(Player.A) || isPossibleGameBallFor(Player.B));
             jsonObject.put(JSONKey.isMatchBall .toString(), (possibleMatchBallFor != null) && (possibleMatchBallFor.length!=0) );
+
+            if ( oTimerInfo != null ) {
+                jsonObject.put(JSONKey.timerInfo.toString(), oTimerInfo);
+            }
         }
         if ( hasStarted() == false ) {
             Player server = getServer();
@@ -3611,7 +3615,7 @@ public abstract class Model implements Serializable
     protected void setDirty(boolean bScoreRelated) {
         m_iDirty++;
         if ( m_bReadingJsonInProgress ) {
-            // spead up the reading
+            // speed up the reading
             return;
         }
 
@@ -3625,7 +3629,7 @@ public abstract class Model implements Serializable
 
         if ( false && bScoreRelated ) {
             try {
-                JSONObject jo = getJsonObject(null, null);
+                JSONObject jo = getJsonObject(null, null, null);
                 jo.remove(JSONKey.timing.toString());
                 jo.remove(JSONKey.metadata.toString());
                 jo.remove(JSONKey.lockState.toString());

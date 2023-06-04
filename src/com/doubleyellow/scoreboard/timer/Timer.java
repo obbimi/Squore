@@ -227,7 +227,7 @@ public class Timer
       //private int    iCounter  = 0;
         private String TAG       = "SB." + SBCountDownTimer.class.getSimpleName();
 
-        SBCountDownTimer(int iSecsInFuture) {
+        private SBCountDownTimer(int iSecsInFuture) {
             super(iSecsInFuture * 1000 / iSpeedUpFactor, 1000 / iSpeedUpFactor);
             for(TimerView timerView:timerViews.values()) {
                 if ( timerView.isShowing() == false ) {
@@ -248,7 +248,7 @@ public class Timer
                 updateTimerView(this, timerView);
             }
             if ( secsLeft == iReminderAtSecs ) {
-                scoreBoard.triggerEvent(ScoreBoard.SBEvent.timerWarning, Timer.timerType); // currently use to e.g. vibarte and make a noice
+                scoreBoard.triggerEvent(ScoreBoard.SBEvent.timerWarning, Timer.timerType ); // currently use to e.g. vibrate and make a noise
             }
         }
 

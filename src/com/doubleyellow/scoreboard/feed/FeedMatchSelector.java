@@ -685,7 +685,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 if ( mDetails.isDirty() == false ) { return false; }
                 JSONObject joModel = null;
                 try {
-                    joModel = mDetails.getJsonObject(null, null);
+                    joModel = mDetails.getJsonObject(null, null, null);
 
                     // remove keys that have no value if match is not yet started
                     joModel.remove(JSONKey.when     .toString());

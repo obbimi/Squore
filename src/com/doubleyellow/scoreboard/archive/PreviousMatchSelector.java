@@ -358,7 +358,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         } catch (Exception e) {
             return false;
         }
-        ScoreBoard.postMatchModel(context, match, false, true);
+        ScoreBoard.postMatchModel(context, match, false, true, null, -1);
         return true;
     }
     private boolean mailMatch(File fMatchModel) {

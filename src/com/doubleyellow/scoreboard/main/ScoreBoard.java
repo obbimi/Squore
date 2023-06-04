@@ -3031,7 +3031,7 @@ touch -t 01030000 LAST.sb
                 enableScoreButton(leadingPlayer); // we only disabled if button of leader was pressed on gameball
             }
             if ( m_liveScoreShare ) {
-                postMatchModel(ScoreBoard.this, matchModel, true, false);
+                postMatchModel(ScoreBoard.this, matchModel, true, false, null, -1);
             }
         }
 
@@ -3550,6 +3550,9 @@ touch -t 01030000 LAST.sb
 
     /** This method is focused at handling gui related events */
     public boolean triggerEvent(SBEvent event, Object ctx) {
+        return triggerEvent(event, ctx, -1);
+    }
+    public boolean triggerEvent(SBEvent event, Object ctx, int iCtx) {
         //Log.d(TAG, "triggerEvent " + event + " (" + ctx + ")");
         switch ( event ) {
             case newMatchStarted:
@@ -3591,23 +3594,37 @@ touch -t 01030000 LAST.sb
                 if ( (matchModel != null) && matchModel.gameHasStarted() == false ) {
                     timestampStartOfGame(GameTiming.ChangedBy.TimerStarted);
                 }
+                if ( (bInitializingModelListeners == false) && m_liveScoreShare ) {
+                    Type timerType = (Type) ctx;
+                    postMatchModel(ScoreBoard.this, matchModel, true, false, timerType, iCtx);
+                }
+
                 return true;
             }
             case timerWarning: {
                 Type timerType = (Type) ctx;
                 doTimerFeedback(timerType, false);
+                if ( m_liveScoreShare ) {
+                    postMatchModel(ScoreBoard.this, matchModel, true, false, timerType, iCtx);
+                }
                 return true;
             }
             case timerEnded:
                 Type timerType = (Type) ctx;
                 //ViewType viewType  = (ViewType) ctx2;
                 doTimerFeedback(timerType, true);
+                if ( m_liveScoreShare ) {
+                    postMatchModel(ScoreBoard.this, matchModel, true, false, timerType, iCtx);
+                }
                 if ( EnumSet.of(Type.UntillStartOfNextGame).contains(timerType) && (matchModel != null) && matchModel.isPossibleGameVictory() ) {
                     endGame(false);
                 }
                 // fall through!!
             case timerCancelled: {
                 timerType = (Type) ctx;
+                if ( m_liveScoreShare ) {
+                    postMatchModel(ScoreBoard.this, matchModel, true, false, timerType, iCtx);
+                }
                 //viewType  = (ViewType) ctx2;
                 if ( EnumSet.of(Type.UntillStartOfNextGame, Type.Warmup).contains(timerType) ) {
                     if ( (matchModel != null) && matchModel.gameHasStarted() == false ) {
@@ -4224,7 +4241,7 @@ touch -t 01030000 LAST.sb
             case R.id.float_match_share:
             case R.id.dyn_match_share:
             case R.id.sb_share_score_sheet:
-                postMatchModel(this, matchModel, true, true);
+                postMatchModel(this, matchModel, true, true, null, -1);
                 if ( shareButton != null ) {
                     shareButton.setHidden(true);
                 }
@@ -4657,7 +4674,7 @@ touch -t 01030000 LAST.sb
         }
 
         if ( bIsResume == false ) {
-            triggerEvent(SBEvent.timerStarted, viewType);
+            triggerEvent(SBEvent.timerStarted, timerType, iInitialSecs);
         }
         boolean bShowBigTimer = PreferenceValues.BTSync_showFullScreenTimer(this);
         ViewType vtMirror = bShowBigTimer ? ViewType.FullScreen : viewType;
@@ -5189,7 +5206,7 @@ touch -t 01030000 LAST.sb
         }
         @Override public void onFinish() {
             Log.d(TAG, "Posting ... ");
-            postMatchModel(ScoreBoard.this, matchModel, false, false);
+            postMatchModel(ScoreBoard.this, matchModel, false, false, null , -1);
         }
     }
     private DelayedModelPoster m_delayedModelPoster = null;
@@ -5203,8 +5220,9 @@ touch -t 01030000 LAST.sb
     }
     private static boolean m_bShareStarted_DemoThread = false;
     /** invoked on: GameEndReached, GameEnded, FirstPointChange, GameIsHalfway, ScoreChange. Mainly for livescore */
-    public static void postMatchModel(Context context, Model matchModel, boolean bAllowEndGameIfApplicable, boolean bFromMenu) {
+    public static void postMatchModel(Context context, Model matchModel, boolean bAllowEndGameIfApplicable, boolean bFromMenu, Type timerType, int iSecsTotal) {
         if ( matchModel == null) { return; }
+        if ( timerType != null ) { matchModel.setShareURL(null); } // ensure repost for livescore, even though score has not changed
         Player possibleMatchVictoryFor = matchModel.isPossibleMatchVictoryFor();
         if ( bAllowEndGameIfApplicable ) {
             if ( possibleMatchVictoryFor != null ) {
@@ -5243,7 +5261,22 @@ touch -t 01030000 LAST.sb
                 e.printStackTrace();
             }
         }
-        matchModelPoster.post(context, matchModel, oSettings, bFromMenu);
+
+        JSONObject oTimerInfo = null;
+        if ( (timerType != null) && (iSecsTotal > -1) ) {
+            Log.w(TAG, "Posting match with timer info");
+            try {
+                oTimerInfo = new JSONObject();
+                oTimerInfo.put("type"        , timerType.toString());
+                oTimerInfo.put("totalSeconds", iSecsTotal);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.w(TAG, "Posting match without timer info");
+        }
+
+        matchModelPoster.post(context, matchModel, oSettings, oTimerInfo, bFromMenu);
     }
 
     // ------------------------------------------------------
@@ -6370,6 +6403,9 @@ touch -t 01030000 LAST.sb
      **/
     public void restartTimerWithSecondsLeft(int iSecs) {
         DialogTimerView.restartTimerWithSecondsLeft(iSecs);
+        if ( m_liveScoreShare ) {
+            postMatchModel(ScoreBoard.this, matchModel, true, false, Timer.timerType, iSecs);
+        }
 
         writeMethodToBluetooth(BTMethods.restartTimerWithSecondsLeft, iSecs);
     }
@@ -6958,7 +6994,7 @@ touch -t 01030000 LAST.sb
                     }
                     case resume: // fall through
                     case resume_confirmed: {
-                        String sJson = matchModel.toJsonString(null, null);
+                        String sJson = matchModel.toJsonString(null, null, null);
                         int iJsonLengthHere = sJson.length();
 
                         setWearableRole(WearRole.AppRunningOnBoth);
@@ -7280,6 +7316,34 @@ touch -t 01030000 LAST.sb
         if ( m_wearableHelper == null ) { return; }
         m_wearableHelper.openPlayStoreOnWearable(this);
     }
+
+    private void sendSettingToWearable(Object[] ctx) {
+        List<String> lPrefKeys = null;
+        if ( (ctx != null) && (ctx.length > 0) ) {
+            lPrefKeys = (List<String>) ctx[0];
+        } else {
+            lPrefKeys = Arrays.asList(PreferenceKeys.colorSchema.toString());
+        }
+        for(String sKey: lPrefKeys) {
+            String sValue = PreferenceValues.getString(sKey, null, this); // default 'false' is for preferences that are boolean
+            if ( sValue == null ) {
+                boolean aBoolean = PreferenceValues.getBoolean(sKey, this, false);
+                sValue = String.valueOf(aBoolean);
+            }
+            // send not wearable prefixed key if that is also a preference
+            final String prefix = PreferenceKeys.wearable + "_";
+            if ( sKey.startsWith(prefix) ) {
+                try {
+                    PreferenceKeys pKeyNonPrefixed = PreferenceKeys.valueOf(sKey.substring(prefix.length()));
+                    sKey = pKeyNonPrefixed.toString();
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+            }
+            writeMethodToBluetooth(BTMethods.updatePreference, sKey, sValue);
+        }
+    }
+
     // ----------------------------------------------------
     // --------------------- casting ----------------------
     // ----------------------------------------------------
