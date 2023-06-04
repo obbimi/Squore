@@ -76,9 +76,9 @@ public class Handicap extends BaseAlertDialog {
 
     private LinkedHashMap<Integer, EditText> lTexts;
     private static Map<Integer, CharSequence> m_entered = new HashMap<>(); // attempt to retain values when 'rotating' screen happens
-    private int iTotalNrOfPreviousGames = 0;
-    private HandicapFormat handicapFormat = null;
-    private int iNrOfPointsToWinGame = 11;
+    private int            iTotalNrOfPreviousGames = 0;
+    private HandicapFormat handicapFormat          = null;
+    private int            iNrOfPointsToWinGame    = 11;
 
     public void init(HandicapFormat handicapFormat, int iNrOfPointsToWinGame) {
         this.handicapFormat       = handicapFormat;
@@ -186,7 +186,7 @@ public class Handicap extends BaseAlertDialog {
             int nextFocusId = p.equals(Player.A) ? iTotalNrOfPreviousGames * 100 + Player.B.ordinal() : (iTotalNrOfPreviousGames + 1) * 100 + Player.A.ordinal();
             n.setNextFocusDownId(nextFocusId);
             n.setId(id);
-            n.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
+            n.setInputType(/*InputType.TYPE_NUMBER_FLAG_SIGNED  | */ InputType.TYPE_CLASS_NUMBER);
             n.setLayoutParams(layoutParams);
             n.setSingleLine();
             n.setMinWidth(60);
