@@ -1041,7 +1041,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             }
         }
 
-        if ( PreferenceValues.isUnbrandedExecutable(this) ) {
+        if ( PreferenceValues.isRunningInMainCodeBase(this) ) {
             // if we are running as unbranded but one ore more other brand values are uncommented
             if ( PreferenceValues.isBrandTesting(this) ) {
                 Brand overwriteBrand = PreferenceValues.getOverwriteBrand(this);
@@ -1497,7 +1497,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             // 20191027: first cancel running timer if back is pressed
             boolean bTimerIsShowing = (ScoreBoard.timer != null) && ScoreBoard.timer.isShowing();
             if ( bTimerIsShowing ) {
-                ScoreBoard.timer.cancel();
+                cancelTimer();
                 return;
             }
             BackKeyBehaviour backKeyBehaviour = PreferenceValues.backKeyBehaviour(this);
@@ -4207,30 +4207,7 @@ touch -t 01030000 LAST.sb
                 ExportImportPrefs.exportSettings(this);
                 return true;
             case R.id.send_settings_to_wearable:
-                List<String> lPrefKeys = null;
-                if ( (ctx != null) && (ctx.length > 0) ) {
-                    lPrefKeys = (List<String>) ctx[0];
-                } else {
-                    lPrefKeys = Arrays.asList(PreferenceKeys.colorSchema.toString());
-                }
-                for(String sKey: lPrefKeys) {
-                    String sValue = PreferenceValues.getString(sKey, null, this); // default 'false' is for preferences that are boolean
-                    if ( sValue == null ) {
-                        boolean aBoolean = PreferenceValues.getBoolean(sKey, this, false);
-                        sValue = String.valueOf(aBoolean);
-                    }
-                    // send not wearable prefixed key if that is also a preference
-                    final String prefix = PreferenceKeys.wearable + "_";
-                    if ( sKey.startsWith(prefix) ) {
-                        try {
-                            PreferenceKeys pKeyNonPrefixed = PreferenceKeys.valueOf(sKey.substring(prefix.length()));
-                            sKey = pKeyNonPrefixed.toString();
-                        } catch (IllegalArgumentException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    writeMethodToBluetooth(BTMethods.updatePreference, sKey, sValue);
-                }
+                sendSettingToWearable(ctx);
                 return true;
             case R.id.cmd_import_matches:
                 selectFilenameForImport();
@@ -5561,7 +5538,7 @@ touch -t 01030000 LAST.sb
         // read matches from raw resources and store them in history
         Map<Integer, SportType> lResources = new HashMap<>();
         addDemoMatchesForSport(lResources, Brand.getSport());
-        if ( PreferenceValues.isUnbrandedExecutable(this) ) {
+        if ( PreferenceValues.isRunningInMainCodeBase(this) ) {
             // if we are running as unbranded but one ore more other brand values are uncommented
             if ( PreferenceValues.isBrandTesting(this) ) {
                 for(Brand brand: Brand.values() ) {
@@ -6847,6 +6824,7 @@ touch -t 01030000 LAST.sb
                                     initColors();
                                 } catch (IllegalArgumentException e2) {
                                     // most likely com.doubleyellow.scoreboard.prefs.ColorPrefs.ColorTarget
+                                    // PlayerColorsNewMatchA , PlayerColorsNewMatchB
                                 }
                             }
                         } else {

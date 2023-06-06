@@ -257,8 +257,8 @@ public enum PreferenceKeys {
         textColors,
         showPlayerColorOn,
             PlayerColorsNewMatch,
-                //PlayerColorsNewMatchA,
-                //PlayerColorsNewMatchB,
+                PlayerColorsNewMatchA,
+                PlayerColorsNewMatchB,
             showPlayerColorOn_Text,
 
     Misc,

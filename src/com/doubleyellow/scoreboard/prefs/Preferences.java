@@ -527,6 +527,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             if ( (key != null) && key.startsWith(PreferenceKeys.PlayerColorsNewMatch.toString()) && preference instanceof EditTextPreference) {
                 String sColor = RWValues.getString(key, null, Preferences.this);
                 ColorPrefs.setColorTargetPreferenceIcon(sColor, preference);
+                m_lColorSettingsChanged.add(key); // PlayerColorsNewMatchA and/or PlayerColorsNewMatchB
             }
 
             // not required... does not change from within app itself

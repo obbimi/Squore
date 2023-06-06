@@ -132,14 +132,15 @@ public class PreferenceValues extends RWValues
 
     private PreferenceValues() {}
 
-    public static final String COM_DOUBLEYELLOW_SCOREBOARD = "com.doubleyellow.scoreboard";
-    public static final String COM_DOUBLEYELLOW_SQUOREWEAR = "com.doubleyellow.squorewear";
+    private static final String COM_DOUBLEYELLOW_SCOREBOARD = "com.doubleyellow.scoreboard";
 
+    public static boolean isRunningInMainCodeBase(Context ctx) {
+        String packageName = ctx.getPackageName();
+        return packageName.equals(PreferenceValues.COM_DOUBLEYELLOW_SCOREBOARD);
+    }
     public static boolean isUnbrandedExecutable(Context ctx) {
         String packageName = ctx.getPackageName();
-        return packageName.equals(PreferenceValues.COM_DOUBLEYELLOW_SCOREBOARD)
-            || packageName.equals(PreferenceValues.COM_DOUBLEYELLOW_SQUOREWEAR)
-            ;
+        return packageName.matches("com\\.doubleyellow\\..+");
     }
     public static boolean isBrandedExecutable(Context ctx) {
         return isUnbrandedExecutable(ctx) == false;
