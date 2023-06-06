@@ -223,6 +223,8 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="BTSync_keepLROnConnectedDeviceMirrored_default__Default">true</bool>
 
     <bool name="Cast_ShowGraphDuringTimer_default">true</bool>
+    <bool name="castScreenShowLogo_default">true</bool>
+    <bool name="castScreenShowSponsor_default">true</bool>
     <bool name="prefetchFlags_default">false</bool>
     <bool name="hideFlagForSameCountry_default">true</bool>
     <bool name="hideAvatarForSameImage_default">false</bool>

@@ -1058,13 +1058,13 @@ public class PreferenceValues extends RWValues
         return RWValues.getString(PreferenceKeys.castScreenLogoUrl, "", context);
     }
     public static boolean castScreenShowLogo(Context context) {
-        return RWValues.getBoolean(PreferenceKeys.castScreenShowLogo, context, true);
+        return RWValues.getBoolean(PreferenceKeys.castScreenShowLogo, context, R.bool.castScreenShowLogo_default);
     }
     public static String castScreenSponsorUrl(Context context) {
         return RWValues.getString(PreferenceKeys.castScreenSponsorUrl, "", context);
     }
     public static boolean castScreenShowSponsor(Context context) {
-        return RWValues.getBoolean(PreferenceKeys.castScreenShowSponsor, context, true);
+        return RWValues.getBoolean(PreferenceKeys.castScreenShowSponsor, context, R.bool.castScreenShowSponsor_default);
     }
 /*
     public static boolean Cast_ShowGraphDuringTimer(Context context) {
