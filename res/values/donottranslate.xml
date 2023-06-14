@@ -26,10 +26,22 @@
     <string name="app_name_short_brand__Tabletennis">Score Table Tennis</string>
     <string name="app_name_short_brand__Badminton">Score Badminton</string>
     <string name="app_name_short_brand__TennisPadel">Score Tennis/Padel</string>
-<!--
-    <string name="app_name">Squore</string>
-    <string name="app_scoreboard">Squore Board</string>
--->
+
+    <string name="winning_gamescore__Squash">11</string>
+    <string name="winning_gamescore__Racketlon">21</string>
+    <string name="winning_gamescore__Tabletennis">11</string>
+    <string name="winning_gamescore__Badminton">21</string>
+    <string name="winning_gamescore__TennisPadel">AD</string>
+
+    <string name="non_winning_gamescore__Squash">9</string>
+    <string name="non_winning_gamescore__Racketlon">18</string>
+    <string name="non_winning_gamescore__Tabletennis">7</string>
+    <string name="non_winning_gamescore__Badminton">16</string>
+    <string name="non_winning_gamescore__TennisPadel">40</string>
+    <!--
+        <string name="app_name">Squore</string>
+        <string name="app_scoreboard">Squore Board</string>
+    -->
 
     <string name="activate_mode__Squash">@string/activate_mode__Default</string>
     <string name="deactivate_mode__Squash">@string/deactivate_mode__Default</string>

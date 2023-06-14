@@ -199,7 +199,7 @@
         app:layout_constraintEnd_toStartOf="@id/space_side_player"
         android:clickable="true"
         android:includeFontPadding="false"
-        android:text="11"
+        android:text="@string/winning_gamescore__Squash"
         />
 
     <com.doubleyellow.android.view.AutoResizeTextView
@@ -212,7 +212,7 @@
         app:layout_constraintEnd_toStartOf="@id/space_side_player"
         android:clickable="true"
         android:includeFontPadding="false"
-        android:text="9"
+        android:text="@string/non_winning_gamescore__Squash"
         />
 
     <com.doubleyellow.scoreboard.view.GameHistoryView

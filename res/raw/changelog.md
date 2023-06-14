@@ -1,3 +1,8 @@
+## 4.52 (june 2023)
+
+- send info about state of timer to livescore pages for better experience
+- Sync last used player colors to wearable
+
 ## 4.51 (march 2023)
 
 - added new option in 'Injury Timers' to be compliant with new official Squash rules

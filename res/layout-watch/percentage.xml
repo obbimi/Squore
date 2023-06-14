@@ -115,7 +115,7 @@
         app:layout_marginRightPercent="@fraction/wear_margin_to_show_gamescores_between_scorebuttons__Squash"
         android:clickable="true"
         android:includeFontPadding="false"
-        android:text="11" android:layout_width="0dp" android:layout_height="0dp"
+        android:text="@string/winning_gamescore__Squash" android:layout_width="0dp" android:layout_height="0dp"
     />
 
     <com.doubleyellow.android.view.AutoResizeTextView android:id="@+id/btn_score2"
@@ -130,7 +130,7 @@
         app:layout_marginLeftPercent="@fraction/wear_margin_to_show_gamescores_between_scorebuttons__Squash"
         android:clickable="true"
         android:includeFontPadding="false"
-        android:text="9" android:layout_width="0dp" android:layout_height="0dp"
+        android:text="@string/non_winning_gamescore__Squash" android:layout_width="0dp" android:layout_height="0dp"
     />
 
     <!-- side buttons underneath names towards the center -->

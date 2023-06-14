@@ -17,6 +17,7 @@
 ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 -->
+<!-- ONLY USE BY OLD CAST/PRESENTATION SCREEN and WEARABLE -->
 <com.doubleyellow.view.SBRelativeLayout
         android:id="@+id/squoreboard_root_view"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -112,7 +113,7 @@
             app:layout_marginLeftPercent="@fraction/ls_horizontal_margin_4x"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:text="11"
+            android:text="@string/winning_gamescore__Squash"
             android:clickable="true"
             android:includeFontPadding="false"
     />
@@ -129,7 +130,7 @@
             app:layout_marginRightPercent="@fraction/ls_horizontal_margin_4x"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:text="9"
+            android:text="@string/non_winning_gamescore__Squash"
             android:clickable="true"
             android:includeFontPadding="false"
     />
