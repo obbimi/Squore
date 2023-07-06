@@ -1565,6 +1565,12 @@
             dy:displayValues="@array/handicapFormatDisplayValues"
             dy:enumClass="com.doubleyellow.scoreboard.model.HandicapFormat"
         />
+        <CheckBoxPreference android:key="allowNegativeHandicap"
+            android:icon="@drawable/dummy"
+            android:title="@string/pref_allowNegativeHandicap"
+            android:summary="@string/pref_allowNegativeHandicap_summary"
+            android:defaultValue="@bool/allowNegativeHandicap_default"
+        />
     </PreferenceScreen>
 
 

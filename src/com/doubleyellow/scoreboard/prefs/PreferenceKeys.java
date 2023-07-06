@@ -212,6 +212,7 @@ public enum PreferenceKeys {
         doublesServeSequence,
         /** to start with a score other than 0-0 */
         handicapFormat,
+            allowNegativeHandicap,
 
         /** GSMModel*/
         finalSetFinish, // also used as JSONKey

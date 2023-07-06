@@ -186,7 +186,11 @@ public class Handicap extends BaseAlertDialog {
             int nextFocusId = p.equals(Player.A) ? iTotalNrOfPreviousGames * 100 + Player.B.ordinal() : (iTotalNrOfPreviousGames + 1) * 100 + Player.A.ordinal();
             n.setNextFocusDownId(nextFocusId);
             n.setId(id);
-            n.setInputType(/*InputType.TYPE_NUMBER_FLAG_SIGNED  | */ InputType.TYPE_CLASS_NUMBER);
+            int iInputType = InputType.TYPE_CLASS_NUMBER;
+            if ( PreferenceValues.allowNegativeHandicap(context) ) {
+                iInputType = InputType.TYPE_NUMBER_FLAG_SIGNED  | InputType.TYPE_CLASS_NUMBER;
+            }
+            n.setInputType(iInputType);
             n.setLayoutParams(layoutParams);
             n.setSingleLine();
             n.setMinWidth(60);

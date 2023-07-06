@@ -197,6 +197,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="sortMatchesByEvent_default">true</bool>
     <bool name="TextSizeScoreAsBigAsPossible_default">true</bool>
     <bool name="mailFullScoringSheet_default">true</bool>
+    <bool name="allowNegativeHandicap_default">false</bool>
     <bool name="showActionBar_default">true</bool>
     <bool name="showSideButtonsWithinScoreButtons_default">false</bool>
     <bool name="showTips_default">true</bool>

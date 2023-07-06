@@ -351,6 +351,8 @@
     <string name="pref_mailFullScoringSheet">Mail full scoring sheet</string>
     <string name="pref_mailFullScoringSheet_summary">The composed email will include a complete scoring sheet</string>
     <string name="pref_mailResultTo_not_set">You can set a default mail recipient in the \'%1$s\' screen of \'%2$s\'</string>
+    <string name="pref_allowNegativeHandicap">Allow negative handicap score</string>
+    <string name="pref_allowNegativeHandicap_summary">Allow negative values when entering handicap score</string>
 
     <string name="pref_live_score_summary">Optimize for, and view Live Score</string>
     <string name="pref_live_score_url">live?lang=en</string>

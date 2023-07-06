@@ -1166,6 +1166,9 @@ public class PreferenceValues extends RWValues
         m_playerList.clear();
     }
 
+    public static boolean allowNegativeHandicap(Context context) {
+        return getBoolean(PreferenceKeys.allowNegativeHandicap, context, R.bool.allowNegativeHandicap_default);
+    }
     private static List<String> getAllowedContacts(Context context) {
         if ( readContactsForAutoCompletion(context) == false ) { return null; }
 
@@ -1972,7 +1975,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2023-03-25"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2023-07-03"; // auto adjusted by shell script 'clean.and.assemble.sh'
     public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

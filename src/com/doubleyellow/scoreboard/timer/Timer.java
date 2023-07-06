@@ -248,7 +248,7 @@ public class Timer
                 updateTimerView(this, timerView);
             }
             if ( secsLeft == iReminderAtSecs ) {
-                scoreBoard.triggerEvent(ScoreBoard.SBEvent.timerWarning, Timer.timerType ); // currently use to e.g. vibrate and make a noise
+                scoreBoard.triggerEvent(ScoreBoard.SBEvent.timerWarning, Timer.timerType, Timer.iReminderAtSecs );
             }
         }
 
