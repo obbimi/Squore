@@ -1,3 +1,8 @@
+## 4.52 (july 2023)
+
+- add option to 'Changes Sides' setting called 'After First Point In Tiebreak'
+  - This allows to, combined with 'Every 4 Point In a Tiebreak', to configure the so called 'Coman' tiebreak
+
 ## 4.51 (march 2023)
 
 - minor improvements for working with feeds

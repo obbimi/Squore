@@ -908,7 +908,8 @@ public class MatchView extends ScrollView
                     cbChangesSidesWhen = new CheckBox[values.length];
                     for (int i = 0; i < values.length; i++) {
                         CheckBox cb = new CheckBox(context);
-                        cb.setText(saDisplayValues[i]);
+                        String saDisplayValue = i < saDisplayValues.length ? saDisplayValues[i] : StringUtil.capitalize(values[i]);
+                        cb.setText(saDisplayValue);
                         ChangeSidesWhen_GSM eValue = values[i];
                         boolean bChecked = checkedValues.contains(eValue);
                         cb.setChecked(bChecked);

@@ -23,5 +23,6 @@ public enum ChangeSidesWhen_GSM {
     BetweenSets,
     EverySixPointsInTiebreak,
     EveryFourPointsInTiebreak,
+    AfterFirstPointInTiebreak,
     // AfterTieBreak, // for now consider this an 'odd game'
 }

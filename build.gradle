@@ -97,21 +97,21 @@ android {
             minSdkVersion 19
             targetSdkVersion 33
             multiDexEnabled true // required since using firebase
-            versionCode 1915 * 10000 + 499
+            versionCode 1915 * 10000 + 500
             versionName "4.52"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 33
-            versionCode 2315 * 10000 + 499
+            versionCode 2315 * 10000 + 500
             versionName "4.52"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 33
-            versionCode 2501 * 10000 + 499
+            versionCode 2501 * 10000 + 500
             versionName "4.52"
         }
     }
@@ -173,15 +173,15 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
-    implementation 'androidx.appcompat:appcompat:1.5.1' // moving from 1.3.1 to 1.4.0 makes e.g. android wear in emulator fail
+    implementation 'androidx.appcompat:appcompat:1.6.1' // moving from 1.3.1 to 1.4.0 makes e.g. android wear in emulator fail
     // not required for building, BUT required for runtime when using newer gradle (20191022)
 
   //implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 
     // ChromeCast (new with Custom Receiver)
-    phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:21.2.0'
-    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:21.2.0'
-    wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.2.0' // wearOs can not cast but to run it still needs 'Implementation' to not have 'ClassNotFound' exceptions
+    phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:21.3.0'
+    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:21.3.0'
+    wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.3.0' // wearOs can not cast but to run it still needs 'Implementation' to not have 'ClassNotFound' exceptions
 
     // allow communication between handheld device and wearable
     phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:18.0.0' // compileOnly is good enough for API < 23

@@ -2952,10 +2952,10 @@ touch -t 01030000 LAST.sb
         @Override public void OnXPointsPlayedInTiebreak(int iTotalPoints) {
 
             EnumSet<ChangeSidesWhen_GSM> playersWhen = PreferenceValues.changeSidesWhen_GSM(ScoreBoard.this);
-
-            if ( playersWhen.contains(ChangeSidesWhen_GSM.EveryFourPointsInTiebreak) && (iTotalPoints % 4 == 0) ) {
+            int iCompareTo = playersWhen.contains(ChangeSidesWhen_GSM.AfterFirstPointInTiebreak) ? 1 : 0;
+            if ( playersWhen.contains(ChangeSidesWhen_GSM.EveryFourPointsInTiebreak) && (iTotalPoints % 4 == iCompareTo) ) {
                 swapSides_BOP(null);
-            } else if ( playersWhen.contains(ChangeSidesWhen_GSM.EverySixPointsInTiebreak) && (iTotalPoints % 6 == 0) ) {
+            } else if ( playersWhen.contains(ChangeSidesWhen_GSM.EverySixPointsInTiebreak) && (iTotalPoints % 6 == iCompareTo) ) {
                 swapSides_BOP(null);
             } else {
                 if ( Brand.isGameSetMatch() ) {
@@ -3092,7 +3092,14 @@ touch -t 01030000 LAST.sb
 
             // just to be on the save side: hide the following to as well
             showShareFloatButton(false, false);
-            showChangeSideFloatButton(false);
+            if ( Brand.isGameSetMatch() ) {
+                EnumSet<ChangeSidesWhen_GSM> playersWhen = PreferenceValues.changeSidesWhen_GSM(ScoreBoard.this);
+                if ( playersWhen.contains(ChangeSidesWhen_GSM.AfterFirstPointInTiebreak) == false ) {
+                    showChangeSideFloatButton(false);
+                }
+            } else {
+                showChangeSideFloatButton(false);
+            }
 
             iBoard.updateGameBallMessage("OnFirstPointOfGame");
             iBoard.updateBrandLogoBasedOnScore();
