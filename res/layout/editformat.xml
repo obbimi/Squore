@@ -224,14 +224,26 @@
             android:textSize="@dimen/txt_small"
             android:layout_margin="2dp"
             />
+        <com.doubleyellow.android.view.EnumSpinner
+            android:id="@+id/goldenPointFormat"
+            app:enum_class="com.doubleyellow.scoreboard.model.GoldenPointFormat"
+            app:enum_display_values="@array/goldenPointFormatDisplayValues"
+            android:layoutMode="opticalBounds"
+            android:orientation="vertical"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@color/dy_dark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+<!--
         <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/useGoldenPoint"
+            android:id="@+id/goldenPointFormat"
             android:layout_gravity="center_horizontal"
             android:text="@string/lbl_GoldenPoint"
             android:textSize="@dimen/txt_small"
             />
+-->
     </LinearLayout>
 
 </android.widget.RelativeLayout>

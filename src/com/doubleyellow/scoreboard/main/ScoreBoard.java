@@ -2195,7 +2195,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 GSMModel gsmModelNew = (GSMModel) ScoreBoard.matchModel;
                 FinalSetFinish finalSetFinish = gsmModelPrev.getFinalSetFinish();
                 gsmModelNew.setFinalSetFinish(finalSetFinish);
-                gsmModelNew.setGoldenPointToWinGame(gsmModelPrev.getGoldenPointToWinGame());
+                gsmModelNew.setGoldenPointFormat(gsmModelPrev.getGoldenPointFormat());
                 gsmModelNew.setStartTiebreakOneGameEarly(gsmModelPrev.getStartTiebreakOneGameEarly());
                 gsmModelNew.setNewBalls(gsmModelPrev.getNewBalls());
             }
@@ -2967,10 +2967,18 @@ touch -t 01030000 LAST.sb
         @Override public void OnGameBallChange(Player[] players, boolean bHasGameBall, boolean bForUndo) {
             if ( Brand.isGameSetMatch() ) {
                 if ( bHasGameBall ) {
-                    // don't treat gameball unless it is golden point, as special, wait for SetBall in stead
+                    // don't treat GameBall unless it is golden point, as special, wait for SetBall in stead
                     GSMModel gsmModel= (GSMModel) matchModel;
-                    if ( gsmModel.getGoldenPointToWinGame() && gsmModel.getMaxScore()==gsmModel.getMinScore() ) {
-                        iBoard.updateGameBallMessage("OnGoldenPoint", players, bHasGameBall);
+                    GoldenPointFormat goldenPointFormat = gsmModel.getGoldenPointFormat();
+                    if ( goldenPointFormat.onDeuceNumber() >= 0 ) {
+                        int maxScore = gsmModel.getMaxScore();
+                        if ( maxScore == gsmModel.getMinScore() ) {
+                            // score is equal
+                            // TODO: not yet if goldenPointFormat==OnSecondDeuce and....
+                            if ( maxScore >= GSMModel.NUMBER_OF_POINTS_TO_WIN_GAME - 1 + goldenPointFormat.onDeuceNumber() ) {
+                                iBoard.updateGameBallMessage("OnGoldenPoint", players, bHasGameBall);
+                            }
+                        }
                     }
                     return;
                 } else {
@@ -5059,7 +5067,7 @@ touch -t 01030000 LAST.sb
                     if ( Brand.isGameSetMatch() ) {
                         GSMModel gsmModel = (GSMModel) m;
                         PreferenceValues.setEnum   (PreferenceKeys.finalSetFinish           , this, gsmModel.getFinalSetFinish());
-                        PreferenceValues.setBoolean(PreferenceKeys.goldenPointToWinGame     , this, gsmModel.getGoldenPointToWinGame());
+                        PreferenceValues.setEnum   (PreferenceKeys.goldenPointFormat        , this, gsmModel.getGoldenPointFormat());
                         PreferenceValues.setBoolean(PreferenceKeys.StartTiebreakOneGameEarly, this, gsmModel.getStartTiebreakOneGameEarly());
                         PreferenceValues.setEnum   (PreferenceKeys.newBalls                 , this, gsmModel.getNewBalls());
                     }

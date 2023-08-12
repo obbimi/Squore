@@ -122,14 +122,13 @@ public class GSMModel extends Model
     //------------------------
     // Golden point
     //------------------------
-    private boolean m_bGoldenPointToWinGame = false;
-    public void setGoldenPointToWinGame(boolean v) {
-        m_bGoldenPointToWinGame = v;
+    public GoldenPointFormat getGoldenPointFormat() {
+        return m_goldenPointFormat;
     }
-    public boolean getGoldenPointToWinGame() {
-        return m_bGoldenPointToWinGame;
+    private GoldenPointFormat m_goldenPointFormat = GoldenPointFormat.None;
+    public void setGoldenPointFormat(GoldenPointFormat v) {
+        m_goldenPointFormat = v;
     }
-
 
     //------------------------
     // Match Format / Player/Time Details
@@ -1024,32 +1023,45 @@ public class GSMModel extends Model
     }
 
     @Override Player[] calculateIsPossibleGameVictoryFor(When when, Map<Player, Integer> gameScore, boolean bFromIsMatchBallFrom) {
-        int iNrOfPointsToWinGame = _getNrOfPointsToWinGame();
-        Player[] playersGB = new Player[]{};
+        final int iNrOfPointsToWinGame = _getNrOfPointsToWinGame();
+        Player[] playersGB = getNoneOfPlayers();
 
         // e.g Beach Tennis has this option, Padel is known to use it quite regularly
-        if ( m_bGoldenPointToWinGame && (isInTieBreak_TT_RL() == false) ) {
-            int maxScore  = getMaxScore(gameScore);
+        int onDeuceNumberZB = m_goldenPointFormat.onDeuceNumber();
+        if ( onDeuceNumberZB >= 0 && (isInTieBreak_TT_RL() == false) ) {
+            int maxScore = getMaxScore(gameScore);
             if ( maxScore >= iNrOfPointsToWinGame - 1 ) {
                 int diffScore = getDiffScore(gameScore);
-                Player pLeader = getLeaderInGivenGame(gameScore);
+                Player pLeader = getLeaderInGivenGame(gameScore); // null if no leader
 
                 switch ( when ) {
                     case Now:
-                        if ( maxScore == iNrOfPointsToWinGame && diffScore > 0 ) {
-                            playersGB =  new Player[] { pLeader } ;
+                        if ( maxScore >= iNrOfPointsToWinGame ) {
+                            if ( diffScore >= 2 ) {
+                                playersGB = new Player[] { pLeader };
+                            } else if ( diffScore == 1 ) {
+                                if ( maxScore >= iNrOfPointsToWinGame + onDeuceNumberZB ) {
+                                    playersGB =  new Player[] { pLeader } ;
+                                } else {
+                                    playersGB = getNoneOfPlayers();
+                                }
+                            }
                         }
                         break;
                     case ScoreOneMorePoint:
                         if ( maxScore >= iNrOfPointsToWinGame - 1 ) {
-                            if ( diffScore == 0 ) {
-                                playersGB = getPlayers();
-                            } else {
-                                playersGB = new Player[] { pLeader } ;
+                            if ( diffScore >= 1 ) {
+                                playersGB = new Player[] { pLeader };
+                            } else if ( diffScore == 0 ) {
+                                if ( maxScore >= iNrOfPointsToWinGame - 1 + onDeuceNumberZB ) {
+                                    playersGB = getPlayers();
+                                }
                             }
                         }
                         break;
                 }
+            } else {
+                // score to low for anyone to have gameball
             }
         } else {
             playersGB = super.calculateIsPossibleGameVictoryFor_SQ_TT_BM_RL(when, gameScore, iNrOfPointsToWinGame);
@@ -1213,7 +1225,7 @@ public class GSMModel extends Model
         joFormat.put(PreferenceKeys.finalSetFinish      .toString(), m_finalSetFinish);
         joFormat.put(PreferenceKeys.newBalls            .toString(), m_newBalls);
         joFormat.put(JsonKey.lastBallChangeOccurredAtStartOfGame.toString(), m_iLastBallChangeOccurredAtStartOfGame);
-        joFormat.put(PreferenceKeys.goldenPointToWinGame.toString(), m_bGoldenPointToWinGame);
+        joFormat.put(PreferenceKeys.goldenPointFormat.toString(), m_goldenPointFormat);
         if ( m_bStartTiebreakOneGameEarly ) {
             joFormat.put(PreferenceKeys.StartTiebreakOneGameEarly.toString(), m_bStartTiebreakOneGameEarly);
         }
@@ -1233,8 +1245,18 @@ public class GSMModel extends Model
         int i = joFormat.optInt(JsonKey.lastBallChangeOccurredAtStartOfGame.toString(), 0);
         setLastBallChangeOccurredAtStartOfGame(i);
 
-        boolean b = joFormat.optBoolean(PreferenceKeys.goldenPointToWinGame.toString());
-        setGoldenPointToWinGame(b);
+        if ( joFormat.has(PreferenceKeys.goldenPointToWinGame.toString()) ) {
+            // legacy
+            boolean b = joFormat.optBoolean(PreferenceKeys.goldenPointToWinGame.toString());
+            if ( b ) {
+                joFormat.put(PreferenceKeys.goldenPointFormat.toString(), GoldenPointFormat.OnFirstDeuce.toString());
+            }
+            joFormat.remove(PreferenceKeys.goldenPointToWinGame.toString());
+        }
+        String s3 = joFormat.optString(PreferenceKeys.goldenPointFormat.toString());
+        if (StringUtil.isNotEmpty(s3) ) {
+            setGoldenPointFormat(GoldenPointFormat.valueOf(s3));
+        }
 
         boolean b2 = joFormat.optBoolean(PreferenceKeys.StartTiebreakOneGameEarly.toString());
         setStartTiebreakOneGameEarly(b2);

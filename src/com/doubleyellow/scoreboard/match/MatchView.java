@@ -429,7 +429,7 @@ public class MatchView extends ScrollView
     private CompoundButton       cbUseEnglishScoring;
     private CheckBox             cbUseLiveScoring;
     private CheckBox             cbStartTieBreakOnGameEarlyGSM;
-    private CompoundButton       cbUseGoldenPoint;
+    private Spinner              spUseGoldenPoint;
     private PreferenceACTextView txtRefereeName;
     private PreferenceACTextView txtMarkerName;
     private PreferenceACTextView txtEventName;
@@ -890,11 +890,12 @@ public class MatchView extends ScrollView
             }
             cbUseEnglishScoring.setChecked(useHandInHandOutScoring);
         }
-        cbUseGoldenPoint = (CompoundButton) findViewById(R.id.useGoldenPoint);
-        if ( cbUseGoldenPoint != null ) {
-            boolean useGoldenPoint = PreferenceValues.useGoldenPoint(context);
-            cbUseGoldenPoint.setChecked(useGoldenPoint);
+        spUseGoldenPoint = (Spinner) findViewById(R.id.goldenPointFormat);
+        if ( spUseGoldenPoint != null ) {
+            GoldenPointFormat goldenPointFormatPref = PreferenceValues.goldenPointFormat(context);
+            initEnumSpinner(spUseGoldenPoint, GoldenPointFormat.class, goldenPointFormatPref, null, R.array.goldenPointFormatDisplayValues, null);
         }
+
         // initialize checkboxes array for 'Change Sides When'
         Feature ffChangesSide = PreferenceValues.useChangeSidesFeature(context);
         if ( Feature.DoNotUse.equals(ffChangesSide) == false ) {
@@ -1350,7 +1351,10 @@ public class MatchView extends ScrollView
                 NewBalls fsf = NewBalls.values()[spNewBalls.getSelectedItemPosition()];
                 gsmModel.setNewBalls(fsf);
             }
-            gsmModel.setGoldenPointToWinGame(cbUseGoldenPoint!= null && cbUseGoldenPoint.isChecked());
+            if ( spUseGoldenPoint != null) {
+                GoldenPointFormat goldenPointFormat = GoldenPointFormat.values()[spUseGoldenPoint.getSelectedItemPosition()];
+                gsmModel.setGoldenPointFormat(goldenPointFormat);
+            }
             gsmModel.setStartTiebreakOneGameEarly(   cbStartTieBreakOnGameEarlyGSM!= null
                                                   && cbStartTieBreakOnGameEarlyGSM.getVisibility() == View.VISIBLE
                                                   && cbStartTieBreakOnGameEarlyGSM.isChecked());

@@ -115,6 +115,11 @@
         <item>Suggereer gebruik</item>
         <item>Toon automatisch</item>
     </string-array>
+    <string-array name="FeatureDisplayValues_DoAuto">
+        <item>Niet doen</item>
+        <item>Suggereer</item>
+        <item>Automatisch uitvoeren</item>
+    </string-array>
     <string-array name="ShareMatchPrefsDisplayValues">
         <item>Share link met alle match details</item>
 <!--
@@ -127,11 +132,6 @@
         <item>SMS match samenvatting naar default nummer</item>
         <item>Post match details naar web-site</item>
         <item>Post score sheet als text in email</item>
-    </string-array>
-    <string-array name="FeatureDisplayValues_DoAuto">
-        <item>Niet doen</item>
-        <item>Suggereer</item>
-        <item>Automatisch uitvoeren</item>
     </string-array>
     <string-array name="EndGameDisplayValues">
         <item>Niet suggereren</item>
@@ -191,6 +191,12 @@
         <item>Geen handicap</item>
         <item>Specifieer aan begin van wedstrijd</item>
         <item>Specifieer aan begin elke game</item>
+    </string-array>
+
+    <string-array name="goldenPointFormatDisplayValues">
+        <item>Uit</item>
+        <item>Pro (Op Eerste Deuce)</item>
+        <item>Amateur (Op Tweede Deuce)</item>
     </string-array>
 
     <string-array name="changeSidesWhen_GSM_DisplayValues">

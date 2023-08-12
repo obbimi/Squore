@@ -833,8 +833,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="@fraction/matchformat_label_width" />
 
-        <ToggleButton
-            android:id="@+id/useGoldenPoint"
+        <Spinner
+            android:id="@+id/goldenPointFormat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layoutMode="opticalBounds"

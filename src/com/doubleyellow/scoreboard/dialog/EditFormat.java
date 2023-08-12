@@ -31,6 +31,7 @@ import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.EnumSpinner;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.model.GoldenPointFormat;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.match.MatchView;
@@ -69,11 +70,11 @@ public class EditFormat extends BaseAlertDialog {
 
     private Spinner                           spNumberOfGamesToWin;
     private Spinner                           spGameEndScore;
-    private Spinner                           spWarmpupDuration;
-    private ToggleButton                      cbWarmpupDuration;
+    private Spinner                           spWarmupDuration;
+    private ToggleButton                      cbWarmupDuration;
     private Spinner                           spPauseDuration;
     private ToggleButton                      cbPauseDuration;
-    private CompoundButton                    cbGoldenPoint;
+    private EnumSpinner<GoldenPointFormat>    spGoldenPointFormat;
     private CompoundButton                    cbStartTiebreakOneGameEarly;
     private ToggleButton                      tbBestOf_or_TotalOf;
     private EnumSpinner<TieBreakFormat>       spTieBreakFormat;
@@ -134,9 +135,9 @@ public class EditFormat extends BaseAlertDialog {
                 ll_doubleServeSequence.setVisibility(View.GONE);
             }
         }
-        spWarmpupDuration = (Spinner)      vg.findViewById(R.id.spWarmupDuration);
-        cbWarmpupDuration = (ToggleButton) vg.findViewById(R.id.cbWarmupDuration);
-        MatchView.initDuration(context, cbWarmpupDuration, spWarmpupDuration, null, Preferences.syncAndClean_warmupValues(context), PreferenceValues.getWarmupDuration(context));
+        spWarmupDuration = (Spinner)      vg.findViewById(R.id.spWarmupDuration);
+        cbWarmupDuration = (ToggleButton) vg.findViewById(R.id.cbWarmupDuration);
+        MatchView.initDuration(context, cbWarmupDuration, spWarmupDuration, null, Preferences.syncAndClean_warmupValues(context), PreferenceValues.getWarmupDuration(context));
 
         spPauseDuration = (Spinner)      vg.findViewById(R.id.spPauseDuration);
         cbPauseDuration = (ToggleButton) vg.findViewById(R.id.cbPauseDuration);
@@ -152,16 +153,17 @@ public class EditFormat extends BaseAlertDialog {
         cbUseEnglishScoring.setChecked(bHandInHandOut);
         cbUseEnglishScoring.setEnabled(iNewNrOfPointsToWinGame==0);
 
-        cbGoldenPoint = (CompoundButton) vg.findViewById(R.id.useGoldenPoint);
-        if ( cbGoldenPoint != null ) {
+        spGoldenPointFormat = (EnumSpinner<GoldenPointFormat>) vg.findViewById(R.id.goldenPointFormat);
+        if ( spGoldenPointFormat != null ) {
             if ( Brand.isGameSetMatch() ) {
-                boolean bUseGoldenPoint = PreferenceValues.useGoldenPoint(context);
-                cbGoldenPoint.setChecked(bUseGoldenPoint);
+                GoldenPointFormat goldenPointFormat = ((GSMModel) matchModel).getGoldenPointFormat();
+                spGoldenPointFormat.setSelected(goldenPointFormat);
                 ViewUtil.hideViews(vg, R.id.llScoringType);
             } else {
                 ViewUtil.hideViews(vg, R.id.llGoldenPoint);
             }
         }
+        cbStartTiebreakOneGameEarly = (CompoundButton) vg.findViewById(R.id.cbStartTieBreakOnGameEarlyGSM); // not yet used/visible
 
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, int which) {
@@ -199,10 +201,11 @@ public class EditFormat extends BaseAlertDialog {
                 }
                 if ( Brand.isGameSetMatch() ) {
                     GSMModel gsmModel = (GSMModel) matchModel;
-                    if ( (cbGoldenPoint != null) && cbGoldenPoint.isEnabled() ) {
-                        boolean bUseGoldenPoint = cbGoldenPoint.isChecked();
-                        gsmModel.setGoldenPointToWinGame(bUseGoldenPoint);
-                        PreferenceValues.setBoolean(PreferenceKeys.goldenPointToWinGame, context, bUseGoldenPoint);
+                    if ( (spGoldenPointFormat != null) && spGoldenPointFormat.isEnabled() ) {
+                        GoldenPointFormat goldenPointFormat = GoldenPointFormat.values()[spGoldenPointFormat.getSelectedItemPosition()];
+                        //GoldenPointFormat goldenPointFormat = spGoldenPointFormat.getSelectedEnum(); // DNW yet
+                        gsmModel.setGoldenPointFormat(goldenPointFormat);
+                        PreferenceValues.setEnum(PreferenceKeys.goldenPointFormat, context, goldenPointFormat);
                     }
                     if ( (cbStartTiebreakOneGameEarly != null) && cbStartTiebreakOneGameEarly.isEnabled() ) {
                         boolean bStartTiebreakOneGameEarly = cbStartTiebreakOneGameEarly.isChecked();
@@ -216,11 +219,13 @@ public class EditFormat extends BaseAlertDialog {
 
                 if ( matchModel.isDoubles() && Brand.supportsDoubleServeSequence() ) {
                     DoublesServeSequence dss = DoublesServeSequence.values()[spDoublesServeSequence.getSelectedItemPosition()];
+                    //DoublesServeSequence dss = spDoublesServeSequence.getSelectedEnum(); // DNW yet
                     bChanged = matchModel.setDoublesServeSequence(dss) || bChanged;
                     PreferenceValues.setEnum(PreferenceKeys.doublesServeSequence, context, dss); // make it the default for next matches
                 }
 
-                MatchView.getValueFromSelectListOrToggleAndStoreAsPref(context, cbPauseDuration, spPauseDuration, PreferenceKeys.timerPauseBetweenGames, PreferenceValues.getPauseDuration(context));
+                MatchView.getValueFromSelectListOrToggleAndStoreAsPref(context, cbWarmupDuration, spWarmupDuration, PreferenceKeys.timerWarmup           , PreferenceValues.getWarmupDuration(context));
+                MatchView.getValueFromSelectListOrToggleAndStoreAsPref(context, cbPauseDuration , spPauseDuration , PreferenceKeys.timerPauseBetweenGames, PreferenceValues.getPauseDuration(context));
 
                 if ( tbBestOf_or_TotalOf != null ) {
                     matchModel.setPlayAllGames(tbBestOf_or_TotalOf.isChecked());

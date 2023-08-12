@@ -244,6 +244,11 @@
         <item>A1/A2/B1/B2</item>               <!-- DSS___12_12__6 -->
         <item>A1/B1/A1/B1</item>               <!-- DSS___1_1____4 -->
     </string-array>
+    <string-array name="goldenPointFormatDisplayValues">
+        <item>Não usar</item>
+        <item>Pro (Primeiro Iguais)</item>
+        <item>Amateur (Segundo Iguais)</item>
+    </string-array>
 
     <string-array name="changeSidesWhen_GSM_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ChangeSidesWhen_GSM -->

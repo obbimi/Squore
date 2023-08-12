@@ -1017,8 +1017,14 @@ public class PreferenceValues extends RWValues
     public static boolean useHandInHandOutScoring(Context context) {
         return getBoolean(PreferenceKeys.useHandInHandOutScoring, context, R.bool.useEnglishScoring_default);
     }
+    /** @deprecated */
     public static boolean useGoldenPoint(Context context) {
-        return getBoolean(PreferenceKeys.goldenPointToWinGame, context, R.bool.useGoldenPointToWinGame_default);
+        return getBoolean(PreferenceKeys.goldenPointToWinGame, context, false);
+    }
+    public static GoldenPointFormat goldenPointFormat(Context context) {
+        // for backwards compatibility
+        GoldenPointFormat goldenPointFormatDefault = useGroupNameAsEventData(context) ? GoldenPointFormat.OnFirstDeuce : GoldenPointFormat.None;
+        return getEnum(PreferenceKeys.goldenPointFormat, context, GoldenPointFormat.class, goldenPointFormatDefault);
     }
     public static boolean startTiebreakOneGameEarly(Context context) {
         // TODO: add to Preferences.xml ?
@@ -1975,7 +1981,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2023-07-03"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2023-07-18"; // auto adjusted by shell script 'clean.and.assemble.sh'
     public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
     }

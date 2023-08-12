@@ -237,6 +237,11 @@
         <item>Specificare all\'inizio dell\'incontro</item>
         <item>Specificare all\'inizio d\'ogni gioco</item>
     </string-array>
+    <string-array name="goldenPointFormatDisplayValues">
+        <item>Non usare</item>
+        <item>Pro (Primo Deuce)</item>
+        <item>Amateur (Secondo Deuce)</item>
+    </string-array>
     <string-array name="doublesServeSequence">
         <item>A1/B1/A2/B2</item>               <!-- DSS_1_1_2_2__8 -->
         <item>A2/B1/B2 then A1/A2/B1/B2</item> <!-- DSS_2_12_12__6 -->

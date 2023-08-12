@@ -31,6 +31,4 @@
 
     <string name="NewMatchesType_default__TennisPadel">TeamVsTeam_OneMatchPerPlayer</string> <!-- value of com.doubleyellow.scoreboard.prefs.NewMatchesType -->
 
-    <bool name="useGoldenPointToWinGame_default">false</bool>
-
 </resources>

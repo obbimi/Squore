@@ -203,4 +203,10 @@
         <item>Spécifier au début du match</item>
         <item>Spécifier au début de chaque jeu</item>
     </string-array>
+
+    <string-array name="goldenPointFormatDisplayValues">
+        <item>Ne pas utiliser</item>
+        <item>Pro (Première Égalité)</item>
+        <item>Amateur (Deuxième Égalité)</item>
+    </string-array>
 </resources>

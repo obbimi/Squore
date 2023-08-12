@@ -120,10 +120,18 @@ public class MatchInfo extends BaseAlertDialog {
             sb.append("\n");
         }
         if ( matchModel instanceof GSMModel ) {
-            String[] fsfValues = context.getResources().getStringArray(R.array.finalSetFinishDisplayValues);
-            sb.append("\n");
-            sb.append(getString(R.string.pref_finalSetFinish)).append(" : ").append(fsfValues[ ((GSMModel) matchModel).getFinalSetFinish().ordinal()]);
-            sb.append("\n");
+            {
+                String[] fsfValues = context.getResources().getStringArray(R.array.finalSetFinishDisplayValues);
+                sb.append("\n");
+                sb.append(getString(R.string.pref_finalSetFinish)).append(" : ").append(fsfValues[((GSMModel) matchModel).getFinalSetFinish().ordinal()]);
+                sb.append("\n");
+            }
+            {
+                String[] fsfValues = context.getResources().getStringArray(R.array.goldenPointFormatDisplayValues);
+                sb.append("\n");
+                sb.append(getString(R.string.lbl_GoldenPoint)).append(" : ").append(fsfValues[((GSMModel) matchModel).getGoldenPointFormat().ordinal()]);
+                sb.append("\n");
+            }
         }
         if ( matchModel.isDoubles() && Brand.supportsDoubleServeSequence() ) {
             sb.append("\n");
