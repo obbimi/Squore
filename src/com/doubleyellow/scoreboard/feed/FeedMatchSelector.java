@@ -773,7 +773,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         m_sDisplayFormat_Players = DisplayFormat_PlayerDefault;
     }
 
-    private URLTask m_task = null; // 20210930: move this object outside of the EMSAdapter: when activity was started for 2nd time with API 27 it was not cancellable because reference was gone
+    private URLTask m_task = null; // move this object outside of the EMSAdapter: when activity was started for 2nd time with API 27 it was not cancellable because reference was gone
 
     private class EMSAdapter extends SimpleELAdapter implements ContentReceiver
     {

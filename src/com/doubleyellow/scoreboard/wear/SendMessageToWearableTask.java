@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 /**
- * To send message in an asynchronous way to paired device.
+ * To send message in an asynchronous way to a paired device.
  */
 class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
 {

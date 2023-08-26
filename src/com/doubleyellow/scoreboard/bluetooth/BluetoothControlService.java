@@ -279,7 +279,7 @@ public class BluetoothControlService
             BluetoothServerSocket tmp = null;
             // Create a new listening server socket
             try {
-                tmp = mAdapter.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);
+                tmp = mAdapter.listenUsingRfcommWithServiceRecord(NAME, MY_UUID); // Needs android.permission.BLUETOOTH_CONNECT permission for android.content.AttributionSource
             } catch (IOException e) {
             }
             mmServerSocket = tmp;

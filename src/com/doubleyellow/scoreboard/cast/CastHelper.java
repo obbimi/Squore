@@ -257,7 +257,7 @@ public class CastHelper implements ICastHelper
 
             @Override public void onRemoteDisplaySessionError(Status errorReason) {
                 //initError();
-                Log.w(TAG, "onRemoteDisplaySessionError " + errorReason); // 20210628: Status{statusCode=unknown status code: 2202, resolution=null}
+                Log.w(TAG, "onRemoteDisplaySessionError " + errorReason);
             }
 
             @Override public void onServiceCreated(CastRemoteDisplayLocalService castRemoteDisplayLocalService) {

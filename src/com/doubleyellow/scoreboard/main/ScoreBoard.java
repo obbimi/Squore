@@ -4402,7 +4402,7 @@ touch -t 01030000 LAST.sb
     }
 
     private boolean showNewMatchWizard() {
-        if ( matchModel == null ) { return false; } // 20210910
+        if ( matchModel == null ) { return false; }
         EditMatchWizard editMatchWizard = new EditMatchWizard(this, matchModel, this);
         editMatchWizard.show();
         return true;
@@ -5218,7 +5218,7 @@ touch -t 01030000 LAST.sb
         Player possibleMatchVictoryFor = matchModel.isPossibleMatchVictoryFor();
         if ( bAllowEndGameIfApplicable ) {
             if ( possibleMatchVictoryFor != null ) {
-                matchModel.endGame(true, true); // 20211102: DO notify listeners (OLD: don't notify listeners: might popup a disturbing dialog like 'Post to site?')
+                matchModel.endGame(true, true); // DO notify listeners (OLD: don't notify listeners: might popup a disturbing dialog like 'Post to site?')
             }
         }
         JSONObject oSettings = null;
@@ -6998,6 +6998,7 @@ touch -t 01030000 LAST.sb
                             Log.d(TAG, "Send " + sMessage);
                             sendMessageToWearablesUnchecked(sMessage);
                         } else {
+                            // btMethod = resume confirmed
                             String sMatchStartTimeHere        = matchModel.getMatchStartTimeHHMMSSXXX();
                             String sMatchStartTimeCounterPart = ( saMethodNArgs.length > 1 ) ? saMethodNArgs[1]: null;
                             int    iMatchJsonLengthOther      = ( saMethodNArgs.length > 2 ) ? Integer.parseInt(saMethodNArgs[2]) : 0;
