@@ -122,7 +122,7 @@ public class WearableHelper
 
     static final String BRAND_PATH              = "/" + Brand.brand;
     /** variables used to not SEND a message back while handling an INCOMING message */
-    private static boolean m_bHandlingWearableMessageInProgress = false;
+    private static String m_sHandlingWearableMessageInProgress = null;
 
     private MessageListener onMessageReceivedListener = null;
     private static class MessageListener implements MessageClient.OnMessageReceivedListener
@@ -142,9 +142,9 @@ public class WearableHelper
             Log.d(TAG, String.format("received reqid %d: %s", messageEvent.getRequestId() , sData));
 
             // received a message from the handheld-wearable counterpart: handle change here
-            m_bHandlingWearableMessageInProgress = true;
+            m_sHandlingWearableMessageInProgress = sData;
             m_scoreBoard.interpretReceivedMessage(sData, MessageSource.Wearable);
-            m_bHandlingWearableMessageInProgress = false;
+            m_sHandlingWearableMessageInProgress = null;
         }
     };
 
@@ -230,34 +230,37 @@ public class WearableHelper
     }
 */
 
-    public void sendMatchFromToWearable(Context ctx, String sJson) {
-        if ( m_bNoWearableSupport ) { return; }
+    public boolean sendMatchFromToWearable(Context ctx, String sJson) {
+        if ( m_bNoWearableSupport ) { return false; }
 
         //sendMessageToWearables(ctx, BRAND_PATH, sJson.length() + ":" + sJson); // don't : bypass check and start async task directly
-        sendMessageToWearablesUnchecked(ctx, sJson.length() + ":" + sJson);
+        return sendMessageToWearablesUnchecked(ctx, sJson.length() + ":" + sJson);
     }
 
-    public void sendMessageToWearablesUnchecked(Context context, Object sMessage) {
-        if ( m_bNoWearableSupport ) { return; }
+    /** sends message to connected wearable without checking if e.g. message is already in progress, or role is not set correctly */
+    public boolean sendMessageToWearablesUnchecked(Context context, Object sMessage) {
+        if ( m_bNoWearableSupport ) { return false; }
 
         SendMessageToWearableTask task = new SendMessageToWearableTask(context);
         task.myExecute(BRAND_PATH, sMessage);
+        return true;
     }
-    public void sendMessageToWearables(Context context, String sMessage) {
-        if ( m_bNoWearableSupport ) { return; }
+    public boolean sendMessageToWearables(Context context, String sMessage) {
+        if ( m_bNoWearableSupport ) { return false; }
 
-        if ( m_bHandlingWearableMessageInProgress ) {
-            Log.d(TAG, "Not sending message " + sMessage + ". Still interpreting incoming message");
-            return;
+        if ( m_sHandlingWearableMessageInProgress != null ) {
+            Log.d(TAG, "Not sending message " + sMessage + ". Still interpreting incoming message " + m_sHandlingWearableMessageInProgress);
+            return false;
         }
         if ( sMessage.startsWith(BTMethods.requestCompleteJsonOfMatch.toString() ) )  {
             // independent of current wearable role, send anyways
         } else if ( m_wearableRole.equals(WearRole.Unknown) ) {
-            //Log.d(TAG, "App not running on both devices. Not sending: " + sMessage);
-            return;
+            Log.d(TAG, "App not running on both devices. Not sending: " + sMessage);
+            return false;
         }
         SendMessageToWearableTask task = new SendMessageToWearableTask(context);
         task.myExecute(BRAND_PATH, sMessage);
+        return true;
     }
 
 /*
@@ -308,7 +311,7 @@ public class WearableHelper
 
     /**
      * if not set, don't send messages between devices, allowing both to keep score of a different match
-     * If set to Equal, match has been exchanged deliberatly and try to keep them in sync from now on.
+     * If set to Equal, match has been exchanged deliberately and try to keep them in sync from now on.
      **/
     private WearRole m_wearableRole = WearRole.Unknown;
 

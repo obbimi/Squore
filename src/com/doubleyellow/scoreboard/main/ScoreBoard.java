@@ -7294,17 +7294,17 @@ touch -t 01030000 LAST.sb
         if ( m_wearableHelper == null ) { return; }
         m_wearableHelper.setWearableRole(role);
     }
-    private void sendMatchFromToWearable(String sJson) {
-        if ( m_wearableHelper == null ) { return; }
-        m_wearableHelper.sendMatchFromToWearable(this, sJson);
+    private boolean sendMatchFromToWearable(String sJson) {
+        if ( m_wearableHelper == null ) { return false; }
+        return m_wearableHelper.sendMatchFromToWearable(this, sJson);
     }
-    private void sendMessageToWearables(String sMessage) {
-        if ( m_wearableHelper == null ) { return; }
-        m_wearableHelper.sendMessageToWearables(this, sMessage);
+    private boolean sendMessageToWearables(String sMessage) {
+        if ( m_wearableHelper == null ) { return false; }
+        return m_wearableHelper.sendMessageToWearables(this, sMessage);
     }
-    private void sendMessageToWearablesUnchecked(Object sMessage) {
-        if ( m_wearableHelper == null ) { return; }
-        m_wearableHelper.sendMessageToWearablesUnchecked(this, sMessage);
+    private boolean sendMessageToWearablesUnchecked(Object sMessage) {
+        if ( m_wearableHelper == null ) { return false; }
+        return m_wearableHelper.sendMessageToWearablesUnchecked(this, sMessage);
     }
     private void openPlayStoreOnWearable() {
         if ( m_wearableHelper == null ) { return; }
@@ -7316,7 +7316,11 @@ touch -t 01030000 LAST.sb
         if ( (ctx != null) && (ctx.length > 0) ) {
             lPrefKeys = (List<String>) ctx[0];
         } else {
-            lPrefKeys = Arrays.asList(PreferenceKeys.colorSchema.toString());
+            lPrefKeys = Arrays.asList(PreferenceKeys.colorSchema.toString()
+                                     , PreferenceKeys.wearable_allowScoringWithHardwareButtons.toString()
+                                     , PreferenceKeys.wearable_allowScoringWithRotary.toString()
+                                     , PreferenceKeys.wearable_keepScreenOnWhen.toString()
+                                     );
         }
         for(String sKey: lPrefKeys) {
             String sValue = PreferenceValues.getString(sKey, null, this); // default 'false' is for preferences that are boolean
@@ -7324,8 +7328,8 @@ touch -t 01030000 LAST.sb
                 boolean aBoolean = PreferenceValues.getBoolean(sKey, this, false);
                 sValue = String.valueOf(aBoolean);
             }
-            // send not wearable prefixed key if that is also a preference
-            final String prefix = PreferenceKeys.wearable + "_";
+            // send not wearable_ prefixed key to wearable if without the prefix it is also a preference
+            final String prefix = PreferenceKeys.wearable_.toString();
             if ( sKey.startsWith(prefix) ) {
                 try {
                     PreferenceKeys pKeyNonPrefixed = PreferenceKeys.valueOf(sKey.substring(prefix.length()));

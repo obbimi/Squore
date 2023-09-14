@@ -54,7 +54,7 @@ class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
             Log.d(TAG, "Started using Executors.newSingleThreadExecutor... ");
             return executeOnExecutor(Executors.newSingleThreadExecutor(), params);
         } else {
-            Log.d(TAG, "Started ... ");
+            Log.d(TAG, "Started ... " + params);
             return executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
         }
     }
@@ -64,7 +64,10 @@ class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
             Log.d(TAG, "No instance of " + NodeClient.class.getName());
             return null;
         }
-        if ( m_messageClient == null ) { return null; }
+        if ( m_messageClient == null ) {
+            Log.d(TAG, "No m_messageClient");
+            return null;
+        }
 
         try {
             Task<List<Node>> nodeListTask = m_nodeClient.getConnectedNodes();
@@ -75,8 +78,8 @@ class SendMessageToWearableTask extends AsyncTask<Object, Void, String>
                 String sPath    = String.valueOf(objects[0]) ;
                 String sMessage = String.valueOf(objects[1]);
                 Task<Integer> sendMessageTask = m_messageClient.sendMessage(node.getId(), sPath, sMessage.getBytes());
-                Integer requestId = Tasks.await(sendMessageTask);
-                Log.v(TAG, String.format("send reqId %d : %s", requestId, sMessage)); // just an (for every call increasing) integer. Same number as messageEvent.getRequestId() on receiving end
+                Integer requestId = Tasks.await(sendMessageTask); // just an (for every call increasing) integer. Same number as messageEvent.getRequestId() on receiving end
+                Log.v(TAG, String.format("send reqId %d : %s", requestId, sMessage));
                 lastNodeId = node.getId();
             }
         } catch (Exception e) {

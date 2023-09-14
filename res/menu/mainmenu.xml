@@ -158,7 +158,7 @@
                         <item android:id="@+id/cmd_import_matches"     app:showAsAction="never"  android:icon="@android:drawable/stat_sys_download" android:title="@string/import_matches" />
                         <item android:id="@+id/cmd_export_matches"     app:showAsAction="never"  android:icon="@android:drawable/ic_menu_upload"    android:title="@string/export_matches" />
                     </group>
-                    <item android:id="@+id/send_settings_to_wearable" app:showAsAction="never"  android:icon="@drawable/wearos"      android:title="@string/send_settings_to_wearable" android:visible="false" />
+                    <item android:id="@+id/send_settings_to_wearable" app:showAsAction="never"  android:icon="@drawable/wearos"      android:title="@string/send_settings_to_wearable" android:visible="true" />
                 </menu>
             </item>
 
