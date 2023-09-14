@@ -1,3 +1,10 @@
+## 4.53 (sept 2023)
+
+- option to specify 'assessor'
+- make referee/marker/assessor visible in 'Score Details'
+- allow to change 'match date' for 'Stored matches'
+  - e.g. when entering matches into Squore that were initially scored on paper 
+
 ## 4.52 (june 2023)
 
 - send info about state of timer to livescore pages for better experience

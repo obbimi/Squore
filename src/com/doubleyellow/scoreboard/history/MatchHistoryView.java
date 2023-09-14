@@ -149,9 +149,9 @@ public class MatchHistoryView extends LinearLayout
             if ( StringUtil.hasNonEmpty(sRef, sMarker, sAssessor) ) {
                 TableLayout tbReferee = new TableLayout(context);
                 this.addView(tbReferee, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                tbReferee.addView(getLabelAndTextView(R.string.lbl_referee , sRef));
-                tbReferee.addView(getLabelAndTextView(R.string.lbl_marker  , sMarker));
-                tbReferee.addView(getLabelAndTextView(R.string.lbl_assessor, sAssessor));
+                if ( StringUtil.isNotEmpty(sRef     ) ) { tbReferee.addView(getLabelAndTextView(R.string.lbl_referee , sRef     )); }
+                if ( StringUtil.isNotEmpty(sMarker  ) ) { tbReferee.addView(getLabelAndTextView(R.string.lbl_marker  , sMarker  )); }
+                if ( StringUtil.isNotEmpty(sAssessor) ) { tbReferee.addView(getLabelAndTextView(R.string.lbl_assessor, sAssessor)); }
                 tbReferee.addView(getLabelAndTextView(" "   , " ")); // splitter
 
                 //ColorPrefs.setColor(tbReferee);

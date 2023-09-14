@@ -1,3 +1,8 @@
+## 4.53 (sept 2023)
+
+- allow to change 'match date' for 'Stored matches'
+    - e.g. when entering matches into app that were initially scored on paper
+
 ## 4.51 (march 2023)
 
 - minor improvements for working with feeds
