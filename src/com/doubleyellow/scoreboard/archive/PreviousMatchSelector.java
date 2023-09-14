@@ -286,11 +286,11 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
                             messageMatch(f, null);
                             break;
                         case R.id.pmi_item_edit_event:
-                            // TODO: edit event
                             editEventAndPlayers(f);
                             break;
                         case R.id.pmi_item_edit_date:
-                            // TODO: edit
+                            // TODO:
+                            editMatchDate(f);
                             break;
                     }
                     return false;
@@ -347,6 +347,24 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         EditPlayers editPlayers = new EditPlayers(context, match, null);
         DialogManager.getInstance().show(editPlayers);
         //baseDialog = editPlayers;
+        return true;
+    }
+
+    private boolean editMatchDate(File fMatchModel) {
+        Model match = Brand.getModel();
+        try {
+            match.fromJsonString(fMatchModel);
+            File fCheck = match.getStoreAs(getArchiveDir(context));
+            if ( fCheck.getAbsoluteFile().equals(fMatchModel) == false ) {
+                fMatchModel.delete();
+                PersistHelper.storeAsPrevious(context, match, true);
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        EditMatchDate editMatchDate = new EditMatchDate(context, match, null);
+        DialogManager.getInstance().show(editMatchDate);
+        //baseDialog = editMatchDate;
         return true;
     }
 

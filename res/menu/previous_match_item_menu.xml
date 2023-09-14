@@ -18,7 +18,7 @@
         android:visible="true">
         <menu>
             <item android:visible="true"  android:id="@+id/pmi_item_edit_event" android:title="@string/sb_edit_event_or_player" />
-            <item android:visible="false" android:id="@+id/pmi_item_edit_date"  android:title="@string/date" />
+            <item android:visible="true"  android:id="@+id/pmi_item_edit_date"  android:title="@string/date" />
         </menu>
     </item>
     <item android:id="@+id/pmi_item_delete"  android:icon="@android:drawable/ic_menu_delete"  android:title="@string/uc_delete" />
