@@ -253,8 +253,8 @@ public class Speak
                 }
             }
 
-            if ( (gsmModel != null) && (iServer >= 3) && (gsmModel.isTieBreakGame() == false) ) {
-                int iResGoldenPointOrDeuce = gsmModel.getGoldenPointToWinGame() ? R.string.oa_golden_point : R.string.oa_deuce;
+            if ( (gsmModel != null) && (iServer >= GSMModel.NUMBER_OF_POINTS_TO_WIN_GAME-1) && (gsmModel.isTieBreakGame() == false) ) {
+                int iResGoldenPointOrDeuce = (gsmModel.getGoldenPointFormat().onDeuceNumber() >= 0 && iServer >= GSMModel.NUMBER_OF_POINTS_TO_WIN_GAME - 1 + gsmModel.getGoldenPointFormat().onDeuceNumber() ) ? R.string.oa_golden_point : R.string.oa_deuce;
                 String sDeuceOrGoldenPoint = getResourceString(iResGoldenPointOrDeuce);
                 setTextToSpeak(SpeechType.ScoreServer  , sDeuceOrGoldenPoint);
                 setTextToSpeak(SpeechType.ScoreReceiver, "");

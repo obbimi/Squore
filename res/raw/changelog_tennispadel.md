@@ -1,3 +1,10 @@
+## 4.53 (august 2023)
+
+- additional setting for 'Golden Point': 
+  - Off
+  - Pro (On First Deuce)
+  - Amateur (On Second Deuce)
+
 ## 4.52 (july 2023)
 
 - add option to 'Changes Sides' setting called 'After First Point In Tiebreak'

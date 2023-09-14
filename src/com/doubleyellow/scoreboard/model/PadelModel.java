@@ -23,7 +23,7 @@ public class PadelModel extends GSMModel {
         super();
 
         // sometimes a 'gold point' (no advantage) is used for deciding a game, but not in official rules
-        setGoldenPointToWinGame(false);
+        setGoldenPointFormat(GoldenPointFormat.None);
     }
     @Override public SportType getSport() {
         return SportType.Padel;

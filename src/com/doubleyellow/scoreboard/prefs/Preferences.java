@@ -51,6 +51,7 @@ import com.doubleyellow.prefs.EnumListPreference;
 import com.doubleyellow.prefs.EnumMultiSelectPreference;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.model.GoldenPointFormat;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -392,10 +393,11 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             ((GSMModel) ScoreBoard.getMatchModel()).setNewBalls(newBalls);
                         }
                         break;
-                    case goldenPointToWinGame:
+                    //case goldenPointToWinGame:
+                    case goldenPointFormat:
                         if ( ScoreBoard.getMatchModel() instanceof GSMModel) {
-                            boolean bGoldenPoint = PreferenceValues.useGoldenPoint(Preferences.this);
-                            ((GSMModel) ScoreBoard.getMatchModel()).setGoldenPointToWinGame(bGoldenPoint);
+                            GoldenPointFormat goldenPointFormat = PreferenceValues.goldenPointFormat(Preferences.this);
+                            ((GSMModel) ScoreBoard.getMatchModel()).setGoldenPointFormat(goldenPointFormat);
                         }
                         break;
                     case StartTiebreakOneGameEarly:
@@ -653,31 +655,38 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             }
 
             // remove some brand preferences if required
-            final PreferenceGroup psBrandCategory = (PreferenceGroup) this.findPreference(PreferenceKeys.Brand);
+            final PreferenceGroup psBrandCategory   = (PreferenceGroup) this.findPreference(PreferenceKeys.Brand);
+            final Preference      psBrandSelectList = psBrandCategory.findPreference(PreferenceKeys.squoreBrand.toString());
             if ( psBrandCategory != null ) {
                 if ( PreferenceValues.isBrandedExecutable(getActivity()) && Brand.isNotSquash() ) {
                     // plain racketlon or tabletennis versions
-                    psAppearance.removePreference(psBrandCategory);
+                    //psAppearance.removePreference(psBrandCategory);
+                    psAppearance.removePreference(psBrandSelectList);
                 } else if ( (Brand.values().length <= 1) && PreferenceValues.isUnbrandedExecutable(getActivity()) ) {
                     // remove option to change anything brand related if unbranded executable and other possible brands commented out
                     //psBrandCategory.removeAll(); // only if removing somehow does not work
                     //this.getPreferenceScreen().removePreference(psBrandCategory);
-                    psAppearance.removePreference(psBrandCategory);
+                    //psAppearance.removePreference(psBrandCategory);
+                    psAppearance.removePreference(psBrandSelectList);
                 } else {
                     if ( PreferenceValues.isBrandedExecutable(getActivity()) ) {
                         // for a branded version, do not support changing the brand
-                        final Preference psBrand = psBrandCategory.findPreference(PreferenceKeys.squoreBrand.toString());
-                        if (psBrand != null) {
+                        if (psBrandSelectList != null) {
                             if ((Brand.values().length <= 1) || PreferenceValues.isBrandedExecutable(getActivity())) {
-                                psBrandCategory.removePreference(psBrand);
+                                psBrandCategory.removePreference(psBrandSelectList);
                             }
                         }
                     }
 
                     final Preference psShowBrandLogoOn = psBrandCategory.findPreference(PreferenceKeys.showBrandLogoOn.toString());
                     if ( psShowBrandLogoOn != null ) {
+                        Context context = getActivity();
+                        String sImageURL = PreferenceValues.castScreenSponsorUrl(context);
+                        if ( StringUtil.isEmpty(sImageURL) ) {
+                            sImageURL = PreferenceValues.castScreenLogoUrl(context);
+                        }
                         if (PreferenceValues.isUnbrandedExecutable(getActivity()) && (Brand.brand == Brand.Squore || Brand.getLogoResId() == 0)) {
-                            psBrandCategory.removePreference(psShowBrandLogoOn);
+                            //psBrandCategory.removePreference(psShowBrandLogoOn);
                         }
                     }
                     final Preference psHideBrandLogoWhenGameInProgress = psBrandCategory.findPreference(PreferenceKeys.hideBrandLogoWhenGameInProgress.toString());
@@ -926,7 +935,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 File[] storageDirectories = new File[]
                         { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                         , Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                        , getContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) // this directory is not ideal. Files are deleted if app is uninstalled...
+                        , getActivity().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) // this directory is not ideal. Files are deleted if app is uninstalled...
                         , Environment.getExternalStorageDirectory()
                         };
                 for(File storageDirectory2: storageDirectories) {

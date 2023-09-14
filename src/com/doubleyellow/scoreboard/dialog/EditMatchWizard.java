@@ -38,6 +38,7 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.FinalSetFinish;
 import com.doubleyellow.scoreboard.model.GSMModel;
+import com.doubleyellow.scoreboard.model.GoldenPointFormat;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.ModelFactory;
 import com.doubleyellow.scoreboard.model.Player;
@@ -239,16 +240,16 @@ public class EditMatchWizard extends BaseAlertDialog
             if ( Brand.isGameSetMatch() )
             {
                 // golden point or not
-                String[] fsfDescriptions = { getString(R.string.cmd_no), getString(R.string.cmd_yes) };
+                String[] fsfDescriptions = context.getResources().getStringArray(R.array.goldenPointFormatDisplayValues);
                 List<String> lValues = new ArrayList<>();
                 for(String sDescription: fsfDescriptions ) {
                     lValues.add(getString(R.string.lbl_GoldenPoint) + ": " + sDescription);
                 }
                 SelectObjectToggle<String> tbGoldenPoint = new SelectObjectToggle<String>(context, lValues);
-                tbGoldenPoint.setTag(PreferenceKeys.goldenPointToWinGame);
+                tbGoldenPoint.setTag(PreferenceKeys.goldenPointFormat);
                 GSMModel gsmModel = (GSMModel) matchModel;
-                boolean bGoldenPoint = gsmModel.getGoldenPointToWinGame();
-                tbGoldenPoint.setSelectedIndex(bGoldenPoint?1:0);
+                GoldenPointFormat goldenPointFormat = gsmModel.getGoldenPointFormat();
+                tbGoldenPoint.setSelectedIndex(goldenPointFormat.ordinal());
 
                 llBrandSpecific.addView(tbGoldenPoint, lpCC);
             }
@@ -266,6 +267,18 @@ public class EditMatchWizard extends BaseAlertDialog
                 tbFirstDiscipline.setSelectedIndex(disciplineSequence.iterator().next().ordinal());
 
                 llBrandSpecific.addView(tbFirstDiscipline, lpCC);
+            }
+            if ( Brand.isSquash() ) {
+                // english scoring
+                List<String> lValues = new ArrayList<>();
+                lValues.add(getString(R.string.lbl_Scoring_PointPerRally));
+                lValues.add(getString(R.string.lbl_Scoring_PointWhenServing__Squash));
+
+                SelectObjectToggle<String> tbHandInHandOut = new SelectObjectToggle<String>(context, lValues);
+                tbHandInHandOut.setTag(PreferenceKeys.useHandInHandOutScoring);
+                tbHandInHandOut.setSelectedIndex(matchModel.isEnglishScoring() ? 1 : 0);
+
+                llBrandSpecific.addView(tbHandInHandOut, lpCC);
             }
 
             if ( llBrandSpecific.getChildCount() > 0 ) {
@@ -378,10 +391,15 @@ public class EditMatchWizard extends BaseAlertDialog
                         ((GSMModel) m_tmp).setFinalSetFinish(finalSetFinish);
                         break;
                     }
-                    case goldenPointToWinGame: {
+                    case goldenPointFormat: {
                         SelectObjectToggle<String> tb = (SelectObjectToggle<String>) current;
-                        boolean bGoldenPoint = tb.getSelectedIndex() == 1;
-                        ((GSMModel) m_tmp).setGoldenPointToWinGame(bGoldenPoint);
+                        GoldenPointFormat goldenPointFormat = GoldenPointFormat.values()[tb.getSelectedIndex()];
+                        ((GSMModel) m_tmp).setGoldenPointFormat(goldenPointFormat);
+                        break;
+                    }
+                    case useHandInHandOutScoring: {
+                        SelectObjectToggle<String> tb = (SelectObjectToggle<String>) current;
+                        m_tmp.setEnglishScoring(tb.getSelectedIndex()==1);
                         break;
                     }
                     case disciplineSequence: {
