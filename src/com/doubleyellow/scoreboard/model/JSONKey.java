@@ -31,6 +31,7 @@ public enum JSONKey {
 		isVictoryFor,
 	referee,
 		markers,
+		assessors,
 	players,
 		colors,
 		countries,

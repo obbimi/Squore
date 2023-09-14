@@ -3,6 +3,7 @@
     <string name="lbl_Scoring_PointWhenServing__Squash">Hand-in/hand-out</string>
 
     <string name="lbl_marker">Marker</string>
+    <string name="lbl_assessor">Assessor</string>
 
     <string name="no_let_abbreviation">NL</string>
     <string name="yes_let_abbreviation">YL</string>

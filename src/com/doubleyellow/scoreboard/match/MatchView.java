@@ -88,9 +88,10 @@ public class MatchView extends ScrollView
         }
     }
 
-    void setReferees(String sName, String sMarker) {
+    void setReferees(String sName, String sMarker, String sAssessor) {
         txtRefereeName.setText(sName);
         txtMarkerName .setText(sMarker);
+        txtAssessorName.setText(sAssessor);
     }
 
     /** wrapper introduced to be able to quickly turn it off during development */
@@ -432,6 +433,7 @@ public class MatchView extends ScrollView
     private Spinner              spUseGoldenPoint;
     private PreferenceACTextView txtRefereeName;
     private PreferenceACTextView txtMarkerName;
+    private PreferenceACTextView txtAssessorName;
     private PreferenceACTextView txtEventName;
     private PreferenceACTextView txtEventDivision;
     private PreferenceACTextView txtEventRound;
@@ -604,8 +606,9 @@ public class MatchView extends ScrollView
 
         txtRefereeName   = (PreferenceACTextView) findViewById(R.id.match_referee);
         txtMarkerName    = (PreferenceACTextView) findViewById(R.id.match_marker);
+        txtAssessorName  = (PreferenceACTextView) findViewById(R.id.match_assessor);
         spAnnouncementLanguage = (Spinner) findViewById(R.id.spAnnouncementLanguage);
-        tvsReferee = new View[]{txtRefereeName,txtMarkerName, spAnnouncementLanguage};
+        tvsReferee = new View[]{txtRefereeName,txtMarkerName,txtAssessorName, spAnnouncementLanguage};
 
         if ( bIsDoubles ) {
             txtPlayerA  = (EditText) findViewById(R.id.match_playerA1);
@@ -1421,8 +1424,10 @@ public class MatchView extends ScrollView
             );
         }
         if ( txtRefereeName != null ) {
-            m.setReferees( txtRefereeName.getTextAndPersist().toString()
-                         , txtMarkerName .getTextAndPersist().toString());
+            m.setReferees( txtRefereeName .getTextAndPersist().toString()
+                         , txtMarkerName  .getTextAndPersist().toString()
+                         , txtAssessorName.getTextAndPersist().toString()
+                         );
         }
 /*
         m.setNrOfPointsToWinGame(iNrOfPoints2Win);

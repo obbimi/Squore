@@ -158,8 +158,9 @@ public class Match extends XActivity implements MenuHandler
 
             String sRef    = model.getReferee();
             String sMarker = model.getMarker();
-            if ( StringUtil.hasNonEmpty(sRef, sMarker) ) {
-                vMatchView.setReferees(sRef, sMarker);
+            String sAssessor = model.getAssessor();
+            if ( StringUtil.hasNonEmpty(sRef, sMarker, sAssessor) ) {
+                vMatchView.setReferees(sRef, sMarker, sAssessor);
             }
 
             m_sSource   = model.getSource();

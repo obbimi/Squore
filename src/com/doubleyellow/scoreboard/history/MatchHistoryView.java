@@ -141,6 +141,24 @@ public class MatchHistoryView extends LinearLayout
             trTimes.addView(getTextView(sTime));
         }
 
+        // referee data if present
+        {
+            String sRef      = matchModel.getReferee();
+            String sMarker   = matchModel.getMarker();
+            String sAssessor = matchModel.getAssessor();
+            if ( StringUtil.hasNonEmpty(sRef, sMarker, sAssessor) ) {
+                TableLayout tbReferee = new TableLayout(context);
+                this.addView(tbReferee, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                tbReferee.addView(getLabelAndTextView(R.string.lbl_referee , sRef));
+                tbReferee.addView(getLabelAndTextView(R.string.lbl_marker  , sMarker));
+                tbReferee.addView(getLabelAndTextView(R.string.lbl_assessor, sAssessor));
+                tbReferee.addView(getLabelAndTextView(" "   , " ")); // splitter
+
+                //ColorPrefs.setColor(tbReferee);
+            }
+        }
+
+
         this.matchModel = matchModel;
 
         ColorPrefs.setColor(this);
@@ -266,6 +284,7 @@ public class MatchHistoryView extends LinearLayout
                 vGameHistory.update(false);
             }
         }
+
     }
 
     private LinearLayout getLabelAndTextView(int iLabel, String sText) {

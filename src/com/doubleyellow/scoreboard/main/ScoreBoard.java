@@ -2189,7 +2189,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             matchModel.setHandicapFormat      (previous.getHandicapFormat     ());
             matchModel.setSource              (previous.getSource() , previous.getSourceID() );
             matchModel.setAdditionalPostParams(previous.getAdditionalPostParams());
-            matchModel.setReferees            (previous.getReferee(), previous.getMarker());
+            matchModel.setReferees            (previous.getReferee(), previous.getMarker(), previous.getAssessor());
             if ( matchModel instanceof GSMModel ) {
                 GSMModel gsmModelPrev = (GSMModel) previous;
                 GSMModel gsmModelNew = (GSMModel) ScoreBoard.matchModel;
@@ -2237,7 +2237,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             matchModel.setEnglishScoring     (PreferenceValues.useHandInHandOutScoring(this));
             matchModel.setTiebreakFormat     (PreferenceValues.getTiebreakFormat      (this));
             matchModel.setHandicapFormat     (PreferenceValues.getHandicapFormat      (this));
-            matchModel.setReferees           (PreferenceValues.getRefereeName         (this), PreferenceValues.getMarkerName(this));
+            matchModel.setReferees           (PreferenceValues.getRefereeName         (this), PreferenceValues.getMarkerName(this), PreferenceValues.getAssessorName(this));
 
             if ( fJson != null && fJson.exists() ) {
                 try {
@@ -5090,7 +5090,7 @@ touch -t 01030000 LAST.sb
                         // TODO: announcement language
                         bChanged = matchModel.setEvent(m.getEventName(), m.getEventDivision(), m.getEventRound(), m.getEventLocation());
                         bChanged = matchModel.setCourt(m.getCourt());
-                        bChanged = matchModel.setReferees(m.getReferee(), m.getMarker());
+                        bChanged = matchModel.setReferees(m.getReferee(), m.getMarker(), m.getAssessor());
 
                         bChanged = matchModel.setNrOfPointsToWinGame(m.getNrOfPointsToWinGame());
                         bChanged = matchModel.setNrOfGamesToWinMatch(m.getNrOfGamesToWinMatch());

@@ -2007,14 +2007,18 @@ public abstract class Model implements Serializable
 
     private String m_sReferee = "";
     private String m_sMarker  = "";
-    public boolean setReferees(String sName, String sMarker) {
+    private String m_sAssessor  = "";
+    public boolean setReferees(String sName, String sMarker, String sAssessor) {
         if ( sName   == null ) { sName   = ""; }
         if ( sMarker == null ) { sMarker = ""; }
+        if ( sAssessor == null ) { sAssessor = ""; }
         sName  = sName.trim();
-        boolean bNameChanged = m_sReferee.equals(sName)  == false;
-                bNameChanged = bNameChanged || m_sMarker.equals(sMarker)  == false;
+        boolean bNameChanged =                 m_sReferee .equals(sName)     == false;
+                bNameChanged = bNameChanged || m_sMarker  .equals(sMarker)   == false;
+                bNameChanged = bNameChanged || m_sAssessor.equals(sAssessor) == false;
         m_sReferee = sName;
         m_sMarker  = sMarker;
+        m_sAssessor= sAssessor;
         if ( bNameChanged ) {
             setDirty(false);
         }
@@ -2022,6 +2026,7 @@ public abstract class Model implements Serializable
     }
     public String getReferee() { return m_sReferee; }
     public String getMarker() { return m_sMarker; }
+    public String getAssessor() { return m_sAssessor; }
 
     //-------------------------------
     // Court
@@ -2338,7 +2343,7 @@ public abstract class Model implements Serializable
             // read referee
             JSONObject oRef = joMatch.optJSONObject(JSONKey.referee.toString());
             if ( JsonUtil.isNotEmpty(oRef) ) {
-                setReferees(oRef.optString(JSONKey.name.toString()), oRef.optString(JSONKey.markers.toString()));
+                setReferees(oRef.optString(JSONKey.name.toString()), oRef.optString(JSONKey.markers.toString()), oRef.optString(JSONKey.assessors.toString()));
             }
             setCourt(joMatch.optString(JSONKey.court.toString()));
 
@@ -2957,10 +2962,11 @@ public abstract class Model implements Serializable
 */
 
         // referee
-        if ( StringUtil.hasNonEmpty(m_sReferee, m_sMarker) ) {
+        if ( StringUtil.hasNonEmpty(m_sReferee, m_sMarker, m_sAssessor) ) {
             JSONObject joRef = new JSONObject();
             joRef.put(JSONKey.name   .toString(), m_sReferee);
             joRef.put(JSONKey.markers.toString(), m_sMarker);
+            joRef.put(JSONKey.assessors.toString(), m_sAssessor);
             JsonUtil.removeEmpty(joRef);
             jsonObject.put(JSONKey.referee.toString(), joRef);
         }

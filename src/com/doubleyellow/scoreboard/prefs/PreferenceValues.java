@@ -1943,6 +1943,9 @@ public class PreferenceValues extends RWValues
     public static String getMarkerName(Context context) {
         return getString(PreferenceKeys.markerName, "", context);
     }
+    public static String getAssessorName(Context context) {
+        return getString(PreferenceKeys.assessorName, "", context);
+    }
 
     public static String getDefaultMailTo(Context context) {
         return getString(PreferenceKeys.mailResultTo, "", context);

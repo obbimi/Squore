@@ -52,6 +52,8 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * Allow changing event, players, referees info of a match.
+ *
  * @deprecated We will be editing a match with the MatchView in a Match activity
  */
 public class EditPlayers extends BaseAlertDialog
@@ -81,6 +83,7 @@ public class EditPlayers extends BaseAlertDialog
         mCaptions.put(JSONKey.court   , R.string.lbl_court__Default);
         mCaptions.put(JSONKey.referee , R.string.lbl_referee);
         mCaptions.put(JSONKey.markers , R.string.lbl_marker);
+        mCaptions.put(JSONKey.assessors, R.string.lbl_assessor);
     }
 
     private String getMatchDetailsLabel(JSONKey md) {
@@ -96,8 +99,8 @@ public class EditPlayers extends BaseAlertDialog
         EnumSet<JSONKey> eEventDetails = EnumSet.of(                        JSONKey.event         ,    JSONKey.division          ,    JSONKey.round          ,    JSONKey.location          , JSONKey.court);
         List<String> eventDetails = new ArrayList<String>(Arrays.asList( matchModel.getEventName(), matchModel.getEventDivision(), matchModel.getEventRound(), matchModel.getEventLocation(), matchModel.getCourt() ));
 
-        EnumSet<JSONKey> eReferees = EnumSet.of(                            JSONKey.referee     ,    JSONKey.markers);
-        List<String> refDetails   = new ArrayList<String>(Arrays.asList( matchModel.getReferee(), matchModel.getMarker()));
+        EnumSet<JSONKey> eReferees = EnumSet.of(                            JSONKey.referee     ,    JSONKey.markers, JSONKey.assessors);
+        List<String> refDetails   = new ArrayList<String>(Arrays.asList( matchModel.getReferee(), matchModel.getMarker(), matchModel.getAssessor()));
 
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
         int iMainBgColor   = mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
@@ -266,6 +269,9 @@ public class EditPlayers extends BaseAlertDialog
                 case markers:
                     text.init(R.string.emptyList_default, PreferenceKeys.refereeList, PreferenceKeys.markerName);
                     break;
+                case assessors:
+                    text.init(R.string.emptyList_default, PreferenceKeys.refereeList, PreferenceKeys.assessorName);
+                    break;
             }
             text.setImeOptions(e.equals(JSONKey.referee) ? EditorInfo.IME_ACTION_NEXT : EditorInfo.IME_ACTION_DONE); // using this seems to block the usage of setOnKeyListener()
 /*
@@ -409,13 +415,14 @@ public class EditPlayers extends BaseAlertDialog
                                                 };
                 String[] saReferee = new String[] { mReferee2Txt.get(JSONKey.referee).getTextAndPersist().toString()
                                                   , mReferee2Txt.get(JSONKey.markers).getTextAndPersist().toString()
+                                                  , mReferee2Txt.get(JSONKey.assessors).getTextAndPersist().toString()
                                                   };
                 if ( scoreBoard != null ) {
                     // invoked from main scoreboard
                     boolean bPlayersModified = scoreBoard.setPlayerNames(saPlayers);
                     boolean bModified = bPlayersModified;
 
-                    bModified =  matchModel.setReferees     (saReferee[0], saReferee[1])                           || bModified;
+                    bModified =  matchModel.setReferees     (saReferee[0], saReferee[1], saReferee[2])             || bModified;
                     bModified =  matchModel.setEvent        (saEvent[0]  , saEvent[1]  , saEvent[2], saEvent[3])   || bModified;
                     bModified =  matchModel.setCourt(mEvent2Txt.get(JSONKey.court).getTextAndPersist().toString()) || bModified;
                     if ( saCountries != null ) {
@@ -439,7 +446,7 @@ public class EditPlayers extends BaseAlertDialog
                     // from previous matches
                     File fWasStoredAs = matchModel.getStoreAs(PreviousMatchSelector.getArchiveDir(context));
 
-                    boolean bRefChanged   = matchModel.setReferees(saReferee[0], saReferee[1]);
+                    boolean bRefChanged   = matchModel.setReferees(saReferee[0], saReferee[1], saReferee[2]);
                     boolean bEventChanged = matchModel.setEvent(saEvent[0], saEvent[1], saEvent[2], saEvent[3]);
                     boolean bNameChanged = false;
                     for ( Player player: Model.getPlayers() ) {

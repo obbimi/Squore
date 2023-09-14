@@ -115,6 +115,7 @@ public enum PreferenceKeys {
         refereeList,
             refereeName,
             markerName,
+            assessorName,
         playerList,
         myMatches,
             matchList,

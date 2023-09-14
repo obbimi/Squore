@@ -1155,6 +1155,26 @@
             android:layout_weight="1"
             android:background="@drawable/button_dark"
             android:hint="@string/lbl_marker"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:nextFocusDown="@id/match_assessor"
+            android:paddingStart="@dimen/sb_playername_leftpadding"
+            android:paddingEnd="@dimen/sb_playername_leftpadding"
+            android:singleLine="true"
+            android:tag="item"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/txt_small"
+            dy:PreferenceKeys="refereeList,markerName"
+            dy:defaultACValues="" />
+        <com.doubleyellow.scoreboard.view.PreferenceACTextView
+            android:id="@+id/match_assessor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/sb_playername_leftpadding"
+            android:layout_weight="1"
+            android:background="@drawable/button_dark"
+            android:hint="@string/lbl_assessor"
             android:imeOptions="actionDone"
             android:maxLines="1"
             android:paddingStart="@dimen/sb_playername_leftpadding"
@@ -1163,7 +1183,7 @@
             android:tag="item"
             android:textCursorDrawable="@null"
             android:textSize="@dimen/txt_small"
-            dy:PreferenceKeys="refereeList,markerName"
+            dy:PreferenceKeys="refereeList,assessorName"
             dy:defaultACValues="" />
     </LinearLayout>
 
