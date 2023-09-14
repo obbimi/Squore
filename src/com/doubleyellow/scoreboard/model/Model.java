@@ -1691,6 +1691,16 @@ public abstract class Model implements Serializable
         if ( last == null ) { return 0; }
         return last.getEnd();
     }
+    public boolean setMatchDate(Date d) {
+        String matchTime = DateUtil.formatDate2String(d, DateUtil.HHMMSS_COLON) + DateUtil.getTimezoneXXX();
+        String matchDate = DateUtil.formatDate2String(d, DateUtil.YYYY_MM_DD);
+        if ( matchDate.equals(m_matchDate) && matchTime.equals(m_matchTime) ) {
+             return false;
+        }
+        m_matchDate = matchDate;
+        m_matchTime = matchTime;
+        return true;
+    }
     public Date getMatchDate() {
         Date dReturn = null;
         try {
