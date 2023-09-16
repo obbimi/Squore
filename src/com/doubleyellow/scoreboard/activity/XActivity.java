@@ -46,6 +46,10 @@ public abstract class XActivity extends /*Activity*/ AppCompatActivity /* For Im
         return getOrientation().equals(Orientation.Portrait);
     }
 
+    public FragmentManager getSupportFragmentManager() {
+        return super.getSupportFragmentManager();
+        //return null; // TODO
+    }
     //----------------------------------------------------
     // Actionbar methods
     //----------------------------------------------------
