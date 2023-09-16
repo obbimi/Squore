@@ -21,10 +21,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dy="http://double-yellow.be"
+    android:background="@android:color/black"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 <com.doubleyellow.view.SBRelativeLayout
     android:id="@+id/squoreboard_root_view"
+    android:background="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
     app:boxedEdges="@integer/wear_round_boxedEdges__Squash">
