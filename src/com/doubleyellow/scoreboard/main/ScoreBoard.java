@@ -119,7 +119,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /* ChromeCast */
-import androidx.appcompat.app.AppCompatActivity;
+//import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
 
 // Wearable
@@ -1776,7 +1776,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         scSequence = new ShowcaseSequence(this, mainMenu);
         scSequence.setConfig(config);
         int iSomeActionBarId = android.R.id.home; // does not work for AppCompatActivity (16908332)
-        if ( this instanceof AppCompatActivity ) {
+        if ( this instanceof androidx.appcompat.app.AppCompatActivity ) {
             iSomeActionBarId = R.id.sb_overflow_submenu; // 2131689712
         }
         if ( bFromMenu == false ) {

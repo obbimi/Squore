@@ -4,7 +4,7 @@ buildscript {
     // required for using gradle i.s.o. gradlew
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.1.3'
@@ -16,7 +16,6 @@ buildscript {
 repositories {
     mavenCentral() // for protobuf
     google()
-    jcenter()
 
     // required to work with aar file in libs dir
     flatDir {
@@ -94,25 +93,25 @@ android {
         // versionCodePrefix specifies [min_api_level][bitwise_supported_screensizes s=1,m=2,l=4,xl=8]
         phoneTabletPre22 {
             dimension "devicetype"
-            minSdkVersion 19
+            minSdkVersion 21 // increased to 21 for wearos splashscreen dependency
             targetSdkVersion 33
             multiDexEnabled true // required since using firebase
-            versionCode 1915 * 10000 + 500
-            versionName "4.52"
+            versionCode 1915 * 10000 + 503
+            versionName "4.53"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 33
-            versionCode 2315 * 10000 + 500
-            versionName "4.52"
+            versionCode 2315 * 10000 + 503
+            versionName "4.53"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 33
-            versionCode 2501 * 10000 + 500
-            versionName "4.52"
+            versionCode 2501 * 10000 + 503
+            versionName "4.53"
         }
     }
     buildTypes {
@@ -157,7 +156,7 @@ dependencies {
     implementation 'com.doubleyellow:AndroidBase@aar'
     // uncommenting this while in Android Studio creates a subdir AndroidBase with an .iml file in it
 
-    implementation 'androidx.wear:wear:1.2.0'       // minSdk=23 for 1.[0-2].0
+    implementation 'androidx.wear:wear:1.3.0'       // minSdk=23 for 1.[0-2].0
     implementation 'androidx.wear:wear-input:1.1.0' // minSdk=25
     //phoneTabletPre22Implementation  'androidx.wear:wear-input:1.1.0'// comment out this line temporarily what code will lead to errors when invocation is not prevented using Build.VERSION.SDK_INT > Build.VERSION_CODES.?
     //phoneTabletPost23Implementation 'androidx.wear:wear-input:1.1.0'// minSdk=25
@@ -188,9 +187,9 @@ dependencies {
     wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.3.0' // wearOs can not cast but to run it still needs 'Implementation' to not have 'ClassNotFound' exceptions
 
     // allow communication between handheld device and wearable
-    phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:18.0.0' // compileOnly is good enough for API < 23
-    phoneTabletPost23Implementation   'com.google.android.gms:play-services-wearable:18.0.0'
-    wearOsImplementation              'com.google.android.gms:play-services-wearable:18.0.0'
+    phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:18.1.0' // compileOnly is good enough for API < 23
+    phoneTabletPost23Implementation   'com.google.android.gms:play-services-wearable:18.1.0'
+    wearOsImplementation              'com.google.android.gms:play-services-wearable:18.1.0'
 
     phoneTabletPre22CompileOnly       'com.google.android.support:wearable:2.9.0'
     phoneTabletPost23Implementation   'com.google.android.support:wearable:2.9.0'

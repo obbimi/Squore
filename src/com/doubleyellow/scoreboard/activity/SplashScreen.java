@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
-import androidx.appcompat.app.ActionBar;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -84,7 +83,7 @@ public class SplashScreen extends XActivity
         if ( SPLASH_TIME_OUT > 0 ) {
             activity.setContentView(R.layout.splashscreen);
 
-            ActionBar ab = activity.getSupportActionBar();
+            androidx.appcompat.app.ActionBar ab = activity.getXActionBar();
             if (ab != null) {
                 ab.hide();
             }
