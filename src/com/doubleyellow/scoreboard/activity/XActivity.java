@@ -17,14 +17,18 @@
 
 package com.doubleyellow.scoreboard.activity;
 
+import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
+//import android.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.doubleyellow.android.view.Orientation;
 import com.doubleyellow.android.view.ViewUtil;
 
-public abstract class XActivity extends /*Activity*/ AppCompatActivity /* For Implementing ChromeCast */ {
+public abstract class XActivity extends /*Activity*/ AppCompatActivity /* For Implementing ChromeCast: just the button?! */ {
 
     protected static final String TAG = "SB." + XActivity.class.getSimpleName();
 

@@ -138,7 +138,7 @@ public class Import extends BaseAlertDialog
             case BNT_IMPORT:
                 String sFilename = fChecked.getName();
                 File file = new File(sourceDirectory, sFilename);
-                int iCnt = ExportImport.importData(targetDirectory, file);
+                int iCnt = ExportImport.importData(targetDirectory, file); // Zip Path Traversal: Security warning in google play
                 if ( iCnt > 0 ) {
                     Toast.makeText(context, getString(R.string.File_x_has_been_imported__Cnt_y, sFilename, iCnt), Toast.LENGTH_LONG).show();
                     if ( context instanceof MenuHandler) {

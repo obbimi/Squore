@@ -31,7 +31,7 @@ Supports you in scoring/sharing a table tennis match.
 &bull; post a result to a configurable website (ask the web-master of your club)
 You may check with your web-master if it is possible to have one or both of these last two options made available
 
-The WearOS (wearable) version supports the more basic functionality only.
+The Wear OS version supports the more basic functionality only.
 
 <b>Permissions:</b>
 &bull; Read Contacts: for auto-completing player names when setting up a match

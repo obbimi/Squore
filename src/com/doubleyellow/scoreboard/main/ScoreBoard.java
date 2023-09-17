@@ -267,7 +267,9 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         @Override public boolean onSwipe(View view, Direction direction, float maxD, float percentageOfView) {
             if ( ViewUtil.isWearable(ScoreBoard.this) ) {
                 // wearable screen is typically to small to interpret swipe events
-                return false;
+                // return false;
+                // 2023-09-17: Wear OS guidelines says: swipe must implement 'dismiss'
+                return handleMenuItem(R.id.sb_exit);
             }
             int viewId = getXmlIdOfParent(view);
             Player player = IBoard.m_id2player.get(viewId);
@@ -335,7 +337,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                 case R.id.txt_player1:
                 case R.id.txt_player2:
                     if ( ViewUtil.getScreenHeightWidthMinimum(ScoreBoard.this) < 320 ) {
-                        // just to have a way to get to the settings if no actionbar is visible on android wear
+                        // just to have a way to get to the settings if no actionbar is visible on Wear OS
                         return handleMenuItem(R.id.sb_settings);
                     } else {
                         return handleMenuItem(R.id.sb_edit_event_or_player);
@@ -2130,7 +2132,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
                     //if ( requestWindowFeature(Window.FEATURE_ACTION_BAR) ) {
                     //}
                     //} else {
-                    // presume android wear
+                    // presume Wear OS
                     //}
                     break;
                 case setToFalse:
