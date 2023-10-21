@@ -14,10 +14,13 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:fitsSystemWindows">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+
+        <!-- 2023-10-21: specifying it here only seems to affect postSplashScreenTheme ? -->
+        <!--<item name="android:navigationBarColor">@android:color/white</item>--> <!-- software buttons at bottom, replacing hardware buttons -->
         <item name="splashScreenIconSize">@dimen/splashscreen_icon_size_no_background</item>
 
-        <item name="windowSplashScreenAnimationDuration">@integer/default_icon_animation_duration</item>
+<!--        <item name="windowSplashScreenAnimationDuration">@integer/default_icon_animation_duration</item>-->
+        <item name="windowSplashScreenAnimationDuration">300</item>
 <!--    <item name="windowSplashScreenAnimatedIcon">@android:drawable/sym_def_app_icon</item>-->
 
         <!-- Set the splash screen background to black: required for Wear OS -->
@@ -31,18 +34,25 @@
 
     <style name="Theme.App.Starting_Badminton" parent="Theme.SBSplashScreen">
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_badminton</item>
+        <item name="windowSplashScreenBackground">@color/background_default__Badminton</item>
     </style>
     <style name="Theme.App.Starting_Racketlon" parent="Theme.SBSplashScreen">
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_racketlon</item>
+        <item name="windowSplashScreenBackground">@color/background_default__Racketlon</item>
     </style>
     <style name="Theme.App.Starting_Squore" parent="Theme.SBSplashScreen">
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_squore</item>
+        <item name="windowSplashScreenBackground">@color/background_default__Squash</item>
+<!--        <item name="android:statusBarColor">@color/background_default__Squash</item>-->
+<!--        <item name="android:navigationBarColor">@color/background_default__Squash</item>-->
     </style>
     <style name="Theme.App.Starting_Tabletennis" parent="Theme.SBSplashScreen">
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_tabletennis</item>
+        <item name="windowSplashScreenBackground">@color/background_default__Tabletennis</item>
     </style>
     <style name="Theme.App.Starting_TennisPadel" parent="Theme.SBSplashScreen">
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_tennispadel</item>
+        <item name="windowSplashScreenBackground">@color/background_default__TennisPadel</item>
     </style>
 <!--
     <style name="SBNonHolo" parent="@android:style/Theme">
@@ -67,6 +77,8 @@
         <item name="colorAccent">@android:color/holo_blue_dark</item>
         <item name="android:textColorSecondary">@android:color/holo_blue_dark</item>
 -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/white</item> <!-- software buttons at bottom, replacing hardware buttons -->
 
         <item name="circularProgressBarStyle">@style/CircularProgressBar</item>
         <item name="preferenceCheckBoxStyle">@style/PreferenceCheckBox</item>

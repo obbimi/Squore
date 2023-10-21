@@ -13,24 +13,22 @@
         <item>|IPF Dark              |#1C3755|#D63E2D|#7BB0E7|#000000|</item><!-- purple|red|blue... -->
     </string-array>
 
-    <!--  -->
     <string-array name="colorSchema__Racketlon" translatable="false">
         <!-- scorebtn|name+sht|serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|FIR Dark              |#004071|#C30D14|#D6D6D6|#000000|</item><!-- purple|red|grey... -->
     </string-array>
 
-    <!--colorSchema__Tabletennis -->
     <string-array name="colorSchema__Tabletennis" translatable="false">
                                 <!-- scorebtn|name  |serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|ITTF Dark             |#333333|#005043|#E3E5E4|#000000|</item><!-- dark grey|green|light grey on black... -->
     </string-array>
 
-    <!--colorSchema__Badminton -->
     <string-array name="colorSchema__Badminton" translatable="false">
                                 <!-- scorebtn|name  |serveside|backgrn -->
         <item>|name                  |Color1 |Color2 |Color3 |Color9 |</item>
         <item>|BWF Dark              |#333333|#DF2027|#DDDDDD|#000000|</item><!-- dark grey|red|grey on black ... -->
     </string-array>
+
 </resources>

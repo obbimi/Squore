@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <!-- for import/export functionality -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- possibly replaced by more granular: https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- bluetooth (Legacy up to Android 11) -->
@@ -122,14 +122,15 @@
             -->
 
             <!-- test to see if app can be started on wearable from handheld... does not seem to work -->
+<!--
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-<!--                <data android:scheme="ihoeve" android:host="squore" />-->
                 <data android:scheme="market" android:host="squore.double-yellow.be" />
             </intent-filter>
+-->
 
             <!-- test to see if media button intent will give more info -->
 <!--

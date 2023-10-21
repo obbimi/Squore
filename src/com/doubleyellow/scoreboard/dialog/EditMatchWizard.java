@@ -18,6 +18,7 @@ package com.doubleyellow.scoreboard.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -82,7 +83,7 @@ public class EditMatchWizard extends BaseAlertDialog
         LinearLayout.LayoutParams lpCC = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
-        int iMainBgColor   = mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
+        int iMainBgColor   = Color.BLACK; // Google guidelines for wearables //mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
         int iLabelTxt      = mColors.get(ColorPrefs.ColorTarget.playerButtonTextColor);
         int iSelectTxt     = mColors.get(ColorPrefs.ColorTarget.darkest);
         int iInputBgColor  = mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
@@ -90,7 +91,7 @@ public class EditMatchWizard extends BaseAlertDialog
 
         m_rootView = new LinearLayout(context);
         m_rootView.setOrientation(LinearLayout.VERTICAL);
-        ColorUtil.setBackground(m_rootView, iMainBgColor);
+        //ColorUtil.setBackground(m_rootView, iMainBgColor);
 
         float fResizeFactorForWizard = 1.5f;
         m_buttonSizePx = (int) (scoreBoard.getFloatingButtonSizePx() * fResizeFactorForWizard);
@@ -140,31 +141,37 @@ public class EditMatchWizard extends BaseAlertDialog
             txtPlayer.setOnEditorActionListener(onEditorActionListener); // TODO: can we use this?
             txtPlayer.setText(matchModel.getName(p));
 
-            txtPlayer.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtPlayer.getTextSize() * fResizeFactorForWizard);
+            //txtPlayer.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtPlayer.getTextSize() * fResizeFactorForWizard); // wear guidelines say size must match with user prefs
         }
 
         {
             LinearLayout llBestOf = new LinearLayout(context);
-            llBestOf.setOrientation(LinearLayout.HORIZONTAL);
+            llBestOf.setOrientation(LinearLayout.VERTICAL);
+
             {
-                List<String> lValues = new ArrayList<>();
-                String sBO = getString(R.string.best_of_x_games_to_y_1);
-                String sTO = getString(R.string.total_of_x_games_to_y_1);
-                lValues.add(sBO);
-                lValues.add(sTO);
-                SelectObjectToggle<String> tbBestOf_or_TotalOf = new SelectObjectToggle<String>(context, lValues);
-                tbBestOf_or_TotalOf.setTag(PreferenceKeys.playAllGames);
-                boolean bPlayAll = matchModel.playAllGames();
-                tbBestOf_or_TotalOf.setSelectedIndex(bPlayAll?1:0);
-                tbBestOf_or_TotalOf.setMinimumHeight(0); // has no effect when called here
+                LinearLayout llBestOf1 = new LinearLayout(context);
+                llBestOf1.setOrientation(LinearLayout.HORIZONTAL);
 
                 if ( Brand.isRacketlon() == false ) {
-                    llBestOf.addView(tbBestOf_or_TotalOf, lpCC);
+                    List<String> lValues = new ArrayList<>();
+                    String sBO = getString(R.string.best_of_x_games_to_y_1);
+                    String sTO = getString(R.string.total_of_x_games_to_y_1);
+                    lValues.add(sBO);
+                    lValues.add(sTO);
+                    SelectObjectToggle<String> tbBestOf_or_TotalOf = new SelectObjectToggle<String>(context, lValues);
+                    tbBestOf_or_TotalOf.setTag(PreferenceKeys.playAllGames);
+                    boolean bPlayAll = matchModel.playAllGames();
+                    tbBestOf_or_TotalOf.setSelectedIndex(bPlayAll?1:0);
+                    tbBestOf_or_TotalOf.setMinimumHeight(0); // has no effect when called here
+
+                    llBestOf1.addView(tbBestOf_or_TotalOf, lpCC);
+                    llBestOf.addView(llBestOf1);
                 }
             }
+            LinearLayout llBestOf2 = new LinearLayout(context);
+            llBestOf2.setOrientation(LinearLayout.HORIZONTAL);
             {
-                int iPreferredNrToWin = PreferenceValues.numberOfGamesToWinMatch(context);
-                    iPreferredNrToWin = matchModel.getNrOfGamesToWinMatch();
+                int iPreferredNrToWin = matchModel.getNrOfGamesToWinMatch(); //PreferenceValues.numberOfGamesToWinMatch(context);
 
                 SortedSet<Integer> lValues = new TreeSet<>();
                 lValues.add(1);
@@ -189,13 +196,12 @@ public class EditMatchWizard extends BaseAlertDialog
                 tbTotalNrOfGames.setSelected(iPreferredNrToWin);
 
                 if ( Brand.isRacketlon() == false ) {
-                    llBestOf.addView(tbTotalNrOfGames, lpCC);
+                    llBestOf2.addView(tbTotalNrOfGames, lpCC);
                 }
             }
 
             {
-                int iPreferredNrToWin = PreferenceValues.numberOfPointsToWinGame(context);
-                    iPreferredNrToWin = matchModel.getNrOfPointsToWinGame();
+                int iPreferredNrToWin = matchModel.getNrOfPointsToWinGame(); //PreferenceValues.numberOfPointsToWinGame(context);
                 SortedSet<Integer> lValues = new TreeSet<>();
                 int iCommonEndScoresResId = R.array.commonEndScores__Squash;
                     iCommonEndScoresResId = PreferenceValues.getSportTypeSpecificResId(context, iCommonEndScoresResId);
@@ -212,7 +218,8 @@ public class EditMatchWizard extends BaseAlertDialog
                 otNrOfPointsToWinGame.setSelected(iPreferredNrToWin);
                 otNrOfPointsToWinGame.setTag(PreferenceKeys.numberOfPointsToWinGame);
 
-                llBestOf.addView(otNrOfPointsToWinGame, lpCC);
+                llBestOf2.addView(otNrOfPointsToWinGame, lpCC);
+                llBestOf.addView(llBestOf2);
             }
 
             lControls.add(llBestOf);

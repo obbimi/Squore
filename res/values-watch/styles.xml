@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.App.Starting_Badminton" parent="Theme.SBSplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_badminton</item>
+        <item name="windowSplashScreenBackground">@android:color/black</item>
+    </style>
+    <style name="Theme.App.Starting_Racketlon" parent="Theme.SBSplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_racketlon</item>
+        <item name="windowSplashScreenBackground">@android:color/black</item>
+    </style>
+    <style name="Theme.App.Starting_Squore" parent="Theme.SBSplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_squore</item>
+        <item name="windowSplashScreenBackground">@android:color/black</item>
+    </style>
+    <style name="Theme.App.Starting_Tabletennis" parent="Theme.SBSplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_tabletennis</item>
+        <item name="windowSplashScreenBackground">@android:color/black</item>
+    </style>
+    <style name="Theme.App.Starting_TennisPadel" parent="Theme.SBSplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_tennispadel</item>
+        <item name="windowSplashScreenBackground">@android:color/black</item>
+    </style>
+</resources>
