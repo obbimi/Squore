@@ -7,9 +7,7 @@
         <!-- copies from Theme.SplashScreen.Common cause we MUST extend Theme.AppCompat -->
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">
-            @drawable/compat_splash_screen_no_icon_background
-        </item>
+        <item name="android:windowBackground">@drawable/compat_splash_screen_no_icon_background</item>
         <item name="android:opacity">opaque</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:fitsSystemWindows">false</item>
@@ -94,7 +92,7 @@
         <item name="android:windowTitleSize">25dp</item>
 -->
 
-        <!-- was still only usefull for 'Feedback' activity ?! -->
+        <!-- was still only useful for 'Feedback' activity ?! -->
         <!--<item name="android:windowBackground">@color/dy_white</item>-->
 
         <item name="android:actionBarStyle">@style/SBActionBar</item>

@@ -102,6 +102,10 @@ public enum Brand
     /* @deprecated */
     //public int getRemoteDisplayAppIdResId() { return iRemoteDisplayAppIdResId;}
 
+    public static boolean m_bHasWearable = false;
+    public static void setHasWearable(boolean b) {
+        m_bHasWearable = b;
+    }
     private static JSONObject m_mCastConfig = null;
     public static void setCastConfig(JSONObject mCastConfig, File fCacheDir) {
         //if ( true ) { return; } // TODO: for now don't use webconfig

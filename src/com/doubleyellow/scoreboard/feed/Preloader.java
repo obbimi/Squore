@@ -205,6 +205,11 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                             JSONObject castConfig = config.getJSONObject(C_CastConfig);
                             Brand.setCastConfig(castConfig, m_context.getCacheDir());
                         }
+                        final String C_HasWearable = "HasWearable" + "-" + Brand.brand;
+                        if ( config.has(C_HasWearable) ) {
+                            boolean bHasWearable = config.getBoolean(C_HasWearable);
+                            Brand.setHasWearable(bHasWearable);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -2089,7 +2089,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         this.mColors = mColors;
 
         iBoard.initColors(mColors);
-
         // there is a pretty dark color, for ecstatic reasons, make actionbar the same color
         setActionBarBGColor(mColors.get(ColorPrefs.ColorTarget.actionBarBackgroundColor));
 
@@ -2469,7 +2468,7 @@ touch -t 01030000 LAST.sb
     /** Does not seem to work so well if app started for debugging. But when started from home screen it seems to work fine (android 7) */
     private static void doRestart(Context c) {
         if (c == null) return;
-        // fetch the packagemanager so we can get the default launch activity
+        // fetch the package-manager so we can get the default launch activity
         // (you can replace this intent with any other activity if you want
         PackageManager pm = c.getPackageManager();
         //check if we got the PackageManager
@@ -3853,6 +3852,8 @@ touch -t 01030000 LAST.sb
         ViewUtil.setPackageIconOrHide(this, menu, R.id.sb_open_store_on_wearable, "com.android.vending");
 
         setMenuItemVisibility(R.id.sb_send_match_result, StringUtil.isNotEmpty(PreferenceValues.getDefaultSMSTo(this)));
+
+        setMenuItemVisibility(R.id.sb_open_store_on_wearable, Brand.m_bHasWearable);
 
         if ( Brand.isNotSquash() ) {
             setMenuItemVisibility(R.id.sb_official_announcement, false);
@@ -7282,7 +7283,7 @@ touch -t 01030000 LAST.sb
                 String msg = "Installed on a device with no wearable support";
                 if ( m_bNoWearablePossible == false ) {
                     m_bNoWearablePossible = true;
-                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
                 Log.w(TAG, msg);
@@ -7291,6 +7292,7 @@ touch -t 01030000 LAST.sb
             m_wearableHelper = new WearableHelper(this);
         }
         m_wearableHelper.onResume(this);
+
     }
     public void setWearableRole(WearRole role) {
         if ( m_wearableHelper == null ) { return; }

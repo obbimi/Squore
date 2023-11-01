@@ -1391,8 +1391,12 @@ public class IBoard implements TimerViewContainer
         GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, colors);
         // gd.setShape(GradientDrawable.RECTANGLE); // RECTANGLE is the default
         //gd.setCornerRadius(getResources().getDimension(R.dimen.sb_button_radius));
-        gd.setCornerRadius(getScreenHeightWidthMinimumFraction(R.fraction.player_button_corner_radius)); // if we do not set this, screen elements no longer have rounded corners
         int viewId = view.getId();
+        if ( viewId == R.id.squoreboard_root_view ) {
+            // do not apply corner radius to root view because 'splashscreenbackground' becomes visible in corners
+        } else {
+            gd.setCornerRadius(getScreenHeightWidthMinimumFraction(R.fraction.player_button_corner_radius)); // if we do not set this, screen elements no longer have rounded corners
+        }
         if ( iBorderColor != null ) {
             gd.setStroke(getScreenHeightWidthMinimumFraction(R.fraction.player_button_colorborder_thickness), iBorderColor);
             mViewId2BorderColor.put(viewId, iBorderColor);

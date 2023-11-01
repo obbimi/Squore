@@ -31,6 +31,7 @@
     -->
 
     <item android:id="@+id/media_route_menu_item" app:showAsAction="always" android:title="@string/media_route_menu_title" app:actionProviderClass="androidx.mediarouter.app.MediaRouteActionProvider"/>
+<!--<item android:id="@+id/media_route_menu_item" app:showAsAction="always" android:title="@string/media_route_menu_title" app:actionProviderClass="android.app.MediaRouteActionProvider"/>-->
 
     <!--<item android:id="@+id/dyn_bluetooth"     app:showAsAction="ifRoom" android:icon="@android:drawable/stat_sys_data_bluetooth" android:visible="false" android:title="Bluetooth" />-->
     <item android:id="@+id/dyn_undo_last"     app:showAsAction="ifRoom" android:icon="@drawable/u_turn"                  android:visible="false" android:title="@string/uc_undo" />
@@ -181,7 +182,7 @@
                     <item android:id="@+id/sb_download_posted_to_squore_matches" app:showAsAction="never"                                       android:title="Download posted to Squore zip" android:visible="false" />
                     <item android:id="@+id/sb_download_zip"          app:showAsAction="never"                                       android:title="Download zip" android:visible="false" />
 
-                    <item android:id="@+id/sb_open_store_on_wearable" app:showAsAction="never" android:icon="@drawable/wearos" android:title="Open PlayStore On Wearable" />
+                    <item android:id="@+id/sb_open_store_on_wearable" app:showAsAction="never" android:icon="@drawable/wearos" android:title="Open PlayStore On Wearable" android:visible="true" />
                 </menu>
             </item>
 
