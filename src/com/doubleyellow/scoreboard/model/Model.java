@@ -128,6 +128,10 @@ public abstract class Model implements Serializable
 		/** Invoked each time a 'call' is recorded into the model */
         void OnCallChanged(Call call, Player appealingOrMisbehaving, Player pointAwardedTo, ConductType conductType);
     }
+    public interface OnPowerPlayChangeListener extends OnModelChangeListener {
+		/** Invoked each something powerplay related changes */
+        void OnPowerPlayChange(Player player, PowerPlayForPlayer powerPlayForPlayer);
+    }
     public interface OnBrokenEquipmentListener extends OnModelChangeListener {
 		/** Invoked each time a 'call' is recorded into the model */
         void OnBrokenEquipmentChanged(BrokenEquipment equipment, Player affectedPlayer);
@@ -142,6 +146,7 @@ public abstract class Model implements Serializable
     transient private List<OnCallChangeListener>         onCallChangeListeners           = new ArrayList<OnCallChangeListener>();
     transient         List<OnComplexChangeListener>      onComplexChangeListeners        = new ArrayList<OnComplexChangeListener>();
     transient private List<OnBrokenEquipmentListener>    onBrokenEquipmentListeners      = new ArrayList<OnBrokenEquipmentListener>();
+    transient private List<OnPowerPlayChangeListener>    onPowerPlayChangeListener       = new ArrayList<>();
     transient private List<OnLockChangeListener>         onLockChangeListeners           = new ArrayList<OnLockChangeListener>();
     transient private List<GameTiming.OnTimingChangedListener> onTimingChangedListeners  = new ArrayList<GameTiming.OnTimingChangedListener>();
 
@@ -155,6 +160,7 @@ public abstract class Model implements Serializable
         iCnt += ListUtil.removeObjects(onMatchEndListeners          , sClassNameFilter);
         iCnt += ListUtil.removeObjects(onCallChangeListeners        , sClassNameFilter);
         iCnt += ListUtil.removeObjects(onBrokenEquipmentListeners   , sClassNameFilter);
+        iCnt += ListUtil.removeObjects(onPowerPlayChangeListener    , sClassNameFilter);
         iCnt += ListUtil.removeObjects(onComplexChangeListeners     , sClassNameFilter);
         iCnt += ListUtil.removeObjects(onLockChangeListeners        , sClassNameFilter);
         iCnt += ListUtil.removeObjects(onTimingChangedListeners     , sClassNameFilter);
@@ -170,6 +176,7 @@ public abstract class Model implements Serializable
         registerListeners(lCopyFrom.onMatchEndListeners);
         registerListeners(lCopyFrom.onCallChangeListeners);
         registerListeners(lCopyFrom.onBrokenEquipmentListeners);
+        registerListeners(lCopyFrom.onPowerPlayChangeListener);
         registerListeners(lCopyFrom.onComplexChangeListeners);
         registerListeners(lCopyFrom.onLockChangeListeners);
         registerListeners(lCopyFrom.onTimingChangedListeners);
@@ -225,6 +232,9 @@ public abstract class Model implements Serializable
         }
         if ( changedListener instanceof OnBrokenEquipmentListener ) {
             onBrokenEquipmentListeners.add((OnBrokenEquipmentListener) changedListener);
+        }
+        if ( changedListener instanceof OnPowerPlayChangeListener ) {
+            onPowerPlayChangeListener.add((OnPowerPlayChangeListener) changedListener);
         }
         if ( changedListener instanceof OnLockChangeListener ) {
             OnLockChangeListener lockChangeListener = (OnLockChangeListener) changedListener;
@@ -307,6 +317,10 @@ public abstract class Model implements Serializable
     private boolean                             m_bEnglishScoring       = false;
     private TieBreakFormat                      m_TieBreakFormat        = TieBreakFormat.TwoClearPoints;
     private HandicapFormat                      m_HandicapFormat        = HandicapFormat.None;
+
+            Set<Player>                         m_currentRallyIsPowerPlayFor = new HashSet<>();
+            Map<Player, Integer>                m_player2NrOfPowerPlaysUsed  = new HashMap<>();
+            int                                 m_maxNrOfPowerPlays          = 2; // TODO : configurable
 
     private Map<Player, String>                 m_player2Name           = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Id             = new HashMap<Player, String>();
