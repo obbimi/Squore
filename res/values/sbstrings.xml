@@ -213,6 +213,15 @@
     <string name="point">Point</string>
     <string name="points">Points</string>
     <string name="lbl_warning">Warning</string>
+
+    <string name="lbl_power_play">Power Play</string>
+    <string name="lbl_power_play_won">Power Play Won</string>
+    <string name="lbl_power_play_lost">Power Play Lost</string>
+    <string name="lbl_power_play_won_by_x">Power Play point awarded to %s</string>
+    <string name="lbl_power_play_lost_by_x">Power Play lost by %s</string>
+    <string name="no_more_power_plays_left__x">No more Power Plays left (%d)</string>
+    <string name="lbl_activate_for">Activate for</string>
+    <string name="lbl_both">Both</string>
     <!--
         <string name="last_game__score_x_induration_y_z">Last game: %s in %s %s</string>
         <string name="last_game__score_x_induration_y_z__2lines">Last game: %s\nin %s %s</string>

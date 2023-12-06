@@ -727,6 +727,70 @@ public abstract class Model implements Serializable
 
     public abstract void changeScore(Player player);
 
+    public boolean setNrOfPowerPlaysPerMatch(int i) {
+        if (m_maxNrOfPowerPlays != i) {
+            m_maxNrOfPowerPlays = i;
+            return true;
+        }
+        return false;
+    }
+    public boolean nextRallyIsPowerPlayFor(Player p) {
+        return m_currentRallyIsPowerPlayFor.contains(p);
+    }
+    public int getNrOfPowerPlaysLeftFor(Player p) {
+        return m_maxNrOfPowerPlays - MapUtil.getInt(m_player2NrOfPowerPlaysUsed, p, 0);
+    }
+    public int getNrOfPowerPlaysPerMatch() {
+        return m_maxNrOfPowerPlays;
+    }
+    public void markNextRallyAsPowerPlayFor(Player player) {
+        // TODO: can this be done if player has gameball already?? For now assume: no
+        PowerPlayForPlayer powerPlayForPlayer = null;
+        int iUsedPowerPlays = MapUtil.getInt(m_player2NrOfPowerPlaysUsed, player, 0);
+        if ( iUsedPowerPlays >= m_maxNrOfPowerPlays ) {
+            powerPlayForPlayer = PowerPlayForPlayer.NoMoreAvailable;
+        } else if ( isPossibleGameBallFor(player) ) {
+            powerPlayForPlayer = PowerPlayForPlayer.NotActivatableOnGameBall;
+        } else {
+            if ( m_currentRallyIsPowerPlayFor.add(player) ) {
+                powerPlayForPlayer = PowerPlayForPlayer.ActivatedForNextRally;
+            } else {
+                m_currentRallyIsPowerPlayFor.remove(player);
+                powerPlayForPlayer = PowerPlayForPlayer.DeActivatedForNextRally;
+            }
+        }
+        for(OnPowerPlayChangeListener listener: onPowerPlayChangeListener ) {
+            listener.OnPowerPlayChange(player, powerPlayForPlayer);
+        }
+    }
+    private boolean bHandlePowerPlayInProgress = false;
+    void changeScoreHandlePowerPlay(Sport sport, Player pScoringPlayer) {
+        if ( bHandlePowerPlayInProgress ) { return; }
+        if ( ListUtil.isEmpty(m_currentRallyIsPowerPlayFor) ) { return; }
+        bHandlePowerPlayInProgress = true;
+
+        List<Player> lPowerPlayForCleanup = new ArrayList<>(m_currentRallyIsPowerPlayFor);
+        for(Player p: lPowerPlayForCleanup ) {
+            MapUtil.increaseCounter(m_player2NrOfPowerPlaysUsed, p);
+            Call powerPlayCall = p.equals(pScoringPlayer) ? Call.PPW : Call.PPL;
+            switch (sport) {
+                case Squash:
+                    recordAppealAndCall(pScoringPlayer, powerPlayCall);
+                    break;
+                default:
+                    changeScore(pScoringPlayer);
+                    break;
+            }
+            for(OnPowerPlayChangeListener listener: onPowerPlayChangeListener ) {
+                PowerPlayForPlayer powerPlayForPlayer = p.equals(pScoringPlayer) ? PowerPlayForPlayer.CashedIn : PowerPlayForPlayer.Wasted;
+                listener.OnPowerPlayChange(p, powerPlayForPlayer);
+                m_currentRallyIsPowerPlayFor.remove(p);
+                listener.OnPowerPlayChange(p, PowerPlayForPlayer.DeActivatedForNextRally);
+            }
+        }
+        bHandlePowerPlayInProgress = false;
+    }
+
     private String m_sResultFast = null;
     /** @deprecated */
     public void setResult(String s) {
@@ -1025,6 +1089,11 @@ public abstract class Model implements Serializable
                     determineServerAndSideForUndoFromPreviousScoreLine(lastValidWithServer, null);
                 }
 
+                if ( slRemoved.call.equals(Call.PPW) || slRemoved.call.equals(Call.PPL) ) {
+                    Player powerPlayRequestBy = slRemoved.getCallTargetPlayer();
+                    m_currentRallyIsPowerPlayFor.add(powerPlayRequestBy);
+                    MapUtil.increaseCounter(m_player2NrOfPowerPlaysUsed, powerPlayRequestBy, -1);
+                }
                 if ( slRemoved.call.getScoreAffect().equals(Call.ScoreAffect.LoseGame) ) {
                     // we are undo-ing a conduct-game (CG)
                     Player adjustScoreFor = slRemoved.getCallTargetPlayer().getOther();
@@ -1055,6 +1124,15 @@ public abstract class Model implements Serializable
                     }
                     for (OnScoreChangeListener l : onScoreChangeListeners) {
                         l.OnScoreChange(removeScoringPlayer, iReducedScore, iDelta, null);
+                    }
+                    if ( ListUtil.isNotEmpty(m_currentRallyIsPowerPlayFor) ) {
+                        List<Player> lProcess = new ArrayList<>(m_currentRallyIsPowerPlayFor);
+                        for ( Player p : lProcess ) {
+                            m_currentRallyIsPowerPlayFor.remove(p);
+                            for (OnPowerPlayChangeListener l : onPowerPlayChangeListener) {
+                                l.OnPowerPlayChange(p, PowerPlayForPlayer.DeActivatedForNextRally);
+                            }
+                        }
                     }
                 } else if ( slRemoved.isBrokenEquipment() ) {
                     for (OnBrokenEquipmentListener l : onBrokenEquipmentListeners) {
@@ -2559,6 +2637,29 @@ public abstract class Model implements Serializable
 */
             }
 
+            // powerplay
+            if ( joMatch.has(JSONKey.maxNrOfPowerPlays.toString()) ) {
+                m_maxNrOfPowerPlays = joMatch.getInt(JSONKey.maxNrOfPowerPlays.toString());
+                JSONObject jsonObject = joMatch.optJSONObject(JSONKey.nrOfPowerPlaysUsed.toString());
+                m_player2NrOfPowerPlaysUsed.clear();
+                if ( jsonObject != null ) {
+                    Iterator<String> keys = jsonObject.keys();
+                    while( keys.hasNext() ) {
+                        String sPlayer = keys.next();
+                        int iUsed = jsonObject.getInt(sPlayer);
+                        m_player2NrOfPowerPlaysUsed.put(Player.valueOf(sPlayer), iUsed);
+                    }
+                }
+                JSONArray jsonArray = joMatch.optJSONArray(JSONKey.currentRallyIsPowerPlayFor.toString());
+                m_currentRallyIsPowerPlayFor.clear();
+                if ( jsonArray != null ) {
+                    for(int i=0; i< jsonArray.length(); i++) {
+                        String sPlayer  = jsonArray.getString(i);
+                        m_currentRallyIsPowerPlayFor.add(Player.valueOf(sPlayer));
+                    }
+                }
+            }
+
             // read conduct types
             JSONArray conductCalls = joMatch.optJSONArray(JSONKey.conductCalls.toString());
             for (int g = 0; g < JsonUtil.size(conductCalls); g++) {
@@ -2908,6 +3009,17 @@ public abstract class Model implements Serializable
         }
         jsonObject.put(JSONKey.isVictoryFor.toString(), isPossibleMatchVictoryFor() );
         JsonUtil.removeEmpty(jsonObject);
+
+        // powerplay
+        if ( m_maxNrOfPowerPlays > 0 ) {
+            jsonObject.put(JSONKey.maxNrOfPowerPlays.toString(), m_maxNrOfPowerPlays);
+            if ( MapUtil.isNotEmpty(m_player2NrOfPowerPlaysUsed) ) {
+                jsonObject.put(JSONKey.nrOfPowerPlaysUsed.toString(), new JSONObject(MapUtil.keysToString(m_player2NrOfPowerPlaysUsed) ) );
+            }
+            if ( ListUtil.isNotEmpty(m_currentRallyIsPowerPlayFor) ) {
+                jsonObject.put(JSONKey.currentRallyIsPowerPlayFor.toString(), new JSONArray(ListUtil.elementsToString(m_currentRallyIsPowerPlayFor) ) );
+            }
+        }
 
         // conducts
         if ( ListUtil.size(lConductCalls) > 0 ) {
@@ -4044,7 +4156,10 @@ public abstract class Model implements Serializable
                 pointAwardedTo = appealing.getOther();
                 break;
             case ST:
+            case PPW:
                 pointAwardedTo = appealing;
+                break;
+            case PPL:
                 break;
         }
         for(OnCallChangeListener l: onCallChangeListeners) {

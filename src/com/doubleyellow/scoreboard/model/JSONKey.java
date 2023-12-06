@@ -57,6 +57,9 @@ public enum JSONKey {
 		doublesServeSequence,
         // racketlon specific keys
         disciplineSequence,
+		maxNrOfPowerPlays,
+		nrOfPowerPlaysUsed,
+		currentRallyIsPowerPlayFor,
 	when,
 		/** yyyyMMdd format */
 		date,

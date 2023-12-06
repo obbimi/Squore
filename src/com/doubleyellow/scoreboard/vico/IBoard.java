@@ -81,12 +81,14 @@ public class IBoard implements TimerViewContainer
     public static Map<Player, Integer> m_player2serverSideId;
     public static Map<Player, Integer> m_player2nameId;
     public static Map<Player, Integer> m_player2gamesWonId;
+    public static Map<Player, Integer> m_player2PowerPlayIconId;
     public static SparseArray<Player>  m_id2player;
     static {
         m_player2scoreId      = new HashMap<Player , Integer>();
         m_player2serverSideId = new HashMap<Player , Integer>();
         m_player2nameId       = new HashMap<Player , Integer>();
         m_player2gamesWonId   = new HashMap<Player , Integer>();
+        m_player2PowerPlayIconId = new HashMap<Player , Integer>();
         m_id2player           = new SparseArray<Player>();
 
         initPlayer2ScreenElements(Player.A);
@@ -109,6 +111,9 @@ public class IBoard implements TimerViewContainer
 
         m_player2gamesWonId  .put(pFirst           , R.id.btn_gameswon1);
         m_player2gamesWonId  .put(pFirst.getOther(), R.id.btn_gameswon2);
+
+        m_player2PowerPlayIconId.put(pFirst           , R.id.sb_powerplay1_icon);
+        m_player2PowerPlayIconId.put(pFirst.getOther(), R.id.sb_powerplay2_icon);
 
         m_id2player          .put(R.id.txt_player1 , pFirst);
         m_id2player          .put(R.id.btn_score1  , pFirst);
@@ -1038,6 +1043,18 @@ public class IBoard implements TimerViewContainer
                     decisionMessages[i] = null; // so that it is re-created with correct colors
                 }
             }
+        }
+    }
+
+    public boolean setPowerPlayIconVisibility(int visibility, Player p) {
+        int iResId = m_player2PowerPlayIconId.get(p);
+        View vIcon = m_vRoot.findViewById(iResId);
+        if ( vIcon != null ) {
+            vIcon.setVisibility(visibility);
+            return true;
+        } else {
+            Log.w(TAG, "No powerplay view found ...");
+            return false;
         }
     }
 

@@ -77,6 +77,13 @@ http://developer.android.com/guide/practices/screens_support.html
     <integer name="gameEndScore_default__Racquetball">15</integer>
     <integer name="gameEndScore_default__TennisPadel">6</integer> <!-- abuse to be used as setEndScore default, gameEndScore is always 4 -->
 
+    <bool name="usePowerPlay_default">false</bool>
+    <integer name="numberOfPowerPlaysPerPlayerPerMatch_default__Squash">2</integer>
+    <integer name="numberOfPowerPlaysPerPlayerPerMatch_default__Badminton">0</integer>
+    <integer name="numberOfPowerPlaysPerPlayerPerMatch_default__Tabletennis">0</integer>
+    <integer name="numberOfPowerPlaysPerPlayerPerMatch_default__Racketlon">0</integer>
+    <integer name="numberOfPowerPlaysPerPlayerPerMatch_default__TennisPadel">0</integer>
+
     <integer name="numberOfGamesToWin_default__Squash">3</integer>
     <integer name="numberOfGamesToWin_default__Badminton">2</integer>
     <integer name="numberOfGamesToWin_default__Tabletennis">4</integer>

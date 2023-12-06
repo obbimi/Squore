@@ -107,6 +107,7 @@ public class SquashModel extends Model {
 
     @Override public void changeScore(Player player) {
         super.changeScore_SQ_RB(player, true, null);
+        changeScoreHandlePowerPlay(Sport.Squash, player);
     }
 
     @Override public String getResultShort() {

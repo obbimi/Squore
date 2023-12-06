@@ -489,6 +489,10 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         // speak a small piece of text to allow user to finetune voice right here
                         playSpeechSample();
                         break;
+                    case usePowerPlay:
+                        boolean ppEnabled = PreferenceValues.usePowerPlay(Preferences.this);
+                        settingsFragment.setEnabledForPrefKeys(ppEnabled, PreferenceKeys.numberOfPowerPlaysPerPlayerPerMatch);
+                        break;
                     case FCMEnabled:
                         // if no FCM device id yet, generate one
                         String sFCMDeviceId = PreferenceValues.getFCMDeviceId(Preferences.this);

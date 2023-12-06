@@ -1269,6 +1269,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         m_liveScoreShare           = PreferenceValues.isConfiguredForLiveScore(this);
 
         updateMicrophoneFloatButton();
+        updatePowerPlayIcons();
         updateTimerFloatButton();
         iBoard.updateGameBallMessage("onResume");
         if ( Brand.isGameSetMatch() ) {
@@ -1576,24 +1577,34 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             boolean bHandled = onVolumePressHandler.handle(this, keyCode == KeyEvent.KEYCODE_VOLUME_UP, action == KeyEvent.ACTION_UP);
             return bHandled;
         } else {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_BACK:
-                    if (action == KeyEvent.ACTION_UP) {
+            if (action == KeyEvent.ACTION_UP) {
+                switch (keyCode) {
+                    case KeyEvent.KEYCODE_BACK:
                         handleBackPressed();
                         return true;
-                    }
-                case KeyEvent.KEYCODE_MENU: // Hardware menu buttons are slowly being phased out of android
-                    if ( action == KeyEvent.ACTION_UP ) {
+                    case KeyEvent.KEYCODE_MENU: // Hardware menu buttons are slowly being phased out of android
                         ToggleResult toggleResult = ScoreBoard.this.toggleActionBar(getXActionBar());
                         if ( toggleResult.equals(ToggleResult.nothing) == false ) {
                             PreferenceValues.setBoolean(PreferenceKeys.showActionBar,this,toggleResult.equals(ToggleResult.setToTrue)?true:false);
                         }
                         return true;
-                    }
 /*
-                case KeyEvent.KEYCODE_HOME: // does not seem to work, at least in android 5.1+
-                    return handleHomePressed();
+                    case KeyEvent.KEYCODE_HOME: // does not seem to work, at least in android 5.1+
+                        return handleHomePressed();
 */
+                    case KeyEvent.KEYCODE_A: // A
+                    case 16: // pg up
+                        handleMenuItem(R.id.pl_change_score, Player.A);
+                        return true;
+                    case KeyEvent.KEYCODE_B: // B
+                    case 10: // pg down
+                        handleMenuItem(R.id.pl_change_score, Player.B);
+                        return true;
+                    case KeyEvent.KEYCODE_U: // U(ndo)
+                    case KeyEvent.KEYCODE_FORWARD_DEL: // delete
+                        handleMenuItem(R.id.sb_undo_last);
+                        return true;
+                }
             }
         }
 
@@ -2184,6 +2195,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             matchModel.setNrOfPointsToWinGame (previous.getNrOfPointsToWinGame());
             matchModel.setNrOfGamesToWinMatch (previous.getNrOfGamesToWinMatch());
             matchModel.setNrOfServesPerPlayer (previous.getNrOfServesPerPlayer());
+            matchModel.setNrOfPowerPlaysPerMatch(previous.getNrOfPowerPlaysPerMatch());
             matchModel.setEnglishScoring      (previous.isEnglishScoring      ());
             matchModel.setPlayAllGames        (previous.playAllGames          ());
             matchModel.setTiebreakFormat      (previous.getTiebreakFormat     ());
@@ -2239,6 +2251,11 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
             matchModel.setTiebreakFormat     (PreferenceValues.getTiebreakFormat      (this));
             matchModel.setHandicapFormat     (PreferenceValues.getHandicapFormat      (this));
             matchModel.setReferees           (PreferenceValues.getRefereeName         (this), PreferenceValues.getMarkerName(this), PreferenceValues.getAssessorName(this));
+            if ( PreferenceValues.usePowerPlay(this) ) {
+                matchModel.setNrOfPowerPlaysPerMatch(PreferenceValues.numberOfPowerPlaysPerPlayerPerMatch(this));
+            } else {
+                matchModel.setNrOfPowerPlaysPerMatch(0);
+            }
 
             if ( fJson != null && fJson.exists() ) {
                 try {
@@ -2922,6 +2939,7 @@ touch -t 01030000 LAST.sb
         matchModel.registerListener(new MatchEndListener());
         matchModel.registerListener(new CallChangeListener());
         matchModel.registerListener(new BrokenEquipmentListener());
+        matchModel.registerListener(new OnPowerPlayChangeListener());
         matchModel.registerListener(new LockChangeListener());
         matchModel.registerListener(new TimingChangedListener());
       //matchModel.registerListener(new ScoreLinesChangeListener());
@@ -3220,6 +3238,43 @@ touch -t 01030000 LAST.sb
             iBoard.updateScoreHistory(false);
         }
     }
+    private void showPowerPlayDialog() {
+        //if ( Brand.isNotSquash() ) { return; }
+        if ( warnModelIsLocked() ) { return; }
+        PowerPlayFor powerPlayFor = new PowerPlayFor(this, matchModel, this);
+        show(powerPlayFor);
+    }
+
+    private class OnPowerPlayChangeListener implements Model.OnPowerPlayChangeListener {
+        @Override public void OnPowerPlayChange(Player player, PowerPlayForPlayer powerPlayForPlayer) {
+            if ( powerPlayForPlayer.equals(PowerPlayForPlayer.CashedIn)) {
+                iBoard.showChoosenDecision(Call.PPW, player, null);
+            } else if ( powerPlayForPlayer.equals(PowerPlayForPlayer.Wasted)) {
+                iBoard.showChoosenDecision(Call.PPL, player, null);
+            } else {
+                EnumSet<PowerPlayForPlayer> useOnlyIconFor = EnumSet.of(PowerPlayForPlayer.ActivatedForNextRally, PowerPlayForPlayer.DeActivatedForNextRally);
+                if ( useOnlyIconFor.contains(powerPlayForPlayer) == false ) {
+                    String msg = "Powerplay : " + matchModel.getName(player) + " : " + StringUtil.capitalize(powerPlayForPlayer);
+                    Toast.makeText(ScoreBoard.this, msg, Toast.LENGTH_LONG).show();
+                }
+                int iVis = powerPlayForPlayer.equals(PowerPlayForPlayer.ActivatedForNextRally) ? View.VISIBLE : View.INVISIBLE ;
+                iBoard.setPowerPlayIconVisibility(iVis, player);
+            }
+        }
+    }
+    private void updatePowerPlayIcons() {
+        if ( matchModel == null ) { return; }
+        for(Player p : Player.values()) {
+            boolean bNextIsPP = matchModel.nextRallyIsPowerPlayFor(p);
+            int iVis = bNextIsPP ? View.VISIBLE : View.INVISIBLE ;
+            iBoard.setPowerPlayIconVisibility(iVis, p);
+
+            int iLeft = matchModel.getNrOfPowerPlaysLeftFor(p);
+            if ( iLeft > 0 ) {
+                // TODO
+            }
+        }
+    }
     private class ComplexChangeListener implements Model.OnComplexChangeListener {
         @Override public void OnChanged() {
             // e.g. an undo back into previous game has been done, or score has been adjusted
@@ -3246,6 +3301,7 @@ touch -t 01030000 LAST.sb
             iBoard.updateGameAndMatchDurationChronos();
 
             showAppropriateMenuItemInActionBar();
+            updatePowerPlayIcons();
         }
     }
     private class ServeSideChangeListener implements Model.OnServeSideChangeListener {
@@ -3580,6 +3636,7 @@ touch -t 01030000 LAST.sb
                 autoShowTossDialog();
                 autoShowTimer(Type.UntillStartOfNextGame);
                 autoShowOfficialAnnouncement(AnnouncementTrigger.StartOfGame);
+                updatePowerPlayIcons();
                 if ( PreferenceValues.keepScreenOnWhen(ScoreBoard.this).equals(KeepScreenOnWhen.MatchIsInProgress) ) {
                     keepScreenOn(true);
                 }
@@ -3947,6 +4004,15 @@ touch -t 01030000 LAST.sb
             // add dyn speak in favor
             lShowIds.add(0, (Integer) R.id.dyn_speak);
             lShowIds.remove((Integer) R.id.dyn_end_game);
+        }
+        int nrOfPowerPlaysPerMatch = matchModel.getNrOfPowerPlaysPerMatch();
+        boolean usePowerPlay = PreferenceValues.usePowerPlay(this);
+        if ( usePowerPlay ) {
+            if ( matchModel.gameHasStarted() && nrOfPowerPlaysPerMatch > 0 ) {
+                if ( matchModel.getNrOfPowerPlaysLeftFor(Player.A) + matchModel.getNrOfPowerPlaysLeftFor(Player.B) > 0 ) {
+                    lShowIds.add(0, (Integer) R.id.dyn_power_play);
+                }
+            }
         }
 
         // ===================
@@ -4326,6 +4392,10 @@ touch -t 01030000 LAST.sb
                     }
                 }
                 return true;
+            case R.id.sb_power_play:
+            case R.id.dyn_power_play:
+                showPowerPlayDialog();
+                return false;
             case R.id.sb_toss:
             case R.id.float_toss:
                 _showWhoServesDialog();

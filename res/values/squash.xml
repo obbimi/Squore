@@ -12,6 +12,8 @@
     <string name="conduct_stroke_abbreviation">CS</string>
     <string name="conduct_game_abbreviation">CG</string>
     <string name="conduct_match_abbreviation">CM</string>
+    <string name="power_play_won_abbreviation">PPW</string>
+    <string name="power_play_lost_abbreviation">PPL</string>
 
     <string name="timeout_string_abbreviation">TO</string>
     <string name="broken_string_abbreviation">BS</string>

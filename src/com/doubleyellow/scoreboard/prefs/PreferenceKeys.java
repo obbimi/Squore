@@ -223,6 +223,9 @@ public enum PreferenceKeys {
         goldenPointToWinGame, // also used as JSONKey
         goldenPointFormat, // also used as JSONKey
         StartTiebreakOneGameEarly, // also used as JSONKey
+    PowerPlay,
+        usePowerPlay,
+        numberOfPowerPlaysPerPlayerPerMatch,
 
     StartupAction,
 

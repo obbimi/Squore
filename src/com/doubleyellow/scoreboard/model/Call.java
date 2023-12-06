@@ -36,6 +36,10 @@ public enum Call {
     CG(true, ScoreAffect.LoseGame  , R.string.oa_conduct_game   , R.string.oa_conduct_x__game_to_y_for_type_t  , R.string.conduct_game_abbreviation),
     // Conduct match
     CM(true, ScoreAffect.LoseMatch , R.string.oa_conduct_match  , R.string.oa_conduct_match                    , R.string.conduct_match_abbreviation),
+
+    // Power Play
+    PPW(false, ScoreAffect.WinPoint , R.string.lbl_power_play_won , R.string.lbl_power_play_won_by_x          , R.string.power_play_won_abbreviation),
+    PPL(false, ScoreAffect.None     , R.string.lbl_power_play_lost, R.string.lbl_power_play_lost_by_x         , R.string.power_play_lost_abbreviation),
     ;
     private boolean    bIsConduct      = false;
     private ScoreAffect scoreAffect = ScoreAffect.None;

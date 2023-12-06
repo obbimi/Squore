@@ -262,6 +262,11 @@
     <string name="pref_handicapFormat_summary">To start a score other than 0–0</string>
     <string name="pref_playAllGames">Play all games</string>
     <string name="pref_playAllGames_summary">Play \'Total-of-x-games\' in stead of \'Best-of-x-games\'</string>
+    <string name="pref_PowerPlay">Power Play</string>
+    <string name="pref_usePowerPlay">Use \'Power Play\' feature</string>
+    <string name="pref_numberOfPowerPlaysPerPlayerPerMatch">Number of Power Plays</string>
+    <string name="pref_usePowerPlay_summary">Player can indicate next rally as \'Power Play\' for him/her and that player gets two points if he wins that rally</string>
+    <string name="pref_numberOfPowerPlaysPerPlayerPerMatch_summary">Number of Power Plays each player may use per match</string>
     <string name="pref_useEnglishScoring">Hand-in/hand-out scoring</string>
     <string name="pref_useEnglishScoring_summary">\'Old\' scoring format. Player can only score if he served.</string>
     <string name="pref_finalSetFinish">Final Set Finish</string> <!-- Tennis/Padel -->
@@ -351,6 +356,7 @@
     <string name="pref_mailFullScoringSheet">Mail full scoring sheet</string>
     <string name="pref_mailFullScoringSheet_summary">The composed email will include a complete scoring sheet</string>
     <string name="pref_mailResultTo_not_set">You can set a default mail recipient in the \'%1$s\' screen of \'%2$s\'</string>
+    <string name="pref_Handicap">Handicap score</string>
     <string name="pref_allowNegativeHandicap">Allow negative handicap score</string>
     <string name="pref_allowNegativeHandicap_summary">Allow negative values when entering handicap score</string>
 

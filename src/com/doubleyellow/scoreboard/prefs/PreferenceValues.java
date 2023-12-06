@@ -1420,6 +1420,12 @@ public class PreferenceValues extends RWValues
         }
         return iMax;
     }
+    public static boolean usePowerPlay(Context context) {
+        return getBoolean(PreferenceKeys.usePowerPlay, context, R.bool.usePowerPlay_default);
+    }
+    public static int numberOfPowerPlaysPerPlayerPerMatch(Context context) {
+        return getIntegerR(PreferenceKeys.numberOfPowerPlaysPerPlayerPerMatch, context, R.integer.numberOfPowerPlaysPerPlayerPerMatch_default__Squash);
+    }
     public static int numberOfCharactersBeforeAutocomplete(Context context) {
         return getIntegerR(PreferenceKeys.numberOfCharactersBeforeAutocomplete, context, R.integer.numberOfCharactersBeforeAutocomplete_default);
     }
