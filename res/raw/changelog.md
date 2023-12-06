@@ -1,3 +1,8 @@
+## 4.53 (nov 2023)
+
+- If match is manually ended because of Injury or Conduct, ensure the winner is specified if the result is posted to a website
+- Option to use Power Play (experimental)
+
 ## 4.53 (sept 2023)
 
 - option to specify 'assessor'

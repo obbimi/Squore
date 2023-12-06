@@ -36,7 +36,7 @@ android {
 
     lintOptions {
         disable 'MissingTranslation'
-        checkReleaseBuilds true
+        checkReleaseBuilds false // to get rid of com.android.tools.lint.client.api.Vendor error
         // Or, if you prefer, you can continue to check for errors in release builds, but continue the build even when errors are found:
         abortOnError false
         //deprecation true
@@ -93,25 +93,25 @@ android {
         // versionCodePrefix specifies [min_api_level][bitwise_supported_screensizes s=1,m=2,l=4,xl=8]
         phoneTabletPre22 {
             dimension "devicetype"
-            minSdkVersion 21 // increased to 21 for wearos splashscreen dependency
+            minSdkVersion 21 // increased to 21 for WearOS splashscreen dependency
             targetSdkVersion 33
             multiDexEnabled true // required since using firebase
-            versionCode 1915 * 10000 + 503
-            versionName "4.53"
+            versionCode 1915 * 10000 + 506
+            versionName "4.54"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 33
-            versionCode 2315 * 10000 + 503
-            versionName "4.53"
+            versionCode 2315 * 10000 + 506
+            versionName "4.54"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 33
-            versionCode 2501 * 10000 + 503
-            versionName "4.53"
+            versionCode 2501 * 10000 + 506
+            versionName "4.54"
         }
     }
     buildTypes {

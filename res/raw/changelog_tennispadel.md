@@ -1,3 +1,14 @@
+## 4.53 (dec 2023)
+ 
+- Experimental: allow scoring by using a specific keys on bluetooth connected keyboard
+  - Pg Up  , A : score point for player A
+  - Pg Down, B : score point for player B
+  - Delete , U : undo last score
+- The above hopefully also allows e.g. for controlling score using 'slide presenters'
+- Allow to start tie-break one game early
+- Bugfixes
+  - Match/Set duration incorrect values at end of match
+   
 ## 4.53 (august 2023)
 
 - additional setting for 'Golden Point': 
