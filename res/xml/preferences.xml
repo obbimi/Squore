@@ -1557,20 +1557,35 @@
                             android:summary="@string/pref_playAllGames_summary"
                             android:defaultValue="@bool/playAllGames_default"
         />
-        <com.doubleyellow.prefs.EnumListPreference
-            android:key="handicapFormat"
-            android:title="@string/pref_handicapFormat"
-            android:summary="@string/pref_handicapFormat_summary"
-            android:defaultValue="@string/handicapFormat_default"
-            dy:displayValues="@array/handicapFormatDisplayValues"
-            dy:enumClass="com.doubleyellow.scoreboard.model.HandicapFormat"
-        />
-        <CheckBoxPreference android:key="allowNegativeHandicap"
-            android:icon="@drawable/dummy"
-            android:title="@string/pref_allowNegativeHandicap"
-            android:summary="@string/pref_allowNegativeHandicap_summary"
-            android:defaultValue="@bool/allowNegativeHandicap_default"
-        />
+        <PreferenceCategory android:title="@string/pref_PowerPlay" android:key="PowerPlayPrefs">
+            <CheckBoxPreference android:key="usePowerPlay"
+                android:title="@string/pref_usePowerPlay"
+                android:summary="@string/pref_usePowerPlay_summary"
+                android:defaultValue="@bool/usePowerPlay_default"
+                />
+            <EditTextPreference android:key="numberOfPowerPlaysPerPlayerPerMatch"
+                android:title="@string/pref_numberOfPowerPlaysPerPlayerPerMatch"
+                android:summary="@string/pref_numberOfPowerPlaysPerPlayerPerMatch_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/numberOfPowerPlaysPerPlayerPerMatch_default__Squash"
+                />
+        </PreferenceCategory>
+        <PreferenceCategory android:title="@string/pref_Handicap" android:key="HandicapPrefs">
+            <com.doubleyellow.prefs.EnumListPreference
+                android:key="handicapFormat"
+                android:title="@string/pref_handicapFormat"
+                android:summary="@string/pref_handicapFormat_summary"
+                android:defaultValue="@string/handicapFormat_default"
+                dy:displayValues="@array/handicapFormatDisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.model.HandicapFormat"
+            />
+            <CheckBoxPreference android:key="allowNegativeHandicap"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_allowNegativeHandicap"
+                android:summary="@string/pref_allowNegativeHandicap_summary"
+                android:defaultValue="@bool/allowNegativeHandicap_default"
+            />
+        </PreferenceCategory>
     </PreferenceScreen>
 
 
