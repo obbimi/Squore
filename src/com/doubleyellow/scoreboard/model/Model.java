@@ -458,12 +458,13 @@ public abstract class Model implements Serializable
     private List<Player>                        m_lGameWinner           = null; // TODO: add one for set end in GSM
 
     /** game timing of all games including the one about to start/started */
-    transient private List<GameTiming>          m_lGameTimings          = null;
+    transient List<GameTiming>                  m_lGameTimings          = null;
 
     //------------------------
     // Match scores
     //------------------------
-    public  Player                              m_winnerBecauseOf       = null; // reason is 'encoded' in the m_lockState
+    public  Player                              m_winnerBecauseOf         = null; // reason is 'encoded' in the m_lockState
+    public  EndMatchManuallyBecause             m_EndMatchManuallyBecause = null;
 
     Model() {
         init();
@@ -2746,6 +2747,9 @@ public abstract class Model implements Serializable
                 setLockState(lockState);
                 if ( joMatch.has( JSONKey.winnerBecauseOf.toString() ) ) {
                     m_winnerBecauseOf = JsonUtil.getEnum(joMatch, JSONKey.winnerBecauseOf, Player.class, null);
+                    if ( lockState != null && lockState.isEndMatchManually() ) {
+                        m_EndMatchManuallyBecause = lockState.equals(LockState.LockedEndOfMatchConduct) ? EndMatchManuallyBecause.ConductMatch : EndMatchManuallyBecause.RetiredBecauseOfInjury;
+                    }
                 }
             } else if ( matchHasEnded() ) {
                 setLockState(LockState.LockedEndOfMatch);
@@ -3390,6 +3394,7 @@ public abstract class Model implements Serializable
         endGame(false, true);
 
         m_winnerBecauseOf = pWinnerManually;
+        m_EndMatchManuallyBecause = endMatchManuallyBecause;
 
         Player possibleMatchVictoryFor = (pWinnerManually!=null) ? pWinnerManually : isPossibleMatchVictoryFor();
         if ( possibleMatchVictoryFor != null ) {

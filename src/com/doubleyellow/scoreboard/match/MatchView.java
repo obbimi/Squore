@@ -705,7 +705,20 @@ public class MatchView extends ScrollView
         {
             cbStartTieBreakOnGameEarlyGSM = findViewById(R.id.cbStartTieBreakOnGameEarlyGSM);
             if ( cbStartTieBreakOnGameEarlyGSM != null ) {
-                cbStartTieBreakOnGameEarlyGSM.setVisibility(iGameEndPref < GSMModel.NUMBER_OF_GAMES_TO_WIN_SET_DEFAULT ? VISIBLE: GONE);
+                boolean bAllow = true; // iGameEndPref < GSMModel.NUMBER_OF_GAMES_TO_WIN_SET_DEFAULT;
+                cbStartTieBreakOnGameEarlyGSM.setVisibility(bAllow ? VISIBLE: GONE);
+                cbStartTieBreakOnGameEarlyGSM.setOnClickListener(new OnClickListener() {
+                    @Override public void onClick(View v) {
+                        if ( v instanceof CheckBox ) {
+                            CheckBox cb = (CheckBox) v;
+                            Object selectedItem = spGameEndScore.getSelectedItem();
+                            Integer iNrOfGamesToWinSet = Integer.parseInt(String.valueOf(selectedItem).trim());
+                            int iStartTiebreakAt = iNrOfGamesToWinSet - ( cb.isChecked() ? 1 : 0 );
+                            String sMsg = getContext().getString(R.string.pref_StartTieBreakOneGameEarly_CheckUncheckMsg, iStartTiebreakAt);
+                            Toast.makeText(getContext(), sMsg, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         }
 
@@ -1181,7 +1194,7 @@ public class MatchView extends ScrollView
                         dataAdapter.notifyDataSetChanged();
                     }
                     if ( Brand.isGameSetMatch() ) {
-                        boolean bAllowStartTiebreakOneGameEarly = position + iValueOffset < GSMModel.NUMBER_OF_GAMES_TO_WIN_SET_DEFAULT;
+                        boolean bAllowStartTiebreakOneGameEarly = true; //position + iValueOffset < GSMModel.NUMBER_OF_GAMES_TO_WIN_SET_DEFAULT;
                         if ( cbStartTieBreakOnGameEarlyGSM != null ) {
                             cbStartTieBreakOnGameEarlyGSM.setVisibility( bAllowStartTiebreakOneGameEarly ? View.VISIBLE : View.GONE);
                         }

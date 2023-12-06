@@ -13,6 +13,7 @@
     <dimen name="splash_screen_icon_size">48dp</dimen>
     <!-- Non-round icon with background must use reduced size to fit circle -->
     <dimen name="splash_screen_icon_size_tabletennis">108dp</dimen>
+    <dimen name="splash_screen_icon_size_tennispadel">108dp</dimen>
     <dimen name="splash_screen_icon_size_racketlon">108dp</dimen>
     <dimen name="splash_screen_icon_size_badminton">108dp</dimen>
     <dimen name="splash_screen_icon_size_squore">108dp</dimen>

@@ -683,6 +683,12 @@ public class GSMModel extends Model
         return gtTmp.getDurationMM();
     }
 
+    @Override public long getDuration() {
+        long lStart = m_lGamesTiming_PerSet.get(0).get(0).getStart();
+        long lEnd   = ListUtil.getLast(ListUtil.getLast(m_lGamesTiming_PerSet)).getEnd();
+        return lEnd - lStart;
+    }
+
     public long getSetDuration(int setNr1B) {
         if ( setNr1B == 1 ) {
             return super.getDuration();

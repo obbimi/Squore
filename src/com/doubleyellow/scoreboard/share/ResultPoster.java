@@ -25,6 +25,8 @@ import android.util.Log;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.feed.Authentication;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.model.EndMatchManuallyBecause;
+import com.doubleyellow.scoreboard.model.LockState;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.PostDataPreference;
@@ -139,6 +141,14 @@ public class ResultPoster implements ContentReceiver
                 String sPlayers        = matchModel.getName(Player.A)    + "_" + matchModel.getName(Player.B);
                 String sResult         = matchModel.getResultShort();
                 Player winner          = matchModel.isPossibleMatchVictoryFor();
+                String sPostLockstate  = "";
+                if ( winner == null ) {
+                    LockState lockState = matchModel.getLockState();
+                    if ( lockState != null && lockState.isEndMatchManually() && (matchModel.m_EndMatchManuallyBecause != null) ) {
+                        winner = matchModel.m_winnerBecauseOf;
+                        sPostLockstate = EndMatchManuallyBecause.class.getSimpleName() + "=" + matchModel.m_EndMatchManuallyBecause;
+                    }
+                }
                 String sAdditionalModel= matchModel.getAdditionalPostParams(); // e.g. if match id is for an interclub match, subid can be for position 1 to 4 (or 5 like in leaguemaster)
                 String sAdditionalPref = PreferenceValues.getAdditionalPostKeyValuePairs(scoreBoard);
 
@@ -153,6 +163,7 @@ public class ResultPoster implements ContentReceiver
                     if ( (sAdditionalPref + sAdditionalModel + sBodyAuthentication1 + sBodyAuthentication2).contains(sSplitter) == false ) {
                         sParseToMapLater = sSplitter + sAdditionalPref
                                          + sSplitter + sAdditionalModel
+                                         + sSplitter + sPostLockstate
                                          + sSplitter + sBodyAuthentication1
                                          + sSplitter + sBodyAuthentication2
                                          + sSplitter + ListUtil.join(lAdditionalModel, sSplitter)

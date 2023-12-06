@@ -325,7 +325,7 @@ public class IBoard implements TimerViewContainer
             long lStartTime      = matchModel.getMatchStart();
             long calculatedBase  = lStartTime - lBootTime;
             if ( matchModel.matchHasEnded() /*|| matchModel.isLocked()*/ ) {
-                long duration        = matchModel.getDuration(); // fixed duration
+                long   duration       = matchModel.getDuration();
                 String sDurationMM_SS = DateUtil.convertDurationToHHMMSS_Colon(duration);
                 tvMatchTime.setText(String.format(sFormat, sDurationMM_SS));
                 tvMatchTime.stop();
@@ -336,7 +336,7 @@ public class IBoard implements TimerViewContainer
                 long base = roundToNearest1000(calculatedBase);
                 tvMatchTime.setBase(base);
                 tvMatchTime.start();
-                long duration = System.currentTimeMillis() - matchModel.getMatchStart(); // dynamic duration
+                long   duration       = System.currentTimeMillis() - matchModel.getMatchStart(); // dynamic duration
                 String sDurationMM_SS = DateUtil.convertDurationToHHMMSS_Colon(duration);
                 castSendChronosFunction(ICastHelper.MatchChrono_update, DateUtil.convertToSeconds(duration), true, sFormat, sDurationMM_SS);
             }
@@ -386,6 +386,13 @@ public class IBoard implements TimerViewContainer
             long lSetDuration    = matchModel.getSetDuration(setNrInProgress1B);
             String sDurationHH_MM = DateUtil.convertDurationToHHMMSS_Colon(lSetDuration);
             if ( matchModel.matchHasEnded() /*|| matchModel.isLocked()*/ ) {
+                if ( lSetDuration == 0 ) {
+                    // assume we just calculate set duration of set that is not to be played. look back to last set
+                    setNrInProgress1B--;
+                    lSetDuration   = matchModel.getSetDuration(setNrInProgress1B);
+                    sDurationHH_MM = DateUtil.convertDurationToHHMMSS_Colon(lSetDuration);
+                    sFormat        = getSetDurationFormat(setNrInProgress1B);
+                }
                 tvSetTime.setText(String.format(sFormat, sDurationHH_MM));
                 tvSetTime.stop();
                 castSendChronosFunction(ICastHelper.SetChrono_update, DateUtil.convertToSeconds(lSetDuration), false, sFormat, sDurationHH_MM);
