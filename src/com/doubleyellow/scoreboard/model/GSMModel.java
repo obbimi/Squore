@@ -512,7 +512,7 @@ public class GSMModel extends Model
         int setNrInProgressZB = getSetNrInProgress() - 1;
         if ( setNrInProgressZB > 0 ) {
             List<Map<Player, Integer>> maps = m_lPlayer2GamesWon_PerSet.get(setNrInProgressZB - 1);
-            if ( ListUtil.size(maps) > getNrOfGamesToWinSet() * 2 ) {
+            if ( ListUtil.size(maps) > getNrOfGamesToWinSet() * 2 + 1 ) { // for a tiebreak 7-6 maps contains 14 entries, don't forget 0-0 is the additional entry
                 // after a tie-break, determine server based on first server in previous set
                 List<List<ScoreLine>> gameScoreLinesOfPreviousSet = getGameScoreLinesOfSet(setNrInProgressZB - 1);
                 if ( ListUtil.isNotEmpty(gameScoreLinesOfPreviousSet)) {

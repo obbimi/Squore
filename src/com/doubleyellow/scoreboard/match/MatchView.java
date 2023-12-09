@@ -705,7 +705,7 @@ public class MatchView extends ScrollView
         {
             cbStartTieBreakOnGameEarlyGSM = findViewById(R.id.cbStartTieBreakOnGameEarlyGSM);
             if ( cbStartTieBreakOnGameEarlyGSM != null ) {
-                boolean bAllow = true; // iGameEndPref < GSMModel.NUMBER_OF_GAMES_TO_WIN_SET_DEFAULT;
+                boolean bAllow = Brand.isGameSetMatch(); // iGameEndPref < GSMModel.NUMBER_OF_GAMES_TO_WIN_SET_DEFAULT;
                 cbStartTieBreakOnGameEarlyGSM.setVisibility(bAllow ? VISIBLE: GONE);
                 cbStartTieBreakOnGameEarlyGSM.setOnClickListener(new OnClickListener() {
                     @Override public void onClick(View v) {
