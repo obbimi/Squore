@@ -46,7 +46,7 @@
         "pages": [
             { "title": "LiveScore       ", "url" : "5.1.livescore"        },
             { "title": "ChromeCast      ", "url" : "5.2.chromecast"       },
-            { "title": "BlueTooth Mirror", "url" : "5.3.bluetooth.mirror.md" }
+            { "title": "Remote          ", "url" : "5.3.bluetooth.mirror.md" }
         ]
     },
     {
@@ -66,6 +66,7 @@
     {
         "title": "Other",
         "pages": [
+            { "title": "WearOS          ", "url" : "9.1.wear_os"           },
             { "title": "Shortcuts       ", "url" : "9.1.shortcuts"         },
             { "title": "Technical       ", "url" : "9.3.technical.details" },
             { "title": "Credits         ", "url" : "9.5.credits"           },
