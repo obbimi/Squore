@@ -10,7 +10,7 @@
     {
         "title": "Match",
         "pages": [
-            { "title": "Match Setup     ", "url" : "2.1.match.setup"      },
+            { "title": "Setup           ", "url" : "2.1.match.setup"      },
             { "title": "Singles         ", "url" : "2.5.match.singles"    },
             { "title": "Doubles         ", "url" : "2.6.match.doubles"    },
             { "title": "Feeds           ", "url" : "2.2.match.from.feed"  },
@@ -29,7 +29,7 @@
             { "title": "Speech          ", "url" : "3.3.speech"           },
             { "title": "Calls           ", "url" : "3.5.appeals.conducts" },
             { "title": "Announcements   ", "url" : "3.7.announcements"    },
-            { "title": "BlueTooth Media Buttons", "url" : "8.1.bluetooth.mediabuttons" }
+            { "title": "Remote          ", "url" : "8.1.bluetooth.mediabuttons" }
         ]
     },
     {
@@ -46,7 +46,8 @@
         "pages": [
             { "title": "LiveScore       ", "url" : "5.1.livescore"        },
             { "title": "ChromeCast      ", "url" : "5.2.chromecast"       },
-            { "title": "Remote          ", "url" : "5.3.bluetooth.mirror.md" }
+            { "title": "Remote          ", "url" : "5.3.bluetooth.mirror.md" },
+            { "title": "FCM             ", "url" : "5.4.fcm.md" }
         ]
     },
     {
