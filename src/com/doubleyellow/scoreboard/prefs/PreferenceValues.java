@@ -879,6 +879,10 @@ public class PreferenceValues extends RWValues
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useReferees__Default);
         return context.getResources().getBoolean(iResBrandSpecific);
     }
+    public static boolean useBluetoothLE(Context context) {
+        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.UseBluetoothLE_default__Default);
+        return getBoolean(PreferenceKeys.UseBluetoothLE, context, iResBrandSpecific);
+    }
     public static boolean allowTrustAllCertificatesAndHosts(Context context) {
         return getBoolean(PreferenceKeys.allowTrustAllCertificatesAndHosts, context, R.bool.allowTrustAllCertificatesAndHosts_default);
     }

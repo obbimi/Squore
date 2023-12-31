@@ -230,6 +230,11 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="BTSync_keepLROnConnectedDeviceMirrored_default__Squash">false</bool>
     <bool name="BTSync_keepLROnConnectedDeviceMirrored_default__Default">true</bool>
 
+    <bool name="UseBluetoothLE_default__Squash">false</bool>
+    <bool name="UseBluetoothLE_default__TennisPadel">false</bool>
+    <bool name="UseBluetoothLE_default__Default">false</bool>
+    <string name="pref_BluetoothLE_Config_default">single_ble_01</string>
+
     <bool name="Cast_ShowGraphDuringTimer_default">true</bool>
     <bool name="castScreenShowLogo_default">true</bool>
     <bool name="castScreenShowSponsor_default">true</bool>

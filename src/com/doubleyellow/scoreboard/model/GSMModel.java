@@ -694,14 +694,14 @@ public class GSMModel extends Model
             return super.getDuration();
         } else {
             long lDuration = 0; // TODO: use this?
-            if ( setNr1B - 1 < ListUtil.size(m_lGamesTiming_PerSet) ) {
+            if ( setNr1B > 1 && setNr1B - 1 < ListUtil.size(m_lGamesTiming_PerSet) ) {
                 List<GameTiming> lGameTimingsForSet = m_lGamesTiming_PerSet.get(setNr1B - 1);
                 lDuration = getSetDuration(lGameTimingsForSet);
                 //return lDuration1;
             }
             Long lStart = getSetStart(setNr1B);
             Long lEnd   = System.currentTimeMillis();
-            if ( setNr1B - 1 < ListUtil.size(m_lGamesTiming_PerSet) ) {
+            if ( setNr1B > 1 && setNr1B - 1 < ListUtil.size(m_lGamesTiming_PerSet) ) {
                 List<GameTiming> lGameTimingsForSet = m_lGamesTiming_PerSet.get(setNr1B - 1);
 
                 List<GameTiming> gameTimings = lGameTimingsForSet;

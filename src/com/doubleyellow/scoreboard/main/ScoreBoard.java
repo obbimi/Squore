@@ -6226,7 +6226,66 @@ touch -t 01030000 LAST.sb
     }
 
     // ----------------------------------------------------
-    // --------------------- bluetooth ----------------------
+    // --------------------- bluetooth BLE-----------------
+    // ----------------------------------------------------
+    private static BLEReceiverManager m_bleReceiverManager   = null;
+    private void onResumeInitBluetoothBLE()
+    {
+        final String sMethod = "SB.onCreateInitBLE";
+        //if ( true ) { return; } // TMP
+
+        boolean bInitBLE = PreferenceValues.useBluetoothLE(this);
+        if ( bInitBLE == false ) {
+            Log.i(sMethod, "Don't use BLE. Period");
+            return;
+        }
+
+        if ( false ) {
+            String[] permissions = {Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+            if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.S ) {
+                permissions = new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
+            }
+            ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal()); // causes endless onresume
+        }
+
+        if ( m_bleReceiverManager == null ) {
+
+            String sBluetoothLEDevice1 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral1, null, this);
+            String sBluetoothLEDevice2 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral2, null, this);
+            if ( StringUtil.hasEmpty(sBluetoothLEDevice1, sBluetoothLEDevice2) ) {
+                Log.w(sMethod, "Don't use BLE. No 2 devices specified");
+                return;
+            }
+
+            if ( true ) {
+                String sJson = ContentUtil.readRaw(this, R.raw.bluetooth_le_config);
+                try {
+                    JSONObject config = new JSONObject(sJson);
+                    String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config_default      , this);
+                    config = config.getJSONObject(sBLEConfig);
+                    m_bleReceiverManager = new BLEReceiverManager(this, mBluetoothAdapter, sBluetoothLEDevice1, sBluetoothLEDevice2, config);
+                    m_bleReceiverManager.startReceiving();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+/*
+                String sServiceUuid        = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Service_UUID       , R.string.pref_BluetoothLE_Service_UUID_default      , this);
+                String sCharacteristicUuid = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Characteristic_UUID, R.string.pref_BluetoothLE_Characteristic_UUID_default, this);
+                if ( StringUtil.hasEmpty(sServiceUuid, sCharacteristicUuid) ) {
+                    Log.w(sMethod, "Don't use BLE. No service and/or characteristic uuid specified");
+                    return;
+                }
+*/
+            }
+        }
+        if ( m_bleReceiverManager != null ) {
+            BLEHandler bleHandler = new BLEHandler(this);
+            m_bleReceiverManager.setHandler(bleHandler);
+        }
+    }
+    // ----------------------------------------------------
+    // --------------------- bluetooth --------------------
     // ----------------------------------------------------
 
     // Get the default adapter
@@ -6344,6 +6403,9 @@ touch -t 01030000 LAST.sb
         }
         if ( mBluetoothControlService != null ) {
             //mBluetoothControlService.stop();
+        }
+        if ( m_bleReceiverManager != null ) {
+            m_bleReceiverManager.closeConnection();
         }
         try {
             unregisterReceiver(mBTStateChangeReceiver);
@@ -6922,21 +6984,21 @@ touch -t 01030000 LAST.sb
                     }
                     case changeScore: {
                         if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
-                            Player player = Player.valueOf(saMethodNArgs[1]);
+                            Player player = Player.valueOf(saMethodNArgs[1].toUpperCase());
                             matchModel.changeScore(player);
                         }
                         break;
                     }
                     case changeSide: {
                         if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
-                            Player player = Player.valueOf(saMethodNArgs[1]);
+                            Player player = Player.valueOf(saMethodNArgs[1].toUpperCase());
                             matchModel.changeSide(player);
                         }
                         break;
                     }
                     case changeColor: {
                         if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
-                            Player player = Player.valueOf(saMethodNArgs[1]);
+                            Player player = Player.valueOf(saMethodNArgs[1].toUpperCase());
                             matchModel.setPlayerColor(player, saMethodNArgs.length>2?saMethodNArgs[2]:null);
                         }
                         break;
@@ -6947,7 +7009,7 @@ touch -t 01030000 LAST.sb
                     }
                     case undoLastForScorer: {
                         if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
-                            Player nonScorer = Player.valueOf(saMethodNArgs[1]);
+                            Player nonScorer = Player.valueOf(saMethodNArgs[1].toUpperCase());
                             matchModel.undoLastForScorer(nonScorer);
                         }
                         break;
@@ -6995,7 +7057,7 @@ touch -t 01030000 LAST.sb
                     }
                     case recordConduct: {
                         if ( saMethodNArgs.length > 3 && (matchModel != null) ) {
-                            Player      player      = Player     .valueOf(saMethodNArgs[1]);
+                            Player      player      = Player     .valueOf(saMethodNArgs[1].toUpperCase());
                             Call        call        = Call       .valueOf(saMethodNArgs[2]);
                             ConductType conductType = ConductType.valueOf(saMethodNArgs[3]);
                             matchModel.recordConduct(player, call, conductType);
@@ -7023,14 +7085,14 @@ touch -t 01030000 LAST.sb
                     }
                     case swapPlayers: {
                         if ( saMethodNArgs.length > 1 ) {
-                            Player pFirst = Player.valueOf(saMethodNArgs[1]);
+                            Player pFirst = Player.valueOf(saMethodNArgs[1].toUpperCase());
                             swapSides(Toast.LENGTH_LONG, pFirst);
                         }
                         break;
                     }
                     case swapDoublePlayers: {
                         if ( saMethodNArgs.length > 1 ) {
-                            Player player = Player.valueOf(saMethodNArgs[1]);
+                            Player player = Player.valueOf(saMethodNArgs[1].toUpperCase());
                             _swapDoublePlayers(player);
                         }
                         break;

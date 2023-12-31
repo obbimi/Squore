@@ -20,4 +20,5 @@ public enum MessageSource {
     BluetoothMirror,
     Wearable,
     FirebaseCloudMessage,
+    BluetoothLE,
 }

@@ -1,0 +1,25 @@
+{
+  "config_name" : {
+    "service1-uuid" : {
+      "characteristic1-uuid" : "bluetooth-command-1",
+      "characteristic2-uuid" : "bluetooth-command-2"
+    },
+    "service2-uuid" : {
+      "characteristic3-uuid" : "bluetooth-command-3"
+    }
+  },
+  "single_ble_01" : {
+    "00001811-0000-1000-8000-00805f9b34fb" : {
+      "00002a44-0000-1000-8000-00805f9b34fb" : "undoLast()",
+      "00002a45-0000-1000-8000-00805f9b34fb" : "changeScore(A)",
+      "00002a46-0000-1000-8000-00805f9b34fb" : "changeScore(B)",
+      "00002a47-0000-1000-8000-00805f9b34fb" : "changeScore(%2$s)"
+    }
+  },
+  "double_ble_01" : {
+    "00001811-0000-1000-8000-00805f9b34fb" : {
+      "00002a44-0000-1000-8000-00805f9b34fb" : "undoLast()",
+      "00002a45-0000-1000-8000-00805f9b34fb" : "changeScore(%1$s)"
+    }
+  }
+}
