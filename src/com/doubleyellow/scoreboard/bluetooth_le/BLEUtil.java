@@ -4,8 +4,16 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
+import android.bluetooth.le.ScanSettings;
+import android.content.Context;
 import android.util.Log;
+import com.doubleyellow.scoreboard.R;
 
+import com.doubleyellow.android.util.ContentUtil;
+import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -18,6 +26,22 @@ import java.util.UUID;
 public class BLEUtil
 {
     private final static String TAG = "SB.BLEUtil";
+    public final static String device_name_regexp = "device_name_regexp";
+
+    final public static ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
+
+    public static JSONObject getActiveConfig(Context context) {
+        String sJson = ContentUtil.readRaw(context, R.raw.bluetooth_le_config);
+        try {
+            JSONObject config = new JSONObject(sJson);
+            String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config_default      , context);
+            config = config.getJSONObject(sBLEConfig);
+            return  config;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /** only to get BLE services/characteristics info about a device in nicely readable format */
     public static void printGattTable(BluetoothGatt gatt) {

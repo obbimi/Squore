@@ -398,6 +398,7 @@
     <string name="pref_BluetoothLE_Peripheral2">Peripheral 2</string>
     <string name="pref_BluetoothLE_Peripheral_Summary">Unique name or MAC address of Peripheral</string>
     <string name="pref_BluetoothLE_Config">Config to use (Services and Characteristics)</string>
+    <string name="pref_BluetoothLE_Devices">BLE Devices</string>
 
     <string name="for_this_to_take_effect_a_restart_is_required">For this to take effect a restart is required</string>
     <string name="pref_reset_title">Reset to default</string>

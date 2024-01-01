@@ -70,7 +70,6 @@ public class BLEReceiverManager
 
         this.mServicesAndCharacteristicsConfig = mServicesAndCharacteristicsConfig;
     }
-    final private ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
 
     /*
      * @param handler A Handler to send messages back to the UI Activity
@@ -82,6 +81,7 @@ public class BLEReceiverManager
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override public void onScanResult(int callbackType, ScanResult result)
         {
+            // does not seem to give much more info
             ScanRecord scanRecord = result.getScanRecord();
             if ( scanRecord != null ) {
                 SparseArray<byte[]> manufacturerSpecificData = scanRecord.getManufacturerSpecificData();
@@ -139,7 +139,7 @@ public class BLEReceiverManager
         }
         @Override public void onScanFailed      (int errorCode) {
             super.onScanFailed(errorCode);
-            Log.w(TAG, "onScanFailed : "  + errorCode);
+            Log.w(TAG, "onScanFailed : "  + errorCode); // e.g. when bluetooth is turnof on BLE peripheral emulator
         }
     };
 
@@ -159,17 +159,21 @@ public class BLEReceiverManager
 
         @Override public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             super.onConnectionStateChange(gatt, status, newState);
-            if(status == BluetoothGatt.GATT_SUCCESS){
-                if(newState == BluetoothProfile.STATE_CONNECTED){
-                    Log.i(TAG, "Discovering services ... ");
+            if ( status == BluetoothGatt.GATT_SUCCESS ) {
+                if ( newState == BluetoothProfile.STATE_CONNECTED ) {
+                    Log.i(TAG, "Discovering services ... " + this.sDevice);
                     Message message = mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), "Discovering services " + this.sDevice);
                     message.sendToTarget();
                     gatt.discoverServices();
                     mDevice2gatt.put(this.sDevice, gatt); //this.gatt = gatt;
-                } else if(newState == BluetoothProfile.STATE_DISCONNECTED){
-                    gatt.close();
+                } else {
+                    Log.w(TAG, String.format("onConnectionStateChange new state %d (%s)", newState, this.sDevice));
+                    if ( newState == BluetoothProfile.STATE_DISCONNECTED ) {
+                        gatt.close();
+                    }
                 }
             } else {
+                Log.w(TAG, String.format("onConnectionStateChange status :%d (%s)", status, this.sDevice));
                 mDevice2gatt.remove(this.sDevice);
                 gatt.close();
                 currentConnectionAttempt+=1;
@@ -177,7 +181,7 @@ public class BLEReceiverManager
                 if ( currentConnectionAttempt <= MAXIMUM_CONNECTION_ATTEMPTS ) {
                     startReceiving();
                 } else {
-                    Log.w(TAG, "Could not connect to ble device ... ");
+                    Log.w(TAG, "Could not connect to ble device ... " + this.sDevice);
                     Message message = mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), "Disconnected " + this.sDevice);
                     message.sendToTarget();
                 }
@@ -188,7 +192,7 @@ public class BLEReceiverManager
             super.onServicesDiscovered(gatt, status);
 
             BLEUtil.printGattTable(gatt);
-            if ( sDevice.toLowerCase().startsWith("iho") == false ) {
+            if ( false && sDevice.toLowerCase().startsWith("iho") == false ) {
                 // for BLE emulator as peripheral this does not trigger onMtuChanged
                 boolean bReq = gatt.requestMtu(517); // could remain default of 20
                 Log.d(TAG, "requestMtu : " + bReq);
@@ -202,14 +206,21 @@ public class BLEReceiverManager
         }
         @Override public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
-            byte[] value = characteristic.getValue();
-            Log.d(TAG, String.format("characteristic : %s, value : %s", characteristic.getUuid(), new String(value)));
-            String sMessage = new String(value);
+            int    iValue  = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT8, 0);
+            Log.d(TAG, "iValue : " + iValue);
+            String sValue  = characteristic.getStringValue(0);
+            Log.d(TAG, "sValue : " + sValue);
+            byte[] baValue = characteristic.getValue();
+            for (int i = 0; i < baValue.length; i++) {
+                Log.d(TAG, "b[" + i + "] : " + baValue[i]);
+            }
+            Log.d(TAG, String.format("characteristic : %s, value : %s", characteristic.getUuid(), sValue));
+            String sMessage = sValue;
             try {
                 JSONObject joChars = mServicesAndCharacteristicsConfig.optJSONObject(characteristic.getService().getUuid().toString().toLowerCase());
                 if ( joChars != null ) {
                     String sMessageFormat = joChars.getString(characteristic.getUuid().toString().toLowerCase());
-                    sMessage = String.format(sMessageFormat, player.toString(), sMessage);
+                    sMessage = String.format(sMessageFormat, player.toString(), sValue, iValue);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -270,8 +281,8 @@ public class BLEReceiverManager
     }
 
     public void startReceiving() {
-        mDevicesUsed.clear();
-        bluetoothLeScanner.startScan(null, scanSettings, scanCallback);
+        //mDevicesUsed.clear();
+        bluetoothLeScanner.startScan(null, BLEUtil.scanSettings, scanCallback);
     }
 
     public void reconnect() {

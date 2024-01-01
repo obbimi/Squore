@@ -333,6 +333,4 @@ public enum PreferenceKeys {
     BluetoothLE_Peripheral1,
     BluetoothLE_Peripheral2,
     BluetoothLE_Config,
-    //BluetoothLE_Service_UUID,
-    //BluetoothLE_Characteristic_UUID,
 }

@@ -6228,15 +6228,27 @@ touch -t 01030000 LAST.sb
     // ----------------------------------------------------
     // --------------------- bluetooth BLE-----------------
     // ----------------------------------------------------
+    private void selectBleDevices() {
+        persist(false);
+
+        Intent bleActivity = new Intent(this, BLEActivity.class);
+        startActivity(bleActivity);
+        BLEDevicesSelected = true;
+    }
+
     private static BLEReceiverManager m_bleReceiverManager   = null;
+    private static boolean BLEDevicesSelected = false;
     private void onResumeInitBluetoothBLE()
     {
         final String sMethod = "SB.onCreateInitBLE";
-        //if ( true ) { return; } // TMP
 
         boolean bInitBLE = PreferenceValues.useBluetoothLE(this);
         if ( bInitBLE == false ) {
             Log.i(sMethod, "Don't use BLE. Period");
+            return;
+        }
+        if ( BLEDevicesSelected == false ) {
+            Log.i(sMethod, "Don't use BLE. First select devices");
             return;
         }
 
@@ -6256,27 +6268,12 @@ touch -t 01030000 LAST.sb
                 Log.w(sMethod, "Don't use BLE. No 2 devices specified");
                 return;
             }
+            Log.i(sMethod, String.format("Scanning for devices %s, %s", sBluetoothLEDevice1, sBluetoothLEDevice2));
 
-            if ( true ) {
-                String sJson = ContentUtil.readRaw(this, R.raw.bluetooth_le_config);
-                try {
-                    JSONObject config = new JSONObject(sJson);
-                    String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config_default      , this);
-                    config = config.getJSONObject(sBLEConfig);
-                    m_bleReceiverManager = new BLEReceiverManager(this, mBluetoothAdapter, sBluetoothLEDevice1, sBluetoothLEDevice2, config);
-                    m_bleReceiverManager.startReceiving();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else {
-/*
-                String sServiceUuid        = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Service_UUID       , R.string.pref_BluetoothLE_Service_UUID_default      , this);
-                String sCharacteristicUuid = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Characteristic_UUID, R.string.pref_BluetoothLE_Characteristic_UUID_default, this);
-                if ( StringUtil.hasEmpty(sServiceUuid, sCharacteristicUuid) ) {
-                    Log.w(sMethod, "Don't use BLE. No service and/or characteristic uuid specified");
-                    return;
-                }
-*/
+            JSONObject config = BLEUtil.getActiveConfig(this);
+            if ( config != null ) {
+                m_bleReceiverManager = new BLEReceiverManager(this, mBluetoothAdapter, sBluetoothLEDevice1, sBluetoothLEDevice2, config);
+                m_bleReceiverManager.startReceiving();
             }
         }
         if ( m_bleReceiverManager != null ) {
