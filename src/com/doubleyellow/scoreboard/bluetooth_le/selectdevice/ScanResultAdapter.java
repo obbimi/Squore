@@ -2,29 +2,41 @@ package com.doubleyellow.scoreboard.bluetooth_le.selectdevice;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.ScanResult;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.model.Player;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.ViewHolder>
 {
+    private static final String TAG = "SB." + ScanResultAdapter.class.getSimpleName();
+
+    private final Map<Player,String> mSelectedSeenDevices;
+    private final Map<Player, String> mSelectedPrefDevices;
     private List<ScanResult> items = null;
-    public ScanResultAdapter(List<ScanResult> items) {
+
+    public ScanResultAdapter(List<ScanResult> items, Map<Player,String> mSelectedSeenDevices, Map<Player, String> mSelectedPrefDevices) {
         this.items = items;
+        this.mSelectedSeenDevices = mSelectedSeenDevices;
+        this.mSelectedPrefDevices = mSelectedPrefDevices;
     }
 
     private DeviceSelector onClickListener = null;
     public void setListener(DeviceSelector listener) {
         this.onClickListener = listener;
     }
+    static List<String> lDetectedAndConfiguredDevices = new ArrayList<>();
 
     class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -54,13 +66,19 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
             tvSgnl.setText(result.getRssi() + " dBm");
 
             if ( onClickListener != null && btnUseAsA != null && btnUseAsB != null ) {
-                btnUseAsA.setOnClickListener(onClickListener);
                 btnUseAsA.setTag(address);
-                onClickListener.adjustEnableOrVisibility(btnUseAsA);
+                btnUseAsA.setOnClickListener(onClickListener);
+                if ( onClickListener.adjustEnableOrVisibility(btnUseAsA, address, mSelectedPrefDevices) ) {
+                    mSelectedSeenDevices.put(Player.A, address);
+                    Log.i(TAG, "Marked A as prefselected device " + address + "  : " + mSelectedSeenDevices);
+                }
 
                 btnUseAsB.setTag(address);
                 btnUseAsB.setOnClickListener(onClickListener);
-                onClickListener.adjustEnableOrVisibility(btnUseAsB);
+                if ( onClickListener.adjustEnableOrVisibility(btnUseAsB, address, mSelectedPrefDevices) ) {
+                    mSelectedSeenDevices.put(Player.B, address);
+                    Log.i(TAG, "Marked B as prefselected device " + address + "  : " + mSelectedSeenDevices);
+                }
             }
         }
     }

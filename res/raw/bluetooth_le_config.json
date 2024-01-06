@@ -8,7 +8,17 @@
       "characteristic3-uuid" : "bluetooth-command-3"
     }
   },
-  "single_ble_01" : {
+  "double_ble_d-score" : {
+    "96f9374a-2417-44e3-ae06-aa362556914e" : {
+      "96f9374b-2417-44e3-ae06-aa362556914e": "player_type: 0=server|1=receiver|none",
+      "96f9374c-2417-44e3-ae06-aa362556914e": "changeScore(%1$s, %2$s, %3$s),button: 0|1"
+    },
+    "1D14D6EE-FD63-4FA1-BFA4-8F47B42119F0 DFU Service" : {
+      "F7BF3564-FB6D-4E53-88A4-5E37E0326063 OTA Control characteristic" : "firmware update?"
+    },
+    "device_name_regexp" : "(Dali BC 1CH|d-sc[0-9]|D-SCORE-RX_[0-9A-Fa-f:]{4,17}_(none|server|receiver))"
+  },
+  "single_ble_01_alert" : {
     "00001811-0000-1000-8000-00805f9b34fb" : {
       "00002a44-0000-1000-8000-00805f9b34fb" : "undoLast()",
       "00002a45-0000-1000-8000-00805f9b34fb" : "changeScore(A)",
@@ -16,7 +26,7 @@
       "00002a47-0000-1000-8000-00805f9b34fb" : "changeScore(%2$s)"
     }
   },
-  "double_ble_01" : {
+  "double_ble_01_alert" : {
     "00001811-0000-1000-8000-00805f9b34fb" : {
       "00002a44-0000-1000-8000-00805f9b34fb" : "undoLast()",
       "00002a45-0000-1000-8000-00805f9b34fb" : "changeScore(%1$s)"

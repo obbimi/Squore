@@ -302,6 +302,9 @@
         <activity android:name="com.doubleyellow.scoreboard.activity.Feedback" android:label="@string/cmd_feedback">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
         </activity>
+        <activity android:name="com.doubleyellow.scoreboard.bluetooth_le.selectdevice.BLEActivity" android:label="Devices">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
+        </activity>
 
         <activity android:name="com.doubleyellow.scoreboard.prefs.Preferences" android:label="@string/sb_preferences" android:theme="@style/SBPreferencesTheme">
             <!--<meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />-->

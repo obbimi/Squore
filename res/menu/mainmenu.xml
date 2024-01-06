@@ -56,6 +56,7 @@
             app:showAsAction="always">
 
         <menu>
+            <item android:id="@+id/sb_ble_devices"           app:showAsAction="never" android:icon="@drawable/dummy"                          android:title="@string/pref_BluetoothLE_Devices" android:visible="false" />
             <item
                     android:id="@+id/uc_new"
                     android:icon="@drawable/circled_plus"

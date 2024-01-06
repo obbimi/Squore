@@ -7,6 +7,7 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.doubleyellow.scoreboard.activity.XActivity;
 import com.doubleyellow.scoreboard.bluetooth_le.BLEUtil;
+import com.doubleyellow.scoreboard.match.Match;
+import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.StringUtil;
@@ -28,7 +31,10 @@ import com.doubleyellow.util.StringUtil;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class BLEActivity extends XActivity
@@ -37,10 +43,14 @@ public class BLEActivity extends XActivity
     BluetoothLeScanner bleScanner = null;
 
     private final List<ScanResult>  scanResults       = new ArrayList<>();
-    private final ScanResultAdapter scanResultAdapter = new ScanResultAdapter(scanResults);
+    private final Map<String, Long> mAddress2LastSeen = new HashMap<>();
+    private final Map<Player,String> mSelectedSeenDevices = new HashMap<>();
+    private Map<Player, String> mSelectedPrefDevices = null;
+    private ScanResultAdapter scanResultAdapter = null;
 
     boolean isScanning = false;
     private Pattern pMustMatch = null;
+    private Button btnGo;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +60,30 @@ public class BLEActivity extends XActivity
         bleScanner = bluetoothAdapter.getBluetoothLeScanner();
 
         setContentView(R.layout.ble_activity);
+
+        btnGo = findViewById(R.id.ble_start_button);
+        btnGo.setOnClickListener(v -> {
+            bleScanner.stopScan(scanCallback);
+            PreferenceValues.setString(PreferenceKeys.BluetoothLE_Peripheral1, this, "");
+            PreferenceValues.setString(PreferenceKeys.BluetoothLE_Peripheral2, this, "");
+            for(Player p : mSelectedSeenDevices.keySet() ) {
+                String sAddress = mSelectedSeenDevices.get(p);
+                PreferenceKeys key = p.equals(Player.A) ? PreferenceKeys.BluetoothLE_Peripheral1 : PreferenceKeys.BluetoothLE_Peripheral2;
+                PreferenceValues.setString(key, this, sAddress);
+            }
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        });
+        btnGo.setEnabled(false);
+
+        String sBluetoothLEDevice1 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral1, null, this);
+        String sBluetoothLEDevice2 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral2, null, this);
+        Map mTmp = new HashMap();
+        if ( StringUtil.isNotEmpty(sBluetoothLEDevice1) ) mTmp.put(Player.A, sBluetoothLEDevice1);
+        if ( StringUtil.isNotEmpty(sBluetoothLEDevice2) ) mTmp.put(Player.B, sBluetoothLEDevice2);
+        mSelectedPrefDevices = Collections.unmodifiableMap(mTmp);
+        scanResultAdapter = new ScanResultAdapter(scanResults, mSelectedSeenDevices, mSelectedPrefDevices);
 
         Button button = findViewById(R.id.ble_scan_button);
         button.setOnClickListener(v -> {
@@ -73,9 +107,7 @@ public class BLEActivity extends XActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false)); // why?
         recyclerView.setNestedScrollingEnabled(false);
 
-        String sBluetoothLEDevice1 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral1, null, this);
-        String sBluetoothLEDevice2 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral2, null, this);
-        DeviceSelector listener = new DeviceSelector(sBluetoothLEDevice1, sBluetoothLEDevice2, this);
+        DeviceSelector listener = new DeviceSelector(mSelectedSeenDevices, this);
         scanResultAdapter.setListener(listener);
 
         JSONObject config = BLEUtil.getActiveConfig(this);
@@ -96,8 +128,14 @@ public class BLEActivity extends XActivity
         bleScanner.stopScan(scanCallback);
     }
 
+    @Override protected void onPause() {
+        super.onPause();
+    }
+
     private final ScanCallback scanCallback = new ScanCallback()
     {
+        private long lLastCleanupOfDevicesNoLongerBroadcasting = 0L;
+
         @Override public void onScanResult(int callbackType, ScanResult result) {
             if ( pMustMatch != null ) {
                 String name = result.getDevice().getName();
@@ -108,19 +146,51 @@ public class BLEActivity extends XActivity
             }
 
             int indexQuery = -1;
+            final String address = result.getDevice().getAddress();
+            long lNow = System.currentTimeMillis();
+            mAddress2LastSeen.put(address, lNow);
+
             for(int i=0; i< scanResults.size();i++) {
-                if (scanResults.get(i).getDevice().getAddress().equalsIgnoreCase(result.getDevice().getAddress()) ) {
+                String previousFoundAddress = scanResults.get(i).getDevice().getAddress();
+                if ( previousFoundAddress.equalsIgnoreCase(address) ) {
                     indexQuery = i;
+                    break;
                 }
             }
-            if (indexQuery != -1) {
+            if ( indexQuery != -1 ) {
                 // A scan result already exists with the same address
-                scanResults.set(indexQuery, result);
-                scanResultAdapter.notifyItemChanged(indexQuery);
+                Long lSeen = mAddress2LastSeen.get(address);
+                if ( lNow - lSeen > 2000 ) {
+                    Log.i(TAG, "updating " + address);
+                    scanResults.set(indexQuery, result);
+                    scanResultAdapter.notifyItemChanged(indexQuery);
+                }
             } else {
+                Log.i(TAG, "adding " + address);
                 scanResults.add(result);
                 scanResultAdapter.notifyItemInserted(scanResults.size() - 1);
                 //scanResultAdapter.notifyDataSetChanged();
+            }
+
+            final long lCleanupCheckEvery  = 3000L;
+            final long lCleanupIfUnseenFor = 4000L;
+            if ( lNow - lLastCleanupOfDevicesNoLongerBroadcasting > lCleanupCheckEvery ) {
+                Log.i(TAG, "Checking for unseen devices");
+                int iSizeBeforeClean = scanResults.size();
+                for(int i = iSizeBeforeClean -1; i >=0; i--) {
+                    String previousFoundAddress = scanResults.get(i).getDevice().getAddress();
+                    long lLastSeen = mAddress2LastSeen.get(previousFoundAddress);
+                    if ( lNow - lLastSeen > lCleanupIfUnseenFor ) {
+                        Log.w(TAG, "Removing unseen device " + previousFoundAddress);
+                        scanResults.remove(i);
+                        scanResultAdapter.notifyItemRemoved(i);
+
+                        mSelectedSeenDevices.remove(previousFoundAddress);
+                    }
+                }
+                Log.i(TAG, "Selected Seen Devices : " + mSelectedSeenDevices);
+                btnGo.setEnabled(mSelectedSeenDevices.size() == 2);
+                lLastCleanupOfDevicesNoLongerBroadcasting = lNow;
             }
         }
 

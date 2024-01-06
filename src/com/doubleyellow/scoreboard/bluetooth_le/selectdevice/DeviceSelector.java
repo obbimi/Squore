@@ -1,45 +1,45 @@
 package com.doubleyellow.scoreboard.bluetooth_le.selectdevice;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
-import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
-import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.R;
 
+import java.util.Map;
+
+/**
+ * View representing a selectable BLE peripheral
+ */
 public class DeviceSelector implements View.OnClickListener
 {
-    private String sDevice1 = null;
-    private String sDevice2 = null;
-    private Context context = null;
-    DeviceSelector(String s1, String s2, Context context) {
-        this.sDevice1 = s1;
-        this.sDevice2 = s2;
-        this.context = context;
+    private static final String TAG = "SB." + DeviceSelector.class.getSimpleName();
+
+    private final Map<Player,String> mSelectedSeenDevices;
+    DeviceSelector(Map<Player,String> mSelectedSeenDevices, Context context) {
+        this.mSelectedSeenDevices = mSelectedSeenDevices;
     }
 
-    void adjustEnableOrVisibility(View v) {
-        String sAddress = (String) v.getTag();
-        adjustEnableOrVisibility(v, sAddress, sDevice1, sDevice2);
-    }
-
-    private void adjustEnableOrVisibility(View v, String sAddress, String sDevice1, String sDevice2) {
+    boolean adjustEnableOrVisibility(View v, String sAddress, Map<Player, String> mSelectedPrefDevices) {
+        String sDevice1 = mSelectedPrefDevices.get(Player.A);
+        String sDevice2 = mSelectedPrefDevices.get(Player.B);
         int visibility = (
                           ( sAddress.equalsIgnoreCase(sDevice1) && (v.getId() == R.id.use_as_device_a ) )
                        || ( sAddress.equalsIgnoreCase(sDevice2) && (v.getId() == R.id.use_as_device_b) )
                          ) ? View.INVISIBLE : View.VISIBLE;
         v.setVisibility(visibility);
+        return visibility==View.INVISIBLE;
     }
     
     @Override public void onClick(View v) {
         String sAddress = (String) v.getTag();
         if ( v.getId() == R.id.use_as_device_a ) {
-            sDevice1 = sAddress;
-            PreferenceValues.setString(PreferenceKeys.BluetoothLE_Peripheral1, context, sDevice1);
+            mSelectedSeenDevices.put(Player.A, sAddress);
         } else if ( v.getId() == R.id.use_as_device_b ) {
-            sDevice2 = sAddress;
-            PreferenceValues.setString(PreferenceKeys.BluetoothLE_Peripheral2, context, sDevice2);
+            mSelectedSeenDevices.put(Player.B, sAddress);
         }
-        adjustEnableOrVisibility(v);
+        Log.i(TAG, "Marked device " + sAddress + "  : " + mSelectedSeenDevices);
+        v.setVisibility(View.INVISIBLE);
     }
 }

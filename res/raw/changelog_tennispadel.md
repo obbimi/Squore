@@ -8,6 +8,7 @@
 - Allow to start tie-break one game early
 - Bugfixes
   - Match/Set duration incorrect values at end of match
+  - Correct server indication if sets ends in 7-5
    
 ## 4.53 (august 2023)
 

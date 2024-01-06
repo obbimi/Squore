@@ -71,6 +71,10 @@ import com.doubleyellow.scoreboard.bluetooth.BluetoothControlService;
 import com.doubleyellow.scoreboard.bluetooth.BluetoothHandler;
 import com.doubleyellow.scoreboard.bluetooth.MessageSource;
 import com.doubleyellow.scoreboard.bluetooth.SelectDeviceDialog;
+import com.doubleyellow.scoreboard.bluetooth_le.BLEHandler;
+import com.doubleyellow.scoreboard.bluetooth_le.BLEReceiverManager;
+import com.doubleyellow.scoreboard.bluetooth_le.BLEUtil;
+import com.doubleyellow.scoreboard.bluetooth_le.selectdevice.BLEActivity;
 import com.doubleyellow.scoreboard.cast.FullScreenTimer;
 import com.doubleyellow.scoreboard.cast.EndOfGameView;
 import com.doubleyellow.scoreboard.cast.framework.CastHelper;
@@ -3912,6 +3916,8 @@ touch -t 01030000 LAST.sb
 
         setMenuItemVisibility(R.id.sb_open_store_on_wearable, Brand.m_bHasWearable);
 
+        setMenuItemVisibility(R.id.sb_ble_devices, PreferenceValues.useBluetoothLE(this));
+
         if ( Brand.isNotSquash() ) {
             setMenuItemVisibility(R.id.sb_official_announcement, false);
             setMenuItemVisibility(R.id.sb_possible_conductsA   , false);
@@ -4425,6 +4431,9 @@ touch -t 01030000 LAST.sb
                 // http://squore.double-yellow.be/make.matches.zip.php
                 handleMenuItem(R.id.sb_download_zip, URLFeedTask.prefixWithBaseIfRequired("/matches.zip"), ZipType.SquoreAll);
                 break;
+            case R.id.sb_ble_devices:
+                selectBleDevices();
+                return true;
             case R.id.sb_demo:
                 restartScore();
                 setModus(null, Mode.FullAutomatedDemo);
@@ -4994,6 +5003,13 @@ touch -t 01030000 LAST.sb
         m_iChildActivityRequestCode = 0;
         super.onActivityResult(requestCode_MenuId, resultCode, data);
 
+        if ( requestCode_MenuId == R.id.sb_ble_devices ) {
+            if ( data != null ) {
+                Bundle extras = data.getExtras();
+                BLEDevicesSelected = true;
+                onResumeInitBluetoothBLE();
+            }
+        }
         if ( requestCode_MenuId == R.id.sb_settings ) {
             // returning from settings
             if ( m_wearableHelper != null ) {
@@ -6229,11 +6245,23 @@ touch -t 01030000 LAST.sb
     // --------------------- bluetooth BLE-----------------
     // ----------------------------------------------------
     private void selectBleDevices() {
+        if ( PreferenceValues.useBluetoothLE(this) == false ) { return; }
+
         persist(false);
 
+        String[] permissions = {Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.S ) {
+            permissions = new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
+        }
+        ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal());
+
+        if ( m_bleReceiverManager != null ) {
+            // ensure currently connected devices are disconnected and there for will start broadcasting again to show up in BLEActivity
+            m_bleReceiverManager.closeConnection();
+        }
+
         Intent bleActivity = new Intent(this, BLEActivity.class);
-        startActivity(bleActivity);
-        BLEDevicesSelected = true;
+        startActivityForResult(bleActivity, R.id.sb_ble_devices);
     }
 
     private static BLEReceiverManager m_bleReceiverManager   = null;

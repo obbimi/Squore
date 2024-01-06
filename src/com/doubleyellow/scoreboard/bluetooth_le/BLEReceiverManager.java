@@ -12,9 +12,10 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
 import android.content.Context;
+import android.os.Build;
 import android.os.Message;
+import android.os.ParcelUuid;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -53,7 +54,7 @@ public class BLEReceiverManager
 
     private final Context context;
 
-    private       List<String> saDeviceNames         = new ArrayList<>();
+    private       List<String> saDeviceAddresses         = new ArrayList<>();
     private final JSONObject   mServicesAndCharacteristicsConfig;
 
     public BLEReceiverManager( Context context, BluetoothAdapter bluetoothAdapter
@@ -63,10 +64,10 @@ public class BLEReceiverManager
         this.context              = context;
         this.bluetoothLeScanner   = bluetoothAdapter.getBluetoothLeScanner();
 
-        this.saDeviceNames.add(sBluetoothLEDeviceA);
-        this.saDeviceNames.add(sBluetoothLEDeviceB);
-        saDeviceNames = ListUtil.removeDuplicates(saDeviceNames);
-        ListUtil.removeEmpty(this.saDeviceNames);
+        this.saDeviceAddresses.add(sBluetoothLEDeviceA);
+        this.saDeviceAddresses.add(sBluetoothLEDeviceB);
+        saDeviceAddresses = ListUtil.removeDuplicates(saDeviceAddresses);
+        ListUtil.removeEmpty(this.saDeviceAddresses);
 
         this.mServicesAndCharacteristicsConfig = mServicesAndCharacteristicsConfig;
     }
@@ -81,6 +82,18 @@ public class BLEReceiverManager
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override public void onScanResult(int callbackType, ScanResult result)
         {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if ( result.isConnectable() == false ) {
+                    return;
+                }
+            }
+            ParcelUuid[] uuids = result.getDevice().getUuids();
+            if ( uuids != null ) {
+                for(int i=0; i < uuids.length; i++) {
+                    Log.i(TAG, "uuids[" + i + "]:" + uuids[i].toString());
+                }
+            }
+
             // does not seem to give much more info
             ScanRecord scanRecord = result.getScanRecord();
             if ( scanRecord != null ) {
@@ -108,8 +121,9 @@ public class BLEReceiverManager
                 mDevicesSeen.put(devName, lNow);
             }
 
-            for ( int i=0; i < saDeviceNames.size(); i++ ) {
-                String sLookingFor = saDeviceNames.get(i);
+            // connectGatt if it is matches one of the 2 device names/mac addresses
+            for ( int i=0; i < saDeviceAddresses.size(); i++ ) {
+                String sLookingFor = saDeviceAddresses.get(i);
                 if( sLookingFor.equalsIgnoreCase(devName) || sLookingFor.equalsIgnoreCase(btDevice.getAddress()) ) {
                     if ( mDevicesUsed.containsKey(sLookingFor) ) { continue; }
 
@@ -119,11 +133,11 @@ public class BLEReceiverManager
                     btDevice.connectGatt(context,false, new MyBluetoothGattCallback(sLookingFor, Player.values()[i]));
                     mDevicesUsed.put(sLookingFor, System.currentTimeMillis());
 
-                    if( MapUtil.size(mDevicesUsed) == saDeviceNames.size() ){
+                    if ( MapUtil.size(mDevicesUsed) == saDeviceAddresses.size() ) {
                         bluetoothLeScanner.stopScan(this);
-                        Log.i(TAG, "Stopped scanning. Devices found = " + ListUtil.join(saDeviceNames, ","));
+                        Log.i(TAG, "Stopped scanning. All devices found = " + ListUtil.join(saDeviceAddresses, ","));
                     } else {
-                        List<String> lOther = new ArrayList<>(saDeviceNames);
+                        List<String> lOther = new ArrayList<>(saDeviceAddresses);
                         lOther.remove(sLookingFor);
                         Log.i(TAG, "Continue scanning for second device " + ListUtil.join(lOther, ","));
                         message = mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), "Connected " + sLookingFor + ", looking for " + ListUtil.join(lOther, ","));
@@ -160,16 +174,27 @@ public class BLEReceiverManager
         @Override public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             super.onConnectionStateChange(gatt, status, newState);
             if ( status == BluetoothGatt.GATT_SUCCESS ) {
-                if ( newState == BluetoothProfile.STATE_CONNECTED ) {
-                    Log.i(TAG, "Discovering services ... " + this.sDevice);
-                    Message message = mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), "Discovering services " + this.sDevice);
-                    message.sendToTarget();
-                    gatt.discoverServices();
-                    mDevice2gatt.put(this.sDevice, gatt); //this.gatt = gatt;
-                } else {
-                    Log.w(TAG, String.format("onConnectionStateChange new state %d (%s)", newState, this.sDevice));
-                    if ( newState == BluetoothProfile.STATE_DISCONNECTED ) {
-                        gatt.close();
+                switch (newState) {
+                    case BluetoothProfile.STATE_CONNECTED: {
+                        Log.i(TAG, "Discovering services ... " + this.sDevice);
+                        Message message = mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), "Discovering services " + this.sDevice);
+                        message.sendToTarget();
+                        gatt.discoverServices();
+                        mDevice2gatt.put(this.sDevice, gatt); //this.gatt = gatt;
+                    }
+                    case BluetoothProfile.STATE_DISCONNECTED: {
+                        Log.w(TAG, String.format("onConnectionStateChange new state %d (%s)", newState, this.sDevice));
+                        if ( newState == BluetoothProfile.STATE_DISCONNECTED ) {
+                            gatt.close();
+                            mDevice2gatt.remove(this.sDevice);
+                            if ( saDeviceAddresses.size() - MapUtil.size(mDevice2gatt) == 1 ) {
+                                bluetoothLeScanner.startScan(null, BLEUtil.scanSettings, scanCallback);
+                                Log.w(TAG, "Restart scanning. Not all devices found. Devices still found = " + ListUtil.join(mDevice2gatt.keySet(), ","));
+                            }
+                        }
+                    }
+                    default: {
+                        Log.w(TAG, String.format("onConnectionStateChange new state %d (%s)", newState, this.sDevice));
                     }
                 }
             } else {

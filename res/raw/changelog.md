@@ -9,7 +9,8 @@
 - make referee/marker/assessor visible in 'Score Details'
 - allow to change 'match date' for 'Stored matches'
   - e.g. when entering matches into Squore that were initially scored on paper 
-
+- option to allow negative scores when using Handicap option  
+ 
 ## 4.52 (june 2023)
 
 - send info about state of timer to livescore pages for better experience
