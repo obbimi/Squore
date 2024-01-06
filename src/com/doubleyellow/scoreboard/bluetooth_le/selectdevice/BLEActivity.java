@@ -4,15 +4,14 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.doubleyellow.scoreboard.R;
 
@@ -22,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.doubleyellow.scoreboard.activity.XActivity;
 import com.doubleyellow.scoreboard.bluetooth_le.BLEUtil;
-import com.doubleyellow.scoreboard.match.Match;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -48,9 +46,10 @@ public class BLEActivity extends XActivity
     private Map<Player, String> mSelectedPrefDevices = null;
     private ScanResultAdapter scanResultAdapter = null;
 
-    boolean isScanning = false;
-    private Pattern pMustMatch = null;
-    private Button btnGo;
+    private boolean isScanning     = false;
+    private Pattern pMustMatch     = null;
+    private String  sMustStartWith = null;
+    private Button  btnGo;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,14 +110,16 @@ public class BLEActivity extends XActivity
         scanResultAdapter.setListener(listener);
 
         JSONObject config = BLEUtil.getActiveConfig(this);
-        if ( config != null ) {
-            String sRegExp = config.optString(BLEUtil.device_name_regexp);
-            if ( StringUtil.isNotEmpty(sRegExp) ) {
-                try {
-                    pMustMatch = Pattern.compile(sRegExp);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        if ( config == null ) {
+            Toast.makeText(this, "Could not obtain config for BLE", Toast.LENGTH_LONG).show();
+        }
+        sMustStartWith = config.optString(BLEUtil.device_name_starts_with);
+        String sRegExp = config.optString(BLEUtil.device_name_regexp);
+        if ( StringUtil.isNotEmpty(sRegExp) ) {
+            try {
+                pMustMatch = Pattern.compile(sRegExp);
+            } catch (Exception e) {
+                Toast.makeText(this, "Devices pattern is not valid: " + sRegExp, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -136,11 +137,24 @@ public class BLEActivity extends XActivity
     {
         private long lLastCleanupOfDevicesNoLongerBroadcasting = 0L;
 
+        private Map mDiscardedBecauseOfRegexp = new HashMap();
+
         @Override public void onScanResult(int callbackType, ScanResult result) {
-            if ( pMustMatch != null ) {
+            if ( pMustMatch != null || StringUtil.isNotEmpty(sMustStartWith) ) {
                 String name = result.getDevice().getName();
-                if ( pMustMatch.matcher(String.valueOf(name)).matches() == false ) {
-                    //Log.d(TAG, String.format("Skipping %s based on regexp %s", name, pMustMatch.pattern()));
+
+                if ( (name == null) || pMustMatch.matcher(name).matches() == false ) {
+                    if ( mDiscardedBecauseOfRegexp.containsKey(name) == false ) {
+                        mDiscardedBecauseOfRegexp.put(name, result.getDevice().getAddress());
+                        Log.d(TAG, String.format("Skipping %s based on regexp %s", name, pMustMatch.pattern()));
+                    }
+                    return;
+                }
+                if ( (name == null) || name.startsWith(sMustStartWith) == false ) {
+                    if ( mDiscardedBecauseOfRegexp.containsKey(name) == false ) {
+                        mDiscardedBecauseOfRegexp.put(name, result.getDevice().getAddress());
+                        Log.d(TAG, String.format("Skipping %s based on startswith %s", name, sMustStartWith));
+                    }
                     return;
                 }
             }

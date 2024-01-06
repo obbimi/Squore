@@ -27,6 +27,7 @@ import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -232,20 +233,30 @@ public class BLEReceiverManager
         @Override public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
             int    iValue  = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT8, 0);
-            Log.d(TAG, "iValue : " + iValue);
             String sValue  = characteristic.getStringValue(0);
-            Log.d(TAG, "sValue : " + sValue);
             byte[] baValue = characteristic.getValue();
-            for (int i = 0; i < baValue.length; i++) {
-                Log.d(TAG, "b[" + i + "] : " + baValue[i]);
+            if ( false ) {
+                Log.d(TAG, "iValue : " + iValue);
+                Log.d(TAG, "sValue : " + sValue);
+                for (int i = 0; i < baValue.length; i++) {
+                    Log.d(TAG, "b[" + i + "] : " + baValue[i]);
+                }
+                Log.d(TAG, String.format("characteristic : %s, value : %s", characteristic.getUuid(), sValue));
             }
-            Log.d(TAG, String.format("characteristic : %s, value : %s", characteristic.getUuid(), sValue));
             String sMessage = sValue;
             try {
                 JSONObject joChars = mServicesAndCharacteristicsConfig.optJSONObject(characteristic.getService().getUuid().toString().toLowerCase());
                 if ( joChars != null ) {
-                    String sMessageFormat = joChars.getString(characteristic.getUuid().toString().toLowerCase());
-                    sMessage = String.format(sMessageFormat, player.toString(), sValue, iValue);
+                    Object oMessageFormat = joChars.get(characteristic.getUuid().toString().toLowerCase());
+                    String sMessageFormat = String.valueOf(oMessageFormat);
+                    if ( oMessageFormat instanceof JSONArray ) {
+                        JSONArray jsonArray = (JSONArray) oMessageFormat;
+                        sMessageFormat = jsonArray.getString(0);
+                        if ( jsonArray.length() > 1 && saDeviceAddresses.size() == 2 ) {
+                            sMessageFormat = jsonArray.getString(1);
+                        }
+                    }
+                    sMessage = String.format(sMessageFormat, player.toString(), iValue, sValue);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

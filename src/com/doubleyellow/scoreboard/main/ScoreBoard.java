@@ -18,6 +18,7 @@
 package com.doubleyellow.scoreboard.main;
 
 import android.app.*;
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.*;
@@ -39,6 +40,7 @@ import android.os.*;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.InputDeviceCompat;
 import androidx.core.view.MotionEventCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -6265,7 +6267,9 @@ touch -t 01030000 LAST.sb
     }
 
     private static BLEReceiverManager m_bleReceiverManager   = null;
-    private static boolean BLEDevicesSelected = false;
+    private static boolean BLEDevicesSelected                    = false;
+    private static Player  blePlayerWaitingForScoreToBeConfirmed = null;
+    private static Integer bleButtonUsedToIndicate_IScored         = null;
     private void onResumeInitBluetoothBLE()
     {
         final String sMethod = "SB.onCreateInitBLE";
@@ -6299,11 +6303,13 @@ touch -t 01030000 LAST.sb
             Log.i(sMethod, String.format("Scanning for devices %s, %s", sBluetoothLEDevice1, sBluetoothLEDevice2));
 
             JSONObject config = BLEUtil.getActiveConfig(this);
-            if ( config != null ) {
-                m_bleReceiverManager = new BLEReceiverManager(this, mBluetoothAdapter, sBluetoothLEDevice1, sBluetoothLEDevice2, config);
-                m_bleReceiverManager.startReceiving();
+            if ( config == null ) {
+                Toast.makeText(this, "Could not obtain config for BLE", Toast.LENGTH_LONG).show();
+                return;
             }
+            m_bleReceiverManager = new BLEReceiverManager(this, mBluetoothAdapter, sBluetoothLEDevice1, sBluetoothLEDevice2, config);
         }
+        m_bleReceiverManager.startReceiving();
         if ( m_bleReceiverManager != null ) {
             BLEHandler bleHandler = new BLEHandler(this);
             m_bleReceiverManager.setHandler(bleHandler);
@@ -7007,9 +7013,74 @@ touch -t 01030000 LAST.sb
                         }
                         break;
                     }
+                    case changeScoreBLEConfirm: {
+                        Player player = Player.valueOf(saMethodNArgs[1].toUpperCase());
+                        Integer iButtonPressed = Integer.parseInt(saMethodNArgs[2].trim());
+                        Log.i(TAG, String.format("changeScoreBLEConfirm: %s, bleButtonUsedToIndicate_IScored: %s, player:%s, button:%d", blePlayerWaitingForScoreToBeConfirmed, bleButtonUsedToIndicate_IScored, player, iButtonPressed));
+                        if ( blePlayerWaitingForScoreToBeConfirmed != null ) {
+                            boolean bDoChangeScore = false;
+                            boolean bDoCancelScore = false;
+                            final boolean bConfirmationByOpponentIsWithOppositeButton = true; // TODO: from config
+                            final boolean bCancelationByInitiatorIsWithOppositeButton = true; // TODO: from config
+                            if ( player.getOther().equals(blePlayerWaitingForScoreToBeConfirmed) ) {
+                                // check the confirmation
+                                Log.i(TAG, "Check BLE confirmation");
+                                if ( bConfirmationByOpponentIsWithOppositeButton ) {
+                                    if ( iButtonPressed.equals(bleButtonUsedToIndicate_IScored) == false ) {
+                                        bDoChangeScore = true;
+                                    } else {
+                                        bDoCancelScore = true;
+                                    }
+                                } else {
+                                    if ( iButtonPressed.equals(bleButtonUsedToIndicate_IScored) ) {
+                                        bDoChangeScore = true;
+                                    } else {
+                                        bDoCancelScore = true;
+                                    }
+                                }
+                            } else {
+                                Log.w(TAG, "Player waiting for confirmation pressed button");
+                                if ( bCancelationByInitiatorIsWithOppositeButton ) {
+                                    if ( iButtonPressed.equals(bleButtonUsedToIndicate_IScored) == false ) {
+                                        bDoCancelScore = true;
+                                    }
+                                } else {
+                                    if ( iButtonPressed.equals(bleButtonUsedToIndicate_IScored) ) {
+                                        bDoCancelScore = true;
+                                    }
+                                }
+                            }
+                            if ( bDoChangeScore ) {
+                                Log.i(TAG, "Score confirmed");
+                                matchModel.changeScore(blePlayerWaitingForScoreToBeConfirmed);
+                                blePlayerWaitingForScoreToBeConfirmed = null;
+                                bleButtonUsedToIndicate_IScored = null;
+                                // TODO: some feedback ?
+                            } else if ( bDoCancelScore ) {
+                                Log.i(TAG, "Score canceled");
+                                blePlayerWaitingForScoreToBeConfirmed = null;
+                                bleButtonUsedToIndicate_IScored = null;
+                                // TODO: some feedback ?
+                            } else {
+                                Log.w(TAG, "Score still waiting confirmation?");
+                            }
+                        } else {
+                            Log.w(TAG, "Score now waiting for confirmation by opponent");
+                            blePlayerWaitingForScoreToBeConfirmed = player;
+                            bleButtonUsedToIndicate_IScored = iButtonPressed;
+                        }
+                        break;
+                    }
                     case changeScore: {
                         if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
-                            Player player = Player.valueOf(saMethodNArgs[1].toUpperCase());
+                            String sAorB = saMethodNArgs[1].toUpperCase();
+                            Player player;
+                            if ( sAorB.matches("[0-1]") ) {
+                                Integer i0isA1IsB = Integer.parseInt(sAorB);
+                                player = Player.values()[i0isA1IsB];
+                            } else {
+                                player = Player.valueOf(sAorB);
+                            }
                             matchModel.changeScore(player);
                         }
                         break;

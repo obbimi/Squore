@@ -43,13 +43,14 @@ public class BLEHandler extends Handler
         BTMessage btMessage = BTMessage.values()[msg.what];
         Log.d(TAG, "msg.what : " + msg.what + " : " + btMessage);
         String sMsg = String.valueOf(msg.obj);
-        Log.d(TAG, "msg.obj  : " + msg.obj + " (" + sMsg + ")");
-        Log.d(TAG, "msg.arg1 : " + msg.arg1);
-        Log.d(TAG, "msg.arg2 : " + msg.arg2);
+        Log.d(TAG, "msg.obj  : " + msg.obj);
+        //Log.d(TAG, "msg.arg1 : " + msg.arg1);
+        //Log.d(TAG, "msg.arg2 : " + msg.arg2);
         if ( btMessage.equals(BTMessage.READ) ) {
             try {
                 sb.interpretReceivedMessage(sMsg, MessageSource.BluetoothLE);
             } catch (Exception e) {
+                e.printStackTrace();
                 Log.w(TAG, "Message could not be understood :" + sMsg);
             }
         } else if ( btMessage.equals(BTMessage.STATE_CHANGE) ) {

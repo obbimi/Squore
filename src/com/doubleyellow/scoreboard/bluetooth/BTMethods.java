@@ -45,7 +45,7 @@ public enum BTMethods {
     jsonMatchReceived(false),
     requestCountryFlag(false),
 
-    /** mainly used to be send from wearable to more userfriendly handheld */
+    /* mainly used to be send from wearable to more user-friendly handheld */
     //openSuggestMatchSyncDialogOnOtherPaired(false),
     /** to check when app opens if it also open on counterpart device */
     resume(false),
@@ -56,6 +56,9 @@ public enum BTMethods {
     lock(false),
     unlock(false),
     updatePreference(false),
+
+    /** Typically used only in BLE setup */
+    changeScoreBLEConfirm(true),
     ;
     private boolean bVerifyScore = false;
     BTMethods(boolean verifyScore) {

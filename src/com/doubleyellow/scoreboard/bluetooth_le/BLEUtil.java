@@ -26,7 +26,8 @@ import java.util.UUID;
 public class BLEUtil
 {
     private final static String TAG = "SB.BLEUtil";
-    public final static String device_name_regexp = "device_name_regexp";
+    public final static String device_name_regexp      = "device_name_regexp";
+    public final static String device_name_starts_with = "device_name_starts_with";
 
     final public static ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
 
