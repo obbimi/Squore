@@ -1073,6 +1073,13 @@ public class IBoard implements TimerViewContainer
             Log.w(TAG, "No bluetooticon view found ...");
         }
     }
+    public void setBluetoothBLEIconVisibility(int visibility, int nrOfDevicesConnected) {
+        TextView vTxt = m_vRoot.findViewById(R.id.sb_bluetoothble_nrofconnected);
+        if ( vTxt != null ) {
+            vTxt.setText("\u16E1\u16d2:" + nrOfDevicesConnected);
+            vTxt.setVisibility(visibility);
+        }
+    }
 
     private SBTimerView sbTimerView = null;
     @Override public TimerView getTimerView() {

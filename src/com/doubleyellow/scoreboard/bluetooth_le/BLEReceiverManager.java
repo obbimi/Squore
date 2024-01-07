@@ -50,11 +50,14 @@ public class BLEReceiverManager
 
     private final BluetoothLeScanner bluetoothLeScanner;
     private       BLEHandler         mHandler;
+    /** one or two devices with time we 'saw' them */
     private final Map<String, Long>  mDevicesUsed       = new HashMap<>();
+    /** just a map to reduce logging */
     private final Map<String, Long>  mDevicesSeen       = new HashMap<>();
 
     private final Context context;
 
+    /** the one or two devices we want to connect to */
     private       List<String> saDeviceAddresses         = new ArrayList<>();
     private final JSONObject   mServicesAndCharacteristicsConfig;
 
@@ -78,6 +81,12 @@ public class BLEReceiverManager
      */
     public void setHandler(BLEHandler handler) {
         this.mHandler = handler;
+    }
+
+    public void setState(BLEState state, String sAddress, int iDeviceCount) {
+        if ( mHandler == null ) { return; }
+        Message message = mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), state.ordinal(), iDeviceCount, sAddress);
+        message.sendToTarget();
     }
 
     private final ScanCallback scanCallback = new ScanCallback() {
@@ -128,21 +137,21 @@ public class BLEReceiverManager
                 if( sLookingFor.equalsIgnoreCase(devName) || sLookingFor.equalsIgnoreCase(btDevice.getAddress()) ) {
                     if ( mDevicesUsed.containsKey(sLookingFor) ) { continue; }
 
-                    Log.i(TAG, "Connecting to device " + devName);
-                    Message message = mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), "Connected " + sLookingFor);
-                    message.sendToTarget();
-                    btDevice.connectGatt(context,false, new MyBluetoothGattCallback(sLookingFor, Player.values()[i]));
                     mDevicesUsed.put(sLookingFor, System.currentTimeMillis());
+                    Log.i(TAG, "Connecting GAT to device " + devName);
+                    Player eachPlayerHasADevicePlayer = saDeviceAddresses.size() == 1 ? null : Player.values()[i];
+                    btDevice.connectGatt(context,false, new MyBluetoothGattCallback(btDevice.getAddress(), eachPlayerHasADevicePlayer));
 
-                    if ( MapUtil.size(mDevicesUsed) == saDeviceAddresses.size() ) {
+                    boolean bAllDevicesFound = MapUtil.size(mDevicesUsed) == saDeviceAddresses.size();
+                    if ( bAllDevicesFound ) {
                         bluetoothLeScanner.stopScan(this);
                         Log.i(TAG, "Stopped scanning. All devices found = " + ListUtil.join(saDeviceAddresses, ","));
+                        setState(BLEState.CONNECTED_ALL, btDevice.getAddress(), MapUtil.size(mDevicesUsed));
                     } else {
                         List<String> lOther = new ArrayList<>(saDeviceAddresses);
                         lOther.remove(sLookingFor);
                         Log.i(TAG, "Continue scanning for second device " + ListUtil.join(lOther, ","));
-                        message = mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), "Connected " + sLookingFor + ", looking for " + ListUtil.join(lOther, ","));
-                        message.sendToTarget();
+                        setState(BLEState.CONNECTED_TO_1_of_2, lOther.get(0), MapUtil.size(mDevicesUsed));
                     }
                 }
             }
@@ -154,62 +163,66 @@ public class BLEReceiverManager
         }
         @Override public void onScanFailed      (int errorCode) {
             super.onScanFailed(errorCode);
-            Log.w(TAG, "onScanFailed : "  + errorCode); // e.g. when bluetooth is turnof on BLE peripheral emulator
+            Log.w(TAG, "onScanFailed : "  + errorCode); // e.g. when bluetooth is turned off on BLE peripheral emulator?
         }
     };
 
     private final         Map<String, BluetoothGatt> mDevice2gatt = new HashMap<>();
 
+    /** one instance created per BLE devices connected, so 1 or 2 */
     private class MyBluetoothGattCallback extends BluetoothGattCallback
     {
         private              int currentConnectionAttempt    = 1;
         private final static int MAXIMUM_CONNECTION_ATTEMPTS = 5;
 
-        private final String sDevice;
+        private final String sDeviceAddress;
         private final Player player ;
-        MyBluetoothGattCallback(String sName, Player player) {
-            this.sDevice = sName;
-            this.player = player;
+        MyBluetoothGattCallback(String sAddress, Player player) {
+            this.sDeviceAddress = sAddress;
+            this.player         = player;
         }
 
         @Override public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             super.onConnectionStateChange(gatt, status, newState);
             if ( status == BluetoothGatt.GATT_SUCCESS ) {
                 switch (newState) {
-                    case BluetoothProfile.STATE_CONNECTED: {
-                        Log.i(TAG, "Discovering services ... " + this.sDevice);
-                        Message message = mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), "Discovering services " + this.sDevice);
-                        message.sendToTarget();
+                    case BluetoothProfile.STATE_CONNECTED /* 2 */: {
+                        Log.i(TAG, "Discovering services ... " + this.sDeviceAddress);
+                        setState(BLEState.CONNECTED_DiscoveringServices, this.sDeviceAddress, 1);
                         gatt.discoverServices();
-                        mDevice2gatt.put(this.sDevice, gatt); //this.gatt = gatt;
+                        mDevice2gatt.put(this.sDeviceAddress, gatt); //this.gatt = gatt;
+                        break;
                     }
-                    case BluetoothProfile.STATE_DISCONNECTED: {
-                        Log.w(TAG, String.format("onConnectionStateChange new state %d (%s)", newState, this.sDevice));
-                        if ( newState == BluetoothProfile.STATE_DISCONNECTED ) {
-                            gatt.close();
-                            mDevice2gatt.remove(this.sDevice);
-                            if ( saDeviceAddresses.size() - MapUtil.size(mDevice2gatt) == 1 ) {
-                                bluetoothLeScanner.startScan(null, BLEUtil.scanSettings, scanCallback);
-                                Log.w(TAG, "Restart scanning. Not all devices found. Devices still found = " + ListUtil.join(mDevice2gatt.keySet(), ","));
-                            }
+                    case BluetoothProfile.STATE_DISCONNECTED /* 0 */: {
+                        Log.w(TAG, String.format("onConnectionStateChange NEW state %d (%s)", newState, this.sDeviceAddress));
+                        gatt.close();
+                        mDevice2gatt.remove(this.sDeviceAddress);
+                        mDevicesUsed.remove(this.sDeviceAddress);
+                        setState(BLEState.DISCONNECTED_Gatt, this.sDeviceAddress, MapUtil.size(mDevicesUsed));
+                        if ( saDeviceAddresses.size() - MapUtil.size(mDevice2gatt) == 1 ) {
+                            bluetoothLeScanner.startScan(null, BLEUtil.scanSettings, scanCallback);
+                            Log.w(TAG, "Restart scanning. Not all devices found. Devices still found = " + ListUtil.join(mDevice2gatt.keySet(), ","));
                         }
+                        break;
                     }
                     default: {
-                        Log.w(TAG, String.format("onConnectionStateChange new state %d (%s)", newState, this.sDevice));
+                        Log.w(TAG, String.format("onConnectionStateChange new state %d (%s)", newState, this.sDeviceAddress));
                     }
                 }
             } else {
-                Log.w(TAG, String.format("onConnectionStateChange status :%d (%s)", status, this.sDevice));
-                mDevice2gatt.remove(this.sDevice);
+                Log.w(TAG, String.format("onConnectionStateChange status :%d (%s)", status, this.sDeviceAddress)); // status = 8 if e.g. device turned off
+                mDevice2gatt.remove(this.sDeviceAddress);
+                mDevicesUsed.remove(this.sDeviceAddress);
+                mDevicesSeen.remove(this.sDeviceAddress);
                 gatt.close();
                 currentConnectionAttempt+=1;
                 Log.i(TAG, String.format("Attempting to connect %d/%d", currentConnectionAttempt, MAXIMUM_CONNECTION_ATTEMPTS));
+                setState(BLEState.DISCONNECTED_Gatt, this.sDeviceAddress, MapUtil.size(mDevicesUsed));
                 if ( currentConnectionAttempt <= MAXIMUM_CONNECTION_ATTEMPTS ) {
                     startReceiving();
                 } else {
-                    Log.w(TAG, "Could not connect to ble device ... " + this.sDevice);
-                    Message message = mHandler.obtainMessage(BTMessage.STATE_CHANGE.ordinal(), "Disconnected " + this.sDevice);
-                    message.sendToTarget();
+                    Log.w(TAG, "Could not connect to ble device ... " + this.sDeviceAddress);
+                    //setState(BLEState.NONE, this.sDeviceAddress); // TODO: required?
                 }
             }
         }
@@ -218,7 +231,7 @@ public class BLEReceiverManager
             super.onServicesDiscovered(gatt, status);
 
             BLEUtil.printGattTable(gatt);
-            if ( false && sDevice.toLowerCase().startsWith("iho") == false ) {
+            if ( false && sDeviceAddress.toLowerCase().startsWith("iho") == false ) {
                 // for BLE emulator as peripheral this does not trigger onMtuChanged
                 boolean bReq = gatt.requestMtu(517); // could remain default of 20
                 Log.d(TAG, "requestMtu : " + bReq);
@@ -256,7 +269,7 @@ public class BLEReceiverManager
                             sMessageFormat = jsonArray.getString(1);
                         }
                     }
-                    sMessage = String.format(sMessageFormat, player.toString(), iValue, sValue);
+                    sMessage = String.format(sMessageFormat, (player==null ? "" : player.toString()), iValue, sValue);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -319,6 +332,7 @@ public class BLEReceiverManager
     public void startReceiving() {
         //mDevicesUsed.clear();
         bluetoothLeScanner.startScan(null, BLEUtil.scanSettings, scanCallback);
+        setState(BLEState.CONNECTING, ListUtil.join(saDeviceAddresses, ","), MapUtil.size(mDevicesUsed));
     }
 
     public void reconnect() {
@@ -338,7 +352,8 @@ public class BLEReceiverManager
     public void closeConnection() {
         this.bluetoothLeScanner.stopScan(scanCallback);
 
-        for(BluetoothGatt gatt : mDevice2gatt.values() ) {
+        for(String sDeviceAddress : mDevice2gatt.keySet() ) {
+            BluetoothGatt gatt = mDevice2gatt.get(sDeviceAddress);
             Map<String, List<String>> mServices2Characteristics = BLEUtil.getServiceUUID2CharUUID(mServicesAndCharacteristicsConfig);
             for(String sServiceUUID: mServices2Characteristics.keySet() ) {
                 List<String> lCharacteristicUUID = mServices2Characteristics.get(sServiceUUID);
@@ -348,11 +363,17 @@ public class BLEReceiverManager
                     BluetoothGattCharacteristic characteristic = findCharacteristics(gatt, sServiceUUID, sCharacteristicUUID);
                     if ( characteristic != null ) {
                         disconnectCharacteristic(gatt, characteristic);
+                        mDevicesUsed.remove(sDeviceAddress);
+
+                        setState(BLEState.DISCONNECTED_Gatt, sDeviceAddress, MapUtil.size(mDevicesUsed));
                     }
                 }
             }
             gatt.close();
         }
+        mDevicesUsed.clear();
+        mDevicesSeen.clear();
+        setState(BLEState.DISCONNECTED, null, 0);
     }
 
     private void disconnectCharacteristic(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic ){

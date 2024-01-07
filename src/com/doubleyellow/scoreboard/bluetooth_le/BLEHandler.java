@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.doubleyellow.scoreboard.bluetooth.BTMessage;
@@ -54,9 +55,36 @@ public class BLEHandler extends Handler
                 Log.w(TAG, "Message could not be understood :" + sMsg);
             }
         } else if ( btMessage.equals(BTMessage.STATE_CHANGE) ) {
-            Toast.makeText(sb, sMsg, Toast.LENGTH_LONG).show();
+            BLEState btState = BLEState.values()[msg.arg1];
+            int iNrOfDevices = msg.arg2;
+            Log.d(TAG, "new state  : " + btState);
+            Log.d(TAG, "iNrOfDevices: " + iNrOfDevices);
+            switch (btState) {
+                case CONNECTED_DiscoveringServices:
+                    break;
+                case CONNECTED_TO_1_of_2:
+                    sb.setBluetoothBLEIconVisibility(View.VISIBLE, 1);
+                    break;
+                case CONNECTED_ALL:
+                    sb.setBluetoothBLEIconVisibility(View.VISIBLE, iNrOfDevices);
+                    break;
+                case DISCONNECTED:
+                    sb.setBluetoothBLEIconVisibility(View.INVISIBLE, -1);
+                    break;
+                case CONNECTING:
+                    sb.setBluetoothBLEIconVisibility(View.VISIBLE, iNrOfDevices);
+                    break;
+                case DISCONNECTED_Gatt:
+                    // if one of the two devices
+                    sb.setBluetoothBLEIconVisibility(View.VISIBLE, iNrOfDevices);
+                    break;
+                default:
+                    Toast.makeText(sb, sMsg, Toast.LENGTH_LONG).show();
+                    break;
+            }
         }
     }
+/*
     private boolean m_bHandlingBluetoothMessageInProgress = false;
     boolean isHandlingMessage() {
         return m_bHandlingBluetoothMessageInProgress;

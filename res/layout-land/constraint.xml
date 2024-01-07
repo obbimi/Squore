@@ -339,6 +339,19 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         />
+    <TextView
+        android:id="@+id/sb_bluetoothble_nrofconnected"
+        app:layout_constraintEnd_toEndOf="@id/btn_score2"
+        app:layout_constraintTop_toTopOf="@id/btn_score2"
+        android:gravity="center"
+        android:visibility="visible"
+        android:text="\u16E1\u16d2:0"
+        app:layout_constraintWidth_percent="@fraction/ls_fr_match_timer_width"
+        app:layout_constraintDimensionRatio="H,3:1"
+        android:layout_width="0dp" android:layout_height="0dp"
+        android:textColor="@color/white"
+        />
+
     <ImageView android:id="@+id/sb_powerplay1_icon"
         app:layout_constraintTop_toTopOf="@id/btn_score1"
         app:layout_constraintBottom_toBottomOf="@id/btn_score1"

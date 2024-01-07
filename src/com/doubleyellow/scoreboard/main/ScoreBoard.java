@@ -1229,7 +1229,6 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         registerNfc();
         onCreateInitBluetooth();
-
     }
 
     private void initCountryList() {
@@ -1298,6 +1297,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
         onResumeNFC();
         onResumeFCM();
         onResumeBlueTooth();
+        onResumeInitBluetoothBLE();
         onResume_BluetoothMediaControlButtons();
         onResumeWearable();
         if ( PreferenceValues.isCastRestartRequired() ) {
@@ -5008,7 +5008,7 @@ touch -t 01030000 LAST.sb
         if ( requestCode_MenuId == R.id.sb_ble_devices ) {
             if ( data != null ) {
                 Bundle extras = data.getExtras();
-                BLEDevicesSelected = true;
+                m_bBLEDevicesSelected = true;
                 onResumeInitBluetoothBLE();
             }
         }
@@ -6249,6 +6249,7 @@ touch -t 01030000 LAST.sb
     private void selectBleDevices() {
         if ( PreferenceValues.useBluetoothLE(this) == false ) { return; }
 
+        m_bBLEDevicesSelected = false;
         persist(false);
 
         String[] permissions = {Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -6260,26 +6261,28 @@ touch -t 01030000 LAST.sb
         if ( m_bleReceiverManager != null ) {
             // ensure currently connected devices are disconnected and there for will start broadcasting again to show up in BLEActivity
             m_bleReceiverManager.closeConnection();
+            m_bleReceiverManager = null;
         }
 
         Intent bleActivity = new Intent(this, BLEActivity.class);
         startActivityForResult(bleActivity, R.id.sb_ble_devices);
     }
 
-    private static BLEReceiverManager m_bleReceiverManager   = null;
-    private static boolean BLEDevicesSelected                    = false;
+    private static BLEReceiverManager m_bleReceiverManager       = null;
+    private static boolean m_bBLEDevicesSelected                 = false;
     private static Player  blePlayerWaitingForScoreToBeConfirmed = null;
-    private static Integer bleButtonUsedToIndicate_IScored         = null;
+    private static Integer bleButtonUsedToIndicate_IScored       = null;
     private void onResumeInitBluetoothBLE()
     {
         final String sMethod = "SB.onCreateInitBLE";
+        setBluetoothBLEIconVisibility(View.INVISIBLE, 0);
 
         boolean bInitBLE = PreferenceValues.useBluetoothLE(this);
         if ( bInitBLE == false ) {
             Log.i(sMethod, "Don't use BLE. Period");
             return;
         }
-        if ( BLEDevicesSelected == false ) {
+        if ( m_bBLEDevicesSelected == false ) {
             Log.i(sMethod, "Don't use BLE. First select devices");
             return;
         }
@@ -6309,11 +6312,11 @@ touch -t 01030000 LAST.sb
             }
             m_bleReceiverManager = new BLEReceiverManager(this, mBluetoothAdapter, sBluetoothLEDevice1, sBluetoothLEDevice2, config);
         }
-        m_bleReceiverManager.startReceiving();
         if ( m_bleReceiverManager != null ) {
             BLEHandler bleHandler = new BLEHandler(this);
             m_bleReceiverManager.setHandler(bleHandler);
         }
+        m_bleReceiverManager.startReceiving();
     }
     // ----------------------------------------------------
     // --------------------- bluetooth --------------------
@@ -6621,6 +6624,13 @@ touch -t 01030000 LAST.sb
         }
 
         iBoard.setBluetoothIconVisibility(visibility);
+    }
+    public void setBluetoothBLEIconVisibility(int visibility, int nrOfDevicesConnected) {
+        if ( iBoard == null ) {
+            return;
+        }
+
+        iBoard.setBluetoothBLEIconVisibility(visibility, nrOfDevicesConnected);
     }
 
     private static Map<PreferenceKeys, String> mBtPrefSlaveSettings = new HashMap<>();
