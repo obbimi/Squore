@@ -20,8 +20,10 @@
     "1D14D6EE-FD63-4FA1-BFA4-8F47B42119F0 DFU Service" : {
       "F7BF3564-FB6D-4E53-88A4-5E37E0326063 OTA Control characteristic" : "firmware update?"
     },
-    "device_name_regexp" : "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
-    "device_name_starts_with" : "D-SCORE-RX_"
+    "deviceNameMustMatch" : "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
+    "deviceNameStartsWith" : "D-SCORE-RX_",
+    "ConfirmScoreByOpponentButton" : "PRIMARY_BUTTON",
+    "CancelScoreByInitiatorButton" : "SECONDARY_BUTTON"
   },
   "single_ble_01_alert" : {
     "00001811-0000-1000-8000-00805f9b34fb" : {

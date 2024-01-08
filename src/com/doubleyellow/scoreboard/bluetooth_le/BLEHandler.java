@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023  Iddo Hoeve
+ * Copyright (C) 2024  Iddo Hoeve
  *
  * Squore is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -89,4 +89,5 @@ public class BLEHandler extends Handler
     boolean isHandlingMessage() {
         return m_bHandlingBluetoothMessageInProgress;
     }
+*/
 }

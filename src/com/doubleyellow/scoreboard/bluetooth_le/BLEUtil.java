@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2024  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.doubleyellow.scoreboard.bluetooth_le;
 
 import android.bluetooth.BluetoothGatt;
@@ -12,6 +28,7 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.util.StringUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,8 +43,15 @@ import java.util.UUID;
 public class BLEUtil
 {
     private final static String TAG = "SB.BLEUtil";
-    public final static String device_name_regexp      = "device_name_regexp";
-    public final static String device_name_starts_with = "device_name_starts_with";
+
+    public enum Keys {
+        deviceNameMustMatch,
+        deviceNameStartsWith,
+
+        ConfirmScoreByOpponentButton,
+        CancelScoreByInitiatorButton,
+        RssiValueAt1M,
+    }
 
     final public static ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
 
@@ -78,6 +102,23 @@ public class BLEUtil
             }
         }
         Log.d(TAG, sb.toString());
+    }
+
+    public static float getButtonFor(JSONObject mServicesAndCharacteristicsConfig, float fDefault) {
+        return fDefault;
+    }
+
+    public static BLEDeviceButton getButtonFor(JSONObject mServicesAndCharacteristicsConfig, Keys eKey, BLEDeviceButton btnDefault) {
+        String s = mServicesAndCharacteristicsConfig.optString(eKey.toString());
+        if ( StringUtil.isEmpty(s) ) { return btnDefault; }
+        BLEDeviceButton btnFromConfig = null;
+        try {
+            btnFromConfig = BLEDeviceButton.valueOf(s);
+            return btnFromConfig;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return btnDefault;
     }
 
     /** transforms json like in bluetooth_le_config to easier iterable format */

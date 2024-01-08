@@ -1601,7 +1601,8 @@ public class IBoard implements TimerViewContainer
     private void showDecisionMessage(Player pDecisionFor, Call call, String sMsg, int iMessageDurationSecs) {
         if ( getBlockToasts() ) { return; }
         final int fmIdx;
-        if ( call.isConduct() ) {
+        boolean bCentral = (call != null && call.isConduct()) || (pDecisionFor == null);
+        if ( bCentral ) {
             fmIdx = 2;
         } else {
             fmIdx = pDecisionFor.equals(m_firstPlayerOnScreen)?0:1;
@@ -1616,14 +1617,14 @@ public class IBoard implements TimerViewContainer
             if ( ViewUtil.isPortraitOrientation(context) ) {
                 direction = Direction.None;
             } else {
-                if ( call.isConduct() ) {
+                if ( bCentral ) {
                     direction = Direction.S;
                 } else {
                     // place message over player requesting it
                     direction = pDecisionFor.equals(m_firstPlayerOnScreen) ? Direction.W : Direction.E;
                 }
             }
-            final int iResId_widthFraction = call.isConduct() ? R.fraction.pt_conduct_width : R.fraction.pt_decision_msg_width;
+            final int iResId_widthFraction = bCentral ? R.fraction.pt_conduct_width : R.fraction.pt_decision_msg_width;
             int iWidthPx = getScreenHeightWidthMinimumFraction(iResId_widthFraction);
             FloatingMessage.Builder builder = new FloatingMessage.Builder(context, iWidthPx);
             if ( mColors != null ) {
@@ -1654,7 +1655,7 @@ public class IBoard implements TimerViewContainer
             castSendFunction(ICastHelper.Call_showDecision + "(" + "'" + sMsg + "'"
                                                            + ","       + fmIdx
                                                            + "," + "'" + call + "'"
-                                                           + ","       + call.isConduct()
+                                                           + ","       + (call!=null ? call.isConduct() : "''")
                                                            + ")");
         }
 
@@ -1678,7 +1679,16 @@ public class IBoard implements TimerViewContainer
     // ------------------------------------------------------
 
     private static final Call info_message_dummycall =Call.CW;  // use CW here just to let it appear as 'centered'...
-    public void showMessage(String sMsg,int iMessageDuration) {
+    public void showBLEMessage(Player p, String sMsg, int iMessageDuration) {
+        // hide any 'permanent' BLE message still displaying
+        if ( p != null ) {
+            showDecisionMessage(p.getOther(), null, null, -1);
+        } else {
+            hideMessage();
+        }
+        showDecisionMessage(p, null, sMsg, iMessageDuration);
+    }
+    public void showMessage(String sMsg, int iMessageDuration) {
         showDecisionMessage(null, info_message_dummycall, sMsg, iMessageDuration);
     }
     public void hideMessage() {

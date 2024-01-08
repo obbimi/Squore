@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2024  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.doubleyellow.scoreboard.bluetooth_le.selectdevice;
 
 import android.bluetooth.BluetoothAdapter;
@@ -40,16 +56,20 @@ public class BLEActivity extends XActivity
     BluetoothAdapter   bluetoothAdapter = null;
     BluetoothLeScanner bleScanner = null;
 
-    private final List<ScanResult>  scanResults       = new ArrayList<>();
-    private final Map<String, Long> mAddress2LastSeen = new HashMap<>();
+    private final List<ScanResult>   scanResults          = new ArrayList<>();
+    private final Map<String, Long>  mAddress2LastSeen    = new HashMap<>();
     private final Map<Player,String> mSelectedSeenDevices = new HashMap<>();
-    private Map<Player, String> mSelectedPrefDevices = null;
     private ScanResultAdapter scanResultAdapter = null;
 
-    private boolean isScanning     = false;
+    private boolean m_bIsScanning  = false;
     private Pattern pMustMatch     = null;
     private String  sMustStartWith = null;
+    private double  fRssiValueAt1M = -50.0f;
     private Button  btnGo;
+
+    private static final long lUpdateInterval     = 2000L; // must be smaller then 2 values below
+    private static final long lCleanupCheckEvery  = 3000L;
+    private static final long lCleanupIfUnseenFor = 4000L;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,29 +96,36 @@ public class BLEActivity extends XActivity
         });
         btnGo.setEnabled(false);
 
+        JSONObject config = BLEUtil.getActiveConfig(this);
+        if ( config == null ) {
+            Toast.makeText(this, "Could not obtain config for BLE", Toast.LENGTH_LONG).show();
+            return;
+        }
+        fRssiValueAt1M = config.optDouble(BLEUtil.Keys.RssiValueAt1M.toString(), fRssiValueAt1M);
+
         String sBluetoothLEDevice1 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral1, null, this);
         String sBluetoothLEDevice2 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral2, null, this);
         Map mTmp = new HashMap();
         if ( StringUtil.isNotEmpty(sBluetoothLEDevice1) ) mTmp.put(Player.A, sBluetoothLEDevice1);
         if ( StringUtil.isNotEmpty(sBluetoothLEDevice2) ) mTmp.put(Player.B, sBluetoothLEDevice2);
-        mSelectedPrefDevices = Collections.unmodifiableMap(mTmp);
-        scanResultAdapter = new ScanResultAdapter(scanResults, mSelectedSeenDevices, mSelectedPrefDevices);
+        Map<Player, String> mSelectedPrefDevices = Collections.unmodifiableMap(mTmp);
+        scanResultAdapter = new ScanResultAdapter(scanResults, fRssiValueAt1M, mSelectedSeenDevices, mSelectedPrefDevices);
 
-        Button button = findViewById(R.id.ble_scan_button);
-        button.setOnClickListener(v -> {
-            if (isScanning) {
-                isScanning = false;
+        Button btnScan = findViewById(R.id.ble_scan_button);
+        btnScan.setOnClickListener(v -> {
+            if ( m_bIsScanning ) {
+                m_bIsScanning = false;
                 bleScanner.stopScan(scanCallback);
                 //stopBleScan();
             } else {
-                isScanning = true;
+                m_bIsScanning = true;
                 if ( scanResults.size() > 0 ) {
                     scanResults.clear();
                     scanResultAdapter.notifyDataSetChanged();
                 }
                 bleScanner.startScan(null, BLEUtil.scanSettings, scanCallback);
             }
-            ((TextView)v).setText(isScanning?"Stop Scan":"Start Scan");
+            ((TextView)v).setText(m_bIsScanning?"Stop Scan":"Start Scan");
         });
 
         RecyclerView recyclerView = findViewById(R.id.scan_results_recycler_view);
@@ -106,15 +133,8 @@ public class BLEActivity extends XActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false)); // why?
         recyclerView.setNestedScrollingEnabled(false);
 
-        DeviceSelector listener = new DeviceSelector(mSelectedSeenDevices, this);
-        scanResultAdapter.setListener(listener);
-
-        JSONObject config = BLEUtil.getActiveConfig(this);
-        if ( config == null ) {
-            Toast.makeText(this, "Could not obtain config for BLE", Toast.LENGTH_LONG).show();
-        }
-        sMustStartWith = config.optString(BLEUtil.device_name_starts_with);
-        String sRegExp = config.optString(BLEUtil.device_name_regexp);
+        sMustStartWith = config.optString(BLEUtil.Keys.deviceNameStartsWith.toString());
+        String sRegExp = config.optString(BLEUtil.Keys.deviceNameMustMatch     .toString());
         if ( StringUtil.isNotEmpty(sRegExp) ) {
             try {
                 pMustMatch = Pattern.compile(sRegExp);
@@ -137,7 +157,7 @@ public class BLEActivity extends XActivity
     {
         private long lLastCleanupOfDevicesNoLongerBroadcasting = 0L;
 
-        private Map mDiscardedBecauseOfRegexp = new HashMap();
+        private final Map mDiscardedBecauseOfRegexp = new HashMap();
 
         @Override public void onScanResult(int callbackType, ScanResult result) {
             if ( pMustMatch != null || StringUtil.isNotEmpty(sMustStartWith) ) {
@@ -162,9 +182,8 @@ public class BLEActivity extends XActivity
             int indexQuery = -1;
             final String address = result.getDevice().getAddress();
             long lNow = System.currentTimeMillis();
-            mAddress2LastSeen.put(address, lNow);
 
-            for(int i=0; i< scanResults.size();i++) {
+            for(int i=0; i < scanResults.size();i++) {
                 String previousFoundAddress = scanResults.get(i).getDevice().getAddress();
                 if ( previousFoundAddress.equalsIgnoreCase(address) ) {
                     indexQuery = i;
@@ -174,20 +193,21 @@ public class BLEActivity extends XActivity
             if ( indexQuery != -1 ) {
                 // A scan result already exists with the same address
                 Long lSeen = mAddress2LastSeen.get(address);
-                if ( lNow - lSeen > 2000 ) {
+                long lDiff = lNow - lSeen;
+                if ( lDiff > lUpdateInterval ) {
                     Log.i(TAG, "updating " + address);
                     scanResults.set(indexQuery, result);
                     scanResultAdapter.notifyItemChanged(indexQuery);
+                    mAddress2LastSeen.put(address, lNow);
                 }
             } else {
                 Log.i(TAG, "adding " + address);
                 scanResults.add(result);
                 scanResultAdapter.notifyItemInserted(scanResults.size() - 1);
                 //scanResultAdapter.notifyDataSetChanged();
+                mAddress2LastSeen.put(address, lNow);
             }
 
-            final long lCleanupCheckEvery  = 3000L;
-            final long lCleanupIfUnseenFor = 4000L;
             if ( lNow - lLastCleanupOfDevicesNoLongerBroadcasting > lCleanupCheckEvery ) {
                 Log.i(TAG, "Checking for unseen devices");
                 int iSizeBeforeClean = scanResults.size();

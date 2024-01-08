@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
 
+    <string name="ble_score_cancelled_by_opponent_x_by_pressing_y">Score cancelled by opponent %1$s by pressing %2$s</string>
+    <string name="ble_score_cancelled_by_initiator_x_by_pressing_y">Score cancelled by initiator %1$s by pressing %2$s</string>
+    <string name="ble_score_confirmed_by_opponent_x_by_pressing_y">Score confirmed by opponent %1$s by pressing %2$s</string>
+    <string name="ble_x_confirm_score_for_y_by_pressing_z">%1$s, confirm score for %2$s by pressing %3$s</string>
+
     <string name="bt_disconnect">Disconnect</string>
     <string name="bt_pull_or_push">Choose</string>
     <string name="bt_pull">Pull</string>

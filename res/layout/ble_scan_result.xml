@@ -58,9 +58,16 @@
         android:textSize="14sp"
         android:textColor="@android:color/black"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/use_as_device_a"
         tools:text="-58 dBm" />
-
+    <TextView
+        android:id="@+id/device_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/use_as_device_a"
+        tools:text="0.1 m" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
