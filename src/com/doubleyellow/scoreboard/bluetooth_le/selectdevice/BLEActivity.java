@@ -77,6 +77,10 @@ public class BLEActivity extends XActivity
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager.getAdapter();
         bleScanner = bluetoothAdapter.getBluetoothLeScanner();
+        if ( bleScanner == null ) {
+            Toast.makeText(this, "Is bluetooth enabled?", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         setContentView(R.layout.ble_activity);
 
@@ -113,6 +117,10 @@ public class BLEActivity extends XActivity
 
         Button btnScan = findViewById(R.id.ble_scan_button);
         btnScan.setOnClickListener(v -> {
+            if ( bleScanner == null ) {
+                Toast.makeText(this, "Is bluetooth enabled?", Toast.LENGTH_LONG).show();
+                return;
+            }
             if ( m_bIsScanning ) {
                 m_bIsScanning = false;
                 bleScanner.stopScan(scanCallback);
@@ -146,7 +154,9 @@ public class BLEActivity extends XActivity
 
     @Override protected void onDestroy() {
         super.onDestroy();
-        bleScanner.stopScan(scanCallback);
+        if ( bleScanner != null ) {
+            bleScanner.stopScan(scanCallback);
+        }
     }
 
     @Override protected void onPause() {

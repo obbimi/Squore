@@ -12,8 +12,8 @@
   },
   "double_ble_d-score" : {
     "96f9374a-2417-44e3-ae06-aa362556914e" : {
-      "96f9374b-2417-44e3-ae06-aa362556914e": "player_type: 0=server|1=returner|2=none",
-      "96f9374c-2417-44e3-ae06-aa362556914e": [ "changeScore(%2$s)"
+      "96f91f4b-2417-44e3-ae06-aa362556914e": "player_type: 0=server|1=returner|2=none",
+      "96f91f4c-2417-44e3-ae06-aa362556914e": [ "changeScore(%2$s)"
                                               , "changeScoreBLEConfirm(%1$s, %2$s)"
                                               ]
     },
@@ -37,6 +37,26 @@
     "00001811-0000-1000-8000-00805f9b34fb" : {
       "00002a44-0000-1000-8000-00805f9b34fb" : "undoLast()",
       "00002a45-0000-1000-8000-00805f9b34fb" : "changeScore(%1$s)"
+    }
+  },
+  "double_ble_02_WB010988_Zentri" : {
+    "distance" : "180m",
+    "175f8f23-a570-49bd-9627-815a6a27de2a" : {
+      "1cce1ea8-bd34-4813-a00a-c76e028fadcb" : "write Rx",
+      "cacc07ff-ffff-4c48-8fae-a9ef71b75e26" : "read Tx"
+    }
+  },
+  "double_ble_02_RDL" : {
+    "RDL52832" : "model name, not unique",
+    "00001803-494c-4f47-4943-544543480000" : {
+      "00001804-494c-4f47-4943-544543480000" : "undoLast(value=passcode)",
+      "00001805-494c-4f47-4943-544543480000" : "undoLast()"
+    },
+    "0000fe59-0000-1000-8000-00805f9b34fb" : {
+      "8ec90003-f315-4f60-9fb8-838830daea50" : "undoLast()"
+    },
+    "00001801-0000-1000-8000-00805f9b34fb" : {
+      "00002a05-0000-1000-8000-00805f9b34fb" : "undoLast()"
     }
   }
 }
