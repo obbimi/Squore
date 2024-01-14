@@ -6638,6 +6638,9 @@ touch -t 01030000 LAST.sb
         }
 
         iBoard.setBluetoothBLEIconVisibility(visibility, nrOfDevicesConnected);
+        if ( visibility == View.INVISIBLE ) {
+            iBoard.showBLEMessage(null, null, -1);
+        }
     }
 
     private static Map<PreferenceKeys, String> mBtPrefSlaveSettings = new HashMap<>();
@@ -7034,6 +7037,7 @@ touch -t 01030000 LAST.sb
                         Player  player         = Player.valueOf(saMethodNArgs[1].toUpperCase());
                         Integer iButtonPressed = Integer.parseInt(saMethodNArgs[2].trim());
                         BLEDeviceButton eButtonPressed = BLEDeviceButton.values()[iButtonPressed];
+                        String sButtonPressed = m_bleConfig.optString(eButtonPressed.toString(), eButtonPressed.toString());
                         Log.i(TAG, String.format("changeScoreBLEConfirm: %s, bleButtonUsedToIndicate_IScored: %s, player:%s, button:%s", blePlayerWaitingForScoreToBeConfirmed, bleButtonUsedToIndicate_IScored, player, eButtonPressed));
 
                         if ( blePlayerWaitingForScoreToBeConfirmed != null ) {
@@ -7045,16 +7049,16 @@ touch -t 01030000 LAST.sb
                                 switch (m_eConfirmScoreByOpponentButton) {
                                     case SECONDARY_BUTTON:
                                         if ( eButtonPressed.equals(bleButtonUsedToIndicate_IScored) ) {
-                                            sDoCancelScore = getString(R.string.ble_score_cancelled_by_opponent_x_by_pressing_y, player, eButtonPressed);
+                                            sDoCancelScore = getString(R.string.ble_score_cancelled_by_opponent_x_by_pressing_y, player, sButtonPressed);
                                         } else {
-                                            sDoChangeScore = getString(R.string.ble_score_confirmed_by_opponent_x_by_pressing_y, player, eButtonPressed);
+                                            sDoChangeScore = getString(R.string.ble_score_confirmed_by_opponent_x_by_pressing_y, player, sButtonPressed);
                                         }
                                         break;
                                     case PRIMARY_BUTTON:
                                         if ( eButtonPressed.equals(bleButtonUsedToIndicate_IScored) ) {
-                                            sDoChangeScore = getString(R.string.ble_score_confirmed_by_opponent_x_by_pressing_y, player, eButtonPressed);
+                                            sDoChangeScore = getString(R.string.ble_score_confirmed_by_opponent_x_by_pressing_y, player, sButtonPressed);
                                         } else {
-                                            sDoCancelScore = getString(R.string.ble_score_cancelled_by_opponent_x_by_pressing_y, player, eButtonPressed);
+                                            sDoCancelScore = getString(R.string.ble_score_cancelled_by_opponent_x_by_pressing_y, player, sButtonPressed);
                                         }
                                         break;
                                 }
@@ -7063,12 +7067,12 @@ touch -t 01030000 LAST.sb
                                 switch (m_eCancelScoreByInitiatorButton) {
                                     case SECONDARY_BUTTON:
                                         if ( eButtonPressed.equals(bleButtonUsedToIndicate_IScored) == false ) {
-                                            sDoCancelScore = getString(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, player, eButtonPressed);
+                                            sDoCancelScore = getString(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, player, sButtonPressed);
                                         }
                                         break;
                                     case PRIMARY_BUTTON:
                                         if ( eButtonPressed.equals(bleButtonUsedToIndicate_IScored) ) {
-                                            sDoCancelScore = getString(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, player, eButtonPressed);
+                                            sDoCancelScore = getString(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, player, sButtonPressed);
                                         }
                                         break;
                                 }
@@ -7093,11 +7097,13 @@ touch -t 01030000 LAST.sb
                             blePlayerWaitingForScoreToBeConfirmed = player;
                             bleButtonUsedToIndicate_IScored       = eButtonPressed;
 
-                            String sMsg = String.format("%s, confirm score for %s by pressing %s", player.getOther(), player, m_eConfirmScoreByOpponentButton);
+                            String sButtonDescription = m_bleConfig.optString(m_eConfirmScoreByOpponentButton.toString(), m_eConfirmScoreByOpponentButton.toString());
+                            String sMsg = getString(R.string.ble_x_confirm_score_for_y_by_pressing_z, player.getOther(), player, sButtonDescription);
                             iBoard.showBLEMessage(player, sMsg, -1);
                         }
                         break;
                     }
+                    case changeScoreBLE:
                     case changeScore: {
                         if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
                             String sAorB = saMethodNArgs[1].toUpperCase();
@@ -7107,6 +7113,10 @@ touch -t 01030000 LAST.sb
                                 player = Player.values()[i0isA1IsB];
                             } else {
                                 player = Player.valueOf(sAorB);
+                            }
+                            if ( btMethod.equals(BTMethods.changeScoreBLE) ) {
+                                String sMsg = getString(R.string.ble_score_for_X_changed_by_ble, player);
+                                iBoard.showBLEMessage(player, sMsg, 2);
                             }
                             matchModel.changeScore(player);
                         }

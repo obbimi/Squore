@@ -13,14 +13,16 @@
   "double_ble_d-score" : {
     "96f9374a-2417-44e3-ae06-aa362556914e" : {
       "96f91f4b-2417-44e3-ae06-aa362556914e": "WRITE player_type: 0=server|1=returner|2=none",
-      "96f91f4c-2417-44e3-ae06-aa362556914e": [ "changeScore(%2$s)"
+      "96f91f4c-2417-44e3-ae06-aa362556914e": [ "changeScoreBLE(%2$s)"
                                               , "changeScoreBLEConfirm(%1$s, %2$s)"
                                               ]
     },
     "deviceNameMustMatch" : "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
     "deviceNameStartsWith" : "D-SCORE-RX_",
     "ConfirmScoreByOpponentButton" : "PRIMARY_BUTTON",
-    "CancelScoreByInitiatorButton" : "SECONDARY_BUTTON"
+    "CancelScoreByInitiatorButton" : "SECONDARY_BUTTON",
+    "PRIMARY_BUTTON" : "Green",
+    "SECONDARY_BUTTON" : "Red"
   },
   "double_ble_d-score-NOTUSED" : {
     "0000180a-0000-1000-8000-00805f9b34fb" : {
@@ -43,15 +45,15 @@
   "single_ble_01_alert" : {
     "00001811-0000-1000-8000-00805f9b34fb" : {
       "00002a44-0000-1000-8000-00805f9b34fb" : "undoLast()",
-      "00002a45-0000-1000-8000-00805f9b34fb" : "changeScore(A)",
-      "00002a46-0000-1000-8000-00805f9b34fb" : "changeScore(B)",
-      "00002a47-0000-1000-8000-00805f9b34fb" : "changeScore(%2$s)"
+      "00002a45-0000-1000-8000-00805f9b34fb" : "changeScoreBLE(A)",
+      "00002a46-0000-1000-8000-00805f9b34fb" : "changeScoreBLE(B)",
+      "00002a47-0000-1000-8000-00805f9b34fb" : "changeScoreBLE(%2$s)"
     }
   },
   "double_ble_01_alert" : {
     "00001811-0000-1000-8000-00805f9b34fb" : {
       "00002a44-0000-1000-8000-00805f9b34fb" : "undoLast()",
-      "00002a45-0000-1000-8000-00805f9b34fb" : "changeScore(%1$s)"
+      "00002a45-0000-1000-8000-00805f9b34fb" : "changeScoreBLE(%1$s)"
     }
   },
   "double_ble_02_WB010988_Zentri" : {

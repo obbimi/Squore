@@ -3,8 +3,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ble_activity_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_default__Squash"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".main.ScoreBoard"
     >
@@ -13,7 +15,7 @@
         android:id="@+id/ble_scan_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Scan"
+        android:text="@string/ble_start_scan"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +38,7 @@
         android:id="@+id/ble_start_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go and start scoring with devices"
+        android:text="@string/ble_start_scoring_with_devices"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

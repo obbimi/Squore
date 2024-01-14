@@ -133,7 +133,8 @@ public class BLEActivity extends XActivity
                 }
                 bleScanner.startScan(null, BLEUtil.scanSettings, scanCallback);
             }
-            ((TextView)v).setText(m_bIsScanning?"Stop Scan":"Start Scan");
+            TextView btn = (TextView) v;
+            btn.setText(m_bIsScanning ? R.string.ble_stop_scan : R.string.ble_start_scan);
         });
 
         RecyclerView recyclerView = findViewById(R.id.scan_results_recycler_view);

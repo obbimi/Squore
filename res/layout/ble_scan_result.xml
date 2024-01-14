@@ -24,7 +24,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="@android:color/black"
         app:layout_constraintTop_toBottomOf="@id/device_name"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="MAC: XX:XX:XX:XX:XX" />
@@ -35,8 +34,6 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:text="B"
-        android:background="@android:color/white"
-        android:textColor="@android:color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -46,8 +43,6 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:text="A"
-        android:background="@android:color/white"
-        android:textColor="@android:color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/use_as_device_b" />
@@ -56,7 +51,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="@android:color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/use_as_device_a"
         tools:text="-58 dBm" />
@@ -65,7 +59,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/use_as_device_a"
         tools:text="0.1 m" />

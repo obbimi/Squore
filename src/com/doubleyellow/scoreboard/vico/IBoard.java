@@ -1080,6 +1080,37 @@ public class IBoard implements TimerViewContainer
             vTxt.setVisibility(visibility);
         }
     }
+    public void showBLEMessage(Player p, String sMsg, int iMessageDurationSecs) {
+        // hide any 'permanent' BLE message still displaying
+/*
+        if ( p != null ) {
+            showDecisionMessage(p.getOther(), null, null, -1);
+        } else {
+            hideMessage();
+        }
+        showDecisionMessage(p, null, sMsg, iMessageDuration);
+*/
+        final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bluetoothble_information);
+        if ( tvBLEInfo != null ) {
+            if ( StringUtil.isNotEmpty(sMsg) ) {
+                tvBLEInfo.setText(sMsg);
+                tvBLEInfo.setVisibility(View.VISIBLE);
+
+                if ( iMessageDurationSecs > 0 ) {
+                    // auto hide in x secs
+                    CountDownTimer countDownTimer = new CountDownTimer(iMessageDurationSecs * 1000, 1000) {
+                        @Override public void onTick(long millisUntilFinished) { }
+                        @Override public void onFinish() {
+                            tvBLEInfo.setVisibility(View.INVISIBLE);
+                        }
+                    };
+                    countDownTimer.start();
+                }
+            } else {
+                tvBLEInfo.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
 
     private SBTimerView sbTimerView = null;
     @Override public TimerView getTimerView() {
@@ -1678,16 +1709,7 @@ public class IBoard implements TimerViewContainer
     // Informative messages (e.g. change sides for Racketlon)
     // ------------------------------------------------------
 
-    private static final Call info_message_dummycall =Call.CW;  // use CW here just to let it appear as 'centered'...
-    public void showBLEMessage(Player p, String sMsg, int iMessageDuration) {
-        // hide any 'permanent' BLE message still displaying
-        if ( p != null ) {
-            showDecisionMessage(p.getOther(), null, null, -1);
-        } else {
-            hideMessage();
-        }
-        showDecisionMessage(p, null, sMsg, iMessageDuration);
-    }
+    private static final Call info_message_dummycall = Call.CW;  // use CW here just to let it appear as 'centered'...
     public void showMessage(String sMsg, int iMessageDuration) {
         showDecisionMessage(null, info_message_dummycall, sMsg, iMessageDuration);
     }

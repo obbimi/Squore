@@ -58,6 +58,7 @@ public enum BTMethods {
     updatePreference(false),
 
     /** Typically used only in BLE setup */
+    changeScoreBLE(true),
     changeScoreBLEConfirm(true),
     ;
     private boolean bVerifyScore = false;
