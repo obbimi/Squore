@@ -67,9 +67,9 @@ public class BLEActivity extends XActivity
     private double  fRssiValueAt1M = -50.0f;
     private Button  btnGo;
 
-    private static final long lUpdateInterval     = 2000L; // must be smaller then 2 values below
-    private static final long lCleanupCheckEvery  = 3000L;
-    private static final long lCleanupIfUnseenFor = 4000L;
+    private static final long lUpdateInterval     = 1000L; // must be smaller then 2 values below
+    private static final long lCleanupCheckEvery  = 2000L;
+    private static final long lCleanupIfUnseenFor = 3000L;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

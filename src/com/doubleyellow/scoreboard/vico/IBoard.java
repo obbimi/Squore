@@ -1080,12 +1080,7 @@ public class IBoard implements TimerViewContainer
             vTxt.setVisibility(visibility);
         }
     }
-    public void appendToBLEMessage(String sMsg) {
-        final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bluetoothble_information);
-        if ( tvBLEInfo != null ) {
-            tvBLEInfo.setText(tvBLEInfo.getText() + sMsg);
-        }
-    }
+    private CountDownTimer m_timerBLEMessage;
     public void showBLEMessage(Player p, String sMsg, int iMessageDurationSecs) {
         // hide any 'permanent' BLE message still displaying
 /*
@@ -1104,17 +1099,27 @@ public class IBoard implements TimerViewContainer
 
                 if ( iMessageDurationSecs > 0 ) {
                     // auto hide in x secs
-                    CountDownTimer countDownTimer = new CountDownTimer(iMessageDurationSecs * 1000, 1000) {
+                    if ( m_timerBLEMessage != null ) {
+                        m_timerBLEMessage.cancel();
+                    }
+                    m_timerBLEMessage = new CountDownTimer(iMessageDurationSecs * 1000, 1000) {
                         @Override public void onTick(long millisUntilFinished) { }
                         @Override public void onFinish() {
                             tvBLEInfo.setVisibility(View.INVISIBLE);
+                            m_timerBLEMessage = null;
                         }
                     };
-                    countDownTimer.start();
+                    m_timerBLEMessage.start();
                 }
             } else {
                 tvBLEInfo.setVisibility(View.INVISIBLE);
             }
+        }
+    }
+    public void appendToBLEMessage(String sMsg) {
+        final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bluetoothble_information);
+        if ( tvBLEInfo != null ) {
+            tvBLEInfo.setText(tvBLEInfo.getText() + sMsg);
         }
     }
 

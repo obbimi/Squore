@@ -6314,8 +6314,11 @@ touch -t 01030000 LAST.sb
                 Toast.makeText(this, "Could not obtain config for BLE", Toast.LENGTH_LONG).show();
                 return;
             }
-            m_eConfirmScoreByOpponentButton = BLEUtil.getButtonFor(m_bleConfig, BLEUtil.Keys.ConfirmScoreByOpponentButton, m_eConfirmScoreByOpponentButton);
-            m_eCancelScoreByInitiatorButton = BLEUtil.getButtonFor(m_bleConfig, BLEUtil.Keys.CancelScoreByInitiatorButton, m_eCancelScoreByInitiatorButton);
+            if ( (sBluetoothLEDevice1 != null) && (sBluetoothLEDevice1.equalsIgnoreCase(sBluetoothLEDevice2) == false) ) {
+                // settings only relevant when using 2 buttons with confirmation mechanism
+                m_eConfirmScoreByOpponentButton = BLEUtil.getButtonFor(m_bleConfig, BLEUtil.Keys.ConfirmScoreByOpponentButton, m_eConfirmScoreByOpponentButton);
+                m_eCancelScoreByInitiatorButton = BLEUtil.getButtonFor(m_bleConfig, BLEUtil.Keys.CancelScoreByInitiatorButton, m_eCancelScoreByInitiatorButton);
+            }
 
             m_bleReceiverManager = new BLEReceiverManager(this, mBluetoothAdapter, sBluetoothLEDevice1, sBluetoothLEDevice2, m_bleConfig);
         }

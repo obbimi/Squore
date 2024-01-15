@@ -13,13 +13,26 @@
   "double_ble_d-score" : {
     "96f9374a-2417-44e3-ae06-aa362556914e" : {
       "96f91f4b-2417-44e3-ae06-aa362556914e": "WRITE player_type: 0=server|1=returner|2=none",
-      "96f91f4c-2417-44e3-ae06-aa362556914e": [ "changeScoreBLE(%2$s)"
-                                              , "changeScoreBLEConfirm(%1$s, %2$s)"
-                                              ]
+      "96f91f4c-2417-44e3-ae06-aa362556914e": [
+        {
+          "TranslateToBTMessage" : [ "-button released (one device)"
+                                   , "changeScoreBLE(B)"
+                                   , "changeScoreBLE(A)"
+                                   , "-both buttons pressed (one device)"
+                                   ]
+        },
+        {
+          "TranslateToBTMessage" : [ "-button released (two devices)"
+                                   , "changeScoreBLEConfirm(%1$s, SECONDARY_BUTTON)"
+                                   , "changeScoreBLEConfirm(%1$s, PRIMARY_BUTTON)"
+                                   , "-both buttons pressed (two devices)"
+                                   ]
+        }
+      ]
     },
-    "deviceNameMustMatch" : "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
-    "deviceNameStartsWith" : "D-SCORE-RX_",
-    "ConfirmScoreByOpponentButton" : "PRIMARY_BUTTON",
+    "DeviceNameMustMatch" : "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
+    "DeviceNameStartsWith" : "D-SCORE-RX_",
+    "ConfirmScoreByOpponentButton" : "SECONDARY_BUTTON",
     "CancelScoreByInitiatorButton" : "SECONDARY_BUTTON",
     "PRIMARY_BUTTON" : "Green",
     "SECONDARY_BUTTON" : "Red"

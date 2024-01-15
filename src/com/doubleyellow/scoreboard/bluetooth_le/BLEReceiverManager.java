@@ -301,7 +301,7 @@ public class BLEReceiverManager
                         if ( joCharacteristicCfg != null ) {
                             JSONArray saMessageFormat = joCharacteristicCfg.getJSONArray(BLEUtil.Keys.TranslateToBTMessage.toString());
                             int iValue = value[0];
-                            if ( (iValue >= 0) && (iValue < saMessageFormat.length()) ) {
+                            if ( (iValue >= 0) && (iValue < saMessageFormat.length() ) ) {
                                 String sMessageFormat = saMessageFormat.getString(iValue);
                                 if ( sMessageFormat == null || sMessageFormat.startsWith("-") ) {
                                     //Log.d(TAG, "Ignoring message " + sMessageFormat + " " + iValue);
@@ -319,8 +319,6 @@ public class BLEReceiverManager
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), sMessage );
-            message.sendToTarget();
         }
 
         @Override public void onDescriptorRead        (         BluetoothGatt gatt,          BluetoothGattDescriptor     descriptor    , int status)                        { super.onDescriptorRead     (gatt, descriptor, status);            }

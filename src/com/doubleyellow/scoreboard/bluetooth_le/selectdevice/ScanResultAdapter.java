@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import com.doubleyellow.scoreboard.R;
-import com.doubleyellow.scoreboard.bluetooth_le.BLEUtil;
 import com.doubleyellow.scoreboard.model.Player;
 
 import androidx.annotation.NonNull;
