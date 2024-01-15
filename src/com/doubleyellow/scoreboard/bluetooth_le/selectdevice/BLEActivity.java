@@ -142,8 +142,8 @@ public class BLEActivity extends XActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false)); // why?
         recyclerView.setNestedScrollingEnabled(false);
 
-        sMustStartWith = config.optString(BLEUtil.Keys.deviceNameStartsWith.toString());
-        String sRegExp = config.optString(BLEUtil.Keys.deviceNameMustMatch     .toString());
+        sMustStartWith = config.optString(BLEUtil.Keys.DeviceNameStartsWith.toString());
+        String sRegExp = config.optString(BLEUtil.Keys.DeviceNameMustMatch     .toString());
         if ( StringUtil.isNotEmpty(sRegExp) ) {
             try {
                 pMustMatch = Pattern.compile(sRegExp);

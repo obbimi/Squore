@@ -7034,9 +7034,8 @@ touch -t 01030000 LAST.sb
                         break;
                     }
                     case changeScoreBLEConfirm: {
-                        Player  player         = Player.valueOf(saMethodNArgs[1].toUpperCase());
-                        Integer iButtonPressed = Integer.parseInt(saMethodNArgs[2].trim());
-                        BLEDeviceButton eButtonPressed = BLEDeviceButton.values()[iButtonPressed];
+                        Player          player         = Player         .valueOf(saMethodNArgs[1].toUpperCase().trim());
+                        BLEDeviceButton eButtonPressed = BLEDeviceButton.valueOf(saMethodNArgs[2].toUpperCase().trim());
                         String sButtonPressed = m_bleConfig.optString(eButtonPressed.toString(), eButtonPressed.toString());
                         Log.i(TAG, String.format("changeScoreBLEConfirm: %s, bleButtonUsedToIndicate_IScored: %s, player:%s, button:%s", blePlayerWaitingForScoreToBeConfirmed, bleButtonUsedToIndicate_IScored, player, eButtonPressed));
 
@@ -7078,22 +7077,23 @@ touch -t 01030000 LAST.sb
                                 }
                             }
                             if ( sDoChangeScore != null ) {
-                                Log.i(TAG, sDoChangeScore);
+                                Log.i(TAG, "sDoChangeScore : " + sDoChangeScore);
                                 matchModel.changeScore(blePlayerWaitingForScoreToBeConfirmed);
                                 blePlayerWaitingForScoreToBeConfirmed = null;
-                                bleButtonUsedToIndicate_IScored = null;
+                                bleButtonUsedToIndicate_IScored       = null;
 
-                                iBoard.showBLEMessage(player, sDoChangeScore, 5);
+                                iBoard.showBLEMessage(player, sDoChangeScore, 10);
                             } else if ( sDoCancelScore != null ) {
-                                Log.i(TAG, sDoCancelScore);
+                                Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
                                 blePlayerWaitingForScoreToBeConfirmed = null;
-                                bleButtonUsedToIndicate_IScored = null;
-                                iBoard.showBLEMessage(player, sDoCancelScore, 5);
+                                bleButtonUsedToIndicate_IScored       = null;
+                                iBoard.showBLEMessage(player, sDoCancelScore, 10);
                             } else {
-                                Log.w(TAG, "Score still waiting confirmation?");
+                                Log.w(TAG, "Score still waiting confirmation? " + blePlayerWaitingForScoreToBeConfirmed + " " + bleButtonUsedToIndicate_IScored);
+                                iBoard.appendToBLEMessage(".");
                             }
                         } else {
-                            Log.w(TAG, "Score now waiting for confirmation by opponent pressing " + m_eConfirmScoreByOpponentButton);
+                            Log.w(TAG, String.format("Score for %s entered with button %s now waiting for confirmation by opponent %s pressing %s", player, eButtonPressed, player.getOther(), m_eConfirmScoreByOpponentButton));
                             blePlayerWaitingForScoreToBeConfirmed = player;
                             bleButtonUsedToIndicate_IScored       = eButtonPressed;
 
@@ -7105,25 +7105,25 @@ touch -t 01030000 LAST.sb
                     }
                     case changeScoreBLE:
                     case changeScore: {
-                        if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
+                        if ( (saMethodNArgs.length > 1) && (matchModel != null) ) {
                             String sAorB = saMethodNArgs[1].toUpperCase();
                             Player player;
                             if ( sAorB.matches("[0-1]") ) {
-                                Integer i0isA1IsB = Integer.parseInt(sAorB);
+                                int i0isA1IsB = Integer.parseInt(sAorB);
                                 player = Player.values()[i0isA1IsB];
                             } else {
                                 player = Player.valueOf(sAorB);
                             }
                             if ( btMethod.equals(BTMethods.changeScoreBLE) ) {
                                 String sMsg = getString(R.string.ble_score_for_X_changed_by_ble, player);
-                                iBoard.showBLEMessage(player, sMsg, 2);
+                                iBoard.showBLEMessage(player, sMsg, 10);
                             }
                             matchModel.changeScore(player);
                         }
                         break;
                     }
                     case changeSide: {
-                        if ( saMethodNArgs.length > 1 && (matchModel != null) ) {
+                        if ( (saMethodNArgs.length > 1) && (matchModel != null) ) {
                             Player player = Player.valueOf(saMethodNArgs[1].toUpperCase());
                             matchModel.changeSide(player);
                         }

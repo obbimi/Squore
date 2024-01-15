@@ -194,6 +194,7 @@ public class BLEReceiverManager
         private              int currentConnectionAttempt    = 1;
         private final static int MAXIMUM_CONNECTION_ATTEMPTS = 5;
 
+        private BluetoothGattCharacteristic characteristicPlayerType = null;
         private final String sDeviceAddress;
         private final Player player ;
         MyBluetoothGattCallback(String sAddress, Player player) {
@@ -275,11 +276,13 @@ public class BLEReceiverManager
             //int    iValue  = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT8, 0);
             //String sValue  = characteristic.getStringValue(0);
             byte[] baValue = characteristic.getValue();
-            Log.d(TAG, "onCharacteristicChanged A");
-            this.onCharacteristicChanged(gatt, characteristic, baValue);
+            translateToBTMessageAndSendToMain(characteristic, baValue);
         }
         @Override public void onCharacteristicChanged (@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value) {
             //super.onCharacteristicChanged(gatt, characteristic, value);
+            translateToBTMessageAndSendToMain(characteristic, value);
+        }
+        void translateToBTMessageAndSendToMain(BluetoothGattCharacteristic characteristic, byte[] value) {
             if ( false ) {
                 Log.d(TAG, "iValue : " + value[0]);
                 Log.d(TAG, "sValue : " + new String(value));
@@ -287,22 +290,31 @@ public class BLEReceiverManager
                     Log.d(TAG, "b[" + i + "] : " + value[i]);
                 }
             }
-            Log.d(TAG, String.format("onCharacteristicChanged B: characteristic : %s, writetype : %d, instance_id : %d", characteristic.getUuid(), characteristic.getWriteType(), characteristic.getInstanceId())); // e.g. write type 2 for indicate, no notify also results in '2' ?
+            //Log.d(TAG, String.format("onCharacteristicChanged B: characteristic : %s, writetype : %d, instance_id : %d", characteristic.getUuid(), characteristic.getWriteType(), characteristic.getInstanceId())); // e.g. write type 2 for indicate, no notify also results in '2' ?
 
-            String sMessage = new String(value);
             try {
-                JSONObject joChars = mServicesAndCharacteristicsConfig.optJSONObject(characteristic.getService().getUuid().toString().toLowerCase());
-                if ( joChars != null ) {
-                    Object oMessageFormat = joChars.get(characteristic.getUuid().toString().toLowerCase());
-                    String sMessageFormat = String.valueOf(oMessageFormat);
-                    if ( oMessageFormat instanceof JSONArray ) {
-                        JSONArray jsonArray = (JSONArray) oMessageFormat;
-                        sMessageFormat = jsonArray.getString(0);
-                        if ( jsonArray.length() > 1 && saDeviceAddresses.size() == 2 ) {
-                            sMessageFormat = jsonArray.getString(1);
+                JSONObject joServiceCfg = mServicesAndCharacteristicsConfig.optJSONObject(characteristic.getService().getUuid().toString().toLowerCase());
+                if ( joServiceCfg != null ) {
+                    JSONArray  jaCharacteristicCfg = joServiceCfg.optJSONArray(characteristic.getUuid().toString().toLowerCase());
+                    if ( jaCharacteristicCfg != null ) {
+                        JSONObject joCharacteristicCfg = jaCharacteristicCfg.getJSONObject(saDeviceAddresses.size() - 1);
+                        if ( joCharacteristicCfg != null ) {
+                            JSONArray saMessageFormat = joCharacteristicCfg.getJSONArray(BLEUtil.Keys.TranslateToBTMessage.toString());
+                            int iValue = value[0];
+                            if ( (iValue >= 0) && (iValue < saMessageFormat.length()) ) {
+                                String sMessageFormat = saMessageFormat.getString(iValue);
+                                if ( sMessageFormat == null || sMessageFormat.startsWith("-") ) {
+                                    //Log.d(TAG, "Ignoring message " + sMessageFormat + " " + iValue);
+                                } else {
+                                    String sMessage = String.format(sMessageFormat, (this.player==null?"":player), value[0]);
+                                    Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), sMessage );
+                                    message.sendToTarget();
+                                }
+                            } else {
+                                //Log.d(TAG, "Ignoring value " + iValue);
+                            }
                         }
                     }
-                    sMessage = String.format(sMessageFormat, (player==null ? "" : player.toString()), value[0], sMessage);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -316,12 +328,12 @@ public class BLEReceiverManager
         @Override public void onPhyUpdate             (         BluetoothGatt gatt, int txPhy, int rxPhy, int status)                                                       { super.onPhyUpdate          (gatt, txPhy, rxPhy, status);          }
         @Override public void onPhyRead               (         BluetoothGatt gatt, int txPhy, int rxPhy, int status)                                                       { super.onPhyRead            (gatt, txPhy, rxPhy, status);          }
         @Override public void onCharacteristicRead    (         BluetoothGatt gatt,          BluetoothGattCharacteristic characteristic, int status)                        {
-            super.onCharacteristicRead (gatt, characteristic, status);
+            //super.onCharacteristicRead (gatt, characteristic, status);
             byte[] value = characteristic.getValue();
             if ( value.length != 0 ) {
                 Log.d(TAG, "onCharacteristicRead A value " + value[0]);
             }
-            this.onCharacteristicRead(gatt, characteristic, value, status);
+            writePlayerInfo(gatt, characteristic, value);
         }
         @Override public void onCharacteristicRead    (@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value, int status) {
             //super.onCharacteristicRead (gatt, characteristic, value, status); // gives error?!
@@ -341,6 +353,10 @@ public class BLEReceiverManager
                 for ( int i = 0; i < baValue.length; i++ ) {
                     Log.d(TAG, "b[" + i + "] : " + baValue[i]);
                 }
+            }
+            if ( this.characteristicPlayerType != null && descriptor.getCharacteristic().equals(this.characteristicPlayerType) == false ) {
+                // with actual device this needs to be done AFTER updating characteristics of 'scoring'
+                readPlayerInfo(gatt, characteristicPlayerType);
             }
         }
         @Override public void onReliableWriteCompleted(         BluetoothGatt gatt, int status) {super.onReliableWriteCompleted(gatt, status);}
@@ -372,12 +388,13 @@ public class BLEReceiverManager
                         int properties = characteristic.getProperties();
                         BluetoothGattDescriptor cccdDescriptor = characteristic.getDescriptor(UUID.fromString(CCCD_DESCRIPTOR_UUID)); // NOT REQUIRED to receive INDICATE ?! unclear
                         if ( cccdDescriptor == null ) {
-                            Log.w(TAG, "cccdDescriptor=null");
+                            Log.w(TAG, String.format("cccdDescriptor=null for %s", characteristic.getUuid()));
                         }
+
                         if ( (properties & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0 ) {
                             if ( gatt.setCharacteristicNotification(characteristic, true) ) {
-                                Log.i(TAG, "Writing value PROPERTY_INDICATE to descriptor");
                                 if ( cccdDescriptor != null ) {
+                                    Log.i(TAG, "Writing value PROPERTY_INDICATE to descriptor");
                                     cccdDescriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE); // 2,0
                                     gatt.writeDescriptor(cccdDescriptor); // triggers onDescriptorWrite()
                                 }
@@ -385,20 +402,23 @@ public class BLEReceiverManager
                         } else {
                             if ( (properties & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0 ) {
                                 if ( gatt.setCharacteristicNotification(characteristic, true) ) {
-                                    Log.i(TAG, "Writing value PROPERTY_NOTIFY to descriptor");
                                     if ( cccdDescriptor != null ) {
+                                        Log.i(TAG, "Writing value PROPERTY_NOTIFY to descriptor");
                                         cccdDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE); // 2,0
                                         gatt.writeDescriptor(cccdDescriptor); // triggers onDescriptorWrite()
                                     }
                                 }
                             } else {
-                                readPlayerInfo(gatt, characteristic);
+                                characteristicPlayerType = characteristic; // to trigger readPlayerInfo() later
+                                //readPlayerInfo(gatt, characteristic);
                             }
                         }
                     }
                 }
             }
         }
+
+        /** to trigger writePlayerInfo if incorrect */
         private void readPlayerInfo(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             if ( gatt.readCharacteristic(characteristic) ) {
                 // actual value must be 'catched' in callback: onCharacteristicRead()
@@ -410,7 +430,8 @@ public class BLEReceiverManager
             String sWriteIndicator = null;
             UUID uuid = characteristic.getUuid();
             try {
-                sWriteIndicator = mServicesAndCharacteristicsConfig.optJSONObject(characteristic.getService().getUuid().toString()).optString(uuid.toString());
+                String sServiceUuid = characteristic.getService().getUuid().toString();
+                sWriteIndicator = mServicesAndCharacteristicsConfig.optJSONObject(sServiceUuid).optString(uuid.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }

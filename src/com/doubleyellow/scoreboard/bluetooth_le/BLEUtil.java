@@ -45,12 +45,17 @@ public class BLEUtil
     private final static String TAG = "SB.BLEUtil";
 
     public enum Keys {
-        deviceNameMustMatch,
-        deviceNameStartsWith,
+        DeviceNameMustMatch,
+        DeviceNameStartsWith,
 
+        /** one of the values of BLEDeviceButton */
         ConfirmScoreByOpponentButton,
+        /** one of the values of BLEDeviceButton */
         CancelScoreByInitiatorButton,
         RssiValueAt1M,
+
+        /** Array of messages (Message formats) */
+        TranslateToBTMessage,
     }
 
     final public static ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();

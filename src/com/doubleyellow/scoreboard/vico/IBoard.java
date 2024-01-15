@@ -1080,6 +1080,12 @@ public class IBoard implements TimerViewContainer
             vTxt.setVisibility(visibility);
         }
     }
+    public void appendToBLEMessage(String sMsg) {
+        final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bluetoothble_information);
+        if ( tvBLEInfo != null ) {
+            tvBLEInfo.setText(tvBLEInfo.getText() + sMsg);
+        }
+    }
     public void showBLEMessage(Player p, String sMsg, int iMessageDurationSecs) {
         // hide any 'permanent' BLE message still displaying
 /*
