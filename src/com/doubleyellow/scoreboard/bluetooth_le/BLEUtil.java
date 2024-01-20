@@ -16,13 +16,18 @@
  */
 package com.doubleyellow.scoreboard.bluetooth_le;
 
+import android.Manifest;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.doubleyellow.scoreboard.R;
 
 import com.doubleyellow.android.util.ContentUtil;

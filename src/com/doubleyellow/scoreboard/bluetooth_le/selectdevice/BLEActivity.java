@@ -135,6 +135,9 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             }
             if ( m_bIsScanning ) {
                 m_bIsScanning = false;
+                if ( m_cdUpdateGui != null ) {
+                    m_cdUpdateGui.cancel();
+                }
                 bleScanner.stopScan(scanCallback);
             } else {
                 m_bIsScanning = startScan(true);
@@ -157,13 +160,28 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             }
         }
 
+        m_cdUpdateGui = new CountDownTimer(m_lStopScanningAfterXSeconds * 1000, 500) {
+            @Override public void onTick(long millisUntilFinished) {
+                m_iProgress++;
+                checkForUnseen(m_iProgress);
+                btnGo.setEnabled(mSelectedSeenDevices.size() == 2);
+                updateScanButton(m_iProgress);
+            }
+            @Override public void onFinish() {
+                m_bIsScanning = false;
+                if ( bleScanner != null ) {
+                    bleScanner.stopScan(scanCallback);
+                }
+                updateScanButton(0);
+            }
+        };
+
         //ColorPrefs.setColors(this, findViewById(R.id.ble_activity_root));
     }
 
-    private CountDownTimer dcUpdateGui;
+    private CountDownTimer m_cdUpdateGui;
     private long           m_lStopScanningAfterXSeconds = 60 * 10; // TODO: preference?
     private boolean startScan(boolean bCheckPermissions) {
-
         if ( scanResults.size() > 0 ) {
             scanResults.clear();
             scanResultAdapter.notifyDataSetChanged();
@@ -174,65 +192,55 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             String[] permissions = BLEUtil.getPermissions();
             ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal());
         } else {
-            if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED ) {
-                bleScanner.startScan(null, BLEUtil.scanSettings, scanCallback);
-            } else {
+            if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ) {
                 String sMsg = "The app has not been granted the permission to find nearby devices...";
-                //Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                 (new AlertDialog.Builder(this)).setTitle("Permission").setIcon(android.R.drawable.stat_sys_data_bluetooth).setMessage(sMsg).show();
                 return false;
             }
         }
 
-        dcUpdateGui = new CountDownTimer(m_lStopScanningAfterXSeconds * 1000, 500) {
-            @Override public void onTick(long millisUntilFinished) {
-                checkForUnseen();
-                btnGo.setEnabled(mSelectedSeenDevices.size() == 2);
-                updateScanButton(m_iProgress++);
-            }
-            @Override public void onFinish() {
-                m_bIsScanning = false;
-                if ( bleScanner != null ) {
-                    bleScanner.stopScan(scanCallback);
-                }
-                updateScanButton(0);
-            }
-        };
-        dcUpdateGui.start();
+        bleScanner.startScan(null, BLEUtil.scanSettings, scanCallback);
+        m_cdUpdateGui.start();
         return true;
     }
 
     private long lLastCleanupOfDevicesNoLongerBroadcasting = 0L;
 
-    private void checkForUnseen() {
+    private void checkForUnseen(int iProgress) {
         long lNow = System.currentTimeMillis();
         if ( lNow - lLastCleanupOfDevicesNoLongerBroadcasting > lCleanupCheckEvery ) {
-            Log.i(TAG, "Checking for unseen devices");
-            int iSizeBeforeClean = scanResults.size();
-            for(int i = iSizeBeforeClean -1; i >=0; i--) {
-                String previousFoundAddress = scanResults.get(i).getDevice().getAddress();
-                long lLastSeen = mAddress2LastSeen.get(previousFoundAddress);
-                if ( lNow - lLastSeen > lCleanupIfUnseenFor ) {
-                    Log.w(TAG, "Removing unseen device " + previousFoundAddress);
-                    scanResults.remove(i);
-                    scanResultAdapter.notifyItemRemoved(i);
-                    if (MapUtil.isNotEmpty(mSelectedSeenDevices)) {
-                        List<Player> lPlayersSelectedToUseDevice = new ArrayList<>();
-                        for (Player p : Player.values()) {
-                            String sSelectedForP = mSelectedSeenDevices.get(p);
-                            if ( sSelectedForP.equalsIgnoreCase(previousFoundAddress) ) {
-                                lPlayersSelectedToUseDevice.add(p);
+            if ( ListUtil.isNotEmpty(scanResults) ) {
+                Log.d(TAG, "Checking for unseen devices");
+                int iSizeBeforeClean = scanResults.size();
+                for(int i = iSizeBeforeClean -1; i >=0; i--) {
+                    String previousFoundAddress = scanResults.get(i).getDevice().getAddress();
+                    long lLastSeen = mAddress2LastSeen.get(previousFoundAddress);
+                    if ( lNow - lLastSeen > lCleanupIfUnseenFor ) {
+                        Log.w(TAG, "Removing unseen device " + previousFoundAddress);
+                        scanResults.remove(i);
+                        scanResultAdapter.notifyItemRemoved(i);
+                        if (MapUtil.isNotEmpty(mSelectedSeenDevices)) {
+                            List<Player> lPlayersSelectedToUseDevice = new ArrayList<>();
+                            for ( Player p : mSelectedSeenDevices.keySet() ) {
+                                String sSelectedForP = mSelectedSeenDevices.get(p);
+                                if ( sSelectedForP.equalsIgnoreCase(previousFoundAddress) ) {
+                                    lPlayersSelectedToUseDevice.add(p);
+                                }
                             }
-                        }
-                        if (ListUtil.isNotEmpty(lPlayersSelectedToUseDevice) ) {
-                            for(Player p: lPlayersSelectedToUseDevice ) {
-                                mSelectedSeenDevices.remove(p);
+                            if (ListUtil.isNotEmpty(lPlayersSelectedToUseDevice) ) {
+                                for(Player p: lPlayersSelectedToUseDevice ) {
+                                    mSelectedSeenDevices.remove(p);
+                                }
                             }
                         }
                     }
                 }
+                Log.d(TAG, "Selected Seen Devices : " + mSelectedSeenDevices);
+            } else {
+                if ( mDiscardedBecauseOfRegexp.size() == 0 && iProgress % 4 == 0 ) {
+                    Log.w(TAG, "Most likely 'Location' permissions are set to 'Ask every time'.. actual scanning not functional");
+                }
             }
-            Log.i(TAG, "Selected Seen Devices : " + mSelectedSeenDevices);
             lLastCleanupOfDevicesNoLongerBroadcasting = lNow;
         }
     }
@@ -268,8 +276,8 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         if ( bleScanner != null ) {
             bleScanner.stopScan(scanCallback);
         }
-        if ( dcUpdateGui != null ) {
-            dcUpdateGui.cancel();
+        if ( m_cdUpdateGui != null ) {
+            m_cdUpdateGui.cancel();
         }
     }
 
@@ -277,10 +285,9 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         super.onPause();
     }
 
+    private final Map<String, String> mDiscardedBecauseOfRegexp = new HashMap<>();
     private final ScanCallback scanCallback = new ScanCallback()
     {
-        private final Map mDiscardedBecauseOfRegexp = new HashMap();
-
         @Override public void onScanResult(int callbackType, ScanResult result) {
             if ( pMustMatch != null || StringUtil.isNotEmpty(sMustStartWith) ) {
                 String name = result.getDevice().getName();
@@ -317,9 +324,9 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                 Long lSeen = mAddress2LastSeen.get(address);
                 long lDiff = lNow - lSeen;
                 if ( lDiff > lUpdateInterval ) {
-                    Log.i(TAG, "updating " + address);
+                    //Log.d(TAG, "updating " + address);
                     scanResults.set(indexQuery, result);
-                    scanResultAdapter.notifyItemChanged(indexQuery);
+                    scanResultAdapter.notifyItemChanged(indexQuery); // ensures onBindViewHolder() is called again
                     mAddress2LastSeen.put(address, lNow);
                 }
             } else {

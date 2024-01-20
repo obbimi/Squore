@@ -27,9 +27,8 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:text="MAC: XX:XX:XX:XX:XX" />
 
-    <Button
+    <CheckBox
         android:id="@+id/use_as_device_b"
-        style="@style/SBButton"
         android:layout_width="44dp"
         android:layout_height="wrap_content"
         android:textSize="14sp"
@@ -37,9 +36,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-    <Button
+    <CheckBox
         android:id="@+id/use_as_device_a"
-        style="@style/SBButton"
         android:layout_width="44dp"
         android:layout_height="wrap_content"
         android:textSize="14sp"

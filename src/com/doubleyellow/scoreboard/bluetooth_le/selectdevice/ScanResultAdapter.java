@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Player;
@@ -39,35 +40,38 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
 
     private final Map<Player, String> mSelectedSeenDevices;
     private final Map<Player, String> mSelectedPrefDevices;
-    private List<ScanResult> items;
-    private double           fRssiValueAt1M;
+    private List<ScanResult>          items;
+    private double                    fRssiValueAt1M;
 
     public ScanResultAdapter(List<ScanResult> items, double fRssiValueAt1M, Map<Player,String> mSelectedSeenDevices, Map<Player, String> mSelectedPrefDevices) {
-        this.items = items;
+        this.items                = items;
         this.mSelectedSeenDevices = mSelectedSeenDevices;
         this.mSelectedPrefDevices = mSelectedPrefDevices;
         this.fRssiValueAt1M       = fRssiValueAt1M;
     }
 
-    private final boolean bUseEnableDisable = true;
-
     private boolean adjustEnableOrVisibility(View v, String sAddress) {
         String sDevice1 = mSelectedPrefDevices.get(Player.A);
         String sDevice2 = mSelectedPrefDevices.get(Player.B);
-        if ( mSelectedSeenDevices.size() == mSelectedPrefDevices.size() ) {
+        if ( mSelectedSeenDevices.containsKey(Player.A) ) {
             sDevice1 = mSelectedSeenDevices.get(Player.A);
+        }
+        if ( mSelectedSeenDevices.containsKey(Player.B) ) {
             sDevice2 = mSelectedSeenDevices.get(Player.B);
         }
-        int visibility = ( ( sAddress.equalsIgnoreCase(sDevice1) && (v.getId() == R.id.use_as_device_a ) )
-                        || ( sAddress.equalsIgnoreCase(sDevice2) && (v.getId() == R.id.use_as_device_b) )
-                         ) ? View.INVISIBLE
-                           : View.VISIBLE;
-        if ( bUseEnableDisable ) {
-            v.setEnabled(visibility == View.VISIBLE);
+        boolean bIsSelectedForUsage = (sAddress.equalsIgnoreCase(sDevice1) && (v.getId() == R.id.use_as_device_a))
+                                   || (sAddress.equalsIgnoreCase(sDevice2) && (v.getId() == R.id.use_as_device_b));
+        if ( v instanceof CheckBox ) {
+            CheckBox cb = (CheckBox) v;
+            if ( cb.isChecked() != bIsSelectedForUsage ) {
+                cb.setChecked(bIsSelectedForUsage);
+                //Log.d(TAG, "Adjusting checked for " + sAddress  + " " + bIsSelectedForUsage);
+            }
         } else {
+            int visibility = bIsSelectedForUsage ? View.INVISIBLE : View.VISIBLE;
             v.setVisibility(visibility);
         }
-        return visibility==View.INVISIBLE;
+        return bIsSelectedForUsage;
     }
 
     @Override public void onClick(View v) {
@@ -79,8 +83,9 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
         }
 
         Log.i(TAG, "Marked device " + sAddress + "  : " + mSelectedSeenDevices);
-        if ( bUseEnableDisable ) {
-            v.setEnabled(false);
+        if ( v instanceof CheckBox ) {
+            CheckBox cb = (CheckBox) v;
+            cb.setChecked(true);
         } else {
             v.setVisibility(View.INVISIBLE);
         }
@@ -133,7 +138,7 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
                 btn.setOnClickListener(ScanResultAdapter.this);
                 if ( adjustEnableOrVisibility(btn, address) ) {
                     mSelectedSeenDevices.put(p, address);
-                    Log.i(TAG, "Marked " + p + " as pref selected device " + address + "  : " + mSelectedSeenDevices);
+                    //Log.d(TAG, "Marked " + p + " as pref selected device " + address + "  : " + mSelectedSeenDevices);
                 }
             }
         }
@@ -143,11 +148,13 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
     @Override public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.ble_scan_result, parent, false);
+        //Log.d(TAG, "New viewholder ...");
         return new ViewHolder(view);
     }
 
     @Override public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ScanResult item = items.get(position);
+        //Log.d(TAG, "Binding " + position);
         holder.bind(item);
     }
 
