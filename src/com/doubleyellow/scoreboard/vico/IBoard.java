@@ -1073,7 +1073,7 @@ public class IBoard implements TimerViewContainer
             Log.w(TAG, "No bluetooticon view found ...");
         }
     }
-    public void setBluetoothBLEIconVisibility(int visibility, int nrOfDevicesConnected) {
+    public void updateBLEConnectionStatusIcon(int visibility, int nrOfDevicesConnected) {
         TextView vTxt = m_vRoot.findViewById(R.id.sb_bluetoothble_nrofconnected);
         if ( vTxt != null ) {
             vTxt.setText("\u16E1\u16d2:" + nrOfDevicesConnected);
@@ -1097,11 +1097,11 @@ public class IBoard implements TimerViewContainer
                 tvBLEInfo.setText(sMsg);
                 tvBLEInfo.setVisibility(View.VISIBLE);
 
+                if ( m_timerBLEMessage != null ) {
+                    m_timerBLEMessage.cancel();
+                }
                 if ( iMessageDurationSecs > 0 ) {
                     // auto hide in x secs
-                    if ( m_timerBLEMessage != null ) {
-                        m_timerBLEMessage.cancel();
-                    }
                     m_timerBLEMessage = new CountDownTimer(iMessageDurationSecs * 1000, 1000) {
                         @Override public void onTick(long millisUntilFinished) { }
                         @Override public void onFinish() {

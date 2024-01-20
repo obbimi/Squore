@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.doubleyellow.scoreboard.bluetooth.BTMessage;
 import com.doubleyellow.scoreboard.bluetooth.MessageSource;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.R;
 
 /**
  * Handler specific for BluetoothLE messages.
@@ -63,20 +64,21 @@ public class BLEHandler extends Handler
                 case CONNECTED_DiscoveringServices:
                     break;
                 case CONNECTED_TO_1_of_2:
-                    sb.setBluetoothBLEIconVisibility(View.VISIBLE, 1);
+                    sb.updateBLEConnectionStatus(View.VISIBLE, 1, sb.getString(R.string.ble_only_one_of_two_devices_connected), -1);
                     break;
                 case CONNECTED_ALL:
-                    sb.setBluetoothBLEIconVisibility(View.VISIBLE, iNrOfDevices);
+                    String sUIMsg = sb.getResources().getQuantityString(R.plurals.ble_ready_for_scoring_with_devices, iNrOfDevices);
+                    sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sUIMsg, 10);
                     break;
                 case DISCONNECTED:
-                    sb.setBluetoothBLEIconVisibility(View.INVISIBLE, -1);
+                    sb.updateBLEConnectionStatus(View.INVISIBLE, -1, "Oeps 3", -1);
                     break;
                 case CONNECTING:
-                    sb.setBluetoothBLEIconVisibility(View.VISIBLE, iNrOfDevices);
+                    sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, null, -1);
                     break;
                 case DISCONNECTED_Gatt:
-                    // if one of the two devices
-                    sb.setBluetoothBLEIconVisibility(View.VISIBLE, iNrOfDevices);
+                    // if one of the two devices disconnects
+                    sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_Lost_connection_to_a_device), -1);
                     break;
                 default:
                     Toast.makeText(sb, sMsg, Toast.LENGTH_LONG).show();

@@ -5007,10 +5007,19 @@ touch -t 01030000 LAST.sb
         super.onActivityResult(requestCode_MenuId, resultCode, data);
 
         if ( requestCode_MenuId == R.id.sb_ble_devices ) {
-            if ( data != null ) {
+            if ( resultCode == RESULT_OK ) {
                 Bundle extras = data.getExtras();
+                PreferenceValues.setString(PreferenceKeys.BluetoothLE_Peripheral1, this, "");
+                PreferenceValues.setString(PreferenceKeys.BluetoothLE_Peripheral2, this, "");
+                for(Player p : Player.values() ) {
+                    String sAddress = extras.getString(p.toString());
+                    PreferenceKeys key = p.equals(Player.A) ? PreferenceKeys.BluetoothLE_Peripheral1 : PreferenceKeys.BluetoothLE_Peripheral2;
+                    PreferenceValues.setString(key, this, sAddress);
+                }
                 m_bBLEDevicesSelected = true;
                 onResumeInitBluetoothBLE();
+            } else {
+                m_bBLEDevicesSelected = false;
             }
         }
         if ( requestCode_MenuId == R.id.sb_settings ) {
@@ -6244,9 +6253,9 @@ touch -t 01030000 LAST.sb
         }
     }
 
-    // ----------------------------------------------------
-    // --------------------- bluetooth BLE-----------------
-    // ----------------------------------------------------
+    // -----------------------------------------------------
+    // --------------------- bluetooth BLE -----------------
+    // -----------------------------------------------------
     private void selectBleDevices() {
         if ( PreferenceValues.useBluetoothLE(this) == false ) { return; }
 
@@ -6268,18 +6277,39 @@ touch -t 01030000 LAST.sb
         Intent bleActivity = new Intent(this, BLEActivity.class);
         startActivityForResult(bleActivity, R.id.sb_ble_devices);
     }
+    public void updateBLEConnectionStatus(int visibility, int nrOfDevicesConnected, String sMsg, int iDurationSecs) {
+        if ( iBoard == null ) {
+            return;
+        }
 
-    private        JSONObject         m_bleConfig                = null;
-    private        BLEDeviceButton m_eConfirmScoreByOpponentButton = BLEDeviceButton.SECONDARY_BUTTON;
-    private        BLEDeviceButton m_eCancelScoreByInitiatorButton = BLEDeviceButton.SECONDARY_BUTTON;
-    private        BLEReceiverManager m_bleReceiverManager       = null;
-    private static boolean         m_bBLEDevicesSelected                 = false;
-    private static Player          blePlayerWaitingForScoreToBeConfirmed = null;
-    private static BLEDeviceButton bleButtonUsedToIndicate_IScored       = null;
+        iBoard.updateBLEConnectionStatusIcon(visibility, nrOfDevicesConnected);
+        if ( visibility == View.INVISIBLE ) {
+            iBoard.showBLEMessage(null, null, -1);
+        } else {
+            if ( StringUtil.isNotEmpty(sMsg) ) {
+                iBoard.showBLEMessage(null, sMsg, iDurationSecs);
+            }
+        }
+    }
+
+
+    private boolean notifyBLE(Player p) {
+        if ( m_bleReceiverManager != null ) { return false; }
+        m_bleReceiverManager.writeToBLE(p);
+        return true;
+    }
+
+    private        JSONObject         m_bleConfig                           = null;
+    private        BLEDeviceButton    m_eConfirmScoreByOpponentButton       = BLEDeviceButton.SECONDARY_BUTTON;
+    private        BLEDeviceButton    m_eCancelScoreByInitiatorButton       = BLEDeviceButton.SECONDARY_BUTTON;
+    private        BLEReceiverManager m_bleReceiverManager                  = null;
+    private static boolean            m_bBLEDevicesSelected                 = false;
+    private static Player             blePlayerWaitingForScoreToBeConfirmed = null;
+    private static BLEDeviceButton    bleButtonUsedToIndicate_IScored       = null;
     private void onResumeInitBluetoothBLE()
     {
         final String sMethod = "SB.onCreateInitBLE";
-        setBluetoothBLEIconVisibility(View.INVISIBLE, 0);
+        updateBLEConnectionStatus(View.INVISIBLE, 0, null, -1);
 
         boolean bInitBLE = PreferenceValues.useBluetoothLE(this);
         if ( bInitBLE == false ) {
@@ -6291,16 +6321,7 @@ touch -t 01030000 LAST.sb
             return;
         }
 
-        if ( false ) {
-            String[] permissions = {Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-            if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.S ) {
-                permissions = new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
-            }
-            ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal()); // causes endless onresume
-        }
-
         if ( m_bleReceiverManager == null ) {
-
             String sBluetoothLEDevice1 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral1, null, this);
             String sBluetoothLEDevice2 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral2, null, this);
             if ( StringUtil.hasEmpty(sBluetoothLEDevice1, sBluetoothLEDevice2) ) {
@@ -6635,17 +6656,6 @@ touch -t 01030000 LAST.sb
 
         iBoard.setBluetoothIconVisibility(visibility);
     }
-    public void setBluetoothBLEIconVisibility(int visibility, int nrOfDevicesConnected) {
-        if ( iBoard == null ) {
-            return;
-        }
-
-        iBoard.setBluetoothBLEIconVisibility(visibility, nrOfDevicesConnected);
-        if ( visibility == View.INVISIBLE ) {
-            iBoard.showBLEMessage(null, null, -1);
-        }
-    }
-
     private static Map<PreferenceKeys, String> mBtPrefSlaveSettings = new HashMap<>();
     static {
         mBtPrefSlaveSettings.put(PreferenceKeys.useOfficialAnnouncementsFeature, String.valueOf(Feature.DoNotUse ));

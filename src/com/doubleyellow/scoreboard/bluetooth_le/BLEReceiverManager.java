@@ -284,8 +284,8 @@ public class BLEReceiverManager
         }
         void translateToBTMessageAndSendToMain(BluetoothGattCharacteristic characteristic, byte[] value) {
             if ( false ) {
-                Log.d(TAG, "iValue : " + value[0]);
-                Log.d(TAG, "sValue : " + new String(value));
+                Log.d(TAG, "value[0] : " + value[0]);
+                Log.d(TAG, "sValue   : " + new String(value));
                 for (int i = 0; i < value.length; i++) {
                     Log.d(TAG, "b[" + i + "] : " + value[i]);
                 }

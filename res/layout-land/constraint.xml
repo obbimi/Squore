@@ -331,6 +331,7 @@
         app:layout_constraintEnd_toEndOf="@id/btn_score2"
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintVertical_bias="0.05"
+        android:contentDescription="showing if bluetooth connection is active"
         android:gravity="center"
         android:visibility="visible"
         app:layout_constraintHeight_percent="@fraction/ls_fr_bluetooth_icon_height"

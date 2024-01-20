@@ -358,7 +358,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center"
         android:visibility="visible"
-        android:text="Some information about ble connected devices"
+        android:text="Some information about or from ble connected devices"
         app:layout_constraintHeight_percent="0.04"
         android:layout_width="0dp" android:layout_height="0dp"
         android:textColor="@android:color/white"
