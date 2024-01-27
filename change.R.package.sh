@@ -53,7 +53,7 @@ function correctSportSpecificResource {
     let correctedCnt=0
     let keptCnt=0
     # list all renamed USED resource names and ...
-    for res in $(grep -E -r '@(array|bool|fraction|integer|integer-array|string|string-array).*__[A-Z][A-Za-z]+' * | perl -ne 's~.*@(array|bool|fraction|integer|integer-array|string|string-array)\/(\w+__\w+).*~$2~; print' | sort -u); do
+    for res in $(grep -E -r '@(array|bool|fraction|integer|integer-array|string|string-array|color).*__[A-Z][A-Za-z]+' * | perl -ne 's~.*@(array|bool|fraction|integer|integer-array|string|string-array|color)\/(\w+__\w+).*~$2~; print' | sort -u); do
         # ... check that the appropriate res definition exists
         if grep -E -q -r "name=.${res}." *; then
             if echo ${res} | grep -q "__${from}"; then
@@ -188,7 +188,7 @@ if [[ "$tobranded" = "Squore" ]] ; then
     fromSuffix="[A-Z][a-z][A-Za-z]+"
     toSuffix=Squash
 fi
-for f in $(grep -E -rl "@(string|fraction).*__${fromSuffix}\""); do
+for f in $(grep -E -rl "@(string|fraction|color).*__${fromSuffix}\""); do
     oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
 
     cat ${f} | perl -ne "s~__${fromSuffix}\"~__${toSuffix}\"~; print" > ${f}.1.xml

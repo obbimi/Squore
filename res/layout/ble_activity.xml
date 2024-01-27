@@ -38,11 +38,14 @@
         android:id="@+id/ble_start_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ble_start_scoring_with_devices"
+        android:text="@string/ble_select_devices_to_use_for_scoring"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+<!--
+    android:text="@{@plurals/ble_start_scoring_with_devices(0, 0)}"
+-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

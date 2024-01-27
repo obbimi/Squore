@@ -54,6 +54,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -111,6 +112,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             finish();
         });
         btnGo.setEnabled(false);
+        btnGo.setText(R.string.ble_select_devices_to_use_for_scoring);
 
         JSONObject config = BLEUtil.getActiveConfig(this);
         if ( config == null ) {
@@ -165,6 +167,12 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                 m_iProgress++;
                 checkForUnseen(m_iProgress);
                 btnGo.setEnabled(mSelectedSeenDevices.size() == 2);
+                int iDifferentDevices = (new LinkedHashSet<>(mSelectedSeenDevices.values())).size();
+                String sCaption = getResources().getQuantityString(R.plurals.ble_start_scoring_with_devices, iDifferentDevices);
+                if ( iDifferentDevices == 0 || mSelectedSeenDevices.size() != 2 ) {
+                    sCaption = getString(R.string.ble_select_devices_to_use_for_scoring);
+                }
+                btnGo.setText(sCaption);
                 updateScanButton(m_iProgress);
             }
             @Override public void onFinish() {
@@ -190,7 +198,9 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         // TODO: check permissions BLUETOOTH_SCAN
         if ( ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.BLUETOOTH_SCAN)  ) {
             String[] permissions = BLEUtil.getPermissions();
+            Log.w(TAG, "Trying to request permission for scanning");
             ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal());
+            return false;
         } else {
             if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ) {
                 String sMsg = "The app has not been granted the permission to find nearby devices...";

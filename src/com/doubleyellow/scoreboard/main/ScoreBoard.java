@@ -5017,6 +5017,9 @@ touch -t 01030000 LAST.sb
                     PreferenceValues.setString(key, this, sAddress);
                 }
                 m_bBLEDevicesSelected = true;
+                if ( PreferenceValues.setEnum(PreferenceKeys.useChangeSidesFeature, this, Feature.Automatic) ) {
+                    Toast.makeText(this, "Change sides automated in BLE mode", Toast.LENGTH_LONG).show();
+                }
                 onResumeInitBluetoothBLE();
             } else {
                 m_bBLEDevicesSelected = false;
@@ -6262,11 +6265,8 @@ touch -t 01030000 LAST.sb
         m_bBLEDevicesSelected = false;
         persist(false);
 
-        String[] permissions = {Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.S ) {
-            permissions = new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
-        }
-        ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal());
+        //String[] permissions = BLEUtil.getPermissions();
+        //ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal());
 
         if ( m_bleReceiverManager != null ) {
             // ensure currently connected devices are disconnected and there for will start broadcasting again to show up in BLEActivity
