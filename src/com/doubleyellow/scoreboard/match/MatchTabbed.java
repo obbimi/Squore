@@ -69,7 +69,7 @@ import java.util.*;
  * - enter a singles match manually
  * - enter a doubles match manually
  */
-public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessageCallback, MenuHandler, FeedMatchSelector.FeedStatusChangedListerer {
+public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMessageCallback,*/ MenuHandler, FeedMatchSelector.FeedStatusChangedListerer {
 
     private static final String TAG = "SB." + MatchTabbed.class.getSimpleName();
 
@@ -130,6 +130,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
     // --------------------- NDEF/NFC/AndroidBeam ---------
     // ----------------------------------------------------
 
+/*
     private NfcAdapter mNfcAdapter;
     private void registerNfc() {
         if ( getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC) == false ) {
@@ -147,7 +148,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
     @Override public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
         String      packageName       = this.getPackageName();
         String      text              = getNdefJsonString(this);
-        NdefRecord  mimeRecord        = ScoreBoard.createMimeRecord("application/" + "json" /*+ packageName*/, text.getBytes());
+        NdefRecord  mimeRecord        = ScoreBoard.createMimeRecord("application/" + "json", text.getBytes());
         NdefRecord  applicationRecord = NdefRecord.createApplicationRecord(packageName);
         NdefMessage msg               = new NdefMessage(new NdefRecord[]{mimeRecord, applicationRecord});
         return msg;
@@ -190,6 +191,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         }
         return joSetting.toString();
     }
+*/
 
     private Menu menu = null;
     /** Populates the options menu. */
@@ -692,7 +694,7 @@ public class MatchTabbed extends XActivity implements NfcAdapter.CreateNdefMessa
         viewPager.addOnPageChangeListener(new OnPageChangeListener());
         viewPager.setCurrentItem(actualTabsToShow.indexOf(defaultTab));
 
-        registerNfc();
+        //registerNfc();
 
         ScoreBoard.updateDemoThread(this);
     }

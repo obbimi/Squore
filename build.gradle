@@ -7,10 +7,15 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.3'
+        //classpath 'com.android.tools.build:gradle:4.1.3'
+        //classpath "com.android.tools.build:gradle:7.2.0"
+        classpath "com.android.tools.build:gradle:7.3.1"
+        //classpath "com.android.tools.build:gradle:7.0.4"
+        //classpath "com.android.tools.build:gradle:7.4.2"
+        // NOTE: Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements
 
         // added for firebase to parse google-services.json
-        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.google.gms:google-services:4.4.0'
     }
 }
 repositories {
@@ -30,7 +35,9 @@ android {
         targetCompatibility 1.8
     }
 
-    compileSdkVersion 33
+    // compileSdkVersion seems required when running from command line?!
+    //compileSdkVersion 33
+    compileSdkVersion 34 // makes NfcAdapter no longer compatible
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
     //buildToolsVersion '28.0.3'
 
@@ -169,7 +176,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar']) // AndroidBase and Graph
 
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    //implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
     implementation 'androidx.appcompat:appcompat:1.6.1' // moving from 1.3.1 to 1.4.0 makes e.g. Wear OS in emulator fail
@@ -182,9 +189,9 @@ dependencies {
     implementation 'androidx.core:core-splashscreen:1.0.1'
 
     // ChromeCast (new with Custom Receiver)
-    phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:21.3.0'
-    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:21.3.0'
-    wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.3.0' // wearOs can not cast but to run it still needs 'Implementation' to not have 'ClassNotFound' exceptions
+    phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:21.4.0'
+    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:21.4.0'
+    wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.4.0' // wearOs can not cast but to run it still needs 'Implementation' to not have 'ClassNotFound' exceptions
 
     // allow communication between handheld device and wearable
     phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:18.1.0' // compileOnly is good enough for API < 23
@@ -222,6 +229,9 @@ dependencies {
     // firebase in combination with pusher
     // https://github.com/pusher/push-notifications-android
     implementation 'com.pusher:push-notifications-android:1.9.0'
+
+    // added to avoid compile issues due to multiple kotlin libraries included by dependencies
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0"
 }
 
 /*

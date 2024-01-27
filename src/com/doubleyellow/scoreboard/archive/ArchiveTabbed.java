@@ -62,7 +62,7 @@ import java.util.List;
 /**
  * Activity to present previous/archived/recent matches
  */
-public class ArchiveTabbed extends XActivity implements NfcAdapter.CreateNdefMessageCallback, MenuHandler {
+public class ArchiveTabbed extends XActivity implements /*NfcAdapter.CreateNdefMessageCallback,*/ MenuHandler {
 
     private static final String TAG = "SB." + ArchiveTabbed.class.getSimpleName();
 

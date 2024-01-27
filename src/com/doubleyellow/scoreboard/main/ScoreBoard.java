@@ -135,7 +135,7 @@ import androidx.wear.input.WearableButtons; // requires api >= 25
 /**
  * The main Activity of the scoreboard app.
  */
-public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback, MenuHandler, DrawTouch
+public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback,*/ MenuHandler, DrawTouch
 {
     private static final String TAG = "SB." + ScoreBoard.class.getSimpleName();
 
@@ -1228,7 +1228,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         rateMeMaybe_init();
 
-        registerNfc();
+        //registerNfc();
         onCreateInitBluetooth();
     }
 
@@ -1295,7 +1295,7 @@ public class ScoreBoard extends XActivity implements NfcAdapter.CreateNdefMessag
 
         initScoreHistory();
 
-        onResumeNFC();
+        //onResumeNFC();
         onResumeFCM();
         onResumeBlueTooth();
         onResumeInitBluetoothBLE();
@@ -2415,7 +2415,7 @@ touch -t 01030000 LAST.sb
     @Override protected void onPause() {
         super.onPause(); // onstop, ondestroy oncontentchanged
         persist(false);
-        onNFCPause();
+        //onNFCPause();
         onActivityPause_Cast();
         onPauseWearable();
         onPause_BluetoothMediaControlButtons();
@@ -5811,6 +5811,7 @@ touch -t 01030000 LAST.sb
     private String[][]     techListsArray     = null;
     private static final boolean B_ONE_INSTANCE_FROM_NFC = true; // foreground dispatch http://stackoverflow.com/questions/19450661/nfc-detection-either-start-activity-or-display-dialog
 
+/*
     private NfcAdapter     mNfcAdapter        = null;
     private void registerNfc() {
         if ( getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC) == false ) {
@@ -5844,45 +5845,34 @@ touch -t 01030000 LAST.sb
     @Override public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
         String packageName    = this.getPackageName();
         String text           = matchModel.toJsonString(this);
-        NdefRecord mimeRecord = createMimeRecord("application/" + "json" /*+ packageName*/, text.getBytes()); // matching mimetype should exist in AndroidManifest.xml in the following form
-/*
-        <intent-filter>
-            <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
-            <category android:name="android.intent.category.DEFAULT"/>
-            <data android:mimeType="application/json"/>
-        </intent-filter>
-*/
+        NdefRecord mimeRecord = createMimeRecord("application/" + "json" , text.getBytes()); // matching mimetype should exist in AndroidManifest.xml in the following form
         NdefRecord applicationRecord = NdefRecord.createApplicationRecord(packageName);
         NdefMessage msg = new NdefMessage(new NdefRecord[]{mimeRecord
-                /**
-                 * Next parameter is the Android Application Record (AAR).
-                 * When a device receives a push with an AAR in it, the application specified in the AAR is guaranteed to run.
-                 * The AAR overrides the tag dispatch system.
-                 * We add it to guarantee that our ScoreBoard starts when receiving a beamed message (or download of the app from google-play is started if app is not yet installed).
-                 */
                 , applicationRecord
         });
         return msg;
     }
 
-    /** Creates a custom MIME type encapsulated in an NDEF record */
+    //Creates a custom MIME type encapsulated in an NDEF record
     public static NdefRecord createMimeRecord(String mimeType, byte[] payload) {
-        byte[] mimeBytes = mimeType.getBytes(/*Charset.forName("US-ASCII")*/);
+        byte[] mimeBytes = mimeType.getBytes();
         NdefRecord mimeRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, mimeBytes, new byte[0], payload);
         return mimeRecord;
     }
+*/
 
     @Override public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         // onResume gets called after this to handle the intent
         Log.w(TAG, "onNewIntent.. intent = " + intent);
         setIntent(intent);
-        onNFCNewIntent(intent);
+        //onNFCNewIntent(intent);
         onURLNewIntent(intent);
     }
 
     private static final int MESSAGE_SENT = 1;
 
+/*
     @Override public void onNdefPushComplete(NfcEvent nfcEvent) {
         // A handler is needed to send messages to the activity when this callback occurs, because it happens from a binder thread
         if ( mNdefHandler == null ) {
@@ -5898,8 +5888,10 @@ touch -t 01030000 LAST.sb
         }
         mNdefHandler.obtainMessage(MESSAGE_SENT).sendToTarget();
     }
-    /** This handler receives a message from onNdefPushComplete */
+
+    //This handler receives a message from onNdefPushComplete
     private static Handler mNdefHandler = null;
+*/
 
     private static boolean m_bURLReceived = false;
     private void onResumeURL() {
@@ -5984,6 +5976,10 @@ touch -t 01030000 LAST.sb
         }
     }
 
+    private void onURLNewIntent(Intent intent) {
+        m_bURLReceived = false;
+    }
+/*
     private void onNFCNewIntent(Intent intent) {
         m_bNFCReceived = false;
         Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -6084,6 +6080,7 @@ touch -t 01030000 LAST.sb
             }
         }
     }
+*/
 
     //---------------------------------------------------------
     // Progress message
