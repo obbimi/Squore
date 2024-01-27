@@ -26,11 +26,13 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import android.app.ActionBar;
 import android.content.Context;
+/*
 import android.content.pm.PackageManager;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
+*/
 import android.os.Bundle;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
@@ -53,7 +55,6 @@ import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.MenuHandler;
 import com.doubleyellow.android.util.SimpleELAdapter;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,18 +81,6 @@ public class ArchiveTabbed extends XActivity implements /*NfcAdapter.CreateNdefM
             this.clazz = clazz;
             this.iName = iName;
         }
-
-/*
-        private Fragment matchSelector = null;
-        private Fragment createFragment() {
-            try {
-                this.matchSelector = (Fragment) clazz.newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return matchSelector;
-        }
-*/
     }
 
     private Fragment getFragment(SelectTab tab) {
@@ -103,6 +92,7 @@ public class ArchiveTabbed extends XActivity implements /*NfcAdapter.CreateNdefM
     // --------------------- NDEF/NFC/AndroidBeam ---------
     // ----------------------------------------------------
 
+/*
     private NfcAdapter mNfcAdapter;
     private void registerNfc() {
         if ( getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC) == false ) {
@@ -119,7 +109,7 @@ public class ArchiveTabbed extends XActivity implements /*NfcAdapter.CreateNdefM
     @Override public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
         String      packageName       = this.getPackageName();
         String      text              = getNdefJsonString(this);
-        NdefRecord  mimeRecord        = ScoreBoard.createMimeRecord("application/" + "json" /*+ packageName*/, text.getBytes());
+        NdefRecord  mimeRecord        = ScoreBoard.createMimeRecord("application/" + "json", text.getBytes());
         NdefRecord  applicationRecord = NdefRecord.createApplicationRecord(packageName);
         NdefMessage msg               = new NdefMessage(new NdefRecord[]{mimeRecord, applicationRecord});
         return msg;
@@ -139,6 +129,7 @@ public class ArchiveTabbed extends XActivity implements /*NfcAdapter.CreateNdefM
         }
         return joSetting.toString();
     }
+*/
 
     /** Populates the options menu. */
     private Menu menu = null;
@@ -191,15 +182,6 @@ public class ArchiveTabbed extends XActivity implements /*NfcAdapter.CreateNdefM
         int menuItemId = item.getItemId();
         return handleMenuItem(menuItemId, item);
     }
-    /** for now this is only triggered for returning from 'select feed from feed' activity */
-/*
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if ( data != null ) {
-            handleMenuItem(R.id.refresh);
-        }
-    }
-*/
 
     public boolean handleMenuItem(int menuItemId, Object... ctx) {
         if ( (menuItemId != R.id.close) && (menuItemId != R.id.sb_overflow_submenu) && ListUtil.isEmpty(actualTabsToShow) ) {
@@ -330,7 +312,7 @@ public class ArchiveTabbed extends XActivity implements /*NfcAdapter.CreateNdefM
         viewPager.setOnPageChangeListener(new OnPageChangeListener());
         viewPager.setCurrentItem(actualTabsToShow.indexOf(defaultTab));
 
-        registerNfc();
+        //registerNfc();
 
         // this is only because in the fragment activity... after rotate listeners are no longer working as expected... so do not allow orientation change
         //initAllowedOrientation();

@@ -51,14 +51,11 @@ import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.NewMatchLayout;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
-import com.doubleyellow.scoreboard.prefs.URLsKeys;
 import com.doubleyellow.scoreboard.view.ExpandableListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.MenuHandler;
 import com.doubleyellow.android.util.SimpleELAdapter;
 import com.doubleyellow.util.StringUtil;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.*;
 
