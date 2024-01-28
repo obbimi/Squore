@@ -7078,7 +7078,7 @@ touch -t 01030000 LAST.sb
 
                                 iBoard.stopWaitingForBLEConfirmation();
                                 iBoard.showBLEMessage(player, sDoChangeScore, 10);
-                                iBoard.startBLEScoreChangeFeedback(blePlayerWaitingForScoreToBeConfirmed);
+                                iBoard.startFeedbackForRemoteScoreChange(blePlayerWaitingForScoreToBeConfirmed);
                                 blePlayerWaitingForScoreToBeConfirmed = null;
                                 bleButtonUsedToIndicate_IScored       = null;
                             } else if ( sDoCancelScore != null ) {
@@ -7117,7 +7117,7 @@ touch -t 01030000 LAST.sb
                             if ( btMethod.equals(BTMethods.changeScoreBLE) ) {
                                 String sMsg = getString(R.string.ble_score_for_X_changed_by_ble, player);
                                 iBoard.showBLEMessage(player, sMsg, 10);
-                                iBoard.startBLEScoreChangeFeedback(player);
+                                iBoard.startFeedbackForRemoteScoreChange(player);
                             }
                             matchModel.changeScore(player);
                         }

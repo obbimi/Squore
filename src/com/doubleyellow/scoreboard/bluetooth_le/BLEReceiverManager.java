@@ -37,6 +37,7 @@ import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
 
+import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.bluetooth.BTMessage;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.util.ListUtil;
@@ -276,12 +277,18 @@ public class BLEReceiverManager
             //int    iValue  = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT8, 0);
             //String sValue  = characteristic.getStringValue(0);
             byte[] baValue = characteristic.getValue();
+            //Integer    iValue  = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 0); // returns null
             translateToBTMessageAndSendToMain(characteristic, baValue);
         }
         @Override public void onCharacteristicChanged (@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value) {
             //super.onCharacteristicChanged(gatt, characteristic, value);
-            translateToBTMessageAndSendToMain(characteristic, value);
+            translateToBTMessageAndSendToMain(characteristic, value); // deprecated
         }
+        void showInvalidActiveConfig() {
+            Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.ble_active_config_not_suitable_for_x_devices, saDeviceAddresses.size());
+            mHandler.sendMessage(msg);
+        }
+
         void translateToBTMessageAndSendToMain(BluetoothGattCharacteristic characteristic, byte[] value) {
             if ( false ) {
                 Log.d(TAG, "value[0] : " + value[0]);
@@ -297,22 +304,28 @@ public class BLEReceiverManager
                 if ( joServiceCfg != null ) {
                     JSONArray  jaCharacteristicCfg = joServiceCfg.optJSONArray(characteristic.getUuid().toString().toLowerCase());
                     if ( jaCharacteristicCfg != null ) {
-                        JSONObject joCharacteristicCfg = jaCharacteristicCfg.getJSONObject(saDeviceAddresses.size() - 1);
-                        if ( joCharacteristicCfg != null ) {
-                            JSONArray saMessageFormat = joCharacteristicCfg.getJSONArray(BLEUtil.Keys.TranslateToBTMessage.toString());
-                            int iValue = value[0];
-                            if ( (iValue >= 0) && (iValue < saMessageFormat.length() ) ) {
-                                String sMessageFormat = saMessageFormat.getString(iValue);
-                                if ( sMessageFormat == null || sMessageFormat.startsWith("-") ) {
-                                    //Log.d(TAG, "Ignoring message " + sMessageFormat + " " + iValue);
-                                } else {
-                                    String sMessage = String.format(sMessageFormat, (this.player==null?"":player), value[0]);
-                                    Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), sMessage );
-                                    message.sendToTarget();
-                                }
+                        JSONObject joCharacteristicCfg = jaCharacteristicCfg.optJSONObject(saDeviceAddresses.size() - 1);
+                        if ( joCharacteristicCfg == null ) {
+                            showInvalidActiveConfig();
+                            return;
+                        }
+                        JSONArray saMessageFormat = joCharacteristicCfg.optJSONArray(BLEUtil.Keys.TranslateToBTMessage.toString());
+                        if ( saMessageFormat == null || saMessageFormat.length() == 0 ) {
+                            showInvalidActiveConfig();
+                            return;
+                        }
+                        int iValue = value[0];
+                        if ( (iValue >= 0) && (iValue < saMessageFormat.length() ) ) {
+                            String sMessageFormat = saMessageFormat.getString(iValue);
+                            if ( sMessageFormat == null || sMessageFormat.startsWith("-") ) {
+                                //Log.d(TAG, "Ignoring message " + sMessageFormat + " " + iValue);
                             } else {
-                                //Log.d(TAG, "Ignoring value " + iValue);
+                                String sMessage = String.format(sMessageFormat, (this.player==null?"":player), value[0]);
+                                Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), sMessage );
+                                message.sendToTarget();
                             }
+                        } else {
+                            //Log.d(TAG, "Ignoring value " + iValue);
                         }
                     }
                 }
@@ -357,7 +370,10 @@ public class BLEReceiverManager
                 readPlayerInfo(gatt, characteristicPlayerType);
             }
         }
-        @Override public void onReliableWriteCompleted(         BluetoothGatt gatt, int status) {super.onReliableWriteCompleted(gatt, status);}
+        @Override public void onReliableWriteCompleted(         BluetoothGatt gatt, int status) {
+            super.onReliableWriteCompleted(gatt, status);
+            Log.i(TAG, "onReliableWriteCompleted " + gatt.getDevice().getAddress());
+        }
         @Override public void onReadRemoteRssi        (         BluetoothGatt gatt, int rssi, int status) {
             super.onReadRemoteRssi(gatt, rssi, status);
             Log.i(TAG, "onReadRemoteRssi " + gatt.getDevice().getAddress());

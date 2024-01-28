@@ -329,8 +329,9 @@ public enum PreferenceKeys {
 
     AutomateWhatCanBeAutomatedPrefs,
 
-    UseBluetoothLE,
-    BluetoothLE_Peripheral1,
-    BluetoothLE_Peripheral2,
-    BluetoothLE_Config,
+    BlueToothLE,
+        UseBluetoothLE,
+        BluetoothLE_Peripheral1,
+        BluetoothLE_Peripheral2,
+        BluetoothLE_Config,
 }

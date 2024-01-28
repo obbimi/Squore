@@ -76,6 +76,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
     private Pattern pMustMatch     = null;
     private String  sMustStartWith = null;
     private double  fRssiValueAt1M = -50.0f;
+    private int  iNrOfDevicesRequired = -1;
     private Button  btnGo;
     private Button  btnScan;
     private    int  m_iProgress = -1;
@@ -96,6 +97,8 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         }
 
         setContentView(R.layout.ble_activity);
+        String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config, R.string.pref_BluetoothLE_Config_default, this);
+        setTitle(getString(R.string.ble_devices) + " : " + sBLEConfig);
 
         btnGo = findViewById(R.id.ble_start_button);
         btnGo.setOnClickListener(v -> {
@@ -116,10 +119,11 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
 
         JSONObject config = BLEUtil.getActiveConfig(this);
         if ( config == null ) {
-            Toast.makeText(this, "Could not obtain config for BLE", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Could not obtain config for BLE. Check your settings.", Toast.LENGTH_LONG).show();
             return;
         }
         fRssiValueAt1M = config.optDouble(BLEUtil.Keys.RssiValueAt1M.toString(), fRssiValueAt1M);
+        iNrOfDevicesRequired   = config.optInt(BLEUtil.Keys.NrOfDevices.toString(), iNrOfDevicesRequired);
 
         String sBluetoothLEDevice1 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral1, null, this);
         String sBluetoothLEDevice2 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral2, null, this);
@@ -166,8 +170,13 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             @Override public void onTick(long millisUntilFinished) {
                 m_iProgress++;
                 checkForUnseen(m_iProgress);
-                btnGo.setEnabled(mSelectedSeenDevices.size() == 2);
                 int iDifferentDevices = (new LinkedHashSet<>(mSelectedSeenDevices.values())).size();
+                if ( iNrOfDevicesRequired == -1 ) {
+                    // 1 or 2 devices selected for both players
+                    btnGo.setEnabled(mSelectedSeenDevices.size() == 2);
+                } else {
+                    btnGo.setEnabled(mSelectedSeenDevices.size() == 2 && (iDifferentDevices == iNrOfDevicesRequired) );
+                }
                 String sCaption = getResources().getQuantityString(R.plurals.ble_start_scoring_with_devices, iDifferentDevices);
                 if ( iDifferentDevices == 0 || mSelectedSeenDevices.size() != 2 ) {
                     sCaption = getString(R.string.ble_select_devices_to_use_for_scoring);
@@ -195,17 +204,17 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             scanResultAdapter.notifyDataSetChanged();
             btnGo.setEnabled(false);
         }
-        // TODO: check permissions BLUETOOTH_SCAN
-        if ( ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.BLUETOOTH_SCAN)
-          || ( PreferenceValues.currentDateIsTestDate() && ( ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ) )
+        // check permissions BLUETOOTH_SCAN
+        if ( ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)
+          || ( PreferenceValues.currentDateIsTestDate() && ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) )
            )
         {
             String[] permissions = BLEUtil.getPermissions();
             Log.w(TAG, "Trying to request permission for scanning");
-            ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal());
+            ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal()); // API28 : Can request only one set of permissions at a time
             return false;
         } else {
-            if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ) {
+            if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
                 (new AlertDialog.Builder(this)).setTitle("Permission").setIcon(android.R.drawable.stat_sys_data_bluetooth).setMessage(R.string.ble_permission_not_granted).show();
                 return false;
             }
@@ -271,7 +280,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
 
     @Override public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults); // 225, BLEUtil.permissions, [-1,-1,0,0]
-        boolean bStartScan = true;
+        boolean bStartScan = permissions.length > 0;
         for (int i = 0; i < permissions.length; i++) {
             if ( grantResults[i] == PackageManager.PERMISSION_DENIED ) {
                 bStartScan = false;

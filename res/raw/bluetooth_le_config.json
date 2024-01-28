@@ -1,49 +1,98 @@
 {
-  "config_name" : {
-    "service1-uuid" : {
-      "characteristic1-uuid" : "bluetooth-command-1 (%1$s = PlayerA/B holding device, %2$s=int value from device, %3$s=string value from device (not useful most of the time)",
-      "characteristic2-uuid" : [ "bluetooth-command-single-wristband ("
-                               , "bluetooth-command-wristband-per-team"
-                               ]
-    },
-    "service2-uuid" : {
-      "characteristic3-uuid" : "bluetooth-command-3"
+  "config_name": {
+    "service1-uuid": {
+      "button-characteristic2-uuid": [
+        {
+          "TranslateToBTMessage": [
+            "bluetooth-command-single-wristband receive value 0",
+            "bluetooth-command-single-wristband receive value 1",
+            "bluetooth-command-single-wristband receive value 2"
+          ]
+        },
+        {
+          "TranslateToBTMessage": [
+            "bluetooth-command-two-wristbands receive value 0: %1$s holds player A or B",
+            "bluetooth-command-two-wristbands receive value 1",
+            "bluetooth-command-two-wristbands receive value 2"
+          ]
+        }
+      ]
     }
   },
-  "D-SCORE-RX" : {
-    "96f9374a-2417-44e3-ae06-aa362556914e" : {
+  "D-SCORE-RX": {
+    "96f9374a-2417-44e3-ae06-aa362556914e": {
       "96f91f4b-2417-44e3-ae06-aa362556914e": "WRITE player_type: 0=server|1=returner|2=none",
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
-          "TranslateToBTMessage" : [ "-button released (one device)"
-                                   , "changeScoreBLE(B)"
-                                   , "changeScoreBLE(A)"
-                                   , "-both buttons pressed (one device)"
-                                   ]
+          "TranslateToBTMessage": [
+            "-both buttons released (one device), not used",
+            "changeScoreBLE(B)",
+            "changeScoreBLE(A)",
+            "-both buttons pressed (one device), not used"
+          ]
         },
         {
-          "TranslateToBTMessage" : [ "-button released (two devices)"
-                                   , "changeScoreBLEConfirm(%1$s, SECONDARY_BUTTON)"
-                                   , "changeScoreBLEConfirm(%1$s, PRIMARY_BUTTON)"
-                                   , "-both buttons pressed (two devices)"
-                                   ]
+          "TranslateToBTMessage": [
+            "-both buttons released (two devices), not used",
+            "changeScoreBLEConfirm(%1$s, SECONDARY_BUTTON)",
+            "changeScoreBLEConfirm(%1$s, PRIMARY_BUTTON)",
+            "-both buttons pressed (two devices), not used"
+          ]
         }
       ]
     },
-    "DeviceNameMustMatch"  : "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
-    "DeviceNameStartsWith" : "D-SCORE-RX_",
-    "ConfirmScoreByOpponentButton" : "SECONDARY_BUTTON",
-    "CancelScoreByInitiatorButton" : "SECONDARY_BUTTON",
-    "PRIMARY_BUTTON"   : "Green",
-    "SECONDARY_BUTTON" : "Red"
+    "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
+    "DeviceNameStartsWith": "D-SCORE-RX_",
+    "ConfirmScoreByOpponentButton": "SECONDARY_BUTTON",
+    "CancelScoreByInitiatorButton": "SECONDARY_BUTTON",
+    "PRIMARY_BUTTON": "Green",
+    "SECONDARY_BUTTON": "Red"
   },
-  "D-SCORE-RX-NOTUSED" : {
-    "0000180a-0000-1000-8000-00805f9b34fb" : {
-      "Device information" :  true,
-      "00002a29-0000-1000-8000-00805f9b34fb" : "READABLE Manufacturer Name String"
+  "D-SCORE-RX One Device with two buttons": {
+    "96f9374a-2417-44e3-ae06-aa362556914e": {
+      "96f91f4c-2417-44e3-ae06-aa362556914e": [
+        {
+          "TranslateToBTMessage": [
+            "-both buttons released (one device), not used",
+            "changeScoreBLE(B)",
+            "changeScoreBLE(A)",
+            "-both buttons pressed (one device), not used"
+          ]
+        },
+        null
+      ]
     },
-    "00001800-0000-1000-8000-00805f9b34fb" : {
-      "Description" : "Generic Access",
+    "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
+    "NrOfDevices" : 1,
+    "PRIMARY_BUTTON": "Green",
+    "SECONDARY_BUTTON": "Red"
+  },
+  "D-SCORE-RX Two Devices with only one button used - No Confirm": {
+    "96f9374a-2417-44e3-ae06-aa362556914e": {
+      "96f91f4c-2417-44e3-ae06-aa362556914e": [
+        {
+          "OneDevice": "NotApplicable. App should not allow to start with just one device selected."
+        },
+        {
+          "TranslateToBTMessage": [
+            "-buttons released (two devices)",
+            "-red button pressed, not used",
+            "changeScoreBLE(%1$s)",
+            "-both buttons pressed (two devices)"
+          ]
+        }
+      ]
+    },
+    "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
+    "NrOfDevices" : 2
+  },
+  "d-score-rx-notused": {
+    "0000180a-0000-1000-8000-00805f9b34fb": {
+      "Device information": true,
+      "00002a29-0000-1000-8000-00805f9b34fb": "READABLE Manufacturer Name String"
+    },
+    "00001800-0000-1000-8000-00805f9b34fb": {
+      "Description": "Generic Access",
       "00002a00-0000-1000-8000-00805f9b34fb": "Device Name",
       "00002a01-0000-1000-8000-00805f9b34fb": "Appearance"
     },
@@ -51,42 +100,42 @@
       "Description": "Battery Service",
       "00002a19-0000-1000-8000-00805f9b34fb": "Battery Level READ"
     },
-    "1D14D6EE-FD63-4FA1-BFA4-8F47B42119F0 DFU Service" : {
-      "F7BF3564-FB6D-4E53-88A4-5E37E0326063 OTA Control characteristic" : "firmware update?"
+    "1D14D6EE-FD63-4FA1-BFA4-8F47B42119F0 DFU Service": {
+      "F7BF3564-FB6D-4E53-88A4-5E37E0326063 OTA Control characteristic": "firmware update?"
     }
   },
-  "single_ble_01_alert" : {
-    "00001811-0000-1000-8000-00805f9b34fb" : {
-      "00002a44-0000-1000-8000-00805f9b34fb" : "undoLast()",
-      "00002a45-0000-1000-8000-00805f9b34fb" : "changeScoreBLE(A)",
-      "00002a46-0000-1000-8000-00805f9b34fb" : "changeScoreBLE(B)",
-      "00002a47-0000-1000-8000-00805f9b34fb" : "changeScoreBLE(%2$s)"
+  "single_ble_01_alert": {
+    "00001811-0000-1000-8000-00805f9b34fb": {
+      "00002a44-0000-1000-8000-00805f9b34fb": "undoLast()",
+      "00002a45-0000-1000-8000-00805f9b34fb": "changeScoreBLE(A)",
+      "00002a46-0000-1000-8000-00805f9b34fb": "changeScoreBLE(B)",
+      "00002a47-0000-1000-8000-00805f9b34fb": "changeScoreBLE(%2$s)"
     }
   },
-  "double_ble_01_alert" : {
-    "00001811-0000-1000-8000-00805f9b34fb" : {
-      "00002a44-0000-1000-8000-00805f9b34fb" : "undoLast()",
-      "00002a45-0000-1000-8000-00805f9b34fb" : "changeScoreBLE(%1$s)"
+  "double_ble_01_alert": {
+    "00001811-0000-1000-8000-00805f9b34fb": {
+      "00002a44-0000-1000-8000-00805f9b34fb": "undoLast()",
+      "00002a45-0000-1000-8000-00805f9b34fb": "changeScoreBLE(%1$s)"
     }
   },
-  "double_ble_02_WB010988_Zentri" : {
-    "distance" : "180m",
-    "175f8f23-a570-49bd-9627-815a6a27de2a" : {
-      "1cce1ea8-bd34-4813-a00a-c76e028fadcb" : "write Rx",
-      "cacc07ff-ffff-4c48-8fae-a9ef71b75e26" : "read Tx"
+  "double_ble_02_WB010988_Zentri": {
+    "distance": "180m",
+    "175f8f23-a570-49bd-9627-815a6a27de2a": {
+      "1cce1ea8-bd34-4813-a00a-c76e028fadcb": "write Rx",
+      "cacc07ff-ffff-4c48-8fae-a9ef71b75e26": "read Tx"
     }
   },
-  "double_ble_02_RDL" : {
-    "RDL52832" : "model name, not unique",
-    "00001803-494c-4f47-4943-544543480000" : {
-      "00001804-494c-4f47-4943-544543480000" : "undoLast(value=passcode)",
-      "00001805-494c-4f47-4943-544543480000" : "undoLast()"
+  "double_ble_02_RDL": {
+    "RDL52832": "model name, not unique",
+    "00001803-494c-4f47-4943-544543480000": {
+      "00001804-494c-4f47-4943-544543480000": "undoLast(value=passcode)",
+      "00001805-494c-4f47-4943-544543480000": "undoLast()"
     },
-    "0000fe59-0000-1000-8000-00805f9b34fb" : {
-      "8ec90003-f315-4f60-9fb8-838830daea50" : "undoLast()"
+    "0000fe59-0000-1000-8000-00805f9b34fb": {
+      "8ec90003-f315-4f60-9fb8-838830daea50": "undoLast()"
     },
-    "00001801-0000-1000-8000-00805f9b34fb" : {
-      "00002a05-0000-1000-8000-00805f9b34fb" : "undoLast()"
+    "00001801-0000-1000-8000-00805f9b34fb": {
+      "00002a05-0000-1000-8000-00805f9b34fb": "undoLast()"
     }
   }
 }

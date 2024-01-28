@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.bluetooth.BTMessage;
 import com.doubleyellow.scoreboard.bluetooth.MessageSource;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -48,7 +49,12 @@ public class BLEHandler extends Handler
         //Log.d(TAG, "msg.obj  : " + msg.obj);
         //Log.d(TAG, "msg.arg1 : " + msg.arg1);
         //Log.d(TAG, "msg.arg2 : " + msg.arg2);
-        if ( btMessage.equals(BTMessage.READ) ) {
+        if ( btMessage.equals(BTMessage.INFO) ) {
+            int iNrOfDevices = msg.arg2;
+            String sMsg2 = sb.getString(msg.arg1, iNrOfDevices, Brand.getShortName(sb));
+            Toast.makeText(sb, sMsg2, Toast.LENGTH_LONG).show();
+            sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sMsg2, -1);
+        } else if ( btMessage.equals(BTMessage.READ) ) {
             try {
                 sb.interpretReceivedMessage(sMsg, MessageSource.BluetoothLE);
             } catch (Exception e) {

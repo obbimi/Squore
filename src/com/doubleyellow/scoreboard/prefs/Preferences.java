@@ -51,6 +51,7 @@ import com.doubleyellow.prefs.EnumListPreference;
 import com.doubleyellow.prefs.EnumMultiSelectPreference;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.bluetooth_le.BLEUtil;
 import com.doubleyellow.scoreboard.model.GoldenPointFormat;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
@@ -635,6 +636,15 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             return false;
                         }
                     });
+                }
+            }
+            final PreferenceGroup psBLE = (PreferenceGroup) this.findPreference(PreferenceKeys.BlueToothLE);
+            if ( psBLE != null ) {
+                ListPreference lpBLEconfig = ( ListPreference) this.findPreference(PreferenceKeys.BluetoothLE_Config);
+                if ( lpBLEconfig != null ) {
+                    List<CharSequence> lLetUserSelectFrom   = BLEUtil.getConfigs(getContext());
+                    lpBLEconfig.setEntryValues(lLetUserSelectFrom.toArray(new CharSequence[0]));
+                    lpBLEconfig.setEntries    (lLetUserSelectFrom.toArray(new CharSequence[0]));
                 }
             }
             final PreferenceGroup psCastLiveScore = (PreferenceGroup) this.findPreference(PreferenceKeys.ChromeCast);

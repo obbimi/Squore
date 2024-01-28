@@ -52,7 +52,7 @@ public class BLEUtil
     @NonNull
     public static String[] getPermissions() {
         String[] permissions = {Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.S ) {
+        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.S /* 31 */ ) {
             permissions = new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
         }
         return permissions;
@@ -70,15 +70,38 @@ public class BLEUtil
 
         /** Array of messages (Message formats) */
         TranslateToBTMessage,
+        /** if specified in the config, this exact nr of devices (1 or 2) need to be connected */
+        NrOfDevices,
     }
 
     final public static ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
 
+    public static List<CharSequence> getConfigs(Context context) {
+        String sJson = ContentUtil.readRaw(context, R.raw.bluetooth_le_config);
+        try {
+            JSONObject config = new JSONObject(sJson);
+            //String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config_default      , context);
+
+            List<CharSequence> lReturn = new ArrayList<>();
+            Iterator<String> keys = config.keys();
+            while(keys.hasNext()) {
+                String sKey = keys.next();
+                if ( sKey.startsWith(sKey.substring(0,3).toUpperCase())) {
+                    // for now only list entries with first few characters uppercase
+                    lReturn.add(sKey);
+                }
+            }
+            return lReturn;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static JSONObject getActiveConfig(Context context) {
         String sJson = ContentUtil.readRaw(context, R.raw.bluetooth_le_config);
         try {
             JSONObject config = new JSONObject(sJson);
-            String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config_default      , context);
+            String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config, R.string.pref_BluetoothLE_Config_default, context);
             config = config.getJSONObject(sBLEConfig);
             return  config;
         } catch (JSONException e) {
