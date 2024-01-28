@@ -5984,10 +5984,6 @@ touch -t 01030000 LAST.sb
         m_bNFCReceived = false;
         Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
     }
-    private void onURLNewIntent(Intent intent) {
-        m_bURLReceived = false;
-    }
-
     private void onNFCPause() {
         if ( B_ONE_INSTANCE_FROM_NFC && (mNfcAdapter != null) ) {
             try {
@@ -6046,16 +6042,6 @@ touch -t 01030000 LAST.sb
                     } else {
                         JSONObject joSetting = new JSONObject(sMessage);
                         // TODO: handle settings being transferred
-/*
-                        Log.w(TAG, joSetting.toString(4));
-                        if ( joSetting.has(PreferenceKeys.feedPostUrls.toString())) {
-
-                        }
-                        if ( joSetting.has(PreferenceKeys.matchList.toString())) {
-                            String sMatchList = joSetting.getString(PreferenceKeys.matchList.toString());
-                            PreferenceValues.prependMatchesToList(this, Arrays.asList(StringUtil.singleCharacterSplit(sMatchList)));
-                        }
-*/
                         for ( PreferenceKeys key: PreferenceKeys.values() ) {
                             if ( joSetting.has(key.toString())) {
                                 String value = joSetting.getString(key.toString());
@@ -7089,14 +7075,17 @@ touch -t 01030000 LAST.sb
                             if ( sDoChangeScore != null ) {
                                 Log.i(TAG, "sDoChangeScore : " + sDoChangeScore);
                                 matchModel.changeScore(blePlayerWaitingForScoreToBeConfirmed);
+
+                                iBoard.stopWaitingForBLEConfirmation();
+                                iBoard.showBLEMessage(player, sDoChangeScore, 10);
+                                iBoard.startBLEScoreChangeFeedback(blePlayerWaitingForScoreToBeConfirmed);
                                 blePlayerWaitingForScoreToBeConfirmed = null;
                                 bleButtonUsedToIndicate_IScored       = null;
-
-                                iBoard.showBLEMessage(player, sDoChangeScore, 10);
                             } else if ( sDoCancelScore != null ) {
                                 Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
                                 blePlayerWaitingForScoreToBeConfirmed = null;
                                 bleButtonUsedToIndicate_IScored       = null;
+                                iBoard.stopWaitingForBLEConfirmation();
                                 iBoard.showBLEMessage(player, sDoCancelScore, 10);
                             } else {
                                 Log.w(TAG, "Score still waiting confirmation? " + blePlayerWaitingForScoreToBeConfirmed + " " + bleButtonUsedToIndicate_IScored);
@@ -7108,8 +7097,9 @@ touch -t 01030000 LAST.sb
                             bleButtonUsedToIndicate_IScored       = eButtonPressed;
 
                             String sButtonDescription = m_bleConfig.optString(m_eConfirmScoreByOpponentButton.toString(), m_eConfirmScoreByOpponentButton.toString());
-                            String sMsg = getString(R.string.ble_x_confirm_score_for_y_by_pressing_z, player.getOther(), player, sButtonDescription);
-                            iBoard.showBLEMessage(player, sMsg, -1);
+                            String sToConfirmMsg = getString(R.string.ble_x_confirm_score_for_y_by_pressing_z, player.getOther(), player, sButtonDescription);
+                            iBoard.showBLEMessage(player, sToConfirmMsg, -1);
+                            iBoard.startWaitingForBLEConfirmation(blePlayerWaitingForScoreToBeConfirmed);
                         }
                         break;
                     }
@@ -7127,6 +7117,7 @@ touch -t 01030000 LAST.sb
                             if ( btMethod.equals(BTMethods.changeScoreBLE) ) {
                                 String sMsg = getString(R.string.ble_score_for_X_changed_by_ble, player);
                                 iBoard.showBLEMessage(player, sMsg, 10);
+                                iBoard.startBLEScoreChangeFeedback(player);
                             }
                             matchModel.changeScore(player);
                         }

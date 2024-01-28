@@ -1080,17 +1080,66 @@ public class IBoard implements TimerViewContainer
             vTxt.setVisibility(visibility);
         }
     }
+    private final PlayerScoreButtonColorSwitchCountDownTimer m_timerBLEConfirm      = new PlayerScoreButtonColorSwitchCountDownTimer(30 * 1000, 500);
+    private final PlayerScoreButtonColorSwitchCountDownTimer m_timerBLEScoreChanged = new PlayerScoreButtonColorSwitchCountDownTimer(4 * 200, 200);
+    public void stopWaitingForBLEConfirmation() {
+        for(Player p: Player.values() ) {
+            waitForBLEConfirmation(p, false);
+        }
+    }
+    public void startWaitingForBLEConfirmation(Player player) {
+        waitForBLEConfirmation(player, true);
+    }
+    private void waitForBLEConfirmation(Player player, boolean bWaiting) {
+        if ( bWaiting ) {
+            m_timerBLEConfirm.start(player);
+        } else {
+            scoreButtonColorSwitch(player, false);
+            m_timerBLEConfirm.cancel();
+        }
+    }
+    public void startBLEScoreChangeFeedback(Player player) {
+        m_timerBLEScoreChanged.start(player);
+    }
+    private class PlayerScoreButtonColorSwitchCountDownTimer extends CountDownTimer {
+        private Player m_player = null;
+        private boolean m_bInvert = false;
+        PlayerScoreButtonColorSwitchCountDownTimer(int iTotalDuration, int iBlinkInterval) {
+            super(iTotalDuration, iBlinkInterval);
+        }
+        @Override public void onTick(long millisUntilFinished) {
+            m_bInvert = ! m_bInvert;
+            scoreButtonColorSwitch(m_player, m_bInvert);
+        }
+
+        @Override public void onFinish() {
+            scoreButtonColorSwitch(m_player, false);
+        }
+        public void start(Player p) {
+            m_player = p;
+            super.start();
+        }
+    }
+
+    private void scoreButtonColorSwitch(Player player, boolean bInvert) {
+        TextView btnScore = (TextView) findViewById(m_player2scoreId.get(player));
+        if ( btnScore == null ) { return; }
+
+        Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
+        Integer scoreButtonBgd = mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
+        Integer scoreButtonTxt = mColors.get(ColorPrefs.ColorTarget.scoreButtonTextColor);
+        if ( bInvert ) {
+            setBackgroundColor(btnScore, scoreButtonTxt);
+            setTextColor(btnScore, scoreButtonBgd);
+        } else {
+            setBackgroundColor(btnScore, scoreButtonBgd);
+            setTextColor(btnScore, scoreButtonTxt);
+        }
+    }
+
     private CountDownTimer m_timerBLEMessage;
     public void showBLEMessage(Player p, String sMsg, int iMessageDurationSecs) {
         // hide any 'permanent' BLE message still displaying
-/*
-        if ( p != null ) {
-            showDecisionMessage(p.getOther(), null, null, -1);
-        } else {
-            hideMessage();
-        }
-        showDecisionMessage(p, null, sMsg, iMessageDuration);
-*/
         final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bluetoothble_information);
         if ( tvBLEInfo != null ) {
             if ( StringUtil.isNotEmpty(sMsg) ) {

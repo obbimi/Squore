@@ -196,15 +196,17 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             btnGo.setEnabled(false);
         }
         // TODO: check permissions BLUETOOTH_SCAN
-        if ( ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.BLUETOOTH_SCAN)  ) {
+        if ( ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.BLUETOOTH_SCAN)
+          || ( PreferenceValues.currentDateIsTestDate() && ( ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ) )
+           )
+        {
             String[] permissions = BLEUtil.getPermissions();
             Log.w(TAG, "Trying to request permission for scanning");
             ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal());
             return false;
         } else {
             if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ) {
-                String sMsg = "The app has not been granted the permission to find nearby devices...";
-                (new AlertDialog.Builder(this)).setTitle("Permission").setIcon(android.R.drawable.stat_sys_data_bluetooth).setMessage(sMsg).show();
+                (new AlertDialog.Builder(this)).setTitle("Permission").setIcon(android.R.drawable.stat_sys_data_bluetooth).setMessage(R.string.ble_permission_not_granted).show();
                 return false;
             }
         }

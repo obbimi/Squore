@@ -22,6 +22,7 @@
     </plurals>
     <string name="ble_only_one_of_two_devices_connected">Only one of 2 devices connected</string>
     <string name="ble_Lost_connection_to_a_device">Lost connection to a BLE device</string>
+    <string name="ble_permission_not_granted">The app has not been granted the permission to find nearby devices...</string>
 
     <string name="bt_disconnect">Disconnect</string>
     <string name="bt_pull_or_push">Choose</string>

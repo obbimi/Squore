@@ -233,7 +233,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="UseBluetoothLE_default__Squash">false</bool>
     <bool name="UseBluetoothLE_default__TennisPadel">false</bool>
     <bool name="UseBluetoothLE_default__Default">false</bool>
-    <string name="pref_BluetoothLE_Config_default">double_ble_d-score</string>
+    <string name="pref_BluetoothLE_Config_default">D-SCORE-RX</string>
 
     <bool name="Cast_ShowGraphDuringTimer_default">true</bool>
     <bool name="castScreenShowLogo_default">true</bool>
