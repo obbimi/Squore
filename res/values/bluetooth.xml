@@ -11,10 +11,13 @@
         <item quantity="one">Start scoring for both players with single device</item>
         <item quantity="other">Start scoring with both selected devices</item>
     </plurals>
+    <string name="ble_score_cancelled_by_pressing_y">Score cancelled by pressing %1$s</string>
+    <string name="ble_score_confirmed_by_pressing_y">Score confirmed by pressing %1$s</string>
     <string name="ble_score_cancelled_by_opponent_x_by_pressing_y">Score cancelled by opponent %1$s by pressing %2$s</string>
     <string name="ble_score_cancelled_by_initiator_x_by_pressing_y">Score cancelled by initiator %1$s by pressing %2$s</string>
     <string name="ble_score_confirmed_by_opponent_x_by_pressing_y">Score confirmed by opponent %1$s by pressing %2$s</string>
-    <string name="ble_x_confirm_score_for_y_by_pressing_z">%1$s, confirm score for %2$s by pressing %3$s</string>
+    <string name="ble_player_x_confirm_score_for_y_by_pressing_z">%1$s, confirm score for %2$s by pressing %3$s</string>
+    <string name="ble_confirm_score_for_y_by_pressing_z">confirm score for %1$s by pressing %2$s</string>
     <string name="ble_score_for_X_changed_by_ble">Score for %1$s changed by BLE</string>
     <plurals name="ble_ready_for_scoring_with_devices">
         <item quantity="one">Ready for scoring with the BLE device</item>

@@ -122,8 +122,8 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             Toast.makeText(this, "Could not obtain config for BLE. Check your settings.", Toast.LENGTH_LONG).show();
             return;
         }
-        fRssiValueAt1M = config.optDouble(BLEUtil.Keys.RssiValueAt1M.toString(), fRssiValueAt1M);
-        iNrOfDevicesRequired   = config.optInt(BLEUtil.Keys.NrOfDevices.toString(), iNrOfDevicesRequired);
+        fRssiValueAt1M       = config.optDouble(BLEUtil.Keys.RssiValueAt1M.toString(), fRssiValueAt1M);
+        iNrOfDevicesRequired = config.optInt(BLEUtil.Keys.NrOfDevices.toString(), iNrOfDevicesRequired);
 
         String sBluetoothLEDevice1 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral1, null, this);
         String sBluetoothLEDevice2 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral2, null, this);

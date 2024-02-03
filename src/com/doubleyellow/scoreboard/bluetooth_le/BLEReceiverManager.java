@@ -40,6 +40,7 @@ import androidx.annotation.NonNull;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.bluetooth.BTMessage;
 import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.Params;
@@ -290,7 +291,7 @@ public class BLEReceiverManager
         }
 
         void translateToBTMessageAndSendToMain(BluetoothGattCharacteristic characteristic, byte[] value) {
-            if ( false ) {
+            if ( PreferenceValues.currentDateIsTestDate() ) {
                 Log.d(TAG, "value[0] : " + value[0]);
                 Log.d(TAG, "sValue   : " + new String(value));
                 for (int i = 0; i < value.length; i++) {
@@ -320,6 +321,7 @@ public class BLEReceiverManager
                             if ( sMessageFormat == null || sMessageFormat.startsWith("-") ) {
                                 //Log.d(TAG, "Ignoring message " + sMessageFormat + " " + iValue);
                             } else {
+                                sMessageFormat = sMessageFormat.replaceAll("#.*", "").trim();
                                 String sMessage = String.format(sMessageFormat, (this.player==null?"":player), value[0]);
                                 Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), sMessage );
                                 message.sendToTarget();

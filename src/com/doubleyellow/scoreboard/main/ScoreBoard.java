@@ -6282,13 +6282,14 @@ touch -t 01030000 LAST.sb
         return true;
     }
 
-    private        JSONObject         m_bleConfig                           = null;
-    private        BLEDeviceButton    m_eConfirmScoreByOpponentButton       = BLEDeviceButton.SECONDARY_BUTTON;
-    private        BLEDeviceButton    m_eCancelScoreByInitiatorButton       = BLEDeviceButton.SECONDARY_BUTTON;
-    private        BLEReceiverManager m_bleReceiverManager                  = null;
-    private static boolean            m_bBLEDevicesSelected                 = false;
-    private static Player             blePlayerWaitingForScoreToBeConfirmed = null;
-    private static BLEDeviceButton    bleButtonUsedToIndicate_IScored       = null;
+    private        JSONObject         m_bleConfig                             = null;
+    private        boolean            m_eSingleDevice_ConfirmWithSameButton   = false;
+    private        BLEDeviceButton    m_eConfirmScoreByOpponentButton         = BLEDeviceButton.SECONDARY_BUTTON;
+    private        BLEDeviceButton    m_eCancelScoreByInitiatorButton         = BLEDeviceButton.SECONDARY_BUTTON;
+    private        BLEReceiverManager m_bleReceiverManager                    = null;
+    private static boolean            m_bBLEDevicesSelected                   = false;
+    private static Player             m_blePlayerWaitingForScoreToBeConfirmed = null;
+    private static BLEDeviceButton    m_bleButtonUsedToIndicate_IScored       = null;
     private void onResumeInitBluetoothBLE()
     {
         final String sMethod = "SB.onCreateInitBLE";
@@ -6319,9 +6320,13 @@ touch -t 01030000 LAST.sb
                 return;
             }
             if ( (sBluetoothLEDevice1 != null) && (sBluetoothLEDevice1.equalsIgnoreCase(sBluetoothLEDevice2) == false) ) {
-                // settings only relevant when using 2 buttons with confirmation mechanism
+                // settings only relevant when using 2 wristbands with confirmation mechanism
                 m_eConfirmScoreByOpponentButton = BLEUtil.getButtonFor(m_bleConfig, BLEUtil.Keys.ConfirmScoreByOpponentButton, m_eConfirmScoreByOpponentButton);
                 m_eCancelScoreByInitiatorButton = BLEUtil.getButtonFor(m_bleConfig, BLEUtil.Keys.CancelScoreByInitiatorButton, m_eCancelScoreByInitiatorButton);
+            }
+            if ( (sBluetoothLEDevice1 != null) && (sBluetoothLEDevice1.equalsIgnoreCase(sBluetoothLEDevice2)) ) {
+                // settings only relevant when using 1 wristbands with 2 buttons and confirmation mechanism
+                m_eSingleDevice_ConfirmWithSameButton = m_bleConfig.optBoolean(BLEUtil.Keys.SingleDevice_ConfirmWithSameButton.toString(), m_eSingleDevice_ConfirmWithSameButton);
             }
 
             m_bleReceiverManager = new BLEReceiverManager(this, mBluetoothAdapter, sBluetoothLEDevice1, sBluetoothLEDevice2, m_bleConfig);
@@ -6970,12 +6975,13 @@ touch -t 01030000 LAST.sb
         for(String sMethodNArgs: saReadMethods) {
 
             // read what model.method() to invoke with what arguments
-            String[] saMethodNArgs = sMethodNArgs.trim().split("[\\(\\),]");
-            String    sMethod     = saMethodNArgs[0];
-            BTMethods btMethod    = null;
+            String[]  saMethodNArgs = sMethodNArgs.trim().split("[\\(\\),]");
+            String    sMethod       = saMethodNArgs[0];
+            BTMethods btMethod      = null;
             try {
                 btMethod = BTMethods.valueOf(sMethod);
             } catch (Exception e) {
+                Log.w(TAG, "Could not derive method from " + sMethod);
                 // might happen if connection is broken unexpectedly
                 // or old version communicating with new version with new method
                 //e.printStackTrace();
@@ -7033,73 +7039,128 @@ touch -t 01030000 LAST.sb
                         Player          player         = Player         .valueOf(saMethodNArgs[1].toUpperCase().trim());
                         BLEDeviceButton eButtonPressed = BLEDeviceButton.valueOf(saMethodNArgs[2].toUpperCase().trim());
                         String sButtonPressed = m_bleConfig.optString(eButtonPressed.toString(), eButtonPressed.toString());
-                        Log.i(TAG, String.format("changeScoreBLEConfirm: %s, bleButtonUsedToIndicate_IScored: %s, player:%s, button:%s", blePlayerWaitingForScoreToBeConfirmed, bleButtonUsedToIndicate_IScored, player, eButtonPressed));
+                        int iNrOfDevicesRequired = m_bleConfig.optInt(BLEUtil.Keys.NrOfDevices.toString(), 2);
+                        Log.i(TAG, String.format("changeScoreBLEConfirm: %s, m_bleButtonUsedToIndicate_IScored: %s, player:%s, button:%s", m_blePlayerWaitingForScoreToBeConfirmed, m_bleButtonUsedToIndicate_IScored, player, eButtonPressed));
 
-                        if ( blePlayerWaitingForScoreToBeConfirmed != null ) {
-                            String sDoChangeScore = null;
-                            String sDoCancelScore = null;
-                            if ( player.getOther().equals(blePlayerWaitingForScoreToBeConfirmed) ) {
-                                // check the confirmation
-                                Log.i(TAG, "Check BLE confirmation by " + player + " with button " + m_eConfirmScoreByOpponentButton);
-                                switch (m_eConfirmScoreByOpponentButton) {
-                                    case SECONDARY_BUTTON:
-                                        if ( eButtonPressed.equals(bleButtonUsedToIndicate_IScored) ) {
-                                            sDoCancelScore = getString(R.string.ble_score_cancelled_by_opponent_x_by_pressing_y, player, sButtonPressed);
-                                        } else {
-                                            sDoChangeScore = getString(R.string.ble_score_confirmed_by_opponent_x_by_pressing_y, player, sButtonPressed);
-                                        }
-                                        break;
-                                    case PRIMARY_BUTTON:
-                                        if ( eButtonPressed.equals(bleButtonUsedToIndicate_IScored) ) {
-                                            sDoChangeScore = getString(R.string.ble_score_confirmed_by_opponent_x_by_pressing_y, player, sButtonPressed);
-                                        } else {
-                                            sDoCancelScore = getString(R.string.ble_score_cancelled_by_opponent_x_by_pressing_y, player, sButtonPressed);
-                                        }
-                                        break;
+                        if ( iNrOfDevicesRequired == 1 ) {
+                            if ( m_blePlayerWaitingForScoreToBeConfirmed != null ) {
+                                String sDoChangeScore = null;
+                                String sDoCancelScore = null;
+                                if ( player.equals(m_blePlayerWaitingForScoreToBeConfirmed) ) {
+                                    // same button pressed again
+                                    if ( m_eSingleDevice_ConfirmWithSameButton ) {
+                                        sDoChangeScore = getString(R.string.ble_score_confirmed_by_pressing_y, sButtonPressed);
+                                    } else {
+                                        sDoCancelScore = getString(R.string.ble_score_cancelled_by_pressing_y, sButtonPressed);
+                                    }
+                                } else {
+                                    // other button pressed
+                                    if ( m_eSingleDevice_ConfirmWithSameButton ) {
+                                        sDoCancelScore = getString(R.string.ble_score_cancelled_by_pressing_y, sButtonPressed);
+                                    } else {
+                                        sDoChangeScore = getString(R.string.ble_score_confirmed_by_pressing_y, sButtonPressed);
+                                    }
+                                }
+                                if ( sDoChangeScore != null ) {
+                                    Log.i(TAG, "sDoChangeScore : " + sDoChangeScore);
+                                    matchModel.changeScore(m_blePlayerWaitingForScoreToBeConfirmed);
+
+                                    iBoard.stopWaitingForBLEConfirmation();
+                                    iBoard.showBLEMessage(player, sDoChangeScore, 10);
+                                    iBoard.startFeedbackForRemoteScoreChange(m_blePlayerWaitingForScoreToBeConfirmed);
+                                    m_blePlayerWaitingForScoreToBeConfirmed = null;
+                                  //m_bleButtonUsedToIndicate_IScored       = null;
+                                } else if ( sDoCancelScore != null ) {
+                                    Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
+                                    m_blePlayerWaitingForScoreToBeConfirmed = null;
+                                  //m_bleButtonUsedToIndicate_IScored       = null;
+                                    iBoard.stopWaitingForBLEConfirmation();
+                                    iBoard.showBLEMessage(player, sDoCancelScore, 10);
+                                } else {
+                                    // should not happen... with single device one button should confirm, the other cancel (third button?)
+                                    Log.w(TAG, "[Single device] Score still waiting confirmation? " + m_blePlayerWaitingForScoreToBeConfirmed + " " + m_eSingleDevice_ConfirmWithSameButton);
+                                    iBoard.appendToBLEMessage(".");
                                 }
                             } else {
-                                Log.w(TAG, "Player " + blePlayerWaitingForScoreToBeConfirmed + " waiting for confirmation by opponent pressing " + m_eConfirmScoreByOpponentButton);
-                                switch (m_eCancelScoreByInitiatorButton) {
-                                    case SECONDARY_BUTTON:
-                                        if ( eButtonPressed.equals(bleButtonUsedToIndicate_IScored) == false ) {
-                                            sDoCancelScore = getString(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, player, sButtonPressed);
-                                        }
-                                        break;
-                                    case PRIMARY_BUTTON:
-                                        if ( eButtonPressed.equals(bleButtonUsedToIndicate_IScored) ) {
-                                            sDoCancelScore = getString(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, player, sButtonPressed);
-                                        }
-                                        break;
+                                BLEDeviceButton eButtonOther = BLEDeviceButton.values()[1 - eButtonPressed.ordinal()];
+                                BLEDeviceButton eButtonToConfirm = m_eSingleDevice_ConfirmWithSameButton ? eButtonPressed : eButtonOther;
+                                Log.w(TAG, String.format("Score for %s entered with button %s now waiting for confirmation by pressing %s", player, eButtonPressed, eButtonToConfirm));
+                                m_blePlayerWaitingForScoreToBeConfirmed = player;
+                              //m_bleButtonUsedToIndicate_IScored       = eButtonPressed;
+
+                                String sButtonDescription = m_bleConfig.optString(eButtonToConfirm.toString(), eButtonToConfirm.toString());
+                                String sToConfirmMsg = getString(R.string.ble_confirm_score_for_y_by_pressing_z, m_blePlayerWaitingForScoreToBeConfirmed, sButtonDescription);
+                                iBoard.showBLEMessage(player, sToConfirmMsg, -1);
+                                iBoard.startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed);
+                            }
+
+                        } else if ( iNrOfDevicesRequired == 2 ) {
+                            if ( m_blePlayerWaitingForScoreToBeConfirmed != null ) {
+                                String sDoChangeScore = null;
+                                String sDoCancelScore = null;
+                                if ( player.getOther().equals(m_blePlayerWaitingForScoreToBeConfirmed) ) {
+                                    // check the confirmation
+                                    Log.i(TAG, "Check BLE confirmation by " + player + " with button " + m_eConfirmScoreByOpponentButton);
+                                    switch (m_eConfirmScoreByOpponentButton) {
+                                        case SECONDARY_BUTTON:
+                                            if ( eButtonPressed.equals(m_bleButtonUsedToIndicate_IScored) ) {
+                                                sDoCancelScore = getString(R.string.ble_score_cancelled_by_opponent_x_by_pressing_y, player, sButtonPressed);
+                                            } else {
+                                                sDoChangeScore = getString(R.string.ble_score_confirmed_by_opponent_x_by_pressing_y, player, sButtonPressed);
+                                            }
+                                            break;
+                                        case PRIMARY_BUTTON:
+                                            if ( eButtonPressed.equals(m_bleButtonUsedToIndicate_IScored) ) {
+                                                sDoChangeScore = getString(R.string.ble_score_confirmed_by_opponent_x_by_pressing_y, player, sButtonPressed);
+                                            } else {
+                                                sDoCancelScore = getString(R.string.ble_score_cancelled_by_opponent_x_by_pressing_y, player, sButtonPressed);
+                                            }
+                                            break;
+                                    }
+                                } else {
+                                    Log.w(TAG, "Player " + m_blePlayerWaitingForScoreToBeConfirmed + " waiting for confirmation by opponent pressing " + m_eConfirmScoreByOpponentButton);
+                                    switch (m_eCancelScoreByInitiatorButton) {
+                                        case SECONDARY_BUTTON:
+                                            if ( eButtonPressed.equals(m_bleButtonUsedToIndicate_IScored) == false ) {
+                                                sDoCancelScore = getString(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, player, sButtonPressed);
+                                            }
+                                            break;
+                                        case PRIMARY_BUTTON:
+                                            if ( eButtonPressed.equals(m_bleButtonUsedToIndicate_IScored) ) {
+                                                sDoCancelScore = getString(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, player, sButtonPressed);
+                                            }
+                                            break;
+                                    }
                                 }
-                            }
-                            if ( sDoChangeScore != null ) {
-                                Log.i(TAG, "sDoChangeScore : " + sDoChangeScore);
-                                matchModel.changeScore(blePlayerWaitingForScoreToBeConfirmed);
+                                if ( sDoChangeScore != null ) {
+                                    Log.i(TAG, "sDoChangeScore : " + sDoChangeScore);
+                                    matchModel.changeScore(m_blePlayerWaitingForScoreToBeConfirmed);
 
-                                iBoard.stopWaitingForBLEConfirmation();
-                                iBoard.showBLEMessage(player, sDoChangeScore, 10);
-                                iBoard.startFeedbackForRemoteScoreChange(blePlayerWaitingForScoreToBeConfirmed);
-                                blePlayerWaitingForScoreToBeConfirmed = null;
-                                bleButtonUsedToIndicate_IScored       = null;
-                            } else if ( sDoCancelScore != null ) {
-                                Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
-                                blePlayerWaitingForScoreToBeConfirmed = null;
-                                bleButtonUsedToIndicate_IScored       = null;
-                                iBoard.stopWaitingForBLEConfirmation();
-                                iBoard.showBLEMessage(player, sDoCancelScore, 10);
+                                    iBoard.stopWaitingForBLEConfirmation();
+                                    iBoard.showBLEMessage(player, sDoChangeScore, 10);
+                                    iBoard.startFeedbackForRemoteScoreChange(m_blePlayerWaitingForScoreToBeConfirmed);
+                                    m_blePlayerWaitingForScoreToBeConfirmed = null;
+                                    m_bleButtonUsedToIndicate_IScored       = null;
+                                } else if ( sDoCancelScore != null ) {
+                                    Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
+                                    m_blePlayerWaitingForScoreToBeConfirmed = null;
+                                    m_bleButtonUsedToIndicate_IScored       = null;
+                                    iBoard.stopWaitingForBLEConfirmation();
+                                    iBoard.showBLEMessage(player, sDoCancelScore, 10);
+                                } else {
+                                    Log.w(TAG, "Score still waiting confirmation? " + m_blePlayerWaitingForScoreToBeConfirmed + " " + m_bleButtonUsedToIndicate_IScored);
+                                    iBoard.appendToBLEMessage(".");
+                                }
                             } else {
-                                Log.w(TAG, "Score still waiting confirmation? " + blePlayerWaitingForScoreToBeConfirmed + " " + bleButtonUsedToIndicate_IScored);
-                                iBoard.appendToBLEMessage(".");
-                            }
-                        } else {
-                            Log.w(TAG, String.format("Score for %s entered with button %s now waiting for confirmation by opponent %s pressing %s", player, eButtonPressed, player.getOther(), m_eConfirmScoreByOpponentButton));
-                            blePlayerWaitingForScoreToBeConfirmed = player;
-                            bleButtonUsedToIndicate_IScored       = eButtonPressed;
+                                Log.w(TAG, String.format("Score for %s entered with button %s now waiting for confirmation by opponent %s pressing %s", player, eButtonPressed, player.getOther(), m_eConfirmScoreByOpponentButton));
+                                m_blePlayerWaitingForScoreToBeConfirmed = player;
+                                m_bleButtonUsedToIndicate_IScored       = eButtonPressed;
 
-                            String sButtonDescription = m_bleConfig.optString(m_eConfirmScoreByOpponentButton.toString(), m_eConfirmScoreByOpponentButton.toString());
-                            String sToConfirmMsg = getString(R.string.ble_x_confirm_score_for_y_by_pressing_z, player.getOther(), player, sButtonDescription);
-                            iBoard.showBLEMessage(player, sToConfirmMsg, -1);
-                            iBoard.startWaitingForBLEConfirmation(blePlayerWaitingForScoreToBeConfirmed);
+                                String sButtonDescription = m_bleConfig.optString(m_eConfirmScoreByOpponentButton.toString(), m_eConfirmScoreByOpponentButton.toString());
+                                String sToConfirmMsg = getString(R.string.ble_player_x_confirm_score_for_y_by_pressing_z, player.getOther(), player, sButtonDescription);
+                                iBoard.showBLEMessage(player, sToConfirmMsg, -1);
+                                iBoard.startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed);
+                            }
                         }
                         break;
                     }

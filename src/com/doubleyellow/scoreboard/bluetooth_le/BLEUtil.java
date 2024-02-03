@@ -66,6 +66,7 @@ public class BLEUtil
         ConfirmScoreByOpponentButton,
         /** one of the values of BLEDeviceButton */
         CancelScoreByInitiatorButton,
+        SingleDevice_ConfirmWithSameButton,
         RssiValueAt1M,
 
         /** Array of messages (Message formats) */
