@@ -51,8 +51,8 @@ public class BLEHandler extends Handler
         //Log.d(TAG, "msg.arg2 : " + msg.arg2);
         if ( btMessage.equals(BTMessage.INFO) ) {
             int iNrOfDevices = msg.arg2;
-            String sMsg2 = sb.getString(msg.arg1, iNrOfDevices, Brand.getShortName(sb));
-            Toast.makeText(sb, sMsg2, Toast.LENGTH_LONG).show();
+            String sMsg2 = sb.getString(msg.arg1, iNrOfDevices, sMsg, Brand.getShortName(sb));
+            //Toast.makeText(sb, sMsg2, Toast.LENGTH_LONG).show();
             sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sMsg2, -1);
         } else if ( btMessage.equals(BTMessage.READ) ) {
             try {

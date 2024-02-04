@@ -6269,8 +6269,17 @@ touch -t 01030000 LAST.sb
                 iBoard.showBLEMessage(null, sMsg, iDurationSecs);
             }
         }
+        TextView vTxt = findViewById(R.id.sb_bluetoothble_nrofconnected);
+        if ( vTxt != null ) {
+            vTxt.setOnClickListener(v -> {
+                showBLEDevicesBatteryLevels();
+            } );
+        }
     }
-
+    private void showBLEDevicesBatteryLevels() {
+        // actual level will be returned async via an INFO message
+        m_bleReceiverManager.readBatteryLevel();
+    }
 
     private boolean notifyBLE(Player p) {
         if ( m_bleReceiverManager != null ) { return false; }

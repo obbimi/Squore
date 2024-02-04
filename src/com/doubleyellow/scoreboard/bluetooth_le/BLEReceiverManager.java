@@ -67,6 +67,10 @@ public class BLEReceiverManager
 
     private final String CCCD_DESCRIPTOR_UUID = "00002902-0000-1000-8000-00805F9B34FB"; // Client Characteristic Configuration
 
+    private final String BATTERY_SERVICE_UUID = "0000180f-0000-1000-8000-00805f9b34fb";
+    private final String BATTERY_CHARACTERISTIC_UUID = "00002a19-0000-1000-8000-00805f9b34fb";
+    private String sReadingBatterLevelOf = null;
+
     private final BluetoothLeScanner bluetoothLeScanner;
     private       BLEHandler         mHandler;
     /** one or two devices with time we 'saw' them */
@@ -346,7 +350,13 @@ public class BLEReceiverManager
             if ( value.length != 0 ) {
                 Log.d(TAG, "onCharacteristicRead A value " + value[0]);
             }
-            writePlayerInfo(gatt, characteristic, value);
+            if ( characteristic.getUuid().toString().equals(BATTERY_CHARACTERISTIC_UUID) ) {
+                Integer intValue = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT8, 0);
+                Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.ble_battery_level, intValue, sReadingBatterLevelOf);
+                mHandler.sendMessage(msg);
+            } else {
+                writePlayerInfo(gatt, characteristic, value);
+            }
         }
         @Override public void onCharacteristicRead    (@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value, int status) {
             //super.onCharacteristicRead (gatt, characteristic, value, status); // gives error?!
@@ -486,6 +496,39 @@ public class BLEReceiverManager
                 }
             }
         }
+    }
+
+    public boolean writeToBLE(Player p) {
+        BluetoothGatt gatt = mPlayer2gatt.get(p);
+        if ( gatt == null ) { return false; }
+
+        // TODO: write some indication to wristband of other player let them know they need to
+        // - confirm / cancel score entered by opponent ?
+        // - notify them score was confirmed / canceled ?
+
+        return true;
+    }
+
+    public String readBatteryLevel() {
+        for ( String sDevice: mDevice2gatt.keySet() ) {
+            BluetoothGatt gatt = mDevice2gatt.get(sDevice);
+
+            BluetoothGattCharacteristic batteryCharacteristics = findCharacteristics(gatt, BATTERY_SERVICE_UUID, BATTERY_CHARACTERISTIC_UUID);
+            if ( batteryCharacteristics == null ) {
+                continue;
+            }
+            if ( mDevice2gatt.size() == 2 ) {
+                if ( sReadingBatterLevelOf != null && sReadingBatterLevelOf.equals(sDevice) ) {
+                    continue;
+                }
+            }
+            sReadingBatterLevelOf = sDevice;
+            if ( gatt.readCharacteristic(batteryCharacteristics) ) {
+                // actual value must be 'catched' in callback: onCharacteristicRead()
+                return sReadingBatterLevelOf;
+            }
+        }
+        return null;
     }
 
     public void startReceiving() {
