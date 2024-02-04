@@ -62,6 +62,8 @@ public class BLEUtil
         DeviceNameMustMatch,
         DeviceNameStartsWith,
 
+        InitiateScoreChangeButton,
+
         /** one of the values of BLEDeviceButton */
         ConfirmScoreByOpponentButton,
         /** one of the values of BLEDeviceButton */

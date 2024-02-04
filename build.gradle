@@ -176,7 +176,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar']) // AndroidBase and Graph
 
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    //implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4' // this one is not actually required, but removing it makes com.doubleyellow.scoreboard.history.MatchGameScoresView in portrait spacing incorrect?!
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
     implementation 'androidx.appcompat:appcompat:1.6.1' // moving from 1.3.1 to 1.4.0 makes e.g. Wear OS in emulator fail

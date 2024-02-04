@@ -1087,7 +1087,7 @@ public class IBoard implements TimerViewContainer
         SetTransparency,
     }
     private final PlayerFocusEffectCountDownTimer m_timerBLEConfirm      = new PlayerFocusEffectCountDownTimer(FocusEffect.SetTransparency, 60 * 1000, 50);
-    private final PlayerFocusEffectCountDownTimer m_timerBLEScoreChanged = new PlayerFocusEffectCountDownTimer(FocusEffect.BlinkByInverting, 5 * 300, 300);
+    private final PlayerFocusEffectCountDownTimer m_timerBLEScoreChanged = new PlayerFocusEffectCountDownTimer(FocusEffect.BlinkByInverting, 10 * 300, 300);
     public void stopWaitingForBLEConfirmation() {
         for(Player p: Player.values() ) {
             waitForBLEConfirmation(p, false);
@@ -1097,24 +1097,24 @@ public class IBoard implements TimerViewContainer
         waitForBLEConfirmation(player, true);
     }
     private void waitForBLEConfirmation(Player player, boolean bWaiting) {
-        ShowPlayerColorOn guiElement0IsName1IsScore = ShowPlayerColorOn.ScoreButton; // TODO: from options
+        ShowPlayerColorOn guiElementToUseForFocus = ShowPlayerColorOn.ScoreButton; // TODO: from options
         if ( bWaiting ) {
-            m_timerBLEConfirm.start(guiElement0IsName1IsScore, player);
+            m_timerBLEConfirm.start(guiElementToUseForFocus, player);
         } else {
-            guiElementColorSwitch(guiElement0IsName1IsScore, player, FocusEffect.BlinkByInverting, 0);
-            guiElementColorSwitch(guiElement0IsName1IsScore, player, FocusEffect.SetTransparency, 0);
+            guiElementColorSwitch(guiElementToUseForFocus, player, FocusEffect.BlinkByInverting, 0);
+            guiElementColorSwitch(guiElementToUseForFocus, player, FocusEffect.SetTransparency, 0);
             m_timerBLEConfirm.cancel();
         }
     }
     public void startFeedbackForRemoteScoreChange(Player player) {
-        ShowPlayerColorOn guiElement0IsName1IsScore = ShowPlayerColorOn.ScoreButton; // TODO: from options
+        ShowPlayerColorOn guiElementToUseForFocus = ShowPlayerColorOn.ScoreButton; // TODO: from options
         m_timerBLEScoreChanged.cancel();
-        m_timerBLEScoreChanged.start(guiElement0IsName1IsScore, player);
+        m_timerBLEScoreChanged.start(guiElementToUseForFocus, player);
     }
     private class PlayerFocusEffectCountDownTimer extends CountDownTimer {
         private Player  m_player                    = null;
         private int     m_iInvocationCnt            = 0;
-        private ShowPlayerColorOn m_guiElement0IsName1IsScore = ShowPlayerColorOn.PlayerButton;
+        private ShowPlayerColorOn m_guiElementToUseForFocus = ShowPlayerColorOn.PlayerButton;
         private FocusEffect m_focusEffect = null;
 
         PlayerFocusEffectCountDownTimer(FocusEffect focusEffect, int iTotalDuration, int iInvocationInterval) {
@@ -1123,28 +1123,28 @@ public class IBoard implements TimerViewContainer
         }
         @Override public void onTick(long millisUntilFinished) {
             m_iInvocationCnt++;
-            guiElementColorSwitch(m_guiElement0IsName1IsScore, m_player, m_focusEffect, m_iInvocationCnt);
+            guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt);
         }
 
         @Override public void onFinish() {
             m_iInvocationCnt = 0;
-            guiElementColorSwitch(m_guiElement0IsName1IsScore, m_player, m_focusEffect, m_iInvocationCnt);
+            guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt);
         }
-        public void start(ShowPlayerColorOn guiElement0IsName1IsScore, Player p) {
+        public void start(ShowPlayerColorOn guiElementToUseForFocus, Player p) {
             m_iInvocationCnt = 0;
-            m_guiElement0IsName1IsScore = guiElement0IsName1IsScore;
+            m_guiElementToUseForFocus = guiElementToUseForFocus;
             m_player = p;
             super.start();
         }
     }
 
-    private void guiElementColorSwitch(ShowPlayerColorOn guiElement0IsName1IsScore, Player player, FocusEffect focusEffect, int iInvocationCnt) {
+    private void guiElementColorSwitch(ShowPlayerColorOn guiElementToUseForFocus, Player player, FocusEffect focusEffect, int iInvocationCnt) {
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
 
         Map<Player, Integer> player2GuiElement = m_player2nameId;
         Integer iBgColor = mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
         Integer iTxColor = mColors.get(ColorPrefs.ColorTarget.playerButtonTextColor);
-        switch (guiElement0IsName1IsScore) {
+        switch (guiElementToUseForFocus) {
             case PlayerButton:
                 iBgColor = mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
                 iTxColor = mColors.get(ColorPrefs.ColorTarget.playerButtonTextColor);
@@ -1182,7 +1182,7 @@ public class IBoard implements TimerViewContainer
                     GradientDrawable gd = (GradientDrawable) drawable;
                     int iTransparency = Math.abs ((20 * iInvocationCnt) % 200 - 100);
                     if ( iInvocationCnt == 0 ) { iTransparency = 0; }
-                    Log.d(TAG, "transparency : " + iTransparency);
+                    //Log.d(TAG, "transparency : " + iTransparency);
                     gd.setAlpha(0xFF - iTransparency);
                 }
                 break;

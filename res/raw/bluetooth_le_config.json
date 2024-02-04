@@ -43,9 +43,10 @@
     },
     "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
     "DeviceNameStartsWith": "D-SCORE-RX_",
+    "InitiateScoreChangeButton"   : "PRIMARY_BUTTON",
     "ConfirmScoreByOpponentButton": "SECONDARY_BUTTON",
     "CancelScoreByInitiatorButton": "SECONDARY_BUTTON",
-    "PRIMARY_BUTTON": "Green",
+    "PRIMARY_BUTTON"  : "Green",
     "SECONDARY_BUTTON": "Red"
   },
   "D-SCORE-RX One Device with two buttons": {
