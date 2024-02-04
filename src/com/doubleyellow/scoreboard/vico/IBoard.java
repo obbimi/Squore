@@ -19,6 +19,7 @@ package com.doubleyellow.scoreboard.vico;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -1080,8 +1081,13 @@ public class IBoard implements TimerViewContainer
             vTxt.setVisibility(visibility);
         }
     }
-    private final PlayerScoreButtonColorSwitchCountDownTimer m_timerBLEConfirm      = new PlayerScoreButtonColorSwitchCountDownTimer(60 * 1000, 800);
-    private final PlayerScoreButtonColorSwitchCountDownTimer m_timerBLEScoreChanged = new PlayerScoreButtonColorSwitchCountDownTimer(5 * 300, 300);
+
+    private enum FocusEffect {
+        BlinkByInverting,
+        SetTransparency,
+    }
+    private final PlayerFocusEffectCountDownTimer m_timerBLEConfirm      = new PlayerFocusEffectCountDownTimer(FocusEffect.SetTransparency, 60 * 1000, 50);
+    private final PlayerFocusEffectCountDownTimer m_timerBLEScoreChanged = new PlayerFocusEffectCountDownTimer(FocusEffect.BlinkByInverting, 5 * 300, 300);
     public void stopWaitingForBLEConfirmation() {
         for(Player p: Player.values() ) {
             waitForBLEConfirmation(p, false);
@@ -1091,66 +1097,96 @@ public class IBoard implements TimerViewContainer
         waitForBLEConfirmation(player, true);
     }
     private void waitForBLEConfirmation(Player player, boolean bWaiting) {
-        int guiElement0IsName1IsScore = 0; // TODO: from options
+        ShowPlayerColorOn guiElement0IsName1IsScore = ShowPlayerColorOn.ScoreButton; // TODO: from options
         if ( bWaiting ) {
             m_timerBLEConfirm.start(guiElement0IsName1IsScore, player);
         } else {
-            guiElementColorSwitch(guiElement0IsName1IsScore, player, false);
+            guiElementColorSwitch(guiElement0IsName1IsScore, player, FocusEffect.BlinkByInverting, 0);
+            guiElementColorSwitch(guiElement0IsName1IsScore, player, FocusEffect.SetTransparency, 0);
             m_timerBLEConfirm.cancel();
         }
     }
     public void startFeedbackForRemoteScoreChange(Player player) {
-        int guiElement0IsName1IsScore = 1; // TODO: from options
+        ShowPlayerColorOn guiElement0IsName1IsScore = ShowPlayerColorOn.ScoreButton; // TODO: from options
+        m_timerBLEScoreChanged.cancel();
         m_timerBLEScoreChanged.start(guiElement0IsName1IsScore, player);
     }
-    private class PlayerScoreButtonColorSwitchCountDownTimer extends CountDownTimer {
+    private class PlayerFocusEffectCountDownTimer extends CountDownTimer {
         private Player  m_player                    = null;
-        private boolean m_bInvert                   = false;
-        private int     m_guiElement0IsName1IsScore = 0;
-        PlayerScoreButtonColorSwitchCountDownTimer(int iTotalDuration, int iBlinkInterval) {
-            super(iTotalDuration, iBlinkInterval);
+        private int     m_iInvocationCnt            = 0;
+        private ShowPlayerColorOn m_guiElement0IsName1IsScore = ShowPlayerColorOn.PlayerButton;
+        private FocusEffect m_focusEffect = null;
+
+        PlayerFocusEffectCountDownTimer(FocusEffect focusEffect, int iTotalDuration, int iInvocationInterval) {
+            super(iTotalDuration, iInvocationInterval);
+            this.m_focusEffect = focusEffect;
         }
         @Override public void onTick(long millisUntilFinished) {
-            m_bInvert = ! m_bInvert;
-            guiElementColorSwitch(m_guiElement0IsName1IsScore, m_player, m_bInvert);
+            m_iInvocationCnt++;
+            guiElementColorSwitch(m_guiElement0IsName1IsScore, m_player, m_focusEffect, m_iInvocationCnt);
         }
 
         @Override public void onFinish() {
-            guiElementColorSwitch(m_guiElement0IsName1IsScore, m_player, false);
+            m_iInvocationCnt = 0;
+            guiElementColorSwitch(m_guiElement0IsName1IsScore, m_player, m_focusEffect, m_iInvocationCnt);
         }
-        public void start(int guiElement0IsName1IsScore, Player p) {
+        public void start(ShowPlayerColorOn guiElement0IsName1IsScore, Player p) {
+            m_iInvocationCnt = 0;
             m_guiElement0IsName1IsScore = guiElement0IsName1IsScore;
             m_player = p;
             super.start();
         }
     }
 
-    private void guiElementColorSwitch(int guiElement0IsName1IsScore, Player player, boolean bInvert) {
-        Map<Player, Integer> player2GuiElement = guiElement0IsName1IsScore == 0 ? m_player2nameId : m_player2scoreId;
+    private void guiElementColorSwitch(ShowPlayerColorOn guiElement0IsName1IsScore, Player player, FocusEffect focusEffect, int iInvocationCnt) {
+        Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
+
+        Map<Player, Integer> player2GuiElement = m_player2nameId;
+        Integer iBgColor = mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
+        Integer iTxColor = mColors.get(ColorPrefs.ColorTarget.playerButtonTextColor);
+        switch (guiElement0IsName1IsScore) {
+            case PlayerButton:
+                iBgColor = mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
+                iTxColor = mColors.get(ColorPrefs.ColorTarget.playerButtonTextColor);
+                player2GuiElement = m_player2nameId;
+                break;
+            case ScoreButton:
+                iBgColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
+                iTxColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonTextColor);
+                player2GuiElement = m_player2scoreId;
+                break;
+        }
         View view = findViewById(player2GuiElement.get(player));
         if ( view == null ) { return; }
 
-        Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
-        Integer iBgColor = mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
-        Integer iTxColor = mColors.get(ColorPrefs.ColorTarget.playerButtonTextColor);
-        if ( guiElement0IsName1IsScore == 1 ) {
-            iBgColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
-            iTxColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonTextColor);
+        switch (focusEffect) {
+            case BlinkByInverting:
+                boolean bInvert = iInvocationCnt % 2 == 1;
+                if ( bInvert ) {
+                    Integer iTmp = iBgColor;
+                    iBgColor = iTxColor;
+                    iTxColor = iTmp;
+                }
+                if ( view instanceof PlayersButton ) {
+                    PlayersButton v = (PlayersButton) view;
+                    v.setBackgroundColor(iBgColor);
+                    v.setTextColor      (iTxColor);
+                } else {
+                    setBackgroundColor(view, iBgColor);
+                    setTextColor(view, iTxColor);
+                }
+                break;
+            case SetTransparency:
+                Drawable drawable = view.getBackground();
+                if ( drawable instanceof GradientDrawable ) {
+                    GradientDrawable gd = (GradientDrawable) drawable;
+                    int iTransparency = Math.abs ((20 * iInvocationCnt) % 200 - 100);
+                    if ( iInvocationCnt == 0 ) { iTransparency = 0; }
+                    Log.d(TAG, "transparency : " + iTransparency);
+                    gd.setAlpha(0xFF - iTransparency);
+                }
+                break;
         }
-        if ( bInvert ) {
-            Integer iTmp = iBgColor;
-            iBgColor = iTxColor;
-            iTxColor = iTmp;
-        }
-        if ( view instanceof PlayersButton ) {
-            PlayersButton v = (PlayersButton) view;
-            v.setBackgroundColor(iBgColor);
-            v.setTextColor      (iTxColor);
-        } else {
-            setBackgroundColor(view, iBgColor);
-            setTextColor(view, iTxColor);
-        }
-
     }
 
     private CountDownTimer m_timerBLEMessage;
