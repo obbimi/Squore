@@ -37,6 +37,7 @@ import android.os.*;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 
+import androidx.annotation.Nullable;
 import androidx.core.view.InputDeviceCompat;
 import androidx.core.view.MotionEventCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -99,6 +100,7 @@ import com.doubleyellow.scoreboard.timer.Timer;
 import com.doubleyellow.scoreboard.history.MatchHistory;
 import com.doubleyellow.scoreboard.match.*;
 import com.doubleyellow.scoreboard.vico.IBoard;
+import com.doubleyellow.scoreboard.vico.FocusEffect;
 import com.doubleyellow.scoreboard.view.GameHistoryView;
 import com.doubleyellow.scoreboard.view.PlayersButton;
 import com.doubleyellow.scoreboard.view.ServeButton;
@@ -5014,7 +5016,7 @@ touch -t 01030000 LAST.sb
                 }
                 m_bBLEDevicesSelected = true;
                 if ( PreferenceValues.setEnum(PreferenceKeys.useChangeSidesFeature, this, Feature.Automatic) ) {
-                    Toast.makeText(this, "Change sides automated in BLE mode", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.ble_change_sides_automated_in_ble_mode, Toast.LENGTH_LONG).show();
                 }
                 onResumeInitBluetoothBLE();
             } else {
@@ -6235,6 +6237,87 @@ touch -t 01030000 LAST.sb
         }
     }
 
+    //===================================================================
+    // Draw focus to GUI elements
+    //===================================================================
+    private final PlayerFocusEffectCountDownTimer m_timerBLEConfirm      = new PlayerFocusEffectCountDownTimer(FocusEffect.SetTransparency, 60 * 1000, 50);
+    private final PlayerFocusEffectCountDownTimer m_timerBLEScoreChanged = new PlayerFocusEffectCountDownTimer(FocusEffect.BlinkByInverting, 10 * 300, 300);
+    private class PlayerFocusEffectCountDownTimer extends CountDownTimer {
+        private Player  m_player                    = null;
+        private int     m_iInvocationCnt            = 0;
+        private ShowPlayerColorOn m_guiElementToUseForFocus = ShowPlayerColorOn.PlayerButton;
+        private FocusEffect m_focusEffect = null;
+        private String m_sTmpTxtOnElementDuringFeedback = null;
+
+        PlayerFocusEffectCountDownTimer(FocusEffect focusEffect, int iTotalDuration, int iInvocationInterval) {
+            super(iTotalDuration, iInvocationInterval);
+            this.m_focusEffect = focusEffect;
+        }
+        @Override public void onTick(long millisUntilFinished) {
+            m_iInvocationCnt++;
+            iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, m_sTmpTxtOnElementDuringFeedback);
+        }
+
+        @Override public void onFinish() {
+            m_iInvocationCnt                 = 0;
+            iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, null);
+            doChangeScoreIfRequired();
+        }
+        public void start(ShowPlayerColorOn guiElementToUseForFocus, Player p, String sTmpTxtOnElementDuringFeedback) {
+            m_iInvocationCnt                 = 0;
+            m_guiElementToUseForFocus        = guiElementToUseForFocus;
+            m_player                         = p;
+            m_sTmpTxtOnElementDuringFeedback = sTmpTxtOnElementDuringFeedback;
+            Log.i(TAG, "m_sTmpTxtOnElementDuringFeedback : " + m_sTmpTxtOnElementDuringFeedback);
+            super.start();
+        }
+
+        public void myCancel() {
+            doChangeScoreIfRequired();
+            super.cancel(); // final ... can not be overwritten
+        }
+        private void doChangeScoreIfRequired() {
+            if ( m_sTmpTxtOnElementDuringFeedback != null ) {
+                m_sTmpTxtOnElementDuringFeedback = null;
+                matchModel.changeScore(m_player);
+            }
+        }
+    }
+    public void stopWaitingForBLEConfirmation() {
+        for(Player p: Player.values() ) {
+            waitForBLEConfirmation(p, false);
+        }
+    }
+    public void startWaitingForBLEConfirmation(Player player) {
+        waitForBLEConfirmation(player, true);
+    }
+    private void waitForBLEConfirmation(Player player, boolean bWaiting) {
+        ShowPlayerColorOn guiElementToUseForFocus = ShowPlayerColorOn.ScoreButton; // TODO: from options
+        if ( bWaiting ) {
+            m_timerBLEConfirm.start(guiElementToUseForFocus, player, null);
+        } else {
+            iBoard.guiElementColorSwitch(guiElementToUseForFocus, player, FocusEffect.BlinkByInverting, 0, null);
+            iBoard.guiElementColorSwitch(guiElementToUseForFocus, player, FocusEffect.SetTransparency, 0, null);
+            m_timerBLEConfirm.myCancel();
+        }
+    }
+    public void startFeedbackForRemoteScoreChange(Player player, String sTmpTxtOnElementDuringFeedback) {
+        ShowPlayerColorOn guiElementToUseForFocus = ShowPlayerColorOn.ScoreButton; // TODO: from options
+        m_timerBLEScoreChanged.myCancel();
+        m_timerBLEScoreChanged.start(guiElementToUseForFocus, player, sTmpTxtOnElementDuringFeedback);
+    }
+
+    @Nullable private String getTxtOnElementDuringFeedback(Player player) {
+        String sTmpTxtOnElementDuringFeedback = null;
+        if ( matchModel.isPossibleGameBallFor(player) ) {
+            sTmpTxtOnElementDuringFeedback = getString(R.string.Game);
+            if ( matchModel instanceof GSMModel ) {
+                GSMModel gsmModel = (GSMModel) matchModel;
+            }
+        }
+        return sTmpTxtOnElementDuringFeedback;
+    }
+
     // -----------------------------------------------------
     // --------------------- bluetooth BLE -----------------
     // -----------------------------------------------------
@@ -6256,12 +6339,17 @@ touch -t 01030000 LAST.sb
         Intent bleActivity = new Intent(this, BLEActivity.class);
         startActivityForResult(bleActivity, R.id.sb_ble_devices);
     }
+    /** invoked by the BLEHandler */
     public void updateBLEConnectionStatus(int visibility, int nrOfDevicesConnected, String sMsg, int iDurationSecs) {
         if ( iBoard == null ) {
             return;
         }
 
-        iBoard.updateBLEConnectionStatusIcon(visibility, nrOfDevicesConnected);
+        if ( 0 <= nrOfDevicesConnected && nrOfDevicesConnected <=2 ) {
+            iBoard.updateBLEConnectionStatusIcon(visibility, nrOfDevicesConnected);
+        } else {
+            // nrOfDevicesConnected = actually the battery level
+        }
         if ( visibility == View.INVISIBLE ) {
             iBoard.showBLEMessage(null, null, -1);
         } else {
@@ -6270,7 +6358,7 @@ touch -t 01030000 LAST.sb
             }
         }
         TextView vTxt = findViewById(R.id.sb_bluetoothble_nrofconnected);
-        if ( vTxt != null ) {
+        if ( vTxt != null && (vTxt.hasOnClickListeners() == false) ) {
             vTxt.setOnClickListener(v -> {
                 showBLEDevicesBatteryLevels();
             } );
@@ -7047,6 +7135,7 @@ touch -t 01030000 LAST.sb
                         String          sButtonPressed       = m_bleConfig.optString(eButtonPressed.toString()          , eButtonPressed.toString());
                         int             iNrOfDevicesRequired = m_bleConfig.optInt   (BLEUtil.Keys.NrOfDevices.toString(), 2);
                         Log.i(TAG, String.format("changeScoreBLEConfirm: %s, player:%s, button:%s", m_blePlayerWaitingForScoreToBeConfirmed, player, eButtonPressed));
+                        String sTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(m_blePlayerWaitingForScoreToBeConfirmed);
 
                         if ( iNrOfDevicesRequired == 1 ) {
                             if ( m_blePlayerWaitingForScoreToBeConfirmed != null ) {
@@ -7069,16 +7158,18 @@ touch -t 01030000 LAST.sb
                                 }
                                 if ( sDoChangeScore != null ) {
                                     Log.i(TAG, "sDoChangeScore : " + sDoChangeScore);
-                                    matchModel.changeScore(m_blePlayerWaitingForScoreToBeConfirmed);
 
-                                    iBoard.stopWaitingForBLEConfirmation();
+                                    stopWaitingForBLEConfirmation();
                                     iBoard.showBLEMessage(player, sDoChangeScore, 10);
-                                    iBoard.startFeedbackForRemoteScoreChange(m_blePlayerWaitingForScoreToBeConfirmed);
+                                    if ( sTmpTxtOnElementDuringFeedback == null ) {
+                                        matchModel.changeScore(m_blePlayerWaitingForScoreToBeConfirmed);
+                                    }
+                                    startFeedbackForRemoteScoreChange(m_blePlayerWaitingForScoreToBeConfirmed, sTmpTxtOnElementDuringFeedback);
                                     m_blePlayerWaitingForScoreToBeConfirmed = null;
                                 } else if ( sDoCancelScore != null ) {
                                     Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
                                     m_blePlayerWaitingForScoreToBeConfirmed = null;
-                                    iBoard.stopWaitingForBLEConfirmation();
+                                    stopWaitingForBLEConfirmation();
                                     iBoard.showBLEMessage(player, sDoCancelScore, 10);
                                 } else {
                                     // should not happen... with single device one button should confirm, the other cancel (third button?)
@@ -7094,7 +7185,7 @@ touch -t 01030000 LAST.sb
                                 String sButtonDescription = m_bleConfig.optString(eButtonToConfirm.toString(), eButtonToConfirm.toString());
                                 String sToConfirmMsg = getString(R.string.ble_confirm_score_for_y_by_pressing_z, m_blePlayerWaitingForScoreToBeConfirmed, sButtonDescription);
                                 iBoard.showBLEMessage(player, sToConfirmMsg, -1);
-                                iBoard.startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed);
+                                startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed);
                             }
 
                         } else if ( iNrOfDevicesRequired == 2 ) {
@@ -7118,38 +7209,43 @@ touch -t 01030000 LAST.sb
                                 }
                                 if ( sDoChangeScore != null ) {
                                     Log.i(TAG, "sDoChangeScore : " + sDoChangeScore);
-                                    matchModel.changeScore(m_blePlayerWaitingForScoreToBeConfirmed);
 
-                                    iBoard.stopWaitingForBLEConfirmation();
+                                    stopWaitingForBLEConfirmation();
                                     iBoard.showBLEMessage(player, sDoChangeScore, 10);
-                                    iBoard.startFeedbackForRemoteScoreChange(m_blePlayerWaitingForScoreToBeConfirmed);
+                                    if ( sTmpTxtOnElementDuringFeedback == null ) {
+                                        matchModel.changeScore(m_blePlayerWaitingForScoreToBeConfirmed);
+                                    }
+                                    startFeedbackForRemoteScoreChange(m_blePlayerWaitingForScoreToBeConfirmed, sTmpTxtOnElementDuringFeedback);
                                     m_blePlayerWaitingForScoreToBeConfirmed = null;
                                 } else if ( sDoCancelScore != null ) {
                                     Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
                                     m_blePlayerWaitingForScoreToBeConfirmed = null;
-                                    iBoard.stopWaitingForBLEConfirmation();
+                                    stopWaitingForBLEConfirmation();
                                     iBoard.showBLEMessage(player, sDoCancelScore, 10);
                                 } else {
                                     Log.w(TAG, "Score still waiting confirmation? " + m_blePlayerWaitingForScoreToBeConfirmed);
                                     iBoard.appendToBLEMessage(".");
                                 }
                             } else {
-                                m_blePlayerWaitingForScoreToBeConfirmed = player;
                                 if ( eButtonPressed.equals(m_eInitiateScoreChangeButton) ) {
                                     Log.w(TAG, String.format("Score for %s entered with button %s now waiting for confirmation by opponent %s pressing %s", player, eButtonPressed, player.getOther(), m_eConfirmScoreByOpponentButton));
+                                    m_blePlayerWaitingForScoreToBeConfirmed = player;
 
                                     String sButtonDescription = m_bleConfig.optString(m_eConfirmScoreByOpponentButton.toString(), m_eConfirmScoreByOpponentButton.toString());
                                     String sToConfirmMsg = getString(R.string.ble_player_x_confirm_score_for_y_by_pressing_z, player.getOther(), player, sButtonDescription);
                                     iBoard.showBLEMessage(player, sToConfirmMsg, -1);
-                                    iBoard.startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed);
+                                    startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed);
                                 } else {
                                     Log.w(TAG, String.format("In state waiting for initiate-score-change, button %s does nothing ", eButtonPressed));
+                                    if ( PreferenceValues.currentDateIsTestDate() ) {
+                                        String sInitButtonDescription = m_bleConfig.optString(m_eInitiateScoreChangeButton.toString(), m_eInitiateScoreChangeButton.toString());
+                                        iBoard.showBLEMessage(player, "Waiting for initiate-score-change by pressing " + sInitButtonDescription + " by either player/team", 2);
+                                    }
                                 }
                             }
                         }
                         break;
                     }
-                    case changeScoreBLE:
                     case changeScore: {
                         if ( (saMethodNArgs.length > 1) && (matchModel != null) ) {
                             String sAorB = saMethodNArgs[1].toUpperCase();
@@ -7160,15 +7256,29 @@ touch -t 01030000 LAST.sb
                             } else {
                                 player = Player.valueOf(sAorB);
                             }
-                            if ( btMethod.equals(BTMethods.changeScoreBLE) ) {
-                                String sMsg = getString(R.string.ble_score_for_X_changed_by_ble, player);
-                                iBoard.showBLEMessage(player, sMsg, 10);
-                                iBoard.startFeedbackForRemoteScoreChange(player);
-                            }
                             matchModel.changeScore(player);
                         }
                         break;
                     }
+                    case changeScoreBLE:
+                        if ( (saMethodNArgs.length > 1) && (matchModel != null) ) {
+                            String sAorB = saMethodNArgs[1].toUpperCase();
+                            Player player;
+                            if ( sAorB.matches("[0-1]") ) {
+                                int i0isA1IsB = Integer.parseInt(sAorB);
+                                player = Player.values()[i0isA1IsB];
+                            } else {
+                                player = Player.valueOf(sAorB);
+                            }
+                            String sTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(player);
+                            String sMsg = getString(R.string.ble_score_for_X_changed_by_ble, player);
+                            iBoard.showBLEMessage(player, sMsg, 10);
+                            if ( sTmpTxtOnElementDuringFeedback == null ) {
+                                matchModel.changeScore(player);
+                            }
+                            startFeedbackForRemoteScoreChange(player, sTmpTxtOnElementDuringFeedback);
+                        }
+                        break;
                     case changeSide: {
                         if ( (saMethodNArgs.length > 1) && (matchModel != null) ) {
                             Player player = Player.valueOf(saMethodNArgs[1].toUpperCase());

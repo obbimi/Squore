@@ -1074,71 +1074,9 @@ public class IBoard implements TimerViewContainer
             Log.w(TAG, "No bluetooticon view found ...");
         }
     }
-    public void updateBLEConnectionStatusIcon(int visibility, int nrOfDevicesConnected) {
-        TextView vTxt = m_vRoot.findViewById(R.id.sb_bluetoothble_nrofconnected);
-        if ( vTxt != null ) {
-            vTxt.setText("\u16E1\u16d2:" + nrOfDevicesConnected);
-            vTxt.setVisibility(visibility);
-        }
-    }
 
-    private enum FocusEffect {
-        BlinkByInverting,
-        SetTransparency,
-    }
-    private final PlayerFocusEffectCountDownTimer m_timerBLEConfirm      = new PlayerFocusEffectCountDownTimer(FocusEffect.SetTransparency, 60 * 1000, 50);
-    private final PlayerFocusEffectCountDownTimer m_timerBLEScoreChanged = new PlayerFocusEffectCountDownTimer(FocusEffect.BlinkByInverting, 10 * 300, 300);
-    public void stopWaitingForBLEConfirmation() {
-        for(Player p: Player.values() ) {
-            waitForBLEConfirmation(p, false);
-        }
-    }
-    public void startWaitingForBLEConfirmation(Player player) {
-        waitForBLEConfirmation(player, true);
-    }
-    private void waitForBLEConfirmation(Player player, boolean bWaiting) {
-        ShowPlayerColorOn guiElementToUseForFocus = ShowPlayerColorOn.ScoreButton; // TODO: from options
-        if ( bWaiting ) {
-            m_timerBLEConfirm.start(guiElementToUseForFocus, player);
-        } else {
-            guiElementColorSwitch(guiElementToUseForFocus, player, FocusEffect.BlinkByInverting, 0);
-            guiElementColorSwitch(guiElementToUseForFocus, player, FocusEffect.SetTransparency, 0);
-            m_timerBLEConfirm.cancel();
-        }
-    }
-    public void startFeedbackForRemoteScoreChange(Player player) {
-        ShowPlayerColorOn guiElementToUseForFocus = ShowPlayerColorOn.ScoreButton; // TODO: from options
-        m_timerBLEScoreChanged.cancel();
-        m_timerBLEScoreChanged.start(guiElementToUseForFocus, player);
-    }
-    private class PlayerFocusEffectCountDownTimer extends CountDownTimer {
-        private Player  m_player                    = null;
-        private int     m_iInvocationCnt            = 0;
-        private ShowPlayerColorOn m_guiElementToUseForFocus = ShowPlayerColorOn.PlayerButton;
-        private FocusEffect m_focusEffect = null;
 
-        PlayerFocusEffectCountDownTimer(FocusEffect focusEffect, int iTotalDuration, int iInvocationInterval) {
-            super(iTotalDuration, iInvocationInterval);
-            this.m_focusEffect = focusEffect;
-        }
-        @Override public void onTick(long millisUntilFinished) {
-            m_iInvocationCnt++;
-            guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt);
-        }
-
-        @Override public void onFinish() {
-            m_iInvocationCnt = 0;
-            guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt);
-        }
-        public void start(ShowPlayerColorOn guiElementToUseForFocus, Player p) {
-            m_iInvocationCnt = 0;
-            m_guiElementToUseForFocus = guiElementToUseForFocus;
-            m_player = p;
-            super.start();
-        }
-    }
-
-    private void guiElementColorSwitch(ShowPlayerColorOn guiElementToUseForFocus, Player player, FocusEffect focusEffect, int iInvocationCnt) {
+    public void guiElementColorSwitch(ShowPlayerColorOn guiElementToUseForFocus, Player player, FocusEffect focusEffect, int iInvocationCnt, String sTmpTxtOnElementDuringFeedback) {
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
 
         Map<Player, Integer> player2GuiElement = m_player2nameId;
@@ -1174,6 +1112,22 @@ public class IBoard implements TimerViewContainer
                 } else {
                     setBackgroundColor(view, iBgColor);
                     setTextColor(view, iTxColor);
+                    if ( view instanceof TextView ) {
+                        TextView tv = (TextView) view;
+                        int iTagNr = R.string.oa_game;
+                        Object tag = tv.getTag(iTagNr);
+                        if ( StringUtil.isNotEmpty(sTmpTxtOnElementDuringFeedback) ) {
+                            if ( tag == null ) {
+                                tv.setTag(iTagNr, tv.getText());
+                            }
+                            tv.setText(sTmpTxtOnElementDuringFeedback);
+                        } else {
+                            if ( tag != null ) {
+                                tv.setText(tag.toString());
+                                tv.setTag(iTagNr, null);
+                            }
+                        }
+                    }
                 }
                 break;
             case SetTransparency:
@@ -1188,6 +1142,18 @@ public class IBoard implements TimerViewContainer
                 break;
         }
     }
+
+    //===================================================================
+    // BLE methods
+    //===================================================================
+    public void updateBLEConnectionStatusIcon(int visibility, int nrOfDevicesConnected) {
+        TextView vTxt = m_vRoot.findViewById(R.id.sb_bluetoothble_nrofconnected);
+        if ( vTxt != null ) {
+            vTxt.setText("\u16E1\u16d2:" + nrOfDevicesConnected);
+            vTxt.setVisibility(visibility);
+        }
+    }
+
 
     private CountDownTimer m_timerBLEMessage;
     public void showBLEMessage(Player p, String sMsg, int iMessageDurationSecs) {

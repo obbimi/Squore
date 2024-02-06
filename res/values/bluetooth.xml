@@ -5,12 +5,14 @@
     <string name="ble_stop_scan">Stop scan</string>
     <string name="ble_scanning">Scanning</string>
 
+    <string name="ble_change_sides_automated_in_ble_mode">Change sides automated in BLE mode</string>
     <string name="ble_select_devices_to_use_for_scoring">Select devices you want to use for scoring</string>
     <plurals name="ble_start_scoring_with_devices">
         <item quantity="zero">@string/ble_select_devices_to_use_for_scoring</item> <!-- never actually use by android -->
         <item quantity="one">Start scoring for both players with single device</item>
         <item quantity="other">Start scoring with both selected devices</item>
     </plurals>
+    <string name="ble_battery_level">BLE Battery Level of %2$s: %1$d %%</string> <!-- %% is 'escaped' percentage character -->
     <string name="ble_score_cancelled_by_pressing_y">Score cancelled by pressing %1$s</string>
     <string name="ble_score_confirmed_by_pressing_y">Score confirmed by pressing %1$s</string>
     <string name="ble_score_cancelled_by_opponent_x_by_pressing_y">Score cancelled by opponent %1$s by pressing %2$s</string>
