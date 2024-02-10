@@ -385,7 +385,7 @@
         />
 
     <TextView
-        android:id="@+id/sb_bluetoothble_information"
+        android:id="@+id/sb_bottom_of_screen_infomessage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

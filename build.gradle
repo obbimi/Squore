@@ -225,6 +225,8 @@ dependencies {
     // https://github.com/pusher/push-notifications-android/issues/117
     implementation 'com.google.firebase:firebase-iid:21.1.0' // add explicitly since no longer in the BOM, but required by com.pusher:push-notifications-android:1.9.0
 
+    // open source library for in-app-purchasing implementation
+    //implementation 'com.anjlab.android.iab.v3:library:2.1.0'
 
     // firebase in combination with pusher
     // https://github.com/pusher/push-notifications-android

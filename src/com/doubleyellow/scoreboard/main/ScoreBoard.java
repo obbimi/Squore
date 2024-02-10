@@ -6357,10 +6357,10 @@ touch -t 01030000 LAST.sb
             // nrOfDevicesConnected = actually the battery level
         }
         if ( visibility == View.INVISIBLE ) {
-            iBoard.showBLEMessage(null, null, -1);
+            iBoard.showInfoMessage(null, -1);
         } else {
             if ( StringUtil.isNotEmpty(sMsg) ) {
-                iBoard.showBLEMessage(null, sMsg, iDurationSecs);
+                iBoard.showInfoMessage(sMsg, iDurationSecs);
             }
         }
         TextView vTxt = findViewById(R.id.sb_bluetoothble_nrofconnected);
@@ -7166,7 +7166,7 @@ touch -t 01030000 LAST.sb
                                     Log.i(TAG, "sDoChangeScore : " + sDoChangeScore);
 
                                     stopWaitingForBLEConfirmation();
-                                    iBoard.showBLEMessage(player, sDoChangeScore, 10);
+                                    iBoard.showBLEInfoMessage(sDoChangeScore, 10);
                                     if ( sTmpTxtOnElementDuringFeedback == null ) {
                                         matchModel.changeScore(m_blePlayerWaitingForScoreToBeConfirmed);
                                     }
@@ -7176,11 +7176,11 @@ touch -t 01030000 LAST.sb
                                     Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
                                     m_blePlayerWaitingForScoreToBeConfirmed = null;
                                     stopWaitingForBLEConfirmation();
-                                    iBoard.showBLEMessage(player, sDoCancelScore, 10);
+                                    iBoard.showBLEInfoMessage(sDoCancelScore, 10);
                                 } else {
                                     // should not happen... with single device one button should confirm, the other cancel (third button?)
                                     Log.w(TAG, "[Single device] Score still waiting confirmation? " + m_blePlayerWaitingForScoreToBeConfirmed + " " + m_bSingleDevice_ConfirmWithSameButton);
-                                    iBoard.appendToBLEMessage(".");
+                                    iBoard.appendToInfoMessage(".");
                                 }
                             } else {
                                 BLEDeviceButton eButtonOther     = BLEDeviceButton.values()[1 - eButtonPressed.ordinal()];
@@ -7190,7 +7190,7 @@ touch -t 01030000 LAST.sb
 
                                 String sButtonDescription = m_bleConfig.optString(eButtonToConfirm.toString(), eButtonToConfirm.toString());
                                 String sToConfirmMsg = getString(R.string.ble_confirm_score_for_y_by_pressing_z, m_blePlayerWaitingForScoreToBeConfirmed, sButtonDescription);
-                                iBoard.showBLEMessage(player, sToConfirmMsg, -1);
+                                iBoard.showBLEInfoMessage(sToConfirmMsg, -1);
                                 startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed);
                             }
 
@@ -7217,7 +7217,7 @@ touch -t 01030000 LAST.sb
                                     Log.i(TAG, "sDoChangeScore : " + sDoChangeScore);
 
                                     stopWaitingForBLEConfirmation();
-                                    iBoard.showBLEMessage(player, sDoChangeScore, 10);
+                                    iBoard.showBLEInfoMessage(sDoChangeScore, 10);
                                     if ( sTmpTxtOnElementDuringFeedback == null ) {
                                         matchModel.changeScore(m_blePlayerWaitingForScoreToBeConfirmed);
                                     }
@@ -7227,10 +7227,10 @@ touch -t 01030000 LAST.sb
                                     Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
                                     m_blePlayerWaitingForScoreToBeConfirmed = null;
                                     stopWaitingForBLEConfirmation();
-                                    iBoard.showBLEMessage(player, sDoCancelScore, 10);
+                                    iBoard.showBLEInfoMessage(sDoCancelScore, 10);
                                 } else {
                                     Log.w(TAG, "Score still waiting confirmation? " + m_blePlayerWaitingForScoreToBeConfirmed);
-                                    iBoard.appendToBLEMessage(".");
+                                    iBoard.appendToInfoMessage(".");
                                 }
                             } else {
                                 if ( eButtonPressed.equals(m_eInitiateScoreChangeButton) ) {
@@ -7239,13 +7239,14 @@ touch -t 01030000 LAST.sb
 
                                     String sButtonDescription = m_bleConfig.optString(m_eConfirmScoreByOpponentButton.toString(), m_eConfirmScoreByOpponentButton.toString());
                                     String sToConfirmMsg = getString(R.string.ble_player_x_confirm_score_for_y_by_pressing_z, player.getOther(), player, sButtonDescription);
-                                    iBoard.showBLEMessage(player, sToConfirmMsg, -1);
+                                    iBoard.showBLEInfoMessage(sToConfirmMsg, -1);
                                     startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed);
                                 } else {
                                     Log.w(TAG, String.format("In state waiting for initiate-score-change, button %s does nothing ", eButtonPressed));
                                     if ( PreferenceValues.currentDateIsTestDate() ) {
                                         String sInitButtonDescription = m_bleConfig.optString(m_eInitiateScoreChangeButton.toString(), m_eInitiateScoreChangeButton.toString());
-                                        iBoard.showBLEMessage(player, "Waiting for initiate-score-change by pressing " + sInitButtonDescription + " by either player/team", 2);
+                                        String sInfoMsg = getString(R.string.ble_waiting_initiate_score_change_message, sInitButtonDescription);
+                                        iBoard.showBLEInfoMessage(sInfoMsg, 4);
                                     }
                                 }
                             }
@@ -7277,8 +7278,8 @@ touch -t 01030000 LAST.sb
                                 player = Player.valueOf(sAorB);
                             }
                             String sTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(player);
-                            String sMsg = getString(R.string.ble_score_for_X_changed_by_ble, player);
-                            iBoard.showBLEMessage(player, sMsg, 10);
+                            String sInfoMsg = getString(R.string.ble_score_for_X_changed_by_ble, player);
+                            iBoard.showBLEInfoMessage(sInfoMsg, 10);
                             if ( sTmpTxtOnElementDuringFeedback == null ) {
                                 matchModel.changeScore(player);
                             }

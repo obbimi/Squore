@@ -31,6 +31,12 @@
             android:icon="@android:drawable/stat_sys_data_bluetooth"
             android:defaultValue="@bool/UseBluetoothLE_default__Squash"
             />
+        <CheckBoxPreference android:key="ShowFeedBackOnBLEButtonsPressedInfoMessages"
+            android:title="@string/pref_ShowFeedBackOnBLEButtonsPressedInfoMessages"
+            android:summary="@string/pref_ShowFeedBackOnBLEButtonsPressedInfoMessages_Summary"
+            android:icon="@drawable/dummy"
+            android:defaultValue="@bool/ShowFeedBackOnBLEButtonsPressedInfoMessages_default"
+            />
         <ListPreference android:key="BluetoothLE_Config"
             android:icon="@android:drawable/stat_sys_data_bluetooth"
             android:title="@string/pref_BluetoothLE_Config"

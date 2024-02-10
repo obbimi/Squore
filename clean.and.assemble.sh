@@ -26,6 +26,13 @@ fi
 pkg=$(grep package= ${mffile} | perl -ne 's~.*"([a-z\.]+)".*~$1~; print')
 
 # check if a new version code for the brand for which we will be creating an apk is specified
+if [[ -n "$1" ]]; then
+    versionCodeFromCommandLine=$1
+    echo "Changing build.gradle to use versioncode $versionCodeFromCommandLine"
+    #grep versionCode build.gradle | sed -i "s/10000 + [0-9][0-9][0-9]/10000 + ${versionCodeFromCommandLine}/"
+    sed -i "s/10000 + [0-9][0-9]*/10000 + ${versionCodeFromCommandLine}/" build.gradle
+fi
+
 brand=$(grep -E 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
 echo "Manifest file : ${mffile}"
 echo "Package       : ${pkg}"
@@ -66,11 +73,11 @@ else
 fi
 
 if [[ -z "${hasNewVersionCode}" ]]; then
-    if [[ -n "$(grep versionCode build.gradle | grep -i ${brand})" ]]; then
+    if [[ -n "$(grep versionCode build.gradle)" ]]; then
         echo "Specify new version code for ${brand}"
         read -p "Open build.gradle [Y/n] ?" ANWSER
         if [[ "${ANWSER:-y}" = "y" ]]; then
-            vi +/${brand} build.gradle
+            vi +/versionCode build.gradle
             exit 1
         fi
     else
@@ -122,7 +129,9 @@ if [[ ${iStep} -le 1 ]]; then
             # determine correct version number from manifest
             if [[ -e build/intermediates/merged_manifests/${productFlavor}Release ]]; then
                 mergedManifest=$(find build/intermediates/merged_manifests/${productFlavor}Release -name AndroidManifest.xml)
+                echo "Merged manifest: ${mergedManifest}"
                 versionCode=$(head ${mergedManifest} | grep versionCode | sed -e 's~[^0-9]~~g')
+                echo "Merged manifest versionCode: ${versionCode}"
 
                 if [[ -e ${BU_DIR} ]]; then
                     if [[ -e ${relapk} ]]; then
@@ -134,6 +143,8 @@ if [[ ${iStep} -le 1 ]]; then
                 else
                     echo "NOT making backup in non existing directory ${BU_DIR}"
                 fi
+            else
+                echo "WARN: could not find build/intermediates/merged_manifests/${productFlavor}Release"
             fi
 
             #read -p "Does copy look ok"

@@ -1142,6 +1142,50 @@ public class IBoard implements TimerViewContainer
                 break;
         }
     }
+    public void showBLEInfoMessage(String sMsg, int iMessageDurationSecs) {
+        boolean bShow = PreferenceValues.showFeedBackOnBLEButtonsPressedInfoMessages(context);
+        if ( bShow ) {
+            showInfoMessage(sMsg, iMessageDurationSecs);
+        }
+    }
+
+    //===================================================================
+    // INFO message methods (replacing 'toasts'
+    //===================================================================
+    private CountDownTimer m_timerInfoMessage;
+    public void showInfoMessage(String sMsg, int iMessageDurationSecs) {
+        // hide any 'permanent' BLE message still displaying
+        final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bottom_of_screen_infomessage);
+        if ( tvBLEInfo != null ) {
+            if ( StringUtil.isNotEmpty(sMsg) ) {
+                tvBLEInfo.setText(sMsg);
+                tvBLEInfo.setVisibility(View.VISIBLE);
+
+                if ( m_timerInfoMessage != null ) {
+                    m_timerInfoMessage.cancel();
+                }
+                if ( iMessageDurationSecs > 0 ) {
+                    // auto hide in x secs
+                    m_timerInfoMessage = new CountDownTimer(iMessageDurationSecs * 1000, 1000) {
+                        @Override public void onTick(long millisUntilFinished) { }
+                        @Override public void onFinish() {
+                            tvBLEInfo.setVisibility(View.INVISIBLE);
+                            m_timerInfoMessage = null;
+                        }
+                    };
+                    m_timerInfoMessage.start();
+                }
+            } else {
+                tvBLEInfo.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+    public void appendToInfoMessage(String sMsg) {
+        final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bottom_of_screen_infomessage);
+        if ( tvBLEInfo != null ) {
+            tvBLEInfo.setText(tvBLEInfo.getText() + sMsg);
+        }
+    }
 
     //===================================================================
     // BLE methods
@@ -1151,42 +1195,6 @@ public class IBoard implements TimerViewContainer
         if ( vTxt != null ) {
             vTxt.setText("\u16E1\u16d2:" + nrOfDevicesConnected);
             vTxt.setVisibility(visibility);
-        }
-    }
-
-
-    private CountDownTimer m_timerBLEMessage;
-    public void showBLEMessage(Player p, String sMsg, int iMessageDurationSecs) {
-        // hide any 'permanent' BLE message still displaying
-        final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bluetoothble_information);
-        if ( tvBLEInfo != null ) {
-            if ( StringUtil.isNotEmpty(sMsg) ) {
-                tvBLEInfo.setText(sMsg);
-                tvBLEInfo.setVisibility(View.VISIBLE);
-
-                if ( m_timerBLEMessage != null ) {
-                    m_timerBLEMessage.cancel();
-                }
-                if ( iMessageDurationSecs > 0 ) {
-                    // auto hide in x secs
-                    m_timerBLEMessage = new CountDownTimer(iMessageDurationSecs * 1000, 1000) {
-                        @Override public void onTick(long millisUntilFinished) { }
-                        @Override public void onFinish() {
-                            tvBLEInfo.setVisibility(View.INVISIBLE);
-                            m_timerBLEMessage = null;
-                        }
-                    };
-                    m_timerBLEMessage.start();
-                }
-            } else {
-                tvBLEInfo.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
-    public void appendToBLEMessage(String sMsg) {
-        final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bluetoothble_information);
-        if ( tvBLEInfo != null ) {
-            tvBLEInfo.setText(tvBLEInfo.getText() + sMsg);
         }
     }
 

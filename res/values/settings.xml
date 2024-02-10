@@ -395,6 +395,8 @@
     <string name="pref_Category_BlueToothLE">Bluetooth LE</string>
     <string name="pref_UseBluetoothLE">Use Bluetooth LE</string>
     <string name="pref_UseBluetoothLE_Summary">Allow controlling the score by connected Bluetooth LE devices like D-Score wristbands</string>
+    <string name="pref_ShowFeedBackOnBLEButtonsPressedInfoMessages">Show feedback messages</string>
+    <string name="pref_ShowFeedBackOnBLEButtonsPressedInfoMessages_Summary">Show small messages about buttons being pressed/to be pressed at bottom of the screen</string>
     <string name="pref_BluetoothLE_Peripheral1">Peripheral 1</string>
     <string name="pref_BluetoothLE_Peripheral2">Peripheral 2</string>
     <string name="pref_BluetoothLE_Peripheral_Summary">Unique name or MAC address of Peripheral</string>

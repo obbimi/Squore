@@ -886,6 +886,9 @@ public class PreferenceValues extends RWValues
         int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.UseBluetoothLE_default__Default);
         return getBoolean(PreferenceKeys.UseBluetoothLE, context, iResBrandSpecific);
     }
+    public static boolean showFeedBackOnBLEButtonsPressedInfoMessages(Context context) {
+        return getBoolean(PreferenceKeys.ShowFeedBackOnBLEButtonsPressedInfoMessages, context, R.bool.ShowFeedBackOnBLEButtonsPressedInfoMessages_default);
+    }
     public static boolean allowTrustAllCertificatesAndHosts(Context context) {
         return getBoolean(PreferenceKeys.allowTrustAllCertificatesAndHosts, context, R.bool.allowTrustAllCertificatesAndHosts_default);
     }
@@ -1999,7 +2002,7 @@ public class PreferenceValues extends RWValues
 
     private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2023-09-18"; // auto adjusted by shell script 'clean.and.assemble.sh'
     public static boolean currentDateIsTestDate() {
-        return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) < 0;
+        return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) <= 0;
     }
 
 

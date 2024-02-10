@@ -352,13 +352,13 @@
         />
 
     <TextView
-        android:id="@+id/sb_bluetoothble_information"
+        android:id="@+id/sb_bottom_of_screen_infomessage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center"
         android:visibility="visible"
-        android:text="Some information about or from ble connected devices"
+        android:text="Some information about state changes/events withing the app"
         app:layout_constraintHeight_percent="0.04"
         android:layout_width="0dp" android:layout_height="0dp"
         android:textColor="@android:color/white"
