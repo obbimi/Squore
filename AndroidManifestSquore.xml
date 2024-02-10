@@ -35,9 +35,9 @@
     <!-- bluetooth (Android 12 upwards) -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"   />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"      />
-<!--    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />-->
 
-    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- android 9 casting -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- FOREGROUND_SERVICE is a normal permission, so the system automatically grants it to the requesting app. -->
@@ -302,7 +302,7 @@
         <activity android:name="com.doubleyellow.scoreboard.activity.Feedback" android:label="@string/cmd_feedback">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
         </activity>
-        <activity android:name="com.doubleyellow.scoreboard.bluetooth_le.selectdevice.BLEActivity" android:label="Devices">
+        <activity android:name="com.doubleyellow.scoreboard.bluetooth_le.selectdevice.BLEActivity" android:label="@string/ble_devices">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
         </activity>
 

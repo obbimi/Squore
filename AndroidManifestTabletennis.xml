@@ -38,6 +38,8 @@
 <!--
     <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
 -->
+    <!-- added for BLE -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 <!--<uses-feature android:name="android.hardware.type.watch"             android:required="false"/>-->
     <uses-feature android:name="android.hardware.bluetooth"              android:required="false"/>
@@ -149,6 +151,9 @@
         </activity>
 
         <activity android:name="com.doubleyellow.scoreboard.activity.Feedback" android:label="@string/cmd_feedback">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
+        </activity>
+        <activity android:name="com.doubleyellow.scoreboard.bluetooth_le.selectdevice.BLEActivity" android:label="@string/ble_devices">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.doubleyellow.scoreboard.main.ScoreBoard" />
         </activity>
 

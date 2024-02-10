@@ -38,6 +38,8 @@
 <!--
     <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
 -->
+    <!-- added for BLE -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 <!--<uses-feature android:name="android.hardware.type.watch"             android:required="false"/>-->
     <uses-feature android:name="android.hardware.bluetooth"              android:required="false"/>

@@ -561,30 +561,36 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         handleMenuItem(R.id.sb_about);
                         return;
                     }
-                    int[] iMenuIds = new int[] { R.id.sb_demo
-                                               , R.id.sb_toggle_demo_mode
-                                               , R.id.sb_download_posted_to_squore_matches
-                                               , R.id.android_language
+                    int[] iMenuIds = new int[] { R.id.sb_ble_devices
+                                               //, R.id.sb_demo
+                                               //, R.id.sb_toggle_demo_mode
+                                               //, R.id.sb_download_posted_to_squore_matches
+                                               //, R.id.android_language
                                                };
                     int iToggled = ViewUtil.setMenuItemsVisibility(mainMenu, iMenuIds, true);
-                    if ( iToggled > 0 ) {
+                    if ( iMenuIds[0] == R.id.sb_ble_devices ) {
+                        PreferenceValues.setBoolean(PreferenceKeys.UseBluetoothLE.toString(), ScoreBoard.this, true);
+                        PreferenceValues.setEnum   (PreferenceKeys.StartupAction.toString() , ScoreBoard.this, StartupAction.BLEDevices);
+                        Toast.makeText(ScoreBoard.this, String.format("D-SCORE BLE option enabled. Use menu option: %s", getString(R.string.pref_BluetoothLE_Devices)), Toast.LENGTH_LONG).show();
+                    }
+                    if ( iToggled > 1 ) {
                         Toast.makeText(ScoreBoard.this, String.format("Additional %d menu items made available", iToggled), Toast.LENGTH_LONG).show();
-                    }
-                    Mode newMode = toggleDemoMode(null);
-                    if ( newMode.equals(Mode.ScreenShots) ) {
-                        PreferenceValues.setEnum   (PreferenceKeys.BackKeyBehaviour            , ScoreBoard.this, BackKeyBehaviour.UndoScoreNoConfirm); // for adb demo/screenshots script
-                        PreferenceValues.setBoolean(PreferenceKeys.showFullScreen              , ScoreBoard.this, true);                         // for adb demo/screenshots script
-                        PreferenceValues.setBoolean(PreferenceKeys.showActionBar               , ScoreBoard.this, false);                        // for adb demo/screenshots script
-                        PreferenceValues.setBoolean(PreferenceKeys.showAdjustTimeButtonsInTimer, ScoreBoard.this, false);                        // for cleaner screenshots
-                        PreferenceValues.setBoolean(PreferenceKeys.showUseAudioCheckboxInTimer , ScoreBoard.this, false);                        // for cleaner screenshots
-                    } else {
-                        PreferenceValues.setEnum   (PreferenceKeys.BackKeyBehaviour            , ScoreBoard.this, BackKeyBehaviour.PressTwiceToExit);
-                        PreferenceValues.setBoolean(PreferenceKeys.showAdjustTimeButtonsInTimer, ScoreBoard.this, R.bool.showAdjustTimeButtonsInTimer_default);
-                        PreferenceValues.setBoolean(PreferenceKeys.showUseAudioCheckboxInTimer , ScoreBoard.this, R.bool.showUseAudioCheckboxInTimer_default);
-                    }
-                    if ( newMode.equals(Mode.Debug) ) {
-                        PreferenceValues.setString(PreferenceKeys.FeedFeedsURL, ScoreBoard.this, getString(R.string.feedFeedsURL_default) + "?suffix=.new");
-                        //PreferenceValues.setNumber (PreferenceKeys.viewedChangelogVersion, ScoreBoard.this, PreferenceValues.getAppVersionCode(ScoreBoard.this)-1);
+                        Mode newMode = m_mode; // toggleDemoMode(null);
+                        if ( newMode.equals(Mode.ScreenShots) ) {
+                            PreferenceValues.setEnum   (PreferenceKeys.BackKeyBehaviour            , ScoreBoard.this, BackKeyBehaviour.UndoScoreNoConfirm); // for adb demo/screenshots script
+                            PreferenceValues.setBoolean(PreferenceKeys.showFullScreen              , ScoreBoard.this, true);                         // for adb demo/screenshots script
+                            PreferenceValues.setBoolean(PreferenceKeys.showActionBar               , ScoreBoard.this, false);                        // for adb demo/screenshots script
+                            PreferenceValues.setBoolean(PreferenceKeys.showAdjustTimeButtonsInTimer, ScoreBoard.this, false);                        // for cleaner screenshots
+                            PreferenceValues.setBoolean(PreferenceKeys.showUseAudioCheckboxInTimer , ScoreBoard.this, false);                        // for cleaner screenshots
+                        } else {
+                            PreferenceValues.setEnum   (PreferenceKeys.BackKeyBehaviour            , ScoreBoard.this, BackKeyBehaviour.PressTwiceToExit);
+                            PreferenceValues.setBoolean(PreferenceKeys.showAdjustTimeButtonsInTimer, ScoreBoard.this, R.bool.showAdjustTimeButtonsInTimer_default);
+                            PreferenceValues.setBoolean(PreferenceKeys.showUseAudioCheckboxInTimer , ScoreBoard.this, R.bool.showUseAudioCheckboxInTimer_default);
+                        }
+                        if ( newMode.equals(Mode.Debug) ) {
+                            PreferenceValues.setString(PreferenceKeys.FeedFeedsURL, ScoreBoard.this, getString(R.string.feedFeedsURL_default) + "?suffix=.new");
+                            //PreferenceValues.setNumber (PreferenceKeys.viewedChangelogVersion, ScoreBoard.this, PreferenceValues.getAppVersionCode(ScoreBoard.this)-1);
+                        }
                     }
                 }
                 if ( Brand.isTabletennis() ) {

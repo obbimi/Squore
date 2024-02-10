@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
@@ -609,10 +610,10 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 ResetPrefs.resetToDefaults(getActivity(), R.xml.preferences);
             }
 
-            // 'hack' to be able to update the Icon of the 'PreferenceScreen key="Colors"' when returning from it
             final PreferenceGroup  psAppearance = (PreferenceGroup ) this.findPreference(PreferenceKeys.Appearance    );
             final PreferenceGroup  psInternet   = (PreferenceGroup ) this.findPreference(PreferenceKeys.webIntegration);
             final PreferenceScreen psColors     = (PreferenceScreen) this.findPreference(PreferenceKeys.Colors        );
+            // 'hack' to be able to update the Icon of the 'PreferenceScreen key="Colors"' when returning from it
             if ( psColors != null ) {
                 if (/*Brand.getREColorPalette() !=0 && */ false ) {
                     psAppearance.removePreference(psColors);
@@ -640,11 +641,17 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             }
             final PreferenceGroup psBLE = (PreferenceGroup) this.findPreference(PreferenceKeys.BlueToothLE);
             if ( psBLE != null ) {
-                ListPreference lpBLEconfig = ( ListPreference) this.findPreference(PreferenceKeys.BluetoothLE_Config);
-                if ( lpBLEconfig != null ) {
-                    List<CharSequence> lLetUserSelectFrom   = BLEUtil.getConfigs(getContext());
-                    lpBLEconfig.setEntryValues(lLetUserSelectFrom.toArray(new CharSequence[0]));
-                    lpBLEconfig.setEntries    (lLetUserSelectFrom.toArray(new CharSequence[0]));
+                if ( PreferenceValues.useBluetoothLE(getContext()) ) {
+                    ListPreference lpBLEconfig = ( ListPreference) this.findPreference(PreferenceKeys.BluetoothLE_Config);
+                    if ( lpBLEconfig != null ) {
+                        List<CharSequence> lLetUserSelectFrom   = BLEUtil.getConfigs(getContext());
+                        lpBLEconfig.setEntryValues(lLetUserSelectFrom.toArray(new CharSequence[0]));
+                        lpBLEconfig.setEntries    (lLetUserSelectFrom.toArray(new CharSequence[0]));
+                    }
+                } else {
+                    if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
+                        psBLE.getParent().removePreference(psBLE);
+                    }
                 }
             }
             final PreferenceGroup psCastLiveScore = (PreferenceGroup) this.findPreference(PreferenceKeys.ChromeCast);

@@ -37,6 +37,9 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+
 import com.doubleyellow.android.task.DownloadImageTask;
 import com.doubleyellow.android.task.URLTask;
 import com.doubleyellow.android.view.ViewUtil;
@@ -2403,12 +2406,15 @@ public class PreferenceValues extends RWValues
     public static Permission doesUserHavePermissionToBluetooth(Context context, boolean bRequestIfRequired) {
         return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH, bRequestIfRequired);
     }
+    @RequiresApi(api = Build.VERSION_CODES.S)
     public static Permission doesUserHavePermissionToBluetoothConnect(Context context, boolean bRequestIfRequired) {
         return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH_CONNECT, bRequestIfRequired);
     }
+    @RequiresApi(api = Build.VERSION_CODES.S)
     public static Permission doesUserHavePermissionToBluetoothScan(Context context, boolean bRequestIfRequired) {
-        return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH_SCAN, bRequestIfRequired);
+        return requestPermission(context, PreferenceKeys.UseBluetoothLE, Manifest.permission.BLUETOOTH_SCAN, bRequestIfRequired);
     }
+    @RequiresApi(api = Build.VERSION_CODES.S)
     public static Permission doesUserHavePermissionToBluetoothAdvertise(Context context, boolean bRequestIfRequired) {
         return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH_ADVERTISE, bRequestIfRequired);
     }

@@ -21,6 +21,43 @@
                   xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:dy="http://double-yellow.be">
 
+    <PreferenceScreen
+        android:title="@string/pref_Category_BlueToothLE"
+        android:icon="@android:drawable/stat_sys_data_bluetooth"
+        android:key="BlueToothLE">
+        <CheckBoxPreference android:key="UseBluetoothLE"
+            android:title="@string/pref_UseBluetoothLE"
+            android:summary="@string/pref_UseBluetoothLE_Summary"
+            android:icon="@android:drawable/stat_sys_data_bluetooth"
+            android:defaultValue="@bool/UseBluetoothLE_default__Squash"
+            />
+        <ListPreference android:key="BluetoothLE_Config"
+            android:icon="@android:drawable/stat_sys_data_bluetooth"
+            android:title="@string/pref_BluetoothLE_Config"
+            android:summary="@string/pref_BluetoothLE_Config_Summary"
+            android:defaultValue="@string/pref_BluetoothLE_Config_default"
+            />
+<!--
+        <EditTextPreference android:key="BluetoothLE_Config"
+            android:icon="@android:drawable/stat_sys_data_bluetooth"
+            android:title="@string/pref_BluetoothLE_Config"
+            android:defaultValue="@string/pref_BluetoothLE_Config_default"
+            />
+-->
+<!--
+        <EditTextPreference android:key="BluetoothLE_Peripheral1"
+            android:icon="@android:drawable/stat_sys_data_bluetooth"
+            android:title="@string/pref_BluetoothLE_Peripheral1"
+            android:summary="@string/pref_BluetoothLE_Peripheral_Summary"
+            />
+        <EditTextPreference android:key="BluetoothLE_Peripheral2"
+            android:icon="@android:drawable/stat_sys_data_bluetooth"
+            android:title="@string/pref_BluetoothLE_Peripheral2"
+            android:summary="@string/pref_BluetoothLE_Peripheral_Summary"
+            />
+-->
+    </PreferenceScreen>
+
     <PreferenceScreen android:key="Appearance"
                       android:title="@string/pref_Appearance"
                       android:icon="@android:drawable/ic_menu_view"
@@ -910,8 +947,6 @@
                 android:key="useCastScreen"
                 android:title="@string/pref_useCastScreen"
                 android:summary="@string/pref_useCastScreen_summary"
-                android:entries="@array/colorSchema_new"
-                android:entryValues="@array/colorSchema_new"
                 android:defaultValue="0"
                 />
 <!--
