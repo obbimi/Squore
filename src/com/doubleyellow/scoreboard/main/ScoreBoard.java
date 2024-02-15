@@ -569,9 +569,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                                };
                     int iToggled = ViewUtil.setMenuItemsVisibility(mainMenu, iMenuIds, true);
                     if ( iMenuIds[0] == R.id.sb_ble_devices ) {
-                        PreferenceValues.setBoolean(PreferenceKeys.UseBluetoothLE.toString(), ScoreBoard.this, true);
-                        PreferenceValues.setEnum   (PreferenceKeys.StartupAction.toString() , ScoreBoard.this, StartupAction.BLEDevices);
-                        Toast.makeText(ScoreBoard.this, String.format("D-SCORE BLE option enabled. Use menu option: %s", getString(R.string.pref_BluetoothLE_Devices)), Toast.LENGTH_LONG).show();
+                        promoteAppToUseBLE();
                     }
                     if ( iToggled > 1 ) {
                         Toast.makeText(ScoreBoard.this, String.format("Additional %d menu items made available", iToggled), Toast.LENGTH_LONG).show();
@@ -6327,6 +6325,13 @@ touch -t 01030000 LAST.sb
     // -----------------------------------------------------
     // --------------------- bluetooth BLE -----------------
     // -----------------------------------------------------
+    private void promoteAppToUseBLE() {
+        PreferenceValues.setBoolean(PreferenceKeys.UseBluetoothLE.toString(), ScoreBoard.this, true);
+        PreferenceValues.setEnum   (PreferenceKeys.StartupAction.toString() , ScoreBoard.this, StartupAction.BLEDevices);
+        Toast.makeText(ScoreBoard.this, String.format("D-SCORE BLE option enabled. Use menu option: %s", getString(R.string.pref_BluetoothLE_Devices)), Toast.LENGTH_LONG).show();
+        //RWValues.Permission permission = PreferenceValues.doesUserHavePermissionToAccessFineLocation(this, true);
+    }
+
     private void selectBleDevices() {
         if ( PreferenceValues.useBluetoothLE(this) == false ) { return; }
 
@@ -6538,13 +6543,14 @@ touch -t 01030000 LAST.sb
         if ( mBluetoothAdapter == null ) {
             return; // no bluetooth on device
         }
-        PreferenceValues.Permission hasPermission = PreferenceValues.doesUserHavePermissionToBluetooth(this, true);
+        PreferenceValues.Permission hasPermission = PreferenceValues.doesUserHavePermissionToBluetoothConnect(this, false);
         if ( PreferenceValues.Permission.Granted.equals(hasPermission) == false ) {
             return;
         }
 
         if ( mBluetoothControlService != null ) {
             if ( mBluetoothControlService.getState().equals(BTState.NONE) ) {
+                // requires android.permission.BLUETOOTH_CONNECT
                 mBluetoothControlService.breakConnectionAndListenForNew();
             }
         }

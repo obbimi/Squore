@@ -32,6 +32,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.R;
 
 import androidx.annotation.Nullable;
@@ -57,6 +58,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -204,20 +206,26 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             scanResultAdapter.notifyDataSetChanged();
             btnGo.setEnabled(false);
         }
-        // check permissions BLUETOOTH_SCAN
-        if ( ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)
-          || ( PreferenceValues.currentDateIsTestDate() && ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) )
-           )
-        {
-            String[] permissions = BLEUtil.getPermissions();
+        String[] permissions = BLEUtil.getPermissions();
+        Set<RWValues.Permission> lPerms = new LinkedHashSet<>();
+        for( String sPermName: permissions ) {
+            RWValues.Permission permission = PreferenceValues.getPermission(this, PreferenceKeys.UseBluetoothLE, sPermName);
+            lPerms.add(permission);
+        }
+        if ( lPerms.size() == 1 && lPerms.iterator().next().equals(RWValues.Permission.Granted) ) {
+            // all good
+        } else if ( lPerms.contains(RWValues.Permission.Denied) ) {
+            if ( PreferenceValues.currentDateIsTestDate() ) {
+                ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal()); // API28 : Can request only one set of permissions at a time
+                return false;
+            }
+            (new AlertDialog.Builder(this)).setTitle("Permissions").setIcon(android.R.drawable.stat_sys_data_bluetooth).setMessage(R.string.ble_permission_not_granted).show();
+            return false;
+        } else {
+            // request missing
             Log.w(TAG, "Trying to request permission for scanning");
             ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal()); // API28 : Can request only one set of permissions at a time
             return false;
-        } else {
-            if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
-                (new AlertDialog.Builder(this)).setTitle("Permission").setIcon(android.R.drawable.stat_sys_data_bluetooth).setMessage(R.string.ble_permission_not_granted).show();
-                return false;
-            }
         }
 
         bleScanner.startScan(null, BLEUtil.scanSettings, scanCallback);
