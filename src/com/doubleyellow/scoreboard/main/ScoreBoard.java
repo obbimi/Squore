@@ -3176,6 +3176,7 @@ touch -t 01030000 LAST.sb
                 iBoard.updateFieldDivisionBasedOnScore();
                 iBoard.updateGameAndMatchDurationChronos();
                 iBoard.updateGameScores();
+                iBoard.updateSetScoresToShow(true);
             } else {
                 // normal score
                 if ( PreferenceValues.recordRallyEndStatsAfterEachScore(ScoreBoard.this).equals(Feature.Automatic)
@@ -3302,6 +3303,7 @@ touch -t 01030000 LAST.sb
             updateMicrophoneFloatButton();
             showShareFloatButton(matchModel.isPossibleGameVictory(), matchModel.matchHasEnded());
             if ( Brand.isGameSetMatch() ) {
+                iBoard.updateSetScoresToShow(true);
                 // to prevent 'set ball' being show while it is gameball, if we go back from 0-0 into e.g. 40-30 of previous game
                 iBoard.showGameBallMessage(false, null);
             } else {

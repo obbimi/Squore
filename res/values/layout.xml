@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <fraction name="lsp_fr_mainrow_height_2x">0.28</fraction>
+    <fraction name="lsp_fr_score_width_setswon">0.12</fraction>
+    <fraction name="lsp_fr_score_width_gameswon">0.16</fraction>
+    <fraction name="lsp_fr_score_width_clickable">0.20</fraction>
+    <fraction name="lsp_fr_vertical_margin_3x">0.01</fraction>
+    <fraction name="lsp_fr_horizontal_margin_4x">0.01</fraction>
+
     <fraction name="ls_fr_vertical_margin_3x">0.01</fraction>
     <fraction name="ls_fr_horizontal_margin_4x">0.005</fraction>
     <fraction name="ls_fr_name_height">0.18</fraction>

@@ -728,6 +728,19 @@ public class IBoard implements TimerViewContainer
             matchGameScores.update(matchModel, m_firstPlayerOnScreen);
 
             return scoresToShow;
+        } else {
+            if ( Brand.isGameSetMatch() ) {
+                GSMModel gsmModel = (GSMModel) matchModel;
+                TextView vSetScore = (TextView) findViewById(R.id.btn_score1_set);
+                if ( vSetScore != null ) {
+                    Map<Player, Integer> setsWon = gsmModel.getSetsWon();
+                    vSetScore.setText(String.valueOf(setsWon.get(m_firstPlayerOnScreen)));
+                    vSetScore = (TextView) findViewById(R.id.btn_score2_set);
+                    vSetScore.setText(String.valueOf(setsWon.get(m_firstPlayerOnScreen.getOther())));
+                }
+            } else {
+                // TODO: use btn_score1_set to display serve side for squash?
+            }
         }
         return null;
     }
@@ -772,6 +785,18 @@ public class IBoard implements TimerViewContainer
             //matchGameScores.setTextSizeDp(textSize);
 
             matchGameScores.update(matchModel, m_firstPlayerOnScreen);
+        } else {
+            TextView vGameScore = (TextView) findViewById(R.id.btn_score1_game);
+            if ( vGameScore != null ) {
+                Map<Player, Integer> gamesWon = matchModel.getGamesWon();
+                if ( gamesWon != null ) {
+                    vGameScore.setText(String.valueOf(gamesWon.get(m_firstPlayerOnScreen)) );
+                    vGameScore = (TextView) findViewById(R.id.btn_score2_game);
+                    vGameScore.setText(String.valueOf(gamesWon.get(m_firstPlayerOnScreen.getOther())) );
+                } else {
+                    Log.w(TAG, "Games won is null");
+                }
+            }
         }
 
         // update casting screen
