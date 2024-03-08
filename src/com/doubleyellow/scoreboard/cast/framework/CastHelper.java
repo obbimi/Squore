@@ -635,7 +635,11 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         iBoard.updateGameBallMessage("PS:updateViewWithColorAndScore");
         if ( Brand.isGameSetMatch() ) {
             MatchGameScoresView.ScoresToShow scoresToShow = iBoard.updateSetScoresToShow(false);
-            sendFunction(GameScores_display + "(" + scoresToShow.equals(MatchGameScoresView.ScoresToShow.GamesWonPerSet) + ")");
+            if ( scoresToShow != null ) {
+                sendFunction(GameScores_display + "(" + scoresToShow.equals(MatchGameScoresView.ScoresToShow.GamesWonPerSet) + ")");
+            } else {
+                sendFunction(GameScores_display + "(" + true + ")");
+            }
         }
         iBoard.updateGameAndMatchDurationChronos();
 

@@ -2372,8 +2372,10 @@ touch -t 01030000 LAST.sb
                 if ( matchModel.isDoubles() ) {
                     Integer iId = IBoard.m_player2serverSideId.get(player);
                     if ( iId == null ) { continue; }
-                    View btn = ( View ) findViewById(iId);
-                    btn.setVisibility(View.INVISIBLE); // do not use GONE or relative layout is screwed up
+                    View btn = findViewById(iId);
+                    if ( btn != null ) {
+                        btn.setVisibility(View.INVISIBLE); // do not use View.GONE or relative layout is screwed up
+                    }
                 }
             } else {
                 view.setOnTouchListener(namesButtonGestureListener);
@@ -6360,6 +6362,10 @@ touch -t 01030000 LAST.sb
             sTmpTxtOnElementDuringFeedback = getString(R.string.Game);
             if ( matchModel instanceof GSMModel ) {
                 GSMModel gsmModel = (GSMModel) matchModel;
+                Player[] possibleSetVictoryFor = gsmModel.isPossibleSetVictoryFor();
+                if (possibleSetVictoryFor!=null && possibleSetVictoryFor.length!=0) {
+                    sTmpTxtOnElementDuringFeedback = StringUtil.capitalize(getString(R.string.oa_set)) ;
+                }
             }
         }
         return sTmpTxtOnElementDuringFeedback;
