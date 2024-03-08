@@ -252,6 +252,8 @@
 -->
     <string name="pref_OrientationPreference">Orientations</string>
     <string name="pref_OrientationPreference_summary">What orientations to use. Portrait is less intuitive but easier single-handed.</string>
+    <string name="pref_LandscapeLayoutPreference">Landscape Layout</string>
+    <string name="pref_LandscapeLayoutPreference_summary">Allowing for e.g. all scores (games/sets) to visible with similar digit size. Less easy to change score. Typically useful when controlling score via remote device.</string>
     <string name="pref_saveMatchesForLaterUsage">Save matches</string>
     <string name="pref_saveMatchesForLaterUsage_summary">Save matches for re-consulting the results later.</string>
     <string name="pref_gameEndScore">Points to win the game</string>

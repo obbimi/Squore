@@ -262,60 +262,6 @@
             </PreferenceCategory>
         </PreferenceScreen>
 -->
-        <PreferenceCategory android:key="Flags"
-                            android:title="@string/pref_CountryFlags"
-                            android:summary="@string/pref_CountryFlags_summary">
-            <com.doubleyellow.prefs.EnumMultiSelectPreference
-                android:icon="@drawable/dummy"
-                android:key="showCountryAs"
-                android:title="@string/pref_showCountryAs"
-                android:defaultValue="@array/ShowCountryAs_DefaultValues"
-                dy:displayValues="@array/ShowCountryAsDisplayValues"
-                dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowCountryAs"
-            />
-            <CheckBoxPreference
-                android:icon="@drawable/dummy"
-                android:key="hideFlagForSameCountry"
-                android:title="@string/pref_hideFlagForSameCountry"
-                android:defaultValue="@bool/hideFlagForSameCountry_default"
-            />
-        </PreferenceCategory>
-
-        <PreferenceCategory android:key="Avatars"
-                            android:title="@string/pref_Avatars"
-                            android:summary="@string/pref_Avatars_summary">
-            <com.doubleyellow.prefs.EnumMultiSelectPreference
-                android:icon="@drawable/avatar_tux"
-                android:key="showAvatarOn"
-                android:title="@string/pref_showAvatarOn"
-                android:defaultValue="@array/ShowAvatarOn_DefaultValues"
-                dy:displayValues="@array/ShowAvatarOnDisplayValues"
-                dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowAvatarOn"
-            />
-<!--
-            <CheckBoxPreference android:key="hideAvatarForSameImage"
-                                android:title="@string/pref_hideAvatarForSameImage"
-                                android:defaultValue="@bool/hideAvatarForSameImage_default"
-            />
--->
-        </PreferenceCategory>
-
-        <PreferenceCategory android:title="@string/pref_ActionBar">
-            <CheckBoxPreference
-                android:icon="@drawable/dummy"
-                android:key="showActionBar"
-                android:title="@string/pref_showActionBar"
-                android:summary="@string/pref_showActionBar_summary"
-                android:defaultValue="@bool/showActionBar_default"
-                />
-            <CheckBoxPreference
-                android:icon="@drawable/dummy"
-                android:key="showTextInActionBar"
-                android:title="@string/pref_showTextInActionBar"
-                android:defaultValue="@bool/showTextInActionBar_default"
-                />
-        </PreferenceCategory>
-
         <PreferenceCategory android:title="@string/pref_Category_Layout">
             <CheckBoxPreference android:key="showFullScreen"
                                 android:icon="@drawable/ic_media_fullscreen"
@@ -330,6 +276,15 @@
                     android:defaultValue="@array/OrientationPreferenceDefaultValues"
                     dy:displayValues="@array/OrientationPreference_DisplayValues"
                     dy:enumClass="com.doubleyellow.prefs.OrientationPreference"
+            />
+            <com.doubleyellow.prefs.EnumListPreference
+                    android:key="LandscapeLayoutPreference"
+                    android:title="@string/pref_LandscapeLayoutPreference"
+                    android:summary="@string/pref_LandscapeLayoutPreference_summary"
+                    android:icon="@drawable/dummy"
+                    android:defaultValue="Default"
+                    dy:displayValues="@array/LandscapeLayoutPreference_DisplayValues"
+                    dy:enumClass="com.doubleyellow.scoreboard.prefs.LandscapeLayoutPreference"
             />
 <!--
             <CheckBoxPreference android:key="landscapeOrientationOnly"
@@ -432,6 +387,60 @@
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.NewMatchLayout"
                 />
 
+        </PreferenceCategory>
+
+        <PreferenceCategory android:key="Flags"
+                            android:title="@string/pref_CountryFlags"
+                            android:summary="@string/pref_CountryFlags_summary">
+            <com.doubleyellow.prefs.EnumMultiSelectPreference
+                android:icon="@drawable/dummy"
+                android:key="showCountryAs"
+                android:title="@string/pref_showCountryAs"
+                android:defaultValue="@array/ShowCountryAs_DefaultValues"
+                dy:displayValues="@array/ShowCountryAsDisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowCountryAs"
+            />
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="hideFlagForSameCountry"
+                android:title="@string/pref_hideFlagForSameCountry"
+                android:defaultValue="@bool/hideFlagForSameCountry_default"
+            />
+        </PreferenceCategory>
+
+        <PreferenceCategory android:key="Avatars"
+                            android:title="@string/pref_Avatars"
+                            android:summary="@string/pref_Avatars_summary">
+            <com.doubleyellow.prefs.EnumMultiSelectPreference
+                android:icon="@drawable/avatar_tux"
+                android:key="showAvatarOn"
+                android:title="@string/pref_showAvatarOn"
+                android:defaultValue="@array/ShowAvatarOn_DefaultValues"
+                dy:displayValues="@array/ShowAvatarOnDisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowAvatarOn"
+            />
+<!--
+            <CheckBoxPreference android:key="hideAvatarForSameImage"
+                                android:title="@string/pref_hideAvatarForSameImage"
+                                android:defaultValue="@bool/hideAvatarForSameImage_default"
+            />
+-->
+        </PreferenceCategory>
+
+        <PreferenceCategory android:title="@string/pref_ActionBar">
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="showActionBar"
+                android:title="@string/pref_showActionBar"
+                android:summary="@string/pref_showActionBar_summary"
+                android:defaultValue="@bool/showActionBar_default"
+                />
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="showTextInActionBar"
+                android:title="@string/pref_showTextInActionBar"
+                android:defaultValue="@bool/showTextInActionBar_default"
+                />
         </PreferenceCategory>
 
         <PreferenceCategory android:title="@string/pref_Category_Brand" android:key="Brand">

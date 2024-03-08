@@ -1175,7 +1175,7 @@ public class IBoard implements TimerViewContainer
     }
 
     //===================================================================
-    // INFO message methods (replacing 'toasts'
+    // INFO message methods (replacing 'toasts')
     //===================================================================
     private CountDownTimer m_timerInfoMessage;
     public void showInfoMessage(String sMsg, int iMessageDurationSecs) {
@@ -1337,7 +1337,7 @@ public class IBoard implements TimerViewContainer
             // now that gamescores has more room, timer has to little room if we keep the xml setting: change it so timer is right-aligned to parent
             view = findViewById(R.id.btn_timer);
             if ( view != null ) {
-                ViewGroup.LayoutParams loParams = (ViewGroup.LayoutParams) view.getLayoutParams();
+                ViewGroup.LayoutParams loParams = view.getLayoutParams();
                 if ( loParams instanceof RelativeLayout.LayoutParams ) { // TODO: can be removed in future now we are switching to ConstraintLayout
                     RelativeLayout.LayoutParams rlParams = (RelativeLayout.LayoutParams) loParams;
                     if ( ViewUtil.isPortraitOrientation(context) ) {

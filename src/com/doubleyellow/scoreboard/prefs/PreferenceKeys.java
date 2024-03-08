@@ -29,6 +29,7 @@ public enum PreferenceKeys {
         endGameSuggestion,
         /* @deprecated */
         OrientationPreference,
+            LandscapeLayoutPreference,
         showActionBar,
         showFullScreen,
         showTextInActionBar,

@@ -38,6 +38,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.InputDeviceCompat;
 import androidx.core.view.MotionEventCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -1168,10 +1169,36 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     actionBar.setDisplayHomeAsUpEnabled(true);
                 }
 
-                FrameLayout frameLayout = (FrameLayout) findViewById(R.id.content_frame);
+                FrameLayout frameLayout = findViewById(R.id.content_frame);
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View view = inflater.inflate(R.layout.constraint, null);
-                //View view = inflater.inflate(R.layout.percentage, null);
+                View view = null;
+                if ( ViewUtil.isLandscapeOrientation(this) ) {
+                    LandscapeLayoutPreference llp = PreferenceValues.getLandscapeLayout(this);
+                    view = inflater.inflate(llp.getLayoutResourceId(), null);
+                    if ( llp.equals(LandscapeLayoutPreference.Default) == false ) {
+                        m_bNoFloatingButtons = true;
+                        PreferenceValues.setOverwrite(PreferenceKeys.floatingMessageForGameBallOn, "");
+
+                        // hide 'set' related elements
+                        if ( Brand.isGameSetMatch() == false ) {
+                            int[] iViewIds = new int[] {R.id.btn_score1_set, R.id.btn_score2_set, R.id.space_scoreset_scoregame};
+                            for(int i: iViewIds) {
+                                View vTxt = view.findViewById(i);
+                                if ( vTxt == null ) { continue; }
+                                vTxt.setVisibility(View.INVISIBLE);
+                                ViewGroup.LayoutParams loParams = vTxt.getLayoutParams();
+                                if ( loParams instanceof ConstraintLayout.LayoutParams) {
+                                    ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) loParams;
+                                    layoutParams.matchConstraintPercentWidth = 0.0f;
+                                    //layoutParams.width = 0;
+                                    vTxt.setLayoutParams(layoutParams);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    view = inflater.inflate(R.layout.constraint, null);
+                }
                 frameLayout.addView(view);
             }
         }
@@ -2563,7 +2590,9 @@ touch -t 01030000 LAST.sb
             });
 */
         }
-        speakButton.setHidden(bVisible == false);
+        if ( speakButton != null ) {
+            speakButton.setHidden(bVisible == false);
+        }
     }
 
     // ----------------------------------------------------
@@ -2591,7 +2620,9 @@ touch -t 01030000 LAST.sb
                 }
             });
         }
-        undoButton.setHidden(bVisible == false);
+        if ( undoButton != null ) {
+            undoButton.setHidden(bVisible == false);
+        }
     }
 
     // ----------------------------------------------------
@@ -2659,7 +2690,9 @@ touch -t 01030000 LAST.sb
             });
         }
 
-        timerButton.setHidden(bVisible == false);
+        if ( timerButton != null ) {
+            timerButton.setHidden(bVisible == false);
+        }
     }
 
     // ----------------------------------------------------
@@ -2691,7 +2724,9 @@ touch -t 01030000 LAST.sb
             }
             tossButton = getFloatingActionButton(R.id.float_toss, fMargin, iResTossImage, colorKey, null);
         }
-        tossButton.setHidden(bVisible == false);
+        if ( tossButton != null ){
+            tossButton.setHidden(bVisible == false);
+        }
     }
 
     // ----------------------------------------------------
@@ -2714,6 +2749,8 @@ touch -t 01030000 LAST.sb
             //  xhdpi = 64x64 // on android 9 for floating buttons at least this resolution should be available
             // xxhdpi = 96x96
         }
+        if ( shareButton == null ) { return; }
+
         ShareMatchPrefs prefs = PreferenceValues.getShareAction(this);
         boolean bVisible = bMatchHasEnded || (bGameHasEnded && prefs.alsoBeforeMatchEnd());
         shareButton.setHidden(bVisible == false);
@@ -2756,7 +2793,9 @@ touch -t 01030000 LAST.sb
             }
             changeSideButton = getFloatingActionButton(R.id.float_changesides, fMargin, iChangeSidesImage, colorKey, null);
         }
-        changeSideButton.setHidden(bVisible == false);
+        if ( changeSideButton != null ) {
+            changeSideButton.setHidden(bVisible == false);
+        }
     }
 
     // ----------------------------------------------------
@@ -2828,6 +2867,8 @@ touch -t 01030000 LAST.sb
     // -----------------float utility          ------------
     // ----------------------------------------------------
     private FloatingActionButton getFloatingActionButton(int iActionId, float fMarginBasedOnButtonSize, int iDrawable, ColorPrefs.ColorTarget colorTarget, Direction direction) {
+        if ( m_bNoFloatingButtons ) { return null; }
+
         if ( direction == null ) {
             direction = isPortrait() ? Direction.E : Direction.S;
             if ( isWearable() ) {
@@ -6246,8 +6287,8 @@ touch -t 01030000 LAST.sb
     //===================================================================
     // Draw focus to GUI elements
     //===================================================================
-    private final PlayerFocusEffectCountDownTimer m_timerBLEConfirm      = new PlayerFocusEffectCountDownTimer(FocusEffect.SetTransparency, 60 * 1000, 50);
-    private final PlayerFocusEffectCountDownTimer m_timerBLEScoreChanged = new PlayerFocusEffectCountDownTimer(FocusEffect.BlinkByInverting, 10 * 300, 300);
+    private final PlayerFocusEffectCountDownTimer m_timerBLEConfirm           = new PlayerFocusEffectCountDownTimer(FocusEffect.SetTransparency, 60 * 1000, 50);
+    private final PlayerFocusEffectCountDownTimer m_timerScoreChangedFeedBack = new PlayerFocusEffectCountDownTimer(FocusEffect.BlinkByInverting, 10 * 300, 300);
     private class PlayerFocusEffectCountDownTimer extends CountDownTimer {
         private Player  m_player                    = null;
         private int     m_iInvocationCnt            = 0;
@@ -6307,10 +6348,10 @@ touch -t 01030000 LAST.sb
             m_timerBLEConfirm.myCancel();
         }
     }
-    public void startFeedbackForRemoteScoreChange(Player player, String sTmpTxtOnElementDuringFeedback) {
+    private void startVisualFeedbackForScoreChange(Player player, String sTmpTxtOnElementDuringFeedback) {
         ShowPlayerColorOn guiElementToUseForFocus = ShowPlayerColorOn.ScoreButton; // TODO: from options
-        m_timerBLEScoreChanged.myCancel();
-        m_timerBLEScoreChanged.start(guiElementToUseForFocus, player, sTmpTxtOnElementDuringFeedback);
+        m_timerScoreChangedFeedBack.myCancel();
+        m_timerScoreChangedFeedBack.start(guiElementToUseForFocus, player, sTmpTxtOnElementDuringFeedback);
     }
 
     @Nullable private String getTxtOnElementDuringFeedback(Player player) {
@@ -7178,7 +7219,7 @@ touch -t 01030000 LAST.sb
                                     if ( sTmpTxtOnElementDuringFeedback == null ) {
                                         matchModel.changeScore(m_blePlayerWaitingForScoreToBeConfirmed);
                                     }
-                                    startFeedbackForRemoteScoreChange(m_blePlayerWaitingForScoreToBeConfirmed, sTmpTxtOnElementDuringFeedback);
+                                    startVisualFeedbackForScoreChange(m_blePlayerWaitingForScoreToBeConfirmed, sTmpTxtOnElementDuringFeedback);
                                     m_blePlayerWaitingForScoreToBeConfirmed = null;
                                 } else if ( sDoCancelScore != null ) {
                                     Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
@@ -7229,7 +7270,7 @@ touch -t 01030000 LAST.sb
                                     if ( sTmpTxtOnElementDuringFeedback == null ) {
                                         matchModel.changeScore(m_blePlayerWaitingForScoreToBeConfirmed);
                                     }
-                                    startFeedbackForRemoteScoreChange(m_blePlayerWaitingForScoreToBeConfirmed, sTmpTxtOnElementDuringFeedback);
+                                    startVisualFeedbackForScoreChange(m_blePlayerWaitingForScoreToBeConfirmed, sTmpTxtOnElementDuringFeedback);
                                     m_blePlayerWaitingForScoreToBeConfirmed = null;
                                 } else if ( sDoCancelScore != null ) {
                                     Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
@@ -7291,7 +7332,7 @@ touch -t 01030000 LAST.sb
                             if ( sTmpTxtOnElementDuringFeedback == null ) {
                                 matchModel.changeScore(player);
                             }
-                            startFeedbackForRemoteScoreChange(player, sTmpTxtOnElementDuringFeedback);
+                            startVisualFeedbackForScoreChange(player, sTmpTxtOnElementDuringFeedback);
                         }
                         break;
                     case changeSide: {

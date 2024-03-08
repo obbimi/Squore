@@ -362,6 +362,13 @@ public class PreferenceValues extends RWValues
         }
         return getEnum(PreferenceKeys.gameScoresAppearance, context, GameScoresAppearance.class, GameScoresAppearance.ShowGamesWon);
     }
+    public static LandscapeLayoutPreference getLandscapeLayout(Context context) {
+        LandscapeLayoutPreference def = LandscapeLayoutPreference.Default;
+        if ( Brand.isRacketlon() || Brand.isGameSetMatch() ) {
+            def = LandscapeLayoutPreference.Default;
+        }
+        return getEnum(PreferenceKeys.LandscapeLayoutPreference, context, LandscapeLayoutPreference.class, def);
+    }
     public static DoublesServeSequence getDoublesServeSequence(Context context) {
         DoublesServeSequence dssDefault = DoublesServeSequence.values()[0];
         return getEnum(PreferenceKeys.doublesServeSequence, context, DoublesServeSequence.class, dssDefault, Model.mOldDSS2New);
