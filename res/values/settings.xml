@@ -189,6 +189,8 @@
     <string name="pref_showLastGameDurationChronoOn__TennisPadel">Show \'Set duration\' on</string>
     <string name="pref_showFieldDivisionOn">Show \'Field or Division\' on</string>
     <string name="pref_timerViewType">Type of timer</string>
+    <string name="pref_blinkFeedbackPerPoint">Blink feedback per point</string>
+    <string name="pref_blinkFeedbackPerPoint_summary">Blink the changes score a few seconds after each score change. Specifically handy if score is controlled remotely.</string>
     <string name="pref_hapticFeedbackPerPoint">Haptic feedback per point</string>
     <string name="pref_hapticFeedbackPerPoint_summary">Vibrate shortly each time a point is added, game is ended or undo action is performed</string>
     <string name="pref_hapticFeedbackOnGameEnd">Haptic feedback on game end</string>

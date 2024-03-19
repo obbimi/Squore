@@ -35,6 +35,7 @@
     <string name="oa_games">Hras</string>
     <string name="oa_gameball">Setbol</string>
     <string name="oa_matchball">Mečbol</string>
+    <string name="oa_match">Meč</string>
 
     <string name="oa_set">set</string>
     <string name="oa_sets">sets</string>

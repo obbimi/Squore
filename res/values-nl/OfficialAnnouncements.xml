@@ -31,6 +31,7 @@
     <string name="oa_games">games</string>
     <string name="oa_gameball">Game bal</string>
     <string name="oa_matchball">Match bal</string>
+    <string name="oa_match">Match</string>
 
     <string name="oa_set">set</string>
     <string name="oa_sets">sets</string>

@@ -491,6 +491,14 @@
                 />
         </PreferenceCategory>
 
+        <CheckBoxPreference android:key="blinkFeedbackPerPoint"
+            android:title="@string/pref_blinkFeedbackPerPoint"
+            android:icon="@drawable/dummy"
+            android:summary="@string/pref_blinkFeedbackPerPoint_summary"
+            android:defaultValue="@bool/blinkFeedbackPerPoint_default"
+            />
+
+
         <PreferenceCategory android:title="@string/pref_BehaviourConvenience">
             <CheckBoxPreference
                 android:icon="@drawable/dummy"

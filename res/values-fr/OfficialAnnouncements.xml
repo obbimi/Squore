@@ -29,6 +29,7 @@
     <string name="oa_games">Jeux</string>
     <string name="oa_gameball">Balle de jeu</string>
     <string name="oa_matchball">Balle de match</string>
+    <string name="oa_match">Match</string>
 
     <string name="oa_n_all__or__n_equal">%1$d partout</string>
     <string name="oa_player_needs_2_clear_points">2 points d\'écart</string>

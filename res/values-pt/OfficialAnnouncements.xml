@@ -28,6 +28,7 @@
     <string name="oa_games">games</string>
     <string name="oa_gameball">Game ball</string>
     <string name="oa_matchball">Match ball</string>
+    <string name="oa_match">Match</string>
 
     <string name="oa_n_all__or__n_equal">%d-iguais</string>
     <string name="oa_player_needs_2_clear_points">O jogador tem que vencer por 2 pontos</string>

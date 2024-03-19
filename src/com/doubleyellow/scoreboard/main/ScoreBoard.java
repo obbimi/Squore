@@ -1260,6 +1260,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         //registerNfc();
         onCreateInitBluetooth();
     }
+    private boolean m_bNoFloatingButtons = false;
 
     private void initCountryList() {
         if ( CountryUtil.isInitialized()==false ) {
@@ -6289,14 +6290,13 @@ touch -t 01030000 LAST.sb
     //===================================================================
     // Draw focus to GUI elements
     //===================================================================
-    private final PlayerFocusEffectCountDownTimer m_timerBLEConfirm           = new PlayerFocusEffectCountDownTimer(FocusEffect.SetTransparency, 60 * 1000, 50);
-    private final PlayerFocusEffectCountDownTimer m_timerScoreChangedFeedBack = new PlayerFocusEffectCountDownTimer(FocusEffect.BlinkByInverting, 10 * 300, 300);
+    private final PlayerFocusEffectCountDownTimer m_timerScoreChangedFeedBack = new PlayerFocusEffectCountDownTimer(FocusEffect.BlinkByInverting, 16 * 400, 400);
     private class PlayerFocusEffectCountDownTimer extends CountDownTimer {
-        private Player  m_player                    = null;
-        private int     m_iInvocationCnt            = 0;
+        private Player            m_player                  = null;
+        private int               m_iInvocationCnt          = 0;
         private ShowPlayerColorOn m_guiElementToUseForFocus = ShowPlayerColorOn.PlayerButton;
-        private FocusEffect m_focusEffect = null;
-        private String m_sTmpTxtOnElementDuringFeedback = null;
+        private FocusEffect       m_focusEffect             = null;
+        private String            m_sTmpTxtOnElementDuringFeedback = null;
 
         PlayerFocusEffectCountDownTimer(FocusEffect focusEffect, int iTotalDuration, int iInvocationInterval) {
             super(iTotalDuration, iInvocationInterval);
@@ -6308,9 +6308,7 @@ touch -t 01030000 LAST.sb
         }
 
         @Override public void onFinish() {
-            m_iInvocationCnt                 = 0;
-            iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, null);
-            doChangeScoreIfRequired();
+            cancelForPlayer();
         }
         public void start(ShowPlayerColorOn guiElementToUseForFocus, Player p, String sTmpTxtOnElementDuringFeedback) {
             m_iInvocationCnt                 = 0;
@@ -6320,15 +6318,21 @@ touch -t 01030000 LAST.sb
             Log.i(TAG, "m_sTmpTxtOnElementDuringFeedback : " + m_sTmpTxtOnElementDuringFeedback);
             super.start();
         }
-
-        public void myCancel() {
-            doChangeScoreIfRequired();
-            super.cancel(); // final ... can not be overwritten
+        private void cancelForPlayer() {
+            m_iInvocationCnt = 0;
+            if ( m_player == null ) { return; }
+            iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, null);
+            doChangeScoreIfRequired(m_player);
         }
-        private void doChangeScoreIfRequired() {
+        public void myCancel() {
+            //doChangeScoreIfRequired();
+            cancelForPlayer();
+            super.cancel(); // final in parent ... can not be overwritten, hence 'myCancel()'
+        }
+        private void doChangeScoreIfRequired(Player p) {
             if ( m_sTmpTxtOnElementDuringFeedback != null ) {
                 m_sTmpTxtOnElementDuringFeedback = null;
-                matchModel.changeScore(m_player);
+                matchModel.changeScore(p);
             }
         }
     }
@@ -6340,6 +6344,7 @@ touch -t 01030000 LAST.sb
     public void startWaitingForBLEConfirmation(Player player) {
         waitForBLEConfirmation(player, true);
     }
+    private final PlayerFocusEffectCountDownTimer m_timerBLEConfirm = new PlayerFocusEffectCountDownTimer(FocusEffect.SetTransparency, 60 * 1000, 50);
     private void waitForBLEConfirmation(Player player, boolean bWaiting) {
         ShowPlayerColorOn guiElementToUseForFocus = ShowPlayerColorOn.ScoreButton; // TODO: from options
         if ( bWaiting ) {
@@ -6357,26 +6362,31 @@ touch -t 01030000 LAST.sb
     }
 
     @Nullable private String getTxtOnElementDuringFeedback(Player player) {
-        String sTmpTxtOnElementDuringFeedback = null;
+        String sGameSetOrMatch = null;
         if ( matchModel.isPossibleGameBallFor(player) ) {
-            sTmpTxtOnElementDuringFeedback = getString(R.string.Game);
+            sGameSetOrMatch = getString(R.string.Game);
             if ( matchModel instanceof GSMModel ) {
                 GSMModel gsmModel = (GSMModel) matchModel;
                 Player[] possibleSetVictoryFor = gsmModel.isPossibleSetVictoryFor();
                 if (possibleSetVictoryFor!=null && possibleSetVictoryFor.length!=0) {
-                    sTmpTxtOnElementDuringFeedback = StringUtil.capitalize(getString(R.string.oa_set)) ;
+                    sGameSetOrMatch = StringUtil.capitalize(getString(R.string.oa_set)) ;
                 }
             }
+            Player[] possibleMatchBallFor = matchModel.isPossibleMatchBallFor();
+            if (possibleMatchBallFor!=null && possibleMatchBallFor.length!=0) {
+                sGameSetOrMatch = StringUtil.capitalize(getString(R.string.oa_match)) ;
+            }
         }
-        return sTmpTxtOnElementDuringFeedback;
+        return sGameSetOrMatch;
     }
 
     // -----------------------------------------------------
     // --------------------- bluetooth BLE -----------------
     // -----------------------------------------------------
     private void promoteAppToUseBLE() {
-        PreferenceValues.setBoolean(PreferenceKeys.UseBluetoothLE.toString(), ScoreBoard.this, true);
-        PreferenceValues.setEnum   (PreferenceKeys.StartupAction.toString() , ScoreBoard.this, StartupAction.BLEDevices);
+        PreferenceValues.setBoolean(PreferenceKeys.UseBluetoothLE       , ScoreBoard.this, true);
+        PreferenceValues.setBoolean(PreferenceKeys.blinkFeedbackPerPoint, ScoreBoard.this, true);
+        PreferenceValues.setEnum   (PreferenceKeys.StartupAction        , ScoreBoard.this, StartupAction.BLEDevices);
         Toast.makeText(ScoreBoard.this, String.format("D-SCORE BLE option enabled. Use menu option: %s", getString(R.string.pref_BluetoothLE_Devices)), Toast.LENGTH_LONG).show();
         //RWValues.Permission permission = PreferenceValues.doesUserHavePermissionToAccessFineLocation(this, true);
     }
@@ -6627,7 +6637,17 @@ touch -t 01030000 LAST.sb
     //----------------------------------------------------
     private void changeScore(Player player) {
         //Log.d(TAG, "Changing score for for model " + matchModel);
-        matchModel.changeScore(player);
+        if ( PreferenceValues.blinkFeedbackPerPoint(this) ) {
+            String sTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(player);
+            if ( sTmpTxtOnElementDuringFeedback == null ) {
+                matchModel.changeScore(player);
+            } else {
+                // score will be changed by timer ending the visual feedback
+            }
+            startVisualFeedbackForScoreChange(player, sTmpTxtOnElementDuringFeedback);
+        } else {
+            matchModel.changeScore(player);
+        }
         writeMethodToBluetooth(BTMethods.changeScore, player);
     }
 
@@ -6756,6 +6776,13 @@ touch -t 01030000 LAST.sb
         iBoard.updateSetScoresToShow(true);
 
         writeMethodToBluetooth(BTMethods.toggleGameScoreView);
+    }
+
+    public void showInfoMessage(String sMsg, int iMessageDurationSecs) {
+        iBoard.showInfoMessage(sMsg, iMessageDurationSecs);
+    }
+    public void showInfoMessage(int iResId, int iMessageDurationSecs) {
+        iBoard.showInfoMessage(getString(iResId), iMessageDurationSecs);
     }
 
     private boolean m_bRequestPullPushDone = false;
@@ -7855,9 +7882,7 @@ touch -t 01030000 LAST.sb
         if ( (iBoard != null) && (castHelper instanceof CastHelper) ) {
             iBoard.setCastHelper( (CastHelper) castHelper);
         }
-        if ( matchModel != null ) {
-            castHelper.setModelForCast(matchModel);
-        }
+        setModelForCast(matchModel);
     }
 
     public void handleMessageFromCast(JSONObject joMessage) {

@@ -31,6 +31,7 @@
     <string name="oa_games">Satzen</string>
     <string name="oa_gameball">Satzball</string>
     <string name="oa_matchball">Spielball</string>
+    <string name="oa_match">Spiel</string>
 
     <string name="oa_n_all__or__n_equal">%d beide</string>
     <string name="oa_player_needs_2_clear_points">Ein Spieler muss mit 2 Punkten vorsprung gewinnen</string>

@@ -155,6 +155,7 @@ http://developer.android.com/guide/practices/screens_support.html
 <!--
     <bool name="suggestToEndSet_default">true</bool>
 -->
+    <bool name="blinkFeedbackPerPoint_default">false</bool>
     <bool name="hapticFeedbackPerPoint_default">false</bool>
     <bool name="hapticFeedbackOnGameEnd_default">false</bool>
     <bool name="landscapeOrientationOnly_default">false</bool>

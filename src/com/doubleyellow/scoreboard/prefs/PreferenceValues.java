@@ -413,6 +413,9 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.showTextInActionBar, context, R.bool.showTextInActionBar_default);
     }
 
+    public static boolean blinkFeedbackPerPoint(Context context) {
+        return getBoolean(PreferenceKeys.blinkFeedbackPerPoint, context, R.bool.blinkFeedbackPerPoint_default);
+    }
     public static boolean hapticFeedbackPerPoint(Context context) {
         return getBoolean(PreferenceKeys.hapticFeedbackPerPoint, context, R.bool.hapticFeedbackPerPoint_default);
     }
@@ -2413,9 +2416,11 @@ public class PreferenceValues extends RWValues
         return requestPermission(context, PreferenceKeys.targetDirForImportExport, Manifest.permission.WRITE_EXTERNAL_STORAGE, bRequestIfRequired);
     }
     /** should automatically be granted according to documentation, but I have seen cases with SecurityException being thrown */
+/*
     public static Permission doesUserHavePermissionToBluetooth(Context context, boolean bRequestIfRequired) {
         return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH, bRequestIfRequired);
     }
+*/
     @RequiresApi(api = Build.VERSION_CODES.S)
     public static Permission doesUserHavePermissionToBluetoothConnect(Context context, boolean bRequestIfRequired) {
         return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH_CONNECT, bRequestIfRequired);
@@ -2428,6 +2433,14 @@ public class PreferenceValues extends RWValues
     public static Permission doesUserHavePermissionToBluetoothAdvertise(Context context, boolean bRequestIfRequired) {
         return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH_ADVERTISE, bRequestIfRequired);
     }
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public static Permission doesUserHavePermissionToAccessFineLocation(Context context, boolean bRequestIfRequired) {
+        return requestPermission(context, PreferenceKeys.UseBluetoothLE, Manifest.permission.ACCESS_FINE_LOCATION, bRequestIfRequired);
+    }
+    public static <T extends Enum<T>> Permission getPermission(Context ctx, T key, String sPermission) {
+        return requestPermission(ctx, key, sPermission, false);
+    }
+
     public static Permission doesUserHavePermissionToBluetoothAdmin(Context context, boolean bRequestIfRequired) {
         return requestPermission(context, PreferenceKeys.enableScoringByBluetoothConnection, Manifest.permission.BLUETOOTH_ADMIN, bRequestIfRequired);
     }

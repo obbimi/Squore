@@ -1135,22 +1135,23 @@ public class IBoard implements TimerViewContainer
                     v.setBackgroundColor(iBgColor);
                     v.setTextColor      (iTxColor);
                 } else {
+                    // typically the score buttons
                     setBackgroundColor(view, iBgColor);
                     setTextColor(view, iTxColor);
                     if ( view instanceof TextView ) {
                         TextView tv = (TextView) view;
-                        int iTagNr = R.string.oa_game;
+                        final int iTagNr = R.string.oa_game;
                         Object tag = tv.getTag(iTagNr);
-                        if ( StringUtil.isNotEmpty(sTmpTxtOnElementDuringFeedback) ) {
-                            if ( tag == null ) {
-                                tv.setTag(iTagNr, tv.getText());
-                            }
-                            tv.setText(sTmpTxtOnElementDuringFeedback);
-                        } else {
+                        if ( StringUtil.isEmpty(sTmpTxtOnElementDuringFeedback) ) {
                             if ( tag != null ) {
-                                tv.setText(tag.toString());
+                                tv.setText(tag.toString()); // restore back to original text
                                 tv.setTag(iTagNr, null);
                             }
+                        } else {
+                            if ( tag == null ) {
+                                tv.setTag(iTagNr, tv.getText()); // store original text in tag
+                            }
+                            tv.setText(sTmpTxtOnElementDuringFeedback);
                         }
                     }
                 }
