@@ -631,16 +631,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 ScoreBoard.this.onRestart();
                 return true;
             }
-/*
-            EnumSet<ShowPlayerColorOn> colorOns = PreferenceValues.showPlayerColorOn(ScoreBoard.this);
-            if (  colorOns.contains(ShowPlayerColorOn.ServeSideButton)
-               || (colorOns.contains(ShowPlayerColorOn.ScoreButton) == false)
-               ) {
-*/
-                showColorPicker(pl);
-/*
-            }
-*/
+            showColorPicker(pl);
             return true;
         }
     }
@@ -6294,9 +6285,9 @@ touch -t 01030000 LAST.sb
     private class PlayerFocusEffectCountDownTimer extends CountDownTimer {
         private Player            m_player                  = null;
         private int               m_iInvocationCnt          = 0;
-        private ShowPlayerColorOn m_guiElementToUseForFocus = ShowPlayerColorOn.PlayerButton;
+        private ShowScoreChangeOn m_guiElementToUseForFocus = ShowScoreChangeOn.PlayerButton;
         private FocusEffect       m_focusEffect             = null;
-        private String            m_sTmpTxtOnElementDuringFeedback = null;
+        private int               m_iTmpTxtOnElementDuringFeedback = 0;
 
         PlayerFocusEffectCountDownTimer(FocusEffect focusEffect, int iTotalDuration, int iInvocationInterval) {
             super(iTotalDuration, iInvocationInterval);
@@ -6304,24 +6295,24 @@ touch -t 01030000 LAST.sb
         }
         @Override public void onTick(long millisUntilFinished) {
             m_iInvocationCnt++;
-            iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, m_sTmpTxtOnElementDuringFeedback);
+            iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, m_iTmpTxtOnElementDuringFeedback);
         }
 
         @Override public void onFinish() {
             cancelForPlayer();
         }
-        public void start(ShowPlayerColorOn guiElementToUseForFocus, Player p, String sTmpTxtOnElementDuringFeedback) {
+        public void start(ShowScoreChangeOn guiElementToUseForFocus, Player p, int iTmpTxtOnElementDuringFeedback) {
             m_iInvocationCnt                 = 0;
             m_guiElementToUseForFocus        = guiElementToUseForFocus;
             m_player                         = p;
-            m_sTmpTxtOnElementDuringFeedback = sTmpTxtOnElementDuringFeedback;
-            Log.i(TAG, "m_sTmpTxtOnElementDuringFeedback : " + m_sTmpTxtOnElementDuringFeedback);
+            m_iTmpTxtOnElementDuringFeedback = iTmpTxtOnElementDuringFeedback;
+            Log.i(TAG, "m_iTmpTxtOnElementDuringFeedback : " + m_iTmpTxtOnElementDuringFeedback);
             super.start();
         }
         private void cancelForPlayer() {
             m_iInvocationCnt = 0;
             if ( m_player == null ) { return; }
-            iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, null);
+            iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, 0);
             doChangeScoreIfRequired(m_player);
         }
         public void myCancel() {
@@ -6330,8 +6321,8 @@ touch -t 01030000 LAST.sb
             super.cancel(); // final in parent ... can not be overwritten, hence 'myCancel()'
         }
         private void doChangeScoreIfRequired(Player p) {
-            if ( m_sTmpTxtOnElementDuringFeedback != null ) {
-                m_sTmpTxtOnElementDuringFeedback = null;
+            if ( m_iTmpTxtOnElementDuringFeedback != 0 ) {
+                m_iTmpTxtOnElementDuringFeedback = 0;
                 matchModel.changeScore(p);
             }
         }
@@ -6346,35 +6337,60 @@ touch -t 01030000 LAST.sb
     }
     private final PlayerFocusEffectCountDownTimer m_timerBLEConfirm = new PlayerFocusEffectCountDownTimer(FocusEffect.SetTransparency, 60 * 1000, 50);
     private void waitForBLEConfirmation(Player player, boolean bWaiting) {
-        ShowPlayerColorOn guiElementToUseForFocus = ShowPlayerColorOn.ScoreButton; // TODO: from options
+        ShowScoreChangeOn guiElementToUseForFocus = ShowScoreChangeOn.ScoreButton; // TODO: from options
         if ( bWaiting ) {
-            m_timerBLEConfirm.start(guiElementToUseForFocus, player, null);
+            m_timerBLEConfirm.start(guiElementToUseForFocus, player, 0);
         } else {
-            iBoard.guiElementColorSwitch(guiElementToUseForFocus, player, FocusEffect.BlinkByInverting, 0, null);
-            iBoard.guiElementColorSwitch(guiElementToUseForFocus, player, FocusEffect.SetTransparency, 0, null);
+            iBoard.guiElementColorSwitch(guiElementToUseForFocus, player, FocusEffect.BlinkByInverting, 0, 0);
+            iBoard.guiElementColorSwitch(guiElementToUseForFocus, player, FocusEffect.SetTransparency, 0, 0);
             m_timerBLEConfirm.myCancel();
         }
     }
-    private void startVisualFeedbackForScoreChange(Player player, String sTmpTxtOnElementDuringFeedback) {
-        ShowPlayerColorOn guiElementToUseForFocus = ShowPlayerColorOn.ScoreButton; // TODO: from options
+    private void startVisualFeedbackForScoreChange(Player player, int iTmpTxtOnElementDuringFeedback) {
+        ShowScoreChangeOn guiElementToUseForFocus = getShowScoreChangeOn(iTmpTxtOnElementDuringFeedback);
+        if ( iTmpTxtOnElementDuringFeedback == 0 || (guiElementToUseForFocus.equals(ShowScoreChangeOn.ScoreButton) == false) ) {
+            matchModel.changeScore(player);
+            iTmpTxtOnElementDuringFeedback = 0;
+        } else {
+            // score will be changed by timer ending the visual feedback
+        }
         m_timerScoreChangedFeedBack.myCancel();
-        m_timerScoreChangedFeedBack.start(guiElementToUseForFocus, player, sTmpTxtOnElementDuringFeedback);
+        m_timerScoreChangedFeedBack.start(guiElementToUseForFocus, player, iTmpTxtOnElementDuringFeedback);
     }
 
-    @Nullable private String getTxtOnElementDuringFeedback(Player player) {
-        String sGameSetOrMatch = null;
+    private ShowScoreChangeOn getShowScoreChangeOn(int iTmpTxtOnElementDuringFeedback) {
+        ShowScoreChangeOn showScoreChangeOn = ShowScoreChangeOn.ScoreButton;
+        switch (iTmpTxtOnElementDuringFeedback) {
+            case R.string.oa_game:
+                showScoreChangeOn = ShowScoreChangeOn.GamesButton;
+                break;
+            case R.string.oa_set:
+                showScoreChangeOn = ShowScoreChangeOn.SetsButton;
+                break;
+            case R.string.oa_match:
+                if ( Brand.isGameSetMatch() ) {
+                    showScoreChangeOn = ShowScoreChangeOn.SetsButton;
+                } else {
+                    showScoreChangeOn = ShowScoreChangeOn.GamesButton;
+                }
+                break;
+        }
+        return showScoreChangeOn;
+    }
+    @Nullable private int getTxtOnElementDuringFeedback(Player player) {
+        int sGameSetOrMatch = 0;
         if ( matchModel.isPossibleGameBallFor(player) ) {
-            sGameSetOrMatch = getString(R.string.Game);
+            sGameSetOrMatch = R.string.oa_game;
             if ( matchModel instanceof GSMModel ) {
                 GSMModel gsmModel = (GSMModel) matchModel;
                 Player[] possibleSetVictoryFor = gsmModel.isPossibleSetVictoryFor();
                 if (possibleSetVictoryFor!=null && possibleSetVictoryFor.length!=0) {
-                    sGameSetOrMatch = StringUtil.capitalize(getString(R.string.oa_set)) ;
+                    sGameSetOrMatch = R.string.oa_set;
                 }
             }
             Player[] possibleMatchBallFor = matchModel.isPossibleMatchBallFor();
             if (possibleMatchBallFor!=null && possibleMatchBallFor.length!=0) {
-                sGameSetOrMatch = StringUtil.capitalize(getString(R.string.oa_match)) ;
+                sGameSetOrMatch = R.string.oa_match;
             }
         }
         return sGameSetOrMatch;
@@ -6384,9 +6400,16 @@ touch -t 01030000 LAST.sb
     // --------------------- bluetooth BLE -----------------
     // -----------------------------------------------------
     private void promoteAppToUseBLE() {
-        PreferenceValues.setBoolean(PreferenceKeys.UseBluetoothLE       , ScoreBoard.this, true);
-        PreferenceValues.setBoolean(PreferenceKeys.blinkFeedbackPerPoint, ScoreBoard.this, true);
-        PreferenceValues.setEnum   (PreferenceKeys.StartupAction        , ScoreBoard.this, StartupAction.BLEDevices);
+        PreferenceValues.setBoolean(PreferenceKeys.UseBluetoothLE                 , ScoreBoard.this, true);
+        PreferenceValues.setBoolean(PreferenceKeys.blinkFeedbackPerPoint          , ScoreBoard.this, true);
+        PreferenceValues.setBoolean(PreferenceKeys.showActionBar                  , ScoreBoard.this, false);
+        PreferenceValues.setEnum   (PreferenceKeys.useTimersFeature               , ScoreBoard.this, Feature.Automatic);
+        PreferenceValues.setEnum   (PreferenceKeys.useSpeechFeature               , ScoreBoard.this, Feature.Automatic);
+        PreferenceValues.setEnum   (PreferenceKeys.useOfficialAnnouncementsFeature, ScoreBoard.this, Feature.DoNotUse);
+        PreferenceValues.setEnum   (PreferenceKeys.endGameSuggestion              , ScoreBoard.this, Feature.Automatic);
+        PreferenceValues.setEnum   (PreferenceKeys.LandscapeLayoutPreference      , ScoreBoard.this, LandscapeLayoutPreference.Presentation1);
+
+        //PreferenceValues.setEnum   (PreferenceKeys.StartupAction        , ScoreBoard.this, StartupAction.BLEDevices);
         Toast.makeText(ScoreBoard.this, String.format("D-SCORE BLE option enabled. Use menu option: %s", getString(R.string.pref_BluetoothLE_Devices)), Toast.LENGTH_LONG).show();
         //RWValues.Permission permission = PreferenceValues.doesUserHavePermissionToAccessFineLocation(this, true);
     }
@@ -6638,13 +6661,8 @@ touch -t 01030000 LAST.sb
     private void changeScore(Player player) {
         //Log.d(TAG, "Changing score for for model " + matchModel);
         if ( PreferenceValues.blinkFeedbackPerPoint(this) ) {
-            String sTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(player);
-            if ( sTmpTxtOnElementDuringFeedback == null ) {
-                matchModel.changeScore(player);
-            } else {
-                // score will be changed by timer ending the visual feedback
-            }
-            startVisualFeedbackForScoreChange(player, sTmpTxtOnElementDuringFeedback);
+            int iTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(player);
+            startVisualFeedbackForScoreChange(player, iTmpTxtOnElementDuringFeedback);
         } else {
             matchModel.changeScore(player);
         }
@@ -7223,8 +7241,7 @@ touch -t 01030000 LAST.sb
                         String          sButtonPressed       = m_bleConfig.optString(eButtonPressed.toString()          , eButtonPressed.toString());
                         int             iNrOfDevicesRequired = m_bleConfig.optInt   (BLEUtil.Keys.NrOfDevices.toString(), 2);
                         Log.i(TAG, String.format("changeScoreBLEConfirm: %s, player:%s, button:%s", m_blePlayerWaitingForScoreToBeConfirmed, player, eButtonPressed));
-                        String sTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(m_blePlayerWaitingForScoreToBeConfirmed);
-
+                        int iTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(m_blePlayerWaitingForScoreToBeConfirmed);
                         if ( iNrOfDevicesRequired == 1 ) {
                             if ( m_blePlayerWaitingForScoreToBeConfirmed != null ) {
                                 String sDoChangeScore = null;
@@ -7249,10 +7266,7 @@ touch -t 01030000 LAST.sb
 
                                     stopWaitingForBLEConfirmation();
                                     iBoard.showBLEInfoMessage(sDoChangeScore, 10);
-                                    if ( sTmpTxtOnElementDuringFeedback == null ) {
-                                        matchModel.changeScore(m_blePlayerWaitingForScoreToBeConfirmed);
-                                    }
-                                    startVisualFeedbackForScoreChange(m_blePlayerWaitingForScoreToBeConfirmed, sTmpTxtOnElementDuringFeedback);
+                                    startVisualFeedbackForScoreChange(m_blePlayerWaitingForScoreToBeConfirmed, iTmpTxtOnElementDuringFeedback);
                                     m_blePlayerWaitingForScoreToBeConfirmed = null;
                                 } else if ( sDoCancelScore != null ) {
                                     Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
@@ -7300,10 +7314,7 @@ touch -t 01030000 LAST.sb
 
                                     stopWaitingForBLEConfirmation();
                                     iBoard.showBLEInfoMessage(sDoChangeScore, 10);
-                                    if ( sTmpTxtOnElementDuringFeedback == null ) {
-                                        matchModel.changeScore(m_blePlayerWaitingForScoreToBeConfirmed);
-                                    }
-                                    startVisualFeedbackForScoreChange(m_blePlayerWaitingForScoreToBeConfirmed, sTmpTxtOnElementDuringFeedback);
+                                    startVisualFeedbackForScoreChange(m_blePlayerWaitingForScoreToBeConfirmed, iTmpTxtOnElementDuringFeedback);
                                     m_blePlayerWaitingForScoreToBeConfirmed = null;
                                 } else if ( sDoCancelScore != null ) {
                                     Log.i(TAG, "sDoCancelScore : " + sDoCancelScore);
@@ -7359,13 +7370,10 @@ touch -t 01030000 LAST.sb
                             } else {
                                 player = Player.valueOf(sAorB);
                             }
-                            String sTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(player);
+                            int iTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(player);
                             String sInfoMsg = getString(R.string.ble_score_for_X_changed_by_ble, player);
                             iBoard.showBLEInfoMessage(sInfoMsg, 10);
-                            if ( sTmpTxtOnElementDuringFeedback == null ) {
-                                matchModel.changeScore(player);
-                            }
-                            startVisualFeedbackForScoreChange(player, sTmpTxtOnElementDuringFeedback);
+                            startVisualFeedbackForScoreChange(player, iTmpTxtOnElementDuringFeedback);
                         }
                         break;
                     case changeSide: {

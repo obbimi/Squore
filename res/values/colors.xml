@@ -33,6 +33,7 @@
         <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
     <color name="background_default__TennisPadel">#D63E2D</color>
+    <color name="background_default_tp__TennisPadel">#CCD63E2D</color>
 
     <string-array name="colorSchema__Racketlon" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
@@ -55,6 +56,7 @@
         <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
     <color name="background_default__Racketlon">#C30D14</color>
+    <color name="background_default_tp__Racketlon">#CCC30D14</color>
 
     <string-array name="colorSchema__Tabletennis" translatable="false">
                                 <!-- scorebtn|name  |serveside|backgrn -->
@@ -69,6 +71,7 @@
         <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
     <color name="background_default__Tabletennis">#C3161C</color>
+    <color name="background_default_tp__Tabletennis">#CCC3161C</color>
 
     <string-array name="colorSchema__Badminton" translatable="false">
                                 <!-- scorebtn|name  |serveside|backgrn -->
@@ -80,6 +83,7 @@
         <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
     <color name="background_default__Badminton">#DF2027</color>
+    <color name="background_default_tp__Badminton">#CCDF2027</color>
 
     <string-array name="colorSchema__Squash" translatable="false">
                                <!-- scorebtn|name+sht|serveside|backgrn -->
@@ -105,6 +109,7 @@
         <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
     </string-array>
     <color name="background_default__Squash">#4CA3D9</color>
+    <color name="background_default_tp__Squash">#CC4CA3D9</color>
 <!--    <color name="background_default__Squash">@android:color/transparent</color>-->
 
     <string-array name="colorSchema_new"  translatable="false">

@@ -15,7 +15,7 @@ buildscript {
         // NOTE: Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements
 
         // added for firebase to parse google-services.json
-        classpath 'com.google.gms:google-services:4.4.0'
+        classpath 'com.google.gms:google-services:4.4.1'
     }
 }
 repositories {

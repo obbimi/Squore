@@ -362,7 +362,7 @@
         app:layout_constraintHeight_percent="0.04"
         android:layout_width="0dp" android:layout_height="0dp"
         android:textColor="@android:color/white"
-        android:background="@color/background_default__Squash"
+        android:background="@color/background_default_tp__Squash"
         android:textSize="12sp"
         />
 </com.doubleyellow.view.SBConstraintLayout>

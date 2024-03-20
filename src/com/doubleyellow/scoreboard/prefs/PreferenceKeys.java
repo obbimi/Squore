@@ -153,7 +153,6 @@ public enum PreferenceKeys {
         hideBrandLogoWhenGameInProgress,
     showNewMatchFloatButton,
     Timers,
-        //showTimersAutomatically,
         useTimersFeature,
         showLastGameInfoInTimer,
         showPauseButtonOnTimer,

@@ -147,6 +147,9 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             PreferenceValues.setRestartRequired(Preferences.this);
                         }
                         break;
+                    case LandscapeLayoutPreference:
+                        PreferenceValues.setRestartRequired(Preferences.this);
+                        break;
                     case showBrandLogoOn:
                         final Preference psHideBrandLogoWhenGameInProgress = settingsFragment.findPreference(PreferenceKeys.hideBrandLogoWhenGameInProgress);
                         if ( psHideBrandLogoWhenGameInProgress != null ) {

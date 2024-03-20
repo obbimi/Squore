@@ -82,6 +82,7 @@ public class IBoard implements TimerViewContainer
     public static Map<Player, Integer> m_player2serverSideId;
     public static Map<Player, Integer> m_player2nameId;
     public static Map<Player, Integer> m_player2gamesWonId;
+    public static Map<Player, Integer> m_player2SetsWonId;
     public static Map<Player, Integer> m_player2PowerPlayIconId;
     public static SparseArray<Player>  m_id2player;
     static {
@@ -89,6 +90,7 @@ public class IBoard implements TimerViewContainer
         m_player2serverSideId = new HashMap<Player , Integer>();
         m_player2nameId       = new HashMap<Player , Integer>();
         m_player2gamesWonId   = new HashMap<Player , Integer>();
+        m_player2SetsWonId    = new HashMap<Player , Integer>();
         m_player2PowerPlayIconId = new HashMap<Player , Integer>();
         m_id2player           = new SparseArray<Player>();
 
@@ -112,6 +114,9 @@ public class IBoard implements TimerViewContainer
 
         m_player2gamesWonId  .put(pFirst           , R.id.btn_gameswon1);
         m_player2gamesWonId  .put(pFirst.getOther(), R.id.btn_gameswon2);
+
+        m_player2SetsWonId   .put(pFirst           , R.id.btn_score1_set);
+        m_player2SetsWonId   .put(pFirst.getOther(), R.id.btn_score2_set);
 
         m_player2PowerPlayIconId.put(pFirst           , R.id.sb_powerplay1_icon);
         m_player2PowerPlayIconId.put(pFirst.getOther(), R.id.sb_powerplay2_icon);
@@ -749,6 +754,8 @@ public class IBoard implements TimerViewContainer
         setGameScoreView(appearance);
     }
     private void setGameScoreView(GameScoresAppearance appearance) {
+        boolean showGamesWon = appearance.showGamesWon(isPresentation());
+        MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
         for ( Player player : Player.values() ) {
             int iNameId = m_player2gamesWonId.get(player);
             View vGamesWon = findViewById(iNameId);
@@ -756,17 +763,15 @@ public class IBoard implements TimerViewContainer
                 Log.w(TAG, "No GamesWon buttons to work with in orientation/view " + ViewUtil.getCurrentOrientation(context));
                 break;
             }
-            boolean showGamesWon = appearance.showGamesWon(isPresentation());
-            vGamesWon.setVisibility(showGamesWon ? View.VISIBLE : View.INVISIBLE);
+            vGamesWon.setVisibility(showGamesWon || (matchGameScores == null) ? View.VISIBLE : View.INVISIBLE);
         }
 
         // update casting screen
         boolean bShowGameScores = appearance.showGamesWon(true) == false;
         castSendFunction(ICastHelper.GameScores_display + "(" + bShowGameScores + ")");
 
-        MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
         if ( matchGameScores != null ) {
-            if ( appearance.showGamesWon(isPresentation()) ) {
+            if ( showGamesWon ) {
                 matchGameScores.setVisibility(View.GONE); // gone ensures, if many games have been played, more room becomes available for timer/oldfahsined paper scoring
             } else {
                 matchGameScores.setVisibility(View.VISIBLE);
@@ -786,12 +791,12 @@ public class IBoard implements TimerViewContainer
 
             matchGameScores.update(matchModel, m_firstPlayerOnScreen);
         } else {
-            TextView vGameScore = (TextView) findViewById(R.id.btn_score1_game);
+            TextView vGameScore = (TextView) findViewById(R.id.btn_gameswon1);
             if ( vGameScore != null ) {
                 Map<Player, Integer> gamesWon = matchModel.getGamesWon();
                 if ( gamesWon != null ) {
                     vGameScore.setText(String.valueOf(gamesWon.get(m_firstPlayerOnScreen)) );
-                    vGameScore = (TextView) findViewById(R.id.btn_score2_game);
+                    vGameScore = (TextView) findViewById(R.id.btn_gameswon2);
                     vGameScore.setText(String.valueOf(gamesWon.get(m_firstPlayerOnScreen.getOther())) );
                 } else {
                     Log.w(TAG, "Games won is null");
@@ -1101,7 +1106,7 @@ public class IBoard implements TimerViewContainer
     }
 
 
-    public void guiElementColorSwitch(ShowPlayerColorOn guiElementToUseForFocus, Player player, FocusEffect focusEffect, int iInvocationCnt, String sTmpTxtOnElementDuringFeedback) {
+    public void guiElementColorSwitch(ShowScoreChangeOn guiElementToUseForFocus, Player player, FocusEffect focusEffect, int iInvocationCnt, int iTmpTxtOnElementDuringFeedback) {
         Map<ColorPrefs.ColorTarget, Integer> mColors = ColorPrefs.getTarget2colorMapping(context);
 
         Map<Player, Integer> player2GuiElement = m_player2nameId;
@@ -1117,6 +1122,16 @@ public class IBoard implements TimerViewContainer
                 iBgColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
                 iTxColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonTextColor);
                 player2GuiElement = m_player2scoreId;
+                break;
+            case GamesButton:
+                iBgColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
+                iTxColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonTextColor);
+                player2GuiElement = m_player2gamesWonId;
+                break;
+            case SetsButton:
+                iBgColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
+                iTxColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonTextColor);
+                player2GuiElement = m_player2SetsWonId;
                 break;
         }
         View view = findViewById(player2GuiElement.get(player));
@@ -1142,12 +1157,13 @@ public class IBoard implements TimerViewContainer
                         TextView tv = (TextView) view;
                         final int iTagNr = R.string.oa_game;
                         Object tag = tv.getTag(iTagNr);
-                        if ( StringUtil.isEmpty(sTmpTxtOnElementDuringFeedback) ) {
+                        if ( iTmpTxtOnElementDuringFeedback == 0 ) {
                             if ( tag != null ) {
                                 tv.setText(tag.toString()); // restore back to original text
                                 tv.setTag(iTagNr, null);
                             }
                         } else {
+                            String sTmpTxtOnElementDuringFeedback = StringUtil.capitalize(getOAString(iTmpTxtOnElementDuringFeedback));
                             if ( tag == null ) {
                                 tv.setTag(iTagNr, tv.getText()); // store original text in tag
                             }

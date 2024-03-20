@@ -86,9 +86,9 @@
         />
 
     <!-- GAME score buttons -->
-    <com.doubleyellow.android.view.AutoResizeTextView
+    <com.doubleyellow.scoreboard.view.GamesWonButton
         style="@style/SBButton"
-        android:id="@+id/btn_score1_game"
+        android:id="@+id/btn_gameswon1"
         app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
         app:layout_constraintBottom_toTopOf="@id/space_centerright"
         app:layout_constraintEnd_toStartOf="@id/space_scoregame_scorepnt"
@@ -97,9 +97,9 @@
         android:includeFontPadding="false"
         android:layout_width="0dp" android:layout_height="0dp"
         />
-    <com.doubleyellow.android.view.AutoResizeTextView
+    <com.doubleyellow.scoreboard.view.GamesWonButton
         style="@style/SBButton"
-        android:id="@+id/btn_score2_game"
+        android:id="@+id/btn_gameswon2"
         app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
         app:layout_constraintTop_toBottomOf="@id/space_centerright"
         app:layout_constraintEnd_toStartOf="@id/space_scoregame_scorepnt"
@@ -112,8 +112,8 @@
     <Space android:id="@+id/space_scoreset_scoregame"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/btn_score2_game"
-        app:layout_constraintEnd_toStartOf="@id/btn_score1_game"
+        app:layout_constraintTop_toBottomOf="@id/btn_gameswon2"
+        app:layout_constraintEnd_toStartOf="@id/btn_gameswon1"
         app:layout_constraintHeight_percent="@fraction/lsp_fr_vertical_margin_3x"
         app:layout_constraintWidth_percent="@fraction/lsp_fr_horizontal_margin_4x"
         />
@@ -263,7 +263,7 @@
         app:layout_constraintHeight_percent="0.06"
         android:layout_width="0dp" android:layout_height="0dp"
         android:textColor="@android:color/white"
-        android:background="@color/background_default__Squash"
+        android:background="@color/background_default_tp__Squash"
         android:textSize="12sp"
         />
 </com.doubleyellow.view.SBConstraintLayout>
