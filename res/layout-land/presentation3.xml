@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright (C) 2024  Iddo Hoeve
+**
+** Squore is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+-->
+<com.doubleyellow.view.SBConstraintLayout
+        android:id="@+id/squoreboard_root_view"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <Space android:id="@+id/space_topleft1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHeight_percent="@fraction/ls_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="@fraction/ls_fr_horizontal_margin_4x"
+        />
+
+    <Space android:id="@+id/space_bottomright1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="@fraction/ls_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="@fraction/ls_fr_horizontal_margin_4x"
+        />
+
+    <Space android:id="@+id/space_centerright"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="@fraction/ls_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="@fraction/ls_fr_horizontal_margin_4x"
+        />
+
+    <!-- POINTS score buttons -->
+    <com.doubleyellow.android.view.AutoResizeTextView
+        style="@style/SBButton"
+        android:id="@+id/btn_score1"
+        app:layout_constraintBottom_toTopOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/space_centerright"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_extraheight_2x"
+        app:layout_constraintDimensionRatio="@string/lsp_ratio_score"
+        android:text="@string/winning_gamescore__TennisPadel"
+        android:clickable="true"
+        android:includeFontPadding="false"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+    <com.doubleyellow.android.view.AutoResizeTextView
+        style="@style/SBButton"
+        android:id="@+id/btn_score2"
+        app:layout_constraintTop_toBottomOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/space_centerright"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_extraheight_2x"
+        app:layout_constraintDimensionRatio="@string/lsp_ratio_score"
+        android:text="@string/non_winning_gamescore__TennisPadel"
+        android:clickable="true"
+        android:includeFontPadding="false"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+    <Space android:id="@+id/space_scoregame_scorepnt"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_score1"
+        app:layout_constraintEnd_toStartOf="@id/btn_score1"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_horizontal_margin_4x"
+        />
+
+    <!-- GAME score buttons -->
+    <com.doubleyellow.scoreboard.view.GamesWonButton
+        style="@style/SBButton"
+        android:id="@+id/btn_gameswon1"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        app:layout_constraintBottom_toTopOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/space_scoregame_scorepnt"
+        app:layout_constraintDimensionRatio="@string/lsp_ratio_score_games"
+        android:text="5"
+        android:includeFontPadding="false"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+    <com.doubleyellow.scoreboard.view.GamesWonButton
+        style="@style/SBButton"
+        android:id="@+id/btn_gameswon2"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        app:layout_constraintTop_toBottomOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/space_scoregame_scorepnt"
+        app:layout_constraintDimensionRatio="@string/lsp_ratio_score_games"
+        android:text="4"
+        android:includeFontPadding="false"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+
+    <Space android:id="@+id/space_scoreset_scoregame_top"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_gameswon1"
+        app:layout_constraintEnd_toStartOf="@id/btn_gameswon1"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_horizontal_margin_4x"
+        />
+    <Space android:id="@+id/space_scoreset_scoregame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_gameswon2"
+        app:layout_constraintEnd_toStartOf="@id/btn_gameswon1"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_horizontal_margin_4x"
+        />
+
+    <!-- SET score buttons -->
+    <com.doubleyellow.android.view.AutoResizeTextView
+        style="@style/SBButton"
+        android:id="@+id/btn_score1_set"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        app:layout_constraintBottom_toTopOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/space_scoreset_scoregame"
+        app:layout_constraintDimensionRatio="@string/lsp_ratio_score_sets"
+        android:text="1"
+        android:includeFontPadding="false"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+    <com.doubleyellow.android.view.AutoResizeTextView
+        style="@style/SBButton"
+        android:id="@+id/btn_score2_set"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        app:layout_constraintTop_toBottomOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/space_scoreset_scoregame"
+        app:layout_constraintDimensionRatio="@string/lsp_ratio_score_sets"
+        android:text="2"
+        android:includeFontPadding="false"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+    <Space android:id="@+id/space_player_score"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/btn_score1_set"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_horizontal_margin_4x"
+        />
+
+    <!-- playernames -->
+    <com.doubleyellow.scoreboard.view.PlayersButton
+        android:id="@+id/txt_player1"
+        app:layout_constraintBottom_toTopOf="@id/space_centerright"
+        app:layout_constraintStart_toEndOf="@id/space_topleft1"
+        app:layout_constraintEnd_toStartOf="@id/space_player_score"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        android:text="@string/lbl_player_A"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+    <com.doubleyellow.scoreboard.view.PlayersButton
+        android:id="@+id/txt_player2"
+        app:layout_constraintTop_toBottomOf="@id/space_centerright"
+        app:layout_constraintStart_toEndOf="@id/space_topleft1"
+        app:layout_constraintEnd_toStartOf="@id/space_player_score"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        android:text="@string/lbl_player_B"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+
+    <com.doubleyellow.scoreboard.view.ServeButton
+        style="@style/SBButton"
+        android:id="@+id/btn_side1"
+        app:layout_constraintStart_toEndOf="@id/space_topleft1"
+        app:layout_constraintTop_toBottomOf="@id/space_topleft1"
+        app:layout_constraintBottom_toTopOf="@id/space_scoreset_scoregame_top"
+        app:layout_constraintDimensionRatio="H,1:1"
+        android:padding="3dp"
+        android:text="R?"
+        android:textStyle="bold"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+    <com.doubleyellow.scoreboard.view.ServeButton
+        style="@style/SBButton"
+        android:id="@+id/btn_side2"
+        app:layout_constraintStart_toEndOf="@id/space_topleft1"
+        app:layout_constraintTop_toBottomOf="@id/space_scoreset_scoregame"
+        app:layout_constraintBottom_toTopOf="@id/space_bottomright1"
+        app:layout_constraintDimensionRatio="H,1:1"
+        android:text="L"
+        android:textStyle="bold"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+
+    <com.doubleyellow.android.view.AutoResizeTextView
+        style="@style/SBButton"
+        android:visibility="visible"
+        android:id="@+id/btn_timer"
+        app:layout_constraintEnd_toStartOf="@id/btn_score1"
+        app:layout_constraintTop_toBottomOf="@id/space_topleft1"
+        app:layout_constraintBottom_toTopOf="@id/space_scoreset_scoregame_top"
+        app:layout_constraintDimensionRatio="H,1:2"
+        android:text="01:30"
+        android:includeFontPadding="false"
+        android:paddingTop="0px"
+        android:clickable="true"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+
+
+    <TextView
+        android:id="@+id/sb_bottom_of_screen_infomessage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:visibility="visible"
+        android:text="Some information about ble connected devices"
+        app:layout_constraintHeight_percent="0.06"
+        android:layout_width="0dp" android:layout_height="0dp"
+        android:textColor="@android:color/white"
+        android:background="@color/background_default_tp__Squash"
+        android:textSize="12sp"
+        />
+</com.doubleyellow.view.SBConstraintLayout>

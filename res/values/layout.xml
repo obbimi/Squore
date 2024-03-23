@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="lsp_ratio_score">H,3:4</string>
+    <string name="lsp_ratio_score_games">H,4:3</string>
+    <string name="lsp_ratio_score_sets">H,5:3</string>
+
+    <fraction name="lsp_fr_mainrow_extraheight_2x">0.40</fraction>
     <fraction name="lsp_fr_mainrow_height_2x">0.28</fraction>
     <fraction name="lsp_fr_score_ble_connected_width">0.09</fraction>
     <fraction name="lsp_fr_score_width_setswon">0.12</fraction>

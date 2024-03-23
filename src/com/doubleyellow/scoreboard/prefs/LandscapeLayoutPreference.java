@@ -19,9 +19,10 @@ package com.doubleyellow.scoreboard.prefs;
 import com.doubleyellow.scoreboard.R;
 
 public enum LandscapeLayoutPreference {
-    Default                  (R.layout.constraint ), /* same look and feel as default/portrait */
-    Presentation1            (R.layout.presentation), /* Two lines: | Player X | Sets Won | Games Won | Points Scored | */
+    Default       (R.layout.constraint ), /* same look and feel as default/portrait */
+    Presentation1 (R.layout.presentation1), /* Two lines: | Player X | Sets Won | Games Won | Points Scored | */
     Presentation2 (R.layout.presentation2),
+    Presentation3 (R.layout.presentation3), /* Two lines: | Player X | Sets Won | Games Won | Points Scored (BIGGER) | */
     ;
     private int  m_iLayoutResource       = 0;
     LandscapeLayoutPreference(int iLayoutResource) {
