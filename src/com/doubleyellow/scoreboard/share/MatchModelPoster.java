@@ -168,7 +168,12 @@ public class MatchModelPoster implements ContentReceiver
             if ( m_bAutoShareTriggeredForliveScore ) {
                 // only show Toast once in a while
                 if ( (m_model.getMaxScore() + m_model.getMinScore()) % 5 == 0  ) {
-                    Toast.makeText(m_context, R.string.sb_online_sheet_updated, Toast.LENGTH_SHORT).show();
+                    if ( m_context instanceof ScoreBoard ) {
+                        ScoreBoard sb = (ScoreBoard) m_context;
+                        sb.showInfoMessage(R.string.sb_online_sheet_updated, 5);
+                    } else {
+                        Toast.makeText(m_context, R.string.sb_online_sheet_updated, Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else {
                 Toast.makeText(m_context, R.string.sb_online_sheet_updated, Toast.LENGTH_SHORT).show();

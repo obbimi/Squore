@@ -5,6 +5,7 @@ import android.util.Log;
 import com.doubleyellow.scoreboard.bluetooth.MessageSource;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.RemoteMessage;
 import com.pusher.pushnotifications.PushNotificationReceivedListener;
 import com.pusher.pushnotifications.PushNotifications;
@@ -85,6 +86,7 @@ public class PusherHandler implements FCMHandler
         String sInterest = PreferenceValues.getFCMDeviceId(scoreBoard) + "@" + scoreBoard.getPackageName();
         Log.d(TAG, "Interest :" + sInterest);
 
+        //FirebaseApp.initializeApp(scoreBoard); // required with com.google.gms:google-services:4.3.10 according to error messages, but fails anyway with that version
         PushNotifications.start(scoreBoard, sPusherUUID.toString());
         PushNotifications.clearDeviceInterests();
         PushNotifications.addDeviceInterest(sInterest);

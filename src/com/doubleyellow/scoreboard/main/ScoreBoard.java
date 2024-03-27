@@ -181,7 +181,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 if ( key.equals(PreferenceKeys.targetDirForImportExport) && Brand.isSquash() ) {
                     File file = PreferenceValues.targetDirForImportExport(this, true);
                     try {
-                        InputStream inputStream = this.getResources().openRawResource(R.raw.squore_iddo);
+                        InputStream inputStream = this.getResources().openRawResource(R.raw.squore_iddo); // TODO: ensure compile does not fail if resource does not exist
                         FileOutputStream fo = new FileOutputStream(new File(file, "Squore.stored.matches.test.zip"));
                         byte[] baRead = new byte[1024];
                         while(inputStream.read(baRead)>0) {
@@ -1620,18 +1620,26 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     case KeyEvent.KEYCODE_HOME: // does not seem to work, at least in android 5.1+
                         return handleHomePressed();
 */
-                    case KeyEvent.KEYCODE_A: // A
-                    case 16: // pg up
+                    case KeyEvent.KEYCODE_A      : // A
+                    case KeyEvent.KEYCODE_PAGE_UP:
+                    case 16 /* pg up */          : {
                         handleMenuItem(R.id.pl_change_score, Player.A);
                         return true;
-                    case KeyEvent.KEYCODE_B: // B
-                    case 10: // pg down
+                    }
+
+                    case KeyEvent.KEYCODE_B        : // B
+                    case KeyEvent.KEYCODE_PAGE_DOWN:
+                    case 10  /*pg down*/           : {
                         handleMenuItem(R.id.pl_change_score, Player.B);
                         return true;
-                    case KeyEvent.KEYCODE_U: // U(ndo)
-                    case KeyEvent.KEYCODE_FORWARD_DEL: // delete
+                    }
+
+                    case KeyEvent.KEYCODE_R          : /*R(evert)*/
+                    case KeyEvent.KEYCODE_U          : /*U(ndo)*/
+                    case KeyEvent.KEYCODE_FORWARD_DEL: /*delete*/ {
                         handleMenuItem(R.id.sb_undo_last);
                         return true;
+                    }
                 }
             }
         }
@@ -4235,7 +4243,7 @@ touch -t 01030000 LAST.sb
                 return true;
             case R.id.pl_change_score:
                 if ( warnModelIsLocked(id, ctx) ) { return false; }
-                changeScore((Player) ctx[0]);
+                _changeScore((Player) ctx[0]);
                 break;
             case R.id.pl_show_conduct:
                 if ( warnModelIsLocked(true, id, ctx) ) { return false; }
@@ -5056,9 +5064,17 @@ touch -t 01030000 LAST.sb
                     PreferenceValues.setString(key, this, sAddress);
                 }
                 m_bBLEDevicesSelected = true;
-                if ( PreferenceValues.setEnum(PreferenceKeys.useChangeSidesFeature, this, Feature.Automatic) ) {
-                    Toast.makeText(this, R.string.ble_change_sides_automated_in_ble_mode, Toast.LENGTH_LONG).show();
+                if ( PreferenceValues.getLandscapeLayout(this).equals(LandscapeLayoutPreference.Default) ) {
+                    if ( PreferenceValues.setEnum(PreferenceKeys.useChangeSidesFeature, this, Feature.Automatic) ) {
+                        Toast.makeText(this, R.string.ble_change_sides_automated_in_ble_mode, Toast.LENGTH_LONG).show();
+                    }
                 }
+                ActionBar xActionBar = getXActionBar();
+                if ( xActionBar != null && xActionBar.isShowing() && (PreferenceValues.showActionBar(this) == false) ) {
+                    // action bar made visible temporary by pressing 'back'
+                    xActionBar.hide();
+                }
+
                 onResumeInitBluetoothBLE();
             } else {
                 m_bBLEDevicesSelected = false;
@@ -5488,6 +5504,9 @@ touch -t 01030000 LAST.sb
 
     public void restartScore() {
         cancelTimer();
+
+        clearBLEWaitForConfirmation();
+
         initScoreBoard(null);
         matchModel.setDirty();
 
@@ -6300,6 +6319,7 @@ touch -t 01030000 LAST.sb
 
         @Override public void onFinish() {
             cancelForPlayer();
+            clearBLEWaitForConfirmation();
         }
         public void start(ShowScoreChangeOn guiElementToUseForFocus, Player p, int iTmpTxtOnElementDuringFeedback) {
             m_iInvocationCnt                 = 0;
@@ -6407,6 +6427,7 @@ touch -t 01030000 LAST.sb
         PreferenceValues.setEnum   (PreferenceKeys.useSpeechFeature               , ScoreBoard.this, Feature.Automatic);
         PreferenceValues.setEnum   (PreferenceKeys.useOfficialAnnouncementsFeature, ScoreBoard.this, Feature.DoNotUse);
         PreferenceValues.setEnum   (PreferenceKeys.endGameSuggestion              , ScoreBoard.this, Feature.Automatic);
+        PreferenceValues.setEnum   (PreferenceKeys.useChangeSidesFeature          , ScoreBoard.this, Feature.DoNotUse);
         PreferenceValues.setEnum   (PreferenceKeys.LandscapeLayoutPreference      , ScoreBoard.this, LandscapeLayoutPreference.Presentation1);
 
         //PreferenceValues.setEnum   (PreferenceKeys.StartupAction        , ScoreBoard.this, StartupAction.BLEDevices);
@@ -6440,6 +6461,7 @@ touch -t 01030000 LAST.sb
 
         if ( 0 <= nrOfDevicesConnected && nrOfDevicesConnected <=2 ) {
             iBoard.updateBLEConnectionStatusIcon(visibility, nrOfDevicesConnected);
+            m_nrOfBLEDevicesConnected = nrOfDevicesConnected;
         } else {
             // nrOfDevicesConnected = actually the battery level
         }
@@ -6467,6 +6489,16 @@ touch -t 01030000 LAST.sb
         m_bleReceiverManager.writeToBLE(p);
         return true;
     }
+    private boolean clearBLEWaitForConfirmation() {
+        if ( m_blePlayerWaitingForScoreToBeConfirmed != null ) {
+            m_blePlayerWaitingForScoreToBeConfirmed = null;
+            stopWaitingForBLEConfirmation();
+            String sUIMsg = getResources().getQuantityString(R.plurals.ble_ready_for_scoring_with_devices, m_nrOfBLEDevicesConnected);
+            updateBLEConnectionStatus(View.VISIBLE, m_nrOfBLEDevicesConnected, sUIMsg, 10);
+            return true;
+        }
+        return false;
+    }
 
     private        JSONObject         m_bleConfig                             = null;
     private        boolean            m_bSingleDevice_ConfirmWithSameButton   = false;
@@ -6475,6 +6507,7 @@ touch -t 01030000 LAST.sb
     private        BLEDeviceButton    m_eCancelScoreByInitiatorButton         = BLEDeviceButton.SECONDARY_BUTTON;
     private        BLEReceiverManager m_bleReceiverManager                    = null;
     private static boolean            m_bBLEDevicesSelected                   = false;
+    private static int                m_nrOfBLEDevicesConnected               = 0;
     private static Player             m_blePlayerWaitingForScoreToBeConfirmed = null;
     private void onResumeInitBluetoothBLE()
     {
@@ -6658,7 +6691,7 @@ touch -t 01030000 LAST.sb
     //----------------------------------------------------
     // WRAPPER methods to be able to intercept method call to model and communicate it to connected BT device
     //----------------------------------------------------
-    private void changeScore(Player player) {
+    private void _changeScore(Player player) {
         //Log.d(TAG, "Changing score for for model " + matchModel);
         if ( PreferenceValues.blinkFeedbackPerPoint(this) ) {
             int iTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(player);

@@ -66,6 +66,7 @@
         \n %2$s</string>
     <string name="pref_Behaviour">Behaviour</string>
     <string name="pref_Behaviour_summary">Preferred behaviour of visual elements. Official announcements.</string>
+    <string name="pref_Category_RemoteControl">Remote Control</string>
     <string name="pref_MediaPlaybackButtons">Scoring by Media Playback Buttons</string>
     <string name="pref_BehaviourConvenience">Convenience</string>
     <string name="pref_BehaviourOfficial">For official usage</string>

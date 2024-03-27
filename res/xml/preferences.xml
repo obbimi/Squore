@@ -23,6 +23,7 @@
 
     <PreferenceScreen
         android:title="@string/pref_Category_BlueToothLE"
+        android:summary="Collection of settings to hopefully make the BLE experience better"
         android:icon="@android:drawable/stat_sys_data_bluetooth"
         android:key="BlueToothLE">
         <CheckBoxPreference android:key="UseBluetoothLE"
@@ -31,25 +32,69 @@
             android:icon="@android:drawable/stat_sys_data_bluetooth"
             android:defaultValue="@bool/UseBluetoothLE_default__Squash"
             />
-        <CheckBoxPreference android:key="ShowFeedBackOnBLEButtonsPressedInfoMessages"
-            android:title="@string/pref_ShowFeedBackOnBLEButtonsPressedInfoMessages"
-            android:summary="@string/pref_ShowFeedBackOnBLEButtonsPressedInfoMessages_Summary"
-            android:icon="@drawable/dummy"
-            android:defaultValue="@bool/ShowFeedBackOnBLEButtonsPressedInfoMessages_default"
-            />
         <ListPreference android:key="BluetoothLE_Config"
             android:icon="@android:drawable/stat_sys_data_bluetooth"
             android:title="@string/pref_BluetoothLE_Config"
             android:summary="@string/pref_BluetoothLE_Config_Summary"
             android:defaultValue="@string/pref_BluetoothLE_Config_default"
             />
-<!--
-        <EditTextPreference android:key="BluetoothLE_Config"
-            android:icon="@android:drawable/stat_sys_data_bluetooth"
-            android:title="@string/pref_BluetoothLE_Config"
-            android:defaultValue="@string/pref_BluetoothLE_Config_default"
-            />
--->
+        <PreferenceCategory android:title="@string/pref_Appearance">
+            <com.doubleyellow.prefs.EnumListPreference
+                android:key="LandscapeLayoutPreference"
+                android:title="@string/pref_LandscapeLayoutPreference"
+                android:summary="@string/pref_LandscapeLayoutPreference_summary"
+                android:icon="@drawable/dummy"
+                android:defaultValue="Default"
+                dy:displayValues="@array/LandscapeLayoutPreference_DisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.LandscapeLayoutPreference"
+                />
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="showActionBar"
+                android:title="@string/pref_showActionBar"
+                android:summary="@string/pref_showActionBar_summary"
+                android:defaultValue="@bool/showActionBar_default"
+                />
+        </PreferenceCategory>
+        <PreferenceCategory android:title="@string/pref_Behaviour">
+            <CheckBoxPreference android:key="blinkFeedbackPerPoint"
+                android:title="@string/pref_blinkFeedbackPerPoint"
+                android:icon="@drawable/dummy"
+                android:summary="@string/pref_blinkFeedbackPerPoint_summary"
+                android:defaultValue="@bool/blinkFeedbackPerPoint_default"
+                />
+            <com.doubleyellow.prefs.EnumListPreference android:key="useSpeechFeature"
+                android:title="@string/pref_Speech"
+                android:summary="@string/pref_Speech_summary"
+                android:icon="@android:drawable/ic_lock_silent_mode_off"
+                android:defaultValue="@string/useSpeechFeature_default"
+                dy:displayValues="@array/FeatureDisplayValues_DoAuto"
+                dy:enumClass="com.doubleyellow.util.Feature"
+                />
+            <CheckBoxPreference android:key="ShowFeedBackOnBLEButtonsPressedInfoMessages"
+                android:title="@string/pref_ShowFeedBackOnBLEButtonsPressedInfoMessages"
+                android:summary="@string/pref_ShowFeedBackOnBLEButtonsPressedInfoMessages_Summary"
+                android:icon="@drawable/dummy"
+                android:defaultValue="@bool/ShowFeedBackOnBLEButtonsPressedInfoMessages_default"
+                />
+            <com.doubleyellow.prefs.EnumListPreference
+                android:key="useTimersFeature"
+                android:title="@string/pref_useTimersFeature"
+                android:summary="@string/pref_useTimersFeature_summary"
+                android:icon="@drawable/timer"
+                android:defaultValue="@string/useTimersFeature_default"
+                dy:displayValues="@array/FeatureDisplayValues"
+                dy:enumClass="com.doubleyellow.util.Feature"
+                />
+            <com.doubleyellow.prefs.EnumListPreference
+                android:key="useChangeSidesFeature"
+                android:title="@string/pref_useChangeSidesFeature"
+                android:icon="@drawable/change_sides"
+                android:defaultValue="@string/useChangeSidesFeature_default"
+                dy:displayValues="@array/FeatureDisplayValues_DoAuto"
+                dy:enumClass="com.doubleyellow.util.Feature"
+                />
+        </PreferenceCategory>
 <!--
         <EditTextPreference android:key="BluetoothLE_Peripheral1"
             android:icon="@android:drawable/stat_sys_data_bluetooth"
@@ -790,6 +835,45 @@
 
     </PreferenceScreen>
 
+    <PreferenceScreen
+        android:title="@string/pref_Category_RemoteControl"
+        android:summary="Collection of settings in relation to remote controlling the score"
+        android:icon="@android:drawable/stat_sys_data_bluetooth"
+        android:key="RemoteControl">
+
+        <PreferenceCategory android:title="@string/pref_MediaPlaybackButtons">
+            <CheckBoxPreference
+                android:icon="@drawable/dummy"
+                android:key="allowForScoringWithBlueToothConnectedMediaControlButtons"
+                android:title="@string/pref_allowForScoringWithBlueToothConnectedMediaControlButtons"
+                android:summary="@string/pref_allowForScoringWithBlueToothConnectedMediaControlButtons_summary"
+                android:defaultValue="@bool/allowForScoringWithBlueToothConnectedMediaControlButtons_default"
+                />
+        </PreferenceCategory>
+
+        <PreferenceCategory android:title="@string/pref_FCM" android:key="FCMPrefs">
+            <CheckBoxPreference android:key="FCMEnabled"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_FCMEnabled"
+                android:summary="@string/pref_FCMEnabled_summary"
+                android:defaultValue="@bool/FCMEnabled_default"
+                />
+            <com.doubleyellow.scoreboard.prefs.LiveScoreIdPref
+                android:key="FCMDeviceId"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_FCMDeviceId"
+                android:summary="@string/pref_FCMDeviceId_summary"
+                />
+            <CheckBoxPreference android:key="showToastMessageForEveryReceivedFCMMessage"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_showToastMessageForEveryReceivedFCMMessage"
+                android:summary="@string/pref_showToastMessageForEveryReceivedFCMMessage_summary"
+                android:defaultValue="@bool/showToastMessageForEveryReceivedFCMMessage_default"
+                />
+        </PreferenceCategory>
+
+    </PreferenceScreen>
+
     <PreferenceScreen android:key="Speech"
                       android:icon="@android:drawable/ic_lock_silent_mode_off"
                       android:title="@string/pref_Speech"
@@ -1457,27 +1541,6 @@
                 dy:enumClass="com.doubleyellow.util.Feature"
             />
 
-        </PreferenceCategory>
-
-        <PreferenceCategory android:title="@string/pref_FCM" android:key="FCMPrefs">
-            <CheckBoxPreference android:key="FCMEnabled"
-                android:icon="@drawable/dummy"
-                android:title="@string/pref_FCMEnabled"
-                android:summary="@string/pref_FCMEnabled_summary"
-                android:defaultValue="@bool/FCMEnabled_default"
-                />
-            <com.doubleyellow.scoreboard.prefs.LiveScoreIdPref
-                android:key="FCMDeviceId"
-                android:icon="@drawable/dummy"
-                android:title="@string/pref_FCMDeviceId"
-                android:summary="@string/pref_FCMDeviceId_summary"
-                />
-            <CheckBoxPreference android:key="showToastMessageForEveryReceivedFCMMessage"
-                android:icon="@drawable/dummy"
-                android:title="@string/pref_showToastMessageForEveryReceivedFCMMessage"
-                android:summary="@string/pref_showToastMessageForEveryReceivedFCMMessage_summary"
-                android:defaultValue="@bool/showToastMessageForEveryReceivedFCMMessage_default"
-                />
         </PreferenceCategory>
 
         <PreferenceCategory android:title="@string/pref_VisibilityOfNewTournaments">

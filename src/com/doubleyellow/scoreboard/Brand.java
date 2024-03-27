@@ -223,10 +223,14 @@ public enum Brand
         if ( ViewUtil.isWearable(ctx) == false ) {
             PreferenceValues.setBoolean(PreferenceKeys.showTips, ctx, false);
 
-            PreferenceValues.setBoolean(PreferenceKeys.showActionBar , ctx, true); // to be able to quickly select Cast Button, branded version probably uses ChromeCast
+            if ( false ) {
+                PreferenceValues.setBoolean(PreferenceKeys.showActionBar , ctx, true); // to be able to quickly select Cast Button, branded version probably uses ChromeCast
 
-            // if they get in the way of the logo on the device screen, set them to DoNotUse
-            PreferenceValues.setEnum(PreferenceKeys.useOfficialAnnouncementsFeature, ctx, Feature.Suggest);
+                // if they get in the way of the logo on the device screen, set them to DoNotUse
+                PreferenceValues.setEnum(PreferenceKeys.useOfficialAnnouncementsFeature, ctx, Feature.Suggest);
+
+                Toast.makeText(ctx, "Setting non-wearable brand prefs", Toast.LENGTH_SHORT).show();
+            }
         }
 /*
         if ( Brand.isSquash() ) {
