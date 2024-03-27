@@ -1,5 +1,6 @@
 // export ANDROID_HOME=/osshare/software/google/android-sdk-linux
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services' // for firebase, comment out for custom branded version of the app that are not in google-services.json
 buildscript {
     // required for using gradle i.s.o. gradlew
     repositories {
@@ -15,7 +16,7 @@ buildscript {
         // NOTE: Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements
 
         // added for firebase to parse google-services.json
-        classpath 'com.google.gms:google-services:4.4.1'
+        classpath 'com.google.gms:google-services:4.3.8' // 4.3.5 ok, 4.3.10 breaks
     }
 }
 repositories {
@@ -244,4 +245,3 @@ dependencies {
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
 }
 */
-apply plugin: 'com.google.gms.google-services' // for firebase, comment out for custom branded version of the app that are not in google-services.json
