@@ -24,6 +24,7 @@
       "96f91f4b-2417-44e3-ae06-aa362556914e": "WRITE player_type: 0=server|1=returner|2=none",
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
+          "HandleOnReleaseValue": 0,
           "TranslateToBTMessage": [
             "-both buttons released (one device), not used",
             "changeScoreBLE(B)",
@@ -32,6 +33,7 @@
           ]
         },
         {
+          "HandleOnReleaseValue": 0,
           "TranslateToBTMessage": [
             "-both buttons released (two devices), not used",
             "changeScoreBLEConfirm(%1$s, SECONDARY_BUTTON)",

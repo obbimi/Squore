@@ -200,6 +200,8 @@ public class BLEReceiverManager
         private              int currentConnectionAttempt    = 1;
         private final static int MAXIMUM_CONNECTION_ATTEMPTS = 5;
 
+        private int lastValueReceived = 0;
+
         private BluetoothGattCharacteristic characteristicPlayerType = null;
         private final String sDeviceAddress;
         private final Player player ;
@@ -287,7 +289,7 @@ public class BLEReceiverManager
         }
         @Override public void onCharacteristicChanged (@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value) {
             //super.onCharacteristicChanged(gatt, characteristic, value);
-            translateToBTMessageAndSendToMain(characteristic, value); // deprecated
+            translateToBTMessageAndSendToMain(characteristic, value);
         }
         void showInvalidActiveConfig() {
             Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.ble_active_config_not_suitable_for_x_devices, saDeviceAddresses.size());
@@ -319,9 +321,25 @@ public class BLEReceiverManager
                             showInvalidActiveConfig();
                             return;
                         }
-                        int iValue = value[0];
-                        if ( (iValue >= 0) && (iValue < saMessageFormat.length() ) ) {
-                            String sMessageFormat = saMessageFormat.getString(iValue);
+                        final int iValueIn = value[0];
+                        int iValueToHandle = iValueIn;
+                        int iHandleOnReleaseValue = joCharacteristicCfg.optInt(BLEUtil.Keys.HandleOnReleaseValue.toString(), -1);
+                        final boolean bHandleOnRelease = iHandleOnReleaseValue >= 0;
+                        if ( bHandleOnRelease ) {
+                            // only act on 'buttons released' if a value for release is specified
+                            if ( ( this.lastValueReceived != iHandleOnReleaseValue)
+                              && (iValueIn               == iHandleOnReleaseValue)
+                            ) {
+                                iValueToHandle = this.lastValueReceived;
+                            } else if ( iValueIn > lastValueReceived ) {
+                                // assuming value to actually handle 'on release' increases if multiple buttons are pressed
+                                lastValueReceived = iValueIn;
+                                iValueToHandle = -1;
+                            }
+                        }
+
+                        if ( (iValueToHandle >= 0) && (iValueToHandle < saMessageFormat.length() ) ) {
+                            String sMessageFormat = saMessageFormat.getString(iValueToHandle);
                             if ( sMessageFormat == null || sMessageFormat.startsWith("-") ) {
                                 //Log.d(TAG, "Ignoring message " + sMessageFormat + " " + iValue);
                             } else {
@@ -329,6 +347,9 @@ public class BLEReceiverManager
                                 String sMessage = String.format(sMessageFormat, (this.player==null?"":player), value[0]);
                                 Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), sMessage );
                                 message.sendToTarget();
+                            }
+                            if ( bHandleOnRelease ) {
+                                this.lastValueReceived = 0;
                             }
                         } else {
                             //Log.d(TAG, "Ignoring value " + iValue);

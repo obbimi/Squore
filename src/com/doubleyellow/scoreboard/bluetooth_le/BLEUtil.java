@@ -71,6 +71,8 @@ public class BLEUtil
         SingleDevice_ConfirmWithSameButton,
         RssiValueAt1M,
 
+        /* Value BLE devices sends when a buttons is release. If specified, app only (re)-acts when a buttons is released, allowing easier clicking of multiple buttons */
+        HandleOnReleaseValue,
         /** Array of messages (Message formats) */
         TranslateToBTMessage,
         /** if specified in the config, this exact nr of devices (1 or 2) need to be connected */

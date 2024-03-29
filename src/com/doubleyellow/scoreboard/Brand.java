@@ -21,6 +21,7 @@ import com.doubleyellow.scoreboard.R; // don't remove this line, required to sti
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.prefs.RWValues;
