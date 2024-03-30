@@ -66,6 +66,8 @@ public class BLEUtil
 
         /** one of the values of BLEDeviceButton */
         ConfirmScoreByOpponentButton,
+        InitiateOpponentScoreChangeButton,
+        ConfirmScoreBySelfButton,
         /** one of the values of BLEDeviceButton */
         CancelScoreByInitiatorButton,
         SingleDevice_ConfirmWithSameButton,

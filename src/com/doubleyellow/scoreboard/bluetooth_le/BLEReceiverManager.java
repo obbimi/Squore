@@ -334,7 +334,10 @@ public class BLEReceiverManager
                             } else if ( iValueIn > lastValueReceived ) {
                                 // assuming value to actually handle 'on release' increases if multiple buttons are pressed
                                 lastValueReceived = iValueIn;
-                                iValueToHandle = -1;
+                                Log.d(TAG, String.format("Recording value %d to use on release", this.lastValueReceived));
+
+                                //iValueToHandle = -1;
+                                return;
                             }
                         }
 
@@ -381,16 +384,16 @@ public class BLEReceiverManager
         }
         @Override public void onCharacteristicRead    (@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value, int status) {
             //super.onCharacteristicRead (gatt, characteristic, value, status); // gives error?!
-            Log.d(TAG, "onCharacteristicRead B " + gatt.getDevice().getAddress() + " - " + characteristic.getUuid() + " : " + status + " value :" + value[0]);
+            Log.d(TAG, String.format("onCharacteristicRead player %s, address %s uuid: %s, status %d, value %d", this.player, gatt.getDevice().getAddress(), characteristic.getUuid(), status, value[0]));
             writePlayerInfo(gatt, characteristic, value);
         }
         @Override public void onCharacteristicWrite   (         BluetoothGatt gatt,          BluetoothGattCharacteristic characteristic, int status)                        {
             super.onCharacteristicWrite(gatt, characteristic, status);
-            Log.d(TAG, "onCharacteristicWrite " + gatt.getDevice().getAddress() + " - " + characteristic.getUuid() + " : " + status);
+            Log.d(TAG, String.format("onCharacteristicWrite player %s address: %s, uuid: %s, status %d ", this.player, gatt.getDevice().getAddress(), characteristic.getUuid(), status));
         }
         @Override public void onDescriptorWrite       (         BluetoothGatt gatt,          BluetoothGattDescriptor     descriptor    , int status) {
             super.onDescriptorWrite(gatt, descriptor, status);
-            Log.d(TAG, "onDescriptorWrite " + gatt.getDevice().getAddress() + " - " + descriptor.getUuid() + " : " + status);
+            Log.d(TAG, String.format("onDescriptorWrite player %s address: %s, uuid: %s, status %d ", this.player, gatt.getDevice().getAddress(), descriptor.getCharacteristic().getUuid(), status));
 
             if ( false ) {
                 byte[] baValue = descriptor.getValue();
@@ -398,9 +401,12 @@ public class BLEReceiverManager
                     Log.d(TAG, "b[" + i + "] : " + baValue[i]);
                 }
             }
-            if ( this.characteristicPlayerType != null && descriptor.getCharacteristic().equals(this.characteristicPlayerType) == false ) {
+            if ( this.characteristicPlayerType != null && descriptor.getCharacteristic().getUuid().toString().equalsIgnoreCase(this.characteristicPlayerType.getUuid().toString()) == false ) {
                 // with actual device this needs to be done AFTER updating characteristics of 'scoring'
+                Log.w(TAG, String.format("Reading player type for %s", this.player));
                 readPlayerInfo(gatt, characteristicPlayerType);
+            } else {
+                Log.w(TAG, String.format("No read player type for %s", this.player));
             }
         }
         @Override public void onReliableWriteCompleted(         BluetoothGatt gatt, int status) {
@@ -429,19 +435,19 @@ public class BLEReceiverManager
                 for (String sCharacteristicUUID : lCharacteristicUUID) {
                     BluetoothGattCharacteristic characteristic = findCharacteristics(gatt, sServiceUUID, sCharacteristicUUID);
                     if ( characteristic == null ) {
-                        String errorMessage = String.format("Could not find service %s with characteristic %s", sServiceUUID, sCharacteristicUUID);
+                        String errorMessage = String.format("Could not find service %s with characteristic %s for player %s", sServiceUUID, sCharacteristicUUID, this.player);
                         Log.w(TAG, errorMessage);
                     } else {
                         int properties = characteristic.getProperties();
                         BluetoothGattDescriptor cccdDescriptor = characteristic.getDescriptor(UUID.fromString(CCCD_DESCRIPTOR_UUID)); // NOT REQUIRED to receive INDICATE ?! unclear
                         if ( cccdDescriptor == null ) {
-                            Log.w(TAG, String.format("cccdDescriptor=null for %s", characteristic.getUuid()));
+                            Log.w(TAG, String.format("cccdDescriptor=null for characteristic %s of player %s", characteristic.getUuid(), this.player));
                         }
 
                         if ( (properties & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0 ) {
                             if ( gatt.setCharacteristicNotification(characteristic, true) ) {
                                 if ( cccdDescriptor != null ) {
-                                    Log.i(TAG, "Writing value PROPERTY_INDICATE to descriptor");
+                                    Log.i(TAG, String.format("Writing value PROPERTY_INDICATE to descriptor of player %s", this.player));
                                     cccdDescriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE); // 2,0
                                     gatt.writeDescriptor(cccdDescriptor); // triggers onDescriptorWrite()
                                 }
@@ -450,13 +456,14 @@ public class BLEReceiverManager
                             if ( (properties & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0 ) {
                                 if ( gatt.setCharacteristicNotification(characteristic, true) ) {
                                     if ( cccdDescriptor != null ) {
-                                        Log.i(TAG, "Writing value PROPERTY_NOTIFY to descriptor");
+                                        Log.i(TAG, String.format("Writing value PROPERTY_NOTIFY to descriptor of player %s", this.player));
                                         cccdDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE); // 2,0
                                         gatt.writeDescriptor(cccdDescriptor); // triggers onDescriptorWrite()
                                     }
                                 }
                             } else {
                                 characteristicPlayerType = characteristic; // to trigger readPlayerInfo() later
+                                Log.i(TAG, String.format("Assuming we found player type characteristic for player %s", this.player));
                                 //readPlayerInfo(gatt, characteristic);
                             }
                         }
@@ -470,7 +477,7 @@ public class BLEReceiverManager
             if ( gatt.readCharacteristic(characteristic) ) {
                 // actual value must be 'catched' in callback: onCharacteristicRead()
             } else {
-                Log.w(TAG, String.format("Reading value of characteristic %s failed", characteristic.getUuid()));
+                Log.w(TAG, String.format("Reading value of characteristic %s for player %s failed", characteristic.getUuid(), this.player));
             }
         }
         private void writePlayerInfo(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] currentValue) {
@@ -490,12 +497,12 @@ public class BLEReceiverManager
                 value[0] = (byte) Player.values().length;
             }
             if ( currentValue != null && currentValue.length > 0 && currentValue[0] == value[0] ) {
-                Log.i(TAG, String.format("No write required %s. Value already OK : %d", sWriteIndicator, value[0]));
+                Log.i(TAG, String.format("[writePlayerInfo] No write required %s. Value for %s already OK : %d", sWriteIndicator, this.player, value[0]));
                 return;
             }
 
             if ( (sWriteIndicator == null) || (sWriteIndicator.startsWith("WRITE") == false) ) {
-                Log.w(TAG, String.format("Json config does not specify WRITE for e.g. player type for %s", uuid));
+                Log.w(TAG, String.format("[writePlayerInfo] Json config does not specify WRITE for e.g. player type for %s", uuid));
                 return;
             }
             int properties = characteristic.getProperties();
@@ -511,9 +518,9 @@ public class BLEReceiverManager
                 characteristic.setValue(value);
                 characteristic.setWriteType(mWriteType);
                 if ( gatt.writeCharacteristic(characteristic) ) {
-                    Log.i(TAG, String.format("writing value %d to characteristic %s", value[0], uuid));
+                    Log.i(TAG, String.format("[writePlayerInfo] writing value %d to characteristic %s of player %s", value[0], uuid, this.player));
                 } else {
-                    Log.e(TAG, String.format("ERROR: writeCharacteristic failed for characteristic: %s", uuid));
+                    Log.e(TAG, String.format("ERROR: writeCharacteristic failed for : %s", uuid));
                 }
             }
         }

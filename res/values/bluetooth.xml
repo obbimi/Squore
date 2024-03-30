@@ -17,9 +17,12 @@
     <string name="ble_score_cancelled_by_pressing_y">Score cancelled by pressing %1$s</string>
     <string name="ble_score_confirmed_by_pressing_y">Score confirmed by pressing %1$s</string>
     <string name="ble_score_cancelled_by_opponent_x_by_pressing_y">Score cancelled by opponent %1$s by pressing %2$s</string>
+    <string name="ble_score_cancelled_by_scoring_team_x_by_pressing_y">Score cancelled by scoring team %1$s by pressing %2$s</string>
     <string name="ble_score_cancelled_by_initiator_x_by_pressing_y">Score cancelled by initiator %1$s by pressing %2$s</string>
     <string name="ble_score_confirmed_by_opponent_x_by_pressing_y">Score confirmed by opponent %1$s by pressing %2$s</string>
+    <string name="ble_score_confirmed_by_scoring_team_x_by_pressing_y">Score confirmed by scoring team %1$s by pressing %2$s</string>
     <string name="ble_player_x_confirm_score_for_y_by_pressing_z">%1$s, confirm score for %2$s by pressing %3$s</string>
+    <string name="ble_player_x_confirm_you_scored_by_pressing_y">%1$s, confirm you scored by pressing %2$s</string>
     <string name="ble_confirm_score_for_y_by_pressing_z">confirm score for %1$s by pressing %2$s</string>
     <string name="ble_score_for_X_changed_by_ble">Score for %1$s changed by BLE</string>
     <plurals name="ble_ready_for_scoring_with_devices">
