@@ -6300,34 +6300,29 @@ touch -t 01030000 LAST.sb
     //===================================================================
     // Draw focus to GUI elements
     //===================================================================
-    private final PlayerFocusEffectCountDownTimer m_timerScoreChangedFeedBack = new PlayerFocusEffectCountDownTimer(FocusEffect.BlinkByInverting, 16 * 400, 400);
-    private class PlayerFocusEffectCountDownTimer extends CountDownTimer {
-        private Player            m_player                  = null;
-        private int               m_iInvocationCnt          = 0;
-        private ShowScoreChangeOn m_guiElementToUseForFocus = ShowScoreChangeOn.PlayerButton;
-        private FocusEffect       m_focusEffect             = null;
-        private int               m_iTmpTxtOnElementDuringFeedback = 0;
+    private final PlayerFocusEffectCountDownTimerFeedback m_timerScoreChangedFeedBack = new PlayerFocusEffectCountDownTimerFeedback();
+    private abstract class PlayerFocusEffectCountDownTimer extends CountDownTimer {
+        Player            m_player                  = null;
+        int               m_iInvocationCnt          = 0;
+        ShowScoreChangeOn m_guiElementToUseForFocus = ShowScoreChangeOn.PlayerButton;
+        FocusEffect       m_focusEffect             = null;
+        int               m_iTmpTxtOnElementDuringFeedback = 0;
 
         PlayerFocusEffectCountDownTimer(FocusEffect focusEffect, int iTotalDuration, int iInvocationInterval) {
             super(iTotalDuration, iInvocationInterval);
             this.m_focusEffect = focusEffect;
         }
+        abstract void doOnTick(int m_iInvocationCnt, long millisUntilFinished);
+        abstract void doOnFinish();
         @Override public void onTick(long millisUntilFinished) {
             m_iInvocationCnt++;
             iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, m_iTmpTxtOnElementDuringFeedback);
+            doOnTick(m_iInvocationCnt, millisUntilFinished);
         }
 
         @Override public void onFinish() {
+            doOnFinish();
             cancelForPlayer();
-            clearBLEWaitForConfirmation();
-        }
-        public void start(ShowScoreChangeOn guiElementToUseForFocus, Player p, int iTmpTxtOnElementDuringFeedback) {
-            m_iInvocationCnt                 = 0;
-            m_guiElementToUseForFocus        = guiElementToUseForFocus;
-            m_player                         = p;
-            m_iTmpTxtOnElementDuringFeedback = iTmpTxtOnElementDuringFeedback;
-            Log.i(TAG, "m_iTmpTxtOnElementDuringFeedback : " + m_iTmpTxtOnElementDuringFeedback);
-            super.start();
         }
         private void cancelForPlayer() {
             m_iInvocationCnt = 0;
@@ -6347,22 +6342,67 @@ touch -t 01030000 LAST.sb
             }
         }
     }
-    public void stopWaitingForBLEConfirmation() {
-        for(Player p: Player.values() ) {
-            waitForBLEConfirmation(p, false);
+    private static final int I_CONFIRM_COUNTDOWN_INTERVAL = 50;
+    private class PlayerFocusEffectCountDownTimerConfirm extends PlayerFocusEffectCountDrownTimer {
+        private Player m_pNotifyAfterXSecs = null;
+        public void start(ShowScoreChangeOn guiElementToUseForFocus, Player p, Player pNotifyAfterXSecs) {
+            m_iInvocationCnt                 = 0;
+            m_guiElementToUseForFocus        = guiElementToUseForFocus;
+            m_player                         = p;
+            m_pNotifyAfterXSecs              = pNotifyAfterXSecs;
+            super.start();
+        }
+        PlayerFocusEffectCountDownTimerConfirm() {
+            super(FocusEffect.SetTransparency, 60 * 1000, I_CONFIRM_COUNTDOWN_INTERVAL);
+        }
+        @Override void doOnTick(int iInvocationCnt, long millisUntilFinished) {
+            if ( iInvocationCnt == 3 * (1000 / I_CONFIRM_COUNTDOWN_INTERVAL) && m_pNotifyAfterXSecs != null ) {
+                // after 3 seconds let wristband of player to confirm vibrate
+                notifyBLE(m_pNotifyAfterXSecs);
+            }
+        }
+
+        @Override void doOnFinish() {
+            clearBLEWaitForConfirmation();
         }
     }
-    public void startWaitingForBLEConfirmation(Player player) {
-        waitForBLEConfirmation(player, true);
+
+    private class PlayerFocusEffectCountDownTimerFeedback extends PlayerFocusEffectCountDownTimer {
+        public void start(ShowScoreChangeOn guiElementToUseForFocus, Player p, int iTmpTxtOnElementDuringFeedback) {
+            m_iInvocationCnt                 = 0;
+            m_guiElementToUseForFocus        = guiElementToUseForFocus;
+            m_player                         = p;
+            m_iTmpTxtOnElementDuringFeedback = iTmpTxtOnElementDuringFeedback;
+            Log.i(TAG, "m_iTmpTxtOnElementDuringFeedback : " + m_iTmpTxtOnElementDuringFeedback);
+            super.start();
+        }
+        PlayerFocusEffectCountDownTimerFeedback() {
+            super(FocusEffect.BlinkByInverting, 16 * 400, 400);
+        }
+        @Override void doOnTick(int m_iInvocationCnt, long millisUntilFinished) {
+            /* nothing specific for now */
+        }
+
+        @Override void doOnFinish() {
+            /* nothing specific for now */
+        }
     }
-    private final PlayerFocusEffectCountDownTimer m_timerBLEConfirm = new PlayerFocusEffectCountDownTimer(FocusEffect.SetTransparency, 60 * 1000, 50);
-    private void waitForBLEConfirmation(Player player, boolean bWaiting) {
+    public void stopWaitingForBLEConfirmation() {
+        for(Player p: Player.values() ) {
+            waitForBLEConfirmation(p, null, false);
+        }
+    }
+    public void startWaitingForBLEConfirmation(Player pScorer, Player pToConfirm) {
+        waitForBLEConfirmation(pScorer, pToConfirm, true);
+    }
+    private final PlayerFocusEffectCountDownTimerConfirm m_timerBLEConfirm = new PlayerFocusEffectCountDownTimerConfirm();
+    private void waitForBLEConfirmation(Player pScorer, Player pToConfirm, boolean bWaiting) {
         ShowScoreChangeOn guiElementToUseForFocus = ShowScoreChangeOn.ScoreButton; // TODO: from options
         if ( bWaiting ) {
-            m_timerBLEConfirm.start(guiElementToUseForFocus, player, 0);
+            m_timerBLEConfirm.start(guiElementToUseForFocus, pScorer, pToConfirm);
         } else {
-            iBoard.guiElementColorSwitch(guiElementToUseForFocus, player, FocusEffect.BlinkByInverting, 0, 0);
-            iBoard.guiElementColorSwitch(guiElementToUseForFocus, player, FocusEffect.SetTransparency, 0, 0);
+            iBoard.guiElementColorSwitch(guiElementToUseForFocus, pScorer, FocusEffect.BlinkByInverting, 0, 0);
+            iBoard.guiElementColorSwitch(guiElementToUseForFocus, pScorer, FocusEffect.SetTransparency, 0, 0);
             m_timerBLEConfirm.myCancel();
         }
     }
@@ -6485,7 +6525,7 @@ touch -t 01030000 LAST.sb
     }
 
     private boolean notifyBLE(Player p) {
-        if ( m_bleReceiverManager != null ) { return false; }
+        if ( m_bleReceiverManager == null ) { return false; }
         m_bleReceiverManager.writeToBLE(p);
         return true;
     }
@@ -6503,7 +6543,7 @@ touch -t 01030000 LAST.sb
 
     private        JSONObject         m_bleConfig                             = null;
     private        boolean            m_bSingleDevice_ConfirmWithSameButton   = false;
-    private        BLEDeviceButton    m_eInitiateScoreChangeButton            = BLEDeviceButton.PRIMARY_BUTTON;
+    private        BLEDeviceButton    m_eInitiateSelfScoreChangeButton        = BLEDeviceButton.PRIMARY_BUTTON;
     private        BLEDeviceButton    m_eInitiateOpponentScoredChangeButton   = null;
     private        BLEDeviceButton    m_eConfirmScoreBySelfButton             = null;
     private        BLEDeviceButton    m_eConfirmScoreByOpponentButton         = BLEDeviceButton.SECONDARY_BUTTON;
@@ -6544,7 +6584,7 @@ touch -t 01030000 LAST.sb
             }
             if ( (sBluetoothLEDevice1 != null) && (sBluetoothLEDevice1.equalsIgnoreCase(sBluetoothLEDevice2) == false) ) {
                 // settings only relevant when using 2 wristbands with confirmation mechanism
-                m_eInitiateScoreChangeButton          = BLEUtil.getButtonFor(m_bleConfig, BLEUtil.Keys.InitiateScoreChangeButton        , m_eInitiateScoreChangeButton);
+                m_eInitiateSelfScoreChangeButton      = BLEUtil.getButtonFor(m_bleConfig, BLEUtil.Keys.InitiateScoreChangeButton        , m_eInitiateSelfScoreChangeButton);
                 m_eInitiateOpponentScoredChangeButton = BLEUtil.getButtonFor(m_bleConfig, BLEUtil.Keys.InitiateOpponentScoreChangeButton, m_eInitiateOpponentScoredChangeButton);
                 m_eConfirmScoreByOpponentButton = BLEUtil.getButtonFor(m_bleConfig, BLEUtil.Keys.ConfirmScoreByOpponentButton, m_eConfirmScoreByOpponentButton);
                 m_eConfirmScoreBySelfButton     = BLEUtil.getButtonFor(m_bleConfig, BLEUtil.Keys.ConfirmScoreBySelfButton    , m_eConfirmScoreBySelfButton);
@@ -7326,7 +7366,7 @@ touch -t 01030000 LAST.sb
                                 String sButtonDescription = m_bleConfig.optString(eButtonToConfirm.toString(), eButtonToConfirm.toString());
                                 String sToConfirmMsg = getString(R.string.ble_confirm_score_for_y_by_pressing_z, m_blePlayerWaitingForScoreToBeConfirmed, sButtonDescription);
                                 iBoard.showBLEInfoMessage(sToConfirmMsg, -1);
-                                startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed);
+                                startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed, null);
                             }
 
                         } else if ( iNrOfDevicesRequired == 2 ) {
@@ -7396,26 +7436,28 @@ touch -t 01030000 LAST.sb
                                     iBoard.appendToInfoMessage(".");
                                 }
                             } else {
-                                if ( eButtonPressed.equals(m_eInitiateScoreChangeButton) ) {
+                                if ( eButtonPressed.equals(m_eInitiateSelfScoreChangeButton) ) {
                                     Log.w(TAG, String.format("Score for %s entered with button %s now waiting for confirmation by opponent %s pressing %s", playerWristBand, eButtonPressed, playerWristBand.getOther(), m_eConfirmScoreByOpponentButton));
                                     m_blePlayerWaitingForScoreToBeConfirmed = playerWristBand;
+                                    //notifyBLE(playerWristBand.getOther());
 
                                     String sButtonDescription = m_bleConfig.optString(m_eConfirmScoreByOpponentButton.toString(), m_eConfirmScoreByOpponentButton.toString());
                                     String sToConfirmMsg = getString(R.string.ble_player_x_confirm_score_for_y_by_pressing_z, playerWristBand.getOther(), playerWristBand, sButtonDescription);
                                     iBoard.showBLEInfoMessage(sToConfirmMsg, -1);
-                                    startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed);
+                                    startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed, playerWristBand.getOther());
                                 } else if ( eButtonPressed.equals(m_eInitiateOpponentScoredChangeButton) ) {
                                     Log.w(TAG, String.format("Score for opponent entered by %s with button %s now waiting for confirmation by scoring player %s pressing %s", playerWristBand, eButtonPressed, playerWristBand.getOther(), m_eConfirmScoreBySelfButton));
                                     m_blePlayerToConfirmOwnScore = playerWristBand.getOther();
+                                    //notifyBLE(playerWristBand.getOther());
 
                                     String sButtonDescription = m_bleConfig.optString(m_eConfirmScoreBySelfButton.toString(), m_eConfirmScoreBySelfButton.toString());
                                     String sToConfirmMsg = getString(R.string.ble_player_x_confirm_you_scored_by_pressing_y, playerWristBand.getOther(), sButtonDescription);
                                     iBoard.showBLEInfoMessage(sToConfirmMsg, -1);
-                                    startWaitingForBLEConfirmation(m_blePlayerToConfirmOwnScore);
+                                    startWaitingForBLEConfirmation(m_blePlayerToConfirmOwnScore, playerWristBand.getOther());
                                 } else {
                                     Log.w(TAG, String.format("In state waiting for initiate-score-change, button %s does nothing ", eButtonPressed));
                                     if ( PreferenceValues.currentDateIsTestDate() ) {
-                                        String sInitButtonDescription = m_bleConfig.optString(m_eInitiateScoreChangeButton.toString(), m_eInitiateScoreChangeButton.toString());
+                                        String sInitButtonDescription = m_bleConfig.optString(m_eInitiateSelfScoreChangeButton.toString(), m_eInitiateSelfScoreChangeButton.toString());
                                         String sInfoMsg = getString(R.string.ble_waiting_initiate_score_change_message, sInitButtonDescription);
                                         iBoard.showBLEInfoMessage(sInfoMsg, 4);
                                     }

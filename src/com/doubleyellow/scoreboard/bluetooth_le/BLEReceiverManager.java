@@ -86,6 +86,7 @@ public class BLEReceiverManager
 
     private final Map<String, BluetoothGatt> mDevice2gatt = new HashMap<>();
     private final Map<Player, BluetoothGatt> mPlayer2gatt = new HashMap<>();
+    private final Map<Player, MyBluetoothGattCallback> mPlayer2callback = new HashMap<>();
 
     public BLEReceiverManager( Context context, BluetoothAdapter bluetoothAdapter
                              , String sBluetoothLEDeviceA, String sBluetoothLEDeviceB
@@ -166,7 +167,11 @@ public class BLEReceiverManager
                     mDevicesUsed.put(sLookingFor, System.currentTimeMillis());
                     Log.i(TAG, "Connecting GAT to device " + devName);
                     Player eachPlayerHasADevicePlayer = saDeviceAddresses.size() == 1 ? null : Player.values()[i];
-                    btDevice.connectGatt(context,false, new MyBluetoothGattCallback(btDevice.getAddress(), eachPlayerHasADevicePlayer));
+                    MyBluetoothGattCallback callback = new MyBluetoothGattCallback(btDevice.getAddress(), eachPlayerHasADevicePlayer);
+                    if ( eachPlayerHasADevicePlayer != null ) {
+                        mPlayer2callback.put(eachPlayerHasADevicePlayer, callback);
+                    }
+                    btDevice.connectGatt(context,false, callback);
 
                     boolean bAllDevicesFound = MapUtil.size(mDevicesUsed) == saDeviceAddresses.size();
                     if ( bAllDevicesFound ) {
@@ -529,7 +534,12 @@ public class BLEReceiverManager
     public boolean writeToBLE(Player p) {
         BluetoothGatt gatt = mPlayer2gatt.get(p);
         if ( gatt == null ) { return false; }
-
+        MyBluetoothGattCallback callback = mPlayer2callback.get(p);
+        if ( callback != null && callback.characteristicPlayerType != null ) {
+            callback.writePlayerInfo(gatt, callback.characteristicPlayerType, null);
+        } else {
+            Log.w(TAG, String.format("Can not write to notify for %s", p));
+        }
         // TODO: write some indication to wristband of other player let them know they need to
         // - confirm / cancel score entered by opponent ?
         // - notify them score was confirmed / canceled ?
