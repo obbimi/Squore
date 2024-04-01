@@ -19,4 +19,9 @@ package com.doubleyellow.scoreboard.bluetooth_le;
 public enum BLEDeviceButton {
     PRIMARY_BUTTON  , // D-Score: Green
     SECONDARY_BUTTON, //          Red
+    ;
+
+    public BLEDeviceButton getOther() {
+        return this.equals(PRIMARY_BUTTON) ? SECONDARY_BUTTON : PRIMARY_BUTTON;
+    }
 }

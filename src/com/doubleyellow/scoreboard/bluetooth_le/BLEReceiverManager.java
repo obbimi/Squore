@@ -88,6 +88,8 @@ public class BLEReceiverManager
     private final Map<Player, BluetoothGatt> mPlayer2gatt = new HashMap<>();
     private final Map<Player, MyBluetoothGattCallback> mPlayer2callback = new HashMap<>();
 
+    private       String m_sPlayerTypeCharacteristicUuid = null;
+
     public BLEReceiverManager( Context context, BluetoothAdapter bluetoothAdapter
                              , String sBluetoothLEDeviceA, String sBluetoothLEDeviceB
                              , JSONObject mServicesAndCharacteristicsConfig)
@@ -101,6 +103,11 @@ public class BLEReceiverManager
         ListUtil.removeEmpty(this.saDeviceAddresses);
 
         this.mServicesAndCharacteristicsConfig = mServicesAndCharacteristicsConfig;
+
+        JSONObject joPlayerTypeConfig = this.mServicesAndCharacteristicsConfig.optJSONObject(BLEUtil.Keys.PlayerTypeConfig.toString());
+        if ( joPlayerTypeConfig != null ) {
+            m_sPlayerTypeCharacteristicUuid = joPlayerTypeConfig.optString(BLEUtil.Keys.WriteToCharacteristic.toString());
+        }
     }
 
     /*
@@ -207,7 +214,6 @@ public class BLEReceiverManager
 
         private int lastValueReceived = 0;
 
-        private BluetoothGattCharacteristic characteristicPlayerType = null;
         private final String sDeviceAddress;
         private final Player player ;
         MyBluetoothGattCallback(String sAddress, Player player) {
@@ -377,20 +383,22 @@ public class BLEReceiverManager
             //super.onCharacteristicRead (gatt, characteristic, status);
             byte[] value = characteristic.getValue();
             if ( value.length != 0 ) {
-                Log.d(TAG, "onCharacteristicRead A value " + value[0]);
+                Log.d(TAG, String.format("onCharacteristicRead %s value %d ", this.player,value[0]));
             }
-            if ( characteristic.getUuid().toString().equals(BATTERY_CHARACTERISTIC_UUID) ) {
+            if ( characteristic.getUuid().toString().equalsIgnoreCase(BATTERY_CHARACTERISTIC_UUID) ) {
                 Integer intValue = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT8, 0);
                 Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.ble_battery_level, intValue, sReadingBatterLevelOf);
                 mHandler.sendMessage(msg);
-            } else {
+            } else if ( characteristic.getUuid().toString().equalsIgnoreCase(m_sPlayerTypeCharacteristicUuid) ) {
                 writePlayerInfo(gatt, characteristic, value);
             }
         }
         @Override public void onCharacteristicRead    (@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value, int status) {
             //super.onCharacteristicRead (gatt, characteristic, value, status); // gives error?!
             Log.d(TAG, String.format("onCharacteristicRead player %s, address %s uuid: %s, status %d, value %d", this.player, gatt.getDevice().getAddress(), characteristic.getUuid(), status, value[0]));
-            writePlayerInfo(gatt, characteristic, value);
+            if ( characteristic.getUuid().toString().equalsIgnoreCase(m_sPlayerTypeCharacteristicUuid) ) {
+                writePlayerInfo(gatt, characteristic, value);
+            }
         }
         @Override public void onCharacteristicWrite   (         BluetoothGatt gatt,          BluetoothGattCharacteristic characteristic, int status)                        {
             super.onCharacteristicWrite(gatt, characteristic, status);
@@ -434,7 +442,7 @@ public class BLEReceiverManager
             for(String sServiceUUID: mServices2Characteristics.keySet() ) {
                 List<String> lCharacteristicUUID = mServices2Characteristics.get(sServiceUUID);
                 if ( lCharacteristicUUID == null ) {
-                    Log.w(TAG, String.format("No found characteristics for %s", sServiceUUID));
+                    Log.w(TAG, String.format("Not found characteristics for %s", sServiceUUID));
                     continue;
                 }
                 for (String sCharacteristicUUID : lCharacteristicUUID) {
@@ -442,34 +450,30 @@ public class BLEReceiverManager
                     if ( characteristic == null ) {
                         String errorMessage = String.format("Could not find service %s with characteristic %s for player %s", sServiceUUID, sCharacteristicUUID, this.player);
                         Log.w(TAG, errorMessage);
-                    } else {
-                        int properties = characteristic.getProperties();
-                        BluetoothGattDescriptor cccdDescriptor = characteristic.getDescriptor(UUID.fromString(CCCD_DESCRIPTOR_UUID)); // NOT REQUIRED to receive INDICATE ?! unclear
-                        if ( cccdDescriptor == null ) {
-                            Log.w(TAG, String.format("cccdDescriptor=null for characteristic %s of player %s", characteristic.getUuid(), this.player));
-                        }
+                        continue;
+                    }
+                    int properties = characteristic.getProperties();
+                    BluetoothGattDescriptor cccdDescriptor = characteristic.getDescriptor(UUID.fromString(CCCD_DESCRIPTOR_UUID)); // NOT REQUIRED to receive INDICATE ?! unclear
+                    if ( cccdDescriptor == null ) {
+                        Log.w(TAG, String.format("cccdDescriptor=null for characteristic %s of player %s", characteristic.getUuid(), this.player));
+                    }
 
-                        if ( (properties & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0 ) {
+                    if ( (properties & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0 ) {
+                        if ( gatt.setCharacteristicNotification(characteristic, true) ) {
+                            if ( cccdDescriptor != null ) {
+                                Log.i(TAG, String.format("Writing value PROPERTY_INDICATE to descriptor of player %s", this.player));
+                                cccdDescriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE); // 2,0
+                                gatt.writeDescriptor(cccdDescriptor); // triggers onDescriptorWrite()
+                            }
+                        }
+                    } else {
+                        if ( (properties & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0 ) {
                             if ( gatt.setCharacteristicNotification(characteristic, true) ) {
                                 if ( cccdDescriptor != null ) {
-                                    Log.i(TAG, String.format("Writing value PROPERTY_INDICATE to descriptor of player %s", this.player));
-                                    cccdDescriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE); // 2,0
+                                    Log.i(TAG, String.format("Writing value PROPERTY_NOTIFY to descriptor of player %s", this.player));
+                                    cccdDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE); // 2,0
                                     gatt.writeDescriptor(cccdDescriptor); // triggers onDescriptorWrite()
                                 }
-                            }
-                        } else {
-                            if ( (properties & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0 ) {
-                                if ( gatt.setCharacteristicNotification(characteristic, true) ) {
-                                    if ( cccdDescriptor != null ) {
-                                        Log.i(TAG, String.format("Writing value PROPERTY_NOTIFY to descriptor of player %s", this.player));
-                                        cccdDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE); // 2,0
-                                        gatt.writeDescriptor(cccdDescriptor); // triggers onDescriptorWrite()
-                                    }
-                                }
-                            } else {
-                                characteristicPlayerType = characteristic; // to trigger readPlayerInfo() later
-                                Log.i(TAG, String.format("Assuming we found player type characteristic for player %s", this.player));
-                                //readPlayerInfo(gatt, characteristic);
                             }
                         }
                     }
@@ -531,12 +535,19 @@ public class BLEReceiverManager
         }
     }
 
-    public boolean writeToBLE(Player p) {
+    public boolean writeToBLE(Player p, BLEUtil.Keys configKey) {
         BluetoothGatt gatt = mPlayer2gatt.get(p);
         if ( gatt == null ) { return false; }
         MyBluetoothGattCallback callback = mPlayer2callback.get(p);
-        if ( callback != null && callback.characteristicPlayerType != null ) {
-            callback.writePlayerInfo(gatt, callback.characteristicPlayerType, null);
+        if ( callback == null ) { return false; }
+
+        JSONObject joWriteConfig = mServicesAndCharacteristicsConfig.optJSONObject(configKey.toString());
+        if ( joWriteConfig == null ) { return false; }
+
+        String sCharUuid = joWriteConfig.optString(BLEUtil.Keys.WriteToCharacteristic.toString());
+        BluetoothGattCharacteristic characteristics = findCharacteristics(gatt, "*", sCharUuid);
+        if ( characteristics != null ) {
+            callback.writePlayerInfo(gatt, characteristics, null);
         } else {
             Log.w(TAG, String.format("Can not write to notify for %s", p));
         }
@@ -635,7 +646,7 @@ public class BLEReceiverManager
         for ( BluetoothGattService service: gatt.getServices() ) {
             String tmpServiceUuid = service.getUuid().toString();
             mCharsFoundLog.increaseCounter(tmpServiceUuid);
-            if ( tmpServiceUuid.equalsIgnoreCase(serviceUUID) ) {
+            if ( tmpServiceUuid.equalsIgnoreCase(serviceUUID) || serviceUUID.equals("*") ) {
                 List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
                 for ( BluetoothGattCharacteristic characteristic: characteristics ) {
                     String tmpCharacteristicUuid = characteristic.getUuid().toString();

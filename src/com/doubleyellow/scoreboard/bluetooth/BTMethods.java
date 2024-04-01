@@ -57,9 +57,16 @@ public enum BTMethods {
     unlock(false),
     updatePreference(false),
 
-    /** Typically used only in BLE setup */
-    changeScoreBLE(true),
-    changeScoreBLEConfirm(true),
+    /** Typically used only in BLE setup with single device allowing to change the score.
+     * Single parameter specifying the player whoos score should be changed: A or B */
+    changeScoreBLE(false),
+    /**
+     * Typically used only in BLE setup with each player/team having a device allowing to change the score but confirmation by opponent is required.
+     * Two parameters
+     * - first the player identifying what wristband a button was pressed on
+     * - second identifying what button was pressed on the device (@see com.doubleyellow.scoreboard.bluetooth_le.BLEDeviceButton)
+     **/
+    changeScoreBLEConfirm(false),
     ;
     private boolean bVerifyScore = false;
     BTMethods(boolean verifyScore) {

@@ -73,12 +73,17 @@ public class BLEUtil
         SingleDevice_ConfirmWithSameButton,
         RssiValueAt1M,
 
-        /* Value BLE devices sends when a buttons is release. If specified, app only (re)-acts when a buttons is released, allowing easier clicking of multiple buttons */
+        /* Value BLE devices sends when button/buttons is/are release. If specified, app only (re)-acts when buttons are released, allowing easier clicking of multiple buttons */
         HandleOnReleaseValue,
         /** Array of messages (Message formats) */
         TranslateToBTMessage,
         /** if specified in the config, this exact nr of devices (1 or 2) need to be connected */
         NrOfDevices,
+
+        PlayerTypeConfig,
+        ConfirmationRequiredConfig,
+            WriteToCharacteristic,
+            WriteValue,
     }
 
     final public static ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
