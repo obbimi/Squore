@@ -48,6 +48,12 @@
                 dy:displayValues="@array/LandscapeLayoutPreference_DisplayValues"
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.LandscapeLayoutPreference"
                 />
+            <CheckBoxPreference android:key="ShowFeedBackOnBLEButtonsPressedInfoMessages"
+                android:title="@string/pref_ShowFeedBackOnBLEButtonsPressedInfoMessages"
+                android:summary="@string/pref_ShowFeedBackOnBLEButtonsPressedInfoMessages_summary"
+                android:icon="@drawable/dummy"
+                android:defaultValue="@bool/ShowFeedBackOnBLEButtonsPressedInfoMessages_default"
+                />
             <CheckBoxPreference
                 android:icon="@drawable/dummy"
                 android:key="showActionBar"
@@ -57,6 +63,14 @@
                 />
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_Behaviour">
+            <EditTextPreference
+                android:icon="@drawable/dummy"
+                android:key="NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired"
+                android:title="@string/pref_NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired"
+                android:summary="@string/pref_NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default"
+                />
             <CheckBoxPreference android:key="blinkFeedbackPerPoint"
                 android:title="@string/pref_blinkFeedbackPerPoint"
                 android:icon="@drawable/dummy"
@@ -70,12 +84,6 @@
                 android:defaultValue="@string/useSpeechFeature_default"
                 dy:displayValues="@array/FeatureDisplayValues_DoAuto"
                 dy:enumClass="com.doubleyellow.util.Feature"
-                />
-            <CheckBoxPreference android:key="ShowFeedBackOnBLEButtonsPressedInfoMessages"
-                android:title="@string/pref_ShowFeedBackOnBLEButtonsPressedInfoMessages"
-                android:summary="@string/pref_ShowFeedBackOnBLEButtonsPressedInfoMessages_Summary"
-                android:icon="@drawable/dummy"
-                android:defaultValue="@bool/ShowFeedBackOnBLEButtonsPressedInfoMessages_default"
                 />
             <com.doubleyellow.prefs.EnumListPreference
                 android:key="useTimersFeature"

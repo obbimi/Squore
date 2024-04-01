@@ -47,6 +47,7 @@ import com.doubleyellow.util.Params;
 import com.doubleyellow.util.StringUtil;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -355,10 +356,10 @@ public class BLEReceiverManager
                         if ( (iValueToHandle >= 0) && (iValueToHandle < saMessageFormat.length() ) ) {
                             String sMessageFormat = saMessageFormat.getString(iValueToHandle);
                             if ( sMessageFormat == null || sMessageFormat.startsWith("-") ) {
-                                //Log.d(TAG, "Ignoring message " + sMessageFormat + " " + iValue);
+                                Log.d(TAG, "Ignoring message " + sMessageFormat + " handle: " + iValueToHandle  + ", in: " + iValueIn);
                             } else {
                                 sMessageFormat = sMessageFormat.replaceAll("#.*", "").trim();
-                                String sMessage = String.format(sMessageFormat, (this.player==null?"":player), value[0]);
+                                String sMessage = String.format(sMessageFormat, (this.player==null?"":player), (this.player==null?"":player.getOther()), value[0]);
                                 Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), sMessage );
                                 message.sendToTarget();
                             }
@@ -366,7 +367,7 @@ public class BLEReceiverManager
                                 this.lastValueReceived = 0;
                             }
                         } else {
-                            //Log.d(TAG, "Ignoring value " + iValue);
+                            Log.d(TAG, String.format("Ignoring value %d, previous value %d", iValueToHandle, this.lastValueReceived));
                         }
                     }
                 }
@@ -390,14 +391,14 @@ public class BLEReceiverManager
                 Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.ble_battery_level, intValue, sReadingBatterLevelOf);
                 mHandler.sendMessage(msg);
             } else if ( characteristic.getUuid().toString().equalsIgnoreCase(m_sPlayerTypeCharacteristicUuid) ) {
-                writePlayerInfo(gatt, characteristic, value);
+                writePlayerInfo(gatt, characteristic, value, -1);
             }
         }
         @Override public void onCharacteristicRead    (@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value, int status) {
             //super.onCharacteristicRead (gatt, characteristic, value, status); // gives error?!
             Log.d(TAG, String.format("onCharacteristicRead player %s, address %s uuid: %s, status %d, value %d", this.player, gatt.getDevice().getAddress(), characteristic.getUuid(), status, value[0]));
             if ( characteristic.getUuid().toString().equalsIgnoreCase(m_sPlayerTypeCharacteristicUuid) ) {
-                writePlayerInfo(gatt, characteristic, value);
+                writePlayerInfo(gatt, characteristic, value, -1);
             }
         }
         @Override public void onCharacteristicWrite   (         BluetoothGatt gatt,          BluetoothGattCharacteristic characteristic, int status)                        {
@@ -414,10 +415,10 @@ public class BLEReceiverManager
                     Log.d(TAG, "b[" + i + "] : " + baValue[i]);
                 }
             }
-            if ( this.characteristicPlayerType != null && descriptor.getCharacteristic().getUuid().toString().equalsIgnoreCase(this.characteristicPlayerType.getUuid().toString()) == false ) {
+            if ( descriptor.getCharacteristic().getUuid().toString().equalsIgnoreCase(m_sPlayerTypeCharacteristicUuid) == false ) {
                 // with actual device this needs to be done AFTER updating characteristics of 'scoring'
                 Log.w(TAG, String.format("Reading player type for %s", this.player));
-                readPlayerInfo(gatt, characteristicPlayerType);
+                readPlayerInfo(gatt, descriptor.getCharacteristic());
             } else {
                 Log.w(TAG, String.format("No read player type for %s", this.player));
             }
@@ -489,7 +490,7 @@ public class BLEReceiverManager
                 Log.w(TAG, String.format("Reading value of characteristic %s for player %s failed", characteristic.getUuid(), this.player));
             }
         }
-        private void writePlayerInfo(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] currentValue) {
+        private void writePlayerInfo(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] currentValue, int iNewValue) {
             String sWriteIndicator = null;
             UUID uuid = characteristic.getUuid();
             try {
@@ -500,20 +501,20 @@ public class BLEReceiverManager
             }
 
             byte[] value = new byte[1];
-            if ( player != null ) {
-                value[0] = (byte) player.ordinal();
+            if ( iNewValue >= 0 ) {
+                value[0] = (byte) iNewValue;
             } else {
-                value[0] = (byte) Player.values().length;
+                if ( player != null ) {
+                    value[0] = (byte) player.ordinal();
+                } else {
+                    value[0] = (byte) Player.values().length;
+                }
             }
             if ( currentValue != null && currentValue.length > 0 && currentValue[0] == value[0] ) {
                 Log.i(TAG, String.format("[writePlayerInfo] No write required %s. Value for %s already OK : %d", sWriteIndicator, this.player, value[0]));
                 return;
             }
 
-            if ( (sWriteIndicator == null) || (sWriteIndicator.startsWith("WRITE") == false) ) {
-                Log.w(TAG, String.format("[writePlayerInfo] Json config does not specify WRITE for e.g. player type for %s", uuid));
-                return;
-            }
             int properties = characteristic.getProperties();
             int iSupportsWrite = properties & (BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE | BluetoothGattCharacteristic.PROPERTY_WRITE | BluetoothGattCharacteristic.PROPERTY_SIGNED_WRITE);
             if ( iSupportsWrite != 0 ) {
@@ -544,12 +545,27 @@ public class BLEReceiverManager
         JSONObject joWriteConfig = mServicesAndCharacteristicsConfig.optJSONObject(configKey.toString());
         if ( joWriteConfig == null ) { return false; }
 
-        String sCharUuid = joWriteConfig.optString(BLEUtil.Keys.WriteToCharacteristic.toString());
-        BluetoothGattCharacteristic characteristics = findCharacteristics(gatt, "*", sCharUuid);
-        if ( characteristics != null ) {
-            callback.writePlayerInfo(gatt, characteristics, null);
+        JSONArray lPossibleUuids = new JSONArray();
+        String sTmpUuid = joWriteConfig.optString(BLEUtil.Keys.WriteToCharacteristic.toString());
+        if ( sTmpUuid.startsWith("[") ) {
+            lPossibleUuids = joWriteConfig.optJSONArray(BLEUtil.Keys.WriteToCharacteristic.toString());
         } else {
-            Log.w(TAG, String.format("Can not write to notify for %s", p));
+            try {
+                lPossibleUuids.put(0, sTmpUuid);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        for(int i=0; i<lPossibleUuids.length(); i++) {
+            String sCharUuid = lPossibleUuids.optString(i);
+            BluetoothGattCharacteristic characteristics = findCharacteristics(gatt, "*", sCharUuid);
+            if ( characteristics != null ) {
+                int iValueToWrite = joWriteConfig.optInt(BLEUtil.Keys.WriteValue.toString(), -1);
+                callback.writePlayerInfo(gatt, characteristics, null, iValueToWrite);
+                break;
+            } else {
+                Log.w(TAG, String.format("Can not write to notify for %s", p));
+            }
         }
         // TODO: write some indication to wristband of other player let them know they need to
         // - confirm / cancel score entered by opponent ?

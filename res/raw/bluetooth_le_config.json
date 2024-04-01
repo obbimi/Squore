@@ -11,7 +11,7 @@
         },
         {
           "TranslateToBTMessage": [
-            "bluetooth-command-two-wristbands receive value 0: %1$s holds player A or B",
+            "bluetooth-command-two-wristbands receive value 0: %1$s holds player A or B (representing player holding the device), %2$s holds other player (opponent)",
             "bluetooth-command-two-wristbands receive value 1",
             "bluetooth-command-two-wristbands receive value 2"
           ]
@@ -45,15 +45,24 @@
     },
     "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
     "DeviceNameStartsWith": "D-SCORE-RX_",
-    "InitiateScoreChangeButton"   : "PRIMARY_BUTTON",
+    "InitiateScoreChangeButton"        : "PRIMARY_BUTTON",
     "InitiateOpponentScoreChangeButton": "SECONDARY_BUTTON",
-    "ConfirmScoreByOpponentButton": "SECONDARY_BUTTON",
-    "ConfirmScoreBySelfButton"    : "PRIMARY_BUTTON",
-    "CancelScoreByInitiatorButton": "SECONDARY_BUTTON",
+    "CancelScoreByInitiatorButton"     : "SECONDARY_BUTTON",
+    "CancelScoreByOpponentButton"      : null,
+    "ConfirmScoreByOpponentButton"     : "SECONDARY_BUTTON",
+    "ConfirmScoreBySelfButton"         : "PRIMARY_BUTTON",
+    "PlayerTypeConfig" : {
+      "WriteToCharacteristic" : "96f91f4b-2417-44e3-ae06-aa362556914e",
+      "WriteValue" : 1
+    },
+    "ConfirmationRequiredConfig" : {
+      "WriteToCharacteristic" : [ "96f91f4d-2417-44e3-ae06-aa362556914e", "96f91f4b-2417-44e3-ae06-aa362556914e" ],
+      "WriteValue" : 4
+    },
     "PRIMARY_BUTTON"  : "Green",
     "SECONDARY_BUTTON": "Red"
   },
-  "D-SCORE-RX One Device with two buttons": {
+  "D-SCORE-RX B: One Device with two buttons": {
     "96f9374a-2417-44e3-ae06-aa362556914e": {
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
@@ -72,7 +81,7 @@
     "PRIMARY_BUTTON": "Green",
     "SECONDARY_BUTTON": "Red"
   },
-  "D-SCORE-RX One Device with two buttons - Confirm with other button": {
+  "D-SCORE-RX C: One Device with two buttons - Confirm with other button": {
     "96f9374a-2417-44e3-ae06-aa362556914e": {
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
@@ -92,7 +101,7 @@
     "PRIMARY_BUTTON": "Green",
     "SECONDARY_BUTTON": "Red"
   },
-  "D-SCORE-RX One Device with two buttons - Confirm with same button": {
+  "D-SCORE-RX D: One Device with two buttons - Confirm with same button": {
     "96f9374a-2417-44e3-ae06-aa362556914e": {
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
@@ -112,7 +121,7 @@
     "PRIMARY_BUTTON": "GREEN",
     "SECONDARY_BUTTON": "RED"
   },
-  "D-SCORE-RX Two Devices with only one button used - No Confirm": {
+  "D-SCORE-RX E: Two Devices with only green button used - We scored, No Confirm": {
     "96f9374a-2417-44e3-ae06-aa362556914e": {
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
@@ -123,6 +132,25 @@
             "-buttons released (two devices)",
             "-red button pressed, not used",
             "changeScoreBLE(%1$s)",
+            "-both buttons pressed (two devices)"
+          ]
+        }
+      ]
+    },
+    "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
+    "NrOfDevices" : 2
+  },
+  "D-SCORE-RX F: Two Devices with only red button used - Opponent scored, No Confirm": {
+    "96f9374a-2417-44e3-ae06-aa362556914e": {
+      "96f91f4c-2417-44e3-ae06-aa362556914e": [
+        {
+          "OneDevice": "NotApplicable. App should not allow to start with just one device selected."
+        },
+        {
+          "TranslateToBTMessage": [
+            "-buttons released (two devices)",
+            "changeScoreBLE(%2$s, %1$s)",
+            "-green button pressed, not used",
             "-both buttons pressed (two devices)"
           ]
         }
@@ -154,7 +182,7 @@
       "00002a44-0000-1000-8000-00805f9b34fb": "undoLast()",
       "00002a45-0000-1000-8000-00805f9b34fb": "changeScoreBLE(A)",
       "00002a46-0000-1000-8000-00805f9b34fb": "changeScoreBLE(B)",
-      "00002a47-0000-1000-8000-00805f9b34fb": "changeScoreBLE(%2$s)"
+      "00002a47-0000-1000-8000-00805f9b34fb": "-not used"
     }
   },
   "double_ble_01_alert": {

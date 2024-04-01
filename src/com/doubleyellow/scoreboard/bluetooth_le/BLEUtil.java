@@ -70,6 +70,7 @@ public class BLEUtil
         ConfirmScoreBySelfButton,
         /** one of the values of BLEDeviceButton */
         CancelScoreByInitiatorButton,
+        CancelScoreByOpponentButton,
         SingleDevice_ConfirmWithSameButton,
         RssiValueAt1M,
 
@@ -192,7 +193,7 @@ public class BLEUtil
                 }
                 mReturn.put(sServiceUUID, lCharUUID);
             } catch (Exception e) {
-                Log.w(TAG, "Skipping " + sServiceUUID);
+                //Log.t(TAG, "Skipping " + sServiceUUID);
             }
         }
         return mReturn;
