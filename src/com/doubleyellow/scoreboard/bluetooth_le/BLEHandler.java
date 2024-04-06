@@ -61,7 +61,7 @@ public class BLEHandler extends Handler
             }
         } else if ( btMessage.equals(BTMessage.READ) ) {
             try {
-                sb.interpretReceivedMessage(sMsg, MessageSource.BluetoothLE);
+                sb.interpretReceivedMessageOnUiThread(sMsg, MessageSource.BluetoothLE);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.w(TAG, "Message could not be understood :" + sMsg);

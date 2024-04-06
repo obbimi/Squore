@@ -67,6 +67,12 @@ public enum BTMethods {
      * - second identifying what button was pressed on the device (@see com.doubleyellow.scoreboard.bluetooth_le.BLEDeviceButton)
      **/
     changeScoreBLEConfirm(false),
+    /**
+     * Typically used only in BLE setup with each player/team having a device allowing to undo the score but only for 'self' to prevent cheating.
+     * one parameter
+     * - first the player identifying what wristband a button was pressed on
+     **/
+    undoScoreForInitiatorBLE(false),
     ;
     private boolean bVerifyScore = false;
     BTMethods(boolean verifyScore) {

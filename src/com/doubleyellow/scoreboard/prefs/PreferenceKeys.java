@@ -335,5 +335,6 @@ public enum PreferenceKeys {
         BluetoothLE_Peripheral1,
         BluetoothLE_Peripheral2,
         BluetoothLE_Config,
+        NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired,
         ShowFeedBackOnBLEButtonsPressedInfoMessages,
 }

@@ -311,10 +311,6 @@ public class BLEReceiverManager
         void translateToBTMessageAndSendToMain(BluetoothGattCharacteristic characteristic, byte[] value) {
             if ( PreferenceValues.currentDateIsTestDate() ) {
                 Log.d(TAG, "value[0] : " + value[0]);
-                Log.d(TAG, "sValue   : " + new String(value));
-                for (int i = 0; i < value.length; i++) {
-                    Log.d(TAG, "b[" + i + "] : " + value[i]);
-                }
             }
             //Log.d(TAG, String.format("onCharacteristicChanged B: characteristic : %s, writetype : %d, instance_id : %d", characteristic.getUuid(), characteristic.getWriteType(), characteristic.getInstanceId())); // e.g. write type 2 for indicate, no notify also results in '2' ?
 

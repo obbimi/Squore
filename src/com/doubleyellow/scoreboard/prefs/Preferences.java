@@ -465,6 +465,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             SystemUtil.doVibrate(Preferences.this, 200);
                         }
                         break;
+                    case blinkFeedbackPerPoint:
+                        break;
                     case wearable_allowScoringWithHardwareButtons:
                     case wearable_allowScoringWithRotary:
                     case wearable_keepScreenOnWhen:
@@ -513,6 +515,9 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             }
                         }
                         settingsFragment.setEnabledForPrefKeys(fcmEnabled, PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, PreferenceKeys.FCMDeviceId);
+                        break;
+                    case UseBluetoothLE:
+                        boolean bUse = PreferenceValues.useBluetoothLE(Preferences.this);
                         break;
                     default:
                         //Log.d(TAG, "Not handling case for " + eKey);

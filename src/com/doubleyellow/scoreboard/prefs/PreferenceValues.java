@@ -899,6 +899,9 @@ public class PreferenceValues extends RWValues
     public static boolean showFeedBackOnBLEButtonsPressedInfoMessages(Context context) {
         return getBoolean(PreferenceKeys.ShowFeedBackOnBLEButtonsPressedInfoMessages, context, R.bool.ShowFeedBackOnBLEButtonsPressedInfoMessages_default);
     }
+    public static int nrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired(Context context) {
+        return getInteger(PreferenceKeys.NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired, context, R.integer.NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default);
+    }
     public static boolean allowTrustAllCertificatesAndHosts(Context context) {
         return getBoolean(PreferenceKeys.allowTrustAllCertificatesAndHosts, context, R.bool.allowTrustAllCertificatesAndHosts_default);
     }

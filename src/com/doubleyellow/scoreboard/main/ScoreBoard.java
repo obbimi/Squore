@@ -6337,8 +6337,12 @@ touch -t 01030000 LAST.sb
         }
         private void doChangeScoreIfRequired(Player p) {
             if ( m_iTmpTxtOnElementDuringFeedback != 0 ) {
+                if ( m_iTmpTxtOnElementDuringFeedback != R.string.uc_undo ) {
+                    matchModel.changeScore(p);
+                } else {
+                    matchModel.undoLast();
+                }
                 m_iTmpTxtOnElementDuringFeedback = 0;
-                matchModel.changeScore(p);
             }
         }
     }
@@ -6442,22 +6446,22 @@ touch -t 01030000 LAST.sb
         return showScoreChangeOn;
     }
     @Nullable private int getTxtOnElementDuringFeedback(Player player) {
-        int sGameSetOrMatch = 0;
+        int iResIdGameSetOrMatch = 0;
         if ( matchModel.isPossibleGameBallFor(player) ) {
-            sGameSetOrMatch = R.string.oa_game;
+            iResIdGameSetOrMatch = R.string.oa_game;
             if ( matchModel instanceof GSMModel ) {
                 GSMModel gsmModel = (GSMModel) matchModel;
                 Player[] possibleSetVictoryFor = gsmModel.isPossibleSetVictoryFor();
                 if (possibleSetVictoryFor!=null && possibleSetVictoryFor.length!=0) {
-                    sGameSetOrMatch = R.string.oa_set;
+                    iResIdGameSetOrMatch = R.string.oa_set;
                 }
             }
             Player[] possibleMatchBallFor = matchModel.isPossibleMatchBallFor();
             if (possibleMatchBallFor!=null && possibleMatchBallFor.length!=0) {
-                sGameSetOrMatch = R.string.oa_match;
+                iResIdGameSetOrMatch = R.string.oa_match;
             }
         }
-        return sGameSetOrMatch;
+        return iResIdGameSetOrMatch;
     }
 
     // -----------------------------------------------------
@@ -7490,6 +7494,31 @@ touch -t 01030000 LAST.sb
                         }
                         break;
                     }
+                    case undoScoreForInitiatorBLE:
+                        if ( (saMethodNArgs.length > 1) && (matchModel != null) ) {
+                            String sAorB = saMethodNArgs[1].toUpperCase().trim();
+                            Player pUndoTriggeredBy;
+                            if ( sAorB.matches("[0-1]") ) {
+                                int i0isA1IsB = Integer.parseInt(sAorB);
+                                pUndoTriggeredBy = Player.values()[i0isA1IsB];
+                            } else {
+                                pUndoTriggeredBy = Player.valueOf(sAorB);
+                            }
+                            Player lastScorer = matchModel.getLastScorer();
+
+                            String sInfoMsg = getString(R.string.ble_last_score_for_X_undone_by_ble, pUndoTriggeredBy);
+                            if ( pUndoTriggeredBy.equals(lastScorer) ) {
+                                //matchModel.undoLast(); // triggered by timer after blinking 'undo'
+                                startVisualFeedbackForScoreChange(lastScorer, R.string.uc_undo);
+                                iBoard.showBLEInfoMessage(sInfoMsg, 10);
+                            } else {
+                                if ( lastScorer != null ) {
+                                    sInfoMsg = getString(R.string.ble_last_score_for_X_can_not_be_undone_by_ble_of_Y, lastScorer, pUndoTriggeredBy);
+                                    iBoard.showBLEInfoMessage(sInfoMsg, 10);
+                                }
+                            }
+                        }
+                        break;
                     case changeScoreBLE:
                         if ( (saMethodNArgs.length > 1) && (matchModel != null) ) {
                             String sAorB = saMethodNArgs[1].toUpperCase().trim();

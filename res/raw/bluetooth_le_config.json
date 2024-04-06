@@ -38,7 +38,7 @@
             "-both buttons released (two devices), not used",
             "changeScoreBLEConfirm(%1$s, SECONDARY_BUTTON)",
             "changeScoreBLEConfirm(%1$s, PRIMARY_BUTTON)",
-            "-both buttons pressed (two devices), not used"
+            "undoScoreForInitiatorBLE(%1$s) # both buttons pressed (two devices)"
           ]
         }
       ]
