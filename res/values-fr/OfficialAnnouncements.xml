@@ -15,6 +15,8 @@
     <string name="oa_match_to_x">Match %s</string>
     <string name="oa_1_game_all">Un jeu partout</string>
     <string name="oa_x_games_all">%s jeux partout</string>
+    <string name="oa_1_game_all__TennisPadel">Un jeu partout</string>
+    <string name="oa_x_games_all__TennisPadel">%s jeux partout</string>
     <!--<string name="oa_x_leads_n_against_y">%s mène %s vers %s</string>-->
     <!--<string name="oa_x_wins_n_against_y">%s gagne %s vers %s</string>-->
     <string name="oa_a_leads_xGamesToy">%1$s mène %2$s</string>
@@ -27,6 +29,8 @@
     <string name="oa_game_firstletter">J</string>
     <string name="oa_game">Jeu</string>
     <string name="oa_games">Jeux</string>
+    <string name="oa_game__TennisPadel">Jeu</string>
+    <string name="oa_games__TennisPadel">Jeux</string>
     <string name="oa_gameball">Balle de jeu</string>
     <string name="oa_matchball">Balle de match</string>
     <string name="oa_match">Match</string>

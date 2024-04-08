@@ -17,6 +17,8 @@
     <string name="oa_match_to_x">Spiel an %s</string>
     <string name="oa_1_game_all">Ein Satz beide</string>
     <string name="oa_x_games_all">%s Satzen beide</string>
+    <string name="oa_1_game_all__TennisPadel">Eins beide</string>
+    <string name="oa_x_games_all__TennisPadel">%s beide</string>
     <!--<string name="oa_x_leads_n_against_y">%1$s führt %2$s-%3$s in Satzen gegen</string>-->
     <!--<string name="oa_x_wins_n_against_y">Spiel an %1$s, %2$s Satzen zu %s</string>-->
     <string name="oa_a_leads_xGamesToy">%1$s führt %2$s</string>
@@ -27,11 +29,18 @@
     <string name="oa_love">0</string>
     <string name="oa_match_firstletter">M</string>
     <string name="oa_game_firstletter">S</string>
+
     <string name="oa_game">Satz</string>
     <string name="oa_games">Satzen</string>
+    <string name="oa_game__TennisPadel">Spiel</string>
+    <string name="oa_games__TennisPadel">Spielen</string>
     <string name="oa_gameball">Satzball</string>
     <string name="oa_matchball">Spielball</string>
     <string name="oa_match">Spiel</string>
+
+    <string name="oa_set">Satz</string>
+    <string name="oa_sets">Satzen</string>
+    <string name="oa_set_ball">Satzball</string>
 
     <string name="oa_n_all__or__n_equal">%d beide</string>
     <string name="oa_player_needs_2_clear_points">Ein Spieler muss mit 2 Punkten vorsprung gewinnen</string>

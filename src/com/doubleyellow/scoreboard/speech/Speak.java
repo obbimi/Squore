@@ -101,17 +101,6 @@ public class Speak
         @Override public void onInit(int status) {
             m_iStatus = status;
 
-/*
-            if ( m_textToSpeech != null ) {
-                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M */
-/* 22 *//*
- ) {
-                    Set<Voice> voices = m_textToSpeech.getVoices();
-                    Log.d(TAG, "Available voices (listener): " + voices);
-                }
-            }
-*/
-
             switch (status) {
                 case TextToSpeech.SUCCESS:
                     Feature feature = PreferenceValues.useOfficialAnnouncementsFeature(m_context);
@@ -152,7 +141,7 @@ public class Speak
     }
 
     /** Returns false if first in sequence is not used */
-    public boolean setOneOfLocales(Locale[] aLocales) {
+    private boolean setOneOfLocales(Locale[] aLocales) {
         if ( m_textToSpeech == null ) { return false; }
         LinkedHashSet<String> lUnavailable = new LinkedHashSet<>();
         for ( Locale locale: aLocales ) {
@@ -229,16 +218,17 @@ public class Speak
                 } else {
                     gamesWonLastSet = model.getGamesWon();
                 }
-                if (MapUtil.getMaxValue(gamesWonLastSet) > 0 ) {
+                if ( MapUtil.getMaxValue(gamesWonLastSet) > 0 ) {
                     Player pLeaderInGames = MapUtil.getMaxKey(gamesWonLastSet, Player.A);
                     int iGamesLeader  = gamesWonLastSet.get(pLeaderInGames);
                     int iGamesTrailer = gamesWonLastSet.get(pLeaderInGames.getOther());
                     String sGamesScoreText = null;
                     if ( iGamesLeader == iGamesTrailer ) {
-                        sGamesScoreText = (iGamesLeader==1) ? PreferenceValues.getOAString(m_context, R.string.oa_1_game_all) : PreferenceValues.getOAString(m_context, R.string.oa_x_games_all, iGamesLeader);
+                        sGamesScoreText = (iGamesLeader==1) ? getResourceString(R.string.oa_1_game_all)
+                                                            : getResourceString(R.string.oa_x_games_all, iGamesLeader);
                     } else {
                         String sLeader    = model.getName(pLeaderInGames);
-                        String sGameScore = StartEndAnnouncement.x_GamesTo_y(iGamesLeader, iGamesTrailer, m_context);
+                        String sGameScore = x_GamesTo_y(iGamesLeader, iGamesTrailer, m_context);
                         if ( model.matchHasEnded() ) {
                             if ( gsmModel != null ) {
                                 // todo
@@ -411,8 +401,15 @@ public class Speak
 
     /** get text from correct locale */
     private String getResourceString(int p, Object ... args) {
+        p = PreferenceValues.getSportSpecificSuffixedResId(m_context, p); // e.g. for Squash Game=Satz, but for TennisPadel Game=Spiel. Hence we have oa_game=Game and Satz and oa_game__TennisPadel=Game and Spiel
         Resources resources = PreferenceValues.newResources(m_context.getResources(), m_locale);
         return resources.getString(p, args);
+    }
+    private String x_GamesTo_y(int iGamesLeader, int iGamesTrailer, Context ctx) {
+        return iGamesLeader
+                + " " + (iGamesLeader==1?getResourceString(R.string.oa_game):getResourceString(R.string.oa_games))
+                + " " + getResourceString(R.string.oa_x_games_TO_y)
+                + " " + (iGamesTrailer==0?getResourceString(R.string.oa_love):String.valueOf(iGamesTrailer));
     }
 
     //------------------------------

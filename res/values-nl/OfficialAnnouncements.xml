@@ -17,6 +17,8 @@
     <string name="oa_match_to_x">Match voor %s</string>
     <string name="oa_1_game_all">1–1 in games</string>
     <string name="oa_x_games_all">%1$s-%1$s in games</string>
+    <string name="oa_1_game_all__TennisPadel">1–1 in games</string>
+    <string name="oa_x_games_all__TennisPadel">%1$s-%1$s in games</string>
     <!--<string name="oa_x_leads_n_against_y">%1$s leidt %2$s tegen %3$s</string>-->
     <!--<string name="oa_x_wins_n_against_y">%1$s wint %2$s tegen %3$s</string>-->
     <string name="oa_a_leads_xGamesToy">%1$s leidt %2$s</string>

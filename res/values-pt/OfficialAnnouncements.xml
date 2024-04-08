@@ -16,6 +16,8 @@
     <string name="oa_match_to_x">Match para %s</string>
     <string name="oa_1_game_all">1 game iguais</string>
     <string name="oa_x_games_all">%s games iguais</string>
+    <string name="oa_1_game_all__TennisPadel">1 game iguais</string>
+    <string name="oa_x_games_all__TennisPadel">%s games iguais</string>
     <string name="oa_a_leads_xGamesToy">%1$s lidera %2$s</string>
     <string name="oa_a_wins_xGamesToy">Partida para %1$s, %2$s</string>
     <string name="oa_x_games_TO_y">a</string>

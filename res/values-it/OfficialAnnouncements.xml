@@ -17,6 +17,8 @@
     <string name="oa_match_to_x">Incontro a %s</string>
     <string name="oa_1_game_all">Un gioco pari</string>
     <string name="oa_x_games_all">%s giochi pari</string>
+    <string name="oa_1_game_all__TennisPadel">Un gioco pari</string>
+    <string name="oa_x_games_all__TennisPadel">%s giochi pari</string>
     <!--<string name="oa_x_leads_n_against_y">%s leads %s against %s</string>-->
     <!--<string name="oa_x_wins_n_against_y">%s wins %s against %s</string>-->
     <string name="oa_a_leads_xGamesToy">%1$s conduce %2$s</string>
@@ -32,6 +34,8 @@
 
     <string name="oa_game">gioco</string>
     <string name="oa_games">giochi</string>
+    <string name="oa_game__TennisPadel">gioco</string>
+    <string name="oa_games__TennisPadel">giochi</string>
     <string name="oa_gameball">Palla del gioco</string>
     <string name="oa_matchball">Palla dell\'incontro</string>
 

@@ -16,6 +16,8 @@
     <string name="oa_match_to_x">Partida a %s</string>
     <string name="oa_1_game_all">1 juego iguales</string>
     <string name="oa_x_games_all">Iguales a %s juegos</string><!-- salvador martinez 2022-09-12 '2 juegos all' should be 'iguales a 2 juegos' ?! -->
+    <string name="oa_1_game_all__TennisPadel">1 juego iguales</string>
+    <string name="oa_x_games_all__TennisPadel">Iguales a %s juegos</string><!-- salvador martinez 2022-09-12 '2 juegos all' should be 'iguales a 2 juegos' ?! -->
     <!--<string name="oa_x_leads_n_against_y">%s lidera %s a %s</string>-->
     <!--<string name="oa_x_wins_n_against_y">Partido para %s, %s juegos a %s</string>-->
     <string name="oa_a_leads_xGamesToy">%1$s ganan %2$s</string> <!-- salvador martinez 2022-09-12 'lidera' should be 'ganan' ?! -->
@@ -32,6 +34,8 @@
 
     <string name="oa_game">juego</string>
     <string name="oa_games">juegos</string>
+    <string name="oa_game__TennisPadel">juego</string>
+    <string name="oa_games__TennisPadel">juegos</string>
     <string name="oa_gameball">Bola de juego</string>
     <string name="oa_matchball">Bola de partido</string>
     <string name="oa_match">Partido</string>
