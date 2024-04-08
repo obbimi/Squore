@@ -86,7 +86,7 @@ public class PusherHandler implements FCMHandler
         String sInterest = PreferenceValues.getFCMDeviceId(scoreBoard) + "@" + scoreBoard.getPackageName();
         Log.d(TAG, "Interest :" + sInterest);
 
-        //FirebaseApp.initializeApp(scoreBoard); // required with com.google.gms:google-services:4.3.10 according to error messages, but fails anyway with that version
+        FirebaseApp.initializeApp(scoreBoard); // required with com.google.gms:google-services:4.3.10 according to error messages, but fails anyway with that version
         PushNotifications.start(scoreBoard, sPusherUUID.toString());
         PushNotifications.clearDeviceInterests();
         PushNotifications.addDeviceInterest(sInterest);

@@ -143,7 +143,7 @@ public class WearableHelper
 
             // received a message from the handheld-wearable counterpart: handle change here
             m_sHandlingWearableMessageInProgress = sData;
-            m_scoreBoard.interpretReceivedMessage(sData, MessageSource.Wearable);
+            m_scoreBoard.interpretReceivedMessageOnUiThread(sData, MessageSource.Wearable);
             m_sHandlingWearableMessageInProgress = null;
         }
     };
@@ -255,7 +255,7 @@ public class WearableHelper
         if ( sMessage.startsWith(BTMethods.requestCompleteJsonOfMatch.toString() ) )  {
             // independent of current wearable role, send anyways
         } else if ( m_wearableRole.equals(WearRole.Unknown) ) {
-            Log.d(TAG, "App not running on both devices. Not sending: " + sMessage);
+            //Log.d(TAG, "App not running on both devices. Not sending: " + sMessage);
             return false;
         }
         SendMessageToWearableTask task = new SendMessageToWearableTask(context);

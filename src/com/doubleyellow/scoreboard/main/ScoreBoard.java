@@ -7490,7 +7490,14 @@ touch -t 01030000 LAST.sb
                             } else {
                                 player = Player.valueOf(sAorB);
                             }
-                            matchModel.changeScore(player);
+                            String sScoreReceived = saMethodNArgs[saMethodNArgs.length - 1];
+                            String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
+                            if ( sScoreReceived.equals("0-0") && sModelScore.equals("0-0") ) {
+                                // if endGame=automatic changeScore might be send to set score to 0-0, but if slave already changed to 0-0, ignore
+                                Log.w(TAG, String.format("Ignoring %s", btMethod));
+                            } else {
+                                matchModel.changeScore(player);
+                            }
                         }
                         break;
                     }
@@ -7853,6 +7860,7 @@ touch -t 01030000 LAST.sb
             e.printStackTrace();
         }
 
+/*
         PreferenceValues.Permission hasPermission = PreferenceValues.doesUserHavePermissionToBluetoothConnect(this, true);
         if ( PreferenceValues.Permission.Granted.equals(hasPermission) == false ) {
             return;
@@ -7865,12 +7873,33 @@ touch -t 01030000 LAST.sb
         if ( PreferenceValues.Permission.Granted.equals(hasPermission3) == false ) {
             return;
         }
-/*
         PreferenceValues.Permission hasPermission4 = PreferenceValues.doesUserHavePermissionToBluetoothAdvertise(this, true);
         if ( PreferenceValues.Permission.Granted.equals(hasPermission4) == false ) {
             return;
         }
 */
+        String[] permissions = BLEUtil.getPermissions();
+        Set<RWValues.Permission> lPerms = new LinkedHashSet<>();
+        for( String sPermName: permissions ) {
+            RWValues.Permission permission = PreferenceValues.getPermission(this, PreferenceKeys.enableScoringByBluetoothConnection, sPermName);
+            lPerms.add(permission);
+        }
+        if ( lPerms.size() == 1 && lPerms.iterator().next().equals(RWValues.Permission.Granted) ) {
+            // all good
+        } else if ( lPerms.contains(RWValues.Permission.Denied) ) {
+            if ( PreferenceValues.currentDateIsTestDate() ) {
+                ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.enableScoringByBluetoothConnection.ordinal()); // API28 : Can request only one set of permissions at a time
+                return;
+            }
+            (new AlertDialog.Builder(this)).setTitle("Permissions").setIcon(android.R.drawable.stat_sys_data_bluetooth).setMessage(R.string.ble_permission_not_granted).show();
+            return;
+        } else {
+            // request missing
+            Log.w(TAG, "Trying to request permission for scanning");
+            ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal()); // API28 : Can request only one set of permissions at a time
+            return;
+        }
+
 
         SelectDeviceDialog selectDevice = new SelectDeviceDialog(this, matchModel, this);
         int[] iResIds = selectDevice.getBluetoothDevices(true);
