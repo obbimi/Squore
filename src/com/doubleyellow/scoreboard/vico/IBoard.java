@@ -1223,10 +1223,20 @@ public class IBoard implements TimerViewContainer
         }
     }
     public void appendToInfoMessage(String sMsg) {
+        appendToInfoMessage(sMsg, false);
+    }
+    public void appendToInfoMessage(String sMsg, boolean bBetweenBrackets) {
         final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bottom_of_screen_infomessage);
-        if ( tvBLEInfo != null ) {
-            tvBLEInfo.setText(tvBLEInfo.getText() + sMsg);
+        if ( tvBLEInfo == null ) { return; }
+        final String sCurrent = tvBLEInfo.getText().toString();
+        String sNew = sCurrent;
+        if ( bBetweenBrackets ) {
+            sNew = sNew.replaceFirst("\\s*\\(.+\\)$", "");
+            sNew += " (" + sMsg + ")";
+        } else {
+            sNew += sMsg;
         }
+        tvBLEInfo.setText(sNew);
     }
 
     //===================================================================

@@ -88,6 +88,7 @@ public class BLEReceiverManager
     private final Map<String, BluetoothGatt> mDevice2gatt = new HashMap<>();
     private final Map<Player, BluetoothGatt> mPlayer2gatt = new HashMap<>();
     private final Map<Player, MyBluetoothGattCallback> mPlayer2callback = new HashMap<>();
+    private       MyBluetoothGattCallback mCallbackSingleDevice = null;
 
     private       String m_sPlayerTypeCharacteristicUuid = null;
 
@@ -178,6 +179,8 @@ public class BLEReceiverManager
                     MyBluetoothGattCallback callback = new MyBluetoothGattCallback(btDevice.getAddress(), eachPlayerHasADevicePlayer);
                     if ( eachPlayerHasADevicePlayer != null ) {
                         mPlayer2callback.put(eachPlayerHasADevicePlayer, callback);
+                    } else {
+                        mCallbackSingleDevice = callback;
                     }
                     btDevice.connectGatt(context,false, callback);
 
@@ -384,7 +387,7 @@ public class BLEReceiverManager
             }
             if ( characteristic.getUuid().toString().equalsIgnoreCase(BATTERY_CHARACTERISTIC_UUID) ) {
                 Integer intValue = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT8, 0);
-                Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.ble_battery_level, intValue, sReadingBatterLevelOf);
+                Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.ble_battery_level, intValue, (this.player!=null?this.player+" : ":"") + " " + sReadingBatterLevelOf);
                 mHandler.sendMessage(msg);
             } else if ( characteristic.getUuid().toString().equalsIgnoreCase(m_sPlayerTypeCharacteristicUuid) ) {
                 writePlayerInfo(gatt, characteristic, value, -1);
@@ -534,14 +537,23 @@ public class BLEReceiverManager
 
     public boolean writeToBLE(Player p, BLEUtil.Keys configKey) {
         BluetoothGatt gatt = mPlayer2gatt.get(p);
+        if ( p == null && ( mDevice2gatt.size() == 1) ) {
+            gatt = mDevice2gatt.values().iterator().next();
+        }
         if ( gatt == null ) { return false; }
         MyBluetoothGattCallback callback = mPlayer2callback.get(p);
+        if ( p == null && ( mCallbackSingleDevice != null) ) {
+            callback = mCallbackSingleDevice;
+        }
         if ( callback == null ) { return false; }
 
         JSONObject joWriteConfig = mServicesAndCharacteristicsConfig.optJSONObject(configKey.toString());
         if ( joWriteConfig == null ) { return false; }
 
         JSONArray lPossibleUuids = new JSONArray();
+        if ( joWriteConfig.has(BLEUtil.Keys.WriteToCharacteristic.toString()) == false ) {
+            return false;
+        }
         String sTmpUuid = joWriteConfig.optString(BLEUtil.Keys.WriteToCharacteristic.toString());
         if ( sTmpUuid.startsWith("[") ) {
             lPossibleUuids = joWriteConfig.optJSONArray(BLEUtil.Keys.WriteToCharacteristic.toString());
@@ -552,7 +564,7 @@ public class BLEReceiverManager
                 throw new RuntimeException(e);
             }
         }
-        for(int i=0; i<lPossibleUuids.length(); i++) {
+        for ( int i=0; i < lPossibleUuids.length(); i++ ) {
             String sCharUuid = lPossibleUuids.optString(i);
             BluetoothGattCharacteristic characteristics = findCharacteristics(gatt, "*", sCharUuid);
             if ( characteristics != null ) {

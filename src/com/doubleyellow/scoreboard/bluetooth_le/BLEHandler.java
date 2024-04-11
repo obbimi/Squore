@@ -80,6 +80,7 @@ public class BLEHandler extends Handler
                 case CONNECTED_ALL:
                     String sUIMsg = sb.getResources().getQuantityString(R.plurals.ble_ready_for_scoring_with_devices, iNrOfDevices);
                     sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sUIMsg, 10);
+                    sb.showBLEVerifyConnectedDevicesDialog(iNrOfDevices);
                     break;
                 case DISCONNECTED:
                     sb.updateBLEConnectionStatus(View.INVISIBLE, -1, "Oeps 3", -1);

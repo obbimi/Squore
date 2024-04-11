@@ -16,6 +16,7 @@
     <string name="ble_waiting_initiate_score_change_message">Waiting for initiate-score-change by pressing %1$s by either player/team</string>
     <string name="ble_score_cancelled_by_pressing_y">Score cancelled by pressing %1$s</string>
     <string name="ble_score_confirmed_by_pressing_y">Score confirmed by pressing %1$s</string>
+    <string name="ble_score_cancelled_via_gui">BLE Score to be confirmed cancelled in GUI</string>
     <string name="ble_score_cancelled_by_opponent_x_by_pressing_y">Score cancelled by opponent %1$s by pressing %2$s</string>
     <string name="ble_score_cancelled_by_scoring_team_x_by_pressing_y">Score cancelled by scoring team %1$s by pressing %2$s</string>
     <string name="ble_score_cancelled_by_initiator_x_by_pressing_y">Score cancelled by initiator %1$s by pressing %2$s</string>
@@ -24,6 +25,7 @@
     <string name="ble_player_x_confirm_score_for_y_by_pressing_z">%1$s, confirm score for %2$s by pressing %3$s</string>
     <string name="ble_player_x_confirm_you_scored_by_pressing_y">%1$s, confirm you scored by pressing %2$s</string>
     <string name="ble_confirm_score_for_y_by_pressing_z">confirm score for %1$s by pressing %2$s</string>
+    <string name="ble_signalled_x_to_confirm">Signalled %1$s to confirm</string>
     <string name="ble_score_for_X_changed_by_ble">Score for %1$s changed by BLE</string>
     <string name="ble_last_score_for_X_undone_by_ble">Last score for %1$s undone by BLE of %1$s</string>
     <string name="ble_last_score_for_X_can_not_be_undone_by_ble_of_Y">Last score for %1$s can not be undone by BLE of %2$s</string>
@@ -34,9 +36,13 @@
     </plurals>
     <string name="ble_only_one_of_two_devices_connected">Only one of 2 devices connected</string>
     <string name="ble_Lost_connection_to_a_device">Lost connection to a BLE device</string>
-    <string name="ble_permission_not_granted">The app has not been granted the permission to find nearby devices...</string>
-    <string name="ble_active_config_not_suitable_for_x_devices">Choosen BLE config not suitable to work with %1$s device(s)</string>
+    <string name="ble_permission_not_granted">The app has not been granted the permission to find nearby devices…</string>
+    <string name="ble_active_config_not_suitable_for_x_devices">Chosen BLE config not suitable to work with %1$s device(s)</string>
     <string name="ble_devices">Devices</string>
+    <string name="ble_devices_verify">Verify Connected Devices</string>
+    <string name="ble_shortly_vibrate_selected_connected_devices">Shortly vibrate selected connected devices</string>
+    <string name="ble_single_device">Single Device</string>
+    <string name="ble_swap_devices">Swap\u00A0Devices</string>
 
     <string name="bt_disconnect">Disconnect</string>
     <string name="bt_pull_or_push">Choose</string>

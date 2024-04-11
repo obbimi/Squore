@@ -39,6 +39,7 @@ import android.provider.Settings;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.InputDeviceCompat;
 import androidx.core.view.MotionEventCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -60,6 +61,7 @@ import com.doubleyellow.prefs.DynamicListPreference;
 import com.doubleyellow.prefs.OrientationPreference;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.*;
+import com.doubleyellow.scoreboard.bluetooth_le.selectdevice.VerifyConnectedDevices;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.activity.*;
 import com.doubleyellow.scoreboard.archive.ArchiveTabbed;
@@ -469,6 +471,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     {
         @Override public void onClick(View view) {
           //Log.d(TAG, "Received click for model " + matchModel);
+            if ( clearBLEConfirmationStatus() ) { return; }
+
             Player player = IBoard.m_id2player.get(view.getId());
             if ( matchModel.isPossibleGameBallFor(player) && (bGameEndingHasBeenCancelledThisGame == false) ) {
                 // score will go to game-end, and most likely a dialog will be build and show. Prevent any accidental score changes while dialog is about to be shown
@@ -1684,11 +1688,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             if ( iDialogPresentedCnt > 1 ) { return; }
             if ( isLandscape() ) { return; }
 
-            //long currentTime = System.currentTimeMillis();
-            //long lInterval = currentTime - this.lastPress;
-            //this.lastPress = currentTime;
-            //if ( lInterval > 1500L ) { return; }
-
             // user pressed dialog button short after one another: present choice to turn on entering score using volume buttons
             AlertDialog.Builder choose = new MyDialogBuilder(context);
             choose.setMessage(R.string.pref_VolumeKeysBehaviour_question)
@@ -1807,10 +1806,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         ShowcaseConfig config = new ShowcaseConfig();
         config.setDelay(500); // time between each showcase view after 'got it' is clicked
-        //config.setDismissTextColor(mColors.get(ColorPrefs.ColorTarget.playerButtonTextColor));
-        //config.setContentTextColor(mColors.get(ColorPrefs.ColorTarget.playerButtonTextColor));
-        //config.setMaskColor(mColors.get(ColorPrefs.ColorTarget.playerButtonBackgroundColor));
-        //config.setShape(new CircleShape());
         config.setShapePadding(iTxtSize);
         config.setFadeDuration(300);
         config.setDismissText(getString(R.string.scv_got_it));
@@ -2299,11 +2294,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     if ( PreferenceValues.lockMatchMV(this).contains(AutoLockContext.WhenMatchIsUnchangeForX_Minutes)) {
                         final int iMinutes = PreferenceValues.numberOfMinutesAfterWhichToLockMatch(this);
                         if ( iMinutes > 0 ) {
-/*
-sed 's~20170104~20170103~g' LAST.sb > LAST.sb.NEW
-cat LAST.sb.NEW > LAST.sb
-touch -t 01030000 LAST.sb
-*/
                             matchModel.lockIfUnchangedFor(iMinutes);
                         }
                     }
@@ -2485,13 +2475,6 @@ touch -t 01030000 LAST.sb
         MatchTabbed.persist(this);
         ArchiveTabbed.persist(this);
       //cleanup_Speak();
-/*
-        Log.d(TAG, "XActivity.status: " + XActivity.status);
-        boolean bChangeOrientation = OrientationStatus.ChangingOrientation.equals(XActivity.status);
-        if ( true ) {
-            createNotificationTimer();
-        }
-*/
         stopBlueTooth();
 
         PusherHandler.getInstance().cleanup();
@@ -2584,13 +2567,6 @@ touch -t 01030000 LAST.sb
                 }
             }
             speakButton = getFloatingActionButton(R.id.sb_official_announcement, fMargin, iResImage, ColorPrefs.ColorTarget.speakButtonBackgroundColor, null);
-/*
-            speakButton.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
-                    _showOfficialAnnouncement(AnnouncementTrigger.Manual);
-                }
-            });
-*/
         }
         if ( speakButton != null ) {
             speakButton.setHidden(bVisible == false);
@@ -3382,7 +3358,6 @@ touch -t 01030000 LAST.sb
                 shareScoreSheet(ScoreBoard.this, matchModel, true);
             }
 */
-
             showAppropriateMenuItemInActionBar();
 
             if ( (matchModel.matchHasEnded() == false) ) {
@@ -3864,22 +3839,6 @@ touch -t 01030000 LAST.sb
 
     private void doTimerFeedback(Type viewType, boolean bIsEnd) {
         if ( PreferenceValues.useSoundNotificationInTimer    (this) ) {
-/*
-            int iStreamForTimer = AudioManager.STREAM_NOTIFICATION; // TODO: configurable: different for 15 secs and actual end
-            int iRingToneType = RingtoneManager.TYPE_NOTIFICATION;
-            if ( bIsEnd ) {
-                if ( Type.Warmup.equals(viewType) ) {
-                    // TODO: no option for user to stop the sound??
-                    iStreamForTimer = AudioManager.STREAM_ALARM;
-                    iRingToneType = RingtoneManager.TYPE_ALARM;
-                } else {
-                    // TODO: no option for user to stop the sound??
-                    iStreamForTimer = AudioManager.STREAM_RING;
-                    iRingToneType = RingtoneManager.TYPE_RINGTONE;
-                }
-            }
-            SystemUtil.playSound(this, iStreamForTimer, iRingToneType);
-*/
             SystemUtil.playNotificationSound(this);
         }
         if ( PreferenceValues.useVibrationNotificationInTimer(this) ) {
@@ -3909,11 +3868,6 @@ touch -t 01030000 LAST.sb
                 }
             }
         }
-/*
-        if ( scSequence != null ) {
-            scSequence.setMenu(mainMenu);
-        }
-*/
 
         updateDemoThread(menu);
 
@@ -5557,13 +5511,6 @@ touch -t 01030000 LAST.sb
         addToDialogStack(postMatchResult);
     }
 
-/*
-    public void showOnlineSheetAvailableChoice(String sURL) {
-        OnlineSheetAvailableChoice sheetAvailableChoice = new OnlineSheetAvailableChoice(this, matchModel, this);
-        sheetAvailableChoice.init(sURL);
-        addToDialogStack(sheetAvailableChoice);
-    }
-*/
     /** Delete 'Based-On-Preference' */
     private void deleteFromMyList_BOP() {
         if ( MatchTabbed.SelectTab.Mine.equals(MatchTabbed.getDefaultTab() ) == false ) {
@@ -5869,56 +5816,6 @@ touch -t 01030000 LAST.sb
     private String[][]     techListsArray     = null;
     private static final boolean B_ONE_INSTANCE_FROM_NFC = true; // foreground dispatch http://stackoverflow.com/questions/19450661/nfc-detection-either-start-activity-or-display-dialog
 
-/*
-    private NfcAdapter     mNfcAdapter        = null;
-    private void registerNfc() {
-        if ( getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC) == false ) {
-            Log.w(TAG, "No nfc on this device");
-            return;
-        }
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if ( mNfcAdapter == null ) {
-            Log.w(TAG, "NFC not turned on");
-            //Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show();
-            return;
-        }
-        // Register callback
-        mNfcAdapter.setNdefPushMessageCallback(this, this);
-
-        // to be able to intercept message send via NFC on an already running app
-        if ( B_ONE_INSTANCE_FROM_NFC ) {
-            Intent intent = new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE); // PendingIntent.FLAG_IMMUTABLE added for targetSdkVersion >= 31
-            IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
-            try {
-                ndef.addDataType("application/json");
-            } catch (IntentFilter.MalformedMimeTypeException e) {
-                throw new RuntimeException("fail", e);
-            }
-            intentFiltersArray = new IntentFilter[]{ndef,};
-            techListsArray     = new String[][]{new String[]{NfcF.class.getName()}};
-        }
-    }
-
-    @Override public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
-        String packageName    = this.getPackageName();
-        String text           = matchModel.toJsonString(this);
-        NdefRecord mimeRecord = createMimeRecord("application/" + "json" , text.getBytes()); // matching mimetype should exist in AndroidManifest.xml in the following form
-        NdefRecord applicationRecord = NdefRecord.createApplicationRecord(packageName);
-        NdefMessage msg = new NdefMessage(new NdefRecord[]{mimeRecord
-                , applicationRecord
-        });
-        return msg;
-    }
-
-    //Creates a custom MIME type encapsulated in an NDEF record
-    public static NdefRecord createMimeRecord(String mimeType, byte[] payload) {
-        byte[] mimeBytes = mimeType.getBytes();
-        NdefRecord mimeRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, mimeBytes, new byte[0], payload);
-        return mimeRecord;
-    }
-*/
-
     @Override public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         // onResume gets called after this to handle the intent
@@ -5927,29 +5824,6 @@ touch -t 01030000 LAST.sb
         //onNFCNewIntent(intent);
         onURLNewIntent(intent);
     }
-
-    private static final int MESSAGE_SENT = 1;
-
-/*
-    @Override public void onNdefPushComplete(NfcEvent nfcEvent) {
-        // A handler is needed to send messages to the activity when this callback occurs, because it happens from a binder thread
-        if ( mNdefHandler == null ) {
-            mNdefHandler = new Handler() {
-                @Override public void handleMessage(Message msg) {
-                    switch (msg.what) {
-                        case MESSAGE_SENT:
-                            Toast.makeText(getApplicationContext(), R.string.nfc_match_send, Toast.LENGTH_LONG).show();
-                            break;
-                    }
-                }
-            };
-        }
-        mNdefHandler.obtainMessage(MESSAGE_SENT).sendToTarget();
-    }
-
-    //This handler receives a message from onNdefPushComplete
-    private static Handler mNdefHandler = null;
-*/
 
     private static boolean m_bURLReceived = false;
     private void onResumeURL() {
@@ -6037,94 +5911,6 @@ touch -t 01030000 LAST.sb
     private void onURLNewIntent(Intent intent) {
         m_bURLReceived = false;
     }
-/*
-    private void onNFCNewIntent(Intent intent) {
-        m_bNFCReceived = false;
-        Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-    }
-    private void onNFCPause() {
-        if ( B_ONE_INSTANCE_FROM_NFC && (mNfcAdapter != null) ) {
-            try {
-                mNfcAdapter.disableForegroundDispatch(this); // added try-catch because of crash reported in PlayStore (Android 8 on 20180804)
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private static boolean m_bNFCReceived = false;
-    private void onResumeNFC() {
-        if ( B_ONE_INSTANCE_FROM_NFC && (mNfcAdapter != null) ) {
-            try {
-                mNfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFiltersArray, techListsArray);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        if ( m_bNFCReceived ) { return; }
-
-        // Check to see that the Activity started due to an Android Beam
-        Intent intent= getIntent();
-        if ( intent == null) { return; }
-        String action = intent.getAction();
-        //Log.d(TAG, "Resume with action " + action);
-        if ( NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action) ) {
-            Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-            if ( rawMsgs == null ) { return; }
-            NdefMessage msg = (NdefMessage) rawMsgs[0];
-            // record 0 contains the MIME type, record 1 is the AAR, if present
-            NdefRecord[] records = msg.getRecords();
-            NdefRecord recMimeType = records[0];
-            byte[] baMessage = recMimeType.getPayload();
-            String sMessage = new String(baMessage);
-            if ( sMessage.trim().startsWith("{") ) {
-                intent.setAction(Intent.ACTION_MAIN); // attempt to ensure that the beam data is not re-parsed over and over again (works in API 19, not in 17)
-                m_bNFCReceived = true;
-
-                // TODO: use (or totally abandon) PreferenceValues.saveMatchesForLaterUsage(this)
-                try {
-                    Model mIn = Brand.getModel();
-                    if ( mIn.fromJsonString(sMessage) != null ) {
-                        int iContinueMatchCaption  = mIn.matchHasEnded() ? 0 : R.string.cmd_open_match_and_continue;
-                        MatchReceivedUtil mr = new MatchReceivedUtil(this, mIn);
-                        String sMsg = getString( R.string.s1_match_s2_received_via_nfc
-                                , getString(mIn.matchHasEnded() ? R.string.Completed : R.string.Uncompleted)
-                                , mIn.getName(Player.A) + " - " + mIn.getName(Player.B)
-                        );
-                        mr.init(sMsg + "\n" + getString(R.string.what_do_you_want_to_do_with_it)
-                                , R.string.cmd_store_for_later_usage  , MatchAction.SaveToStoredMatches
-                                , R.string.cmd_show_detail            , MatchAction.ShowDetails
-                                , iContinueMatchCaption               , MatchAction.ContinueInScoreBoard
-                        );
-                    } else {
-                        JSONObject joSetting = new JSONObject(sMessage);
-                        // TODO: handle settings being transferred
-                        for ( PreferenceKeys key: PreferenceKeys.values() ) {
-                            if ( joSetting.has(key.toString())) {
-                                String value = joSetting.getString(key.toString());
-                                if ( StringUtil.isNotEmpty(value) ) {
-                                    PreferenceValues.setOverwrite(key, value);
-                                }
-                            }
-                        }
-                        PreferenceValues.interpretOverwrites(this);
-                    }
-                } catch (Exception e) {
-                    String text = getString(R.string.nfc_something_went_wrong, e.getMessage());
-                    Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    Toast.makeText(this, sMessage, Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-*/
 
     //---------------------------------------------------------
     // Progress message
@@ -6365,7 +6151,10 @@ touch -t 01030000 LAST.sb
         @Override void doOnTick(int iInvocationCnt, long millisUntilFinished) {
             if ( iInvocationCnt == m_iNotifyAfterXSecs * (1000 / I_CONFIRM_COUNTDOWN_INTERVAL) && m_pNotifyAfterXSecs != null ) {
                 // after 3 seconds let wristband of player to confirm vibrate
-                notifyBLE(m_pNotifyAfterXSecs, BLEUtil.Keys.ConfirmationRequiredConfig);
+                if ( notifyBLE(m_pNotifyAfterXSecs, BLEUtil.Keys.ConfirmationRequiredConfig) ) {
+                    String sAppend = getString(R.string.ble_signalled_x_to_confirm, m_pNotifyAfterXSecs);
+                    iBoard.appendToInfoMessage(sAppend, true);
+                }
             }
         }
 
@@ -6394,6 +6183,18 @@ touch -t 01030000 LAST.sb
             /* nothing specific for now */
         }
     }
+
+    private boolean clearBLEConfirmationStatus() {
+        if ( m_blePlayerWaitingForScoreToBeConfirmed != null || m_blePlayerToConfirmOwnScore != null ) {
+            stopWaitingForBLEConfirmation();
+            m_blePlayerWaitingForScoreToBeConfirmed = null;
+            m_blePlayerToConfirmOwnScore = null;
+            showInfoMessage(R.string.ble_score_cancelled_via_gui, 5);
+            return true;
+        }
+        return false;
+    }
+
     public void stopWaitingForBLEConfirmation() {
         for(Player p: Player.values() ) {
             waitForBLEConfirmation(p, null, false);
@@ -6487,6 +6288,7 @@ touch -t 01030000 LAST.sb
         if ( PreferenceValues.useBluetoothLE(this) == false ) { return; }
 
         m_bBLEDevicesSelected = false;
+        m_bShowedBLEVerifyConnectedDevicesDialog = false;
         persist(false);
 
         //String[] permissions = BLEUtil.getPermissions();
@@ -6500,6 +6302,13 @@ touch -t 01030000 LAST.sb
 
         Intent bleActivity = new Intent(this, BLEActivity.class);
         startActivityForResult(bleActivity, R.id.sb_ble_devices);
+    }
+    public void showBLEVerifyConnectedDevicesDialog(int iNrOfDevices) {
+        if ( m_bShowedBLEVerifyConnectedDevicesDialog ) { return; }
+        m_bShowedBLEVerifyConnectedDevicesDialog = true;
+        VerifyConnectedDevices verify = new VerifyConnectedDevices(this, matchModel, this);
+        verify.init(iNrOfDevices);
+        dialogManager.show(verify);
     }
     /** invoked by the BLEHandler */
     public void updateBLEConnectionStatus(int visibility, int nrOfDevicesConnected, String sMsg, int iDurationSecs) {
@@ -6525,6 +6334,11 @@ touch -t 01030000 LAST.sb
             vTxt.setOnClickListener(v -> {
                 showBLEDevicesBatteryLevels();
             } );
+            vTxt.setOnLongClickListener(v -> {
+                m_bShowedBLEVerifyConnectedDevicesDialog = false;
+                showBLEVerifyConnectedDevicesDialog(m_nrOfBLEDevicesConnected);
+                return true;
+            });
         }
     }
     private void showBLEDevicesBatteryLevels() {
@@ -6532,10 +6346,9 @@ touch -t 01030000 LAST.sb
         m_bleReceiverManager.readBatteryLevel();
     }
 
-    private boolean notifyBLE(Player p, BLEUtil.Keys configKey) {
+    public boolean notifyBLE(Player p, BLEUtil.Keys configKey) {
         if ( m_bleReceiverManager == null ) { return false; }
-        m_bleReceiverManager.writeToBLE(p, configKey);
-        return true;
+        return m_bleReceiverManager.writeToBLE(p, configKey);
     }
     private boolean clearBLEWaitForConfirmation() {
         if ( m_blePlayerWaitingForScoreToBeConfirmed != null || m_blePlayerToConfirmOwnScore != null ) {
@@ -6559,10 +6372,11 @@ touch -t 01030000 LAST.sb
     private        BLEDeviceButton    m_eCancelScoreByInitiatorButton         = m_eInitiateSelfScoreChangeButton.getOther();
     private        BLEReceiverManager m_bleReceiverManager                    = null;
     private static boolean            m_bBLEDevicesSelected                   = false;
+    private static boolean            m_bShowedBLEVerifyConnectedDevicesDialog = false;
     private static int                m_nrOfBLEDevicesConnected               = 0;
     private static Player             m_blePlayerWaitingForScoreToBeConfirmed = null;
     private static Player             m_blePlayerToConfirmOwnScore            = null;
-    private void onResumeInitBluetoothBLE()
+    public void onResumeInitBluetoothBLE()
     {
         final String sMethod = "SB.onCreateInitBLE";
         updateBLEConnectionStatus(View.INVISIBLE, 0, null, -1);
@@ -6651,37 +6465,6 @@ touch -t 01030000 LAST.sb
             ViewUtil.hideMenuItemForEver(mainMenu, R.id.sb_bluetooth);
             setBluetoothIconVisibility(View.INVISIBLE);
         }
-
-/*
-        // Get paired devices.
-        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-        if ( ListUtil.isNotEmpty(pairedDevices) ) {
-            // There are paired devices. Get the name and address of each paired device.
-            for (BluetoothDevice device : pairedDevices) {
-                String deviceName = device.getName();
-                String deviceHardwareAddress = device.getAddress(); // MAC address, required to request a connection
-                BluetoothClass bluetoothClass = device.getBluetoothClass();
-                String sClass = bluetoothClass.toString();
-                Log.d(TAG, "BLUETOOTH : Paired device: " + deviceName + " : " + sClass + " - " + deviceHardwareAddress);
-                int[] btServices = new int[] {
-                        BluetoothClass.Service.AUDIO,                   // headphone
-                        BluetoothClass.Service.CAPTURE,                 // pc, S4
-                        BluetoothClass.Service.INFORMATION,             // ??
-                        BluetoothClass.Service.LIMITED_DISCOVERABILITY, // ??
-                        BluetoothClass.Service.NETWORKING,              // S4
-                        BluetoothClass.Service.OBJECT_TRANSFER,         // pc, S4
-                        BluetoothClass.Service.RENDER,                  // headphone ?
-                        BluetoothClass.Service.TELEPHONY                // S4
-                };
-                for(int i: btServices) {
-                    Log.d(TAG, deviceName + " has service " + i + ":" + bluetoothClass.hasService(i));
-                }
-            }
-        }
-        if ( MapUtil.isNotEmpty(mBtName2HwAddress) ) {
-            int iChanged = ViewUtil.setMenuItemsVisibility(mainMenu, new int[] {R.id.dyn_bluetooth}, true);
-        }
-*/
     }
 
     /** Listens to state changes in Bluetooth setting of device ON/OFF */
@@ -6727,7 +6510,7 @@ touch -t 01030000 LAST.sb
         }
         registerReceiver(mBTStateChangeReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
     }
-    private void stopBlueTooth() {
+    public void stopBlueTooth() {
         if ( mBluetoothAdapter == null ) {
             return; // no bluetooth on device
         }
@@ -6736,6 +6519,7 @@ touch -t 01030000 LAST.sb
         }
         if ( m_bleReceiverManager != null ) {
             m_bleReceiverManager.closeConnection();
+            m_bleReceiverManager = null;
         }
         try {
             unregisterReceiver(mBTStateChangeReceiver);
@@ -7860,24 +7644,6 @@ touch -t 01030000 LAST.sb
             e.printStackTrace();
         }
 
-/*
-        PreferenceValues.Permission hasPermission = PreferenceValues.doesUserHavePermissionToBluetoothConnect(this, true);
-        if ( PreferenceValues.Permission.Granted.equals(hasPermission) == false ) {
-            return;
-        }
-        PreferenceValues.Permission hasPermission2 = PreferenceValues.doesUserHavePermissionToBluetoothScan(this, true);
-        if ( PreferenceValues.Permission.Granted.equals(hasPermission2) == false ) {
-            return;
-        }
-        PreferenceValues.Permission hasPermission3 = PreferenceValues.doesUserHavePermissionToBluetoothAdmin(this, true);
-        if ( PreferenceValues.Permission.Granted.equals(hasPermission3) == false ) {
-            return;
-        }
-        PreferenceValues.Permission hasPermission4 = PreferenceValues.doesUserHavePermissionToBluetoothAdvertise(this, true);
-        if ( PreferenceValues.Permission.Granted.equals(hasPermission4) == false ) {
-            return;
-        }
-*/
         String[] permissions = BLEUtil.getPermissions();
         Set<RWValues.Permission> lPerms = new LinkedHashSet<>();
         for( String sPermName: permissions ) {
@@ -7909,16 +7675,6 @@ touch -t 01030000 LAST.sb
             // show dialog with info about how to solve/help/why
             MyDialogBuilder.dialogWithOkOnly(this, iResIds[0], iResIds[1], false);
         }
-/*
-        Intent nm = new Intent(this, DeviceListActivity.class);
-        startActivityForResult(nm, REQUEST_CONNECT_DEVICE_INSECURE); // see onActivityResult()
-*/
-        // Ask for location permission if not already allowed
-/*
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        }
-*/
     }
 
     private void turnOffBlueToothIfTurnedOnByApp() {
@@ -7927,16 +7683,6 @@ touch -t 01030000 LAST.sb
                 if ( mBluetoothAdapter.disable() ) {
                     m_bAppTurnedOnBlueTooth = false;
                     Toast.makeText(this, String.format(getString(R.string.bt_bluetooth_turning_off_elipses), Brand.getShortName(this)), Toast.LENGTH_LONG).show();
-/*
-                    int iCountDown = 5;
-                    while ((mBluetoothAdapter.isEnabled()) && (iCountDown > 0) ) {
-                        Log.d(TAG, "Waiting for bluetooth to be turned off: " + iCountDown);
-                        synchronized (this) {
-                            wait(1000);
-                        }
-                        iCountDown--;
-                    }
-*/
                 }
             }
         } catch (Exception e) {
@@ -8303,12 +8049,10 @@ touch -t 01030000 LAST.sb
                     Log.i(TAG, "[onSkipToNext]"); // typically invoked between single-down-followed-by-an-up sequence
                     super.onSkipToNext();
                 }
-
                 @Override public void onSkipToPrevious() {
                     Log.i(TAG, "[onSkipToPrevious]");
                     super.onSkipToPrevious();
                 }
-
                 @Override public void onPlay() {
                     Log.i(TAG, "[onPlay]");
                     super.onPlay();
@@ -8317,41 +8061,16 @@ touch -t 01030000 LAST.sb
                     Log.i(TAG, "[onPause]");
                     super.onPause();
                 }
-
                 @Override public void onFastForward() {
                     Log.i(TAG, "[onFastForward]");
                     super.onFastForward();
                 }
-
                 @Override public void onRewind() {
                     Log.i(TAG, "[onRewind]");
                     super.onRewind();
                 }
 */
             });
-
-/*
-            MediaController mediaController = ms.getController();
-            mediaController.registerCallback(new MediaController.Callback() {
-                @Override public void onAudioInfoChanged(MediaController.PlaybackInfo info) {
-                    Log.i(TAG, "[onAudioInfoChanged] " + info);
-                    super.onAudioInfoChanged(info);
-                }
-            }, new Handler(Looper.getMainLooper()));
-*/
-/*
-            VolumeProvider volumeProvider = getSystemService(VolumeProvider.class);// null
-            AudioManager mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-            //mAudioManager.registerMediaButtonEventReceiver();
-            ms.setPlaybackToRemote(new VolumeProvider(0,10, 5) {
-                @Override public void onSetVolumeTo(int volume) {
-                    super.onSetVolumeTo(volume);
-                }
-                @Override public void onAdjustVolume(int direction) {
-                    super.onAdjustVolume(direction);
-                }
-            });
-*/
 
             ms.setActive(true);
         }
@@ -8369,14 +8088,6 @@ touch -t 01030000 LAST.sb
         // a little sleep
         at.stop();
         at.release();
-
-/*
-        BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
-        if ( defaultAdapter != null ) {
-            boolean bHeadSet = defaultAdapter.getProfileProxy(this, serviceListener, BluetoothProfile.HEADSET);
-            boolean bA2dp    = defaultAdapter.getProfileProxy(this, serviceListener, BluetoothProfile.A2DP);
-        }
-*/
 
         return true;
     }
