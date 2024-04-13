@@ -30,6 +30,7 @@ import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Message;
 import android.os.ParcelUuid;
 import android.util.Log;
@@ -57,10 +58,8 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Reads and interprets message from BLE device.
- * TODO: 2 modes
- * - amateur: every correct message is a change in score
- * - pro    : a correct message from one BLE is request in change of score for requester, a confirmation message from different BLE devices is needed to actually change the score
+ * Reads and interprets message from BLE device(s).
+ * Writes messages to BLE device(s).
  */
 public class BLEReceiverManager
 {
@@ -73,7 +72,7 @@ public class BLEReceiverManager
     private String sReadingBatterLevelOf = null;
 
     private final BluetoothLeScanner bluetoothLeScanner;
-    private       BLEHandler         mHandler;
+    private       Handler mHandler;
     /** one or two devices with time we 'saw' them */
     private final Map<String, Long>  mDevicesUsed       = new HashMap<>();
     /** just a map to reduce logging */
@@ -115,8 +114,8 @@ public class BLEReceiverManager
     /*
      * @param handler A Handler to send messages back to the UI Activity
      */
-    public void setHandler(BLEHandler handler) {
-        this.mHandler = handler;
+    public void setHandler(Handler handler) {
+        mHandler = handler;
     }
 
     public void setState(BLEState state, String sAddress, int iDeviceCount) {
@@ -318,6 +317,7 @@ public class BLEReceiverManager
             //Log.d(TAG, String.format("onCharacteristicChanged B: characteristic : %s, writetype : %d, instance_id : %d", characteristic.getUuid(), characteristic.getWriteType(), characteristic.getInstanceId())); // e.g. write type 2 for indicate, no notify also results in '2' ?
 
             try {
+                final int iHandleOnReleaseValueDefault = mServicesAndCharacteristicsConfig.optInt(BLEUtil.Keys.HandleOnReleaseValue.toString(), -1);
                 JSONObject joServiceCfg = mServicesAndCharacteristicsConfig.optJSONObject(characteristic.getService().getUuid().toString().toLowerCase());
                 if ( joServiceCfg != null ) {
                     JSONArray  jaCharacteristicCfg = joServiceCfg.optJSONArray(characteristic.getUuid().toString().toLowerCase());
@@ -334,7 +334,7 @@ public class BLEReceiverManager
                         }
                         final int iValueIn = value[0];
                         int iValueToHandle = iValueIn;
-                        int iHandleOnReleaseValue = joCharacteristicCfg.optInt(BLEUtil.Keys.HandleOnReleaseValue.toString(), -1);
+                        int iHandleOnReleaseValue = joCharacteristicCfg.optInt(BLEUtil.Keys.HandleOnReleaseValue.toString(), iHandleOnReleaseValueDefault);
                         final boolean bHandleOnRelease = iHandleOnReleaseValue >= 0;
                         if ( bHandleOnRelease ) {
                             // only act on 'buttons released' if a value for release is specified
@@ -572,7 +572,7 @@ public class BLEReceiverManager
                 callback.writePlayerInfo(gatt, characteristics, null, iValueToWrite);
                 break;
             } else {
-                Log.w(TAG, String.format("Can not write to notify for %s", p));
+                Log.w(TAG, String.format("Can not write to notify for sCharUuid[%d] %s (%s)",i, sCharUuid, p));
             }
         }
         // TODO: write some indication to wristband of other player let them know they need to

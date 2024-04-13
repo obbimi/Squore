@@ -16,7 +16,6 @@
  */
 package com.doubleyellow.scoreboard.bluetooth_le.selectdevice;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -28,11 +27,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.doubleyellow.prefs.RWValues;
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 
 import androidx.annotation.Nullable;
@@ -41,11 +45,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.doubleyellow.scoreboard.activity.XActivity;
+import com.doubleyellow.scoreboard.bluetooth.BTMessage;
+import com.doubleyellow.scoreboard.bluetooth_le.BLEReceiverManager;
+import com.doubleyellow.scoreboard.bluetooth_le.BLEState;
 import com.doubleyellow.scoreboard.bluetooth_le.BLEUtil;
+import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Player;
-import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.util.Enums;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
@@ -74,12 +82,17 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
     private final Map<Player,String> mSelectedSeenDevices = new HashMap<>();
     private       ScanResultAdapter  scanResultAdapter    = null;
 
+    private JSONObject m_bleConfig;
+
     private boolean m_bIsScanning  = false;
     private Pattern pMustMatch     = null;
     private String  sMustStartWith = null;
     private double  fRssiValueAt1M = -50.0f;
     private int  iNrOfDevicesRequired = -1;
+    private ViewGroup vgScan;
+    private ViewGroup vgVerify;
     private Button  btnGo;
+    private Button  btnVerify;
     private Button  btnScan;
     private    int  m_iProgress = -1;
 
@@ -105,6 +118,12 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         btnGo = findViewById(R.id.ble_start_button);
         btnGo.setOnClickListener(v -> {
             bleScanner.stopScan(scanCallback);
+
+            // if verify was used, close the connection
+            if ( m_bleReceiverManager != null ) {
+                m_bleReceiverManager.closeConnection();
+            }
+
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);
             for( Player p: Player.values() ) {
@@ -119,13 +138,36 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         btnGo.setEnabled(false);
         btnGo.setText(R.string.ble_select_devices_to_use_for_scoring);
 
-        JSONObject config = BLEUtil.getActiveConfig(this);
-        if ( config == null ) {
+        btnVerify = findViewById(R.id.ble_connect_and_verify_button);
+        btnVerify.setOnClickListener(v -> {
+            bleScanner.stopScan(scanCallback);
+            if ( m_cdUpdateGui != null ) {
+                m_cdUpdateGui.cancel();
+            }
+            m_bIsScanning = false;
+            initForVerify();
+        });
+        btnVerify.setVisibility(View.INVISIBLE);
+
+        vgScan = findViewById(R.id.cl_scan_and_select);
+        vgScan.setVisibility(View.VISIBLE);
+        vgVerify = findViewById(R.id.cl_verify);
+        vgVerify.setVisibility(View.INVISIBLE);
+        vgVerify.findViewById(R.id.ble_cav_swap_devices).setOnClickListener(v -> {
+            String sNewDeviceForB = mSelectedSeenDevices.get(Player.A);
+            String sNewDeviceForA = mSelectedSeenDevices.get(Player.B);
+            mSelectedSeenDevices.put(Player.A, sNewDeviceForA);
+            mSelectedSeenDevices.put(Player.B, sNewDeviceForB);
+            initForVerify();
+        });
+
+        m_bleConfig = BLEUtil.getActiveConfig(this);
+        if ( m_bleConfig == null ) {
             Toast.makeText(this, "Could not obtain config for BLE. Check your settings.", Toast.LENGTH_LONG).show();
             return;
         }
-        fRssiValueAt1M       = config.optDouble(BLEUtil.Keys.RssiValueAt1M.toString(), fRssiValueAt1M);
-        iNrOfDevicesRequired = config.optInt(BLEUtil.Keys.NrOfDevices.toString(), iNrOfDevicesRequired);
+        fRssiValueAt1M       = m_bleConfig.optDouble(BLEUtil.Keys.RssiValueAt1M.toString(), fRssiValueAt1M);
+        iNrOfDevicesRequired = m_bleConfig.optInt(BLEUtil.Keys.NrOfDevices.toString(), iNrOfDevicesRequired);
 
         String sBluetoothLEDevice1 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral1, null, this);
         String sBluetoothLEDevice2 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral2, null, this);
@@ -158,8 +200,8 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false)); // why?
         recyclerView.setNestedScrollingEnabled(false);
 
-        sMustStartWith = config.optString(BLEUtil.Keys.DeviceNameStartsWith.toString());
-        String sRegExp = config.optString(BLEUtil.Keys.DeviceNameMustMatch     .toString());
+        sMustStartWith = m_bleConfig.optString(BLEUtil.Keys.DeviceNameStartsWith.toString());
+        String sRegExp = m_bleConfig.optString(BLEUtil.Keys.DeviceNameMustMatch     .toString());
         if ( StringUtil.isNotEmpty(sRegExp) ) {
             try {
                 pMustMatch = Pattern.compile(sRegExp);
@@ -173,14 +215,20 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                 m_iProgress++;
                 checkForUnseen(m_iProgress);
                 int iDifferentDevices = (new LinkedHashSet<>(mSelectedSeenDevices.values())).size();
+                int iNrOfPlayer2DevicesSelectionsMade = mSelectedSeenDevices.size();
                 if ( iNrOfDevicesRequired == -1 ) {
                     // 1 or 2 devices selected for both players
-                    btnGo.setEnabled(mSelectedSeenDevices.size() == 2);
+                    boolean enabled = iNrOfPlayer2DevicesSelectionsMade == 2;
+                    btnGo.setEnabled(enabled);
                 } else {
-                    btnGo.setEnabled(mSelectedSeenDevices.size() == 2 && (iDifferentDevices == iNrOfDevicesRequired) );
+                    // exact nr of required devices selected
+                    boolean enabled = iNrOfPlayer2DevicesSelectionsMade == 2 && (iDifferentDevices == iNrOfDevicesRequired);
+                    btnGo.setEnabled(enabled);
                 }
+                btnVerify.setVisibility(btnGo.isEnabled()? View.VISIBLE:View.INVISIBLE);
+
                 String sCaption = getResources().getQuantityString(R.plurals.ble_start_scoring_with_devices, iDifferentDevices);
-                if ( iDifferentDevices == 0 || mSelectedSeenDevices.size() != 2 ) {
+                if ( iDifferentDevices == 0 || iNrOfPlayer2DevicesSelectionsMade != 2 ) {
                     sCaption = getString(R.string.ble_select_devices_to_use_for_scoring);
                 }
                 btnGo.setText(sCaption);
@@ -305,6 +353,9 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         if ( bleScanner != null ) {
             bleScanner.stopScan(scanCallback);
         }
+        if ( m_bleReceiverManager != null ) {
+            m_bleReceiverManager.closeConnection();
+        }
         if ( m_cdUpdateGui != null ) {
             m_cdUpdateGui.cancel();
         }
@@ -377,5 +428,119 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             super.onScanFailed(errorCode);
         }
     };
+    private final Map<Player, Integer> m_playerToVerifyButtonResId = MapUtil.getMap(Player.A, R.id.ble_cav_device_1, Player.B, R.id.ble_cav_device_2);
 
+    private BLEReceiverManager m_bleReceiverManager = null;
+    public void initForVerify() {
+        vgScan.setVisibility(View.INVISIBLE);
+        vgVerify.setVisibility(View.VISIBLE);
+
+        int[] iaInitiallyDisable = new int[] { R.id.ble_cav_device_1, R.id.ble_cav_device_2, R.id.ble_cav_swap_devices };
+        for(int iResId: iaInitiallyDisable ) {
+            View vBtn = vgVerify.findViewById(iResId);
+            if ( vBtn == null ) { continue; }
+            vBtn.setEnabled(false);
+        }
+        for(Player p: Player.values() ) {
+            Integer iResId = m_playerToVerifyButtonResId.get(p);
+            Button btn = vgVerify.findViewById(iResId);
+            btn.setText(getString(R.string.ble_cav_poke_device_x, ScoreBoard.getMatchModel().getName(p)));
+            btn.setOnClickListener(v -> {
+                m_bleReceiverManager.writeToBLE(p, BLEUtil.Keys.PokeConfig);
+            });
+        }
+
+        m_bleConfig = BLEUtil.getActiveConfig(this);
+        if ( m_bleReceiverManager != null ) {
+            m_bleReceiverManager.closeConnection();
+        }
+        m_bleReceiverManager = new BLEReceiverManager(this, BluetoothAdapter.getDefaultAdapter(), mSelectedSeenDevices.get(Player.A), mSelectedSeenDevices.get(Player.B), m_bleConfig);
+        m_bleReceiverManager.setHandler(new BLEVerifyHandler(this));
+        m_bleReceiverManager.startReceiving();
+    }
+    private class BLEVerifyHandler extends Handler {
+        private Context m_context = null;
+        BLEVerifyHandler(Context context) {
+            m_context = context;
+        }
+        @Override public void handleMessage(Message msg) {
+            BTMessage btMessage = BTMessage.values()[msg.what];
+            //Log.d(TAG, "msg.what : " + msg.what + " : " + btMessage);
+            String sMsg = String.valueOf(msg.obj);
+/*
+            Log.d(TAG, "msg.obj  : " + msg.obj); // device mac
+            Log.d(TAG, "msg.arg1 : " + msg.arg1);
+            Log.d(TAG, "msg.arg2 : " + msg.arg2);
+*/
+            if ( btMessage.equals(BTMessage.INFO) ) {
+                int iNrOfDevices = msg.arg2;
+                try {
+                    String sMsg2 = m_context.getString(msg.arg1, iNrOfDevices, sMsg, Brand.getShortName(m_context));
+                    Toast.makeText(m_context, sMsg2, Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    Log.w(TAG, "Error while constructing message : " + sMsg);
+                    throw new RuntimeException(e);
+                }
+            } else if ( btMessage.equals(BTMessage.READ) ) {
+                try {
+                    Toast.makeText(m_context, sMsg, Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.w(TAG, "Message could not be understood :" + sMsg);
+                }
+            } else if ( btMessage.equals(BTMessage.STATE_CHANGE) ) {
+                BLEState btState = BLEState.values()[msg.arg1];
+                int iNrOfDevices = msg.arg2;
+                String sDevice = (String) msg.obj;
+                if ( sDevice == null ) {
+                    sDevice = "No device mac for state change";
+                }
+                Map<Player, String> usedForPlayers = MapUtil.filterValues(mSelectedSeenDevices, sDevice, Enums.Match.Keep);
+                Log.d(TAG, String.format("[Verify] device %s, state %s, players connected to device %d (%s)", sDevice, btState, MapUtil.size(usedForPlayers), usedForPlayers.keySet()));
+                //Log.d(TAG, "new state  : " + btState);
+                Log.d(TAG, "iNrOfDevices: " + iNrOfDevices);
+                switch (btState) {
+                    case CONNECTED_DiscoveringServices:
+                    case CONNECTED_TO_1_of_2:
+                    case CONNECTED_ALL:
+                        for(Object o: usedForPlayers.keySet() ) {
+                            Player p = Player.valueOf(String.valueOf(o));
+                            int iResId = m_playerToVerifyButtonResId.get(p);
+                            vgVerify.findViewById(iResId).setEnabled(true);
+                        }
+                        if ( iNrOfDevices == 2 ) {
+                            vgVerify.findViewById(R.id.ble_cav_swap_devices).setEnabled(true);
+                        }
+                        //String sUIMsg = sb.getResources().getQuantityString(R.plurals.ble_ready_for_scoring_with_devices, iNrOfDevices);
+                        //sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sUIMsg, 10);
+                        //sb.showBLEVerifyConnectedDevicesDialog(iNrOfDevices);
+/*
+                        VerifyConnectedDevices verifyConnectedDevices = new VerifyConnectedDevices(m_context, ScoreBoard.getMatchModel(), null);
+                        verifyConnectedDevices.init(iNrOfDevices, m_bleReceiverManager);
+                        verifyConnectedDevices.show();
+*/
+                        break;
+                    case DISCONNECTED:
+                        //sb.updateBLEConnectionStatus(View.INVISIBLE, -1, "Oeps 3", -1);
+                        break;
+                    case CONNECTING:
+                        //sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, null, -1);
+                        break;
+                    case DISCONNECTED_Gatt:
+                        // if one of the two devices disconnects
+                        //sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_Lost_connection_to_a_device), -1);
+                        for(Object o: usedForPlayers.keySet() ) {
+                            Player p = Player.valueOf(String.valueOf(o));
+                            int iResId = m_playerToVerifyButtonResId.get(p);
+                            vgVerify.findViewById(iResId).setEnabled(false);
+                        }
+                        vgVerify.findViewById(R.id.ble_cav_swap_devices).setEnabled(false);
+                        break;
+                    default:
+                        Toast.makeText(m_context, sMsg, Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+        }
+    }
 }

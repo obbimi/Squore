@@ -80,13 +80,13 @@ public class BLEHandler extends Handler
                 case CONNECTED_ALL:
                     String sUIMsg = sb.getResources().getQuantityString(R.plurals.ble_ready_for_scoring_with_devices, iNrOfDevices);
                     sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sUIMsg, 10);
-                    sb.showBLEVerifyConnectedDevicesDialog(iNrOfDevices);
+                    //sb.showBLEVerifyConnectedDevicesDialog(iNrOfDevices);
                     break;
                 case DISCONNECTED:
                     sb.updateBLEConnectionStatus(View.INVISIBLE, -1, "Oeps 3", -1);
                     break;
                 case CONNECTING:
-                    sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, null, -1);
+                    sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_connecting_to_devices), -1);
                     break;
                 case DISCONNECTED_Gatt:
                     // if one of the two devices disconnects
@@ -98,10 +98,4 @@ public class BLEHandler extends Handler
             }
         }
     }
-/*
-    private boolean m_bHandlingBluetoothMessageInProgress = false;
-    boolean isHandlingMessage() {
-        return m_bHandlingBluetoothMessageInProgress;
-    }
-*/
 }

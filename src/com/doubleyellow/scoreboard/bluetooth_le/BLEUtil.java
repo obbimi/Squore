@@ -59,6 +59,7 @@ public class BLEUtil
     }
 
     public enum Keys {
+        SharedConfig,
         DeviceNameMustMatch,
         DeviceNameStartsWith,
 
@@ -82,13 +83,14 @@ public class BLEUtil
         NrOfDevices,
 
         PlayerTypeConfig,
-        ConfirmationRequiredConfig,
+        PokeConfig,
             WriteToCharacteristic,
             WriteValue,
     }
 
     final public static ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
 
+    /** To present list of possible configs to user */
     public static List<CharSequence> getConfigs(Context context) {
         String sJson = ContentUtil.readRaw(context, R.raw.bluetooth_le_config);
         try {
@@ -113,10 +115,21 @@ public class BLEUtil
     public static JSONObject getActiveConfig(Context context) {
         String sJson = ContentUtil.readRaw(context, R.raw.bluetooth_le_config);
         try {
-            JSONObject config = new JSONObject(sJson);
+            final JSONObject config = new JSONObject(sJson);
             String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config, R.string.pref_BluetoothLE_Config_default, context);
-            config = config.getJSONObject(sBLEConfig);
-            return  config;
+            JSONObject configActive = config.getJSONObject(sBLEConfig);
+            if ( configActive.has(Keys.SharedConfig.toString() ) ) {
+                String sShareConfig = (String) configActive.remove(Keys.SharedConfig.toString());
+                JSONObject sharedConfig = config.getJSONObject(sShareConfig);
+                Iterator<String> keys = sharedConfig.keys();
+                while(keys.hasNext()) {
+                    String sKey = keys.next();
+                    if ( configActive.has(sKey) ) { continue; }
+                    Object oValue = sharedConfig.get(sKey);
+                    configActive.put(sKey, oValue);
+                }
+            }
+            return configActive;
         } catch (JSONException e) {
             e.printStackTrace();
         }

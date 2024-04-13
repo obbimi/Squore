@@ -7,6 +7,9 @@
 
     <string name="ble_change_sides_automated_in_ble_mode">Change sides automated in BLE mode</string>
     <string name="ble_select_devices_to_use_for_scoring">Select devices you want to use for scoring</string>
+    <string name="ble_connect_and_verify_button">Connect to devices and verify</string>
+    <string name="ble_cav_poke_device_x">Vibrate device connected to\n %1$s</string>
+    <string name="ble_cav_swap_devices">Vibrate device connected to\n %1$s</string>
     <plurals name="ble_start_scoring_with_devices">
         <item quantity="zero">@string/ble_select_devices_to_use_for_scoring</item> <!-- never actually use by android -->
         <item quantity="one">Start scoring for both players with single device</item>
@@ -36,6 +39,7 @@
     </plurals>
     <string name="ble_only_one_of_two_devices_connected">Only one of 2 devices connected</string>
     <string name="ble_Lost_connection_to_a_device">Lost connection to a BLE device</string>
+    <string name="ble_connecting_to_devices">Connecting_to_devices…</string>
     <string name="ble_permission_not_granted">The app has not been granted the permission to find nearby devices…</string>
     <string name="ble_active_config_not_suitable_for_x_devices">Chosen BLE config not suitable to work with %1$s device(s)</string>
     <string name="ble_devices">Devices</string>

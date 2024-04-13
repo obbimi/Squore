@@ -6151,7 +6151,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         @Override void doOnTick(int iInvocationCnt, long millisUntilFinished) {
             if ( iInvocationCnt == m_iNotifyAfterXSecs * (1000 / I_CONFIRM_COUNTDOWN_INTERVAL) && m_pNotifyAfterXSecs != null ) {
                 // after 3 seconds let wristband of player to confirm vibrate
-                if ( notifyBLE(m_pNotifyAfterXSecs, BLEUtil.Keys.ConfirmationRequiredConfig) ) {
+                if ( notifyBLE(m_pNotifyAfterXSecs, BLEUtil.Keys.PokeConfig) ) {
                     String sAppend = getString(R.string.ble_signalled_x_to_confirm, m_pNotifyAfterXSecs);
                     iBoard.appendToInfoMessage(sAppend, true);
                 }
@@ -6278,8 +6278,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         PreferenceValues.setEnum   (PreferenceKeys.endGameSuggestion              , ScoreBoard.this, Feature.Automatic);
         PreferenceValues.setEnum   (PreferenceKeys.useChangeSidesFeature          , ScoreBoard.this, Feature.DoNotUse);
         PreferenceValues.setEnum   (PreferenceKeys.LandscapeLayoutPreference      , ScoreBoard.this, LandscapeLayoutPreference.Presentation1);
-
-        //PreferenceValues.setEnum   (PreferenceKeys.StartupAction        , ScoreBoard.this, StartupAction.BLEDevices);
+        if ( PreferenceValues.currentDateIsTestDate() ) {
+            PreferenceValues.setEnum   (PreferenceKeys.StartupAction        , ScoreBoard.this, StartupAction.BLEDevices);
+        }
         Toast.makeText(ScoreBoard.this, String.format("D-SCORE BLE option enabled. Use menu option: %s", getString(R.string.pref_BluetoothLE_Devices)), Toast.LENGTH_LONG).show();
         //RWValues.Permission permission = PreferenceValues.doesUserHavePermissionToAccessFineLocation(this, true);
     }
@@ -6288,7 +6289,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( PreferenceValues.useBluetoothLE(this) == false ) { return; }
 
         m_bBLEDevicesSelected = false;
-        m_bShowedBLEVerifyConnectedDevicesDialog = false;
         persist(false);
 
         //String[] permissions = BLEUtil.getPermissions();
@@ -6303,11 +6303,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         Intent bleActivity = new Intent(this, BLEActivity.class);
         startActivityForResult(bleActivity, R.id.sb_ble_devices);
     }
-    public void showBLEVerifyConnectedDevicesDialog(int iNrOfDevices) {
-        if ( m_bShowedBLEVerifyConnectedDevicesDialog ) { return; }
-        m_bShowedBLEVerifyConnectedDevicesDialog = true;
+    private void showBLEVerifyConnectedDevicesDialog(int iNrOfDevices) {
         VerifyConnectedDevices verify = new VerifyConnectedDevices(this, matchModel, this);
-        verify.init(iNrOfDevices);
+        verify.init(iNrOfDevices, m_bleReceiverManager);
         dialogManager.show(verify);
     }
     /** invoked by the BLEHandler */
@@ -6335,7 +6333,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 showBLEDevicesBatteryLevels();
             } );
             vTxt.setOnLongClickListener(v -> {
-                m_bShowedBLEVerifyConnectedDevicesDialog = false;
                 showBLEVerifyConnectedDevicesDialog(m_nrOfBLEDevicesConnected);
                 return true;
             });
@@ -6372,7 +6369,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     private        BLEDeviceButton    m_eCancelScoreByInitiatorButton         = m_eInitiateSelfScoreChangeButton.getOther();
     private        BLEReceiverManager m_bleReceiverManager                    = null;
     private static boolean            m_bBLEDevicesSelected                   = false;
-    private static boolean            m_bShowedBLEVerifyConnectedDevicesDialog = false;
     private static int                m_nrOfBLEDevicesConnected               = 0;
     private static Player             m_blePlayerWaitingForScoreToBeConfirmed = null;
     private static Player             m_blePlayerToConfirmOwnScore            = null;
@@ -7119,7 +7115,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         BLEDeviceButton eButtonPressed       = BLEDeviceButton.valueOf(saMethodNArgs[2].toUpperCase().trim());
                         String          sButtonPressed       = m_bleConfig.optString(eButtonPressed.toString()          , eButtonPressed.toString());
                         int             iNrOfDevicesRequired = m_bleConfig.optInt   (BLEUtil.Keys.NrOfDevices.toString(), 2);
-                        Log.i(TAG, String.format("changeScoreBLEConfirm: %s, player:%s, button:%s", m_blePlayerWaitingForScoreToBeConfirmed, playerWristBand, eButtonPressed));
+                        Log.i(TAG, String.format("[interpretReceivedMessage] changeScoreBLEConfirm: %s, player:%s, button:%s", m_blePlayerWaitingForScoreToBeConfirmed, playerWristBand, eButtonPressed));
                         int iTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(m_blePlayerWaitingForScoreToBeConfirmed);
                         if ( iNrOfDevicesRequired == 1 ) {
                             if ( m_blePlayerWaitingForScoreToBeConfirmed != null ) {

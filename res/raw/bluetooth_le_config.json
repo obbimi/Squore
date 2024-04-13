@@ -1,5 +1,6 @@
 {
   "config_name": {
+    "SharedConfig" : "-other-config",
     "service1-uuid": {
       "button-characteristic2-uuid": [
         {
@@ -19,12 +20,27 @@
       ]
     }
   },
+  "-D-SCORE-RX-SHARED": {
+    "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
+    "DeviceNameStartsWith": "D-SCORE-RX_",
+    "HandleOnReleaseValue": 0,
+    "PRIMARY_BUTTON"  : "Green",
+    "SECONDARY_BUTTON": "Red",
+    "PlayerTypeConfig" : {
+      "WriteToCharacteristic" : "96f91f4b-2417-44e3-ae06-aa362556914e",
+      "WriteValue" : 1
+    },
+    "PokeConfig" : {
+      "WriteToCharacteristic" : [ "96f91f4d-2417-44e3-ae06-aa362556914e", "96f91f4b-2417-44e3-ae06-aa362556914e" ],
+      "WriteValue" : 2
+    }
+  },
   "D-SCORE-RX": {
+    "SharedConfig" : "-D-SCORE-RX-SHARED",
     "96f9374a-2417-44e3-ae06-aa362556914e": {
       "96f91f4b-2417-44e3-ae06-aa362556914e": "WRITE player_type: 0=server|1=returner|2=none",
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
-          "HandleOnReleaseValue": 0,
           "TranslateToBTMessage": [
             "-both buttons released (one device), not used",
             "changeScoreBLE(B)",
@@ -33,7 +49,6 @@
           ]
         },
         {
-          "HandleOnReleaseValue": 0,
           "TranslateToBTMessage": [
             "-both buttons released (two devices), not used",
             "changeScoreBLEConfirm(%1$s, SECONDARY_BUTTON)",
@@ -43,26 +58,16 @@
         }
       ]
     },
-    "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
-    "DeviceNameStartsWith": "D-SCORE-RX_",
     "InitiateScoreChangeButton"        : "PRIMARY_BUTTON",
     "InitiateOpponentScoreChangeButton": "SECONDARY_BUTTON",
     "CancelScoreByInitiatorButton"     : "SECONDARY_BUTTON",
     "CancelScoreByOpponentButton"      : null,
     "ConfirmScoreByOpponentButton"     : "SECONDARY_BUTTON",
-    "ConfirmScoreBySelfButton"         : "PRIMARY_BUTTON",
-    "PlayerTypeConfig" : {
-      "WriteToCharacteristic" : "96f91f4b-2417-44e3-ae06-aa362556914e",
-      "WriteValue" : 1
-    },
-    "ConfirmationRequiredConfig" : {
-      "WriteToCharacteristic" : [ "96f91f4d-2417-44e3-ae06-aa362556914e", "96f91f4b-2417-44e3-ae06-aa362556914e" ],
-      "WriteValue" : 4
-    },
-    "PRIMARY_BUTTON"  : "Green",
-    "SECONDARY_BUTTON": "Red"
+    "ConfirmScoreBySelfButton"         : "PRIMARY_BUTTON"
   },
   "D-SCORE-RX B: One Device with two buttons": {
+    "SharedConfig" : "-D-SCORE-RX-SHARED",
+    "NrOfDevices" : 1,
     "96f9374a-2417-44e3-ae06-aa362556914e": {
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
@@ -75,13 +80,11 @@
         },
         null
       ]
-    },
-    "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
-    "NrOfDevices" : 1,
-    "PRIMARY_BUTTON": "Green",
-    "SECONDARY_BUTTON": "Red"
+    }
   },
   "D-SCORE-RX C: One Device with two buttons - Confirm with other button": {
+    "SharedConfig" : "-D-SCORE-RX-SHARED",
+    "NrOfDevices" : 1,
     "96f9374a-2417-44e3-ae06-aa362556914e": {
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
@@ -95,13 +98,11 @@
         null
       ]
     },
-    "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
-    "NrOfDevices" : 1,
-    "SingleDevice_ConfirmWithSameButton" : false,
-    "PRIMARY_BUTTON": "Green",
-    "SECONDARY_BUTTON": "Red"
+    "SingleDevice_ConfirmWithSameButton" : false
   },
   "D-SCORE-RX D: One Device with two buttons - Confirm with same button": {
+    "SharedConfig" : "-D-SCORE-RX-SHARED",
+    "NrOfDevices" : 1,
     "96f9374a-2417-44e3-ae06-aa362556914e": {
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
@@ -115,13 +116,11 @@
         null
       ]
     },
-    "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
-    "NrOfDevices" : 1,
-    "SingleDevice_ConfirmWithSameButton" : true,
-    "PRIMARY_BUTTON": "GREEN",
-    "SECONDARY_BUTTON": "RED"
+    "SingleDevice_ConfirmWithSameButton" : true
   },
   "D-SCORE-RX E: Two Devices with only green button used - We scored, No Confirm": {
+    "SharedConfig" : "-D-SCORE-RX-SHARED",
+    "NrOfDevices" : 2,
     "96f9374a-2417-44e3-ae06-aa362556914e": {
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
@@ -132,15 +131,15 @@
             "-buttons released (two devices)",
             "-red button pressed, not used",
             "changeScoreBLE(%1$s)",
-            "-both buttons pressed (two devices)"
+            "undoScoreForInitiatorBLE(%1$s) # both buttons pressed (two devices)"
           ]
         }
       ]
-    },
-    "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
-    "NrOfDevices" : 2
+    }
   },
   "D-SCORE-RX F: Two Devices with only red button used - Opponent scored, No Confirm": {
+    "SharedConfig" : "-D-SCORE-RX-SHARED",
+    "NrOfDevices" : 2,
     "96f9374a-2417-44e3-ae06-aa362556914e": {
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
@@ -151,13 +150,11 @@
             "-buttons released (two devices)",
             "changeScoreBLE(%2$s, %1$s)",
             "-green button pressed, not used",
-            "-both buttons pressed (two devices)"
+            "undoScoreForInitiatorBLE(%1$s) #both buttons pressed (two devices)"
           ]
         }
       ]
-    },
-    "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
-    "NrOfDevices" : 2
+    }
   },
   "d-score-rx-notused": {
     "0000180a-0000-1000-8000-00805f9b34fb": {
