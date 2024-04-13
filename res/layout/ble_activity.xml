@@ -20,6 +20,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+    <!--
+        android:text="@{@plurals/ble_start_scoring_with_devices(0, 0)}"
+    -->
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_scan_and_select"
         android:layout_width="match_parent"
@@ -55,22 +59,35 @@
             android:id="@+id/ble_connect_and_verify_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ble_connect_and_verify_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/ble_connect_and_verify_s"
             app:layout_constraintEnd_toEndOf="parent"
             />
+<!--
+        android:text="@plurals/ble_connect_and_verify"
+-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_verify"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:visibility="visible"
         app:layout_constraintTop_toTopOf="@id/cl_scan_and_select"
+        app:layout_constraintBottom_toBottomOf="@id/cl_scan_and_select"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         >
+        <ImageView
+            android:id="@+id/ble_cav_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="H,6:1"
+            />
         <Button
             android:id="@+id/ble_cav_device_1"
             android:layout_width="match_parent"
@@ -90,18 +107,33 @@
             app:layout_constraintEnd_toEndOf="parent"
             />
         <Button
+            android:id="@+id/ble_cav_device_both"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ble_cav_poke_device_both"
+            app:layout_constraintTop_toBottomOf="@id/ble_cav_device_2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+        <Button
             android:id="@+id/ble_cav_swap_devices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/ble_swap_devices"
-            app:layout_constraintTop_toBottomOf="@id/ble_cav_device_2"
+            app:layout_constraintTop_toBottomOf="@id/ble_cav_device_both"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+        <Button
+            android:id="@+id/ble_cav_rescan_for_devices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ble_rescan_for_devices"
+            app:layout_constraintTop_toBottomOf="@id/ble_cav_swap_devices"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-<!--
-    android:text="@{@plurals/ble_start_scoring_with_devices(0, 0)}"
--->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

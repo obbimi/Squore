@@ -62,6 +62,7 @@ public class BLEUtil
         SharedConfig,
         DeviceNameMustMatch,
         DeviceNameStartsWith,
+        DeviceImageURL,
 
         InitiateScoreChangeButton,
 
@@ -101,6 +102,7 @@ public class BLEUtil
             Iterator<String> keys = config.keys();
             while(keys.hasNext()) {
                 String sKey = keys.next();
+                if ( sKey.startsWith("-") ) { continue; }
                 if ( sKey.startsWith(sKey.substring(0,3).toUpperCase())) {
                     // for now only list entries with first few characters uppercase
                     lReturn.add(sKey);

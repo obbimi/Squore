@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.doubleyellow.prefs.RWValues;
@@ -84,17 +85,17 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
 
     private JSONObject m_bleConfig;
 
-    private boolean m_bIsScanning  = false;
-    private Pattern pMustMatch     = null;
-    private String  sMustStartWith = null;
-    private double  fRssiValueAt1M = -50.0f;
-    private int  iNrOfDevicesRequired = -1;
+    private boolean   m_bIsScanning        = false;
+    private Pattern   pMustMatch           = null;
+    private String    sMustStartWith       = null;
+    private double    fRssiValueAt1M       = -50.0f;
+    private int       iNrOfDevicesRequired = -1;
     private ViewGroup vgScan;
     private ViewGroup vgVerify;
-    private Button  btnGo;
-    private Button  btnVerify;
-    private Button  btnScan;
-    private    int  m_iProgress = -1;
+    private Button    btnGo;
+    private Button    btnVerify;
+    private Button    btnScan;
+    private    int    m_iProgress = -1;
 
     private static final long lUpdateInterval     = 1000L; // must be smaller then 2 values below
     private static final long lCleanupCheckEvery  = 2000L;
@@ -140,25 +141,22 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
 
         btnVerify = findViewById(R.id.ble_connect_and_verify_button);
         btnVerify.setOnClickListener(v -> {
-            bleScanner.stopScan(scanCallback);
-            if ( m_cdUpdateGui != null ) {
-                m_cdUpdateGui.cancel();
-            }
-            m_bIsScanning = false;
             initForVerify();
         });
         btnVerify.setVisibility(View.INVISIBLE);
 
         vgScan = findViewById(R.id.cl_scan_and_select);
-        vgScan.setVisibility(View.VISIBLE);
         vgVerify = findViewById(R.id.cl_verify);
-        vgVerify.setVisibility(View.INVISIBLE);
+
         vgVerify.findViewById(R.id.ble_cav_swap_devices).setOnClickListener(v -> {
             String sNewDeviceForB = mSelectedSeenDevices.get(Player.A);
             String sNewDeviceForA = mSelectedSeenDevices.get(Player.B);
             mSelectedSeenDevices.put(Player.A, sNewDeviceForA);
             mSelectedSeenDevices.put(Player.B, sNewDeviceForB);
             initForVerify();
+        });
+        vgVerify.findViewById(R.id.ble_cav_rescan_for_devices).setOnClickListener(v -> {
+            initForScan(true);
         });
 
         m_bleConfig = BLEUtil.getActiveConfig(this);
@@ -190,7 +188,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                 }
                 bleScanner.stopScan(scanCallback);
             } else {
-                m_bIsScanning = startScan(true);
+                m_bIsScanning = startScan();
             }
             updateScanButton(m_iProgress);
         });
@@ -216,22 +214,26 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                 checkForUnseen(m_iProgress);
                 int iDifferentDevices = (new LinkedHashSet<>(mSelectedSeenDevices.values())).size();
                 int iNrOfPlayer2DevicesSelectionsMade = mSelectedSeenDevices.size();
+                String sCaptionGo     = getResources().getQuantityString(R.plurals.ble_start_scoring_with_devices, iDifferentDevices);
+                String sCaptionVerify = getResources().getQuantityString(R.plurals.ble_connect_and_verify        , iDifferentDevices);
+                if ( iDifferentDevices == 0 || iNrOfPlayer2DevicesSelectionsMade != 2 ) {
+                    sCaptionGo = getString(R.string.ble_select_devices_to_use_for_scoring);
+                }
                 if ( iNrOfDevicesRequired == -1 ) {
-                    // 1 or 2 devices selected for both players
+                    // 1 or 2 devices selected for both players is allowed
                     boolean enabled = iNrOfPlayer2DevicesSelectionsMade == 2;
                     btnGo.setEnabled(enabled);
                 } else {
                     // exact nr of required devices selected
                     boolean enabled = iNrOfPlayer2DevicesSelectionsMade == 2 && (iDifferentDevices == iNrOfDevicesRequired);
+                    sCaptionGo     = getResources().getQuantityString(R.plurals.ble_start_scoring_with_devices, iNrOfDevicesRequired);
+                    sCaptionVerify = getResources().getQuantityString(R.plurals.ble_connect_and_verify        , iNrOfDevicesRequired);
                     btnGo.setEnabled(enabled);
                 }
+                btnVerify.setText(sCaptionVerify);
                 btnVerify.setVisibility(btnGo.isEnabled()? View.VISIBLE:View.INVISIBLE);
 
-                String sCaption = getResources().getQuantityString(R.plurals.ble_start_scoring_with_devices, iDifferentDevices);
-                if ( iDifferentDevices == 0 || iNrOfPlayer2DevicesSelectionsMade != 2 ) {
-                    sCaption = getString(R.string.ble_select_devices_to_use_for_scoring);
-                }
-                btnGo.setText(sCaption);
+                btnGo.setText(sCaptionGo);
                 updateScanButton(m_iProgress);
             }
             @Override public void onFinish() {
@@ -244,11 +246,12 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         };
 
         //ColorPrefs.setColors(this, findViewById(R.id.ble_activity_root));
+        initForScan(false);
     }
 
     private CountDownTimer m_cdUpdateGui;
     private long           m_lStopScanningAfterXSeconds = 60 * 10; // TODO: preference?
-    private boolean startScan(boolean bCheckPermissions) {
+    private boolean startScan() {
         if ( scanResults.size() > 0 ) {
             scanResults.clear();
             scanResultAdapter.notifyDataSetChanged();
@@ -344,7 +347,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             }
         }
         if ( bStartScan ) {
-            m_bIsScanning = startScan(false);
+            m_bIsScanning = startScan();
         }
     }
 
@@ -431,16 +434,44 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
     private final Map<Player, Integer> m_playerToVerifyButtonResId = MapUtil.getMap(Player.A, R.id.ble_cav_device_1, Player.B, R.id.ble_cav_device_2);
 
     private BLEReceiverManager m_bleReceiverManager = null;
-    public void initForVerify() {
+    private void initForScan(boolean bStartScan) {
+        if ( m_bleReceiverManager != null ) {
+            m_bleReceiverManager.closeConnection();
+        }
+        vgScan.setVisibility(View.VISIBLE);
+        vgVerify.setVisibility(View.INVISIBLE);
+        m_iProgress = -1;
+        updateScanButton(m_iProgress);
+        if ( bStartScan ) {
+            m_bIsScanning = startScan();
+        }
+    }
+    private void initForVerify() {
+        bleScanner.stopScan(scanCallback);
+        if ( m_cdUpdateGui != null ) {
+            m_cdUpdateGui.cancel();
+        }
+        m_bIsScanning = false;
+
         vgScan.setVisibility(View.INVISIBLE);
         vgVerify.setVisibility(View.VISIBLE);
+        ImageView view = vgVerify.findViewById(R.id.ble_cav_image);
+        if ( view != null ) {
+            String sImageUrl = m_bleConfig.optString(BLEUtil.Keys.DeviceImageURL.toString());
+            if ( StringUtil.isNotEmpty(sImageUrl) ) {
+                PreferenceValues.downloadAvatar(this, view, sImageUrl );
+            } else {
+                view.setVisibility(View.GONE);
+            }
+        }
 
-        int[] iaInitiallyDisable = new int[] { R.id.ble_cav_device_1, R.id.ble_cav_device_2, R.id.ble_cav_swap_devices };
+        int[] iaInitiallyDisable = new int[] { R.id.ble_cav_device_1, R.id.ble_cav_device_2, R.id.ble_cav_device_both, R.id.ble_cav_swap_devices };
         for(int iResId: iaInitiallyDisable ) {
             View vBtn = vgVerify.findViewById(iResId);
             if ( vBtn == null ) { continue; }
             vBtn.setEnabled(false);
         }
+        int iDifferentDevices = (new LinkedHashSet<>(mSelectedSeenDevices.values())).size();
         for(Player p: Player.values() ) {
             Integer iResId = m_playerToVerifyButtonResId.get(p);
             Button btn = vgVerify.findViewById(iResId);
@@ -448,10 +479,19 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             btn.setOnClickListener(v -> {
                 m_bleReceiverManager.writeToBLE(p, BLEUtil.Keys.PokeConfig);
             });
+            btn.setVisibility(iDifferentDevices==2 ? View.VISIBLE : View.GONE);
         }
+        View btnSwapDevices               = vgVerify.findViewById(R.id.ble_cav_swap_devices);
+        btnSwapDevices.setVisibility(iDifferentDevices==2 ? View.VISIBLE : View.GONE);
 
-        m_bleConfig = BLEUtil.getActiveConfig(this);
+        Button btnBoth = vgVerify.findViewById(R.id.ble_cav_device_both);
+        btnBoth.setOnClickListener(v -> {
+            m_bleReceiverManager.writeToBLE(null, BLEUtil.Keys.PokeConfig);
+        });
+        btnBoth.setVisibility(iDifferentDevices==1 ? View.VISIBLE : View.GONE);
+
         if ( m_bleReceiverManager != null ) {
+            // e.g. if swap devices is clicked
             m_bleReceiverManager.closeConnection();
         }
         m_bleReceiverManager = new BLEReceiverManager(this, BluetoothAdapter.getDefaultAdapter(), mSelectedSeenDevices.get(Player.A), mSelectedSeenDevices.get(Player.B), m_bleConfig);
@@ -499,42 +539,35 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                 Log.d(TAG, String.format("[Verify] device %s, state %s, players connected to device %d (%s)", sDevice, btState, MapUtil.size(usedForPlayers), usedForPlayers.keySet()));
                 //Log.d(TAG, "new state  : " + btState);
                 Log.d(TAG, "iNrOfDevices: " + iNrOfDevices);
+                View btnVerifySingleDeviceForBoth = vgVerify.findViewById(R.id.ble_cav_device_both);
+                View btnSwapDevices               = vgVerify.findViewById(R.id.ble_cav_swap_devices);
                 switch (btState) {
                     case CONNECTED_DiscoveringServices:
                     case CONNECTED_TO_1_of_2:
                     case CONNECTED_ALL:
+                        btnVerifySingleDeviceForBoth.setEnabled(true);
                         for(Object o: usedForPlayers.keySet() ) {
                             Player p = Player.valueOf(String.valueOf(o));
                             int iResId = m_playerToVerifyButtonResId.get(p);
                             vgVerify.findViewById(iResId).setEnabled(true);
                         }
                         if ( iNrOfDevices == 2 ) {
-                            vgVerify.findViewById(R.id.ble_cav_swap_devices).setEnabled(true);
+                            btnSwapDevices.setEnabled(true);
                         }
-                        //String sUIMsg = sb.getResources().getQuantityString(R.plurals.ble_ready_for_scoring_with_devices, iNrOfDevices);
-                        //sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sUIMsg, 10);
-                        //sb.showBLEVerifyConnectedDevicesDialog(iNrOfDevices);
-/*
-                        VerifyConnectedDevices verifyConnectedDevices = new VerifyConnectedDevices(m_context, ScoreBoard.getMatchModel(), null);
-                        verifyConnectedDevices.init(iNrOfDevices, m_bleReceiverManager);
-                        verifyConnectedDevices.show();
-*/
                         break;
                     case DISCONNECTED:
-                        //sb.updateBLEConnectionStatus(View.INVISIBLE, -1, "Oeps 3", -1);
                         break;
                     case CONNECTING:
-                        //sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, null, -1);
                         break;
                     case DISCONNECTED_Gatt:
                         // if one of the two devices disconnects
-                        //sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_Lost_connection_to_a_device), -1);
                         for(Object o: usedForPlayers.keySet() ) {
                             Player p = Player.valueOf(String.valueOf(o));
                             int iResId = m_playerToVerifyButtonResId.get(p);
                             vgVerify.findViewById(iResId).setEnabled(false);
                         }
-                        vgVerify.findViewById(R.id.ble_cav_swap_devices).setEnabled(false);
+                        btnSwapDevices.setEnabled(false);
+                        btnVerifySingleDeviceForBoth.setEnabled(false);
                         break;
                     default:
                         Toast.makeText(m_context, sMsg, Toast.LENGTH_LONG).show();

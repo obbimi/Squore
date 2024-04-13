@@ -23,6 +23,7 @@
   "-D-SCORE-RX-SHARED": {
     "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
     "DeviceNameStartsWith": "D-SCORE-RX_",
+    "DeviceImageURL": "https://raw.githubusercontent.com/obbimi/Squore/master/docs/img/d-score-horizontal.png",
     "HandleOnReleaseValue": 0,
     "PRIMARY_BUTTON"  : "Green",
     "SECONDARY_BUTTON": "Red",
