@@ -356,6 +356,11 @@ public class BLEReceiverManager
                             String sMessageFormat = saMessageFormat.getString(iValueToHandle);
                             if ( sMessageFormat == null || sMessageFormat.startsWith("-") ) {
                                 Log.d(TAG, "Ignoring message " + sMessageFormat + " handle: " + iValueToHandle  + ", in: " + iValueIn);
+                                if ( sMessageFormat != null && sMessageFormat.startsWith("-info:") ) {
+                                    String sMessage = String.format(sMessageFormat.replace("-info:", ""), (this.player==null?"":player), (this.player==null?"":player.getOther()), value[0]);
+                                    Message message = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.ble_message_x_ignored, iValueToHandle, sMessage);
+                                    message.sendToTarget();
+                                }
                             } else {
                                 sMessageFormat = sMessageFormat.replaceAll("#.*", "").trim();
                                 String sMessage = String.format(sMessageFormat, (this.player==null?"":player), (this.player==null?"":player.getOther()), value[0]);
@@ -390,7 +395,8 @@ public class BLEReceiverManager
                 Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.ble_battery_level, intValue, (this.player!=null?this.player+" : ":"") + " " + sReadingBatterLevelOf);
                 mHandler.sendMessage(msg);
             } else if ( characteristic.getUuid().toString().equalsIgnoreCase(m_sPlayerTypeCharacteristicUuid) ) {
-                writePlayerInfo(gatt, characteristic, value, -1);
+                BluetoothGattCharacteristic cPlayerType = characteristic;
+                //writePlayerInfo(gatt, cPlayerType, value, -1);
             }
         }
         @Override public void onCharacteristicRead    (@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value, int status) {

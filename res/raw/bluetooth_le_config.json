@@ -1,25 +1,4 @@
 {
-  "config_name": {
-    "SharedConfig" : "-other-config",
-    "service1-uuid": {
-      "button-characteristic2-uuid": [
-        {
-          "TranslateToBTMessage": [
-            "bluetooth-command-single-wristband receive value 0",
-            "bluetooth-command-single-wristband receive value 1",
-            "bluetooth-command-single-wristband receive value 2"
-          ]
-        },
-        {
-          "TranslateToBTMessage": [
-            "bluetooth-command-two-wristbands receive value 0: %1$s holds player A or B (representing player holding the device), %2$s holds other player (opponent)",
-            "bluetooth-command-two-wristbands receive value 1",
-            "bluetooth-command-two-wristbands receive value 2"
-          ]
-        }
-      ]
-    }
-  },
   "-D-SCORE-RX-SHARED": {
     "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
     "DeviceNameStartsWith": "D-SCORE-RX_",
@@ -27,6 +6,8 @@
     "HandleOnReleaseValue": 0,
     "PRIMARY_BUTTON"  : "Green",
     "SECONDARY_BUTTON": "Red",
+    "PRIMARY_BUTTON-Value"  : 2,
+    "SECONDARY_BUTTON-Value": 1,
     "PlayerTypeConfig" : {
       "WriteToCharacteristic" : "96f91f4b-2417-44e3-ae06-aa362556914e",
       "WriteValue" : 1
@@ -130,7 +111,7 @@
         {
           "TranslateToBTMessage": [
             "-buttons released (two devices)",
-            "-red button pressed, not used",
+            "-info:red button pressed by %1$s, not used",
             "changeScoreBLE(%1$s)",
             "undoScoreForInitiatorBLE(%1$s) # both buttons pressed (two devices)"
           ]
@@ -150,63 +131,11 @@
           "TranslateToBTMessage": [
             "-buttons released (two devices)",
             "changeScoreBLE(%2$s, %1$s)",
-            "-green button pressed, not used",
+            "-info:green button pressed by %1$s, not used",
             "undoScoreForInitiatorBLE(%1$s) #both buttons pressed (two devices)"
           ]
         }
       ]
-    }
-  },
-  "d-score-rx-notused": {
-    "0000180a-0000-1000-8000-00805f9b34fb": {
-      "Device information": true,
-      "00002a29-0000-1000-8000-00805f9b34fb": "READABLE Manufacturer Name String"
-    },
-    "00001800-0000-1000-8000-00805f9b34fb": {
-      "Description": "Generic Access",
-      "00002a00-0000-1000-8000-00805f9b34fb": "Device Name",
-      "00002a01-0000-1000-8000-00805f9b34fb": "Appearance"
-    },
-    "0000180f-0000-1000-8000-00805f9b34fb": {
-      "Description": "Battery Service",
-      "00002a19-0000-1000-8000-00805f9b34fb": "Battery Level READ"
-    },
-    "1D14D6EE-FD63-4FA1-BFA4-8F47B42119F0 DFU Service": {
-      "F7BF3564-FB6D-4E53-88A4-5E37E0326063 OTA Control characteristic": "firmware update?"
-    }
-  },
-  "single_ble_01_alert": {
-    "00001811-0000-1000-8000-00805f9b34fb": {
-      "00002a44-0000-1000-8000-00805f9b34fb": "undoLast()",
-      "00002a45-0000-1000-8000-00805f9b34fb": "changeScoreBLE(A)",
-      "00002a46-0000-1000-8000-00805f9b34fb": "changeScoreBLE(B)",
-      "00002a47-0000-1000-8000-00805f9b34fb": "-not used"
-    }
-  },
-  "double_ble_01_alert": {
-    "00001811-0000-1000-8000-00805f9b34fb": {
-      "00002a44-0000-1000-8000-00805f9b34fb": "undoLast()",
-      "00002a45-0000-1000-8000-00805f9b34fb": "changeScoreBLE(%1$s)"
-    }
-  },
-  "double_ble_02_WB010988_Zentri": {
-    "distance": "180m",
-    "175f8f23-a570-49bd-9627-815a6a27de2a": {
-      "1cce1ea8-bd34-4813-a00a-c76e028fadcb": "write Rx",
-      "cacc07ff-ffff-4c48-8fae-a9ef71b75e26": "read Tx"
-    }
-  },
-  "double_ble_02_RDL": {
-    "RDL52832": "model name, not unique",
-    "00001803-494c-4f47-4943-544543480000": {
-      "00001804-494c-4f47-4943-544543480000": "undoLast(value=passcode)",
-      "00001805-494c-4f47-4943-544543480000": "undoLast()"
-    },
-    "0000fe59-0000-1000-8000-00805f9b34fb": {
-      "8ec90003-f315-4f60-9fb8-838830daea50": "undoLast()"
-    },
-    "00001801-0000-1000-8000-00805f9b34fb": {
-      "00002a05-0000-1000-8000-00805f9b34fb": "undoLast()"
     }
   }
 }

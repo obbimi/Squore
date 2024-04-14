@@ -7218,7 +7218,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             } else if ( m_blePlayerToConfirmOwnScore != null ) {
                                 String sDoChangeScore = null;
                                 String sDoCancelScore = null;
-                                if (playerWristBand.equals(m_blePlayerToConfirmOwnScore)) {
+                                if ( playerWristBand.equals(m_blePlayerToConfirmOwnScore) ) {
                                     // check the confirmation by scoring player/team
                                     Log.i(TAG, "Check BLE confirmation by " + playerWristBand + " with button " + m_eConfirmScoreBySelfButton);
                                     if (eButtonPressed.equals(m_eConfirmScoreBySelfButton)) {
@@ -7228,7 +7228,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                     }
                                 } else {
                                     // same player/team pressed a button...
-                                    Log.w(TAG, "Player " + m_blePlayerToConfirmOwnScore + " to confirm own score by pressing " + m_eConfirmScoreBySelfButton);
+                                    if ( eButtonPressed.equals(m_eInitiateOpponentScoredChangeButton.getOther()) ) {
+                                        sDoCancelScore = getString(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, playerWristBand, sButtonPressed);
+                                    } else {
+                                        Log.w(TAG, "Player " + m_blePlayerToConfirmOwnScore + " to confirm own score by pressing " + m_eConfirmScoreBySelfButton);
+                                        iBoard.appendToInfoMessage(".");
+                                    }
                                 }
                                 if (sDoChangeScore != null) {
                                     Log.i(TAG, "sDoChangeScore : " + sDoChangeScore);

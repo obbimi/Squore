@@ -20,8 +20,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.bluetooth_le.BLEReceiverManager;
 import com.doubleyellow.scoreboard.bluetooth_le.BLEUtil;
 import com.doubleyellow.scoreboard.dialog.BaseAlertDialog;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -40,8 +42,11 @@ public class VerifyConnectedDevices extends BaseAlertDialog
         return false;
     }
     private int m_iNrOfDevices = 0;
-    public void init(int iNrOfDevices) {
+    private BLEReceiverManager m_bleReceiverManager                    = null;
+
+    public void init(int iNrOfDevices, BLEReceiverManager bleReceiverManager) {
         m_iNrOfDevices = iNrOfDevices;
+        m_bleReceiverManager = bleReceiverManager;
     }
     @Override public boolean init(Bundle outState) {
         return false;
@@ -70,13 +75,17 @@ public class VerifyConnectedDevices extends BaseAlertDialog
         switch (m_iNrOfDevices) {
             case 1:
                 button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                button.setOnClickListener(v -> scoreBoard.notifyBLE(null, BLEUtil.Keys.ConfirmationRequiredConfig));
+                button.setOnClickListener(v -> m_bleReceiverManager.writeToBLE(null, BLEUtil.Keys.PokeConfig));
                 break;
             case 2:
                 button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                button.setOnClickListener(v -> scoreBoard.notifyBLE(Player.A, BLEUtil.Keys.ConfirmationRequiredConfig));
+                button.setOnClickListener(v -> {
+                    m_bleReceiverManager.writeToBLE(Player.A, BLEUtil.Keys.PokeConfig);
+                });
                 button = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-                button.setOnClickListener(v -> scoreBoard.notifyBLE(Player.B, BLEUtil.Keys.ConfirmationRequiredConfig));
+                button.setOnClickListener(v -> {
+                    m_bleReceiverManager.writeToBLE(Player.B, BLEUtil.Keys.PokeConfig);
+                });
                 button = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
                 button.setOnClickListener(v -> {
                     // swap
@@ -85,9 +94,13 @@ public class VerifyConnectedDevices extends BaseAlertDialog
                     PreferenceValues.setString(PreferenceKeys.BluetoothLE_Peripheral1, context, sBluetoothLEDevice2);
                     PreferenceValues.setString(PreferenceKeys.BluetoothLE_Peripheral2, context, sBluetoothLEDevice1);
                     // reinitialize
-                    scoreBoard.stopBlueTooth();
-                    scoreBoard.onResumeInitBluetoothBLE();
-                    //this.dismiss(); not required
+                    if ( scoreBoard != null ) {
+                        scoreBoard.stopBlueTooth();
+                        scoreBoard.onResumeInitBluetoothBLE();
+                    } else {
+                        Toast.makeText(context, "No ref to scoreboard ??", Toast.LENGTH_SHORT).show();
+                    }
+                    this.dismiss(); // required because dialog buttons somehow now longer make device vibrate?!
                 });
                 button.setOnLongClickListener(v -> {
                     this.dismiss();

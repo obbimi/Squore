@@ -19,6 +19,7 @@
         <item quantity="one">Start scoring for both players with single device</item>
         <item quantity="other">Start scoring with both selected devices</item>
     </plurals>
+    <string name="ble_message_x_ignored">Message from BLE ignored (%1$s): %2$s</string>
     <string name="ble_battery_level">BLE Battery Level of %2$s: %1$d %%</string> <!-- %% is 'escaped' percentage character -->
     <string name="ble_waiting_initiate_score_change_message">Waiting for initiate-score-change by pressing %1$s by either player/team</string>
     <string name="ble_score_cancelled_by_pressing_y">Score cancelled by pressing %1$s</string>
