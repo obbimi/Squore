@@ -416,6 +416,9 @@ public class PreferenceValues extends RWValues
     public static boolean blinkFeedbackPerPoint(Context context) {
         return getBoolean(PreferenceKeys.blinkFeedbackPerPoint, context, R.bool.blinkFeedbackPerPoint_default);
     }
+    public static int numberOfBlinksForFeedbackPerPoint(Context context) {
+        return getInteger(PreferenceKeys.numberOfBlinksForFeedbackPerPoint, context, R.integer.numberOfBlinksForFeedbackPerPoint_default);
+    }
     public static boolean hapticFeedbackPerPoint(Context context) {
         return getBoolean(PreferenceKeys.hapticFeedbackPerPoint, context, R.bool.hapticFeedbackPerPoint_default);
     }

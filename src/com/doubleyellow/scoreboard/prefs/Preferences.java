@@ -128,6 +128,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             }
             boolean bReinitColors = false;
             if ( eKey != null ) {
+                m_lSettingsChanged.add(eKey);
                 switch (eKey) {
                     case squoreBrand:
                         Brand brand = RWValues.getEnum(PreferenceKeys.squoreBrand, Preferences.this, Brand.class, Brand.Squore);
@@ -148,40 +149,31 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         }
                         break;
                     case LandscapeLayoutPreference:
-                        PreferenceValues.setRestartRequired(Preferences.this);
+                        //PreferenceValues.setRestartRequired(Preferences.this);
                         break;
-                    case showBrandLogoOn:
-                        final Preference psHideBrandLogoWhenGameInProgress = settingsFragment.findPreference(PreferenceKeys.hideBrandLogoWhenGameInProgress);
-                        if ( psHideBrandLogoWhenGameInProgress != null ) {
-                            psHideBrandLogoWhenGameInProgress.setEnabled(ListUtil.isNotEmpty(PreferenceValues.showBrandLogoOn(Preferences.this)));
+                    case showBrandLogoOn: {
+                            boolean bEnabled = ListUtil.isNotEmpty(PreferenceValues.showBrandLogoOn(Preferences.this));
+                            settingsFragment.setEnabledForPrefKeys(bEnabled, PreferenceKeys.hideBrandLogoWhenGameInProgress);
+                            setModelDirty();
                         }
-                        setModelDirty();
                         break;
                     case autoShowModeActivationDialog:
-                        final Preference psShowModeDialogAfterXMins = settingsFragment.findPreference(PreferenceKeys.showModeDialogAfterXMins);
-                        if ( psShowModeDialogAfterXMins != null ) {
-                            psShowModeDialogAfterXMins.setEnabled(PreferenceValues.autoShowModeActivationDialog(Preferences.this));
+                        settingsFragment.setEnabledForPrefKeys(PreferenceValues.autoShowModeActivationDialog(Preferences.this), PreferenceKeys.showModeDialogAfterXMins);
+                        break;
+                    case showGamePausedDialog: {
+                            Feature f = PreferenceValues.showGamePausedDialog(Preferences.this);
+                            boolean bEnabled = f.equals(Feature.DoNotUse) == false;
+                            settingsFragment.setEnabledForPrefKeys(bEnabled, PreferenceKeys.autoShowGamePausedDialogAfterXPoints, PreferenceKeys.timerTowelingDown);
                         }
                         break;
-                    case showGamePausedDialog:
-                        Feature f = PreferenceValues.showGamePausedDialog(Preferences.this);
-                        final Preference psAutoShowGamePausedDialogAfterXPoints = settingsFragment.findPreference(PreferenceKeys.autoShowGamePausedDialogAfterXPoints);
-                        if ( psAutoShowGamePausedDialogAfterXPoints != null ) {
-                            psAutoShowGamePausedDialogAfterXPoints.setEnabled(f.equals(Feature.DoNotUse) == false);
-                        }
-                        final Preference pTimerTowelingDown = settingsFragment.findPreference(PreferenceKeys.timerTowelingDown);
-                        if ( pTimerTowelingDown != null ) {
-                            pTimerTowelingDown.setEnabled(f.equals(Feature.DoNotUse) == false);
-                        }
                     case hideBrandLogoWhenGameInProgress:
                         setModelDirty();
                         break;
-                    case showFieldDivisionOn:
-                        final Preference pshideFieldDivisionWhenGameInProgress = settingsFragment.findPreference(PreferenceKeys.hideFieldDivisionWhenGameInProgress);
-                        if ( pshideFieldDivisionWhenGameInProgress != null ) {
-                            pshideFieldDivisionWhenGameInProgress.setEnabled(ListUtil.isNotEmpty(PreferenceValues.showFieldDivisionOn(Preferences.this)));
+                    case showFieldDivisionOn: {
+                            boolean bEnabled = ListUtil.isNotEmpty(PreferenceValues.showFieldDivisionOn(Preferences.this));
+                            settingsFragment.setEnabledForPrefKeys(bEnabled, PreferenceKeys.hideFieldDivisionWhenGameInProgress);
+                            setModelDirty();
                         }
-                        setModelDirty();
                         break;
                     case hideFieldDivisionWhenGameInProgress:
                         setModelDirty();
@@ -242,19 +234,15 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         break;
                     case showActionBar:
                         boolean bShowActionBar = prefs.getBoolean(key, true);
-                        final Preference prefShowTextInActionBar = settingsFragment.findPreference(PreferenceKeys.showTextInActionBar);
-                        if ( prefShowTextInActionBar != null ) {
-                            prefShowTextInActionBar.setEnabled(bShowActionBar);
-                        }
+                        settingsFragment.setEnabledForPrefKeys(bShowActionBar, PreferenceKeys.showTextInActionBar);
                         // fall through
                     case showTextInActionBar:      // fall through
-                  //case landscapeOrientationOnly: // fall through
                     case OrientationPreference:    // fall through
                     case showFullScreen:           // fall through
                     case prefetchFlags:            // fall through
                     case swapPlayersOn180DegreesRotationOfDeviceInLandscape: // fall through
                         setModelDirty();
-                        PreferenceValues.setRestartRequired(Preferences.this);
+                        //PreferenceValues.setRestartRequired(Preferences.this);
                         break;
                     case smsResultToNr: break;
 
@@ -267,14 +255,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                                 break;
                             case Granted:
                                 boolean bReadContacts = prefs.getBoolean(PreferenceKeys.readContactsForAutoCompletion.toString(), true);
-                                ListPreference contactGroup = (ListPreference) settingsFragment.findPreference(PreferenceKeys.onlyForContactGroups);
-                                if (contactGroup != null) {
-                                    contactGroup.setEnabled(bReadContacts);
-                                }
-                                EditTextPreference max = (EditTextPreference) settingsFragment.findPreference(PreferenceKeys.readContactsForAutoCompletion_max);
-                                if (max != null) {
-                                    max.setEnabled(bReadContacts);
-                                }
+                                settingsFragment.setEnabledForPrefKeys(bReadContacts, PreferenceKeys.onlyForContactGroups, PreferenceKeys.readContactsForAutoCompletion_max);
                                 if (bReadContacts) {
                                     // show warning if user has more than x contacts... may cause entering players to become slow or even crash
                                     Cursor cursor = Preferences.this.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
@@ -305,10 +286,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         ListPreference matchesFeedUrl = (ListPreference) settingsFragment.findPreference(PreferenceKeys.feedPostUrl);
                         settingsFragment.initFeedURLs(matchesFeedUrl, sURLs);
 
-                        CheckBoxPreference suggestToPost = (CheckBoxPreference) settingsFragment.findPreference(PreferenceKeys.autoSuggestToPostResult);
-                        if ( suggestToPost != null ) {
-                            suggestToPost.setEnabled(ListUtil.isNotEmpty(urlsList));
-                        }
+                        boolean bEnabled1 = ListUtil.isNotEmpty(urlsList);
+                        settingsFragment.setEnabledForPrefKeys(bEnabled1, PreferenceKeys.autoSuggestToPostResult);
 
                         // TODO: ensure selected value is still valid
                         break;
@@ -418,10 +397,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         break;
                     case lockMatchMV:
                         Set<String> set = prefs.getStringSet(key, null);
-                        Preference pNrOfMins = settingsFragment.findPreference(PreferenceKeys.numberOfMinutesAfterWhichToLockMatch);
-                        if ( pNrOfMins != null ) {
-                            pNrOfMins.setEnabled(set != null && set.contains(AutoLockContext.WhenMatchIsUnchangeForX_Minutes.toString()));
-                        }
+                        boolean bEnabled2 = set != null && set.contains(AutoLockContext.WhenMatchIsUnchangeForX_Minutes.toString());
+                        settingsFragment.setEnabledForPrefKeys(bEnabled2, PreferenceKeys.numberOfMinutesAfterWhichToLockMatch);
                         break;
                     case groupArchivedMatchesBy: // fall through
                     case sortOrderOfArchivedMatches:
@@ -465,7 +442,12 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                             SystemUtil.doVibrate(Preferences.this, 200);
                         }
                         break;
-                    case blinkFeedbackPerPoint:
+                    case blinkFeedbackPerPoint: {
+                            boolean ppEnabled = PreferenceValues.blinkFeedbackPerPoint(Preferences.this);
+                            settingsFragment.setEnabledForPrefKeys(ppEnabled, PreferenceKeys.numberOfBlinksForFeedbackPerPoint);
+                        }
+                        break;
+                    case numberOfBlinksForFeedbackPerPoint:
                         break;
                     case wearable_allowScoringWithHardwareButtons:
                     case wearable_allowScoringWithRotary:
@@ -479,13 +461,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         Feature fUseSpeech = PreferenceValues.useSpeechFeature(Preferences.this);
                         boolean bUseSpeech = PreferenceValues.useFeatureYesNo(fUseSpeech);
                         Speak.getInstance().setFeature(fUseSpeech);
-                        PreferenceKeys [] keys = new PreferenceKeys[] { PreferenceKeys.speechPitch, PreferenceKeys.speechRate, PreferenceKeys.speechPauseBetweenParts };
-                        for(PreferenceKeys keyOfPrefToToggle: keys) {
-                            final Preference pref = settingsFragment.findPreference(keyOfPrefToToggle);
-                            if ( pref != null ) {
-                                pref.setEnabled(bUseSpeech);
-                            }
-                        }
+                        settingsFragment.setEnabledForPrefKeys(bUseSpeech, PreferenceKeys.speechPitch, PreferenceKeys.speechRate, PreferenceKeys.speechPauseBetweenParts);
                         if ( bUseSpeech ) {
                             playSpeechSample();
                         }
@@ -1198,6 +1174,13 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
     public static List<String> getChangedColorSettings() {
         List<String> lReturn = new ArrayList<>(m_lColorSettingsChanged);
         m_lColorSettingsChanged.clear();
+        return lReturn;
+    }
+
+    private static List<PreferenceKeys> m_lSettingsChanged = new ArrayList<>();
+    public static List<PreferenceKeys> getChangedSettings() {
+        List<PreferenceKeys> lReturn = new ArrayList<>(m_lSettingsChanged);
+        m_lSettingsChanged.clear();
         return lReturn;
     }
 

@@ -2504,7 +2504,36 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ----------------------------------------------------
 
     /** Does not seem to work so well if app started for debugging. But when started from home screen it seems to work fine (android 7) */
-    private static void doRestart(Context c) {
+    private void doRestart() {
+        if ( false ) {
+            // Navigating From MainActivity to MainActivity.
+            // Navigate from this activity to the activity
+            // specified by upIntent,
+            // basically finishing this activity in the process.
+            // IH: seems to work for my Mi device (except the first time?)
+            navigateUpTo(new Intent(ScoreBoard.this, ScoreBoard.class));
+            startActivity(getIntent());
+        } else if ( true ) {
+            // after on CLick we are using finish to close and then just after that
+            // we are calling startActivity(getIntent()) to open our application
+            // IH: seems to work for my Mi device (except the first time?)
+            finish();
+            startActivity(getIntent());
+
+            // this basically provides animation
+/*
+            overridePendingTransition(0, 0);
+            long time = System.currentTimeMillis();
+
+            // Showing a toast message at the time when we are capturing screenshot
+            Toast.makeText(ScoreBoard.this, "Current time in millisecond after app restart" + time, Toast.LENGTH_SHORT).show();
+*/
+        } else {
+            doRestart(this);
+        }
+    }
+    /** @deprecated */
+    private void doRestart(Context c) {
         if (c == null) return;
         // fetch the package-manager so we can get the default launch activity
         // (you can replace this intent with any other activity if you want
@@ -5048,6 +5077,31 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     handleMenuItem(R.id.send_settings_to_wearable, lWearableSettingChanged);
                 }
             }
+            List<PreferenceKeys> lChangedSetting = Preferences.getChangedSettings();
+            if ( ListUtil.isNotEmpty(lChangedSetting) ) {
+                for(PreferenceKeys changeKey: lChangedSetting ) {
+                    switch (changeKey) {
+                        case blinkFeedbackPerPoint:
+                        case numberOfBlinksForFeedbackPerPoint:
+                            if ( m_timerScoreChangedFeedBack != null ) {
+                                m_timerScoreChangedFeedBack.myCancel();
+                                m_timerScoreChangedFeedBack = null;
+                            }
+                            break;
+                        case LandscapeLayoutPreference:
+                        case showActionBar:            // fall through
+                        case showTextInActionBar:      // fall through
+                        case OrientationPreference:    // fall through
+                        case showFullScreen:           // fall through
+                        case prefetchFlags:            // fall through
+                        case swapPlayersOn180DegreesRotationOfDeviceInLandscape: // fall through
+                            doRestart();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
         }
 
         // Check which request we're responding to
@@ -6086,7 +6140,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     //===================================================================
     // Draw focus to GUI elements
     //===================================================================
-    private final PlayerFocusEffectCountDownTimerFeedback m_timerScoreChangedFeedBack = new PlayerFocusEffectCountDownTimerFeedback();
+    private PlayerFocusEffectCountDownTimerFeedback m_timerScoreChangedFeedBack = null;
     private abstract class PlayerFocusEffectCountDownTimer extends CountDownTimer {
         Player            m_player                  = null;
         int               m_iInvocationCnt          = 0;
@@ -6137,6 +6191,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         private Player m_pNotifyAfterXSecs = null;
         private int    m_iNotifyAfterXSecs = 3;
 
+        PlayerFocusEffectCountDownTimerConfirm() {
+            super(FocusEffect.SetTransparency, 60 * 1000, I_CONFIRM_COUNTDOWN_INTERVAL);
+        }
         public void start(ShowScoreChangeOn guiElementToUseForFocus, Player p, Player pNotifyAfterXSecs, int iNotifyAfterXSecs) {
             m_iInvocationCnt                 = 0;
             m_guiElementToUseForFocus        = guiElementToUseForFocus;
@@ -6144,9 +6201,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             m_pNotifyAfterXSecs              = pNotifyAfterXSecs;
             m_iNotifyAfterXSecs              = iNotifyAfterXSecs;
             super.start();
-        }
-        PlayerFocusEffectCountDownTimerConfirm() {
-            super(FocusEffect.SetTransparency, 60 * 1000, I_CONFIRM_COUNTDOWN_INTERVAL);
         }
         @Override void doOnTick(int iInvocationCnt, long millisUntilFinished) {
             if ( iInvocationCnt == m_iNotifyAfterXSecs * (1000 / I_CONFIRM_COUNTDOWN_INTERVAL) && m_pNotifyAfterXSecs != null ) {
@@ -6164,6 +6218,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     private class PlayerFocusEffectCountDownTimerFeedback extends PlayerFocusEffectCountDownTimer {
+        PlayerFocusEffectCountDownTimerFeedback(int iNrOfBlinks) {
+            super(FocusEffect.BlinkByInverting, 2 * iNrOfBlinks * 400, 400);
+        }
         public void start(ShowScoreChangeOn guiElementToUseForFocus, Player p, int iTmpTxtOnElementDuringFeedback) {
             m_iInvocationCnt                 = 0;
             m_guiElementToUseForFocus        = guiElementToUseForFocus;
@@ -6171,9 +6228,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             m_iTmpTxtOnElementDuringFeedback = iTmpTxtOnElementDuringFeedback;
             Log.i(TAG, "m_iTmpTxtOnElementDuringFeedback : " + m_iTmpTxtOnElementDuringFeedback);
             super.start();
-        }
-        PlayerFocusEffectCountDownTimerFeedback() {
-            super(FocusEffect.BlinkByInverting, 16 * 400, 400);
         }
         @Override void doOnTick(int m_iInvocationCnt, long millisUntilFinished) {
             /* nothing specific for now */
@@ -6221,7 +6275,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             matchModel.changeScore(player);
             iTmpTxtOnElementDuringFeedback = 0;
         } else {
-            // score will be changed by timer ending the visual feedback
+            // score will be changed by timer ending the visual feedback. No longer used... idea was to show 'game' or 'set' for a few seconds when a point ended the game/set
+        }
+        if ( m_timerScoreChangedFeedBack == null ) {
+            int numberOfBlinksForFeedbackPerPoint = PreferenceValues.numberOfBlinksForFeedbackPerPoint(this);
+            m_timerScoreChangedFeedBack = new PlayerFocusEffectCountDownTimerFeedback(numberOfBlinksForFeedbackPerPoint);
         }
         m_timerScoreChangedFeedBack.myCancel();
         m_timerScoreChangedFeedBack.start(guiElementToUseForFocus, player, iTmpTxtOnElementDuringFeedback);

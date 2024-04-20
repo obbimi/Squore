@@ -244,10 +244,6 @@ Valores seleccionables al comienzo de una nueva partida para la cantidad de segu
     <string name="pref_timerWarmup_values_summary">Valores seleccionables para el calentamiento al comienzo de una nueva partida</string>
     <string name="pref_timerInjury">El número de segundos para recuperarse de una lesión.</string>
     <string name="pref_timerInjury_summary">El número de segundos que un jugador tiene para recuperarse y reanudar el juego después de una lesión. Oficialmente 180 segundos.</string>
-<!--
-    <string name="pref_landscapeOrientationOnly">Landscape only</string>
-    <string name="pref_landscapeOrientationOnly_summary">Show the scoreboard in landscape orientation only. Portrait is less intuitive.</string>
--->
     <string name="pref_OrientationPreference">Orientaciones</string>
     <string name="pref_OrientationPreference_summary">
 Qué orientaciones usar. El vertical es menos intuitivo pero más fácil con una sola mano.</string>

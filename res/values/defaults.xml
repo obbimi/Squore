@@ -155,10 +155,10 @@ http://developer.android.com/guide/practices/screens_support.html
 <!--
     <bool name="suggestToEndSet_default">true</bool>
 -->
+    <integer name="numberOfBlinksForFeedbackPerPoint_default">4</integer>
     <bool name="blinkFeedbackPerPoint_default">false</bool>
     <bool name="hapticFeedbackPerPoint_default">false</bool>
     <bool name="hapticFeedbackOnGameEnd_default">false</bool>
-    <bool name="landscapeOrientationOnly_default">false</bool>
     <bool name="showChoosenDecisionShortly_default">true</bool>
     <bool name="showScoringHistoryInMainScreen_default">true</bool>
     <bool name="indicateGameBall_default">true</bool>

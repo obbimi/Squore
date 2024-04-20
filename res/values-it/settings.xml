@@ -221,10 +221,6 @@
     <string name="pref_timerWarmup_values_summary">Valori selezionabili per il riscaldamento all\'inizio d\'un nuovo incontro</string>
     <string name="pref_timerInjury">Il numero di secondi per il recupero da inforunio</string>
     <string name="pref_timerInjury_summary">Il numero di secondi che un giocatore ha a disposizione per recuperare e riprendere il gioco dopo un infortunio. Ufficialmente 180 secondi.</string>
-<!--
-    <string name="pref_landscapeOrientationOnly">Landscape only</string>
-    <string name="pref_landscapeOrientationOnly_summary">Show the scoreboard in landscape orientation only. Portrait is less intuitive.</string>
--->
     <string name="pref_OrientationPreference">Orientamenti</string>
     <string name="pref_OrientationPreference_summary">Quale orientamento usare. L\'orientamento verticale è meno intuitivo ma più facile per l\'uso con una mano sola.</string>
     <string name="pref_saveMatchesForLaterUsage">Salva incontri</string>

@@ -191,6 +191,8 @@
     <string name="pref_showFieldDivisionOn">Show \'Field or Division\' on</string>
     <string name="pref_timerViewType">Type of timer</string>
     <string name="pref_blinkFeedbackPerPoint">Blink feedback per point</string>
+    <string name="pref_numberOfBlinksForFeedbackPerPoint">Number of blinks for feedback per point</string>
+    <string name="pref_numberOfBlinksForFeedbackPerPoint_summary">The number of times the score button blinks when the score changed</string>
     <string name="pref_blinkFeedbackPerPoint_summary">Blink the changes score a few seconds after each score change. Specifically handy if score is controlled remotely.</string>
     <string name="pref_hapticFeedbackPerPoint">Haptic feedback per point</string>
     <string name="pref_hapticFeedbackPerPoint_summary">Vibrate shortly each time a point is added, game is ended or undo action is performed</string>
@@ -249,10 +251,6 @@
     <string name="pref_timerWarmup_values_summary">Selectable values for warmup at the start of a new match</string>
     <string name="pref_timerInjury">The number of seconds to recover from an injury</string>
     <string name="pref_timerInjury_summary">The number of seconds a player has to recover and resume play after an injury. Officially 180 seconds.</string>
-<!--
-    <string name="pref_landscapeOrientationOnly">Landscape only</string>
-    <string name="pref_landscapeOrientationOnly_summary">Show the scoreboard in landscape orientation only. Portrait is less intuitive.</string>
--->
     <string name="pref_OrientationPreference">Orientations</string>
     <string name="pref_OrientationPreference_summary">What orientations to use. Portrait is less intuitive but easier single-handed.</string>
     <string name="pref_LandscapeLayoutPreference">Landscape Layout</string>

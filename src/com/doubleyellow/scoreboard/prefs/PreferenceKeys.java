@@ -34,6 +34,7 @@ public enum PreferenceKeys {
         showFullScreen,
         showTextInActionBar,
         blinkFeedbackPerPoint,
+        numberOfBlinksForFeedbackPerPoint,
         hapticFeedbackPerPoint,
         hapticFeedbackOnGameEnd,
         numberOfCharactersBeforeAutocomplete,

@@ -213,10 +213,6 @@
     <string name="pref_timerPauseBetweenGames_values_summary">Valeurs possibles au début d\'un nouveau match pour le temps entres les jeux (en secondes - habituellement 90 ou 120 secondes)</string>
     <string name="pref_timerInjury">Le nombre de secondes pour récupérer d\'une blessure</string>
 	<string name="pref_timerInjury_summary">Temps (en secondes) disponible pour un joueur pour récupérer et reprendre le jeu après une blessure (Officiellement de 180 secondes).</string>
-<!--
-    <string name="pref_landscapeOrientationOnly">Paysage seulement</string>
-    <string name="pref_landscapeOrientationOnly_summary">Afficher en mode \'Paysage\' seulement. Le mode \'Portrait\' est moins intuitif.</string>
--->
     <string name="pref_OrientationPreference">Orientations</string> <!-- TODO -->
     <string name="pref_OrientationPreference_summary">Quel orientation choisir ? Le mode \'Paysage\' est plus intuitif</string>
     <string name="pref_saveMatchesForLaterUsage">Enregistrer les matchs</string>

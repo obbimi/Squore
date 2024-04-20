@@ -77,6 +77,15 @@
                 android:summary="@string/pref_blinkFeedbackPerPoint_summary"
                 android:defaultValue="@bool/blinkFeedbackPerPoint_default"
                 />
+            <com.doubleyellow.prefs.SeekBarPreference android:key="numberOfBlinksForFeedbackPerPoint"
+                android:title="@string/pref_numberOfBlinksForFeedbackPerPoint"
+                android:summary="@string/pref_numberOfBlinksForFeedbackPerPoint_summary"
+                android:icon="@drawable/dummy"
+                dy:min="1"
+                dy:interval="1"
+                android:defaultValue="@integer/numberOfBlinksForFeedbackPerPoint_default"
+                android:max="16"
+                />
             <com.doubleyellow.prefs.EnumListPreference android:key="useSpeechFeature"
                 android:title="@string/pref_Speech"
                 android:summary="@string/pref_Speech_summary"
@@ -340,14 +349,6 @@
                     dy:enumClass="com.doubleyellow.scoreboard.prefs.LandscapeLayoutPreference"
             />
 <!--
-            <CheckBoxPreference android:key="landscapeOrientationOnly"
-                                android:icon="@android:drawable/ic_menu_always_landscape_portrait"
-                                android:title="@string/pref_landscapeOrientationOnly"
-                                android:summary="@string/pref_landscapeOrientationOnly_summary"
-                                android:defaultValue="@bool/landscapeOrientationOnly_default"
-                    />
--->
-<!--
             <CheckBoxPreference android:key="showSideButtonsWithinScoreButtons"
                                 android:title="@string/pref_showSideButtonsWithinScoreButtons"
                                 android:summary="@string/pref_showSideButtonsWithinScoreButtons_summary"
@@ -550,6 +551,15 @@
             android:summary="@string/pref_blinkFeedbackPerPoint_summary"
             android:defaultValue="@bool/blinkFeedbackPerPoint_default"
             />
+        <com.doubleyellow.prefs.SeekBarPreference android:key="numberOfBlinksForFeedbackPerPoint"
+            android:title="@string/pref_numberOfBlinksForFeedbackPerPoint"
+            android:summary="@string/pref_numberOfBlinksForFeedbackPerPoint_summary"
+            android:icon="@drawable/dummy"
+            dy:min="1"
+            dy:interval="1"
+            android:defaultValue="@integer/numberOfBlinksForFeedbackPerPoint_default"
+            android:max="16"
+            />
 
 
         <PreferenceCategory android:title="@string/pref_BehaviourConvenience">
@@ -569,14 +579,6 @@
                     dy:displayValues="@array/KeepScreenOnWhen_DisplayValues"
                     dy:enumClass="com.doubleyellow.scoreboard.prefs.KeepScreenOnWhen"
             />
-<!--
-            <CheckBoxPreference android:key="landscapeOrientationOnly"
-                                android:icon="@android:drawable/ic_menu_always_landscape_portrait"
-                                android:title="@string/pref_landscapeOrientationOnly"
-                                android:summary="@string/pref_landscapeOrientationOnly_summary"
-                                android:defaultValue="@bool/landscapeOrientationOnly_default"
-                    />
--->
             <com.doubleyellow.prefs.EnumMultiSelectPreference
                     android:key="OrientationPreference"
                     android:title="@string/pref_OrientationPreference"
