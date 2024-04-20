@@ -26,24 +26,26 @@
 
     <!-- bluetooth (Legacy up to Android 11) -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"  />   <!-- for initiating and cancelling device discovery, and initiating connections -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />   <!-- for initiating and cancelling device discovery, and initiating connections -->
     <!-- TEST: added for target 31+ for mirror with bluetooth -->
 <!--
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
 -->
     <!-- bluetooth (Android 12 upwards) -->
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"   />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"      />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
 
     <!-- android 9 casting -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- FOREGROUND_SERVICE is a normal permission, so the system automatically grants it to the requesting app. -->
 <!--
     <uses-feature android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
 -->
+    <!-- added for BLE -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
 
 <!--<uses-feature android:name="android.hardware.type.watch"             android:required="false"/>-->
     <uses-feature android:name="android.hardware.bluetooth"              android:required="false"/>

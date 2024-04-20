@@ -1,3 +1,10 @@
+## 4.54 (march 2024)
+
+- allow specifying different layout for landscape display
+  - mainly to have better readable score elements
+- allow turning on 'blink' visual feedback after a score change
+  - Specifically handy if score is controlled remotely.
+
 ## 4.53 (nov 2023)
 
 - If match is manually ended because of Injury or Conduct, ensure the winner is specified if the result is posted to a website
@@ -349,3 +356,17 @@ Improvements in bluetooth mirroring
 ### Improvements
 - Improvements for ChromeCast
 
+__EOF__
+
+git clone https://github.com/obbimi/Squore.git Squore.tmp
+cd Squore.tmp
+#git checkout 0c2614e8
+
+cp -rpv ../Squore/gradle .
+cp -pv  ../Squore/gradlew .
+cp -pv  ../Squore/google-services.json .
+cp -pv  ../Squore/res/raw/squore_iddo.zip ./res/raw/.
+
+echo "sdk.dir=/osshare/software/google/android-sdk-linux" > local.properties
+./change.R.package.sh TennisPadel
+./clean.and.assemble.sh 508
