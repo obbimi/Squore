@@ -25,8 +25,8 @@
         {
           "TranslateToBTMessage": [
             "-both buttons released (one device), not used",
-            "changeScoreBLE(B)",
-            "changeScoreBLE(A)",
+            "changeScoreBLE(B, SECONDARY_BUTTON)",
+            "changeScoreBLE(A, PRIMARY_BUTTON)",
             "undoLast() # both buttons pressed (one device)"
           ]
         },
@@ -47,7 +47,7 @@
     "ConfirmScoreByOpponentButton"     : "SECONDARY_BUTTON",
     "ConfirmScoreBySelfButton"         : "PRIMARY_BUTTON"
   },
-  "D-SCORE-RX B: One Device with two buttons": {
+  "D-SCORE-RX B: One Device with two buttons: change score for A with green and B with red": {
     "SharedConfig" : "-D-SCORE-RX-SHARED",
     "NrOfDevices" : 1,
     "96f9374a-2417-44e3-ae06-aa362556914e": {
@@ -55,8 +55,8 @@
         {
           "TranslateToBTMessage": [
             "-both buttons released (one device), not used",
-            "changeScoreBLE(B)",
-            "changeScoreBLE(A)",
+            "changeScoreBLE(B, SECONDARY_BUTTON)",
+            "changeScoreBLE(A, PRIMARY_BUTTON)",
             "undoLast() # both buttons pressed (one device)"
           ]
         },
@@ -64,7 +64,7 @@
       ]
     }
   },
-  "D-SCORE-RX C: One Device with two buttons - Confirm with other button": {
+  "D-SCORE-RX C: One Device with two buttons - change score for A with green and B with red - Confirm with other button": {
     "SharedConfig" : "-D-SCORE-RX-SHARED",
     "NrOfDevices" : 1,
     "96f9374a-2417-44e3-ae06-aa362556914e": {
@@ -112,7 +112,7 @@
           "TranslateToBTMessage": [
             "-buttons released (two devices)",
             "-info:red button pressed by %1$s, not used",
-            "changeScoreBLE(%1$s)",
+            "changeScoreBLE(%1$s, %1$s, PRIMARY_BUTTON)",
             "undoScoreForInitiatorBLE(%1$s) # both buttons pressed (two devices)"
           ]
         }
@@ -130,9 +130,9 @@
         {
           "TranslateToBTMessage": [
             "-buttons released (two devices)",
-            "changeScoreBLE(%2$s, %1$s)",
+            "changeScoreBLE(%2$s, %1$s, SECONDARY_BUTTON)",
             "-info:green button pressed by %1$s, not used",
-            "undoScoreForInitiatorBLE(%1$s) #both buttons pressed (two devices)"
+            "undoScoreForInitiatorBLE(%1$s) # both buttons pressed (two devices)"
           ]
         }
       ]

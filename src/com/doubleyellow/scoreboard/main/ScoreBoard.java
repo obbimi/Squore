@@ -5097,6 +5097,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         case swapPlayersOn180DegreesRotationOfDeviceInLandscape: // fall through
                             doRestart();
                             break;
+                        case BluetoothLE_Config:
+                            if ( m_bleReceiverManager != null ) {
+                                m_bleReceiverManager.closeConnection();
+                                m_bleReceiverManager = null;
+                            }
+                            onResumeInitBluetoothBLE();
+                            break;
                         default:
                             break;
                     }
@@ -6206,7 +6213,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             if ( iInvocationCnt == m_iNotifyAfterXSecs * (1000 / I_CONFIRM_COUNTDOWN_INTERVAL) && m_pNotifyAfterXSecs != null ) {
                 // after 3 seconds let wristband of player to confirm vibrate
                 if ( notifyBLE(m_pNotifyAfterXSecs, BLEUtil.Keys.PokeConfig) ) {
-                    String sAppend = getString(R.string.ble_signalled_x_to_confirm, m_pNotifyAfterXSecs);
+                    String sAppend = getBLEMessage(R.string.ble_signalled_x_to_confirm, m_pNotifyAfterXSecs);
                     iBoard.appendToInfoMessage(sAppend, true);
                 }
             }
@@ -6416,7 +6423,22 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         return false;
     }
+    private String getBLEMessage(int iResId, Object... formatArgs) {
+        Object[] newFormatArgs = new Object[formatArgs.length];
+        for(int i=0; i<formatArgs.length;i++) {
+            Object arg = formatArgs[i];
+            if ( arg instanceof Player ) {
+                newFormatArgs[i] = matchModel.getName((Player) arg);
+            } else if ( arg instanceof BLEDeviceButton ) {
+                newFormatArgs[i] = getBLEButtonDescription((BLEDeviceButton) arg);
+            } else {
+                newFormatArgs[i] = arg;
+            }
+        }
+        return getString(iResId, newFormatArgs);
+    }
     private String getBLEButtonDescription(BLEDeviceButton b) {
+        if ( b == null ) { return "" ; }
         String s = m_bleConfig.optString(b.toString(), b.toString());
         if ( s.startsWith("R.string.") ) {
             // TODO: if in form of R.string.xxx in bluetooth_le_config.json
@@ -7186,7 +7208,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     case changeScoreBLEConfirm: {
                         Player          playerWristBand      = Player         .valueOf(saMethodNArgs[1].toUpperCase().trim());
                         BLEDeviceButton eButtonPressed       = BLEDeviceButton.valueOf(saMethodNArgs[2].toUpperCase().trim());
-                        String          sButtonPressed       = getBLEButtonDescription(eButtonPressed);
                         int             iNrOfDevicesRequired = m_bleConfig.optInt   (BLEUtil.Keys.NrOfDevices.toString(), 2);
                         Log.i(TAG, String.format("[interpretReceivedMessage] changeScoreBLEConfirm: %s, player:%s, button:%s", m_blePlayerWaitingForScoreToBeConfirmed, playerWristBand, eButtonPressed));
                         int iTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(m_blePlayerWaitingForScoreToBeConfirmed);
@@ -7197,16 +7218,16 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                 if ( playerWristBand.equals(m_blePlayerWaitingForScoreToBeConfirmed) ) {
                                     // button for same player pressed again
                                     if ( m_bSingleDevice_ConfirmWithSameButton ) {
-                                        sDoChangeScore = getString(R.string.ble_score_confirmed_by_pressing_y, sButtonPressed);
+                                        sDoChangeScore = getBLEMessage(R.string.ble_score_confirmed_by_pressing_y, eButtonPressed);
                                     } else {
-                                        sDoCancelScore = getString(R.string.ble_score_cancelled_by_pressing_y, sButtonPressed);
+                                        sDoCancelScore = getBLEMessage(R.string.ble_score_cancelled_by_pressing_y, eButtonPressed);
                                     }
                                 } else {
                                     // button for other player pressed
                                     if ( m_bSingleDevice_ConfirmWithSameButton ) {
-                                        sDoCancelScore = getString(R.string.ble_score_cancelled_by_pressing_y, sButtonPressed);
+                                        sDoCancelScore = getBLEMessage(R.string.ble_score_cancelled_by_pressing_y, eButtonPressed);
                                     } else {
-                                        sDoChangeScore = getString(R.string.ble_score_confirmed_by_pressing_y, sButtonPressed);
+                                        sDoChangeScore = getBLEMessage(R.string.ble_score_confirmed_by_pressing_y, eButtonPressed);
                                     }
                                 }
                                 if ( sDoChangeScore != null ) {
@@ -7232,8 +7253,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                 Log.w(TAG, String.format("Score for %s entered with button %s now waiting for confirmation by pressing %s", playerWristBand, eButtonPressed, eButtonToConfirm));
                                 m_blePlayerWaitingForScoreToBeConfirmed = playerWristBand;
 
-                                String sButtonDescription = getBLEButtonDescription(eButtonToConfirm);
-                                String sToConfirmMsg = getString(R.string.ble_confirm_score_for_y_by_pressing_z, m_blePlayerWaitingForScoreToBeConfirmed, sButtonDescription);
+                                String sToConfirmMsg = getBLEMessage(R.string.ble_pressed_X__confirm_score_for_Y_by_pressing_Z, eButtonPressed, m_blePlayerWaitingForScoreToBeConfirmed, eButtonToConfirm);
                                 iBoard.showBLEInfoMessage(sToConfirmMsg, -1);
                                 startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed, null);
                             }
@@ -7246,15 +7266,15 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                     // check the confirmation by other player/team
                                     Log.i(TAG, "Check BLE confirmation by " + playerWristBand + " with button " + m_eConfirmScoreByOpponentButton);
                                     if (eButtonPressed.equals(m_eConfirmScoreByOpponentButton)) {
-                                        sDoChangeScore = getString(R.string.ble_score_confirmed_by_opponent_x_by_pressing_y, playerWristBand, sButtonPressed);
+                                        sDoChangeScore = getBLEMessage(R.string.ble_score_confirmed_by_opponent_x_by_pressing_y, playerWristBand, eButtonPressed);
                                     } else if ( eButtonPressed.equals(m_eCancelScoreByOpponentButton) ) {
-                                        sDoCancelScore = getString(R.string.ble_score_cancelled_by_opponent_x_by_pressing_y, playerWristBand, sButtonPressed);
+                                        sDoCancelScore = getBLEMessage(R.string.ble_score_cancelled_by_opponent_x_by_pressing_y, playerWristBand, eButtonPressed);
                                     }
                                 } else {
                                     // same player/team pressed a button...
                                     Log.w(TAG, "Player " + m_blePlayerWaitingForScoreToBeConfirmed + " waiting for confirmation by opponent pressing " + m_eConfirmScoreByOpponentButton);
                                     if (eButtonPressed.equals(m_eCancelScoreByInitiatorButton)) {
-                                        sDoCancelScore = getString(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, playerWristBand, sButtonPressed);
+                                        sDoCancelScore = getBLEMessage(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, playerWristBand, eButtonPressed);
                                     }
                                 }
                                 if (sDoChangeScore != null) {
@@ -7280,14 +7300,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                     // check the confirmation by scoring player/team
                                     Log.i(TAG, "Check BLE confirmation by " + playerWristBand + " with button " + m_eConfirmScoreBySelfButton);
                                     if (eButtonPressed.equals(m_eConfirmScoreBySelfButton)) {
-                                        sDoChangeScore = getString(R.string.ble_score_confirmed_by_scoring_team_x_by_pressing_y, playerWristBand, sButtonPressed);
+                                        sDoChangeScore = getBLEMessage(R.string.ble_score_confirmed_by_scoring_team_x_by_pressing_y, playerWristBand, eButtonPressed);
                                     } else {
-                                        sDoCancelScore = getString(R.string.ble_score_cancelled_by_scoring_team_x_by_pressing_y, playerWristBand, sButtonPressed);
+                                        sDoCancelScore = getBLEMessage(R.string.ble_score_cancelled_by_scoring_team_x_by_pressing_y, playerWristBand, eButtonPressed);
                                     }
                                 } else {
                                     // same player/team pressed a button...
                                     if ( eButtonPressed.equals(m_eInitiateOpponentScoredChangeButton.getOther()) ) {
-                                        sDoCancelScore = getString(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, playerWristBand, sButtonPressed);
+                                        sDoCancelScore = getBLEMessage(R.string.ble_score_cancelled_by_initiator_x_by_pressing_y, playerWristBand, eButtonPressed);
                                     } else {
                                         Log.w(TAG, "Player " + m_blePlayerToConfirmOwnScore + " to confirm own score by pressing " + m_eConfirmScoreBySelfButton);
                                         iBoard.appendToInfoMessage(".");
@@ -7314,23 +7334,20 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                     Log.w(TAG, String.format("Score for %s entered with button %s now waiting for confirmation by opponent %s pressing %s", playerWristBand, eButtonPressed, playerWristBand.getOther(), m_eConfirmScoreByOpponentButton));
                                     m_blePlayerWaitingForScoreToBeConfirmed = playerWristBand;
 
-                                    String sButtonDescription = getBLEButtonDescription(m_eConfirmScoreByOpponentButton);
-                                    String sToConfirmMsg = getString(R.string.ble_player_x_confirm_score_for_y_by_pressing_z, playerWristBand.getOther(), playerWristBand, sButtonDescription);
+                                    String sToConfirmMsg = getBLEMessage(R.string.ble_player_x_confirm_score_for_y_by_pressing_z, playerWristBand.getOther(), playerWristBand, m_eConfirmScoreByOpponentButton);
                                     iBoard.showBLEInfoMessage(sToConfirmMsg, -1);
                                     startWaitingForBLEConfirmation(m_blePlayerWaitingForScoreToBeConfirmed, playerWristBand.getOther());
                                 } else if ( eButtonPressed.equals(m_eInitiateOpponentScoredChangeButton) ) {
                                     Log.w(TAG, String.format("Score for opponent entered by %s with button %s now waiting for confirmation by scoring player %s pressing %s", playerWristBand, eButtonPressed, playerWristBand.getOther(), m_eConfirmScoreBySelfButton));
                                     m_blePlayerToConfirmOwnScore = playerWristBand.getOther();
 
-                                    String sButtonDescription = getBLEButtonDescription(m_eConfirmScoreBySelfButton);
-                                    String sToConfirmMsg = getString(R.string.ble_player_x_confirm_you_scored_by_pressing_y, playerWristBand.getOther(), sButtonDescription);
+                                    String sToConfirmMsg = getBLEMessage(R.string.ble_player_x_confirm_you_scored_by_pressing_y, playerWristBand.getOther(), m_eConfirmScoreBySelfButton);
                                     iBoard.showBLEInfoMessage(sToConfirmMsg, -1);
                                     startWaitingForBLEConfirmation(m_blePlayerToConfirmOwnScore, playerWristBand.getOther());
                                 } else {
                                     Log.w(TAG, String.format("In state waiting for initiate-score-change, button %s does nothing ", eButtonPressed));
                                     if ( PreferenceValues.currentDateIsTestDate() ) {
-                                        String sInitButtonDescription = getBLEButtonDescription(m_eInitiateSelfScoreChangeButton);
-                                        String sInfoMsg = getString(R.string.ble_waiting_initiate_score_change_message, sInitButtonDescription);
+                                        String sInfoMsg = getBLEMessage(R.string.ble_waiting_initiate_score_change_message, m_eInitiateSelfScoreChangeButton);
                                         iBoard.showBLEInfoMessage(sInfoMsg, 4);
                                     }
                                 }
@@ -7371,14 +7388,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             }
                             Player lastScorer = matchModel.getLastScorer();
 
-                            String sInfoMsg = getString(R.string.ble_last_score_for_X_undone_by_ble, pUndoTriggeredBy);
+                            String sInfoMsg = getBLEMessage(R.string.ble_last_score_for_X_undone_by_ble, pUndoTriggeredBy);
                             if ( pUndoTriggeredBy.equals(lastScorer) ) {
                                 //matchModel.undoLast(); // triggered by timer after blinking 'undo'
                                 startVisualFeedbackForScoreChange(lastScorer, R.string.uc_undo);
                                 iBoard.showBLEInfoMessage(sInfoMsg, 10);
                             } else {
                                 if ( lastScorer != null ) {
-                                    sInfoMsg = getString(R.string.ble_last_score_for_X_can_not_be_undone_by_ble_of_Y, lastScorer, pUndoTriggeredBy);
+                                    sInfoMsg = getBLEMessage(R.string.ble_last_score_for_X_can_not_be_undone_by_ble_of_Y, lastScorer, pUndoTriggeredBy);
                                     iBoard.showBLEInfoMessage(sInfoMsg, 10);
                                 }
                             }
@@ -7386,6 +7403,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         break;
                     case changeScoreBLE:
                         if ( (saMethodNArgs.length > 1) && (matchModel != null) ) {
+                            // derive score to change from first parameter
                             String sAorB = saMethodNArgs[1].toUpperCase().trim();
                             Player pScored;
                             if ( sAorB.matches("[0-1]") ) {
@@ -7394,20 +7412,31 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             } else {
                                 pScored = Player.valueOf(sAorB);
                             }
+
+                            // derive initiated-by-player and by-button-pressed from optional 2nd and 3th parameter(s)
                             Player pInitiatedBy = pScored;
-                            if ( saMethodNArgs.length > 2 ) {
-                                sAorB = saMethodNArgs[2].toUpperCase().trim();
-                                if ( sAorB.matches("[0-1]") ) {
-                                    int i0isA1IsB = Integer.parseInt(sAorB);
-                                    pInitiatedBy = Player.values()[i0isA1IsB];
-                                } else {
-                                    pInitiatedBy = Player.valueOf(sAorB);
+                            BLEDeviceButton buttonPressed = null;
+                            int[] iaPosition = {2,3};
+                            for(int iParamPos: iaPosition) {
+                                if ( saMethodNArgs.length > iParamPos ) {
+                                    sAorB = saMethodNArgs[iParamPos].toUpperCase().trim();
+                                    if ( sAorB.length() == 1 ) {
+                                        if ( sAorB.matches("[0-1]") ) {
+                                            int i0isA1IsB = Integer.parseInt(sAorB);
+                                            pInitiatedBy = Player.values()[i0isA1IsB];
+                                        } else {
+                                            pInitiatedBy = Player.valueOf(sAorB);
+                                        }
+                                    } else {
+                                        String sPrimaryOrSecondary = sAorB;
+                                        buttonPressed = BLEDeviceButton.valueOf(sPrimaryOrSecondary);
+                                    }
                                 }
                             }
                             int iTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(pScored);
-                            String sInfoMsg = getString(R.string.ble_score_for_X_changed_by_ble, pScored);
+                            String sInfoMsg = getBLEMessage(R.string.ble_score_for_X_changed_by_Y_ble_button_of_Z, pScored, buttonPressed, pInitiatedBy);
                             if ( pScored != null  && pScored.equals(pInitiatedBy) == false ) {
-                                sInfoMsg = getString(R.string.ble_score_for_X_changed_by_ble_of_Y, pScored, pInitiatedBy);
+                                sInfoMsg = getBLEMessage(R.string.ble_score_for_X_changed_by_Y_ble_of_Z, pScored, buttonPressed, pInitiatedBy);
                             }
                             iBoard.showBLEInfoMessage(sInfoMsg, 10);
                             startVisualFeedbackForScoreChange(pScored, iTmpTxtOnElementDuringFeedback);
