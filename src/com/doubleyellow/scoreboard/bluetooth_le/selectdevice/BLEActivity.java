@@ -34,6 +34,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.doubleyellow.prefs.RWValues;
@@ -95,6 +97,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
     private Button    btnGo;
     private Button    btnVerify;
     private Button    btnScan;
+    private ProgressBar pbVerify = null;
     private    int    m_iProgress = -1;
 
     private static final long lUpdateInterval     = 1000L; // must be smaller then 2 values below
@@ -158,6 +161,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         vgVerify.findViewById(R.id.ble_cav_rescan_for_devices).setOnClickListener(v -> {
             initForScan(true);
         });
+        pbVerify = vgVerify.findViewById(R.id.ble_cav_progressbar);
 
         m_bleConfig = BLEUtil.getActiveConfig(this);
         if ( m_bleConfig == null ) {
@@ -182,11 +186,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                 return;
             }
             if ( m_bIsScanning ) {
-                m_bIsScanning = false;
-                if ( m_cdUpdateGui != null ) {
-                    m_cdUpdateGui.cancel();
-                }
-                bleScanner.stopScan(scanCallback);
+                stopScanning();
             } else {
                 m_bIsScanning = startScan();
             }
@@ -237,6 +237,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                 updateScanButton(m_iProgress);
             }
             @Override public void onFinish() {
+                stopScanning();
                 m_bIsScanning = false;
                 if ( bleScanner != null ) {
                     bleScanner.stopScan(scanCallback);
@@ -353,6 +354,10 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
 
     @Override protected void onDestroy() {
         super.onDestroy();
+        stopScanning();
+    }
+
+    private void stopScanning() {
         if ( bleScanner != null ) {
             bleScanner.stopScan(scanCallback);
         }
@@ -362,6 +367,8 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         if ( m_cdUpdateGui != null ) {
             m_cdUpdateGui.cancel();
         }
+        m_bIsScanning = false;
+        updateScanButton(0);
     }
 
     @Override protected void onPause() {
@@ -432,6 +439,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         }
     };
     private final Map<Player, Integer> m_playerToVerifyButtonResId = MapUtil.getMap(Player.A, R.id.ble_cav_device_1, Player.B, R.id.ble_cav_device_2);
+    private final Map<Player, Integer> m_playerToBatterLevelResId = MapUtil.getMap(Player.A, R.id.ble_cav_device_batterylevel_1, Player.B, R.id.ble_cav_device_batterylevel_2);
 
     private BLEReceiverManager m_bleReceiverManager = null;
     private void initForScan(boolean bStartScan) {
@@ -447,14 +455,11 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         }
     }
     private void initForVerify() {
-        bleScanner.stopScan(scanCallback);
-        if ( m_cdUpdateGui != null ) {
-            m_cdUpdateGui.cancel();
-        }
-        m_bIsScanning = false;
+        stopScanning();
 
         vgScan.setVisibility(View.INVISIBLE);
         vgVerify.setVisibility(View.VISIBLE);
+        pbVerify.setVisibility(View.VISIBLE);
         ImageView view = vgVerify.findViewById(R.id.ble_cav_image);
         if ( view != null ) {
             String sImageUrl = m_bleConfig.optString(BLEUtil.Keys.DeviceImageURL.toString());
@@ -471,6 +476,8 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             if ( vBtn == null ) { continue; }
             vBtn.setEnabled(false);
         }
+        String sBatterLevelUnknown = "? %";
+            // sBatterLevelUnknown = getString(R.string.ble_request_batterylevel);
         int iDifferentDevices = (new LinkedHashSet<>(mSelectedSeenDevices.values())).size();
         for(Player p: Player.values() ) {
             Integer iResId = m_playerToVerifyButtonResId.get(p);
@@ -480,6 +487,14 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                 m_bleReceiverManager.writeToBLE(p, BLEUtil.Keys.PokeConfig);
             });
             btn.setVisibility(iDifferentDevices==2 ? View.VISIBLE : View.GONE);
+
+            Integer iResIdBL = m_playerToBatterLevelResId.get(p);
+            Button btnBL = vgVerify.findViewById(iResIdBL);
+            btnBL.setText(sBatterLevelUnknown);
+            btnBL.setOnClickListener(v -> {
+                m_bleReceiverManager.readBatteryLevel(p);
+            });
+            btnBL.setVisibility(iDifferentDevices==2 ? View.VISIBLE : View.GONE);
         }
         View btnSwapDevices               = vgVerify.findViewById(R.id.ble_cav_swap_devices);
         btnSwapDevices.setVisibility(iDifferentDevices==2 ? View.VISIBLE : View.GONE);
@@ -489,6 +504,13 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             m_bleReceiverManager.writeToBLE(null, BLEUtil.Keys.PokeConfig);
         });
         btnBoth.setVisibility(iDifferentDevices==1 ? View.VISIBLE : View.GONE);
+
+        Button btnBLBoth = vgVerify.findViewById(R.id.ble_cav_device_batterylevel_both);
+        btnBLBoth.setText(sBatterLevelUnknown);
+        btnBLBoth.setOnClickListener(v -> {
+            m_bleReceiverManager.readBatteryLevel(null);
+        });
+        btnBLBoth.setVisibility(iDifferentDevices==1 ? View.VISIBLE : View.GONE);
 
         if ( m_bleReceiverManager != null ) {
             // e.g. if swap devices is clicked
@@ -512,68 +534,127 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             Log.d(TAG, "msg.arg1 : " + msg.arg1);
             Log.d(TAG, "msg.arg2 : " + msg.arg2);
 */
-            if ( btMessage.equals(BTMessage.INFO) ) {
-                int iNrOfDevices = msg.arg2;
-                try {
-                    String sMsg2 = m_context.getString(msg.arg1, iNrOfDevices, sMsg, Brand.getShortName(m_context));
-                    Toast.makeText(m_context, sMsg2, Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    Log.w(TAG, "Error while constructing message : " + sMsg);
-                    throw new RuntimeException(e);
+            switch (btMessage) {
+                case READ:
+                    try {
+                        Toast.makeText(m_context, sMsg, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.w(TAG, "Message could not be understood :" + sMsg);
+                    }
+                    break;
+                case READ_RESULT_BATTERY: {
+                    int iBatteryLevel = msg.arg1;
+                    int iPlayer       = msg.arg2;
+                    String sDevice    = sMsg;
+                    Player p = null;
+                    if (0 <= iPlayer && iPlayer <= 1) {
+                        p = Player.values()[iPlayer];
+                    }
+                    int iResId = R.id.ble_cav_device_batterylevel_both;
+                    if ( p != null ) {
+                        iResId = m_playerToBatterLevelResId.get(p);
+                    }
+                    TextView txtView = vgVerify.findViewById(iResId);
+                    txtView.setText(iBatteryLevel + "%");
                 }
-            } else if ( btMessage.equals(BTMessage.READ) ) {
-                try {
-                    Toast.makeText(m_context, sMsg, Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.w(TAG, "Message could not be understood :" + sMsg);
+                break;
+                case INFO: {
+                    int iNrOfDevices = msg.arg2;
+                    try {
+                        String sMsg2 = m_context.getString(msg.arg1, iNrOfDevices, sMsg, Brand.getShortName(m_context));
+                        Toast.makeText(m_context, sMsg2, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Log.w(TAG, "Error while constructing message : " + sMsg);
+                        throw new RuntimeException(e);
+                    }
                 }
-            } else if ( btMessage.equals(BTMessage.STATE_CHANGE) ) {
-                BLEState btState = BLEState.values()[msg.arg1];
-                int iNrOfDevices = msg.arg2;
-                String sDevice = (String) msg.obj;
-                if ( sDevice == null ) {
-                    sDevice = "No device mac for state change";
+                break;
+                case STATE_CHANGE: {
+                    BLEState btState = BLEState.values()[msg.arg1];
+                    int iNrOfDevices = msg.arg2;
+                    String sDevice = (String) msg.obj;
+                    if ( sDevice == null ) {
+                        sDevice = "No device mac for state change";
+                    }
+                    Map<Player, String> usedForPlayers = MapUtil.filterValues(mSelectedSeenDevices, sDevice, Enums.Match.Keep);
+                    Log.d(TAG, String.format("[Verify] device %s, state %s, players connected to device %d (%s)", sDevice, btState, MapUtil.size(usedForPlayers), usedForPlayers.keySet()));
+                    //Log.d(TAG, "new state  : " + btState);
+                    Log.d(TAG, "iNrOfDevices: " + iNrOfDevices);
+                    View btnVerifySingleDeviceForBoth = vgVerify.findViewById(R.id.ble_cav_device_both);
+                    View btnSwapDevices               = vgVerify.findViewById(R.id.ble_cav_swap_devices);
+                    switch (btState) {
+                        case CONNECTED_DiscoveringServices:
+                        case CONNECTED_TO_1_of_2:
+                        case CONNECTED_ALL:
+                            btnVerifySingleDeviceForBoth.setEnabled(true);
+                            for(Object o: usedForPlayers.keySet() ) {
+                                Player p = Player.valueOf(String.valueOf(o));
+                                int iResId = m_playerToVerifyButtonResId.get(p);
+                                vgVerify.findViewById(iResId).setEnabled(true);
+                            }
+
+                            // does not seem to work if done directly
+                            if ( btState.equals(BLEState.CONNECTED_ALL) ) {
+                                RequestBatteryLevelCountDown countDown = new RequestBatteryLevelCountDown(iNrOfDevices);
+                                countDown.start();
+                            }
+
+                            if ( iNrOfDevices == 2 ) {
+                                btnSwapDevices.setEnabled(true);
+                            }
+                            break;
+                        case DISCONNECTED:
+                            break;
+                        case CONNECTING:
+                            break;
+                        case DISCONNECTED_Gatt:
+                            // if one of the two devices disconnects
+                            for(Object o: usedForPlayers.keySet() ) {
+                                Player p = Player.valueOf(String.valueOf(o));
+                                int iResId = m_playerToVerifyButtonResId.get(p);
+                                vgVerify.findViewById(iResId).setEnabled(false);
+                            }
+                            btnSwapDevices.setEnabled(false);
+                            btnVerifySingleDeviceForBoth.setEnabled(false);
+                            break;
+                        default:
+                            Toast.makeText(m_context, sMsg, Toast.LENGTH_LONG).show();
+                            break;
+                    }
                 }
-                Map<Player, String> usedForPlayers = MapUtil.filterValues(mSelectedSeenDevices, sDevice, Enums.Match.Keep);
-                Log.d(TAG, String.format("[Verify] device %s, state %s, players connected to device %d (%s)", sDevice, btState, MapUtil.size(usedForPlayers), usedForPlayers.keySet()));
-                //Log.d(TAG, "new state  : " + btState);
-                Log.d(TAG, "iNrOfDevices: " + iNrOfDevices);
-                View btnVerifySingleDeviceForBoth = vgVerify.findViewById(R.id.ble_cav_device_both);
-                View btnSwapDevices               = vgVerify.findViewById(R.id.ble_cav_swap_devices);
-                switch (btState) {
-                    case CONNECTED_DiscoveringServices:
-                    case CONNECTED_TO_1_of_2:
-                    case CONNECTED_ALL:
-                        btnVerifySingleDeviceForBoth.setEnabled(true);
-                        for(Object o: usedForPlayers.keySet() ) {
-                            Player p = Player.valueOf(String.valueOf(o));
-                            int iResId = m_playerToVerifyButtonResId.get(p);
-                            vgVerify.findViewById(iResId).setEnabled(true);
-                        }
-                        if ( iNrOfDevices == 2 ) {
-                            btnSwapDevices.setEnabled(true);
-                        }
-                        break;
-                    case DISCONNECTED:
-                        break;
-                    case CONNECTING:
-                        break;
-                    case DISCONNECTED_Gatt:
-                        // if one of the two devices disconnects
-                        for(Object o: usedForPlayers.keySet() ) {
-                            Player p = Player.valueOf(String.valueOf(o));
-                            int iResId = m_playerToVerifyButtonResId.get(p);
-                            vgVerify.findViewById(iResId).setEnabled(false);
-                        }
-                        btnSwapDevices.setEnabled(false);
-                        btnVerifySingleDeviceForBoth.setEnabled(false);
-                        break;
-                    default:
-                        Toast.makeText(m_context, sMsg, Toast.LENGTH_LONG).show();
-                        break;
-                }
+                break;
             }
+        }
+    }
+
+    private static final long lDurationRequestingBatteryLevel = 3000;
+    private class RequestBatteryLevelCountDown extends CountDownTimer {
+        int iNrOfDevices;
+        int iTicks;
+        RequestBatteryLevelCountDown(int iNrOfDevices) {
+            super(lDurationRequestingBatteryLevel, lDurationRequestingBatteryLevel / 3);
+            this.iNrOfDevices = iNrOfDevices;
+            this.iTicks = 0;
+        }
+        @Override public void onTick(long millisUntilFinished) {
+            iTicks++;
+            if ( iTicks == 1 ) {
+                pbVerify.setVisibility(View.VISIBLE);
+                return;
+            } // skip first tick... to fast
+            if ( iNrOfDevices == 2 ) {
+                m_bleReceiverManager.readBatteryLevel(Player.B);
+            } else {
+                m_bleReceiverManager.readBatteryLevel(null);
+            }
+        }
+
+        @Override public void onFinish() {
+            if ( iNrOfDevices == 2 ) {
+                m_bleReceiverManager.readBatteryLevel(Player.A);
+            }
+            pbVerify.setVisibility(View.INVISIBLE);
         }
     }
 }

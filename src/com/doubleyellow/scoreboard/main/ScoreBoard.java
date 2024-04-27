@@ -6403,9 +6403,16 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             });
         }
     }
+
+    private Player m_bleRequestBatteryLevelOf = Player.A;
     private void showBLEDevicesBatteryLevels() {
         // actual level will be returned async via an INFO message
-        m_bleReceiverManager.readBatteryLevel();
+        if ( m_nrOfBLEDevicesConnected == 2 ) {
+            m_bleReceiverManager.readBatteryLevel(m_bleRequestBatteryLevelOf);
+            m_bleRequestBatteryLevelOf = m_bleRequestBatteryLevelOf.getOther(); // for next call
+        } else {
+            m_bleReceiverManager.readBatteryLevel(null);
+        }
     }
 
     public boolean notifyBLE(Player p, BLEUtil.Keys configKey) {
@@ -7435,8 +7442,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             }
                             int iTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(pScored);
                             String sInfoMsg = getBLEMessage(R.string.ble_score_for_X_changed_by_Y_ble_button_of_Z, pScored, buttonPressed, pInitiatedBy);
-                            if ( pScored != null  && pScored.equals(pInitiatedBy) == false ) {
-                                sInfoMsg = getBLEMessage(R.string.ble_score_for_X_changed_by_Y_ble_of_Z, pScored, buttonPressed, pInitiatedBy);
+                            if ( m_nrOfBLEDevicesConnected == 1 ) {
+                                sInfoMsg = getBLEMessage(R.string.ble_score_for_X_changed_by_Y_ble_button, pScored, buttonPressed);
                             }
                             iBoard.showBLEInfoMessage(sInfoMsg, 10);
                             startVisualFeedbackForScoreChange(pScored, iTmpTxtOnElementDuringFeedback);

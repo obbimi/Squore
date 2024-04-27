@@ -79,6 +79,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         >
+        <!-- cav = connect and validate -->
         <ImageView
             android:id="@+id/ble_cav_image"
             android:layout_width="match_parent"
@@ -88,48 +89,85 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintDimensionRatio="H,6:1"
             />
+        <ProgressBar
+            android:id="@+id/ble_cav_progressbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/ble_cav_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+        <Button
+            android:id="@+id/ble_cav_device_batterylevel_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="BL1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="H,2:3"
+            />
         <Button
             android:id="@+id/ble_cav_device_1"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/ble_cav_poke_device_x"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ble_cav_device_batterylevel_1"
+            />
+        <Button
+            android:id="@+id/ble_cav_swap_devices"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/ble_swap_devices"
+            android:drawableStart="@drawable/ic_action_import_export"
+            app:layout_constraintTop_toBottomOf="@id/ble_cav_device_1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/ble_cav_device_1"
+            />
+        <Button
+            android:id="@+id/ble_cav_device_batterylevel_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="BL2"
+            app:layout_constraintTop_toBottomOf="@id/ble_cav_swap_devices"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="H,2:3"
             />
         <Button
             android:id="@+id/ble_cav_device_2"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/ble_cav_poke_device_x"
-            app:layout_constraintTop_toBottomOf="@id/ble_cav_device_1"
+            app:layout_constraintTop_toBottomOf="@id/ble_cav_swap_devices"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ble_cav_device_batterylevel_2"
+            />
+        <Button
+            android:id="@+id/ble_cav_device_batterylevel_both"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="BL"
+            app:layout_constraintTop_toBottomOf="@id/ble_cav_device_2"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="H,2:3"
             />
         <Button
             android:id="@+id/ble_cav_device_both"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/ble_cav_poke_device_both"
             app:layout_constraintTop_toBottomOf="@id/ble_cav_device_2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
-        <Button
-            android:id="@+id/ble_cav_swap_devices"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/ble_swap_devices"
-            app:layout_constraintTop_toBottomOf="@id/ble_cav_device_both"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ble_cav_device_batterylevel_both"
             />
         <Button
             android:id="@+id/ble_cav_rescan_for_devices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/ble_rescan_for_devices"
-            app:layout_constraintTop_toBottomOf="@id/ble_cav_swap_devices"
+            android:drawableStart="@drawable/ic_menu_matchformat"
+            app:layout_constraintTop_toBottomOf="@id/ble_cav_device_both"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />

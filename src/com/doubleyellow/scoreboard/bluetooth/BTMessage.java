@@ -20,6 +20,7 @@ package com.doubleyellow.scoreboard.bluetooth;
 public enum BTMessage {
     STATE_CHANGE ,
     READ         ,
+    READ_RESULT_BATTERY,
     WRITE        ,
     INFO         ,
 }

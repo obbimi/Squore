@@ -69,7 +69,6 @@ public class BLEReceiverManager
 
     private final String BATTERY_SERVICE_UUID = "0000180f-0000-1000-8000-00805f9b34fb";
     private final String BATTERY_CHARACTERISTIC_UUID = "00002a19-0000-1000-8000-00805f9b34fb";
-    private String sReadingBatterLevelOf = null;
 
     private final BluetoothLeScanner bluetoothLeScanner;
     private       Handler mHandler;
@@ -84,8 +83,9 @@ public class BLEReceiverManager
     private       List<String> saDeviceAddresses         = new ArrayList<>();
     private final JSONObject   mServicesAndCharacteristicsConfig;
 
-    private final Map<String, BluetoothGatt> mDevice2gatt = new HashMap<>();
-    private final Map<Player, BluetoothGatt> mPlayer2gatt = new HashMap<>();
+    private final Map<String, BluetoothGatt>           mDevice2gatt     = new HashMap<>();
+    private final Map<Player, BluetoothGatt>           mPlayer2gatt     = new HashMap<>();
+    private final Map<String, Player>                  mDevice2Player   = new HashMap<>();
     private final Map<Player, MyBluetoothGattCallback> mPlayer2callback = new HashMap<>();
     private       MyBluetoothGattCallback mCallbackSingleDevice = null;
 
@@ -235,6 +235,7 @@ public class BLEReceiverManager
                         mDevice2gatt.put(this.sDeviceAddress, gatt); //this.gatt = gatt;
                         if ( player != null ) {
                             mPlayer2gatt.put(player, gatt);
+                            mDevice2Player.put(this.sDeviceAddress, player);
                         }
                         break;
                     }
@@ -243,6 +244,7 @@ public class BLEReceiverManager
                         gatt.close();
                         mDevice2gatt.remove(this.sDeviceAddress);
                         mDevicesUsed.remove(this.sDeviceAddress);
+                        mDevice2Player.remove(this.sDeviceAddress);
                         if ( player != null ) {
                             mPlayer2gatt.remove(player);
                         }
@@ -260,6 +262,7 @@ public class BLEReceiverManager
             } else {
                 Log.w(TAG, String.format("onConnectionStateChange status :%d (%s)", status, this.sDeviceAddress)); // status = 8 if e.g. device turned off
                 mDevice2gatt.remove(this.sDeviceAddress);
+                mDevice2Player.remove(this.sDeviceAddress);
                 if ( player != null ) {
                     mPlayer2gatt.remove(player);
                 }
@@ -392,7 +395,7 @@ public class BLEReceiverManager
             }
             if ( characteristic.getUuid().toString().equalsIgnoreCase(BATTERY_CHARACTERISTIC_UUID) ) {
                 Integer intValue = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT8, 0);
-                Message msg = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.ble_battery_level, intValue, (this.player!=null?this.player+" : ":"") + " " + sReadingBatterLevelOf);
+                Message msg = mHandler.obtainMessage(BTMessage.READ_RESULT_BATTERY.ordinal(), intValue, (this.player!=null?this.player.ordinal():-1),this.sDeviceAddress);
                 mHandler.sendMessage(msg);
             } else if ( characteristic.getUuid().toString().equalsIgnoreCase(m_sPlayerTypeCharacteristicUuid) ) {
                 BluetoothGattCharacteristic cPlayerType = characteristic;
@@ -588,7 +591,7 @@ public class BLEReceiverManager
         return true;
     }
 
-    public String readBatteryLevel() {
+    public String readBatteryLevel(Player p) {
         for ( String sDevice: mDevice2gatt.keySet() ) {
             BluetoothGatt gatt = mDevice2gatt.get(sDevice);
 
@@ -596,15 +599,16 @@ public class BLEReceiverManager
             if ( batteryCharacteristics == null ) {
                 continue;
             }
-            if ( mDevice2gatt.size() == 2 ) {
-                if ( sReadingBatterLevelOf != null && sReadingBatterLevelOf.equals(sDevice) ) {
-                    continue;
-                }
+            if ( mDevice2Player.size() == 2 && (p != null) && (p.equals(mDevice2Player.get(sDevice)) == false) ) {
+                Log.d(TAG, String.format("Skipping %s since not assigned to player %s", sDevice, p));
+                continue;
             }
-            sReadingBatterLevelOf = sDevice;
+
             if ( gatt.readCharacteristic(batteryCharacteristics) ) {
                 // actual value must be 'catched' in callback: onCharacteristicRead()
-                return sReadingBatterLevelOf;
+                return sDevice;
+            } else {
+                Log.d(TAG, "Failed to read battery characteristic of " + sDevice);
             }
         }
         return null;

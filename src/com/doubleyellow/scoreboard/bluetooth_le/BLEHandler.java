@@ -49,52 +49,69 @@ public class BLEHandler extends Handler
         //Log.d(TAG, "msg.obj  : " + msg.obj);
         //Log.d(TAG, "msg.arg1 : " + msg.arg1);
         //Log.d(TAG, "msg.arg2 : " + msg.arg2);
-        if ( btMessage.equals(BTMessage.INFO) ) {
-            int iNrOfDevices = msg.arg2;
-            try {
-                String sMsg2 = sb.getString(msg.arg1, iNrOfDevices, sMsg, Brand.getShortName(sb));
+        switch (btMessage) {
+            case READ:
+                try {
+                    sb.interpretReceivedMessageOnUiThread(sMsg, MessageSource.BluetoothLE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.w(TAG, "Message could not be understood :" + sMsg);
+                }
+                break;
+            case READ_RESULT_BATTERY:
+                // e.g. battery level
+                int iBatteryLevel = msg.arg1;
+                int iPlayer       = msg.arg2;
+                String sDevice = (String) msg.obj;
+                String sMsg2 = sb.getString(R.string.ble_battery_level, iBatteryLevel, sDevice);
                 //Toast.makeText(sb, sMsg2, Toast.LENGTH_LONG).show();
-                sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sMsg2, -1);
-            } catch (Exception e) {
-                Log.w(TAG, "Error while constructing message : " + sMsg);
-                throw new RuntimeException(e);
+                sb.updateBLEConnectionStatus(View.VISIBLE, -1, sMsg2, 10);
+                break;
+            case INFO: {
+                int iNrOfDevices = msg.arg2;
+                try {
+                    String sMsgInfo = sb.getString(msg.arg1, iNrOfDevices, sMsg, Brand.getShortName(sb));
+                    //Toast.makeText(sb, sMsg2, Toast.LENGTH_LONG).show();
+                    sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sMsgInfo, -1);
+                } catch (Exception e) {
+                    Log.w(TAG, "Error while constructing message : " + sMsg);
+                    throw new RuntimeException(e);
+                }
+                break;
             }
-        } else if ( btMessage.equals(BTMessage.READ) ) {
-            try {
-                sb.interpretReceivedMessageOnUiThread(sMsg, MessageSource.BluetoothLE);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.w(TAG, "Message could not be understood :" + sMsg);
-            }
-        } else if ( btMessage.equals(BTMessage.STATE_CHANGE) ) {
-            BLEState btState = BLEState.values()[msg.arg1];
-            int iNrOfDevices = msg.arg2;
-            Log.d(TAG, "new state  : " + btState);
-            Log.d(TAG, "iNrOfDevices: " + iNrOfDevices);
-            switch (btState) {
-                case CONNECTED_DiscoveringServices:
-                    break;
-                case CONNECTED_TO_1_of_2:
-                    sb.updateBLEConnectionStatus(View.VISIBLE, 1, sb.getString(R.string.ble_only_one_of_two_devices_connected), -1);
-                    break;
-                case CONNECTED_ALL:
-                    String sUIMsg = sb.getResources().getQuantityString(R.plurals.ble_ready_for_scoring_with_devices, iNrOfDevices);
-                    sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sUIMsg, 10);
-                    //sb.showBLEVerifyConnectedDevicesDialog(iNrOfDevices);
-                    break;
-                case DISCONNECTED:
-                    sb.updateBLEConnectionStatus(View.INVISIBLE, -1, "Oeps 3", -1);
-                    break;
-                case CONNECTING:
-                    sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_connecting_to_devices), -1);
-                    break;
-                case DISCONNECTED_Gatt:
-                    // if one of the two devices disconnects
-                    sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_Lost_connection_to_a_device), -1);
-                    break;
-                default:
-                    Toast.makeText(sb, sMsg, Toast.LENGTH_LONG).show();
-                    break;
+            case WRITE:
+                break;
+            case STATE_CHANGE: {
+                BLEState btState = BLEState.values()[msg.arg1];
+                int iNrOfDevices = msg.arg2;
+                Log.d(TAG, "new state  : " + btState);
+                Log.d(TAG, "iNrOfDevices: " + iNrOfDevices);
+                switch (btState) {
+                    case CONNECTED_DiscoveringServices:
+                        break;
+                    case CONNECTED_TO_1_of_2:
+                        sb.updateBLEConnectionStatus(View.VISIBLE, 1, sb.getString(R.string.ble_only_one_of_two_devices_connected), -1);
+                        break;
+                    case CONNECTED_ALL:
+                        String sUIMsg = sb.getResources().getQuantityString(R.plurals.ble_ready_for_scoring_with_devices, iNrOfDevices);
+                        sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sUIMsg, 10);
+                        //sb.showBLEVerifyConnectedDevicesDialog(iNrOfDevices);
+                        break;
+                    case DISCONNECTED:
+                        sb.updateBLEConnectionStatus(View.INVISIBLE, -1, "Oeps 3", -1);
+                        break;
+                    case CONNECTING:
+                        sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_connecting_to_devices), -1);
+                        break;
+                    case DISCONNECTED_Gatt:
+                        // if one of the two devices disconnects
+                        sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_Lost_connection_to_a_device), -1);
+                        break;
+                    default:
+                        Toast.makeText(sb, sMsg, Toast.LENGTH_LONG).show();
+                        break;
+                }
+                break;
             }
         }
     }

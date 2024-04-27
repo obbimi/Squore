@@ -21,6 +21,7 @@
     </plurals>
     <string name="ble_message_x_ignored">Message from BLE ignored (%1$s): %2$s</string>
     <string name="ble_battery_level">BLE Battery Level of %2$s: %1$d %%</string> <!-- %% is 'escaped' percentage character -->
+    <string name="ble_request_batterylevel">Request battery level</string>
     <string name="ble_waiting_initiate_score_change_message">Waiting for initiate-score-change by pressing %1$s by either player/team</string>
     <string name="ble_score_cancelled_by_pressing_y">Score cancelled by pressing %1$s</string>
     <string name="ble_score_confirmed_by_pressing_y">Score confirmed by pressing %1$s</string>
@@ -37,7 +38,7 @@
     <string name="ble_score_for_X_changed_by_Y_ble_button_of_Z">Score for %1$s changed by %2$s BLE button of %3$s</string>
     <string name="ble_last_score_for_X_undone_by_ble">Last score for %1$s undone by BLE of %1$s</string>
     <string name="ble_last_score_for_X_can_not_be_undone_by_ble_of_Y">Last score for %1$s can not be undone by BLE of %2$s</string>
-    <string name="ble_score_for_X_changed_by_Y_ble_of_Z">Score for %1$s changed by %2$s BLE button of %3$s</string>
+    <string name="ble_score_for_X_changed_by_Y_ble_button">Score for %1$s changed by %2$s BLE button</string>
     <plurals name="ble_ready_for_scoring_with_devices">
         <item quantity="one">Ready for scoring with the BLE device</item>
         <item quantity="other">Ready for scoring with both BLE devices</item>
