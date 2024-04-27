@@ -218,6 +218,7 @@ public class BLEReceiverManager
         private int lastValueReceived = 0;
 
         private final String sDeviceAddress;
+        /** is null in case a single device is used for scoring for both players */
         private final Player player ;
         MyBluetoothGattCallback(String sAddress, Player player) {
             this.sDeviceAddress = sAddress;

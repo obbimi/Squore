@@ -95,6 +95,8 @@ public class BluetoothHandler extends Handler
                 sb.interpretReceivedMessageOnUiThread(readMessage, MessageSource.BluetoothMirror);
                 m_bHandlingBluetoothMessageInProgress = false;
                 break;
+            case READ_RESULT_BATTERY:
+                break;
             case INFO:
                 storeBTDeviceConnectedTo(msg.obj); // normally correct device is already stored in 'case STATE_CHANGE'
                 String sMsg = sb.getString(msg.arg1, m_sDeviceNameLastConnected, Brand.getShortName(sb));

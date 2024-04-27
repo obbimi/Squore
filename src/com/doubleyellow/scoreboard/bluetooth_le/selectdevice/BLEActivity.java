@@ -251,7 +251,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
     }
 
     private CountDownTimer m_cdUpdateGui;
-    private long           m_lStopScanningAfterXSeconds = 60 * 10; // TODO: preference?
+    private long           m_lStopScanningAfterXSeconds = 60; // TODO: preference?
     private boolean startScan() {
         if ( scanResults.size() > 0 ) {
             scanResults.clear();
