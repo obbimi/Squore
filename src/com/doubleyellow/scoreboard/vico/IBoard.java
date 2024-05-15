@@ -734,14 +734,46 @@ public class IBoard implements TimerViewContainer
 
             return scoresToShow;
         } else {
+            ViewUtil.hideViews(m_vRoot , R.id.bnt_score1_set_tiebreak_lost_with, R.id.bnt_score2_set_tiebreak_lost_with);
             if ( Brand.isGameSetMatch() ) {
                 GSMModel gsmModel = (GSMModel) matchModel;
                 TextView vSetScore = (TextView) findViewById(R.id.btn_score1_set);
                 if ( vSetScore != null ) {
                     Map<Player, Integer> setsWon = gsmModel.getSetsWon();
-                    vSetScore.setText(String.valueOf(setsWon.get(m_firstPlayerOnScreen)));
+                    Integer iSets1 = setsWon.get(m_firstPlayerOnScreen);
+                    Integer iSets2 = setsWon.get(m_firstPlayerOnScreen.getOther());
+                    if ( iSets1 + iSets2 == 1 ) {
+                        // only one set played up till now: show how the set ended, e.g. 6-4 or 7-6
+                        List<Map<Player, Integer>> gamesWonPerSet = MatchGameScoresView.gsmGamesWonPerSet(gsmModel);
+                        Map<Player, Integer> gamesWonSet1 = gamesWonPerSet.get(0);
+                        iSets1 = gamesWonSet1.get(m_firstPlayerOnScreen);
+                        iSets2 = gamesWonSet1.get(m_firstPlayerOnScreen.getOther());
+
+                        // in case of tiebreak
+                        if ( iSets1 * iSets2 < 0 ) {
+                            // points score by loser
+                            int iResIdSmallDigit = 0;
+                            int iPointsOfTiebreakLoser = 0; // TODO: display this in a small digit
+                            if ( iSets1 < 0 ) {
+                                iPointsOfTiebreakLoser = Math.abs(iSets1);
+                                iResIdSmallDigit = R.id.bnt_score1_set_tiebreak_lost_with;
+                                iSets1 = iSets2 - 1;
+                            }
+                            if ( iSets2 < 0 ) {
+                                iPointsOfTiebreakLoser = Math.abs(iSets2);
+                                iResIdSmallDigit = R.id.bnt_score2_set_tiebreak_lost_with;
+                                iSets2 = iSets1 - 1;
+                            }
+                            TextView viewById = (TextView) findViewById(iResIdSmallDigit);
+                            if ( viewById != null ) {
+                                viewById.setVisibility(View.VISIBLE);
+                                viewById.setText(String.valueOf(iPointsOfTiebreakLoser));
+                            }
+                        }
+                    }
+                    vSetScore.setText(String.valueOf(iSets1));
                     vSetScore = (TextView) findViewById(R.id.btn_score2_set);
-                    vSetScore.setText(String.valueOf(setsWon.get(m_firstPlayerOnScreen.getOther())));
+                    vSetScore.setText(String.valueOf(iSets2));
                 }
             } else {
                 // TODO: use btn_score1_set to display serve side for squash?
@@ -791,17 +823,31 @@ public class IBoard implements TimerViewContainer
 
             matchGameScores.update(matchModel, m_firstPlayerOnScreen);
         } else {
+            // DONE below with m_player2gamesWonId
+/*
             TextView vGameScore = (TextView) findViewById(R.id.btn_gameswon1);
             if ( vGameScore != null ) {
                 Map<Player, Integer> gamesWon = matchModel.getGamesWon();
                 if ( gamesWon != null ) {
-                    vGameScore.setText(String.valueOf(gamesWon.get(m_firstPlayerOnScreen)) );
+                    Integer iGames1 = gamesWon.get(m_firstPlayerOnScreen);
+                    Integer iGames2 = gamesWon.get(m_firstPlayerOnScreen.getOther());
+                    if ( matchModel instanceof GSMModel ) {
+                        List<Map<Player, Integer>> maps = MatchGameScoresView.gsmGamesWonPerSet((GSMModel) matchModel);
+                        Map<Player, Integer> last = ListUtil.removeLast(maps);
+                        if ( MapUtil.getMaxValue(last) == 0 && ListUtil.isNotEmpty(maps) ) {
+                            last = ListUtil.removeLast(maps);
+                        }
+                        iGames1 = last.get(m_firstPlayerOnScreen);
+                        iGames2 = last.get(m_firstPlayerOnScreen.getOther());
+                    }
+                    vGameScore.setText(String.valueOf(iGames1) );
                     vGameScore = (TextView) findViewById(R.id.btn_gameswon2);
-                    vGameScore.setText(String.valueOf(gamesWon.get(m_firstPlayerOnScreen.getOther())) );
+                    vGameScore.setText(String.valueOf(iGames2) );
                 } else {
                     Log.w(TAG, "Games won is null");
                 }
             }
+*/
         }
 
         // update casting screen
@@ -832,6 +878,16 @@ public class IBoard implements TimerViewContainer
 
         if ( (m_player2gamesWonId != null) && (matchModel != null) ) {
             Map<Player, Integer> gamesWon = matchModel.getGamesWon(false);
+            if ( matchModel instanceof GSMModel ) {
+                GSMModel gsmModel = (GSMModel) matchModel;
+                if ( gsmModel.isTieBreakGame() ) {
+                    List<Map<Player, Integer>> maps = MatchGameScoresView.gsmGamesWonPerSet(gsmModel);
+                    gamesWon = ListUtil.removeLast(maps);
+                    if ( MapUtil.getMaxValue(gamesWon) == 0 && ListUtil.isNotEmpty(maps) ) {
+                        gamesWon = ListUtil.removeLast(maps);
+                    }
+                }
+            }
             if ( MapUtil.isNotEmpty(gamesWon) ) {
                 for(Player player: Player.values() ) {
                     int iNameId = m_player2gamesWonId.get(player);
@@ -943,6 +999,8 @@ public class IBoard implements TimerViewContainer
         this.mColors = mColors;
 
         Integer mainBgColor = mColors.get(ColorPrefs.ColorTarget.backgroundColor);
+        Integer mainDark    = mColors.get(ColorPrefs.ColorTarget.darkest);
+        Integer mainLight   = mColors.get(ColorPrefs.ColorTarget.lightest);
 
         for( Player player: Model.getPlayers() ) {
             if ( m_player2serverSideId != null ) {
@@ -984,6 +1042,16 @@ public class IBoard implements TimerViewContainer
                     GamesWonButton txtView = (GamesWonButton) view;
                     setTextColor(txtView, scoreTxtColor);
                     setBackgroundColor(txtView, scoreBgColor);
+                }
+            }
+
+            if ( m_player2SetsWonId != null ) {
+                int iNameId = m_player2SetsWonId.get(player);
+                View view = findViewById(iNameId);
+                if ( view instanceof AutoResizeTextView ) {
+                    AutoResizeTextView txtView = (AutoResizeTextView) view;
+                    setTextColor(txtView, mainLight);
+                    setBackgroundColor(txtView, mainDark); // transparent
                 }
             }
 
@@ -1129,8 +1197,8 @@ public class IBoard implements TimerViewContainer
                 player2GuiElement = m_player2gamesWonId;
                 break;
             case SetsButton:
-                iBgColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonBackgroundColor);
-                iTxColor = mColors.get(ColorPrefs.ColorTarget.scoreButtonTextColor);
+                iBgColor = mColors.get(ColorPrefs.ColorTarget.darkest);
+                iTxColor = mColors.get(ColorPrefs.ColorTarget.lightest);
                 player2GuiElement = m_player2SetsWonId;
                 break;
         }

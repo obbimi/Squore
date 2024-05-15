@@ -116,6 +116,36 @@ public class MatchGameScoresView extends LinearLayout
         GamesWonPerSet,
         SetsWon_and_GamesWonInLastSet,
     }
+
+    public static List<Map<Player, Integer>> gsmGamesWonPerSet(GSMModel gsmModel) {
+        List<Map<Player, Integer>> endScores = gsmModel.getGamesWonPerSet();
+        // for all 7-6 scores: turn into 7-<negative value of points reached in tiebreak)
+        int iNrOfSets = ListUtil.size(endScores);
+        if ( iNrOfSets > 0 ) {
+            int iSetNrZB = -1;
+            for(Map<Player, Integer> setScore: endScores) {
+                iSetNrZB++;
+                if ( MapUtil.getMaxValue(setScore) == 7 ) {
+                    Player pSetWinner = MapUtil.getMaxKey(setScore, Player.A);
+                    Player pSetLoser =  pSetWinner.getOther();
+                    if ( setScore.get(pSetLoser) == 6 ) {
+                        // still not 100% it was a tiebreak if it is the set in progress
+                        List<List<ScoreLine>> gameScoreLinesOfSet = gsmModel.getGameScoreLinesOfSet(iSetNrZB);
+                        List<ScoreLine> tieBreakScorelines = ListUtil.getLast(gameScoreLinesOfSet);
+                        int iScoreOfLoser = 0;
+                        for(ScoreLine line: tieBreakScorelines) {
+                            if ( pSetLoser.equals(line.getScoringPlayer()) ) {
+                                iScoreOfLoser = line.getScore();
+                            }
+                        }
+                        setScore.put(pSetLoser, -1 * iScoreOfLoser);
+                    }
+                }
+            }
+        }
+        return endScores;
+    }
+
     public void update(Model matchModel, Player pFirst) {
         m_checkLayoutCountDownTimer = null; // ensure it will be re-started
         m_players = new Player[] { pFirst, pFirst.getOther() };
@@ -126,38 +156,17 @@ public class MatchGameScoresView extends LinearLayout
                 // PointsWonPerGame is not for GSM: switch over to GSM valid value
                 m_scoresToShow = ScoresToShow.GamesWonPerSet; // TODO: configurable
             }
-            if ( m_scoresToShow.equals(ScoresToShow.GamesWonPerSet) ) {
-                endScores = gsmModel.getGamesWonPerSet();
-                // for all 7-6 scores: turn into 7-<negative value of points reached in tiebreak)
-                int iNrOfSets = ListUtil.size(endScores);
-                if ( iNrOfSets > 0 ) {
-                    int iSetNrZB = -1;
-                    for(Map<Player, Integer> setScore: endScores) {
-                        iSetNrZB++;
-                        if ( MapUtil.getMaxValue(setScore) == 7 ) {
-                            Player pSetWinner = MapUtil.getMaxKey(setScore, Player.A);
-                            Player pSetLoser =  pSetWinner.getOther();
-                            if ( setScore.get(pSetLoser) == 6 ) {
-                                // still not 100% it was a tiebreak if it is the set in progress
-                                List<List<ScoreLine>> gameScoreLinesOfSet = gsmModel.getGameScoreLinesOfSet(iSetNrZB);
-                                List<ScoreLine> tieBreakScorelines = ListUtil.getLast(gameScoreLinesOfSet);
-                                int iScoreOfLoser = 0;
-                                for(ScoreLine line: tieBreakScorelines) {
-                                    if ( pSetLoser.equals(line.getScoringPlayer()) ) {
-                                        iScoreOfLoser = line.getScore();
-                                    }
-                                }
-                                setScore.put(pSetLoser, -1 * iScoreOfLoser);
-                            }
-                        }
-                    }
-                }
-            } else {
-                endScores = new ArrayList<>();
-                Map<Player, Integer> setsWon  = gsmModel.getSetsWon();
-                Map<Player, Integer> gamesWon = gsmModel.getGamesWon();
-                endScores.add(setsWon);
-                endScores.add(gamesWon);
+            endScores = gsmGamesWonPerSet(gsmModel);
+            switch (m_scoresToShow) {
+                case GamesWonPerSet:
+                    break;
+                case SetsWon_and_GamesWonInLastSet:
+                    Map<Player, Integer> setsWon  = gsmModel.getSetsWon();
+                    Map<Player, Integer> gamesWon = ListUtil.getLast(endScores);
+                    endScores = new ArrayList<>();
+                    endScores.add(setsWon);
+                    endScores.add(gamesWon);
+                break;
             }
         }
         this.update( m_players
@@ -415,7 +424,7 @@ public class MatchGameScoresView extends LinearLayout
             for (Player p: players) {
                 boolean  bLeftColumn = p.equals(players[0]);
                 int      iResId      = bLeftColumn ? R.id.score_player_1 : R.id.score_player_2;
-                TextView txt         = (TextView) tr.findViewById(iResId);
+                TextView txt         = tr.findViewById(iResId);
                 boolean  bInvert     = p.equals(gameWinner);
                 if ( Brand.isGameSetMatch() ) {
                     switch (m_scoresToShow) {

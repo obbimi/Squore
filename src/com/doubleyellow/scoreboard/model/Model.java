@@ -1479,13 +1479,13 @@ public abstract class Model implements Serializable
     public Map<Player, Integer> getGamesWon() {
         return getGamesWon(true);
     }
-    public Map<Player, Integer> getGamesWon(boolean bIncludeGameInprogress) {
+    public Map<Player, Integer> getGamesWon(boolean bIncludeGameInProgress) {
         Map<Player, Integer> mGamesWon = getZeroZeroMap();
 
         Map<Player, Integer> mInProgress = getScoreOfGameInProgress();
         List<Map<Player, Integer>> endPointsOfGames = getPlayer2EndPointsOfGames();
         for(Map<Player, Integer> mGameScore: endPointsOfGames) {
-            if (mInProgress == mGameScore && bIncludeGameInprogress == false) {
+            if (mInProgress == mGameScore && bIncludeGameInProgress == false) {
                 break;
             } // skip last 'in progress'
 
@@ -1512,7 +1512,7 @@ public abstract class Model implements Serializable
         }
         // 20141025: added this logic for better display value in historical games
         Player gameVictoryFor = isPossibleGameVictoryFor();
-        if ( bIncludeGameInprogress ) {
+        if ( bIncludeGameInProgress ) {
             if ( gameVictoryFor != null) {
                 MapUtil.increaseCounter(mGamesWon, gameVictoryFor);
             }

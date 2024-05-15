@@ -3,6 +3,7 @@
     <string name="lsp_ratio_score">H,3:4</string>
     <string name="lsp_ratio_score_games">H,4:3</string>
     <string name="lsp_ratio_score_sets">H,5:3</string>
+    <string name="lsp_ratio_small_digit">H,5:4</string>
 
     <fraction name="lsp_fr_mainrow_extraheight_2x">0.40</fraction>
     <fraction name="lsp_fr_mainrow_height_2x">0.28</fraction>
@@ -13,6 +14,10 @@
     <fraction name="lsp_fr_timer_width">0.30</fraction>
     <fraction name="lsp_fr_vertical_margin_3x">0.01</fraction>
     <fraction name="lsp_fr_horizontal_margin_4x">0.01</fraction>
+    <fraction name="x2_5_lsp_fr_small_digit_height">0.10</fraction> <!-- 2/5 of lsp_fr_mainrow_height_2x   -->
+    <fraction name="x2_5_lsp_fr_small_digit_width">0.048</fraction>  <!-- 2/5 of lsp_fr_score_width_setswon -->
+    <fraction name="lsp_fr_small_digit_height">0.12</fraction> <!-- 3/7 of lsp_fr_mainrow_height_2x   -->
+    <fraction name="lsp_fr_small_digit_width">0.051</fraction>  <!-- 3/7 of lsp_fr_score_width_setswon -->
 
     <fraction name="ls_fr_vertical_margin_3x">0.01</fraction>
     <fraction name="ls_fr_horizontal_margin_4x">0.005</fraction>
