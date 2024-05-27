@@ -77,7 +77,7 @@ public class BLEUtil
         RssiValueAt1M,
         ManufacturerData_BatteryLevelAtPos,
 
-        /* Value BLE devices sends when button/buttons is/are release. If specified, app only (re)-acts when buttons are released, allowing easier clicking of multiple buttons */
+        /* Value BLE devices sends when button/buttons is/are release. If specified, app only (re)-acts when buttons are released, allowing easier clicking of multiple buttons and reacting to holding button for certain period of time */
         HandleOnReleaseValue,
         /** Array of messages (Message formats) */
         TranslateToBTMessage,

@@ -199,7 +199,8 @@ public class BLEReceiverManager
         private              int currentConnectionAttempt    = 1;
         private final static int MAXIMUM_CONNECTION_ATTEMPTS = 5;
 
-        private int lastValueReceived = 0;
+        private int  lastValueReceived   = 0;
+        private long lastValueReceivedOn = 0L;
 
         private final String sDeviceAddress;
         /** is null in case a single device is used for scoring for both players */
@@ -333,30 +334,53 @@ public class BLEReceiverManager
                             } else if ( iValueIn > lastValueReceived ) {
                                 // assuming value to actually handle 'on release' increases if multiple buttons are pressed
                                 lastValueReceived = iValueIn;
-                                Log.d(TAG, String.format("Recording value %d to use on release", this.lastValueReceived));
+                                lastValueReceivedOn = System.currentTimeMillis();
+                                Log.d(TAG, String.format("Recording value %d at %d to use on release", this.lastValueReceived, lastValueReceivedOn));
 
                                 //iValueToHandle = -1;
                                 return;
                             }
                         }
 
-                        if ( (iValueToHandle >= 0) && (iValueToHandle < saMessageFormat.length() ) ) {
-                            String sMessageFormat = saMessageFormat.getString(iValueToHandle);
-                            if ( sMessageFormat == null || sMessageFormat.startsWith("-") ) {
-                                Log.d(TAG, "Ignoring message " + sMessageFormat + " handle: " + iValueToHandle  + ", in: " + iValueIn);
-                                if ( sMessageFormat != null && sMessageFormat.startsWith("-info:") ) {
-                                    String sMessage = String.format(sMessageFormat.replace("-info:", ""), (this.player==null?"":player), (this.player==null?"":player.getOther()), value[0]);
-                                    Message message = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.ble_message_x_ignored, iValueToHandle, sMessage);
+                        if ( iValueToHandle >= 0 ) {
+                            long lDurationButtonWasHeld = -1;
+                            if ( bHandleOnRelease && this.lastValueReceivedOn > 0L ) {
+                                lDurationButtonWasHeld = System.currentTimeMillis() - this.lastValueReceivedOn;
+                                if ( lDurationButtonWasHeld >= 1000 ) {
+                                    int iCountDownFrom = Math.round(lDurationButtonWasHeld / 1000);
+                                    for( int iTryFor=iCountDownFrom; iTryFor>=1;iTryFor--){
+                                        JSONArray saMessageFormatLongPress = joCharacteristicCfg.optJSONArray(BLEUtil.Keys.TranslateToBTMessage + "_" + iTryFor);
+                                        if ( saMessageFormatLongPress != null && iValueToHandle < saMessageFormatLongPress.length() ) {
+                                            if ( saMessageFormatLongPress.getString(iValueToHandle).startsWith("-") == false ) {
+                                                // code below will actually handle the value from longpress
+                                                saMessageFormat = saMessageFormatLongPress;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                this.lastValueReceivedOn = 0L;
+                            }
+                            if ( iValueToHandle < saMessageFormat.length() ) {
+                                String sMessageFormat = saMessageFormat.getString(iValueToHandle);
+                                if ( sMessageFormat == null || sMessageFormat.startsWith("-") ) {
+                                    Log.d(TAG, "Ignoring message " + sMessageFormat + " handle: " + iValueToHandle  + ", in: " + iValueIn);
+                                    if ( sMessageFormat != null && sMessageFormat.startsWith("-info:") ) {
+                                        String sMessage = String.format(sMessageFormat.replace("-info:", ""), (this.player==null?"":player), (this.player==null?"":player.getOther()), value[0]);
+                                        Message message = mHandler.obtainMessage(BTMessage.INFO.ordinal(), R.string.ble_message_x_ignored, iValueToHandle, sMessage);
+                                        message.sendToTarget();
+                                    }
+                                } else {
+                                    sMessageFormat = sMessageFormat.replaceAll("#.*", "").trim();
+                                    String sMessage = String.format(sMessageFormat, (this.player==null?"":player), (this.player==null?"":player.getOther()), value[0]);
+                                    Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), sMessage );
                                     message.sendToTarget();
                                 }
+                                if ( bHandleOnRelease ) {
+                                    this.lastValueReceived = 0;
+                                }
                             } else {
-                                sMessageFormat = sMessageFormat.replaceAll("#.*", "").trim();
-                                String sMessage = String.format(sMessageFormat, (this.player==null?"":player), (this.player==null?"":player.getOther()), value[0]);
-                                Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), sMessage );
-                                message.sendToTarget();
-                            }
-                            if ( bHandleOnRelease ) {
-                                this.lastValueReceived = 0;
+                                Log.d(TAG, String.format("Ignoring value %d, previous value %d. Message array to small", iValueToHandle, this.lastValueReceived));
                             }
                         } else {
                             Log.d(TAG, String.format("Ignoring value %d, previous value %d", iValueToHandle, this.lastValueReceived));
