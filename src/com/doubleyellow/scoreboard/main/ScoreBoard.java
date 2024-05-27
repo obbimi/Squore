@@ -6417,7 +6417,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     public boolean notifyBLE(Player p, BLEUtil.Keys configKey) {
         if ( m_bleReceiverManager == null ) { return false; }
-        return m_bleReceiverManager.writeToBLE(p, configKey);
+        return m_bleReceiverManager.writeToBLE(p, configKey, null);
     }
     private boolean clearBLEWaitForConfirmation() {
         if ( m_blePlayerWaitingForScoreToBeConfirmed != null || m_blePlayerToConfirmOwnScore != null ) {

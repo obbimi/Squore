@@ -4,6 +4,8 @@
     "DeviceNameStartsWith": "D-SCORE-RX_",
     "DeviceImageURL": "https://raw.githubusercontent.com/obbimi/Squore/master/docs/img/d-score-horizontal.png",
     "HandleOnReleaseValue": 0,
+    "RssiValueAt1M": -49.1,
+    "ManufacturerData_BatteryLevelAtPos": 767,
     "PRIMARY_BUTTON"  : "Green",
     "SECONDARY_BUTTON": "Red",
     "PRIMARY_BUTTON-Value"  : 2,

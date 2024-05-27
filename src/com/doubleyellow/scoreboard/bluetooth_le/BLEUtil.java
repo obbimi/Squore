@@ -75,6 +75,7 @@ public class BLEUtil
         CancelScoreByOpponentButton,
         SingleDevice_ConfirmWithSameButton,
         RssiValueAt1M,
+        ManufacturerData_BatteryLevelAtPos,
 
         /* Value BLE devices sends when button/buttons is/are release. If specified, app only (re)-acts when buttons are released, allowing easier clicking of multiple buttons */
         HandleOnReleaseValue,

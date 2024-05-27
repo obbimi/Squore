@@ -169,6 +169,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             return;
         }
         fRssiValueAt1M       = m_bleConfig.optDouble(BLEUtil.Keys.RssiValueAt1M.toString(), fRssiValueAt1M);
+        int iManufacturerData_BatteryLevelAtPos = m_bleConfig.optInt(BLEUtil.Keys.ManufacturerData_BatteryLevelAtPos.toString(), -1);
         iNrOfDevicesRequired = m_bleConfig.optInt(BLEUtil.Keys.NrOfDevices.toString(), iNrOfDevicesRequired);
 
         String sBluetoothLEDevice1 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral1, null, this);
@@ -177,7 +178,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         if ( StringUtil.isNotEmpty(sBluetoothLEDevice1) ) mTmp.put(Player.A, sBluetoothLEDevice1);
         if ( StringUtil.isNotEmpty(sBluetoothLEDevice2) ) mTmp.put(Player.B, sBluetoothLEDevice2);
         Map<Player, String> mSelectedPrefDevices = Collections.unmodifiableMap(mTmp);
-        scanResultAdapter = new ScanResultAdapter(scanResults, fRssiValueAt1M, mSelectedSeenDevices, mSelectedPrefDevices);
+        scanResultAdapter = new ScanResultAdapter(scanResults, fRssiValueAt1M, iManufacturerData_BatteryLevelAtPos, mSelectedSeenDevices, mSelectedPrefDevices);
 
         btnScan = findViewById(R.id.ble_scan_button);
         btnScan.setOnClickListener(v -> {
@@ -484,7 +485,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             Button btn = vgVerify.findViewById(iResId);
             btn.setText(getString(R.string.ble_cav_poke_device_x, ScoreBoard.getMatchModel().getName(p)));
             btn.setOnClickListener(v -> {
-                m_bleReceiverManager.writeToBLE(p, BLEUtil.Keys.PokeConfig);
+                m_bleReceiverManager.writeToBLE(p, BLEUtil.Keys.PokeConfig, null);
             });
             btn.setVisibility(iDifferentDevices==2 ? View.VISIBLE : View.GONE);
 
@@ -501,7 +502,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
 
         Button btnBoth = vgVerify.findViewById(R.id.ble_cav_device_both);
         btnBoth.setOnClickListener(v -> {
-            m_bleReceiverManager.writeToBLE(null, BLEUtil.Keys.PokeConfig);
+            m_bleReceiverManager.writeToBLE(null, BLEUtil.Keys.PokeConfig, null);
         });
         btnBoth.setVisibility(iDifferentDevices==1 ? View.VISIBLE : View.GONE);
 

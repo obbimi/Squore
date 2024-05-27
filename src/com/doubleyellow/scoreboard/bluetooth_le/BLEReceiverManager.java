@@ -26,7 +26,6 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.os.Build;
@@ -34,7 +33,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.ParcelUuid;
 import android.util.Log;
-import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
 
@@ -139,23 +137,9 @@ public class BLEReceiverManager
                 }
             }
 
-            // does not seem to give much more info
-            ScanRecord scanRecord = result.getScanRecord();
-            if ( scanRecord != null ) {
-                SparseArray<byte[]> manufacturerSpecificData = scanRecord.getManufacturerSpecificData();
-                if (manufacturerSpecificData != null ) {
-                    for(int i=0; i < manufacturerSpecificData.size(); i++) {
-                        byte[] bytes = manufacturerSpecificData.get(i);
-                        if ( bytes == null ) { continue; }
-                        String s = new String(bytes);
-                        Log.i(TAG, "manufacturerSpecificData[" + i + "]:" + s);
-                    }
-                }
-            }
-
             BluetoothDevice btDevice = result.getDevice();
             String devName = btDevice.getName();
-            if (StringUtil.isEmpty(devName) ) {
+            if ( StringUtil.isEmpty(devName) ) {
                 devName = btDevice.getAddress();
             }
 
@@ -407,7 +391,7 @@ public class BLEReceiverManager
             //super.onCharacteristicRead (gatt, characteristic, value, status); // gives error?!
             Log.d(TAG, String.format("onCharacteristicRead player %s, address %s uuid: %s, status %d, value %d", this.player, gatt.getDevice().getAddress(), characteristic.getUuid(), status, value[0]));
             if ( characteristic.getUuid().toString().equalsIgnoreCase(m_sPlayerTypeCharacteristicUuid) ) {
-                writePlayerInfo(gatt, characteristic, value, -1);
+                writePlayerInfo(gatt, characteristic, value, -1, null);
             }
         }
         @Override public void onCharacteristicWrite   (         BluetoothGatt gatt,          BluetoothGattCharacteristic characteristic, int status)                        {

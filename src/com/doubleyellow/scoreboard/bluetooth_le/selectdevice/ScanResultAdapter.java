@@ -17,8 +17,10 @@
 package com.doubleyellow.scoreboard.bluetooth_le.selectdevice;
 
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +44,14 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
     private final Map<Player, String> mSelectedPrefDevices;
     private List<ScanResult>          items;
     private double                    fRssiValueAt1M;
+    private int                       iManufacturerData_BatteryLevelAtPos;
 
-    public ScanResultAdapter(List<ScanResult> items, double fRssiValueAt1M, Map<Player,String> mSelectedSeenDevices, Map<Player, String> mSelectedPrefDevices) {
+    public ScanResultAdapter(List<ScanResult> items, double fRssiValueAt1M, int iManufacturerData_BatteryLevelAtPos, Map<Player,String> mSelectedSeenDevices, Map<Player, String> mSelectedPrefDevices) {
         this.items                = items;
         this.mSelectedSeenDevices = mSelectedSeenDevices;
         this.mSelectedPrefDevices = mSelectedPrefDevices;
         this.fRssiValueAt1M       = fRssiValueAt1M;
+        this.iManufacturerData_BatteryLevelAtPos = iManufacturerData_BatteryLevelAtPos;
     }
 
     private boolean adjustEnableOrVisibility(View v, String sAddress) {
@@ -105,6 +109,7 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
         TextView tvAddr;
         TextView tvSgnl;
         TextView tvDist;
+        TextView tvBatt;
         Button[]  btnUseAsX = new Button[Player.values().length];
         ViewHolder(View view) {
             super(view);
@@ -112,6 +117,7 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
             tvAddr    = view.findViewById(R.id.mac_address);
             tvSgnl    = view.findViewById(R.id.signal_strength);
             tvDist    = view.findViewById(R.id.device_distance);
+            tvBatt    = view.findViewById(R.id.device_batterylevel);
             btnUseAsX[Player.A.ordinal()] = view.findViewById(R.id.use_as_device_a);
             btnUseAsX[Player.B.ordinal()] = view.findViewById(R.id.use_as_device_b);
         }
@@ -122,7 +128,28 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
                 name = "Unnamed";
             }
             String address = device.getAddress();
-            
+            ScanRecord scanRecord = result.getScanRecord();
+            int iBatteryLevel = -1;
+            if ( scanRecord != null ) {
+                byte[] ba = scanRecord.getManufacturerSpecificData(iManufacturerData_BatteryLevelAtPos);
+                if ( ba != null ) {
+                    iBatteryLevel = ba[0] & 0xFF;
+                    Log.i(TAG, "battery manufacturerSpecificData[" + iManufacturerData_BatteryLevelAtPos + "]:" + iBatteryLevel);
+                }
+                if ( iBatteryLevel == - 1) {
+                    SparseArray<byte[]> manufacturerSpecificData = scanRecord.getManufacturerSpecificData();
+                    if (manufacturerSpecificData != null ) {
+                        for(int i=0; i < manufacturerSpecificData.size(); i++) {
+                            int    iKey = manufacturerSpecificData.keyAt(i); // 767 ?
+                            byte[] bytes = manufacturerSpecificData.valueAt(i);
+                            if ( bytes == null ) { continue; }
+                            iBatteryLevel = bytes[0] & 0xFF;
+                            Log.i(TAG, "manufacturerSpecificData[" + i + "=" + iKey + "]:" + iBatteryLevel);
+                        }
+                    }
+                }
+            }
+
             tvName.setText(name);
             tvAddr.setText(address);
             tvSgnl.setText(result.getRssi() + " dBm");
@@ -130,6 +157,15 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
             float fEnvironmentalValue = 3.1f;   // (between 2 and 4?)
             double fDistance = Math.pow(10, (fRssiValueAt1M - result.getRssi())/(10 * fEnvironmentalValue));
             tvDist.setText(String.format("%.2f m", fDistance));
+
+            if ( iBatteryLevel > 0 ) {
+                tvBatt.setText(String.format("B:%d%%", iBatteryLevel));
+                tvBatt.setVisibility(View.VISIBLE);
+                tvSgnl.setVisibility(View.GONE);
+            } else {
+                tvSgnl.setVisibility(View.VISIBLE);
+                tvBatt.setVisibility(View.GONE);
+            }
 
             for( Player p : Player.values() ) {
                 Button btn = btnUseAsX[p.ordinal()];

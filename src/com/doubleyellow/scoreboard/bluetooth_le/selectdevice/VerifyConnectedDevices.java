@@ -75,16 +75,16 @@ public class VerifyConnectedDevices extends BaseAlertDialog
         switch (m_iNrOfDevices) {
             case 1:
                 button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                button.setOnClickListener(v -> m_bleReceiverManager.writeToBLE(null, BLEUtil.Keys.PokeConfig));
+                button.setOnClickListener(v -> m_bleReceiverManager.writeToBLE(null, BLEUtil.Keys.PokeConfig, null));
                 break;
             case 2:
                 button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
                 button.setOnClickListener(v -> {
-                    m_bleReceiverManager.writeToBLE(Player.A, BLEUtil.Keys.PokeConfig);
+                    m_bleReceiverManager.writeToBLE(Player.A, BLEUtil.Keys.PokeConfig, null);
                 });
                 button = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
                 button.setOnClickListener(v -> {
-                    m_bleReceiverManager.writeToBLE(Player.B, BLEUtil.Keys.PokeConfig);
+                    m_bleReceiverManager.writeToBLE(Player.B, BLEUtil.Keys.PokeConfig, null);
                 });
                 button = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
                 button.setOnClickListener(v -> {
