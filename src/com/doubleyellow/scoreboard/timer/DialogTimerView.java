@@ -270,7 +270,7 @@ public class DialogTimerView implements TimerView
 
         AlertDialog.Builder db = new MyDialogBuilder(scoreBoard);
         int iResIDCancelCaption = R.string.cmd_cancel_timer;
-        if ( Type.UntillStartOfNextGame.equals(Timer.timerType) ) {
+        if ( Type.UntilStartOfNextGame.equals(Timer.timerType) ) {
             iResIDCancelCaption = R.string.Start_game;
         } else if (EnumSet.of(Type.TowelingDown, Type.Timeout).contains(Timer.timerType) ) {
             iResIDCancelCaption = R.string.Resume_game;
