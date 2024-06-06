@@ -107,14 +107,25 @@
             app:layout_constraintDimensionRatio="H,2:3"
             />
         <Button
-            android:id="@+id/ble_cav_device_1"
+            android:id="@+id/ble_cav_device_rename_1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="Rename"
+            app:layout_constraintTop_toBottomOf="@id/ble_cav_device_batterylevel_1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="H,2:3"
+            />
+        <Button
+            android:id="@+id/ble_cav_device_1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:text="@string/ble_cav_poke_device_x"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/ble_cav_device_rename_1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/ble_cav_device_batterylevel_1"
             />
+
         <Button
             android:id="@+id/ble_cav_swap_devices"
             android:layout_width="0dp"
@@ -125,6 +136,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="@id/ble_cav_device_1"
             />
+
         <Button
             android:id="@+id/ble_cav_device_batterylevel_2"
             android:layout_width="0dp"
@@ -135,14 +147,25 @@
             app:layout_constraintDimensionRatio="H,2:3"
             />
         <Button
-            android:id="@+id/ble_cav_device_2"
+            android:id="@+id/ble_cav_device_rename_2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="Rename"
+            app:layout_constraintTop_toBottomOf="@id/ble_cav_device_batterylevel_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="H,2:3"
+            />
+        <Button
+            android:id="@+id/ble_cav_device_2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:text="@string/ble_cav_poke_device_x"
             app:layout_constraintTop_toBottomOf="@id/ble_cav_swap_devices"
+            app:layout_constraintBottom_toBottomOf="@id/ble_cav_device_rename_2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/ble_cav_device_batterylevel_2"
             />
+
         <Button
             android:id="@+id/ble_cav_device_batterylevel_both"
             android:layout_width="0dp"
@@ -153,11 +176,21 @@
             app:layout_constraintDimensionRatio="H,2:3"
             />
         <Button
-            android:id="@+id/ble_cav_device_both"
+            android:id="@+id/ble_cav_device_rename_both"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="Rename"
+            app:layout_constraintTop_toBottomOf="@id/ble_cav_device_batterylevel_both"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="H,2:3"
+            />
+        <Button
+            android:id="@+id/ble_cav_device_both"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:text="@string/ble_cav_poke_device_both"
             app:layout_constraintTop_toBottomOf="@id/ble_cav_device_2"
+            app:layout_constraintBottom_toBottomOf="@id/ble_cav_device_rename_both"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/ble_cav_device_batterylevel_both"
             />

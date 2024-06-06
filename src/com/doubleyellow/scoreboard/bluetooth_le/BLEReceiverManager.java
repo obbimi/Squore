@@ -49,6 +49,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -507,7 +508,7 @@ public class BLEReceiverManager
                 Log.w(TAG, String.format("Reading value of characteristic %s for player %s failed", characteristic.getUuid(), this.player));
             }
         }
-        private void writePlayerInfo(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] currentValue, int iNewValue) {
+        private void writePlayerInfo(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] currentValue, int iNewValue, String sNewValue) {
             String sWriteIndicator = null;
             UUID uuid = characteristic.getUuid();
             try {
@@ -518,13 +519,17 @@ public class BLEReceiverManager
             }
 
             byte[] value = new byte[1];
-            if ( iNewValue >= 0 ) {
-                value[0] = (byte) iNewValue;
+            if ( sNewValue != null ) {
+                value = sNewValue.getBytes(StandardCharsets.UTF_8);
             } else {
-                if ( player != null ) {
-                    value[0] = (byte) player.ordinal();
+                if ( iNewValue >= 0 ) {
+                    value[0] = (byte) iNewValue;
                 } else {
-                    value[0] = (byte) Player.values().length;
+                    if ( player != null ) {
+                        value[0] = (byte) player.ordinal();
+                    } else {
+                        value[0] = (byte) Player.values().length;
+                    }
                 }
             }
             if ( currentValue != null && currentValue.length > 0 && currentValue[0] == value[0] ) {
@@ -553,7 +558,15 @@ public class BLEReceiverManager
         }
     }
 
-    public boolean writeToBLE(Player p, BLEUtil.Keys configKey) {
+    public String getDeviceName(Player p) {
+        BluetoothGatt gatt = mPlayer2gatt.get(p);
+        if ( p == null && ( mDevice2gatt.size() == 1) ) {
+            gatt = mDevice2gatt.values().iterator().next();
+        }
+        return gatt.getDevice().getName();
+    }
+
+    public boolean writeToBLE(Player p, BLEUtil.Keys configKey, String sValue) {
         BluetoothGatt gatt = mPlayer2gatt.get(p);
         if ( p == null && ( mDevice2gatt.size() == 1) ) {
             gatt = mDevice2gatt.values().iterator().next();
@@ -587,7 +600,7 @@ public class BLEReceiverManager
             BluetoothGattCharacteristic characteristics = findCharacteristics(gatt, "*", sCharUuid);
             if ( characteristics != null ) {
                 int iValueToWrite = joWriteConfig.optInt(BLEUtil.Keys.WriteValue.toString(), -1);
-                callback.writePlayerInfo(gatt, characteristics, null, iValueToWrite);
+                callback.writePlayerInfo(gatt, characteristics, null, iValueToWrite, sValue);
                 break;
             } else {
                 Log.w(TAG, String.format("Can not write to notify for sCharUuid[%d] %s (%s)",i, sCharUuid, p));

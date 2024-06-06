@@ -29,10 +29,12 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -40,6 +42,7 @@ import android.widget.Toast;
 
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.R;
 
 import androidx.annotation.Nullable;
@@ -383,19 +386,23 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             if ( pMustMatch != null || StringUtil.isNotEmpty(sMustStartWith) ) {
                 String name = result.getDevice().getName();
 
-                if ( (name == null) || pMustMatch.matcher(name).matches() == false ) {
-                    if ( mDiscardedBecauseOfRegexp.containsKey(name) == false ) {
-                        mDiscardedBecauseOfRegexp.put(name, result.getDevice().getAddress());
-                        Log.d(TAG, String.format("Skipping %s based on regexp %s", name, pMustMatch.pattern()));
+                if ( pMustMatch != null ) {
+                    if ( (name == null) || pMustMatch.matcher(name).matches() == false ) {
+                        if ( mDiscardedBecauseOfRegexp.containsKey(name) == false ) {
+                            mDiscardedBecauseOfRegexp.put(name, result.getDevice().getAddress());
+                            Log.d(TAG, String.format("Skipping %s based on regexp %s", name, pMustMatch.pattern()));
+                        }
+                        return;
                     }
-                    return;
                 }
-                if ( (name == null) || name.startsWith(sMustStartWith) == false ) {
-                    if ( mDiscardedBecauseOfRegexp.containsKey(name) == false ) {
-                        mDiscardedBecauseOfRegexp.put(name, result.getDevice().getAddress());
-                        Log.d(TAG, String.format("Skipping %s based on startswith %s", name, sMustStartWith));
+                if ( sMustStartWith != null ) {
+                    if ( (name == null) || name.startsWith(sMustStartWith) == false ) {
+                        if ( mDiscardedBecauseOfRegexp.containsKey(name) == false ) {
+                            mDiscardedBecauseOfRegexp.put(name, result.getDevice().getAddress());
+                            Log.d(TAG, String.format("Skipping %s based on startswith %s", name, sMustStartWith));
+                        }
+                        return;
                     }
-                    return;
                 }
             }
 
@@ -441,6 +448,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
     };
     private final Map<Player, Integer> m_playerToVerifyButtonResId = MapUtil.getMap(Player.A, R.id.ble_cav_device_1, Player.B, R.id.ble_cav_device_2);
     private final Map<Player, Integer> m_playerToBatterLevelResId = MapUtil.getMap(Player.A, R.id.ble_cav_device_batterylevel_1, Player.B, R.id.ble_cav_device_batterylevel_2);
+    private final Map<Player, Integer> m_playerToRenameResId = MapUtil.getMap(Player.A, R.id.ble_cav_device_rename_1, Player.B, R.id.ble_cav_device_rename_2);
 
     private BLEReceiverManager m_bleReceiverManager = null;
     private void initForScan(boolean bStartScan) {
@@ -471,7 +479,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             }
         }
 
-        int[] iaInitiallyDisable = new int[] { R.id.ble_cav_device_1, R.id.ble_cav_device_2, R.id.ble_cav_device_both, R.id.ble_cav_swap_devices };
+        int[] iaInitiallyDisable = new int[] { R.id.ble_cav_device_1, R.id.ble_cav_device_2, R.id.ble_cav_device_both,R.id.ble_cav_device_rename_1, R.id.ble_cav_device_rename_2, R.id.ble_cav_device_rename_both, R.id.ble_cav_swap_devices };
         for(int iResId: iaInitiallyDisable ) {
             View vBtn = vgVerify.findViewById(iResId);
             if ( vBtn == null ) { continue; }
@@ -480,6 +488,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         String sBatterLevelUnknown = "? %";
             // sBatterLevelUnknown = getString(R.string.ble_request_batterylevel);
         int iDifferentDevices = (new LinkedHashSet<>(mSelectedSeenDevices.values())).size();
+        final JSONObject joRenameConfig = m_bleConfig.optJSONObject(BLEUtil.Keys.RenameConfig.toString());
         for(Player p: Player.values() ) {
             Integer iResId = m_playerToVerifyButtonResId.get(p);
             Button btn = vgVerify.findViewById(iResId);
@@ -487,6 +496,17 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             btn.setOnClickListener(v -> {
                 m_bleReceiverManager.writeToBLE(p, BLEUtil.Keys.PokeConfig, null);
             });
+            if ( joRenameConfig != null ) {
+                //btn.setOnLongClickListener(v -> renameDeviceDialog(p, joRenameConfig));
+
+                Integer iResIdRN = m_playerToRenameResId.get(p);
+                Button btnRN = vgVerify.findViewById(iResIdRN);
+                btnRN.setText(R.string.cmd_rename);
+                btnRN.setOnClickListener(v -> {
+                    renameDeviceDialog(p, joRenameConfig);
+                });
+                btnRN.setVisibility(iDifferentDevices==2 ? View.VISIBLE : View.GONE);
+            }
             btn.setVisibility(iDifferentDevices==2 ? View.VISIBLE : View.GONE);
 
             Integer iResIdBL = m_playerToBatterLevelResId.get(p);
@@ -504,6 +524,16 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         btnBoth.setOnClickListener(v -> {
             m_bleReceiverManager.writeToBLE(null, BLEUtil.Keys.PokeConfig, null);
         });
+        if ( joRenameConfig != null ) {
+            //btnBoth.setOnLongClickListener(v -> renameDeviceDialog(null, joRenameConfig));
+
+            Button btnRNBoth = vgVerify.findViewById(R.id.ble_cav_device_rename_both);
+            btnRNBoth.setText(R.string.cmd_rename);
+            btnRNBoth.setOnClickListener(v -> {
+                renameDeviceDialog(null, joRenameConfig);
+            });
+            btnRNBoth.setVisibility(iDifferentDevices==1 ? View.VISIBLE : View.GONE);
+        }
         btnBoth.setVisibility(iDifferentDevices==1 ? View.VISIBLE : View.GONE);
 
         Button btnBLBoth = vgVerify.findViewById(R.id.ble_cav_device_batterylevel_both);
@@ -583,15 +613,19 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                     //Log.d(TAG, "new state  : " + btState);
                     Log.d(TAG, "iNrOfDevices: " + iNrOfDevices);
                     View btnVerifySingleDeviceForBoth = vgVerify.findViewById(R.id.ble_cav_device_both);
+                    View btnRenameSingleDeviceForBoth = vgVerify.findViewById(R.id.ble_cav_device_rename_both);
                     View btnSwapDevices               = vgVerify.findViewById(R.id.ble_cav_swap_devices);
                     switch (btState) {
                         case CONNECTED_DiscoveringServices:
                         case CONNECTED_TO_1_of_2:
                         case CONNECTED_ALL:
                             btnVerifySingleDeviceForBoth.setEnabled(true);
+                            btnRenameSingleDeviceForBoth.setEnabled(true);
                             for(Object o: usedForPlayers.keySet() ) {
                                 Player p = Player.valueOf(String.valueOf(o));
                                 int iResId = m_playerToVerifyButtonResId.get(p);
+                                vgVerify.findViewById(iResId).setEnabled(true);
+                                iResId = m_playerToRenameResId.get(p);
                                 vgVerify.findViewById(iResId).setEnabled(true);
                             }
 
@@ -615,9 +649,12 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                                 Player p = Player.valueOf(String.valueOf(o));
                                 int iResId = m_playerToVerifyButtonResId.get(p);
                                 vgVerify.findViewById(iResId).setEnabled(false);
+                                iResId = m_playerToRenameResId.get(p);
+                                vgVerify.findViewById(iResId).setEnabled(false);
                             }
                             btnSwapDevices.setEnabled(false);
                             btnVerifySingleDeviceForBoth.setEnabled(false);
+                            btnRenameSingleDeviceForBoth.setEnabled(false);
                             break;
                         default:
                             Toast.makeText(m_context, sMsg, Toast.LENGTH_LONG).show();
@@ -657,5 +694,40 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             }
             pbVerify.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private boolean renameDeviceDialog(Player p, final JSONObject joRenameConfig) {
+        String sCurrentName = m_bleReceiverManager.getDeviceName(p);
+        String sFixedPrefix = joRenameConfig.optString(BLEUtil.Keys.FixedPrefix.toString());
+        if ( StringUtil.isNotEmpty(sFixedPrefix) && sCurrentName.startsWith(sFixedPrefix) ) {
+            sCurrentName = sCurrentName.substring(sFixedPrefix.length());
+        }
+        final EditText txtNewName = new EditText(this);
+        txtNewName.setText(sCurrentName);
+        int iMaxLength = joRenameConfig.optInt(BLEUtil.Keys.FreeTextMaxLength.toString(), -1);
+        if ( iMaxLength > 0 ) {
+            txtNewName.setFilters(new InputFilter[] { new InputFilter.LengthFilter(iMaxLength) });
+        }
+        AlertDialog.Builder ab = new MyDialogBuilder(this);
+        ab.setIcon          (android.R.drawable.ic_menu_edit)
+          .setTitle         ("Rename device")
+          .setView(txtNewName)
+          .setNegativeButton(R.string.cmd_cancel, null)
+          .setPositiveButton(R.string.cmd_rename, (dialog, which) -> renameDevice(p, txtNewName, joRenameConfig))
+          .show();
+        return true;
+    }
+    private void renameDevice(Player p, EditText txtNewName, final JSONObject joRenameConfig) {
+        String sNewName = txtNewName.getText().toString();
+
+        String sCleanOutCharactersRegExp = joRenameConfig.optString(BLEUtil.Keys.CleanOutCharactersRegExp.toString());
+        if ( StringUtil.isNotEmpty(sCleanOutCharactersRegExp) ) {
+            String sNewCleanedName = sNewName.replaceAll(sCleanOutCharactersRegExp, "");
+            if ( sNewCleanedName.equals(sNewName) == false ) {
+                Toast.makeText(this, "removed some disallowed characters before rename", Toast.LENGTH_SHORT).show();
+                sNewName = sNewCleanedName;
+            }
+        }
+        m_bleReceiverManager.writeToBLE(p, BLEUtil.Keys.RenameConfig, sNewName);
     }
 }

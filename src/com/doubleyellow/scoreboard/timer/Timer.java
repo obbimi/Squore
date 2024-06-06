@@ -44,7 +44,7 @@ public class Timer
     private static int              iSecondsInitial = 0;
     private static int              iReminderAtSecs = 0;
     private static String           sReminderText   = null;
-    public  static Type             timerType       = Type.UntillStartOfNextGame;
+    public  static Type             timerType       = Type.UntilStartOfNextGame;
     private static ScoreBoard       scoreBoard;
     private boolean                 autoTriggered   = false;
 

@@ -107,12 +107,12 @@ public class SBTimerView implements TimerView
         String sTime = context.getString(R.string.oa_time);
         showToast(sTime, 3, Direction.None); // not to long for now, can not be easily dismissed yet (floating message can)
         if ( context instanceof ScoreBoard ) {
-            if ( EnumSet.of(Type.Warmup, Type.UntillStartOfNextGame).contains(Timer.timerType) ) {
+            if ( EnumSet.of(Type.Warmup, Type.UntilStartOfNextGame).contains(Timer.timerType) ) {
                 txtView.setText(PreferenceValues.getGameOrSetString(context, R.string.Start_game));
             } else {
                 txtView.setText(PreferenceValues.getGameOrSetString(context, R.string.oa_time));
             }
-            if ( (cmToLate != null) && (ScoreBoard.timer != null) && EnumSet.of(Type.UntillStartOfNextGame, Type.TowelingDown, Type.Timeout).contains(Timer.timerType) ) {
+            if ( (cmToLate != null) && (ScoreBoard.timer != null) && EnumSet.of(Type.UntilStartOfNextGame, Type.TowelingDown, Type.Timeout).contains(Timer.timerType) ) {
                 cmToLate.setVisibility(View.VISIBLE);
                 cmToLate.setBase(ScoreBoard.timer.getToLateBase());
                 cmToLate.start();

@@ -125,7 +125,7 @@ public class DialogTimerView implements TimerView
             }
         }
         if ( PreferenceValues.showTimeIsAlreadyUpFor_Chrono(scoreBoard) ) {
-            if ( (chronometer != null) && (ScoreBoard.timer != null) && Type.UntillStartOfNextGame.equals(Timer.timerType) ) {
+            if ( (chronometer != null) && (ScoreBoard.timer != null) && Type.UntilStartOfNextGame.equals(Timer.timerType) ) {
                 chronometer.setVisibility(View.VISIBLE);
                 chronometer.setBase(ScoreBoard.timer.getToLateBase());
                 chronometer.start();

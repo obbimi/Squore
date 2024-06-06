@@ -85,6 +85,10 @@ public class BLEUtil
         NrOfDevices,
 
         PlayerTypeConfig,
+        RenameConfig,
+            CleanOutCharactersRegExp,
+            FreeTextMaxLength,
+            FixedPrefix,
         PokeConfig,
             WriteToCharacteristic,
             WriteValue,

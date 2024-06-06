@@ -1,7 +1,7 @@
 {
   "-D-SCORE-RX-SHARED": {
-    "DeviceNameMustMatch": "^D-SCORE-RX_[0-9A-Fa-f:]{4,17}.*",
-    "DeviceNameStartsWith": "D-SCORE-RX_",
+    "XDeviceNameMustMatch": "^D-SCORE[0-9A-Fa-f:_]{4,17}.*",
+    "DeviceNameStartsWith": "D-SCORE",
     "DeviceImageURL": "https://raw.githubusercontent.com/obbimi/Squore/master/docs/img/d-score-horizontal.png",
     "HandleOnReleaseValue": 0,
     "RssiValueAt1M": -49.1,
@@ -17,6 +17,12 @@
     "PokeConfig" : {
       "WriteToCharacteristic" : [ "96f91f4d-2417-44e3-ae06-aa362556914e", "96f91f4b-2417-44e3-ae06-aa362556914e" ],
       "WriteValue" : 2
+    },
+    "RenameConfig" : {
+      "WriteToCharacteristic" : [ "00001800-0000-1000-8000-00805f9b34fb", "00002a00-0000-1000-8000-00805f9b34fb" ],
+      "CleanOutCharactersRegExp" : "[^A-Za-z0-9_\\-\\+\\.]",
+      "FreeTextMaxLength" : 11,
+      "FixedPrefix" : "D-SCORE_"
     }
   },
   "D-SCORE-RX": {

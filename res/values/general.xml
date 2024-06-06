@@ -50,6 +50,7 @@
     <string name="cmd_subtract_x_seconds">Subtract %s secs</string>
     <string name="cmd_keep">Keep</string>
     <string name="cmd_delete">Delete</string>
+    <string name="cmd_rename">Rename</string>
     <string name="cmd_delete_all">Delete all…</string>
     <string name="cmd_edit">Edit</string>
     <string name="cmd_open">Open</string>

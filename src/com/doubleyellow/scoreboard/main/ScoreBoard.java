@@ -3428,7 +3428,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     }
                     autoShowGameDetails();
                     autoShowHandicap();
-                    autoShowTimer(Type.UntillStartOfNextGame);
+                    autoShowTimer(Type.UntilStartOfNextGame);
                     autoShowOfficialAnnouncement(AnnouncementTrigger.StartOfGame);
                 } else {
                     autoShowGameDetails();
@@ -3692,7 +3692,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 autoShowTimer(Type.Warmup);
                 autoShowHandicap();
                 autoShowTossDialog();
-                autoShowTimer(Type.UntillStartOfNextGame);
+                autoShowTimer(Type.UntilStartOfNextGame);
                 autoShowOfficialAnnouncement(AnnouncementTrigger.StartOfGame);
                 updatePowerPlayIcons();
                 if ( PreferenceValues.keepScreenOnWhen(ScoreBoard.this).equals(KeepScreenOnWhen.MatchIsInProgress) ) {
@@ -3747,7 +3747,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 if ( m_liveScoreShare ) {
                     postMatchModel(ScoreBoard.this, matchModel, true, false, timerType, iCtx);
                 }
-                if ( EnumSet.of(Type.UntillStartOfNextGame).contains(timerType) && (matchModel != null) && matchModel.isPossibleGameVictory() ) {
+                if ( EnumSet.of(Type.UntilStartOfNextGame).contains(timerType) && (matchModel != null) && matchModel.isPossibleGameVictory() ) {
                     endGame(false);
                 }
                 // fall through!!
@@ -3757,7 +3757,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     postMatchModel(ScoreBoard.this, matchModel, true, false, timerType, iCtx);
                 }
                 //viewType  = (ViewType) ctx2;
-                if ( EnumSet.of(Type.UntillStartOfNextGame, Type.Warmup).contains(timerType) ) {
+                if ( EnumSet.of(Type.UntilStartOfNextGame, Type.Warmup).contains(timerType) ) {
                     if ( (matchModel != null) && matchModel.gameHasStarted() == false ) {
                         timestampStartOfGame(GameTiming.ChangedBy.TimerEnded);
                     }
@@ -4393,7 +4393,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             case R.id.sb_timer:
                 cancelTimer();
                 if ( (matchModel != null) && matchModel.hasStarted() ) {
-                    lastTimerType = Type.UntillStartOfNextGame;
+                    lastTimerType = Type.UntilStartOfNextGame;
                     if ( Brand.supportsTimeout() ) {
                         int iEachX = PreferenceValues.autoShowGamePausedDialogAfterXPoints(ScoreBoard.this);
                         if ( matchModel.isTowelingDownScore(iEachX, 11) ) {
@@ -4402,7 +4402,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     }
                 } else {
                     // toggle between the 2 with Warmup first
-                    lastTimerType = Type.Warmup.equals(lastTimerType)?Type.UntillStartOfNextGame:Type.Warmup;
+                    lastTimerType = Type.Warmup.equals(lastTimerType)?Type.UntilStartOfNextGame:Type.Warmup;
                 }
                 showTimer(lastTimerType, false);
                 return true;
@@ -4680,7 +4680,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             case TowelingDown:
                 twoTimerView = new GamePausedTimerView(this, matchModel);
                 break;
-            case UntillStartOfNextGame:
+            case UntilStartOfNextGame:
                 twoTimerView = new PauseTimerView(this, matchModel);
                 break;
             case ContributedInjury:
@@ -4727,7 +4727,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 case Warmup:
                     timer = new Timer(this, timerType, iInitialSecs, iResumeAt, iInitialSecs / 2, bAutoTriggered);
                     break;
-                case UntillStartOfNextGame:
+                case UntilStartOfNextGame:
                     if (matchModel.matchHasEnded() /*&& (PreferenceValues.showOfficialAnnouncements(this)==false)*/) {
                         iBoard.showToast(R.string.match_has_finished);
                         return;
@@ -4767,7 +4767,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
         }
 
-        EnumSet<Type> esTimerTypes = EnumSet.of(Type.UntillStartOfNextGame, Type.Timeout);
+        EnumSet<Type> esTimerTypes = EnumSet.of(Type.UntilStartOfNextGame, Type.Timeout);
         if ( (matchModel != null) && "Iddo T".equals(matchModel.getName(Player.A)) ) {
             // TESTING
             if ( isLandscape() && esTimerTypes.contains(timerType) ) {

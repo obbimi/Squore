@@ -27,6 +27,6 @@ public class PauseTimerView extends TwoTimerView
     }
 
     @Override public void init(boolean bAutoTriggered) {
-        super.init(Type.UntillStartOfNextGame, bAutoTriggered);
+        super.init(Type.UntilStartOfNextGame, bAutoTriggered);
     }
 }
