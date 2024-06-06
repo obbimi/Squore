@@ -38,7 +38,7 @@ android {
 
     // compileSdkVersion seems required when running from command line?!
     //compileSdkVersion 33
-    compileSdkVersion 34 // makes NfcAdapter no longer compatible
+    compileSdk 34 // makes NfcAdapter no longer compatible
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
     //buildToolsVersion '28.0.3'
 
@@ -104,21 +104,21 @@ android {
             minSdkVersion 21 // increased to 21 for WearOS splashscreen dependency
             targetSdkVersion 33
             multiDexEnabled true // required since using firebase
-            versionCode 1915 * 10000 + 515
+            versionCode 1915 * 10000 + 517
             versionName "4.54"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 33
-            versionCode 2315 * 10000 + 515
+            versionCode 2315 * 10000 + 517
             versionName "4.54"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 33
-            versionCode 2501 * 10000 + 515
+            versionCode 2501 * 10000 + 517
             versionName "4.54"
         }
     }
