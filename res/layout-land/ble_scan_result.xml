@@ -49,10 +49,19 @@
         android:id="@+id/signal_strength"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:textSize="14sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/use_as_device_a"
         tools:text="-58 dBm" />
+    <TextView
+        android:id="@+id/device_batterylevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/mac_address"
+        app:layout_constraintStart_toStartOf="@id/mac_address"
+        />
     <TextView
         android:id="@+id/device_distance"
         android:layout_width="wrap_content"

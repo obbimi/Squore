@@ -20,7 +20,7 @@
     },
     "RenameConfig" : {
       "WriteToCharacteristic" : [ "00001800-0000-1000-8000-00805f9b34fb", "00002a00-0000-1000-8000-00805f9b34fb" ],
-      "CleanOutCharactersRegExp" : "[^A-Za-z0-9_\\-\\+\\.]",
+      "XCleanOutCharactersRegExp" : "[^A-Za-z0-9_\\-\\+\\.]",
       "FreeTextMaxLength" : 11,
       "FixedPrefix" : "D-SCORE_"
     }

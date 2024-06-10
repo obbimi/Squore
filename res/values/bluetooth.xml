@@ -12,8 +12,9 @@
         <item quantity="one">Connect to device and verify</item>
         <item quantity="other">Connect to devices and verify</item>
     </plurals>
-    <string name="ble_cav_poke_device_x">Vibrate device configured to be operated by\n%1$s</string>
-    <string name="ble_cav_poke_device_both">Vibrate device configured to maintain score for both</string>
+    <string name="ble_rename_device">Rename device</string>
+    <string name="ble_cav_poke_device_x">Vibrate device \n%1$s\n configured to be operated by\n%2$s</string>
+    <string name="ble_cav_poke_device_both">Vibrate device \n%1$s\n configured to maintain score for both</string>
     <plurals name="ble_start_scoring_with_devices">
         <item quantity="zero">@string/ble_select_devices_to_use_for_scoring</item> <!-- never actually use by android -->
         <item quantity="one">Start scoring for both players with single device</item>

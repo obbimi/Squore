@@ -61,7 +61,7 @@
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/mac_address"
         app:layout_constraintStart_toStartOf="@id/mac_address"
-        tools:text="-58 dBm" />
+        />
     <TextView
         android:id="@+id/device_distance"
         android:layout_width="wrap_content"

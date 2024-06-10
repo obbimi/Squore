@@ -563,6 +563,9 @@ public class BLEReceiverManager
         if ( p == null && ( mDevice2gatt.size() == 1) ) {
             gatt = mDevice2gatt.values().iterator().next();
         }
+        if ( gatt == null ) {
+            return "";
+        }
         return gatt.getDevice().getName();
     }
 

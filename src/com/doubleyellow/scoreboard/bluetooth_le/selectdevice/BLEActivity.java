@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
@@ -330,6 +331,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         }
     }
     private void updateScanButton( int iProgress ) {
+        if ( btnScan == null ) { return; }
         btnScan.setText(m_bIsScanning ? R.string.ble_stop_scan : R.string.ble_start_scan);
 
         // some stupid implementation to show scan is still busy
@@ -492,7 +494,10 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         for(Player p: Player.values() ) {
             Integer iResId = m_playerToVerifyButtonResId.get(p);
             Button btn = vgVerify.findViewById(iResId);
-            btn.setText(getString(R.string.ble_cav_poke_device_x, ScoreBoard.getMatchModel().getName(p)));
+            String sDeviceName = ""; // retrieve when actually connected
+            String sPlayerName = ScoreBoard.getMatchModel().getName(p);
+            String sTxt = getString(R.string.ble_cav_poke_device_x, sDeviceName, sPlayerName);
+            btn.setText(sTxt);
             btn.setOnClickListener(v -> {
                 m_bleReceiverManager.writeToBLE(p, BLEUtil.Keys.PokeConfig, null);
             });
@@ -612,21 +617,32 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                     Log.d(TAG, String.format("[Verify] device %s, state %s, players connected to device %d (%s)", sDevice, btState, MapUtil.size(usedForPlayers), usedForPlayers.keySet()));
                     //Log.d(TAG, "new state  : " + btState);
                     Log.d(TAG, "iNrOfDevices: " + iNrOfDevices);
-                    View btnVerifySingleDeviceForBoth = vgVerify.findViewById(R.id.ble_cav_device_both);
-                    View btnRenameSingleDeviceForBoth = vgVerify.findViewById(R.id.ble_cav_device_rename_both);
-                    View btnSwapDevices               = vgVerify.findViewById(R.id.ble_cav_swap_devices);
+                    TextView btnVerifySingleDeviceForBoth = vgVerify.findViewById(R.id.ble_cav_device_both);
+                    TextView btnRenameSingleDeviceForBoth = vgVerify.findViewById(R.id.ble_cav_device_rename_both);
+                    TextView btnSwapDevices               = vgVerify.findViewById(R.id.ble_cav_swap_devices);
                     switch (btState) {
                         case CONNECTED_DiscoveringServices:
                         case CONNECTED_TO_1_of_2:
                         case CONNECTED_ALL:
                             btnVerifySingleDeviceForBoth.setEnabled(true);
+                            String sDeviceName = m_bleReceiverManager.getDeviceName(null);
+                            String sTxt        = getString(R.string.ble_cav_poke_device_both, sDeviceName);
+                            btnVerifySingleDeviceForBoth.setText(sTxt);
+
                             btnRenameSingleDeviceForBoth.setEnabled(true);
                             for(Object o: usedForPlayers.keySet() ) {
                                 Player p = Player.valueOf(String.valueOf(o));
                                 int iResId = m_playerToVerifyButtonResId.get(p);
-                                vgVerify.findViewById(iResId).setEnabled(true);
+                                TextView btnVerify = vgVerify.findViewById(iResId);
+                                String sPlayerName = ScoreBoard.getMatchModel().getName(p);
+                                       sDeviceName = m_bleReceiverManager.getDeviceName(p);
+                                       sTxt        = getString(R.string.ble_cav_poke_device_x, sDeviceName, sPlayerName);
+                                btnVerify.setText(sTxt);
+
+                                btnVerify.setEnabled(true);
                                 iResId = m_playerToRenameResId.get(p);
-                                vgVerify.findViewById(iResId).setEnabled(true);
+                                TextView viewById = vgVerify.findViewById(iResId);
+                                viewById.setEnabled(true);
                             }
 
                             // does not seem to work if done directly
@@ -650,7 +666,8 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                                 int iResId = m_playerToVerifyButtonResId.get(p);
                                 vgVerify.findViewById(iResId).setEnabled(false);
                                 iResId = m_playerToRenameResId.get(p);
-                                vgVerify.findViewById(iResId).setEnabled(false);
+                                TextView btn = vgVerify.findViewById(iResId);
+                                btn.setEnabled(false);
                             }
                             btnSwapDevices.setEnabled(false);
                             btnVerifySingleDeviceForBoth.setEnabled(false);
@@ -710,7 +727,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         }
         AlertDialog.Builder ab = new MyDialogBuilder(this);
         ab.setIcon          (android.R.drawable.ic_menu_edit)
-          .setTitle         ("Rename device")
+          .setTitle         (R.string.ble_rename_device)
           .setView(txtNewName)
           .setNegativeButton(R.string.cmd_cancel, null)
           .setPositiveButton(R.string.cmd_rename, (dialog, which) -> renameDevice(p, txtNewName, joRenameConfig))
@@ -718,7 +735,10 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         return true;
     }
     private void renameDevice(Player p, EditText txtNewName, final JSONObject joRenameConfig) {
-        String sNewName = txtNewName.getText().toString();
+        Editable text = txtNewName.getText();
+        if ( text == null ) { return; }
+        String sNewName = text.toString();
+        if ( StringUtil.isEmpty(sNewName) ) { return; }
 
         String sCleanOutCharactersRegExp = joRenameConfig.optString(BLEUtil.Keys.CleanOutCharactersRegExp.toString());
         if ( StringUtil.isNotEmpty(sCleanOutCharactersRegExp) ) {
