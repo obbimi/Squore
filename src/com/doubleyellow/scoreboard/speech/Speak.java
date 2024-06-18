@@ -6,12 +6,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
+import android.speech.tts.Voice;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
-import com.doubleyellow.scoreboard.dialog.StartEndAnnouncement;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.GSMModel;
 import com.doubleyellow.scoreboard.model.Model;
@@ -22,10 +23,13 @@ import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class Speak
 {
@@ -58,6 +62,7 @@ public class Speak
         m_context = context.getApplicationContext();
 
         m_textToSpeech = new TextToSpeech(m_context, onInitListener);
+        m_textToSpeech.setOnUtteranceProgressListener(onUtteranceProgressListener);
 
         setFeature(PreferenceValues.useSpeechFeature(m_context));
 
@@ -65,8 +70,8 @@ public class Speak
         float speechRate  = PreferenceValues.getSpeechRate(context);
         m_iDelayBetweenTwoPieces = PreferenceValues.getSpeechPauseBetweenWords(context);
 
-        m_textToSpeech.setPitch     (speechPitch); // lower values for lower tone
-        m_textToSpeech.setSpeechRate(speechRate);  // to clearly hear to score, a little lower than 1.0 is better
+        setPitch     (speechPitch); // lower values for lower tone
+        setSpeechRate(speechRate);  // to clearly hear to score, a little lower than 1.0 is better
 
         return true;
     }
@@ -97,18 +102,28 @@ public class Speak
         m_Feature = feature;
     }
 
-    private TextToSpeech.OnInitListener onInitListener = new TextToSpeech.OnInitListener() {
+    private final TextToSpeech.OnInitListener onInitListener = new TextToSpeech.OnInitListener() {
         @Override public void onInit(int status) {
             m_iStatus = status;
 
             switch (status) {
                 case TextToSpeech.SUCCESS:
+                    Locale announcementsLocale = PreferenceValues.announcementsLocale(m_context);
+                    setLocale(announcementsLocale);
+
+                    String sVoice = PreferenceValues.getSpeechVoice(m_context);
+                    if ( sVoice != null ) {
+                        setVoice(sVoice);
+                    }
+
+/*
                     Feature feature = PreferenceValues.useOfficialAnnouncementsFeature(m_context);
                     if ( PreferenceValues.useFeatureYesNo(feature) ) {
-                        setLocale(PreferenceValues.announcementsLocale(m_context));
+                        setLocale(announcementsLocale);
                     } else {
                         setLocale(null);
                     }
+*/
                     break;
                 case TextToSpeech.ERROR:
                 default:
@@ -117,6 +132,35 @@ public class Speak
             }
         }
     };
+    private final UtteranceProgressListener onUtteranceProgressListener = new UtteranceProgressListener() {
+        @Override public void onStart(String utteranceId) {
+            Log.d(TAG, "onStart with " + utteranceId);
+        }
+
+        @Override public void onDone(String utteranceId) {
+            Log.d(TAG, "onDone with " + utteranceId);
+            //Looper.prepare(); // Only one Looper may be created per thread
+            speakNext(utteranceId);
+        }
+
+        @Override public void onError(String utteranceId) {
+            Log.d(TAG, "onError with " + utteranceId);
+            speakNext(utteranceId);
+        }
+
+        private boolean speakNext(String utteranceId) {
+            int ordinal = SpeechType.valueOf(utteranceId).ordinal();
+            emptySpeechQueue_Delayed(ordinal + 1, m_iDelayBetweenTwoPieces/*, 0*/);
+            return true;
+        }
+    };
+
+    /*
+    m_textToSpeech.addSpeech("40", m_context.getPackageName(), R.raw.speak_40_german);
+    if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ) {
+        m_textToSpeech.addSpeech("40", Uri.parse("https://squore.double-yellow.be/speach/"));
+    }
+    */
 
     //------------------------------
     // settings

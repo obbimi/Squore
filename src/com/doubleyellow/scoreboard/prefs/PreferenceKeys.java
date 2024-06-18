@@ -183,6 +183,7 @@ public enum PreferenceKeys {
     //showWhoServesDialog,
     useTossFeature,
     useSpeechFeature,
+        speechVoice,
         speechPitch,
         speechRate,
         speechPauseBetweenParts,

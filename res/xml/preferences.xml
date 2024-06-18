@@ -897,6 +897,18 @@
             dy:displayValues="@array/FeatureDisplayValues_DoAuto"
             dy:enumClass="com.doubleyellow.util.Feature"
             />
+        <com.doubleyellow.prefs.EnumListPreference
+            android:icon="@drawable/dummy"
+            android:key="officialAnnouncementsLanguage"
+            android:title="@string/pref_officialAnnouncementsLanguage"
+            android:defaultValue="@string/officialAnnouncementsLanguage_default"
+            dy:enumClass="com.doubleyellow.scoreboard.prefs.AnnouncementLanguage"
+            />
+        <ListPreference android:key="speechVoice"
+            android:icon="@android:drawable/ic_lock_silent_mode_off"
+            android:title="Voice to use"
+            android:defaultValue=""
+            />
 <!--
         <CheckBoxPreference
             android:icon="@android:drawable/ic_lock_silent_mode_off"
@@ -929,17 +941,10 @@
             android:title="@string/pref_speechPauseBetweenParts"
             android:summary="@string/pref_speechPauseBetweenParts_summary"
             android:icon="@drawable/dummy"
-            dy:min="0"
+            dy:min="100"
             dy:interval="100"
             android:defaultValue="@integer/speechPauseBetweenParts_default"
-            android:max="1500"
-            />
-        <com.doubleyellow.prefs.EnumListPreference
-            android:icon="@drawable/dummy"
-            android:key="officialAnnouncementsLanguage"
-            android:title="@string/pref_officialAnnouncementsLanguage"
-            android:defaultValue="@string/officialAnnouncementsLanguage_default"
-            dy:enumClass="com.doubleyellow.scoreboard.prefs.AnnouncementLanguage"
+            android:max="2500"
             />
     </PreferenceScreen>
 

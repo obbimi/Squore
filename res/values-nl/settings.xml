@@ -78,7 +78,7 @@
     <string name="pref_speechRate">Snelheid</string>
     <string name="pref_speechRate_summary">Lagere waardes voor tragere stem (0–100)</string>
     <string name="pref_speechPauseBetweenParts">Pause tussen score onderdelen</string>
-    <string name="pref_speechPauseBetweenParts_summary">Hogere waardes voor langere pause tussen woorden (0–1500)</string>
+    <string name="pref_speechPauseBetweenParts_summary">Hogere waardes voor langere pause tussen woorden (0–2500)</string>
 
     <string name="pref_Other">Overige</string>
     <string name="pref_Appearance">Aanzicht</string>

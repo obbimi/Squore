@@ -483,6 +483,10 @@ public class PreferenceValues extends RWValues
         int iValue0To100 = getIntegerR(PreferenceKeys.speechRate, context, R.integer.speechRate_default);
         return zeroToHundredToFloat0To1(iValue0To100);
     }
+    public static String getSpeechVoice(Context context) {
+        String sVoice = getString(PreferenceKeys.speechVoice, null, context);
+        return sVoice;
+    }
 
     public static int getSpeechPauseBetweenWords(Context context) {
         int iValueMS = getIntegerR(PreferenceKeys.speechPauseBetweenParts, context, R.integer.speechPauseBetweenParts_default);

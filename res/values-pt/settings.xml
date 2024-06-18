@@ -59,7 +59,7 @@
     <string name="pref_speechRate">Taxa</string>
     <string name="pref_speechRate_summary">Valores mais baixos para discurso mais lento (0–100)</string>
     <string name="pref_speechPauseBetweenParts">Pausar entre partes de marcação</string>
-    <string name="pref_speechPauseBetweenParts_summary">Valores mais altos para uma pausa maior entre palavras (0–1500)</string>
+    <string name="pref_speechPauseBetweenParts_summary">Valores mais altos para uma pausa maior entre palavras (0–2500)</string>
 
     <string name="pref_Other">Vários</string>
     <string name="pref_Appearance">Aparência</string>

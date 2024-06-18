@@ -433,6 +433,9 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         break;
                     case officialAnnouncementsLanguage:
                         PreferenceValues.clearOACache();
+                        Locale locale = PreferenceValues.announcementsLocale(Preferences.this);
+                        Speak.getInstance().setLocale(locale);
+                        settingsFragment.initVoices();
                         playSpeechSample();
                         break;
                     case hapticFeedbackOnGameEnd:
@@ -457,6 +460,11 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     case useCastScreen:
                         PreferenceValues.setCastRestartRequired(Preferences.this);
                         break;
+                    case speechVoice:
+                        String sVoice = PreferenceValues.getSpeechVoice(Preferences.this);
+                        Speak.getInstance().setVoice(sVoice);
+                        playSpeechSample();
+                        break;
                     case useSpeechFeature:
                         Feature fUseSpeech = PreferenceValues.useSpeechFeature(Preferences.this);
                         boolean bUseSpeech = PreferenceValues.useFeatureYesNo(fUseSpeech);
@@ -469,7 +477,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     case speechPitch:
                     case speechRate:
                     case speechPauseBetweenParts:
-                        // speak a small piece of text to allow user to finetune voice right here
+                        // speak a small piece of text to allow user to fine tune voice right here
                         playSpeechSample();
                         break;
                     case usePowerPlay:
@@ -540,12 +548,13 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             if ( instance.isStarted() == false ) {
                 instance.start(Preferences.this);
             }
-            instance.setPitch     (PreferenceValues.getSpeechPitch(Preferences.this));
-            instance.setSpeechRate(PreferenceValues.getSpeechRate(Preferences.this));
+            instance.setPitch            (PreferenceValues.getSpeechPitch(Preferences.this));
+            instance.setSpeechRate       (PreferenceValues.getSpeechRate(Preferences.this));
             instance.setPauseBetweenParts(PreferenceValues.getSpeechPauseBetweenWords(Preferences.this));
-            Feature fSpeach = PreferenceValues.useOfficialAnnouncementsFeature(Preferences.this);
-            if ( PreferenceValues.useFeatureYesNo(fSpeach) ) {
-                instance.setLocale(PreferenceValues.announcementsLocale(Preferences.this));
+            Feature fSpeech = PreferenceValues.useOfficialAnnouncementsFeature(Preferences.this);
+            if ( PreferenceValues.useFeatureYesNo(fSpeech) ) {
+                //don't call to easily. Specified TTS voice seems to be lost if
+                //instance.setLocale(PreferenceValues.announcementsLocale(Preferences.this));
             }
 
             // feed current score
@@ -658,6 +667,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     castScreen.setEnabled(false);
                 }
             }
+
+            initVoices();
 
             // remove some brand preferences if required
             final PreferenceGroup psBrandCategory   = (PreferenceGroup) this.findPreference(PreferenceKeys.Brand);
@@ -1000,6 +1011,22 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 if ( psFeeds != null ) {
                     psFeeds.removePreference(findPreference(PreferenceKeys.FeedFeedsURL));
                     //psFeeds.removePreference(findPreference("Technical"));
+                }
+            }
+        }
+
+        public void initVoices() {
+            ListPreference lpSpeechVoice = ( ListPreference) this.findPreference(PreferenceKeys.speechVoice);
+            if ( lpSpeechVoice != null ) {
+                List<String> lLetUserSelectFrom  = Speak.getInstance().getVoices();
+                lpSpeechVoice.setEntryValues(lLetUserSelectFrom.toArray(new CharSequence[0]));
+                lpSpeechVoice.setEntries    (lLetUserSelectFrom.toArray(new CharSequence[0]));
+
+                if ( ListUtil.isNotEmpty(lLetUserSelectFrom) ) {
+                    String sVoiceName = lLetUserSelectFrom.get(0).toString();
+                    lpSpeechVoice.setValue(sVoiceName);
+
+                    Speak.getInstance().setVoice(sVoiceName);
                 }
             }
         }

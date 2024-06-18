@@ -79,7 +79,7 @@
     <string name="pref_speechRate">Rychlost</string>
     <string name="pref_speechRate_summary">Nižší hodnota pro pomalejší řeč (0–100)</string>
     <string name="pref_speechPauseBetweenParts">Pauza mezi částmi skóre</string>
-    <string name="pref_speechPauseBetweenParts_summary">Vyšší hodnota pro delší pauzu mezi slovy (0–1500)</string>
+    <string name="pref_speechPauseBetweenParts_summary">Vyšší hodnota pro delší pauzu mezi slovy (0–2500)</string>
 
     <string name="pref_Other">Různé</string>
     <string name="pref_Appearance">Vzhled</string>
