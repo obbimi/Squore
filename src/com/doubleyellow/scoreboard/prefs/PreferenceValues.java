@@ -483,6 +483,16 @@ public class PreferenceValues extends RWValues
         int iValue0To100 = getIntegerR(PreferenceKeys.speechRate, context, R.integer.speechRate_default);
         return zeroToHundredToFloat0To1(iValue0To100);
     }
+    public static boolean getSpeech_PlayWhiteNoiseSoundFileToKeepAlive(Context context) {
+        return getBoolean(PreferenceKeys.getSpeech_PlayWhiteNoiseSoundFileToKeepAlive, context, true);
+    }
+    public static String getSpeech_UrlOfSoundFileToPlayToKeepAlive(Context context) {
+        String S_AUDIOURL = "android.resource://" + context.getPackageName() + "/" + R.raw.white_noise_2s;
+        return S_AUDIOURL;
+    }
+    public static int getSpeech_PauseBetweenPlaysToKeepAlive(Context context) {
+        return getIntegerR(PreferenceKeys.getSpeech_PauseBetweenPlaysToKeepAlive, context, R.integer.getSpeech_PauseBetweenPlaysToKeepAlive_default);
+    }
     public static String getSpeechVoice(Context context) {
         String sVoice = getString(PreferenceKeys.speechVoice, null, context);
         return sVoice;

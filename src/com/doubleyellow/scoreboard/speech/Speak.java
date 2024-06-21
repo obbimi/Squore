@@ -73,8 +73,21 @@ public class Speak
         setPitch     (speechPitch); // lower values for lower tone
         setSpeechRate(speechRate);  // to clearly hear to score, a little lower than 1.0 is better
 
+        boolean bPlayWhiteNoise = PreferenceValues.getSpeech_PlayWhiteNoiseSoundFileToKeepAlive(context);
+        if ( bPlayWhiteNoise ) {
+            String sUrlOfAudio = PreferenceValues.getSpeech_UrlOfSoundFileToPlayToKeepAlive(context);
+            int iPauseBetween = PreferenceValues.getSpeech_PauseBetweenPlaysToKeepAlive(context);
+            if ( StringUtil.isNotEmpty(sUrlOfAudio) ) {
+                if ( btAudioConnection == null ) {
+                    btAudioConnection = new BTAudioConnection(iPauseBetween, sUrlOfAudio, m_context);
+                    btAudioConnection.start();
+                }
+            }
+        }
+
         return true;
     }
+    private BTAudioConnection btAudioConnection = null;
 
     /** invoked to free up resources */
     public void stop() {
@@ -424,11 +437,12 @@ public class Speak
         if ( iDelay <= 0 ) {
             iDelay = I_DELAY_START;
         }
-        emptySpeechQueue_Delayed(RECALC_BEFORE_START, iDelay, 0);
+        emptySpeechQueue_Restartable(RECALC_BEFORE_START, iDelay/*, 0*/);
     }
 
     /** for playing of score on request */
     public void playAll(Model matchModel) {
+        if ( matchModel == null ) { return; }
         if ( isStarted() == false ) { return; }
         if ( isEnabled() == false ) { return; }
 
@@ -440,7 +454,7 @@ public class Speak
             this.gameBall(matchModel);
         }
 
-        emptySpeechQueue(0, 0);
+        emptySpeechQueue(0/*, 0*/);
     }
 
     /** get text from correct locale */
@@ -489,7 +503,8 @@ public class Speak
                 Bundle bundle = new Bundle();
                 bundle.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 1.0f); // between 0 and 1
                 bundle.putFloat(TextToSpeech.Engine.KEY_PARAM_PAN   , 0.0f); // between -1 and 1
-                m_textToSpeech.speak(sText, TextToSpeech.QUEUE_ADD, bundle, null);
+                m_textToSpeech.speak(sText, TextToSpeech.QUEUE_ADD, bundle, type.toString());
+
             } else {
                 m_textToSpeech.speak(sText, TextToSpeech.QUEUE_ADD, null);
             }
@@ -503,8 +518,11 @@ public class Speak
         }
     }
 
-    private void emptySpeechQueue(int iStartAtStep, int iFromDelayed) {
+    private void emptySpeechQueue(int iStartAtStep/*, int iCntFromDelayed*/) {
         if ( isStarted() == false ) { return; }
+        if ( btAudioConnection != null && iStartAtStep == 0  ) {
+            btAudioConnection.reset();
+        }
 
         for(SpeechType type: SpeechType.values() ) {
             if ( type.ordinal() < iStartAtStep ) { continue; }
@@ -512,23 +530,37 @@ public class Speak
             if ( StringUtil.isEmpty(sToSpeak) ) {
                 continue;
             }
-            if ( m_textToSpeech.isSpeaking() ) {
-                // retry in a half a second, starting at the same index
-                if ( iFromDelayed < 10 ) {
-                    emptySpeechQueue_Delayed(type.ordinal(), m_iDelayBetweenTwoPieces, iFromDelayed+1);
-                }
-                return;
-            }
 
             m_sText[type.ordinal()] = null;
             Log.d(TAG, String.format("Speaking %s : %s", type, sToSpeak));
             speak(sToSpeak, type);
-            emptySpeechQueue_Delayed(type.ordinal() + 1, m_iDelayBetweenTwoPieces, 0);
+            //emptySpeechQueue_Delayed(type.ordinal() + 1, m_iDelayBetweenTwoPieces, 0);
             return;
         }
+
+        // just played some audio, but nothing more to play. Restart keep alive
+        if ( btAudioConnection != null ) {
+            btAudioConnection.reset();
+        }
     }
+    private void emptySpeechQueue_Delayed(final int iStartAtStep, int iDelayMs/*, final int iCntDelayedBecauseStillSpeaking*/) {
+        synchronized (this) {
+            try {
+                wait(iDelayMs);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+/*
+        if ( iStartAtStep == RECALC_BEFORE_START ) {
+            playAll(ScoreBoard.getMatchModel());
+        }
+*/
+        emptySpeechQueue(iStartAtStep/*, iCntDelayedBecauseStillSpeaking*/);
+    }
+
     private static CountDownTimer m_cdtEmptySpeechQueue = null;
-    private void emptySpeechQueue_Delayed(final int iStartAtStep, int iDelayMs, final int iDelayedBecauseStillSpeaking) {
+    private void emptySpeechQueue_Restartable(final int iStartAtStep, int iDelayMs) {
         if ( m_cdtEmptySpeechQueue != null) {
             m_cdtEmptySpeechQueue.cancel();
         }
@@ -538,7 +570,7 @@ public class Speak
                 if ( iStartAtStep == RECALC_BEFORE_START ) {
                     playAll(ScoreBoard.getMatchModel());
                 }
-                emptySpeechQueue(iStartAtStep, iDelayedBecauseStillSpeaking);
+                emptySpeechQueue(iStartAtStep);
             }
         };
         m_cdtEmptySpeechQueue.start();
