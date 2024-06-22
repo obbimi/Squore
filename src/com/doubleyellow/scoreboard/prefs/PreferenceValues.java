@@ -483,15 +483,24 @@ public class PreferenceValues extends RWValues
         int iValue0To100 = getIntegerR(PreferenceKeys.speechRate, context, R.integer.speechRate_default);
         return zeroToHundredToFloat0To1(iValue0To100);
     }
-    public static boolean getSpeech_PlayWhiteNoiseSoundFileToKeepAlive(Context context) {
-        return getBoolean(PreferenceKeys.getSpeech_PlayWhiteNoiseSoundFileToKeepAlive, context, true);
+    public static boolean speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive(Context context) {
+        return getBoolean(PreferenceKeys.speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive, context, true);
     }
     public static String getSpeech_UrlOfSoundFileToPlayToKeepAlive(Context context) {
-        String S_AUDIOURL = "android.resource://" + context.getPackageName() + "/" + R.raw.white_noise_2s;
+        // https://samplefocus.com/samples/fading-noises
+        // - Crackle Subtle
+        String S_AUDIOURL = null;
+               S_AUDIOURL = "android.resource://" + context.getPackageName() + "/" + R.raw.white_noise_2s;
+               //S_AUDIOURL = "android.resource://" + context.getPackageName() + "/" + R.raw.white_noise_4s;
+               //S_AUDIOURL = "https://squore.double-yellow.be/white_noise_2s.aac";
+               //S_AUDIOURL = "https://squore.double-yellow.be/white_noise_4s.mp3";
         return S_AUDIOURL;
     }
-    public static int getSpeech_PauseBetweenPlaysToKeepAlive(Context context) {
-        return getIntegerR(PreferenceKeys.getSpeech_PauseBetweenPlaysToKeepAlive, context, R.integer.getSpeech_PauseBetweenPlaysToKeepAlive_default);
+    public static int speechOverBT_PauseBetweenPlaysToKeepAlive(Context context) {
+        return getIntegerR(PreferenceKeys.speechOverBT_PauseBetweenPlaysToKeepAlive, context, R.integer.speechOverBT_PauseBetweenPlaysToKeepAlive_default);
+    }
+    public static int speechOverBT_PlayingVolumeToKeepAlive(Context context) {
+        return getIntegerR(PreferenceKeys.speechOverBT_PlayingVolumeToKeepAlive, context, R.integer.speechOverBT_speechOverBT_PlayingVolumeToKeepAlive_default);
     }
     public static String getSpeechVoice(Context context) {
         String sVoice = getString(PreferenceKeys.speechVoice, null, context);

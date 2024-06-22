@@ -39,6 +39,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.PreferenceScreen;
 import android.preference.PreferenceCategory;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Toast;
@@ -470,8 +471,14 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         boolean bUseSpeech = PreferenceValues.useFeatureYesNo(fUseSpeech);
                         Speak.getInstance().setFeature(fUseSpeech);
                         settingsFragment.setEnabledForPrefKeys(bUseSpeech, PreferenceKeys.speechPitch, PreferenceKeys.speechRate, PreferenceKeys.speechPauseBetweenParts);
+                        settingsFragment.setEnabledForPrefKeys(bUseSpeech, PreferenceKeys.speechOverBT_PauseBetweenPlaysToKeepAlive, PreferenceKeys.speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive);
                         if ( bUseSpeech ) {
                             playSpeechSample();
+
+                            boolean ppEnabled = PreferenceValues.speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive(Preferences.this);
+                            stopStartWhiteNoise(ppEnabled);
+                        } else {
+                            stopStartWhiteNoise(false);
                         }
                         break;
                     case speechPitch:
@@ -480,10 +487,22 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         // speak a small piece of text to allow user to fine tune voice right here
                         playSpeechSample();
                         break;
-                    case usePowerPlay:
+                    case speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive: {
+                        boolean ppEnabled = PreferenceValues.speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive(Preferences.this);
+                        stopStartWhiteNoise(ppEnabled);
+                        break;
+                    }
+                    case speechOverBT_PauseBetweenPlaysToKeepAlive:
+                    case speechOverBT_PlayingVolumeToKeepAlive: {
+                        stopStartWhiteNoise(false);
+                        boolean ppEnabled = PreferenceValues.speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive(Preferences.this);
+                        stopStartWhiteNoise(ppEnabled);
+                    }
+                    case usePowerPlay: {
                         boolean ppEnabled = PreferenceValues.usePowerPlay(Preferences.this);
                         settingsFragment.setEnabledForPrefKeys(ppEnabled, PreferenceKeys.numberOfPowerPlaysPerPlayerPerMatch);
                         break;
+                    }
                     case FCMEnabled:
                         // if no FCM device id yet, generate one
                         String sFCMDeviceId = PreferenceValues.getFCMDeviceId(Preferences.this);
@@ -543,6 +562,13 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             }
         }
 
+        public void stopStartWhiteNoise(boolean ppEnabled) {
+            if ( ppEnabled ) {
+                Speak.getInstance().startWhiteNoise();
+            } else {
+                Speak.getInstance().stopWhiteNoise();
+            }
+        }
         public void playSpeechSample() {
             Speak instance = Speak.getInstance();
             if ( instance.isStarted() == false ) {
@@ -1018,15 +1044,23 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
         public void initVoices() {
             ListPreference lpSpeechVoice = ( ListPreference) this.findPreference(PreferenceKeys.speechVoice);
             if ( lpSpeechVoice != null ) {
-                List<String> lLetUserSelectFrom  = Speak.getInstance().getVoices();
-                lpSpeechVoice.setEntryValues(lLetUserSelectFrom.toArray(new CharSequence[0]));
-                lpSpeechVoice.setEntries    (lLetUserSelectFrom.toArray(new CharSequence[0]));
+                Map<String, String> mDisplayName2Name = Speak.getInstance().getVoices();
+                List<String> lDisplayValues = new ArrayList<>(mDisplayName2Name.keySet());
+                lpSpeechVoice.setEntries(lDisplayValues.toArray(new CharSequence[0]));
+                List<String> lVoiceNames = new ArrayList<>();
+                for(String sDPName: lDisplayValues) {
+                    lVoiceNames.add(mDisplayName2Name.get(sDPName));
+                }
+                lpSpeechVoice.setEntryValues(lVoiceNames.toArray(new CharSequence[0]));
 
-                if ( ListUtil.isNotEmpty(lLetUserSelectFrom) ) {
-                    String sVoiceName = lLetUserSelectFrom.get(0).toString();
-                    lpSpeechVoice.setValue(sVoiceName);
+                if ( ListUtil.isNotEmpty(lVoiceNames) ) {
+                    String sVoicePref = PreferenceValues.getSpeechVoice(getContext());
+                    if ( StringUtil.isEmpty(sVoicePref) ) {
+                        sVoicePref = lVoiceNames.get(0).toString();
+                    }
+                    lpSpeechVoice.setValue(sVoicePref);
 
-                    Speak.getInstance().setVoice(sVoiceName);
+                    Speak.getInstance().setVoice(sVoicePref);
                 }
             }
         }

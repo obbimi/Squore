@@ -8013,8 +8013,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     private void onResumeSpeak() {
         if ( m_speak != null ) { return; }
         m_speak = Speak.getInstance();
-        m_speak.start(this);
+        m_speak.start(this); // invokes listener.onInit()
     }
+
     private void cleanup_Speak() {
         if ( m_speak != null ) {
             m_speak.stop();

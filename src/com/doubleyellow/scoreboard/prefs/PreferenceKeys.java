@@ -187,8 +187,9 @@ public enum PreferenceKeys {
         speechPitch,
         speechRate,
         speechPauseBetweenParts,
-        getSpeech_PlayWhiteNoiseSoundFileToKeepAlive,
-        getSpeech_PauseBetweenPlaysToKeepAlive,
+        speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive,
+        speechOverBT_PauseBetweenPlaysToKeepAlive,
+        speechOverBT_PlayingVolumeToKeepAlive,
 
     useShareFeature,
         shareAction,

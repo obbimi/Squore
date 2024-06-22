@@ -946,6 +946,28 @@
             android:defaultValue="@integer/speechPauseBetweenParts_default"
             android:max="2500"
             />
+        <PreferenceCategory android:title="@string/pref_speech_SoundOverBlueTooth">
+            <CheckBoxPreference android:key="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_speech_PlayWhiteNoiseSoundFileToKeepAlive"
+                android:summary="@string/pref_speech_PlayWhiteNoiseSoundFileToKeepAlive_summary"
+                android:defaultValue="@bool/speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Squash"
+                />
+            <EditTextPreference android:key="speechOverBT_PauseBetweenPlaysToKeepAlive"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_speech_PauseBetweenPlaysToKeepAlive"
+                android:summary="@string/pref_speech_PauseBetweenPlaysToKeepAlive_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/speechOverBT_PauseBetweenPlaysToKeepAlive_default"
+                />
+            <EditTextPreference android:key="speechOverBT_PlayingVolumeToKeepAlive"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_speechOverBT_PlayingVolumeToKeepAlive"
+                android:summary="@string/pref_speechOverBT_PlayingVolumeToKeepAlive_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/speechOverBT_speechOverBT_PlayingVolumeToKeepAlive_default"
+                />
+        </PreferenceCategory>
     </PreferenceScreen>
 
     <PreferenceScreen android:key="Sharing"

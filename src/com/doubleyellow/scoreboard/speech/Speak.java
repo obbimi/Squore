@@ -25,6 +25,7 @@ import com.doubleyellow.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -73,21 +74,34 @@ public class Speak
         setPitch     (speechPitch); // lower values for lower tone
         setSpeechRate(speechRate);  // to clearly hear to score, a little lower than 1.0 is better
 
-        boolean bPlayWhiteNoise = PreferenceValues.getSpeech_PlayWhiteNoiseSoundFileToKeepAlive(context);
-        if ( bPlayWhiteNoise ) {
-            String sUrlOfAudio = PreferenceValues.getSpeech_UrlOfSoundFileToPlayToKeepAlive(context);
-            int iPauseBetween = PreferenceValues.getSpeech_PauseBetweenPlaysToKeepAlive(context);
-            if ( StringUtil.isNotEmpty(sUrlOfAudio) ) {
-                if ( btAudioConnection == null ) {
-                    btAudioConnection = new BTAudioConnection(iPauseBetween, sUrlOfAudio, m_context);
-                    btAudioConnection.start();
-                }
-            }
+        boolean bPlayWhiteNoise = PreferenceValues.speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive(context);
+        if ( isEnabled() && bPlayWhiteNoise ) {
+            startWhiteNoise();
         }
 
         return true;
     }
     private BTAudioConnection btAudioConnection = null;
+
+    public void startWhiteNoise() {
+        String sUrlOfAudio = PreferenceValues.getSpeech_UrlOfSoundFileToPlayToKeepAlive(m_context);
+        if ( StringUtil.isNotEmpty(sUrlOfAudio) ) {
+            if ( btAudioConnection == null ) {
+                int iPauseBetween = PreferenceValues.speechOverBT_PauseBetweenPlaysToKeepAlive(m_context);
+                int iVolume       = PreferenceValues.speechOverBT_PlayingVolumeToKeepAlive(m_context);
+                iVolume = iVolume % 100;
+                float fVolume0to1 = (iVolume / 100.0f);
+                btAudioConnection = new BTAudioConnection(iPauseBetween, sUrlOfAudio, fVolume0to1, m_context);
+                btAudioConnection.start();
+            }
+        }
+    }
+    public void stopWhiteNoise() {
+        if ( btAudioConnection != null ) {
+            btAudioConnection.stopLooping();
+            btAudioConnection = null;
+        }
+    }
 
     /** invoked to free up resources */
     public void stop() {
@@ -213,6 +227,7 @@ public class Speak
                     m_locale = locale;
                     break;
             }
+            getVoices(locale.getLanguage());
             if ( m_locale != null ) {
                 break;
             }
@@ -231,6 +246,84 @@ public class Speak
             return false;
         }
         return true;
+    }
+
+    private Map<String, Map<String, Voice>> mLang2Voices = new HashMap<>();
+    private Map<String, Voice> mName2VoiceForLanguage = new HashMap<>();
+
+    /** invoked e.g. from Preferences. DisplayName2VoiceName */
+    public Map<String, String> getVoices()
+    {
+        Map<String, String> sDisplayName2Name = new LinkedHashMap<>();
+        final String reGender = ".*#(female|male).*";
+        for(String sName: mName2VoiceForLanguage.keySet() ) {
+            Voice voice = mName2VoiceForLanguage.get(sName);
+
+            List<String> lOptions = new ArrayList<>();
+            String country = voice.getLocale().getCountry();
+            if ( country != null ) {
+                lOptions.add(country);
+            }
+            String sDisplayName = "";
+/*
+            if ( voice.isNetworkConnectionRequired() ) {
+                Log.w(TAG, "voice " + voice.getName() + " needs network");
+                lOptions.add("network");
+            }
+*/
+            if ( voice.getQuality() <= Voice.QUALITY_LOW ) {
+                Log.w(TAG, "voice " + voice.getName() + " has low quality");
+                lOptions.add("q:" + voice.getQuality());
+            }
+/*
+            Set<String> features = voice.getFeatures();
+            if ( features != null && features.contains(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED) ) {
+                lOptions.add("n.a.");
+            }
+*/
+            if ( sName.matches(reGender) ) {
+                String sGender = sName.replaceAll(reGender, "$1");
+                sDisplayName += StringUtil.capitalize(sGender);
+            }
+            // [networkTimeoutMs, notInstalled, legacySetLanguageVoice, networkRetriesCount]
+            Log.w(TAG, "Voice features " + voice.getName() + " : " + voice.getFeatures());
+            sDisplayName = "Voice " + (MapUtil.size(sDisplayName2Name) + 1) + " " + sDisplayName;
+            if ( lOptions.size() > 0 ) {
+                sDisplayName += " [" + ListUtil.join(lOptions, ",") + "]"; // TODO: deliberately not using round braces: causes issues with RWValues.updatePreferenceTitle(preference)
+            }
+            sDisplayName = StringUtil.normalize(sDisplayName);
+            sDisplayName2Name.put(sDisplayName, sName);
+        }
+
+        return sDisplayName2Name;
+    }
+    private void getVoices(String sLanguage) {
+        mName2VoiceForLanguage = mLang2Voices.get(sLanguage);
+        if ( mName2VoiceForLanguage == null ) {
+            mName2VoiceForLanguage = new HashMap<>();
+            mLang2Voices.put(sLanguage, mName2VoiceForLanguage);
+        }
+        Set<Voice> voices = m_textToSpeech.getVoices(); // 465 on my Mi: https://cloud.google.com/text-to-speech/docs/voices
+        for(Voice voice: voices) {
+            if ( voice.getLocale().getLanguage().equalsIgnoreCase(sLanguage)) {
+
+                // name may contain #male or #female
+                mName2VoiceForLanguage.put(voice.getName(), voice);
+            }
+        }
+    }
+
+    public void setVoice(String sName) {
+        if ( MapUtil.isEmpty(mName2VoiceForLanguage) && m_locale != null ) {
+            getVoices(m_locale.getLanguage());
+        }
+        Voice voice = mName2VoiceForLanguage.get(sName);
+        if ( voice != null ) {
+            int SuccessOfError = m_textToSpeech.setVoice(voice);
+            if ( SuccessOfError == TextToSpeech.ERROR ) {
+                Toast.makeText(m_context, "Could not set voice " + sName, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     //------------------------------
@@ -521,7 +614,7 @@ public class Speak
     private void emptySpeechQueue(int iStartAtStep/*, int iCntFromDelayed*/) {
         if ( isStarted() == false ) { return; }
         if ( btAudioConnection != null && iStartAtStep == 0  ) {
-            btAudioConnection.reset();
+            btAudioConnection.reset("Start emptying queue");
         }
 
         for(SpeechType type: SpeechType.values() ) {
@@ -540,7 +633,7 @@ public class Speak
 
         // just played some audio, but nothing more to play. Restart keep alive
         if ( btAudioConnection != null ) {
-            btAudioConnection.reset();
+            btAudioConnection.reset("Queue has been emptied");
         }
     }
     private void emptySpeechQueue_Delayed(final int iStartAtStep, int iDelayMs/*, final int iCntDelayedBecauseStillSpeaking*/) {
