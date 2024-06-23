@@ -37,12 +37,12 @@ else
         echo "Could not determine package from ${brandMfFile}"
         exit
     fi
-    read -t 2 -p "New package ${brandPkg}"
+    read -t $defaultTimeout -p "New package ${brandPkg}"
 fi
 
 if [[ -z "${parentBrand}" ]]; then
     parentBrand="$(cat ${brandMfFile} | grep parentBrand | sed -e 's~parentBrand\s*=\s*~~' | tr -d ' ')"
-    read -t $defaultTimeout -p "Backup brand from ${brandMfFile} ==> '${parentBrand}'. Continuing...."
+    read -t $defaultTimeout -p "Backup brand from ${brandMfFile} ==> '${parentBrand}'. Continuing in $defaultTimeout...."
     echo
 fi
 

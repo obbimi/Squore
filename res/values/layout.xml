@@ -8,6 +8,7 @@
     <fraction name="lsp_fr_mainrow_extraheight_2x">0.40</fraction>
     <fraction name="lsp_fr_mainrow_height_2x">0.28</fraction>
     <fraction name="lsp_fr_score_ble_connected_width">0.09</fraction>
+    <fraction name="lsp_fr_score_width_gameset_details">0.11</fraction>
     <fraction name="lsp_fr_score_width_setswon">0.12</fraction>
     <fraction name="lsp_fr_score_width_gameswon">0.16</fraction>
     <fraction name="lsp_fr_score_width_clickable">0.20</fraction>

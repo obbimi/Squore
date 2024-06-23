@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Space;
 import android.widget.TextView;
 
 import com.doubleyellow.android.util.ColorUtil;
@@ -51,6 +52,7 @@ import com.doubleyellow.scoreboard.timer.Timer;
 import com.doubleyellow.scoreboard.timer.TimerViewContainer;
 import com.doubleyellow.scoreboard.timer.Type;
 import com.doubleyellow.scoreboard.view.GamesWonButton;
+import com.doubleyellow.scoreboard.view.ScorePlusSmallScore;
 import com.doubleyellow.util.*;
 
 import com.doubleyellow.scoreboard.R;
@@ -86,13 +88,13 @@ public class IBoard implements TimerViewContainer
     public static Map<Player, Integer> m_player2PowerPlayIconId;
     public static SparseArray<Player>  m_id2player;
     static {
-        m_player2scoreId      = new HashMap<Player , Integer>();
-        m_player2serverSideId = new HashMap<Player , Integer>();
-        m_player2nameId       = new HashMap<Player , Integer>();
-        m_player2gamesWonId   = new HashMap<Player , Integer>();
-        m_player2SetsWonId    = new HashMap<Player , Integer>();
+        m_player2scoreId         = new HashMap<Player , Integer>();
+        m_player2serverSideId    = new HashMap<Player , Integer>();
+        m_player2nameId          = new HashMap<Player , Integer>();
+        m_player2gamesWonId      = new HashMap<Player , Integer>();
+        m_player2SetsWonId       = new HashMap<Player , Integer>();
         m_player2PowerPlayIconId = new HashMap<Player , Integer>();
-        m_id2player           = new SparseArray<Player>();
+        m_id2player              = new SparseArray<Player>();
 
         initPlayer2ScreenElements(Player.A);
     }
@@ -115,8 +117,8 @@ public class IBoard implements TimerViewContainer
         m_player2gamesWonId  .put(pFirst           , R.id.btn_gameswon1);
         m_player2gamesWonId  .put(pFirst.getOther(), R.id.btn_gameswon2);
 
-        m_player2SetsWonId   .put(pFirst           , R.id.btn_score1_set);
-        m_player2SetsWonId   .put(pFirst.getOther(), R.id.btn_score2_set);
+        m_player2SetsWonId   .put(pFirst           , R.id.btn_setswon1);
+        m_player2SetsWonId   .put(pFirst.getOther(), R.id.btn_setswon2);
 
         m_player2PowerPlayIconId.put(pFirst           , R.id.sb_powerplay1_icon);
         m_player2PowerPlayIconId.put(pFirst.getOther(), R.id.sb_powerplay2_icon);
@@ -734,49 +736,117 @@ public class IBoard implements TimerViewContainer
 
             return scoresToShow;
         } else {
-            ViewUtil.hideViews(m_vRoot , R.id.bnt_score1_set_tiebreak_lost_with, R.id.bnt_score2_set_tiebreak_lost_with);
+            int[] iaSetScores = new int[] { R.id.btn_gameset3_detail1, R.id.btn_gameset3_detail2, R.id.space_gameset3_detail
+                                          , R.id.btn_gameset2_detail1, R.id.btn_gameset2_detail2, R.id.space_gameset2_detail
+                                          , R.id.btn_gameset1_detail1, R.id.btn_gameset1_detail2, R.id.space_gameset1_detail
+                                          };
+            List<TextView> lSetScoresViews = new ArrayList<>();
+            List<Space>    lSetScoresSpaces = new ArrayList<>();
+            for(int iViewId: iaSetScores) {
+                View vCheck = findViewById(iViewId);
+                if ( vCheck instanceof TextView ) {
+                    lSetScoresViews.add((TextView) vCheck);
+                } else if ( vCheck instanceof Space ) {
+                    lSetScoresSpaces.add((Space) vCheck);
+                }
+            }
+
+            //final int iVisibilityIfNotUsed = View.INVISIBLE;
+            final int iVisibilityIfNotUsed = View.GONE; // TODO
+
             if ( Brand.isGameSetMatch() ) {
                 GSMModel gsmModel = (GSMModel) matchModel;
-                TextView vSetScore = (TextView) findViewById(R.id.btn_score1_set);
-                if ( vSetScore != null ) {
-                    Map<Player, Integer> setsWon = gsmModel.getSetsWon();
-                    Integer iSets1 = setsWon.get(m_firstPlayerOnScreen);
-                    Integer iSets2 = setsWon.get(m_firstPlayerOnScreen.getOther());
-                    if ( iSets1 + iSets2 == 1 ) {
-                        // only one set played up till now: show how the set ended, e.g. 6-4 or 7-6
-                        List<Map<Player, Integer>> gamesWonPerSet = MatchGameScoresView.gsmGamesWonPerSet(gsmModel);
-                        Map<Player, Integer> gamesWonSet1 = gamesWonPerSet.get(0);
-                        iSets1 = gamesWonSet1.get(m_firstPlayerOnScreen);
-                        iSets2 = gamesWonSet1.get(m_firstPlayerOnScreen.getOther());
 
-                        // in case of tiebreak
-                        if ( iSets1 * iSets2 < 0 ) {
-                            // points score by loser
-                            int iResIdSmallDigit = 0;
-                            int iPointsOfTiebreakLoser = 0; // TODO: display this in a small digit
-                            if ( iSets1 < 0 ) {
-                                iPointsOfTiebreakLoser = Math.abs(iSets1);
-                                iResIdSmallDigit = R.id.bnt_score1_set_tiebreak_lost_with;
-                                iSets1 = iSets2 - 1;
+                TextView vSetsWon1 = (TextView) findViewById(R.id.btn_setswon1);
+                TextView vSetsWon2 = (TextView) findViewById(R.id.btn_setswon2);
+
+                Map<Player, Integer> setsWon = gsmModel.getSetsWon();
+                Integer iSetsFor1 = setsWon.get(m_firstPlayerOnScreen);
+                Integer iSetsFor2 = setsWon.get(m_firstPlayerOnScreen.getOther());
+                vSetsWon1.setText(String.valueOf(iSetsFor1));
+                vSetsWon2.setText(String.valueOf(iSetsFor2));
+
+                int iNrOfSetDetailsPossibleInLayout = lSetScoresViews.size() / 2;
+                if ( iSetsFor1 + iSetsFor2 <= iNrOfSetDetailsPossibleInLayout) {
+                    // few enough sets played to show details score how the set ended, e.g. 6-4 or 7-6
+
+                    vSetsWon1.setVisibility(iVisibilityIfNotUsed);
+                    vSetsWon2.setVisibility(iVisibilityIfNotUsed);
+
+                    List<Map<Player, Integer>> gamesWonPerSet = MatchGameScoresView.gsmGamesWonPerSet(gsmModel);
+
+                    for(int iSetZb = 0; iSetZb < iNrOfSetDetailsPossibleInLayout; iSetZb++ ) {
+                        TextView vSetScore1 = lSetScoresViews.get(iSetZb * 2 + 0);
+                        TextView vSetScore2 = lSetScoresViews.get(iSetZb * 2 + 1);
+                        Space space = lSetScoresSpaces.get(iSetZb);
+
+                        if ( iSetZb >= iSetsFor1 + iSetsFor2 ) {
+                            // hide views we will not be using
+                            vSetScore1.setVisibility(iVisibilityIfNotUsed);
+                            vSetScore2.setVisibility(iVisibilityIfNotUsed);
+                            if ( space != null ) {
+                                space.setVisibility(iVisibilityIfNotUsed);
                             }
-                            if ( iSets2 < 0 ) {
-                                iPointsOfTiebreakLoser = Math.abs(iSets2);
-                                iResIdSmallDigit = R.id.bnt_score2_set_tiebreak_lost_with;
-                                iSets2 = iSets1 - 1;
+                        } else {
+                            vSetScore1.setVisibility(View.VISIBLE);
+                            vSetScore2.setVisibility(View.VISIBLE);
+                            if ( space != null ) {
+                                space.setVisibility(View.VISIBLE);
                             }
-                            TextView viewById = (TextView) findViewById(iResIdSmallDigit);
-                            if ( viewById != null ) {
-                                viewById.setVisibility(View.VISIBLE);
-                                viewById.setText(String.valueOf(iPointsOfTiebreakLoser));
+                            vSetScore1.setTag(ScorePlusSmallScore.EMPTY);
+                            vSetScore2.setTag(ScorePlusSmallScore.EMPTY);
+
+                            Map<Player, Integer> gamesWonSet = gamesWonPerSet.get(iSetZb);
+                            int iGamesFor1 = gamesWonSet.get(m_firstPlayerOnScreen);
+                            int iGamesFor2 = gamesWonSet.get(m_firstPlayerOnScreen.getOther());
+
+                            // in case of tiebreak
+                            if (   iGamesFor1 * iGamesFor2 < 0 // tiebreak with points scored for loser. Score of loser is stored as negative number
+                               || (iGamesFor1 * iGamesFor2==0 && iGamesFor1 + iGamesFor2 > gsmModel.getNrOfGamesToWinSet()) // tiebreak with no points score for loser
+                            ) {
+                                // points score by loser
+                                View vResIdSetScoreLoser    = null;
+                                int iPointsOfTiebreakLoser = 0; // TODO: display this in a small digit
+                                if ( iGamesFor1 <= 0 ) {
+                                    iPointsOfTiebreakLoser = Math.abs(iGamesFor1);
+                                    vResIdSetScoreLoser   = vSetScore1;
+                                    iGamesFor1 = iGamesFor2 - 1;
+                                }
+                                if ( iGamesFor2 <= 0 ) {
+                                    iPointsOfTiebreakLoser = Math.abs(iGamesFor2);
+                                    vResIdSetScoreLoser   = vSetScore2;
+                                    iGamesFor2 = iGamesFor1 - 1;
+                                }
+                                vResIdSetScoreLoser.setTag(iPointsOfTiebreakLoser);
                             }
+                            vSetScore1.setText(String.valueOf(iGamesFor1));
+                            vSetScore2.setText(String.valueOf(iGamesFor2));
                         }
                     }
-                    vSetScore.setText(String.valueOf(iSets1));
-                    vSetScore = (TextView) findViewById(R.id.btn_score2_set);
-                    vSetScore.setText(String.valueOf(iSets2));
+
+                    int[] iViewIds = new int[] { R.id.btn_gameswon1, R.id.btn_gameswon2, R.id.space_scoregame_scorepnt
+                                               , R.id.btn_side1    , R.id.btn_side2
+                                               };
+                    int iGoneOrVisible = gsmModel.matchHasEnded() ? View.GONE : View.VISIBLE;
+                    for(int i:iViewIds) {
+                        View v = m_vRoot.findViewById(i);
+                        if ( v != null ) {
+                            v.setVisibility(iGoneOrVisible);
+                        }
+                    }
+                } else {
+                    // not all sets details can be displayed, just use one of all possible and show number of sets won
+                    for(int iSetZb = 0; iSetZb < iNrOfSetDetailsPossibleInLayout; iSetZb++ ) {
+                        TextView vSetScore1 = lSetScoresViews.get(iSetZb * 2 + 0);
+                        TextView vSetScore2 = lSetScoresViews.get(iSetZb * 2 + 1);
+                        vSetScore1.setVisibility(iVisibilityIfNotUsed);
+                        vSetScore2.setVisibility(iVisibilityIfNotUsed);
+                    }
+                    vSetsWon1.setVisibility(View.VISIBLE);
+                    vSetsWon2.setVisibility(View.VISIBLE);
                 }
             } else {
-                // TODO: use btn_score1_set to display serve side for squash?
+                ViewUtil.hideViews(m_vRoot , R.id.btn_setswon1, R.id.btn_setswon2, R.id.space_scoreset_scoregame);
             }
         }
         return null;

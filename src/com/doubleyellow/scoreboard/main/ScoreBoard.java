@@ -566,6 +566,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         handleMenuItem(R.id.sb_about);
                         return;
                     }
+                    if ( mBluetoothAdapter == null ) {
+                        Toast.makeText(ScoreBoard.this, R.string.bt_no_bluetooth_on_device, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     int[] iMenuIds = new int[] { R.id.sb_ble_devices
                                                //, R.id.sb_demo
                                                //, R.id.sb_toggle_demo_mode
@@ -1176,7 +1181,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
                         // hide 'set' related elements
                         if ( Brand.isGameSetMatch() == false ) {
-                            int[] iViewIds = new int[] {R.id.btn_score1_set, R.id.btn_score2_set, R.id.space_scoreset_scoregame};
+                            int[] iViewIds = new int[] {R.id.btn_setswon1, R.id.btn_setswon2, R.id.space_scoreset_scoregame};
                             for(int i: iViewIds) {
                                 View vTxt = view.findViewById(i);
                                 if ( vTxt == null ) { continue; }
@@ -6351,6 +6356,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     private void selectBleDevices() {
+        if ( mBluetoothAdapter == null ) {
+            Toast.makeText(this, R.string.bt_no_bluetooth_on_device, Toast.LENGTH_SHORT).show();
+            return;
+        }
         if ( PreferenceValues.useBluetoothLE(this) == false ) { return; }
 
         m_bBLEDevicesSelected = false;

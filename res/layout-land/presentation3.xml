@@ -130,7 +130,7 @@
     <!-- SET score buttons -->
     <com.doubleyellow.android.view.AutoResizeTextView
         style="@style/SBButton"
-        android:id="@+id/btn_score1_set"
+        android:id="@+id/btn_setswon1"
         app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
         app:layout_constraintBottom_toTopOf="@id/space_centerright"
         app:layout_constraintEnd_toStartOf="@id/space_scoreset_scoregame"
@@ -141,7 +141,7 @@
         />
     <com.doubleyellow.android.view.AutoResizeTextView
         style="@style/SBButton"
-        android:id="@+id/btn_score2_set"
+        android:id="@+id/btn_setswon2"
         app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
         app:layout_constraintTop_toBottomOf="@id/space_centerright"
         app:layout_constraintEnd_toStartOf="@id/space_scoreset_scoregame"
@@ -154,7 +154,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="@id/space_centerright"
-        app:layout_constraintEnd_toStartOf="@id/btn_score1_set"
+        app:layout_constraintEnd_toStartOf="@id/btn_setswon1"
         app:layout_constraintHeight_percent="@fraction/lsp_fr_vertical_margin_3x"
         app:layout_constraintWidth_percent="@fraction/lsp_fr_horizontal_margin_4x"
         />

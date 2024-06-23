@@ -76,6 +76,22 @@
         android:includeFontPadding="false"
         android:layout_width="0dp" android:layout_height="0dp"
         />
+    <Space android:id="@+id/space_right30"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_score1"
+        app:layout_constraintStart_toStartOf="@id/space_centerright"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_horizontal_margin_4x"
+        />
+    <Space android:id="@+id/space_right70"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_score2"
+        app:layout_constraintStart_toStartOf="@id/space_centerright"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_horizontal_margin_4x"
+        />
     <Space android:id="@+id/space_scoregame_scorepnt"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -121,7 +137,7 @@
     <!-- SET score buttons -->
     <com.doubleyellow.android.view.AutoResizeTextView
         style="@style/SBButton"
-        android:id="@+id/btn_score1_set"
+        android:id="@+id/btn_setswon1"
         app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
         app:layout_constraintBottom_toTopOf="@id/space_centerright"
         app:layout_constraintEnd_toStartOf="@id/space_scoreset_scoregame"
@@ -132,7 +148,7 @@
         />
     <com.doubleyellow.android.view.AutoResizeTextView
         style="@style/SBButton"
-        android:id="@+id/btn_score2_set"
+        android:id="@+id/btn_setswon2"
         app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
         app:layout_constraintTop_toBottomOf="@id/space_centerright"
         app:layout_constraintEnd_toStartOf="@id/space_scoreset_scoregame"
@@ -141,11 +157,102 @@
         android:includeFontPadding="false"
         android:layout_width="0dp" android:layout_height="0dp"
         />
+    <Space android:id="@+id/space_gameset1_detail"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_setswon1"
+        app:layout_constraintEnd_toStartOf="@id/btn_setswon1"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_horizontal_margin_4x"
+        />
+    <com.doubleyellow.scoreboard.view.ScorePlusSmallScore
+        style="@style/SBButton"
+        android:id="@+id/btn_gameset1_detail1"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        app:layout_constraintBottom_toTopOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/space_gameset1_detail"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_score_width_gameset_details"
+        android:text="6"
+        android:includeFontPadding="false"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+    <com.doubleyellow.scoreboard.view.ScorePlusSmallScore
+        style="@style/SBButton"
+        android:id="@+id/btn_gameset1_detail2"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        app:layout_constraintTop_toBottomOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/space_gameset1_detail"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_score_width_gameset_details"
+        android:text="7"
+        android:includeFontPadding="false"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+    <Space android:id="@+id/space_gameset2_detail"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_gameset1_detail1"
+        app:layout_constraintEnd_toStartOf="@id/btn_gameset1_detail1"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_horizontal_margin_4x"
+        />
+    <com.doubleyellow.scoreboard.view.ScorePlusSmallScore
+        style="@style/SBButton"
+        android:id="@+id/btn_gameset2_detail1"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        app:layout_constraintBottom_toTopOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/space_gameset2_detail"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_score_width_gameset_details"
+        android:text="4"
+        android:includeFontPadding="false"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+    <com.doubleyellow.scoreboard.view.ScorePlusSmallScore
+        style="@style/SBButton"
+        android:id="@+id/btn_gameset2_detail2"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        app:layout_constraintTop_toBottomOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/space_gameset2_detail"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_score_width_gameset_details"
+        android:text="6"
+        android:includeFontPadding="false"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+    <Space android:id="@+id/space_gameset3_detail"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_gameset2_detail1"
+        app:layout_constraintEnd_toStartOf="@id/btn_gameset2_detail1"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_vertical_margin_3x"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_horizontal_margin_4x"
+        />
+    <com.doubleyellow.scoreboard.view.ScorePlusSmallScore
+        style="@style/SBButton"
+        android:id="@+id/btn_gameset3_detail1"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        app:layout_constraintBottom_toTopOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/space_gameset3_detail"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_score_width_gameset_details"
+        android:text="6"
+        android:includeFontPadding="false"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+    <com.doubleyellow.scoreboard.view.ScorePlusSmallScore
+        style="@style/SBButton"
+        android:id="@+id/btn_gameset3_detail2"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        app:layout_constraintTop_toBottomOf="@id/space_centerright"
+        app:layout_constraintEnd_toStartOf="@id/space_gameset3_detail"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_score_width_gameset_details"
+        android:text="1"
+        android:includeFontPadding="false"
+        android:layout_width="0dp" android:layout_height="0dp"
+        />
+
     <Space android:id="@+id/space_player_score"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="@id/space_centerright"
-        app:layout_constraintEnd_toStartOf="@id/btn_score1_set"
+        app:layout_constraintEnd_toStartOf="@id/btn_setswon1"
         app:layout_constraintHeight_percent="@fraction/lsp_fr_vertical_margin_3x"
         app:layout_constraintWidth_percent="@fraction/lsp_fr_horizontal_margin_4x"
         />
@@ -153,7 +260,7 @@
     <!-- playernames -->
     <com.doubleyellow.scoreboard.view.PlayersButton
         android:id="@+id/txt_player1"
-        app:layout_constraintBottom_toTopOf="@id/space_scoregame_scorepnt"
+        app:layout_constraintBottom_toTopOf="@id/space_right30"
         app:layout_constraintStart_toEndOf="@id/space_topleft1"
         app:layout_constraintEnd_toStartOf="@id/space_scoregame_scorepnt"
         app:layout_constraintTop_toBottomOf="@id/space_topleft1"
@@ -166,7 +273,7 @@
         app:layout_constraintBottom_toTopOf="@id/space_bottomright1"
         app:layout_constraintStart_toEndOf="@id/space_topleft1"
         app:layout_constraintEnd_toStartOf="@id/space_scoregame_scorepnt"
-        app:layout_constraintTop_toBottomOf="@id/space_scoreset_scoregame"
+        app:layout_constraintTop_toBottomOf="@id/space_right70"
         android:text="Voldemort/Tom Riddle"
         android:layout_width="0dp"
         android:layout_height="0dp"
