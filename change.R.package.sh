@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+defaultTimeout=2
+
 # derive allowed brands from existing Manifest files
 allowedInput=$(ls -1 AndroidManifest*.xml | grep -v ALL | perl -ne 's~AndroidManifest(.+).xml~$1~; print' | sort )
 
@@ -31,12 +33,16 @@ Allowed are: ${allowedInput}
 	exit
 else
     brandPkg=$(grep package= ${brandMfFile} | perl -ne 's~.*"([a-z\.]+)".*~$1~; print')
+    if [[ -z "$brandPkg" ]]; then
+        echo "Could not determine package from ${brandMfFile}"
+        exit
+    fi
     read -t 2 -p "New package ${brandPkg}"
 fi
 
 if [[ -z "${parentBrand}" ]]; then
     parentBrand="$(cat ${brandMfFile} | grep parentBrand | sed -e 's~parentBrand\s*=\s*~~' | tr -d ' ')"
-    read -t 1 -p "Backup brand from ${brandMfFile} ==> '${parentBrand}'. Continuing...."
+    read -t $defaultTimeout -p "Backup brand from ${brandMfFile} ==> '${parentBrand}'. Continuing...."
     echo
 fi
 
@@ -44,7 +50,7 @@ function correctSportSpecificResource {
     from=$1
     to=$2
 
-    read -t 1 -p "Correcting from ${from} to ${to}. Continue ?"
+    read -t $defaultTimeout -p "Correcting from ${from} to ${to}. Continue ?"
     echo
 
     echo -n > notcorrected.txt
@@ -59,7 +65,7 @@ function correctSportSpecificResource {
             if echo ${res} | grep -q "__${from}"; then
                 nrOfOccurrencesAsExpr=$(grep -E -h -c -r "@.*${res}" * | grep -E -v '^0$' | xargs | sed -e 's/\ /+/g')
                 nrOfOccurrences=$((${nrOfOccurrencesAsExpr}))
-                #read -t 3 -p "Nr of occurrences of valid ${res} : ${nrOfOccurrences}"
+                #read -t $defaultTimeout -p "Nr of occurrences of valid ${res} : ${nrOfOccurrences}"
                 let keptCnt=keptCnt+nrOfOccurrences
                 printf "%2d (+%d) %-72s OK \n" ${keptCnt} ${nrOfOccurrences} ${res} >> notcorrected.txt
             fi
@@ -119,7 +125,7 @@ fi
 
 # derive current package by looking for .R reference in Brand.java
 pkgFrom=$(grep -E 'import[ ]+.*\.R;' com/doubleyellow/scoreboard/main/ScoreBoard.java | perl -ne 's~import\s+([\w\.]+)\.R;~\1~; print')
-read -t 2 -p "From package ${pkgFrom}"
+read -t $defaultTimeout -p "From package ${pkgFrom}"
 if [[ -z "${pkgFrom}" ]]; then
     echo "Could not determine 'from' package"
     exit 1
@@ -151,6 +157,7 @@ touch -t "${oldFileTime}" ${f}
 ####################################################
 # Change <other>.java
 ####################################################
+read -t $defaultTimeout -p "Brand.java adapted. Continue?"
 
 echo '=================================='
 printf "Change to '${tobranded}'\n"
@@ -172,7 +179,7 @@ for f in $(grep -E -irl "${pkgFrom}\.R[^a-z]" *); do
     touch -t "${oldFileTime}" ${f}
 done
 echo '=================================='
-#read -t 10 -p ' Java files changed. Continue ... ? '
+read -t $defaultTimeout -p ' Java files changed. Continue ... ? '
 
 # change some defaults in xml files (in java is/should be taken care of by means of code)
 cd ../res
@@ -200,11 +207,11 @@ for f in $(grep -E -rl "@(string|fraction|color).*__${fromSuffix}\""); do
     else
         rm ${f}.1.xml
     fi
-    #read -t 10 -p ' Continue ? '
+    #read -t $defaultTimeout -p ' Continue ? '
     touch -t "${oldFileTime}" ${f}
 done
 echo '=================================='
-#read -t 10 -p 'menu/layout/preferences files processed. Continue ? '
+#read -t $defaultTimeout -p 'menu/layout/preferences files processed. Continue ? '
 if [[ -e correctSportSpecificResource.txt ]]; then
     rm -v correctSportSpecificResource.txt
 fi
@@ -245,4 +252,13 @@ if [[ -n "$(diff ${f}.tmp ${f})" ]]; then
 else
     rm ${f}.tmp
 fi
+
+# change 'namespace "com.doubleyellow.tennispadel"'
+cat ${f} | perl -ne "s~(namespace\s+')${pkgFrom}(')~\1${brandPkg}\2~; print" > ${f}.tmp
+if [[ -n "$(diff ${f}.tmp ${f})" ]]; then
+    mv ${f}.tmp ${f}
+else
+    rm ${f}.tmp
+fi
+
 touch -t "${oldFileTime}" ${f}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-    package="com.doubleyellow.racketlon">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+    <!-- package="com.doubleyellow.racketlon" -->
     <!-- PlayStoreID=4973204554147732137 -->
 
     <!-- auto added by ?? so specifically remove it -->

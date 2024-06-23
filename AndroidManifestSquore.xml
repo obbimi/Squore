@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-    package="com.doubleyellow.scoreboard">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+    <!-- package="com.doubleyellow.scoreboard" -->
     <!-- PlayStoreID=4972255383319852172 -->
 
     <!-- auto added by ?? so specifically remove it -->

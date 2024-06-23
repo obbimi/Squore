@@ -148,7 +148,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <integer name="speechOverBT_speechOverBT_PlayingVolumeToKeepAlive_default">20</integer>
     <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Squash">false</bool>
     <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__TennisPadel">true</bool>
-    <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__TableTennis">true</bool>
+    <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Tabletennis">true</bool>
     <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Badminton">true</bool>
     <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Racketlon">true</bool>
 
