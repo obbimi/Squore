@@ -750,6 +750,7 @@ public class IBoard implements TimerViewContainer
                     lSetScoresSpaces.add((Space) vCheck);
                 }
             }
+            final int iNrOfSetDetailsPossibleInLayout = lSetScoresViews.size() / 2;
 
             //final int iVisibilityIfNotUsed = View.INVISIBLE;
             final int iVisibilityIfNotUsed = View.GONE; // TODO
@@ -766,7 +767,6 @@ public class IBoard implements TimerViewContainer
                 vSetsWon1.setText(String.valueOf(iSetsFor1));
                 vSetsWon2.setText(String.valueOf(iSetsFor2));
 
-                int iNrOfSetDetailsPossibleInLayout = lSetScoresViews.size() / 2;
                 if ( iSetsFor1 + iSetsFor2 <= iNrOfSetDetailsPossibleInLayout) {
                     // few enough sets played to show details score how the set ended, e.g. 6-4 or 7-6
 
@@ -804,7 +804,7 @@ public class IBoard implements TimerViewContainer
                             if (   iGamesFor1 * iGamesFor2 < 0 // tiebreak with points scored for loser. Score of loser is stored as negative number
                                || (iGamesFor1 * iGamesFor2==0 && iGamesFor1 + iGamesFor2 > gsmModel.getNrOfGamesToWinSet()) // tiebreak with no points score for loser
                             ) {
-                                // points score by loser
+                                // show points score by loser
                                 View vResIdSetScoreLoser    = null;
                                 int iPointsOfTiebreakLoser = 0; // TODO: display this in a small digit
                                 if ( iGamesFor1 <= 0 ) {
@@ -818,6 +818,8 @@ public class IBoard implements TimerViewContainer
                                     iGamesFor2 = iGamesFor1 - 1;
                                 }
                                 vResIdSetScoreLoser.setTag(iPointsOfTiebreakLoser);
+                            } else {
+                                // no tiebreak
                             }
                             vSetScore1.setText(String.valueOf(iGamesFor1));
                             vSetScore2.setText(String.valueOf(iGamesFor2));
@@ -846,7 +848,96 @@ public class IBoard implements TimerViewContainer
                     vSetsWon2.setVisibility(View.VISIBLE);
                 }
             } else {
-                ViewUtil.hideViews(m_vRoot , R.id.btn_setswon1, R.id.btn_setswon2, R.id.space_scoreset_scoregame);
+                Map<Player, Integer> gamesWon = matchModel.getGamesWon();
+
+                TextView vGamesWon1 = (TextView) findViewById(R.id.btn_gameswon1);
+                TextView vGamesWon2 = (TextView) findViewById(R.id.btn_gameswon2);
+
+                Integer iGamesFor1 = gamesWon.get(m_firstPlayerOnScreen);
+                Integer iGamesFor2 = gamesWon.get(m_firstPlayerOnScreen.getOther());
+
+                if ( iGamesFor1 + iGamesFor2 <= iNrOfSetDetailsPossibleInLayout) {
+                    // few enough games played to show details score how they ended, e.g. 11-5, 10-12
+                    vGamesWon1.setVisibility(iVisibilityIfNotUsed);
+                    vGamesWon2.setVisibility(iVisibilityIfNotUsed);
+
+                    // TODO: points score should be ScorePlusSmallScore
+                    TextView vPointsWon1 = (TextView) findViewById(R.id.btn_score1);
+                    TextView vPointsWon2 = (TextView) findViewById(R.id.btn_score2);
+                    if ( iGamesFor1 + iGamesFor2 > 0 ) {
+                        vPointsWon1.setTag(iGamesFor1);
+                        vPointsWon2.setTag(iGamesFor2);
+                    } else {
+                        vPointsWon1.setTag(ScorePlusSmallScore.EMPTY);
+                        vPointsWon2.setTag(ScorePlusSmallScore.EMPTY);
+                    }
+
+                    List<Map<Player, Integer>> pointScoredPerGame = matchModel.getEndScoreOfGames();
+
+                    for (int iSetZb = 0; iSetZb < iNrOfSetDetailsPossibleInLayout; iSetZb++) {
+                        TextView vGameScore1 = lSetScoresViews.get(iSetZb * 2 + 0);
+                        TextView vGameScore2 = lSetScoresViews.get(iSetZb * 2 + 1);
+                        Space space = lSetScoresSpaces.get(iSetZb);
+
+                        if (iSetZb >= iGamesFor1 + iGamesFor2) {
+                            // hide views we will not be using
+                            vGameScore1.setVisibility(iVisibilityIfNotUsed);
+                            vGameScore2.setVisibility(iVisibilityIfNotUsed);
+                            if (space != null) {
+                                space.setVisibility(iVisibilityIfNotUsed);
+                            }
+                        } else {
+                            vGameScore1.setVisibility(View.VISIBLE);
+                            vGameScore2.setVisibility(View.VISIBLE);
+                            if (space != null) {
+                                space.setVisibility(View.VISIBLE);
+                            }
+                            // to be on the safe side, clear small digits that are only for GSMModel
+                            vGameScore1.setTag(ScorePlusSmallScore.EMPTY);
+                            vGameScore2.setTag(ScorePlusSmallScore.EMPTY);
+
+                            Map<Player, Integer> pointWonInGame = pointScoredPerGame.get(iSetZb);
+                            int iPointsFor1 = pointWonInGame.get(m_firstPlayerOnScreen);
+                            int iPointsFor2 = pointWonInGame.get(m_firstPlayerOnScreen.getOther());
+
+                            vGameScore1.setText(String.valueOf(iPointsFor1));
+                            vGameScore2.setText(String.valueOf(iPointsFor2));
+                            if ( iPointsFor1 > iPointsFor2 ) {
+                                ColorUtil.setBackground(vGameScore1, Color.BLACK);
+                                ColorUtil.setBackground(vGameScore2, Color.WHITE);
+                                vGameScore1.setTextColor      (Color.WHITE);
+                                vGameScore2.setTextColor      (Color.BLACK);
+                            }
+                            if ( iPointsFor1 < iPointsFor2 ) {
+                                ColorUtil.setBackground(vGameScore1, Color.WHITE);
+                                ColorUtil.setBackground(vGameScore2, Color.BLACK);
+                                vGameScore1.setTextColor      (Color.BLACK);
+                                vGameScore2.setTextColor      (Color.WHITE);
+                            }
+                        }
+                    }
+
+                    ViewUtil.hideViews(m_vRoot, R.id.btn_setswon1, R.id.btn_setswon2, R.id.space_scoreset_scoregame);
+                } else {
+                    // not all game details can be displayed: hide element supposed to show details
+                    for(int iGameZb = 0; iGameZb < iNrOfSetDetailsPossibleInLayout; iGameZb++ ) {
+                        TextView vSetScore1 = lSetScoresViews.get(iGameZb * 2 + 0);
+                        TextView vSetScore2 = lSetScoresViews.get(iGameZb * 2 + 1);
+                        vSetScore1.setVisibility(iVisibilityIfNotUsed);
+                        vSetScore2.setVisibility(iVisibilityIfNotUsed);
+                    }
+                    // show only number of games won
+                    vGamesWon1.setVisibility(View.VISIBLE);
+                    vGamesWon2.setVisibility(View.VISIBLE);
+
+                    // remove small digit that also indicates number of games won, since we show it in big digits
+                    if ( true ) {
+                        TextView vPointsWon1 = (TextView) findViewById(R.id.btn_score1);
+                        TextView vPointsWon2 = (TextView) findViewById(R.id.btn_score2);
+                        vPointsWon1.setTag(ScorePlusSmallScore.EMPTY);
+                        vPointsWon2.setTag(ScorePlusSmallScore.EMPTY);
+                    }
+                }
             }
         }
         return null;

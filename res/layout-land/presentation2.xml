@@ -52,7 +52,7 @@
         />
 
     <!-- POINTS score buttons -->
-    <com.doubleyellow.android.view.AutoResizeTextView
+    <com.doubleyellow.scoreboard.view.ScorePlusSmallScore
         style="@style/SBButton"
         android:id="@+id/btn_score1"
         app:layout_constraintBottom_toTopOf="@id/space_centerright"
@@ -64,7 +64,7 @@
         android:includeFontPadding="false"
         android:layout_width="0dp" android:layout_height="0dp"
         />
-    <com.doubleyellow.android.view.AutoResizeTextView
+    <com.doubleyellow.scoreboard.view.ScorePlusSmallScore
         style="@style/SBButton"
         android:id="@+id/btn_score2"
         app:layout_constraintTop_toBottomOf="@id/space_centerright"
