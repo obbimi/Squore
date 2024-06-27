@@ -106,21 +106,21 @@ android {
             minSdkVersion 21 // increased to 21 for WearOS splashscreen dependency
             targetSdkVersion 33
             multiDexEnabled true // required since using firebase
-            versionCode 1915 * 10000 + 517
+            versionCode 1915 * 10000 + 519
             versionName "4.54"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 33
-            versionCode 2315 * 10000 + 517
+            versionCode 2315 * 10000 + 519
             versionName "4.54"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 33
-            versionCode 2501 * 10000 + 517
+            versionCode 2501 * 10000 + 519
             versionName "4.54"
         }
     }
@@ -228,7 +228,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-iid:21.1.0' // add explicitly since no longer in the BOM, but required by com.pusher:push-notifications-android:1.9.0
 
     // open source library for in-app-purchasing implementation
-    //implementation 'com.anjlab.android.iab.v3:library:2.1.0'
+    implementation 'com.anjlab.android.iab.v3:library:2.1.0'
+    //implementation 'com.android.billingclient:billing:6.1.0'
 
     // firebase in combination with pusher
     // https://github.com/pusher/push-notifications-android
