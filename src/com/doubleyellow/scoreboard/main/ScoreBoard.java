@@ -3269,9 +3269,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 enableScoreButton(p);
             }
 
-            if ( iDelta == 1 ) {
+            //if ( iDelta == 1 ) {
                 speakScore();
-            }
+            //}
         }
     }
 
@@ -8237,9 +8237,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         PusherHandler pusherHandler = PusherHandler.getInstance();
         if ( PreferenceValues.isFCMEnabled(this) && (Brand.getUUIDPusher() != null) ) {
-            pusherHandler.init(this, Brand.getUUIDPusher(), matchModel.getName(Player.A) + matchModel.getName(Player.B));
-
-            // TODO: for brands with dialogs... suppress them as much as possible, auto-end game etc...
+            try {
+                pusherHandler.init(this, Brand.getUUIDPusher(), matchModel.getName(Player.A) + matchModel.getName(Player.B));
+                // TODO: for brands with dialogs... suppress them as much as possible, auto-end game etc...
+            } catch (Exception e) {
+                Toast.makeText(this, "FCM initialization failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         } else {
             pusherHandler.cleanup();
         }

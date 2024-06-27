@@ -297,13 +297,16 @@ public class Speak
 
         return sDisplayName2Name;
     }
-    private void getVoices(String sLanguage) {
+    private boolean getVoices(String sLanguage) {
         mName2VoiceForLanguage = mLang2Voices.get(sLanguage);
         if ( mName2VoiceForLanguage == null ) {
             mName2VoiceForLanguage = new HashMap<>();
             mLang2Voices.put(sLanguage, mName2VoiceForLanguage);
         }
         Set<Voice> voices = m_textToSpeech.getVoices(); // 465 on my Mi: https://cloud.google.com/text-to-speech/docs/voices
+        if ( voices == null ) {
+            return false;
+        }
         for(Voice voice: voices) {
             if ( voice.getLocale().getLanguage().equalsIgnoreCase(sLanguage)) {
 
@@ -311,6 +314,7 @@ public class Speak
                 mName2VoiceForLanguage.put(voice.getName(), voice);
             }
         }
+        return true;
     }
 
     public void setVoice(String sName) {

@@ -1417,6 +1417,11 @@ public class IBoard implements TimerViewContainer
         boolean bShow = PreferenceValues.showFeedBackOnBLEButtonsPressedInfoMessages(context);
         if ( bShow ) {
             showInfoMessage(sMsg, iMessageDurationSecs);
+        } else {
+            final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bottom_of_screen_infomessage);
+            if ( tvBLEInfo != null && tvBLEInfo.getVisibility() != View.INVISIBLE ) {
+                tvBLEInfo.setVisibility(View.INVISIBLE);
+            }
         }
     }
 

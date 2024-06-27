@@ -121,7 +121,6 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
 
         setContentView(R.layout.ble_activity);
         String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config, R.string.pref_BluetoothLE_Config_default, this);
-        setTitle(getString(R.string.ble_devices) + " : " + sBLEConfig);
 
         btnGo = findViewById(R.id.ble_start_button);
         btnGo.setOnClickListener(v -> {
@@ -172,6 +171,13 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             Toast.makeText(this, "Could not obtain config for BLE. Check your settings.", Toast.LENGTH_LONG).show();
             return;
         }
+
+        try {
+            String sShortDescription = m_bleConfig.getString(BLEUtil.Keys.ShortDescription.toString());
+            setTitle(getString(R.string.ble_devices) + " : " + sBLEConfig + " : " + sShortDescription);
+        } catch (Exception e) {
+        }
+
         fRssiValueAt1M       = m_bleConfig.optDouble(BLEUtil.Keys.RssiValueAt1M.toString(), fRssiValueAt1M);
         int iManufacturerData_BatteryLevelAtPos = m_bleConfig.optInt(BLEUtil.Keys.ManufacturerData_BatteryLevelAtPos.toString(), -1);
         iNrOfDevicesRequired = m_bleConfig.optInt(BLEUtil.Keys.NrOfDevices.toString(), iNrOfDevicesRequired);

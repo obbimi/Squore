@@ -59,6 +59,7 @@ public class BLEUtil
     }
 
     public enum Keys {
+        ShortDescription,
         SharedConfig,
         DeviceNameMustMatch,
         DeviceNameStartsWith,
@@ -97,7 +98,7 @@ public class BLEUtil
     final public static ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
 
     /** To present list of possible configs to user */
-    public static List<CharSequence> getConfigs(Context context) {
+    public static List<CharSequence> getConfigs(Context context, int iWhat1KeyOnly2Description3Both) {
         String sJson = ContentUtil.readRaw(context, R.raw.bluetooth_le_config);
         try {
             JSONObject config = new JSONObject(sJson);
@@ -110,7 +111,21 @@ public class BLEUtil
                 if ( sKey.startsWith("-") ) { continue; }
                 if ( sKey.startsWith(sKey.substring(0,3).toUpperCase())) {
                     // for now only list entries with first few characters uppercase
-                    lReturn.add(sKey);
+                    switch (iWhat1KeyOnly2Description3Both) {
+                        case 1:
+                            lReturn.add(sKey);
+                            break;
+                        case 2:
+                        case 3:
+                            JSONObject joDetails = config.getJSONObject(sKey);
+                            String sShortDescription = joDetails.getString(Keys.ShortDescription.toString());
+                            if ( iWhat1KeyOnly2Description3Both == 2) {
+                                lReturn.add(sShortDescription);
+                            } else {
+                                lReturn.add(sKey + " : " + sShortDescription);
+                            }
+                            break;
+                    }
                 }
             }
             return lReturn;
@@ -124,7 +139,11 @@ public class BLEUtil
         try {
             final JSONObject config = new JSONObject(sJson);
             String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config, R.string.pref_BluetoothLE_Config_default, context);
-            JSONObject configActive = config.getJSONObject(sBLEConfig);
+            JSONObject configActive = config.optJSONObject(sBLEConfig);
+            if ( configActive == null ) {
+                sBLEConfig = context.getString(R.string.pref_BluetoothLE_Config_default);
+                configActive = config.optJSONObject(sBLEConfig);
+            }
             if ( configActive.has(Keys.SharedConfig.toString() ) ) {
                 String sShareConfig = (String) configActive.remove(Keys.SharedConfig.toString());
                 JSONObject sharedConfig = config.getJSONObject(sShareConfig);
