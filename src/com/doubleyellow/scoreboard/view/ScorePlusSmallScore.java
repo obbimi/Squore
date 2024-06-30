@@ -20,6 +20,8 @@ public class ScorePlusSmallScore extends AutoResizeTextView {
 
     private static final String TAG = "SB." + ScorePlusSmallScore.class.getSimpleName();
 
+    private static float fRatioOfSmall = 0.4f;
+
     private AutoResizeTextView txtSmall = null;
 
     public ScorePlusSmallScore(Context context) {

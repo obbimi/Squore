@@ -136,7 +136,7 @@
         />
 
     <!-- SET score buttons -->
-    <com.doubleyellow.android.view.AutoResizeTextView
+    <com.doubleyellow.scoreboard.view.SetsWonButton
         style="@style/SBButton"
         android:id="@+id/btn_setswon1"
         app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
@@ -147,7 +147,7 @@
         android:includeFontPadding="false"
         android:layout_width="0dp" android:layout_height="0dp"
         />
-    <com.doubleyellow.android.view.AutoResizeTextView
+    <com.doubleyellow.scoreboard.view.SetsWonButton
         style="@style/SBButton"
         android:id="@+id/btn_setswon2"
         app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"

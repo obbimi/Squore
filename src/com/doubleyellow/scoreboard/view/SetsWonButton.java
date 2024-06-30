@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018  Iddo Hoeve
+ * Copyright (C) 2024  Iddo Hoeve
  *
  * Squore is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,30 +23,36 @@ import android.util.AttributeSet;
 import com.doubleyellow.android.view.AutoResizeTextView;
 
 /**
- * GamesWon button that indicates
- * - number of games won on the main board
- * - in GSM only used for the set in progress, for finished sets the number of games is displayed using ScorePlusSmallScore
+ * SetsWon button that indicates
+ * - number of sets won in GSM match
  */
-public class GamesWonButton extends AutoResizeTextView
+public class SetsWonButton extends AutoResizeTextView
 {
 /*
-    public GamesWonButton(Context context) {
+    public SetsWonButton(Context context) {
         this(context, null, 0); // not used
     }
 */
     /** Required for usage in layout xml */
-    public GamesWonButton(Context context, AttributeSet attrs) {
+    public SetsWonButton(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public GamesWonButton(Context context, AttributeSet attrs, int defStyle) {
+    public SetsWonButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public String setGamesWon(Integer o) {
+    public String setSetsWon(Integer o) {
         String sValue = String.valueOf(o);
-        this.setText(sValue);
+        this.setText(sValue); // final method
 
         return sValue;
+    }
+
+    @Override public void setVisibility(int visibility) {
+        int iCur = super.getVisibility();
+        if ( iCur != visibility ) {
+            super.setVisibility(visibility);
+        }
     }
 }

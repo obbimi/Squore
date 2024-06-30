@@ -31,6 +31,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.prefs.RWValues;
@@ -46,16 +47,29 @@ import com.doubleyellow.util.StringUtil;
  */
 public class Util {
 
+    private static final String TAG = "SB." + Util.class.getSimpleName();
+
     public static final String MY_DEVICE_MODEL = "GT-I9505,SM-G930F"; // samsung S4, samsung S7
 
     public static Player getWinner(Map<Player, Integer> scores) {
         if ( scores == null ) { return null; }
 
         // no winner?
-        if ( scores.get(Player.A) == scores.get(Player.B) ) { return null; }
+        Integer iScoreA = scores.get(Player.A);
+        Integer iScoreB = scores.get(Player.B);
+        if ( iScoreA < 0 || iScoreB < 0 ) {
+            if ( iScoreA < 0 && iScoreB < 0 ) {
+                // gsm tiebreak encoded value
+                iScoreA = Math.abs(iScoreA);
+                iScoreB = Math.abs(iScoreB);
+            } else {
+                Log.w(TAG, "What?");
+            }
+        }
+        if ( iScoreA == iScoreB) { return null; }
 
         // a winner
-        return ( scores.get(Player.A) > scores.get(Player.B) )? Player.A : Player.B;
+        return ( iScoreA > iScoreB)? Player.A : Player.B;
     }
 
     public static final String removeSeedingRegExp = "[\\[\\(]" + "[0-9/\\\\]+" + "[\\]\\)]\\s*";

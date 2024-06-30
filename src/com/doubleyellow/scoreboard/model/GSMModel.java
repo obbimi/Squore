@@ -252,7 +252,13 @@ public class GSMModel extends Model
         }
     }
 
-    private boolean isFinalSet() {
+    public boolean isFinalSet() {
+        if ( matchHasEnded() ) {
+            Map<Player, Integer> setsWon = getSetsWon();
+            if ( setsWon.get(Player.A) + setsWon.get(Player.B) < m_iNrOfSetsToWinMatch * 2 - 1 ) {
+                return false;
+            }
+        }
         int setNrInProgress = getSetNrInProgress();
         return setNrInProgress == m_iNrOfSetsToWinMatch * 2 - 1;
     }
@@ -400,6 +406,9 @@ public class GSMModel extends Model
     }
     /** Typically [ { A:2, B:6 }, { A:7 B:6 } , { A: 6, B:4} ] */
     public List<Map<Player, Integer>> getGamesWonPerSet() {
+        return getGamesWonPerSet(false);
+    }
+    public List<Map<Player, Integer>> getGamesWonPerSet(boolean bCloneMaps) {
         List<Map<Player, Integer>> lReturn = new ArrayList<>();
 
         Map<Player, Integer> mPlayer2GamesWonLast = null;
@@ -407,7 +416,11 @@ public class GSMModel extends Model
             for(List<Map<Player, Integer>> player2GamesWonInSet :m_lPlayer2GamesWon_PerSet) {
                 mPlayer2GamesWonLast = ListUtil.getLast(player2GamesWonInSet);
                 if ( mPlayer2GamesWonLast != null ) {
-                    lReturn.add(mPlayer2GamesWonLast);
+                    if ( bCloneMaps ) {
+                        lReturn.add(new HashMap<>(mPlayer2GamesWonLast));
+                    } else {
+                        lReturn.add(mPlayer2GamesWonLast);
+                    }
                 }
             }
         }

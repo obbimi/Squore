@@ -31,6 +31,7 @@ import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.EnumSpinner;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.model.FinalSetFinish;
 import com.doubleyellow.scoreboard.model.GoldenPointFormat;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -53,6 +54,7 @@ import java.util.Map;
 
 /**
  * Displays the edit match format dialog to the user.
+ * Holds only limited set op options to edit.
  */
 public class EditFormat extends BaseAlertDialog {
 
@@ -75,6 +77,7 @@ public class EditFormat extends BaseAlertDialog {
     private Spinner                           spPauseDuration;
     private ToggleButton                      cbPauseDuration;
     private EnumSpinner<GoldenPointFormat>    spGoldenPointFormat;
+    private EnumSpinner<FinalSetFinish>       spFinalSetFinish;
     private CompoundButton                    cbStartTiebreakOneGameEarly;
     private ToggleButton                      tbBestOf_or_TotalOf;
     private EnumSpinner<TieBreakFormat>       spTieBreakFormat;
@@ -130,10 +133,7 @@ public class EditFormat extends BaseAlertDialog {
             spDoublesServeSequence.setEnabled(true);
             spDoublesServeSequence.setVisibility(View.VISIBLE);
         } else {
-            View ll_doubleServeSequence= vg.findViewById(R.id.ll_doubleServeSequence);
-            if ( ll_doubleServeSequence != null ) {
-                ll_doubleServeSequence.setVisibility(View.GONE);
-            }
+            ViewUtil.hideViews(vg, R.id.ll_doubleServeSequence);
         }
         spWarmupDuration = (Spinner)      vg.findViewById(R.id.spWarmupDuration);
         cbWarmupDuration = (ToggleButton) vg.findViewById(R.id.cbWarmupDuration);
@@ -153,14 +153,27 @@ public class EditFormat extends BaseAlertDialog {
         cbUseEnglishScoring.setChecked(bHandInHandOut);
         cbUseEnglishScoring.setEnabled(iNewNrOfPointsToWinGame==0);
 
+        if ( Brand.isGameSetMatch() ) {
+            ViewUtil.hideViews(vg, R.id.llScoringType); // hand-in/out
+            ViewUtil.hideViews(vg, R.id.llTieBreakFormat); // 2 clear points, choose 1
+            ViewUtil.hideViews(vg, R.id.llPauseDuration);
+        } else {
+            ViewUtil.hideViews(vg, R.id.llGoldenPoint);
+            ViewUtil.hideViews(vg, R.id.llFinalSetFinish);
+        }
+
         spGoldenPointFormat = (EnumSpinner<GoldenPointFormat>) vg.findViewById(R.id.goldenPointFormat);
         if ( spGoldenPointFormat != null ) {
             if ( Brand.isGameSetMatch() ) {
                 GoldenPointFormat goldenPointFormat = ((GSMModel) matchModel).getGoldenPointFormat();
                 spGoldenPointFormat.setSelected(goldenPointFormat);
-                ViewUtil.hideViews(vg, R.id.llScoringType);
-            } else {
-                ViewUtil.hideViews(vg, R.id.llGoldenPoint);
+            }
+        }
+        spFinalSetFinish = (EnumSpinner<FinalSetFinish>) vg.findViewById(R.id.spFinalSetFinish);
+        if ( spFinalSetFinish != null ) {
+            if ( Brand.isGameSetMatch() ) {
+                FinalSetFinish finalSetFinish = ((GSMModel) matchModel).getFinalSetFinish();
+                spFinalSetFinish.setSelected(finalSetFinish);
             }
         }
         cbStartTiebreakOneGameEarly = (CompoundButton) vg.findViewById(R.id.cbStartTieBreakOnGameEarlyGSM); // not yet used/visible
@@ -206,6 +219,11 @@ public class EditFormat extends BaseAlertDialog {
                         //GoldenPointFormat goldenPointFormat = spGoldenPointFormat.getSelectedEnum(); // DNW yet
                         gsmModel.setGoldenPointFormat(goldenPointFormat);
                         PreferenceValues.setEnum(PreferenceKeys.goldenPointFormat, context, goldenPointFormat);
+                    }
+                    if ( (spFinalSetFinish != null) && spFinalSetFinish.isEnabled() ) {
+                        FinalSetFinish finalSetFinish = FinalSetFinish.values()[spFinalSetFinish.getSelectedItemPosition()];
+                        gsmModel.setFinalSetFinish(finalSetFinish);
+                        PreferenceValues.setEnum(PreferenceKeys.finalSetFinish, context, finalSetFinish);
                     }
                     if ( (cbStartTiebreakOneGameEarly != null) && cbStartTiebreakOneGameEarly.isEnabled() ) {
                         boolean bStartTiebreakOneGameEarly = cbStartTiebreakOneGameEarly.isChecked();

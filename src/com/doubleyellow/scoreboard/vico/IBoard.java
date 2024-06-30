@@ -45,6 +45,8 @@ import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.cast.ICastHelper;
 import com.doubleyellow.scoreboard.cast.framework.CastHelper;
+import com.doubleyellow.scoreboard.history.GSMTieBreakType;
+import com.doubleyellow.scoreboard.history.GSMUtil;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.prefs.*;
@@ -773,7 +775,7 @@ public class IBoard implements TimerViewContainer
                     vSetsWon1.setVisibility(iVisibilityIfNotUsed);
                     vSetsWon2.setVisibility(iVisibilityIfNotUsed);
 
-                    List<Map<Player, Integer>> gamesWonPerSet = MatchGameScoresView.gsmGamesWonPerSet(gsmModel);
+                    List<Map<Player, Integer>> gamesWonPerSet = GSMUtil.gsmGamesWonPerSet(gsmModel, true);
 
                     for(int iSetZb = 0; iSetZb < iNrOfSetDetailsPossibleInLayout; iSetZb++ ) {
                         TextView vSetScore1 = lSetScoresViews.get(iSetZb * 2 + 0);
@@ -801,23 +803,29 @@ public class IBoard implements TimerViewContainer
                             int iGamesFor2 = gamesWonSet.get(m_firstPlayerOnScreen.getOther());
 
                             // in case of tiebreak
-                            if (   iGamesFor1 * iGamesFor2 < 0 // tiebreak with points scored for loser. Score of loser is stored as negative number
-                               || (iGamesFor1 * iGamesFor2==0 && iGamesFor1 + iGamesFor2 > gsmModel.getNrOfGamesToWinSet()) // tiebreak with no points score for loser
-                            ) {
-                                // show points score by loser
-                                View vResIdSetScoreLoser    = null;
-                                int iPointsOfTiebreakLoser = 0; // TODO: display this in a small digit
-                                if ( iGamesFor1 <= 0 ) {
-                                    iPointsOfTiebreakLoser = Math.abs(iGamesFor1);
-                                    vResIdSetScoreLoser   = vSetScore1;
-                                    iGamesFor1 = iGamesFor2 - 1;
+                            GSMTieBreakType gsmTieBreakType = GSMUtil.getTiebreakType(iGamesFor1, iGamesFor2);
+                            if ( gsmTieBreakType != null ) {
+                                int[] iaScore1 = GSMUtil.gamesWonAndTiebreakPoints(iGamesFor1, gsmTieBreakType);
+                                int[] iaScore2 = GSMUtil.gamesWonAndTiebreakPoints(iGamesFor2, gsmTieBreakType);
+
+                                View vSetScoreWinner   = null;
+                                View vSetScoreLoser    = null;
+                                if ( iaScore1[1] > iaScore2[1] ) {
+                                    vSetScoreWinner = vSetScore1;
+                                    vSetScoreLoser  = vSetScore2;
+                                } else {
+                                    vSetScoreWinner = vSetScore2;
+                                    vSetScoreLoser  = vSetScore1;
                                 }
-                                if ( iGamesFor2 <= 0 ) {
-                                    iPointsOfTiebreakLoser = Math.abs(iGamesFor2);
-                                    vResIdSetScoreLoser   = vSetScore2;
-                                    iGamesFor2 = iGamesFor1 - 1;
+                                vSetScoreLoser.setTag(Math.min(iaScore1[1], iaScore2[1]));
+                                if ( gsmTieBreakType.equals(GSMTieBreakType.FinalSetNoGames) ) {
+                                    vSetScoreWinner.setTag(Math.max(iaScore1[1], iaScore2[1]));
+                                } else {
+                                    vSetScoreWinner.setTag(ScorePlusSmallScore.EMPTY);
                                 }
-                                vResIdSetScoreLoser.setTag(iPointsOfTiebreakLoser);
+
+                                iGamesFor1 = iaScore1[0];
+                                iGamesFor2 = iaScore2[0];
                             } else {
                                 // no tiebreak
                             }
@@ -861,7 +869,6 @@ public class IBoard implements TimerViewContainer
                     vGamesWon1.setVisibility(iVisibilityIfNotUsed);
                     vGamesWon2.setVisibility(iVisibilityIfNotUsed);
 
-                    // TODO: points score should be ScorePlusSmallScore
                     TextView vPointsWon1 = (TextView) findViewById(R.id.btn_score1);
                     TextView vPointsWon2 = (TextView) findViewById(R.id.btn_score2);
                     if ( iGamesFor1 + iGamesFor2 > 0 ) {
@@ -976,39 +983,8 @@ public class IBoard implements TimerViewContainer
     public void updateGameScores() {
         MatchGameScoresView matchGameScores = (MatchGameScoresView) findViewById(R.id.gamescores);
         if ( matchGameScores != null) {
-
             matchGameScores.setOnTextResizeListener(matchGamesScoreSizeListener);
-
-            //int textSize = PreferenceValues.getHistoryTextSize(this);
-            //matchGameScores.setTextSizeDp(textSize);
-
             matchGameScores.update(matchModel, m_firstPlayerOnScreen);
-        } else {
-            // DONE below with m_player2gamesWonId
-/*
-            TextView vGameScore = (TextView) findViewById(R.id.btn_gameswon1);
-            if ( vGameScore != null ) {
-                Map<Player, Integer> gamesWon = matchModel.getGamesWon();
-                if ( gamesWon != null ) {
-                    Integer iGames1 = gamesWon.get(m_firstPlayerOnScreen);
-                    Integer iGames2 = gamesWon.get(m_firstPlayerOnScreen.getOther());
-                    if ( matchModel instanceof GSMModel ) {
-                        List<Map<Player, Integer>> maps = MatchGameScoresView.gsmGamesWonPerSet((GSMModel) matchModel);
-                        Map<Player, Integer> last = ListUtil.removeLast(maps);
-                        if ( MapUtil.getMaxValue(last) == 0 && ListUtil.isNotEmpty(maps) ) {
-                            last = ListUtil.removeLast(maps);
-                        }
-                        iGames1 = last.get(m_firstPlayerOnScreen);
-                        iGames2 = last.get(m_firstPlayerOnScreen.getOther());
-                    }
-                    vGameScore.setText(String.valueOf(iGames1) );
-                    vGameScore = (TextView) findViewById(R.id.btn_gameswon2);
-                    vGameScore.setText(String.valueOf(iGames2) );
-                } else {
-                    Log.w(TAG, "Games won is null");
-                }
-            }
-*/
         }
 
         // update casting screen
@@ -1030,21 +1006,25 @@ public class IBoard implements TimerViewContainer
             loiGameDuration.put(time.getDurationMM());
         }
         boolean bSwapAAndB = Player.B.equals(m_firstPlayerOnScreen);
-        castSendFunction(ICastHelper.GameScores_update + "(" + lomPlayer2Score.toString()
+        castSendFunction(ICastHelper.GameScores_update + "(" + lomPlayer2Score
                                                           + "," + bSwapAAndB
-                                                          + "," + loiGameDuration.toString()
+                                                          + "," + loiGameDuration
                                                           + "," + matchModel.matchHasEnded()
                                         + ((setsWon!=null)?("," + (new JSONObject(MapUtil.keysToString(setsWon))).toString() ) :"" )
                                                           + ")");
 
         if ( (m_player2gamesWonId != null) && (matchModel != null) ) {
             Map<Player, Integer> gamesWon = matchModel.getGamesWon(false);
-            if ( matchModel instanceof GSMModel ) {
+            if ( Brand.isGameSetMatch() ) {
                 GSMModel gsmModel = (GSMModel) matchModel;
                 if ( gsmModel.isTieBreakGame() ) {
-                    List<Map<Player, Integer>> maps = MatchGameScoresView.gsmGamesWonPerSet(gsmModel);
+                    List<Map<Player, Integer>> maps = GSMUtil.gsmGamesWonPerSet(gsmModel, false);
                     gamesWon = ListUtil.removeLast(maps);
-                    if ( MapUtil.getMaxValue(gamesWon) == 0 && ListUtil.isNotEmpty(maps) ) {
+                    if ( MapUtil.getMaxValue(gamesWon) == 0
+                            && ListUtil.isNotEmpty(maps)
+                            && (gsmModel.isFinalSet() == false ) // in final set show we can show 0-0 if finalsetfinish is without playing any games
+                       )
+                    {
                         gamesWon = ListUtil.removeLast(maps);
                     }
                 }

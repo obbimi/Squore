@@ -5274,6 +5274,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         bChanged = matchModel.setNrOfPointsToWinGame(m.getNrOfPointsToWinGame());
                         bChanged = matchModel.setNrOfGamesToWinMatch(m.getNrOfGamesToWinMatch());
                         bChanged = matchModel.setTiebreakFormat(m.getTiebreakFormat());
+                        if ( Brand.isGameSetMatch() ) {
+                            GSMModel gsmModel = (GSMModel) m;
+                            // only allow if final set is not yet started
+                            GSMModel gsmInProgress = (GSMModel) matchModel;
+                            if ( gsmInProgress.isFinalSet() == false ) {
+                                gsmInProgress.setFinalSetFinish(gsmModel.getFinalSetFinish());
+                            }
+                        }
                     } else {
                         m.registerListeners(matchModel);
                         setMatchModel(m);

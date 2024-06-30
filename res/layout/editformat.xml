@@ -86,7 +86,7 @@
                 android:id="@+id/spTieBreakFormat"
                 app:enum_class="com.doubleyellow.scoreboard.model.TieBreakFormat"
                 app:enum_display_values="@array/tiebreakFormatDisplayValues"
-                android:nextFocusDown="@+id/spDoublesServeSequence"
+                android:nextFocusDown="@+id/spFinalSetFinish"
                 android:layoutMode="opticalBounds"
                 android:orientation="vertical"
                 android:spinnerMode="dropdown"
@@ -111,7 +111,7 @@
                 android:textSize="@dimen/txt_small"
                 android:layout_margin="2dp"
                 />
-        <com.doubleyellow.android.view.EnumSpinner
+        <Spinner
                 android:id="@+id/spDoublesServeSequence"
                 app:enum_class="com.doubleyellow.scoreboard.model.DoublesServeSequence"
                 app:enum_display_values="@array/doublesServeSequence"
@@ -244,6 +244,37 @@
             android:textSize="@dimen/txt_small"
             />
 -->
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llFinalSetFinish"
+        android:layout_below="@id/llGoldenPoint"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/lblFinalSetFinish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sb_FinalSetFinish"
+            android:textSize="@dimen/txt_small"
+            android:layout_margin="2dp"
+             />
+
+        <com.doubleyellow.android.view.EnumSpinner
+            android:id="@+id/spFinalSetFinish"
+            app:enum_class="com.doubleyellow.scoreboard.model.FinalSetFinish"
+            app:enum_display_values="@array/finalSetFinishDisplayValues"
+            android:nextFocusDown="@+id/spDoublesServeSequence"
+            android:layoutMode="opticalBounds"
+            android:orientation="vertical"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@color/dy_dark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </android.widget.RelativeLayout>

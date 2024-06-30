@@ -35,6 +35,7 @@ import com.doubleyellow.android.view.AutoResizeTextView;
 import com.doubleyellow.android.view.Orientation;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.view.ScorePlusSmallScore;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.android.util.ColorUtil;
@@ -117,34 +118,6 @@ public class MatchGameScoresView extends LinearLayout
         SetsWon_and_GamesWonInLastSet,
     }
 
-    public static List<Map<Player, Integer>> gsmGamesWonPerSet(GSMModel gsmModel) {
-        List<Map<Player, Integer>> endScores = gsmModel.getGamesWonPerSet();
-        // for all 7-6 scores: turn into 7-<negative value of points reached in tiebreak)
-        int iNrOfSets = ListUtil.size(endScores);
-        if ( iNrOfSets > 0 ) {
-            int iSetNrZB = -1;
-            for(Map<Player, Integer> setScore: endScores) {
-                iSetNrZB++;
-                if ( MapUtil.getMaxValue(setScore) == 7 ) {
-                    Player pSetWinner = MapUtil.getMaxKey(setScore, Player.A);
-                    Player pSetLoser =  pSetWinner.getOther();
-                    if ( setScore.get(pSetLoser) == 6 ) {
-                        // still not 100% it was a tiebreak if it is the set in progress
-                        List<List<ScoreLine>> gameScoreLinesOfSet = gsmModel.getGameScoreLinesOfSet(iSetNrZB);
-                        List<ScoreLine> tieBreakScorelines = ListUtil.getLast(gameScoreLinesOfSet);
-                        int iScoreOfLoser = 0;
-                        for(ScoreLine line: tieBreakScorelines) {
-                            if ( pSetLoser.equals(line.getScoringPlayer()) ) {
-                                iScoreOfLoser = line.getScore();
-                            }
-                        }
-                        setScore.put(pSetLoser, -1 * iScoreOfLoser);
-                    }
-                }
-            }
-        }
-        return endScores;
-    }
 
     public void update(Model matchModel, Player pFirst) {
         m_checkLayoutCountDownTimer = null; // ensure it will be re-started
@@ -156,7 +129,7 @@ public class MatchGameScoresView extends LinearLayout
                 // PointsWonPerGame is not for GSM: switch over to GSM valid value
                 m_scoresToShow = ScoresToShow.GamesWonPerSet; // TODO: configurable
             }
-            endScores = gsmGamesWonPerSet(gsmModel);
+            endScores = GSMUtil.gsmGamesWonPerSet(gsmModel, true);
             switch (m_scoresToShow) {
                 case GamesWonPerSet:
                     break;
@@ -385,7 +358,7 @@ public class MatchGameScoresView extends LinearLayout
         this.onTextResizeListener = l;
     }
 
-    /**
+    /** LANDSCAPE
      * 11 |  9
      * -------
      *  8 | 11
@@ -420,7 +393,7 @@ public class MatchGameScoresView extends LinearLayout
             final ViewGroup tr = (ViewGroup) inflater.inflate(iResLayoutPerRow, null);
             tr.setBackgroundColor(bgColorLoser);
 
-            AutoResizeTextView txtMax = null;
+            AutoResizeTextView txtBiggestScore = null;
             for (Player p: players) {
                 boolean  bLeftColumn = p.equals(players[0]);
                 int      iResId      = bLeftColumn ? R.id.score_player_1 : R.id.score_player_2;
@@ -444,30 +417,30 @@ public class MatchGameScoresView extends LinearLayout
                 Integer iScoreOther  = scores.get(p.getOther());
                 String sScorePlayer = String.valueOf(iScorePlayer);
                 if ( Brand.isGameSetMatch() ) {
-                    int iResIdSub = bLeftColumn ? R.id.sub_score_player_1 : R.id.sub_score_player_2;
-                    TextView txtSub = tr.findViewById(iResIdSub);
-                    if ( txtSub != null ) {
-                        txtSub.setText("");
-                    }
-                    if ( (iScorePlayer <= 0) && (iScoreOther == 7) ) {
-                        int iNrOfGamesWonByLoser = 6; // TODO: can be 12 in special set
-                        // assume it is the number of points scored in the tiebreak by the loser of the set
-                        if ( txtSub != null ) {
-                            txtSub.setText("" + Math.abs(iScorePlayer));
-                            txtSub.setTextColor(bgColorWinner); // background should remain 'transparent
-                            sScorePlayer = "" + iNrOfGamesWonByLoser;
+                    // in case of tiebreak
+                    GSMTieBreakType gsmTieBreakType = GSMUtil.getTiebreakType(iScorePlayer, iScoreOther);
+                    if ( gsmTieBreakType != null ) {
+                        int[] iaScoreP = GSMUtil.gamesWonAndTiebreakPoints(iScorePlayer, gsmTieBreakType);
+                        int[] iaScoreO = GSMUtil.gamesWonAndTiebreakPoints(iScoreOther , gsmTieBreakType);
+                        iScorePlayer = iaScoreP[0];
+                        iScoreOther  = iaScoreO[0];
+
+                        sScorePlayer = String.valueOf(iScorePlayer);
+                        if ( gsmTieBreakType.equals(GSMTieBreakType.FinalSetNoGames) || iaScoreP[1] < iaScoreO[1] ) {
+                            txt.setTag(iaScoreP[1]);
                         } else {
-                            sScorePlayer = iNrOfGamesWonByLoser + " (" + (-1 * iScorePlayer) + ")";
+                            txt.setTag(ScorePlusSmallScore.EMPTY);
                         }
+                    } else {
+                        txt.setTag(ScorePlusSmallScore.EMPTY);
                     }
                 }
                 txt.setText(sScorePlayer);
 
-                if ( txtMax == null || iScorePlayer > iScoreOther) {
-                    txtMax = (AutoResizeTextView) txt;
+                if ( txtBiggestScore == null || iScorePlayer > iScoreOther) {
+                    txtBiggestScore = (AutoResizeTextView) txt;
                 }
             }
-
 /*
             TextView dash = (TextView) tr.findViewById(R.id.score_dash);
             setSizeAndColors(dash, false, iTxtSizeForInstanceAndOrientation, instanceKey);
@@ -475,8 +448,8 @@ public class MatchGameScoresView extends LinearLayout
             final float fSpacingFactor = 1.00f;
             if ( bOrientationFirstTime ) {
                 // for first row add a listener to determine row height for the rest
-                txtMax.setText(String.valueOf(iMaxScore));
-                txtMax.addOnResizeListener(new AutoResizeTextView.OnTextResizeListener() {
+                txtBiggestScore.setText(String.valueOf(iMaxScore));
+                txtBiggestScore.addOnResizeListener(new AutoResizeTextView.OnTextResizeListener() {
                     @Override public void onTextResize(AutoResizeTextView textView, float oldSize, float newSize, float requiredWidth, float requiredHeight) {
                         requiredHeight = requiredHeight * fSpacingFactor;
                         mInstanceOrientation2TextSize .put(instanceKey, (int) newSize);
@@ -488,7 +461,7 @@ public class MatchGameScoresView extends LinearLayout
                         MatchGameScoresView.this.updateTop2Bottom(players, gameScores, instanceKey, iMaxScore);
                     }
                 });
-                txtMax.addOnResizeListener(onTextResizeListener);
+                txtBiggestScore.addOnResizeListener(onTextResizeListener);
             } else {
                 int height = mInstanceOrientation2RowHeight.get(instanceKey);
                 if ( (height == 0) && isInEditMode() ) {
@@ -535,7 +508,7 @@ public class MatchGameScoresView extends LinearLayout
 
     /**
      * ------------
-     * | Field 2  |
+     * | Field 2  | ScoreBoard in PORTRAIT, ScoreDetails
      * ---------------------------
      * | Harry    | 11 |  4 | 11 |
      * ---------------------------
@@ -656,7 +629,7 @@ public class MatchGameScoresView extends LinearLayout
             final ViewGroup col = (ViewGroup) inflater.inflate(iResIdInflate, null);
             col.setBackgroundColor(bgColorLoser);
 
-            AutoResizeTextView txtMax = null;
+            AutoResizeTextView txtBiggestScore = null;
             for(Player p: players) {
                 boolean  bTopRow = p.equals(players[0]);
                 int      iResId  = bTopRow ? R.id.score_player_1 : R.id.score_player_2;
@@ -682,27 +655,28 @@ public class MatchGameScoresView extends LinearLayout
 
                 String sScorePlayer = String.valueOf(iScorePlayer);
                 if ( Brand.isGameSetMatch() ) {
-                    int iResIdSub = bTopRow ? R.id.sub_score_player_1 : R.id.sub_score_player_2;
-                    TextView txtSub = col.findViewById(iResIdSub);
-                    if ( txtSub != null ) {
-                        txtSub.setText("");
-                    }
-                    if ( (iScorePlayer <= 0) && (iScoreOther == 7) ) {
-                        int iNrOfGamesWonByLoser = 6; // TODO: can be 12 in special set
-                        // assume it is the number of points scored in the tiebreak by the loser of the set
-                        if ( txtSub != null ) {
-                            txtSub.setText("" + Math.abs(iScorePlayer));
-                            txtSub.setTextColor(bgColorWinner); // background should remain 'transparent
-                            sScorePlayer = "" + iNrOfGamesWonByLoser;
+                    // in case of tiebreak
+                    GSMTieBreakType gsmTieBreakType = GSMUtil.getTiebreakType(iScorePlayer, iScoreOther);
+                    if ( gsmTieBreakType != null ) {
+                        int[] iaScoreP = GSMUtil.gamesWonAndTiebreakPoints(iScorePlayer, gsmTieBreakType);
+                        int[] iaScoreO = GSMUtil.gamesWonAndTiebreakPoints(iScoreOther , gsmTieBreakType);
+                        iScorePlayer = iaScoreP[0];
+                        iScoreOther  = iaScoreO[0];
+
+                        sScorePlayer = String.valueOf(iScorePlayer);
+                        if ( gsmTieBreakType.equals(GSMTieBreakType.FinalSetNoGames) || iaScoreP[1] < iaScoreO[1] ) {
+                            txt.setTag(iaScoreP[1]);
                         } else {
-                            sScorePlayer = iNrOfGamesWonByLoser + " (" + (-1 * iScorePlayer) + ")";
+                            txt.setTag(ScorePlusSmallScore.EMPTY);
                         }
+                    } else {
+                        txt.setTag(ScorePlusSmallScore.EMPTY);
                     }
                 }
                 txt.setText(sScorePlayer);
 
-                if ( txtMax == null || iScorePlayer > iScoreOther) {
-                    txtMax = (AutoResizeTextView) txt;
+                if ( txtBiggestScore == null || iScorePlayer > iScoreOther) {
+                    txtBiggestScore = (AutoResizeTextView) txt;
                 }
             }
 
@@ -712,11 +686,11 @@ public class MatchGameScoresView extends LinearLayout
 */
 
             final float fSpacingFactor = 1.00f;
-            if (bOrientationFirstTime && (txtMax != null) ) {
+            if ( bOrientationFirstTime && (txtBiggestScore != null) ) {
                 // for first row add a listener to determine row height for the rest
-                txtMax.setText(String.valueOf(iMaxScore));
+                txtBiggestScore.setText(String.valueOf(iMaxScore));
                 //if ( isInEditMode() ) throw new RuntimeException(sMethod + "adding on resize listener");
-                txtMax.addOnResizeListener(new AutoResizeTextView.OnTextResizeListener() {
+                txtBiggestScore.addOnResizeListener(new AutoResizeTextView.OnTextResizeListener() {
                     @Override public void onTextResize(AutoResizeTextView textView, float oldSize, float newSize, float requiredWidth, float requiredHeight) {
                         //if ( isInEditMode() && iCounter > 1 ) throw new RuntimeException(sMethod + "requiredWidth " + requiredWidth + " counter " + iCounter);
                         requiredWidth = requiredWidth * fSpacingFactor;
@@ -733,7 +707,7 @@ public class MatchGameScoresView extends LinearLayout
                         //}
                     }
                 });
-                txtMax.addOnResizeListener(onTextResizeListener);
+                txtBiggestScore.addOnResizeListener(onTextResizeListener);
             } else {
                 Integer width = mInstanceOrientation2ColWidth.get(instanceKey);
                 if ( (width == 0) && isInEditMode() ) {
