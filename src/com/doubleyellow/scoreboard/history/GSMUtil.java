@@ -16,6 +16,8 @@
  */
 package com.doubleyellow.scoreboard.history;
 
+import android.util.Log;
+
 import com.doubleyellow.scoreboard.model.GSMModel;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.ScoreLine;
@@ -25,7 +27,9 @@ import com.doubleyellow.util.MapUtil;
 import java.util.List;
 import java.util.Map;
 
-public class GSMUtil {
+public class GSMUtil
+{
+    private static final String TAG = "SB." + GSMUtil.class.getSimpleName();
 
     private static final int finalSetTieBreakOnlyNoGames_NegativeOffset = -100000;
     private static final int normalTiebreak_NegativeOffset = -1000;
@@ -38,7 +42,9 @@ public class GSMUtil {
             for(Map<Player, Integer> setScore: endScores) {
                 iSetNrZB++;
                 int iMaxNrOfGamesInSet = MapUtil.getMaxValue(setScore);
-                boolean bNormalTieBreak = iMaxNrOfGamesInSet == gsmModel.getNrOfGamesToWinSet() + 1;
+                int iMinNrOfGamesInSet = MapUtil.getMinValue(setScore);
+                int nrOfGamesToWinSet  = gsmModel.getNrOfGamesToWinSet(iSetNrZB + 1);
+                boolean bNormalTieBreak = iMaxNrOfGamesInSet >= nrOfGamesToWinSet + 1 && (iMaxNrOfGamesInSet - iMinNrOfGamesInSet==1);
                 boolean bFinalSetTiebreakNoGames = gsmModel.matchHasEnded() && iMaxNrOfGamesInSet == 1;
                 if ( bNormalTieBreak || bFinalSetTiebreakNoGames ) {
                     Player pSetWinner = MapUtil.getMaxKey(setScore, Player.A);

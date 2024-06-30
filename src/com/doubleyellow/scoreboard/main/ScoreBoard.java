@@ -3229,7 +3229,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 iBoard.updateFieldDivisionBasedOnScore();
                 iBoard.updateGameAndMatchDurationChronos();
                 iBoard.updateGameScores();
-                iBoard.updateSetScoresToShow(true);
+                iBoard.updateSetScoresToShow(false);
             } else {
                 // normal score
                 if ( PreferenceValues.recordRallyEndStatsAfterEachScore(ScoreBoard.this).equals(Feature.Automatic)
@@ -4560,7 +4560,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             iBoard.showToast(R.string.match_is__locked);
         } else {
             LockedMatch lockedMatch = new LockedMatch(this, matchModel, this);
-            lockedMatch.init(iBlockingActionId, ctx);
+            if ( matchModel.matchHasEnded() ) {
+                // for an ended match allow unlocking by pressing 'score' button, but don't actually change score after unlock
+                lockedMatch.init(0, ctx);
+            } else {
+                lockedMatch.init(iBlockingActionId, ctx);
+            }
             show(lockedMatch);
         }
         return true;

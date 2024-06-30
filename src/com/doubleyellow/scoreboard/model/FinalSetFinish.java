@@ -23,8 +23,8 @@ public enum FinalSetFinish
     TieBreakTo10             (GSMModel.FS_NR_GAMES_AS_OTHER_SETS, 10),
     NoGames_TieBreakTo7      ( 0, 7),
     NoGames_TieBreakTo10     ( 0, 10),
-    GamesTo12ThenTieBreakTo7 (12, 7),
-    GamesTo12ThenTieBreakTo10(12, 10),
+    GamesTo12ThenTieBreakTo7 (GSMModel.FS_LIMITED_NR_OF_GAMES_12, 7),
+    GamesTo12ThenTieBreakTo10(GSMModel.FS_LIMITED_NR_OF_GAMES_12, 10),
     NoTieBreak(GSMModel.FS_UNLIMITED_NR_OF_GAMES, GSMModel.NOT_APPLICABLE),
     ;
     private int m_iNrOfGamesToWinSet = GSMModel.FS_NR_GAMES_AS_OTHER_SETS; // not deviating, -2 unlimited

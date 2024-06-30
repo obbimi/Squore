@@ -41,6 +41,7 @@ public class GSMModel extends Model
 {
     public final static int FS_NR_GAMES_AS_OTHER_SETS   = -1;
     public final static int FS_UNLIMITED_NR_OF_GAMES    = -2;
+    public final static int FS_LIMITED_NR_OF_GAMES_12   = -12;
     public final static int NOT_APPLICABLE              = -9;
 
     private enum JsonKey {
@@ -188,6 +189,12 @@ public class GSMModel extends Model
         return m_iNrOfSetsToWinMatch;
     }
 
+    public int getNrOfGamesToWinSet(int iSet1B) {
+        if( iSet1B == m_iNrOfSetsToWinMatch * 2 - 1 ) {
+            return getNrOfGamesToWinSet();
+        }
+        return m_iNrOfGamesToWinSet;
+    }
     public int getNrOfGamesToWinSet() {
         // TODO
         if ( isFinalSet() ) {
@@ -197,6 +204,14 @@ public class GSMModel extends Model
                     return m_iNrOfGamesToWinSet;
                 case FS_UNLIMITED_NR_OF_GAMES:
                     return m_iNrOfGamesToWinSet;
+                case FS_LIMITED_NR_OF_GAMES_12:
+                    Map<Player, Integer> player2GamesWon = getPlayer2GamesWon();
+                    int minValue = MapUtil.getMinValue(player2GamesWon);
+                    int iReturn = Math.max(Math.min(minValue + 2, Math.abs(iNrOfGamesToWinSet)), m_iNrOfGamesToWinSet);
+                    if ( iReturn != NUMBER_OF_GAMES_TO_WIN_SET_DEFAULT ) {
+                        Log.w(TAG, "Deviating... normally only in final set: " + iReturn);
+                    }
+                    return iReturn; // 2 more than the lowest number of games won up till now
                 default:
                     return iNrOfGamesToWinSet;
             }
