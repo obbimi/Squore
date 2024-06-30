@@ -45,7 +45,7 @@ public class GamesWonButton extends AutoResizeTextView
 
     public String setGamesWon(Integer o) {
         String sValue = String.valueOf(o);
-        this.setText(sValue);
+        this.setText(sValue); // final method
 
         return sValue;
     }

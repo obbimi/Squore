@@ -92,6 +92,8 @@ public class MatchGameScoresView extends LinearLayout
     private Map<Player, Integer>       m_pointsDiff    = null;
     private Player[]                   m_players       = Player.values(); // must be initialized with a value in order to let setProperties() succeed
 
+    private boolean                    m_bMatchEnded = false;
+
     public ScoresToShow updateSetScoresToShow(boolean bChange) {
         if ( bChange ) {
             switch (m_scoresToShow) {
@@ -120,6 +122,7 @@ public class MatchGameScoresView extends LinearLayout
 
 
     public void update(Model matchModel, Player pFirst) {
+        m_bMatchEnded = matchModel.matchHasEnded();
         m_checkLayoutCountDownTimer = null; // ensure it will be re-started
         m_players = new Player[] { pFirst, pFirst.getOther() };
         List<Map<Player, Integer>> endScores = matchModel.getEndScoreOfPreviousGames();
@@ -399,10 +402,10 @@ public class MatchGameScoresView extends LinearLayout
                 int      iResId      = bLeftColumn ? R.id.score_player_1 : R.id.score_player_2;
                 TextView txt         = tr.findViewById(iResId);
                 boolean  bInvert     = p.equals(gameWinner);
-                if ( Brand.isGameSetMatch() ) {
+                if ( Brand.isGameSetMatch() && (m_bMatchEnded == false) ) {
                     switch (m_scoresToShow) {
                         case GamesWonPerSet:
-                            if (iRow == ListUtil.size(gameScores) ) {
+                            if ( iRow == ListUtil.size(gameScores) ) {
                                 bInvert = false;
                             }
                             break;
@@ -560,7 +563,7 @@ public class MatchGameScoresView extends LinearLayout
 
                         boolean   bTopRow = p.equals(players[0]);
                         int       iResId  = bTopRow ? R.id.flag_player_1 : R.id.flag_player_2;
-                        ImageView img     = (ImageView) colImg.findViewById(iResId);
+                        ImageView img     = colImg.findViewById(iResId);
                         //img.setImageResource(R.drawable.logo);
                         img.setScaleType(ImageView.ScaleType.FIT_XY);
                         img.setBackgroundResource(R.drawable.image_border);
@@ -596,7 +599,7 @@ public class MatchGameScoresView extends LinearLayout
                 });
             }
             // initialize the cell underneath the playernames as 'empty' (no text and transparent)
-            TextView time = (TextView) colPlayers.findViewById(R.id.score_time);
+            TextView time = colPlayers.findViewById(R.id.score_time);
             if ( time != null ) {
                 if ( StringUtil.isNotEmpty(m_eventDivision) && PreferenceValues.showFieldDivision(getContext(), isPresentation()) && m_showTimes ) {
                     float fScaleDownField = 0.7f;
@@ -620,10 +623,10 @@ public class MatchGameScoresView extends LinearLayout
         final List<ViewGroup> cols = new ArrayList<ViewGroup>(); // holds all columns
 
         // show end scores of all games
-        int iRow = 0;
+        int iCol = 0;
         for ( Map<Player, Integer> scores: gameScores ) {
             if ( scores == null ) { continue; } // should not happen...
-            iRow++;
+            iCol++;
             Player gameWinner = Util.getWinner(scores);
 
             final ViewGroup col = (ViewGroup) inflater.inflate(iResIdInflate, null);
@@ -633,17 +636,17 @@ public class MatchGameScoresView extends LinearLayout
             for(Player p: players) {
                 boolean  bTopRow = p.equals(players[0]);
                 int      iResId  = bTopRow ? R.id.score_player_1 : R.id.score_player_2;
-                TextView txt     = (TextView) col.findViewById(iResId);
-                boolean bInvert = p.equals(gameWinner);
-                if ( Brand.isGameSetMatch() ) {
+                TextView txt     = col.findViewById(iResId);
+                boolean  bInvert = p.equals(gameWinner);
+                if ( Brand.isGameSetMatch() && (m_bMatchEnded == false) ) {
                     switch (m_scoresToShow) {
                         case GamesWonPerSet:
-                            if (iRow == ListUtil.size(gameScores) ) {
+                            if (iCol == ListUtil.size(gameScores) ) {
                                 bInvert = false;
                             }
                             break;
                         case SetsWon_and_GamesWonInLastSet:
-                            bInvert = (iRow == ListUtil.size(gameScores)); // do not invert for nr of sets won (row 1), invert for both players for games in current set (row 2)
+                            bInvert = (iCol == ListUtil.size(gameScores)); // do not invert for nr of sets won (row 1), invert for both players for games in current set (row 2)
                             break;
                     }
                 }

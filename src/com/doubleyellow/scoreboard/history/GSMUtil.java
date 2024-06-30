@@ -49,35 +49,34 @@ public class GSMUtil
                 if ( bNormalTieBreak || bFinalSetTiebreakNoGames ) {
                     Player pSetWinner = MapUtil.getMaxKey(setScore, Player.A);
                     Player pSetLoser =  pSetWinner.getOther();
-                    if ( setScore.get(pSetLoser) == gsmModel.getNrOfGamesToWinSet() || bFinalSetTiebreakNoGames) {
-                        // still not 100% it was a tiebreak if it is the set in progress
-                        List<List<ScoreLine>> gameScoreLinesOfSet = gsmModel.getGameScoreLinesOfSet(iSetNrZB);
-                        List<ScoreLine> tieBreakScorelines = ListUtil.getLast(gameScoreLinesOfSet);
-                        int iTBScoreOfLoser  = 0;
-                        int iTBScoreOfWinner = 0;
-                        for(ScoreLine line: tieBreakScorelines) {
-                            if ( pSetLoser.equals(line.getScoringPlayer()) ) {
-                                iTBScoreOfLoser = line.getScore();
-                            }
-                            if ( pSetWinner.equals(line.getScoringPlayer()) ) {
-                                iTBScoreOfWinner = line.getScore();
-                            }
+
+                    List<List<ScoreLine>> gameScoreLinesOfSet = gsmModel.getGameScoreLinesOfSet(iSetNrZB);
+                    List<ScoreLine> tieBreakScorelines = ListUtil.getLast(gameScoreLinesOfSet);
+                    int iTBScoreOfLoser  = 0;
+                    int iTBScoreOfWinner = 0;
+                    for(ScoreLine line: tieBreakScorelines) {
+                        if ( pSetLoser.equals(line.getScoringPlayer()) ) {
+                            iTBScoreOfLoser = line.getScore();
                         }
-                        //setScore.put(pSetLoser, -1 * iScoreOfLoser);
-                        if ( bEncodeTieBreakScore ) {
-                            if ( bFinalSetTiebreakNoGames ) {
-                                setScore.put(pSetLoser , (setScore.get(pSetLoser )+1) * finalSetTieBreakOnlyNoGames_NegativeOffset - iTBScoreOfLoser);
-                                setScore.put(pSetWinner, (setScore.get(pSetWinner)+1) * finalSetTieBreakOnlyNoGames_NegativeOffset - iTBScoreOfWinner);
-                            } else {
-                                // normal tiebreak
-                                setScore.put(pSetLoser , (setScore.get(pSetLoser )+1) * normalTiebreak_NegativeOffset - iTBScoreOfLoser);
-                                setScore.put(pSetWinner, (setScore.get(pSetWinner)+1) * normalTiebreak_NegativeOffset - iTBScoreOfWinner);
-                            }
+                        if ( pSetWinner.equals(line.getScoringPlayer()) ) {
+                            iTBScoreOfWinner = line.getScore();
+                        }
+                    }
+                    //setScore.put(pSetLoser, -1 * iScoreOfLoser);
+                    if ( bEncodeTieBreakScore ) {
+                        if ( bFinalSetTiebreakNoGames ) {
+                            setScore.put(pSetLoser , (setScore.get(pSetLoser )+1) * finalSetTieBreakOnlyNoGames_NegativeOffset - iTBScoreOfLoser);
+                            setScore.put(pSetWinner, (setScore.get(pSetWinner)+1) * finalSetTieBreakOnlyNoGames_NegativeOffset - iTBScoreOfWinner);
+                        } else {
+                            // normal tiebreak
+                            setScore.put(pSetLoser , (setScore.get(pSetLoser )+1) * normalTiebreak_NegativeOffset - iTBScoreOfLoser);
+                            setScore.put(pSetWinner, (setScore.get(pSetWinner)+1) * normalTiebreak_NegativeOffset - iTBScoreOfWinner);
                         }
                     }
                 }
             }
         }
+        Log.d(TAG, "gsmGamesWonPerSet : " + endScores + " (bEncodeTieBreakScore=" + bEncodeTieBreakScore + ")");
         return endScores;
     }
 
