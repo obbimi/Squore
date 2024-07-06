@@ -37,6 +37,7 @@ import android.os.*;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -49,6 +50,9 @@ import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.*;
 import android.widget.*;
+
+import com.anjlab.android.iab.v3.PurchaseInfo;
+import com.anjlab.android.iab.v3.BillingProcessor;
 
 import com.doubleyellow.android.SystemUtil;
 import com.doubleyellow.android.handler.OnClickXTimesHandler;
@@ -1259,6 +1263,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         //registerNfc();
         onCreateInitBluetooth();
+
+        //setUpBillingProcessor();
     }
     private boolean m_bNoFloatingButtons = false;
 
@@ -2483,6 +2489,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         stopBlueTooth();
 
         PusherHandler.getInstance().cleanup();
+
+        destroyBillingProcessor();
     }
 
     private void createNotificationTimer() {
@@ -2558,7 +2566,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         AlarmManager mgr = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1500, mPendingIntent);
         //kill the application
-        System.exit(0);
+        //System.exit(0); // on my Mi, android starts complaining app keeps crashing
+        finish(); // SAME: on my Mi, android starts complaining app keeps crashing
     }
 
     // ----------------------------------------------------
@@ -4469,6 +4478,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 // http://squore.double-yellow.be/make.matches.zip.php
                 handleMenuItem(R.id.sb_download_zip, URLFeedTask.prefixWithBaseIfRequired("/matches.zip"), ZipType.SquoreAll);
                 break;
+            case R.id.sb_purchase_ble:
+                String sProductId = getPackageName() + Brand.ENABLE_BLE_PRODUCT_ID;
+                purchaseProduct(sProductId);
+                return true;
             case R.id.sb_ble_devices:
                 selectBleDevices();
                 return true;
@@ -7520,6 +7533,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             Integer  iInitialSecs = (saMethodNArgs.length>4) ? Integer.parseInt(saMethodNArgs[4]) : null;
 
                             _showTimer(timerType, bAutoStarted, viewType, iInitialSecs);
+                        } else {
+                            Log.d(TAG, "Method needs arguments: " + btMethod);
                         }
                         break;
                     }
@@ -7882,7 +7897,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 if ( m_bNoWearablePossible == false ) {
                     m_bNoWearablePossible = true;
                     //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
                 Log.w(TAG, msg);
                 return;
@@ -8254,31 +8269,111 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 pusherHandler.init(this, Brand.getUUIDPusher(), matchModel.getName(Player.A) + matchModel.getName(Player.B));
                 // TODO: for brands with dialogs... suppress them as much as possible, auto-end game etc...
             } catch (Exception e) {
+                e.printStackTrace();
                 Toast.makeText(this, "FCM initialization failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         } else {
             pusherHandler.cleanup();
         }
     }
-/*
-    private BluetoothProfile.ServiceListener serviceListener = new BluetoothProfile.ServiceListener()
-    {
-        // No idea when this is invoked
-        @Override public void onServiceDisconnected(int profile)
-        {
-            Log.i(TAG,"[onServiceDisconnected] " + profile);
+    // ----------------------------------------------------
+    // --- in-app purchases / Billing                 -----
+    // ----------------------------------------------------
+
+
+    private BillingProcessor m_billingProcessor = null;
+    private String m_sProductToByAfterInit = null;
+
+    private boolean setUpBillingProcessor() {
+        String sBrandBillingLicenseKey = Brand.getBillingPublicKey();
+        if ( StringUtil.isEmpty(sBrandBillingLicenseKey) ) { return false; }
+        if ( m_billingProcessor == null ) {
+            m_billingProcessor = new BillingProcessor(this, sBrandBillingLicenseKey, new BillingProcessor.IBillingHandler() {
+                /** Called when requested PRODUCT ID was successfully purchased */
+                @Override public void onProductPurchased(@NonNull String productId, @Nullable PurchaseInfo details) {
+                    Log.d(TAG, String.format("product id %s was successfully purchased", productId));
+                }
+
+                /** Called when purchase history was restored and the list of all owned PRODUCT ID's was loaded from Google Play */
+                @Override public void onPurchaseHistoryRestored() {
+                    Log.d(TAG, "onPurchaseHistoryRestored has been called");
+                }
+
+                /**
+                 * Called when some error occurred. See Constants class for more details.
+                 * Note - this includes handling the case where the user canceled the buy dialog:
+                 * errorCode = Constants.BILLING_RESPONSE_RESULT_USER_CANCELED
+                 */
+                @Override public void onBillingError(int errorCode, @Nullable Throwable error) {
+                    Log.d(TAG, "onBillingError has been called: " + errorCode);
+                    if ( error != null ) {
+                        // 5 returned twice if still 'agree' is required
+                        // 1 returned if buy dialog cancelled
+                        // 1 returned if 'agree' dialog cancelled
+                        Log.e(TAG, String.format("error %d : %s", errorCode, error) );
+                        //Toast.makeText(ScoreBoard.this, error.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                /** Called when BillingProcessor was initialized and it's ready to purchase */
+                @Override public void onBillingInitialized() {
+                    Log.d(TAG, "onBillingInitialized has been called");
+                    m_billingProcessor.loadOwnedPurchasesFromGoogleAsync(new BillingProcessor.IPurchasesResponseListener() {
+                        @Override public void onPurchasesSuccess() {
+                            Log.i(TAG, "loadOwnedPurchasesFromGoogleAsync onPurchasesSuccess");
+                            if ( m_sProductToByAfterInit != null ) {
+                                purchaseProduct(m_sProductToByAfterInit);
+                            }
+                        }
+
+                        @Override public void onPurchasesError() {
+                            Log.w(TAG, "loadOwnedPurchasesFromGoogleAsync onPurchasesError");
+                        }
+                    });
+                }
+            });
+            m_billingProcessor.initialize();
+            return true;
         }
-        // E.g. invoked when device is rotated. Works for headphone, but not for sound box (a2dp)
-        @Override public void onServiceConnected(int profile, BluetoothProfile proxy)
-        {
-            for (BluetoothDevice device : proxy.getConnectedDevices())
-            {
-                String name            = device.getName();
-                String address         = device.getAddress();
-                int    connectionState = proxy.getConnectionState(device);
-                Log.i(TAG, "[onServiceConnected] |" + profile + " | " + name + " | " + address + " | " + (connectionState ==BluetoothProfile.STATE_CONNECTED?"Connected":"Not connected"));
+        return false;
+    }
+    private void purchaseProduct(String sProductId) {
+        if ( m_sProductToByAfterInit == null ) {
+            m_sProductToByAfterInit = sProductId;
+            setUpBillingProcessor();
+            return;
+        }
+        if ( m_billingProcessor == null ) {
+            Toast.makeText(this, "Billing not configured for this app", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if ( m_billingProcessor.purchase(this, sProductId) ) {
+            Log.d(TAG, String.format("Purchase of %s initiated", sProductId));
+        } else {
+            Log.w(TAG, String.format("Could not start of purchasing %s", sProductId));
+        }
+    }
+    private boolean hasPurchasedProduct(String sProductId) {
+        if ( m_billingProcessor == null ) { return false; }
+        return m_billingProcessor.isPurchased(sProductId);
+    }
+    /** call this method to undo the payment and restore the free version */
+    private void resetPayment(String sProductId) {
+        if ( m_billingProcessor == null ) { return; }
+        m_billingProcessor.consumePurchaseAsync(sProductId, new BillingProcessor.IPurchasesResponseListener() {
+            @Override public void onPurchasesSuccess() {
+                Log.i(TAG, "consumePurchaseAsync onPurchasesSuccess");
             }
+
+            @Override public void onPurchasesError() {
+                Log.w(TAG, "consumePurchaseAsync onPurchasesError");
+            }
+        });
+    }
+    private void destroyBillingProcessor() {
+        if ( m_billingProcessor != null ) {
+            m_billingProcessor.release();
+            m_billingProcessor = null;
         }
-    };
-*/
+    }
 }

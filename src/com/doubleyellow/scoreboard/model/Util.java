@@ -52,7 +52,10 @@ public class Util {
     public static final String MY_DEVICE_MODEL = "GT-I9505,SM-G930F"; // samsung S4, samsung S7
 
     public static Player getWinner(Map<Player, Integer> scores) {
-        if ( scores == null ) { return null; }
+        if ( scores == null ) {
+            //Log.w(TAG, "No scores. No winner");
+            return null;
+        }
 
         // no winner?
         Integer iScoreA = scores.get(Player.A);
@@ -66,7 +69,10 @@ public class Util {
                 Log.w(TAG, "What?");
             }
         }
-        if ( iScoreA == iScoreB) { return null; }
+        if ( iScoreA == iScoreB) {
+            //Log.w(TAG, "Equal scores. No winner");
+            return null;
+        }
 
         // a winner
         return ( iScoreA > iScoreB)? Player.A : Player.B;

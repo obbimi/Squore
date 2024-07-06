@@ -2517,7 +2517,11 @@ public abstract class Model implements Serializable
                     int nrOfGamesToWinMatch     = joFormat.optInt(JSONKey.nrOfGamesToWinMatch.toString(), UNDEFINED_VALUE); // old... keep for now for stored matches
                         nrOfGamesToWinMatch     = joFormat.optInt(PreferenceKeys.numberOfGamesToWinMatch.toString(), nrOfGamesToWinMatch); // optional for e.g. racketlon
                     if ( numberOfPointsToWinGame != UNDEFINED_VALUE ) {
-                        setNrOfPointsToWinGame(numberOfPointsToWinGame);
+                        if ( numberOfPointsToWinGame > 0 ) {
+                            setNrOfPointsToWinGame(numberOfPointsToWinGame);
+                        } else {
+                            Log.w(TAG, "Skipping numberOfPointsToWinGame <= 0. Bug?");
+                        }
                     }
                     if ( nrOfGamesToWinMatch > 0 ) {
                         setNrOfGamesToWinMatch(nrOfGamesToWinMatch);
@@ -3137,7 +3141,12 @@ public abstract class Model implements Serializable
         JSONObject joFormat = new JSONObject();
         if ( this instanceof GSMModel ) {
             // m_iNrOfPointsToWinGame fixed to 4, hence use m_iNrOfGamesToWinSet
-            joFormat.put(PreferenceKeys.numberOfPointsToWinGame.toString(), ((GSMModel)this).getNrOfGamesToWinSet());
+            int nrOfGamesToWinSet = ((GSMModel) this).getNrOfGamesToWinSet();
+            if ( nrOfGamesToWinSet > 0 ) {
+                joFormat.put(PreferenceKeys.numberOfPointsToWinGame.toString(), nrOfGamesToWinSet);
+            } else {
+                Log.w(TAG, "Not storing nrOfGamesToWinSet = " + nrOfGamesToWinSet);
+            }
         } else {
             if ( m_iNrOfPointsToWinGame != UNDEFINED_VALUE ) {
                 joFormat.put(PreferenceKeys.numberOfPointsToWinGame.toString(), m_iNrOfPointsToWinGame);

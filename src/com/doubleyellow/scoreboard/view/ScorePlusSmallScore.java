@@ -97,4 +97,13 @@ public class ScorePlusSmallScore extends AutoResizeTextView {
         }
     }
 
+    @Override public void setVisibility(int visibility) {
+        int iCur = super.getVisibility();
+        if ( iCur != visibility ) {
+            super.setVisibility(visibility);
+            if ( txtSmall != null ) {
+                txtSmall.setVisibility(visibility);
+            }
+        }
+    }
 }

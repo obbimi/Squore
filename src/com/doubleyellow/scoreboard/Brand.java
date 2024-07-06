@@ -408,6 +408,15 @@ public enum Brand
     /** uuid of pusher beam https://dashboard.pusher.com/beams/instances */
     public static UUID   getUUIDPusher()           { return UUID.fromString(Brand.sSharedPusherId);}
 
+    public final static String ENABLE_BLE_PRODUCT_ID = ".enable_ble";
+    public static String getBillingPublicKey() {
+        if ( isGameSetMatch() ) {
+            // brand specific: https://play.google.com/console/u/0/developers/5046226336743383720/app/4972207514792479457/monetization-setup
+            return "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgrZGDU4Pr+0+C6tWIF8EXjHicQ2TNs+0T6/gUrz/Aq99s8Ib+4UYZON4knyKgXFpnDJHhHFMDKxPS7CoG3XW1Lz3S8kLBmtslcu5ot9M1EGCOZnk5rJwYslJ5TTFzZI16bKsPFVTAXBFuXKixS0yvE5H47tKFvg8VudBtiEemLCziO01TmVLefVJ65fQ7qwqvXLe2pgF7T44GvYrXURLnU4GOWSJ+KTDzwlhrI0u5vlBLMg8MH6/R/Ga7HOzY5lYGyg3r2DUTnOmM5OJBeRrYchYZieXzUSAXjRCStVZqPledcEApWnoO5gFRO8QiI0YuCht41hhkC6XsN6obzYRbwIDAQAB";
+        }
+        return null;
+    }
+
     public static int getImageViewResId()          { return brand.imageViewResId;}
     public static int getLogoResId()               { return brand.iLogoResId;}
     public static int getChangeLogResId()          { return brand.iChangeLogResId;}

@@ -49,4 +49,11 @@ public class GamesWonButton extends AutoResizeTextView
 
         return sValue;
     }
+
+    @Override public void setVisibility(int visibility) {
+        int iCur = super.getVisibility();
+        if ( iCur != visibility ) {
+            super.setVisibility(visibility);
+        }
+    }
 }

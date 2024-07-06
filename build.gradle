@@ -16,7 +16,8 @@ buildscript {
         // NOTE: Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements
 
         // added for firebase to parse google-services.json
-        classpath 'com.google.gms:google-services:4.4.2'
+        classpath 'com.google.gms:google-services:4.3.5'
+        //classpath 'com.google.gms:google-services:4.4.2' // 4.3.5 ok, 4.3.10 breaks, 4.4.2 asks for additional initialization but that seems not to work either
     }
 }
 repositories {
@@ -104,23 +105,23 @@ android {
         phoneTabletPre22 {
             dimension "devicetype"
             minSdkVersion 21 // increased to 21 for WearOS splashscreen dependency
-            targetSdkVersion 33
+            targetSdkVersion 34
             multiDexEnabled true // required since using firebase
-            versionCode 1915 * 10000 + 520
+            versionCode 1915 * 10000 + 522
             versionName "4.54"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
-            targetSdkVersion 33
-            versionCode 2315 * 10000 + 520
+            targetSdkVersion 34
+            versionCode 2315 * 10000 + 522
             versionName "4.54"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
-            targetSdkVersion 33
-            versionCode 2501 * 10000 + 520
+            targetSdkVersion 34
+            versionCode 2501 * 10000 + 522
             versionName "4.54"
         }
     }
