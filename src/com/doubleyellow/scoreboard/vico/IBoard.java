@@ -742,7 +742,7 @@ public class IBoard implements TimerViewContainer
                                           , R.id.btn_gameset2_detail1, R.id.btn_gameset2_detail2, R.id.space_gameset2_detail
                                           , R.id.btn_gameset1_detail1, R.id.btn_gameset1_detail2, R.id.space_gameset1_detail
                                           };
-            List<TextView> lSetScoresViews = new ArrayList<>();
+            List<TextView> lSetScoresViews  = new ArrayList<>();
             List<Space>    lSetScoresSpaces = new ArrayList<>();
             for(int iViewId: iaSetScores) {
                 View vCheck = findViewById(iViewId);
@@ -760,20 +760,24 @@ public class IBoard implements TimerViewContainer
             if ( Brand.isGameSetMatch() ) {
                 GSMModel gsmModel = (GSMModel) matchModel;
 
-                TextView vSetsWon1 = (TextView) findViewById(R.id.btn_setswon1);
-                TextView vSetsWon2 = (TextView) findViewById(R.id.btn_setswon2);
+                final TextView vSetsWon1 = (TextView) findViewById(R.id.btn_setswon1);
+                final TextView vSetsWon2 = (TextView) findViewById(R.id.btn_setswon2);
 
                 Map<Player, Integer> setsWon = gsmModel.getSetsWon();
                 Integer iSetsFor1 = setsWon.get(m_firstPlayerOnScreen);
                 Integer iSetsFor2 = setsWon.get(m_firstPlayerOnScreen.getOther());
-                vSetsWon1.setText(String.valueOf(iSetsFor1));
-                vSetsWon2.setText(String.valueOf(iSetsFor2));
+                if ( vSetsWon1 != null ) {
+                    vSetsWon1.setText(String.valueOf(iSetsFor1));
+                    vSetsWon2.setText(String.valueOf(iSetsFor2));
+                }
 
                 if ( iSetsFor1 + iSetsFor2 <= iNrOfSetDetailsPossibleInLayout) {
                     // few enough sets played to show details score how the set ended, e.g. 6-4 or 7-6
 
-                    vSetsWon1.setVisibility(iVisibilityIfNotUsed);
-                    vSetsWon2.setVisibility(iVisibilityIfNotUsed);
+                    if ( vSetsWon1 != null ) {
+                        vSetsWon1.setVisibility(iVisibilityIfNotUsed);
+                        vSetsWon2.setVisibility(iVisibilityIfNotUsed);
+                    }
 
                     List<Map<Player, Integer>> gamesWonPerSet = GSMUtil.gsmGamesWonPerSet(gsmModel, true);
 
@@ -852,8 +856,10 @@ public class IBoard implements TimerViewContainer
                         vSetScore1.setVisibility(iVisibilityIfNotUsed);
                         vSetScore2.setVisibility(iVisibilityIfNotUsed);
                     }
-                    vSetsWon1.setVisibility(View.VISIBLE);
-                    vSetsWon2.setVisibility(View.VISIBLE);
+                    if ( vSetsWon1 != null ) {
+                        vSetsWon1.setVisibility(View.VISIBLE);
+                        vSetsWon2.setVisibility(View.VISIBLE);
+                    }
                 }
             } else {
                 Map<Player, Integer> gamesWon = matchModel.getGamesWon();

@@ -111,7 +111,7 @@
                 android:textSize="@dimen/txt_small"
                 android:layout_margin="2dp"
                 />
-        <Spinner
+        <com.doubleyellow.android.view.EnumSpinner
                 android:id="@+id/spDoublesServeSequence"
                 app:enum_class="com.doubleyellow.scoreboard.model.DoublesServeSequence"
                 app:enum_display_values="@array/doublesServeSequence"

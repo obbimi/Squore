@@ -226,8 +226,6 @@ public enum PreferenceKeys {
         finalSetFinish, // also used as JSONKey
         newBalls,       // also used as JSONKey
             newBallsXGamesUpFront,
-        /** @deprecated */
-        goldenPointToWinGame, // also used as JSONKey
         goldenPointFormat, // also used as JSONKey
         StartTiebreakOneGameEarly, // also used as JSONKey
     PowerPlay,

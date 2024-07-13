@@ -778,7 +778,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 hideRemovePreference(psgMF, PreferenceKeys.changeSidesWhen_GSM);
                 hideRemovePreference(psgMF, PreferenceKeys.finalSetFinish);
                 hideRemovePreference(psgMF, PreferenceKeys.newBalls);
-                hideRemovePreference(psgMF, PreferenceKeys.goldenPointToWinGame);
+                //hideRemovePreference(psgMF, PreferenceKeys.goldenPointToWinGame);
                 hideRemovePreference(psgBeh, PreferenceKeys.indicateGoldenPoint);
             }
 /*

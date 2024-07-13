@@ -57,6 +57,12 @@
             android:smallScreens="true" />
 -->
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
+
     <application
             android:theme="@style/Theme.App.Starting_Badminton"
             android:allowBackup="true"

@@ -1067,9 +1067,11 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.useHandInHandOutScoring, context, R.bool.useEnglishScoring_default);
     }
     /** @deprecated */
+/*
     public static boolean useGoldenPoint(Context context) {
         return getBoolean(PreferenceKeys.goldenPointToWinGame, context, false);
     }
+*/
     public static GoldenPointFormat goldenPointFormat(Context context) {
         // for backwards compatibility
         GoldenPointFormat goldenPointFormatDefault = useGroupNameAsEventData(context) ? GoldenPointFormat.OnFirstDeuce : GoldenPointFormat.None;

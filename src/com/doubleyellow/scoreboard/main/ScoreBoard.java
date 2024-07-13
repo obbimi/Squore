@@ -267,7 +267,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     if ( Brand.isSquash() ) {
                         // TODO: for doubles, switch in/out in such a way that touched player becomes the server
                         Log.d(TAG, String.format("Two finger click on player %s", player));
-                        showBrokenEquipment(player);
+                        if ( matchModel.isDoubles() ) {
+                            handleMenuItem(R.id.pl_show_conduct, player);
+                        } else {
+                            showBrokenEquipment(player);
+                        }
                         break;
                     } else {
                         handleMenuItem(R.id.sb_change_sides);
@@ -714,7 +718,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
             if ( matchModel.isDoubles() ) {
                 // toggle player names of the long clicked team
-                _swapDoublePlayers(pl);
+                handleMenuItem(R.id.sb_swap_double_players, pl);
             } else {
                 if ( isWearable() && matchModel.hasStarted()==false ) {
                     if ( PreferenceValues.isBrandTesting(ScoreBoard.this) ) {
@@ -4209,7 +4213,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 }
                 return true;
             case R.id.sb_swap_double_players:
-                swapDoublePlayers();
+                if ( ctx != null && ctx.length==1 && ctx[0] instanceof Player) {
+                    _swapDoublePlayers((Player) ctx[0]);
+                } else {
+                    swapDoublePlayers();
+                }
                 return true;
             case R.id.sb_lock:
                 lockMatch(ctx);
@@ -8223,19 +8231,23 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             ms.setActive(true);
         }
 
-        // play dummy audio: todo: redo this every x seconds?
-        AudioTrack at = new AudioTrack( AudioManager.STREAM_MUSIC
-                , 48000
-                , AudioFormat.CHANNEL_OUT_STEREO
-                , AudioFormat.ENCODING_PCM_16BIT
-                , AudioTrack.getMinBufferSize(48000, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT)
-                , AudioTrack.MODE_STREAM
-        );
-        at.play();
+        try {
+            // play dummy audio: todo: redo this every x seconds?
+            AudioTrack at = new AudioTrack( AudioManager.STREAM_MUSIC
+                    , 48000
+                    , AudioFormat.CHANNEL_OUT_STEREO
+                    , AudioFormat.ENCODING_PCM_16BIT
+                    , AudioTrack.getMinBufferSize(48000, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT)
+                    , AudioTrack.MODE_STREAM
+            );
+            at.play();
 
-        // a little sleep
-        at.stop();
-        at.release();
+            // a little sleep
+            at.stop();
+            at.release();
+        } catch (Exception e) {
+            Log.e(TAG, "Why was this again?", e);
+        }
 
         return true;
     }

@@ -231,7 +231,7 @@ public class FullDemoThread extends DemoThread {
                 iStep++;
                 iMessage = 0;
             }
-            if ( iStep > ListUtil.size(lView) ) {
+            if (iStep < 0 || iStep >= ListUtil.size(lView) ) {
                 return;
             }
             final ListenerAndView lv = lView.get(iStep);

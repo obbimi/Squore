@@ -116,6 +116,7 @@
 
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
                 <!-- mimetype must match the mimetype as passed from com.doubleyellow.scoreboard.main.ScoreBoard.createNdefMessage() -->
 <!--
                 <data android:mimeType="application/com.doubleyellow.scoreboard"/>
@@ -178,10 +179,4 @@
             </intent-filter>
         </service>
     </application>
-
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.TTS_SERVICE" />
-        </intent>
-    </queries>
 </manifest>

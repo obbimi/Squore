@@ -1283,14 +1283,6 @@ public class GSMModel extends Model
         int i = joFormat.optInt(JsonKey.lastBallChangeOccurredAtStartOfGame.toString(), 0);
         setLastBallChangeOccurredAtStartOfGame(i);
 
-        if ( joFormat.has(PreferenceKeys.goldenPointToWinGame.toString()) ) {
-            // legacy
-            boolean b = joFormat.optBoolean(PreferenceKeys.goldenPointToWinGame.toString());
-            if ( b ) {
-                joFormat.put(PreferenceKeys.goldenPointFormat.toString(), GoldenPointFormat.OnFirstDeuce.toString());
-            }
-            joFormat.remove(PreferenceKeys.goldenPointToWinGame.toString());
-        }
         String s3 = joFormat.optString(PreferenceKeys.goldenPointFormat.toString());
         if (StringUtil.isNotEmpty(s3) ) {
             setGoldenPointFormat(GoldenPointFormat.valueOf(s3));
