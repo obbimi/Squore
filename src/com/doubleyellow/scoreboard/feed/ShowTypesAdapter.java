@@ -23,9 +23,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.icu.util.TimeZone;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.LocaleList;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,8 +127,8 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
 
             // create viewholder for freshly inflated view
             viewHolder = new ViewHolder();
-            viewHolder.text = (TextView)    view.findViewById(R.id.image_item_text);
-            viewHolder.img  = (ImageButton) view.findViewById(R.id.image_item_image);
+            viewHolder.text = view.findViewById(R.id.image_item_text);
+            viewHolder.img  = view.findViewById(R.id.image_item_image);
 
             if ( bReUseView ) {
                 view.setTag(viewHolder);
@@ -138,6 +140,7 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
 
         JSONObject joMeta = joMetaData.optJSONObject(sType);
         if ( joMeta == null ) {
+            Log.w(TAG, "No meta for " + sType);
             return view; // should not occur, if it does App will crash if null is returned (with unclear stacktrace!)
         }
         String sShortDescription = joMeta.optString(FeedKeys.ShortDescription.toString());
@@ -196,12 +199,12 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
         viewHolder.text.setTextColor(iTxtColor);
 
         viewHolder.text.setOnLongClickListener(longClickListener);
-        viewHolder.img.setOnLongClickListener(longClickListener);
+        viewHolder.img.setOnLongClickListener (longClickListener);
         //view.setOnLongClickListener(longClickListener); // tag of this view is incorrect... the viewholder
 
         viewHolder.text.setOnClickListener(clickListener);
-        viewHolder.img.setOnClickListener(clickListener);
-        view.setOnClickListener(clickListener);
+        viewHolder.img.setOnClickListener (clickListener);
+        view.setOnClickListener           (clickListener);
 
         viewHolder.text.setTag(sType);
         if ( bImageFromURL == false ) {
@@ -324,10 +327,42 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
             }
         }
 
+        //context.getSystemService(android.content.Context.COUNTRY_DETECTOR); // "country_detector" // only works up to api 28
+        String networkCountryIso = null;
+        try {
+            TelephonyManager telephonyManager = context.getSystemService(TelephonyManager.class);
+            if ( telephonyManager != null ) {
+                networkCountryIso = telephonyManager.getNetworkCountryIso();
+            }
+            if ( StringUtil.isEmpty(networkCountryIso) ) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    TimeZone aDefault = TimeZone.getDefault();
+                    networkCountryIso = TimeZone.getRegion(aDefault.getID());
+                }
+            }
+            Log.w(TAG, "networkCountryIso : " + networkCountryIso);
+        } catch (Exception e) {
+        }
+
         // if defined for users locale, add certain types to top
         List<String> lLocaleFeedTypes =  new ArrayList<>();
         {
             List<Locale> lLocales = new ArrayList<>(); // most important FIRST
+            if ( StringUtil.isNotEmpty(networkCountryIso) ) {
+                lLocales.add(new Locale("ru", networkCountryIso)); // to get feeds specific for country on top
+
+                // still add all known locales for the same country to get e.g. feeds for germany more on top for players in belgium since de-BE is a known locale
+                Locale[] availableLocales = Locale.getAvailableLocales();
+                if ( availableLocales != null ) {
+                    for(Locale l: availableLocales) {
+                        if ( l.getCountry().equalsIgnoreCase(networkCountryIso) ) {
+                            lLocales.add(l);
+                            //break;
+                        }
+                    }
+                }
+            }
+
             {
                 Resources res    = context.getResources();
                 Configuration resCfg = res.getConfiguration();
@@ -362,6 +397,7 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
             for ( int i=0; i < JsonUtil.size(types); i++ ) {
                 String sType = types.getString(i);
                 if ( sType.equals(FeedKeys.FeedMetaData.toString())) { continue; }
+                if ( sType.startsWith("-") ) { continue; }
                 lKeys.add(sType);
             }
             if ( ListUtil.isEmpty(lKeys) ) {

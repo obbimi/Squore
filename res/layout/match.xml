@@ -497,19 +497,6 @@
                 android:layoutMode="opticalBounds"
                 android:nextFocusDown="@+id/useHandInHandOutScoring"
                 android:orientation="vertical" />
-            <!--
-                            <com.doubleyellow.android.view.EnumSpinner
-                                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                                    android:id="@+id/spDoublesServeSequence"
-                                    app:enum_class="com.doubleyellow.scoreboard.model.DoublesServeSequence"
-                                    app:enum_display_values="@array/doublesServeSequence"
-                                    android:nextFocusDown="@+id/useHandInHandOutScoring"
-                                    android:layoutMode="opticalBounds"
-                                    android:orientation="vertical"
-                                    android:spinnerMode="dialog"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
-            -->
         </LinearLayout>
 
         <LinearLayout
@@ -535,20 +522,6 @@
                 android:layoutMode="opticalBounds"
                 android:nextFocusDown="@+id/spWarmupDuration"
                 android:orientation="vertical" />
-            <!--
-                        <com.doubleyellow.android.view.EnumSpinner
-                                xmlns:app="http://schemas.android.com/apk/res-auto"
-                                android:id="@+id/spTieBreakFormat"
-                                app:enum_class="com.doubleyellow.scoreboard.model.TieBreakFormat"
-                                app:enum_display_values="@array/tiebreakFormatDisplayValues"
-                                android:nextFocusDown="@+id/useHandInHandOutScoring"
-                                android:layoutMode="opticalBounds"
-                                android:orientation="vertical"
-                                android:spinnerMode="dropdown"
-                                android:popupBackground="@color/dy_dark"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-            -->
         </LinearLayout>
 
         <CheckBox

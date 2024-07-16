@@ -41,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.splashscreen.*;
 import androidx.core.view.InputDeviceCompat;
 import androidx.core.view.MotionEventCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -1045,6 +1046,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     /** onCreate() is followed by onstart() onresume(). Also called after orientation change */
     @Override public void onCreate(Bundle savedInstanceState) {
+        // Handle the splash screen transition.
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+        splashScreen.setOnExitAnimationListener(splashScreenViewProvider -> {
+            Log.w(TAG, "setOnExitAnimationListener");
+            splashScreenViewProvider.remove();
+        });
         super.onCreate(savedInstanceState);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);

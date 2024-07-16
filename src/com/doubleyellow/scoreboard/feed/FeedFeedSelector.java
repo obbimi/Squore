@@ -25,6 +25,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.core.splashscreen.SplashScreen;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.*;
@@ -100,6 +102,12 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
     private SwipeRefreshLayout m_srlListView    = null; // should only contain a single listview/gridview
     private SwipeRefreshLayout m_srlExpListView = null;
     @Override public void onCreate(Bundle savedInstanceState) {
+        // avoid splash screen from bleeding trough
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+        splashScreen.setOnExitAnimationListener(splashScreenViewProvider -> {
+            splashScreenViewProvider.remove();
+        });
+
         super.onCreate(savedInstanceState);
 
         LinearLayout ll = new LinearLayout(this);

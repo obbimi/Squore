@@ -21,10 +21,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 import com.doubleyellow.android.util.AndroidPlaceholder;
 import com.doubleyellow.android.util.SimpleELAdapter;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.URLsKeys;
 import com.doubleyellow.util.*;
@@ -173,6 +173,10 @@ class ShowFeedsAdapter extends SimpleELAdapter {
                     }
                     sDisplayName = sDisplayName.replaceFirst("^[\\s-:]+", ""); // remove characters from start
                     sDisplayName = sDisplayName.replaceFirst("[\\s-:]+$", ""); // remove characters from end
+                    if ( sDisplayName.trim().isEmpty() ) {
+                        // e.g. when Region and Name are specified as exactly the same
+                        sDisplayName = sHeader;
+                    }
 
                     if ( range.isIn(0) ) {
                         // in progress: also make them appear first in alphabetically sorted list
@@ -206,7 +210,7 @@ class ShowFeedsAdapter extends SimpleELAdapter {
                         int iDurationInDaysMax              = PreferenceValues.getTournamentMaxDuration_InDays(m_context);
                         sMsg += String.format("\n%s entries found running for more than %s days.", m_iNrRunningToLong, iDurationInDaysMax);
                     }
-                    Toast.makeText(m_context, sMsg, Toast.LENGTH_LONG).show();
+                    MyDialogBuilder.dialogWithOkOnly(m_context, sMsg);
                 }
             }
         }

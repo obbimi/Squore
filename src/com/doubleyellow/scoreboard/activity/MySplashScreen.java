@@ -31,8 +31,8 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 
 import java.util.Arrays;
-
-public class SplashScreen extends XActivity
+/** @deprecated */
+public class MySplashScreen extends XActivity
 {
     private final Class<? extends ScoreBoard> cls = ScoreBoard.class;
 
@@ -134,7 +134,7 @@ public class SplashScreen extends XActivity
     private static boolean bMainIsStarted = false;
     private void startMain() {
         //if ( bMainIsStarted ) { return; }
-        if ( XActivity.class.isAssignableFrom(SplashScreen.this.getClass()) ) {
+        if ( XActivity.class.isAssignableFrom(MySplashScreen.this.getClass()) ) {
             Intent i = new Intent(activity, cls);
             activity.startActivity(i);
         } else {
@@ -166,7 +166,7 @@ public class SplashScreen extends XActivity
             }
         }
         @Override public void onFinish() {
-            if ( XActivity.class.isAssignableFrom(SplashScreen.this.getClass()) ) {
+            if ( XActivity.class.isAssignableFrom(MySplashScreen.this.getClass()) ) {
                 activity.finish();
             }
         }
