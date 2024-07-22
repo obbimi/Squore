@@ -372,7 +372,7 @@ public class Speak
                 } else {
                     gamesWonLastSet = model.getGamesWon();
                 }
-                if ( MapUtil.getMaxValue(gamesWonLastSet) > 0 ) {
+                if ( MapUtil.getMaxValue(gamesWonLastSet) > 0 && model.matchHasEnded() == false ) {
                     Player pLeaderInGames = MapUtil.getMaxKey(gamesWonLastSet, Player.A);
                     int iGamesLeader  = gamesWonLastSet.get(pLeaderInGames);
                     int iGamesTrailer = gamesWonLastSet.get(pLeaderInGames.getOther());
@@ -382,7 +382,7 @@ public class Speak
                                                             : getResourceString(R.string.oa_x_games_all, iGamesLeader);
                     } else {
                         String sLeader    = model.getName(pLeaderInGames);
-                        String sGameScore = x_GamesTo_y(iGamesLeader, iGamesTrailer, m_context);
+                        String sGameScore = x_GamesTo_y(iGamesLeader, iGamesTrailer, R.string.oa_game, R.string.oa_games, m_context);
                         if ( model.matchHasEnded() ) {
                             if ( gsmModel != null ) {
                                 // todo
@@ -393,7 +393,40 @@ public class Speak
                             sGamesScoreText = getResourceString(R.string.oa_a_leads_xGamesToy, sLeader, sGameScore);
                         }
                     }
-                    setTextToSpeak(SpeechType.GSMGamesScore, sGamesScoreText); // todo
+                    setTextToSpeak(SpeechType.GamesScore, sGamesScoreText);
+                } else {
+                    if (gsmModel != null) {
+                        List<Map<Player, Integer>> gamesWonPerSet = gsmModel.getGamesWonPerSet();
+                        Map<Player, Integer> gamesWonPreviousSet = gamesWonPerSet.get(gamesWonPerSet.size()-2);
+                        Player pWinnerInGames = MapUtil.getMaxKey(gamesWonPreviousSet, Player.A);
+                        int    iGamesWinner   = gamesWonPreviousSet.get(pWinnerInGames);
+                        int    iGamesLoser    = gamesWonPreviousSet.get(pWinnerInGames.getOther());
+                        String sWinner        = model.getName(pWinnerInGames);
+                        int    iSetNr         = gsmModel.getSetNrInProgress() - 1;
+                        String sGameScore     = x_GamesTo_y(iGamesWinner, iGamesLoser, R.string.oa_game, R.string.oa_games, m_context);
+                        String sSetScoreText  = getResourceString(R.string.oa_a_wins_set_b_xGamesToy__TennisPadel, sWinner, iSetNr, sGameScore);
+                        setTextToSpeak(SpeechType.GamesScore, sSetScoreText);
+
+                        Map<Player, Integer> setsWon = gsmModel.getSetsWon();
+                        int iMax = MapUtil.getMaxValue(setsWon);
+                        int iMin = MapUtil.getMinValue(setsWon);
+                        String sSetScore = null;
+                        if ( iMax == iMin ) {
+                            if ( iMax == 1 ) {
+                                sSetScore = getResourceString(R.string.oa_1_set_all__TennisPadel);
+                            } else {
+                                sSetScore = getResourceString(R.string.oa_x_sets_all__TennisPadel, iMax);
+                            }
+                        } else {
+                            Player pLeaderInSets = MapUtil.getMaxKey(setsWon, Player.A);
+                            String sLeaderSets   = model.getName(pLeaderInSets);
+                            int    iSetsLeader   = setsWon.get(pLeaderInSets);
+                            int    iSetsTrailer  = setsWon.get(pLeaderInSets.getOther());
+                            String sxSetsToy     = x_GamesTo_y(iSetsLeader, iSetsTrailer, R.string.oa_set, R.string.oa_sets, m_context);
+                            sSetScore = getResourceString(R.string.oa_a_leads_xGamesToy, sLeaderSets, sxSetsToy);
+                        }
+                        setTextToSpeak(SpeechType.GSMSetScore, sSetScore);
+                    }
                 }
             }
 
@@ -560,9 +593,9 @@ public class Speak
         Resources resources = PreferenceValues.newResources(m_context.getResources(), m_locale);
         return resources.getString(p, args);
     }
-    private String x_GamesTo_y(int iGamesLeader, int iGamesTrailer, Context ctx) {
+    private String x_GamesTo_y(int iGamesLeader, int iGamesTrailer, int iResIdGameOrSet, int iResIdGamesOrSets, Context ctx) {
         return iGamesLeader
-                + " " + (iGamesLeader==1?getResourceString(R.string.oa_game):getResourceString(R.string.oa_games))
+                + " " + (iGamesLeader==1?getResourceString(iResIdGameOrSet):getResourceString(iResIdGamesOrSets))
                 + " " + getResourceString(R.string.oa_x_games_TO_y)
                 + " " + (iGamesTrailer==0?getResourceString(R.string.oa_love):String.valueOf(iGamesTrailer));
     }
@@ -576,7 +609,8 @@ public class Speak
       //Call,
       //StartAnnouncement,
         Handout,
-        GSMGamesScore,
+        GamesScore,
+        GSMSetScore,
         ScoreServer,
         ScoreReceiver,
         Gameball,
@@ -586,6 +620,7 @@ public class Speak
     }
     private String[] m_sText = new String[SpeechType.values().length];
     private void setTextToSpeak(SpeechType type, Object oText) {
+        if ( oText == null ) { return; }
         String sOld = m_sText[type.ordinal()];
         String sNew = String.valueOf(oText);
         if ( (sOld == null) || (sOld.equals(sNew) == false) ) {
