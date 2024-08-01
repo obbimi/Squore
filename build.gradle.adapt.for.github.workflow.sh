@@ -8,3 +8,6 @@ rm build.gradle.unsigned
 
 diff build.gradle.unsigned.nogms build.gradle
 mv   build.gradle.unsigned.nogms build.gradle
+
+# create a dummy zip file to ensure compile completes for R.raw.squore_iddo
+touch res/raw/squore_iddo.zip
