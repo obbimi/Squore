@@ -3,7 +3,7 @@ name: Build & Publish Release APK
 on:
   push:
     tags:
-      - 'Release *'
+      - 'Release*'
 
 jobs:
   build:
