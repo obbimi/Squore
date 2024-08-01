@@ -19,10 +19,10 @@ jobs:
         java-version: 11
         distribution: 'adopt'
 
-    - name: Make Gradle executable
-      run: chmod +x ./gradlew
+    - name: Make Gradle related files executable where needed
+      run: chmod +x ./gradlew ./build.gradle.unsigned.sh
     - name: Adapt build.gradle to make only Unsigned release
-      run: sed -i -e 's~^[ ]*signingConfig[ ]*sign~//signingConfig sign~' build.gradle
+      run: ./build.gradle.unsigned.sh
     - name: Build Release APK
       run: ./gradlew build
 
