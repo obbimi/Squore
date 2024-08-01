@@ -35,8 +35,8 @@ android {
 
     compileOptions {
         // added when going from 1.1.9 to androidx.wear:wear:1.2.0
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     // compileSdkVersion seems required when running from command line?!
@@ -107,21 +107,21 @@ android {
             minSdkVersion 21 // increased to 21 for WearOS splashscreen dependency
             targetSdkVersion 34
             multiDexEnabled true // required since using firebase
-            versionCode 1915 * 10000 + 523
+            versionCode 1915 * 10000 + 524
             versionName "4.54"
         }
         phoneTabletPost23 {
             dimension "devicetype"
             minSdkVersion 23
             targetSdkVersion 34
-            versionCode 2315 * 10000 + 523
+            versionCode 2315 * 10000 + 524
             versionName "4.54"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 34
-            versionCode 2501 * 10000 + 523
+            versionCode 2501 * 10000 + 524
             versionName "4.54"
         }
     }

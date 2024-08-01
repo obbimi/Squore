@@ -1,0 +1,37 @@
+name: Build & Publish Release APK
+
+on:
+  push:
+    tags:
+      - 'Release *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.1.7
+
+    - name: Setup Java JDK
+      uses:
+        actions/setup-java@v4.2.1
+      with:
+        java-version: 11
+        distribution: 'adopt'
+
+    - name: Make Gradle executable
+      run: chmod +x ./gradlew
+    - name: Build Release APK
+      run: ./gradlew build
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: Squore.apk
+        path: build/outputs/apk/phoneTabletPost23/release/Squore-phoneTabletPost23-release.apk
+
+    - name: Releasing using Hub
+      uses: sangatdesai/release-apk@main
+      env:
+       GITHUB_TOKEN: ${{ secrets.TOKEN }}
+       APP_FOLDER: app
