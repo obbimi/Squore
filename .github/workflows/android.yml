@@ -22,7 +22,7 @@ jobs:
     - name: Make Gradle executable
       run: chmod +x ./gradlew
     - name: Adapt build.gradle to make only Unsigned release
-      run: sed -i -e 's~[ ]*signingConfig~//signingConfig~' build.gradle
+      run: sed -i -e 's~^[ ]*signingConfig[ ]*sign~//signingConfig sign~' build.gradle
     - name: Build Release APK
       run: ./gradlew build
 
