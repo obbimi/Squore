@@ -20,9 +20,9 @@ jobs:
         distribution: 'adopt'
 
     - name: Make Gradle related files executable where needed
-      run: chmod +x ./gradlew ./build.gradle.unsigned.sh
+      run: chmod +x ./gradlew ./build.gradle.adapt.for.github.workflow.sh
     - name: Adapt build.gradle to make only Unsigned release
-      run: ./build.gradle.unsigned.sh
+      run: ./build.gradle.adapt.for.github.workflow.sh
     - name: Build Release APK
       run: ./gradlew build
 
