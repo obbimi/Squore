@@ -21,17 +21,25 @@ jobs:
 
     - name: Make Gradle executable
       run: chmod +x ./gradlew
+    - name: Adapt build.gradle to make only Unsigned release
+      run: sed -i -e 's~[ ]*signingConfig~//signingConfig~' build.gradle
     - name: Build Release APK
       run: ./gradlew build
 
-    - name: Upload a Build Artifact
+    - name: Upload a Build Artifact for phone/table
       uses: actions/upload-artifact@v4.3.4
       with:
-        name: Squore.apk
+        name: Squore.phone.apk
         path: build/outputs/apk/phoneTabletPost23/release/Squore-phoneTabletPost23-release.apk
 
-    - name: Releasing using Hub
-      uses: sangatdesai/release-apk@main
-      env:
-       GITHUB_TOKEN: ${{ secrets.TOKEN }}
-       APP_FOLDER: app
+    - name: Upload a Build Artifact for wearOs
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: Squore.wearOs.apk
+        path: build/outputs/apk/wearOs/release/Squore-wearOs-release.apk
+
+    #- name: Releasing using Hub
+    #  uses: sangatdesai/release-apk@main
+    #  env:
+    #   GITHUB_TOKEN: ${{ secrets.TOKEN }}
+    #   APP_FOLDER: app
