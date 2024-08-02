@@ -1,6 +1,7 @@
 name: Build & Publish Release APK
 
 on:
+  workflow_dispatch: # run manually
   push:
     tags:
       - 'Release*'
@@ -8,7 +9,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+    - name: get the date
+      id: date
+      run: |
+        NOW=$(date +"%Y%m%d")
+        echo "now=${NOW}" >> $GITHUB_OUTPUT
+
     - name: Checkout
       uses: actions/checkout@v4.1.7
 
@@ -21,10 +29,35 @@ jobs:
 
     - name: Make Gradle related files executable where needed
       run: chmod +x ./gradlew ./build.gradle.adapt.for.github.workflow.sh
+
     - name: Adapt build.gradle to make only Unsigned release
-      run: ./build.gradle.adapt.for.github.workflow.sh
+      env:
+        GSM_API_KEY: ${{ secrets.GSM_API_KEY }}
+      run: ./build.gradle.adapt.for.github.workflow.sh  ${GSM_API_KEY}
+
     - name: Build Release APK
       run: ./gradlew build
+
+    - name: Sign APKs
+      env:
+        KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      run: |
+        echo "${KEYSTORE_BASE64}" | base64 -d > apksign.keystore
+        set -x
+        androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
+        for unsignedFn in build/outputs/apk/*/release/*.apk; do
+          signedFn=${apk/release-unsigned/release-signed}
+          mv -v "$apk" "$unsignedFn"
+          ${androidhome}/build-tools/$(ls ${androidhome}/build-tools/ | tail -1)/apksigner sign --ks apksign.keystore --ks-pass pass:"${KEYSTORE_PASSWORD}" --out "${signedFn}" "${unsignedFn}"
+        done
+        rm -v apksign.keystore
+
+    - name: Extract Version
+      id: extract_version
+      run: |
+        VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
 
     - name: Upload a Build Artifact for phone/table
       uses: actions/upload-artifact@v4.3.4
@@ -35,7 +68,7 @@ jobs:
     - name: Upload a Build Artifact for wearOs
       uses: actions/upload-artifact@v4.3.4
       with:
-        name: Squore.wearOs.apk
+        name: Squore.wearOs.${{ steps.extract_version.outputs.version }}.apk
         path: build/outputs/apk/wearOs/release/Squore-wearOs-release-unsigned.apk
 
     #- name: Releasing using Hub
