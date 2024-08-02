@@ -1,0 +1,67 @@
+name: Build & Publish Other brands
+
+on:
+  workflow_dispatch: # run manually
+    inputs:
+      brand:
+        description: 'The brand to build: TennisPadel/Tabletennis/Badminton/Racketlon'
+        default: "TennisPadel"
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Setup Java JDK
+      uses:
+        actions/setup-java@v4.2.1
+      with:
+        java-version: 11
+        distribution: 'adopt'
+
+    - name: Checkout the code
+      uses: actions/checkout@v4.1.7
+
+    - name: Make pipeline script files executable where needed
+      run: chmod +x ./gradlew ./build.gradle.adapt.for.github.workflow.sh ./change.R.package.sh
+
+    - name: Adapt build.gradle and google-services.json by means of script
+      env:
+        GSM_API_KEY: ${{ secrets.GSM_API_KEY }}
+      run: ./build.gradle.adapt.for.github.workflow.sh ${GSM_API_KEY}
+
+    - name: adapt sources and res files to build different brand
+      run: ./change.R.package.sh ${{ inputs.brand }}
+
+    - name: Build unsigned release .apk files
+      run: ./gradlew build
+
+    - name: Sign .apk files
+      env:
+        KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      run: |
+        echo "${KEYSTORE_BASE64}" | base64 -d > apksign.keystore
+        set -x
+        androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
+        for unsignedFn in build/outputs/apk/*/release/*.apk; do
+          signedFn=${unsignedFn/release-unsigned/release-signed}
+          ${androidhome}/build-tools/$(ls ${androidhome}/build-tools/ | tail -1)/apksigner sign --ks apksign.keystore --ks-pass pass:"${KEYSTORE_PASSWORD}" --out "${signedFn}" "${unsignedFn}"
+        done
+        rm -v apksign.keystore
+
+    - name: Extract the version from build.gradle
+      id: extract_version
+      run: |
+        VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Create upload .apk to /releases
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ secrets.GH_ACCESS_TOKEN }}
+        tag: "${{ steps.extract_version.outputs.version }}"
+        artifacts: ./build/outputs/apk/*/release/*-*-release-signed.apk
+        generateReleaseNotes: false

@@ -37,6 +37,10 @@ else
         echo "Could not determine package from ${brandMfFile}"
         exit
     fi
+    if [[ $(echo "$brandPkg" | wc -l) -gt 1 ]]; then
+        echo "Invalid multilined package $brandPkg derived from ${brandMfFile}"
+        exit
+    fi
     read -t $defaultTimeout -p "New package ${brandPkg}"
 fi
 
@@ -123,7 +127,7 @@ if ! grep -E -q "${tobranded}.*SportType" com/doubleyellow/scoreboard/Brand.java
     exit 1
 fi
 
-# derive current package by looking for .R reference in Brand.java
+# derive current package by looking for .R reference in ScoreBoard.java
 pkgFrom=$(grep -E 'import[ ]+.*\.R;' com/doubleyellow/scoreboard/main/ScoreBoard.java | perl -ne 's~import\s+([\w\.]+)\.R;~\1~; print')
 read -t $defaultTimeout -p "From package ${pkgFrom}"
 if [[ -z "${pkgFrom}" ]]; then
