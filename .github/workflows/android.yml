@@ -11,14 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: get the date
-      id: date
-      run: |
-        NOW=$(date +"%Y%m%d")
-        echo "now=${NOW}" >> $GITHUB_OUTPUT
-
-    - name: Checkout
-      uses: actions/checkout@v4.1.7
+#    - name: get the date
+#      id: date
+#      run: |
+#        NOW=$(date +"%Y%m%d")
+#        echo "now=${NOW}" >> $GITHUB_OUTPUT
 
     - name: Setup Java JDK
       uses:
@@ -26,6 +23,9 @@ jobs:
       with:
         java-version: 11
         distribution: 'adopt'
+
+    - name: Checkout the code
+      uses: actions/checkout@v4.1.7
 
     - name: Make pipeline script files executable where needed
       run: chmod +x ./gradlew ./build.gradle.adapt.for.github.workflow.sh
@@ -35,10 +35,10 @@ jobs:
         GSM_API_KEY: ${{ secrets.GSM_API_KEY }}
       run: ./build.gradle.adapt.for.github.workflow.sh ${GSM_API_KEY}
 
-    - name: Build Release APK
+    - name: Build unsigned release .apk files
       run: ./gradlew build
 
-    - name: Sign APKs
+    - name: Sign .apk files
       env:
         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -52,23 +52,33 @@ jobs:
         done
         rm -v apksign.keystore
 
-    - name: Extract Version from build.gradle
+    - name: Extract the version from build.gradle
       id: extract_version
       run: |
         VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-    - name: Upload a Build Artifact for phone/table
+    - name: Upload artifact for phone
       uses: actions/upload-artifact@v4.3.4
       with:
-        name: Squore.phone.apk
-        path: build/outputs/apk/phoneTabletPost23/release/Squore-phoneTabletPost23-release-unsigned.apk
+        name: Squore.phone.${{ steps.extract_version.outputs.version }}.apk
+        path: build/outputs/apk/phoneTabletPost23/release/Squore-phoneTabletPost23-release-signed.apk
 
-    - name: Upload a Build Artifact for wearOs
+    - name: Upload artifact for wearOs
       uses: actions/upload-artifact@v4.3.4
       with:
         name: Squore.wearOs.${{ steps.extract_version.outputs.version }}.apk
-        path: build/outputs/apk/wearOs/release/Squore-wearOs-release-unsigned.apk
+        path: build/outputs/apk/wearOs/release/Squore-wearOs-release-signed.apk
+
+    - name: Create upload .apk to /releases
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ secrets.GH_ACCESS_TOKEN }}
+        tag: "${{ steps.extract_version.outputs.version }}"
+        #prerelease: "${{ steps.extract_version.outputs.beta }}"
+        #draft: "${{ inputs.draft }}"
+        artifacts: ./build/outputs/apk/*/release/*-*-release-signed.apk
+        generateReleaseNotes: false
 
     #- name: Releasing using Hub
     #  uses: sangatdesai/release-apk@main
