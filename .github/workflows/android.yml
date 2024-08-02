@@ -27,13 +27,13 @@ jobs:
         java-version: 11
         distribution: 'adopt'
 
-    - name: Make Gradle related files executable where needed
+    - name: Make pipeline script files executable where needed
       run: chmod +x ./gradlew ./build.gradle.adapt.for.github.workflow.sh
 
-    - name: Adapt build.gradle to make only Unsigned release
+    - name: Adapt build.gradle and google-services.json by means of script
       env:
         GSM_API_KEY: ${{ secrets.GSM_API_KEY }}
-      run: ./build.gradle.adapt.for.github.workflow.sh  ${GSM_API_KEY}
+      run: ./build.gradle.adapt.for.github.workflow.sh ${GSM_API_KEY}
 
     - name: Build Release APK
       run: ./gradlew build
@@ -48,12 +48,11 @@ jobs:
         androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
         for unsignedFn in build/outputs/apk/*/release/*.apk; do
           signedFn=${apk/release-unsigned/release-signed}
-          mv -v "$apk" "$unsignedFn"
           ${androidhome}/build-tools/$(ls ${androidhome}/build-tools/ | tail -1)/apksigner sign --ks apksign.keystore --ks-pass pass:"${KEYSTORE_PASSWORD}" --out "${signedFn}" "${unsignedFn}"
         done
         rm -v apksign.keystore
 
-    - name: Extract Version
+    - name: Extract Version from build.gradle
       id: extract_version
       run: |
         VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
