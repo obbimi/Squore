@@ -30,13 +30,13 @@ jobs:
       uses: actions/upload-artifact@v4.3.4
       with:
         name: Squore.phone.apk
-        path: build/outputs/apk/phoneTabletPost23/release/Squore-phoneTabletPost23-release.apk
+        path: build/outputs/apk/phoneTabletPost23/release/Squore-phoneTabletPost23-release-unsigned.apk
 
     - name: Upload a Build Artifact for wearOs
       uses: actions/upload-artifact@v4.3.4
       with:
         name: Squore.wearOs.apk
-        path: build/outputs/apk/wearOs/release/Squore-wearOs-release.apk
+        path: build/outputs/apk/wearOs/release/Squore-wearOs-release-unsigned.apk
 
     #- name: Releasing using Hub
     #  uses: sangatdesai/release-apk@main
