@@ -4,7 +4,7 @@ on:
   workflow_dispatch: # run manually
     inputs:
       brand:
-        description: 'The brand to build: TennisPadel/Tabletennis/Badminton/Racketlon'
+        description: 'The brand to build: Squore/TennisPadel/Tabletennis/Badminton/Racketlon'
         default: "TennisPadel"
         required: true
         type: string
@@ -63,6 +63,6 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.GH_ACCESS_TOKEN }}
-        tag: "${{ steps.extract_version.outputs.version }}"
+        tag: "${{ inputs.brand }}.${{ steps.extract_version.outputs.version }}"
         artifacts: ./build/outputs/apk/*/release/*-*-release-signed.apk
         generateReleaseNotes: false
