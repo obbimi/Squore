@@ -43,6 +43,14 @@ jobs:
         VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+    - name: Wait a bit to ensure all matrix file go into same release
+      if: ${{ matrix.brand != 'Badminton' }}
+      run: |
+        set -x
+        if [ '${{ matrix.brand }}' != "Badminton" ]; then
+          sleep 90
+        fi
+
     - name: Build unsigned release .apk files
       run: ./gradlew build
 
@@ -61,13 +69,6 @@ jobs:
         done
         rm -v apksign.keystore
 
-    - name: Wait a bit to ensure all matrix file go into same release
-      if: ${{ matrix.brand != 'Badminton' }}
-      run: |
-        set -x
-        if [ '${{ matrix.brand }}' != "Badminton" ]; then
-          read -p "wait to ensure repo exists created by Badminton part of matrix" -t 90
-        fi
     #- name: Create upload .apk to /releases (ncipollo)
     #  uses: ncipollo/release-action@v1
     #  with:
