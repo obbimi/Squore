@@ -49,7 +49,7 @@ jobs:
         androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
         for unsignedFn in build/outputs/apk/*/release/*.apk; do
           unbrandedSignedFn=${unsignedFn/release-unsigned/release-signed}
-          signedFn=${unbrandedSignedFn/Squore/${{ matrix.brand }}}
+          signedFn=${unbrandedSignedFn/Squore/${{ matrix.brand }}.${{ steps.extract_version.outputs.version }}}
           ${androidhome}/build-tools/$(ls ${androidhome}/build-tools/ | tail -1)/apksigner sign --ks apksign.keystore --ks-pass pass:"${KEYSTORE_PASSWORD}" --out "${signedFn}" "${unsignedFn}"
         done
         rm -v apksign.keystore
@@ -60,12 +60,20 @@ jobs:
         VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-    - name: Create upload .apk to /releases
-      uses: ncipollo/release-action@v1
+    #- name: Create upload .apk to /releases (ncipollo)
+    #  uses: ncipollo/release-action@v1
+    #  with:
+    #    token: ${{ secrets.GH_ACCESS_TOKEN }}
+    #    tag: "Release.${{ steps.extract_version.outputs.version }}"
+    #    artifacts: ./build/outputs/apk/*/release/*-*-release-signed.apk
+    #    generateReleaseNotes: false
+    #    draft: true # Sets the release as a draft instead of publishing it, allowing you to make any edits needed before releasing
+
+    - name: Create upload .apk to /releases (softprops)
+      uses: softprops/action-gh-release@v2
       with:
-        token: ${{ secrets.GH_ACCESS_TOKEN }}
-        tag: "Release.${{ steps.extract_version.outputs.version }}"
-        artifacts: ./build/outputs/apk/*/release/*-*-release-signed.apk
-        generateReleaseNotes: false
         draft: true # Sets the release as a draft instead of publishing it, allowing you to make any edits needed before releasing
-        make_latest: false
+        token: ${{ secrets.GH_ACCESS_TOKEN }}
+        tag_name: "Release.${{ steps.extract_version.outputs.version }}"
+        files: ./build/outputs/apk/*/release/*-*-release-signed.apk
+        generate_release_notes: false
