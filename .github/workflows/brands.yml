@@ -64,7 +64,8 @@ jobs:
     - name: Wait a bit to ensure all matrix file go into same release
       if: ${{ matrix.brand != 'Badminton' }}
       run: |
-        if [[ "${{ matrix.brand }}" != "Badminton" ]]; then
+        set -x
+        if [ '${{ matrix.brand }}' != "Badminton" ]; then
           read -p "wait to ensure repo exists created by Badminton part of matrix" -t 90
         fi
     #- name: Create upload .apk to /releases (ncipollo)
