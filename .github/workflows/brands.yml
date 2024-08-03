@@ -12,6 +12,7 @@ jobs:
         brand:
           - Badminton
           - Racketlon
+          - Squore
           - Tabletennis
           - TennisPadel
 
@@ -46,7 +47,6 @@ jobs:
     - name: Wait a bit to ensure all matrix file go into same release
       if: ${{ matrix.brand != 'Badminton' }}
       run: |
-        set -x
         if [ '${{ matrix.brand }}' != "Badminton" ]; then
           sleep 90
         fi
@@ -60,7 +60,6 @@ jobs:
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       run: |
         echo "${KEYSTORE_BASE64}" | base64 -d > apksign.keystore
-        set -x
         androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
         for unsignedFn in build/outputs/apk/*/release/*.apk; do
           unbrandedSignedFn=${unsignedFn/release-unsigned/release-signed}
