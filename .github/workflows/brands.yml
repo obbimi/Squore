@@ -10,9 +10,10 @@ jobs:
     strategy:
       matrix:
         brand:
-          - TennisPadel
           - Badminton
+          - Racketlon
           - Tabletennis
+          - TennisPadel
 
     steps:
     - name: Setup Java JDK
@@ -36,6 +37,12 @@ jobs:
     - name: adapt sources and res files to build different brand
       run: ./change.R.package.sh ${{ matrix.brand }}
 
+    - name: Extract the version from build.gradle
+      id: extract_version
+      run: |
+        VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
     - name: Build unsigned release .apk files
       run: ./gradlew build
 
@@ -54,12 +61,12 @@ jobs:
         done
         rm -v apksign.keystore
 
-    - name: Extract the version from build.gradle
-      id: extract_version
+    - name: Wait a bit to ensure all matrix file go into same release
+      if: ${{ matrix.brand != 'Badminton' }}
       run: |
-        VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
-
+        if [[ "${{ matrix.brand }}" != "Badminton" ]]; then
+          read -p "wait to ensure repo exists created by Badminton part of matrix" -t 90
+        fi
     #- name: Create upload .apk to /releases (ncipollo)
     #  uses: ncipollo/release-action@v1
     #  with:
