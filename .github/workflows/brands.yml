@@ -1,4 +1,4 @@
-name: Build & Publish Several brands
+name: Build & Publish Several brands OOO
 
 on:
   workflow_dispatch: # run manually
@@ -43,7 +43,7 @@ jobs:
       run: | 
         set -x
         brand=${{ matrix.brand }}
-        ./change.R.package.sh $brand
+        ./change.R.package.sh ${brand}
 
     - name: Extract the version from build.gradle
       id: extract_version

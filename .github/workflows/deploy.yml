@@ -36,7 +36,9 @@ jobs:
         # download file
         wget -O ${fn} https://github.com/obbimi/${brand}/releases/download/${releasePrefix}${version}/${brand}.${version}-phoneTabletPost23-release-signed.apk
         # extract info from apk
-        PKG=$(aapt d badging ${fn} | grep pack | tr ' ' '\n' | grep name | cut -d "'" -f 2)
+        androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
+        aaptPath=$(find ${androidhome}/build-tools -name aapt | sort | tail -1)
+        PKG=$(${aaptPath} d badging ${fn} | grep pack | tr ' ' '\n' | grep name | cut -d "'" -f 2)
         echo "packageName=$PKG" >> $GITHUB_OUTPUT
 
     - name: Publish to google play store 1
