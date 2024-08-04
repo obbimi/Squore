@@ -24,11 +24,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        apkversion:
-          - phoneTabletPost23
-          - phoneTabletPre22
+    #strategy:
+    #  matrix:
+    #    apkversion:
+    #      - phoneTabletPost23
+    #      - phoneTabletPre22
 
     steps:
 
@@ -36,17 +36,23 @@ jobs:
       id: download_apk_extract_info
       run: |
         set -x
-        version=${{ inputs.version }}
-        brand=${{ inputs.brand }}
-        fn=${brand}.${version}-${{ matrix.apkversion }}-release-signed.apk
-        releasePrefix=${{ inputs.releasePrefix }}
-        # download file
-        wget --quiet -O ${fn} https://github.com/obbimi/${brand}/releases/download/${releasePrefix}${version}/${fn}
-        # extract info from apk
         androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
         aaptPath=$(find ${androidhome}/build-tools -name aapt | sort | tail -1)
-        PKG=$(${aaptPath} d badging ${fn} | grep pack | tr ' ' '\n' | grep -E ^name= | cut -d "'" -f 2)
-        echo "packageName=$PKG" >> $GITHUB_OUTPUT
+        version=${{ inputs.version }}
+        brand=${{ inputs.brand }}
+        releasePrefix=${{ inputs.releasePrefix }}
+
+        apkversions="phoneTabletPost23 phoneTabletPre22"
+        for apkversion in $apkversions; do
+          echo ${apkversion}
+          fn=${brand}.${version}-${apkversion}-release-signed.apk
+          # download file
+          wget --quiet -O ${fn} https://github.com/obbimi/${brand}/releases/download/${releasePrefix}${version}/${fn}
+          # extract info from apk
+          PKG=$(${aaptPath} d badging ${fn} | grep pack | tr ' ' '\n' | grep -E ^name= | cut -d "'" -f 2)
+          echo "packageName=$PKG" > $GITHUB_OUTPUT
+        done
+        ls -l *.apk
 
     # https://github.com/r0adkll/upload-google-play
     - name: Publish to google play store 1
@@ -54,7 +60,8 @@ jobs:
       with:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         packageName: ${{ steps.download_apk_extract_info.outputs.packageName }}
-        releaseFiles: ./${{ inputs.brand }}.${{ inputs.version }}-${{ matrix.apkversion }}-release-signed.apk
+        #releaseFiles: ./${{ inputs.brand }}.${{ inputs.version }}-${{ matrix.apkversion }}-release-signed.apk
+        releaseFiles: ./${{ inputs.brand }}.${{ inputs.version }}-phoneTabletPost23-release-signed.apk,./${{ inputs.brand }}.${{ inputs.version }}-phoneTabletPre22-release-signed.apk
         track: beta # alpha,beta,internal or production
         releaseName: ${{ inputs.version }} # if not specified typically derived from versionCode/versionName
         #changesNotSentForReview: true # does not seem to work/be allowed anymore
