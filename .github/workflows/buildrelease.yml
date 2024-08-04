@@ -1,4 +1,5 @@
-# written in such a way that this exact same file can be created in .github/workflows in obbimi/Squore, obbimi/TennisPadel, obbimit/Tabletennis etc to create obbimi/xxx/Release.###
+# written in such a way that this exact same file can be created in .github/workflows in obbimi/Squore, obbimi/TennisPadel, obbimi/Tabletennis, obbimi/Badminton etc to create obbimi/xxx/Release.###
+# please not all 4 secrets: GSM_API_KEY, KEYSTORE_BASE64, KEYSTORE_PASSWORD, GH_ACCESS_TOKEN need to be present in each repo
 name: Build APK & Create Release
 
 on:
@@ -49,16 +50,19 @@ jobs:
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       run: |
         set -x
-        baseBrand=Squore
         brand=$(echo "${{ github.repository }}" | cut -d '/' -f 2)
+        #baseBrand=Squore
+        baseBrand=$brand
         echo "${KEYSTORE_BASE64}" | base64 -d > apksign.keystore
         androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
+        find . -name *.apk
         for unsignedFn in build/outputs/apk/*/release/*.apk; do
           unbrandedSignedFn=${unsignedFn/release-unsigned/release-signed}
           signedFn=${unbrandedSignedFn/${baseBrand}/${brand}.${{ steps.prepare_for_build.outputs.version }}}
           ${androidhome}/build-tools/$(ls ${androidhome}/build-tools/ | tail -1)/apksigner sign --ks apksign.keystore --ks-pass pass:"${KEYSTORE_PASSWORD}" --out "${signedFn}" "${unsignedFn}"
         done
         rm -v apksign.keystore
+        find . -name *.apk
 
     - name: Create upload .apk to /releases
       uses: ncipollo/release-action@v1
