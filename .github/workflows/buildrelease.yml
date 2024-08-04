@@ -1,13 +1,8 @@
+# written in such a way that same file can be used in obbimi/Squore, obbimi/TennisPadel, obbimit/Tabletennis etc
 name: Build APK & Create Release
 
 on:
   workflow_dispatch: # run manually
-    inputs:
-      brand:
-        description: 'The brand to build: Squore/TennisPadel/Tabletennis/Badminton/Racketlon'
-        default: "TennisPadel"
-        required: true
-        type: string
 
 jobs:
   build:
@@ -25,32 +20,28 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v4.1.7
       with:
-        repository: obbimi/Squore # overwrite the default ${{ github.repository }}
+        repository: obbimi/Squore # overwrite the default ${{ github.repository }}. Our java code/resources is always in the Squore repo
         #ref: main
 
-    - name: Make pipeline script files executable where needed
-      run: chmod +x ./gradlew ./build.gradle.adapt.for.github.workflow.sh ./change.R.package.sh
-
-    - name: Adapt build.gradle and google-services.json by means of script
+    - name: Prepare for build
+      id: prepare_for_build
       env:
         GSM_API_KEY: ${{ secrets.GSM_API_KEY }}
-      run: ./build.gradle.adapt.for.github.workflow.sh ${GSM_API_KEY}
-
-    - name: adapt sources and res files to build different brand
-      run: | 
-        set -x
-        brand=$(echo "${{ github.repository }}" | cut -d '/' -f 2)
-        ./change.R.package.sh ${brand}
-
-    - name: Extract the version from build.gradle
-      id: extract_version
       run: |
         set -x
+        # make support files executable
+        chmod +x ./gradlew ./build.gradle.adapt.for.github.workflow.sh ./change.R.package.sh
+        ./build.gradle.adapt.for.github.workflow.sh ${GSM_API_KEY}
+        # adapt sources and res files to build different brand
+        brand=$(echo "${{ github.repository }}" | cut -d '/' -f 2)
+        ./change.R.package.sh ${brand}
+        # Extract the version from build.gradle
         VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
     - name: Build unsigned release .apk files
-      run: ./gradlew build
+      run: |
+        ./gradlew build
 
     - name: Sign .apk files
       env:
@@ -64,7 +55,7 @@ jobs:
         androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
         for unsignedFn in build/outputs/apk/*/release/*.apk; do
           unbrandedSignedFn=${unsignedFn/release-unsigned/release-signed}
-          signedFn=${unbrandedSignedFn/${baseBrand}/${brand}}
+          signedFn=${unbrandedSignedFn/${baseBrand}/${brand}.${{ steps.prepare_for_build.outputs.version }}}
           ${androidhome}/build-tools/$(ls ${androidhome}/build-tools/ | tail -1)/apksigner sign --ks apksign.keystore --ks-pass pass:"${KEYSTORE_PASSWORD}" --out "${signedFn}" "${unsignedFn}"
         done
         rm -v apksign.keystore
@@ -74,7 +65,7 @@ jobs:
       with:
         draft: true # Sets the release as a draft instead of publishing it, allowing you to make any edits needed before releasing
         token: ${{ secrets.GH_ACCESS_TOKEN }}
-        tag: "Release.${{ steps.extract_version.outputs.version }}"
+        tag: "Release.${{ steps.prepare_for_build.outputs.version }}"
         artifacts: ./build/outputs/apk/*/release/*-*-release-signed.apk
         generateReleaseNotes: false
         #make_latest: true
