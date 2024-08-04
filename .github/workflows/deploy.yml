@@ -1,3 +1,4 @@
+# written in such a way that it is only need in obbimi/Squore create releases for all brands
 name: Publish Released APK to Google
 
 on:
@@ -23,33 +24,43 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        apkversion:
+          - phoneTabletPre22
+          - phoneTabletPost23
+
     steps:
 
-    - name: Download from releases
+    - name: Download from /releases
       id: download_apk_extract_info
       run: |
         set -x
         version=${{ inputs.version }}
         brand=${{ inputs.brand }}
-        fn=${brand}.${version}-phoneTabletPost23-release-signed.apk
+        fn=${brand}.${version}-${{ matrix.apkversion }}-release-signed.apk
         releasePrefix=${{ inputs.releasePrefix }}
         # download file
-        wget -O ${fn} https://github.com/obbimi/${brand}/releases/download/${releasePrefix}${version}/${brand}.${version}-phoneTabletPost23-release-signed.apk
+        wget --quiet -O ${fn} https://github.com/obbimi/${brand}/releases/download/${releasePrefix}${version}/${fn}
         # extract info from apk
         androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
         aaptPath=$(find ${androidhome}/build-tools -name aapt | sort | tail -1)
         PKG=$(${aaptPath} d badging ${fn} | grep pack | tr ' ' '\n' | grep -E ^name= | cut -d "'" -f 2)
         echo "packageName=$PKG" >> $GITHUB_OUTPUT
 
+    # https://github.com/r0adkll/upload-google-play
     - name: Publish to google play store 1
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         packageName: ${{ steps.download_apk_extract_info.outputs.packageName }}
-        releaseFiles: ./${{ inputs.brand }}.${{ inputs.version }}-phoneTabletPost23-release-signed.apk
+        releaseFiles: ./${{ inputs.brand }}.${{ inputs.version }}-${{ matrix.apkversion }}-release-signed.apk
         track: beta # alpha,beta,internal or production
-        inAppUpdatePriority: 2
-        #status: inProgress #Error: Status 'inProgress' requires a 'userFraction' to be set
+        releaseName: ${{ inputs.version }} # if not specified typically derived from versionCode/versionName
+        changesNotSentForReview: true
+        status: draft
+        #inAppUpdatePriority: 2
+        #status: inProgress #Error: Status 'inProgress' requires a 'userFraction' to be set: One of completed, inProgress, halted, draft.
         #userFraction: 0.10 # not possible in alpha
         #whatsNewDirectory: distribution/whatsnew
         #mappingFile: app/build/outputs/mapping/release/mapping.txt

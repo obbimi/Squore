@@ -1,4 +1,4 @@
-# written in such a way that same file can be used in obbimi/Squore, obbimi/TennisPadel, obbimit/Tabletennis etc
+# written in such a way that this exact same file can be created in .github/workflows in obbimi/Squore, obbimi/TennisPadel, obbimit/Tabletennis etc to create obbimi/xxx/Release.###
 name: Build APK & Create Release
 
 on:
