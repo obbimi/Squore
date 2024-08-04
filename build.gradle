@@ -84,7 +84,7 @@ android {
         }
         phoneTabletPre22  { manifest { srcFile 'AndroidManifestALLPhoneTabletPre22.xml' } }
         phoneTabletPost23 { manifest { srcFile 'AndroidManifestALLPhoneTablet.xml'      } }
-        wearOs            { manifest { srcFile 'AndroidManifestALLWearOS.xml'           } }
+        //wearOs            { manifest { srcFile 'AndroidManifestALLWearOS.xml'           } }
     }
 
     signingConfigs {
@@ -117,6 +117,7 @@ android {
             versionCode 2315 * 10000 + 526
             versionName "4.54"
         }
+/*
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
@@ -124,10 +125,11 @@ android {
             versionCode 2501 * 10000 + 526
             versionName "4.54"
         }
+*/
     }
     buildTypes {
         release {
-            signingConfig signingConfigs.release // comment out this line if you are just trying a simple build that does need to be signed
+//signingConfig signingConfigs.release // comment out this line if you are just trying a simple build that does need to be signed
             //embedMicroApp true
 
             //minifyEnabled true // somehow this makes the app crash
@@ -152,7 +154,7 @@ android {
             // 'shrinkResources=true' currently only helps for 2%
             shrinkResources true
             //proguardFile 'proguard-project.txt'
-            signingConfig signingConfigs.release
+//signingConfig signingConfigs.release
         }
 */
     }
@@ -194,16 +196,16 @@ dependencies {
     // ChromeCast (new with Custom Receiver)
     phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:21.5.0'
     phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:21.5.0'
-    wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.5.0' // wearOs can not cast but to run it still needs 'Implementation' to not have 'ClassNotFound' exceptions
+    //wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.5.0' // wearOs can not cast but to run it still needs 'Implementation' to not have 'ClassNotFound' exceptions
 
     // allow communication between handheld device and wearable
     phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:18.2.0' // compileOnly is good enough for API < 23
     phoneTabletPost23Implementation   'com.google.android.gms:play-services-wearable:18.2.0'
-    wearOsImplementation              'com.google.android.gms:play-services-wearable:18.2.0'
+    //wearOsImplementation              'com.google.android.gms:play-services-wearable:18.2.0'
 
     phoneTabletPre22CompileOnly       'com.google.android.support:wearable:2.9.0'
     phoneTabletPost23Implementation   'com.google.android.support:wearable:2.9.0'
-    wearOsImplementation              'com.google.android.support:wearable:2.9.0'
+    //wearOsImplementation              'com.google.android.support:wearable:2.9.0'
 
     // Required when using 'com.google.android.support:wearable:2.9.0' for e.g. com/google/android/gms/wearable/CapabilityClient$OnCapabilityChangedListener
     compileOnly       'com.google.android.wearable:wearable:2.9.0' // compileOnly sufficient for devices with API < 23
@@ -229,7 +231,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-iid:21.1.0' // add explicitly since no longer in the BOM, but required by com.pusher:push-notifications-android:1.9.0
 
     // open source library for in-app-purchasing implementation
-    implementation 'com.anjlab.android.iab.v3:library:2.2.0'
+    implementation 'com.anjlab.android.iab.v3:library:2.1.0'
+    //implementation 'com.anjlab.android.iab.v3:library:2.2.0' // somehow gives error/conflict complaining about 6.1.0 in manifest
     //implementation 'com.android.billingclient:billing:6.1.0'
 
     // firebase in combination with pusher
