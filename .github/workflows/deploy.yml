@@ -27,8 +27,8 @@ jobs:
     strategy:
       matrix:
         apkversion:
-          - phoneTabletPre22
           - phoneTabletPost23
+          #- phoneTabletPre22
 
     steps:
 
