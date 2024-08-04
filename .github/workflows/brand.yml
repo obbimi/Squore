@@ -35,6 +35,12 @@ jobs:
     - name: adapt sources and res files to build different brand
       run: ./change.R.package.sh ${{ inputs.brand }}
 
+    - name: Extract the version from build.gradle
+      id: extract_version
+      run: |
+        VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
     - name: Build unsigned release .apk files
       run: ./gradlew build
 
@@ -43,28 +49,23 @@ jobs:
         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       run: |
-        echo "${KEYSTORE_BASE64}" | base64 -d > apksign.keystore
         set -x
+        brand=Squore
+        echo "${KEYSTORE_BASE64}" | base64 -d > apksign.keystore
         androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
         for unsignedFn in build/outputs/apk/*/release/*.apk; do
           unbrandedSignedFn=${unsignedFn/release-unsigned/release-signed}
-          signedFn=${unbrandedSignedFn/Squore/${{ inputs.brand }}}
+          signedFn=${unbrandedSignedFn/${brand}/${{ inputs.brand }}}
           ${androidhome}/build-tools/$(ls ${androidhome}/build-tools/ | tail -1)/apksigner sign --ks apksign.keystore --ks-pass pass:"${KEYSTORE_PASSWORD}" --out "${signedFn}" "${unsignedFn}"
         done
         rm -v apksign.keystore
 
-    - name: Extract the version from build.gradle
-      id: extract_version
-      run: |
-        VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
-
     - name: Create upload .apk to /releases
       uses: ncipollo/release-action@v1
       with:
+        draft: true # Sets the release as a draft instead of publishing it, allowing you to make any edits needed before releasing
         token: ${{ secrets.GH_ACCESS_TOKEN }}
-        tag: "${{ inputs.brand }}.${{ steps.extract_version.outputs.version }}"
+        tag: "Release.${{ steps.extract_version.outputs.version }}"
         artifacts: ./build/outputs/apk/*/release/*-*-release-signed.apk
         generateReleaseNotes: false
-        draft: true # Sets the release as a draft instead of publishing it, allowing you to make any edits needed before releasing
-        make_latest: true
+        #make_latest: true

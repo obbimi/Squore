@@ -26,6 +26,9 @@ jobs:
 
     - name: Checkout the code
       uses: actions/checkout@v4.1.7
+      with:
+        repository: ${{ github.repository }} # =obbimi/Squore , the default
+        #ref: main
 
     - name: Make pipeline script files executable where needed
       run: chmod +x ./gradlew ./build.gradle.adapt.for.github.workflow.sh ./change.R.package.sh
@@ -36,7 +39,10 @@ jobs:
       run: ./build.gradle.adapt.for.github.workflow.sh ${GSM_API_KEY}
 
     - name: adapt sources and res files to build different brand
-      run: ./change.R.package.sh ${{ matrix.brand }}
+      run: | 
+        set -x
+        brand=${{ matrix.brand }}
+        ./change.R.package.sh $brand
 
     - name: Extract the version from build.gradle
       id: extract_version
@@ -59,11 +65,13 @@ jobs:
         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       run: |
+        set -x
+        brand=${{ matrix.brand }}
         echo "${KEYSTORE_BASE64}" | base64 -d > apksign.keystore
         androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
         for unsignedFn in build/outputs/apk/*/release/*.apk; do
           unbrandedSignedFn=${unsignedFn/release-unsigned/release-signed}
-          signedFn=${unbrandedSignedFn/Squore/${{ matrix.brand }}.${{ steps.extract_version.outputs.version }}}
+          signedFn=${unbrandedSignedFn/Squore/${brand}.${{ steps.extract_version.outputs.version }}}
           ${androidhome}/build-tools/$(ls ${androidhome}/build-tools/ | tail -1)/apksigner sign --ks apksign.keystore --ks-pass pass:"${KEYSTORE_PASSWORD}" --out "${signedFn}" "${unsignedFn}"
         done
         rm -v apksign.keystore

@@ -397,15 +397,18 @@ public class Speak
                 } else {
                     if (gsmModel != null) {
                         List<Map<Player, Integer>> gamesWonPerSet = gsmModel.getGamesWonPerSet();
-                        Map<Player, Integer> gamesWonPreviousSet = gamesWonPerSet.get(gamesWonPerSet.size()-2);
-                        Player pWinnerInGames = MapUtil.getMaxKey(gamesWonPreviousSet, Player.A);
-                        int    iGamesWinner   = gamesWonPreviousSet.get(pWinnerInGames);
-                        int    iGamesLoser    = gamesWonPreviousSet.get(pWinnerInGames.getOther());
-                        String sWinner        = model.getName(pWinnerInGames);
-                        int    iSetNr         = gsmModel.getSetNrInProgress() - 1;
-                        String sGameScore     = x_GamesTo_y(iGamesWinner, iGamesLoser, R.string.oa_game, R.string.oa_games, m_context);
-                        String sSetScoreText  = getResourceString(R.string.oa_a_wins_set_b_xGamesToy__TennisPadel, sWinner, iSetNr, sGameScore);
-                        setTextToSpeak(SpeechType.GamesScore, sSetScoreText);
+                        if ( ListUtil.size(gamesWonPerSet) >= 2 ) {
+                            // at least one set has to be finished
+                            Map<Player, Integer> gamesWonPreviousSet = gamesWonPerSet.get(gamesWonPerSet.size() - 2);
+                            Player pWinnerInGames = MapUtil.getMaxKey(gamesWonPreviousSet, Player.A);
+                            int    iGamesWinner   = gamesWonPreviousSet.get(pWinnerInGames);
+                            int    iGamesLoser    = gamesWonPreviousSet.get(pWinnerInGames.getOther());
+                            String sWinner        = model.getName(pWinnerInGames);
+                            int    iSetNr         = gsmModel.getSetNrInProgress() - 1;
+                            String sGameScore     = x_GamesTo_y(iGamesWinner, iGamesLoser, R.string.oa_game, R.string.oa_games, m_context);
+                            String sSetScoreText  = getResourceString(R.string.oa_a_wins_set_b_xGamesToy__TennisPadel, sWinner, iSetNr, sGameScore);
+                            setTextToSpeak(SpeechType.GamesScore, sSetScoreText);
+                        }
 
                         Map<Player, Integer> setsWon = gsmModel.getSetsWon();
                         int iMax = MapUtil.getMaxValue(setsWon);
@@ -576,15 +579,20 @@ public class Speak
         if ( isStarted() == false ) { return; }
         if ( isEnabled() == false ) { return; }
 
-        if ( Brand.isSquash() ) {
-            this.handout(matchModel);
-        }
-        if ( matchModel != null ) {
-            this.score(matchModel);
-            this.gameBall(matchModel);
-        }
+        try {
+            if ( Brand.isSquash() ) {
+                this.handout(matchModel);
+            }
+            if ( matchModel != null ) {
+                this.score(matchModel);
+                this.gameBall(matchModel);
+            }
 
-        emptySpeechQueue(0/*, 0*/);
+            emptySpeechQueue(0/*, 0*/);
+        } catch (Exception e) {
+            Log.e(TAG, "error while trying to speak score", e);
+            throw new RuntimeException(e);
+        }
     }
 
     /** get text from correct locale */
