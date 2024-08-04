@@ -1,0 +1,55 @@
+name: Publish Released APK to Google
+
+on:
+  workflow_dispatch: # run manually
+    inputs:
+      brand:
+        description: 'The brand to deploy: Squore/TennisPadel/Tabletennis/Badminton/Racketlon'
+        default: "Squore"
+        required: true
+        type: string
+      releasePrefix:
+        description: 'The prefix of the release that is published.'
+        default: "Release."
+        required: false
+        type: string
+      version:
+        description: 'The version to deploy: Last 3 digits of versionCode. A release named ${releasePrefix}${version} must exist and publicly accessible for the brand'
+        default: "526"
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Download from releases
+      id: download_apk_extract_info
+      run: |
+        set -x
+        version=${{ inputs.version }}
+        brand=${{ inputs.brand }}
+        fn=${brand}.${version}-phoneTabletPost23-release-signed.apk
+        releasePrefix=${{ inputs.releasePrefix }}
+        # download file
+        wget -O ${fn} https://github.com/obbimi/${brand}/releases/download/${releasePrefix}${version}/${brand}.${version}-phoneTabletPost23-release-signed.apk
+        # extract info from apk
+        PKG=$(aapt d badging ${fn} | grep pack | tr ' ' '\n' | grep name | cut -d "'" -f 2)
+        echo "packageName=$PKG" >> $GITHUB_OUTPUT
+
+    - name: Publish to google play store 1
+      uses: r0adkll/upload-google-play@v1
+      with:
+        serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+        packageName: ${{ steps.download_apk_extract_info.outputs.packageName }}
+        releaseFile: ${{ inputs.brand }}.${{ inputs.version }}-phoneTabletPost23-release-signed.apk
+        track: beta # alpha,beta,internal or production
+        inAppUpdatePriority: 2
+        #status: inProgress #Error: Status 'inProgress' requires a 'userFraction' to be set
+        #userFraction: 0.10 # not possible in alpha
+        #whatsNewDirectory: distribution/whatsnew
+        #mappingFile: app/build/outputs/mapping/release/mapping.txt
+        #debugSymbols: app/intermediates/merged_native_libs/release/out/lib
+        # "Error: The first release on a track cannot be staged"
