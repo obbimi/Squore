@@ -417,7 +417,7 @@ public class Speak
                         if ( iMax == iMin ) {
                             if ( iMax == 1 ) {
                                 sSetScore = getResourceString(R.string.oa_1_set_all__TennisPadel);
-                            } else {
+                            } else if ( iMax > 1 ) {
                                 sSetScore = getResourceString(R.string.oa_x_sets_all__TennisPadel, iMax);
                             }
                         } else {
