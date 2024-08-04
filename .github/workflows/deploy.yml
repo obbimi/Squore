@@ -38,7 +38,7 @@ jobs:
         # extract info from apk
         androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
         aaptPath=$(find ${androidhome}/build-tools -name aapt | sort | tail -1)
-        PKG=$(${aaptPath} d badging ${fn} | grep pack | tr ' ' '\n' | grep name | cut -d "'" -f 2)
+        PKG=$(${aaptPath} d badging ${fn} | grep pack | tr ' ' '\n' | grep -E ^name= | cut -d "'" -f 2)
         echo "packageName=$PKG" >> $GITHUB_OUTPUT
 
     - name: Publish to google play store 1
