@@ -52,9 +52,9 @@ jobs:
           wget --quiet -O ${fn} https://github.com/obbimi/${brand}/releases/download/${releasePrefix}${version}/${fn}
           # extract info from apk
           PKG=$(${aaptPath} d badging ${fn} | grep pack | tr ' ' '\n' | grep -E ^name= | cut -d "'" -f 2)
-          echo "packageName=$PKG" > $GITHUB_OUTPUT
+          echo "packageName=$PKG" >> $GITHUB_OUTPUT
         done
-        echo "filenames=$filenames" | sed 's~,$~~' > $GITHUB_OUTPUT
+        echo "filenames=$filenames" | sed 's~,$~~' >> $GITHUB_OUTPUT
         ls -l *.apk
 
     # https://github.com/r0adkll/upload-google-play
