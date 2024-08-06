@@ -369,6 +369,13 @@ public class Speak
                 if ( gsmModel != null ) {
                     List<Map<Player, Integer>> gamesWonPerSet = gsmModel.getGamesWonPerSet();
                     gamesWonLastSet = ListUtil.getLast(gamesWonPerSet);
+
+                    Player pGameWonBy = gsmModel.getLastScorer();
+                    if ( pGameWonBy != null ) {
+                        String sName = gsmModel.getName(pGameWonBy);
+                        String sGameX = getResourceString(R.string.oa_game_NamePlayerX__TennisPadel, sName);
+                        setTextToSpeak(SpeechType.GameWon, sGameX);
+                    }
                 } else {
                     gamesWonLastSet = model.getGamesWon();
                 }
@@ -528,7 +535,6 @@ public class Speak
 
             if ( model instanceof GSMModel ) {
                 GSMModel gsmModel = (GSMModel) model;
-                // TODO: set ball
                 Player[] possibleSetBallFor = gsmModel.isPossibleSetVictoryFor();
                 Boolean bIsSetBall = (possibleSetBallFor != null) && (possibleSetBallFor.length != 0);
                 if ( bIsSetBall ) {
@@ -613,19 +619,6 @@ public class Speak
     //------------------------------
 
     /** text fragments will be announced in this sequence they are defined in this enumeration */
-    private enum SpeechType {
-      //Call,
-      //StartAnnouncement,
-        Handout,
-        GamesScore,
-        GSMSetScore,
-        ScoreServer,
-        ScoreReceiver,
-        Gameball,
-      //EndAnnouncement,
-        TimerRelated,
-        Other,
-    }
     private String[] m_sText = new String[SpeechType.values().length];
     private void setTextToSpeak(SpeechType type, Object oText) {
         if ( oText == null ) { return; }

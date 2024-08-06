@@ -26,12 +26,12 @@
     <string name="pref_StartTieBreakOneGameEarly">Start Tiebreak One Game Early</string>
     <string name="pref_StartTieBreakOneGameEarly_CheckUncheckMsg">Tie break will start at %1$d-%1$d</string>
     <string-array name="finalSetFinishDisplayValues"> <!-- keep in sync with com.doubleyellow.scoreboard.model.FinalSetFinish -->
-        <item>TieBreak To 7</item>
-        <item>TieBreak To 10</item>
-        <item>No Games - TieBreak To 7</item>
-        <item>No Games - TieBreak To 10</item>
-        <item>Games To 12 - Then TieBreak To 7</item>
-        <item>Games To 12 - Then TieBreak To 10</item>
+        <item>Games as normal - TieBreak To 7</item>
+        <item>Games as normal - TieBreak To 10</item>
+        <item>No Games - Match TieBreak To 7</item>
+        <item>No Games - Match TieBreak To 10</item>
+        <item>Games To 12 - If equal, TieBreak To 7</item>
+        <item>Games To 12 - If equal, TieBreak To 10</item>
         <item>No Tie-Break</item>
     </string-array>
 

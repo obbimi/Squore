@@ -13,6 +13,7 @@
     <string name="sb_receive">Receive</string>
     <string name="oa_love_all">Love-all</string>
 
+    <string name="oa_game_NamePlayerX__TennisPadel">Game %s</string> <!-- spoken text -->
     <string name="oa_game_to_x">Game to %s</string>
     <string name="oa_match_to_x">Match to %s</string>
     <string name="oa_1_game_all">One game all</string>

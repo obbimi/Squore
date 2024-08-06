@@ -13,6 +13,7 @@
     <string name="sb_receive">Rückschläger</string>
     <string name="oa_love_all">Null Beide</string>
 
+    <string name="oa_game_NamePlayerX__TennisPadel">Spiel %s</string>
     <string name="oa_game_to_x">Satz an %s</string>
     <string name="oa_match_to_x">Spiel an %s</string>
     <string name="oa_1_game_all">Ein Satz beide</string>

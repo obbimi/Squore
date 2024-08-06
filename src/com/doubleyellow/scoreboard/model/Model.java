@@ -1215,7 +1215,16 @@ public abstract class Model implements Serializable
     }
 
     public ScoreLine getLastScoreLine() {
-        return ListUtil.getLast(getGameScoreHistory());
+        List<ScoreLine> gameScoreHistory = getGameScoreHistory();
+        if ( ListUtil.isEmpty(gameScoreHistory) ) {
+            // introduced for GSM Speak
+            int iTail = ListUtil.size(m_lGamesScorelineHistory);
+            while(iTail > 0 && ListUtil.isEmpty(gameScoreHistory) ) {
+                iTail--;
+                gameScoreHistory = m_lGamesScorelineHistory.get(iTail);
+            }
+        }
+        return ListUtil.getLast(gameScoreHistory);
     }
 
     public ScoreLine getLastCall() {

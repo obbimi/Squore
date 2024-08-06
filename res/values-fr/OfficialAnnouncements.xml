@@ -11,6 +11,7 @@
     <string name="oa_x_to_serve__y_to_receive">%1$s au service, %2$s à la réception</string>
     <string name="oa_love_all">0–0</string>
 
+    <string name="oa_game_NamePlayerX__TennisPadel">Jeu %s</string>
     <string name="oa_game_to_x">Jeu %s</string>
     <string name="oa_match_to_x">Match %s</string>
     <string name="oa_1_game_all">Un jeu partout</string>

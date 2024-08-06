@@ -13,6 +13,7 @@
     <string name="sb_receive">Risposta</string>
     <string name="oa_love_all">Zero a zero</string>
 
+    <string name="oa_game_NamePlayerX__TennisPadel">Gioco %s</string>
     <string name="oa_game_to_x">Gioco a %s</string>
     <string name="oa_match_to_x">Incontro a %s</string>
     <string name="oa_1_game_all">Un gioco pari</string>
