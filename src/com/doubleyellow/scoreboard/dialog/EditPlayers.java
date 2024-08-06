@@ -54,7 +54,7 @@ import java.util.*;
 /**
  * Allow changing event, players, referees info of a match.
  *
- * @deprecated We will be editing a match with the MatchView in a Match activity
+ * @Deprecated We will be editing a match with the MatchView in a Match activity
  */
 public class EditPlayers extends BaseAlertDialog
 {

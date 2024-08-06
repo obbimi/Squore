@@ -37,7 +37,7 @@ import java.util.*;
  * - have more flexible touch event handling (touchBothListener)
  * - allow drawing arrows for educational/demo purposes
  *
- * @deprecated
+ * @Deprecated
  */
 public class SBRelativeLayout extends PercentRelativeLayout /* deprecated in 26.1.0, TODO: migrate to SBConstraintLayout */  implements DrawArrows {
 

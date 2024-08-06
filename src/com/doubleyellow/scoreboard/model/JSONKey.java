@@ -49,7 +49,7 @@ public enum JSONKey {
 		// tabletennis specific key
 		nrOfServersPerPlayer,
     	handicapFormat,
-		/** @deprecated  */
+		/** @Deprecated  */
 		nrOfGamesToWinMatch,
     	// squash specific keys
 		useHandInHandOutScoring,

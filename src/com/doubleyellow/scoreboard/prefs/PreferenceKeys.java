@@ -27,7 +27,7 @@ public enum PreferenceKeys {
     Behaviour,
         continueRecentMatch,
         endGameSuggestion,
-        /* @deprecated */
+        /* @Deprecated */
         OrientationPreference,
             LandscapeLayoutPreference,
         showActionBar,
@@ -42,7 +42,7 @@ public enum PreferenceKeys {
         NewMatchesType,
             maxNumberOfPlayersInGroup,
         showTips,
-        /** @deprecated */
+        /** @Deprecated */
         lockMatch,
         lockMatchMV,
             numberOfMinutesAfterWhichToLockMatch,
@@ -52,7 +52,7 @@ public enum PreferenceKeys {
         hideFieldDivisionWhenGameInProgress,
 
         changeSides,
-            /** @deprecated boolean */
+            /** @Deprecated boolean */
             swapPlayersBetweenGames,
             swapPlayersHalfwayGame,
             changeSidesWhen_GSM,
@@ -263,7 +263,7 @@ public enum PreferenceKeys {
         colorSchema,
         /** grouping **/
         backgroundColors,
-        /* @deprecated */
+        /* @Deprecated */
         //textColorDynamically,
         textColorDetermination,
         textColors,

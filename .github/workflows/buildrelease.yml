@@ -37,7 +37,7 @@ jobs:
         brand=$(echo "${{ github.repository }}" | cut -d '/' -f 2)
         ./change.R.package.sh ${brand}
         # Extract the version from build.gradle
-        VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
+        VERSION=$(grep 'def\s*versionCodeXXX' build.gradle | cut -d '=' -f 2 | tr -d ' ')
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
     - name: Build unsigned release .apk files

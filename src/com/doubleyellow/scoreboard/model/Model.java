@@ -807,7 +807,7 @@ public abstract class Model implements Serializable
     }
 
     private String m_sResultFast = null;
-    /** @deprecated */
+    /** @Deprecated */
     public void setResult(String s) {
         m_sResultFast = s;
     }
@@ -4496,7 +4496,7 @@ public abstract class Model implements Serializable
         return getNoneOfPlayers();
     }
 
-    /** @deprecated Use isPossibleMatchBallFor_SQ_TT_BM() in stead */
+    /** @Deprecated Use isPossibleMatchBallFor_SQ_TT_BM() in stead */
     private Player isPossibleMatchVictoryFor_SQ_TT(boolean bCheckTotalPointsIfGamesAreEqual)
     {
         Map<Player, Integer> gameCount = getGamesWon(); // getGameCount()

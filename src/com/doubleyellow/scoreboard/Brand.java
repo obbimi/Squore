@@ -100,7 +100,7 @@ public enum Brand
     private UUID uuid;
 
     public SportType getSportType()         { return eSport; }
-    /* @deprecated */
+    /* @Deprecated */
     //public int getRemoteDisplayAppIdResId() { return iRemoteDisplayAppIdResId;}
 
     public static boolean m_bHasWearable = false;

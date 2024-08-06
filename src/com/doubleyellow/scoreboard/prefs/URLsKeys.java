@@ -49,7 +49,7 @@ public enum URLsKeys {
         expandGroup,
         Placeholder_Match,
         Placeholder_Player,
-        /** @deprecated */
+        /** @Deprecated */
         Format_TeamPlayer,
         TextSizePercentage,
         Placeholder_TeamPlayer,

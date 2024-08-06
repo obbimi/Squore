@@ -31,7 +31,7 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 
 import java.util.Arrays;
-/** @deprecated */
+/** @Deprecated */
 public class MySplashScreen extends XActivity
 {
     private final Class<? extends ScoreBoard> cls = ScoreBoard.class;

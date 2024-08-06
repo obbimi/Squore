@@ -30,14 +30,16 @@ if [[ -n "$1" ]]; then
     versionCodeFromCommandLine=$1
     echo "Changing build.gradle to use versioncode $versionCodeFromCommandLine"
     #grep versionCode build.gradle | sed -i "s/10000 + [0-9][0-9][0-9]/10000 + ${versionCodeFromCommandLine}/"
-    sed -i "s/10000 + [0-9][0-9]*/10000 + ${versionCodeFromCommandLine}/" build.gradle
+    #sed -i "s/10000 + [0-9][0-9]*/10000 + ${versionCodeFromCommandLine}/" build.gradle
+    sed -i "s/versionCodeXXX = [0-9][0-9]*/versionCodeXXX = ${versionCodeFromCommandLine}/" build.gradle
 fi
 
 brand=$(grep -E 'Brand\s+brand\s*=\s*Brand\.' src/com/doubleyellow/scoreboard/Brand.java | perl -ne 's~.*Brand\.(\w+);.*~$1~; print')
 echo "Manifest file : ${mffile}"
 echo "Package       : ${pkg}"
 echo "Brand         : ${brand}"
-hasNewVersionCode=$(git diff build.gradle | grep -E '^\+' | grep versionCode | sed 's~.*0000\s*+\s*~~' | sort | tail -1) # holds only the last 3 digits
+#hasNewVersionCode=$(git diff build.gradle | grep -E '^\+' | grep versionCode | sed 's~.*0000\s*+\s*~~' | sort | tail -1) # holds only the last 3 digits
+hasNewVersionCode=$(git diff build.gradle | grep 'versionCodeXXX =' | sed 's~def versionCodeXXX = ~~' | sed 's~+\s*~~' | head -1) # holds only the last 3 digits
 echo "hasNewVersionCode: $hasNewVersionCode"
 BU_DIR=/osshare/code/gitlab/double-yellow.be/app
 if [[ ! -e ${BU_DIR} ]]; then

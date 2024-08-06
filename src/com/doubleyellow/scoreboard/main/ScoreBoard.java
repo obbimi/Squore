@@ -801,7 +801,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         return false;
     }
 
-    /** @deprecated */
+    /** @Deprecated */
     private void _confirmChangeSides(Player leader) {
         ChangeSides changeSides = new ChangeSides(this, matchModel, this);
         changeSides.init(leader);
@@ -2556,7 +2556,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             doRestart(this);
         }
     }
-    /** @deprecated */
+    /** @Deprecated */
     private void doRestart(Context c) {
         if (c == null) return;
         // fetch the package-manager so we can get the default launch activity
@@ -4941,7 +4941,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         EndOfMatch,
         TieBreakDecisionRequired,
         TieBreak,
-        /** @deprecated */
+        /** @Deprecated */
         Manual,
     }
     private void _showOfficialAnnouncement(AnnouncementTrigger trigger, boolean bManuallyRequested) {

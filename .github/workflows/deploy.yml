@@ -63,7 +63,6 @@ jobs:
       with:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         packageName: ${{ steps.download_apk_extract_info.outputs.packageName }}
-        #releaseFiles: ${{ inputs.brand }}.${{ inputs.version }}-phoneTabletPost23-release-signed.apk,${{ inputs.brand }}.${{ inputs.version }}-phoneTabletPre22-release-signed.apk
         releaseFiles: ${{ steps.download_apk_extract_info.outputs.filenames }}
         track: beta # alpha,beta,internal or production
         releaseName: ${{ inputs.version }} # if not specified typically derived from versionCode/versionName

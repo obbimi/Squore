@@ -93,7 +93,7 @@ import java.util.Map;
  *
  * https://developers.google.com/android/guides/setup#ensure_devices_have_the_google_play_services_apk
  *
- * @deprecated
+ * @Deprecated
  */
 public class CastHelper implements ICastHelper
 {
