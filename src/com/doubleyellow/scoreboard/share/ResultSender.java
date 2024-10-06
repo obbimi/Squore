@@ -349,8 +349,8 @@ public class ResultSender {
         Map<String, String> mMatchDivisions       = new HashMap<>();
         StringBuilder       sbMatchLinks          = new StringBuilder();
         StringBuilder sb = new StringBuilder();
-        for(File fS: lSelected) {
-            if ( fS == null  || fS.exists() == false ) {
+        for (File fS : lSelected) {
+            if (fS == null || fS.exists() == false) {
                 continue;
             }
             Model m = ModelFactory.getTemp("Parsing persisted JSON files");
@@ -364,7 +364,7 @@ public class ResultSender {
             sb.append("\n");
             sb.append("\n");
 
-            Player winner      = m.isPossibleMatchVictoryFor();
+            Player winner = m.isPossibleMatchVictoryFor();
             if ( winner != null ) {
                 String sClubWinner = m.getClub(winner);
                        sClubWinner = clubCorrections.getOptionalString(fS.getName() + "__" + winner, sClubWinner);
@@ -375,17 +375,17 @@ public class ResultSender {
                     MapUtil.increaseCounter(mClub2MatchesWon, sClubLoser, 0);
                 }
             }
-            Map<Player, Integer> gamesWon  = m.getGamesWon();
+            Map<Player, Integer> gamesWon = m.getGamesWon();
             List<Map<Player, Integer>> gameScores = m.getGameScoresIncludingInProgress();
-            for(Player p: Player.values() ) {
+            for (Player p : Player.values()) {
                 String sClub = m.getClub(p);
-                       sClub  = clubCorrections.getOptionalString(fS.getName() + "__" + p, sClub);
-                if ( StringUtil.isNotEmpty(sClub) ) {
-                    if ( lClubs.contains(sClub) == false ) {
+                sClub = clubCorrections.getOptionalString(fS.getName() + "__" + p, sClub);
+                if (StringUtil.isNotEmpty(sClub)) {
+                    if (lClubs.contains(sClub) == false) {
                         lClubs.add(sClub);
                     }
                     MapUtil.increaseCounter(mClub2GamesWon, sClub, gamesWon.get(p));
-                    for(Map<Player, Integer> mGameScore: gameScores) {
+                    for (Map<Player, Integer> mGameScore : gameScores) {
                         MapUtil.increaseCounter(mClub2PointsWon, sClub, mGameScore.get(p));
                     }
                 }
@@ -425,7 +425,7 @@ public class ResultSender {
                        sG = StringUtil.capitalize( PreferenceValues.getOAString(context, R.string.oa_games  ) );
                        sP = StringUtil.capitalize( PreferenceValues.getOAString(context, R.string.points    ) );
 
-                sbClubResult.                       append(ListUtil.join(lClubs, " vs "));
+                sbClubResult.append(ListUtil.join(lClubs, " vs "));
                 sbClubResult.append("\n").append(sM).append(": ").append(joinPoints(lClubs, mClub2MatchesWon));
                 sbClubResult.append("\n").append(sG).append(": ").append(joinPoints(lClubs, mClub2GamesWon));
                 sbClubResult.append("\n").append(sP).append(": ").append(joinPoints(lClubs, mClub2PointsWon));
@@ -453,20 +453,19 @@ public class ResultSender {
             // but if the dates are just one day apart, take the first date (most likely one match started after midnight)
             Iterator<String> iterator = mMatchDates.keySet().iterator();
             String     sYYYYMMDD1 = iterator.next();
-            Date       date1      = DateUtil.parseString2Date(sYYYYMMDD1, DateUtil.YYYYMMDD);
+            Date       date1      = DateUtil.parseString2Date(sYYYYMMDD1, DateUtil.YYYY_MM_DD);
             String     sYYYYMMDD2 = iterator.next();
-            Date       date2      = DateUtil.parseString2Date(sYYYYMMDD2, DateUtil.YYYYMMDD);
+            Date       date2      = DateUtil.parseString2Date(sYYYYMMDD2, DateUtil.YYYY_MM_DD);
             if ( (date1 != null) && (date2 != null) ) {
                 int iDaysDiff = DateUtil.convertToDays(date1.getTime() - date2.getTime());
                 if ( Math.abs(iDaysDiff) == 1 ) {
-                    mMatchDates.remove(iDaysDiff<0 ? sYYYYMMDD1 : sYYYYMMDD2);
+                    mMatchDates.remove(iDaysDiff < 0 ? sYYYYMMDD1 : sYYYYMMDD2);
                     Log.d(TAG, "== mMatchDates Corrected : \n" + MapUtil.toNiceString(mMatchDates));
                 }
             }
-        }
-        if ( MapUtil.size(mMatchDates) == 1 ) {
+        } else if ( MapUtil.size(mMatchDates) == 1 ) {
             String     sYYYYMMDD = mMatchDates.keySet().iterator().next();
-            Date       date      = DateUtil.parseString2Date(sYYYYMMDD, DateUtil.YYYYMMDD);
+            Date       date      = DateUtil.parseString2Date(sYYYYMMDD, DateUtil.YYYY_MM_DD);
             DateFormat sdf       = android.text.format.DateFormat.getDateFormat(context);
             sbCommonData.append(PreferenceValues.getOAString(context, R.string.date)).append(": ");
             if ( (sdf != null) && (date != null) ) {

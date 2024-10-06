@@ -278,7 +278,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
             showProgress(R.string.loading_of_x, sName, sURL);
             URLFeedTask task = new URLFeedTask(FeedFeedSelector.this, sURL);
             task.setContentReceiver(new ContentReceiver() {
-                @Override public void receive(String sJson, FetchResult fetchResult, long lCacheAge, String sLastSuccessfulContent) {
+                @Override public void receive(String sJson, FetchResult fetchResult, long lCacheAge, String sLastSuccessfulContent, String sUrl) {
                     try {
                         Log.d(TAG, "Fetchresult :" + fetchResult + " (" + aUrls.length() + ")" );
                         if ( fetchResult.equals(FetchResult.OK) == false ) {

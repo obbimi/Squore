@@ -27,6 +27,7 @@ import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.dialog.OnlineSheetAvailableChoice;
 import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.model.LockState;
@@ -72,7 +73,7 @@ public class MatchModelPoster implements ContentReceiver
         sShowURL = matchModel.getShareURL();
         if ( StringUtil.isNotEmpty(sShowURL) ) {
             // shared before and unchanged
-            presentChoice(sShowURL);
+            presentChoiceOrToast(sShowURL, m_bFromMenu);
         } else {
 
             if ( (m_bAutoShareTriggeredForliveScore == false) || m_bFromMenu ) {
@@ -105,7 +106,24 @@ public class MatchModelPoster implements ContentReceiver
             sName = DateUtil.formatDate2String(date, DateUtil.YYYYMMDD_HHMM) + "_" + sPlayerNamesAscii;
             sName = sName.replaceAll("[^a-zA-Z0-9_]", "");
 
-            final String sURL = Brand.getBaseURL() + "/store/" + sName;
+            String sJson = matchModel.toJsonString(context, oSettings, oTimerInfo);
+
+            // post to server hardcoded affiliated with the app
+            final String baseURL = Brand.getBaseURL();
+            if ( bFromMenu == false ) {
+                // typically for livescore
+                String sThirdPartyUrl = PreferenceValues.getPostLiveScoreToURL(context);
+                if ( sThirdPartyUrl != null && sThirdPartyUrl.startsWith(baseURL) == false ) {
+                    // post details to third party site for 'their' livescore system. e.g https://keepthescore.com/docs/streaming-software/
+
+                    sThirdPartyUrl = URLFeedTask.prefixWithBaseIfRequired(sThirdPartyUrl); // only for own demo feed: in that case it probably is a relative URL
+
+                    PostTask postTask = new PostTask(context, sThirdPartyUrl);
+                    postTask.setContentReceiver(this);
+                    postTask.execute(URLTask.__BODY__, sJson);
+                }
+            }
+            final String sURL = baseURL + "/store/" + sName;
 
             PostTask postTask = new PostTask(context, sURL);
             postTask.setContentReceiver(this);
@@ -114,14 +132,13 @@ public class MatchModelPoster implements ContentReceiver
             if ( matchModel.matchHasEnded() ) {
                 matchModel.setLockState(LockState.SharedEndedMatch);
             }
-            String sJson = matchModel.toJsonString(context, oSettings, oTimerInfo);
             postTask.execute(URLTask.__BODY__, sJson);
             matchModel.setLockState(lsRestore);
         }
     }
 
     private String sShowURL = null;
-    @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent) {
+    @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent, String sPostUrl) {
         Log.i(TAG, result + " Content : " + sContent);
 
         if ( result.equals(FetchResult.OK) ) {
@@ -135,10 +152,13 @@ public class MatchModelPoster implements ContentReceiver
                 // server might have returned another name, use that one to ensure you have the one actually used on the server
                 this.sName = mReturnValues.getOptionalString(NAME, this.sName);
             }
-            sShowURL = Brand.getBaseURL() + "/" + this.sName;
-            m_model.setShareURL(sShowURL);
-            Log.i(TAG, "Match shared. " + sShowURL);
-            presentChoice(sShowURL);
+            final String brandBaseURL = Brand.getBaseURL();
+            if ( sPostUrl != null && sPostUrl.startsWith(brandBaseURL) ) {
+                sShowURL = brandBaseURL + "/" + this.sName;
+                m_model.setShareURL(sShowURL);
+                Log.i(TAG, "Match shared. " + sShowURL);
+            }
+            presentChoiceOrToast(sShowURL, m_bFromMenu);
         } else {
             if ( (m_bAutoShareTriggeredForliveScore == false) || m_bFromMenu ) {
                 String sTitle = "Sharing failed";
@@ -161,9 +181,9 @@ public class MatchModelPoster implements ContentReceiver
         hideProgress();
     }
 
-    private void presentChoice(String sShowURL) {
+    private void presentChoiceOrToast(String sShowURL, boolean bFromMenu) {
         Log.d(TAG, "Presenting choice...");
-        if ( m_bFromMenu == false ) {
+        if ( bFromMenu == false ) {
             // presume auto triggered
             if ( m_bAutoShareTriggeredForliveScore ) {
                 // only show Toast once in a while

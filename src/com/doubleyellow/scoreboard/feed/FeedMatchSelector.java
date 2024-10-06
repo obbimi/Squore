@@ -135,20 +135,22 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             while ( itPrefKeys.hasNext() ) {
                 String sPref  = itPrefKeys.next();
                 String sValue = m_joFeedConfig.getString(sPref);
+                if ( sPref.startsWith("__") ) { continue; }
                 try {
                     PreferenceKeys key = PreferenceKeys.valueOf(sPref);
                     mFeedPrefOverwrites.put(key, sValue);
                 } catch (Exception e) {
-                    URLsKeys key = URLsKeys.PostResult;
-                    if ( sPref.equals( key.toString() ) ) {
-                        Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
-                        String sCurrent = feedPostDetail.get(key);
-                        if ( sValue.equals(sCurrent) == false ) {
-                            feedPostDetail.put(key, sValue);
-                            PreferenceValues.addOrReplaceNewFeedURL(context, feedPostDetail, true, true);
+                    // in stead of a PreferenceKeys it can also be a subset of URLsKeys
+                    URLsKeys[] keys = new URLsKeys[] { URLsKeys.PostResult, URLsKeys.LiveScoreUrl };
+                    for(URLsKeys key: keys) {
+                        if ( sPref.equals( key.toString() ) ) {
+                            Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
+                            String sCurrent = feedPostDetail.get(key);
+                            if ( sValue.equals(sCurrent) == false ) {
+                                feedPostDetail.put(key, sValue);
+                                PreferenceValues.addOrReplaceNewFeedURL(context, feedPostDetail, true, true);
+                            }
                         }
-                    } else {
-                        //e.printStackTrace();
                     }
                 }
             }
@@ -855,7 +857,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
             this.notifyDataSetChanged();
             if ( StringUtil.isEmpty(m_sLastFetchedURL) ) {
-                this.receive(null, FetchResult.UnexpectedContent, 0, null);
+                this.receive(null, FetchResult.UnexpectedContent, 0, null, null);
                 return;
             }
 
@@ -884,7 +886,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
         }
 
-        @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent)
+        @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent, String sUrl)
         {
             Log.i(TAG, String.format("Fetched (from cache %s) %s", lCacheAge, result));
             if ( m_task != null ) {

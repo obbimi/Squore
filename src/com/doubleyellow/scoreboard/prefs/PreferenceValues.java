@@ -1630,6 +1630,9 @@ public class PreferenceValues extends RWValues
     public static String getPostResultToURL(Context context) {
         return getFeedPostDetail(context, URLsKeys.PostResult);
     }
+    public static String getPostLiveScoreToURL(Context context) {
+        return getFeedPostDetail(context, URLsKeys.LiveScoreUrl);
+    }
     private static PostDataPreference getPostDataPreference(Context context) {
         return getEnum(PreferenceKeys.postDataPreference, context, PostDataPreference.class, PostDataPreference.Basic);
     }
@@ -1695,7 +1698,7 @@ public class PreferenceValues extends RWValues
 */
     }
 
-    public static void addOrReplaceNewFeedURL(Context context, String sName, String sFeedMatches, String sFeedPlayers, String sPostURL, boolean bAllowReplace, boolean bMakeActive) {
+    public static void addOrReplaceNewFeedURL(Context context, String sName, String sFeedMatches, String sFeedPlayers, String sPostURL, String sLiveScoreURL, boolean bAllowReplace, boolean bMakeActive) {
         Map<URLsKeys, String> newEntry = new HashMap<URLsKeys, String>();
         newEntry.put(URLsKeys.Name, sName);
         newEntry.put(URLsKeys.FeedMatches, sFeedMatches);
@@ -1705,13 +1708,16 @@ public class PreferenceValues extends RWValues
         if ( StringUtil.isNotEmpty(sPostURL)) {
             newEntry.put(URLsKeys.PostResult, sPostURL);
         }
+        if ( StringUtil.isNotEmpty(sLiveScoreURL)) {
+            newEntry.put(URLsKeys.LiveScoreUrl, sLiveScoreURL);
+        }
         addOrReplaceNewFeedURL(context, newEntry, bAllowReplace, bMakeActive);
     }
     public static void addOrReplaceNewFeedURL(Context context, Map<URLsKeys, String> newEntry, boolean bAllowReplace, boolean bMakeActive) {
         String sCurrentURLs = getString(PreferenceKeys.feedPostUrls, "", context);
         List<Map<URLsKeys, String>> urlsList = getUrlsList(sCurrentURLs, context);
         if ( urlsList == null ) {
-            urlsList = new ArrayList<Map<URLsKeys, String>>();
+            urlsList = new ArrayList<>();
         }
 
         int iNewActiveFeedIndex = 0;
@@ -1895,13 +1901,13 @@ public class PreferenceValues extends RWValues
         // TODO: trigger this code e.g. weekly somehow
         for ( int i=1; i<=3; i++ ) {
             if ( Brand.isSquash() ) {
-                PreferenceValues.addOrReplaceNewFeedURL(context, "Demo PSA Matches " + i, "feed/psa.php?nr=" + i, null, null, false, bMakeActive);
+                PreferenceValues.addOrReplaceNewFeedURL(context, "Demo PSA Matches " + i, "feed/psa.php?nr=" + i, null, null, null, false, bMakeActive);
             }
             if ( Brand.isRacketlon() ) {
-                PreferenceValues.addOrReplaceNewFeedURL(context, "FIR Tournament " + i  , "feed/fir.tournamentsoftware.php?nr=" + i, "feed/fir.tournamentsoftware.php?pm=players&nr=" + i, null, false, bMakeActive);
+                PreferenceValues.addOrReplaceNewFeedURL(context, "FIR Tournament " + i  , "feed/fir.tournamentsoftware.php?nr=" + i, "feed/fir.tournamentsoftware.php?pm=players&nr=" + i, null, null, false, bMakeActive);
             }
             // Squash, racketlon and Table Tennis. URL itself knows what sport based on subdomain
-            PreferenceValues.addOrReplaceNewFeedURL(context, "TS " + Brand.getSport() + " " + i, "feed/tournamentsoftware.php?nr=" + i, "feed/tournamentsoftware.php?pm=players&nr=" + i, null, false, bMakeActive);
+            PreferenceValues.addOrReplaceNewFeedURL(context, "TS " + Brand.getSport() + " " + i, "feed/tournamentsoftware.php?nr=" + i, "feed/tournamentsoftware.php?pm=players&nr=" + i, null, null, false, bMakeActive);
         }
     }
 

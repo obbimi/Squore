@@ -136,7 +136,7 @@ public class PlayerTextView extends AppCompatAutoCompleteTextView implements Con
         Log.i(TAG, String.format("Initializing %s adapter for %s took %s ms", (StringUtil.isNotEmpty(playersFeedURL)?"Feed":"Contacts"), this.getId(), (iFinish - iStart)));
     }
 
-    @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent) {
+    @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent, String sUrl) {
         List<String> playerList = PreferenceValues.getPlayerListAndContacts(getContext());
         if ( (sContent == null) || (result.equals(FetchResult.OK) == false)) {
             // invalid feed url?

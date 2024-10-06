@@ -5442,7 +5442,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
         }
         JSONObject oSettings = null;
-        MatchModelPoster matchModelPoster = new MatchModelPoster();
         m_bShareStarted_DemoThread = true;
         if ( possibleMatchVictoryFor != null ) {
             // only create settings if match is finished... ensure in between updates are just a little smaller/faster
@@ -5488,6 +5487,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             Log.w(TAG, "Posting match without timer info");
         }
 
+        MatchModelPoster matchModelPoster = new MatchModelPoster();
         matchModelPoster.post(context, matchModel, oSettings, oTimerInfo, bFromMenu);
     }
 
@@ -5674,7 +5674,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         PreferenceValues.setEnum(PreferenceKeys.MatchTabbed_defaultTab, this, MatchTabbed.SelectTab.Manual);
 
-        PreferenceValues.addOrReplaceNewFeedURL(this, "Invalid", "http://invalid.url.for.matches", "http://invalid.url.for.players", "http://invalid.url.for.posting.results", false, false);
+        PreferenceValues.addOrReplaceNewFeedURL(this, "Invalid", "http://invalid.url.for.matches", "http://invalid.url.for.players", "http://invalid.url.for.posting.results", "http://invalid.url.for.livescore", false, false);
     }
 
     // ------------------------------------------------------
@@ -5975,7 +5975,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                                      , Brand.getBaseURL() + "/tournamentsoftware/$1");
                     Log.i(TAG, String.format("Feed URL : %s", sFeedURL));
                     PreferenceValues.addOrReplaceNewFeedURL(this, "tournamentsoftware url", sFeedURL + "/matches"
-                                                                                          , sFeedURL + "/players", null, true, true);
+                                                                                          , sFeedURL + "/players", null, null, true, true);
                     handleMenuItem(R.id.sb_select_feed_match);
                 }
             }
@@ -5987,7 +5987,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         private OnResumeWithUrlContentReceiver(String sUrl) {
             this.sURL = sUrl;
         }
-        @Override public void receive(String sContent, FetchResult fetchResult, long lCacheAge, String sPreviousContent) {
+        @Override public void receive(String sContent, FetchResult fetchResult, long lCacheAge, String sPreviousContent, String sUrl) {
             ScoreBoard context = ScoreBoard.this;
             try {
                 if (fetchResult.equals(FetchResult.OK)) {

@@ -27,6 +27,8 @@ public enum URLsKeys {
     FeedMatches,
     /** an URL where match result should be posted to */
     PostResult,
+    /** an URL where intermediate match result should be posted to allowing for implementing e.g. livesore pages */
+    LiveScoreUrl,
     /**
      * Should contain a value of enum PostDataPreference
      */

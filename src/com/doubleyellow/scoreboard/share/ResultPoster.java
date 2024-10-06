@@ -212,7 +212,7 @@ public class ResultPoster implements ContentReceiver
         this.scoreBoard = scoreBoard;
     }
 
-    @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent) {
+    @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent, String sUrl) {
         Log.d(TAG, "Content : " + sContent);
 
         if ( StringUtil.isEmpty(sContent) ) {

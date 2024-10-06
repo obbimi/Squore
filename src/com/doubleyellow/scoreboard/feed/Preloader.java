@@ -182,7 +182,7 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
 
     private static final String SHARED_SECRET = "YourSquore1h03v3";
     // echo -n 'YourSquore1h03v320210208-2330' | md5sum
-    @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent) {
+    @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent, String sUrl) {
         setFetching(false);
         Log.d(TAG, "Fetching done for " + m_status + " (result:" + result + ")");
         switch (result) {

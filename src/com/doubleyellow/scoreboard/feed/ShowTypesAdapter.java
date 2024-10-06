@@ -58,7 +58,7 @@ import java.util.Locale;
 import java.util.concurrent.Executors;
 
 /**
- * Adapter used to show all categories of feeds (TournamentSoftware, SportyHQ, RankedIn).
+ * Adapter used to show all categories of feeds (TournamentSoftware, RankedIn, Leaguemaster, DSQV, SportyHQ).
  *
  * Used by {@link FeedFeedSelector}
  */
@@ -230,7 +230,7 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
         sURL = URLFeedTask.prefixWithBaseIfRequired(sURL);
 
         if ( StringUtil.isEmpty(sURL) ) {
-            this.receive(null, FetchResult.UnexpectedContent, 0, null);
+            this.receive(null, FetchResult.UnexpectedContent, 0, null, sURL);
             return;
         }
 
@@ -249,7 +249,7 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
         }
     }
 
-    @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent)
+    @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent, String sUrlOfResult)
     {
         Log.i(TAG, String.format("Fetched (cache age %d, new size %d cached size %d)", lCacheAge, StringUtil.size(sContent), StringUtil.size(sLastSuccessfulContent)));
 
