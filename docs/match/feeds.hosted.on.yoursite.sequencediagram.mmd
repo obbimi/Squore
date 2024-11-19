@@ -4,7 +4,7 @@ participant App
 participant AppServer
 participant YourSite
 link AppServer: Feed Types    @ https://squore.double-yellow.be/feed/feeds.php
-link AppServer: Documentation @ https://squore.double-yellow.be/2023-02-03.Integrate-Squore-with-your-website.odt
+link AppServer: Documentation @ https://squore.double-yellow.be/feed/2023-11-10.Integrate-Squore-with-your-website.odt
 link YourSite: Feeds           @ https://yoursite/feeds
 link YourSite: Premier Matches @ https://yoursite/feed/premier/matches
 link YourSite: Second Matches  @ https://yoursite/feed/second/matches
@@ -38,7 +38,7 @@ User      ->>+App  : Select "Second"
 Note left of App: "Second" now becomes the 'Active' feed
 App       ->>-YourSite : Fetch Matches from URL specified with 'FeedMatches'
 activate YourSite
-Note left of YourSite: e.g. https://yoursite/feed/seond/matches
+Note left of YourSite: e.g. https://yoursite/feed/second/matches
 YourSite  ->>+App  : JSON with all matches in feed "Second"
 deactivate YourSite
 Note left of YourSite: to receive the match result include:<br>{ config: { shareAction: PostResult<br>, PostResult: https://yoursite/receivematchresult }}
