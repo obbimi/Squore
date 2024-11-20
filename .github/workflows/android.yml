@@ -58,7 +58,7 @@ jobs:
     - name: Extract the version from build.gradle
       id: extract_version
       run: |
-        VERSION=$(grep '^\s*versionCode' build.gradle | cut -d '+' -f 2 | sort -u | tr -d ' ')
+        VERSION=$(grep 'def\s*versionCodeXXX' build.gradle | cut -d '=' -f 2 | tr -d ' ')
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
     - name: Upload artifact for phone
