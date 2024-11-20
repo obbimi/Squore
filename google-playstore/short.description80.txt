@@ -1,1 +1,2 @@
 For referee-ing a squash match. Shows score, serve-side, timers, announcements
+For referee-ing a badminton match. Shows score, server, serve-side, timers

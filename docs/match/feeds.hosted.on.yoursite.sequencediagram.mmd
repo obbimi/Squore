@@ -3,14 +3,9 @@ participant User
 participant App
 participant AppServer
 participant YourSite
-link AppServer: Feed Types    @ https://squore.double-yellow.be/feed/feeds.php
-link AppServer: Documentation @ https://squore.double-yellow.be/feed/2023-11-10.Integrate-Squore-with-your-website.odt
-link YourSite: Feeds           @ https://yoursite/feeds
-link YourSite: Premier Matches @ https://yoursite/feed/premier/matches
-link YourSite: Second Matches  @ https://yoursite/feed/second/matches
-link YourSite: Feeds Example   @ https://squore.double-yellow.be/demo/demo.feeds.partner.php
-link YourSite: Matches Example @ https://squore.double-yellow.be/partner/Region+B/Division/2A
-link YourSite: Mermaid         @ https://mermaid.js.org/syntax/sequenceDiagram.html
+
+links AppServer: { "Feed Types": "https://squore.double-yellow.be/feed/feeds.php", "Documentation" : "https://squore.double-yellow.be/feed/2023-11-10.Integrate-Squore-with-your-website.odt" }
+links YourSite: { "Feeds": "https://yoursite/feeds", "Premier Matches": "https://yoursite/feed/premier/matches", "Second Matches ": "https://yoursite/feed/second/matches", "Feeds Example": "https://squore.double-yellow.be/demo/demo.feeds.partner.php","Matches Example":"https://squore.double-yellow.be/partner/Region+B/Division/2A","Mermaid": "https://mermaid.js.org/syntax/sequenceDiagram.html" }
 
 User      ->>+App  : Select match from feed
 App       ->>-User : Present matches of 'active' feed
@@ -22,7 +17,7 @@ Note left of AppServer  : https://squore.double-yellow.be/feed/feeds.php
 AppServer ->>+App : JSON
 deactivate AppServer
 Note right of App : includes e.g.<br/>"YourType" : { "DisplayName: "Your Type"<br>,"URL": "https://yoursite/feeds"<br/>,"BGColor":"rrggbb"<br/>,"Image":"" }
-App       ->>-User: Present types 
+App       ->>-User: Present types
 
 User      ->>+App: Selects "Your Type"
 App       ->>-YourSite:Fetch Your feeds from corresponding URL
@@ -45,12 +40,12 @@ Note left of YourSite: to receive the match result include:<br>{ config: { share
 App       ->>-User : Present matches
 
 User      ->>+App  : Select match
-App       ->>-User : Present 'New match' 
-Note left of App: prefilled with settings from JSON 
+App       ->>-User : Present 'New match'
+Note left of App: prefilled with settings from JSON
 
 User      ->>+App  : Confirm and Score app
 App       ->>-YourSite: If 'PostResult' is configured, POST match details to URL
 activate YourSite
-YourSite  ->>+App     : Send string to confirm match was received OK/NOK 
+YourSite  ->>+App     : Send string to confirm match was received OK/NOK
 deactivate YourSite
 App       ->>-User    : Show message with POST result

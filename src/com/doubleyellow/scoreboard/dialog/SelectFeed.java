@@ -69,8 +69,9 @@ public class SelectFeed extends BaseAlertDialog
                 .setNegativeButton(R.string.cmd_delete, listener);
 
         // add a view with all possible feed names and let user choose one
-        boolean bSortNames = PreferenceValues.isBrandTesting(context);
-        Set<String> lNames = getFeedNames(bSortNames);
+        boolean bSortNames = false; //PreferenceValues.isBrandTesting(context);
+        final boolean bAddNone = PreferenceValues.isBrandTesting(context) == false;
+        Set<String> lNames = getFeedNames(bSortNames, bAddNone);
 /*
     User must still be able to 'Add new...'
         if ( ListUtil.size(lNames) < 2 ) {
@@ -95,14 +96,14 @@ public class SelectFeed extends BaseAlertDialog
             @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // disable 'Delete' button if 'None' is selected
                 Button btnDelete = dialog.getButton(DELETE);
-                btnDelete.setEnabled(checkedId < ListUtil.size(alNames) - 1);
+                btnDelete.setEnabled(checkedId < ListUtil.size(alNames) - (bAddNone?1:0));
             }
         });
 
         dialog.show();
     }
 
-    private Set<String> getFeedNames(boolean bSortNames) {
+    private Set<String> getFeedNames(boolean bSortNames, boolean bAddNoneOption) {
         //String sUrls = PreferenceValues.getString(PreferenceKeys.feedPostUrls, "", context);
         //List<Map<URLsKeys, String>> urlsList = PreferenceValues.getUrlsList(sUrls);
         //return MapUtil.listOfMaps2List(urlsList, URLsKeys.Name);
@@ -111,7 +112,7 @@ public class SelectFeed extends BaseAlertDialog
             mName2Url = new TreeMap<String, String>();
         }
         // always add the None
-        if ( (mName2Url.containsKey(sNone) == false) && (PreferenceValues.isBrandTesting(context) == false) ) {
+        if ( bAddNoneOption && (mName2Url.containsKey(sNone) == false) ) {
             mName2Url.put(sNone, "");
         }
 

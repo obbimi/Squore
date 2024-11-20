@@ -3,6 +3,7 @@
 #export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
 #export JAVA_HOME=/usr/lib/jvm/java-10-openjdk
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+#export JAVA_HOME=/usr/lib/jvm/java-22-jdk
 #export JAVA_HOME=/osshare/software/oracle/java-8-oracle
 if [[ ! -e $JAVA_HOME ]]; then
     export JAVA_HOME=/cygdrive/c/localapps/jdk1.8.0_231
@@ -83,7 +84,7 @@ if [[ -z "${hasNewVersionCode}" ]]; then
             exit 1
         fi
     else
-        read -t 10 -p "Warning : continue without changing version code for ${brand} ?"
+        read -t 3 -p "Warning : continue without changing version code for ${brand} ?"
     fi
 fi
 
@@ -221,6 +222,7 @@ if [[ ${iStep} -le 2 ]]; then
     fi
 
     rm tmp.adb.install 2> /dev/null
+    echo "tmp files cleaned"
 fi
 # install a shortcut
 #    pkg=com.doubleyellow.scoreboard

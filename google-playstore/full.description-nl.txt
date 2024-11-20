@@ -12,9 +12,9 @@ Ondersteunt bij het reffen van een squash match.
 &bull; heeft mogelijkheid om het gehele score verloop van alle games op te vragen (inclusief grafiek)
 &bull; opvragen lijst van mogelijke 'conducts'
 &bull; heeft mogelijkheid om 'feed URLs' te specifieren om makkelijk matches te kunnen selecteren (i.p.v. namen in te moeten typen)
-&bull; mogelijkheid op wedstrijd resultaat te delen op e.g. facebookclubgenoot te sturen 
-&bull; mogelijkheid op een samenvatting van score van enkele gerelateerde wedstrijden te delen (e.g. interclub wedstrijden)
-&bull; mogelijkheid op wedstrijd resultaat per SMS/Email naar bijvoorbeeld een clubgenoot te sturen
+&bull; mogelijkheid om wedstrijd resultaat te delen op e.g. facebook
+&bull; mogelijkheid om een samenvatting van score van enkele gerelateerde wedstrijden te delen (e.g. interclub wedstrijden)
+&bull; mogelijkheid om wedstrijd resultaat per SMS/Email naar bijvoorbeeld een clubgenoot te sturen
 
 <b>Maar er is meer: Online Help:</b>
-http://squore.double-yellow.be/help/
+<http://squore.double-yellow.be>

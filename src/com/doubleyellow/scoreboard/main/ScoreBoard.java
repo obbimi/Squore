@@ -1194,7 +1194,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         m_bNoFloatingButtons = true;
                         PreferenceValues.setOverwrite(PreferenceKeys.floatingMessageForGameBallOn, "");
 
-                        // hide 'set' related elements
+                        // hide 'set' related elements: For consistency This code should be moved to iBoard (or maybe it is not required anymore)
                         if ( Brand.isGameSetMatch() == false ) {
                             int[] iViewIds = new int[] {R.id.btn_setswon1, R.id.btn_setswon2, R.id.space_scoreset_scoregame};
                             for(int i: iViewIds) {
@@ -2593,6 +2593,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             int newBallsInXgames = gsmModel.newBallsInXgames();
             final int iShowUpFront = PreferenceValues.newBallsXGamesUpFront(this);
             bShowSpeakFAB = (newBallsInXgames >= 0) && (newBallsInXgames <= iShowUpFront);
+
+            boolean tieBreakGame = gsmModel.isTieBreakGame();
+            if ( tieBreakGame ) {
+                int maxScore = gsmModel.getMaxScore();
+                bShowSpeakFAB = maxScore == 0;
+            }
         } else {
             bShowSpeakFAB = matchModel.gameHasStarted() == false || matchModel.isStartOfTieBreak() || matchModel.isPossibleGameVictory();
         }
@@ -3067,12 +3073,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         @Override public void OnGameBallChange(Player[] players, boolean bHasGameBall, boolean bForUndo) {
             if ( Brand.isGameSetMatch() ) {
+                GSMModel gsmModel= (GSMModel) matchModel;
+                int maxScore = gsmModel.getMaxScore();
                 if ( bHasGameBall ) {
                     // don't treat GameBall unless it is golden point, as special, wait for SetBall in stead
-                    GSMModel gsmModel= (GSMModel) matchModel;
                     GoldenPointFormat goldenPointFormat = gsmModel.getGoldenPointFormat();
                     if ( goldenPointFormat.onDeuceNumber() >= 0 ) {
-                        int maxScore = gsmModel.getMaxScore();
                         if ( maxScore == gsmModel.getMinScore() ) {
                             // score is equal
                             // TODO: not yet if goldenPointFormat==OnSecondDeuce and....
@@ -3084,15 +3090,26 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     return;
                 } else {
                     // no more gameball: hence also no more setball: continue
+                    boolean bIsStartOfTiebreak = gsmModel.isTieBreakGame() && maxScore == 0;
+                    if ( bIsStartOfTiebreak ) {
+                        // start of tiebreak
+                        // TODO: can be start of tiebreak: show message
+                        //iBoard.updateTiebreakMessage("OnTieBreakStart", players, bHasGameBall);
+                        showMicrophoneFloatButton(true);
+                    } else {
+                        iBoard.updateGameBallMessage("OnGameBallChange", players, bHasGameBall);
+                        showMicrophoneFloatButton(false); // previous might have been tiebreak
+                    }
+                }
+            } else {
+                //iBoard.doGameBallColorSwitch(player, bHasGameBall);
+                iBoard.updateGameBallMessage("OnGameBallChange", players, bHasGameBall);
+
+                if ( bHasGameBall ) {
+                    showMicrophoneFloatButton(false); // previous might have been tiebreak
                 }
             }
 
-            //iBoard.doGameBallColorSwitch(player, bHasGameBall);
-            iBoard.updateGameBallMessage("OnGameBallChange", players, bHasGameBall);
-
-            if ( bHasGameBall ) {
-                showMicrophoneFloatButton(false); // previous might have been tiebreak
-            }
         }
 
         @Override public void OnTiebreakReached(int iOccurrenceCount) {
@@ -4953,6 +4970,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             boolean bShowSpeakFAB = (newBallsInXgames >= 0) && (newBallsInXgames <= iShowUpFront);
             if ( bShowSpeakFAB ) {
                 _showNewBallsMessage(newBallsInXgames);
+            } else {
+                boolean bIsStartOfTiebreak = gsmModel.isTieBreakGame() && gsmModel.getMaxScore() == 0;
+                if ( bIsStartOfTiebreak ) {
+                    _showTiebreakMessage();
+                }
             }
         }
 
@@ -5040,6 +5062,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         return true;
     }
 
+    private boolean _showTiebreakMessage() {
+        iBoard.showGuidelineMessage_FadeInOut(10, R.string.sb_tiebreak);
+        return true;
+    }
     private boolean _showNewBallsMessage(int iInXGames) {
         if ( iInXGames < 0 ) {
             return false;
