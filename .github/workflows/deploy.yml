@@ -1,5 +1,6 @@
 # written in such a way that it is only need in obbimi/Squore create releases for all brands
-name: Publish Released APK to Google
+name: Publish Released APK's to Google Playstore as draft
+run-name: Deploy ${{ inputs.brand }} release ${{ inputs.version }} to Play Store
 
 on:
   workflow_dispatch: # run manually
@@ -11,7 +12,7 @@ on:
         type: string
       version:
         description: 'The version to deploy: Last 3 digits of versionCode. A release named Release.${version} must exist and publicly accessible for the brand'
-        default: "526"
+        default: "528"
         required: true
         type: string
       #releasePrefix:
