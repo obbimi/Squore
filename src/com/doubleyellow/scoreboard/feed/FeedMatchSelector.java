@@ -1371,24 +1371,27 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     public static String canonicalizeJsonKeys(String sContent) {
         // allow the feed to specify keys in CamelCase, we will be using camelcase with first letter lowercase
-        sContent = sContent
-                .replaceAll("\\bDivision\\b", JSONKey.division.toString())
-                .replaceAll("\\bField\\b"   , JSONKey.field   .toString())
-                .replaceAll("\\bRound\\b"   , JSONKey.round   .toString())
-                .replaceAll("\\bLocation\\b", JSONKey.location.toString())
-                .replaceAll("\\bPlayers\\b" , JSONKey.players .toString())
-                .replaceAll("\\bCourt\\b"   , JSONKey.court   .toString())
-                .replaceAll("\\bDate\\b"    , JSONKey.date    .toString())
-                .replaceAll("\\bTime\\b"    , JSONKey.time    .toString())
-                .replaceAll("\\bID\\b"      , JSONKey.id      .toString())
-                .replaceAll("\\bId\\b"      , JSONKey.id      .toString())
-                .replaceAll("\\bName\\b"    , JSONKey.name    .toString())
-                .replaceAll("\\bClub\\b"    , JSONKey.club    .toString())
-                .replaceAll("\\bCountry\\b" , JSONKey.country .toString())
+        String sContentFixed = sContent
+                .replaceAll("\"Division\"", JSONKey.division.toString())
+                .replaceAll("\"Field\""   , JSONKey.field   .toString())
+                .replaceAll("\"Round\""   , JSONKey.round   .toString())
+                .replaceAll("\"Location\"", JSONKey.location.toString())
+                .replaceAll("\"Players\"" , JSONKey.players .toString())
+                .replaceAll("\"Court\""   , JSONKey.court   .toString())
+                .replaceAll("\"Date\""    , JSONKey.date    .toString())
+                .replaceAll("\"Time\""    , JSONKey.time    .toString())
+                .replaceAll("\"ID\""      , JSONKey.id      .toString())
+                .replaceAll("\"Id\""      , JSONKey.id      .toString())
+                .replaceAll("\"Name\""    , JSONKey.name    .toString())
+                .replaceAll("\"Club\""    , JSONKey.club    .toString())
+                .replaceAll("\"Country\"" , JSONKey.country .toString())
                 //translate old (legacy) keys (all lower and/or with underscores) to new more consistent camelCase ones
-                .replaceAll("\\bteam_players\\b", JSONKey.teamPlayers.toString())
-                .replaceAll("\\bteamid\\b"      , JSONKey.teamId.toString())
+                .replaceAll("\"team_players\"", JSONKey.teamPlayers.toString())
+                .replaceAll("\"teamid\""      , JSONKey.teamId.toString())
         ;
+        if ( sContentFixed.equals(sContent) == false ) {
+            return sContentFixed;
+        }
         return sContent;
     }
 
