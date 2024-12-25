@@ -323,7 +323,7 @@ public class IBoard implements TimerViewContainer
         if ( tvMatchTime == null ) { return; }
 
         boolean bShowMatchTimer = PreferenceValues.showMatchDuration(context, isPresentation());
-        tvMatchTime.setVisibility(bShowMatchTimer?View.VISIBLE:View.GONE);
+        setVisibility(tvMatchTime, bShowMatchTimer?View.VISIBLE:View.GONE);
 
         if ( bShowMatchTimer ) {
             String sChar = getOAString(context, R.string.oa_match_firstletter);
@@ -775,8 +775,8 @@ public class IBoard implements TimerViewContainer
                     // few enough sets played to show details score how the set ended, e.g. 6-4 or 7-6
 
                     if ( vSetsWon1 != null ) {
-                        vSetsWon1.setVisibility(iVisibilityIfNotUsed);
-                        vSetsWon2.setVisibility(iVisibilityIfNotUsed);
+                        setVisibility(vSetsWon1, iVisibilityIfNotUsed);
+                        setVisibility(vSetsWon2, iVisibilityIfNotUsed);
                     }
 
                     List<Map<Player, Integer>> gamesWonPerSet = GSMUtil.gsmGamesWonPerSet(gsmModel, true);
@@ -788,14 +788,14 @@ public class IBoard implements TimerViewContainer
 
                         if ( iSetZb >= iSetsFor1 + iSetsFor2 ) {
                             // hide views we will not be using
-                            vSetScore1.setVisibility(iVisibilityIfNotUsed);
-                            vSetScore2.setVisibility(iVisibilityIfNotUsed);
+                            setVisibility(vSetScore1, iVisibilityIfNotUsed);
+                            setVisibility(vSetScore2, iVisibilityIfNotUsed);
                             if ( space != null ) {
                                 space.setVisibility(iVisibilityIfNotUsed);
                             }
                         } else {
-                            vSetScore1.setVisibility(View.VISIBLE);
-                            vSetScore2.setVisibility(View.VISIBLE);
+                            setVisibility(vSetScore1, View.VISIBLE);
+                            setVisibility(vSetScore2, View.VISIBLE);
                             if ( space != null ) {
                                 space.setVisibility(View.VISIBLE);
                             }
@@ -857,8 +857,8 @@ public class IBoard implements TimerViewContainer
                         vSetScore2.setVisibility(iVisibilityIfNotUsed);
                     }
                     if ( vSetsWon1 != null ) {
-                        vSetsWon1.setVisibility(View.VISIBLE);
-                        vSetsWon2.setVisibility(View.VISIBLE);
+                        setVisibility(vSetsWon1, View.VISIBLE);
+                        setVisibility(vSetsWon2, View.VISIBLE);
                     }
                 }
             } else {
@@ -872,11 +872,11 @@ public class IBoard implements TimerViewContainer
 
                 if ( iGamesFor1 + iGamesFor2 <= iNrOfSetDetailsPossibleInLayout) {
                     // few enough games played to show details score how they ended, e.g. 11-5, 10-12
-                    vGamesWon1.setVisibility(iVisibilityIfNotUsed);
-                    vGamesWon2.setVisibility(iVisibilityIfNotUsed);
+                    setVisibility(vGamesWon1, iVisibilityIfNotUsed);
+                    setVisibility(vGamesWon2, iVisibilityIfNotUsed);
 
-                    TextView vPointsWon1 = (TextView) findViewById(R.id.btn_score1);
-                    TextView vPointsWon2 = (TextView) findViewById(R.id.btn_score2);
+                    final TextView vPointsWon1 = (TextView) findViewById(R.id.btn_score1);
+                    final TextView vPointsWon2 = (TextView) findViewById(R.id.btn_score2);
                     if ( iGamesFor1 + iGamesFor2 > 0 ) {
                         vPointsWon1.setTag(iGamesFor1);
                         vPointsWon2.setTag(iGamesFor2);
@@ -894,14 +894,14 @@ public class IBoard implements TimerViewContainer
 
                         if (iSetZb >= iGamesFor1 + iGamesFor2) {
                             // hide views we will not be using
-                            vGameScore1.setVisibility(iVisibilityIfNotUsed);
-                            vGameScore2.setVisibility(iVisibilityIfNotUsed);
+                            setVisibility(vGameScore1, iVisibilityIfNotUsed);
+                            setVisibility(vGameScore2, iVisibilityIfNotUsed);
                             if (space != null) {
                                 space.setVisibility(iVisibilityIfNotUsed);
                             }
                         } else {
-                            vGameScore1.setVisibility(View.VISIBLE);
-                            vGameScore2.setVisibility(View.VISIBLE);
+                            setVisibility(vGameScore1, View.VISIBLE);
+                            setVisibility(vGameScore2, View.VISIBLE);
                             if (space != null) {
                                 space.setVisibility(View.VISIBLE);
                             }
@@ -936,12 +936,12 @@ public class IBoard implements TimerViewContainer
                     for(int iGameZb = 0; iGameZb < iNrOfSetDetailsPossibleInLayout; iGameZb++ ) {
                         TextView vSetScore1 = lSetScoresViews.get(iGameZb * 2 + 0);
                         TextView vSetScore2 = lSetScoresViews.get(iGameZb * 2 + 1);
-                        vSetScore1.setVisibility(iVisibilityIfNotUsed);
-                        vSetScore2.setVisibility(iVisibilityIfNotUsed);
+                        setVisibility(vSetScore1, iVisibilityIfNotUsed);
+                        setVisibility(vSetScore2, iVisibilityIfNotUsed);
                     }
                     // show only number of games won
-                    vGamesWon1.setVisibility(View.VISIBLE);
-                    vGamesWon2.setVisibility(View.VISIBLE);
+                    setVisibility(vGamesWon1, View.VISIBLE);
+                    setVisibility(vGamesWon2, View.VISIBLE);
 
                     // remove small digit that also indicates number of games won, since we show it in big digits
                     if ( true ) {
@@ -1431,14 +1431,14 @@ public class IBoard implements TimerViewContainer
                     m_timerInfoMessage = new CountDownTimer(iMessageDurationSecs * 1000, 1000) {
                         @Override public void onTick(long millisUntilFinished) { }
                         @Override public void onFinish() {
-                            tvBLEInfo.setVisibility(View.INVISIBLE);
+                            setVisibility(tvBLEInfo, View.INVISIBLE);
                             m_timerInfoMessage = null;
                         }
                     };
                     m_timerInfoMessage.start();
                 }
             } else {
-                tvBLEInfo.setVisibility(View.INVISIBLE);
+                setVisibility(tvBLEInfo, View.INVISIBLE);
             }
         }
     }
@@ -2172,5 +2172,13 @@ public class IBoard implements TimerViewContainer
 
     private int getScreenHeightWidthMinimumFraction(int iResIdFraction) {
         return ViewUtil.getScreenHeightWidthMinimumFraction(display, iResIdFraction, context);
+    }
+    private boolean setVisibility(View v, int iVisibility) {
+        if ( v == null ) {
+            Log.w(TAG, "View is null");
+            return false;
+        }
+        v.setVisibility(iVisibility);
+        return true;
     }
 }
