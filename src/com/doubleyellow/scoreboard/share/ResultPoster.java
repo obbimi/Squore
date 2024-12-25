@@ -132,6 +132,7 @@ public class ResultPoster implements ContentReceiver
         switch (postDataPreference) {
             case JsonDetailsOnly:
                 sJson = matchModel.toJsonString(scoreBoard);
+                postTask.setHeader(MatchModelPoster.C_Http_Content_Type, MatchModelPoster.C_Application_Json);
                 postTask.execute(URLTask.__BODY__, sJson);
                 break;
             case BasicWithJsonDetails:

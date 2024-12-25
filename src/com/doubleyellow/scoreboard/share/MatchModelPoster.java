@@ -53,6 +53,9 @@ public class MatchModelPoster implements ContentReceiver
 {
     public static final String TAG = "SB." + MatchModelPoster.class.getSimpleName();
 
+    public static final String C_Http_Content_Type = "Content-Type";
+    public static final String C_Application_Json = "application/json";
+
     private Context m_context = null;
     private Model   m_model   = null;
     public MatchModelPoster() { }
@@ -120,6 +123,7 @@ public class MatchModelPoster implements ContentReceiver
 
                     PostTask postTask = new PostTask(context, sThirdPartyUrl);
                     postTask.setContentReceiver(this);
+                    postTask.setHeader(C_Http_Content_Type, C_Application_Json);
                     postTask.execute(URLTask.__BODY__, sJson);
                 }
             }
@@ -132,6 +136,7 @@ public class MatchModelPoster implements ContentReceiver
             if ( matchModel.matchHasEnded() ) {
                 matchModel.setLockState(LockState.SharedEndedMatch);
             }
+            postTask.setHeader(C_Http_Content_Type, C_Application_Json);
             postTask.execute(URLTask.__BODY__, sJson);
             matchModel.setLockState(lsRestore);
         }
