@@ -604,6 +604,18 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         if ( joMatch.has(PreferenceKeys.numberOfGamesToWinMatch.toString() ) ) {
             model.setNrOfGamesToWinMatch(joMatch.getInt(PreferenceKeys.numberOfGamesToWinMatch.toString()));
         }
+        try {
+            if ( joMatch.has(PreferenceKeys.tieBreakFormat.toString() ) ) {
+                model.setTiebreakFormat(TieBreakFormat.valueOf(joMatch.getString(PreferenceKeys.tieBreakFormat.toString())));
+            }
+            if ( joMatch.has(PreferenceKeys.useHandInHandOutScoring.toString() ) ) {
+                model.setEnglishScoring(joMatch.getBoolean(PreferenceKeys.useHandInHandOutScoring.toString()));
+            }
+            if ( joMatch.has(PreferenceKeys.timerPauseBetweenGames.toString() ) ) {
+                PreferenceValues.setOverwrite(PreferenceKeys.timerPauseBetweenGames, joMatch.getInt(PreferenceKeys.timerPauseBetweenGames.toString()));
+            }
+        } catch (Exception e) {
+        }
     }
 
     private void setModelEvent(Model model, String sGroup, String feedPostName, JSONObject joMatch) {
