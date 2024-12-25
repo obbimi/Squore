@@ -126,11 +126,6 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             m_sDisplayFormat_Players = canonicalizeJsonKeys(m_sDisplayFormat_Players);
             m_sDisplayFormat_Matches = canonicalizeJsonKeys(m_sDisplayFormat_Matches);
 
-            String sExpandGroup = m_joFeedConfig.optString(URLsKeys.expandGroup.toString());
-            if ( StringUtil.isNotEmpty(sExpandGroup) ) {
-                //lExpandedGroups.add(sExpandGroup); // TODO
-            }
-
             Iterator<String> itPrefKeys = m_joFeedConfig.keys();
             while ( itPrefKeys.hasNext() ) {
                 String sPref  = itPrefKeys.next();

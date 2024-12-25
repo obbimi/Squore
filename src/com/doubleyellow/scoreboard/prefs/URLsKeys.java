@@ -48,7 +48,6 @@ public enum URLsKeys {
     /* Json config feed keys */
     config,
         avatarBaseURL,
-        expandGroup,
         Placeholder_Match,
         Placeholder_Player,
         /** @Deprecated */
