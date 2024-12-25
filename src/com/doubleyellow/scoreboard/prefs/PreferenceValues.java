@@ -728,8 +728,8 @@ public class PreferenceValues extends RWValues
     }
 
     private static final int[] iaOAResString = new int[] {
-            R.string.oa_best_of_x_games_to_y,
-            R.string.oa_best_of_x_games,
+            R.string.oa_bestOfX_or_firstToY_games__to_z,
+            R.string.oa_bestOfX_or_firstToY_games,
             R.string.oa_x_th_game,
             R.string.oa_game_to_x,
             R.string.oa_match_to_x,

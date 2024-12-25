@@ -5,8 +5,8 @@
     <string name="oa_time">Tempo!</string>
     <string name="oal_pause">Pausa</string>
 
-    <string name="oa_best_of_x_games_to_y">Melhor de %s games</string>
-    <string name="oa_best_of_x_games">Melhor de %s games</string>
+    <string name="oa_bestOfX_or_firstToY_games__to_z">Melhor de %1$s games</string>
+    <string name="oa_bestOfX_or_firstToY_games">Melhor de %1$s games</string>
     <string name="oa_x_to_serve__y_to_receive">%1$s sacando, %2$s recebendo</string>
     <string name="sb_serve">Sacando</string>
     <string name="sb_receive">Recebendo</string>

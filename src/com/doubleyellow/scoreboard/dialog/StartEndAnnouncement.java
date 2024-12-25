@@ -318,9 +318,9 @@ public class StartEndAnnouncement extends BaseAlertDialog
                 int iNrOfPointsToWinGame = matchModel.getNrOfPointsToWinGame();
                 if ( iNrOfPointsToWinGame == 11 && Brand.isSquash() ) {
                     // default is 11. If current format is also 11 do NOT make it part of the announcement
-                    lMsgs.add(PreferenceValues.getOAString(ctx, R.string.oa_best_of_x_games     , (iNrOfGamesToWin * 2 - 1)));
+                    lMsgs.add(PreferenceValues.getOAString(ctx, R.string.oa_bestOfX_or_firstToY_games      , (iNrOfGamesToWin * 2 - 1), iNrOfGamesToWin));
                 } else {
-                    lMsgs.add(PreferenceValues.getOAString(ctx, R.string.oa_best_of_x_games_to_y, (iNrOfGamesToWin * 2 - 1), iNrOfPointsToWinGame));
+                    lMsgs.add(PreferenceValues.getOAString(ctx, R.string.oa_bestOfX_or_firstToY_games__to_z, (iNrOfGamesToWin * 2 - 1), iNrOfGamesToWin, iNrOfPointsToWinGame));
                 }
             }
 

@@ -6,8 +6,8 @@
     <string name="oal_pause">Pause</string>
     <string name="oa_handout">Changement</string>
 
-    <string name="oa_best_of_x_games_to_y">Au meilleur de %1$s jeux à %2$s</string>
-    <string name="oa_best_of_x_games">Au meilleur de %1$s jeux</string>
+    <string name="oa_bestOfX_or_firstToY_games__to_z">Au meilleur de %1$s jeux à %3$s</string>
+    <string name="oa_bestOfX_or_firstToY_games">Au meilleur de %1$s jeux</string>
     <string name="oa_x_to_serve__y_to_receive">%1$s au service, %2$s à la réception</string>
     <string name="oa_love_all">0–0</string>
 

@@ -6,8 +6,8 @@
     <string name="oal_pause">Přestávka</string>
     <string name="oa_handout">Ztráta</string>
 
-    <string name="oa_best_of_x_games_to_y">Na nejvýše %1$s sety(ů) do %2$s</string>
-    <string name="oa_best_of_x_games">Na nejvýše %1$s sety(ů)</string>
+    <string name="oa_bestOfX_or_firstToY_games__to_z">Na nejvýše %1$s sety(ů) do %3$s</string>
+    <string name="oa_bestOfX_or_firstToY_games">Na nejvýše %1$s sety(ů)</string>
     <string name="oa_x_to_serve__y_to_receive">%1$s podává, %2$s příjmá</string>
     <string name="sb_serve">Podává</string>
     <string name="sb_receive">Příjmá</string>

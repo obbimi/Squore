@@ -6,8 +6,8 @@
     <string name="oal_pause">Pause</string>
     <string name="oa_handout">Aufschlagwechsel</string>
 
-    <string name="oa_best_of_x_games_to_y">%1$s Satzspiel bis %2$s</string>
-    <string name="oa_best_of_x_games">%1$s Satzspiel</string>
+    <string name="oa_bestOfX_or_firstToY_games__to_z">%2$s Satzspiel bis %3$s</string>
+    <string name="oa_bestOfX_or_firstToY_games">%2$s Satzspiel</string>
     <string name="oa_x_to_serve__y_to_receive">%1$s hat Aufschlag, %2$s Rückschläger</string>
     <string name="sb_serve">Aufschlag</string>
     <string name="sb_receive">Rückschläger</string>

@@ -6,8 +6,8 @@
     <string name="oal_pause">Pause</string>
     <string name="oa_handout">Hand-out</string>
 
-    <string name="oa_best_of_x_games_to_y">Best of %1$s games tot %2$s</string>
-    <string name="oa_best_of_x_games">Best of %1$s games</string>
+    <string name="oa_bestOfX_or_firstToY_games__to_z">Best of %1$s games tot %3$s</string>
+    <string name="oa_bestOfX_or_firstToY_games">Best of %1$s games</string>
     <string name="oa_x_to_serve__y_to_receive">%1$s serveert, %2$s ontvangt</string>
     <string name="sb_serve">Serveert</string>
     <string name="sb_receive">Ontvangt</string>
