@@ -40,7 +40,7 @@ echo "Manifest file : ${mffile}"
 echo "Package       : ${pkg}"
 echo "Brand         : ${brand}"
 #hasNewVersionCode=$(git diff build.gradle | grep -E '^\+' | grep versionCode | sed 's~.*0000\s*+\s*~~' | sort | tail -1) # holds only the last 3 digits
-hasNewVersionCode=$(git diff build.gradle | grep 'versionCodeXXX =' | sed 's~def versionCodeXXX = ~~' | sed 's~+\s*~~' | head -1) # holds only the last 3 digits
+hasNewVersionCode=$(git diff build.gradle | grep 'versionCodeXXX =' | sed 's~def versionCodeXXX = ~~' | grep -v '-' | sed 's~+\s*~~' | head -1 | tr -d ' ') # holds only the last 3 digits
 echo "hasNewVersionCode: $hasNewVersionCode"
 BU_DIR=/osshare/code/gitlab/double-yellow.be/app
 if [[ ! -e ${BU_DIR} ]]; then

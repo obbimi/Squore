@@ -58,6 +58,12 @@ public class ResultPoster implements ContentReceiver
 {
     public static final String TAG = "SB." + ResultPoster.class.getSimpleName();
 
+    private enum ResponseKeys {
+        title,
+        message,
+        result,
+    }
+
     private String             sPostURL           = null;
     private Authentication     eAuthentication    = Authentication.None;
     private String             sUrlName           = null;
@@ -217,7 +223,7 @@ public class ResultPoster implements ContentReceiver
         Log.d(TAG, "Content : " + sContent);
 
         if ( StringUtil.isEmpty(sContent) ) {
-            sContent = "<html><i>No result in body of post to <b>" + sPostURL + "</b></i>. Please ask webmaster to provide a feedback text/html/json.</html>";
+            sContent = "<html><i>No result in body of " + result + " post to <b>" + sPostURL + "</b></i>. Please ask webmaster to provide a feedback text/html/json.</html>";
         }
 
         String sMessage   = sContent.trim();
@@ -228,9 +234,9 @@ public class ResultPoster implements ContentReceiver
         if ( sContent.startsWith("{") && sContent.endsWith("}") ) {
             try {
                 JSONObject jo = new JSONObject(sContent);
-                sTitle    = jo.optString("title"  , sTitle);
-                sMessage  = jo.optString("message", sMessage);
-                bResultOK = jo.optString("result" , "OK").equalsIgnoreCase("OK");
+                sTitle    = jo.optString(ResponseKeys.title  .toString() , sTitle);
+                sMessage  = jo.optString(ResponseKeys.message.toString() , sMessage);
+                bResultOK = jo.optString(ResponseKeys.result .toString(), "OK").equalsIgnoreCase("OK");
 
 /*
 {
