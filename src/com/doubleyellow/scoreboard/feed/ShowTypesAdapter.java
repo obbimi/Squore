@@ -178,9 +178,15 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
                 downloadImageTask.execute();
                 bImageFromURL = true;
             } else {
-                Bitmap bitMapFromBase64 = ViewUtil.getBitMapFromBase64(sBitMap);
-                viewHolder.img.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                viewHolder.img.setImageBitmap(bitMapFromBase64);
+                try {
+                    Bitmap bitMapFromBase64 = ViewUtil.getBitMapFromBase64(sBitMap);
+                    viewHolder.img.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    viewHolder.img.setImageBitmap(bitMapFromBase64);
+                } catch (Exception e) {
+                    String sMsg = "Could not base64 decode image for " + sDisplayName;
+                    Log.e(TAG, sMsg);
+                    Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+                }
             }
         } else {
             viewHolder.img.setVisibility(View.INVISIBLE);

@@ -273,10 +273,13 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
             this.bDisabled = b;
         }
 
-        private void fetchUrls(final JSONArray aUrls, final String sName, final JSONArray arrayMerged, final JSONArray arrayBackup) {
+        private void fetchUrls(final JSONArray aUrls, final String sName, final JSONArray arrayMerged, final JSONArray arrayBackup, int iCacheInMinutes) {
             String sURL = (String) aUrls.remove(0);
             showProgress(R.string.loading_of_x, sName, sURL);
             URLFeedTask task = new URLFeedTask(FeedFeedSelector.this, sURL);
+            if ( iCacheInMinutes >= 0 ) {
+                task.setMaximumReuseCacheTimeMinutes(iCacheInMinutes);
+            }
             task.setContentReceiver(new ContentReceiver() {
                 @Override public void receive(String sJson, FetchResult fetchResult, long lCacheAge, String sLastSuccessfulContent, String sUrl) {
                     try {
@@ -291,7 +294,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                         }
 
                         if ( aUrls.length() > 0 ) {
-                            fetchUrls(aUrls, sName, arrayMerged, arrayBackup);
+                            fetchUrls(aUrls, sName, arrayMerged, arrayBackup, iCacheInMinutes);
                         } else {
                             PreferenceValues.addFeedTypeToMyList(FeedFeedSelector.this, sName);
                             changeStatus(Status.LoadingFeeds);
@@ -323,6 +326,11 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                 m_sortOrder = null;
             }
 
+            int iCacheInMinutes = -1;
+            if ( joType != null) {
+                iCacheInMinutes = joType.optInt(FeedKeys.ReuseCacheForXMinutes.toString(), iCacheInMinutes);
+            }
+
             JSONArray array = loadTypesAdapter.joRoot.optJSONArray(sName);
             if ( loadTypesAdapter.joRoot.has(sName + "." + FeedKeys.URL) ) {
                 // URL's are specified. Fetch content to have most recent data
@@ -341,7 +349,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                 }
                 if ( JsonUtil.isNotEmpty(aUrls) ) {
                     final JSONArray arrayMerged = new JSONArray();
-                    fetchUrls(aUrls, sName, arrayMerged, array);
+                    fetchUrls(aUrls, sName, arrayMerged, array, iCacheInMinutes);
                 }
             } else if ( JsonUtil.isNotEmpty(array) ) {
                 PreferenceValues.addFeedTypeToMyList(FeedFeedSelector.this, sName);

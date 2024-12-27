@@ -57,9 +57,6 @@ public class URLFeedTask extends URLTask
         this.iReadTimeoutMS = iReadTimeoutMS;
     }
 
-    @Override public int getMaximumReuseCacheTimeMS(String sCacheFile) {
-        return I_HOUR_IN_MILLISECS;
-    }
     @Override public int getReadTimeout() {
         return iReadTimeoutMS;
     }
