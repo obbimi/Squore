@@ -71,7 +71,7 @@ jobs:
         rm -v apksign.keystore
         find . -name *.apk
 
-    - name: Create upload .apk to /releases
+    - name: Upload .apk to /releases
       uses: ncipollo/release-action@v1
       with:
         draft: true # Sets the release as a draft instead of publishing it, allowing you to make any edits needed before releasing
