@@ -11,6 +11,17 @@ name: Build APK & Create Release
 
 on:
   workflow_dispatch: # run manually
+    inputs:
+      release_in_draft:
+        description: Leave the release in draft
+        type: boolean
+        default: true
+        required: true
+      generateReleaseNotes:
+        description: Generate release notes for the release
+        type: boolean
+        default: false
+        required: true
 
 jobs:
   build:
@@ -74,9 +85,9 @@ jobs:
     - name: Upload .apk to /releases
       uses: ncipollo/release-action@v1
       with:
-        draft: true # Sets the release as a draft instead of publishing it, allowing you to make any edits needed before releasing
+        draft: ${{ inputs.release_in_draft }} # Sets the release as a draft instead of publishing it, allowing you to make any edits needed before publishing
         token: ${{ secrets.GH_ACCESS_TOKEN }}
         tag: "Release.${{ steps.prepare_for_build.outputs.version }}"
         artifacts: ./build/outputs/apk/*/release/*-*-release-signed.apk
-        generateReleaseNotes: false
+        generateReleaseNotes: ${{ inputs.generateReleaseNotes }}
         #make_latest: true

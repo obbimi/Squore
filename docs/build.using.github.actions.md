@@ -5,17 +5,17 @@
 For each brand:
 
 - Goto [actions](https://github.com/obbimi/Squore/actions)
-    - Choose 'Build APK & Create Release' (buildrelease.yml) > Run workflow 
-    - Wait ... (Runs for about 5 minutes)
+  - Choose 'Build APK & Create Release' (buildrelease.yml) > Run workflow (on master)
+  - Wait ... (Runs for about 5 minutes)
 - Check [release](https://github.com/obbimi/Squore/releases) 
   - ensure to be signed in since just created release is in Draft and not publicly visible
   - 'Edit' the release that is in 'Draft'
-  - Press 'Publish release'
-    - Next to apk files, source files will become visible
+  - Optionally add 'Notes' and click 'Publish release'
+    - Next to the .apk files, source files will become visible
 
 - Badminton
-    - [build](https://github.com/obbimi/Badminton/actions/workflows/buildrelease.yml)
-    - [verify draft and publish release](https://github.com/obbimi/Badminton/releases)
+  - [build](https://github.com/obbimi/Badminton/actions/workflows/buildrelease.yml)
+  - [verify draft and publish release](https://github.com/obbimi/Badminton/releases)
 - Squore
   - [build](https://github.com/obbimi/Squore/actions/workflows/buildrelease.yml)
   - [verify draft and publish release](https://github.com/obbimi/Squore/releases)
@@ -26,20 +26,24 @@ For each brand:
   - [build](https://github.com/obbimi/TennisPadel/actions/workflows/buildrelease.yml)
   - [verify draft and publish release](https://github.com/obbimi/TennisPadel/releases)
 
-- Check with the android app 'Obtainium' that updates are available.
+- Check with the android app [Obtainium](https://github.com/ImranR98/Obtainium) that updates are available.
 
 Publish Released APK to Google > Run workflow 
 
 ## Deploy to Google
 
 - Goto [actions](https://github.com/obbimi/Squore/actions)
-    - Choose [Publish Released APK to Google](https://github.com/obbimi/Squore/actions/workflows/deploy.yml) > Run workflow
-    - provide 'Brand' and 'VersionCode'
-    - Runs for less than a minute
+  - Choose [Publish Released APK to Google](https://github.com/obbimi/Squore/actions/workflows/deploy.yml) > Run workflow
+  - provide 'Brand' and 'VersionCode'
+  - Runs for less than a minute
 - Goto [Play Console](https://play.google.com/console/u/0/developers/5046226336743383720/app-list)
-    - Select the Correct app (Brand) and go to
-      - Test and Release > Release overview
-      - Under 'Latest release' there should be 'Open tesing' version in status 'Draft' with latest apk files
+  - Select the Correct app (Brand) and go to
+    - Test and Release > Release overview
+    - Under 'Latest release' there should be 'Open testing' version in status 'Draft' with latest apk files
+      - [Badminton  ](https://play.google.com/console/u/0/developers/5046226336743383720/app/4974076001360456618/releases/overview)
+      - [Squore     ](https://play.google.com/console/u/0/developers/5046226336743383720/app/4972255383319852172/releases/overview)
+      - [Tabletennis](https://play.google.com/console/u/0/developers/5046226336743383720/app/4975506867766261096/releases/overview)
+      - [TennisPadel](https://play.google.com/console/u/0/developers/5046226336743383720/app/4972207514792479457/releases/overview)
 
 ## Troubleshooting
 

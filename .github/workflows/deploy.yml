@@ -1,4 +1,4 @@
-# written in such a way that it is only need in obbimi/Squore create releases for all brands
+# written in such a way that it is only need in obbimi/Squore to create releases for all brands
 name: Publish Released APK's to Google Playstore as draft
 run-name: Deploy ${{ inputs.brand }} release ${{ inputs.version }} to Play Store
 
@@ -63,10 +63,10 @@ jobs:
       uses: r0adkll/upload-google-play@v1.1.3
       with:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-        packageName: ${{ steps.download_apk_extract_info.outputs.packageName }}
+        packageName : ${{ steps.download_apk_extract_info.outputs.packageName }}
         releaseFiles: ${{ steps.download_apk_extract_info.outputs.filenames }}
         track: beta # alpha,beta,internal or production
-        releaseName: ${{ inputs.version }} # if not specified typically derived from versionCode/versionName
+        releaseName : ${{ inputs.version }} # if not specified typically derived from versionCode/versionName
         #changesNotSentForReview: true # does not seem to work or not allowed anymore by Google
         # existingEditId: # A valid, unpublished Edit ID
         status: draft
