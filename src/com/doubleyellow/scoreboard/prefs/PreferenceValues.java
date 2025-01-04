@@ -1644,7 +1644,7 @@ public class PreferenceValues extends RWValues
             boolean bChanged = setEnum(PreferenceKeys.shareAction, context, ShareMatchPrefs.LinkWithFullDetails);
             return bChanged;
         }
-        final int iLengthToCheck = 20;
+        final int iLengthToCheck = Math.max(20, sPostURL.indexOf('/', Math.min(10, sPostURL.length())));
         int iMinLength = Math.min(StringUtil.size(sModelSource), StringUtil.size(sPostURL));
         if ( iMinLength < iLengthToCheck ) {
             // prevent StringIndexOutOfBounds

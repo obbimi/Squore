@@ -25,7 +25,9 @@ import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.widget.Toast;
 import com.doubleyellow.android.util.ExportImport;
+import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.util.FileUtil;
 import com.doubleyellow.util.MapUtil;
 
@@ -125,9 +127,11 @@ public class ExportImportPrefs extends DialogPreference
         boolean bWritten = FileUtil.writeObjectToFile(fSettings, buAll);
         if ( bWritten ) {
             String sMsg = context.getString(R.string.x_stored_in_y, context.getString(R.string.sb_preferences), fSettings.getAbsolutePath());
+            MyDialogBuilder.dialogWithOkOnly(context, sMsg);
             Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
         } else {
             String sMsg = String.format("Could not store settings in %s", fSettings.getAbsolutePath());
+            MyDialogBuilder.dialogWithOkOnly(context, sMsg + "\nMaybe try and change the export location. Settings > Archive > Directory for import/export");
             Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
         }
     }
@@ -143,7 +147,7 @@ public class ExportImportPrefs extends DialogPreference
             Toast.makeText(context, R.string.could_not_determine_external_storage_location, Toast.LENGTH_LONG).show();
             return null;
         }
-        return new File(externalStorageDirectory, "Squore.settings.bin");
+        return new File(externalStorageDirectory, Brand.getShortName(context) + ".settings.bin");
     }
 
 }

@@ -303,6 +303,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                     } catch (JSONException e) {
                         e.printStackTrace();
                         changeStatus(Status.SelectFeed);
+                        Toast.makeText(FeedFeedSelector.this, "Invalid JSON in " + sName, Toast.LENGTH_SHORT).show();
                     }
                 }
             });

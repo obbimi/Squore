@@ -80,6 +80,20 @@ public class Feedback extends XActivity implements View.OnClickListener, View.On
             btn.setOnClickListener(this);
         }
 
+        // allow alternative way of obtaining info for if e.g. no email client is available
+        View btn = findViewById(R.id.cmd_email_the_developer);
+        btn.setLongClickable(true);
+        btn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override public boolean onLongClick(View v) {
+                List<String> lInfo = collectInfo();
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, ListUtil.join(lInfo, "\n")); // for whatsapp
+                Feedback.this.startActivity(Intent.createChooser(intent,  Brand.getShortName(Feedback.this) + ":")); // This actually becomes the title of the chooser
+                return true;
+            }
+        });
+
         findViewById(R.id.ll_feedback)             .setVisibility(View.VISIBLE);
         findViewById(R.id.ll_no_there_is_a_problem).setVisibility(View.GONE);
         findViewById(R.id.ll_yes_i_like           ).setVisibility(View.GONE);
@@ -95,6 +109,56 @@ public class Feedback extends XActivity implements View.OnClickListener, View.On
         return false;
     }
 
+    private List<String> collectInfo() {
+        List<String> lInfo = new ArrayList<>();
+
+        // put user settings in the email
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        lInfo.add(StringUtil.lrpad("Debug Info", '=', 40));
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(this.getPackageName(), 0);
+
+            lInfo.add("App Version: " + info.versionName + " (" + info.versionCode + ")");
+            lInfo.add("Device API Level: " + Build.VERSION.SDK_INT);
+            lInfo.add("Device: " + Build.MANUFACTURER + " " + Build.MODEL + " " + Build.BRAND + " " + Build.VERSION.RELEASE);
+        } catch (Exception e) { }
+        lInfo.add("Screen Size HxW: " + ViewUtil.getScreenHeightWidthMaximum(this) + " x " + ViewUtil.getScreenHeightWidthMinimum(this));
+        lInfo.add("DeviceDefaultOrientation:" + ViewUtil.getDeviceDefaultOrientation(this));
+        lInfo.add("Resource folder: " + getString(R.string.setting_resource_folder));
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        lInfo.add(displayMetrics.toString()); // string like DisplayMetrics{density=1.5, width=480, height= 800, scaledDensity=1.2750001, xdpi=217.713  , ydpi=207.347}
+
+        if ( true ) {
+            lInfo.add(StringUtil.lrpad("Features", '=', 40));
+            final FeatureInfo[] featuresList = getPackageManager().getSystemAvailableFeatures();
+            for (FeatureInfo f : featuresList) {
+                lInfo.add(f.name);
+            }
+        }
+        if ( true ) {
+            lInfo.add(StringUtil.lrpad("Settings", '=', 40));
+            Map<String, ?> all = prefs.getAll();
+            Set<String> keys = all.keySet();
+            SortedSet<String> keysSorted = new TreeSet<String>(keys);
+            for(String key: keysSorted) {
+                Object val = all.get(key);
+                if ( key.toLowerCase().matches(".*password$")) {
+                    val = "******"; // do not send any passwords in the feedback mail: would piss off the user
+                }
+                if ( key.endsWith("List") ) { // EventList RoundList PlayerList MatchList
+                    val = String.format("[list of length %s]", String.valueOf(val).split("\n").length);
+                }
+                lInfo.add("|" + key + ":" + val);
+            }
+        }
+        if ( true ) {
+            lInfo.add(StringUtil.lrpad("", '=', 40));
+            lInfo.add("Become a tester: https://play.google.com/apps/testing/" + getPackageName());
+            lInfo.add(StringUtil.lrpad("", '=', 40));
+        }
+        return lInfo;
+    }
     @Override public void onClick(View view) {
         String sMarketURL = "market://details"                           + "?id=" + this.getPackageName();
         String sPlayURL   = "https://play.google.com/store/apps/details" + "?id=" + this.getPackageName();
@@ -145,53 +209,7 @@ public class Feedback extends XActivity implements View.OnClickListener, View.On
                 break;
             }
             case R.id.cmd_email_the_developer:
-                List<String> lInfo = new ArrayList<>();
-
-                // put user settings in the email
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                lInfo.add(StringUtil.lrpad("Debug Info", '=', 40));
-                try {
-                    PackageInfo info = getPackageManager().getPackageInfo(this.getPackageName(), 0);
-
-                    lInfo.add("App Version: " + info.versionName + " (" + info.versionCode + ")");
-                    lInfo.add("Device API Level: " + Build.VERSION.SDK_INT);
-                    lInfo.add("Device: " + Build.MANUFACTURER + " " + Build.MODEL + " " + Build.BRAND + " " + Build.VERSION.RELEASE);
-                } catch (Exception e) { }
-                lInfo.add("Screen Size HxW: " + ViewUtil.getScreenHeightWidthMaximum(this) + " x " + ViewUtil.getScreenHeightWidthMinimum(this));
-                lInfo.add("DeviceDefaultOrientation:" + ViewUtil.getDeviceDefaultOrientation(this));
-                lInfo.add("Resource folder: " + getString(R.string.setting_resource_folder));
-
-                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                lInfo.add(displayMetrics.toString()); // string like DisplayMetrics{density=1.5, width=480, height= 800, scaledDensity=1.2750001, xdpi=217.713  , ydpi=207.347}
-
-                if ( true ) {
-                    lInfo.add(StringUtil.lrpad("Features", '=', 40));
-                    final FeatureInfo[] featuresList = getPackageManager().getSystemAvailableFeatures();
-                    for (FeatureInfo f : featuresList) {
-                        lInfo.add(f.name);
-                    }
-                }
-                if ( true ) {
-                    lInfo.add(StringUtil.lrpad("Settings", '=', 40));
-                    Map<String, ?> all = prefs.getAll();
-                    Set<String> keys = all.keySet();
-                    SortedSet<String> keysSorted = new TreeSet<String>(keys);
-                    for(String key: keysSorted) {
-                        Object val = all.get(key);
-                        if ( key.toLowerCase().matches(".*password$")) {
-                            val = "******"; // do not send any passwords in the feedback mail: would piss off the user
-                        }
-                        if ( key.endsWith("List") ) { // EventList RoundList PlayerList MatchList
-                            val = String.format("[list of length %s]", String.valueOf(val).split("\n").length);
-                        }
-                        lInfo.add("|" + key + ":" + val);
-                    }
-                }
-                if ( true ) {
-                    lInfo.add(StringUtil.lrpad("", '=', 40));
-                    lInfo.add("Become a tester: https://play.google.com/apps/testing/" + getPackageName());
-                    lInfo.add(StringUtil.lrpad("", '=', 40));
-                }
+                List<String> lInfo = collectInfo();
 
                 String sendFeedbackTo = getString(R.string.developer_email);
                 String sSubject = Brand.getShortName(this) + " Feedback";
