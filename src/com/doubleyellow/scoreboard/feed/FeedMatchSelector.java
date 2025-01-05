@@ -1236,7 +1236,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
                 String sDisplayName = placeholder.translate(sDisplayFormat, joMatch);
                        sDisplayName = placeholder.removeUntranslated(sDisplayName);
-                       sDisplayName = sDisplayName.replaceAll("[^\\w\\s]{2}", ""); // remove brackets around values that are not provided (), [], <>
+                       sDisplayName = sDisplayName.replaceAll("(\\[\\s*\\]|\\(\\s*\\)|<\\s*>)", ""); // remove brackets around values that are not provided (), [], <>
                        sDisplayName = sDisplayName.replaceAll("[:]\\s*$", "");   // remove splitter character(s) at end (there because certain values not provided)
                        sDisplayName = StringUtil.normalize(sDisplayName).trim();
 
