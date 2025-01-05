@@ -102,7 +102,7 @@ android {
         }
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
-    def versionCodeXXX = 531
+    def versionCodeXXX = 532
     productFlavors {
         // versionCodePrefix specifies [min_api_level][bitwise_supported_screensizes s=1,m=2,l=4,xl=8]
         phoneTabletPre22 {
@@ -183,10 +183,11 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar']) // AndroidBase and Graph
 
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4' // this one is not actually required, but removing it makes com.doubleyellow.scoreboard.history.MatchGameScoresView in portrait spacing incorrect?!
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4' // 2.2.0 fails ... this one is not actually required, but removing it makes com.doubleyellow.scoreboard.history.MatchGameScoresView in portrait spacing incorrect?!
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
-    implementation 'androidx.appcompat:appcompat:1.6.1' // moving from 1.3.1 to 1.4.0 makes e.g. Wear OS in emulator fail, 1.7.0 made build fail it seems (20240606)    
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    // moving from 1.3.1 to 1.4.0 makes e.g. Wear OS in emulator fail, 1.7.0 made build fail it seems (20250105)
 
   //implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 
@@ -195,14 +196,16 @@ dependencies {
     implementation 'androidx.core:core-splashscreen:1.0.1'
 
     // ChromeCast (new with Custom Receiver)
-    phoneTabletPre22Implementation  'com.google.android.gms:play-services-cast-framework:21.5.0'
-    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:21.5.0'
-    wearOsImplementation            'com.google.android.gms:play-services-cast-framework:21.5.0' // wearOs can not cast but to run it still needs 'Implementation' to not have 'ClassNotFound' exceptions
+    phoneTabletPre22Implementation 'com.google.android.gms:play-services-cast-framework:22.0.0'
+    phoneTabletPost23Implementation 'com.google.android.gms:play-services-cast-framework:22.0.0'
+    wearOsImplementation 'com.google.android.gms:play-services-cast-framework:22.0.0'
+    // wearOs can not cast but to run it still needs 'Implementation' to not have 'ClassNotFound' exceptions
 
     // allow communication between handheld device and wearable
-    phoneTabletPre22CompileOnly       'com.google.android.gms:play-services-wearable:18.2.0' // compileOnly is good enough for API < 23
-    phoneTabletPost23Implementation   'com.google.android.gms:play-services-wearable:18.2.0'
-    wearOsImplementation              'com.google.android.gms:play-services-wearable:18.2.0'
+    phoneTabletPre22CompileOnly 'com.google.android.gms:play-services-wearable:19.0.0'
+    // compileOnly is good enough for API < 23
+    phoneTabletPost23Implementation 'com.google.android.gms:play-services-wearable:19.0.0'
+    wearOsImplementation 'com.google.android.gms:play-services-wearable:19.0.0'
 
     phoneTabletPre22CompileOnly       'com.google.android.support:wearable:2.9.0'
     phoneTabletPost23Implementation   'com.google.android.support:wearable:2.9.0'
@@ -224,7 +227,7 @@ dependencies {
     // For an optimal experience using FCM, add the Firebase SDK for Google Analytics. This is recommended, but not required.
     //implementation 'com.google.firebase:firebase-analytics'
 
-    implementation platform('com.google.firebase:firebase-bom:31.1.1') // 2022-12-17: compiles OK but PushNotifications.start in PusherHandler.init fails with java.lang.ClassNotFoundException: com.google.firebase.iid.FirebaseInstanceId if firebase-iid is not added specifically
+    implementation platform('com.google.firebase:firebase-bom:33.7.0') // 2022-12-17: compiles OK but PushNotifications.start in PusherHandler.init fails with java.lang.ClassNotFoundException: com.google.firebase.iid.FirebaseInstanceId if firebase-iid is not added specifically
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-analytics'     // replaces firebase-core
     implementation 'com.google.firebase:firebase-installations' // replaces firebase-iid
@@ -232,7 +235,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-iid:21.1.0' // add explicitly since no longer in the BOM, but required by com.pusher:push-notifications-android:1.9.0
 
     // open source library for in-app-purchasing implementation
-    implementation 'com.anjlab.android.iab.v3:library:2.1.0'
+    implementation 'com.anjlab.android.iab.v3:library:2.2.0'
     //implementation 'com.anjlab.android.iab.v3:library:2.2.0' // somehow gives error/conflict complaining about 6.1.0 in manifest
     //implementation 'com.android.billingclient:billing:6.1.0'
 
@@ -241,7 +244,7 @@ dependencies {
     implementation 'com.pusher:push-notifications-android:1.9.2'
 
     // added to avoid compile issues due to multiple kotlin libraries included by dependencies
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0"
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.0'
 }
 
 /*
