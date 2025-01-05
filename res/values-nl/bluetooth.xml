@@ -20,6 +20,7 @@
     <li>bluetooth aan staat</li>
     <li>dit apparaat is (nog steeds) opgelijst als \'gekoppeld\' </li>
     <li>%2$s is opgestart</li>
+    <li>%2$s de permissie \'Locatie\' heeft (e.g. door \'Mirror Score\' een keer te starten van het andere toestel)</li>
     </ul>
 </html>]]></string>
 

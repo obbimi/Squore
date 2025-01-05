@@ -79,6 +79,7 @@
     <li>bluetooth is turned on</li>
     <li>this device is (still) listed as paired device</li>
     <li>%2$s is running</li>
+    <li>%2$s has been granted the \'Location\' permission (e.g. by starting \'Mirror Score\' from the other device)</li>
     </ul>
 </html>]]></string>
 
