@@ -658,7 +658,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     });
                 }
             }
-            final PreferenceGroup psBLE = (PreferenceGroup) this.findPreference(PreferenceKeys.BlueToothLE);
+            final PreferenceGroup psBLE = (PreferenceGroup) this.findPreference(PreferenceKeys.BluetoothLE);
             if ( psBLE != null ) {
                 if ( PreferenceValues.useBluetoothLE(getContext()) ) {
                     ListPreference lpBLEconfig = ( ListPreference) this.findPreference(PreferenceKeys.BluetoothLE_Config);
@@ -765,6 +765,9 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 hideRemovePreference(psgBeh, PreferenceKeys.numberOfServiceCountUpOrDown);    // only for racketlon and tabletennis
             }
             if ( Brand.isGameSetMatch() ) {
+                for(PreferenceKeys key: NONGameSetMatch_SpecificPrefs ) {
+                    hideRemovePreference(psgBeh, key);
+                }
                 hideRemovePreference(psgBeh, PreferenceKeys.indicateGameBall); // always at AD/40 very common. In squash games may be to 9,11 or 15
                 hideRemovePreference(psgBeh, PreferenceKeys.endGameSuggestion); // should be always Automatic. very common score in tennispadel/tennis
                 hideRemovePreference(psgBeh, PreferenceKeys.showDetailsAtEndOfGameAutomatically); // TODO: make details about sets, not games
@@ -774,12 +777,11 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 hideRemovePreference(psgBeh, PreferenceKeys.swapPlayersBetweenGames);
                 hideRemovePreference(psgBeh, PreferenceKeys.swapPlayersHalfwayGame);
             } else {
-                PreferenceGroup  psgMF = (PreferenceGroup)    ps.findPreference(PreferenceKeys.MatchFormat.toString());
-                hideRemovePreference(psgMF, PreferenceKeys.changeSidesWhen_GSM);
-                hideRemovePreference(psgMF, PreferenceKeys.finalSetFinish);
-                hideRemovePreference(psgMF, PreferenceKeys.newBalls);
-                //hideRemovePreference(psgMF, PreferenceKeys.goldenPointToWinGame);
-                hideRemovePreference(psgBeh, PreferenceKeys.indicateGoldenPoint);
+                PreferenceGroup psgMF = (PreferenceGroup) ps.findPreference(PreferenceKeys.MatchFormat.toString());
+                for(PreferenceKeys key: GameSetMatch_SpecificPrefs ) {
+                    hideRemovePreference(psgMF, key);
+                    hideRemovePreference(psgBeh, key);
+                }
             }
 /*
             if ( false && Brand.isGameSetMatch() ) {
@@ -1256,4 +1258,20 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
     private void clearPPA() {
         getPackageManager().clearPackagePreferredActivities(getPackageName());
     }
+
+    public static Set<PreferenceKeys> GameSetMatch_SpecificPrefs = Set.of
+            ( PreferenceKeys.changeSidesWhen_GSM
+            , PreferenceKeys.finalSetFinish
+            , PreferenceKeys.newBalls
+            , PreferenceKeys.indicateGoldenPoint
+            );
+    public static Set<PreferenceKeys> NONGameSetMatch_SpecificPrefs = Set.of
+            ( PreferenceKeys.indicateGameBall
+            , PreferenceKeys.endGameSuggestion
+            , PreferenceKeys.showDetailsAtEndOfGameAutomatically
+            , PreferenceKeys.hapticFeedbackOnGameEnd
+            , PreferenceKeys.AutomateWhatCanBeAutomatedPrefs
+            , PreferenceKeys.swapPlayersBetweenGames
+            , PreferenceKeys.swapPlayersHalfwayGame
+            );
 }

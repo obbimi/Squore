@@ -875,14 +875,18 @@ public class IBoard implements TimerViewContainer
                     setVisibility(vGamesWon1, iVisibilityIfNotUsed);
                     setVisibility(vGamesWon2, iVisibilityIfNotUsed);
 
-                    final TextView vPointsWon1 = (TextView) findViewById(R.id.btn_score1);
-                    final TextView vPointsWon2 = (TextView) findViewById(R.id.btn_score2);
-                    if ( iGamesFor1 + iGamesFor2 > 0 ) {
-                        vPointsWon1.setTag(iGamesFor1);
-                        vPointsWon2.setTag(iGamesFor2);
-                    } else {
-                        vPointsWon1.setTag(ScorePlusSmallScore.EMPTY);
-                        vPointsWon2.setTag(ScorePlusSmallScore.EMPTY);
+                    {
+                        final TextView vPointsWon1 = (TextView) findViewById(R.id.btn_score1);
+                        if ( vPointsWon1 != null ) {
+                            final TextView vPointsWon2 = (TextView) findViewById(R.id.btn_score2);
+                            if ( iGamesFor1 + iGamesFor2 > 0 ) {
+                                vPointsWon1.setTag(iGamesFor1);
+                                vPointsWon2.setTag(iGamesFor2);
+                            } else {
+                                vPointsWon1.setTag(ScorePlusSmallScore.EMPTY);
+                                vPointsWon2.setTag(ScorePlusSmallScore.EMPTY);
+                            }
+                        }
                     }
 
                     List<Map<Player, Integer>> pointScoredPerGame = matchModel.getEndScoreOfGames();
@@ -946,9 +950,11 @@ public class IBoard implements TimerViewContainer
                     // remove small digit that also indicates number of games won, since we show it in big digits
                     if ( true ) {
                         TextView vPointsWon1 = (TextView) findViewById(R.id.btn_score1);
-                        TextView vPointsWon2 = (TextView) findViewById(R.id.btn_score2);
-                        vPointsWon1.setTag(ScorePlusSmallScore.EMPTY);
-                        vPointsWon2.setTag(ScorePlusSmallScore.EMPTY);
+                        if ( vPointsWon1 != null ) {
+                            TextView vPointsWon2 = (TextView) findViewById(R.id.btn_score2);
+                            vPointsWon1.setTag(ScorePlusSmallScore.EMPTY);
+                            vPointsWon2.setTag(ScorePlusSmallScore.EMPTY);
+                        }
                     }
                 }
             }

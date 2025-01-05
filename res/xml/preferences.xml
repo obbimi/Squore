@@ -25,7 +25,7 @@
         android:title="@string/pref_Category_BlueToothLE"
         android:summary="Collection of settings to hopefully make the BLE experience better"
         android:icon="@android:drawable/stat_sys_data_bluetooth"
-        android:key="BlueToothLE">
+        android:key="BluetoothLE">
         <CheckBoxPreference android:key="UseBluetoothLE"
             android:title="@string/pref_UseBluetoothLE"
             android:summary="@string/pref_UseBluetoothLE_Summary"
