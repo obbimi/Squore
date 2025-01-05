@@ -99,16 +99,16 @@ public class ConductInfo extends XActivity
             List<String> lInput = new ArrayList<String>(Arrays.asList(sContent.split("\n")));
             ListUtil.removeEmpty(lInput);
             String sHeader = null;
-            for(String sMatch: lInput) {
-                sMatch = sMatch.trim();
-                if ( StringUtil.isEmpty(sMatch)) { continue; }
-                if ( sMatch.startsWith(HEADER_PREFIX) ) {
-                    sHeader = sMatch.replaceFirst(HEADER_PREFIX, "").trim();
+            for(String sOffence: lInput) {
+                sOffence = sOffence.trim();
+                if ( StringUtil.isEmpty(sOffence)) { continue; }
+                if ( sOffence.startsWith(HEADER_PREFIX) ) {
+                    sHeader = sOffence.replaceFirst(HEADER_PREFIX, "").trim();
                     sHeader = sHeader.replaceAll("\\(.*\\)", ""); // for header in app remove info between brackets
                     sHeader = sHeader.replaceAll(":$", "").trim();
                     continue;
                 }
-                super.addItem(sHeader, sMatch);
+                super.addItem(sHeader, sOffence);
             }
         }
     }

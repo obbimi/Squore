@@ -62,13 +62,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Fragment that allows the user to select a match from an internet feed like defined in
+ * Fragment that allows the user to select a match from an internet feed defined in
  * feedPostUrls/feedPostUrl preferences.
  *
  * Used within MatchTabbed activity.
  *
- *
- * If no matches are in the feed, and a 'players' feed is available it allows the user browse the list of players and to select the first player of a match.
+ * If no matches are in the feed, and a 'players' feed is available it allows the user to browse the list of players and to select the first player of a match.
  */
 public class FeedMatchSelector extends ExpandableMatchSelector
 {
@@ -88,11 +87,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         }
         sbAllOpsAsRegExp.append(")");
 
-        SETTING_REGEXP = "\\[" + sbAllOpsAsRegExp.toString() + "\\s*=\\s*([^\\]]+)\\]";
+        SETTING_REGEXP = "\\[" + sbAllOpsAsRegExp + "\\s*=\\s*([^\\]]+)\\]";
     }
     private static final String HEADER_PREFIX_REGEXP = "^\\s*([+-])\\s*(.+)$";
 
-    public static Map<PreferenceKeys, String> mFeedPrefOverwrites = new HashMap<PreferenceKeys, String>();
+    public static Map<PreferenceKeys, String> mFeedPrefOverwrites = new HashMap<>();
 
     private String     m_sNoMatchesInFeed = null;
     /** global list of team players */
@@ -681,7 +680,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 }
 
                 Model mDetails = Brand.getModel();
-                if (itemAtPosition instanceof JSONObject) {
+                if ( itemAtPosition instanceof JSONObject ) {
                     boolean bNamesPopulated = populateModelFromJSON(mDetails, (JSONObject) itemAtPosition, null, PreferenceValues.getFeedPostName(context));
                 } else if (itemAtPosition instanceof String) {
                     String sText = (String) itemAtPosition;
@@ -1258,7 +1257,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
         /** Matches or players */
         private List<String> fillListFlat(String sContent) {
-            List<String> lInput = new ArrayList<String>(Arrays.asList(sContent.split("\n")));
+            List<String> lInput = new ArrayList<>(Arrays.asList(sContent.split("\n")));
             ListUtil.removeEmpty(lInput);
 
             if ( ListUtil.isEmpty(lInput) ) {
@@ -1287,7 +1286,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         }
                     }
                 }
-                List<String> lExpanded = new ArrayList<String>();
+                List<String> lExpanded = new ArrayList<>();
                 String sHeader = getString(m_feedStatus.equals(FeedStatus.showingPlayers)?R.string.lbl_players:R.string.sb_matches); // default if no header follows in the feed
                 mFeedPrefOverwrites.clear();
                 Model mTmp = ModelFactory.getTemp("Storing parsing-result of a match from a feed");
@@ -1446,7 +1445,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     public interface FeedStatusChangedListerer {
         void notify(FeedStatus fsOld, FeedStatus fsNew);
     }
-    private List<FeedStatusChangedListerer> lChangeListeners = new ArrayList<FeedStatusChangedListerer>();
+    private List<FeedStatusChangedListerer> lChangeListeners = new ArrayList<>();
     public void registerFeedChangeListener(FeedStatusChangedListerer l) {
         lChangeListeners.add(l);
     }

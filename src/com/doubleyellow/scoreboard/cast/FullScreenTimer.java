@@ -100,7 +100,7 @@ public class FullScreenTimer implements TimerViewContainer
         Timer.removeTimerView(false, timerView);
         timerView = null;
 
-                            txtTimer = (TextView           ) root.findViewById(R.id.peog_timer     );
+        txtTimer = root.findViewById(R.id.peog_timer);
         if ( txtTimer != null ) {
             if ( matchModel.matchHasEnded() ) {
                 txtTimer.setVisibility(View.INVISIBLE);

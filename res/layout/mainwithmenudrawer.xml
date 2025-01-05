@@ -8,6 +8,8 @@
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+    <!-- frame for e.g. full screen timer -->
     <FrameLayout
             android:visibility="gone"
             android:id="@+id/presentation_frame"

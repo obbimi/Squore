@@ -54,12 +54,12 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
 {
     protected static final String TAG = "SB." + SimpleELAdapter.class.getSimpleName();
 
-    private List<String>                  m_lHeaders           = new ArrayList<String>();     // filtered
-    private HashMap<String, List<String>> m_lHeader2Childs     = new LinkedHashMap<String, List<String>>(); // only childs have been filtered
-    private List<String>                  m_lHeadersFull       = new ArrayList<String>();
-    private HashMap<String, List<String>> m_lHeader2ChildsFull = new LinkedHashMap<String, List<String>>();
-    private Map<String, Object>           m_mObjects           = new HashMap<String, Object> ();
-    private Map<String, Boolean>          m_mSelected          = new HashMap<String, Boolean>();
+    private List<String>                  m_lHeaders           = new ArrayList<>();     // filtered
+    private HashMap<String, List<String>> m_lHeader2Childs     = new LinkedHashMap<>(); // only childs have been filtered
+    private List<String>                  m_lHeadersFull       = new ArrayList<>();
+    private HashMap<String, List<String>> m_lHeader2ChildsFull = new LinkedHashMap<>();
+    private Map<String, Object>           m_mObjects           = new HashMap<> ();
+    private Map<String, Boolean>          m_mSelected          = new HashMap<>();
 
     private LayoutInflater                inflater             = null;
     private Context                       ctx                  = null;
@@ -103,10 +103,10 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
         m_itemSorter = itemSorter;
     }
     protected void sortHeaders(SortOrder sortOrder) {
-        setHeaderSorter(new StringComparator<String>(sortOrder));
+        setHeaderSorter(new StringComparator<>(sortOrder));
     }
     protected void sortItems(SortOrder sortOrder) {
-        setItemSorter(new StringComparator<String>(sortOrder));
+        setItemSorter(new StringComparator<>(sortOrder));
     }
     private transient Comparator<String> m_headerSorter = null;
     private transient Comparator<String> m_itemSorter   = null;
@@ -154,10 +154,10 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
     protected void addItem(String sGroup, String sItem) {
         addItem(sGroup, sItem, null);
     }
-    public Object addItem(String sGroup, String sItem, Object o) {
+    public Object addItem(String sGroup, String sItem, Object o /* for now typically a file holding the match details of a finished game, or a json object holding player/match info from a feed */) {
         List<String> lItems = m_lHeader2ChildsFull.get(sGroup);
         if ( lItems == null ) {
-            lItems = new ArrayList<String>();
+            lItems = new ArrayList<>();
             m_lHeader2ChildsFull.put(sGroup, lItems);
             addHeader(sGroup);
         }
@@ -263,10 +263,10 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
         m_mSelected.clear();
     }
     public List removeSelectedItems() {
-        ArrayList<Object> list = new ArrayList<Object>();
+        ArrayList<Object> list = new ArrayList<>();
         for(String sHeader: m_lHeaders) {
             List<String> lItems = m_lHeader2Childs.get(sHeader);
-            List<String> lItemsCopy = new ArrayList<String>(lItems); // to iterator over but allow remove to be called on actual list
+            List<String> lItemsCopy = new ArrayList<>(lItems); // to iterator over but allow remove to be called on actual list
             for(String sItem: lItemsCopy) {
                 String key = getKey(sHeader, sItem);
                 if ( isSelected(key) ) {
@@ -643,7 +643,7 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
         return m_lHeader2ChildsFull.get(sHeader);
     }
     public LinkedHashMap<String, Integer> getHeaderChildCounts() {
-        LinkedHashMap<String, Integer> mHeader2Count = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> mHeader2Count = new LinkedHashMap<>();
         for(String sHeader: m_lHeader2ChildsFull.keySet() ) {
             mHeader2Count.put(sHeader, ListUtil.size(getChilds(sHeader)));
         }
