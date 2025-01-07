@@ -16,6 +16,9 @@
  */
 package com.doubleyellow.scoreboard.model;
 
+/**
+ * Maintain state of communicating back the match result to the source
+ */
 public enum SourceFeedbackState {
     None,
     SourceNotReachable,

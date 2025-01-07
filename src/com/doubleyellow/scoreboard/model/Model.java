@@ -1896,6 +1896,15 @@ public abstract class Model implements Serializable
         }
     }
 
+    // to keep track of a result should be re-posted maybe
+    protected SourceFeedbackState m_eSourceFeedbackState = SourceFeedbackState.None;
+    protected String              m_sPostURL             = null;
+    public void setSourceFeedbackState(SourceFeedbackState eState, String sUrl) {
+        m_eSourceFeedbackState = eState;
+        m_sPostURL = sUrl;
+        setDirty();
+    }
+
     public String getAdditionalPostParams() {
         return m_sAdditionalPostParams;
     }
@@ -2795,6 +2804,11 @@ public abstract class Model implements Serializable
                 String sSourceID = joMetadata.optString(JSONKey.sourceID.toString(), "");
                 setSource(sSource, sSourceID);
 
+                if ( joMetadata.has(JSONKey.sourceFeedbackState.toString()) ) {
+                    String sState = joMetadata.getString(JSONKey.sourceFeedbackState.toString());
+                    setSourceFeedbackState(SourceFeedbackState.valueOf(sState), joMetadata.optString(JSONKey.sourcePostResultUrl.toString()));
+                }
+
                 String sAdditionalPostParams = joMetadata.optString(JSONKey.additionalPostParams.toString(), "");
                 setAdditionalPostParams(sAdditionalPostParams);
 
@@ -3262,6 +3276,10 @@ public abstract class Model implements Serializable
         }
         if ( StringUtil.isNotEmpty(m_shareUrl) ) {
             metaData.put(JSONKey.shareURL.toString(), m_shareUrl);
+        }
+        if ( m_eSourceFeedbackState != null && m_eSourceFeedbackState.equals(SourceFeedbackState.None) == false ) {
+            metaData.put(JSONKey.sourceFeedbackState.toString(), m_eSourceFeedbackState.toString());
+            metaData.put(JSONKey.sourcePostResultUrl.toString(), m_sPostURL);
         }
 
         // send a few 'unique' values for the device: this is mainly for the livescore page to allow filtering on matches only from a certain device

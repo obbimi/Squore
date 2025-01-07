@@ -89,6 +89,8 @@ public enum JSONKey {
 	metadata,
 		source,
 		sourceID, id,
+		sourcePostResultUrl,
+		sourceFeedbackState,
 		shareURL,
 		additionalPostParams,
 	wifi,

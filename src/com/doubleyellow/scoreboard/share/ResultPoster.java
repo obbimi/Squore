@@ -26,9 +26,11 @@ import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.feed.Authentication;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.EndMatchManuallyBecause;
+import com.doubleyellow.scoreboard.model.JSONKey;
 import com.doubleyellow.scoreboard.model.LockState;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.Model;
+import com.doubleyellow.scoreboard.model.SourceFeedbackState;
 import com.doubleyellow.scoreboard.prefs.PostDataPreference;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.android.task.URLTask;
@@ -92,10 +94,12 @@ public class ResultPoster implements ContentReceiver
         return sUrlName;
     }
 
+    private Model m_matchModel = null;
     public void post(ScoreBoard scoreBoard, Model matchModel, Authentication authentication, String sUserName, String sPassword)
     {
         PostTask postTask = new PostTask(scoreBoard, sPostURL);
         postTask.setContentReceiver(this);
+        m_matchModel = matchModel;
 
         Map<Player, Integer> pointsWon = matchModel.getTotalNumberOfPointsScored();
 
@@ -230,6 +234,26 @@ public class ResultPoster implements ContentReceiver
         String sTitle     = null;
         boolean bResultOK = result.equals(FetchResult.OK);
 
+        if ( bResultOK ) {
+            if (m_matchModel.matchHasEnded() ) {
+                m_matchModel.setSourceFeedbackState(SourceFeedbackState.SourceAcceptedFinalResult, sUrl);
+            } else {
+                m_matchModel.setSourceFeedbackState(SourceFeedbackState.SourceAcceptedIntermediateResult, sUrl);
+            }
+        } else {
+            switch (result) {
+                case LoginToNetworkFirst:
+                case NoNetwork:
+                case TimeoutError:
+                case SSLHandshakeError:
+                    m_matchModel.setSourceFeedbackState(SourceFeedbackState.SourceNotReachable, sUrl);
+                    break;
+                default:
+                    m_matchModel.setSourceFeedbackState(SourceFeedbackState.SourceRejectedResult, sUrl);
+                    break;
+            }
+        }
+
         // if returned content appears to be JSON try and interpret it
         if ( sContent.startsWith("{") && sContent.endsWith("}") ) {
             try {
@@ -237,6 +261,11 @@ public class ResultPoster implements ContentReceiver
                 sTitle    = jo.optString(ResponseKeys.title  .toString() , sTitle);
                 sMessage  = jo.optString(ResponseKeys.message.toString() , sMessage);
                 bResultOK = jo.optString(ResponseKeys.result .toString(), "OK").equalsIgnoreCase("OK");
+
+                if ( jo.has(JSONKey.sourceFeedbackState.toString() ) ) {
+                    String sFeedbackStateAsSpecifiedBySource = jo.getString(JSONKey.sourceFeedbackState.toString());
+                    m_matchModel.setSourceFeedbackState(SourceFeedbackState.valueOf(sFeedbackStateAsSpecifiedBySource), sUrl);
+                }
 
 /*
 {
