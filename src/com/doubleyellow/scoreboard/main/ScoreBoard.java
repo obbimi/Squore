@@ -6550,6 +6550,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     private static int                m_nrOfBLEDevicesConnected               = 0;
     private static Player             m_blePlayerWaitingForScoreToBeConfirmed = null;
     private static Player             m_blePlayerToConfirmOwnScore            = null;
+    /** attempt to 'catch' accidental double press on connected BLE device */
+    private static Map<Player, Long>  m_lastBLEScoreChangeReceivedFrom         = new HashMap<>();
+
     public void onResumeInitBluetoothBLE()
     {
         final String sMethod = "SB.onCreateInitBLE";
@@ -7516,6 +7519,25 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                     }
                                 }
                             }
+
+                            {
+                                long lNow = System.currentTimeMillis();
+                                long lThreshold = 2000;
+                                if ( m_lastBLEScoreChangeReceivedFrom.containsKey(pInitiatedBy) ) {
+                                    long lLastPress = m_lastBLEScoreChangeReceivedFrom.get(pInitiatedBy);
+                                    if ( lNow -  lLastPress < lThreshold ) {
+                                        String sInfoMsg = getBLEMessage(R.string.ble_score_for_X_changed_by_Y_ble_button_of_Z_ignored__assume_accidental_double_click, pScored, buttonPressed, pInitiatedBy, lThreshold);
+                                        if ( m_nrOfBLEDevicesConnected == 1 ) {
+                                            // TODO
+                                        }
+                                        iBoard.showBLEInfoMessage(sInfoMsg, 10);
+                                        return;
+                                    }
+                                }
+                                m_lastBLEScoreChangeReceivedFrom.put(pInitiatedBy, lNow);
+                                m_lastBLEScoreChangeReceivedFrom.remove(pInitiatedBy.getOther()); // e.g. allow more quickly changing the score by pressing buttons alternating
+                            }
+
                             int iTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(pScored);
                             String sInfoMsg = getBLEMessage(R.string.ble_score_for_X_changed_by_Y_ble_button_of_Z, pScored, buttonPressed, pInitiatedBy);
                             if ( m_nrOfBLEDevicesConnected == 1 ) {

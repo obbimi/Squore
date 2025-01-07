@@ -16,6 +16,8 @@
  */
 package com.doubleyellow.scoreboard.bluetooth_le;
 
+import android.annotation.SuppressLint;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -59,7 +61,10 @@ import java.util.UUID;
 /**
  * Reads and interprets message from BLE device(s).
  * Writes messages to BLE device(s).
+ *
+ * Read messages are passed on to the BLEHandler to update the scoreboard.
  */
+@SuppressLint("MissingPermission")
 public class BLEReceiverManager
 {
     private final static String TAG = "SB.BLEReceiverManager";
