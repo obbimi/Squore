@@ -815,6 +815,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( pFirst == null ) {
             pFirst = IBoard.togglePlayer2ScreenElements();
         } else {
+            if ( pFirst.equals(IBoard.m_firstPlayerOnScreen) ) {
+                return;
+            }
             pFirst = IBoard.initPlayer2ScreenElements(pFirst);
         }
         matchModel.triggerListeners();
@@ -7772,6 +7775,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             if ( sModelScore.equals(sScoreReceived) == false ) {
                                 Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
                                 writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
+                            } else if ( sModelScore.matches("[0-1]-[0-1]") ) { // best of x to y: increase to y+1 on slave
+                                // at start of new game always re-request entire model
+                                writeMethodToBluetooth(BTMethods.requestCompleteJsonOfMatch);
                             }
                             //hidePresentationEndOfGame();
                         }
@@ -7780,6 +7786,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         if ( PreferenceValues.showToastMessageForEveryReceivedFCMMessage(this)) {
                             Toast.makeText(this, "Score changed by FCM message: " + readMessage, Toast.LENGTH_SHORT).show();
                         }
+                        break;
+                    case BluetoothLE:
                         break;
                 }
             }

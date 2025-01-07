@@ -29,7 +29,7 @@ public enum BTMethods {
     swapDoublePlayers  (false),
     /* TODO: rename to switchSides */
     swapPlayers        (false),
-    endGame            (false),
+    endGame            (true),
 
     timestampStartOfGame       (false),
     startTimer                 (false),
