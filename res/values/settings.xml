@@ -37,7 +37,7 @@
     <string name="pref_Category_End_of_Game">End of Game</string>
     <string name="pref_Category_End_of_Game__TennisPadel">End of Set</string>
     <string name="pref_Category_Others">Others</string>
-    <string name="pref_Category_Live_Score_ChromeCast">Live Score/ChromeCast/Bluetooth Mirror</string>
+    <string name="pref_Category_Live_Score_ChromeCast">Live Score/ChromeCast/MQTT/Bluetooth Mirror</string>
     <string name="pref_Category_ChromeCast">ChromeCast</string>
     <string name="pref_Category_BlueToothSync">BlueTooth Mirror</string>
     <string name="pref_Category_Directory_for_import_export">Directory for import/export</string>
@@ -46,6 +46,21 @@
     <string name="pref_Category_Feeds">Feeds</string>
     <string name="pref_Category_Import_Export_Settings">Import/Export Settings</string>
     <string name="pref_Make_your_choice">Make your choice</string>
+
+    <string name="pref_Category_MQTT">MQTT</string>
+    <string name="pref_UseMQTT">Use MQTT (publish/subscribe)</string>
+    <string name="pref_UseMQTT_Summary">Allow livescore/score mirroring using MQTT publish/subscribe mechanism</string>
+    <string name="pref_MQTTBrokerURL">Broker URL</string>
+    <string name="pref_MQTTBrokerURL_Custom">Custom Broker URL</string>
+    <string name="pref_MQTTBrokerURL_Summary">Either a public or private broker can be used. By default a public broker without authentication is configured</string>
+    <string name="pref_MQTTPublishTopic">Publish Topic</string>
+    <string name="pref_MQTTPublishTopic_Summary">Topic placeholder when publishing changes in a match</string>
+    <string name="pref_MQTTSubscribeTopic">Subscribe Topic</string>
+    <string name="pref_MQTTSubscribeTopic_Summary">Topic placeholder when subscribing to changes in a match on an other device</string>
+    <string name="pref_MQTTOtherDeviceId">Other device id</string>
+    <string name="pref_MQTTOtherDeviceId_Summary">Unique device id of the device you want to mirror the score for</string>
+    <string name="pref_MQTTDeviceId">Device Unique Id</string>
+    <string name="pref_MQTTDeviceId_summary">This ID is used to uniquely identify this device. It should be entered on another device as \'Other device id\' to achieve mirroring the score using MQTT</string>
 
     <string name="pref_feedFeedsURL">feedFeedsURL</string>
     <string name="pref_feedFeedsURL_summary">For developers only</string>

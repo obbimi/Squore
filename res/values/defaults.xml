@@ -245,6 +245,21 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="ShowFeedBackOnBLEButtonsPressedInfoMessages_default">true</bool>
     <integer name="NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default">4</integer>
 
+    <bool name="UseMQTT_default__Default">false</bool>
+    <string name="MQTTTopicTemplate__Default">double-yellow/${EventId}/${Brand}/${DeviceId}</string>
+
+    <!-- https://github.com/emqx/blog/blob/main/en/202111/popular-online-public-mqtt-brokers.md -->
+    <string-array name="MQTTBrokerUrls" translatable="false">
+        <item>tcp://broker.hivemq.com:1883</item> <!-- 2025-01-11 ok -->
+        <item>tcp://broker.emqx.io:1883</item> <!-- 2025-01-11 ok -->
+        <item>tcp://mqtt.eclipseprojects.io:1883</item>
+        <item>tcp://test.mosquitto.org:1883</item>
+        <item>tcp://broker-cn.emqx.io:1883</item>
+<!--        <item>tcp://iot.eclipse.org:1883</item>--> <!-- 2025-01-11 NOK -->
+        <item>Custom</item>
+    </string-array>
+    <string name="MQTTBrokerURL_Custom__Default">tcp://192.168.0.130:1883</string>
+
     <bool name="Cast_ShowGraphDuringTimer_default">true</bool>
     <bool name="castScreenShowLogo_default">true</bool>
     <bool name="castScreenShowSponsor_default">true</bool>

@@ -21,4 +21,5 @@ public enum MessageSource {
     Wearable,
     FirebaseCloudMessage,
     BluetoothLE,
+    MQTT,
 }

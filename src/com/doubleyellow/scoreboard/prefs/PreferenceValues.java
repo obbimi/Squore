@@ -928,6 +928,36 @@ public class PreferenceValues extends RWValues
     public static int nrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired(Context context) {
         return getInteger(PreferenceKeys.NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired, context, R.integer.NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default);
     }
+
+    public static boolean useMQTT(Context context) {
+        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.UseMQTT_default__Default);
+        return getBoolean(PreferenceKeys.UseMQTT, context, iResBrandSpecific);
+    }
+    public static String getMQTTBrokerURL(Context context) {
+        String sCustom = getString(PreferenceKeys.MQTTBrokerURL_Custom, R.string.MQTTBrokerURL_Custom__Default, context);
+        String sOneOfList = getString(PreferenceKeys.MQTTBrokerURL, null, context);
+        String[] saValues = context.getResources().getStringArray(R.array.MQTTBrokerUrls);
+        String sCustomSelected = saValues[saValues.length - 1];
+        if ( StringUtil.isEmpty(sOneOfList) ) {
+            return saValues[0];
+        } else {
+            if ( sOneOfList.equals(sCustomSelected) ) {
+                return sCustom;
+            } else {
+                return sOneOfList;
+            }
+        }
+    }
+    public static String getMQTTPublishTopic(Context context) {
+        return getString(PreferenceKeys.MQTTPublishTopic, R.string.MQTTTopicTemplate__Default, context);
+    }
+    public static String getMQTTSubscribeTopic(Context context) {
+        return getString(PreferenceKeys.MQTTSubscribeTopic, R.string.MQTTTopicTemplate__Default, context);
+    }
+    public static String getMQTTOtherDeviceId(Context context) {
+        return getString(PreferenceKeys.MQTTOtherDeviceId, "", context).toUpperCase();
+    }
+
     public static boolean allowTrustAllCertificatesAndHosts(Context context) {
         return getBoolean(PreferenceKeys.allowTrustAllCertificatesAndHosts, context, R.bool.allowTrustAllCertificatesAndHosts_default);
     }
@@ -2041,7 +2071,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2024-12-28"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2025-01-12"; // auto adjusted by shell script 'clean.and.assemble.sh'
     public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) <= 0;
     }

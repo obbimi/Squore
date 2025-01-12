@@ -341,4 +341,11 @@ public enum PreferenceKeys {
         BluetoothLE_Config,
         NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired,
         ShowFeedBackOnBLEButtonsPressedInfoMessages,
+
+    UseMQTT,
+        MQTTBrokerURL,
+            MQTTBrokerURL_Custom,
+        MQTTPublishTopic,
+        MQTTSubscribeTopic,
+            MQTTOtherDeviceId,
 }

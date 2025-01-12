@@ -1023,7 +1023,7 @@
         </PreferenceCategory>
     </PreferenceScreen>
 
-    <PreferenceScreen android:key="LiveScore_Cast"
+    <PreferenceScreen android:key="LiveScore_Mirror"
                       android:icon="@drawable/ic_chromecast"
                       android:summary="@string/pref_live_score_summary"
                       android:title="@string/pref_Category_Live_Score_ChromeCast">
@@ -1102,6 +1102,46 @@
 -->
         </PreferenceCategory>
 
+        <PreferenceCategory android:title="@string/pref_Category_MQTT" android:key="MQTT">
+            <CheckBoxPreference android:key="UseMQTT"
+                android:title="@string/pref_UseMQTT"
+                android:summary="@string/pref_UseMQTT_Summary"
+                android:icon="@android:drawable/stat_sys_data_bluetooth"
+                android:defaultValue="@bool/UseMQTT_default__Default"
+                />
+            <ListPreference android:key="MQTTBrokerURL"
+                android:title="@string/pref_MQTTBrokerURL"
+                android:entries="@array/MQTTBrokerUrls"
+                android:entryValues="@array/MQTTBrokerUrls"
+                android:summary="@string/pref_MQTTBrokerURL_Summary"
+                android:defaultValue=""/>
+            <EditTextPreference android:key="MQTTBrokerURL_Custom"
+                android:title="@string/pref_MQTTBrokerURL_Custom"
+                android:defaultValue="@string/MQTTBrokerURL_Custom__Default"
+                />
+            <EditTextPreference android:key="MQTTPublishTopic"
+                android:title="@string/pref_MQTTPublishTopic"
+                android:summary="@string/pref_MQTTPublishTopic_Summary"
+                android:defaultValue="@string/MQTTTopicTemplate__Default"
+                />
+            <EditTextPreference android:key="MQTTSubscribeTopic"
+                android:title="@string/pref_MQTTSubscribeTopic"
+                android:summary="@string/pref_MQTTSubscribeTopic_Summary"
+                android:defaultValue="@string/MQTTTopicTemplate__Default"
+                />
+            <EditTextPreference android:key="MQTTOtherDeviceId"
+                android:title="@string/pref_MQTTOtherDeviceId"
+                android:summary="@string/pref_MQTTOtherDeviceId_Summary"
+                android:defaultValue=""
+                />
+            <com.doubleyellow.scoreboard.prefs.LiveScoreIdPref
+                android:key="FCMDeviceId"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_MQTTDeviceId"
+                android:summary="@string/pref_FCMDeviceId_summary"
+                />
+        </PreferenceCategory>
+
         <PreferenceCategory android:title="@string/pref_Category_BlueToothSync" android:key="BlueToothSync">
             <CheckBoxPreference android:key="BTSync_keepLROnConnectedDeviceMirrored"
                                 android:title="@string/pref_BTSync_keepLROnConnectedDeviceMirrored"
@@ -1114,6 +1154,7 @@
                                 android:defaultValue="@bool/BTSync_showFullScreenTimer_default__Squash"
             />
         </PreferenceCategory>
+
     </PreferenceScreen>
 
     <PreferenceScreen android:key="Timers"

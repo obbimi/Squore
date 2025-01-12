@@ -98,6 +98,7 @@ import com.doubleyellow.scoreboard.firebase.PusherHandler;
 import com.doubleyellow.scoreboard.firebase.PusherMessagingService;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
+import com.doubleyellow.scoreboard.mqtt.MQTTClient;
 import com.doubleyellow.scoreboard.share.MatchModelPoster;
 import com.doubleyellow.scoreboard.share.ResultPoster;
 import com.doubleyellow.scoreboard.share.ResultSender;
@@ -137,6 +138,9 @@ import androidx.appcompat.app.ActionBar;
 
 // Wearable
 import androidx.wear.input.WearableButtons; // requires api >= 25
+
+// MQTT
+import org.eclipse.paho.client.mqttv3.*;
 
 /**
  * The main Activity of the scoreboard app.
@@ -1346,6 +1350,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         initScoreHistory();
 
         //onResumeNFC();
+        onResumeMQTT();
         onResumeFCM();
         onResumeBlueTooth();
         onResumeInitBluetoothBLE();
@@ -2501,6 +2506,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         ArchiveTabbed.persist(this);
       //cleanup_Speak();
         stopBlueTooth();
+        stopMQTT();
 
         PusherHandler.getInstance().cleanup();
 
@@ -5146,6 +5152,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
             List<PreferenceKeys> lChangedSetting = Preferences.getChangedSettings();
             if ( ListUtil.isNotEmpty(lChangedSetting) ) {
+                boolean bMQTTRestarted = false;
                 for(PreferenceKeys changeKey: lChangedSetting ) {
                     switch (changeKey) {
                         case blinkFeedbackPerPoint:
@@ -5164,12 +5171,25 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         case swapPlayersOn180DegreesRotationOfDeviceInLandscape: // fall through
                             doRestart();
                             break;
+                        case UseBluetoothLE: // fall through
                         case BluetoothLE_Config:
                             if ( m_bleReceiverManager != null ) {
                                 m_bleReceiverManager.closeConnection();
                                 m_bleReceiverManager = null;
                             }
                             onResumeInitBluetoothBLE();
+                            break;
+                        case UseMQTT:              // fall through
+                        case MQTTBrokerURL:        // fall through
+                        case MQTTBrokerURL_Custom: // fall through
+                        case MQTTSubscribeTopic:   // fall through
+                        case MQTTPublishTopic:     // fall through
+                        case MQTTOtherDeviceId:    // fall through
+                            if ( bMQTTRestarted == false ) {
+                                stopMQTT();
+                                onResumeMQTT();
+                                bMQTTRestarted = true;
+                            }
                             break;
                         default:
                             break;
@@ -6989,6 +7009,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     private synchronized void writeMethodToBluetooth(BTMethods method, Object... args) {
+        publishOnMQTT(method, args); // TODO: finetune when/what to publish
+
         boolean bDoSend = true;
         // DO not send some if Slave
         switch (method) {
@@ -7638,6 +7660,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     }
                     case requestCompleteJsonOfMatch: {
                         sendMatchToOtherBluetoothDevice(false, 2000);
+                        publishMatchOnMQTT();
                         break;
                     }
                     case requestCountryFlag: {
@@ -7788,6 +7811,22 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         }
                         break;
                     case BluetoothLE:
+                        break;
+                    case MQTT:
+                        // if e.g. MQTT 'slave' displaying score from other device
+                        if ( btMethod.verifyScore() ) {
+                            // verify score of model against score received. If not equal request complete matchmodel to get in sync
+                            String sScoreReceived = saMethodNArgs[saMethodNArgs.length - 1];
+                            String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
+                            if ( sModelScore.equals(sScoreReceived) == false ) {
+                                Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
+                                publishOnMQTT(BTMethods.requestCompleteJsonOfMatch);
+                            } else if ( sModelScore.matches("[0-1]-[0-1]") ) { // best of x to y: increase to y+1 on slave
+                                // at start of new game always re-request entire model
+                                publishOnMQTT(BTMethods.requestCompleteJsonOfMatch);
+                            }
+                            //hidePresentationEndOfGame();
+                        }
                         break;
                 }
             }
@@ -8351,6 +8390,199 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             pusherHandler.cleanup();
         }
     }
+
+    // ----------------------------------------------------
+    // --- MQTT                                       -----
+    // ----------------------------------------------------
+    private MQTTClient m_MqttClient = null;
+    private void onResumeMQTT() {
+        if ( PreferenceValues.useMQTT(this) == false ) {
+            return;
+        }
+        final String sBrokerUrl = PreferenceValues.getMQTTBrokerURL(this);
+        if ( StringUtil.isEmpty(sBrokerUrl) ) {
+            return;
+        }
+        if ( m_MqttClient == null ) {
+            String sDeviceId = Brand.getShortName(this) + "." + PreferenceValues.getFCMDeviceId(this);
+            m_MqttClient = new MQTTClient(this, sBrokerUrl, sDeviceId);
+        }
+        if ( m_MqttClient.isConnected() ) {
+            return;
+        }
+        iBoard.showInfoMessage(String.format("MQTT Connecting to %s ...", sBrokerUrl), 10);
+        m_MqttClient.connect("", "", new IMqttActionListener() {
+            @Override public void onSuccess(IMqttToken asyncActionToken) {
+                final String mqttSubScribeTopic = getMQTTSubscribeTopic(null);
+                if ( StringUtil.isEmpty(mqttSubScribeTopic) ) {
+                    iBoard.showInfoMessage(String.format("MQTT Connected to %s OK", sBrokerUrl), 10);
+                } else {
+                    if ( m_MqttClient == null ) { return; }
+                    m_MqttClient.subscribe(mqttSubScribeTopic, new MQTTSubscribeActionListener(mqttSubScribeTopic, sBrokerUrl));
+
+                    // listen for 'clients' to request the complete json of a match
+                    String mqttTopic = getMQTTSubscribeTopic(BTMethods.requestCompleteJsonOfMatch);
+                    if  ( StringUtil.isNotEmpty(mqttTopic) ) {
+                        m_MqttClient.subscribe(mqttTopic, new MQTTSubscribeActionListener(mqttTopic, sBrokerUrl));
+                    }
+                }
+            }
+
+            @Override public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                MyDialogBuilder.dialogWithOkOnly(ScoreBoard.this, getString(R.string.pref_Category_MQTT) , String.format("ERROR: MQTT Connection %s failed", exception.toString()), true);
+            }
+        }, new MQTTCallback());
+    }
+
+    /** keep track of what message was received when, mainly to prevent endless loop when 2 devices are subscrived to each other */
+    private Map<String, Long> m_MQTTmessageReceived = new HashMap<>();
+    private BTRole m_MQTTRole = null;
+    private void changeMQTTRole(BTRole role) {
+        if ( role.equals(m_MQTTRole) ) {
+            return;
+        }
+        if ( role.equals(BTRole.Slave) ) {
+            PreferenceValues.setOverwrites(mBtPrefSlaveSettings);
+        }
+        if ( role.equals(BTRole.Master) ) {
+            PreferenceValues.removeOverwrites(mBtPrefSlaveSettings.keySet());
+        }
+        m_MQTTRole = role;
+        iBoard.showInfoMessage("MQTT role " + m_MQTTRole, 2);
+    }
+    private class MQTTCallback implements MqttCallback {
+
+        @Override public void messageArrived(String topic, MqttMessage message) throws Exception {
+            String msg = String.format("MQTT Received: %s [%s]", message.toString(), topic );
+            Log.d(TAG, msg);
+
+            if ( topic.endsWith(PreferenceValues.getFCMDeviceId(ScoreBoard.this)) ) {
+                // show but ignore for further processing, messages published by this device itself
+                iBoard.showInfoMessage(msg, 1);
+            } else {
+                String sPayload = new String(message.getPayload());
+                long lNow = System.currentTimeMillis();
+                if ( m_MQTTmessageReceived.containsKey(sPayload) ) {
+                    long lReceivedPrev = m_MQTTmessageReceived.get(sPayload);
+                    if ( lNow - lReceivedPrev < 2000 ) {
+                        iBoard.showInfoMessage("IGNORE MQTT duplicate: " + sPayload, 2);
+                        return;
+                    }
+                }
+                if ( sPayload.startsWith(BTMethods.changeScore.toString()) ) {
+                    changeMQTTRole(BTRole.Slave);
+                }
+                m_MQTTmessageReceived.put(sPayload, lNow);
+                interpretReceivedMessageOnUiThread(sPayload, MessageSource.MQTT);
+            }
+        }
+
+        @Override public void connectionLost(Throwable cause) {
+            iBoard.showInfoMessage("WARN: MQTT Connection to broker lost", 10);
+            // e.g. internet connection stopped working, or broker on local network stopped
+            // todo: start timer to retry
+        }
+        @Override public void deliveryComplete(IMqttDeliveryToken token) {}
+    }
+
+
+    private class MQTTSubscribeActionListener implements IMqttActionListener
+    {
+        String sTopic = null;
+        String sUrl   = null;
+        MQTTSubscribeActionListener(String topic, String url) {
+            this.sTopic = topic;
+            this.sUrl = url;
+        }
+        @Override public void onSuccess(IMqttToken asyncActionToken) {
+            iBoard.showInfoMessage(String.format("MQTT Subscribed to %s on %s", sTopic, sUrl), 10);
+        }
+
+        @Override public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+            MyDialogBuilder.dialogWithOkOnly(ScoreBoard.this, getString(R.string.pref_Category_MQTT) , String.format("ERROR: MQTT Subscribed to %s failed %s", sTopic, exception.toString()), true);
+        }
+    }
+
+    private void stopMQTT() {
+        if ( m_MqttClient == null ) {
+            return;
+        }
+        if ( m_MqttClient.isConnected() ) {
+            m_MqttClient.disconnect();
+            m_MqttClient = null; // required
+        }
+
+    }
+
+    private synchronized void publishOnMQTT(BTMethods method, Object... args) {
+        if ( m_MqttClient == null || m_MqttClient.isConnected() == false ) {
+            return;
+        }
+
+        if ( BTMethods.changeScore.equals(method) ) {
+            changeMQTTRole(BTRole.Master);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        addMethodAndArgs(sb, method, args);
+        final String sMessage = sb.toString();
+
+        //Log.d(TAG, "About to write BT message " + sMessage.trim());
+        final String mqttTopic = getMQTTPublishTopic(method);
+        m_MqttClient.publish(mqttTopic, sMessage);
+    }
+    public void publishMatchOnMQTT() {
+        if ( m_MqttClient == null || m_MqttClient.isConnected() == false ) {
+            return;
+        }
+
+        String sJson = matchModel.toJsonString(ScoreBoard.this);
+        final String mqttTopic = getMQTTPublishTopic(null);
+        m_MqttClient.publish(mqttTopic, sJson.length() + ":" + sJson);
+    }
+
+    private String getMQTTPublishTopic(BTMethods btMethod) {
+        String sPlaceholder = PreferenceValues.getMQTTPublishTopic(this);
+        String sSubTopic = "";
+
+        String sDevice = PreferenceValues.getFCMDeviceId(this);
+        if ( EnumSet.of(BTMethods.requestCompleteJsonOfMatch).contains(btMethod) ) {
+            sDevice = PreferenceValues.getMQTTOtherDeviceId(this);
+            sSubTopic = "/" + btMethod;
+        }
+        String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
+        return sValue + sSubTopic;
+    }
+
+    private String getMQTTSubscribeTopic(BTMethods btMethod) {
+        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic(this);
+        String sSubTopic = "";
+
+        String sDevice = PreferenceValues.getMQTTOtherDeviceId(this);
+        if ( EnumSet.of(BTMethods.requestCompleteJsonOfMatch).contains(btMethod) ) {
+            sDevice = PreferenceValues.getFCMDeviceId(this);
+            sSubTopic = "/" + btMethod;
+        }
+        String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
+        return sValue + sSubTopic;
+    }
+    private String doMQTTTopicTranslation(String sPlaceholder, String sDeviceId) {
+        // subscribe to any message from specific device
+        if ( StringUtil.isEmpty(sDeviceId) ) {
+            return null;
+        }
+        Map mValues = MapUtil.getMap
+                ("Brand", Brand.getShortName(this)
+                , "DeviceId", sDeviceId
+                );
+        Placeholder instance = Placeholder.getInstance(TAG);
+        String sValue = instance.translate(sPlaceholder, mValues);
+               sValue = instance.removeUntranslated(sValue);
+               sValue = sValue.replaceAll("//", "/").replaceAll("^/", "");
+               sValue = sValue.replaceAll(" ", "");
+        return sValue;
+    }
+
     // ----------------------------------------------------
     // --- in-app purchases / Billing                 -----
     // ----------------------------------------------------
