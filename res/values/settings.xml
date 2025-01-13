@@ -53,10 +53,12 @@
     <string name="pref_MQTTBrokerURL">Broker URL</string>
     <string name="pref_MQTTBrokerURL_Custom">Custom Broker URL</string>
     <string name="pref_MQTTBrokerURL_Summary">Either a public or private broker can be used. By default a public broker without authentication is configured</string>
-    <string name="pref_MQTTPublishTopic">Publish Topic</string>
-    <string name="pref_MQTTPublishTopic_Summary">Topic placeholder when publishing changes in a match</string>
-    <string name="pref_MQTTSubscribeTopic">Subscribe Topic</string>
-    <string name="pref_MQTTSubscribeTopic_Summary">Topic placeholder when subscribing to changes in a match on an other device</string>
+    <string name="pref_MQTTPublishTopicMatch">Publish Match Topic</string>
+    <string name="pref_MQTTPublishTopicMatch_Summary">Topic placeholder when publishing the complete match status in json</string>
+    <string name="pref_MQTTPublishTopicChange">Publish Change Topic</string>
+    <string name="pref_MQTTPublishTopicChange_Summary">Topic placeholder when publishing changes in a match</string>
+    <string name="pref_MQTTSubscribeTopicChange">Subscribe Topic</string>
+    <string name="pref_MQTTSubscribeTopicChange_Summary">Topic placeholder when subscribing to changes in a match on an other device</string>
     <string name="pref_MQTTOtherDeviceId">Other device id</string>
     <string name="pref_MQTTOtherDeviceId_Summary">Unique device id of the device you want to mirror the score for</string>
     <string name="pref_MQTTDeviceId">Device Unique Id</string>

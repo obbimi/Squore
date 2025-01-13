@@ -246,7 +246,8 @@ http://developer.android.com/guide/practices/screens_support.html
     <integer name="NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default">4</integer>
 
     <bool name="UseMQTT_default__Default">false</bool>
-    <string name="MQTTTopicTemplate__Default">double-yellow/${EventId}/${Brand}/${DeviceId}</string>
+    <string name="MQTTTopicMatchTemplate__Default">double-yellow/${EventId}/${Brand}/${DeviceId}/match</string>
+    <string name="MQTTTopicChangeTemplate__Default">double-yellow/${Brand}/${DeviceId}/change</string>
 
     <!-- https://github.com/emqx/blog/blob/main/en/202111/popular-online-public-mqtt-brokers.md -->
     <string-array name="MQTTBrokerUrls" translatable="false">

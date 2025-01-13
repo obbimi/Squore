@@ -5182,8 +5182,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         case UseMQTT:              // fall through
                         case MQTTBrokerURL:        // fall through
                         case MQTTBrokerURL_Custom: // fall through
-                        case MQTTSubscribeTopic:   // fall through
-                        case MQTTPublishTopic:     // fall through
+                        case MQTTPublishTopicMatch:     // fall through
+                        case MQTTPublishTopicChange:     // fall through
+                        case MQTTSubscribeTopicChange:   // fall through
                         case MQTTOtherDeviceId:    // fall through
                             if ( bMQTTRestarted == false ) {
                                 stopMQTT();
@@ -7659,8 +7660,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         break;
                     }
                     case requestCompleteJsonOfMatch: {
+                        if ( saMethodNArgs.length > 1 ) {
+                            String requestingMatchOfDeviceWithId = saMethodNArgs[1];
+                            if ( requestingMatchOfDeviceWithId.equalsIgnoreCase(PreferenceValues.getFCMDeviceId(this)) ) {
+                                publishMatchOnMQTT(null, true);
+                            }
+                        }
                         sendMatchToOtherBluetoothDevice(false, 2000);
-                        publishMatchOnMQTT();
                         break;
                     }
                     case requestCountryFlag: {
@@ -7820,10 +7826,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
                             if ( sModelScore.equals(sScoreReceived) == false ) {
                                 Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
-                                publishOnMQTT(BTMethods.requestCompleteJsonOfMatch);
+                                publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, PreferenceValues.getMQTTOtherDeviceId(this));
                             } else if ( sModelScore.matches("[0-1]-[0-1]") ) { // best of x to y: increase to y+1 on slave
                                 // at start of new game always re-request entire model
-                                publishOnMQTT(BTMethods.requestCompleteJsonOfMatch);
+                                publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, PreferenceValues.getMQTTOtherDeviceId(this));
                             }
                             //hidePresentationEndOfGame();
                         }
@@ -8413,18 +8419,21 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         iBoard.showInfoMessage(String.format("MQTT Connecting to %s ...", sBrokerUrl), 10);
         m_MqttClient.connect("", "", new IMqttActionListener() {
             @Override public void onSuccess(IMqttToken asyncActionToken) {
-                final String mqttSubScribeTopic = getMQTTSubscribeTopic(null);
-                if ( StringUtil.isEmpty(mqttSubScribeTopic) ) {
-                    iBoard.showInfoMessage(String.format("MQTT Connected to %s OK", sBrokerUrl), 10);
-                } else {
+                // listen for 'clients' to request the complete json of a match specifically of this device
+                final String mqttRespondToTopic = getMQTTSubscribeTopicChange(BTMethods.requestCompleteJsonOfMatch);
+                if  ( StringUtil.isNotEmpty(mqttRespondToTopic) ) {
                     if ( m_MqttClient == null ) { return; }
-                    m_MqttClient.subscribe(mqttSubScribeTopic, new MQTTSubscribeActionListener(mqttSubScribeTopic, sBrokerUrl));
+                    m_MqttClient.subscribe(mqttRespondToTopic, new MQTTSubscribeActionListener(mqttRespondToTopic, sBrokerUrl));
+                }
 
-                    // listen for 'clients' to request the complete json of a match
-                    String mqttTopic = getMQTTSubscribeTopic(BTMethods.requestCompleteJsonOfMatch);
-                    if  ( StringUtil.isNotEmpty(mqttTopic) ) {
-                        m_MqttClient.subscribe(mqttTopic, new MQTTSubscribeActionListener(mqttTopic, sBrokerUrl));
-                    }
+                final String mqttSubScribeToOtherTopic = getMQTTSubscribeTopicChange(null);
+                if ( StringUtil.isNotEmpty(mqttSubScribeToOtherTopic) ) {
+                    if ( m_MqttClient == null ) { return; }
+
+                    // listen for changes on
+                    m_MqttClient.subscribe(mqttSubScribeToOtherTopic, new MQTTSubscribeActionListener(mqttSubScribeToOtherTopic, sBrokerUrl));
+                } else {
+                    iBoard.showInfoMessage(String.format("MQTT Connected to %s OK", sBrokerUrl), 10);
                 }
             }
 
@@ -8434,7 +8443,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }, new MQTTCallback());
     }
 
-    /** keep track of what message was received when, mainly to prevent endless loop when 2 devices are subscrived to each other */
+    /** keep track of what message was received when, mainly to prevent endless loop when 2 devices are subscribed to each other */
     private Map<String, Long> m_MQTTmessageReceived = new HashMap<>();
     private BTRole m_MQTTRole = null;
     private void changeMQTTRole(BTRole role) {
@@ -8511,7 +8520,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             m_MqttClient.disconnect();
             m_MqttClient = null; // required
         }
-
     }
 
     private synchronized void publishOnMQTT(BTMethods method, Object... args) {
@@ -8528,42 +8536,60 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         final String sMessage = sb.toString();
 
         //Log.d(TAG, "About to write BT message " + sMessage.trim());
-        final String mqttTopic = getMQTTPublishTopic(method);
-        m_MqttClient.publish(mqttTopic, sMessage);
+        boolean bUseOtherDeviceId = EnumSet.of(BTMethods.requestCompleteJsonOfMatch).contains(method);
+        String changeTopic = getMQTTPublishTopicChange(false);
+        if ( bUseOtherDeviceId ) {
+            changeTopic += MQTT_TOPIC_CONCAT_CHAR + method;
+        }
+        m_MqttClient.publish(changeTopic, sMessage);
     }
-    public void publishMatchOnMQTT() {
+    public void publishMatchOnMQTT(Context context, boolean bPrefixWithJsonLength) {
         if ( m_MqttClient == null || m_MqttClient.isConnected() == false ) {
             return;
         }
 
-        String sJson = matchModel.toJsonString(ScoreBoard.this);
-        final String mqttTopic = getMQTTPublishTopic(null);
-        m_MqttClient.publish(mqttTopic, sJson.length() + ":" + sJson);
+        String matchTopic = getMQTTPublishTopicMatch();
+        String sJson = matchModel.toJsonString(context);
+        if ( bPrefixWithJsonLength ) {
+            // typically so the published data is the same as for bluetooth mirror messages
+            sJson = sJson.length() + ":" + sJson;
+            matchTopic = getMQTTPublishTopicChange(false);
+        }
+        m_MqttClient.publish(matchTopic, sJson);
     }
 
-    private String getMQTTPublishTopic(BTMethods btMethod) {
-        String sPlaceholder = PreferenceValues.getMQTTPublishTopic(this);
-        String sSubTopic = "";
+    private String getMQTTPublishTopicMatch() {
+        String sPlaceholder = PreferenceValues.getMQTTPublishTopicMatch(this);
 
         String sDevice = PreferenceValues.getFCMDeviceId(this);
-        if ( EnumSet.of(BTMethods.requestCompleteJsonOfMatch).contains(btMethod) ) {
-            sDevice = PreferenceValues.getMQTTOtherDeviceId(this);
-            sSubTopic = "/" + btMethod;
-        }
         String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
-        return sValue + sSubTopic;
+        return sValue;
     }
 
-    private String getMQTTSubscribeTopic(BTMethods btMethod) {
-        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic(this);
+    private String getMQTTPublishTopicChange(boolean bUseOtherDeviceId) {
+        String sPlaceholder = PreferenceValues.getMQTTPublishTopicChange(this);
+
+        String sDevice = PreferenceValues.getFCMDeviceId(this);
+        if ( bUseOtherDeviceId ) {
+            sDevice = PreferenceValues.getMQTTOtherDeviceId(this);
+        }
+        String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
+        return sValue;
+    }
+
+    private String getMQTTSubscribeTopicChange(BTMethods btMethod) {
+        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopicChange(this);
         String sSubTopic = "";
 
         String sDevice = PreferenceValues.getMQTTOtherDeviceId(this);
         if ( EnumSet.of(BTMethods.requestCompleteJsonOfMatch).contains(btMethod) ) {
-            sDevice = PreferenceValues.getFCMDeviceId(this);
-            sSubTopic = "/" + btMethod;
+            sDevice = "+"; // PreferenceValues.getFCMDeviceId(this);
+            sSubTopic = MQTT_TOPIC_CONCAT_CHAR + btMethod;
         }
         String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
+        if ( StringUtil.isEmpty(sValue) ) {
+            return null;
+        }
         return sValue + sSubTopic;
     }
     private String doMQTTTopicTranslation(String sPlaceholder, String sDeviceId) {
@@ -8582,7 +8608,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                sValue = sValue.replaceAll(" ", "");
         return sValue;
     }
-
+    private static final String MQTT_TOPIC_CONCAT_CHAR = "_";
     // ----------------------------------------------------
     // --- in-app purchases / Billing                 -----
     // ----------------------------------------------------

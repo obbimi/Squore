@@ -22,31 +22,34 @@ import info.mqtt.android.service.Ack;
 import info.mqtt.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Publish to
- * double-yellow/${EventIdentifier}/${BrandOrSport}/${deviceid}
- * double-yellow/${EventIdentifier}/${BrandOrSport}/${deviceid}/requestCompleteJsonOfMatch   for mirroring a fixed device (slave)
+ * double-yellow/${EventId}/${BrandOrSport}/${deviceid}                                   publish commands (acting as master) that slave should execute keep score in sync
+ * double-yellow/${EventId}/${BrandOrSport}/${otherdeviceid}/requestCompleteJsonOfMatch   for mirroring a fixed device (acting as slave), when model appears out of sync
  *
  * Subscribe to
- * double-yellow/${EventIdentifier}/${BrandOrSport}/${deviceid}                              for mirroring a fixed device (slave)
- * double-yellow/${EventIdentifier}/${BrandOrSport}/${deviceid}/requestCompleteJsonOfMatch   for mirroring a fixed device (master)
- * double-yellow/${EventIdentifier}/${BrandOrSport}/+                                        for livescore of multiple matches of single sport
- * double-yellow/${EventIdentifier}/#                                                        for livescore of multiple matches
+ * double-yellow/${EventId}/${BrandOrSport}/${otherdeviceid}                              for mirroring a fixed device (being slave), receiving commands or complete match model as json
+ * double-yellow/${EventId}/${BrandOrSport}/${deviceid}/requestCompleteJsonOfMatch        for mirroring a fixed device (master), to react to a request of a slave to sync the entire match model
+ * double-yellow/${EventId}/${BrandOrSport}/+                                             for livescore of multiple matches of single sport
+ * double-yellow/${EventId}/#                                                             for livescore of multiple matches
  *
- * 'EventIdentifier' to allow using a public broker like 'tcp://broker.hivemq.com:1883' and ensure you only receive info from a certain subset of matches
- * 'BrandOrSport' to allow subscribing only to a squash matches or only badminton matches
+ * 'EventId' (optional) to allow using a public broker like 'tcp://broker.hivemq.com:1883' and ensure you only receive info from a certain subset of matches
+ * 'BrandOrSport' (optional) to allow subscribing only to a squash matches or only badminton matches
  *
  */
 public class MQTTClient
 {
     private static final int MQTT_QOS = 1;
-    private MqttAndroidClient mqttClient;
-    private IMqttActionListener defaultCbPublish = new MQTTActionListener("Publish");
-    private IMqttActionListener defaultCbDisconnect = new MQTTActionListener("Disconnect");
+    private final MqttAndroidClient mqttClient;
+    private final IMqttActionListener defaultCbPublish = new MQTTActionListener("Publish");
+    private final IMqttActionListener defaultCbDisconnect = new MQTTActionListener("Disconnect");
+    private final IMqttActionListener defaultCbUnSubscribe = new MQTTActionListener("UnSubscribe");
 /*
     private IMqttActionListener defaultCbConnect = new MQTTActionListener("Connect");
     private IMqttActionListener defaultCbSubscribe = new MQTTActionListener("Subscribe");
-    private IMqttActionListener defaultCbUnSubscribe = new MQTTActionListener("UnSubscribe");
     private MqttCallback defaultCbClient = new MQTTCallback();
 */
 
@@ -68,12 +71,18 @@ public class MQTTClient
         return mqttClient.isConnected();
     }
 
+    private List<String> m_lSubscriptions = new ArrayList<>();
     public void subscribe(String topic, IMqttActionListener cbSubscribe) {
+        m_lSubscriptions.add(topic);
         mqttClient.subscribe(topic, MQTT_QOS, null, cbSubscribe);
     }
 
-    public void unsubscribe(String topic, IMqttActionListener cbUnsubscribe) {
-        mqttClient.unsubscribe(topic, null, cbUnsubscribe);
+    public void unsubscribe(String topic) {
+        m_lSubscriptions.remove(topic);
+        mqttClient.unsubscribe(topic, null, defaultCbUnSubscribe);
+    }
+    public List<String> getSubscriptionTopics() {
+        return m_lSubscriptions;
     }
 
     public void publish(String topic, String msg) {

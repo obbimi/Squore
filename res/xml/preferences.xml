@@ -1055,6 +1055,57 @@
 
         </PreferenceCategory>
 
+        <PreferenceCategory android:title="@string/pref_Category_MQTT" android:key="MQTT">
+            <CheckBoxPreference android:key="UseMQTT"
+                android:title="@string/pref_UseMQTT"
+                android:summary="@string/pref_UseMQTT_Summary"
+                android:icon="@drawable/dummy"
+                android:defaultValue="@bool/UseMQTT_default__Default"
+                />
+            <ListPreference android:key="MQTTBrokerURL"
+                android:title="@string/pref_MQTTBrokerURL"
+                android:entries="@array/MQTTBrokerUrls"
+                android:entryValues="@array/MQTTBrokerUrls"
+                android:summary="@string/pref_MQTTBrokerURL_Summary"
+                android:icon="@drawable/dummy"
+                android:defaultValue=""/>
+            <EditTextPreference android:key="MQTTBrokerURL_Custom"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_MQTTBrokerURL_Custom"
+                android:defaultValue="@string/MQTTBrokerURL_Custom__Default"
+                />
+            <EditTextPreference android:key="MQTTPublishTopicMatch"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_MQTTPublishTopicMatch"
+                android:summary="@string/pref_MQTTPublishTopicMatch_Summary"
+                android:defaultValue="@string/MQTTTopicMatchTemplate__Default"
+                />
+            <EditTextPreference android:key="MQTTPublishTopicChange"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_MQTTPublishTopicChange"
+                android:summary="@string/pref_MQTTPublishTopicChange_Summary"
+                android:defaultValue="@string/MQTTTopicChangeTemplate__Default"
+                />
+            <EditTextPreference android:key="MQTTSubscribeTopicChange"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_MQTTSubscribeTopicChange"
+                android:summary="@string/pref_MQTTSubscribeTopicChange_Summary"
+                android:defaultValue="@string/MQTTTopicChangeTemplate__Default"
+                />
+            <EditTextPreference android:key="MQTTOtherDeviceId"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_MQTTOtherDeviceId"
+                android:summary="@string/pref_MQTTOtherDeviceId_Summary"
+                android:defaultValue=""
+                />
+            <com.doubleyellow.scoreboard.prefs.LiveScoreIdPref
+                android:key="liveScoreDeviceId"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_MQTTDeviceId"
+                android:summary="@string/pref_MQTTDeviceId_summary"
+                />
+        </PreferenceCategory>
+
         <PreferenceCategory android:title="@string/pref_Category_ChromeCast" android:key="ChromeCast">
             <EditTextPreference android:key="castScreenLogoUrl"
                 android:icon="@drawable/ic_chromecast"
@@ -1100,46 +1151,6 @@
                                 android:defaultValue="@bool/Cast_ShowGraphDuringTimer_default"
             />
 -->
-        </PreferenceCategory>
-
-        <PreferenceCategory android:title="@string/pref_Category_MQTT" android:key="MQTT">
-            <CheckBoxPreference android:key="UseMQTT"
-                android:title="@string/pref_UseMQTT"
-                android:summary="@string/pref_UseMQTT_Summary"
-                android:icon="@android:drawable/stat_sys_data_bluetooth"
-                android:defaultValue="@bool/UseMQTT_default__Default"
-                />
-            <ListPreference android:key="MQTTBrokerURL"
-                android:title="@string/pref_MQTTBrokerURL"
-                android:entries="@array/MQTTBrokerUrls"
-                android:entryValues="@array/MQTTBrokerUrls"
-                android:summary="@string/pref_MQTTBrokerURL_Summary"
-                android:defaultValue=""/>
-            <EditTextPreference android:key="MQTTBrokerURL_Custom"
-                android:title="@string/pref_MQTTBrokerURL_Custom"
-                android:defaultValue="@string/MQTTBrokerURL_Custom__Default"
-                />
-            <EditTextPreference android:key="MQTTPublishTopic"
-                android:title="@string/pref_MQTTPublishTopic"
-                android:summary="@string/pref_MQTTPublishTopic_Summary"
-                android:defaultValue="@string/MQTTTopicTemplate__Default"
-                />
-            <EditTextPreference android:key="MQTTSubscribeTopic"
-                android:title="@string/pref_MQTTSubscribeTopic"
-                android:summary="@string/pref_MQTTSubscribeTopic_Summary"
-                android:defaultValue="@string/MQTTTopicTemplate__Default"
-                />
-            <EditTextPreference android:key="MQTTOtherDeviceId"
-                android:title="@string/pref_MQTTOtherDeviceId"
-                android:summary="@string/pref_MQTTOtherDeviceId_Summary"
-                android:defaultValue=""
-                />
-            <com.doubleyellow.scoreboard.prefs.LiveScoreIdPref
-                android:key="FCMDeviceId"
-                android:icon="@drawable/dummy"
-                android:title="@string/pref_MQTTDeviceId"
-                android:summary="@string/pref_FCMDeviceId_summary"
-                />
         </PreferenceCategory>
 
         <PreferenceCategory android:title="@string/pref_Category_BlueToothSync" android:key="BlueToothSync">

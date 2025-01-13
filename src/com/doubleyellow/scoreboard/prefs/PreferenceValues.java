@@ -948,11 +948,14 @@ public class PreferenceValues extends RWValues
             }
         }
     }
-    public static String getMQTTPublishTopic(Context context) {
-        return getString(PreferenceKeys.MQTTPublishTopic, R.string.MQTTTopicTemplate__Default, context);
+    public static String getMQTTPublishTopicMatch(Context context) {
+        return getString(PreferenceKeys.MQTTPublishTopicMatch, R.string.MQTTTopicMatchTemplate__Default, context);
     }
-    public static String getMQTTSubscribeTopic(Context context) {
-        return getString(PreferenceKeys.MQTTSubscribeTopic, R.string.MQTTTopicTemplate__Default, context);
+    public static String getMQTTPublishTopicChange(Context context) {
+        return getString(PreferenceKeys.MQTTPublishTopicChange, R.string.MQTTTopicChangeTemplate__Default, context);
+    }
+    public static String getMQTTSubscribeTopicChange(Context context) {
+        return getString(PreferenceKeys.MQTTSubscribeTopicChange, R.string.MQTTTopicChangeTemplate__Default, context);
     }
     public static String getMQTTOtherDeviceId(Context context) {
         return getString(PreferenceKeys.MQTTOtherDeviceId, "", context).toUpperCase();

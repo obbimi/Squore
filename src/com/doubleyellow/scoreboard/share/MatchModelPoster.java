@@ -116,7 +116,7 @@ public class MatchModelPoster implements ContentReceiver
             if ( bFromMenu == false ) {
                 // typically for livescore
                 String sThirdPartyUrl = PreferenceValues.getPostLiveScoreToURL(context);
-                if ( sThirdPartyUrl != null && sThirdPartyUrl.startsWith(baseURL) == false ) {
+                if ( sThirdPartyUrl != null && sThirdPartyUrl.startsWith(baseURL) == false && sThirdPartyUrl.startsWith("http") ) {
                     // post details to third party site for 'their' livescore system. e.g https://keepthescore.com/docs/streaming-software/
 
                     sThirdPartyUrl = URLFeedTask.prefixWithBaseIfRequired(sThirdPartyUrl); // only for own demo feed: in that case it probably is a relative URL
