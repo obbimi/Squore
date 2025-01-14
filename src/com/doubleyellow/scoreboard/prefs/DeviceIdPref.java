@@ -28,11 +28,9 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * Preference to generate a new Live Score Device ID or FCM Device ID.
- *
- * TODO: rename to DeviceIdPref
+ * Preference to generate a new Live Score Device ID, FCM Device ID, or MQTT Device ID.
  */
-public class LiveScoreIdPref extends MultiPrefsDialog
+public class DeviceIdPref extends MultiPrefsDialog
 {
     @Override protected void showDialog(Bundle state) {
         String sCurrent = PreferenceValues.getString(getKey(), "", context);
@@ -46,7 +44,7 @@ public class LiveScoreIdPref extends MultiPrefsDialog
     }
 
     private String sDeviceIdNew = null;
-    public LiveScoreIdPref(Context context, AttributeSet attrs) {
+    public DeviceIdPref(Context context, AttributeSet attrs) {
         super(context, attrs); // invoked already/only when settings activity is requested
     }
 

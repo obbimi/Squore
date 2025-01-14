@@ -1300,7 +1300,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     private boolean m_liveScoreShare = false;
 
-    /** e.g. after settings screen has been entered and closed, matchdetails have been viewed. also after orientation switch (but onrestoreinstance is called first) */
+    /**
+     * e.g. after settings screen has been entered and closed, matchdetails have been viewed.
+     * Also after orientation switch (onRestoreinstance is called first) */
     @Override protected void onResume() {
         super.onResume();
 
@@ -2462,7 +2464,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // --------------- Persistence ------------------------
     // ----------------------------------------------------
 
-    /**  is called when the user receives an event like a call or a text message or simply leaves the app himself, when onPause() is called the Activity may be partially or completely hidden. */
+    /**
+     * is called when the user receives an event like a call or a text message
+     * or simply leaves the app himself,
+     * when onPause() is called the Activity may be partially or completely hidden.
+     **/
     @Override protected void onPause() {
         super.onPause(); // onstop, ondestroy oncontentchanged
         persist(false);
@@ -2490,9 +2496,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
     }
 
-    /** Invoked when device is rotated. Invoked before onDestroy(). But also if child scoreBoard activity is created?! */
+    /**
+     * Invoked when device is rotated.
+     * Invoked before onDestroy().
+     * But also if child scoreBoard activity is created?!
+     **/
     @Override protected void onStop() {
         onActivityStop_Cast();
+        stopMQTT();
         super.onStop();
         persist(false);
         createNotificationTimer();
@@ -5179,6 +5190,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             }
                             onResumeInitBluetoothBLE();
                             break;
+/*
                         case UseMQTT:              // fall through
                         case MQTTBrokerURL:        // fall through
                         case MQTTBrokerURL_Custom: // fall through
@@ -5192,6 +5204,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                 bMQTTRestarted = true;
                             }
                             break;
+*/
                         default:
                             break;
                     }
@@ -5469,6 +5482,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         @Override public void onFinish() {
             Log.d(TAG, "Posting ... ");
             postMatchModel(ScoreBoard.this, matchModel, false, false, null , -1);
+            publishMatchOnMQTT(null, false);
         }
     }
     private DelayedModelPoster m_delayedModelPoster = null;
@@ -8543,13 +8557,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         m_MqttClient.publish(changeTopic, sMessage);
     }
-    public void publishMatchOnMQTT(Context context, boolean bPrefixWithJsonLength) {
+    private void publishMatchOnMQTT(Context context, boolean bPrefixWithJsonLength) {
         if ( m_MqttClient == null || m_MqttClient.isConnected() == false ) {
             return;
         }
-
+        List<String> lSkipKeys = bPrefixWithJsonLength ? null : PreferenceValues.getMQTTSkipJsonKeys(context);
         String matchTopic = getMQTTPublishTopicMatch();
-        String sJson = matchModel.toJsonString(context);
+        String sJson = matchModel.toJsonString(context, null, null, lSkipKeys);
         if ( bPrefixWithJsonLength ) {
             // typically so the published data is the same as for bluetooth mirror messages
             sJson = sJson.length() + ":" + sJson;

@@ -540,7 +540,7 @@ public class PreferenceValues extends RWValues
     private static String getDeviceId(PreferenceKeys key, Context context, boolean bGenerateIfNull) {
         String sID = RWValues.getString(key, null, context);
         if ( bGenerateIfNull && StringUtil.isEmpty(sID) ) {
-            sID = LiveScoreIdPref.generateNewId();
+            sID = DeviceIdPref.generateNewId();
             RWValues.setString(key, context, sID);
         }
         return sID;
@@ -559,7 +559,7 @@ public class PreferenceValues extends RWValues
         }
         String sliveScoreDeviceId = PreferenceValues.getLiveScoreDeviceId(ctx);
         if ( StringUtil.isEmpty(sliveScoreDeviceId) ) {
-            sliveScoreDeviceId = LiveScoreIdPref.generateNewLivescoreId();
+            sliveScoreDeviceId = DeviceIdPref.generateNewLivescoreId();
             setString(PreferenceKeys.liveScoreDeviceId, ctx, sliveScoreDeviceId);
         }
     }
@@ -950,6 +950,9 @@ public class PreferenceValues extends RWValues
     }
     public static String getMQTTPublishTopicMatch(Context context) {
         return getString(PreferenceKeys.MQTTPublishTopicMatch, R.string.MQTTTopicMatchTemplate__Default, context);
+    }
+    public static List<String> getMQTTSkipJsonKeys(Context context) {
+        return getStringAsList(context, PreferenceKeys.MQTTSkipJsonKeys, 0);
     }
     public static String getMQTTPublishTopicChange(Context context) {
         return getString(PreferenceKeys.MQTTPublishTopicChange, R.string.MQTTTopicChangeTemplate__Default, context);

@@ -868,7 +868,7 @@
                 android:summary="@string/pref_FCMEnabled_summary"
                 android:defaultValue="@bool/FCMEnabled_default"
                 />
-            <com.doubleyellow.scoreboard.prefs.LiveScoreIdPref
+            <com.doubleyellow.scoreboard.prefs.DeviceIdPref
                 android:key="FCMDeviceId"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_FCMDeviceId"
@@ -1046,7 +1046,7 @@
                         android:data="@string/pref_live_score_url" />
             </Preference>
 
-            <com.doubleyellow.scoreboard.prefs.LiveScoreIdPref
+            <com.doubleyellow.scoreboard.prefs.DeviceIdPref
                 android:key="liveScoreDeviceId"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_liveScoreDeviceId"
@@ -1068,7 +1068,7 @@
                 android:entryValues="@array/MQTTBrokerUrls"
                 android:summary="@string/pref_MQTTBrokerURL_Summary"
                 android:icon="@drawable/dummy"
-                android:defaultValue=""/>
+                android:defaultValue="@string/MQTTBrokerURL_Public__Default"/>
             <EditTextPreference android:key="MQTTBrokerURL_Custom"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_MQTTBrokerURL_Custom"
@@ -1098,7 +1098,7 @@
                 android:summary="@string/pref_MQTTOtherDeviceId_Summary"
                 android:defaultValue=""
                 />
-            <com.doubleyellow.scoreboard.prefs.LiveScoreIdPref
+            <com.doubleyellow.scoreboard.prefs.DeviceIdPref
                 android:key="liveScoreDeviceId"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_MQTTDeviceId"

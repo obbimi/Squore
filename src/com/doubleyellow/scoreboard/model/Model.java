@@ -2995,6 +2995,9 @@ public abstract class Model implements Serializable
         return toJsonString(context, null, null);
     }
     public String toJsonString(Context context, JSONObject oSettings, JSONObject oTimerInfo) {
+        return toJsonString(context, oSettings, oTimerInfo, null);
+    }
+    public String toJsonString(Context context, JSONObject oSettings, JSONObject oTimerInfo, List<String> lSkipKeys) {
         try {
             GameTiming gameTimingCurrent = getGameTimingCurrent();
             if ( gameTimingCurrent != null ) {
@@ -3004,6 +3007,11 @@ public abstract class Model implements Serializable
             }
 
             JSONObject jsonObject = getJsonObject(context, oSettings, oTimerInfo);
+            if ( ListUtil.isNotEmpty(lSkipKeys) ) {
+                for(String s : lSkipKeys ) {
+                    jsonObject.remove(s);
+                }
+            }
 
             String sJson = null;
             if ( ScoreBoard.isInSpecialMode() ) {
