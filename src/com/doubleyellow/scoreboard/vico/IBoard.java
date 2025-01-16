@@ -1475,6 +1475,13 @@ public class IBoard implements TimerViewContainer
             vTxt.setVisibility(visibility);
         }
     }
+    public void updateMQTTConnectionStatusIcon(int visibility, int nrOfWhat) {
+        TextView vTxt = m_vRoot.findViewById(R.id.sb_mqtt_connection_info);
+        if ( vTxt != null ) {
+            vTxt.setText("MQ:" + nrOfWhat);
+            vTxt.setVisibility(visibility);
+        }
+    }
 
     private SBTimerView sbTimerView = null;
     @Override public TimerView getTimerView() {

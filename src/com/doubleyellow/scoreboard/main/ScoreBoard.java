@@ -3177,7 +3177,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 enableScoreButton(leadingPlayer); // we only disabled if button of leader was pressed on gameball
             }
             if ( m_liveScoreShare ) {
-                postMatchModel(ScoreBoard.this, matchModel, true, false, null, -1);
+                postMatchModel(ScoreBoard.this, matchModel, true, false, null);
             }
         }
 
@@ -3789,7 +3789,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 }
                 if ( (bInitializingModelListeners == false) && m_liveScoreShare ) {
                     Type timerType = (Type) ctx;
-                    postMatchModel(ScoreBoard.this, matchModel, true, false, timerType, iCtx);
+                    postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, timerType, iCtx);
                 }
 
                 return true;
@@ -3798,7 +3798,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 Type timerType = (Type) ctx;
                 doTimerFeedback(timerType, false);
                 if ( m_liveScoreShare ) {
-                    postMatchModel(ScoreBoard.this, matchModel, true, false, timerType, iCtx);
+                    postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, timerType, iCtx);
                 }
                 return true;
             }
@@ -3807,7 +3807,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 //ViewType viewType  = (ViewType) ctx2;
                 doTimerFeedback(timerType, true);
                 if ( m_liveScoreShare ) {
-                    postMatchModel(ScoreBoard.this, matchModel, true, false, timerType, iCtx);
+                    postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, timerType, iCtx);
                 }
                 if ( EnumSet.of(Type.UntilStartOfNextGame).contains(timerType) && (matchModel != null) && matchModel.isPossibleGameVictory() ) {
                     endGame(false);
@@ -3816,7 +3816,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             case timerCancelled: {
                 timerType = (Type) ctx;
                 if ( m_liveScoreShare ) {
-                    postMatchModel(ScoreBoard.this, matchModel, true, false, timerType, iCtx);
+                    postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, timerType, iCtx);
                 }
                 //viewType  = (ViewType) ctx2;
                 if ( EnumSet.of(Type.UntilStartOfNextGame, Type.Warmup).contains(timerType) ) {
@@ -4407,7 +4407,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             case R.id.float_match_share:
             case R.id.dyn_match_share:
             case R.id.sb_share_score_sheet:
-                postMatchModel(this, matchModel, true, true, null, -1);
+                postMatchModel(this, matchModel, true, true, null);
                 if ( shareButton != null ) {
                     shareButton.setHidden(true);
                 }
@@ -5480,9 +5480,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             //Log.d(TAG, "Waiting ... " + millisUntilFinished);
         }
         @Override public void onFinish() {
-            Log.d(TAG, "Posting ... ");
-            postMatchModel(ScoreBoard.this, matchModel, false, false, null , -1);
-            publishMatchOnMQTT(null, false);
+            Log.d(TAG, "Posting/Publishing ... ");
+            postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, null, -1);
         }
     }
     private DelayedModelPoster m_delayedModelPoster = null;
@@ -5496,9 +5495,17 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
     private static boolean m_bShareStarted_DemoThread = false;
     /** invoked on: GameEndReached, GameEnded, FirstPointChange, GameIsHalfway, ScoreChange. Mainly for livescore */
+    public void postMatchModel_publishOnMQTT(Context context, Model matchModel, Type timerType, int iSecsTotal) {
+        JSONObject oTimerInfo = getTimerInfo(timerType, iSecsTotal);
+        postMatchModel(context, matchModel, true, false, oTimerInfo);
+        publishMatchOnMQTT(context, false, oTimerInfo);
+    }
     public static void postMatchModel(Context context, Model matchModel, boolean bAllowEndGameIfApplicable, boolean bFromMenu, Type timerType, int iSecsTotal) {
+        postMatchModel(context, matchModel, bAllowEndGameIfApplicable, bFromMenu, getTimerInfo(timerType, iSecsTotal));
+    }
+    public static void postMatchModel(Context context, Model matchModel, boolean bAllowEndGameIfApplicable, boolean bFromMenu, JSONObject oTimerInfo) {
         if ( matchModel == null) { return; }
-        if ( timerType != null ) { matchModel.setShareURL(null); } // ensure repost for livescore, even though score has not changed
+        if ( oTimerInfo != null ) { matchModel.setShareURL(null); } // ensure repost for livescore, even though score has not changed
         Player possibleMatchVictoryFor = matchModel.isPossibleMatchVictoryFor();
         if ( bAllowEndGameIfApplicable ) {
             if ( possibleMatchVictoryFor != null ) {
@@ -5537,24 +5544,24 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
         }
 
-        JSONObject oTimerInfo = null;
-        if ( (timerType != null) && (iSecsTotal > -1) ) {
-            Log.w(TAG, "Posting match with timer info");
-            try {
-                oTimerInfo = new JSONObject();
-                oTimerInfo.put("type"        , timerType.toString());
-                oTimerInfo.put("totalSeconds", iSecsTotal);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Log.w(TAG, "Posting match without timer info");
-        }
-
         MatchModelPoster matchModelPoster = new MatchModelPoster();
         matchModelPoster.post(context, matchModel, oSettings, oTimerInfo, bFromMenu);
     }
 
+    private static JSONObject getTimerInfo(Type timerType, int iSecsTotal) {
+        if ( (timerType == null) || (iSecsTotal <= 0) ) {
+            return null;
+        }
+        JSONObject oTimerInfo = null;
+        try {
+            oTimerInfo = new JSONObject();
+            oTimerInfo.put("type"        , timerType.toString());
+            oTimerInfo.put("totalSeconds", iSecsTotal);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return oTimerInfo;
+    }
     // ------------------------------------------------------
     // dialog boxes
     // ------------------------------------------------------
@@ -6865,7 +6872,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     public void restartTimerWithSecondsLeft(int iSecs) {
         DialogTimerView.restartTimerWithSecondsLeft(iSecs);
         if ( m_liveScoreShare ) {
-            postMatchModel(ScoreBoard.this, matchModel, true, false, Timer.timerType, iSecs);
+            postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, Timer.timerType, iSecs);
         }
 
         writeMethodToBluetooth(BTMethods.restartTimerWithSecondsLeft, iSecs);
@@ -7676,8 +7683,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     case requestCompleteJsonOfMatch: {
                         if ( saMethodNArgs.length > 1 ) {
                             String requestingMatchOfDeviceWithId = saMethodNArgs[1];
-                            if ( requestingMatchOfDeviceWithId.equalsIgnoreCase(PreferenceValues.getFCMDeviceId(this)) ) {
-                                publishMatchOnMQTT(null, true);
+                            if ( requestingMatchOfDeviceWithId.equalsIgnoreCase("*") ) {
+                                publishMatchOnMQTT(null, false, null);
+                            } else if ( requestingMatchOfDeviceWithId.equalsIgnoreCase(PreferenceValues.getFCMDeviceId(this)) ) {
+                                publishMatchOnMQTT(null, true, null);
                             }
                         }
                         sendMatchToOtherBluetoothDevice(false, 2000);
@@ -8417,10 +8426,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     private MQTTClient m_MqttClient = null;
     private void onResumeMQTT() {
         if ( PreferenceValues.useMQTT(this) == false ) {
+            iBoard.updateMQTTConnectionStatusIcon(View.INVISIBLE, -1);
             return;
         }
         final String sBrokerUrl = PreferenceValues.getMQTTBrokerURL(this);
         if ( StringUtil.isEmpty(sBrokerUrl) ) {
+            iBoard.updateMQTTConnectionStatusIcon(View.INVISIBLE, -1);
             return;
         }
         if ( m_MqttClient == null ) {
@@ -8428,11 +8439,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             m_MqttClient = new MQTTClient(this, sBrokerUrl, sDeviceId);
         }
         if ( m_MqttClient.isConnected() ) {
+            iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);
             return;
         }
         iBoard.showInfoMessage(String.format("MQTT Connecting to %s ...", sBrokerUrl), 10);
         m_MqttClient.connect("", "", new IMqttActionListener() {
             @Override public void onSuccess(IMqttToken asyncActionToken) {
+                iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);
+
                 // listen for 'clients' to request the complete json of a match specifically of this device
                 final String mqttRespondToTopic = getMQTTSubscribeTopicChange(BTMethods.requestCompleteJsonOfMatch);
                 if  ( StringUtil.isNotEmpty(mqttRespondToTopic) ) {
@@ -8449,16 +8463,29 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 } else {
                     iBoard.showInfoMessage(String.format("MQTT Connected to %s OK", sBrokerUrl), 10);
                 }
+                if ( m_liveScoreShare ) {
+                    publishMatchOnMQTT(ScoreBoard.this, false, null);
+                }
             }
 
             @Override public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                MyDialogBuilder.dialogWithOkOnly(ScoreBoard.this, getString(R.string.pref_Category_MQTT) , String.format("ERROR: MQTT Connection %s failed", exception.toString()), true);
+                if ( isDialogShowing() == false ) {
+                    String sMsg = String.format("ERROR: MQTT Connection to %s failed: %s", sBrokerUrl, exception.toString());
+                    GenericMessageDialog dialog = new GenericMessageDialog(ScoreBoard.this);
+                    dialog.init(getString(R.string.pref_Category_MQTT), sMsg);
+                    addToDialogStack(dialog);
+                }
+                stopMQTT();
+
+                String sMsg = String.format("ERROR: MQTT Connection to %s failed", sBrokerUrl);
+                doDelayedMQTTReconnect(sMsg,30);
+                //iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 0);
             }
         }, new MQTTCallback());
     }
 
-    /** keep track of what message was received when, mainly to prevent endless loop when 2 devices are subscribed to each other */
-    private Map<String, Long> m_MQTTmessageReceived = new HashMap<>();
+    /** keep track of what message was received when, mainly to prevent endless loop when 2 devices are subscribed to each other to mirror each other */
+    private final Map<String, Long> m_MQTTmessageReceived = new HashMap<>();
     private BTRole m_MQTTRole = null;
     private void changeMQTTRole(BTRole role) {
         if ( role.equals(m_MQTTRole) ) {
@@ -8501,13 +8528,29 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
 
         @Override public void connectionLost(Throwable cause) {
-            iBoard.showInfoMessage("WARN: MQTT Connection to broker lost", 10);
-            // e.g. internet connection stopped working, or broker on local network stopped
-            // todo: start timer to retry
+            doDelayedMQTTReconnect("WARN: MQTT Connection to broker lost.", 10);
         }
         @Override public void deliveryComplete(IMqttDeliveryToken token) {}
     }
 
+    private void doDelayedMQTTReconnect(String sMsg, int iReconnectInSeconds) {
+        iBoard.showInfoMessage(sMsg + " Reconnecting in " + iReconnectInSeconds, iReconnectInSeconds);
+        // e.g. internet connection stopped working, or broker on local network stopped
+        // todo: start timer to retry
+        stopMQTT();
+        new DelayedMQTTReconnect(iReconnectInSeconds * 1000).start();
+    }
+    private class DelayedMQTTReconnect extends CountDownTimer {
+        private DelayedMQTTReconnect(long iMilliSeconds) {
+            super(iMilliSeconds, 250);
+        }
+        @Override public void onTick(long millisUntilFinished) {
+            //Log.d(TAG, "Waiting ... " + millisUntilFinished);
+        }
+        @Override public void onFinish() {
+            onResumeMQTT();
+        }
+    }
 
     private class MQTTSubscribeActionListener implements IMqttActionListener
     {
@@ -8519,6 +8562,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         @Override public void onSuccess(IMqttToken asyncActionToken) {
             iBoard.showInfoMessage(String.format("MQTT Subscribed to %s on %s", sTopic, sUrl), 10);
+            iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);
         }
 
         @Override public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
@@ -8527,6 +8571,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     private void stopMQTT() {
+        iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 0);
         if ( m_MqttClient == null ) {
             return;
         }
@@ -8557,13 +8602,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         m_MqttClient.publish(changeTopic, sMessage);
     }
-    private void publishMatchOnMQTT(Context context, boolean bPrefixWithJsonLength) {
+    private void publishMatchOnMQTT(Context context, boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
         if ( m_MqttClient == null || m_MqttClient.isConnected() == false ) {
             return;
         }
         List<String> lSkipKeys = bPrefixWithJsonLength ? null : PreferenceValues.getMQTTSkipJsonKeys(context);
         String matchTopic = getMQTTPublishTopicMatch();
-        String sJson = matchModel.toJsonString(context, null, null, lSkipKeys);
+        String sJson = matchModel.toJsonString(context, null, oTimerInfo, lSkipKeys);
         if ( bPrefixWithJsonLength ) {
             // typically so the published data is the same as for bluetooth mirror messages
             sJson = sJson.length() + ":" + sJson;

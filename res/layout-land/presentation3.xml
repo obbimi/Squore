@@ -234,6 +234,18 @@
         android:layout_width="0dp" android:layout_height="0dp"
         android:textColor="@color/white"
         />
+    <TextView
+        android:id="@+id/sb_mqtt_connection_info"
+        app:layout_constraintEnd_toEndOf="@id/btn_score1"
+        app:layout_constraintBottom_toBottomOf="@id/btn_score1"
+        android:gravity="center"
+        android:visibility="visible"
+        android:text="MQ:0"
+        app:layout_constraintWidth_percent="@fraction/lsp_fr_score_ble_connected_width"
+        app:layout_constraintDimensionRatio="H,3:2"
+        android:layout_width="0dp" android:layout_height="0dp"
+        android:textColor="@color/white"
+        />
 
     <TextView
         android:id="@+id/sb_bottom_of_screen_infomessage"
