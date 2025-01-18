@@ -26,7 +26,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
-import android.hardware.SensorManager;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
@@ -48,7 +47,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.util.Base64;
 import android.util.Log;
-import android.util.SparseIntArray;
 import android.view.*;
 import android.widget.*;
 
@@ -56,13 +54,11 @@ import com.anjlab.android.iab.v3.PurchaseInfo;
 import com.anjlab.android.iab.v3.BillingProcessor;
 
 import com.doubleyellow.android.SystemUtil;
-import com.doubleyellow.android.handler.OnClickXTimesHandler;
 import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.android.util.RateMeMaybe;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.*;
-import com.doubleyellow.prefs.DynamicListPreference;
 import com.doubleyellow.prefs.OrientationPreference;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.*;
@@ -139,9 +135,6 @@ import androidx.appcompat.app.ActionBar;
 // Wearable
 import androidx.wear.input.WearableButtons; // requires api >= 25
 
-// MQTT
-import org.eclipse.paho.client.mqttv3.*;
-
 /**
  * The main Activity of the scoreboard app.
  */
@@ -212,253 +205,23 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     //-------------------------------------------------------------------------
-    // Controller listeners helper methods
-    //-------------------------------------------------------------------------
-    private int getXmlIdOfParent(View view) {
-        int id = view.getId();
-        Player player = IBoard.m_id2player.get(id);
-        if ( player == null ) {
-            String sTag = String.valueOf(view.getTag());
-            if ( sTag.contains(PlayersButton.SUBBUTTON)) {
-                id = Integer.parseInt(sTag.replaceFirst(PlayersButton.SUBBUTTON + ".*", ""));
-                player = IBoard.m_id2player.get(id);
-            }
-            if ( player == null ) {
-                return 0;
-            }
-        }
-        return id;
-    }
-    private DoublesServe getInOrOut(View view) {
-        String sTag = String.valueOf(view.getTag());
-        if ( sTag.contains(PlayersButton.SUBBUTTON)) {
-            int iSeq = Integer.parseInt(sTag.replaceFirst(".*" + PlayersButton.SUBBUTTON, ""));
-            return DoublesServe.values()[iSeq];
-        } else {
-            return DoublesServe.NA;
-        }
-    }
-
-    //-------------------------------------------------------------------------
     // Controller listeners
     //-------------------------------------------------------------------------
-    public  final ScoreButtonListener       scoreButtonListener        = new ScoreButtonListener();
-    private final ServerSideButtonListener  serverSideButtonListener   = new ServerSideButtonListener();
-    private final GameScoresListener        gameScoresListener         = new GameScoresListener();
-    public  final PlayerNamesButtonListener namesButtonListener        = new PlayerNamesButtonListener();
-    private final ScoreBoardTouchListener   scoreBoardTouchListener    = new ScoreBoardTouchListener();
+    public  final ScoreButtonListener       scoreButtonListener        = new ScoreButtonListener(this);
+    private final ServerSideButtonListener  serverSideButtonListener   = new ServerSideButtonListener(this);
+    private final GameScoresListener        gameScoresListener         = new GameScoresListener(this);
+    public  final PlayerNamesButtonListener namesButtonListener        = new PlayerNamesButtonListener(this);
+    private final ScoreBoardTouchListener   scoreBoardTouchListener    = new ScoreBoardTouchListener(this);
 
     private final SimpleGestureListener     scoreButtonGestureListener = new SimpleGestureListener(scoreBoardTouchListener, scoreBoardTouchListener, scoreButtonListener     , null /*scoreButtonListener*/, scoreBoardTouchListener);
     private final SimpleGestureListener     namesButtonGestureListener = new SimpleGestureListener(scoreBoardTouchListener, scoreBoardTouchListener, namesButtonListener     , namesButtonListener         , scoreBoardTouchListener);
     private final SimpleGestureListener     serveButtonGestureListener = new SimpleGestureListener(scoreBoardTouchListener, scoreBoardTouchListener, serverSideButtonListener, serverSideButtonListener    , scoreBoardTouchListener);
     private final SimpleGestureListener     gamesScoresGestureListener = new SimpleGestureListener(scoreBoardTouchListener, scoreBoardTouchListener, gameScoresListener      , gameScoresListener          , scoreBoardTouchListener);
 
-    private final CurrentGameScoreListener  currentGameScoreListener   = new CurrentGameScoreListener();
+    private final CurrentGameScoreListener  currentGameScoreListener   = new CurrentGameScoreListener(this);
 
-    private class ScoreBoardTouchListener implements SimpleGestureListener.SwipeListener, SimpleGestureListener.EraseListener, SimpleGestureListener.TwoFingerClickListener
-    {
-        @Override public boolean onTwoFingerClick(View view) {
-            int viewId = getXmlIdOfParent(view);
-            dbgmsg("Two finger clicked", viewId, 0);
-            Player player = IBoard.m_id2player.get(viewId);
-            switch(viewId) {
-                case R.id.btn_score1:
-                case R.id.btn_score2:
-                    // on tablet, the buttons are so big that two finger touch/click may be performed without user thinking about it
-                    handleMenuItem(R.id.pl_change_score, player);
-                    return true;
-                case R.id.txt_player1:
-                case R.id.txt_player2:
-                    if ( Brand.isSquash() ) {
-                        // TODO: for doubles, switch in/out in such a way that touched player becomes the server
-                        Log.d(TAG, String.format("Two finger click on player %s", player));
-                        if ( matchModel.isDoubles() ) {
-                            handleMenuItem(R.id.pl_show_conduct, player);
-                        } else {
-                            showBrokenEquipment(player);
-                        }
-                        break;
-                    } else {
-                        handleMenuItem(R.id.sb_change_sides);
-                    }
-            }
-            return false;
-        }
-
-        @Override public boolean onSwipe(View view, Direction direction, float maxD, float percentageOfView) {
-            if ( ViewUtil.isWearable(ScoreBoard.this) ) {
-                // wearable screen is typically to small to interpret swipe events
-                // return false;
-                // 2023-09-17: Wear OS guidelines says: swipe must implement 'dismiss'
-                return handleMenuItem(R.id.sb_exit);
-            }
-            int viewId = getXmlIdOfParent(view);
-            Player player = IBoard.m_id2player.get(viewId);
-            dbgmsg("Swipe to " + direction +" of " + maxD + " (%=" + percentageOfView + ",p=" + player + ")", viewId, 0);
-            if ( percentageOfView < 0.50 ) { return false; }
-            if ( player          == null ) { return false; }
-            boolean isServer = player.equals(matchModel.getServer());
-            switch( viewId ) {
-                case R.id.btn_score1:
-                case R.id.btn_score2:
-                    if ( EnumSet.of(Direction.E, Direction.W).contains(direction) ) {
-                        if ( Brand.isSquash() && isServer ) {
-                            // perform undo if swiped horizontally over server score button (= person who scored last)
-                            handleMenuItem(R.id.dyn_undo_last);
-                        } else {
-                            Player pLastScorer = matchModel.getLastScorer();
-                            if ( player.equals(pLastScorer) ) {
-                                // perform undo if swiped horizontally over last scorer
-                                handleMenuItem(R.id.dyn_undo_last);
-                            } else {
-                                if ( matchModel.getScore(player) > 0 ) {
-                                    // present user with dialog to remove last scoreline for other than latest scorer ...
-                                    confirmUndoLastForNonScorer(player);
-                                }
-                            }
-                        }
-                        return true;
-                    }
-                    break;
-                case R.id.txt_player1:
-                case R.id.txt_player2:
-                    // allow changing sides if last point was a handout
-                    ServeSide nextServeSide = matchModel.getNextServeSide(player);
-                    if ( matchModel.isLastPointHandout() && isServer) {
-                        if (nextServeSide.equals(ServeSide.L) && direction.equals(Direction.E)) {
-                            // change from left to right
-                            changeSide(player);
-                            return true;
-                        } else if (nextServeSide.equals(ServeSide.R) && direction.equals(Direction.W)) {
-                            // change from right to left
-                            changeSide(player);
-                            return true;
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-            return false;
-        }
-
-        @Override public boolean onErase(View view, HVD hvd, float maxD, float percentageOfView) {
-            int viewId = getXmlIdOfParent(view);
-            dbgmsg("Erase " + hvd + " movement of " + maxD + " (%=" + percentageOfView + ")", viewId, 0);
-            if ( percentageOfView < 0.50 ) {
-                return false;
-            }
-            switch(viewId) {
-                case R.id.btn_score1:
-                case R.id.btn_score2:
-                    if ( hvd.equals(HVD.Diagonal) ) {
-                        return handleMenuItem(R.id.sb_clear_score);
-                    }
-                    break;
-                case R.id.txt_player1:
-                case R.id.txt_player2:
-                    if ( ViewUtil.getScreenHeightWidthMinimum(ScoreBoard.this) < 320 ) {
-                        // just to have a way to get to the settings if no actionbar is visible on Wear OS
-                        return handleMenuItem(R.id.sb_settings);
-                    } else {
-                        return handleMenuItem(R.id.sb_edit_event_or_player);
-                    }
-                default:
-                    break;
-            }
-            return false;
-        }
-    }
-
-    private TouchBothListener.LongClickBothListener longClickBothListener = new TouchBothListener.LongClickBothListener() {
-        @Override public boolean onLongClickBoth(View view1, View view2) {
-            dbgmsg("Long Clicked both", view1.getId(), view2.getId());
-            if ( matchModel == null ) { return false; }
-
-            List<Integer> lIds = Arrays.asList(view1.getId(), view2.getId());
-            if ( lIds.containsAll(Arrays.asList(R.id.txt_player1, R.id.txt_player2)) ) {
-                if ( matchModel.isLocked() ) {
-                    if ( matchModel.isUnlockable() ) {
-                        return handleMenuItem(R.id.sb_unlock);
-                    }
-                } else {
-                    return handleMenuItem(R.id.sb_lock, LockState.LockedManualGUI);
-                }
-            }
-            if ( lIds.containsAll(Arrays.asList(R.id.btn_score1, R.id.btn_score2)) ) {
-                if ( ViewUtil.isWearable(ScoreBoard.this) ) {
-                    // for convenience shortly display the current time on a wearable, so players can consult time by long pressing both score buttons
-                    // to see how long players still may remain on court if the have only a limited time to play
-                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                    String sCurrentTime = sdf.format(new Date());
-                    iBoard.showMessage(sCurrentTime, 3);
-                } else {
-                    if ( matchModel.hasStarted() ) {
-                        return handleMenuItem(R.id.sb_match_format);
-                    } else {
-                        return handleMenuItem(R.id.change_match_format);
-                    }
-                }
-            }
-            // TODO: this only works if side buttons are NOT on top of score buttons (portrait only for now)
-            if ( lIds.containsAll(Arrays.asList(R.id.btn_side1, R.id.btn_side2)) ) {
-                // Nothing for end user yet
-                if ( PreferenceValues.isBrandTesting(ScoreBoard.this) ) {
-                    toggleBrand();
-                }
-            }
-            // TODO: if playing double switch player names if clicking the two child view of R.id.txt_player1
-            return false;
-        }
-    };
-    /** side1 and side2 simulatiously */
-    private void toggleBrand() {
-        Brand newBrandForTesting = ListUtil.getNextEnum(Brand.brand);
-        RWValues.setEnum(PreferenceKeys.squoreBrand, ScoreBoard.this, newBrandForTesting);
-        Brand.setBrandPrefs(ScoreBoard.this);
-        Brand.setSportPrefs(ScoreBoard.this);
-        DynamicListPreference.deleteCacheFile(ScoreBoard.this, PreferenceKeys.colorSchema.toString());
-        //doRestart(ScoreBoard.this);
-        Toast.makeText(this, String.format("Restart to make new brand %s effective", newBrandForTesting), Toast.LENGTH_LONG).show();
-    }
-
-    private TouchBothListener.ClickBothListener clickBothListener = new TouchBothListener.ClickBothListener() {
-        private long lLastBothClickServeSideButtons = 0;
-        private final List<Integer> bothScoreButtons  = Arrays.asList(R.id.btn_score1 , R.id.btn_score2 );
-        private final List<Integer> bothPlayerButtons = Arrays.asList(R.id.txt_player1, R.id.txt_player2);
-        private final List<Integer> bothSideButtons   = Arrays.asList(R.id.btn_side1  , R.id.btn_side2  );
-
-        @Override public boolean onClickBoth(View view1, View view2) {
-            dbgmsg("Clicked both", view1.getId(), view2.getId());
-
-            List<Integer> lIds = Arrays.asList(view1.getId(), view2.getId());
-            if ( lIds.containsAll(bothPlayerButtons) ) {
-                if ( isLandscape() ) {
-                    handleMenuItem(R.id.sb_change_sides);
-                } else {
-                    handleMenuItem(R.id.dyn_new_match);
-                }
-                return true;
-            }
-            if ( lIds.containsAll(bothScoreButtons) ) {
-                if ( isInPromoMode() == false ) {
-                    // do not do this in promo mode: allow to tab both score buttons very fast to go to the end of a game
-                    return handleMenuItem(R.id.sb_adjust_score);
-                }
-            }
-            if ( lIds.containsAll(bothSideButtons) ) {
-                // only works decently in portrait mode when side buttons are not 'over' the score buttons
-                if ( (System.currentTimeMillis() - lLastBothClickServeSideButtons < 500)) {
-                    // toggle demo mode if
-                    handleMenuItem(R.id.sb_toggle_demo_mode);
-                    return true;
-                } else {
-                    lLastBothClickServeSideButtons = System.currentTimeMillis();
-                }
-            }
-            return false;
-        }
-    };
+    private final TouchBothListener.LongClickBothListener longClickBothListener = new LongClickBothListener(this);
+    private final TouchBothListener.ClickBothListener clickBothListener = new ClickBothListener(this);
 
     //-------------------------------------------------------------------------
     // Helper methods to prevent score change while EndGame dialog was in about/in progress to be presented (fast double click on scorebutton on gameball)
@@ -469,7 +232,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
            enableScoreButton(p);
         }
     }
-    private void enableScoreButton(Player player) {
+    void enableScoreButton(Player player) {
         View view = findViewById(IBoard.m_player2scoreId.get(player));
         if ( view == null ) { return; }
         if ( view.isEnabled() ) { return; }
@@ -480,31 +243,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         view.setEnabled(false);
       //Log.d(TAG, "Disabling score button for model " + matchModel);
     }
-    private class ScoreButtonListener implements View.OnClickListener
-    {
-        @Override public void onClick(View view) {
-          //Log.d(TAG, "Received click for model " + matchModel);
-            if ( clearBLEConfirmationStatus() ) { return; }
 
-            Player player = IBoard.m_id2player.get(view.getId());
-            if ( matchModel.isPossibleGameBallFor(player) && (bGameEndingHasBeenCancelledThisGame == false) ) {
-                // score will go to game-end, and most likely a dialog will be build and show. Prevent any accidental score changes while dialog is about to be shown
-                // mainly to prevent odd behaviour of the app for when people are 'quickly' entering a score by tapping rappidly on score buttons
-                disableScoreButton(view);
-            }
-            if ( dialogManager.dismissIfTwoTimerView() /*cancelTimer()*/ ) {
-                // only possible for inline timer
-                if ( isDialogShowing() ) {
-                    // e.g DoublesFirstServer may auto-show after timer is cancelled
-                    return;
-                }
-            }
-            enableScoreButton(player.getOther());
-            handleMenuItem(R.id.pl_change_score, player);
-        }
-    }
-
-    private void confirmUndoLastForNonScorer(final Player p) {
+    void confirmUndoLastForNonScorer(final Player p) {
         AlertDialog.Builder cfunls = new MyDialogBuilder(this);
         cfunls.setTitle(R.string.uc_undo)
                 .setIcon(R.drawable.u_turn)
@@ -523,7 +263,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 .show();
     }
 
-    private ToggleResult toggleActionBar(ActionBar actionBar) {
+    ToggleResult toggleActionBar(ActionBar actionBar) {
         if ( actionBar == null ) { return ToggleResult.nothing; }
 
         if ( actionBar.isShowing() ) {
@@ -541,221 +281,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         return bUseActionBar;
     }
 
-    private class ServerSideButtonListener implements View.OnClickListener, View.OnLongClickListener {
-        private OnClickXTimesHandler onClickXTimesHandler = null;
-        @Override public void onClick(View view) {
-            if ( warnModelIsLocked() ) { return; }
-            int viewId = getXmlIdOfParent(view);
-            Player player = IBoard.m_id2player.get(viewId);
-            if ( player == null ) { return; }
-            if ( matchModel.isDoubles() ) {
-                if ( player.equals( matchModel.getServer() ) ) {
-                    DoublesServe inOutClickedOn = getInOrOut(view);
-                    DoublesServe inOut = matchModel.getNextDoubleServe(player);
-                    if ( (inOutClickedOn                         != null)
-                      && (inOutClickedOn.equals(DoublesServe.NA) == false)
-                      && (inOutClickedOn.equals(inOut)           == false)
-                       ) {
-                        // clicked on serve side button of non-serving doubles player of the same team
-                        if ( Brand.isSquash() ) {
-                            matchModel.changeDoubleServe(player);
-                        }
-                    } else {
-                        // clicked on serve side button of serving doubles player of the same team
-                        if ( Brand.isSquash() ) {
-                            changeSide(player);
-                        }
-                    }
-                } else {
-                    // toggle receiver
-                    //matchModel.changeDoubleReceiver(null); // swap players in stead
-                }
-            } else {
-                if ( onClickXTimesHandler == null ) {
-                    onClickXTimesHandler = new OnClickXTimesHandler(300, 10);
-                }
-                if ( onClickXTimesHandler.handle() ) {
-                    if ( isWearable() ) {
-                        handleMenuItem(R.id.sb_about);
-                        return;
-                    }
-                    if ( mBluetoothAdapter == null ) {
-                        Toast.makeText(ScoreBoard.this, R.string.bt_no_bluetooth_on_device, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    int[] iMenuIds = new int[] { R.id.sb_ble_devices
-                                               //, R.id.sb_demo
-                                               //, R.id.sb_toggle_demo_mode
-                                               //, R.id.sb_download_posted_to_squore_matches
-                                               //, R.id.android_language
-                                               };
-                    int iToggled = ViewUtil.setMenuItemsVisibility(mainMenu, iMenuIds, true);
-                    if ( iMenuIds[0] == R.id.sb_ble_devices ) {
-                        promoteAppToUseBLE();
-                    }
-                    if ( iToggled > 1 ) {
-                        Toast.makeText(ScoreBoard.this, String.format("Additional %d menu items made available", iToggled), Toast.LENGTH_LONG).show();
-                        Mode newMode = m_mode; // toggleDemoMode(null);
-                        if ( newMode.equals(Mode.ScreenShots) ) {
-                            PreferenceValues.setEnum   (PreferenceKeys.BackKeyBehaviour            , ScoreBoard.this, BackKeyBehaviour.UndoScoreNoConfirm); // for adb demo/screenshots script
-                            PreferenceValues.setBoolean(PreferenceKeys.showFullScreen              , ScoreBoard.this, true);                         // for adb demo/screenshots script
-                            PreferenceValues.setBoolean(PreferenceKeys.showActionBar               , ScoreBoard.this, false);                        // for adb demo/screenshots script
-                            PreferenceValues.setBoolean(PreferenceKeys.showAdjustTimeButtonsInTimer, ScoreBoard.this, false);                        // for cleaner screenshots
-                            PreferenceValues.setBoolean(PreferenceKeys.showUseAudioCheckboxInTimer , ScoreBoard.this, false);                        // for cleaner screenshots
-                        } else {
-                            PreferenceValues.setEnum   (PreferenceKeys.BackKeyBehaviour            , ScoreBoard.this, BackKeyBehaviour.PressTwiceToExit);
-                            PreferenceValues.setBoolean(PreferenceKeys.showAdjustTimeButtonsInTimer, ScoreBoard.this, R.bool.showAdjustTimeButtonsInTimer_default);
-                            PreferenceValues.setBoolean(PreferenceKeys.showUseAudioCheckboxInTimer , ScoreBoard.this, R.bool.showUseAudioCheckboxInTimer_default);
-                        }
-                        if ( newMode.equals(Mode.Debug) ) {
-                            PreferenceValues.setString(PreferenceKeys.FeedFeedsURL, ScoreBoard.this, getString(R.string.feedFeedsURL_default) + "?suffix=.new");
-                            //PreferenceValues.setNumber (PreferenceKeys.viewedChangelogVersion, ScoreBoard.this, PreferenceValues.getAppVersionCode(ScoreBoard.this)-1);
-                        }
-                    }
-                }
-                if ( Brand.isTabletennis() ) {
-                    if ( matchModel.isInMode(TabletennisModel.Mode.Expedite) ) {
-                        changeSide(player);
-                    } else {
-                        // Who will serve at what score is totally determined by who started serving the first point
-                        if ( (matchModel.hasStarted() == false) && (player.equals(matchModel.getServer()) == false) ) {
-                            changeSide(player);
-                        }
-                    }
-                } else if ( Brand.isBadminton() ) {
-                    // Who will serve at what score is totally determined by the score: TODO: not in 'old' rules (double only?)
-                    if ( (matchModel.hasStarted() == false) && (player.equals(matchModel.getServer()) == false) ) {
-                        changeSide(player);
-                    }
-                } else if ( Brand.isRacketlon() ) {
-                    // Who will serve at what score is totally determined by who started serving the first point
-                    if ( (matchModel.hasStarted() == false) && (player.equals(matchModel.getServer()) == false) ) {
-                        changeSide(player);
-                    }
-                } else {
-                    changeSide(player);
-                }
-            }
-        }
-
-        @Override public boolean onLongClick(View view) {
-            int viewId = getXmlIdOfParent(view);
-            Player pl = IBoard.m_id2player.get(viewId);
-            if ( pl == null ) { return false; }
-
-            if ( m_mode.equals(ScoreBoard.Mode.ScreenShots) && pl.equals(Player.B) ) {
-                // switch to a different color schema
-                int i = PreferenceValues.getInteger(PreferenceKeys.colorSchema, ScoreBoard.this, 0);
-                PreferenceValues.setNumber(PreferenceKeys.colorSchema, ScoreBoard.this, i + 1);
-                ScoreBoard.getMatchModel().setDirty();
-                ColorPrefs.clearColorCache();
-                ScoreBoard.this.onRestart();
-                return true;
-            }
-            showColorPicker(pl);
-            return true;
-        }
-    }
-
-    private class GameScoresListener implements View.OnLongClickListener, View.OnClickListener {
-        private long lActionBarToggledAt = 0L;
-        @Override public void onClick(View view) {
-            if ( Brand.isGameSetMatch() ) {
-                toggleSetScoreView();
-            } else if ( Brand.isRacketlon() == false ) {
-                toggleGameScoreView();
-            } else {
-                long currentTime = System.currentTimeMillis();
-                if ( currentTime - lActionBarToggledAt > 1500 ) {
-                    // prevent single click show history being triggered after a long click
-                    if ( isWearable() ) {
-                        // score details NOT yet optimized for wearables
-                    } else {
-                        handleMenuItem(R.id.sb_score_details);
-                    }
-                } else {
-                    Log.d(TAG, "Skip single click for now... ");
-                }
-            }
-        }
-
-        @Override public boolean onLongClick(View view) {
-            ActionBar actionBar = getXActionBar();
-            if ( (actionBar != null) && (isWearable() == false) /*&& (PreferenceValues.showActionBar(ScoreBoard.this) == false)*/ ) {
-                toggleActionBar(actionBar);
-                lActionBarToggledAt = System.currentTimeMillis();
-            } else {
-                this.onClick(view);
-            }
-            return false;
-        }
-    }
-
-    private class CurrentGameScoreListener implements View.OnClickListener {
-        private long lLastClickTime;
-        private Toast toast = null;
-
-        @Override public void onClick(View view) {
-            long currentTime = System.currentTimeMillis();
-            if ( currentTime - lLastClickTime > 1500 ) {
-                toast = Toast.makeText(ScoreBoard.this, R.string.press_again_to_undo_last_score, Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.BOTTOM, 0, 0);
-                toast.show();
-                lLastClickTime = currentTime;
-            } else {
-                handleMenuItem(R.id.dyn_undo_last); // TODO: enough 'undo' options, we can use something else here
-                lLastClickTime = 0;
-                if ( toast != null ) {
-                    toast.cancel();
-                }
-            }
-        }
-    }
-
-    private class PlayerNamesButtonListener implements View.OnLongClickListener, View.OnClickListener
-    {
-        @Override public boolean onLongClick(View view) {
-            int viewId = getXmlIdOfParent(view);
-            Player pl = IBoard.m_id2player.get(viewId);
-            if ( pl == null ) { return false; }
-            if ( matchModel == null ) { return false; }
-
-            if ( matchModel.isDoubles() ) {
-                // toggle player names of the long clicked team
-                handleMenuItem(R.id.sb_swap_double_players, pl);
-            } else {
-                if ( isWearable() && matchModel.hasStarted()==false ) {
-                    if ( PreferenceValues.isBrandTesting(ScoreBoard.this) ) {
-                        toggleBrand();
-                    } else {
-                        // on wearable allow changing name with minimal interface
-                        if ( handleMenuItem(R.id.pl_change_name, pl) == false ) {
-                            handleMenuItem(R.id.pl_show_conduct, pl);
-                        };
-                    }
-                } else {
-                    handleMenuItem(R.id.pl_show_conduct, pl);
-                }
-            }
-
-            return true;
-        }
-
-        @Override public void onClick(View view) {
-            int viewId = getXmlIdOfParent(view);
-            Player pl = IBoard.m_id2player.get(viewId);
-            if ( pl == null ) { return; }
-            if ( Brand.isSquash() ) {
-                handleMenuItem(R.id.pl_show_appeal, pl);
-            } else {
-                if ( isWearable() ) {
-                    // for non-squash allow changing name by short click as well
-                    handleMenuItem(R.id.pl_change_name, pl);
-                }
-            }
-        }
-    }
 
     //-------------------------------------------------------------------------
     // Swap (double) players
@@ -883,166 +408,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
 	//-------------------------------------------------------------------------
-	// Adapter for menu drawer
+	// Menu drawer
 	//-------------------------------------------------------------------------
     private DrawerLayout drawerLayout;
     private ListView     drawerView;
     //private ActionBarDrawerToggle mDrawerToggle;
 
-    private static final boolean m_bHideDrawerItemsFromOldMenu = false; // TODO: maybe later
-    private static final LinkedHashMap<Integer,Integer>  id2String  = new LinkedHashMap<Integer,Integer>();
-    private class MenuDrawerAdapter extends BaseAdapter implements ListView.OnItemClickListener, View.OnClickListener, DrawerLayout.DrawerListener {
-        private List<Integer>  id2Seq    = new ArrayList<Integer>();
-      //private SparseIntArray id2String = new SparseIntArray();
-        private SparseIntArray id2Image  = new SparseIntArray();
-        private LayoutInflater inflater  = null;
-
-        private MenuDrawerAdapter() {
-            inflater = (LayoutInflater)ScoreBoard.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            int iOfficialRulesResId = PreferenceValues.getSportTypeSpecificResId(ScoreBoard.this, R.string.sb_official_rules__Squash, 0);
-        startSection(R.string.uc_new   );
-            addItem(R.id.sb_enter_singles_match , R.string.sb_new_singles_match    ,         R.drawable.circled_plus          , R.bool.useSinglesMatch__Default   );
-            addItem(R.id.sb_select_static_match , R.string.sb_select_static_match  ,         R.drawable.ic_action_view_as_list, R.bool.useMyListFunctionality__Default);
-            addItem(R.id.sb_select_feed_match   , R.string.sb_select_feed_match    ,         R.drawable.ic_action_web_site    , R.bool.useMatchFromFeed__Default  );
-            addItem(R.id.sb_enter_doubles_match , R.string.sb_new_doubles_match    ,         R.drawable.circled_plus          );
-        startSection(R.string.uc_edit   );
-            addItem(R.id.sb_clear_score         , R.string.sb_clear_score          ,         R.drawable.circle_2arrows   );
-            addItem(R.id.sb_adjust_score        , R.string.sb_adjust_score         , android.R.drawable.ic_menu_edit        );
-            addItem(R.id.sb_edit_event_or_player, R.string.sb_edit_event_or_player , android.R.drawable.ic_menu_edit        );
-            addItem(R.id.change_match_format    , R.string.pref_MatchFormat        ,         R.drawable.ic_action_mouse     );
-        startSection(R.string.uc_show   );
-            addItem(R.id.sb_toss                , R.string.sb_cmd_toss             ,         R.drawable.toss_white          );
-            addItem(R.id.sb_timer               , R.string.sb_timer                ,         R.drawable.timer               );
-            addItem(R.id.sb_injury_timer        , R.string.sb_injury_timer         ,         R.drawable.timer               , R.bool.useInjuryTimers__Squash);
-            addItem(R.id.sb_player_timeout_timer, R.string.sb_player_timeout_timer ,         R.drawable.timer               , R.bool.usePlayerTimeoutTimers__Squash);
-            addItem(R.id.sb_score_details       , R.string.sb_score_details        ,         R.drawable.ic_action_chart_line);
-            if ( false && PreferenceValues.isFCMEnabled(ScoreBoard.this)) {
-                // TODO: allow disable/enable on items in menudrawer
-                addItem(R.id.sb_fcm_info, R.string.FCM_Info, R.drawable.dummy);
-            }
-        startSection(R.string.goto_help );
-            addItem(R.id.sb_quick_intro         , R.string.Quick_intro             , android.R.drawable.ic_dialog_info         );
-            addItem(R.id.sb_help                , R.string.goto_help               , android.R.drawable.ic_menu_help           );
-            addItem(R.id.sb_official_rules      , iOfficialRulesResId              , android.R.drawable.ic_menu_search         );
-            addItem(R.id.sb_live_score          , R.string.Live_Score              ,         R.drawable.ic_action_web_site     );
-            addItem(R.id.sb_feedback            , R.string.cmd_feedback            ,         R.drawable.ic_action_import_export);
-        startSection(R.string.pref_Other );
-            addItem(R.id.sb_settings            , R.string.settings                , R.drawable.ic_action_settings    );
-            addItem(R.id.sb_stored_matches      , R.string.sb_stored_matches       , R.drawable.ic_action_view_as_list);
-        startSection(R.string.ImportExport_elipses );
-            addItem(R.id.cmd_import_matches     , R.string.import_matches          , android.R.drawable.stat_sys_download);
-            addItem(R.id.cmd_export_matches     , R.string.export_matches          , android.R.drawable.ic_menu_upload);
-
-            if ( ListUtil.size(id2Seq) == 0 ) {
-                id2Seq.addAll(id2String.keySet());
-            }
-        }
-
-        private void startSection(int iCaptionId) {
-            id2String.put(iCaptionId, iCaptionId);
-        }
-        private void addItem(int iActionId, int iCaptionId, int iImageId) {
-            addItem(iActionId, iCaptionId, iImageId, 0);
-        }
-        private void addItem(int iActionId, int iCaptionId, int iImageId, int iShowResid) {
-            if ( iShowResid != 0 ) {
-                iShowResid = PreferenceValues.getSportTypeSpecificResId(ScoreBoard.this, iShowResid, iShowResid);
-                boolean bShow = getResources().getBoolean(iShowResid);
-                if ( bShow == false ) {
-                    Log.d(TAG, "Specifically not showing " + getResources().getResourceName(iActionId) );
-                    return;
-                }
-            }
-            if ( iCaptionId == 0 ) {
-                // e.g. for Tennis AND Padel rules... menu option
-                return;
-            }
-            id2String.put(iActionId , iCaptionId);
-            if ( iImageId != 0 ) {
-                id2Image .put(iActionId , iImageId  );
-            }
-            if ( m_bHideDrawerItemsFromOldMenu && (mainMenu != null) ) {
-                // does not work if menu not yet inflated
-                ViewUtil.hideMenuItemForEver(mainMenu, iActionId);
-            }
-        }
-
-        @Override public int getCount() {
-            return id2Seq.size();
-        }
-
-        @Override public Object getItem(int position) {
-            return id2Seq.get(position);
-        }
-
-        @Override public long getItemId(int position) {
-            return id2Seq.get(position);
-        }
-
-        @Override public View getView(int position, View convertView, ViewGroup parent) {
-            View view;
-
-            int iId = id2Seq.get(position);
-            Integer iResImage = id2Image.get(iId);
-            int iResIdTxt = id2String.get(iId);
-
-            if ( iResIdTxt == iId ) {
-                view = inflater.inflate(R.layout.list_item_section, null);
-                view.setOnClickListener(null);
-                view.setOnLongClickListener(null);
-                view.setLongClickable(false);
-                final TextView sectionView = (TextView) view.findViewById(R.id.list_item_section_text);
-                sectionView.setText(iResIdTxt);
-            } else {
-                view = inflater.inflate(R.layout.image_item, null /*viewGroupParent*/);
-                TextView text = (TextView) view.findViewById(R.id.image_item_text);
-                ImageButton img = (ImageButton) view.findViewById(R.id.image_item_image);
-                img.setImageResource(iResImage);
-                text.setText(iResIdTxt);
-    /*
-                text.setOnClickListener(this);
-    */
-                img.setOnClickListener(this);
-                img.setTag(iId);
-                view.setOnClickListener(this);
-                view.setTag(iId);
-            }
-            return view;
-        }
-
-        @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            drawerLayout.closeDrawer(drawerView);
-            handleMenuItem(id2Seq.get(position));
-        }
-
-        //
-        // OnClickListener
-        //
-        @Override public void onClick(View v) {
-            Object tag = v.getTag();
-            if ( tag instanceof Integer ) {
-                Integer iId = (Integer) tag;
-                drawerLayout.closeDrawer(drawerView);
-                handleMenuItem(iId);
-            }
-        }
-
-        //
-        // DrawerListener
-        //
-
-        @Override public void onDrawerStateChanged(int newState) { }
-        @Override public void onDrawerSlide(View drawerView, float slideOffset) { }
-        @Override public void onDrawerOpened(View drawerView) {
-            //getXActionBar().setTitle(mDrawerTitle);
-            //invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-        }
-        @Override public void onDrawerClosed(View drawerView) {
-            //getXActionBar().setTitle(mTitle);
-            //invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-        }
-    }
     //-------------------------------------------------------------------------
 	// Activity method overwrites
 	//-------------------------------------------------------------------------
@@ -1180,7 +551,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawerView   = (ListView)     findViewById(R.id.left_drawer);
 
-                MenuDrawerAdapter adapter = new MenuDrawerAdapter();
+                MenuDrawerAdapter adapter = new MenuDrawerAdapter(this);
                 drawerView.setAdapter(adapter);
                 drawerView.setOnItemClickListener(adapter);
                 drawerLayout.addDrawerListener(adapter);
@@ -1636,7 +1007,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         if ( keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             if ( onVolumePressHandler == null ) {
-                onVolumePressHandler = new OnVolumeButtonPressHandler();
+                onVolumePressHandler = new OnVolumeButtonPressHandler(this);
             }
             boolean bHandled = onVolumePressHandler.handle(this, keyCode == KeyEvent.KEYCODE_VOLUME_UP, action == KeyEvent.ACTION_UP);
             return bHandled;
@@ -1684,61 +1055,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     private OnVolumeButtonPressHandler onVolumePressHandler = null;
-    private class OnVolumeButtonPressHandler {
-        //private long lastPress = 0L;
-        private int iDialogPresentedCnt = 0;
-
-        private boolean handle(final Context context, boolean bVolumeTrueIsUpFalseIsDown, boolean bActionTrueIsUpFalseIsDown) {
-
-            boolean bUseVolumeButtonsForScoring = false;
-            VolumeKeysBehaviour volumeKeysBehaviour = PreferenceValues.volumeKeysBehaviour(context);
-            switch (volumeKeysBehaviour) {
-                case None:
-                    break;
-                case AdjustScore:
-                    bUseVolumeButtonsForScoring = true;
-                    break;
-                case AdjustScore__ForPortraitOnly:
-                    bUseVolumeButtonsForScoring = isPortrait();
-                    break;
-            }
-
-            if ( bActionTrueIsUpFalseIsDown ) {
-                // we only do something for 'up' action. If a user long presses a volume key a lot of 'down' events are triggered
-                Player first = IBoard.m_firstPlayerOnScreen;
-                if ( bUseVolumeButtonsForScoring ) {
-                    Player player = bVolumeTrueIsUpFalseIsDown ? first : first.getOther();
-                    handleMenuItem(R.id.pl_change_score, player);
-                } else {
-                    showActivateDialog(context);
-                }
-            }
-            return bUseVolumeButtonsForScoring;
-        }
-
-        private void showActivateDialog(final Context context) {
-            if ( iDialogPresentedCnt > 1 ) { return; }
-            if ( isLandscape() ) { return; }
-
-            // user pressed dialog button short after one another: present choice to turn on entering score using volume buttons
-            AlertDialog.Builder choose = new MyDialogBuilder(context);
-            choose.setMessage(R.string.pref_VolumeKeysBehaviour_question)
-                    .setIcon(R.drawable.dummy)
-                    .setPositiveButton(R.string.cmd_yes, new DialogInterface.OnClickListener() {
-                        @Override public void onClick(DialogInterface dialog, int which) {
-                            PreferenceValues.setEnum(PreferenceKeys.VolumeKeysBehaviour, context, VolumeKeysBehaviour.AdjustScore__ForPortraitOnly);
-                        }
-                    })
-                    .setNeutralButton(R.string.cmd_no, new DialogInterface.OnClickListener() {
-                        @Override public void onClick(DialogInterface dialog, int which) {
-                            iDialogPresentedCnt += 100; // ensure it is not presented again
-                        }
-                    })
-                    .show();
-
-            iDialogPresentedCnt++;
-        }
-    }
 
     /** e.g. when match details is closed */
     @Override protected void onRestart() {
@@ -1767,44 +1083,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
     }
 
-    // ------------------------------------------------------
-    // Swap players on 180 degrees
-    // ------------------------------------------------------
-    private class SwapPlayersOn180Listener extends OrientationEventListener {
-        private Integer m_previousDegrees = null;
-
-        SwapPlayersOn180Listener(Context context) {
-            super(context , SensorManager.SENSOR_DELAY_NORMAL);
-        }
-
-        @Override public void onOrientationChanged(int iDegrees) {
-            // returns the number of degrees the device is rotated in comparison to its default orientation
-            // for phones default portrait means orientation is near 0
-            // for tables default landscape means orientation is near 0
-            // a value of -1 is return if the phone is more or less horizontal
-            // these values still come in nicely even if you set your screen to e.g. landscape only
-            if ( iDegrees == ORIENTATION_UNKNOWN ) { return; }
-            if ( isPortrait()                    ) { return; } // no use for this functionality in portrait orientation
-
-            float f0To4 = (float) iDegrees / 90;
-            int   i0To4 = Math.round(f0To4) % 4;
-            //Log.v(TAG, "Orientation changed to " + i0To4  + " , " + f0To4  + " , " + iDegrees);
-            if ( m_previousDegrees != null ) {
-                int iPrev = m_previousDegrees;
-                if ( Math.abs(iPrev - i0To4) == 2 ) {
-                    // swapping
-                    // - from 0 to 2 or back, or
-                    // - from 1 to 3 or back
-                    Log.i(TAG, "Swap because going from " + iPrev + " to " + i0To4);
-                    swapSides(null /*Toast.LENGTH_SHORT*/, null);
-                    m_previousDegrees = i0To4;
-                }
-            } else {
-                m_previousDegrees = i0To4;
-            }
-        }
-
-    }
     private OrientationEventListener m_orientationListener = null;
     private void initForSwapPlayersOn180Rotation() {
         if ( m_orientationListener != null ) { return; }
@@ -1904,179 +1182,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         return scSequence.addSequenceItem(iViewId, iResid, shapeType);
     }
 
-    private ShowcaseSequence.OnSequenceItemChangeListener showcaseListener = new ShowcaseSequence.OnSequenceItemChangeListener() {
-        @Override public void beforeShow(int position, int iDeltaNotUsed, int iViewId, int iResId) {
-            Log.d(TAG, "beforeShow:: highlight view " + getResourceEntryName(iViewId) + ", display text " + getResourceEntryName(iResId));
+    private ShowcaseSequence.OnSequenceItemChangeListener showcaseListener = new ShowcaseSequenceItemChangeListener(this);
 
-            if ( /*(position == 1) &&*/ (iViewId == R.id.float_toss) ) {
-                PreferenceValues.setOverwrite(PreferenceKeys.useTossFeature                     , Feature.Suggest.toString());
-                PreferenceValues.setOverwrite(PreferenceKeys.useTimersFeature                   , Feature.Suggest.toString());
-                PreferenceValues.setOverwrite(PreferenceKeys.autoSuggestToPostResult            , "false");
-                PreferenceValues.setOverwrite(PreferenceKeys.showDetailsAtEndOfGameAutomatically, "false");
-                restartScore();
-                if ( Brand.isRacketlon() ) {
-                    PreferenceValues.setOverwrite(PreferenceKeys.useOfficialAnnouncementsFeature, Feature.DoNotUse.toString());
-                    matchModel.setNrOfPointsToWinGame(21);
-                    matchModel.setNrOfGamesToWinMatch(0);
-                    matchModel.setPlayerNames("Ricky", "Lonny");
-                } else if ( Brand.isTabletennis() ) {
-                    PreferenceValues.setOverwrite(PreferenceKeys.useOfficialAnnouncementsFeature, Feature.DoNotUse.toString());
-                    matchModel.setNrOfPointsToWinGame(11);
-                    matchModel.setNrOfGamesToWinMatch(4);
-                    matchModel.setPlayerNames("Tabby", "Tenny");
-                } else if ( Brand.isBadminton() ) {
-                    PreferenceValues.setOverwrite(PreferenceKeys.useOfficialAnnouncementsFeature, Feature.DoNotUse.toString());
-                    matchModel.setNrOfPointsToWinGame(21);
-                    matchModel.setNrOfGamesToWinMatch(2);
-                    matchModel.setPlayerNames("Baddy", "Tonny");
-                } else if ( Brand.isGameSetMatch() ) {
-                    PreferenceValues.setOverwrite(PreferenceKeys.useOfficialAnnouncementsFeature, Feature.DoNotUse.toString());
-                    PreferenceValues.setOverwrite(PreferenceKeys.useTimersFeature               , Feature.DoNotUse.toString());
-                    GSMModel gsmModel = (GSMModel) matchModel;
-                    gsmModel.setNrOfPointsToWinGame(6); // = setNrOfGamesToWinSet
-                    gsmModel.setNrOfGamesToWinMatch(2); // = setNrOfSetsToWinMatch
-                    gsmModel.setPlayerNames("Paddy", "Tenny");
-                } else {
-                    PreferenceValues.setOverwrite(PreferenceKeys.useOfficialAnnouncementsFeature, Feature.Suggest.toString());
-                    matchModel.setNrOfPointsToWinGame(11);
-                    matchModel.setNrOfGamesToWinMatch(3);
-                    matchModel.setPlayerNames("Shaun", "Casey");
-                }
-                matchModel.setPlayerAvatar(Player.A, null);
-                matchModel.setPlayerAvatar(Player.B, null);
-            }
-            if ( position == 0 ) {
-                PreferenceValues.setOverwrite(PreferenceKeys.showMatchDurationChronoOn   , ShowOnScreen.OnChromeCast.toString());
-                PreferenceValues.setOverwrite(PreferenceKeys.showLastGameDurationChronoOn, ShowOnScreen.OnChromeCast.toString());
-                iBoard.updateGameAndMatchDurationChronos();
-            }
-            final int nrOfPointsToWinGame = matchModel.getNrOfPointsToWinGame();
-            switch (iViewId) {
-                case R.id.btn_side1:
-                    matchModel.changeScore(Player.B);
-                    matchModel.changeScore(Player.A); // ensure button for player A is highlighted for squash
-                    if ( Brand.isNotSquash() ) {
-                        while ( matchModel.getServer().equals(Player.A) == false ) {
-                            matchModel.changeScore(Player.A); // ensure button for player A is highlighted
-                        }
-                    }
-                    break;
-                case R.id.btn_score1:
-                    if ( matchModel.getMaxScore() < 3 ) {
-                        matchModel.changeScore(Player.A);
-                        matchModel.changeScore(Player.A);
-                        matchModel.changeScore(Player.B);
-                        matchModel.changeScore(Player.B);
-                        matchModel.changeScore(Player.B);
-                        matchModel.changeScore(Player.B);
-                    }
-                    if ( Brand.isGameSetMatch() ) {
-                        matchModel.changeScore(Player.A);
-                        matchModel.changeScore(Player.B);
-                        while ( matchModel.getMaxScore() > 0 ) {
-                            // continue until a game is won
-                            matchModel.changeScore(Player.B);
-                        }
-                        matchModel.changeScore(Player.A);
-                        matchModel.changeScore(Player.A);
-                        matchModel.changeScore(Player.B);
-                    }
-                    break;
-                case R.id.float_changesides:
-                    // TODO
-                    break;
-                case R.id.float_timer:
-                    PreferenceValues.setOverwrite(PreferenceKeys.showHideButtonOnTimer, false);
-                    if ( matchModel.isPossibleGameVictory() == false ) {
-                        matchModel.setGameScore_Json(0, nrOfPointsToWinGame, nrOfPointsToWinGame - 4, 5, false);
-                        endGame(true);
-                    }
-                    break;
-                case R.id.sb_official_announcement:
-                    matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6, false);
-                    endGame(true);
-                    break;
-                case R.id.gamescores:
-                    break;
-                case R.id.txt_player1:
-                    matchModel.changeScore(Player.B);
-                    matchModel.changeScore(Player.A);
-                    if ( matchModel.getMaxScore() < 3 ) {
-                        IBoard.setBlockToasts(true);
-                        matchModel.recordAppealAndCall(Player.A, Call.ST);
-                        matchModel.changeScore(Player.B);
-                        matchModel.recordAppealAndCall(Player.B, Call.YL);
-                        IBoard.setBlockToasts(false);
-                    }
-                    break;
-                case R.id.dyn_score_details:
-                case R.id.float_match_share:
-                    boolean bDontChangePast = true;
-                    if ( Brand.isNotSquash() ) {
-                        if ( Brand.isGameSetMatch() ) {
-                            // TODO: ensure match is ended
-                            GSMModel gsmModel= (GSMModel) matchModel;
-                            //matchModel.setSetScore_Json(); // TODO
-                        } else {
-                            // trigger model changes that are not triggered by user step (sb_official_announcement), because some show case screens are skipped for e.g. Racketlon
-                            matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6, bDontChangePast);
-                            endGame(true);
-                        }
-                    }
-                    if ( matchModel.matchHasEnded() == false) {
-                        IBoard.setBlockToasts(true);
-                        matchModel.setGameScore_Json(2, nrOfPointsToWinGame,  nrOfPointsToWinGame -5, 5, bDontChangePast);
-                        if ( Brand.isRacketlon() ) {
-                            // add a score that ends the racketlon match by points
-                            matchModel.setGameScore_Json(3, 15, 11, 8, bDontChangePast);
-                        } else if ( Brand.isTabletennis() ) {
-                            // add a score that ends the tabletennis match
-                            matchModel.setGameScore_Json(3, nrOfPointsToWinGame+2, nrOfPointsToWinGame, 8, bDontChangePast);
-                            matchModel.setGameScore_Json(4, nrOfPointsToWinGame, nrOfPointsToWinGame-4, 7, bDontChangePast);
-                        } else if ( Brand.isBadminton() ) {
-                            // add a score that ends the badminton match
-                            // best of 3, nothing to do
-                        } else if ( Brand.isGameSetMatch() ) {
-                            // TODO: add a score that ends the tennis/padel match
-                        } else {
-                            int iGameInProgress1B = matchModel.getGameNrInProgress();
-                            while ( matchModel.matchHasEnded() == false ) {
-                                matchModel.setGameScore_Json(iGameInProgress1B-1, nrOfPointsToWinGame +2, nrOfPointsToWinGame, 8, bDontChangePast);
-                                iGameInProgress1B++;
-                                if ( iGameInProgress1B >= matchModel.getNrOfGamesToWinMatch() * 2 ) { break; } // additional safety precaution
-                            }
-                        }
-                        endGame(true);
-                        showShareFloatButton(true, true);
-                        IBoard.setBlockToasts(false);
-                        matchModel.setLockState(LockState.LockedEndOfMatch);
-                    }
-                    break;
-                case R.id.sb_overflow_submenu:
-                case R.id.dyn_undo_last:
-                case android.R.id.home:
-                    ActionBar actionBar = getXActionBar();
-                    if ( (actionBar != null) && (actionBar.isShowing() == false) ) {
-                        // show action bar
-                        if ( isWearable() == false ) {
-                            toggleActionBar(actionBar);
-                        }
-                    }
-                    break;
-                case R.id.float_new_match:
-                    break;
-            }
-        }
-
-        @Override public void onDismiss(ShowcaseView itemView, int position, ShowcaseView.DismissReason reason) {
-            IBoard.setBlockToasts(false);
-            if ( reason == null || reason.equals(ShowcaseView.DismissReason.SkipSequence) ) {
-                cancelShowCase();
-            }
-        }
-    };
-
-    private String getResourceEntryName(int iViewId) {
+    String getResourceEntryName(int iViewId) {
         try {
             return getResources().getResourceEntryName(iViewId) + " " + iViewId;
         } catch (Resources.NotFoundException e) {
@@ -2086,7 +1194,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         return "-?- " + iViewId;
     }
 
-    private void cancelShowCase() {
+    void cancelShowCase() {
         if ( scSequence != null ) {
             scSequence.stop();
             scSequence = null;
@@ -2144,7 +1252,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         return mColors;
     }
 
-    private IBoard iBoard = null;
+    IBoard iBoard = null;
 
     private void initCountries() {
         if ( matchModel == null ) {return; }
@@ -2791,7 +1899,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // -----------------share button           ------------
     // ----------------------------------------------------
     private FloatingActionButton shareButton = null;
-    private void showShareFloatButton(boolean bGameHasEnded, boolean bMatchHasEnded) {
+    void showShareFloatButton(boolean bGameHasEnded, boolean bMatchHasEnded) {
         if ( PreferenceValues.useShareFeature(this).equals(Feature.Suggest)==false ) {
             if ( shareButton != null ) { shareButton.setHidden(true); }
             return;
@@ -3936,9 +3044,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             SystemUtil.doVibrate(this, 800);
         }
     }
-    private Menu       mainMenu                   = null;
+    Menu       mainMenu                   = null;
     private MenuItem[] menuItemsWithOrWithoutText = null;
-
 
     /** Populates the scoreBoard's options menu. Called only once for ScoreBoard (but re-invoked if orientation changes) */
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -3950,15 +3057,17 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         initCastMenu();
 
-        if ( m_bHideDrawerItemsFromOldMenu && (id2String.isEmpty() == false) ) {
-            for(Integer iId: id2String.keySet() ) {
+/*
+        if ( MenuDrawerAdapter.m_bHideDrawerItemsFromOldMenu && (MenuDrawerAdapter.id2String.isEmpty() == false) ) {
+            for(Integer iId: MenuDrawerAdapter.id2String.keySet() ) {
                 boolean b = ViewUtil.hideMenuItemForEver(mainMenu, iId);
                 if ( b == false ) {
-                    String sCaption = getString(id2String.get(iId));
+                    String sCaption = getString(MenuDrawerAdapter.id2String.get(iId));
                     Log.w(TAG, String.format("Failed to hide %s = %s", iId, sCaption));
                 }
             }
         }
+*/
 
         updateDemoThread(menu);
 
@@ -4185,6 +3294,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     private int m_menuIdBeingHandled = 0;
+    boolean handleDrawerMenuItem(int id, Object... ctx) {
+        drawerLayout.closeDrawer(drawerView);
+        return handleMenuItem(id, ctx);
+    }
     public boolean handleMenuItem(int id, Object... ctx) {
         if ( m_menuIdBeingHandled == id ) {
             Log.d(TAG, "Same menu item again: " + id + " " + getResources().getResourceName(id));
@@ -4639,7 +3752,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     private boolean warnModelIsLocked(int iBlockingActionId, Object... ctx) {
         return warnModelIsLocked(false, iBlockingActionId, ctx);
     }
-    private boolean warnModelIsLocked() {
+    boolean warnModelIsLocked() {
         return warnModelIsLocked(false, 0, (Object[]) null);
     }
 
@@ -4670,7 +3783,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         show(conduct);
     }
 
-    private void showBrokenEquipment(Player asking) {
+    void showBrokenEquipment(Player asking) {
         //if ( Brand.isNotSquash() ) { return; }
         if ( warnModelIsLocked() ) { return; }
         BrokenWhat brokenWhat = new BrokenWhat(this, matchModel, this);
@@ -4678,7 +3791,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         show(brokenWhat);
     }
 
-    private void showColorPicker(Player p) {
+    void showColorPicker(Player p) {
         if ( matchModel == null ) { return; }
         ColorPicker colorPicker = new ColorPicker(this, matchModel, this);
         colorPicker.init(p, matchModel.getColor(p));
@@ -5943,7 +5056,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             demoThread.setMenu(menu);
         }
     }
-    private static Mode m_mode = Mode.Normal;
+    static Mode m_mode = Mode.Normal;
 
     // ------------------------------------------------------
     // workaround to keep timer or baseDialog alive when orientation changes
@@ -6247,7 +5360,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ----------------------------------------------------
     // --------------------- debug mode -------------------
     // ----------------------------------------------------
-    private void dbgmsg(String s, int iResId, int iResId2) {
+    public void dbgmsg(String s, int iResId, int iResId2) {
         if ( m_mode.equals(Mode.Normal) ) { return; }
 
         String sMsg = s + " on " + (iResId<9999?iResId:getResourceEntryName(iResId));
@@ -6362,7 +5475,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
     }
 
-    private boolean clearBLEConfirmationStatus() {
+    boolean clearBLEConfirmationStatus() {
         if ( m_blePlayerWaitingForScoreToBeConfirmed != null || m_blePlayerToConfirmOwnScore != null ) {
             stopWaitingForBLEConfirmation();
             m_blePlayerWaitingForScoreToBeConfirmed = null;
@@ -6450,7 +5563,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // -----------------------------------------------------
     // --------------------- bluetooth BLE -----------------
     // -----------------------------------------------------
-    private void promoteAppToUseBLE() {
+    void promoteAppToUseBLE() {
         PreferenceValues.setBoolean(PreferenceKeys.UseBluetoothLE                 , ScoreBoard.this, true);
         PreferenceValues.setBoolean(PreferenceKeys.blinkFeedbackPerPoint          , ScoreBoard.this, true);
         PreferenceValues.setBoolean(PreferenceKeys.showActionBar                  , ScoreBoard.this, false);
@@ -6654,7 +5767,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ----------------------------------------------------
 
     // Get the default adapter
-    private static final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    static final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     private void onCreateInitBluetooth() {
         //mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -6878,14 +5991,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         writeMethodToBluetooth(BTMethods.restartTimerWithSecondsLeft, iSecs);
     }
 
-    private void toggleGameScoreView() {
+    void toggleGameScoreView() {
         iBoard.toggleGameScoreView();
         castGamesWonAppearance();
 
         writeMethodToBluetooth(BTMethods.toggleGameScoreView);
     }
 
-    private void toggleSetScoreView() {
+    void toggleSetScoreView() {
         iBoard.updateSetScoresToShow(true);
 
         writeMethodToBluetooth(BTMethods.toggleGameScoreView);
@@ -8016,7 +7129,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         return context.getResources().getConfiguration().isScreenRound();
     }
 
-    private boolean isWearable() {
+    boolean isWearable() {
         return ViewUtil.isWearable(this);
     }
     private void onPauseWearable() {
@@ -8423,7 +7536,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ----------------------------------------------------
     // --- MQTT                                       -----
     // ----------------------------------------------------
-    private MQTTHandler m_MQTTHandler = null;
+    MQTTHandler m_MQTTHandler = null;
     private void onResumeMQTT() {
         if ( PreferenceValues.useMQTT(this) == false ) {
             iBoard.updateMQTTConnectionStatusIcon(View.INVISIBLE, -1);
@@ -8450,20 +7563,18 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     public void doDelayedMQTTReconnect(String sMsg, int iReconnectInSeconds) {
         iBoard.showInfoMessage(sMsg + " Reconnecting in " + iReconnectInSeconds, iReconnectInSeconds);
         // e.g. internet connection stopped working, or broker on local network stopped
-        // todo: start timer to retry
         stopMQTT();
-        new DelayedMQTTReconnect(iReconnectInSeconds * 1000).start();
+        DelayedMQTTReconnect cdtReconnect = new DelayedMQTTReconnect((long) iReconnectInSeconds * 1000);
+        cdtReconnect.start();
     }
     private class DelayedMQTTReconnect extends CountDownTimer {
         private DelayedMQTTReconnect(long iMilliSeconds) {
-            super(iMilliSeconds, 250);
-        }
-        @Override public void onTick(long millisUntilFinished) {
-            //Log.d(TAG, "Waiting ... " + millisUntilFinished);
+            super(iMilliSeconds, 1000L);
         }
         @Override public void onFinish() {
             onResumeMQTT();
         }
+        @Override public void onTick(long millisUntilFinished) {}
     }
 
     private synchronized void publishOnMQTT(BTMethods method, Object... args) {
@@ -8476,11 +7587,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     private void stopMQTT() {
-        if ( m_MQTTHandler == null ) {
-            return;
+        if ( m_MQTTHandler != null ) {
+            m_MQTTHandler.stop();
+            m_MQTTHandler = null; // required ?
         }
-        m_MQTTHandler.stop();
-        m_MQTTHandler = null; // required ?
     }
 
     // ----------------------------------------------------

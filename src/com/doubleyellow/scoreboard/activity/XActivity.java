@@ -43,10 +43,10 @@ public abstract class XActivity extends /*Activity*/ AppCompatActivity /* For Im
         }
         return m_orientation;
     }
-    protected boolean isLandscape() {
+    public boolean isLandscape() {
         return getOrientation().equals(Orientation.Landscape);
     }
-    protected boolean isPortrait() {
+    public boolean isPortrait() {
         return getOrientation().equals(Orientation.Portrait);
     }
 
@@ -59,7 +59,7 @@ public abstract class XActivity extends /*Activity*/ AppCompatActivity /* For Im
     //----------------------------------------------------
 
     /** Method to be able to quickly switch between when extending Activity and AppCompatActivity */
-    protected ActionBar getXActionBar() {
+    public ActionBar getXActionBar() {
         try {
             return super.getSupportActionBar(); // with ChromeCast
         } catch (Exception e) {

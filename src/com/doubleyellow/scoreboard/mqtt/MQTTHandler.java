@@ -117,10 +117,13 @@ public class MQTTHandler
                 // TODO: after a view dialog revert to just toast...
                 // TODO: dialog with 'Turn off MQTT'
                 String sMsg = String.format("ERROR: MQTT Connection to %s failed: %s", m_sBrokerUrl, exception.toString());
+                m_iBoard.showInfoMessage(sMsg, 10);
+/*
                 GenericMessageDialog dialog = new GenericMessageDialog(m_context);
                 dialog.init(m_context.getString(R.string.pref_Category_MQTT), sMsg);
-                //m_context.addToDialogStack(dialog);
                 dialog.show();
+                //m_context.addToDialogStack(dialog);
+*/
             }
             stop();
 

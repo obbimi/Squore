@@ -24,6 +24,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.doubleyellow.android.view.ViewUtil;
+import com.doubleyellow.prefs.DynamicListPreference;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.cast.framework.CastHelper;
 import com.doubleyellow.scoreboard.model.Model;
@@ -34,6 +35,7 @@ import com.doubleyellow.scoreboard.prefs.*;
 import com.doubleyellow.util.Feature;
 import com.doubleyellow.util.FileUtil;
 import com.doubleyellow.util.JsonUtil;
+import com.doubleyellow.util.ListUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -427,5 +429,15 @@ public enum Brand
 
     public static int getGameSetBallPoint_ResourceId() {
         return ( Brand.isRacketlon() || Brand.isGameSetMatch() ) ? R.string.oa_set_ball : ( Brand.isBadminton()? R.string.oa_gamepoint : R.string.oa_gameball );
+    }
+
+    public static void toggleBrand(Context context) {
+        Brand newBrandForTesting = ListUtil.getNextEnum(Brand.brand);
+        RWValues.setEnum(PreferenceKeys.squoreBrand, context, newBrandForTesting);
+        Brand.setBrandPrefs(context);
+        Brand.setSportPrefs(context);
+        DynamicListPreference.deleteCacheFile(context, PreferenceKeys.colorSchema.toString());
+        //doRestart(ScoreBoard.this);
+        Toast.makeText(context, String.format("Restart to make new brand %s effective", newBrandForTesting), Toast.LENGTH_LONG).show();
     }
 }
