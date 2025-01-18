@@ -17,6 +17,9 @@
 package com.doubleyellow.scoreboard.mqtt;
 
 import android.util.Log;
+import android.view.View;
+
+import com.doubleyellow.scoreboard.vico.IBoard;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
@@ -24,14 +27,19 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 class MQTTActionListener implements IMqttActionListener {
     private static final String TAG = "SB." + MQTTActionListener.class.getSimpleName();
     private String sPurpose = null;
-    public MQTTActionListener(String sPurpose) {
+    private IBoard m_iBoard = null;
+    public MQTTActionListener(String sPurpose, IBoard iBoard) {
         this.sPurpose = sPurpose;
+        m_iBoard = iBoard;
     }
-    @Override public void onSuccess(IMqttToken asyncActionToken) {
-        Log.d(TAG, "onSuccess: " + sPurpose + " t=" + asyncActionToken.getTopics() + " " + asyncActionToken);
+    @Override public void onSuccess(IMqttToken token) {
+        //m_iBoard.showInfoMessage("MQTT " + sPurpose, 2); // to much
+        m_iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);
+        Log.d(TAG, "onSuccess: " + sPurpose + " t=" + token.getTopics() + " " + token);
     }
 
-    @Override public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-        Log.d(TAG, "onFailure: " + sPurpose + " t=" + asyncActionToken.getTopics() + " " + asyncActionToken);
+    @Override public void onFailure(IMqttToken token, Throwable exception) {
+        m_iBoard.showInfoMessage("ERROR: MQTT " + sPurpose, 10);
+        Log.d(TAG, "onFailure: " + sPurpose + " t=" + token.getTopics() + " " + token);
     }
 }

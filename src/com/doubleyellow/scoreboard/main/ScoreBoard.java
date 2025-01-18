@@ -98,7 +98,7 @@ import com.doubleyellow.scoreboard.firebase.PusherHandler;
 import com.doubleyellow.scoreboard.firebase.PusherMessagingService;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
-import com.doubleyellow.scoreboard.mqtt.MQTTClient;
+import com.doubleyellow.scoreboard.mqtt.MQTTHandler;
 import com.doubleyellow.scoreboard.share.MatchModelPoster;
 import com.doubleyellow.scoreboard.share.ResultPoster;
 import com.doubleyellow.scoreboard.share.ResultSender;
@@ -1298,7 +1298,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
     }
 
-    private boolean m_liveScoreShare = false;
+    public boolean m_liveScoreShare = false;
 
     /**
      * e.g. after settings screen has been entered and closed, matchdetails have been viewed.
@@ -5498,7 +5498,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     public void postMatchModel_publishOnMQTT(Context context, Model matchModel, Type timerType, int iSecsTotal) {
         JSONObject oTimerInfo = getTimerInfo(timerType, iSecsTotal);
         postMatchModel(context, matchModel, true, false, oTimerInfo);
-        publishMatchOnMQTT(context, false, oTimerInfo);
+        publishMatchOnMQTT(false, oTimerInfo);
     }
     public static void postMatchModel(Context context, Model matchModel, boolean bAllowEndGameIfApplicable, boolean bFromMenu, Type timerType, int iSecsTotal) {
         postMatchModel(context, matchModel, bAllowEndGameIfApplicable, bFromMenu, getTimerInfo(timerType, iSecsTotal));
@@ -6939,7 +6939,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         iBoard.setBluetoothIconVisibility(visibility);
     }
-    private static Map<PreferenceKeys, String> mBtPrefSlaveSettings = new HashMap<>();
+    public static Map<PreferenceKeys, String> mBtPrefSlaveSettings = new HashMap<>();
     static {
         mBtPrefSlaveSettings.put(PreferenceKeys.useOfficialAnnouncementsFeature, String.valueOf(Feature.DoNotUse ));
         mBtPrefSlaveSettings.put(PreferenceKeys.useShareFeature                , String.valueOf(Feature.DoNotUse ));
@@ -7082,7 +7082,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         sendMessageToWearables(sMessage);
     }
 
-    private void addMethodAndArgs(StringBuilder sb, BTMethods method, Object[] args) {
+    public void addMethodAndArgs(StringBuilder sb, BTMethods method, Object[] args) {
         sb.append(method);
         sb.append("(");
 
@@ -7684,9 +7684,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         if ( saMethodNArgs.length > 1 ) {
                             String requestingMatchOfDeviceWithId = saMethodNArgs[1];
                             if ( requestingMatchOfDeviceWithId.equalsIgnoreCase("*") ) {
-                                publishMatchOnMQTT(null, false, null);
+                                publishMatchOnMQTT( false, null);
                             } else if ( requestingMatchOfDeviceWithId.equalsIgnoreCase(PreferenceValues.getFCMDeviceId(this)) ) {
-                                publishMatchOnMQTT(null, true, null);
+                                publishMatchOnMQTT( true, null);
                             }
                         }
                         sendMatchToOtherBluetoothDevice(false, 2000);
@@ -8423,7 +8423,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ----------------------------------------------------
     // --- MQTT                                       -----
     // ----------------------------------------------------
-    private MQTTClient m_MqttClient = null;
+    private MQTTHandler m_MQTTHandler = null;
     private void onResumeMQTT() {
         if ( PreferenceValues.useMQTT(this) == false ) {
             iBoard.updateMQTTConnectionStatusIcon(View.INVISIBLE, -1);
@@ -8434,106 +8434,20 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             iBoard.updateMQTTConnectionStatusIcon(View.INVISIBLE, -1);
             return;
         }
-        if ( m_MqttClient == null ) {
+        if ( m_MQTTHandler == null ) {
             String sDeviceId = Brand.getShortName(this) + "." + PreferenceValues.getFCMDeviceId(this);
-            m_MqttClient = new MQTTClient(this, sBrokerUrl, sDeviceId);
+            m_MQTTHandler = new MQTTHandler(this, iBoard, sBrokerUrl, sDeviceId);
         }
-        if ( m_MqttClient.isConnected() ) {
+        if ( m_MQTTHandler.isConnected() ) {
             iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);
             return;
         }
         iBoard.showInfoMessage(String.format("MQTT Connecting to %s ...", sBrokerUrl), 10);
-        m_MqttClient.connect("", "", new IMqttActionListener() {
-            @Override public void onSuccess(IMqttToken asyncActionToken) {
-                iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);
-
-                // listen for 'clients' to request the complete json of a match specifically of this device
-                final String mqttRespondToTopic = getMQTTSubscribeTopicChange(BTMethods.requestCompleteJsonOfMatch);
-                if  ( StringUtil.isNotEmpty(mqttRespondToTopic) ) {
-                    if ( m_MqttClient == null ) { return; }
-                    m_MqttClient.subscribe(mqttRespondToTopic, new MQTTSubscribeActionListener(mqttRespondToTopic, sBrokerUrl));
-                }
-
-                final String mqttSubScribeToOtherTopic = getMQTTSubscribeTopicChange(null);
-                if ( StringUtil.isNotEmpty(mqttSubScribeToOtherTopic) ) {
-                    if ( m_MqttClient == null ) { return; }
-
-                    // listen for changes on
-                    m_MqttClient.subscribe(mqttSubScribeToOtherTopic, new MQTTSubscribeActionListener(mqttSubScribeToOtherTopic, sBrokerUrl));
-                } else {
-                    iBoard.showInfoMessage(String.format("MQTT Connected to %s OK", sBrokerUrl), 10);
-                }
-                if ( m_liveScoreShare ) {
-                    publishMatchOnMQTT(ScoreBoard.this, false, null);
-                }
-            }
-
-            @Override public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                if ( isDialogShowing() == false ) {
-                    String sMsg = String.format("ERROR: MQTT Connection to %s failed: %s", sBrokerUrl, exception.toString());
-                    GenericMessageDialog dialog = new GenericMessageDialog(ScoreBoard.this);
-                    dialog.init(getString(R.string.pref_Category_MQTT), sMsg);
-                    addToDialogStack(dialog);
-                }
-                stopMQTT();
-
-                String sMsg = String.format("ERROR: MQTT Connection to %s failed", sBrokerUrl);
-                doDelayedMQTTReconnect(sMsg,30);
-                //iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 0);
-            }
-        }, new MQTTCallback());
+        m_MQTTHandler.connect("", "");
     }
 
-    /** keep track of what message was received when, mainly to prevent endless loop when 2 devices are subscribed to each other to mirror each other */
-    private final Map<String, Long> m_MQTTmessageReceived = new HashMap<>();
-    private BTRole m_MQTTRole = null;
-    private void changeMQTTRole(BTRole role) {
-        if ( role.equals(m_MQTTRole) ) {
-            return;
-        }
-        if ( role.equals(BTRole.Slave) ) {
-            PreferenceValues.setOverwrites(mBtPrefSlaveSettings);
-        }
-        if ( role.equals(BTRole.Master) ) {
-            PreferenceValues.removeOverwrites(mBtPrefSlaveSettings.keySet());
-        }
-        m_MQTTRole = role;
-        iBoard.showInfoMessage("MQTT role " + m_MQTTRole, 2);
-    }
-    private class MQTTCallback implements MqttCallback {
 
-        @Override public void messageArrived(String topic, MqttMessage message) throws Exception {
-            String msg = String.format("MQTT Received: %s [%s]", message.toString(), topic );
-            Log.d(TAG, msg);
-
-            if ( topic.endsWith(PreferenceValues.getFCMDeviceId(ScoreBoard.this)) ) {
-                // show but ignore for further processing, messages published by this device itself
-                iBoard.showInfoMessage(msg, 1);
-            } else {
-                String sPayload = new String(message.getPayload());
-                long lNow = System.currentTimeMillis();
-                if ( m_MQTTmessageReceived.containsKey(sPayload) ) {
-                    long lReceivedPrev = m_MQTTmessageReceived.get(sPayload);
-                    if ( lNow - lReceivedPrev < 2000 ) {
-                        iBoard.showInfoMessage("IGNORE MQTT duplicate: " + sPayload, 2);
-                        return;
-                    }
-                }
-                if ( sPayload.startsWith(BTMethods.changeScore.toString()) ) {
-                    changeMQTTRole(BTRole.Slave);
-                }
-                m_MQTTmessageReceived.put(sPayload, lNow);
-                interpretReceivedMessageOnUiThread(sPayload, MessageSource.MQTT);
-            }
-        }
-
-        @Override public void connectionLost(Throwable cause) {
-            doDelayedMQTTReconnect("WARN: MQTT Connection to broker lost.", 10);
-        }
-        @Override public void deliveryComplete(IMqttDeliveryToken token) {}
-    }
-
-    private void doDelayedMQTTReconnect(String sMsg, int iReconnectInSeconds) {
+    public void doDelayedMQTTReconnect(String sMsg, int iReconnectInSeconds) {
         iBoard.showInfoMessage(sMsg + " Reconnecting in " + iReconnectInSeconds, iReconnectInSeconds);
         // e.g. internet connection stopped working, or broker on local network stopped
         // todo: start timer to retry
@@ -8552,122 +8466,23 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
     }
 
-    private class MQTTSubscribeActionListener implements IMqttActionListener
-    {
-        String sTopic = null;
-        String sUrl   = null;
-        MQTTSubscribeActionListener(String topic, String url) {
-            this.sTopic = topic;
-            this.sUrl = url;
-        }
-        @Override public void onSuccess(IMqttToken asyncActionToken) {
-            iBoard.showInfoMessage(String.format("MQTT Subscribed to %s on %s", sTopic, sUrl), 10);
-            iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);
-        }
-
-        @Override public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-            MyDialogBuilder.dialogWithOkOnly(ScoreBoard.this, getString(R.string.pref_Category_MQTT) , String.format("ERROR: MQTT Subscribed to %s failed %s", sTopic, exception.toString()), true);
-        }
+    private synchronized void publishOnMQTT(BTMethods method, Object... args) {
+        if ( m_MQTTHandler == null ) { return; }
+        m_MQTTHandler.publishOnMQTT(method, args);
+    }
+    private void publishMatchOnMQTT(boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
+        if ( m_MQTTHandler == null ) { return; }
+        m_MQTTHandler.publishMatchOnMQTT(matchModel, bPrefixWithJsonLength, oTimerInfo);
     }
 
     private void stopMQTT() {
-        iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 0);
-        if ( m_MqttClient == null ) {
+        if ( m_MQTTHandler == null ) {
             return;
         }
-        if ( m_MqttClient.isConnected() ) {
-            m_MqttClient.disconnect();
-            m_MqttClient = null; // required
-        }
+        m_MQTTHandler.stop();
+        m_MQTTHandler = null; // required ?
     }
 
-    private synchronized void publishOnMQTT(BTMethods method, Object... args) {
-        if ( m_MqttClient == null || m_MqttClient.isConnected() == false ) {
-            return;
-        }
-
-        if ( BTMethods.changeScore.equals(method) ) {
-            changeMQTTRole(BTRole.Master);
-        }
-
-        StringBuilder sb = new StringBuilder();
-        addMethodAndArgs(sb, method, args);
-        final String sMessage = sb.toString();
-
-        //Log.d(TAG, "About to write BT message " + sMessage.trim());
-        boolean bUseOtherDeviceId = EnumSet.of(BTMethods.requestCompleteJsonOfMatch).contains(method);
-        String changeTopic = getMQTTPublishTopicChange(false);
-        if ( bUseOtherDeviceId ) {
-            changeTopic += MQTT_TOPIC_CONCAT_CHAR + method;
-        }
-        m_MqttClient.publish(changeTopic, sMessage);
-    }
-    private void publishMatchOnMQTT(Context context, boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
-        if ( m_MqttClient == null || m_MqttClient.isConnected() == false ) {
-            return;
-        }
-        List<String> lSkipKeys = bPrefixWithJsonLength ? null : PreferenceValues.getMQTTSkipJsonKeys(context);
-        String matchTopic = getMQTTPublishTopicMatch();
-        String sJson = matchModel.toJsonString(context, null, oTimerInfo, lSkipKeys);
-        if ( bPrefixWithJsonLength ) {
-            // typically so the published data is the same as for bluetooth mirror messages
-            sJson = sJson.length() + ":" + sJson;
-            matchTopic = getMQTTPublishTopicChange(false);
-        }
-        m_MqttClient.publish(matchTopic, sJson);
-    }
-
-    private String getMQTTPublishTopicMatch() {
-        String sPlaceholder = PreferenceValues.getMQTTPublishTopicMatch(this);
-
-        String sDevice = PreferenceValues.getFCMDeviceId(this);
-        String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
-        return sValue;
-    }
-
-    private String getMQTTPublishTopicChange(boolean bUseOtherDeviceId) {
-        String sPlaceholder = PreferenceValues.getMQTTPublishTopicChange(this);
-
-        String sDevice = PreferenceValues.getFCMDeviceId(this);
-        if ( bUseOtherDeviceId ) {
-            sDevice = PreferenceValues.getMQTTOtherDeviceId(this);
-        }
-        String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
-        return sValue;
-    }
-
-    private String getMQTTSubscribeTopicChange(BTMethods btMethod) {
-        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopicChange(this);
-        String sSubTopic = "";
-
-        String sDevice = PreferenceValues.getMQTTOtherDeviceId(this);
-        if ( EnumSet.of(BTMethods.requestCompleteJsonOfMatch).contains(btMethod) ) {
-            sDevice = "+"; // PreferenceValues.getFCMDeviceId(this);
-            sSubTopic = MQTT_TOPIC_CONCAT_CHAR + btMethod;
-        }
-        String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
-        if ( StringUtil.isEmpty(sValue) ) {
-            return null;
-        }
-        return sValue + sSubTopic;
-    }
-    private String doMQTTTopicTranslation(String sPlaceholder, String sDeviceId) {
-        // subscribe to any message from specific device
-        if ( StringUtil.isEmpty(sDeviceId) ) {
-            return null;
-        }
-        Map mValues = MapUtil.getMap
-                ("Brand", Brand.getShortName(this)
-                , "DeviceId", sDeviceId
-                );
-        Placeholder instance = Placeholder.getInstance(TAG);
-        String sValue = instance.translate(sPlaceholder, mValues);
-               sValue = instance.removeUntranslated(sValue);
-               sValue = sValue.replaceAll("//", "/").replaceAll("^/", "");
-               sValue = sValue.replaceAll(" ", "");
-        return sValue;
-    }
-    private static final String MQTT_TOPIC_CONCAT_CHAR = "_";
     // ----------------------------------------------------
     // --- in-app purchases / Billing                 -----
     // ----------------------------------------------------
