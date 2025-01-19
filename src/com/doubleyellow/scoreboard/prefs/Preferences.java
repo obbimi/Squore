@@ -506,7 +506,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     case FCMEnabled:
                         // if no FCM device id yet, generate one
                         String sFCMDeviceId = PreferenceValues.getFCMDeviceId(Preferences.this);
-                        Preference pFCMId = settingsFragment.findPreference(PreferenceKeys.FCMDeviceId);
+                        Preference pFCMId = settingsFragment.findPreference(PreferenceKeys.liveScoreDeviceId);
                         if ( pFCMId != null ) {
                             PreferenceValues.updatePreferenceTitleResId(pFCMId, Preferences.this);
                         }
@@ -517,7 +517,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                                 PreferenceValues.setEnum(aKey, Preferences.this, Feature.Automatic);
                             }
                         }
-                        settingsFragment.setEnabledForPrefKeys(fcmEnabled, PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, PreferenceKeys.FCMDeviceId);
+                        settingsFragment.setEnabledForPrefKeys(fcmEnabled, PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, PreferenceKeys.liveScoreDeviceId);
                         break;
                     case UseBluetoothLE:
                         boolean bUse = PreferenceValues.useBluetoothLE(Preferences.this);
@@ -969,7 +969,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
 
             // FCM
             if ( PreferenceValues.isFCMEnabled(getActivity()) == false ) {
-                setEnabledForPrefKeys(false, PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, PreferenceKeys.FCMDeviceId);
+                setEnabledForPrefKeys(false, PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, PreferenceKeys.liveScoreDeviceId);
             }
 
             ListPreference lpTargetDir = (ListPreference) findPreference(PreferenceKeys.targetDirForImportExport);

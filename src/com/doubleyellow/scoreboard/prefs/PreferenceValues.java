@@ -526,7 +526,7 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.useOfficialAnnouncementsFeature, context, Feature.class, iRes);
     }
     public static String getLiveScoreDeviceId(Context context) {
-        return getDeviceId(PreferenceKeys.liveScoreDeviceId, context, false);
+        return getDeviceId(PreferenceKeys.liveScoreDeviceId, context, true);
     }
     public static boolean isFCMEnabled(Context context) {
         return getBoolean(PreferenceKeys.FCMEnabled, context, R.bool.FCMEnabled_default);
@@ -535,7 +535,7 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, context, R.bool.showToastMessageForEveryReceivedFCMMessage_default);
     }
     public static String getFCMDeviceId(Context context) {
-        return getDeviceId(PreferenceKeys.FCMDeviceId, context, true);
+        return getDeviceId(PreferenceKeys.liveScoreDeviceId, context, true);
     }
     private static String getDeviceId(PreferenceKeys key, Context context, boolean bGenerateIfNull) {
         String sID = RWValues.getString(key, null, context);
@@ -934,10 +934,10 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.UseMQTT, context, iResBrandSpecific);
     }
     public static String getMQTTBrokerURL(Context context) {
-        String sCustom = getString(PreferenceKeys.MQTTBrokerURL_Custom, R.string.MQTTBrokerURL_Custom__Default, context);
+        String sCustom = getMQTTBrokerURL_Custom(context);
         String sOneOfList = getString(PreferenceKeys.MQTTBrokerURL, null, context);
         String[] saValues = context.getResources().getStringArray(R.array.MQTTBrokerUrls);
-        String sCustomSelected = saValues[saValues.length - 1];
+        String sCustomSelected = saValues[saValues.length - 1]; // TODO: dangerous assumption
         if ( StringUtil.isEmpty(sOneOfList) ) {
             return saValues[0];
         } else {
@@ -948,6 +948,11 @@ public class PreferenceValues extends RWValues
             }
         }
     }
+
+    public static String getMQTTBrokerURL_Custom(Context context) {
+        return getString(PreferenceKeys.MQTTBrokerURL_Custom, R.string.MQTTBrokerURL_Custom__Default, context);
+    }
+
     public static String getMQTTPublishTopicMatch(Context context) {
         return getString(PreferenceKeys.MQTTPublishTopicMatch, R.string.MQTTTopicMatchTemplate__Default, context);
     }
@@ -959,6 +964,9 @@ public class PreferenceValues extends RWValues
     }
     public static String getMQTTSubscribeTopicChange(Context context) {
         return getString(PreferenceKeys.MQTTSubscribeTopicChange, R.string.MQTTTopicChangeTemplate__Default, context);
+    }
+    public static String getMQTTJoinerLeaverTopicPrefix(Context context) {
+        return getString(PreferenceKeys.MQTTJoinerLeaverTopicPrefix, R.string.MQTTJoinerLeaverTopicPrefix__Default, context);
     }
     public static String getMQTTOtherDeviceId(Context context) {
         return getString(PreferenceKeys.MQTTOtherDeviceId, "", context).toUpperCase();

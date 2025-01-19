@@ -248,6 +248,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="UseMQTT_default__Default">false</bool>
     <string name="MQTTTopicMatchTemplate__Default">double-yellow/${EventId}/${Brand}/${DeviceId}/match</string>
     <string name="MQTTTopicChangeTemplate__Default">double-yellow/${Brand}/${DeviceId}/change</string>
+    <string name="MQTTJoinerLeaverTopicPrefix__Default">double-yellow/${Brand}</string>
 
     <!-- https://github.com/emqx/blog/blob/main/en/202111/popular-online-public-mqtt-brokers.md -->
     <string-array name="MQTTBrokerUrls" translatable="false">
@@ -261,7 +262,7 @@ http://developer.android.com/guide/practices/screens_support.html
     </string-array>
     <string name="MQTTBrokerURL_Public__Default">tcp://broker.hivemq.com:1883</string>
     <string name="MQTTBrokerURL_Custom">Custom</string>
-    <string name="MQTTBrokerURL_Custom__Default">tcp://192.168.0.129:1883</string>
+    <string name="MQTTBrokerURL_Custom__Default">tcp://192.168.0.130:1883</string>
 
     <bool name="Cast_ShowGraphDuringTimer_default">true</bool>
     <bool name="castScreenShowLogo_default">true</bool>

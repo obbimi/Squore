@@ -67,6 +67,8 @@
     <string name="bt_match_received_by_X">Match received by %1$s</string>
     <string name="bt_bluetooth_mirror">Mirror score (Bluetooth)</string>
 
+    <string name="bt_mqtt_mirror">Mirror score (MQTT)</string>
+
     <string name="bt_connection_to_device_X_was_lost">Bluetooth connection to %s was lost</string>
     <string name="bt_connected_to_device_X">Connected to device %s</string>
     <string name="bt_already_connected_to_X">Already connected to %s</string>

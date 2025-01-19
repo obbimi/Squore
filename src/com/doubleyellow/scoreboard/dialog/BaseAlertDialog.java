@@ -89,6 +89,13 @@ public abstract class BaseAlertDialog /*extends AlertDialog NOT. TO MUCH hassle*
         txt.setTextColor(Color.WHITE); // TODO: improve
         return txt;
     }
+    protected TextView getTextView(String s) {
+        TextView txt = new TextView(context);
+        txt.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        txt.setText(s);
+        txt.setTextColor(Color.WHITE); // TODO: improve
+        return txt;
+    }
 
     private SparseArray<TextView> m_lButtons = new SparseArray<TextView>();
     protected TextView getActionView(int iCaption, final int iAction) {

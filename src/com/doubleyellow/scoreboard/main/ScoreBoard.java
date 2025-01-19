@@ -95,6 +95,7 @@ import com.doubleyellow.scoreboard.firebase.PusherMessagingService;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.mqtt.MQTTHandler;
+import com.doubleyellow.scoreboard.mqtt.SelectMQTTDeviceDialog;
 import com.doubleyellow.scoreboard.share.MatchModelPoster;
 import com.doubleyellow.scoreboard.share.ResultPoster;
 import com.doubleyellow.scoreboard.share.ResultSender;
@@ -673,7 +674,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     /**
      * e.g. after settings screen has been entered and closed, matchdetails have been viewed.
-     * Also after orientation switch (onRestoreinstance is called first) */
+     * Also after orientation switch (onRestoreInstance is called first) */
     @Override protected void onResume() {
         super.onResume();
 
@@ -2842,7 +2843,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         officialAnnouncementClosed,
         injuryTypeClosed,
         playerTimeoutClosed,
-        bluetoothDeviceSelectionClosed,
+        mirrorDeviceSelectionClosed,
         //rallyEndStatsClosed,
         //specifyHandicapClosed,
         //dialogClosed,
@@ -2977,7 +2978,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 }
                 break;
             }
-            case bluetoothDeviceSelectionClosed:
+            case mirrorDeviceSelectionClosed:
                 // communicate FullScreenTimer preference to slave device
                 if ( false ) {
                     boolean bShowFS = PreferenceValues.BTSync_showFullScreenTimer(this);
@@ -3387,6 +3388,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 return true;
             case R.id.sb_bluetooth:
                 setupBluetoothControl(true);
+                break;
+            case R.id.sb_mqtt_mirror:
+                setupMQTTControl();
                 break;
             case R.id.dyn_undo_last:
             case R.id.sb_undo_last:
@@ -5095,7 +5099,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         dialogManager.restoreInstanceState(savedInstanceState, this, matchModel, this);
         updateDemoThread(this);
-        //initModelListeners(); // 20141201: removed here because onResume is always invoked
     }
 
     // ----------------------------------------------------
@@ -6270,7 +6273,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
                     if ( sFileContent.startsWith("{") && sFileContent.endsWith("}") ) {
                         Log.d(TAG, "Parsing received match...");
-                        if ( msgSource.equals(MessageSource.FirebaseCloudMessage) ) {
+                        if ( EnumSet.of(MessageSource.FirebaseCloudMessage/*, MessageSource.MQTT*/).contains(msgSource) ) {
                             Model m = Brand.getModel();
                             m.fromJsonString(sFileContent);
                             boolean bStartNewMatchDialog = StringUtil.areAllNonEmpty(m.getName(Player.A), m.getName(Player.B));
@@ -6281,7 +6284,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
                                 if ( StringUtil.isEmpty(m.getSource()) ) {
                                     String sSourceId = null; // DateUtil.getCurrentYYYYMMDDTHHMMSS();  // TODO
-                                    m.setSource(MessageSource.FirebaseCloudMessage.toString(), sSourceId);
+                                    m.setSource(msgSource.toString(), sSourceId);
                                     String sFileContentEnriched = m.toJsonString(null);
                                     intent.putExtra(IntentKeys.NewMatch.toString(), sFileContentEnriched);
                                 }
@@ -6290,16 +6293,16 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                 // act as if the match was selected from a feed
                                 final int iRequestCode = R.id.sb_select_feed_match;
                                 if ( childActivityRequestCode() == iRequestCode ) {
-                                    Toast.makeText(this, "Ignoring new match to ref received by FCM message: " + sFileContent + ".\nRelated child activity already open", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(this, "Ignoring new match to ref received by " + msgSource + " message: " + sFileContent + ".\nRelated child activity already open", Toast.LENGTH_LONG).show();
                                 } else {
                                     onActivityResult(iRequestCode, 0 , intent);
                                     if ( PreferenceValues.showToastMessageForEveryReceivedFCMMessage(this)) {
-                                        Toast.makeText(this, "New match to ref received by FCM message:\n" + sFileContent, Toast.LENGTH_LONG).show();
+                                        Toast.makeText(this, "New match to ref received by " + msgSource + " message:\n" + sFileContent, Toast.LENGTH_LONG).show();
                                     }
                                 }
                             } else {
                                 // TODO: implement other options. e.g. populate 'My List' and open 'My List'
-                                Toast.makeText(this, "JSON received via FCM is not valid to represent a match.\n" + sFileContent, Toast.LENGTH_LONG).show();
+                                Toast.makeText(this, "JSON received via " + msgSource + " is not valid to represent a match.\n" + sFileContent, Toast.LENGTH_LONG).show();
                             }
                         } else {
                             try {
@@ -7536,8 +7539,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ----------------------------------------------------
     // --- MQTT                                       -----
     // ----------------------------------------------------
-    MQTTHandler m_MQTTHandler = null;
-    private void onResumeMQTT() {
+    public MQTTHandler m_MQTTHandler = null;
+    public void onResumeMQTT() {
         if ( PreferenceValues.useMQTT(this) == false ) {
             iBoard.updateMQTTConnectionStatusIcon(View.INVISIBLE, -1);
             return;
@@ -7564,9 +7567,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         iBoard.showInfoMessage(sMsg + " Reconnecting in " + iReconnectInSeconds, iReconnectInSeconds);
         // e.g. internet connection stopped working, or broker on local network stopped
         stopMQTT();
-        DelayedMQTTReconnect cdtReconnect = new DelayedMQTTReconnect((long) iReconnectInSeconds * 1000);
+        cdtReconnect = new DelayedMQTTReconnect((long) iReconnectInSeconds * 1000);
         cdtReconnect.start();
     }
+    private DelayedMQTTReconnect cdtReconnect = null;
     private class DelayedMQTTReconnect extends CountDownTimer {
         private DelayedMQTTReconnect(long iMilliSeconds) {
             super(iMilliSeconds, 1000L);
@@ -7586,17 +7590,30 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         m_MQTTHandler.publishMatchOnMQTT(matchModel, bPrefixWithJsonLength, oTimerInfo);
     }
 
-    private void stopMQTT() {
+    public void stopMQTT() {
+        if ( cdtReconnect != null ) {
+            cdtReconnect.cancel();
+            cdtReconnect = null;
+        }
         if ( m_MQTTHandler != null ) {
             m_MQTTHandler.stop();
             m_MQTTHandler = null; // required ?
         }
     }
 
+    private void setupMQTTControl() {
+        if ( m_MQTTHandler == null ) {
+            PreferenceValues.setBoolean(PreferenceKeys.UseMQTT, this, true);
+            onResumeMQTT();
+        }
+        SelectMQTTDeviceDialog selectDevice = new SelectMQTTDeviceDialog(this, matchModel, this);
+        addToDialogStack(selectDevice);
+    }
+
+
     // ----------------------------------------------------
     // --- in-app purchases / Billing                 -----
     // ----------------------------------------------------
-
 
     private BillingProcessor m_billingProcessor = null;
     private String m_sProductToByAfterInit = null;

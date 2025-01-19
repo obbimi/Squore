@@ -869,9 +869,9 @@
                 android:defaultValue="@bool/FCMEnabled_default"
                 />
             <com.doubleyellow.scoreboard.prefs.DeviceIdPref
-                android:key="FCMDeviceId"
+                android:key="liveScoreDeviceId"
                 android:icon="@drawable/dummy"
-                android:title="@string/pref_FCMDeviceId"
+                android:title="@string/pref_DeviceId"
                 android:summary="@string/pref_FCMDeviceId_summary"
                 />
             <CheckBoxPreference android:key="showToastMessageForEveryReceivedFCMMessage"
@@ -1049,7 +1049,7 @@
             <com.doubleyellow.scoreboard.prefs.DeviceIdPref
                 android:key="liveScoreDeviceId"
                 android:icon="@drawable/dummy"
-                android:title="@string/pref_liveScoreDeviceId"
+                android:title="@string/pref_DeviceId"
                 android:summary="@string/pref_liveScoreDeviceId_summary"
                 />
 
@@ -1101,7 +1101,7 @@
             <com.doubleyellow.scoreboard.prefs.DeviceIdPref
                 android:key="liveScoreDeviceId"
                 android:icon="@drawable/dummy"
-                android:title="@string/pref_MQTTDeviceId"
+                android:title="@string/pref_DeviceId"
                 android:summary="@string/pref_MQTTDeviceId_summary"
                 />
         </PreferenceCategory>

@@ -61,8 +61,9 @@
     <string name="pref_MQTTSubscribeTopicChange_Summary">Topic placeholder when subscribing to changes in a match on an other device</string>
     <string name="pref_MQTTOtherDeviceId">Other device id</string>
     <string name="pref_MQTTOtherDeviceId_Summary">Unique device id of the device you want to mirror the score for</string>
-    <string name="pref_MQTTDeviceId">Device Unique Id</string>
     <string name="pref_MQTTDeviceId_summary">This ID is used to uniquely identify this device. It should be entered on another device as \'Other device id\' to achieve mirroring the score using MQTT</string>
+    <string name="pref_DeviceId">Device Unique Id</string>
+    <string name="pref_Brokers">Brokers</string>
 
     <string name="pref_feedFeedsURL">feedFeedsURL</string>
     <string name="pref_feedFeedsURL_summary">For developers only</string>
@@ -393,7 +394,7 @@
     <string name="pref_live_score_url_summary">Use this URL to have see all matches shared with this app, e.g. related to your event</string>
     <string name="pref_LiveScorePrefs">Support live scoring</string>
     <string name="pref_updateLiveScore">Update live score</string>
-    <string name="pref_liveScoreDeviceId">Live Score - Device Unique Id</string>
+<!--    <string name="pref_liveScoreDeviceId">Live Score - Device Unique Id</string>-->
     <string name="pref_liveScoreDeviceId_summary">This ID can be used to get only matches from this device on the Live Score webpage</string>
 
     <string name="pref_FCM">FCM (Firebase Cloud Messaging)</string>
@@ -403,7 +404,7 @@
     <string name="pref_showToastMessageForEveryReceivedFCMMessage">Show toast for received FCM message</string>
     <string name="pref_showToastMessageForEveryReceivedFCMMessage_summary">Show a toast message for every received FCM message</string>
     <string name="pref_FCMEnabled_summary">Allow changing the score on the device by accessing certain URLs. Once enabled use Menu > Show > FCM - Info</string>
-    <string name="pref_FCMDeviceId">FCM - Device Unique Id</string>
+<!-- <string name="pref_FCMDeviceId">FCM - Device Unique Id</string> -->
     <string name="pref_FCMDeviceId_summary">This ID is used to uniquely identify this device. It will be part of the FCM URL (URL that can be used to change the score on this device)</string>
 
     <string name="pref_DeviceId_use_new__x">Use new: %1$s</string>

@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class LongClickBothListener extends ScoreBoardListener implements TouchBothListener.LongClickBothListener
 {
@@ -64,7 +65,7 @@ public class LongClickBothListener extends ScoreBoardListener implements TouchBo
                 scoreBoard.iBoard.showMessage(sCurrentTime, 3);
             } else {
                 if ( scoreBoard.m_MQTTHandler != null ) {
-                    List<String> subscriptionTopics = scoreBoard.m_MQTTHandler.getSubscriptionTopics();
+                    Set<String> subscriptionTopics = scoreBoard.m_MQTTHandler.getSubscriptionTopics();
                     if ( ListUtil.isNotEmpty(subscriptionTopics) ) {
                         for(String sTopic: subscriptionTopics ) {
                             Toast.makeText(scoreBoard, sTopic, Toast.LENGTH_SHORT).show();

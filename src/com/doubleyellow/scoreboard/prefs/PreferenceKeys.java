@@ -286,7 +286,6 @@ public enum PreferenceKeys {
 
     FCMPrefs,
         FCMEnabled,
-        FCMDeviceId,
         showToastMessageForEveryReceivedFCMMessage,
 
     /* not really preferences but makes them manageable from 'parent' app */
@@ -345,6 +344,7 @@ public enum PreferenceKeys {
     UseMQTT,
         MQTTBrokerURL,
             MQTTBrokerURL_Custom,
+        MQTTJoinerLeaverTopicPrefix,
         MQTTPublishTopicMatch,
             MQTTSkipJsonKeys,
         MQTTPublishTopicChange,

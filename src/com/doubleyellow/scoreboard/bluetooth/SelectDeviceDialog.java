@@ -27,6 +27,7 @@ import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
+import com.doubleyellow.android.view.SelectObjectView;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.BaseAlertDialog;
@@ -240,6 +241,6 @@ public class SelectDeviceDialog extends BaseAlertDialog
                     break;
                 }
         }
-        scoreBoard.triggerEvent(ScoreBoard.SBEvent.bluetoothDeviceSelectionClosed, this);
+        scoreBoard.triggerEvent(ScoreBoard.SBEvent.mirrorDeviceSelectionClosed, this);
     }
 }
