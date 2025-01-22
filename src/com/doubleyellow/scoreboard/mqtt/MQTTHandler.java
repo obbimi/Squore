@@ -36,11 +36,11 @@ import com.doubleyellow.util.StringUtil;
 import info.mqtt.android.service.Ack;
 import info.mqtt.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +91,8 @@ public class MQTTHandler
         m_joinerLeaverTopic = doMQTTTopicTranslation(PreferenceValues.getMQTTJoinerLeaverTopicPrefix(context) + "/" + JoinerLeaver.class.getSimpleName(), null) ;
 
         //mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK, null, true, 1); // version 4.3 of https://github.com/hannesa2/paho.mqtt.android
-        mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK);
+        //mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK); // uses MqttDefaultFilePersistence and seems to throw MqttPersistenceException
+        mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK, new MemoryPersistence());
 
         defaultCbPublish     = new MQTTActionListener("Publish"    , iBoard, m_sBrokerUrl);
         defaultCbDisconnect  = new MQTTActionListener("Disconnect" , iBoard, m_sBrokerUrl);
@@ -132,7 +133,12 @@ public class MQTTHandler
         }
 
         @Override public void onFailure(IMqttToken token, Throwable exception) {
-            String sMsg = String.format("ERROR: MQTT Connection to %s failed: %s", m_sBrokerUrl, exception);
+            String sException = String.valueOf(exception);
+            if ( sException.equals(MqttException.class.getSimpleName() + "(0)") ) {
+                sException = exception.getClass().getSimpleName(); // e.g. MqttPersistenceException
+                exception.printStackTrace();
+            }
+            String sMsg = String.format("ERROR: MQTT Connection to %s failed: %s", m_sBrokerUrl, sException);
             stop();
 
             m_context.doDelayedMQTTReconnect(sMsg,11);

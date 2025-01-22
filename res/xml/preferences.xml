@@ -1059,7 +1059,7 @@
             <CheckBoxPreference android:key="UseMQTT"
                 android:title="@string/pref_UseMQTT"
                 android:summary="@string/pref_UseMQTT_Summary"
-                android:icon="@drawable/dummy"
+                android:icon="@drawable/mqtt"
                 android:defaultValue="@bool/UseMQTT_default__Default"
                 />
             <ListPreference android:key="MQTTBrokerURL"

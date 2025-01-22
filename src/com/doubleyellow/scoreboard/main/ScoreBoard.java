@@ -7557,6 +7557,16 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( m_MQTTHandler == null ) {
             String sDeviceId = Brand.getShortName(this) + "." + PreferenceValues.getFCMDeviceId(this);
             m_MQTTHandler = new MQTTHandler(this, iBoard, sBrokerUrl, sDeviceId);
+            TextView tvMqttInfo = findViewById(R.id.sb_mqtt_connection_info);
+            if ( tvMqttInfo != null && tvMqttInfo.hasOnClickListeners() == false ) {
+                tvMqttInfo.setOnClickListener(v -> {
+                    if ( m_MQTTHandler != null /*&& m_MQTTHandler.isConnected()*/ ) {
+                        stopMQTT();
+                    } else {
+                        onResumeMQTT();
+                    }
+                });
+            }
         }
         if ( m_MQTTHandler.isConnected() ) {
             iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);

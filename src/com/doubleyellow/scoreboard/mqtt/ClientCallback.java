@@ -45,6 +45,7 @@ public class ClientCallback implements MqttCallback
 
     /** keep track of what message was received when, mainly to prevent endless loop when 2 devices are subscribed to each other to mirror each other */
     private final Map<String, Long> m_MQTTmessageReceived = new HashMap<>();
+    private int m_iDuplicateCount = 0;
 
     @Override public void messageArrived(String topic, MqttMessage message) throws Exception {
         String msg = String.format("MQTT Received: %s [%s]", message.toString(), topic );
@@ -58,8 +59,13 @@ public class ClientCallback implements MqttCallback
             long lNow = System.currentTimeMillis();
             if ( m_MQTTmessageReceived.containsKey(sPayload) ) {
                 long lReceivedPrev = m_MQTTmessageReceived.get(sPayload);
-                if ( lNow - lReceivedPrev < 2000 ) {
-                    m_handler.m_iBoard.showInfoMessage("IGNORE MQTT duplicate: " + sPayload, 2);
+                long lMsAgo = lNow - lReceivedPrev;
+                if ( lMsAgo < 2000 ) {
+                    m_iDuplicateCount++;
+                    Log.w(TAG, String.format("IGNORE MQTT duplicate(%d): %s", m_iDuplicateCount, sPayload));
+                    if ( m_iDuplicateCount < 16 ) {
+                        m_handler.m_iBoard.showInfoMessage("IGNORE MQTT duplicate: " + sPayload, 2);
+                    }
                     return;
                 }
             }

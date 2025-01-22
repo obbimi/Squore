@@ -371,7 +371,7 @@
         android:gravity="center"
         android:visibility="visible"
         android:text="Some information about state changes/events withing the app"
-        app:layout_constraintHeight_percent="0.04"
+        app:layout_constraintHeight_percent="0.08"
         android:layout_width="0dp" android:layout_height="0dp"
         android:textColor="@android:color/white"
         android:background="@color/background_default_tp__Squash"
