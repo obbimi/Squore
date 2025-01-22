@@ -26,20 +26,22 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 
 class MQTTActionListener implements IMqttActionListener {
     private static final String TAG = "SB." + MQTTActionListener.class.getSimpleName();
-    private String sPurpose = null;
+    private String m_sPurpose = null;
+    private String m_sBrokerUrl = null;
     private IBoard m_iBoard = null;
-    public MQTTActionListener(String sPurpose, IBoard iBoard) {
-        this.sPurpose = sPurpose;
-        m_iBoard = iBoard;
+    public MQTTActionListener(String sPurpose, IBoard iBoard, String sBroker) {
+        m_sPurpose   = sPurpose;
+        m_iBoard     = iBoard;
+        m_sBrokerUrl = sBroker;
     }
     @Override public void onSuccess(IMqttToken token) {
         //m_iBoard.showInfoMessage("MQTT " + sPurpose, 2); // to much
         m_iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);
-        Log.d(TAG, "onSuccess: " + sPurpose + " t=" + token.getTopics() + " " + token);
+        Log.d(TAG, "onSuccess: " + m_sPurpose + " t=" + token.getTopics() + " " + token + " " + m_sBrokerUrl);
     }
 
     @Override public void onFailure(IMqttToken token, Throwable exception) {
-        m_iBoard.showInfoMessage("ERROR: MQTT " + sPurpose, 10);
-        Log.d(TAG, "onFailure: " + sPurpose + " t=" + token.getTopics() + " " + token);
+        m_iBoard.showInfoMessage("ERROR: MQTT " + m_sPurpose + " " + m_sBrokerUrl, 10);
+        Log.d(TAG, "onFailure: " + m_sPurpose + " t=" + token.getTopics() + " " + token + " " + m_sBrokerUrl + " " + exception.getMessage());
     }
 }

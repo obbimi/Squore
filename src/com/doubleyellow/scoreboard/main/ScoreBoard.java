@@ -4307,21 +4307,21 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             }
                             onResumeInitBluetoothBLE();
                             break;
-/*
                         case UseMQTT:              // fall through
                         case MQTTBrokerURL:        // fall through
                         case MQTTBrokerURL_Custom: // fall through
-                        case MQTTPublishTopicMatch:     // fall through
-                        case MQTTPublishTopicChange:     // fall through
-                        case MQTTSubscribeTopicChange:   // fall through
-                        case MQTTOtherDeviceId:    // fall through
+                        case MQTTJoinerLeaverTopicPrefix: // fall through
+                        case MQTTPublishTopicMatch:       // fall through
+                        case MQTTSkipJsonKeys:            // fall through
+                        case MQTTPublishTopicChange:      // fall through
+                        case MQTTSubscribeTopicChange:    // fall through
+                        case MQTTOtherDeviceId:           // fall through
                             if ( bMQTTRestarted == false ) {
                                 stopMQTT();
                                 onResumeMQTT();
                                 bMQTTRestarted = true;
                             }
                             break;
-*/
                         default:
                             break;
                     }
@@ -7541,6 +7541,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ----------------------------------------------------
     public MQTTHandler m_MQTTHandler = null;
     public void onResumeMQTT() {
+        if ( cdtReconnect != null ) {
+            cdtReconnect.cancel();
+            cdtReconnect = null;
+        }
         if ( PreferenceValues.useMQTT(this) == false ) {
             iBoard.updateMQTTConnectionStatusIcon(View.INVISIBLE, -1);
             return;
@@ -7559,12 +7563,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             return;
         }
         iBoard.showInfoMessage(String.format("MQTT Connecting to %s ...", sBrokerUrl), 10);
-        m_MQTTHandler.connect("", "");
+        m_MQTTHandler.connect("", ""); // TODO: work with broker that requires to provide credentials
     }
 
 
     public void doDelayedMQTTReconnect(String sMsg, int iReconnectInSeconds) {
-        iBoard.showInfoMessage(sMsg + " Reconnecting in " + iReconnectInSeconds, iReconnectInSeconds);
+        iBoard.showInfoMessage("(%1$d) " + sMsg + " Reconnecting in %1$d", iReconnectInSeconds);
         // e.g. internet connection stopped working, or broker on local network stopped
         stopMQTT();
         cdtReconnect = new DelayedMQTTReconnect((long) iReconnectInSeconds * 1000);

@@ -1421,12 +1421,12 @@ public class IBoard implements TimerViewContainer
     // INFO message methods (replacing 'toasts')
     //===================================================================
     private CountDownTimer m_timerInfoMessage;
-    public void showInfoMessage(String sMsg, int iMessageDurationSecs) {
+    public void showInfoMessage(final String sMsg, int iMessageDurationSecs) {
         // hide any 'permanent' BLE message still displaying
         final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bottom_of_screen_infomessage);
         if ( tvBLEInfo != null ) {
             if ( StringUtil.isNotEmpty(sMsg) ) {
-                tvBLEInfo.setText(sMsg);
+                tvBLEInfo.setText(String.format(sMsg, iMessageDurationSecs));
                 tvBLEInfo.setVisibility(View.VISIBLE);
 
                 if ( m_timerInfoMessage != null ) {
@@ -1435,7 +1435,12 @@ public class IBoard implements TimerViewContainer
                 if ( iMessageDurationSecs > 0 ) {
                     // auto hide in x secs
                     m_timerInfoMessage = new CountDownTimer(iMessageDurationSecs * 1000, 1000) {
-                        @Override public void onTick(long millisUntilFinished) { }
+                        @Override public void onTick(long millisUntilFinished) {
+                            if ( sMsg.contains("%d") || sMsg.contains("%1$d") ) {
+                                int iSecondsLeft = (int) millisUntilFinished / 1000;
+                                tvBLEInfo.setText(String.format(sMsg, iSecondsLeft));
+                            }
+                        }
                         @Override public void onFinish() {
                             setVisibility(tvBLEInfo, View.INVISIBLE);
                             m_timerInfoMessage = null;
@@ -1475,10 +1480,21 @@ public class IBoard implements TimerViewContainer
             vTxt.setVisibility(visibility);
         }
     }
+
+    private static final String[] m_aStatusTexts = { "mq", "Mq", "MQ", "mQ" };
+    private int m_statusIndex = 0;
     public void updateMQTTConnectionStatusIcon(int visibility, int nrOfWhat) {
         TextView vTxt = m_vRoot.findViewById(R.id.sb_mqtt_connection_info);
         if ( vTxt != null ) {
-            vTxt.setText("MQ:" + nrOfWhat);
+            if ( nrOfWhat > 0 ) {
+                m_statusIndex++;
+                if ( m_statusIndex >= m_aStatusTexts.length ) {
+                    m_statusIndex = 0;
+                }
+            } else {
+                m_statusIndex = 0;
+            }
+            vTxt.setText(m_aStatusTexts[m_statusIndex] + ":" + nrOfWhat);
             vTxt.setVisibility(visibility);
         }
     }
