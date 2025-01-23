@@ -159,38 +159,35 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
     }
 
     @Override public boolean handleMenuItem(int menuItemId, Object... ctx) {
-        switch (menuItemId) {
-            case android.R.id.home: // contains a 'back arrow' so treat it like the back button
-                onBackPressed();
-                break;
-            case R.id.close:
-            case R.id.cmd_cancel:
-                finish();
-                return true;
-            case R.id.refresh:
-                switch (m_status) {
-                    case SelectType:
-                        loadTypesAdapter.load(false);
-                        break;
-                    case SelectFeed:
-                        if ( showFeedsAdapter != null ) {
-                            showFeedsAdapter.load(false);
-                        }
-                        break;
-                }
+        if (menuItemId == android.R.id.home) { // contains a 'back arrow' so treat it like the back button
+            onBackPressed();
+        } else if (menuItemId == R.id.close || menuItemId == R.id.cmd_cancel) {
+            finish();
+            return true;
+        } else if (menuItemId == R.id.refresh) {
+            switch (m_status) {
+                case SelectType:
+                    loadTypesAdapter.load(false);
+                    break;
+                case SelectFeed:
+                    if (showFeedsAdapter != null) {
+                        showFeedsAdapter.load(false);
+                    }
+                    break;
+            }
 
-                //expListView.setAdapter(loadFeedAdapter);
-                //loadFeedAdapter.load(false);
-                return true;
-            case R.id.expand_all:
-                ExpandableListUtil.expandAll(expListView);
-				return true;
-            case R.id.collapse_all:
-                ExpandableListUtil.collapseAll(expListView);
-				return true;
-            case R.id.filter:
-                initFiltering();
-                return true;
+            //expListView.setAdapter(loadFeedAdapter);
+            //loadFeedAdapter.load(false);
+            return true;
+        } else if (menuItemId == R.id.expand_all) {
+            ExpandableListUtil.expandAll(expListView);
+            return true;
+        } else if (menuItemId == R.id.collapse_all) {
+            ExpandableListUtil.collapseAll(expListView);
+            return true;
+        } else if (menuItemId == R.id.filter) {
+            initFiltering();
+            return true;
         }
         return false;
     }

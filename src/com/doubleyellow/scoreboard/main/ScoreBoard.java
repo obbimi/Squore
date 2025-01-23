@@ -2052,27 +2052,20 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             int iAdditionalMargin = (iScreenDiagonal - boxedHeightWidth) / 2;
 
             // special case: do not add additional margin and have button in free space around the square scoreboard
-            switch ( iActionId ) {
-                case R.id.float_toss:
-                case R.id.float_changesides:
-                    direction = Direction.N;
-                    iMargin = 0;
-                    break;
-                case R.id.float_new_match:
-                    direction = Direction.E;
-                    iMargin = 0;
-                    break;
-                case R.id.float_undo_last:
-                    direction = Direction.S;
-                    iMargin = 0;
-                    break;
-                case R.id.float_timer:
-                    direction = Direction.W;
-                    iMargin = 0;
-                    break;
-                default:
-                    iMargin += iAdditionalMargin;
-                    break;
+            if (iActionId == R.id.float_toss || iActionId == R.id.float_changesides) {
+                direction = Direction.N;
+                iMargin = 0;
+            } else if (iActionId == R.id.float_new_match) {
+                direction = Direction.E;
+                iMargin = 0;
+            } else if (iActionId == R.id.float_undo_last) {
+                direction = Direction.S;
+                iMargin = 0;
+            } else if (iActionId == R.id.float_timer) {
+                direction = Direction.W;
+                iMargin = 0;
+            } else {
+                iMargin += iAdditionalMargin;
             }
 
         }
@@ -3306,62 +3299,55 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         m_menuIdBeingHandled = id;
         try {
-        switch (id) {
-/*
-            case R.id.sb_display_settings:
-                this.startActivity(new Intent(android.provider.Settings.ACTION_DISPLAY_SETTINGS)); // api level 8 (android 3.1?)
-                return true;
-*/
-            case R.id.android_language:
+            if (id == R.id.android_language) {
                 Intent intent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
                 startActivity(intent);
                 return true;
-            case R.id.sb_settings:
-                if ( isWearable() ) { return false; }
+            } else if (id == R.id.sb_settings) {
+                if (isWearable()) {
+                    return false;
+                }
                 Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
                 startActivityForResult(settingsActivity, id);
                 return true;
-            case R.id.dyn_speak:
+            } else if (id == R.id.dyn_speak) {
                 Speak.getInstance().playAll(matchModel);
-                break;
-            case R.id.dyn_end_game:
-            case R.id.end_game:
-                if ( warnModelIsLocked(id, ctx) ) { return false; }
-                if ( matchModel.isPossibleGameVictory() ) {
+            } else if (id == R.id.dyn_end_game || id == R.id.end_game) {
+                if (warnModelIsLocked(id, ctx)) {
+                    return false;
+                }
+                if (matchModel.isPossibleGameVictory()) {
                     endGame(false);
                 } else {
                     areYouSureGameEnding();
                 }
                 persist(false);
                 return true;
-            case R.id.end_match:
-                // present dialog for reason why: Conduct Match, Retired Because of Injury
+            } else if (id == R.id.end_match) {// present dialog for reason why: Conduct Match, Retired Because of Injury
                 selectMatchEndReason();
                 //matchModel.endMatch(EndMatchManuallyBecause.RetiredBecauseOfInjury);
                 //persist(false);
                 return true;
-            case R.id.sb_toggle_demo_mode:
+            } else if (id == R.id.sb_toggle_demo_mode) {
                 DemoThread.DemoMessage demoMessage = null;
-                if ( ListUtil.length (ctx) > 0  ) {
+                if (ListUtil.length(ctx) > 0) {
                     demoMessage = (DemoThread.DemoMessage) ctx[0];
                 }
                 toggleDemoMode(demoMessage);
                 return true;
-            case R.id.sb_change_sides:
-            case R.id.float_changesides:
+            } else if (id == R.id.sb_change_sides || id == R.id.float_changesides) {
                 swapSides(Toast.LENGTH_LONG, null);
-                if ( Brand.isBadminton() && (matchModel != null) && matchModel.isDoubles() ) {
+                if (Brand.isBadminton() && (matchModel != null) && matchModel.isDoubles()) {
                     _swapDoublePlayers(Player.values(), false);
                 }
-                if ( Brand.isTabletennis() && (matchModel != null) && matchModel.isDoubles()
-                   && (matchModel.getMaxScore() * 2 + 1 == matchModel.getNrOfPointsToWinGame()) ) {
+                if (Brand.isTabletennis() && (matchModel != null) && matchModel.isDoubles()
+                        && (matchModel.getMaxScore() * 2 + 1 == matchModel.getNrOfPointsToWinGame())) {
                     // ensure receiver is swapped
-                    _swapDoublePlayers(new Player[] { matchModel.getReceiver() }, true);
+                    _swapDoublePlayers(new Player[]{matchModel.getReceiver()}, true);
                 }
                 return true;
-            case R.id.sb_swap_server:
-                // typically only for Tabletennis if initially choosen server was incorrect
-                if ( Brand.isTabletennis() ) {
+            } else if (id == R.id.sb_swap_server) {// typically only for Tabletennis if initially choosen server was incorrect
+                if (Brand.isTabletennis()) {
                     TabletennisModel tabletennisModel = (TabletennisModel) matchModel;
                     tabletennisModel.changeInitialServer();
 
@@ -3370,112 +3356,113 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     undoLast();
                 }
                 return true;
-            case R.id.sb_swap_double_players:
-                if ( ctx != null && ctx.length==1 && ctx[0] instanceof Player) {
+            } else if (id == R.id.sb_swap_double_players) {
+                if (ctx != null && ctx.length == 1 && ctx[0] instanceof Player) {
                     _swapDoublePlayers((Player) ctx[0]);
                 } else {
                     swapDoublePlayers();
                 }
                 return true;
-            case R.id.sb_lock:
+            } else if (id == R.id.sb_lock) {
                 lockMatch(ctx);
                 return true;
-            case R.id.sb_unlock:
+            } else if (id == R.id.sb_unlock) {
                 unlockMatch();
                 return true;
-            case R.id.sb_open_store_on_wearable:
+            } else if (id == R.id.sb_open_store_on_wearable) {
                 openPlayStoreOnWearable();
                 return true;
-            case R.id.sb_bluetooth:
+            } else if (id == R.id.sb_bluetooth) {
                 setupBluetoothControl(true);
-                break;
-            case R.id.sb_mqtt_mirror:
+            } else if (id == R.id.sb_mqtt_mirror) {
                 setupMQTTControl();
-                break;
-            case R.id.dyn_undo_last:
-            case R.id.sb_undo_last:
-            case R.id.float_undo_last:
+            } else if (id == R.id.dyn_undo_last || id == R.id.sb_undo_last || id == R.id.float_undo_last) {
                 return undoLast();
-            case R.id.sb_undo_last_for_non_scorer:
+            } else if (id == R.id.sb_undo_last_for_non_scorer) {
                 Player nonScorer = null;
-                if ( ctx != null && ctx.length==1 && ctx[0] instanceof Player) {
+                if (ctx != null && ctx.length == 1 && ctx[0] instanceof Player) {
                     nonScorer = (Player) ctx[0];
                 } else {
                     nonScorer = matchModel.getLastScorer().getOther();
                 }
-                if ( undoLastForScorer(nonScorer) ) {
+                if (undoLastForScorer(nonScorer)) {
                     Toast.makeText(ScoreBoard.this, "Removed last scoreline for " + matchModel.getName(nonScorer), Toast.LENGTH_LONG).show();
                 }
                 return true;
-            case R.id.pl_change_score:
-                if ( warnModelIsLocked(id, ctx) ) { return false; }
-                _changeScore((Player) ctx[0]);
-                break;
-            case R.id.pl_show_conduct:
-                if ( warnModelIsLocked(true, id, ctx) ) { return false; }
-                showConduct((Player) ctx[0]);
-                break;
-            case R.id.pl_change_name: {
-                if ( warnModelIsLocked(true, id, ctx) ) { return false; }
-                return showChangeName((Player) ctx[0]);
-            }
-            case R.id.pl_show_appeal:
-                if ( warnModelIsLocked(id, ctx) ) { return false; }
-                showAppeal((Player) ctx[0]);
-                break;
-            case R.id.sb_edit_event_or_player: {
-                    Intent nm = new Intent(this, Match.class);
-                    nm.putExtra(IntentKeys.EditMatch.toString(), matchModel);
-                    startActivityForResult(nm, id);
+            } else if (id == R.id.pl_change_score) {
+                if (warnModelIsLocked(id, ctx)) {
+                    return false;
                 }
+                _changeScore((Player) ctx[0]);
+            } else if (id == R.id.pl_show_conduct) {
+                if (warnModelIsLocked(true, id, ctx)) {
+                    return false;
+                }
+                showConduct((Player) ctx[0]);
+            } else if (id == R.id.pl_change_name) {
+                if (warnModelIsLocked(true, id, ctx)) {
+                    return false;
+                }
+                return showChangeName((Player) ctx[0]);
+            } else if (id == R.id.pl_show_appeal) {
+                if (warnModelIsLocked(id, ctx)) {
+                    return false;
+                }
+                showAppeal((Player) ctx[0]);
+            } else if (id == R.id.sb_edit_event_or_player) {
+                Intent nm = new Intent(this, Match.class);
+                nm.putExtra(IntentKeys.EditMatch.toString(), matchModel);
+                startActivityForResult(nm, id);
                 return true;
-            case R.id.sb_stored_matches: {
+            } else if (id == R.id.sb_stored_matches) {
                 ArchiveTabbed.SelectTab selectTab = ArchiveTabbed.SelectTab.Previous;
-                if ( ctx != null && ctx.length==1 && ctx[0] instanceof ArchiveTabbed.SelectTab) {
+                if (ctx != null && ctx.length == 1 && ctx[0] instanceof ArchiveTabbed.SelectTab) {
                     selectTab = (ArchiveTabbed.SelectTab) ctx[0];
                 }
                 ArchiveTabbed.setDefaultTab(selectTab);
                 Intent nm = new Intent(this, ArchiveTabbed.class);
                 startActivityForResult(nm, id); // see onActivityResult()
                 return true;
-            }
-            case R.id.sb_select_feed_match: {
-                if ( isWearable() ) { return false; }
+            } else if (id == R.id.sb_select_feed_match) {
+                if (isWearable()) {
+                    return false;
+                }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.Feed);
                 Intent nm = new Intent(this, MatchTabbed.class);
                 startActivityForResult(nm, id); // see onActivityResult()
                 return true;
-            }
-            case R.id.sb_select_static_match: {
-                if ( isWearable() ) { return false; }
+            } else if (id == R.id.sb_select_static_match) {
+                if (isWearable()) {
+                    return false;
+                }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.Mine);
                 Intent nm = new Intent(this, MatchTabbed.class);
                 startActivityForResult(nm, id); // see onActivityResult()
                 return true;
-            }
-            case R.id.sb_enter_singles_match: {
-                if ( isWearable() ) { return showNewMatchWizard(); }
+            } else if (id == R.id.sb_enter_singles_match) {
+                if (isWearable()) {
+                    return showNewMatchWizard();
+                }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.Manual);
                 Intent nm = new Intent(this, MatchTabbed.class);
                 startActivityForResult(nm, id); // see onActivityResult()
                 return true;
-            }
-            case R.id.sb_enter_doubles_match: {
-                if ( isWearable() ) { return showNewMatchWizard(); }
+            } else if (id == R.id.sb_enter_doubles_match) {
+                if (isWearable()) {
+                    return showNewMatchWizard();
+                }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.ManualDbl);
                 Intent nm = new Intent(this, MatchTabbed.class);
                 startActivityForResult(nm, id); // see onActivityResult()
                 return true;
-            }
-            case R.id.float_new_match:
-            case R.id.dyn_new_match: {
+            } else if (id == R.id.float_new_match || id == R.id.dyn_new_match) {
                 MatchTabbed.SelectTab defaultTab = MatchTabbed.getDefaultTab();
-                if ( Brand.isPadel() && ( (defaultTab == null) || MatchTabbed.SelectTab.Manual.equals(defaultTab) ) ) {
+                if (Brand.isPadel() && ((defaultTab == null) || MatchTabbed.SelectTab.Manual.equals(defaultTab))) {
                     // usually Padel is NOT singles, go to doubles by default
                     MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.ManualDbl);
                 }
                 cancelShowCase();
-                if ( isWearable() ) {
+                if (isWearable()) {
                     showNewMatchWizard();
                 } else {
                     Intent nm = new Intent(this, MatchTabbed.class);
@@ -3483,121 +3470,115 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 }
 
                 return true;
-            }
-            case R.id.sb_put_match_summary_on_clipboard:
+            } else if (id == R.id.sb_put_match_summary_on_clipboard) {
                 ContentUtil.placeOnClipboard(this, "squore summary", ResultSender.getMatchSummary(this, matchModel));
                 return false;
-            case R.id.sb_share_matches_summary:
+            } else if (id == R.id.sb_share_matches_summary) {
                 selectMatchesForSummary();
                 return false;
-            case R.id.sb_share_match_summary:
+            } else if (id == R.id.sb_share_match_summary) {
                 ShareHelper.shareMatchSummary(this, matchModel, null, null);
                 return false;
-            case R.id.sb_send_match_result:
+            } else if (id == R.id.sb_send_match_result) {
                 ShareHelper.shareMatchSummary(this, matchModel, null, PreferenceValues.getDefaultSMSTo(this));
                 return false;
-            case R.id.sb_post_match_result:
+            } else if (id == R.id.sb_post_match_result) {
                 postMatchResult();
                 return false;
-            case R.id.sb_email_match_result:
+            } else if (id == R.id.sb_email_match_result) {
                 ShareHelper.emailMatchResult(this, matchModel);
                 return false;
-            case R.id.cmd_import_settings:
+            } else if (id == R.id.cmd_import_settings) {
                 ExportImportPrefs.importSettings(this);
                 // TODO: is a restart required, or only for the colors
                 ColorPrefs.clearColorCache();
                 initColors();
                 initCountries();
                 return true;
-            case R.id.cmd_export_settings:
+            } else if (id == R.id.cmd_export_settings) {
                 ExportImportPrefs.exportSettings(this);
                 return true;
-            case R.id.send_settings_to_wearable:
+            } else if (id == R.id.send_settings_to_wearable) {
                 sendSettingToWearable(ctx);
                 return true;
-            case R.id.cmd_import_matches:
+            } else if (id == R.id.cmd_import_matches) {
                 selectFilenameForImport();
                 return true;
-            case R.id.cmd_export_matches:
+            } else if (id == R.id.cmd_export_matches) {
                 selectFilenameForExport();
                 return true;
-            case R.id.float_match_share:
-            case R.id.dyn_match_share:
-            case R.id.sb_share_score_sheet:
+            } else if (id == R.id.float_match_share || id == R.id.dyn_match_share || id == R.id.sb_share_score_sheet) {
                 postMatchModel(this, matchModel, true, true, null);
-                if ( shareButton != null ) {
+                if (shareButton != null) {
                     shareButton.setHidden(true);
                 }
                 //shareMatchResult();
                 return false;
-            case R.id.dyn_score_details:
-            case R.id.sb_score_details:
+            } else if (id == R.id.dyn_score_details || id == R.id.sb_score_details) {
                 showScoreHistory();
                 return false;
-            case R.id.sb_live_score:
+            } else if (id == R.id.sb_live_score) {
                 showLiveScore();
                 return false;
-            case R.id.sb_fcm_info:
+            } else if (id == R.id.sb_fcm_info) {
                 openFCMInfoUrl();
                 return false;
-            case R.id.sb_official_rules:
+            } else if (id == R.id.sb_official_rules) {
                 showOfficialSquashRules();
                 return false;
-            case R.id.sb_quick_intro:
+            } else if (id == R.id.sb_quick_intro) {
                 boolean bFromMenu = (ListUtil.length(ctx) == 0);
                 startShowCase(bFromMenu);
                 return false;
-            case R.id.sb_change_log:
+            } else if (id == R.id.sb_change_log) {
                 showChangeLog();
                 return false;
-            case R.id.sb_credits:
+            } else if (id == R.id.sb_credits) {
                 showCredits();
                 return false;
-            case R.id.sb_adjust_score:
-                if ( warnModelIsLocked() ) { return false; }
+            } else if (id == R.id.sb_adjust_score) {
+                if (warnModelIsLocked()) {
+                    return false;
+                }
                 adjustScore();
                 return true;
-            case R.id.sb_clear_score:
-                if ( warnModelIsLocked(id, ctx) ) { return false; }
-                if ( (matchModel != null) && matchModel.hasStarted() ) {
+            } else if (id == R.id.sb_clear_score) {
+                if (warnModelIsLocked(id, ctx)) {
+                    return false;
+                }
+                if ((matchModel != null) && matchModel.hasStarted()) {
                     confirmRestart();
                 } else {
                     initScoreBoard(null);
                 }
                 return true;
-            case R.id.change_match_format:
+            } else if (id == R.id.change_match_format) {
                 editMatchFormatDialog();
-                break;
-            case R.id.sb_match_format:
+            } else if (id == R.id.sb_match_format) {
                 showMatchFormatDialog();
-                break;
-            case R.id.float_timer:
-            case R.id.dyn_timer:
-            case R.id.sb_timer:
+            } else if (id == R.id.float_timer || id == R.id.dyn_timer || id == R.id.sb_timer) {
                 cancelTimer();
-                if ( (matchModel != null) && matchModel.hasStarted() ) {
+                if ((matchModel != null) && matchModel.hasStarted()) {
                     lastTimerType = Type.UntilStartOfNextGame;
-                    if ( Brand.supportsTimeout() ) {
+                    if (Brand.supportsTimeout()) {
                         int iEachX = PreferenceValues.autoShowGamePausedDialogAfterXPoints(ScoreBoard.this);
-                        if ( matchModel.isTowelingDownScore(iEachX, 11) ) {
+                        if (matchModel.isTowelingDownScore(iEachX, 11)) {
                             lastTimerType = Type.TowelingDown;
                         }
                     }
                 } else {
                     // toggle between the 2 with Warmup first
-                    lastTimerType = Type.Warmup.equals(lastTimerType)?Type.UntilStartOfNextGame:Type.Warmup;
+                    lastTimerType = Type.Warmup.equals(lastTimerType) ? Type.UntilStartOfNextGame : Type.Warmup;
                 }
                 showTimer(lastTimerType, false);
                 return true;
-            case R.id.sb_player_timeout_timer:
+            } else if (id == R.id.sb_player_timeout_timer) {
                 _showPlayerTimeoutPlayerChooser();
-                break;
-            case R.id.sb_injury_timer:
+            } else if (id == R.id.sb_injury_timer) {
                 _showInjuryTypeChooser();
                 return true;
-            case R.id.tt_activate_mode: // fall through
-            case R.id.tt_deactivate_mode:
-                if ( Brand.isTabletennis() ) {
+            } else if (id == R.id.tt_activate_mode || id == R.id.tt_deactivate_mode) {
+                if (Brand.isTabletennis()) {
                     boolean bActivate = id == R.id.tt_activate_mode;
                     matchModel.setMode(bActivate ? TabletennisModel.Mode.Expedite : null);
 
@@ -3606,7 +3587,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     // make 'counter-part' menu visible
                     setMenuItemVisibility(bActivate ? R.id.tt_deactivate_mode : R.id.tt_activate_mode, true);
 
-                    if ( bActivate ) {
+                    if (bActivate) {
                         // we will no respond to clicks on the serve side button
                         PreferenceValues.setOverwrite(PreferenceKeys.serveButtonTransparencyNonServer, "0");
                     } else {
@@ -3614,62 +3595,57 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     }
                 }
                 return true;
-            case R.id.sb_power_play:
-            case R.id.dyn_power_play:
+            } else if (id == R.id.sb_power_play || id == R.id.dyn_power_play) {
                 showPowerPlayDialog();
                 return false;
-            case R.id.sb_toss:
-            case R.id.float_toss:
+            } else if (id == R.id.sb_toss || id == R.id.float_toss) {
                 _showWhoServesDialog();
                 return false;
-            case R.id.sb_official_announcement:
+            } else if (id == R.id.sb_official_announcement) {
                 _showOfficialAnnouncement(AnnouncementTrigger.Manual, true);
                 return false;
-            case R.id.sb_privacy_and_terms:
+            } else if (id == R.id.sb_privacy_and_terms) {
                 showPrivacyAndTerms();
                 return false;
-            case R.id.sb_about:
+            } else if (id == R.id.sb_about) {
                 showAbout();
                 return false;
-            case R.id.sb_feedback:
+            } else if (id == R.id.sb_feedback) {
                 Intent feedBack = new Intent(getBaseContext(), Feedback.class);
                 startActivity(feedBack);
                 return false;
-            case R.id.sb_possible_conductsA:
-            case R.id.sb_possible_conductsB:
+            } else if (id == R.id.sb_possible_conductsA || id == R.id.sb_possible_conductsB) {
                 Intent conducts = new Intent(getBaseContext(), ConductInfo.class);
                 startActivity(conducts);
                 return false;
-            case R.id.sb_download_zip:
+            } else if (id == R.id.sb_download_zip) {
                 downloadMatchesInZip((String) ctx[0], (ZipType) ctx[1]);
                 return false;
-            case R.id.sb_download_posted_to_squore_matches:
-                // http://squore.double-yellow.be/make.matches.zip.php
+            } else if (id == R.id.sb_download_posted_to_squore_matches) {// http://squore.double-yellow.be/make.matches.zip.php
                 handleMenuItem(R.id.sb_download_zip, URLFeedTask.prefixWithBaseIfRequired("/matches.zip"), ZipType.SquoreAll);
-                break;
-            case R.id.sb_purchase_ble:
+            } else if (id == R.id.sb_purchase_ble) {
                 String sProductId = getPackageName() + Brand.ENABLE_BLE_PRODUCT_ID;
                 purchaseProduct(sProductId);
                 return true;
-            case R.id.sb_ble_devices:
+            } else if (id == R.id.sb_ble_devices) {
                 selectBleDevices();
                 return true;
-            case R.id.sb_demo:
+            } else if (id == R.id.sb_demo) {
                 restartScore();
                 setModus(null, Mode.FullAutomatedDemo);
                 return true;
-            case R.id.sb_help:
+            } else if (id == R.id.sb_help) {
                 showHelp();
                 return true;
-            case R.id.sb_exit:
+            } else if (id == R.id.sb_exit) {
                 persist(true);
                 turnOffBlueToothIfTurnedOnByApp();
                 cleanup_Speak();
                 System.exit(0);
                 return true;
-            case android.R.id.home: {
-                if ( drawerLayout != null ) {
-                    if ( drawerLayout.isDrawerOpen(drawerView) ) {
+            } else if (id == android.R.id.home) {
+                if (drawerLayout != null) {
+                    if (drawerLayout.isDrawerOpen(drawerView)) {
                         drawerLayout.closeDrawer(drawerView);
                     } else {
                         drawerLayout.openDrawer(drawerView);
@@ -3680,23 +3656,21 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     startActivityForResult(sm, id); // see onActivityResult
                 }
                 return false;
-            }
-            default:
+            } else {
                 String sPackage = ShareHelper.m_menuResIdToPackage.get(id);
-                if ( StringUtil.isNotEmpty(sPackage) ) {
+                if (StringUtil.isNotEmpty(sPackage)) {
                     ShareHelper.shareMatchSummary(this, matchModel, sPackage, null);
                     return false;
                 }
                 Log.w(TAG, "Unhandled int " + id);
-                if ( id != 0) {
+                if (id != 0) {
                     try {
                         String s = getResources().getResourceName(id);
                         Log.w(TAG, "Unhandled " + s);
                     } catch (Resources.NotFoundException e) {
                     }
                 }
-                break;
-        }
+            }
         } finally {
             m_menuIdBeingHandled = 0;
         }
@@ -5527,20 +5501,16 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     private ShowScoreChangeOn getShowScoreChangeOn(int iTmpTxtOnElementDuringFeedback) {
         ShowScoreChangeOn showScoreChangeOn = ShowScoreChangeOn.ScoreButton;
-        switch (iTmpTxtOnElementDuringFeedback) {
-            case R.string.oa_game:
-                showScoreChangeOn = ShowScoreChangeOn.GamesButton;
-                break;
-            case R.string.oa_set:
+        if (iTmpTxtOnElementDuringFeedback == R.string.oa_game) {
+            showScoreChangeOn = ShowScoreChangeOn.GamesButton;
+        } else if (iTmpTxtOnElementDuringFeedback == R.string.oa_set) {
+            showScoreChangeOn = ShowScoreChangeOn.SetsButton;
+        } else if (iTmpTxtOnElementDuringFeedback == R.string.oa_match) {
+            if (Brand.isGameSetMatch()) {
                 showScoreChangeOn = ShowScoreChangeOn.SetsButton;
-                break;
-            case R.string.oa_match:
-                if ( Brand.isGameSetMatch() ) {
-                    showScoreChangeOn = ShowScoreChangeOn.SetsButton;
-                } else {
-                    showScoreChangeOn = ShowScoreChangeOn.GamesButton;
-                }
-                break;
+            } else {
+                showScoreChangeOn = ShowScoreChangeOn.GamesButton;
+            }
         }
         return showScoreChangeOn;
     }
@@ -6007,6 +5977,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         writeMethodToBluetooth(BTMethods.toggleGameScoreView);
     }
 
+    public synchronized void showInfoMessageOnUiThread(final String sMsg, int iMessageDurationSecs) {
+        runOnUiThread(() -> iBoard.showInfoMessage(sMsg, iMessageDurationSecs));
+    }
     public void showInfoMessage(String sMsg, int iMessageDurationSecs) {
         iBoard.showInfoMessage(sMsg, iMessageDurationSecs);
     }
@@ -7592,7 +7565,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         @Override public void onFinish() {
             onResumeMQTT();
         }
-        @Override public void onTick(long millisUntilFinished) {}
+        @Override public void onTick(long millisUntilFinished) {
+            //int iLeft = (int) millisUntilFinished / 1000;
+            //Log.d(TAG, "MQTT reconnect in " + iLeft);
+        }
     }
 
     private synchronized void publishOnMQTT(BTMethods method, Object... args) {
@@ -7602,6 +7578,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     private void publishMatchOnMQTT(boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
         if ( m_MQTTHandler == null ) { return; }
         m_MQTTHandler.publishMatchOnMQTT(matchModel, bPrefixWithJsonLength, oTimerInfo);
+    }
+    public void updateMQTTConnectionStatusIconOnUiThread(int visibility, int nrOfWhat) {
+        runOnUiThread(() -> iBoard.updateMQTTConnectionStatusIcon(visibility, nrOfWhat));
     }
 
     public void stopMQTT() {

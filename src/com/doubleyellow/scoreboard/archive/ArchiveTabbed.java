@@ -185,69 +185,62 @@ public class ArchiveTabbed extends XActivity implements /*NfcAdapter.CreateNdefM
             showDisabledInSettingsMessage();
             return false;
         }
-        switch (menuItemId) {
-            case R.id.filter:  case R.id.mt_filter:
-            case R.id.refresh:
-                if ( getFragment(SelectTab.Previous) instanceof ExpandableMatchSelector ) {
-                    ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(SelectTab.Previous);
-                    listAdapter = matchSelector.getListAdapter(null);
-                    if ( menuItemId == R.id.filter ) {
-                        matchSelector.initFiltering(true);
-                    }
-                    if ( menuItemId == R.id.refresh ) {
-                        if ( listAdapter != null ) {
-                            listAdapter.load(false);
-                        }
+        if (menuItemId == R.id.filter || menuItemId == R.id.mt_filter || menuItemId == R.id.refresh) {
+            if (getFragment(SelectTab.Previous) instanceof ExpandableMatchSelector) {
+                ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(SelectTab.Previous);
+                listAdapter = matchSelector.getListAdapter(null);
+                if (menuItemId == R.id.filter) {
+                    matchSelector.initFiltering(true);
+                }
+                if (menuItemId == R.id.refresh) {
+                    if (listAdapter != null) {
+                        listAdapter.load(false);
                     }
                 }
-                if ( getFragment(SelectTab.PreviousMultiSelect) instanceof RecentMatchesMultiSelect ) {
-                    if ( menuItemId == R.id.refresh ) {
-                        RecentMatchesMultiSelect matchSelector = (RecentMatchesMultiSelect) getFragment(SelectTab.PreviousMultiSelect);
-                        matchSelector.initMatches();
-                    }
-                }
-                return true;
-            case R.id.cmd_export:
-                PreviousMatchSelector.selectFilenameForExport(this);
-                return true;
-            case R.id.cmd_import:
-                PreviousMatchSelector.selectFilenameForImport(this);
-                return true;
-            case R.id.expand_all:
-            case R.id.collapse_all: {
-                if ( (getFragment(defaultTab) != null) && (getFragment(defaultTab) instanceof ExpandableMatchSelector) ) {
-                    ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(defaultTab);
-                    if ( menuItemId == R.id.expand_all ) {
-                        ExpandableListUtil.expandAll(matchSelector.expandableListView);
-                    } else if ( menuItemId == R.id.collapse_all ) {
-                        ExpandableListUtil.collapseAll(matchSelector.expandableListView);
-                    }
-                }
-                return true;
             }
-            case R.id.cmd_delete_all:
-                PreviousMatchSelector.confirmDeleteAllPrevious(this);
-                return true;
-            case R.id.cmd_share_selected:
-                Fragment fragment = getFragment(defaultTab);
-                if ( fragment instanceof RecentMatchesMultiSelect ) {
-                    RecentMatchesMultiSelect recentMatchesMultiSelect = (RecentMatchesMultiSelect) fragment;
-                    return recentMatchesMultiSelect.shareSelected(this);
+            if (getFragment(SelectTab.PreviousMultiSelect) instanceof RecentMatchesMultiSelect) {
+                if (menuItemId == R.id.refresh) {
+                    RecentMatchesMultiSelect matchSelector = (RecentMatchesMultiSelect) getFragment(SelectTab.PreviousMultiSelect);
+                    matchSelector.initMatches();
                 }
-                return false;
-            case R.id.sb_sort_by:
-                PreviousMatchSelector.selectSortingOptions(this);
-                return true;
-            case R.id.sb_overflow_submenu:
-                return false;
-            case android.R.id.home:
-            case R.id.close:
-                // fall through
-                this.finish();
-                return true;
-            default:
-                return false;
+            }
+            return true;
+        } else if (menuItemId == R.id.cmd_export) {
+            PreviousMatchSelector.selectFilenameForExport(this);
+            return true;
+        } else if (menuItemId == R.id.cmd_import) {
+            PreviousMatchSelector.selectFilenameForImport(this);
+            return true;
+        } else if (menuItemId == R.id.expand_all || menuItemId == R.id.collapse_all) {
+            if ((getFragment(defaultTab) != null) && (getFragment(defaultTab) instanceof ExpandableMatchSelector)) {
+                ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(defaultTab);
+                if (menuItemId == R.id.expand_all) {
+                    ExpandableListUtil.expandAll(matchSelector.expandableListView);
+                } else if (menuItemId == R.id.collapse_all) {
+                    ExpandableListUtil.collapseAll(matchSelector.expandableListView);
+                }
+            }
+            return true;
+        } else if (menuItemId == R.id.cmd_delete_all) {
+            PreviousMatchSelector.confirmDeleteAllPrevious(this);
+            return true;
+        } else if (menuItemId == R.id.cmd_share_selected) {
+            Fragment fragment = getFragment(defaultTab);
+            if (fragment instanceof RecentMatchesMultiSelect) {
+                RecentMatchesMultiSelect recentMatchesMultiSelect = (RecentMatchesMultiSelect) fragment;
+                return recentMatchesMultiSelect.shareSelected(this);
+            }
+            return false;
+        } else if (menuItemId == R.id.sb_sort_by) {
+            PreviousMatchSelector.selectSortingOptions(this);
+            return true;
+        } else if (menuItemId == R.id.sb_overflow_submenu) {
+            return false;
+        } else if (menuItemId == android.R.id.home || menuItemId == R.id.close) {// fall through
+            this.finish();
+            return true;
         }
+        return false;
     }
 
     private PagerTabStrip titleStrip = null;

@@ -53,7 +53,7 @@ public class ClientCallback implements MqttCallback
 
         if ( topic.endsWith(PreferenceValues.getFCMDeviceId(m_handler.m_context)) ) {
             // show but ignore for further processing, messages published by this device itself
-            m_handler.m_iBoard.showInfoMessage(msg, 1);
+            m_handler.m_context.showInfoMessageOnUiThread(msg, 1);
         } else {
             String sPayload = new String(message.getPayload());
             long lNow = System.currentTimeMillis();
@@ -64,7 +64,7 @@ public class ClientCallback implements MqttCallback
                     m_iDuplicateCount++;
                     Log.w(TAG, String.format("IGNORE MQTT duplicate(%d): %s", m_iDuplicateCount, sPayload));
                     if ( m_iDuplicateCount < 16 ) {
-                        m_handler.m_iBoard.showInfoMessage("IGNORE MQTT duplicate: " + sPayload, 2);
+                        m_handler.m_context.showInfoMessageOnUiThread("IGNORE MQTT duplicate: " + sPayload, 2);
                     }
                     return;
                 }

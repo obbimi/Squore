@@ -43,26 +43,21 @@ class ScoreBoardTouchListener extends ScoreBoardListener implements SimpleGestur
         int viewId = getXmlIdOfParent(view);
         scoreBoard.dbgmsg("Two finger clicked", viewId, 0);
         Player player = IBoard.m_id2player.get(viewId);
-        switch(viewId) {
-            case R.id.btn_score1:
-            case R.id.btn_score2:
-                // on tablet, the buttons are so big that two finger touch/click may be performed without user thinking about it
-                handleMenuItem(R.id.pl_change_score, player);
-                return true;
-            case R.id.txt_player1:
-            case R.id.txt_player2:
-                if ( Brand.isSquash() ) {
-                    // TODO: for doubles, switch in/out in such a way that touched player becomes the server
-                    Log.d(TAG, String.format("Two finger click on player %s", player));
-                    if ( ScoreBoard.getMatchModel().isDoubles() ) {
-                        handleMenuItem(R.id.pl_show_conduct, player);
-                    } else {
-                        scoreBoard.showBrokenEquipment(player);
-                    }
-                    break;
+        if (viewId == R.id.btn_score1 || viewId == R.id.btn_score2) {// on tablet, the buttons are so big that two finger touch/click may be performed without user thinking about it
+            handleMenuItem(R.id.pl_change_score, player);
+            return true;
+        } else if (viewId == R.id.txt_player1 || viewId == R.id.txt_player2) {
+            if (Brand.isSquash()) {
+                // TODO: for doubles, switch in/out in such a way that touched player becomes the server
+                Log.d(TAG, String.format("Two finger click on player %s", player));
+                if (ScoreBoard.getMatchModel().isDoubles()) {
+                    handleMenuItem(R.id.pl_show_conduct, player);
                 } else {
-                    handleMenuItem(R.id.sb_change_sides);
+                    scoreBoard.showBrokenEquipment(player);
                 }
+            } else {
+                handleMenuItem(R.id.sb_change_sides);
+            }
         }
         return false;
     }
@@ -80,46 +75,38 @@ class ScoreBoardTouchListener extends ScoreBoardListener implements SimpleGestur
         if ( percentageOfView < 0.50 ) { return false; }
         if ( player          == null ) { return false; }
         boolean isServer = player.equals(ScoreBoard.getMatchModel().getServer());
-        switch( viewId ) {
-            case R.id.btn_score1:
-            case R.id.btn_score2:
-                if ( EnumSet.of(Direction.E, Direction.W).contains(direction) ) {
-                    if ( Brand.isSquash() && isServer ) {
-                        // perform undo if swiped horizontally over server score button (= person who scored last)
+        if (viewId == R.id.btn_score1 || viewId == R.id.btn_score2) {
+            if (EnumSet.of(Direction.E, Direction.W).contains(direction)) {
+                if (Brand.isSquash() && isServer) {
+                    // perform undo if swiped horizontally over server score button (= person who scored last)
+                    handleMenuItem(R.id.dyn_undo_last);
+                } else {
+                    Player pLastScorer = ScoreBoard.getMatchModel().getLastScorer();
+                    if (player.equals(pLastScorer)) {
+                        // perform undo if swiped horizontally over last scorer
                         handleMenuItem(R.id.dyn_undo_last);
                     } else {
-                        Player pLastScorer = ScoreBoard.getMatchModel().getLastScorer();
-                        if ( player.equals(pLastScorer) ) {
-                            // perform undo if swiped horizontally over last scorer
-                            handleMenuItem(R.id.dyn_undo_last);
-                        } else {
-                            if ( ScoreBoard.getMatchModel().getScore(player) > 0 ) {
-                                // present user with dialog to remove last scoreline for other than latest scorer ...
-                                scoreBoard.confirmUndoLastForNonScorer(player);
-                            }
+                        if (ScoreBoard.getMatchModel().getScore(player) > 0) {
+                            // present user with dialog to remove last scoreline for other than latest scorer ...
+                            scoreBoard.confirmUndoLastForNonScorer(player);
                         }
                     }
+                }
+                return true;
+            }
+        } else if (viewId == R.id.txt_player1 || viewId == R.id.txt_player2) {// allow changing sides if last point was a handout
+            ServeSide nextServeSide = ScoreBoard.getMatchModel().getNextServeSide(player);
+            if (ScoreBoard.getMatchModel().isLastPointHandout() && isServer) {
+                if (nextServeSide.equals(ServeSide.L) && direction.equals(Direction.E)) {
+                    // change from left to right
+                    changeSide(player);
+                    return true;
+                } else if (nextServeSide.equals(ServeSide.R) && direction.equals(Direction.W)) {
+                    // change from right to left
+                    changeSide(player);
                     return true;
                 }
-                break;
-            case R.id.txt_player1:
-            case R.id.txt_player2:
-                // allow changing sides if last point was a handout
-                ServeSide nextServeSide = ScoreBoard.getMatchModel().getNextServeSide(player);
-                if ( ScoreBoard.getMatchModel().isLastPointHandout() && isServer) {
-                    if (nextServeSide.equals(ServeSide.L) && direction.equals(Direction.E)) {
-                        // change from left to right
-                        changeSide(player);
-                        return true;
-                    } else if (nextServeSide.equals(ServeSide.R) && direction.equals(Direction.W)) {
-                        // change from right to left
-                        changeSide(player);
-                        return true;
-                    }
-                }
-                break;
-            default:
-                break;
+            }
         }
         return false;
     }
@@ -130,23 +117,17 @@ class ScoreBoardTouchListener extends ScoreBoardListener implements SimpleGestur
         if ( percentageOfView < 0.50 ) {
             return false;
         }
-        switch(viewId) {
-            case R.id.btn_score1:
-            case R.id.btn_score2:
-                if ( hvd.equals(HVD.Diagonal) ) {
-                    return handleMenuItem(R.id.sb_clear_score);
-                }
-                break;
-            case R.id.txt_player1:
-            case R.id.txt_player2:
-                if ( ViewUtil.getScreenHeightWidthMinimum(scoreBoard) < 320 ) {
-                    // just to have a way to get to the settings if no actionbar is visible on Wear OS
-                    return handleMenuItem(R.id.sb_settings);
-                } else {
-                    return handleMenuItem(R.id.sb_edit_event_or_player);
-                }
-            default:
-                break;
+        if (viewId == R.id.btn_score1 || viewId == R.id.btn_score2) {
+            if (hvd.equals(HVD.Diagonal)) {
+                return handleMenuItem(R.id.sb_clear_score);
+            }
+        } else if (viewId == R.id.txt_player1 || viewId == R.id.txt_player2) {
+            if (ViewUtil.getScreenHeightWidthMinimum(scoreBoard) < 320) {
+                // just to have a way to get to the settings if no actionbar is visible on Wear OS
+                return handleMenuItem(R.id.sb_settings);
+            } else {
+                return handleMenuItem(R.id.sb_edit_event_or_player);
+            }
         }
         return false;
     }

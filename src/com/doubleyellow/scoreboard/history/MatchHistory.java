@@ -208,14 +208,8 @@ public class MatchHistory extends XActivity implements MenuHandler
     }
 
     @Override public boolean handleMenuItem(int menuItemId, Object... item) {
-        switch (menuItemId) {
-            case android.R.id.home:
-            case R.id.close:
-                // fall through
-            default:
-                this.finish();
-                return true;
-        }
+        this.finish();
+        return true;
     }
 
     private static List<PreGraphTabs> preGraphTabsToShow() {

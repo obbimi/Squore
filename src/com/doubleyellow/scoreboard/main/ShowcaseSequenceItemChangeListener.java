@@ -90,120 +90,107 @@ public class ShowcaseSequenceItemChangeListener extends ScoreBoardListener imple
             scoreBoard.iBoard.updateGameAndMatchDurationChronos();
         }
         final int nrOfPointsToWinGame = matchModel.getNrOfPointsToWinGame();
-        switch (iViewId) {
-            case R.id.btn_side1:
-                matchModel.changeScore(Player.B);
-                matchModel.changeScore(Player.A); // ensure button for player A is highlighted for squash
-                if ( Brand.isNotSquash() ) {
-                    while ( matchModel.getServer().equals(Player.A) == false ) {
-                        matchModel.changeScore(Player.A); // ensure button for player A is highlighted
-                    }
+        if (iViewId == R.id.btn_side1) {
+            matchModel.changeScore(Player.B);
+            matchModel.changeScore(Player.A); // ensure button for player A is highlighted for squash
+            if (Brand.isNotSquash()) {
+                while (matchModel.getServer().equals(Player.A) == false) {
+                    matchModel.changeScore(Player.A); // ensure button for player A is highlighted
                 }
-                break;
-            case R.id.btn_score1:
-                if ( matchModel.getMaxScore() < 3 ) {
-                    matchModel.changeScore(Player.A);
-                    matchModel.changeScore(Player.A);
-                    matchModel.changeScore(Player.B);
-                    matchModel.changeScore(Player.B);
-                    matchModel.changeScore(Player.B);
-                    matchModel.changeScore(Player.B);
-                }
-                if ( Brand.isGameSetMatch() ) {
-                    matchModel.changeScore(Player.A);
-                    matchModel.changeScore(Player.B);
-                    while ( matchModel.getMaxScore() > 0 ) {
-                        // continue until a game is won
-                        matchModel.changeScore(Player.B);
-                    }
-                    matchModel.changeScore(Player.A);
-                    matchModel.changeScore(Player.A);
-                    matchModel.changeScore(Player.B);
-                }
-                break;
-            case R.id.float_changesides:
-                // TODO
-                break;
-            case R.id.float_timer:
-                PreferenceValues.setOverwrite(PreferenceKeys.showHideButtonOnTimer, false);
-                if ( matchModel.isPossibleGameVictory() == false ) {
-                    matchModel.setGameScore_Json(0, nrOfPointsToWinGame, nrOfPointsToWinGame - 4, 5, false);
-                    scoreBoard.endGame(true);
-                }
-                break;
-            case R.id.sb_official_announcement:
-                matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6, false);
-                scoreBoard.endGame(true);
-                break;
-            case R.id.gamescores:
-                break;
-            case R.id.txt_player1:
-                matchModel.changeScore(Player.B);
+            }
+        } else if (iViewId == R.id.btn_score1) {
+            if (matchModel.getMaxScore() < 3) {
                 matchModel.changeScore(Player.A);
-                if ( matchModel.getMaxScore() < 3 ) {
-                    IBoard.setBlockToasts(true);
-                    matchModel.recordAppealAndCall(Player.A, Call.ST);
+                matchModel.changeScore(Player.A);
+                matchModel.changeScore(Player.B);
+                matchModel.changeScore(Player.B);
+                matchModel.changeScore(Player.B);
+                matchModel.changeScore(Player.B);
+            }
+            if (Brand.isGameSetMatch()) {
+                matchModel.changeScore(Player.A);
+                matchModel.changeScore(Player.B);
+                while (matchModel.getMaxScore() > 0) {
+                    // continue until a game is won
                     matchModel.changeScore(Player.B);
-                    matchModel.recordAppealAndCall(Player.B, Call.YL);
-                    IBoard.setBlockToasts(false);
                 }
-                break;
-            case R.id.dyn_score_details:
-            case R.id.float_match_share:
-                boolean bDontChangePast = true;
-                if ( Brand.isNotSquash() ) {
-                    if ( Brand.isGameSetMatch() ) {
-                        // TODO: ensure match is ended
-                        GSMModel gsmModel= (GSMModel) matchModel;
-                        //matchModel.setSetScore_Json(); // TODO
-                    } else {
-                        // trigger model changes that are not triggered by user step (sb_official_announcement), because some show case screens are skipped for e.g. Racketlon
-                        matchModel.setGameScore_Json(1, nrOfPointsToWinGame -1, nrOfPointsToWinGame +1, 6, bDontChangePast);
-                        scoreBoard.endGame(true);
-                    }
-                }
-                if ( matchModel.matchHasEnded() == false) {
-                    IBoard.setBlockToasts(true);
-                    matchModel.setGameScore_Json(2, nrOfPointsToWinGame,  nrOfPointsToWinGame -5, 5, bDontChangePast);
-                    if ( Brand.isRacketlon() ) {
-                        // add a score that ends the racketlon match by points
-                        matchModel.setGameScore_Json(3, 15, 11, 8, bDontChangePast);
-                    } else if ( Brand.isTabletennis() ) {
-                        // add a score that ends the tabletennis match
-                        matchModel.setGameScore_Json(3, nrOfPointsToWinGame+2, nrOfPointsToWinGame, 8, bDontChangePast);
-                        matchModel.setGameScore_Json(4, nrOfPointsToWinGame, nrOfPointsToWinGame-4, 7, bDontChangePast);
-                    } else if ( Brand.isBadminton() ) {
-                        // add a score that ends the badminton match
-                        // best of 3, nothing to do
-                    } else if ( Brand.isGameSetMatch() ) {
-                        // TODO: add a score that ends the tennis/padel match
-                    } else {
-                        int iGameInProgress1B = matchModel.getGameNrInProgress();
-                        while ( matchModel.matchHasEnded() == false ) {
-                            matchModel.setGameScore_Json(iGameInProgress1B-1, nrOfPointsToWinGame +2, nrOfPointsToWinGame, 8, bDontChangePast);
-                            iGameInProgress1B++;
-                            if ( iGameInProgress1B >= matchModel.getNrOfGamesToWinMatch() * 2 ) { break; } // additional safety precaution
-                        }
-                    }
+                matchModel.changeScore(Player.A);
+                matchModel.changeScore(Player.A);
+                matchModel.changeScore(Player.B);
+            }
+        } else if (iViewId == R.id.float_changesides) {// TODO
+        } else if (iViewId == R.id.float_timer) {
+            PreferenceValues.setOverwrite(PreferenceKeys.showHideButtonOnTimer, false);
+            if (matchModel.isPossibleGameVictory() == false) {
+                matchModel.setGameScore_Json(0, nrOfPointsToWinGame, nrOfPointsToWinGame - 4, 5, false);
+                scoreBoard.endGame(true);
+            }
+        } else if (iViewId == R.id.sb_official_announcement) {
+            matchModel.setGameScore_Json(1, nrOfPointsToWinGame - 1, nrOfPointsToWinGame + 1, 6, false);
+            scoreBoard.endGame(true);
+        } else if (iViewId == R.id.gamescores) {
+        } else if (iViewId == R.id.txt_player1) {
+            matchModel.changeScore(Player.B);
+            matchModel.changeScore(Player.A);
+            if (matchModel.getMaxScore() < 3) {
+                IBoard.setBlockToasts(true);
+                matchModel.recordAppealAndCall(Player.A, Call.ST);
+                matchModel.changeScore(Player.B);
+                matchModel.recordAppealAndCall(Player.B, Call.YL);
+                IBoard.setBlockToasts(false);
+            }
+        } else if (iViewId == R.id.dyn_score_details || iViewId == R.id.float_match_share) {
+            boolean bDontChangePast = true;
+            if (Brand.isNotSquash()) {
+                if (Brand.isGameSetMatch()) {
+                    // TODO: ensure match is ended
+                    GSMModel gsmModel = (GSMModel) matchModel;
+                    //matchModel.setSetScore_Json(); // TODO
+                } else {
+                    // trigger model changes that are not triggered by user step (sb_official_announcement), because some show case screens are skipped for e.g. Racketlon
+                    matchModel.setGameScore_Json(1, nrOfPointsToWinGame - 1, nrOfPointsToWinGame + 1, 6, bDontChangePast);
                     scoreBoard.endGame(true);
-                    scoreBoard.showShareFloatButton(true, true);
-                    IBoard.setBlockToasts(false);
-                    matchModel.setLockState(LockState.LockedEndOfMatch);
                 }
-                break;
-            case R.id.sb_overflow_submenu:
-            case R.id.dyn_undo_last:
-            case android.R.id.home:
-                ActionBar actionBar = scoreBoard.getXActionBar();
-                if ( (actionBar != null) && (actionBar.isShowing() == false) ) {
-                    // show action bar
-                    if ( scoreBoard.isWearable() == false ) {
-                        scoreBoard.toggleActionBar(actionBar);
+            }
+            if (matchModel.matchHasEnded() == false) {
+                IBoard.setBlockToasts(true);
+                matchModel.setGameScore_Json(2, nrOfPointsToWinGame, nrOfPointsToWinGame - 5, 5, bDontChangePast);
+                if (Brand.isRacketlon()) {
+                    // add a score that ends the racketlon match by points
+                    matchModel.setGameScore_Json(3, 15, 11, 8, bDontChangePast);
+                } else if (Brand.isTabletennis()) {
+                    // add a score that ends the tabletennis match
+                    matchModel.setGameScore_Json(3, nrOfPointsToWinGame + 2, nrOfPointsToWinGame, 8, bDontChangePast);
+                    matchModel.setGameScore_Json(4, nrOfPointsToWinGame, nrOfPointsToWinGame - 4, 7, bDontChangePast);
+                } else if (Brand.isBadminton()) {
+                    // add a score that ends the badminton match
+                    // best of 3, nothing to do
+                } else if (Brand.isGameSetMatch()) {
+                    // TODO: add a score that ends the tennis/padel match
+                } else {
+                    int iGameInProgress1B = matchModel.getGameNrInProgress();
+                    while (matchModel.matchHasEnded() == false) {
+                        matchModel.setGameScore_Json(iGameInProgress1B - 1, nrOfPointsToWinGame + 2, nrOfPointsToWinGame, 8, bDontChangePast);
+                        iGameInProgress1B++;
+                        if (iGameInProgress1B >= matchModel.getNrOfGamesToWinMatch() * 2) {
+                            break;
+                        } // additional safety precaution
                     }
                 }
-                break;
-            case R.id.float_new_match:
-                break;
+                scoreBoard.endGame(true);
+                scoreBoard.showShareFloatButton(true, true);
+                IBoard.setBlockToasts(false);
+                matchModel.setLockState(LockState.LockedEndOfMatch);
+            }
+        } else if (iViewId == R.id.sb_overflow_submenu || iViewId == R.id.dyn_undo_last || iViewId == android.R.id.home) {
+            ActionBar actionBar = scoreBoard.getXActionBar();
+            if ((actionBar != null) && (actionBar.isShowing() == false)) {
+                // show action bar
+                if (scoreBoard.isWearable() == false) {
+                    scoreBoard.toggleActionBar(actionBar);
+                }
+            }
+        } else if (iViewId == R.id.float_new_match) {
         }
     }
 

@@ -17,9 +17,8 @@
 package com.doubleyellow.scoreboard.mqtt;
 
 import android.util.Log;
-import android.view.View;
 
-import com.doubleyellow.scoreboard.vico.IBoard;
+import com.doubleyellow.scoreboard.main.ScoreBoard;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
@@ -28,20 +27,20 @@ class MQTTActionListener implements IMqttActionListener {
     private static final String TAG = "SB." + MQTTActionListener.class.getSimpleName();
     private String m_sPurpose = null;
     private String m_sBrokerUrl = null;
-    private IBoard m_iBoard = null;
-    public MQTTActionListener(String sPurpose, IBoard iBoard, String sBroker) {
+    private ScoreBoard m_context = null;
+    public MQTTActionListener(String sPurpose, ScoreBoard scoreBoard, String sBroker) {
         m_sPurpose   = sPurpose;
-        m_iBoard     = iBoard;
+        m_context    = scoreBoard;
         m_sBrokerUrl = sBroker;
     }
     @Override public void onSuccess(IMqttToken token) {
         //m_iBoard.showInfoMessage("MQTT " + sPurpose, 2); // to much
-        m_iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, m_sPurpose.equalsIgnoreCase("Disconnect")?0:1);
+        //m_context.updateMQTTConnectionStatusIcon(View.VISIBLE, m_sPurpose.equalsIgnoreCase("Disconnect")?0:1);
         Log.d(TAG, "onSuccess: " + m_sPurpose + " t=" + token.getTopics() + " " + token + " " + m_sBrokerUrl);
     }
 
     @Override public void onFailure(IMqttToken token, Throwable exception) {
-        m_iBoard.showInfoMessage("ERROR: MQTT " + m_sPurpose + " " + m_sBrokerUrl, 10);
+        m_context.showInfoMessageOnUiThread("ERROR: MQTT " + m_sPurpose + " " + m_sBrokerUrl, 10);
         Log.d(TAG, "onFailure: " + m_sPurpose + " t=" + token.getTopics() + " " + token + " " + m_sBrokerUrl + " " + exception.getMessage());
     }
 }

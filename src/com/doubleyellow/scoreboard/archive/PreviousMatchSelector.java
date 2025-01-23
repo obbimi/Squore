@@ -263,35 +263,25 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
                     Log.d(TAG, msg);
                     //Toast.makeText(PreviousMatchSelector.this, msg, Toast.LENGTH_SHORT).show();
                     File f = (File) getObject(sHeader, sText);
-                    switch (item.getItemId()) {
-                        case R.id.pmi_item_details:
-                            matchDetails(f);
-                            break;
-                        case R.id.pmi_item_open:
-                            selectMatch(f);
-                            break;
-                        case R.id.pmi_item_delete:
-                            confirmDeleteMatch(f, sHeader, sText);
-                            break;
-                        case R.id.pmi_match_share:
-                            shareScoreSheet(f);
-                            break;
-                        case R.id.pmi_item_email:
-                            mailMatch(f);
-                            break;
-                        case R.id.pmi_item_clipboard:
-                            clipboardMatch(f);
-                            break;
-                        case R.id.pmi_item_message:
-                            messageMatch(f, null);
-                            break;
-                        case R.id.pmi_item_edit_event:
-                            editEventAndPlayers(f);
-                            break;
-                        case R.id.pmi_item_edit_date:
-                            // TODO:
-                            editMatchDate(f);
-                            break;
+                    int itemId = item.getItemId();
+                    if (itemId == R.id.pmi_item_details) {
+                        matchDetails(f);
+                    } else if (itemId == R.id.pmi_item_open) {
+                        selectMatch(f);
+                    } else if (itemId == R.id.pmi_item_delete) {
+                        confirmDeleteMatch(f, sHeader, sText);
+                    } else if (itemId == R.id.pmi_match_share) {
+                        shareScoreSheet(f);
+                    } else if (itemId == R.id.pmi_item_email) {
+                        mailMatch(f);
+                    } else if (itemId == R.id.pmi_item_clipboard) {
+                        clipboardMatch(f);
+                    } else if (itemId == R.id.pmi_item_message) {
+                        messageMatch(f, null);
+                    } else if (itemId == R.id.pmi_item_edit_event) {
+                        editEventAndPlayers(f);
+                    } else if (itemId == R.id.pmi_item_edit_date) {// TODO:
+                        editMatchDate(f);
                     }
                     return false;
                 }
@@ -320,11 +310,9 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
                     String msg = "Menu item '" + item.getTitle() + "' clicked for '" + sHeader + "'";
                     Log.d(TAG, msg);
                     //Toast.makeText(scoreBoard, msg, Toast.LENGTH_SHORT).show();
-                    switch (item.getItemId()) {
-                        case R.id.pmi_group_delete:
-                            confirmDeleteHeader(sHeader);
-                            //_deleteHeader(sHeader);
-                            break;
+                    if (item.getItemId() == R.id.pmi_group_delete) {
+                        confirmDeleteHeader(sHeader);
+                        //_deleteHeader(sHeader);
                     }
                     return false;
                 }

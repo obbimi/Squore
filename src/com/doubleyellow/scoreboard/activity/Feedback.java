@@ -164,38 +164,33 @@ public class Feedback extends XActivity implements View.OnClickListener, View.On
         String sPlayURL   = "https://play.google.com/store/apps/details" + "?id=" + this.getPackageName();
 
         view.setEnabled(false);
-        switch (view.getId()) {
-            case R.id.cmd_yes_i_like:
-                findViewById(R.id.ll_do_you_like          ).setVisibility(View.GONE);
-                findViewById(R.id.ll_yes_i_like           ).setVisibility(View.VISIBLE);
-                break;
-            case R.id.cmd_no_there_is_a_problem:
-                findViewById(R.id.ll_do_you_like          ).setVisibility(View.GONE);
-                findViewById(R.id.ll_no_there_is_a_problem).setVisibility(View.VISIBLE);
-                break;
-            case R.id.cmd_rate_the_app:
-                try {
-                    Uri uri = Uri.parse(sMarketURL);
-                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(this, "Could not launch Play Store!", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.cmd_share_with_friends: {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                // in facebook only the URL is actually taken from the extra text
-                intent.putExtra(Intent.EXTRA_TEXT, "Squore - Squash Ref Tool\n" + sPlayURL); // market url does not work in facebook (the most likely target)
-                startActivity(Intent.createChooser(intent, getString(R.string.cmd_share_with_friends)));
-                break;
+        int id = view.getId();
+        if (id == R.id.cmd_yes_i_like) {
+            findViewById(R.id.ll_do_you_like).setVisibility(View.GONE);
+            findViewById(R.id.ll_yes_i_like).setVisibility(View.VISIBLE);
+        } else if (id == R.id.cmd_no_there_is_a_problem) {
+            findViewById(R.id.ll_do_you_like).setVisibility(View.GONE);
+            findViewById(R.id.ll_no_there_is_a_problem).setVisibility(View.VISIBLE);
+        } else if (id == R.id.cmd_rate_the_app) {
+            try {
+                Uri uri = Uri.parse(sMarketURL);
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(this, "Could not launch Play Store!", Toast.LENGTH_SHORT).show();
             }
-            case R.id.cmd_like_on_facebook: {
-                Uri url = getLinkToFacebook(this);
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, url));
-                } catch (ActivityNotFoundException e) {
-                    e.printStackTrace();
-                }
+        } else if (id == R.id.cmd_share_with_friends) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            // in facebook only the URL is actually taken from the extra text
+            intent.putExtra(Intent.EXTRA_TEXT, "Squore - Squash Ref Tool\n" + sPlayURL); // market url does not work in facebook (the most likely target)
+            startActivity(Intent.createChooser(intent, getString(R.string.cmd_share_with_friends)));
+        } else if (id == R.id.cmd_like_on_facebook) {
+            Uri url = getLinkToFacebook(this);
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, url));
+            } catch (ActivityNotFoundException e) {
+                e.printStackTrace();
+            }
 /*
                 Intent facebookAppIntent = null;
                 try {
@@ -206,35 +201,32 @@ public class Feedback extends XActivity implements View.OnClickListener, View.On
                     startActivity(facebookAppIntent);
                 }
 */
-                break;
+        } else if (id == R.id.cmd_email_the_developer) {
+            List<String> lInfo = collectInfo();
+
+            String sendFeedbackTo = getString(R.string.developer_email);
+            String sSubject = Brand.getShortName(this) + " Feedback";
+
+            Log.i(TAG, ListUtil.join(lInfo, "\n"));
+
+            try {
+                //Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", sendFeedbackTo, null)); // this no longer seems to work: Gmail issue?
+
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                emailIntent.setData(Uri.parse("mailto:")); // only email apps should handle this
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{sendFeedbackTo});
+
+                //emailIntent.putExtra(Intent.EXTRA_TEXT   , ListUtil.join(lInfo,"\n"));
+                emailIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml("<tt>" + ListUtil.join(lInfo, "</tt><br/>\n<tt>") + "</tt>"));  // TODO: test
+
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, sSubject);
+
+                this.startActivity(Intent.createChooser(emailIntent, getString(R.string.cmd_feedback)));
+            } catch (Exception e) {
+                e.printStackTrace();
+                //Log.e(TAG, "Starting sms or call failed");
+                Toast.makeText(this, "Could not launch email intent!", Toast.LENGTH_SHORT).show();
             }
-            case R.id.cmd_email_the_developer:
-                List<String> lInfo = collectInfo();
-
-                String sendFeedbackTo = getString(R.string.developer_email);
-                String sSubject = Brand.getShortName(this) + " Feedback";
-
-                Log.i(TAG, ListUtil.join(lInfo,"\n"));
-
-                try {
-                  //Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", sendFeedbackTo, null)); // this no longer seems to work: Gmail issue?
-
-                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-                    emailIntent.setData(Uri.parse("mailto:")); // only email apps should handle this
-                    emailIntent.putExtra(Intent.EXTRA_EMAIL  , new String[] { sendFeedbackTo });
-
-                  //emailIntent.putExtra(Intent.EXTRA_TEXT   , ListUtil.join(lInfo,"\n"));
-                    emailIntent.putExtra(Intent.EXTRA_TEXT   , Html.fromHtml("<tt>" + ListUtil.join(lInfo,"</tt><br/>\n<tt>") + "</tt>"));  // TODO: test
-
-                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, sSubject);
-
-                    this.startActivity(Intent.createChooser(emailIntent, getString(R.string.cmd_feedback)));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    //Log.e(TAG, "Starting sms or call failed");
-                    Toast.makeText(this, "Could not launch email intent!", Toast.LENGTH_SHORT).show();
-                }
-                break;
         }
         view.setEnabled(true);
     }

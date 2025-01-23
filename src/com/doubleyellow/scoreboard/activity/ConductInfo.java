@@ -67,13 +67,8 @@ public class ConductInfo extends XActivity
 
     /** Handles the user's menu selection. */
     @Override public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-            case R.id.close:
-            default:
-                this.finish();
-                return true;
-        }
+        this.finish();
+        return true;
     }
 
     private EMSAdapter emsAdapter;

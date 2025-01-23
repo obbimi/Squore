@@ -85,17 +85,14 @@ public class ScoreSheetOnline extends AppCompatActivity {
 
     /** Handles the user's menu selection. */
     @Override public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-            case R.id.close:
-                this.finish();
-                break;
-            case R.id.share:
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, sShowURL);
-                this.startActivity(Intent.createChooser(intent, this.getString(R.string.cmd_share_with_friends)));
-                break;
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home || itemId == R.id.close) {
+            this.finish();
+        } else if (itemId == R.id.share) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, sShowURL);
+            this.startActivity(Intent.createChooser(intent, this.getString(R.string.cmd_share_with_friends)));
         }
         return true;
     }

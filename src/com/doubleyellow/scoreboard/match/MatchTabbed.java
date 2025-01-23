@@ -337,182 +337,163 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
             View view = getFragment(defaultTab).getView();
             matchView = (MatchView) ((view instanceof MatchView) ? view : null);
         }
-        switch (menuItemId) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.cmd_ok: case R.id.mt_cmd_ok:
-                return _startMatch();
-            case R.id.mt_matchlayout_all: {
-                PreferenceValues.setEnum(PreferenceKeys.newMatchLayout, this, NewMatchLayout.AllFields);
-                return _restart(R.id.dyn_new_match);
+        // fall through
+        if (menuItemId == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (menuItemId == R.id.cmd_ok || menuItemId == R.id.mt_cmd_ok) {
+            return _startMatch();
+        } else if (menuItemId == R.id.mt_matchlayout_all) {
+            PreferenceValues.setEnum(PreferenceKeys.newMatchLayout, this, NewMatchLayout.AllFields);
+            return _restart(R.id.dyn_new_match);
+        } else if (menuItemId == R.id.mt_matchlayout_simple) {
+            PreferenceValues.setEnum(PreferenceKeys.newMatchLayout, this, NewMatchLayout.Simple);
+            return _restart(R.id.dyn_new_match);
+        } else if (menuItemId == R.id.uc_clear_all_fields || menuItemId == R.id.mt_clear_all_fields) {
+            if (matchView == null) return false;
+            return matchView.clearAllFields();
+        } else if (menuItemId == R.id.uc_clear_player_fields || menuItemId == R.id.mt_clear_player_fields) {
+            if (matchView == null) return false;
+            return matchView.clearPlayerFields();
+        } else if (menuItemId == R.id.uc_clear_event_fields || menuItemId == R.id.mt_clear_event_fields) {
+            if (matchView == null) return false;
+            return matchView.clearEventFields();
+        } else if (menuItemId == R.id.uc_clear_club_fields || menuItemId == R.id.mt_clear_club_fields) {
+            if (matchView == null) return false;
+            return matchView.clearClubFields();
+        } else if (menuItemId == R.id.uc_clear_country_fields || menuItemId == R.id.mt_clear_country_fields) {
+            if (matchView == null) return false;
+            return matchView.clearCountryFields();
+        } else if (menuItemId == R.id.uc_clear_referee_fields || menuItemId == R.id.mt_clear_referee_fields) {
+            if (matchView == null) return false;
+            return matchView.clearRefereeFields();
+        } else if (menuItemId == R.id.uc_switch_feed) {
+            cancelCurrentFetch();
+            FeedMatchSelector.switchFeed(this);
+            return true;
+        } else if (menuItemId == R.id.uc_add_new_feed) {
+            cancelCurrentFetch();
+            Intent ff = new Intent(this, FeedFeedSelector.class);
+            startActivityForResult(ff, 1); // see onActivityResult
+            return true;
+        } else if (menuItemId == R.id.open_feed_url) {
+            String sURL = PreferenceValues.getMatchesFeedURL(this);
+            ScoreBoard.openInBrowser(this, sURL);
+            return true;
+        } else if (menuItemId == R.id.uc_group_matches_by_court || menuItemId == R.id.uc_hide_matches_with_result) {
+            if (item == null || item.length == 0 || (item[0] instanceof MenuItem) == false) {
+                return false;
             }
-            case R.id.mt_matchlayout_simple: {
-                PreferenceValues.setEnum(PreferenceKeys.newMatchLayout, this, NewMatchLayout.Simple);
-                return _restart(R.id.dyn_new_match);
+            final MenuItem menuItem = (MenuItem) item[0];
+            boolean bNewChecked = (menuItem.isChecked() == false);
+            int iNewIconId = bNewChecked ? android.R.drawable.checkbox_on_background : android.R.drawable.checkbox_off_background;
+            menuItem.setChecked(bNewChecked);
+            menuItem.setIcon(iNewIconId); // we do this because checking/unchecking is not visible?!
+            PreferenceKeys prefKey = PreferenceKeys.hideCompletedMatchesFromFeed;
+            if (menuItemId == R.id.uc_group_matches_by_court) {
+                prefKey = PreferenceKeys.groupMatchesInFeedByCourt;
             }
-            case R.id.uc_clear_all_fields: case R.id.mt_clear_all_fields: {
-                if (matchView == null) return false;
-                return matchView.clearAllFields();
-            }
-            case R.id.uc_clear_player_fields: case R.id.mt_clear_player_fields: {
-                if (matchView == null) return false;
-                return matchView.clearPlayerFields();
-            }
-            case R.id.uc_clear_event_fields: case R.id.mt_clear_event_fields: {
-                if (matchView == null) return false;
-                return matchView.clearEventFields();
-            }
-            case R.id.uc_clear_club_fields: case R.id.mt_clear_club_fields: {
-                if (matchView == null) return false;
-                return matchView.clearClubFields();
-            }
-            case R.id.uc_clear_country_fields: case R.id.mt_clear_country_fields: {
-                if (matchView == null) return false;
-                return matchView.clearCountryFields();
-            }
-            case R.id.uc_clear_referee_fields: case R.id.mt_clear_referee_fields: {
-                if (matchView == null) return false;
-                return matchView.clearRefereeFields();
-            }
-            case R.id.uc_switch_feed: {
-                cancelCurrentFetch();
-                FeedMatchSelector.switchFeed(this);
-                return true;
-            }
-            case R.id.uc_add_new_feed: {
-                cancelCurrentFetch();
-                Intent ff = new Intent(this, FeedFeedSelector.class);
-                startActivityForResult(ff, 1); // see onActivityResult
-                return true;
-            }
-            case R.id.open_feed_url: {
-                String sURL = PreferenceValues.getMatchesFeedURL(this);
-                ScoreBoard.openInBrowser(this, sURL);
-                return true;
-            }
-            case R.id.uc_group_matches_by_court: // fall through
-            case R.id.uc_hide_matches_with_result: {
-                if ( item == null || item.length==0 || (item[0] instanceof MenuItem)==false ) { return false; }
-                final MenuItem menuItem = (MenuItem) item[0];
-                boolean bNewChecked = (menuItem.isChecked() == false);
-                int iNewIconId= bNewChecked?android.R.drawable.checkbox_on_background:android.R.drawable.checkbox_off_background;
-                menuItem.setChecked(bNewChecked);
-                menuItem.setIcon(iNewIconId); // we do this because checking/unchecking is not visible?!
-                PreferenceKeys prefKey = PreferenceKeys.hideCompletedMatchesFromFeed;
-                if ( menuItemId == R.id.uc_group_matches_by_court ) {
-                    prefKey = PreferenceKeys.groupMatchesInFeedByCourt;
-                }
-                PreferenceValues.setBoolean(prefKey, this, bNewChecked);
+            PreferenceValues.setBoolean(prefKey, this, bNewChecked);
 
-                // now refresh: try without reloading data from the URL
-                if ( /*(listAdapter == null) &&*/ (getFragment(defaultTab) instanceof FeedMatchSelector)) {
-                    FeedMatchSelector fms = (FeedMatchSelector) getFragment(defaultTab);
-                    //fms.resetFeedStatus();
+            // now refresh: try without reloading data from the URL
+            if ( /*(listAdapter == null) &&*/ (getFragment(defaultTab) instanceof FeedMatchSelector)) {
+                FeedMatchSelector fms = (FeedMatchSelector) getFragment(defaultTab);
+                //fms.resetFeedStatus();
+                SimpleELAdapter listAdapter = fms.getListAdapter(null);
+                listAdapter.load(true);
+            }
+
+            return true;
+        } else if (menuItemId == R.id.show_players_from_feed || menuItemId == R.id.show_matches_from_feed) {
+            cancelCurrentFetch();
+            Fragment fragment = getFragment(defaultTab);
+            if (fragment instanceof ExpandableMatchSelector) {
+                ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) fragment;
+                if (matchSelector instanceof FeedMatchSelector) {
+                    FeedMatchSelector fms = (FeedMatchSelector) matchSelector;
                     SimpleELAdapter listAdapter = fms.getListAdapter(null);
-                    listAdapter.load(true);
+                    if (menuItemId == R.id.show_players_from_feed) {
+                        if (fms.getFeedStatus().isShowingMatches()) {
+                            fms.resetFeedStatus(FeedMatchSelector.FeedStatus.loadingPlayers);
+                            listAdapter.load(true);
+                        }
+                    }
+                    if (menuItemId == R.id.show_matches_from_feed) {
+                        if (fms.getFeedStatus().isShowingPlayers()) {
+                            fms.resetFeedStatus(FeedMatchSelector.FeedStatus.loadingMatches);
+                            listAdapter.load(true);
+                        }
+                    }
                 }
+            }
+            return true;
+        } else if (menuItemId == R.id.filter || menuItemId == R.id.mt_filter || menuItemId == R.id.expand_all || menuItemId == R.id.collapse_all) {
+            Fragment fragment = getFragment(defaultTab);
+            if (fragment instanceof ExpandableMatchSelector) {
+                ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(defaultTab);
+                if (menuItemId == R.id.expand_all) {
+                    ExpandableListUtil.expandAll(matchSelector.expandableListView);
+                } else if (menuItemId == R.id.collapse_all) {
+                    ExpandableListUtil.collapseAll(matchSelector.expandableListView);
+                    // show totals per header
+                    if (matchSelector instanceof FeedMatchSelector) {
+                        FeedMatchSelector fms = (FeedMatchSelector) matchSelector;
+                        SimpleELAdapter listAdapter = fms.getListAdapter(null);
+                        MyDialogBuilder.dialogWithOkOnly(this, MapUtil.toNiceString(listAdapter.getHeaderChildCounts()));
+                    }
+                } else if ((menuItemId == R.id.filter) || (menuItemId == R.id.mt_filter)) {
+                    matchSelector.initFiltering(true);
+                }
+            }
+            return true;
+        } else if (menuItemId == R.id.sort_group_names) {
+            StaticMatchSelector staticMatchSelector = (StaticMatchSelector) getFragment(SelectTab.Mine);
+            staticMatchSelector.sortHeaders(this);
+            return true;
+        } else if (menuItemId == R.id.new_group) {
+            StaticMatchSelector staticMatchSelector = (StaticMatchSelector) getFragment(SelectTab.Mine);
+            staticMatchSelector.editHeader("");
+            return true;
+        } else if (menuItemId == R.id.refresh || menuItemId == R.id.mt_refresh) {
+            if ((listAdapter == null) && (getFragment(defaultTab) instanceof ExpandableMatchSelector)) {
+                ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(defaultTab);
+                if (matchSelector != null) {
+                    listAdapter = matchSelector.getListAdapter(null);
+                }
+            }
+            if (listAdapter != null) {
+                boolean bUseCacheIfPresent = (item.length > 0 && (item[0] instanceof Boolean) && (Boolean) item[0]);
+                boolean resetFeedStatus = (item.length > 1 && (item[1] instanceof Boolean) && (Boolean) item[1]);
+                if (resetFeedStatus && defaultTab.equals(SelectTab.Feed)) {
+                    FeedMatchSelector fms = (FeedMatchSelector) getFragment(defaultTab);
+                    fms.resetFeedStatus(null);
+                }
+                listAdapter.load(bUseCacheIfPresent);
+            }
+            if (defaultTab.equals(SelectTab.Feed)) {
+                // to update the title
+                mAdapter.notifyDataSetChanged();
+            }
 
-                return true;
-            }
-            case R.id.show_players_from_feed:
-            case R.id.show_matches_from_feed: {
-                cancelCurrentFetch();
-                Fragment fragment = getFragment(defaultTab);
-                if ( fragment instanceof ExpandableMatchSelector ) {
-                    ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) fragment;
-                    if ( matchSelector instanceof FeedMatchSelector ) {
-                        FeedMatchSelector       fms           = (FeedMatchSelector) matchSelector;
-                        SimpleELAdapter         listAdapter   = fms.getListAdapter(null);
-                        if ( menuItemId == R.id.show_players_from_feed ) {
-                            if ( fms.getFeedStatus().isShowingMatches() ) {
-                                fms.resetFeedStatus(FeedMatchSelector.FeedStatus.loadingPlayers);
-                                listAdapter.load(true);
-                            }
-                        }
-                        if ( menuItemId == R.id.show_matches_from_feed ) {
-                            if ( fms.getFeedStatus().isShowingPlayers() ) {
-                                fms.resetFeedStatus(FeedMatchSelector.FeedStatus.loadingMatches);
-                                listAdapter.load(true);
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-            case R.id.filter: case R.id.mt_filter:
-            case R.id.expand_all:
-            case R.id.collapse_all: {
-                Fragment fragment = getFragment(defaultTab);
-                if ( fragment instanceof ExpandableMatchSelector ) {
-                    ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(defaultTab);
-                    if ( menuItemId == R.id.expand_all ) {
-                        ExpandableListUtil.expandAll(matchSelector.expandableListView);
-                    } else if ( menuItemId == R.id.collapse_all ) {
-                        ExpandableListUtil.collapseAll(matchSelector.expandableListView);
-                        // show totals per header
-                        if ( matchSelector instanceof FeedMatchSelector) {
-                            FeedMatchSelector fms = (FeedMatchSelector) matchSelector;
-                            SimpleELAdapter listAdapter = fms.getListAdapter(null);
-                            MyDialogBuilder.dialogWithOkOnly(this, MapUtil.toNiceString(listAdapter.getHeaderChildCounts()));
-                        }
-                    } else if ( (menuItemId == R.id.filter) || (menuItemId == R.id.mt_filter) ) {
-                        matchSelector.initFiltering(true);
-                    }
-                }
-                return true;
-            }
-            case R.id.sort_group_names: {
-                StaticMatchSelector staticMatchSelector = (StaticMatchSelector) getFragment(SelectTab.Mine);
-                staticMatchSelector.sortHeaders(this);
-                return true;
-            }
-            case R.id.new_group: {
-                StaticMatchSelector staticMatchSelector = (StaticMatchSelector) getFragment(SelectTab.Mine);
-                staticMatchSelector.editHeader("");
-                return true;
-            }
-            case R.id.refresh: case R.id.mt_refresh:
-                if ( (listAdapter == null) && (getFragment(defaultTab) instanceof ExpandableMatchSelector)) {
-                    ExpandableMatchSelector matchSelector = (ExpandableMatchSelector) getFragment(defaultTab);
-                    if ( matchSelector != null ) {
-                        listAdapter = matchSelector.getListAdapter(null);
-                    }
-                }
-                if ( listAdapter != null ) {
-                    boolean bUseCacheIfPresent = (item.length > 0 && (item[0] instanceof Boolean) && (Boolean) item[0]);
-                    boolean resetFeedStatus    = (item.length > 1 && (item[1] instanceof Boolean) && (Boolean) item[1]);
-                    if ( resetFeedStatus && defaultTab.equals(SelectTab.Feed) ) {
-                        FeedMatchSelector fms = (FeedMatchSelector) getFragment(defaultTab);
-                        fms.resetFeedStatus(null);
-                    }
-                    listAdapter.load(bUseCacheIfPresent);
-                }
-                if ( defaultTab.equals(SelectTab.Feed) ) {
-                    // to update the title
-                    mAdapter.notifyDataSetChanged();
-                }
-
-                return true;
-            case R.id.cmd_export: case R.id.mt_cmd_export:
-                PreviousMatchSelector.selectFilenameForExport(this);
-                return true;
-            case R.id.cmd_import: case R.id.mt_cmd_import:
-                PreviousMatchSelector.selectFilenameForImport(this);
-                return true;
-            case R.id.cmd_delete_all:
-                PreviousMatchSelector.confirmDeleteAllPrevious(this);
-                return true;
-            case R.id.sb_overflow_submenu:
-                return false;
-            case R.id.close:
-                this.finish();
-                return true;
-            default:
-                tryShowToast("Sorry, don't know what to do for menu item " + menuItemId + "... Trying start match...");
-                //_startMatch();
-                return false;
+            return true;
+        } else if (menuItemId == R.id.cmd_export || menuItemId == R.id.mt_cmd_export) {
+            PreviousMatchSelector.selectFilenameForExport(this);
+            return true;
+        } else if (menuItemId == R.id.cmd_import || menuItemId == R.id.mt_cmd_import) {
+            PreviousMatchSelector.selectFilenameForImport(this);
+            return true;
+        } else if (menuItemId == R.id.cmd_delete_all) {
+            PreviousMatchSelector.confirmDeleteAllPrevious(this);
+            return true;
+        } else if (menuItemId == R.id.sb_overflow_submenu) {
+            return false;
+        } else if (menuItemId == R.id.close) {
+            this.finish();
+            return true;
         }
+        tryShowToast("Sorry, don't know what to do for menu item " + menuItemId + "... Trying start match...");
+        //_startMatch();
+        return false;
     }
 
     private void cancelCurrentFetch() {

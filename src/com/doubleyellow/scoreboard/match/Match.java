@@ -177,41 +177,39 @@ public class Match extends XActivity implements MenuHandler
     }
 
     public boolean handleMenuItem(int menuItemId, Object... ctx) {
-        switch (menuItemId) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.dyn_new_match: {
-                Intent intent = new Intent();
-                intent.setAction(String.valueOf(R.id.dyn_new_match));
-                setResult(RESULT_OK, intent);
-                finish();
-                return true;
-            }
-            case R.id.cmd_ok:
-                Intent intent = vMatchView.getIntent(m_sSource, m_sSourceID, false, m_bIsEditMatch);
-                if (intent == null) return false;
-                setResult(RESULT_OK, intent);
-                Match.dontShow();
+        if (menuItemId == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (menuItemId == R.id.dyn_new_match) {
+            Intent intent = new Intent();
+            intent.setAction(String.valueOf(R.id.dyn_new_match));
+            setResult(RESULT_OK, intent);
+            finish();
+            return true;
+        } else if (menuItemId == R.id.cmd_ok) {
+            Intent intent = vMatchView.getIntent(m_sSource, m_sSourceID, false, m_bIsEditMatch);
+            if (intent == null) return false;
+            setResult(RESULT_OK, intent);
+            Match.dontShow();
 
-                finish();
-                return true;
-            case R.id.cmd_cancel:
-                finish();
-                return true;
-            case R.id.uc_clear_all_fields:
-                return vMatchView.clearAllFields();
-            case R.id.uc_clear_player_fields:
-                return vMatchView.clearPlayerFields();
-            case R.id.uc_clear_club_fields:
-                return vMatchView.clearClubFields();
-            case R.id.uc_clear_country_fields:
-                return vMatchView.clearCountryFields();
-            case R.id.uc_clear_event_fields:
-                return vMatchView.clearEventFields();
-            case R.id.uc_clear_referee_fields:
-                vMatchView.clearRefereeFields();
-                return true;
+            finish();
+            return true;
+        } else if (menuItemId == R.id.cmd_cancel) {
+            finish();
+            return true;
+        } else if (menuItemId == R.id.uc_clear_all_fields) {
+            return vMatchView.clearAllFields();
+        } else if (menuItemId == R.id.uc_clear_player_fields) {
+            return vMatchView.clearPlayerFields();
+        } else if (menuItemId == R.id.uc_clear_club_fields) {
+            return vMatchView.clearClubFields();
+        } else if (menuItemId == R.id.uc_clear_country_fields) {
+            return vMatchView.clearCountryFields();
+        } else if (menuItemId == R.id.uc_clear_event_fields) {
+            return vMatchView.clearEventFields();
+        } else if (menuItemId == R.id.uc_clear_referee_fields) {
+            vMatchView.clearRefereeFields();
+            return true;
         }
         return false;
     }

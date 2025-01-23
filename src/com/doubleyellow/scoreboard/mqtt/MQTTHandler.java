@@ -19,7 +19,6 @@ package com.doubleyellow.scoreboard.mqtt;
 import android.view.View;
 import android.util.Log;
 
-//import org.eclipse.paho.android.service.MqttAndroidClient;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.bluetooth.BTMethods;
@@ -33,6 +32,7 @@ import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.Placeholder;
 import com.doubleyellow.util.StringUtil;
 
+//import org.eclipse.paho.android.service.MqttAndroidClient;
 import info.mqtt.android.service.Ack;
 import info.mqtt.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.*;
@@ -92,11 +92,11 @@ public class MQTTHandler
 
         //mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK, null, true, 1); // version 4.3 of https://github.com/hannesa2/paho.mqtt.android
         //mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK); // uses MqttDefaultFilePersistence and seems to throw MqttPersistenceException
-        mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK, new MemoryPersistence());
+        mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK, new MemoryPersistence(), true, 1);
 
-        defaultCbPublish     = new MQTTActionListener("Publish"    , iBoard, m_sBrokerUrl);
-        defaultCbDisconnect  = new MQTTActionListener("Disconnect" , iBoard, m_sBrokerUrl);
-        defaultCbUnSubscribe = new MQTTActionListener("UnSubscribe", iBoard, m_sBrokerUrl);
+        defaultCbPublish     = new MQTTActionListener("Publish"    , context, m_sBrokerUrl);
+        defaultCbDisconnect  = new MQTTActionListener("Disconnect" , context, m_sBrokerUrl);
+        defaultCbUnSubscribe = new MQTTActionListener("UnSubscribe", context, m_sBrokerUrl);
         defaultSubscribe     = new SubscribeCallback();
     }
 
@@ -106,7 +106,7 @@ public class MQTTHandler
             ClientCallback callback = ClientCallback.getInstance(MQTTHandler.this);
             mqttClient.setCallback(callback);
 
-            m_iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);
+            m_context.updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 1);
 
             if  ( StringUtil.isNotEmpty(m_joinerLeaverTopic) ) {
                 subscribe(m_joinerLeaverTopic);
@@ -125,7 +125,7 @@ public class MQTTHandler
                 // listen for changes on
                 subscribe(mqttSubScribeToOtherTopic);
             } else {
-                m_iBoard.showInfoMessage(String.format("MQTT Connected to %s OK", m_sBrokerUrl), 10);
+                m_context.showInfoMessageOnUiThread(String.format("MQTT Connected to %s OK", m_sBrokerUrl), 10);
             }
             if ( m_context.m_liveScoreShare ) {
                 publishMatchOnMQTT(ScoreBoard.getMatchModel(), false, null);
@@ -151,12 +151,13 @@ public class MQTTHandler
         options.setUserName(username);
         options.setPassword(password.toCharArray());
         options.setConnectionTimeout(5);
+        //options.setExecutorServiceTimeout(6000);
         // TODO: finetune ?
         mqttClient.connect(options, null, new ConnectCallback());
     }
 
     public void stop() {
-        m_iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 0);
+        m_context.updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 0);
         if ( isConnected() ) {
             publish(m_joinerLeaverTopic, JoinerLeaver.leave + "(" + m_thisDeviceId + ")");
             unsubscribe("#");
@@ -221,7 +222,7 @@ public class MQTTHandler
             PreferenceValues.removeOverwrites(m_context.mBtPrefSlaveSettings.keySet());
         }
         m_MQTTRole = role;
-        m_iBoard.showInfoMessage("MQTT role " + m_MQTTRole, 2);
+        m_context.showInfoMessageOnUiThread("MQTT role " + m_MQTTRole, 2);
     }
 
     private String getMQTTSubscribeTopicChange(String sMethod) {
@@ -320,8 +321,8 @@ public class MQTTHandler
     {
         @Override public void onSuccess(IMqttToken token) {
             String sMsg = String.format("MQTT Subscribed to %s on %s", shorten(token.getTopics()), m_sBrokerUrl);
-            m_iBoard.showInfoMessage(sMsg, 10);
-            m_iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);
+            m_context.showInfoMessageOnUiThread(sMsg, 10);
+            m_context.updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 1);
         }
 
         @Override public void onFailure(IMqttToken token, Throwable exception) {

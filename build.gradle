@@ -11,10 +11,10 @@ buildscript {
         //classpath 'com.android.tools.build:gradle:4.1.3'
         //classpath "com.android.tools.build:gradle:7.0.4"
         //classpath "com.android.tools.build:gradle:7.2.0"
-        classpath "com.android.tools.build:gradle:7.3.1"
+        //classpath "com.android.tools.build:gradle:7.3.1"
         // gradle-wrapper.properties may contain 8.2
         //classpath "com.android.tools.build:gradle:7.4.2" // almost succeeds
-        //classpath "com.android.tools.build:gradle:8.5.1" // requires gradle 8.7 in wrapper
+        classpath "com.android.tools.build:gradle:8.4.0" // requires gradle 8.7 in wrapper
         // NOTE: Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements
 
         // added for firebase to parse google-services.json
@@ -25,6 +25,7 @@ buildscript {
 repositories {
     mavenCentral() // for protobuf
     google()
+    maven { url 'https://jitpack.io' } // mqtt
 
     // required to work with aar file in libs dir
     flatDir {
@@ -41,9 +42,7 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
 
-    // compileSdkVersion seems required when running from command line?!
-    //compileSdkVersion 33
-    compileSdk 34 // makes NfcAdapter no longer compatible
+    compileSdk 35 // makes NfcAdapter no longer compatible
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
     //buildToolsVersion '28.0.3'
 
@@ -102,7 +101,7 @@ android {
         }
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
-    def versionCodeXXX = 537
+    def versionCodeXXX = 538
     productFlavors {
         // versionCodePrefix specifies [min_api_level][bitwise_supported_screensizes s=1,m=2,l=4,xl=8]
         phoneTabletPre22 {
@@ -227,7 +226,7 @@ dependencies {
     // For an optimal experience using FCM, add the Firebase SDK for Google Analytics. This is recommended, but not required.
     //implementation 'com.google.firebase:firebase-analytics'
 
-    implementation platform('com.google.firebase:firebase-bom:33.7.0') // 2022-12-17: compiles OK but PushNotifications.start in PusherHandler.init fails with java.lang.ClassNotFoundException: com.google.firebase.iid.FirebaseInstanceId if firebase-iid is not added specifically
+    implementation platform('com.google.firebase:firebase-bom:33.8.0') // 2022-12-17: compiles OK but PushNotifications.start in PusherHandler.init fails with java.lang.ClassNotFoundException: com.google.firebase.iid.FirebaseInstanceId if firebase-iid is not added specifically
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-analytics'     // replaces firebase-core
     implementation 'com.google.firebase:firebase-installations' // replaces firebase-iid
@@ -240,7 +239,8 @@ dependencies {
 
     //implementation 'com.github.hannesa2:paho.mqtt.android:4.3' // new mqtt library that supports android 12 (https://github.com/hannesa2/paho.mqtt.android/releases/download/4.3/serviceLibrary-release.aar)
     //implementation 'paho.mqtt.android:Hannesa2PahoMQTT4.3@aar' // new mqtt library that supports android 12 (https://github.com/hannesa2/paho.mqtt.android/releases/download/4.3/serviceLibrary-release.aar)
-    implementation 'paho.mqtt.android:Hannesa2PahoMQTT@aar' // new mqtt library that supports android 12 (https://github.com/hannesa2/paho.mqtt.android/releases/download/3.5.1/serviceLibrary-release.aar)
+    //implementation 'paho.mqtt.android:Hannesa2PahoMQTT@aar' // new mqtt library that supports android 12 (https://github.com/hannesa2/paho.mqtt.android/releases/download/3.5.1/serviceLibrary-release.aar)
+    implementation "com.github.hannesa2:paho.mqtt.android:4.3"
     implementation 'com.jakewharton.timber:timber:5.0.1' // required by 'new' paho
     //implementation 'androidx.legacy:legacy-support-v4:1.0.0' // required by 'new' paho
 
@@ -251,7 +251,7 @@ dependencies {
 
     // firebase in combination with pusher
     // https://github.com/pusher/push-notifications-android
-    implementation 'com.pusher:push-notifications-android:1.9.2'
+    implementation 'com.pusher:push-notifications-android:1.9.2' // 1.10.0 requires minSdk 24
 
     // added to avoid compile issues due to multiple kotlin libraries included by dependencies
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.0'

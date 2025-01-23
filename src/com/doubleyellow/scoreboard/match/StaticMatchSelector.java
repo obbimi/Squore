@@ -796,19 +796,15 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                     //String msg = "Menu item '" + item.getTitle() + "' clicked for '" + sMatch + "' in '" + sHeader + "'";
                     //Log.d(TAG, msg);
                     //Toast.makeText(StaticMatchSelector.this, msg, Toast.LENGTH_SHORT).show();
-                    switch (item.getItemId()) {
-                        case R.id.smi_item_select:
-                            startMatch(sHeader, sMatch);
-                            break;
-                        case R.id.smi_item_delete:
-                            _replaceMatch(sHeader, sMatch, null);
-                            break;
-                        case R.id.smi_item_edit:
-                            editMatch(sHeader, sMatch, true, null, 2);
-                            break;
-                        case R.id.smi_item_copy:
-                            editMatch(sHeader, sMatch, false, null, 2);
-                            break;
+                    int itemId = item.getItemId();
+                    if (itemId == R.id.smi_item_select) {
+                        startMatch(sHeader, sMatch);
+                    } else if (itemId == R.id.smi_item_delete) {
+                        _replaceMatch(sHeader, sMatch, null);
+                    } else if (itemId == R.id.smi_item_edit) {
+                        editMatch(sHeader, sMatch, true, null, 2);
+                    } else if (itemId == R.id.smi_item_copy) {
+                        editMatch(sHeader, sMatch, false, null, 2);
                     }
                     return false;
                 }
@@ -860,16 +856,13 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                     String msg = "Menu item '" + item.getTitle() + "' clicked for '" + sHeader + "'";
                     Log.d(TAG, msg);
                     //Toast.makeText(scoreBoard, msg, Toast.LENGTH_SHORT).show();
-                    switch ( item.getItemId() ) {
-                        case R.id.smi_group_delete:
-                            confirmDeleteHeader(sHeader);
-                            break;
-                        case R.id.smi_group_add_match:
-                            editMatch(sHeader, "", false, null, 2);
-                            break;
-                        case R.id.smi_group_edit:
-                            editHeader(sHeader);
-                            break;
+                    int itemId = item.getItemId();
+                    if (itemId == R.id.smi_group_delete) {
+                        confirmDeleteHeader(sHeader);
+                    } else if (itemId == R.id.smi_group_add_match) {
+                        editMatch(sHeader, "", false, null, 2);
+                    } else if (itemId == R.id.smi_group_edit) {
+                        editHeader(sHeader);
                     }
                     return false;
                 }
