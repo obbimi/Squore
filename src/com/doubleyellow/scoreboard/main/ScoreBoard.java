@@ -7555,9 +7555,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     public void doDelayedMQTTReconnect(String sMsg, int iReconnectInSeconds) {
-        iBoard.showInfoMessage("(%1$d) " + sMsg + " Reconnecting in %1$d", iReconnectInSeconds);
+        showInfoMessageOnUiThread("(%1$d) " + sMsg + " Reconnecting in %1$d", iReconnectInSeconds);
         // e.g. internet connection stopped working, or broker on local network stopped
         stopMQTT();
+
+        try {
+            Looper.prepare();
+        } catch (Exception e) {}
         cdtReconnect = new DelayedMQTTReconnect((long) iReconnectInSeconds * 1000);
         cdtReconnect.start();
     }

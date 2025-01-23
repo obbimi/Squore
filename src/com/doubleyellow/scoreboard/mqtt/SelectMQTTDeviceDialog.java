@@ -95,7 +95,7 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
         scoreBoard.setJoinedDevicesListener((lNew, sAddedRemoved) -> {
             ll.removeView(sovDevices);
             sovDevices = refreshSelectList(lNew);
-            ll.addView(sovDevices, 2);
+            ll.addView(sovDevices, 3);
         } );
         ll.addView(getTextView(getString(R.string.sb_ThisDeviceId)));
         TextView tvThisDeviceId = new TextView(context);
