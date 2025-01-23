@@ -126,8 +126,9 @@
                 </menu>
             </item>
 
-            <item android:id="@+id/sb_bluetooth"                      app:showAsAction="never" android:icon="@android:drawable/stat_sys_data_bluetooth" android:title="@string/bt_bluetooth_mirror" />
             <item android:id="@+id/sb_mqtt_mirror"                    app:showAsAction="never" android:icon="@drawable/mqtt" android:title="@string/bt_mqtt_mirror" />
+            <item android:id="@+id/sb_bluetooth"                      app:showAsAction="never" android:icon="@android:drawable/stat_sys_data_bluetooth" android:title="@string/bt_bluetooth_mirror" />
+
             <item
                     android:id="@+id/sb_sub_share_match"
                     android:icon="@android:drawable/ic_menu_share"

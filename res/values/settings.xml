@@ -65,6 +65,10 @@
     <string name="pref_DeviceId">Device Unique Id</string>
     <string name="pref_Brokers">Brokers</string>
 
+    <string name="sb_MQTTSelectBroker">Select broker</string>
+    <string name="sb_MQTTSelectOtherDeviceId">Select other device id</string>
+    <string name="sb_ThisDeviceId">This Device Unique Id</string>
+
     <string name="pref_feedFeedsURL">feedFeedsURL</string>
     <string name="pref_feedFeedsURL_summary">For developers only</string>
     <string name="pref_MaximumCacheAgeFeeds">Maximum Cache Age Feeds</string>

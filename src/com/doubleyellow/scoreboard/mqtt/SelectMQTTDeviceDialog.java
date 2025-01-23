@@ -20,7 +20,9 @@ package com.doubleyellow.scoreboard.mqtt;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.doubleyellow.android.view.SelectObjectView;
 import com.doubleyellow.scoreboard.Brand;
@@ -87,11 +89,20 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
         }
 
         // add a view with all possible devices and let user choose one
-        LinearLayout ll = new LinearLayout(context);
+        final LinearLayout ll = new LinearLayout(context);
         ll.setOrientation(LinearLayout.VERTICAL);
-        sovDevices = refreshSelectList(scoreBoard.m_MQTTHandler.getJoinedDevices());
-        ll.addView(getTextView(getString(R.string.pref_DeviceId) + " : " + PreferenceValues.getLiveScoreDeviceId(context)));
-        ll.addView(getTextView(R.string.pref_MQTTOtherDeviceId));
+        sovDevices = refreshSelectList(scoreBoard.getJoinedDevices());
+        scoreBoard.setJoinedDevicesListener((lNew, sAddedRemoved) -> {
+            ll.removeView(sovDevices);
+            sovDevices = refreshSelectList(lNew);
+            ll.addView(sovDevices, 2);
+        } );
+        ll.addView(getTextView(getString(R.string.sb_ThisDeviceId)));
+        TextView tvThisDeviceId = new TextView(context);
+        tvThisDeviceId.setText(PreferenceValues.getLiveScoreDeviceId(context));
+        tvThisDeviceId.setTag(ColorPrefs.Tags.item.toString());
+        ll.addView(tvThisDeviceId);
+        ll.addView(getTextView(R.string.sb_MQTTSelectOtherDeviceId));
         ll.addView(sovDevices);
         ll.addView(llCb);
 
@@ -112,9 +123,9 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
         sovBrokers.setOnCheckedChangeListener((group, checkedId) -> {
             scoreBoard.stopMQTT();
             PreferenceValues.setString(PreferenceKeys.MQTTBrokerURL, context, sovBrokers.getChecked());
-            scoreBoard.onResumeMQTT();
+            scoreBoard.doDelayedMQTTReconnect("", 1);
         });
-        ll.addView(getTextView(R.string.pref_Brokers));
+        ll.addView(getTextView(R.string.sb_MQTTSelectBroker));
         ll.addView(sovBrokers);
 
         adb.setView(ll);
@@ -174,19 +185,19 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
                 if ( sOtherDeviceChecked != null && sOtherDeviceChecked.matches("[A-Z0-9]{6,8}") ) {
                     PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, sOtherDeviceChecked);
                 }
+                scoreBoard.stopMQTT();
+                scoreBoard.doDelayedMQTTReconnect("", 1);
 
                 break;
             case DialogInterface.BUTTON_NEUTRAL:
                 break;
             case DialogInterface.BUTTON_NEGATIVE:
                 // refresh
-                sovDevices = refreshSelectList(scoreBoard.m_MQTTHandler.getJoinedDevices());
+                sovDevices = refreshSelectList(scoreBoard.getJoinedDevices());
                 if (sovDevices == null) return;
                 // TODO:
                 break;
         }
-        scoreBoard.stopMQTT();
-        scoreBoard.onResumeMQTT();
 
         scoreBoard.triggerEvent(ScoreBoard.SBEvent.mirrorDeviceSelectionClosed, this);
     }

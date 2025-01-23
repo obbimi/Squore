@@ -164,7 +164,6 @@ public class MQTTHandler
 
             mqttClient.disconnect(null, defaultCbDisconnect); // throw nullpointer exception ?
         }
-        m_mJoinedDevices.clear();
     }
 
     public boolean isConnected() {
@@ -172,7 +171,6 @@ public class MQTTHandler
     }
 
     private final Map<String, Long> m_lSubscriptions = new TreeMap<>();
-    final Map<String, Long> m_mJoinedDevices = new TreeMap<>();
     private void subscribe(String topic) {
         if ( m_lSubscriptions.containsKey(topic) ) {
             Log.w(TAG, "already subscribed to " + shorten(topic));
@@ -193,9 +191,7 @@ public class MQTTHandler
     public Set<String> getSubscriptionTopics() {
         return m_lSubscriptions.keySet();
     }
-    public Set<String> getJoinedDevices() {
-        return new LinkedHashSet<>(m_mJoinedDevices.keySet());
-    }
+
 
     public void publish(String topic, String msg) {
         if ( topic == null ) {

@@ -94,6 +94,7 @@ import com.doubleyellow.scoreboard.firebase.PusherHandler;
 import com.doubleyellow.scoreboard.firebase.PusherMessagingService;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
+import com.doubleyellow.scoreboard.mqtt.JoinedDevicesListener;
 import com.doubleyellow.scoreboard.mqtt.MQTTHandler;
 import com.doubleyellow.scoreboard.mqtt.SelectMQTTDeviceDialog;
 import com.doubleyellow.scoreboard.share.MatchModelPoster;
@@ -6592,6 +6593,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             if ( sScoreReceived.equals("0-0") && sModelScore.equals("0-0") ) {
                                 // if endGame=automatic changeScore might be send to set score to 0-0, but if slave already changed to 0-0, ignore
                                 Log.w(TAG, String.format("Ignoring %s", btMethod));
+                            } else if ((sScoreReceived.equals("1-0") || sScoreReceived.equals("0-1")) && matchModel.isPossibleGameVictory()) {
+                                // assume end game was not yet performed here on 'mirrored' device
+                                matchModel.endGame();
+                                matchModel.changeScore(player);
                             } else {
                                 matchModel.changeScore(player);
                             }
@@ -7519,12 +7524,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             cdtReconnect = null;
         }
         if ( PreferenceValues.useMQTT(this) == false ) {
-            iBoard.updateMQTTConnectionStatusIcon(View.INVISIBLE, -1);
+            updateMQTTConnectionStatusIconOnUiThread(View.INVISIBLE, -1);
             return;
         }
         final String sBrokerUrl = PreferenceValues.getMQTTBrokerURL(this);
         if ( StringUtil.isEmpty(sBrokerUrl) ) {
-            iBoard.updateMQTTConnectionStatusIcon(View.INVISIBLE, -1);
+            updateMQTTConnectionStatusIconOnUiThread(View.INVISIBLE, -1);
             return;
         }
         if ( m_MQTTHandler == null ) {
@@ -7542,13 +7547,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
         }
         if ( m_MQTTHandler.isConnected() ) {
-            iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);
+            updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 1);
             return;
         }
-        iBoard.showInfoMessage(String.format("MQTT Connecting to %s ...", sBrokerUrl), 10);
+        showInfoMessageOnUiThread(String.format("MQTT Connecting to %s ...", sBrokerUrl), 10);
         m_MQTTHandler.connect("", ""); // TODO: work with broker that requires to provide credentials
     }
-
 
     public void doDelayedMQTTReconnect(String sMsg, int iReconnectInSeconds) {
         iBoard.showInfoMessage("(%1$d) " + sMsg + " Reconnecting in %1$d", iReconnectInSeconds);
@@ -7592,6 +7596,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             m_MQTTHandler.stop();
             m_MQTTHandler = null; // required ?
         }
+        m_mJoinedDevices.clear();
     }
 
     private void setupMQTTControl() {
@@ -7601,6 +7606,39 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         SelectMQTTDeviceDialog selectDevice = new SelectMQTTDeviceDialog(this, matchModel, this);
         addToDialogStack(selectDevice);
+    }
+    final Map<String, Long> m_mJoinedDevices = new TreeMap<>();
+    public Set<String> getJoinedDevices() {
+        return new LinkedHashSet<>(m_mJoinedDevices.keySet());
+    }
+    private JoinedDevicesListener joinedDevicesListener = null;
+    public void setJoinedDevicesListener(JoinedDevicesListener listener) {
+        this.joinedDevicesListener = listener;
+    }
+    public boolean updateJoinedDevices(String sFromDevice, boolean bJoined) {
+        boolean bChanged = false;
+        if ( bJoined ) {
+            if ( m_mJoinedDevices.containsKey(sFromDevice) ) {
+                Log.w(TAG, "Already know about " + sFromDevice);
+            } else {
+                m_mJoinedDevices.put(sFromDevice, System.currentTimeMillis());
+                bChanged = true;
+            }
+        } else {
+            if ( m_mJoinedDevices.containsKey(sFromDevice) ) {
+                m_mJoinedDevices.remove(sFromDevice);
+                bChanged = true;
+            } else {
+                bChanged = false;
+            }
+        }
+        if ( bChanged ) {
+            Log.i(TAG, "I now know about " + m_mJoinedDevices);
+            if ( joinedDevicesListener != null ) {
+                runOnUiThread(() -> joinedDevicesListener.updatedTo(new LinkedHashSet<>(m_mJoinedDevices.keySet()) , sFromDevice));
+            }
+        }
+        return bChanged;
     }
 
 

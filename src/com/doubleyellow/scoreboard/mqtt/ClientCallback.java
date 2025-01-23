@@ -76,22 +76,18 @@ public class ClientCallback implements MqttCallback
                 if (saMethodNArgs.length==3 ) {
                     bIsResponseToOtherJoin = Boolean.parseBoolean(saMethodNArgs[2]);
                 }
-                if ( sFromDevice.equals(m_handler.m_thisDeviceId) ) { return; }
 
                 if ( sPayload.startsWith(MQTTHandler.JoinerLeaver.join.toString() ) ) {
-                    if ( m_handler.m_mJoinedDevices.containsKey(sFromDevice) ) {
-                        Log.w(TAG, "Already know about " + sFromDevice);
-                        return;
-                    }
-                    m_handler.m_mJoinedDevices.put(sFromDevice, System.currentTimeMillis());
-                    if ( bIsResponseToOtherJoin == false ) {
-                        // let new joiner know we joined in the past
-                        m_handler.publish(m_handler.m_joinerLeaverTopic, MQTTHandler.JoinerLeaver.join  + "(" + m_handler.m_thisDeviceId + "," + true + ")");
+                    if ( sFromDevice.equals(m_handler.m_thisDeviceId) ) { return; }
+                    if ( m_handler.m_context.updateJoinedDevices(sFromDevice, true) ) {
+                        if ( bIsResponseToOtherJoin == false ) {
+                            // let new joiner know we joined in the past
+                            m_handler.publish(m_handler.m_joinerLeaverTopic, MQTTHandler.JoinerLeaver.join  + "(" + m_handler.m_thisDeviceId + "," + true + ")");
+                        }
                     }
                 } else if ( sPayload.startsWith(MQTTHandler.JoinerLeaver.leave.toString()) ) {
-                    m_handler.m_mJoinedDevices.remove(sFromDevice);
+                    m_handler.m_context.updateJoinedDevices(sFromDevice, false);
                 }
-                Log.i(TAG, "I now know about " + m_handler.m_mJoinedDevices);
                 return;
             }
 
@@ -103,6 +99,7 @@ public class ClientCallback implements MqttCallback
             m_handler.m_context.interpretReceivedMessageOnUiThread(sPayload, MessageSource.MQTT);
         }
     }
+
 
     @Override public void connectionLost(Throwable cause) {
         if ( cause == null ) {
