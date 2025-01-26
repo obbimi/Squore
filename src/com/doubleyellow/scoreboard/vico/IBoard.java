@@ -1312,7 +1312,7 @@ public class IBoard implements TimerViewContainer
             vIcon.setVisibility(visibility);
             return true;
         } else {
-            Log.w(TAG, "No powerplay view found ...");
+            //Log.w(TAG, "No powerplay view found ...");
             return false;
         }
     }

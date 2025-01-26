@@ -70,15 +70,15 @@ public class MQTTHandler
 {
     private static final String TAG = "SB." + MQTTHandler.class.getSimpleName();
     private static final int MQTT_QOS = 0;
-    private final MqttAndroidClient mqttClient;
-    private final IMqttActionListener defaultCbPublish     ;
-    private final IMqttActionListener defaultCbDisconnect  ;
-    private final IMqttActionListener defaultCbUnSubscribe ;
-    private final ConnectCallback     connectCallback      ;
-    private final SubscribeCallback   defaultSubscribe     ;
+    private final MqttAndroidClient  mqttClient          ;
+    private final MQTTActionListener defaultCbPublish    ;
+    private final MQTTActionListener defaultCbDisconnect ;
+    private final MQTTActionListener defaultCbUnSubscribe;
+    private final ConnectCallback    connectCallback     ;
+    private final SubscribeCallback  defaultSubscribe    ;
                   ScoreBoard m_context    = null;
                   IBoard     m_iBoard     = null;
-                  String     m_sBrokerUrl = null;
+            final String     m_sBrokerUrl;
 
             final String     m_joinerLeaverTopic;
             final String     m_thisDeviceId;
@@ -87,6 +87,15 @@ public class MQTTHandler
         join,
         thanksForJoining,
         leave
+    }
+
+    public void reinit(ScoreBoard context, IBoard iBoard) {
+        m_context = context;
+        m_iBoard = iBoard;
+
+        defaultCbPublish    .reinit(context);
+        defaultCbDisconnect .reinit(context);
+        defaultCbUnSubscribe.reinit(context);
     }
 
     public MQTTHandler(ScoreBoard context, IBoard iBoard, String serverURI) {
@@ -155,7 +164,7 @@ public class MQTTHandler
                 // listen for changes on
                 subscribe(mqttSubScribeToOtherTopic, null);
             } else {
-                m_context.showInfoMessageOnUiThread(String.format("MQTT Connected to %s OK", m_sBrokerUrl), 10);
+                m_context.showInfoMessageOnUiThread(m_context.getString(R.string.sb_MQTT_Connected_to_x, m_sBrokerUrl), 10);
             }
             if ( m_context.m_liveScoreShare ) {
                 publishMatchOnMQTT(ScoreBoard.getMatchModel(), false, null);
@@ -170,7 +179,7 @@ public class MQTTHandler
             }
             Log.w(TAG, "onFailure " + sException + " " + this.toString());
 
-            String sMsg = String.format("ERROR: MQTT Connection to %s failed: %s", m_sBrokerUrl, sException);
+            String sMsg = m_context.getString(R.string.sb_MQTT_Connection_to_x_failed_y, m_sBrokerUrl, sException);
             stop();
 
             if ( m_iReconnectAttempts < 10 ) {
@@ -180,7 +189,7 @@ public class MQTTHandler
             } else {
                 m_context.stopMQTT();
                 m_context.updateMQTTConnectionStatusIconOnUiThread(View.INVISIBLE, -1);
-                m_context.showInfoMessageOnUiThread("Turned off MQTT after to many failed reconnect attempts", 10);
+                m_context.showInfoMessageOnUiThread(m_context.getString(R.string.sb_MQTT_TurnedOff_ToManyFailedReconnectAttempts), 10);
             }
         }
 
@@ -203,18 +212,6 @@ public class MQTTHandler
 
             mqttClient.disconnect(m_thisDeviceId, defaultCbDisconnect); // throws nullpointer exception ?
         }
-/*
-        try {
-            mqttClient.unregisterResources();
-        } catch (Exception e) {
-            //throw new RuntimeException(e);
-        }
-        try {
-            mqttClient.disconnectForcibly();
-        } catch (MqttException e) {
-            //throw new RuntimeException(e);
-        }
-*/
     }
 
     public boolean isConnected() {
@@ -376,7 +373,7 @@ public class MQTTHandler
 
         @Override public void onSuccess(IMqttToken token) {
             String[] topics = token.getTopics();
-            String sMsg = String.format("MQTT Subscribed to %s on %s", shorten(topics), m_sBrokerUrl);
+            String sMsg = m_context.getString(R.string.sb_MQTT_Subscribed_to_x, shorten(topics));
             m_context.showInfoMessageOnUiThread(sMsg, 10);
             m_context.updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 1);
             for (int i = 0; i < topics.length; i++) {
@@ -390,7 +387,7 @@ public class MQTTHandler
         }
 
         @Override public void onFailure(IMqttToken token, Throwable exception) {
-            String sMsg = String.format("ERROR: MQTT Subscribed to %s on %s failed with %s", shorten(token.getTopics()), m_sBrokerUrl, exception.toString());
+            String sMsg = m_context.getString(R.string.sb_MQTT_Subscription_to_x_failed_y, shorten(token.getTopics()), exception.toString());
             MyDialogBuilder.dialogWithOkOnly(m_context, m_context.getString(R.string.pref_Category_MQTT) , sMsg, true);
         }
     }
@@ -402,4 +399,3 @@ public class MQTTHandler
         return Arrays.toString(sa).replaceAll("[\\[\\]]", "").replaceAll("double-yellow/" + Brand.getShortName(m_context), "");
     }
 }
-

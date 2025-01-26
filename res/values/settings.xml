@@ -68,6 +68,12 @@
     <string name="sb_MQTTSelectBroker">Select broker</string>
     <string name="sb_MQTTSelectOtherDeviceId">Select other device id</string>
     <string name="sb_ThisDeviceId">This Device Unique Id</string>
+    <string name="sb_MQTT_NoJoinedDevicesYet">No joined devices detected yet</string>
+    <string name="sb_MQTT_TurnedOff_ToManyFailedReconnectAttempts">Turned off MQTT after to many failed reconnect attempts</string>
+    <string name="sb_MQTT_Connected_to_x">MQTT Connected to %1$s</string>
+    <string name="sb_MQTT_Connection_to_x_failed_y">ERROR: MQTT Connection to %1$s failed: %2$s</string>
+    <string name="sb_MQTT_Subscription_to_x_failed_y">ERROR: MQTT Subscription to %1$s failed: %2$s</string>
+    <string name="sb_MQTT_Subscribed_to_x">MQTT Subscribed to %1$s</string>
 
     <string name="pref_feedFeedsURL">feedFeedsURL</string>
     <string name="pref_feedFeedsURL_summary">For developers only</string>

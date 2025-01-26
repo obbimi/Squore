@@ -33,6 +33,11 @@ class MQTTActionListener implements IMqttActionListener {
         m_context    = scoreBoard;
         m_sBrokerUrl = sBroker;
     }
+
+    void reinit(ScoreBoard scoreBoard) {
+        m_context = scoreBoard;
+    }
+
     @Override public void onSuccess(IMqttToken token) {
         //m_iBoard.showInfoMessage("MQTT " + sPurpose, 2); // to much
         //m_context.updateMQTTConnectionStatusIcon(View.VISIBLE, m_sPurpose.equalsIgnoreCase("Disconnect")?0:1);

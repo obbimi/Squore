@@ -429,7 +429,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         // Handle the splash screen transition.
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         splashScreen.setOnExitAnimationListener(splashScreenViewProvider -> {
-            Log.w(TAG, "setOnExitAnimationListener");
+            //Log.w(TAG, "setOnExitAnimationListener");
             splashScreenViewProvider.remove();
         });
         super.onCreate(savedInstanceState);
@@ -1613,7 +1613,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
      **/
     @Override protected void onStop() {
         onActivityStop_Cast();
-        stopMQTT();
+        //stopMQTT();
         super.onStop();
         persist(false);
         createNotificationTimer();
@@ -1627,7 +1627,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         ArchiveTabbed.persist(this);
       //cleanup_Speak();
         stopBlueTooth();
-        stopMQTT();
+        //stopMQTT();
 
         PusherHandler.getInstance().cleanup();
 
@@ -3593,6 +3593,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 persist(true);
                 turnOffBlueToothIfTurnedOnByApp();
                 cleanup_Speak();
+                stopMQTT();
                 System.exit(0);
                 return true;
             } else if (id == android.R.id.home) {
@@ -4432,6 +4433,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     //setModelForCast(matchModel);
 
                     sendMatchToOtherBluetoothDevice(true, 500);
+                    if ( isMQTTMirrorMaster() ) {
+                        publishMatchOnMQTT( true, null);
+                    }
                 }
             }
             {
@@ -5643,7 +5647,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         boolean bInitBLE = PreferenceValues.useBluetoothLE(this);
         if ( bInitBLE == false ) {
-            Log.i(sMethod, "Don't use BLE. Period");
+            //Log.i(sMethod, "Don't use BLE. Period");
             return;
         }
         if ( m_bBLEDevicesSelected == false ) {
@@ -5869,7 +5873,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         // first send endgame (because 'startNewGame' may stop a possible timer to be started)
         boolean bIsBtMaster   = BTRole.Master.equals(m_blueToothRole);
-        boolean bIsMqttMaster = m_MQTTHandler != null && BTRole.Master.equals(m_MQTTHandler.getRole());
+        boolean bIsMqttMaster = isMQTTMirrorMaster();
         if ( bIsBtMaster || bIsMqttMaster ) {
             writeMethodToBluetooth(BTMethods.endGame);
         }
@@ -5878,6 +5882,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         return true;
     }
+
 
     /** Invoked from Appeal dialog */
     public void recordAppealAndCall(Player appealingPlayer, Call call) {
@@ -6727,7 +6732,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             String requestingMatchOfDeviceWithId = saMethodNArgs[1];
                             if ( requestingMatchOfDeviceWithId.equalsIgnoreCase("*") ) {
                                 publishMatchOnMQTT( false, null);
-                            } else if ( requestingMatchOfDeviceWithId.equalsIgnoreCase(PreferenceValues.getFCMDeviceId(this)) ) {
+                            } else if ( requestingMatchOfDeviceWithId.equalsIgnoreCase(PreferenceValues.getLiveScoreDeviceId(this)) ) {
                                 publishMatchOnMQTT( true, null);
                             }
                         }
@@ -6891,10 +6896,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
                             if ( sModelScore.equals(sScoreReceived) == false ) {
                                 Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
-                                publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, PreferenceValues.getMQTTOtherDeviceId(this));
+                                publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, PreferenceValues.getMQTTOtherDeviceId(this), sModelScore);
                             } else if ( sModelScore.matches("[0-1]-[0-1]") ) { // best of x to y: increase to y+1 on slave
                                 // at start of new game always re-request entire model
-                                publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, PreferenceValues.getMQTTOtherDeviceId(this));
+                                //publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, PreferenceValues.getMQTTOtherDeviceId(this));
                             }
                             //hidePresentationEndOfGame();
                         }
@@ -7465,7 +7470,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ----------------------------------------------------
     // --- MQTT                                       -----
     // ----------------------------------------------------
-    public MQTTHandler m_MQTTHandler = null;
+    public static MQTTHandler m_MQTTHandler = null;
     public void onResumeMQTT() {
         if ( cdtReconnect != null ) {
             cdtReconnect.cancel();
@@ -7482,31 +7487,33 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         if ( m_MQTTHandler == null ) {
             m_MQTTHandler = new MQTTHandler(this, iBoard, sBrokerUrl);
-            TextView tvMqttInfo = findViewById(R.id.sb_mqtt_connection_info);
-            if ( tvMqttInfo != null ) {
-                if ( tvMqttInfo.hasOnClickListeners() == false ) {
-                    tvMqttInfo.setOnClickListener(v -> {
-                        if ( m_MQTTHandler != null /*&& m_MQTTHandler.isConnected()*/ ) {
-                            stopMQTT();
-                        } else {
-                            onResumeMQTT();
-                        }
-                    });
-                    tvMqttInfo.setOnLongClickListener(v -> {
-                        stopMQTT();
-                        PreferenceValues.setBoolean(PreferenceKeys.UseMQTT, this, false);
-                        v.setVisibility(View.INVISIBLE);
-                        return true;
-                    });
-                }
-            }
+        } else {
+            m_MQTTHandler.reinit(this, iBoard);
         }
         if ( m_MQTTHandler.isConnected() ) {
             updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 1);
-            return;
+        } else {
+            showInfoMessageOnUiThread(String.format("MQTT Connecting to %s ...", sBrokerUrl), 10);
+            m_MQTTHandler.connect("", ""); // TODO: work with broker that requires to provide credentials
         }
-        showInfoMessageOnUiThread(String.format("MQTT Connecting to %s ...", sBrokerUrl), 10);
-        m_MQTTHandler.connect("", ""); // TODO: work with broker that requires to provide credentials
+        TextView tvMqttInfo = findViewById(R.id.sb_mqtt_connection_info);
+        if ( tvMqttInfo != null ) {
+            if ( tvMqttInfo.hasOnClickListeners() == false ) {
+                tvMqttInfo.setOnClickListener(v -> {
+                    if ( m_MQTTHandler != null /*&& m_MQTTHandler.isConnected()*/ ) {
+                        stopMQTT();
+                    } else {
+                        onResumeMQTT();
+                    }
+                });
+                tvMqttInfo.setOnLongClickListener(v -> {
+                    stopMQTT();
+                    PreferenceValues.setBoolean(PreferenceKeys.UseMQTT, this, false);
+                    v.setVisibility(View.INVISIBLE);
+                    return true;
+                });
+            }
+        }
     }
 
     public boolean doDelayedMQTTReconnect(String sMsg, int iReconnectInSeconds, int iReconnectAttempt) {
@@ -7600,6 +7607,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
         }
         return bChanged;
+    }
+    private boolean isMQTTMirrorMaster() {
+        return m_MQTTHandler != null && BTRole.Master.equals(m_MQTTHandler.getRole());
     }
 
 

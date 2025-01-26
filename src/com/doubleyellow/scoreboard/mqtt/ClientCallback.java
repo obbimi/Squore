@@ -52,7 +52,7 @@ public class ClientCallback implements MqttCallback
         String msg = String.format("MQTT Received: %s [%s]", message.toString(), topic );
         //Log.d(TAG, msg);
 
-        if ( topic.endsWith(PreferenceValues.getFCMDeviceId(m_handler.m_context)) ) {
+        if ( topic.endsWith(PreferenceValues.getLiveScoreDeviceId(m_handler.m_context)) ) {
             // show but ignore for further processing, messages published by this device itself
             m_handler.m_context.showInfoMessageOnUiThread(msg, 1);
         } else {

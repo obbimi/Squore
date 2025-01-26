@@ -67,6 +67,7 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
                 .setMessage(R.string.bt_select_device_for_scoreboard_mirroring)
                 .setPositiveButton(android.R.string.ok, listener)
                 .setNeutralButton(android.R.string.cancel, listener)
+                .setNegativeButton(R.string.lbl_none, listener)
         ;
 
         // the checkboxes
@@ -142,7 +143,7 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
         String sCheckedDevice = null;
         if ( ListUtil.isEmpty(lPairedDevicesChecked) ) {
             // improve: show message now devices yet
-            lPairedDevicesChecked.add("No joined devices detected yet");
+            lPairedDevicesChecked.add(getString(R.string.sb_MQTT_NoJoinedDevicesYet));
         } else {
             sCheckedDevice = lPairedDevicesChecked.iterator().next();
             if ( StringUtil.isNotEmpty(sPreviouslyConnected) ) {
@@ -160,6 +161,7 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
             lPairedDevicesChecked.add(sPreviouslyConnected);
             sCheckedDevice = sPreviouslyConnected;
         }
+        lPairedDevicesChecked.add(getString(R.string.lbl_none));
 
         List<String> l = new ArrayList<>(lPairedDevicesChecked);
         sovDevices = new SelectObjectView<>(context, l, sCheckedDevice);
@@ -181,14 +183,23 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
                 //    PreferenceValues.setBoolean(PreferenceKeys.BTSync_keepLROnConnectedDeviceMirrored, context, cbLRMirror.isChecked());
                 //}
                 String sOtherDeviceChecked = sovDevices.getChecked();
-                if ( sOtherDeviceChecked != null && sOtherDeviceChecked.matches("[A-Z0-9]{6,8}") ) {
+                if ( sOtherDeviceChecked != null && sOtherDeviceChecked.matches("[A-Z0-9]{6,8}") && (sOtherDeviceChecked.equals(getString(R.string.lbl_none)) == false) ) {
                     PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, sOtherDeviceChecked);
+                } else {
+                    PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, "");
                 }
                 scoreBoard.stopMQTT();
                 scoreBoard.doDelayedMQTTReconnect("", 1, 1);
 
                 break;
             case DialogInterface.BUTTON_NEUTRAL:
+                break;
+            case DialogInterface.BUTTON_NEGATIVE:
+                PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, "");
+
+                scoreBoard.stopMQTT();
+                scoreBoard.doDelayedMQTTReconnect("", 1, 1);
+
                 break;
         }
 
