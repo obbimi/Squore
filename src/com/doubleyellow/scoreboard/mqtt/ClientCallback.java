@@ -27,6 +27,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class ClientCallback implements MqttCallback
 
     @Override public void messageArrived(String topic, MqttMessage message) throws Exception {
         String msg = String.format("MQTT Received: %s [%s]", message.toString(), topic );
-        Log.d(TAG, msg);
+        //Log.d(TAG, msg);
 
         if ( topic.endsWith(PreferenceValues.getFCMDeviceId(m_handler.m_context)) ) {
             // show but ignore for further processing, messages published by this device itself
@@ -71,18 +72,15 @@ public class ClientCallback implements MqttCallback
             }
             if ( topic.endsWith(MQTTHandler.JoinerLeaver.class.getSimpleName()) ) {
                 String[] saMethodNArgs = sPayload.trim().split("[\\(\\),]");
+                String sMethod     = saMethodNArgs[0];
                 String sFromDevice = saMethodNArgs[1];
-                boolean bIsResponseToOtherJoin = false;
-                if (saMethodNArgs.length==3 ) {
-                    bIsResponseToOtherJoin = Boolean.parseBoolean(saMethodNArgs[2]);
-                }
 
-                if ( sPayload.startsWith(MQTTHandler.JoinerLeaver.join.toString() ) ) {
+                if ( sMethod.matches("(" + MQTTHandler.JoinerLeaver.join + "|" + MQTTHandler.JoinerLeaver.thanksForJoining +")" ) ) {
                     if ( sFromDevice.equals(m_handler.m_thisDeviceId) ) { return; }
                     if ( m_handler.m_context.updateJoinedDevices(sFromDevice, true) ) {
-                        if ( bIsResponseToOtherJoin == false ) {
+                        if ( sMethod.equals(MQTTHandler.JoinerLeaver.join.toString() ) ) {
                             // let new joiner know we joined in the past
-                            m_handler.publish(m_handler.m_joinerLeaverTopic, MQTTHandler.JoinerLeaver.join  + "(" + m_handler.m_thisDeviceId + "," + true + ")");
+                            m_handler.publish(m_handler.m_joinerLeaverTopic, MQTTHandler.JoinerLeaver.thanksForJoining  + "(" + m_handler.m_thisDeviceId + ")", false);
                         }
                     }
                 } else if ( sPayload.startsWith(MQTTHandler.JoinerLeaver.leave.toString()) ) {
@@ -105,11 +103,13 @@ public class ClientCallback implements MqttCallback
         if ( cause == null ) {
             // on simple rotate of the device, we handle reconnect in lifecycle methods of main activity
         } else {
-            // e.g. java.io.EOFException if Broker actually went down, java.netSocketException if wifi turned off
+            // e.g.
+            // java.io.EOFException    if Broker actually went down
+            // java.netSocketException if wifi turned off
             if ( cause.getCause() != null ) {
                 cause = cause.getCause();
             }
-            m_handler.m_context.doDelayedMQTTReconnect(String.format("W: MQTT tcp to broker %s lost: %s.", m_handler.m_sBrokerUrl, cause), 10);
+            m_handler.m_context.doDelayedMQTTReconnect(String.format("W: MQTT tcp to broker %s lost: %s.", m_handler.m_sBrokerUrl, cause), 10, 1);
         }
     }
     @Override public void deliveryComplete(IMqttDeliveryToken token) {

@@ -67,7 +67,6 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
                 .setMessage(R.string.bt_select_device_for_scoreboard_mirroring)
                 .setPositiveButton(android.R.string.ok, listener)
                 .setNeutralButton(android.R.string.cancel, listener)
-        //.setNegativeButton(R.string.refresh       , listener)
         ;
 
         // the checkboxes
@@ -123,7 +122,7 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
         sovBrokers.setOnCheckedChangeListener((group, checkedId) -> {
             scoreBoard.stopMQTT();
             PreferenceValues.setString(PreferenceKeys.MQTTBrokerURL, context, sovBrokers.getChecked());
-            scoreBoard.doDelayedMQTTReconnect("", 1);
+            scoreBoard.doDelayedMQTTReconnect("", 1, 1);
         });
         ll.addView(getTextView(R.string.sb_MQTTSelectBroker));
         ll.addView(sovBrokers);
@@ -186,16 +185,10 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
                     PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, sOtherDeviceChecked);
                 }
                 scoreBoard.stopMQTT();
-                scoreBoard.doDelayedMQTTReconnect("", 1);
+                scoreBoard.doDelayedMQTTReconnect("", 1, 1);
 
                 break;
             case DialogInterface.BUTTON_NEUTRAL:
-                break;
-            case DialogInterface.BUTTON_NEGATIVE:
-                // refresh
-                sovDevices = refreshSelectList(scoreBoard.getJoinedDevices());
-                if (sovDevices == null) return;
-                // TODO:
                 break;
         }
 

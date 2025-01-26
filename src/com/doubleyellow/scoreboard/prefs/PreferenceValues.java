@@ -107,13 +107,15 @@ public class PreferenceValues extends RWValues
     //public static final String removeSeedingRegExp = "[\\[\\]0-9/]+$";
     private static boolean m_restartRequired = false;
     static void setRestartRequired(Context ctx) {
+/*
         if ( m_restartRequired == false ) {
             Toast.makeText(ctx, R.string.for_this_to_take_effect_a_restart_is_required, Toast.LENGTH_SHORT).show();
         }
+*/
         m_restartRequired = true;
     }
     public static boolean isRestartRequired() {
-        boolean bReturn = false && m_restartRequired;
+        boolean bReturn = m_restartRequired;
         m_restartRequired = false;
         return bReturn;
     }

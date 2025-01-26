@@ -19,6 +19,8 @@ package com.doubleyellow.scoreboard.mqtt;
 import android.view.View;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.bluetooth.BTMethods;
@@ -35,13 +37,15 @@ import com.doubleyellow.util.StringUtil;
 //import org.eclipse.paho.android.service.MqttAndroidClient;
 import info.mqtt.android.service.Ack;
 import info.mqtt.android.service.MqttAndroidClient;
+import info.mqtt.android.service.MqttTraceHandler;
+
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.LinkedHashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -70,60 +74,86 @@ public class MQTTHandler
     private final IMqttActionListener defaultCbPublish     ;
     private final IMqttActionListener defaultCbDisconnect  ;
     private final IMqttActionListener defaultCbUnSubscribe ;
-    private final IMqttActionListener defaultSubscribe     ;
+    private final ConnectCallback     connectCallback      ;
+    private final SubscribeCallback   defaultSubscribe     ;
                   ScoreBoard m_context    = null;
                   IBoard     m_iBoard     = null;
                   String     m_sBrokerUrl = null;
+
             final String     m_joinerLeaverTopic;
             final String     m_thisDeviceId;
 
     enum JoinerLeaver {
         join,
+        thanksForJoining,
         leave
     }
 
-    public MQTTHandler(ScoreBoard context, IBoard iBoard, String serverURI, String clientID) {
+    public MQTTHandler(ScoreBoard context, IBoard iBoard, String serverURI) {
         m_context    = context;
         m_iBoard     = iBoard;
         m_sBrokerUrl = serverURI;
 
-        m_thisDeviceId      = PreferenceValues.getLiveScoreDeviceId(context);
+        m_thisDeviceId  = PreferenceValues.getLiveScoreDeviceId(context);
+
+        String clientID = /*Brand.getShortName(context) + "." +*/ m_thisDeviceId;
         m_joinerLeaverTopic = doMQTTTopicTranslation(PreferenceValues.getMQTTJoinerLeaverTopicPrefix(context) + "/" + JoinerLeaver.class.getSimpleName(), null) ;
 
         //mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK, null, true, 1); // version 4.3 of https://github.com/hannesa2/paho.mqtt.android
         //mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK); // uses MqttDefaultFilePersistence and seems to throw MqttPersistenceException
         mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK, new MemoryPersistence(), true, 1);
 
+        mqttClient.setTraceCallback(new MqttTraceHandler() {
+            @Override public void traceDebug(@Nullable String s) {
+                Log.d("MqttTraceHandler", s);
+            }
+
+            @Override public void traceError(@Nullable String s) {
+                Log.e("MqttTraceHandler", s);
+            }
+
+            @Override public void traceException(@Nullable String s, @Nullable Exception e) {
+                Log.e("MqttTraceHandler", s, e);
+            }
+        });
+        mqttClient.setTraceEnabled(true);
+
         defaultCbPublish     = new MQTTActionListener("Publish"    , context, m_sBrokerUrl);
         defaultCbDisconnect  = new MQTTActionListener("Disconnect" , context, m_sBrokerUrl);
         defaultCbUnSubscribe = new MQTTActionListener("UnSubscribe", context, m_sBrokerUrl);
         defaultSubscribe     = new SubscribeCallback();
+        connectCallback      = new ConnectCallback();
     }
 
     private class ConnectCallback implements IMqttActionListener {
+        private int m_iReconnectAttempts = 0;
         @Override public void onSuccess(IMqttToken token) {
             // start listening for published messages
+            m_iReconnectAttempts = 0;
             ClientCallback callback = ClientCallback.getInstance(MQTTHandler.this);
             mqttClient.setCallback(callback);
+            Log.d(TAG, "Connected");
 
             m_context.updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 1);
+            Log.d(TAG, "Connected made visible to user in icon");
 
-            if  ( StringUtil.isNotEmpty(m_joinerLeaverTopic) ) {
-                subscribe(m_joinerLeaverTopic);
-                publish(m_joinerLeaverTopic, JoinerLeaver.join  + "(" + m_thisDeviceId + "," + false + ")");
+            if ( StringUtil.isNotEmpty(m_joinerLeaverTopic) ) {
+                subscribe(m_joinerLeaverTopic, JoinerLeaver.join  + "(" + m_thisDeviceId + ")");
+                Log.d(TAG, "Subscribing to " + m_joinerLeaverTopic);
+                //publish(m_joinerLeaverTopic, JoinerLeaver.join  + "(" + m_thisDeviceId + ")");
             }
 
             // listen for 'clients' to request the complete json of a match specifically of this device
             final String mqttRespondToTopic = getMQTTSubscribeTopicChange(BTMethods.requestCompleteJsonOfMatch.toString());
-            if  ( StringUtil.isNotEmpty(mqttRespondToTopic) ) {
-                subscribe(mqttRespondToTopic);
+            if ( StringUtil.isNotEmpty(mqttRespondToTopic) ) {
+                subscribe(mqttRespondToTopic, null);
             }
 
             final String mqttSubScribeToOtherTopic = getMQTTSubscribeTopicChange(null);
             if ( StringUtil.isNotEmpty(mqttSubScribeToOtherTopic) ) {
 
                 // listen for changes on
-                subscribe(mqttSubScribeToOtherTopic);
+                subscribe(mqttSubScribeToOtherTopic, null);
             } else {
                 m_context.showInfoMessageOnUiThread(String.format("MQTT Connected to %s OK", m_sBrokerUrl), 10);
             }
@@ -138,11 +168,20 @@ public class MQTTHandler
                 sException = exception.getClass().getSimpleName(); // e.g. MqttPersistenceException
                 exception.printStackTrace();
             }
+            Log.w(TAG, "onFailure " + sException + " " + this.toString());
+
             String sMsg = String.format("ERROR: MQTT Connection to %s failed: %s", m_sBrokerUrl, sException);
             stop();
 
-            m_context.doDelayedMQTTReconnect(sMsg,11);
-            //iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 0);
+            if ( m_iReconnectAttempts < 10 ) {
+                if ( m_context.doDelayedMQTTReconnect(sMsg,11, m_iReconnectAttempts)  ) {
+                    m_iReconnectAttempts++;
+                };
+            } else {
+                m_context.stopMQTT();
+                m_context.updateMQTTConnectionStatusIconOnUiThread(View.INVISIBLE, -1);
+                m_context.showInfoMessageOnUiThread("Turned off MQTT after to many failed reconnect attempts", 10);
+            }
         }
 
     }
@@ -153,17 +192,29 @@ public class MQTTHandler
         options.setConnectionTimeout(5);
         //options.setExecutorServiceTimeout(6000);
         // TODO: finetune ?
-        mqttClient.connect(options, null, new ConnectCallback());
+        mqttClient.connect(options, m_thisDeviceId, connectCallback);
     }
 
     public void stop() {
         m_context.updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 0);
         if ( isConnected() ) {
-            publish(m_joinerLeaverTopic, JoinerLeaver.leave + "(" + m_thisDeviceId + ")");
-            unsubscribe("#");
+            publish(m_joinerLeaverTopic, JoinerLeaver.leave + "(" + m_thisDeviceId + ")", false);
+            //unsubscribe("#");
 
-            mqttClient.disconnect(null, defaultCbDisconnect); // throw nullpointer exception ?
+            mqttClient.disconnect(m_thisDeviceId, defaultCbDisconnect); // throws nullpointer exception ?
         }
+/*
+        try {
+            mqttClient.unregisterResources();
+        } catch (Exception e) {
+            //throw new RuntimeException(e);
+        }
+        try {
+            mqttClient.disconnectForcibly();
+        } catch (MqttException e) {
+            //throw new RuntimeException(e);
+        }
+*/
     }
 
     public boolean isConnected() {
@@ -171,12 +222,14 @@ public class MQTTHandler
     }
 
     private final Map<String, Long> m_lSubscriptions = new TreeMap<>();
-    private void subscribe(String topic) {
+    private void subscribe(String topic, String sPublishOnSuccess) {
         if ( m_lSubscriptions.containsKey(topic) ) {
             Log.w(TAG, "already subscribed to " + shorten(topic));
             return;
         }
-        m_lSubscriptions.put(topic, System.currentTimeMillis());
+        if ( StringUtil.isNotEmpty(sPublishOnSuccess) ) {
+            defaultSubscribe.m_mOnSubscribeSuccessPublish.put(topic, sPublishOnSuccess);
+        }
         mqttClient.subscribe(topic, MQTT_QOS, null, defaultSubscribe);
     }
 
@@ -193,7 +246,7 @@ public class MQTTHandler
     }
 
 
-    public void publish(String topic, String msg) {
+    public void publish(String topic, String msg, boolean bRetain) {
         if ( topic == null ) {
             Log.w(TAG, "Topic can not be null");
             return;
@@ -201,7 +254,7 @@ public class MQTTHandler
         MqttMessage message = new MqttMessage();
         message.setPayload(msg.getBytes());
         message.setQos(MQTT_QOS);
-        message.setRetained(false);
+        message.setRetained(bRetain);
         mqttClient.publish(topic, message, null, defaultCbPublish);
     }
 
@@ -219,6 +272,10 @@ public class MQTTHandler
         }
         m_MQTTRole = role;
         m_context.showInfoMessageOnUiThread("MQTT role " + m_MQTTRole, 2);
+    }
+
+    public BTRole getRole() {
+        return m_MQTTRole;
     }
 
     private String getMQTTSubscribeTopicChange(String sMethod) {
@@ -258,7 +315,7 @@ public class MQTTHandler
         if ( bUseOtherDeviceId ) {
             changeTopic += MQTT_TOPIC_CONCAT_CHAR + method;
         }
-        publish(changeTopic, sMessage);
+        publish(changeTopic, sMessage, false);
     }
 
     public void publishMatchOnMQTT(Model matchModel, boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
@@ -273,7 +330,7 @@ public class MQTTHandler
             sJson = sJson.length() + ":" + sJson;
             matchTopic = getMQTTPublishTopicChange(false);
         }
-        publish(matchTopic, sJson);
+        publish(matchTopic, sJson, true);
     }
 
     private String getMQTTPublishTopicMatch() {
@@ -315,10 +372,21 @@ public class MQTTHandler
 
     private class SubscribeCallback implements IMqttActionListener
     {
+        Map<String,String> m_mOnSubscribeSuccessPublish = new HashMap<>();
+
         @Override public void onSuccess(IMqttToken token) {
-            String sMsg = String.format("MQTT Subscribed to %s on %s", shorten(token.getTopics()), m_sBrokerUrl);
+            String[] topics = token.getTopics();
+            String sMsg = String.format("MQTT Subscribed to %s on %s", shorten(topics), m_sBrokerUrl);
             m_context.showInfoMessageOnUiThread(sMsg, 10);
             m_context.updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 1);
+            for (int i = 0; i < topics.length; i++) {
+                String topic = topics[i];
+                m_lSubscriptions.put(topic, System.currentTimeMillis());
+                if ( m_mOnSubscribeSuccessPublish.containsKey(topic)) {
+                    String sPublishMsg = m_mOnSubscribeSuccessPublish.remove(topic);
+                    publish(topic, sPublishMsg, false);
+                }
+            }
         }
 
         @Override public void onFailure(IMqttToken token, Throwable exception) {

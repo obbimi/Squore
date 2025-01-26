@@ -682,7 +682,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( PreferenceValues.isRestartRequired() ) {
             persist(false);
             //System.exit(0); // todo in android 6 and 7, app does not restart automatically... i think it did in 5 (and 4)
-            //doRestart(this);
+            doRestart();
             return;
         }
         switch ( PreferenceValues.keepScreenOnWhen(this) ) {
@@ -1659,56 +1659,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     /** Does not seem to work so well if app started for debugging. But when started from home screen it seems to work fine (android 7) */
     private void doRestart() {
-        if ( false ) {
-            // Navigating From MainActivity to MainActivity.
-            // Navigate from this activity to the activity
-            // specified by upIntent,
-            // basically finishing this activity in the process.
-            // IH: seems to work for my Mi device (except the first time?)
-            navigateUpTo(new Intent(ScoreBoard.this, ScoreBoard.class));
-            startActivity(getIntent());
-        } else if ( true ) {
-            // after on CLick we are using finish to close and then just after that
-            // we are calling startActivity(getIntent()) to open our application
-            // IH: seems to work for my Mi device (except the first time?)
-            finish();
-            startActivity(getIntent());
-
-            // this basically provides animation
-/*
-            overridePendingTransition(0, 0);
-            long time = System.currentTimeMillis();
-
-            // Showing a toast message at the time when we are capturing screenshot
-            Toast.makeText(ScoreBoard.this, "Current time in millisecond after app restart" + time, Toast.LENGTH_SHORT).show();
-*/
-        } else {
-            doRestart(this);
-        }
-    }
-    /** @Deprecated */
-    private void doRestart(Context c) {
-        if (c == null) return;
-        // fetch the package-manager so we can get the default launch activity
-        // (you can replace this intent with any other activity if you want
-        PackageManager pm = c.getPackageManager();
-        //check if we got the PackageManager
-        if (pm == null) return;
-
-        //create the intent with the default start activity for your application
-        Intent mStartActivity = pm.getLaunchIntentForPackage(c.getPackageName());
-        if (mStartActivity == null) return;
-
-        mStartActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        // create a pending intent so the application is restarted after System.exit(0) was called.
-        // We use an AlarmManager to call this intent in 100ms
-        int mPendingIntentId = 223344;
-        PendingIntent mPendingIntent = PendingIntent.getActivity(c, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager mgr = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1500, mPendingIntent);
-        //kill the application
-        //System.exit(0); // on my Mi, android starts complaining app keeps crashing
-        finish(); // SAME: on my Mi, android starts complaining app keeps crashing
+        super.recreate();
     }
 
     // ----------------------------------------------------
@@ -2025,7 +1976,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 break;
             case Automatic:
                 //endGame(true); // skip bluetooth because 'changeScore' has not even been send if this method triggered by 'changeScore'
-                _endGame(false, false);
+                _endGame(false);
                 break;
         }
         return bShowDialog;
@@ -5833,8 +5784,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         try {
             unregisterReceiver(mBTStateChangeReceiver);
         } catch (Exception e) { //have seen java.lang.IllegalArgumentException: Receiver not registered:
-            Log.w(TAG, e.getMessage());
-            //e.printStackTrace();
+            //Log.w(TAG, e.getMessage());
         }
     }
     //----------------------------------------------------
@@ -5911,19 +5861,17 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         return bOK;
     }
     public boolean endGame(boolean bFromDialog) {
-        return _endGame(bFromDialog, false);
+        return _endGame(bFromDialog);
     }
-    private boolean _endGame(boolean bFromDialog, boolean bBTDelayed) {
+    private boolean _endGame(boolean bFromDialog) {
         if ( (bFromDialog == false) && warnModelIsLocked() ) { return false; }
         if ( matchModel == null ) { return false; }
 
         // first send endgame (because 'startNewGame' may stop a possible timer to be started)
-        if ( BTRole.Master.equals(m_blueToothRole) ) {
-            if ( bBTDelayed ) {
-                writeMethodToBluetoothDelayed(BTMethods.endGame);
-            } else {
-                writeMethodToBluetooth(BTMethods.endGame);
-            }
+        boolean bIsBtMaster   = BTRole.Master.equals(m_blueToothRole);
+        boolean bIsMqttMaster = m_MQTTHandler != null && BTRole.Master.equals(m_MQTTHandler.getRole());
+        if ( bIsBtMaster || bIsMqttMaster ) {
+            writeMethodToBluetooth(BTMethods.endGame);
         }
 
         matchModel.endGame();
@@ -7533,17 +7481,24 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             return;
         }
         if ( m_MQTTHandler == null ) {
-            String sDeviceId = Brand.getShortName(this) + "." + PreferenceValues.getFCMDeviceId(this);
-            m_MQTTHandler = new MQTTHandler(this, iBoard, sBrokerUrl, sDeviceId);
+            m_MQTTHandler = new MQTTHandler(this, iBoard, sBrokerUrl);
             TextView tvMqttInfo = findViewById(R.id.sb_mqtt_connection_info);
-            if ( tvMqttInfo != null && tvMqttInfo.hasOnClickListeners() == false ) {
-                tvMqttInfo.setOnClickListener(v -> {
-                    if ( m_MQTTHandler != null /*&& m_MQTTHandler.isConnected()*/ ) {
+            if ( tvMqttInfo != null ) {
+                if ( tvMqttInfo.hasOnClickListeners() == false ) {
+                    tvMqttInfo.setOnClickListener(v -> {
+                        if ( m_MQTTHandler != null /*&& m_MQTTHandler.isConnected()*/ ) {
+                            stopMQTT();
+                        } else {
+                            onResumeMQTT();
+                        }
+                    });
+                    tvMqttInfo.setOnLongClickListener(v -> {
                         stopMQTT();
-                    } else {
-                        onResumeMQTT();
-                    }
-                });
+                        PreferenceValues.setBoolean(PreferenceKeys.UseMQTT, this, false);
+                        v.setVisibility(View.INVISIBLE);
+                        return true;
+                    });
+                }
             }
         }
         if ( m_MQTTHandler.isConnected() ) {
@@ -7554,16 +7509,17 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         m_MQTTHandler.connect("", ""); // TODO: work with broker that requires to provide credentials
     }
 
-    public void doDelayedMQTTReconnect(String sMsg, int iReconnectInSeconds) {
-        showInfoMessageOnUiThread("(%1$d) " + sMsg + " Reconnecting in %1$d", iReconnectInSeconds);
-        // e.g. internet connection stopped working, or broker on local network stopped
-        stopMQTT();
+    public boolean doDelayedMQTTReconnect(String sMsg, int iReconnectInSeconds, int iReconnectAttempt) {
+        if ( cdtReconnect != null ) { return false; }
+        runOnUiThread(() -> {
+            showInfoMessageOnUiThread("(%1$d) " + sMsg + " Reconnecting in %1$d (# " + iReconnectAttempt + ")", iReconnectInSeconds);
+            // e.g. internet connection stopped working, or broker on local network stopped
+            stopMQTT();
 
-        try {
-            Looper.prepare();
-        } catch (Exception e) {}
-        cdtReconnect = new DelayedMQTTReconnect((long) iReconnectInSeconds * 1000);
-        cdtReconnect.start();
+            cdtReconnect = new DelayedMQTTReconnect((long) iReconnectInSeconds * 1000);
+            cdtReconnect.start();
+        });
+        return true;
     }
     private DelayedMQTTReconnect cdtReconnect = null;
     private class DelayedMQTTReconnect extends CountDownTimer {
@@ -7571,6 +7527,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             super(iMilliSeconds, 1000L);
         }
         @Override public void onFinish() {
+            cdtReconnect = null;
             onResumeMQTT();
         }
         @Override public void onTick(long millisUntilFinished) {
