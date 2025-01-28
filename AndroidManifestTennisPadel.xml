@@ -80,7 +80,7 @@
                    android:value="com.doubleyellow.scoreboard.cast.framework.CastOptionsProvider" />
 
         <!-- for in-app-purchases -->
-        <meta-data android:name="com.google.android.play.billingclient.version" android:value="6.1.0" />
+        <meta-data android:name="com.google.android.play.billingclient.version" android:value="7.0.0" />
 
         <!-- only for shared libraries, mine is not -->
         <!--<uses-library android:name="com.doubleyellow.android"/>-->
