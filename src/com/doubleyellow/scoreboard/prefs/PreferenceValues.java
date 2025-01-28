@@ -930,6 +930,9 @@ public class PreferenceValues extends RWValues
     public static int nrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired(Context context) {
         return getInteger(PreferenceKeys.NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired, context, R.integer.NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default);
     }
+    public static int IgnoreAccidentalDoublePress_ThresholdInMilliSeconds(Context context) {
+        return getInteger(PreferenceKeys.IgnoreAccidentalDoublePress_ThresholdInMilliSeconds, context, R.integer.IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_default);
+    }
 
     public static boolean useMQTT(Context context) {
         int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.UseMQTT_default__Default);
@@ -2087,7 +2090,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2025-01-12"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2025-01-29"; // auto adjusted by shell script 'clean.and.assemble.sh'
     public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) <= 0;
     }

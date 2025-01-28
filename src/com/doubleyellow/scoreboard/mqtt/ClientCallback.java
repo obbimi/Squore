@@ -113,6 +113,6 @@ public class ClientCallback implements MqttCallback
         }
     }
     @Override public void deliveryComplete(IMqttDeliveryToken token) {
-        Log.d(TAG, "Delivery complete " + token);
+        Log.d(TAG, "Delivery complete " + token + (token.getTopics()==null?null:Arrays.asList(token.getTopics())));
     }
 }

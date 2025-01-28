@@ -340,6 +340,7 @@ public enum PreferenceKeys {
         BluetoothLE_Config,
         NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired,
         ShowFeedBackOnBLEButtonsPressedInfoMessages,
+        IgnoreAccidentalDoublePress_ThresholdInMilliSeconds,
 
     UseMQTT,
         MQTTBrokerURL,

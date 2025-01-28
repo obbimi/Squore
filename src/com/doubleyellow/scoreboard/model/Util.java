@@ -49,7 +49,7 @@ public class Util {
 
     private static final String TAG = "SB." + Util.class.getSimpleName();
 
-    public static final String MY_DEVICE_MODEL = "GT-I9505,SM-G930F"; // samsung S4, samsung S7
+    public static final String MY_DEVICE_MODEL = "GT-I9505,SM-G930F,M2002J9G"; // samsung S4, samsung S7, huawai
 
     public static Player getWinner(Map<Player, Integer> scores) {
         if ( scores == null ) {
@@ -111,7 +111,9 @@ public class Util {
         String address = getMacAddr();
 
         if ( bIsMyDevice == null ) {
-            bIsMyDevice = MY_DEVICE_MODEL.contains(Build.MODEL) && ContentUtil.isAppInstalled(ctx, "com.doubleyellow") && "8C:F5:A3:F1:F1:96".equals(address);
+            boolean appInstalled = ContentUtil.isAppInstalled(ctx, "com.doubleyellow");
+            boolean bIsMacAddress = "8C:F5:A3:F1:F1:96".equals(address);
+            bIsMyDevice = MY_DEVICE_MODEL.contains(Build.MODEL) && appInstalled && bIsMacAddress;
         }
         return bIsMyDevice;
     }

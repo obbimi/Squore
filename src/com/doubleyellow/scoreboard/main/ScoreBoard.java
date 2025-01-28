@@ -472,7 +472,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
 
             int iRunCount = PreferenceValues.getRunCount(this, PreferenceKeys.OrientationPreference);
-            if ( iRunCount <= 1 ) {
+            if ( iRunCount <= 3 ) {
                 if ( Util.isMyDevice(this) ) {
                     RWValues.setStringIfCurrentlyNotSet(PreferenceKeys.refereeName, this, "Iddo H");
                 }
@@ -5408,37 +5408,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
     }
 
-    boolean clearBLEConfirmationStatus() {
-        if ( m_blePlayerWaitingForScoreToBeConfirmed != null || m_blePlayerToConfirmOwnScore != null ) {
-            stopWaitingForBLEConfirmation();
-            m_blePlayerWaitingForScoreToBeConfirmed = null;
-            m_blePlayerToConfirmOwnScore = null;
-            showInfoMessage(R.string.ble_score_cancelled_via_gui, 5);
-            return true;
-        }
-        return false;
-    }
-
-    public void stopWaitingForBLEConfirmation() {
-        for(Player p: Player.values() ) {
-            waitForBLEConfirmation(p, null, false);
-        }
-    }
-    public void startWaitingForBLEConfirmation(Player pScorer, Player pToConfirm) {
-        waitForBLEConfirmation(pScorer, pToConfirm, true);
-    }
-    private final PlayerFocusEffectCountDownTimerConfirm m_timerBLEConfirm = new PlayerFocusEffectCountDownTimerConfirm();
-    private void waitForBLEConfirmation(Player pScorer, Player pToConfirm, boolean bWaiting) {
-        ShowScoreChangeOn guiElementToUseForFocus = ShowScoreChangeOn.ScoreButton; // TODO: from options
-        if ( bWaiting ) {
-            int iNrOfSecs = PreferenceValues.nrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired(this);
-            m_timerBLEConfirm.start(guiElementToUseForFocus, pScorer, pToConfirm, iNrOfSecs);
-        } else {
-            iBoard.guiElementColorSwitch(guiElementToUseForFocus, pScorer, FocusEffect.BlinkByInverting, 0, 0);
-            iBoard.guiElementColorSwitch(guiElementToUseForFocus, pScorer, FocusEffect.SetTransparency, 0, 0);
-            m_timerBLEConfirm.myCancel();
-        }
-    }
     private void startVisualFeedbackForScoreChange(Player player, int iTmpTxtOnElementDuringFeedback) {
         ShowScoreChangeOn guiElementToUseForFocus = getShowScoreChangeOn(iTmpTxtOnElementDuringFeedback);
         if ( iTmpTxtOnElementDuringFeedback == 0 || (guiElementToUseForFocus.equals(ShowScoreChangeOn.ScoreButton) == false) ) {
@@ -5639,6 +5608,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     private static Player             m_blePlayerToConfirmOwnScore            = null;
     /** attempt to 'catch' accidental double press on connected BLE device */
     private static Map<Player, Long>  m_lastBLEScoreChangeReceivedFrom         = new HashMap<>();
+    private        long               m_lIgnoreAccidentalDoublePress_ThresholdMS = 2000;
 
     public void onResumeInitBluetoothBLE()
     {
@@ -5654,6 +5624,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             Log.i(sMethod, "Don't use BLE. First select devices");
             return;
         }
+        m_lIgnoreAccidentalDoublePress_ThresholdMS = PreferenceValues.IgnoreAccidentalDoublePress_ThresholdInMilliSeconds(this);
 
         if ( m_bleReceiverManager == null ) {
             String sBluetoothLEDevice1 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral1, null, this);
@@ -5690,6 +5661,38 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             m_bleReceiverManager.setHandler(bleHandler);
         }
         m_bleReceiverManager.startReceiving();
+    }
+
+    boolean clearBLEConfirmationStatus() {
+        if ( m_blePlayerWaitingForScoreToBeConfirmed != null || m_blePlayerToConfirmOwnScore != null ) {
+            stopWaitingForBLEConfirmation();
+            m_blePlayerWaitingForScoreToBeConfirmed = null;
+            m_blePlayerToConfirmOwnScore = null;
+            showInfoMessage(R.string.ble_score_cancelled_via_gui, 5);
+            return true;
+        }
+        return false;
+    }
+
+    public void stopWaitingForBLEConfirmation() {
+        for(Player p: Player.values() ) {
+            waitForBLEConfirmation(p, null, false);
+        }
+    }
+    public void startWaitingForBLEConfirmation(Player pScorer, Player pToConfirm) {
+        waitForBLEConfirmation(pScorer, pToConfirm, true);
+    }
+    private final PlayerFocusEffectCountDownTimerConfirm m_timerBLEConfirm = new PlayerFocusEffectCountDownTimerConfirm();
+    private void waitForBLEConfirmation(Player pScorer, Player pToConfirm, boolean bWaiting) {
+        ShowScoreChangeOn guiElementToUseForFocus = ShowScoreChangeOn.ScoreButton; // TODO: from options
+        if ( bWaiting ) {
+            int iNrOfSecs = PreferenceValues.nrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired(this);
+            m_timerBLEConfirm.start(guiElementToUseForFocus, pScorer, pToConfirm, iNrOfSecs);
+        } else {
+            iBoard.guiElementColorSwitch(guiElementToUseForFocus, pScorer, FocusEffect.BlinkByInverting, 0, 0);
+            iBoard.guiElementColorSwitch(guiElementToUseForFocus, pScorer, FocusEffect.SetTransparency, 0, 0);
+            m_timerBLEConfirm.myCancel();
+        }
     }
     // ----------------------------------------------------
     // --------------------- bluetooth --------------------
@@ -6614,13 +6617,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                 }
                             }
 
-                            {
+                            if ( m_lIgnoreAccidentalDoublePress_ThresholdMS > 0L ) {
                                 long lNow = System.currentTimeMillis();
-                                long lThreshold = 2000;
                                 if ( m_lastBLEScoreChangeReceivedFrom.containsKey(pInitiatedBy) ) {
                                     long lLastPress = m_lastBLEScoreChangeReceivedFrom.get(pInitiatedBy);
-                                    if ( lNow -  lLastPress < lThreshold ) {
-                                        String sInfoMsg = getBLEMessage(R.string.ble_score_for_X_changed_by_Y_ble_button_of_Z_ignored__assume_accidental_double_click, pScored, buttonPressed, pInitiatedBy, lThreshold);
+                                    if ( lNow -  lLastPress < m_lIgnoreAccidentalDoublePress_ThresholdMS ) {
+                                        String sInfoMsg = getBLEMessage(R.string.ble_score_for_X_changed_by_Y_ble_button_of_Z_ignored__assume_accidental_double_click, pScored, buttonPressed, pInitiatedBy, m_lIgnoreAccidentalDoublePress_ThresholdMS);
                                         if ( m_nrOfBLEDevicesConnected == 1 ) {
                                             // TODO
                                         }
@@ -7445,7 +7447,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     ComponentName componentName = this.startService(intent);
                 } else {
                     boolean bStopping = this.stopService(intent);
-                    Log.d(TAG, "Stopping service " + PusherMessagingService.class.getName() + " " + bStopping); // typically false on startup of app
+                    //Log.d(TAG, "Stopping service " + PusherMessagingService.class.getName() + " " + bStopping); // typically false on startup of app
                 }
             } catch (Exception e) {
                 Log.w(TAG, "Unable to start/stop service via 'start/stopService()");

@@ -196,7 +196,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
     }
     @Override public void initCastMenu(Activity activity, Menu menu) {
         MenuItem mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(activity.getApplicationContext(), menu, R.id.media_route_menu_item);
-        Log.d(TAG, String.format("initCastMenu: %s (visible: %s)", mediaRouteMenuItem, mediaRouteMenuItem.isVisible()));
+        //Log.d(TAG, String.format("initCastMenu: %s (visible: %s)", mediaRouteMenuItem, mediaRouteMenuItem.isVisible()));
 
         if ( false ) {
             // just testing some stuff

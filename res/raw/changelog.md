@@ -1,3 +1,13 @@
+## 4.55 (jan 2025)
+
+- first version with MQTT capabilities (experimental)
+  - Score mirroring can be achieved (similar functionality as Bluetooth-mirror)
+  - 'Local' live score on a LAN when running a local mqtt broker 
+- improvements in mirroring
+  - Bug fixes in Bluetooth-mirroring
+  - Allow the 'slave' device of a mirrored pair to have a 'presentation' layout when in landscape orientation
+    - showing complete score more pleasing to the eye   
+ 
 ## 4.54 (march 2024)
 
 - allow specifying different layout for landscape display

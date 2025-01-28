@@ -71,6 +71,14 @@
                 android:inputType="number"
                 android:defaultValue="@integer/NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default"
                 />
+            <EditTextPreference
+                android:icon="@drawable/dummy"
+                android:key="IgnoreAccidentalDoublePress_ThresholdInMilliSeconds"
+                android:title="@string/pref_IgnoreAccidentalDoublePress_ThresholdInMilliSeconds"
+                android:summary="@string/pref_IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_default"
+                />
             <CheckBoxPreference android:key="blinkFeedbackPerPoint"
                 android:title="@string/pref_blinkFeedbackPerPoint"
                 android:icon="@drawable/dummy"

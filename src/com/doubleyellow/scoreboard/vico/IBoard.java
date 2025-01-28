@@ -1322,7 +1322,7 @@ public class IBoard implements TimerViewContainer
         if ( vIcon != null ) {
             vIcon.setVisibility(visibility);
         } else {
-            Log.w(TAG, "No bluetooticon view found ...");
+            Log.w(TAG, "No sb_bluetooth_icon view found ..."  + context.getResources().getResourceName(m_vRoot.getId()));
         }
     }
 

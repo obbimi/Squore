@@ -438,6 +438,8 @@
     <string name="pref_ShowFeedBackOnBLEButtonsPressedInfoMessages_summary">Show small messages about buttons being pressed/to be pressed at bottom of the screen</string>
     <string name="pref_NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired">Seconds before notifying BLE Device</string>
     <string name="pref_NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_summary">Number of seconds before a signal is send to the ble device of the player/team to confirm score (making the device vibrate shortly). Only when scoring with one BLE devices per player/team with \'Score confirmation\'</string>
+    <string name="pref_IgnoreAccidentalDoublePress_ThresholdInMilliSeconds">Ignore accidental double press click threshold</string>
+    <string name="pref_IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_summary">If a second BLE device click is received from the same button within this number of milliseconds, the second signal will be ignored</string>
     <string name="pref_BluetoothLE_Peripheral1">Peripheral 1</string>
     <string name="pref_BluetoothLE_Peripheral2">Peripheral 2</string>
     <string name="pref_BluetoothLE_Peripheral_Summary">Unique name or MAC address of Peripheral</string>

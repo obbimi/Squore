@@ -244,6 +244,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <string name="pref_BluetoothLE_Config_default">D-SCORE-RX</string>
     <bool name="ShowFeedBackOnBLEButtonsPressedInfoMessages_default">true</bool>
     <integer name="NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default">4</integer>
+    <integer name="IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_default">1500</integer>
 
     <bool name="UseMQTT_default__Default">false</bool>
     <string name="MQTTTopicMatchTemplate__Default">double-yellow/${EventId}/${Brand}/${DeviceId}/match</string>
