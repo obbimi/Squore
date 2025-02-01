@@ -1,6 +1,6 @@
-# written in such a way that it is only need in obbimi/Squore to create releases for all brands
-name: Publish Released APK's to Google Playstore as draft
-run-name: Deploy ${{ inputs.brand }} release ${{ inputs.version }} to Play Store
+# written in such a way that it is only needed in the obbimi/Squore repo to publish releases for Squore and all derivatives
+name: Upload apk's from a github release to Google Playstore as draft
+run-name: Upload ${{ inputs.brand }} release ${{ inputs.version }} assets to Play Store
 
 on:
   workflow_dispatch: # run manually
@@ -12,7 +12,7 @@ on:
         type: string
       version:
         description: 'The version to deploy: Last 3 digits of versionCode. A release named Release.${version} must exist and publicly accessible for the brand'
-        default: "542"
+        default: "543" # TODO: can this default automatically be updated on a commit containing build.gradle with a new value for versionCodeXXX
         required: true
         type: string
       #releasePrefix:
@@ -36,13 +36,14 @@ jobs:
     - name: Download from /releases
       id: download_apk_extract_info
       run: |
-        set -x
+        #set -x
         androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
         aaptPath=$(find ${androidhome}/build-tools -name aapt | sort | tail -1)
         version=${{ inputs.version }}
         brand=${{ inputs.brand }}
         releasePrefix=
 
+        # github contains a release for wearOs as well, but 1) google does not accept it for the moment, 2) should be in a different google release anyway
         apkversions="phoneTabletPost23 phoneTabletPre22"
         filenames=""
         for apkversion in $apkversions; do
@@ -77,5 +78,3 @@ jobs:
         #mappingFile: app/build/outputs/mapping/release/mapping.txt
         #debugSymbols: app/intermediates/merged_native_libs/release/out/lib
         # "Error: The first release on a track cannot be staged"
-
-# Changes are sent for review automatically. The query parameter changesNotSentForReview must not be set.
