@@ -39,7 +39,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.PreferenceScreen;
 import android.preference.PreferenceCategory;
 import android.provider.ContactsContract;
-import android.provider.Settings;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Toast;
@@ -678,8 +677,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
             if ( psCastLiveScore != null ) {
                 ListPreference castScreen = (ListPreference) psCastLiveScore.findPreference(PreferenceKeys.useCastScreen.toString());
 
-                List<CharSequence> lLetUserSelectFrom   = new ArrayList();
-                List<CharSequence> lLetUserSelectFromHR = new ArrayList();
+                List<CharSequence> lLetUserSelectFrom   = new ArrayList<>();
+                List<CharSequence> lLetUserSelectFromHR = new ArrayList<>();
                 JSONArray jaDisplayIds = Brand.brand.getCastListForBrandFromConfig(false);
                 if ( jaDisplayIds != null ) {
                     castScreen.setEnabled(true);

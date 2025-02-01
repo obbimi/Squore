@@ -95,8 +95,17 @@ public class BLEUtil
             WriteValue,
     }
 
-    final public static ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
+    final public static ScanSettings scanSettings;
+    static {
+        ScanSettings.Builder builder = new ScanSettings.Builder();
+        builder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O /* 26 */ ) {
+            builder.setPhy(ScanSettings.PHY_LE_ALL_SUPPORTED);
+            builder.setLegacy(false);
+        }
 
+        scanSettings = builder.build();
+    }
     /** To present list of possible configs to user */
     public static List<CharSequence> getConfigs(Context context, int iWhat1KeyOnly2Description3Both) {
         String sJson = ContentUtil.readRaw(context, R.raw.bluetooth_le_config);
