@@ -145,7 +145,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                                 PreferenceValues.addOrReplaceNewFeedURL(context, feedPostDetail, true, true);
                             }
                             if ( key.equals(URLsKeys.LiveScoreUrl) ) {
-                                if ( sValue.startsWith("tcp:") ) {
+                                if ( sValue.trim().matches("^(tcp|mqtt|mqtts):.+") ) {
                                     PreferenceValues.setBoolean(PreferenceKeys.UseMQTT, context, true);
                                     PreferenceValues.setString(PreferenceKeys.MQTTBrokerURL_Custom, context, sValue);
                                     PreferenceValues.setString(PreferenceKeys.MQTTBrokerURL, context, getString(R.string.MQTTBrokerURL_Custom));

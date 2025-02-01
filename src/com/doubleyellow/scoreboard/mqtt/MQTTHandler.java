@@ -70,6 +70,8 @@ public class MQTTHandler
 {
     private static final String TAG = "SB." + MQTTHandler.class.getSimpleName();
     private static final int MQTT_QOS = 0;
+    private static final int MQTT_DEFAULT_PORT  = 1883;
+    private static final int MQTTS_DEFAULT_PORT = 8883;
     private final MqttAndroidClient  mqttClient          ;
     private final MQTTActionListener defaultCbPublish    ;
     private final MQTTActionListener defaultCbDisconnect ;
@@ -101,6 +103,20 @@ public class MQTTHandler
     public MQTTHandler(ScoreBoard context, IBoard iBoard, String serverURI) {
         m_context    = context;
         m_iBoard     = iBoard;
+
+        // the library we use does not like 'mqtt://' urls without a port. Convert it to a tcp:// version
+        if ( serverURI.startsWith("mqtt") ) {
+            java.net.URI uriBroker = java.net.URI.create(serverURI);
+            int iPort = uriBroker.getPort();
+            if ( iPort == -1 ) {
+                if ( uriBroker.getScheme().equals("mqtt") ) {
+                    iPort = MQTT_DEFAULT_PORT;
+                } else if ( uriBroker.getScheme().equals("mqtts") ) {
+                    iPort = MQTTS_DEFAULT_PORT;
+                }
+            }
+            serverURI = "tcp" + "://" + uriBroker.getHost() + ":" + iPort;
+        }
         m_sBrokerUrl = serverURI;
 
         m_thisDeviceId  = PreferenceValues.getLiveScoreDeviceId(context);
