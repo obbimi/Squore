@@ -30,7 +30,7 @@ public class ScoreButtonListener extends ScoreBoardListener implements View.OnCl
 
     @Override public void onClick(View view) {
         //Log.d(TAG, "Received click for model " + matchModel);
-        if ( scoreBoard.clearBLEConfirmationStatus() ) { return; }
+        if ( scoreBoard.m_bleConfigHandler.clearBLEConfirmationStatus() ) { return; }
 
         Player player = IBoard.m_id2player.get(view.getId());
         if ( getMatchModel().isPossibleGameBallFor(player) && (scoreBoard.bGameEndingHasBeenCancelledThisGame == false) ) {

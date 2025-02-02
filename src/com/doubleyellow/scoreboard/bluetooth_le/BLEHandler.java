@@ -32,14 +32,16 @@ import com.doubleyellow.scoreboard.R;
 /**
  * Handler specific for BluetoothLE messages.
  */
-public class BLEHandler extends Handler
+class BLEHandler extends Handler
 {
     private static final String TAG = "SB." + BLEHandler.class.getSimpleName();
 
     private ScoreBoard sb = null;
-    public BLEHandler(ScoreBoard scoreBoard) {
+    private BLEConfigHandler configHandler;
+    public BLEHandler(ScoreBoard scoreBoard, BLEConfigHandler bleConfigHandler) {
         super(Looper.getMainLooper());
         sb = scoreBoard;
+        configHandler = bleConfigHandler;
     }
 
     @Override public void handleMessage(Message msg) {
@@ -65,14 +67,14 @@ public class BLEHandler extends Handler
                 String sDevice = (String) msg.obj;
                 String sMsg2 = sb.getString(R.string.ble_battery_level, iBatteryLevel, sDevice);
                 //Toast.makeText(sb, sMsg2, Toast.LENGTH_LONG).show();
-                sb.updateBLEConnectionStatus(View.VISIBLE, -1, sMsg2, 10);
+                configHandler.updateBLEConnectionStatus(View.VISIBLE, -1, sMsg2, 10);
                 break;
             case INFO: {
                 int iNrOfDevices = msg.arg2;
                 try {
                     String sMsgInfo = sb.getString(msg.arg1, iNrOfDevices, sMsg, Brand.getShortName(sb));
                     //Toast.makeText(sb, sMsg2, Toast.LENGTH_LONG).show();
-                    sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sMsgInfo, -1);
+                    configHandler.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sMsgInfo, -1);
                 } catch (Exception e) {
                     Log.w(TAG, "Error while constructing message : " + sMsg);
                     throw new RuntimeException(e);
@@ -90,22 +92,22 @@ public class BLEHandler extends Handler
                     case CONNECTED_DiscoveringServices:
                         break;
                     case CONNECTED_TO_1_of_2:
-                        sb.updateBLEConnectionStatus(View.VISIBLE, 1, sb.getString(R.string.ble_only_one_of_two_devices_connected), -1);
+                        configHandler.updateBLEConnectionStatus(View.VISIBLE, 1, sb.getString(R.string.ble_only_one_of_two_devices_connected), -1);
                         break;
                     case CONNECTED_ALL:
                         String sUIMsg = sb.getResources().getQuantityString(R.plurals.ble_ready_for_scoring_with_devices, iNrOfDevices);
-                        sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sUIMsg, 10);
+                        configHandler.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sUIMsg, 10);
                         //sb.showBLEVerifyConnectedDevicesDialog(iNrOfDevices);
                         break;
                     case DISCONNECTED:
-                        sb.updateBLEConnectionStatus(View.INVISIBLE, -1, "Oeps 3", -1);
+                        configHandler.updateBLEConnectionStatus(View.INVISIBLE, -1, "Oeps 3", -1);
                         break;
                     case CONNECTING:
-                        sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_connecting_to_devices), -1);
+                        configHandler.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_connecting_to_devices), -1);
                         break;
                     case DISCONNECTED_Gatt:
                         // if one of the two devices disconnects
-                        sb.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_Lost_connection_to_a_device), -1);
+                        configHandler.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_Lost_connection_to_a_device), -1);
                         break;
                     default:
                         Toast.makeText(sb, sMsg, Toast.LENGTH_LONG).show();

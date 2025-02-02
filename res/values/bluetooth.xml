@@ -38,6 +38,7 @@
     <string name="ble_signalled_x_to_confirm">Signalled %1$s to confirm</string>
     <string name="ble_score_for_X_changed_by_Y_ble_button_of_Z">Score for %1$s changed by %2$s BLE button of %3$s</string>
     <string name="ble_score_for_X_changed_by_Y_ble_button_of_Z_ignored__assume_accidental_double_click">IGNORED: Score change for %1$s by %2$s button of %3$s. Assuming it was an accidental double click (threshold : %4$d ms)</string>
+    <string name="ble_undo_last_ignored__assume_accidental_double_click">IGNORED: Undo last. Assuming it was an accidental double click (threshold : %1$d ms)</string>
     <string name="ble_last_score_for_X_undone_by_ble">Last score for %1$s undone by BLE of %1$s</string>
     <string name="ble_last_score_for_X_can_not_be_undone_by_ble_of_Y">Last score for %1$s can not be undone by BLE of %2$s</string>
     <string name="ble_score_for_X_changed_by_Y_ble_button">Score for %1$s changed by %2$s BLE button</string>

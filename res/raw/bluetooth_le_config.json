@@ -36,11 +36,11 @@
             "-both buttons released (one device), not used",
             "changeScoreBLE(B, SECONDARY_BUTTON)",
             "changeScoreBLE(A, PRIMARY_BUTTON)",
-            "undoLast() # both buttons pressed (one device)"
+            "undoLastBLE() # both buttons pressed (one device)"
           ],
           "TranslateToBTMessage_2": [
             "-both buttons released after long press (one device), not used",
-            "undoLast() # secondary button long pressed",
+            "undoLastBLE() # secondary button long pressed",
             "-startTimer(UntilStartOfNextGame) # primary button long pressed",
             "-lock() # both buttons long pressed (one device)"
           ],
@@ -85,12 +85,12 @@
             "-both buttons released (one device), not used",
             "changeScoreBLE(B, SECONDARY_BUTTON)",
             "changeScoreBLE(A, PRIMARY_BUTTON)",
-            "undoLast() # both buttons pressed (one device)"
+            "undoLastBLE() # both buttons pressed (one device)"
           ],
           "TranslateToBTMessage_2": [
             "-both buttons released after long press (one device), not used",
-            "undoLast() # secondary button long pressed",
-            "undoLast() # primary button long pressed",
+            "undoLastBLE() # secondary button long pressed",
+            "undoLastBLE() # primary button long pressed",
             "-lock() # both buttons long pressed (one device)"
           ]
         },
@@ -109,12 +109,12 @@
             "-both buttons released (one device), not used",
             "changeScoreBLEConfirm(B, SECONDARY_BUTTON)",
             "changeScoreBLEConfirm(A, PRIMARY_BUTTON)",
-            "undoLast() # both buttons pressed (one device)"
+            "undoLastBLE() # both buttons pressed (one device)"
           ],
           "TranslateToBTMessage_2": [
             "-both buttons released after long press (one device), not used",
-            "undoLast() # secondary button long pressed",
-            "undoLast() # primary button long pressed",
+            "undoLastBLE() # secondary button long pressed",
+            "undoLastBLE() # primary button long pressed",
             "-lock() # both buttons long pressed (one device)"
           ]
         },
@@ -134,12 +134,12 @@
             "-both buttons released (one device), not used",
             "changeScoreBLEConfirm(B, SECONDARY_BUTTON)",
             "changeScoreBLEConfirm(A, PRIMARY_BUTTON)",
-            "undoLast() # both buttons pressed (one device)"
+            "undoLastBLE() # both buttons pressed (one device)"
           ],
           "TranslateToBTMessage_2": [
             "-both buttons released after long press (one device), not used",
-            "undoLast() # secondary button long pressed",
-            "undoLast() # primary button long pressed",
+            "undoLastBLE() # secondary button long pressed",
+            "undoLastBLE() # primary button long pressed",
             "-lock() # both buttons long pressed (one device)"
           ]
         },

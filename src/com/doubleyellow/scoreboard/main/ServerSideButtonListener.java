@@ -91,7 +91,7 @@ class ServerSideButtonListener extends ScoreBoardListener implements View.OnClic
                 };
                 int iToggled = ViewUtil.setMenuItemsVisibility(scoreBoard.mainMenu, iMenuIds, true);
                 if ( iMenuIds[0] == R.id.sb_ble_devices ) {
-                    scoreBoard.promoteAppToUseBLE();
+                    scoreBoard.m_bleConfigHandler.promoteAppToUseBLE();
                 }
                 if ( iToggled > 1 ) {
                     Toast.makeText(scoreBoard, String.format("Additional %d menu items made available", iToggled), Toast.LENGTH_LONG).show();

@@ -47,13 +47,12 @@ import java.util.UUID;
 
 public class BLEUtil
 {
-    private final static String TAG = "SB.BLEUtil";
+    private final static String TAG = "SB." + BLEUtil.class.getSimpleName();
 
-    @NonNull
-    public static String[] getPermissions() {
-        String[] permissions = {Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.S /* 31 */ ) {
-            permissions = new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
+    @NonNull public static String[] getPermissions() {
+        String[] permissions = { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.S /* 31 */ ) {
+            permissions = new String[] {Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         }
         return permissions;
     }
@@ -172,7 +171,7 @@ public class BLEUtil
     }
 
     /** only to get BLE services/characteristics info about a device in nicely readable format */
-    public static void printGattTable(BluetoothGatt gatt) {
+    static void printGattTable(BluetoothGatt gatt) {
         StringBuilder sb = new StringBuilder();
         sb.append(gatt.getDevice().getName()).append(" ").append(gatt.getDevice().getAddress()).append("\n");
         if ( gatt.getServices().isEmpty() ) {
@@ -207,11 +206,13 @@ public class BLEUtil
         Log.d(TAG, sb.toString());
     }
 
+/*
     public static float getButtonFor(JSONObject mServicesAndCharacteristicsConfig, float fDefault) {
         return fDefault;
     }
+*/
 
-    public static BLEDeviceButton getButtonFor(JSONObject mServicesAndCharacteristicsConfig, Keys eKey, BLEDeviceButton btnDefault) {
+    static BLEDeviceButton getButtonFor(JSONObject mServicesAndCharacteristicsConfig, Keys eKey, BLEDeviceButton btnDefault) {
         String s = mServicesAndCharacteristicsConfig.optString(eKey.toString());
         if ( StringUtil.isEmpty(s) ) { return btnDefault; }
         BLEDeviceButton btnFromConfig = null;
@@ -225,7 +226,7 @@ public class BLEUtil
     }
 
     /** transforms json like in bluetooth_le_config to easier iterable format */
-    public static Map<String, List<String>> getServiceUUID2CharUUID(JSONObject mServicesAndCharacteristicsConfig) {
+    static Map<String, List<String>> getServiceUUID2CharUUID(JSONObject mServicesAndCharacteristicsConfig) {
         Map<String, List<String>> mReturn = new HashMap<>();
         Iterator<String> itServiceUUID = mServicesAndCharacteristicsConfig.keys();
         while(itServiceUUID.hasNext() ) {

@@ -73,6 +73,7 @@ public enum BTMethods {
      * - first the player identifying what wristband a button was pressed on
      **/
     undoScoreForInitiatorBLE(false),
+    undoLastBLE(false),
     ;
     private boolean bVerifyScore = false;
     BTMethods(boolean verifyScore) {
