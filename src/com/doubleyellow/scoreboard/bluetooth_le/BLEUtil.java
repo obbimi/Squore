@@ -49,14 +49,6 @@ public class BLEUtil
 {
     private final static String TAG = "SB." + BLEUtil.class.getSimpleName();
 
-    @NonNull public static String[] getPermissions() {
-        String[] permissions = { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.S /* 31 */ ) {
-            permissions = new String[] {Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        }
-        return permissions;
-    }
-
     public enum Keys {
         ShortDescription,
         SharedConfig,

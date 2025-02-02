@@ -14,7 +14,8 @@ buildscript {
         //classpath "com.android.tools.build:gradle:7.3.1"
         // gradle-wrapper.properties may contain 8.2
         //classpath "com.android.tools.build:gradle:7.4.2" // almost succeeds
-        classpath "com.android.tools.build:gradle:8.4.2" // requires gradle 8.7 in wrapper
+        //classpath "com.android.tools.build:gradle:8.4.2" // requires gradle 8.7 in wrapper
+        classpath "com.android.tools.build:gradle:8.6.1" // requires android-studio 2024.2, does not work with the 2023.3.1 version
         // NOTE: Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements
 
         // added for firebase to parse google-services.json

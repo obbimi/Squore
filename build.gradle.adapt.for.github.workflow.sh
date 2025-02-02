@@ -13,6 +13,7 @@ if [[ -z "${GSM_API_KEY}" ]]; then
 else
     # prepare actual google-services.json with secrets from input variable
     mv   build.gradle.unsigned build.gradle
+    # create a google-services.json with secrets
     sed -e "s~__GSM_API_KEY__~${GSM_API_KEY}~" google-services.no-secrets.json > google-services.json
 fi
 

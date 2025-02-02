@@ -74,9 +74,8 @@ import com.doubleyellow.scoreboard.bluetooth.BluetoothControlService;
 import com.doubleyellow.scoreboard.bluetooth.BluetoothHandler;
 import com.doubleyellow.scoreboard.bluetooth.MessageSource;
 import com.doubleyellow.scoreboard.bluetooth.SelectDeviceDialog;
-import com.doubleyellow.scoreboard.bluetooth_le.BLEBridge;
-import com.doubleyellow.scoreboard.bluetooth_le.BLEConfigHandler;
-import com.doubleyellow.scoreboard.bluetooth_le.BLEUtil;
+import com.doubleyellow.scoreboard.bluetooth.BLEBridge;
+import com.doubleyellow.scoreboard.bluetooth.BTUtil;
 import com.doubleyellow.scoreboard.cast.FullScreenTimer;
 import com.doubleyellow.scoreboard.cast.EndOfGameView;
 import com.doubleyellow.scoreboard.cast.framework.CastHelper;
@@ -704,6 +703,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         updatePowerPlayIcons();
         updateTimerFloatButton();
         iBoard.updateGameBallMessage("onResume");
+        iBoard.showInfoMessage(null, 1);
+        iBoard.updateBLEConnectionStatusIcon(View.INVISIBLE, -1);
+
         if ( Brand.isGameSetMatch() ) {
             // to prevent 'set ball' being show while it is gameball: TODO: still show if actual setball
             iBoard.showGameBallMessage(false, null);
@@ -5375,15 +5377,16 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             m_bleConfigHandler = new BLEConfigHandler(this, iBoard);
         }
 
-        m_bleConfigHandler.updateBLEConnectionStatus(View.INVISIBLE, 0, null, -1);
+        if ( m_bleConfigHandler != null ) {
+            m_bleConfigHandler.updateBLEConnectionStatus(View.INVISIBLE, 0, null, -1);
+            m_bleConfigHandler.init(this, iBoard);
+        }
 
         boolean bInitBLE = PreferenceValues.useBluetoothLE(this);
         if ( bInitBLE == false ) {
             //Log.i(sMethod, "Don't use BLE. Period");
             return;
         }
-
-        m_bleConfigHandler.init();
     }
 
     // ----------------------------------------------------
@@ -6449,7 +6452,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             e.printStackTrace();
         }
 
-        String[] permissions = BLEUtil.getPermissions();
+        String[] permissions = BTUtil.getPermissions();
         Set<RWValues.Permission> lPerms = new LinkedHashSet<>();
         for( String sPermName: permissions ) {
             RWValues.Permission permission = PreferenceValues.getPermission(this, PreferenceKeys.enableScoringByBluetoothConnection, sPermName);

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.bluetooth.BLEBridge;
 import com.doubleyellow.scoreboard.bluetooth_le.selectdevice.BLEActivity;
 import com.doubleyellow.scoreboard.bluetooth_le.selectdevice.VerifyConnectedDevices;
 import com.doubleyellow.scoreboard.main.PlayerFocusEffectCountDownTimer;
@@ -56,16 +57,16 @@ public class BLEConfigHandler implements BLEBridge {
 
     private ScoreBoard m_context = null;
     private IBoard     m_iBoard  = null;
-    public BLEConfigHandler(ScoreBoard context, IBoard iBoard) {
-        m_context = context;
-        m_iBoard = iBoard;
-
-        m_lIgnoreAccidentalDoublePress_ThresholdMS = PreferenceValues.IgnoreAccidentalDoublePress_ThresholdInMilliSeconds(m_context);
-    }
+    public BLEConfigHandler() {}
 
     private        BLEReceiverManager m_bleReceiverManager                    = null;
-    @Override public boolean init() {
-        final String sMethod = "getReceiverManager";
+    @Override public boolean init(ScoreBoard context, IBoard iBoard) {
+        final String sMethod = "init";
+
+        m_context = context;
+        m_iBoard  = iBoard;
+
+        m_lIgnoreAccidentalDoublePress_ThresholdMS = PreferenceValues.IgnoreAccidentalDoublePress_ThresholdInMilliSeconds(m_context);
 
         if ( m_bBLEDevicesSelected == false ) {
             Log.i(sMethod, "Don't use BLE. First select devices");

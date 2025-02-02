@@ -27,7 +27,8 @@ abstract class ScoreBoardListener {
     ScoreBoardListener(ScoreBoard scoreBoard) {
         this.scoreBoard = scoreBoard;
     }
-    ScoreBoard scoreBoard = null;
+    final ScoreBoard scoreBoard;
+
     boolean handleMenuItem(int id, Object... ctx) {
         return scoreBoard.handleMenuItem(id, ctx);
     }

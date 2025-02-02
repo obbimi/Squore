@@ -14,13 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.doubleyellow.scoreboard.bluetooth_le;
+package com.doubleyellow.scoreboard.bluetooth;
 
 import android.content.Intent;
 
+import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.vico.IBoard;
+
 public interface BLEBridge
 {
-    public boolean init();
+    public boolean init(ScoreBoard scoreBoard, IBoard iBoard);
     public void stop();
 
 

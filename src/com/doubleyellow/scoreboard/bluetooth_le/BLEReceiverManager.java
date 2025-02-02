@@ -67,7 +67,7 @@ import java.util.UUID;
 @SuppressLint("MissingPermission")
 public class BLEReceiverManager
 {
-    private final static String TAG = "SB.BLEReceiverManager";
+    private final static String TAG = "SB." + BLEReceiverManager.class.getSimpleName();
 
     private final String CCCD_DESCRIPTOR_UUID = "00002902-0000-1000-8000-00805F9B34FB"; // Client Characteristic Configuration
 
@@ -339,7 +339,7 @@ public class BLEReceiverManager
                                 iValueToHandle = this.lastValueReceived;
                             } else if ( iValueIn > lastValueReceived ) {
                                 // assuming value to actually handle 'on release' increases if multiple buttons are pressed
-                                lastValueReceived = iValueIn;
+                                lastValueReceived   = iValueIn;
                                 lastValueReceivedOn = System.currentTimeMillis();
                                 Log.d(TAG, String.format("Recording value %d at %d to use on release", this.lastValueReceived, lastValueReceivedOn));
 

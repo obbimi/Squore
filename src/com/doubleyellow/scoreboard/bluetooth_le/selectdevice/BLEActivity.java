@@ -43,6 +43,7 @@ import android.widget.Toast;
 
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.bluetooth.BTUtil;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.R;
 
@@ -77,7 +78,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Activity in which user can start scanning for BLE devices and select a devices for player A and B.
+ * Activity in which user can start scanning for BLE devices and select devices for player A and B.
  */
 public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPermissionsResultCallback
 {
@@ -269,7 +270,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
             scanResultAdapter.notifyDataSetChanged();
             btnGo.setEnabled(false);
         }
-        String[] permissions = BLEUtil.getPermissions();
+        String[] permissions = BTUtil.getPermissions();
         Set<RWValues.Permission> lPerms = new LinkedHashSet<>();
         for( String sPermName: permissions ) {
             RWValues.Permission permission = PreferenceValues.getPermission(this, PreferenceKeys.UseBluetoothLE, sPermName);

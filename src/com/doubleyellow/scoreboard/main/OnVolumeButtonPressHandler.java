@@ -29,8 +29,6 @@ import com.doubleyellow.scoreboard.prefs.VolumeKeysBehaviour;
 import com.doubleyellow.scoreboard.vico.IBoard;
 
 class OnVolumeButtonPressHandler extends ScoreBoardListener {
-    ScoreBoard scoreBoard = null;
-
     OnVolumeButtonPressHandler(ScoreBoard scoreBoard) {
         super(scoreBoard);
     }
