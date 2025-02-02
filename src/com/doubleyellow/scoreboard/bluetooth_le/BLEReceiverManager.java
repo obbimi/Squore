@@ -353,6 +353,7 @@ public class BLEReceiverManager
                             if ( bHandleOnRelease && this.lastValueReceivedOn > 0L ) {
                                 lDurationButtonWasHeld = System.currentTimeMillis() - this.lastValueReceivedOn;
                                 if ( lDurationButtonWasHeld >= 1000 ) {
+                                    // check what 'long press' to use depending the duration of the long press
                                     int iCountDownFrom = Math.round(lDurationButtonWasHeld / 1000);
                                     for( int iTryFor=iCountDownFrom; iTryFor>=1;iTryFor--){
                                         JSONArray saMessageFormatLongPress = joCharacteristicCfg.optJSONArray(BLEUtil.Keys.TranslateToBTMessage + "_" + iTryFor);
@@ -360,6 +361,7 @@ public class BLEReceiverManager
                                             if ( saMessageFormatLongPress.getString(iValueToHandle).startsWith("-") == false ) {
                                                 // code below will actually handle the value from longpress
                                                 saMessageFormat = saMessageFormatLongPress;
+                                                Log.i(TAG, "Using long press " + saMessageFormat);
                                                 break;
                                             }
                                         }
@@ -379,6 +381,7 @@ public class BLEReceiverManager
                                 } else {
                                     sMessageFormat = sMessageFormat.replaceAll("#.*", "").trim();
                                     String sMessage = String.format(sMessageFormat, (this.player==null?"":player), (this.player==null?"":player.getOther()), value[0]);
+                                    Log.d(TAG, "Message " + sMessage);
                                     Message message = mHandler.obtainMessage(BTMessage.READ.ordinal(), sMessage );
                                     message.sendToTarget();
                                 }

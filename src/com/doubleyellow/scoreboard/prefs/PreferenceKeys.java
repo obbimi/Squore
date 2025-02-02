@@ -341,6 +341,7 @@ public enum PreferenceKeys {
         NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired,
         ShowFeedBackOnBLEButtonsPressedInfoMessages,
         IgnoreAccidentalDoublePress_ThresholdInMilliSeconds,
+        BLEBridge_ClassName,
 
     UseMQTT,
         MQTTBrokerURL,
