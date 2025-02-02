@@ -249,8 +249,8 @@ cd ..
 f=build.gradle
 oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
 
-# change manifest file name to one of brand we want to generate apk for
-cat ${f} | perl -ne "s~(srcFile\s+')AndroidManifest[A-Z][a-z][A-Za-z]+.xml~\1${brandMfFile}~; print" > ${f}.tmp
+# change manifest file name to one of brand we want to generate apk for, ensuring NOT to change the AndroidManifestALL references
+cat ${f} | perl -ne "s~(srcFile\s+')AndroidManifest[A-Z]{1,2}[a-z][A-Za-z]+.xml~\1${brandMfFile}~; print" > ${f}.tmp
 if [[ -n "$(diff ${f}.tmp ${f})" ]]; then
     mv ${f}.tmp ${f}
 else

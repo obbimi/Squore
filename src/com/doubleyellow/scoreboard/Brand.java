@@ -56,6 +56,7 @@ public enum Brand
   //Racquetball     (SportType.Racquetball, R.string.app_name_short_brand__Racquetball     , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150     , R.string.CUSTOM_RECEIVER_APP_ID_brand_shared      , R.array.colorSchema__Racquetball , "https://racquetball.double-yellow.be", null                                  , R.raw.changelog),
 
   //WinnerPadel     (SportType.Padel      , R.string.app_name_short_brand__WinnerPadel     ,15, R.drawable.brand_padel_splash__winnerpadel, R.id.sb_branded_logo_ar400, R.color.brand_padel_bg_color         , R.string.CUSTOM_RECEIVER_APP_ID_brand_test      , R.array.colorSchema__WinnerPadel , 4000, "https://tennispadel.double-yellow.be", "06d7511e-f00a-4d82-b10b-2c8629e67dc8", R.raw.changelog_tennispadel),
+  //DScore          (SportType.TennisPadel, R.string.app_name_short_brand__DScore          , 0, 0/*R.drawable.brand_squore*/            , R.id.sb_branded_logo_ar150     , R.string.CUSTOM_RECEIVER_APP_ID_DScore_fancy      , R.array.colorSchema__DScore , "", "f538f11b-99cc-4cf0-9ead-241fd0e4c245"                                  , 0),
 
     ;
     Brand( SportType sport

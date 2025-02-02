@@ -77,18 +77,21 @@
     <fraction name="wear_margin_to_show_gamescores_between_scorebuttons__Badminton">@fraction/wear_margin_to_show_gamescores_between_buttons_HIDE</fraction>
     <fraction name="wear_margin_to_show_gamescores_between_scorebuttons__TennisPadel">@fraction/wear_margin_to_show_gamescores_between_buttons_HIDE</fraction>
     <fraction name="wear_margin_to_show_gamescores_between_scorebuttons__Racketlon">@fraction/wear_margin_to_show_gamescores_between_buttons_SHOW</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_scorebuttons__Default">@fraction/wear_margin_to_show_gamescores_between_buttons_HIDE</fraction>
 
     <fraction name="wear_margin_to_show_gamescores_between_playerbuttons__Squash">@fraction/wear_margin_to_show_gamescores_between_buttons_SHOW</fraction>
     <fraction name="wear_margin_to_show_gamescores_between_playerbuttons__Badminton">@fraction/wear_margin_to_show_gamescores_between_buttons_SHOW</fraction>
     <fraction name="wear_margin_to_show_gamescores_between_playerbuttons__Tabletennis">@fraction/wear_margin_to_show_gamescores_between_buttons_SHOW</fraction>
     <fraction name="wear_margin_to_show_gamescores_between_playerbuttons__TennisPadel">@fraction/wear_margin_to_show_gamescores_between_buttons_SHOW</fraction>
     <fraction name="wear_margin_to_show_gamescores_between_playerbuttons__Racketlon">@fraction/wear_margin_to_show_gamescores_between_buttons_HIDE</fraction>
+    <fraction name="wear_margin_to_show_gamescores_between_playerbuttons__Default">@fraction/wear_margin_to_show_gamescores_between_buttons_SHOW</fraction>
 
     <fraction name="wear_margin_to_show_gamescores_below_playerbuttons__Squash">@fraction/wear_margin_to_show_gamescores_below_playerbuttons_HIDE</fraction>
     <fraction name="wear_margin_to_show_gamescores_below_playerbuttons__Badminton">@fraction/wear_margin_to_show_gamescores_below_playerbuttons_HIDE</fraction>
     <fraction name="wear_margin_to_show_gamescores_below_playerbuttons__Tabletennis">@fraction/wear_margin_to_show_gamescores_below_playerbuttons_HIDE</fraction>
     <fraction name="wear_margin_to_show_gamescores_below_playerbuttons__TennisPadel">@fraction/wear_margin_to_show_gamescores_below_playerbuttons_HIDE</fraction>
     <fraction name="wear_margin_to_show_gamescores_below_playerbuttons__Racketlon">@fraction/wear_margin_to_show_gamescores_below_playerbuttons_SHOW</fraction>
+    <fraction name="wear_margin_to_show_gamescores_below_playerbuttons__Default">@fraction/wear_margin_to_show_gamescores_below_playerbuttons_HIDE</fraction>
 
     <fraction name="border_margin_playerButton_wear_round_10">10%</fraction> <!-- to still use full width of a round screen for score buttons but have name buttons not fall outside -->
 
@@ -98,6 +101,7 @@
     <fraction name="border_margin_playerButton_wear_round__Badminton">0.0%</fraction>
     <fraction name="border_margin_playerButton_wear_round__Tabletennis">0.0%</fraction>
     <fraction name="border_margin_playerButton_wear_round__Racketlon">0.0%</fraction>
+    <fraction name="border_margin_playerButton_wear_round__Default">0.0%</fraction>
 
     <integer name="wear_round_boxedEdges_TOPBOTTOM">10</integer> <!-- androidx.wear.widget.BoxInsetLayout.LayoutParams#BOX_TOP 2 + 8 -->
     <integer name="wear_round_boxedEdges_ALL">15</integer> <!-- androidx.wear.widget.BoxInsetLayout.LayoutParams#BOX_ALL=15  mainly to get approved for PlayStore -->
@@ -108,6 +112,7 @@
     <integer name="wear_round_boxedEdges__Badminton">@integer/wear_round_boxedEdges_TOPBOTTOM</integer>
     <integer name="wear_round_boxedEdges__Tabletennis">@integer/wear_round_boxedEdges_TOPBOTTOM</integer>
     <integer name="wear_round_boxedEdges__Racketlon">@integer/wear_round_boxedEdges_TOPBOTTOM</integer>
+    <integer name="wear_round_boxedEdges__Default">@integer/wear_round_boxedEdges_TOPBOTTOM</integer>
 
     <!-- temporary to get it approved for round screens -->
 <!--

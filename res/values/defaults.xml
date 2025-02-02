@@ -97,6 +97,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <string name="endGameSuggestion_default__Racketlon">Suggest</string>
     <string name="endGameSuggestion_default__Racquetball">Suggest</string>
     <string name="endGameSuggestion_default__TennisPadel">Automatic</string>
+    <string name="endGameSuggestion_default__Default">Automatic</string>
 
     <!--
         <integer name="numberOfGamesToWinSet_default__TennisPadel">6</integer>
@@ -151,9 +152,12 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Tabletennis">true</bool>
     <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Badminton">true</bool>
     <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Racketlon">true</bool>
+    <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Default">true</bool>
 
     <integer name="serveButtonTransparencyNonServer_default__Squash">60</integer> <!-- between 0 and 100 -->
+    <integer name="serveButtonTransparencyNonServer_default__Default">60</integer> <!-- between 0 and 100 -->
     <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Squash">false</bool>
+    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Default">true</bool>
     <bool name="swapPlayersBetweenGames_default">true</bool>
     <bool name="useEnglishScoring_default">false</bool>
     <bool name="playAllGames_default">false</bool>
@@ -426,5 +430,6 @@ http://developer.android.com/guide/practices/screens_support.html
 \nhttps://www.federsquash.it/images/2014-2015/carte-federali/2015-Reg-Incontri-Singolo-Coni.pdf
 \nhttp://dsqv.de/downloads/doc_download/95-squash-spielregeln-einzel-2014
 ]]></string>
+    <string name="OfficialRulesURLs_default__Default"></string>
 
 </resources>

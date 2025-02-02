@@ -2,7 +2,7 @@
 sed -e 's~^[ ]*signingConfig[ ]*sign~//signingConfig sign~' \
     -e 's~throw new~//throw new~' build.gradle > build.gradle.unsigned
 
-# do not use com.google.gms (google-services.json) is not in repo
+# do not use com.google.gms (google-services.json) if GSM_API_KEY not in repo secrets
 GSM_API_KEY="$1";
 if [[ -z "${GSM_API_KEY}" ]]; then
     # don't use com.google.gsm

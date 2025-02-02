@@ -68,6 +68,7 @@
     <string name="scorelineLayout_default__Racketlon">HideServeSide</string>
     <string name="scorelineLayout_default__Tabletennis">HideServeSide</string>
     <string name="scorelineLayout_default__TennisPadel">HideServeSide</string>
+    <string name="scorelineLayout_default__Default">HideServeSide</string>
 
     <string name="newMatchLayout_default">AllFields</string>
     <string name="groupArchivedMatchesBy_default">Date</string>
@@ -155,6 +156,10 @@
         <item>OnDevice</item>
         <!--<item>OnChromeCast</item>-->
     </string-array>
+    <string-array name="showScoringHistoryInMainScreenOn_DefaultValues__Default">
+        <!--<item>OnDevice</item>-->
+        <!--<item>OnChromeCast</item>-->
+    </string-array>
 
 
     <string-array name="floatingMessageForGameBallOn_DefaultValues__Squash">
@@ -174,6 +179,10 @@
         <item>OnChromeCast</item>
     </string-array>
     <string-array name="floatingMessageForGameBallOn_DefaultValues__Badminton">
+        <item>OnDevice</item>
+        <item>OnChromeCast</item>
+    </string-array>
+    <string-array name="floatingMessageForGameBallOn_DefaultValues__Default">
         <item>OnDevice</item>
         <item>OnChromeCast</item>
     </string-array>

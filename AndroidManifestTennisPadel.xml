@@ -41,7 +41,7 @@
     <!-- added for BLE -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <!-- for activating BLE D-Score -->
+    <!-- for activating BLE -->
     <uses-permission android:name="com.android.vending.BILLING" />
 
 <!--<uses-feature android:name="android.hardware.type.watch"             android:required="false"/>-->
