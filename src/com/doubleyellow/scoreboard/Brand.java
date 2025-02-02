@@ -166,7 +166,7 @@ public enum Brand
             lBrand = clone(lBrand); // do not modify the array part of the config
             if ( isSquash() && lBrand.length() > 1 ) {
                 Object sRemoved = lBrand.remove(0); // don't make presentation screen default during development
-                Log.w("SB.Brand", "Not returning :" + sRemoved);
+                //Log.w("SB.Brand", "Not returning :" + sRemoved);
             }
             for (int i = 0; i < lDefaults.length(); i++) {
                 lBrand.put(lDefaults.optString(i));
