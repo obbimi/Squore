@@ -5374,7 +5374,16 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     public void onResumeInitBluetoothBLE()
     {
         if ( m_bleConfigHandler == null ) {
-            m_bleConfigHandler = new BLEConfigHandler(this, iBoard);
+            //int iBLEBridge_ClassName_defaultResId = PreferenceValues.getSportTypeSpecificResId(this, R.string.BLEBridge_ClassName__Squash, 0);
+            String sClass = "com.doubleyellow.scoreboard.bluetooth_le.BLEConfigHandler"; // PreferenceValues.getString(PreferenceKeys.BLEBridge_ClassName, iBLEBridge_ClassName_defaultResId, this);
+            if ( StringUtil.isNotEmpty(sClass) ) {
+                try {
+                    Class clazz = Class.forName(sClass);
+                    m_bleConfigHandler = (BLEBridge) clazz.newInstance();
+                } catch (Exception e) {
+                    Log.e(TAG, sClass, e);
+                }
+            }
         }
 
         if ( m_bleConfigHandler != null ) {
