@@ -5374,8 +5374,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     public void onResumeInitBluetoothBLE()
     {
         if ( m_bleConfigHandler == null ) {
-            int iBLEBridge_ClassName_defaultResId = PreferenceValues.getSportTypeSpecificResId(this, R.string.BLEBridge_ClassName__Squash, 0);
-            String sClass = PreferenceValues.getString(PreferenceKeys.BLEBridge_ClassName, iBLEBridge_ClassName_defaultResId, this);
+            String sClass = PreferenceValues.getBLEBridge_ClassName(this);
             if ( StringUtil.isNotEmpty(sClass) ) {
                 try {
                     Class clazz = Class.forName(sClass);

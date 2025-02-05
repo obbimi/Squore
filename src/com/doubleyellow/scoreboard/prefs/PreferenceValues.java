@@ -920,6 +920,11 @@ public class PreferenceValues extends RWValues
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useReferees__Default);
         return context.getResources().getBoolean(iResBrandSpecific);
     }
+    public static String getBLEBridge_ClassName(Context context) {
+        int iBLEBridge_ClassName_defaultResId = PreferenceValues.getSportTypeSpecificResId(context, R.string.BLEBridge_ClassName__Squash, R.string.BLEBridge_ClassName__Default);
+        String sClass = PreferenceValues.getString(PreferenceKeys.BLEBridge_ClassName, iBLEBridge_ClassName_defaultResId, context);
+        return sClass;
+    }
     public static boolean useBluetoothLE(Context context) {
         int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.UseBluetoothLE_default__Default);
         return getBoolean(PreferenceKeys.UseBluetoothLE, context, iResBrandSpecific);
@@ -2090,7 +2095,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2025-02-01"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2025-02-06"; // auto adjusted by shell script 'clean.and.assemble.sh'
     public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) <= 0;
     }

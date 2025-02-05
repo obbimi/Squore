@@ -100,11 +100,13 @@ public class BLEConfigHandler implements BLEBridge {
             m_bSingleDevice_ConfirmWithSameButton = m_bleConfig.optBoolean(BLEUtil.Keys.SingleDevice_ConfirmWithSameButton.toString(), m_bSingleDevice_ConfirmWithSameButton);
         }
 
-        m_bleReceiverManager = new BLEReceiverManager(m_context, mBluetoothAdapter, sBluetoothLEDevice1, sBluetoothLEDevice2, m_bleConfig);
+        if ( m_bleReceiverManager == null ) {
+            m_bleReceiverManager = new BLEReceiverManager(m_context, mBluetoothAdapter, sBluetoothLEDevice1, sBluetoothLEDevice2, m_bleConfig);
 
-        BLEHandler bleHandler = new BLEHandler(m_context, this);
-        m_bleReceiverManager.setHandler(bleHandler);
-        m_bleReceiverManager.startReceiving();
+            BLEHandler bleHandler = new BLEHandler(m_context, this);
+            m_bleReceiverManager.setHandler(bleHandler);
+            m_bleReceiverManager.startReceiving();
+        }
 
         return true;
     }
