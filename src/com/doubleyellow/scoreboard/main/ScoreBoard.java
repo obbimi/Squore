@@ -2348,7 +2348,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 }
             }
 
-            if ( (bInitializingModelListeners == false) && (iTotal != 0) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
+            if ( (bInitializingModelListeners == false) && ( (iTotal != 0) || (iDelta == -1) ) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
                 //shareScoreSheet(ScoreBoard.this, matchModel, false);
                 // start timer to post in e.g. x seconds. Restart this timer as soon as another point is scored
                 shareScoreSheetDelayed(600);
@@ -3823,7 +3823,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         addToDialogStack(twoTimerView);
 
         // ensure the match shows up in the list of live score a.s.a.p. so e.g. when warmup timer is started
-        if ( (matchModel != null) && ( matchModel.hasStarted() == false ) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
+        if ( bAutoTriggered && (matchModel != null) && ( matchModel.hasStarted() == false ) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
             shareScoreSheetDelayed(1000);
         }
     }

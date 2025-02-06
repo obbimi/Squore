@@ -596,17 +596,17 @@ public class MatchView extends ScrollView
         //showViews(lViewsToShow);
 
         // get references for late use
-        txtEventName     = (PreferenceACTextView) findViewById(R.id.match_event);
-        txtEventDivision = (PreferenceACTextView) findViewById(R.id.match_division);
-        txtEventRound    = (PreferenceACTextView) findViewById(R.id.match_round);
-        txtEventLocation = (PreferenceACTextView) findViewById(R.id.match_location);
-        txtEventID       = (TextView)             findViewById(R.id.match_id);
-        txtCourt         = (PreferenceACTextView) findViewById(R.id.match_court);
+        txtEventName     = findViewById(R.id.match_event);
+        txtEventDivision = findViewById(R.id.match_division);
+        txtEventRound    = findViewById(R.id.match_round);
+        txtEventLocation = findViewById(R.id.match_location);
+        txtEventID       = findViewById(R.id.match_id);
+        txtCourt         = findViewById(R.id.match_court);
         tvsEvent = new TextView[]{txtEventName,txtEventDivision,txtEventRound,txtEventLocation, txtCourt};
 
-        txtRefereeName   = (PreferenceACTextView) findViewById(R.id.match_referee);
-        txtMarkerName    = (PreferenceACTextView) findViewById(R.id.match_marker);
-        txtAssessorName  = (PreferenceACTextView) findViewById(R.id.match_assessor);
+        txtRefereeName   = findViewById(R.id.match_referee);
+        txtMarkerName    = findViewById(R.id.match_marker);
+        txtAssessorName  = findViewById(R.id.match_assessor);
         spAnnouncementLanguage = (Spinner) findViewById(R.id.spAnnouncementLanguage);
         tvsReferee = new View[]{txtRefereeName,txtMarkerName,txtAssessorName, spAnnouncementLanguage};
 
