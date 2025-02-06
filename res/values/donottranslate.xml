@@ -28,7 +28,7 @@
     <string name="app_name_short_brand__TennisPadel">Score Tennis/Padel</string>
 
     <string name="BLEBridge_ClassName__Squash"></string>
-    <string name="BLEBridge_ClassName__Default"></string>
+    <string name="BLEBridge_ClassName__Default">com.doubleyellow.scoreboard.bluetooth_le.BLEConfigHandler</string>
 
     <string name="winning_gamescore__Squash">11</string>
     <string name="winning_gamescore__Racketlon">21</string>
