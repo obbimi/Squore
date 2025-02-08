@@ -425,8 +425,11 @@ public class BLEConfigHandler implements BLEBridge {
     public void startWaitingForBLEConfirmation(Player pScorer, Player pToConfirm) {
         waitForBLEConfirmation(pScorer, pToConfirm, true);
     }
-    private final PlayerFocusEffectCountDownTimerConfirm m_timerBLEConfirm = new PlayerFocusEffectCountDownTimerConfirm();
+    private PlayerFocusEffectCountDownTimerConfirm m_timerBLEConfirm = null;
     private void waitForBLEConfirmation(Player pScorer, Player pToConfirm, boolean bWaiting) {
+        if (m_timerBLEConfirm == null) {
+            m_timerBLEConfirm = new PlayerFocusEffectCountDownTimerConfirm(m_iBoard);
+        }
         ShowScoreChangeOn guiElementToUseForFocus = ShowScoreChangeOn.ScoreButton; // TODO: from options
         if ( bWaiting ) {
             int iNrOfSecs = PreferenceValues.nrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired(m_context);
@@ -443,8 +446,8 @@ public class BLEConfigHandler implements BLEBridge {
         private Player m_pNotifyAfterXSecs = null;
         private int    m_iNotifyAfterXSecs = 3;
 
-        PlayerFocusEffectCountDownTimerConfirm() {
-            super(FocusEffect.SetTransparency, 60 * 1000, I_CONFIRM_COUNTDOWN_INTERVAL, m_iBoard);
+        PlayerFocusEffectCountDownTimerConfirm(IBoard iBoard) {
+            super(FocusEffect.SetTransparency, 60 * 1000, I_CONFIRM_COUNTDOWN_INTERVAL, iBoard);
         }
         public void start(ShowScoreChangeOn guiElementToUseForFocus, Player p, Player pNotifyAfterXSecs, int iNotifyAfterXSecs) {
             m_iInvocationCnt                 = 0;

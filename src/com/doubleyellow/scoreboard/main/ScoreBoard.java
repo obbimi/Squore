@@ -6088,6 +6088,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     }
                     case changeScoreBLEConfirm: {
                         m_bleConfigHandler.changeScoreBLEConfirm(saMethodNArgs);
+                        break;
                     }
                     case changeScore: {
                         if ( (saMethodNArgs.length > 1) && (matchModel != null) ) {

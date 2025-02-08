@@ -144,7 +144,11 @@ public class BLEUtil
                 sBLEConfig = context.getString(R.string.pref_BluetoothLE_Config_default);
                 configActive = config.optJSONObject(sBLEConfig);
             }
-            if ( configActive.has(Keys.SharedConfig.toString() ) ) {
+            if ( configActive == null ) {
+                sBLEConfig = context.getString(R.string.pref_BluetoothLE_Config_default2);
+                configActive = config.optJSONObject(sBLEConfig);
+            }
+            if ( (configActive != null) && configActive.has(Keys.SharedConfig.toString() ) ) {
                 String sShareConfig = (String) configActive.remove(Keys.SharedConfig.toString());
                 JSONObject sharedConfig = config.getJSONObject(sShareConfig);
                 Iterator<String> keys = sharedConfig.keys();

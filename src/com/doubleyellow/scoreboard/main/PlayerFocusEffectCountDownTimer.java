@@ -17,6 +17,7 @@
 package com.doubleyellow.scoreboard.main;
 
 import android.os.CountDownTimer;
+import android.util.Log;
 
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Player;
@@ -26,6 +27,7 @@ import com.doubleyellow.scoreboard.vico.IBoard;
 
 public abstract class PlayerFocusEffectCountDownTimer extends CountDownTimer
 {
+    private static final String TAG = "SB." + PlayerFocusEffectCountDownTimer.class.getSimpleName();
     public Player            m_player                  = null;
     public int               m_iInvocationCnt          = 0;
     public ShowScoreChangeOn m_guiElementToUseForFocus = ShowScoreChangeOn.PlayerButton;
@@ -36,13 +38,17 @@ public abstract class PlayerFocusEffectCountDownTimer extends CountDownTimer
     public PlayerFocusEffectCountDownTimer(FocusEffect focusEffect, int iTotalDuration, int iInvocationInterval, IBoard iBoard) {
         super(iTotalDuration, iInvocationInterval);
         this.m_focusEffect = focusEffect;
-        this.m_iBoard = iBoard;
+        this.m_iBoard      = iBoard;
     }
     public abstract void doOnTick(int m_iInvocationCnt, long millisUntilFinished);
     public abstract void doOnFinish();
     @Override public void onTick(long millisUntilFinished) {
         m_iInvocationCnt++;
-        m_iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, m_iTmpTxtOnElementDuringFeedback);
+        if ( m_iBoard != null ) {
+            m_iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, m_iTmpTxtOnElementDuringFeedback);
+        } else {
+            Log.w(TAG, "No iboard. Not switching color");
+        }
         doOnTick(m_iInvocationCnt, millisUntilFinished);
     }
 
@@ -53,7 +59,9 @@ public abstract class PlayerFocusEffectCountDownTimer extends CountDownTimer
     private void cancelForPlayer() {
         m_iInvocationCnt = 0;
         if ( m_player == null ) { return; }
-        m_iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, 0);
+        if ( m_iBoard != null ) {
+            m_iBoard.guiElementColorSwitch(m_guiElementToUseForFocus, m_player, m_focusEffect, m_iInvocationCnt, 0);
+        }
         doChangeScoreIfRequired(m_player);
     }
     public void myCancel() {
