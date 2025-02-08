@@ -36,8 +36,8 @@ class BLEHandler extends Handler
 {
     private static final String TAG = "SB." + BLEHandler.class.getSimpleName();
 
-    private ScoreBoard sb = null;
-    private BLEConfigHandler configHandler;
+    private final ScoreBoard sb;
+    private final BLEConfigHandler configHandler;
     public BLEHandler(ScoreBoard scoreBoard, BLEConfigHandler bleConfigHandler) {
         super(Looper.getMainLooper());
         sb = scoreBoard;
@@ -56,8 +56,8 @@ class BLEHandler extends Handler
                 try {
                     sb.interpretReceivedMessageOnUiThread(sMsg, MessageSource.BluetoothLE);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.w(TAG, "Message could not be understood :" + sMsg);
+                    //e.printStackTrace();
+                    Log.w(TAG, "Could not understand message :" + sMsg);
                 }
                 break;
             case READ_RESULT_BATTERY:
@@ -103,7 +103,9 @@ class BLEHandler extends Handler
                         configHandler.updateBLEConnectionStatus(View.INVISIBLE, -1, "Oeps 3", -1);
                         break;
                     case CONNECTING:
-                        configHandler.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sb.getString(R.string.ble_connecting_to_devices), -1);
+                        // iNrOfDevices = number of desired devices
+                        String sMsgConnecting = sb.getResources().getQuantityString(R.plurals.ble_connecting_to_devices, iNrOfDevices);
+                        configHandler.updateBLEConnectionStatus(View.VISIBLE, iNrOfDevices, sMsgConnecting, -1);
                         break;
                     case DISCONNECTED_Gatt:
                         // if one of the two devices disconnects

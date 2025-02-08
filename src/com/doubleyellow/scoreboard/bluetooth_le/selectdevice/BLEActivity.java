@@ -211,7 +211,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         recyclerView.setNestedScrollingEnabled(false);
 
         sMustStartWith = m_bleConfig.optString(BLEUtil.Keys.DeviceNameStartsWith.toString());
-        String sRegExp = m_bleConfig.optString(BLEUtil.Keys.DeviceNameMustMatch     .toString());
+        String sRegExp = m_bleConfig.optString(BLEUtil.Keys.DeviceNameMustMatch .toString());
         if ( StringUtil.isNotEmpty(sRegExp) ) {
             try {
                 pMustMatch = Pattern.compile(sRegExp);
@@ -589,7 +589,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
                 case READ_RESULT_BATTERY: {
                     int iBatteryLevel = msg.arg1;
                     int iPlayer       = msg.arg2;
-                    String sDevice    = sMsg;
+                    //String sDevice    = sMsg;
                     Player p = null;
                     if (0 <= iPlayer && iPlayer <= 1) {
                         p = Player.values()[iPlayer];

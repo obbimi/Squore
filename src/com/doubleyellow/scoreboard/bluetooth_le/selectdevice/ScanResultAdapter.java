@@ -42,9 +42,9 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
 
     private final Map<Player, String> mSelectedSeenDevices;
     private final Map<Player, String> mSelectedPrefDevices;
-    private List<ScanResult>          items;
-    private double                    fRssiValueAt1M;
-    private int                       iManufacturerData_BatteryLevelAtPos;
+    private final List<ScanResult>    items;
+    private final double              fRssiValueAt1M;
+    private final int                 iManufacturerData_BatteryLevelAtPos;
 
     public ScanResultAdapter(List<ScanResult> items, double fRssiValueAt1M, int iManufacturerData_BatteryLevelAtPos, Map<Player,String> mSelectedSeenDevices, Map<Player, String> mSelectedPrefDevices) {
         this.items                = items;

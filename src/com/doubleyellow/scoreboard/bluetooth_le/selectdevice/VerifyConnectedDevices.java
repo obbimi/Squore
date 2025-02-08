@@ -32,6 +32,7 @@ import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 
+/** @deprecated */
 public class VerifyConnectedDevices extends BaseAlertDialog
 {
     public VerifyConnectedDevices(Context context, Model matchModel, ScoreBoard scoreBoard) {

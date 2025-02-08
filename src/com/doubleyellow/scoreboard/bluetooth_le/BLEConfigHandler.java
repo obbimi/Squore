@@ -28,7 +28,9 @@ import com.doubleyellow.util.StringUtil;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Class to serve as glue for BLE functionality.
@@ -53,8 +55,6 @@ public class BLEConfigHandler implements BLEBridge {
     private static final Map<Player, Long> m_lastBLEScoreChangeReceivedFrom   = new HashMap<>();
     private        long               m_lIgnoreAccidentalDoublePress_ThresholdMS = 1500;
 
-    private static boolean            m_bBLEDevicesSelected                   = false;
-
     private ScoreBoard m_context = null;
     private IBoard     m_iBoard  = null;
     public BLEConfigHandler() {}
@@ -68,24 +68,39 @@ public class BLEConfigHandler implements BLEBridge {
 
         m_lIgnoreAccidentalDoublePress_ThresholdMS = PreferenceValues.IgnoreAccidentalDoublePress_ThresholdInMilliSeconds(m_context);
 
-        if ( m_bBLEDevicesSelected == false ) {
-            Log.i(sMethod, "Don't use BLE. First select devices");
-            return false;
-        }
-
-        String sBluetoothLEDevice1 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral1, null, m_context);
-        String sBluetoothLEDevice2 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral2, null, m_context);
-        if ( StringUtil.hasEmpty(sBluetoothLEDevice1, sBluetoothLEDevice2) ) {
-            Log.w(sMethod, "Don't use BLE. No 2 devices specified");
-            return false;
-        }
-        Log.i(sMethod, String.format("Scanning for devices %s, %s", sBluetoothLEDevice1, sBluetoothLEDevice2));
-
         m_bleConfig = BLEUtil.getActiveConfig(m_context);
         if ( m_bleConfig == null ) {
             Toast.makeText(m_context, "Could not obtain config for BLE", Toast.LENGTH_LONG).show();
             return false;
         }
+        String sBluetoothLEDevice1 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral1, null, m_context);
+        String sBluetoothLEDevice2 = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Peripheral2, null, m_context);
+
+        int iNrOfDevicesRequired = m_bleConfig.optInt(BLEUtil.Keys.NrOfDevices.toString(), -1);
+        Set<String> setDevices = new HashSet<>();
+        if ( StringUtil.isNotEmpty(sBluetoothLEDevice1) ) setDevices.add(sBluetoothLEDevice1);
+        if ( StringUtil.isNotEmpty(sBluetoothLEDevice2) ) setDevices.add(sBluetoothLEDevice2);
+
+        if ( iNrOfDevicesRequired == 2 && setDevices.size() != 2 ) {
+            Log.w(sMethod, "Don't use BLE. No 2 devices specified: " + setDevices);
+            return false;
+        }
+        if ( iNrOfDevicesRequired == 1 && setDevices.size() !=1 ) {
+            Log.w(sMethod, "Don't use BLE. No devices or more then 1 device specified: " + setDevices);
+            return false;
+        }
+        if ( iNrOfDevicesRequired == -1 && setDevices.isEmpty() ) {
+            Log.w(sMethod, "Don't use BLE. No devices to use specified");
+            return false;
+        }
+        boolean bAutoReconnect = PreferenceValues.getBoolean(PreferenceKeys.BluetoothLE_AutoReconnect, m_context, true);
+        if ( bAutoReconnect == false ) {
+            Log.i(sMethod, "Don't use BLE autoreconnect. First select devices");
+            return false;
+        }
+
+        Log.i(sMethod, String.format("Scanning for devices %s, %s", sBluetoothLEDevice1, sBluetoothLEDevice2));
+
         if ( (sBluetoothLEDevice1 != null) && (sBluetoothLEDevice1.equalsIgnoreCase(sBluetoothLEDevice2) == false) ) {
             // settings only relevant when using 2 wristbands with confirmation mechanism
             m_eInitiateSelfScoreChangeButton      = BLEUtil.getButtonFor(m_bleConfig, BLEUtil.Keys.InitiateScoreChangeButton        , m_eInitiateSelfScoreChangeButton);
@@ -509,7 +524,12 @@ public class BLEConfigHandler implements BLEBridge {
                 showBLEDevicesBatteryLevels();
             } );
             vTxt.setOnLongClickListener(v -> {
-                showBLEVerifyConnectedDevicesDialog(m_nrOfBLEDevicesConnected);
+                //showBLEVerifyConnectedDevicesDialog(m_nrOfBLEDevicesConnected);
+                this.stop();
+                setAutoReconnect(false);
+
+                Toast.makeText( m_context ,"BLE Auto Reconnect Stopped", Toast.LENGTH_LONG).show();
+
                 return true;
             });
         }
@@ -540,8 +560,6 @@ public class BLEConfigHandler implements BLEBridge {
         }
         if ( PreferenceValues.useBluetoothLE(m_context) == false ) { return; }
 
-        m_bBLEDevicesSelected = false;
-
         //String[] permissions = BLEUtil.getPermissions();
         //ActivityCompat.requestPermissions(this, permissions, PreferenceKeys.UseBluetoothLE.ordinal());
 
@@ -561,7 +579,8 @@ public class BLEConfigHandler implements BLEBridge {
                 PreferenceKeys key = p.equals(Player.A) ? PreferenceKeys.BluetoothLE_Peripheral1 : PreferenceKeys.BluetoothLE_Peripheral2;
                 PreferenceValues.setString(key, m_context, sAddress);
             }
-            m_bBLEDevicesSelected = true;
+
+            setAutoReconnect(true);
             if ( PreferenceValues.getLandscapeLayout(m_context).equals(LandscapeLayoutPreference.Default) ) {
                 if ( PreferenceValues.setEnum(PreferenceKeys.useChangeSidesFeature, m_context, Feature.Automatic) ) {
                     Toast.makeText(m_context, R.string.ble_change_sides_automated_in_ble_mode, Toast.LENGTH_LONG).show();
@@ -570,8 +589,12 @@ public class BLEConfigHandler implements BLEBridge {
 
             m_context.onResumeInitBluetoothBLE();
         } else {
-            m_bBLEDevicesSelected = false;
+            setAutoReconnect(false);
         }
+    }
+
+    private void setAutoReconnect(boolean b) {
+        PreferenceValues.setBoolean(PreferenceKeys.BluetoothLE_AutoReconnect, m_context, b);
     }
 
     @Override public void promoteAppToUseBLE() {

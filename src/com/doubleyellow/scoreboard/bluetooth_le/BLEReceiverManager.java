@@ -650,7 +650,7 @@ public class BLEReceiverManager
     public void startReceiving() {
         //mDevicesUsed.clear();
         bluetoothLeScanner.startScan(null, BLEUtil.scanSettings, scanCallback);
-        setState(BLEState.CONNECTING, ListUtil.join(saDeviceAddresses, ","), MapUtil.size(mDevicesUsed));
+        setState(BLEState.CONNECTING, ListUtil.join(saDeviceAddresses, ","), ListUtil.size(saDeviceAddresses));
     }
 
 /*
