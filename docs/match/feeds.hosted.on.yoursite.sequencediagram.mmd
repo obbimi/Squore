@@ -4,13 +4,14 @@ participant App
 participant AppServer
 participant YourSite
 
+links User: { "This image": "https://github.com/obbimi/Squore/blob/master/docs/match/feeds.hosted.on.yoursite.sequencediagram.mmd" }
 links AppServer: { "Feed Types": "https://squore.double-yellow.be/feed/feeds.php", "Documentation" : "https://squore.double-yellow.be/feed/2023-11-10.Integrate-Squore-with-your-website.odt" }
-links YourSite: { "Feeds": "https://yoursite/feeds", "Premier Matches": "https://yoursite/feed/premier/matches", "Second Matches ": "https://yoursite/feed/second/matches", "Feeds Example": "https://squore.double-yellow.be/demo/demo.feeds.partner.php","Matches Example":"https://squore.double-yellow.be/partner/Region+B/Division/2A","Mermaid": "https://mermaid.js.org/syntax/sequenceDiagram.html" }
+links YourSite: { "Feeds": "https://yoursite/feeds", "League A Matches": "https://yoursite/feed/League A/matches", "League B Matches ": "https://yoursite/feed/league_b/matches", "Feeds Example": "https://squore.double-yellow.be/demo/demo.feeds.partner.php","Matches Example":"https://squore.double-yellow.be/partner/Region+B/Division/2A","Mermaid": "https://mermaid.js.org/syntax/sequenceDiagram.html" }
 
-User      ->>+App  : Select match from feed
+User      ->>+App  : Choose "New match > Select from feed"
 App       ->>-User : Present matches of 'active' feed
 
-User      ->>+App        : Select new feed
+User      ->>+App        : Choose "Select new feed"
 App       ->>-AppServer  :List of feed types
 activate AppServer
 Note left of AppServer  : https://squore.double-yellow.be/feed/feeds.php
@@ -25,18 +26,18 @@ activate YourSite
 Note left of YourSite: e.g. https://yoursite/feeds
 YourSite  ->>+App  : JSON with all your feeds
 deactivate YourSite
-Note left of YourSite : e.g.<br> [{"Name": "Premier", "FeedMatches": "https://yoursite/feed/premier/matches"}<br>,{"Name": "Second", "FeedMatches": "https://yoursite/feed/second/matches"}]
+Note left of YourSite : e.g.<br> [{"Name": "League A", "FeedMatches": "https://yoursite/feed/league_a/matches"}<br>,{"Name": "League B", "FeedMatches": "https://yoursite/feed/league_b/matches"}]
 %%end
 App       ->>-User : Present leagues/tournaments
 
-User      ->>+App  : Select "Second"
-Note left of App: "Second" now becomes the 'Active' feed
+User      ->>+App  : Select feed named "League B"
+Note left of App: "League B" now becomes the 'Active' feed
 App       ->>-YourSite : Fetch Matches from URL specified with 'FeedMatches'
 activate YourSite
-Note left of YourSite: e.g. https://yoursite/feed/second/matches
-YourSite  ->>+App  : JSON with all matches in feed "Second"
+Note left of YourSite: e.g. https://yoursite/feed/league_b/matches
+YourSite  ->>+App  : JSON with all matches in feed "League B"
 deactivate YourSite
-Note left of YourSite: to receive the match result include:<br>{ config: { shareAction: PostResult<br>, PostResult: https://yoursite/receivematchresult }}
+Note left of YourSite: to receive the match result, include section like:<br>{ config: { shareAction: PostResult<br>, PostResult: https://yoursite/receivematchresult }}
 App       ->>-User : Present matches
 
 User      ->>+App  : Select match
@@ -46,6 +47,7 @@ Note left of App: prefilled with settings from JSON
 User      ->>+App  : Confirm and Score app
 App       ->>-YourSite: If 'PostResult' is configured, POST match details to URL
 activate YourSite
+Note left of YourSite: e.g. https://yoursite/receivematchresult
 YourSite  ->>+App     : Send string to confirm match was received OK/NOK
 deactivate YourSite
 App       ->>-User    : Show message with POST result
