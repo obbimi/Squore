@@ -47,6 +47,14 @@ public class URLFeedTask extends URLTask
         }
         return sURL;
     }
+    public static String addCountryCodeAsParameter(String sURL, Context context) {
+        String sCC = PreferenceValues.getCountryFromTelephonyOrTimeZone(context);
+        if ( StringUtil.isNotEmpty(sCC) ) {
+            String sParamSplitter = sURL.contains("?") ? "?" : "&";
+            sURL = sURL + sParamSplitter + "cc=" + sCC;
+        }
+        return sURL;
+    }
 
     private int iReadTimeoutMS = 30000;
     public URLFeedTask(Context ctx, String sUrl) {

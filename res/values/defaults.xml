@@ -401,9 +401,13 @@ http://developer.android.com/guide/practices/screens_support.html
 \nFeedMatches=feed/tournamentsoftware.php?nr=2&pm=matches
 \nFeedPlayers=feed/tournamentsoftware.php?nr=2&pm=players
 \n
-\nName=TournamentSoftware 3
-\nFeedMatches=feed/tournamentsoftware.php?nr=3&pm=matches
-\nFeedPlayers=feed/tournamentsoftware.php?nr=3&pm=players
+\nName=RankedIn 1
+\nFeedMatches=feed/rankedin_tournamentfeed.php?nr=1&pm=matches
+\nFeedPlayers=feed/rankedin_tournamentfeed.php?nr=1&pm=players
+\n
+\nName=RankedIn 2
+\nFeedMatches=feed/rankedin_tournamentfeed.php?nr=2&pm=matches
+\nFeedPlayers=feed/rankedin_tournamentfeed.php?nr=2&pm=players
 \n
 \nName=PSA Tournament 1
 \nFeedMatches=feed/psa.php?nr=1

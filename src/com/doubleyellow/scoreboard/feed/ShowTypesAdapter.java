@@ -23,11 +23,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.icu.util.TimeZone;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.LocaleList;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -334,21 +332,7 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
         }
 
         //context.getSystemService(android.content.Context.COUNTRY_DETECTOR); // "country_detector" // only works up to api 28
-        String networkCountryIso = null;
-        try {
-            TelephonyManager telephonyManager = context.getSystemService(TelephonyManager.class);
-            if ( telephonyManager != null ) {
-                networkCountryIso = telephonyManager.getNetworkCountryIso();
-            }
-            if ( StringUtil.isEmpty(networkCountryIso) ) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    TimeZone aDefault = TimeZone.getDefault();
-                    networkCountryIso = TimeZone.getRegion(aDefault.getID());
-                }
-            }
-            Log.w(TAG, "networkCountryIso : " + networkCountryIso);
-        } catch (Exception e) {
-        }
+        String networkCountryIso = PreferenceValues.getCountryFromTelephonyOrTimeZone(context);
 
         // if defined for users locale, add certain types to top
         List<String> lLocaleFeedTypes =  new ArrayList<>();

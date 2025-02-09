@@ -32,6 +32,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.preference.*;
 import android.provider.ContactsContract;
+import android.telephony.TelephonyManager;
+import android.icu.util.TimeZone;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
@@ -1673,12 +1675,14 @@ public class PreferenceValues extends RWValues
     }
     public static String getMatchesFeedURL(Context context) {
         String sUrl = getFeedPostDetail(context, URLsKeys.FeedMatches);
-        sUrl = URLFeedTask.prefixWithBaseIfRequired(sUrl);
+               sUrl = URLFeedTask.prefixWithBaseIfRequired(sUrl);
+               sUrl = URLFeedTask.addCountryCodeAsParameter(sUrl, context);
         return sUrl;
     }
     public static String getPlayersFeedURL(Context context) {
         String sUrl = getFeedPostDetail(context, URLsKeys.FeedPlayers);
-        sUrl = URLFeedTask.prefixWithBaseIfRequired(sUrl);
+               sUrl = URLFeedTask.prefixWithBaseIfRequired(sUrl);
+               sUrl = URLFeedTask.addCountryCodeAsParameter(sUrl, context);
         return sUrl;
     }
     public static String getPostResultToURL(Context context) {
@@ -2533,4 +2537,22 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.allowForScoringWithBlueToothConnectedMediaControlButtons, context, false);
     }
 
+    public static String getCountryFromTelephonyOrTimeZone(Context context) {
+        String networkCountryIso = null;
+        try {
+            TelephonyManager telephonyManager = context.getSystemService(TelephonyManager.class);
+            if ( telephonyManager != null ) {
+                networkCountryIso = telephonyManager.getNetworkCountryIso();
+            }
+            if ( StringUtil.isEmpty(networkCountryIso) ) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    TimeZone aDefault = TimeZone.getDefault();
+                    networkCountryIso = TimeZone.getRegion(aDefault.getID());
+                }
+            }
+            Log.w(TAG, "networkCountryIso : " + networkCountryIso);
+        } catch (Exception e) {
+        }
+        return networkCountryIso;
+    }
 }
