@@ -977,8 +977,8 @@ public class PreferenceValues extends RWValues
     public static String getMQTTSubscribeTopicChange(Context context) {
         return getString(PreferenceKeys.MQTTSubscribeTopicChange, R.string.MQTTTopicChangeTemplate__Default, context);
     }
-    public static String getMQTTJoinerLeaverTopicPrefix(Context context) {
-        return getString(PreferenceKeys.MQTTJoinerLeaverTopicPrefix, R.string.MQTTJoinerLeaverTopicPrefix__Default, context);
+    public static String getMQTTPublishJoinerLeaverTopic(Context context) {
+        return getString(PreferenceKeys.MQTTPublishJoinerLeaverTopic, R.string.MQTTPublishJoinerLeaverTopic__Default, context);
     }
     public static String getMQTTOtherDeviceId(Context context) {
         return getString(PreferenceKeys.MQTTOtherDeviceId, "", context).toUpperCase();

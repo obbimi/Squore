@@ -1082,17 +1082,23 @@
                 android:title="@string/pref_MQTTBrokerURL_Custom"
                 android:defaultValue="@string/MQTTBrokerURL_Custom__Default"
                 />
-            <EditTextPreference android:key="MQTTPublishTopicMatch"
+            <EditTextPreference android:key="MQTTPublishJoinerLeaverTopic"
                 android:icon="@drawable/dummy"
-                android:title="@string/pref_MQTTPublishTopicMatch"
-                android:summary="@string/pref_MQTTPublishTopicMatch_Summary"
-                android:defaultValue="@string/MQTTTopicMatchTemplate__Default"
+                android:title="@string/pref_MQTTPublishJoinerLeaverTopic"
+                android:summary="@string/pref_MQTTPublishJoinerLeaverTopic_Summary"
+                android:defaultValue="@string/MQTTPublishJoinerLeaverTopic__Default"
                 />
             <EditTextPreference android:key="MQTTPublishTopicChange"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_MQTTPublishTopicChange"
                 android:summary="@string/pref_MQTTPublishTopicChange_Summary"
                 android:defaultValue="@string/MQTTTopicChangeTemplate__Default"
+                />
+            <EditTextPreference android:key="MQTTPublishTopicMatch"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_MQTTPublishTopicMatch"
+                android:summary="@string/pref_MQTTPublishTopicMatch_Summary"
+                android:defaultValue="@string/MQTTTopicMatchTemplate__Default"
                 />
             <EditTextPreference android:key="MQTTSubscribeTopicChange"
                 android:icon="@drawable/dummy"

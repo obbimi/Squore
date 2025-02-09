@@ -4218,7 +4218,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         case UseMQTT:              // fall through
                         case MQTTBrokerURL:        // fall through
                         case MQTTBrokerURL_Custom: // fall through
-                        case MQTTJoinerLeaverTopicPrefix: // fall through
+                        case MQTTPublishJoinerLeaverTopic: // fall through
                         case MQTTPublishTopicMatch:       // fall through
                         case MQTTSkipJsonKeys:            // fall through
                         case MQTTPublishTopicChange:      // fall through

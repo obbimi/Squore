@@ -1488,7 +1488,7 @@ public class IBoard implements TimerViewContainer
         }
     }
 
-    private static final String[] m_aStatusTexts = { "mq", "Mq", "MQ", "mQ" };
+    private static final String[] m_aStatusTexts = { "MQ", "MQ", "MQ", "MQ" };
     private int m_statusIndex = 0;
     public void updateMQTTConnectionStatusIcon(int visibility, int nrOfWhat) {
         TextView vTxt = m_vRoot.findViewById(R.id.sb_mqtt_connection_info);

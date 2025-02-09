@@ -53,16 +53,16 @@ import java.util.TreeMap;
 
 /**
  * Publish to
- * double-yellow/${EventId}/${BrandOrSport}/${deviceid}                                   publish commands (acting as master) that slave should execute keep score in sync
- * double-yellow/${EventId}/${BrandOrSport}/${otherdeviceid}/requestCompleteJsonOfMatch   for mirroring a fixed device (acting as slave), when model appears out of sync
+ * double-yellow/${FeedName}/${BrandOrSport}/${deviceid}                                   publish commands (acting as master) that slave should execute keep score in sync
+ * double-yellow/${FeedName}/${BrandOrSport}/${otherdeviceid}/requestCompleteJsonOfMatch   for mirroring a fixed device (acting as slave), when model appears out of sync
  *
  * Subscribe to
- * double-yellow/${EventId}/${BrandOrSport}/${otherdeviceid}                              for mirroring a fixed device (being slave), receiving commands or complete match model as json
- * double-yellow/${EventId}/${BrandOrSport}/${deviceid}/requestCompleteJsonOfMatch        for mirroring a fixed device (master), to react to a request of a slave to sync the entire match model
- * double-yellow/${EventId}/${BrandOrSport}/+                                             for livescore of multiple matches of single sport
- * double-yellow/${EventId}/#                                                             for livescore of multiple matches
+ * double-yellow/${FeedName}/${BrandOrSport}/${otherdeviceid}                              for mirroring a fixed device (being slave), receiving commands or complete match model as json
+ * double-yellow/${FeedName}/${BrandOrSport}/${deviceid}/requestCompleteJsonOfMatch        for mirroring a fixed device (master), to react to a request of a slave to sync the entire match model
+ * double-yellow/${FeedName}/${BrandOrSport}/+                                             for livescore of multiple matches of single sport
+ * double-yellow/${FeedName}/#                                                             for livescore of multiple matches
  *
- * 'EventId' (optional) to allow using a public broker like 'tcp://broker.hivemq.com:1883' and ensure you only receive info from a certain subset of matches
+ * 'FeedName' (optional) to allow using a public broker like 'tcp://broker.hivemq.com:1883' and ensure you only receive info from a certain subset of matches
  * 'BrandOrSport' (optional) to allow subscribing only to a squash matches or only badminton matches
  *
  */
@@ -90,6 +90,11 @@ public class MQTTHandler
         thanksForJoining,
         leave
     }
+    enum TopicPlaceholder {
+        DeviceId,
+        FeedName
+    }
+
 
     public void reinit(ScoreBoard context, IBoard iBoard) {
         m_context = context;
@@ -122,7 +127,7 @@ public class MQTTHandler
         m_thisDeviceId  = PreferenceValues.getLiveScoreDeviceId(context);
 
         String clientID = /*Brand.getShortName(context) + "." +*/ m_thisDeviceId;
-        m_joinerLeaverTopic = doMQTTTopicTranslation(PreferenceValues.getMQTTJoinerLeaverTopicPrefix(context) + "/" + JoinerLeaver.class.getSimpleName(), null) ;
+        m_joinerLeaverTopic = doMQTTTopicTranslation(PreferenceValues.getMQTTPublishJoinerLeaverTopic(context), null) ;
 
         //mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK, null, true, 1); // version 4.3 of https://github.com/hannesa2/paho.mqtt.android
         //mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK); // uses MqttDefaultFilePersistence and seems to throw MqttPersistenceException
@@ -367,12 +372,21 @@ public class MQTTHandler
 
     private String doMQTTTopicTranslation(String sPlaceholder, String sDeviceId) {
         // subscribe to any message from specific device
-        if ( StringUtil.isEmpty(sDeviceId) && sPlaceholder.contains("${DeviceId}") ) {
+        if ( StringUtil.isEmpty(sDeviceId) && sPlaceholder.contains("${" + TopicPlaceholder.DeviceId + "}") ) {
             return null;
         }
+        String sEvent = "";
+        if ( sPlaceholder.contains("${" + TopicPlaceholder.FeedName + "}") ) {
+            sEvent = PreferenceValues.getMatchesFeedName(m_context);
+            if ( StringUtil.isNotEmpty(sEvent) ) {
+                sEvent = sEvent.replaceAll("[^0-9A-Za-z_-]", "");
+            }
+        }
+
         Map mValues = MapUtil.getMap
                 ("Brand", Brand.getShortName(m_context)
-                , "DeviceId", sDeviceId
+                , TopicPlaceholder.DeviceId.toString(), sDeviceId
+                , TopicPlaceholder.FeedName.toString(), sEvent
                 );
         Placeholder instance = Placeholder.getInstance(TAG);
         String sValue = instance.translate(sPlaceholder, mValues);
