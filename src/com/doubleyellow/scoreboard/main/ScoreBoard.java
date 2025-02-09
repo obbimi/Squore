@@ -336,7 +336,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     /** Invoked by SideToss */
-    public void swapSides(Integer iToastLength, Player pFirst) {
+    public void swapSides(int iToastLength, Player pFirst) {
         if ( matchModel == null ) { return; }
 
         if ( pFirst == null ) {
@@ -349,9 +349,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         matchModel.triggerListeners();
 
-        if ( (iToastLength != null) && ( iToastLength == Toast.LENGTH_LONG || iToastLength == Toast.LENGTH_SHORT ) ) {
+        if ( iToastLength != 0 ) {
             String sMsg = getString( matchModel.isDoubles()? R.string.teams_have_swapped_sides : R.string.player_names_swapped); // + " (" + pFirst + ")";
-            Toast.makeText(this, sMsg, iToastLength).show();
+            iBoard.showInfoMessage(sMsg, iToastLength);
         }
         swapSidesOnBT(pFirst);
     }
@@ -401,7 +401,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         if ( bShowToast ) {
             String sMsg = getString(R.string.double_player_names_of_team_x_swapped, ListUtil.join(Arrays.asList(pls), " & "));
-            Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
+            iBoard.showInfoMessage(sMsg, 5);
         }
     }
 
@@ -2530,7 +2530,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     } else {
                         Feature fChangeSides = PreferenceValues.useChangeSidesFeature(ScoreBoard.this);
                         swapSides_BOP(fChangeSides);
-                        //swapSides(Toast.LENGTH_LONG, null);
                     }
                 }
             }
@@ -3287,7 +3286,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 toggleDemoMode(demoMessage);
                 return true;
             } else if (id == R.id.sb_change_sides || id == R.id.float_changesides) {
-                swapSides(Toast.LENGTH_LONG, null);
+                swapSides(5, null);
                 if (Brand.isBadminton() && (matchModel != null) && matchModel.isDoubles()) {
                     _swapDoublePlayers(Player.values(), false);
                 }
@@ -3336,8 +3335,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 } else {
                     nonScorer = matchModel.getLastScorer().getOther();
                 }
-                if (undoLastForScorer(nonScorer)) {
-                    Toast.makeText(ScoreBoard.this, "Removed last scoreline for " + matchModel.getName(nonScorer), Toast.LENGTH_LONG).show();
+                if ( undoLastForScorer(nonScorer) ) {
+                    String sMsg = "Removed last scoreline for " + matchModel.getName(nonScorer);
+                    iBoard.showInfoMessage(sMsg, 5);
                 }
                 return true;
             } else if (id == R.id.pl_change_score) {
@@ -3440,7 +3440,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 ShareHelper.emailMatchResult(this, matchModel);
                 return false;
             } else if (id == R.id.cmd_import_settings) {
-                ExportImportPrefs.importSettings(this);
+                String sMessage = ExportImportPrefs.importSettings(this, false);
+                if ( StringUtil.isNotEmpty(sMessage) ) {
+                    iBoard.showInfoMessage(sMessage, 6);
+                }
                 // TODO: is a restart required, or only for the colors
                 ColorPrefs.clearColorCache();
                 initColors();
@@ -5925,16 +5928,19 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                 // act as if the match was selected from a feed
                                 final int iRequestCode = R.id.sb_select_feed_match;
                                 if ( childActivityRequestCode() == iRequestCode ) {
-                                    Toast.makeText(this, "Ignoring new match to ref received by " + msgSource + " message: " + sFileContent + ".\nRelated child activity already open", Toast.LENGTH_LONG).show();
+                                    String sMsg = "Ignoring new match to ref received by " + msgSource + " message: " + sFileContent + ".\nRelated child activity already open";
+                                    Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                                 } else {
                                     onActivityResult(iRequestCode, 0 , intent);
                                     if ( PreferenceValues.showToastMessageForEveryReceivedFCMMessage(this)) {
-                                        Toast.makeText(this, "New match to ref received by " + msgSource + " message:\n" + sFileContent, Toast.LENGTH_LONG).show();
+                                        String sMsg = "New match to ref received by " + msgSource + " message:\n" + sFileContent;
+                                        Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                                     }
                                 }
                             } else {
                                 // TODO: implement other options. e.g. populate 'My List' and open 'My List'
-                                Toast.makeText(this, "JSON received via " + msgSource + " is not valid to represent a match.\n" + sFileContent, Toast.LENGTH_LONG).show();
+                                String sMsg = "JSON received via " + msgSource + " is not valid to represent a match.\n" + sFileContent;
+                                Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                             }
                         } else {
                             try {
@@ -6003,7 +6009,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                 bluetoothRequestCountryFile(2000);
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Toast.makeText(this, String.format("Could not interpret file as image for %s", sCountryCode), Toast.LENGTH_LONG).show();
+                                String sMsg = String.format("Could not interpret file as image for %s", sCountryCode);
+                                Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                                 writeMethodToBluetooth(BTMethods.Toast, "Receiver could not interpret image for " + sCountryCode);
                             }
                         } else {
@@ -6062,7 +6069,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                 } else {
                                     PreferenceValues.setString(key, this, sValue);
                                 }
-                                Toast.makeText(this, String.format("Updated pref over bluetooth %s=%s", key, sValue), Toast.LENGTH_LONG).show();
+                                String sMsg = String.format("Updated pref over bluetooth %s=%s", key, sValue);
+                                Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                                 if (saMethodNArgs[1].toLowerCase().contains("color") ) {
                                     ColorPrefs.clearColorCache();
                                     initColors();
@@ -6073,7 +6081,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                     ColorPrefs.ColorTarget key    = ColorPrefs.ColorTarget.valueOf(saMethodNArgs[1]);
                                     String         sValue = saMethodNArgs[2];
                                     PreferenceValues.setString(key, this, sValue);
-                                    Toast.makeText(this, String.format("Updated color pref over bluetooth %s=%s", key, sValue), Toast.LENGTH_LONG).show();
+                                    String sMsg = String.format("Updated color pref over bluetooth %s=%s", key, sValue);
+                                    Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                                     ColorPrefs.clearColorCache();
                                     initColors();
                                 } catch (IllegalArgumentException e2) {
@@ -6082,7 +6091,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                 }
                             }
                         } else {
-                            Toast.makeText(this, String.format("Could not handle %s,%s,%s", (Object[]) saMethodNArgs), Toast.LENGTH_LONG).show();
+                            String sMsg = String.format("Could not handle %s,%s,%s", (Object[]) saMethodNArgs);
+                            Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                         }
                         break;
                     }
@@ -6232,7 +6242,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     case swapPlayers: {
                         if ( saMethodNArgs.length > 1 ) {
                             Player pFirst = Player.valueOf(saMethodNArgs[1].toUpperCase());
-                            swapSides(Toast.LENGTH_LONG, pFirst);
+                            swapSides(5, pFirst);
                         }
                         break;
                     }
@@ -6367,7 +6377,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         break;
                     case FirebaseCloudMessage:
                         if ( PreferenceValues.showToastMessageForEveryReceivedFCMMessage(this)) {
-                            Toast.makeText(this, "Score changed by FCM message: " + readMessage, Toast.LENGTH_SHORT).show();
+                            String sMsg = "Score changed by FCM message: " + readMessage;
+                            Toast.makeText(this, sMsg, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case BluetoothLE:

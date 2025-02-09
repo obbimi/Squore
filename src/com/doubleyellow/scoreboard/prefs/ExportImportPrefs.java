@@ -62,7 +62,7 @@ public class ExportImportPrefs extends DialogPreference
         switch (iPressed) {
             case DialogInterface.BUTTON_POSITIVE:
                 //import
-                importSettings(context);
+                importSettings(context, true);
 
                 Preferences.setModelDirty();
 
@@ -78,7 +78,7 @@ public class ExportImportPrefs extends DialogPreference
     private static final String sSettingsExtension_BIN  = ".bin";
     private static final String sSettingsExtension_JSON = ".json";
 
-    public static boolean importSettings(Context context) {
+    public static String importSettings(Context context, boolean bShowToast) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         File fSettingsJSON = getSettingsBinaryFile(context, true, sSettingsExtension_JSON);
@@ -115,8 +115,10 @@ public class ExportImportPrefs extends DialogPreference
                 }
                 editor.commit();
                 String sMsg = context.getString(R.string.x_restored_from_y, context.getString(R.string.sb_preferences), fSettingsJSON.getAbsolutePath());
-                Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
-                return true;
+                if ( bShowToast ) {
+                    Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+                }
+                return sMsg;
             } catch (Exception e) {
             }
         }
@@ -126,13 +128,15 @@ public class ExportImportPrefs extends DialogPreference
         if ( (fSettings == null) || (fSettings.exists() == false) ) {
             String sMsg  =        context.getString(R.string.could_not_find_file_x                 , (fSettings==null?"":fSettings.getAbsolutePath()) );
                    sMsg += "\n" + context.getString(R.string.did_you_already_perform_an_export_of_x, context.getString(R.string.sb_preferences));
-            Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
-            return false;
+            if ( bShowToast ) {
+                Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+            }
+            return sMsg;
         }
 
         Map<String, ?> buAll = (Map<String, ?>) FileUtil.readObjectFromFile(fSettings);
         if ( MapUtil.isEmpty(buAll) ) {
-            return false;
+            return null;
         }
 
         SharedPreferences.Editor editor = preferences.edit();
@@ -160,9 +164,11 @@ public class ExportImportPrefs extends DialogPreference
         editor.commit();
 
         String sMsg = context.getString(R.string.x_restored_from_y, context.getString(R.string.sb_preferences), fSettings.getAbsolutePath());
-        Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+        if ( bShowToast ) {
+            Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+        }
 
-        return true;
+        return sMsg;
     }
 
     public static void exportSettings(Context context) {

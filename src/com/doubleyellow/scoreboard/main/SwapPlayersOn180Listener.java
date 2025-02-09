@@ -54,7 +54,7 @@ class SwapPlayersOn180Listener extends OrientationEventListener {
                 // - from 0 to 2 or back, or
                 // - from 1 to 3 or back
                 Log.i(TAG, "Swap because going from " + iPrev + " to " + i0To4);
-                scoreBoard.swapSides(null /*Toast.LENGTH_SHORT*/, null);
+                scoreBoard.swapSides(0, null);
                 m_previousDegrees = i0To4;
             }
         } else {

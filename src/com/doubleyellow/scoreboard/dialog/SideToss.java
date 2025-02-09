@@ -123,7 +123,7 @@ public class SideToss extends BaseAlertDialog
         }
         if ( (bLooserShouldBeRight != null) && (bLooserShouldBeRight != bLooserOfTossIsRight) ) {
             // swap teams
-            scoreBoard.swapSides(null, null);
+            scoreBoard.swapSides(0, null);
         }
         if ( bLooserShouldBeRight != null ) {
             this.dismiss();
