@@ -52,7 +52,6 @@ import com.doubleyellow.prefs.EnumListPreference;
 import com.doubleyellow.prefs.EnumMultiSelectPreference;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
-import com.doubleyellow.scoreboard.bluetooth_le.BLEUtil;
 import com.doubleyellow.scoreboard.model.GoldenPointFormat;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
@@ -662,8 +661,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 if ( PreferenceValues.useBluetoothLE(getContext()) ) {
                     ListPreference lpBLEconfig = ( ListPreference) this.findPreference(PreferenceKeys.BluetoothLE_Config);
                     if ( lpBLEconfig != null ) {
-                        List<CharSequence> lKeys        = BLEUtil.getConfigs(getContext(), 1);
-                        List<CharSequence> lKeysAndDesc = BLEUtil.getConfigs(getContext(), 3);
+                        List<CharSequence> lKeys        = PreferenceValues.getConfigs(getContext(), R.raw.bluetooth_le_config, 1);
+                        List<CharSequence> lKeysAndDesc = PreferenceValues.getConfigs(getContext(), R.raw.bluetooth_le_config, 3);
                         lpBLEconfig.setEntryValues(lKeys       .toArray(new CharSequence[0]));
                         lpBLEconfig.setEntries    (lKeysAndDesc.toArray(new CharSequence[0]));
                     }

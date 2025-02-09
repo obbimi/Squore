@@ -174,7 +174,7 @@ public class BLEActivity extends XActivity implements ActivityCompat.OnRequestPe
         }
 
         try {
-            String sShortDescription = m_bleConfig.getString(BLEUtil.Keys.ShortDescription.toString());
+            String sShortDescription = m_bleConfig.getString(PreferenceKeys.ShortDescription.toString());
             setTitle(getString(R.string.ble_devices) + " : " + sBLEConfig + " : " + sShortDescription);
         } catch (Exception e) {
         }

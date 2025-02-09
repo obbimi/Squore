@@ -44,6 +44,7 @@ import androidx.annotation.RequiresApi;
 
 import com.doubleyellow.android.task.DownloadImageTask;
 import com.doubleyellow.android.task.URLTask;
+import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.prefs.OrientationPreference;
 import com.doubleyellow.prefs.RWValues;
@@ -60,6 +61,9 @@ import com.doubleyellow.scoreboard.speech.Speak;
 import com.doubleyellow.scoreboard.timer.ViewType;
 import com.doubleyellow.scoreboard.view.PreferenceCheckBox;
 import com.doubleyellow.util.*;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.*;
@@ -2099,7 +2103,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2025-02-06"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2025-02-10"; // auto adjusted by shell script 'clean.and.assemble.sh'
     public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) <= 0;
     }
@@ -2554,5 +2558,71 @@ public class PreferenceValues extends RWValues
         } catch (Exception e) {
         }
         return networkCountryIso;
+    }
+
+    /** To present list of possible configs to user */
+    public static List<CharSequence> getConfigs(Context context, int iResIdOfJson, int iWhat1KeyOnly2Description3Both) {
+        String sJson = ContentUtil.readRaw(context, iResIdOfJson);
+        try {
+            JSONObject config = new JSONObject(sJson);
+            //String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config_default      , context);
+
+            List<CharSequence> lReturn = new ArrayList<>();
+            Iterator<String> keys = config.keys();
+            while(keys.hasNext()) {
+                String sKey = keys.next();
+                if ( sKey.startsWith("-") ) { continue; }
+                if ( sKey.startsWith(sKey.substring(0,3).toUpperCase())) {
+                    // for now only list entries with first few characters uppercase
+                    switch (iWhat1KeyOnly2Description3Both) {
+                        case 1:
+                            lReturn.add(sKey);
+                            break;
+                        case 2:
+                        case 3:
+                            JSONObject joDetails = config.getJSONObject(sKey);
+                            String sShortDescription = joDetails.getString(PreferenceKeys.ShortDescription.toString());
+                            if ( iWhat1KeyOnly2Description3Both == 2) {
+                                lReturn.add(sShortDescription);
+                            } else {
+                                lReturn.add(sKey + " : " + sShortDescription);
+                            }
+                            break;
+                    }
+                }
+            }
+            return lReturn;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static JSONObject getActiveConfig(Context context, int iResIdJson, Object oKeyActive, int iResIdActiveDefault, String sKeySharedConfig) {
+        String sJson = ContentUtil.readRaw(context, iResIdJson/*R.raw.bluetooth_le_config*/);
+        try {
+            final JSONObject config = new JSONObject(sJson);
+            String sBLEConfig = PreferenceValues.getString(oKeyActive /*PreferenceKeys.BluetoothLE_Config*/, R.string.pref_BluetoothLE_Config_default, context);
+            JSONObject configActive = config.optJSONObject(sBLEConfig);
+            if ( configActive == null ) {
+                sBLEConfig = context.getString(iResIdActiveDefault /*R.string.pref_BluetoothLE_Config_default*/);
+                configActive = config.optJSONObject(sBLEConfig);
+            }
+            if ( (configActive != null) && configActive.has(sKeySharedConfig /*BLEUtil.Keys.SharedConfig.toString()*/ ) ) {
+                String sShareConfig = (String) configActive.remove(sKeySharedConfig);
+                JSONObject sharedConfig = config.getJSONObject(sShareConfig);
+                Iterator<String> keys = sharedConfig.keys();
+                while(keys.hasNext()) {
+                    String sKey = keys.next();
+                    if ( configActive.has(sKey) ) { continue; }
+                    Object oValue = sharedConfig.get(sKey);
+                    configActive.put(sKey, oValue);
+                }
+            }
+            return configActive;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

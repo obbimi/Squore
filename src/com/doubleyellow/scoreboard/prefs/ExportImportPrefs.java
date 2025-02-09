@@ -205,6 +205,7 @@ public class ExportImportPrefs extends DialogPreference
             tmSettings.remove(PreferenceKeys.OfficialSquashRulesURLs.toString());
             tmSettings.remove(PreferenceKeys.squoreBrand.toString());
             tmSettings.remove(PreferenceKeys.viewedChangelogVersion.toString());
+            tmSettings.remove(PreferenceKeys.liveScoreDeviceId.toString()); // if used for transferring settings, we do not want to devices having the same id
 
             JSONObject joSettings = new JSONObject(tmSettings);
             FileUtil.writeTo(fSettingsJson, joSettings.toString(2));

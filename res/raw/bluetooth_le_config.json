@@ -25,7 +25,7 @@
       "FixedPrefix" : "D-SCORE_"
     }
   },
-  "D-SCORE-RX": {
+  "D-SCORE-RX A": {
     "ShortDescription": "One or Two Devices",
     "SharedConfig" : "-D-SCORE-RX-SHARED",
     "96f9374a-2417-44e3-ae06-aa362556914e": {

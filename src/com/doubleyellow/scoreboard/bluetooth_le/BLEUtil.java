@@ -16,7 +16,6 @@
  */
 package com.doubleyellow.scoreboard.bluetooth_le;
 
-import android.Manifest;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
@@ -26,16 +25,13 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 
 import com.doubleyellow.scoreboard.R;
 
-import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.StringUtil;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -50,7 +46,6 @@ public class BLEUtil
     private final static String TAG = "SB." + BLEUtil.class.getSimpleName();
 
     public enum Keys {
-        ShortDescription,
         SharedConfig,
         DeviceNameMustMatch,
         DeviceNameStartsWith,
@@ -97,73 +92,8 @@ public class BLEUtil
 
         scanSettings = builder.build();
     }
-    /** To present list of possible configs to user */
-    public static List<CharSequence> getConfigs(Context context, int iWhat1KeyOnly2Description3Both) {
-        String sJson = ContentUtil.readRaw(context, R.raw.bluetooth_le_config);
-        try {
-            JSONObject config = new JSONObject(sJson);
-            //String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config_default      , context);
-
-            List<CharSequence> lReturn = new ArrayList<>();
-            Iterator<String> keys = config.keys();
-            while(keys.hasNext()) {
-                String sKey = keys.next();
-                if ( sKey.startsWith("-") ) { continue; }
-                if ( sKey.startsWith(sKey.substring(0,3).toUpperCase())) {
-                    // for now only list entries with first few characters uppercase
-                    switch (iWhat1KeyOnly2Description3Both) {
-                        case 1:
-                            lReturn.add(sKey);
-                            break;
-                        case 2:
-                        case 3:
-                            JSONObject joDetails = config.getJSONObject(sKey);
-                            String sShortDescription = joDetails.getString(Keys.ShortDescription.toString());
-                            if ( iWhat1KeyOnly2Description3Both == 2) {
-                                lReturn.add(sShortDescription);
-                            } else {
-                                lReturn.add(sKey + " : " + sShortDescription);
-                            }
-                            break;
-                    }
-                }
-            }
-            return lReturn;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
     public static JSONObject getActiveConfig(Context context) {
-        String sJson = ContentUtil.readRaw(context, R.raw.bluetooth_le_config);
-        try {
-            final JSONObject config = new JSONObject(sJson);
-            String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config, R.string.pref_BluetoothLE_Config_default, context);
-            JSONObject configActive = config.optJSONObject(sBLEConfig);
-            if ( configActive == null ) {
-                sBLEConfig = context.getString(R.string.pref_BluetoothLE_Config_default);
-                configActive = config.optJSONObject(sBLEConfig);
-            }
-            if ( configActive == null ) {
-                sBLEConfig = context.getString(R.string.pref_BluetoothLE_Config_default2);
-                configActive = config.optJSONObject(sBLEConfig);
-            }
-            if ( (configActive != null) && configActive.has(Keys.SharedConfig.toString() ) ) {
-                String sShareConfig = (String) configActive.remove(Keys.SharedConfig.toString());
-                JSONObject sharedConfig = config.getJSONObject(sShareConfig);
-                Iterator<String> keys = sharedConfig.keys();
-                while(keys.hasNext()) {
-                    String sKey = keys.next();
-                    if ( configActive.has(sKey) ) { continue; }
-                    Object oValue = sharedConfig.get(sKey);
-                    configActive.put(sKey, oValue);
-                }
-            }
-            return configActive;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return PreferenceValues.getActiveConfig(context, R.raw.bluetooth_le_config, PreferenceKeys.BluetoothLE_Config, R.string.pref_BluetoothLE_Config_default, Keys.SharedConfig.toString());
     }
 
     /** only to get BLE services/characteristics info about a device in nicely readable format */
