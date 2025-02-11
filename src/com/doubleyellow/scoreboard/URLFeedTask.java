@@ -48,6 +48,9 @@ public class URLFeedTask extends URLTask
         return sURL;
     }
     public static String addCountryCodeAsParameter(String sURL, Context context) {
+        if ( StringUtil.isEmpty(sURL)         ) { return sURL; }
+        if ( sURL.startsWith("http") == false ) { return sURL; }
+
         String sCC = PreferenceValues.getCountryFromTelephonyOrTimeZone(context);
         if ( StringUtil.isNotEmpty(sCC) ) {
             String sParamSplitter = sURL.contains("?") ? "&" : "?";
