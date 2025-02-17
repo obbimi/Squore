@@ -31,7 +31,7 @@ import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 
-public class ScoreSheetOnline extends AppCompatActivity {
+public class ScoreSheetOnline extends XActivity {
 
     private String sShowURL = null;
 

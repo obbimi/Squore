@@ -53,8 +53,14 @@ import java.util.TreeMap;
 
 /**
  * Publish to
- * double-yellow/${FeedName}/${BrandOrSport}/${deviceid}                                   publish commands (acting as master) that slave should execute keep score in sync
- * double-yellow/${FeedName}/${BrandOrSport}/${otherdeviceid}/requestCompleteJsonOfMatch   for mirroring a fixed device (acting as slave), when model appears out of sync
+ * double-yellow/${FeedName}/${BrandOrSport}/${DeviceId}                                   publish commands (acting as master) that slave should execute keep score in sync
+ * double-yellow/${FeedName}/${BrandOrSport}/${OtherDeviceId}/requestCompleteJsonOfMatch   for mirroring a fixed device (acting as slave), when model appears out of sync
+ *
+ * Subscribe to
+ * double-yellow/${FeedName}/${BrandOrSport}/${OtherDeviceId}                              for mirroring a fixed device (being slave), receiving commands or complete match model as json
+ * double-yellow/${FeedName}/${BrandOrSport}/${DeviceId}/requestCompleteJsonOfMatch        for mirroring a fixed device (master), to react to a request of a slave to sync the entire match model
+ * double-yellow/${FeedName}/${BrandOrSport}/+                                             for live-score of multiple matches of single sport
+ * double-yellow/${FeedName}/#                                                             for live-score of multiple matches
  *
  * Subscribe to
  * double-yellow/${FeedName}/${BrandOrSport}/${otherdeviceid}                              for mirroring a fixed device (being slave), receiving commands or complete match model as json
@@ -133,20 +139,22 @@ public class MQTTHandler
         //mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK); // uses MqttDefaultFilePersistence and seems to throw MqttPersistenceException
         mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK, new MemoryPersistence(), true, 1);
 
-        mqttClient.setTraceCallback(new MqttTraceHandler() {
-            @Override public void traceDebug(@Nullable String s) {
-                Log.d("MqttTraceHandler", s);
-            }
+        if ( PreferenceValues.currentDateIsTestDate() ) {
+            mqttClient.setTraceCallback(new MqttTraceHandler() {
+                @Override public void traceDebug(@Nullable String s) {
+                    Log.d("MqttTraceHandler", s);
+                }
 
-            @Override public void traceError(@Nullable String s) {
-                Log.e("MqttTraceHandler", s);
-            }
+                @Override public void traceError(@Nullable String s) {
+                    Log.e("MqttTraceHandler", s);
+                }
 
-            @Override public void traceException(@Nullable String s, @Nullable Exception e) {
-                Log.e("MqttTraceHandler", s, e);
-            }
-        });
-        mqttClient.setTraceEnabled(true);
+                @Override public void traceException(@Nullable String s, @Nullable Exception e) {
+                    Log.e("MqttTraceHandler", s, e);
+                }
+            });
+            mqttClient.setTraceEnabled(true);
+        }
 
         defaultCbPublish     = new MQTTActionListener("Publish"    , context, m_sBrokerUrl);
         defaultCbDisconnect  = new MQTTActionListener("Disconnect" , context, m_sBrokerUrl);
@@ -155,13 +163,17 @@ public class MQTTHandler
         connectCallback      = new ConnectCallback();
     }
 
+    /**
+     * Subscribe to certain topics when connection was successful.
+     * Try reconnecting if connection failed.
+     */
     private class ConnectCallback implements IMqttActionListener {
         private int m_iReconnectAttempts = 0;
         @Override public void onSuccess(IMqttToken token) {
             // start listening for published messages
             m_iReconnectAttempts = 0;
             ClientCallback callback = ClientCallback.getInstance(MQTTHandler.this);
-            mqttClient.setCallback(callback);
+            mqttClient.setCallback(callback); // pass on published messages to a topic this device is subscribed to, to this callback
             Log.d(TAG, "Connected");
 
             m_context.updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 1);
@@ -198,7 +210,7 @@ public class MQTTHandler
                 sException = exception.getClass().getSimpleName(); // e.g. MqttPersistenceException
                 exception.printStackTrace();
             }
-            Log.w(TAG, "onFailure " + sException + " " + this.toString());
+            Log.w(TAG, "onFailure " + sException + " " + this);
 
             String sMsg = m_context.getString(R.string.sb_MQTT_Connection_to_x_failed_y, m_sBrokerUrl, sException);
             stop();
@@ -206,7 +218,7 @@ public class MQTTHandler
             if ( m_iReconnectAttempts < 10 ) {
                 if ( m_context.doDelayedMQTTReconnect(sMsg,11, m_iReconnectAttempts)  ) {
                     m_iReconnectAttempts++;
-                };
+                }
             } else {
                 m_context.stopMQTT();
                 m_context.updateMQTTConnectionStatusIconOnUiThread(View.INVISIBLE, -1);

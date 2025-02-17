@@ -20,9 +20,12 @@ package com.doubleyellow.scoreboard.activity;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 //import android.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.FragmentManager;
 
 import com.doubleyellow.android.view.Orientation;
@@ -53,6 +56,17 @@ public abstract class XActivity extends /*Activity*/ AppCompatActivity /* For Im
     public FragmentManager getSupportFragmentManager() {
         return super.getSupportFragmentManager();
         //return null; // TODO
+    }
+
+    @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+        // Handle the splash screen transition.
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+        splashScreen.setOnExitAnimationListener(splashScreenViewProvider -> {
+            // avoid splash screen from bleeding trough
+            //Log.w(TAG, "setOnExitAnimationListener");
+            splashScreenViewProvider.remove();
+        });
+        super.onCreate(savedInstanceState);
     }
     //----------------------------------------------------
     // Actionbar methods
