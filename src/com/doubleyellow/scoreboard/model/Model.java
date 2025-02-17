@@ -3154,6 +3154,8 @@ public abstract class Model implements Serializable
         joWhen.put(JSONKey.date.toString(), m_matchDate);
         if ( StringUtil.isNotEmpty(m_matchTime) ) {
             joWhen.put(JSONKey.time.toString(), m_matchTime);
+            //joWhen.put(JSONKey.start.toString(), m_matchDate + "T" + m_matchTime);
+            jsonObject.put(JSONKey.start.toString(), m_matchDate + "T" + m_matchTime);
         }
         jsonObject.put(JSONKey.when.toString(), joWhen);
 
