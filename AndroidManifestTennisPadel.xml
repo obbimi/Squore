@@ -85,16 +85,6 @@
         <!-- only for shared libraries, mine is not -->
         <!--<uses-library android:name="com.doubleyellow.android"/>-->
 
-        <!-- Splash screen -->
-<!--
-        <activity android:name="com.doubleyellow.scoreboard.activity.SplashScreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
--->
-
         <activity android:name="com.doubleyellow.scoreboard.main.ScoreBoard" android:label="@string/app_name_short_brand__TennisPadel" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

@@ -36,7 +36,7 @@
             android:icon="@android:drawable/stat_sys_data_bluetooth"
             android:title="@string/pref_BluetoothLE_Config"
             android:summary="@string/pref_BluetoothLE_Config_Summary"
-            android:defaultValue="@string/pref_BluetoothLE_Config_default"
+            android:defaultValue="@string/pref_BluetoothLE_Config__Default"
             />
         <PreferenceCategory android:title="@string/pref_Appearance">
             <com.doubleyellow.prefs.EnumListPreference
