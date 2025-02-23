@@ -2565,7 +2565,7 @@ public class PreferenceValues extends RWValues
         String sJson = ContentUtil.readRaw(context, iResIdOfJson);
         try {
             JSONObject config = new JSONObject(sJson);
-            //String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config_default      , context);
+            //String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config__Default      , context);
 
             List<CharSequence> lReturn = new ArrayList<>();
             Iterator<String> keys = config.keys();
@@ -2602,10 +2602,10 @@ public class PreferenceValues extends RWValues
         String sJson = ContentUtil.readRaw(context, iResIdJson/*R.raw.bluetooth_le_config*/);
         try {
             final JSONObject config = new JSONObject(sJson);
-            String sBLEConfig = PreferenceValues.getString(oKeyActive /*PreferenceKeys.BluetoothLE_Config*/, R.string.pref_BluetoothLE_Config_default, context);
+            String sBLEConfig = PreferenceValues.getString(oKeyActive /*PreferenceKeys.BluetoothLE_Config*/, R.string.pref_BluetoothLE_Config__Default, context);
             JSONObject configActive = config.optJSONObject(sBLEConfig);
             if ( configActive == null ) {
-                sBLEConfig = context.getString(iResIdActiveDefault /*R.string.pref_BluetoothLE_Config_default*/);
+                sBLEConfig = context.getString(iResIdActiveDefault /*R.string.pref_BluetoothLE_Config__Default*/);
                 configActive = config.optJSONObject(sBLEConfig);
             }
             if ( (configActive != null) && configActive.has(sKeySharedConfig /*BLEUtil.Keys.SharedConfig.toString()*/ ) ) {
