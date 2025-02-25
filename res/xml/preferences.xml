@@ -36,7 +36,7 @@
             android:icon="@android:drawable/stat_sys_data_bluetooth"
             android:title="@string/pref_BluetoothLE_Config"
             android:summary="@string/pref_BluetoothLE_Config_Summary"
-            android:defaultValue="@string/pref_BluetoothLE_Config__Default"
+            android:defaultValue="@string/pref_BluetoothLE_Config_default__Default"
             />
         <PreferenceCategory android:title="@string/pref_Appearance">
             <com.doubleyellow.prefs.EnumListPreference
@@ -83,7 +83,7 @@
                 android:title="@string/pref_blinkFeedbackPerPoint"
                 android:icon="@drawable/dummy"
                 android:summary="@string/pref_blinkFeedbackPerPoint_summary"
-                android:defaultValue="@bool/blinkFeedbackPerPoint_default"
+                android:defaultValue="@bool/blinkFeedbackPerPoint_default__Default"
                 />
             <com.doubleyellow.prefs.SeekBarPreference android:key="numberOfBlinksForFeedbackPerPoint"
                 android:title="@string/pref_numberOfBlinksForFeedbackPerPoint"
@@ -98,7 +98,7 @@
                 android:title="@string/pref_Speech"
                 android:summary="@string/pref_Speech_summary"
                 android:icon="@android:drawable/ic_lock_silent_mode_off"
-                android:defaultValue="@string/useSpeechFeature_default"
+                android:defaultValue="@string/useSpeechFeature_default__Default"
                 dy:displayValues="@array/FeatureDisplayValues_DoAuto"
                 dy:enumClass="com.doubleyellow.util.Feature"
                 />
@@ -107,7 +107,7 @@
                 android:title="@string/pref_useTimersFeature"
                 android:summary="@string/pref_useTimersFeature_summary"
                 android:icon="@drawable/timer"
-                android:defaultValue="@string/useTimersFeature_default"
+                android:defaultValue="@string/useTimersFeature_default__Default"
                 dy:displayValues="@array/FeatureDisplayValues"
                 dy:enumClass="com.doubleyellow.util.Feature"
                 />
@@ -115,7 +115,7 @@
                 android:key="useChangeSidesFeature"
                 android:title="@string/pref_useChangeSidesFeature"
                 android:icon="@drawable/change_sides"
-                android:defaultValue="@string/useChangeSidesFeature_default"
+                android:defaultValue="@string/useChangeSidesFeature_default__Default"
                 dy:displayValues="@array/FeatureDisplayValues_DoAuto"
                 dy:enumClass="com.doubleyellow.util.Feature"
                 />
@@ -352,7 +352,7 @@
                     android:title="@string/pref_LandscapeLayoutPreference"
                     android:summary="@string/pref_LandscapeLayoutPreference_summary"
                     android:icon="@drawable/dummy"
-                    android:defaultValue="Default"
+                    android:defaultValue="@string/LandscapeLayoutPreference_default__Default"
                     dy:displayValues="@array/LandscapeLayoutPreference_DisplayValues"
                     dy:enumClass="com.doubleyellow.scoreboard.prefs.LandscapeLayoutPreference"
             />
@@ -557,7 +557,7 @@
             android:title="@string/pref_blinkFeedbackPerPoint"
             android:icon="@drawable/dummy"
             android:summary="@string/pref_blinkFeedbackPerPoint_summary"
-            android:defaultValue="@bool/blinkFeedbackPerPoint_default"
+            android:defaultValue="@bool/blinkFeedbackPerPoint_default__Default"
             />
         <com.doubleyellow.prefs.SeekBarPreference android:key="numberOfBlinksForFeedbackPerPoint"
             android:title="@string/pref_numberOfBlinksForFeedbackPerPoint"
@@ -638,7 +638,7 @@
                 android:key="useChangeSidesFeature"
                 android:title="@string/pref_useChangeSidesFeature"
                 android:icon="@drawable/change_sides"
-                android:defaultValue="@string/useChangeSidesFeature_default"
+                android:defaultValue="@string/useChangeSidesFeature_default__Default"
                 dy:displayValues="@array/FeatureDisplayValues_DoAuto"
                 dy:enumClass="com.doubleyellow.util.Feature"
                 />
@@ -778,7 +778,7 @@
                     android:title="@string/pref_useTimersFeature"
                     android:summary="@string/pref_useTimersFeature_summary"
                     android:icon="@drawable/timer"
-                    android:defaultValue="@string/useTimersFeature_default"
+                    android:defaultValue="@string/useTimersFeature_default__Default"
                     dy:displayValues="@array/FeatureDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
                     />
@@ -901,7 +901,7 @@
             android:title="@string/pref_Speech"
             android:summary="@string/pref_Speech_summary"
             android:icon="@android:drawable/ic_lock_silent_mode_off"
-            android:defaultValue="@string/useSpeechFeature_default"
+            android:defaultValue="@string/useSpeechFeature_default__Default"
             dy:displayValues="@array/FeatureDisplayValues_DoAuto"
             dy:enumClass="com.doubleyellow.util.Feature"
             />
@@ -917,15 +917,6 @@
             android:title="Voice to use"
             android:defaultValue=""
             />
-<!--
-        <CheckBoxPreference
-            android:icon="@android:drawable/ic_lock_silent_mode_off"
-            android:key="useSpeechFeature"
-            android:title="@string/pref_Speech"
-            android:summary="@string/pref_Speech_summary"
-            android:defaultValue="@bool/useSpeechFeature_default"
-            />
--->
 
         <com.doubleyellow.prefs.SeekBarPreference android:key="speechPitch"
             android:title="@string/pref_speechPitch"
@@ -1210,7 +1201,7 @@
                 android:icon="@drawable/timer"
                 android:key="useTimersFeature"
                 android:title="@string/pref_useTimersFeature"
-                android:defaultValue="@string/useTimersFeature_default"
+                android:defaultValue="@string/useTimersFeature_default__Default"
                 dy:displayValues="@array/FeatureDisplayValues"
                 dy:enumClass="com.doubleyellow.util.Feature"
                 />

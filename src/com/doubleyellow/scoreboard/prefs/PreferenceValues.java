@@ -422,7 +422,7 @@ public class PreferenceValues extends RWValues
     }
 
     public static boolean blinkFeedbackPerPoint(Context context) {
-        return getBoolean(PreferenceKeys.blinkFeedbackPerPoint, context, R.bool.blinkFeedbackPerPoint_default);
+        return getBoolean(PreferenceKeys.blinkFeedbackPerPoint, context, R.bool.blinkFeedbackPerPoint_default__Default);
     }
     public static int numberOfBlinksForFeedbackPerPoint(Context context) {
         return getInteger(PreferenceKeys.numberOfBlinksForFeedbackPerPoint, context, R.integer.numberOfBlinksForFeedbackPerPoint_default);
@@ -477,7 +477,7 @@ public class PreferenceValues extends RWValues
         return getEnum(PreferenceKeys.useShareFeature, context, Feature.class, R.string.useShareFeature_default);
     }
     public static Feature useSpeechFeature(Context context) {
-        return getEnum(PreferenceKeys.useSpeechFeature, context, Feature.class, R.string.useSpeechFeature_default);
+        return getEnum(PreferenceKeys.useSpeechFeature, context, Feature.class, R.string.useSpeechFeature_default__Default);
     }
     public static boolean useFeatureYesNo(Feature f) {
         return EnumSet.of(Feature.Suggest, Feature.Automatic).contains(f);
@@ -857,7 +857,7 @@ public class PreferenceValues extends RWValues
     }
 
     public static Feature useTimersFeature(Context context) {
-        return getEnum(PreferenceKeys.useTimersFeature, context, Feature.class, R.string.useTimersFeature_default);
+        return getEnum(PreferenceKeys.useTimersFeature, context, Feature.class, R.string.useTimersFeature_default__Default);
     }
     public static BackKeyBehaviour backKeyBehaviour(Context context) {
         return getEnum(PreferenceKeys.BackKeyBehaviour, context, BackKeyBehaviour.class, R.string.BackKeyBehaviour_default);
@@ -1095,7 +1095,7 @@ public class PreferenceValues extends RWValues
         return getEnumSet(PreferenceKeys.changeSidesWhen_GSM, context, ChangeSidesWhen_GSM.class, defaultValues);
     }
     public static Feature useChangeSidesFeature(Context context) {
-        return getEnum(PreferenceKeys.useChangeSidesFeature, context, Feature.class, R.string.useChangeSidesFeature_default);
+        return getEnum(PreferenceKeys.useChangeSidesFeature, context, Feature.class, R.string.useChangeSidesFeature_default__Default);
     }
     /** for tabletennis, not squash or racketlon */
     public static Feature showGamePausedDialog(Context context) {
@@ -2565,7 +2565,7 @@ public class PreferenceValues extends RWValues
         String sJson = ContentUtil.readRaw(context, iResIdOfJson);
         try {
             JSONObject config = new JSONObject(sJson);
-            //String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config__Default      , context);
+            //String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config_default__Default      , context);
 
             List<CharSequence> lReturn = new ArrayList<>();
             Iterator<String> keys = config.keys();
@@ -2602,10 +2602,10 @@ public class PreferenceValues extends RWValues
         String sJson = ContentUtil.readRaw(context, iResIdJson/*R.raw.bluetooth_le_config*/);
         try {
             final JSONObject config = new JSONObject(sJson);
-            String sBLEConfig = PreferenceValues.getString(oKeyActive /*PreferenceKeys.BluetoothLE_Config*/, R.string.pref_BluetoothLE_Config__Default, context);
+            String sBLEConfig = PreferenceValues.getString(oKeyActive /*PreferenceKeys.BluetoothLE_Config*/, R.string.pref_BluetoothLE_Config_default__Default, context);
             JSONObject configActive = config.optJSONObject(sBLEConfig);
             if ( configActive == null ) {
-                sBLEConfig = context.getString(iResIdActiveDefault /*R.string.pref_BluetoothLE_Config__Default*/);
+                sBLEConfig = context.getString(iResIdActiveDefault /*R.string.pref_BluetoothLE_Config_default__Default*/);
                 configActive = config.optJSONObject(sBLEConfig);
             }
             if ( (configActive != null) && configActive.has(sKeySharedConfig /*BLEUtil.Keys.SharedConfig.toString()*/ ) ) {

@@ -167,7 +167,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="suggestToEndSet_default">true</bool>
 -->
     <integer name="numberOfBlinksForFeedbackPerPoint_default">4</integer>
-    <bool name="blinkFeedbackPerPoint_default">false</bool>
+    <bool name="blinkFeedbackPerPoint_default__Default">false</bool>
     <bool name="hapticFeedbackPerPoint_default">false</bool>
     <bool name="hapticFeedbackOnGameEnd_default">false</bool>
     <bool name="showChoosenDecisionShortly_default">true</bool>
@@ -210,6 +210,8 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="useSinglesMatch__Default">true</bool>
     <bool name="useInjuryTimers__Squash">true</bool>
     <bool name="usePlayerTimeoutTimers__Squash">false</bool>
+    <bool name="usePowerPlay__Squash">true</bool>
+    <bool name="usePowerPlay__Default">false</bool>
     <bool name="usePlayerTimeoutTimers__Default">false</bool>
     <bool name="useInjuryTimers__Default">false</bool>
     <bool name="allowTrustAllCertificatesAndHosts_default">false</bool>
@@ -245,7 +247,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="UseBluetoothLE_default__Squash">false</bool>
     <bool name="UseBluetoothLE_default__TennisPadel">false</bool>
     <bool name="UseBluetoothLE_default__Default">false</bool>
-    <string name="pref_BluetoothLE_Config__Default">D-SCORE-RX A</string>
+    <string name="pref_BluetoothLE_Config_default__Default">D-SCORE-RX A</string>
     <bool name="ShowFeedBackOnBLEButtonsPressedInfoMessages_default">true</bool>
     <integer name="NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default">4</integer>
     <integer name="IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_default">1500</integer>

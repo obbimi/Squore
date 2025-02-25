@@ -80,7 +80,7 @@
     <string name="groupArchivedMatchesBy_default">Date</string>
     <string name="sortOrderOfArchivedMatches_default">Descending</string>
     <string name="BackKeyBehaviour_default">PressTwiceToExit</string>
-    <string name="useTimersFeature_default">Suggest</string>
+    <string name="useTimersFeature_default__Default">Suggest</string>
     <string name="useOfficialAnnouncementsFeature_default__Squash">Suggest</string>
     <string name="useOfficialAnnouncementsFeature_default__TennisPadel">Suggest</string> <!-- e.g. for New Balls -->
     <string name="useOfficialAnnouncementsFeature_default__Badminton">DoNotUse</string>
@@ -90,12 +90,13 @@
     <string name="useTossFeature_default">Suggest</string>
     <string name="useNewBallsFeature_default">Suggest</string>
     <string name="useShareFeature_default">Suggest</string>
-    <bool   name="useSpeechFeature_default">false</bool>
+    <bool   name="useSpeechFeature_default__Default">false</bool>
     <string name="showGamePausedDialog_default">Suggest</string>
-    <string name="useChangeSidesFeature_default">Suggest</string>
+    <string name="useChangeSidesFeature_default__Default">Suggest</string>
     <string name="KeepScreenOnWhen_default">MatchIsInProgress</string>
     <string name="VolumeKeysBehaviour_default">None</string>
-    <string name="useSpeechFeature_default">DoNotUse</string>
+    <string name="useSpeechFeature_default__Default">DoNotUse</string>
+    <string name="LandscapeLayoutPreference_default__Default">Default</string>
 
     <string name="handicapFormat_default">None</string>
     <string name="feedFeedsURL_default">/feed/feeds.php</string>
