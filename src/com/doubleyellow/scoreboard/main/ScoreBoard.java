@@ -2990,10 +2990,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         MenuInflater inflater = getMenuInflater();
 
         inflater.inflate(R.menu.mainmenu, menu);
-      //MenuItem mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), menu, R.id.media_route_menu_item);
         mainMenu = menu;
 
-        initCastMenu();
+        if ( PreferenceValues.isPublicApp(this) ) {
+            initCastMenu();
+        }
 
 /*
         if ( MenuDrawerAdapter.m_bHideDrawerItemsFromOldMenu && (MenuDrawerAdapter.id2String.isEmpty() == false) ) {

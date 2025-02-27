@@ -914,6 +914,10 @@ public class PreferenceValues extends RWValues
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useSinglesMatch__Default);
         return context.getResources().getBoolean(iResBrandSpecific);
     }
+    public static boolean isPublicApp(Context context) {
+        int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.isPublicApp__Default);
+        return context.getResources().getBoolean(iResBrandSpecific);
+    }
     public static boolean useMyListFunctionality(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useMyListFunctionality__Default);
         return context.getResources().getBoolean(iResBrandSpecific);
@@ -936,7 +940,7 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.UseBluetoothLE, context, iResBrandSpecific);
     }
     public static boolean showFeedBackOnBLEButtonsPressedInfoMessages(Context context) {
-        return getBoolean(PreferenceKeys.ShowFeedBackOnBLEButtonsPressedInfoMessages, context, R.bool.ShowFeedBackOnBLEButtonsPressedInfoMessages_default);
+        return getBoolean(PreferenceKeys.ShowFeedBackOnBLEButtonsPressedInfoMessages, context, R.bool.ShowFeedBackOnBLEButtonsPressedInfoMessages_default__Default);
     }
     public static int nrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired(Context context) {
         return getInteger(PreferenceKeys.NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired, context, R.integer.NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default);

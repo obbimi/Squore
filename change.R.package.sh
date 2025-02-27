@@ -65,11 +65,13 @@ function correctSportSpecificResource {
     # list all renamed USED resource names and ...
     for res in $(grep -E -r '@(array|bool|fraction|integer|integer-array|string|string-array|color).*__[A-Z][A-Za-z]+' * | perl -ne 's~.*@(array|bool|fraction|integer|integer-array|string|string-array|color)\/(\w+__\w+).*~$2~; print' | sort -u); do
         # ... check that the appropriate res definition exists
-        if grep -E -q -r "name=.${res}." *; then
+        if grep -E -q -R "name=.${res}." *; then
             if echo ${res} | grep -q "__${from}"; then
                 nrOfOccurrencesAsExpr=$(grep -E -h -c -r "@.*${res}" * | grep -E -v '^0$' | xargs | sed -e 's/\ /+/g')
                 nrOfOccurrences=$((${nrOfOccurrencesAsExpr}))
-                #read -t $defaultTimeout -p "Nr of occurrences of valid ${res} : ${nrOfOccurrences}"
+                if [[ "${to}" = "XDefault" ]]; then
+                    read -t $defaultTimeout -p "Nr of occurrences of valid ${res} : ${nrOfOccurrences}"
+                fi
                 let keptCnt=keptCnt+nrOfOccurrences
                 printf "%2d (+%d) %-72s OK \n" ${keptCnt} ${nrOfOccurrences} ${res} >> notcorrected.txt
             fi
@@ -169,9 +171,7 @@ printf "Change to '${tobranded}'\n"
 #if [[ "$tobranded" = "Squore" ]]; then
 #    tobrandedLC='scoreboard'
 #fi
-#for f in $(grep -E -irl 'com\.doubleyellow\.[a-z]+\.R[^a-z]' *); do
-#    cat ${f} | perl -ne "s~com\.doubleyellow\.(?!base.R)[a-z]+\.R([^A-Za-z'])~com.doubleyellow.${tobrandedLC}.R\$1~; print" > ${f}.1.txt
-for f in $(grep -E -irl "${pkgFrom}\.R[^a-z]" *); do
+for f in $(grep -E -il -R "${pkgFrom}\.R[^a-z]" *); do
     oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
     cat ${f} | perl -ne "s~(import\s+|\()${pkgFrom}\.R([^A-Za-z'])~\$1${brandPkg}.R\$2~; print" > ${f}.1.txt
     if [[ -n "$(diff ${f} ${f}.1.txt)" ]]; then
@@ -189,7 +189,7 @@ read -t $defaultTimeout -p ' Java files changed. Continue ... ? '
 cd ../res
 
 ####################################################
-# Change menu/layout/prefences xml files
+# Change menu, layout and prefences xml files
 ####################################################
 
 echo '=================================='
@@ -199,7 +199,7 @@ if [[ "$tobranded" = "Squore" ]] ; then
     fromSuffix="[A-Z][a-z][A-Za-z]+"
     toSuffix=Squash
 fi
-for f in $(grep -E -rl "@(string|fraction|color).*__${fromSuffix}\""); do
+for f in $(grep -E -R -l "@(string|fraction|color).*__${fromSuffix}\""); do
     oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
 
     cat ${f} | perl -ne "s~__${fromSuffix}\"~__${toSuffix}\"~; print" > ${f}.1.xml

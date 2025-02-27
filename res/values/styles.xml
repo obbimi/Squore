@@ -217,7 +217,7 @@
 -->
     </style>
 
-    <!-- introduced to have a really dark action bark so that the prodominantly white icons are clearly visible -->
+    <!-- introduced to have a really dark action bark so that the predominantly white icons are clearly visible -->
     <style name="SBActionBar" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:background">@drawable/header_back</item>
     </style>

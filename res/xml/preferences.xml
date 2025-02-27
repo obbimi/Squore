@@ -52,7 +52,7 @@
                 android:title="@string/pref_ShowFeedBackOnBLEButtonsPressedInfoMessages"
                 android:summary="@string/pref_ShowFeedBackOnBLEButtonsPressedInfoMessages_summary"
                 android:icon="@drawable/dummy"
-                android:defaultValue="@bool/ShowFeedBackOnBLEButtonsPressedInfoMessages_default"
+                android:defaultValue="@bool/ShowFeedBackOnBLEButtonsPressedInfoMessages_default__Default"
                 />
             <CheckBoxPreference
                 android:icon="@drawable/dummy"
