@@ -85,8 +85,8 @@ android {
             }
         }
         phoneTabletPre24  { manifest { srcFile 'AndroidManifestALLPhoneTabletPre22.xml' } }
-        phoneTabletPost25 { manifest { srcFile 'AndroidManifestSquore.xml'      } }
-        wearOs            { manifest { srcFile 'AndroidManifestSquore.xml'           } }
+        phoneTabletPost25 { manifest { srcFile 'AndroidManifestSquore.xml'              } }
+        wearOs            { manifest { srcFile 'AndroidManifestSquore.xml'              } }
     }
 
     signingConfigs {

@@ -78,9 +78,9 @@ EO_HELP
                 build_version_sdk=$(adb -s ${dvc} shell getprop ro.build.version.sdk | sed -e 's~[^0-9]~~')
                 build_product_model=$(adb -s ${dvc} shell getprop ro.product.model)
 
-                productFlavor="phoneTabletPost23"
+                productFlavor="phoneTabletPost25"
                 if [[ ${build_version_sdk} -lt 23 ]]; then
-                    productFlavor="phoneTabletPre22"
+                    productFlavor="phoneTabletPre24"
                 fi
                 if echo "${build_product_model}" | grep "wear"; then
                     productFlavor="wearOs"

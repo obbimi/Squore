@@ -2566,6 +2566,8 @@ public class PreferenceValues extends RWValues
 
     /** To present list of possible configs to user */
     public static List<CharSequence> getConfigs(Context context, int iResIdOfJson, int iWhat1KeyOnly2Description3Both) {
+        iResIdOfJson = getSportSpecificSuffixedResId(context, iResIdOfJson);
+
         String sJson = ContentUtil.readRaw(context, iResIdOfJson);
         try {
             JSONObject config = new JSONObject(sJson);
@@ -2603,7 +2605,7 @@ public class PreferenceValues extends RWValues
     }
 
     public static JSONObject getActiveConfig(Context context, int iResIdJson, Object oKeyActive, int iResIdActiveDefault, String sKeySharedConfig) {
-        String sJson = ContentUtil.readRaw(context, iResIdJson/*R.raw.bluetooth_le_config*/);
+        String sJson = ContentUtil.readRaw(context, iResIdJson);
         try {
             final JSONObject config = new JSONObject(sJson);
             String sBLEConfig = PreferenceValues.getString(oKeyActive /*PreferenceKeys.BluetoothLE_Config*/, R.string.pref_BluetoothLE_Config_default__Default, context);
