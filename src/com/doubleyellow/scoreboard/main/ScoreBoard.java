@@ -2994,6 +2994,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         if ( PreferenceValues.isPublicApp(this) ) {
             initCastMenu();
+        } else {
+            menu.removeItem(R.id.media_route_menu_item);
         }
 
 /*

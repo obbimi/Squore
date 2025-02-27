@@ -26,10 +26,9 @@
     }
   },
   "D-SCORE-RX A": {
-    "ShortDescription": "One or Two Devices",
+    "ShortDescription": "One or Two Devices: 2: Green = We scored, Long Green/Red = Undo",
     "SharedConfig" : "-D-SCORE-RX-SHARED",
     "96f9374a-2417-44e3-ae06-aa362556914e": {
-      "96f91f4b-2417-44e3-ae06-aa362556914e": "WRITE player_type: 0=server|1=returner|2=none",
       "96f91f4c-2417-44e3-ae06-aa362556914e": [
         {
           "TranslateToBTMessage": [
@@ -53,9 +52,9 @@
         },
         {
           "TranslateToBTMessage": [
-            "-both buttons released (two devices), not used",
-            "changeScoreBLEConfirm(%1$s, SECONDARY_BUTTON)",
-            "changeScoreBLEConfirm(%1$s, PRIMARY_BUTTON)",
+            "-buttons released (two devices)",
+            "-info:red button pressed by %1$s, not used",
+            "changeScoreBLE(%1$s, %1$s, PRIMARY_BUTTON)",
             "undoScoreForInitiatorBLE(%1$s) # both buttons pressed (two devices)"
           ],
           "TranslateToBTMessage_2": [
@@ -66,13 +65,7 @@
           ]
         }
       ]
-    },
-    "InitiateScoreChangeButton"        : "PRIMARY_BUTTON",
-    "InitiateOpponentScoreChangeButton": "SECONDARY_BUTTON",
-    "CancelScoreByInitiatorButton"     : "SECONDARY_BUTTON",
-    "CancelScoreByOpponentButton"      : null,
-    "ConfirmScoreByOpponentButton"     : "SECONDARY_BUTTON",
-    "ConfirmScoreBySelfButton"         : "PRIMARY_BUTTON"
+    }
   },
   "D-SCORE-RX B" : {
     "ShortDescription": "One Device: Green = A Scored, Red = B Scored",
@@ -219,5 +212,54 @@
         }
       ]
     }
+  },
+  "D-SCORE-RX H": {
+    "ShortDescription": "One or Two Devices: 2: 'Anti-cheat' Confirmation by opponent required",
+    "SharedConfig" : "-D-SCORE-RX-SHARED",
+    "96f9374a-2417-44e3-ae06-aa362556914e": {
+      "96f91f4b-2417-44e3-ae06-aa362556914e": "WRITE player_type: 0=server|1=returner|2=none",
+      "96f91f4c-2417-44e3-ae06-aa362556914e": [
+        {
+          "TranslateToBTMessage": [
+            "-both buttons released (one device), not used",
+            "changeScoreBLE(B, SECONDARY_BUTTON)",
+            "changeScoreBLE(A, PRIMARY_BUTTON)",
+            "undoLastBLE() # both buttons pressed (one device)"
+          ],
+          "TranslateToBTMessage_2": [
+            "-both buttons released after long press (one device), not used",
+            "undoLastBLE() # secondary button long pressed",
+            "-startTimer(UntilStartOfNextGame) # primary button long pressed",
+            "-lock() # both buttons long pressed (one device)"
+          ],
+          "TranslateToBTMessage_4": [
+            "-both buttons released (one device), not used",
+            "-secondary button very long pressed",
+            "-startTimer(Warmup) # primary button very long pressed",
+            "-both buttons very long pressed (one device)"
+          ]
+        },
+        {
+          "TranslateToBTMessage": [
+            "-both buttons released (two devices), not used",
+            "changeScoreBLEConfirm(%1$s, SECONDARY_BUTTON)",
+            "changeScoreBLEConfirm(%1$s, PRIMARY_BUTTON)",
+            "undoScoreForInitiatorBLE(%1$s) # both buttons pressed (two devices)"
+          ],
+          "TranslateToBTMessage_2": [
+            "-both buttons released after long press (two devices), not used",
+            "undoScoreForInitiatorBLE(%1$s) # secondary button long pressed (two devices)",
+            "undoScoreForInitiatorBLE(%1$s) # primary button long pressed (two devices)",
+            "-lock() # both buttons long pressed (two devices)"
+          ]
+        }
+      ]
+    },
+    "InitiateScoreChangeButton"        : "PRIMARY_BUTTON",
+    "InitiateOpponentScoreChangeButton": "SECONDARY_BUTTON",
+    "CancelScoreByInitiatorButton"     : "SECONDARY_BUTTON",
+    "CancelScoreByOpponentButton"      : null,
+    "ConfirmScoreByOpponentButton"     : "SECONDARY_BUTTON",
+    "ConfirmScoreBySelfButton"         : "PRIMARY_BUTTON"
   }
 }

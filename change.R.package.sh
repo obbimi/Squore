@@ -189,17 +189,17 @@ read -t $defaultTimeout -p ' Java files changed. Continue ... ? '
 cd ../res
 
 ####################################################
-# Change menu, layout and prefences xml files
+# Change menu, layout and preferences xml files
 ####################################################
 
 echo '=================================='
 fromSuffix="(Squash|Default)"
 toSuffix=${tobranded}
 if [[ "$tobranded" = "Squore" ]] ; then
-    fromSuffix="[A-Z][a-z][A-Za-z]+"
+    fromSuffix="[A-Z][A-Za-z]+" # replace ALL left behinds back to Squash/Default
     toSuffix=Squash
 fi
-for f in $(grep -E -R -l "@(string|fraction|color).*__${fromSuffix}\""); do
+for f in $(grep -E -R -l "@(string|fraction|color).*__${fromSuffix}\"" | sort); do
     oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
 
     cat ${f} | perl -ne "s~__${fromSuffix}\"~__${toSuffix}\"~; print" > ${f}.1.xml
@@ -208,6 +208,7 @@ for f in $(grep -E -R -l "@(string|fraction|color).*__${fromSuffix}\""); do
         #meld         ${f} ${f}.1.xml
         #rm -v ${f}.1.xml # TEMP
         mv ${f}.1.xml ${f}
+        #cp -v ${f}.1.xml ${f}
     else
         rm ${f}.1.xml
     fi
@@ -250,7 +251,7 @@ f=build.gradle
 oldFileTime=$(find ${f} -maxdepth 0 -printf "%Ty%Tm%Td%TH%TM.%.2TS")
 
 # change manifest file name to one of brand we want to generate apk for, ensuring NOT to change the AndroidManifestALL references
-cat ${f} | perl -ne "s~(srcFile\s+')AndroidManifest[A-Z]{1,2}[a-z][A-Za-z]+.xml~\1${brandMfFile}~; print" > ${f}.tmp
+cat ${f} | perl -ne "s~(srcFile\s+')AndroidManifest[A-Z][A-Za-z]+.xml~\1${brandMfFile}~; print" > ${f}.tmp
 if [[ -n "$(diff ${f}.tmp ${f})" ]]; then
     mv ${f}.tmp ${f}
 else
