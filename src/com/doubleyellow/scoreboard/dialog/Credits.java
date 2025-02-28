@@ -41,8 +41,7 @@ public class Credits extends BaseAlertDialog
 
     @Override public void show() {
         MarkDownView webView = new MarkDownView(context, null);
-        int iResId = R.raw.credits;
-        iResId = PreferenceValues.getSportSpecificSuffixedResId(context, iResId);
+        int iResId = PreferenceValues.getSportSpecificSuffixedResId(context, R.raw.credits);
 
         webView.init( iResId );
 

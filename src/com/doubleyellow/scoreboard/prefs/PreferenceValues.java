@@ -637,8 +637,10 @@ public class PreferenceValues extends RWValues
         return language.toString().equals(deviceLanguage) == false;
     }
 
-    // TODO: 20200301: use this for more than just Padel
-    /** Try to obtain a more specific value by suffixing a resource with the Brand name */
+    /**
+     * Try to obtain a more specific value by simply suffixing a resource with the Brand name.
+     * Do NOT use for resource strings also used in preferences.xml
+     **/
     public static Integer getSportSpecificSuffixedResId(Context context, Integer iResIdNoSuffix) {
         if ( (iResIdNoSuffix == null) || (iResIdNoSuffix == 0) ) { return 0; }
 
@@ -673,7 +675,10 @@ public class PreferenceValues extends RWValues
     public static int getSportTypeSpecificResId(Context context, int iResidSquashSuffixed) {
         return getSportTypeSpecificResId(context, iResidSquashSuffixed, iResidSquashSuffixed);
     }
-    /** translate a __(Squash|Default) suffixed STRING resource id in brand specific resource id */
+    /**
+     * Translate a __(Squash|Default) suffixed STRING resource id in brand specific resource id.
+     * Typically for resource also used as defaults in preferences.xml
+     **/
     public static int getSportTypeSpecificResId(Context context, int iResidSquashSuffixed, int iDefault) {
         final String sResName = context.getResources().getResourceName    (iResidSquashSuffixed);
         final String sResType = context.getResources().getResourceTypeName(iResidSquashSuffixed);
@@ -936,7 +941,7 @@ public class PreferenceValues extends RWValues
         return sClass;
     }
     public static boolean useBluetoothLE(Context context) {
-        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.UseBluetoothLE_default__Default);
+        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.UseBluetoothLE_default);
         return getBoolean(PreferenceKeys.UseBluetoothLE, context, iResBrandSpecific);
     }
     public static boolean showFeedBackOnBLEButtonsPressedInfoMessages(Context context) {
@@ -950,7 +955,7 @@ public class PreferenceValues extends RWValues
     }
 
     public static boolean useMQTT(Context context) {
-        int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.UseMQTT_default__Default);
+        int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.UseMQTT_default__Default);
         return getBoolean(PreferenceKeys.UseMQTT, context, iResBrandSpecific);
     }
     public static String getMQTTBrokerURL(Context context) {

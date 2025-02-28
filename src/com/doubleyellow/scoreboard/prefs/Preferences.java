@@ -661,8 +661,8 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 if ( PreferenceValues.useBluetoothLE(getContext()) ) {
                     ListPreference lpBLEconfig = ( ListPreference) this.findPreference(PreferenceKeys.BluetoothLE_Config);
                     if ( lpBLEconfig != null ) {
-                        List<CharSequence> lKeys        = PreferenceValues.getConfigs(getContext(), R.raw.bluetooth_le_config__default, 1);
-                        List<CharSequence> lKeysAndDesc = PreferenceValues.getConfigs(getContext(), R.raw.bluetooth_le_config__default, 3);
+                        List<CharSequence> lKeys        = PreferenceValues.getConfigs(getContext(), R.raw.bluetooth_le_config, 1);
+                        List<CharSequence> lKeysAndDesc = PreferenceValues.getConfigs(getContext(), R.raw.bluetooth_le_config, 3);
                         lpBLEconfig.setEntryValues(lKeys       .toArray(new CharSequence[0]));
                         lpBLEconfig.setEntries    (lKeysAndDesc.toArray(new CharSequence[0]));
                     }

@@ -47,7 +47,7 @@ if [[ ! -e ${BU_DIR} ]]; then
 	  BU_DIR=/mnt/c/code/gitlab/double-yellow.be/app
 fi
 
-productFlavor="phoneTabletPost23"
+productFlavor="phoneTabletPost25"
 relapk=$(find . -name "*${productFlavor}-Xrelease.apk")
 if [[ ! -e ${relapk} ]]; then
     relapk=$(find ${BU_DIR} -name "Score-${brand}.${productFlavor}*${hasNewVersionCode}.apk")
@@ -123,7 +123,7 @@ if [[ ${iStep} -le 1 ]]; then
 
     echo "Building ... ${pkg}"
     if ./gradlew assemble; then
-        productFlavors="phoneTabletPre22 phoneTabletPost23 wearOs"
+        productFlavors="phoneTabletPre24 phoneTabletPost25 wearOs"
         for productFlavor in ${productFlavors}; do
 
             relapk=$(find . -name "*-${productFlavor}-release.apk")
@@ -179,9 +179,9 @@ if [[ ${iStep} -le 2 ]]; then
         build_product_model=$(  ${ADB_COMMAND} -s ${dvc} shell getprop ro.product.model)
         build_characteristics=$(${ADB_COMMAND} -s ${dvc} shell getprop ro.build.characteristics) # "emulator,nosdcard,watch",default
         echo "Device ${dvc} : Version= ${build_version_sdk}, Model= ${build_product_model}, Characteristicts= ${build_characteristics}"
-        productFlavor="phoneTabletPost23"
+        productFlavor="phoneTabletPost25"
         if [[ ${build_version_sdk} -lt 23 ]]; then
-            productFlavor="phoneTabletPre22"
+            productFlavor="phoneTabletPre24"
         fi
         #if [[ "${build_product_model}" =~ "wear" ]]; then
         #    productFlavor="wearOs"

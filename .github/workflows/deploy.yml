@@ -28,8 +28,8 @@ jobs:
     #strategy:
     #  matrix:
     #    apkversion:
-    #      - phoneTabletPost23
-    #      - phoneTabletPre22
+    #      - phoneTabletPost25
+    #      - phoneTabletPre24
 
     steps:
 
@@ -44,7 +44,7 @@ jobs:
         releasePrefix=
 
         # github contains a release for wearOs as well, but 1) google does not accept it for the moment, 2) should be in a different google release anyway
-        apkversions="phoneTabletPost23 phoneTabletPre22"
+        apkversions="phoneTabletPost25 phoneTabletPre24"
         filenames=""
         for apkversion in $apkversions; do
           echo ${apkversion}

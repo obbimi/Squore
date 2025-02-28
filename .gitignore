@@ -4,6 +4,8 @@ gradlew.bat
 gradlew
 Squore.iml
 .idea
+.env
+.secrets
 build
 gradle
 *.sh
