@@ -32,7 +32,7 @@ public class ShareHelper
     static {
         m_menuResIdToPackage = new HashMap<>();
         m_menuResIdToPackage.put(R.id.sb_whatsapp_match_summary     , "com.whatsapp");
-        m_menuResIdToPackage.put(R.id.sb_twitter_match_summary      , "com.twitter.android");
+        //m_menuResIdToPackage.put(R.id.sb_twitter_match_summary      , "com.twitter.android");
         m_menuResIdToPackage.put(R.id.sb_instagram_match_summary    , "com.instagram.android");
         m_menuResIdToPackage.put(R.id.sb_facebook_match_summary     , "com.facebook.katana");
         m_menuResIdToPackage.put(R.id.sb_facebook_lite_match_summary, "com.facebook.lite");

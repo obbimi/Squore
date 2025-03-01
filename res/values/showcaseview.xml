@@ -45,9 +45,8 @@
           </string>
     <string name="scv_few_more_good_to_knows">A few more \'Good to know-s\':
         \n
-        \n- You can easily display the score on a big TV screen using Chrome Cast.
         \n- You can specify a country per player. Flags for the chosen countries will be displayed.
-        \n- You can use the volume buttons to be your \'score\' buttons (must be activated via the settings).
-        \n- You can transfer a match from one android device to another using NFC.
+        \n- In portrait orientation, you can use the volume buttons to be your \'score\' buttons.
+        \n- You can easily display the score on a big TV screen using Chrome Cast.
           </string>
 </resources>

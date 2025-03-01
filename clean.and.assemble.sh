@@ -6,9 +6,6 @@ export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 export JAVA_HOME=/usr/lib/jvm/java-22-jdk
 #export JAVA_HOME=/osshare/software/oracle/java-8-oracle
 if [[ ! -e $JAVA_HOME ]]; then
-    export JAVA_HOME=/cygdrive/c/localapps/jdk1.8.0_231
-fi
-if [[ ! -e $JAVA_HOME ]]; then
     # ubuntu shell
     #export JAVA_HOME=/mnt/c/localapps/jdk1.8.0_231
     #export JAVA_HOME=C:/localapps/jdk1.8.0_231

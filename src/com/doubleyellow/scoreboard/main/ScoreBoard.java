@@ -487,7 +487,15 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         handleStartedFromOtherApp();
 
-        ViewUtil.setFullScreen(getWindow(), PreferenceValues.showFullScreen(this));
+        boolean bFullScreen = PreferenceValues.showFullScreen(this);
+        ViewUtil.setFullScreen(getWindow(), bFullScreen);
+        if ( bFullScreen ) {
+            // hide the statusbar
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                          | View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
 
         boolean bOrientationChangeRequested =   initAllowedOrientation(this);
 
@@ -875,8 +883,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     bundle.putString(PreferenceKeys.StartupAction.toString(), StartupAction.ForceSelectMatch.toString());
                 }
             }
-*/
-            // Get values from the intent/scoreBoard that started this scoreBoard
+
+            // Get values from the intent that started this scoreBoard
             if ( bundle != null ) {
                 for ( PreferenceKeys key: PreferenceKeys.values() ) {
                     String value = bundle.getString(key.toString());
@@ -1298,6 +1306,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( bUseActionBar == null || bUseActionBar.equals(ToggleResult.nothing) ) {
             bUseActionBar = PreferenceValues.showActionBar(this)? ToggleResult.setToTrue : ToggleResult.setToFalse;
         }
+        if ( PreferenceValues.isScoreboardInPresentationView(this) ) {
+            bUseActionBar = ToggleResult.setToFalse;
+        }
         final ActionBar actionBar = getXActionBar();
         if ( actionBar != null ) {
             switch (bUseActionBar) {
@@ -1550,7 +1561,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     private void initActionBarSettings(MenuItem[] menuitems) {
         if ( menuitems == null ) { return; }
-        //this.bUseActionBar = PreferenceValues.showActionBar(this);
         if ( this.bUseActionBar != ToggleResult.setToTrue ) { return; }
         boolean bShowTextInActionBar = PreferenceValues.showTextInActionBar(this);
         for( MenuItem menuItem: menuitems ) {
@@ -4415,7 +4425,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
                     sendMatchToOtherBluetoothDevice(true, 500);
                     if ( isMQTTMirrorMaster() ) {
-                        publishMatchOnMQTT( true, null);
+                        publishMatchOnMQTT( matchModel, true, null);
                     }
                 }
             }
@@ -4526,7 +4536,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     public void postMatchModel_publishOnMQTT(Context context, Model matchModel, Type timerType, int iSecsTotal) {
         JSONObject oTimerInfo = getTimerInfo(timerType, iSecsTotal);
         postMatchModel(context, matchModel, true, false, oTimerInfo);
-        publishMatchOnMQTT(false, oTimerInfo);
+        publishMatchOnMQTT(matchModel, false, oTimerInfo);
     }
     public static void postMatchModel(Context context, Model matchModel, boolean bAllowEndGameIfApplicable, boolean bFromMenu, Type timerType, int iSecsTotal) {
         postMatchModel(context, matchModel, bAllowEndGameIfApplicable, bFromMenu, getTimerInfo(timerType, iSecsTotal));
@@ -6222,9 +6232,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         if ( saMethodNArgs.length > 1 ) {
                             String requestingMatchOfDeviceWithId = saMethodNArgs[1];
                             if ( requestingMatchOfDeviceWithId.equalsIgnoreCase("*") ) {
-                                publishMatchOnMQTT( false, null);
+                                publishMatchOnMQTT(matchModel, false, null);
                             } else if ( requestingMatchOfDeviceWithId.equalsIgnoreCase(PreferenceValues.getLiveScoreDeviceId(this)) ) {
-                                publishMatchOnMQTT( true, null);
+                                publishMatchOnMQTT(matchModel, true, null);
                             }
                         }
                         sendMatchToOtherBluetoothDevice(false, 2000);
@@ -7039,7 +7049,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( m_MQTTHandler == null ) { return; }
         m_MQTTHandler.publishOnMQTT(method, args);
     }
-    private void publishMatchOnMQTT(boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
+    private void publishMatchOnMQTT(Model matchModel, boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
         if ( m_MQTTHandler == null ) { return; }
         m_MQTTHandler.publishMatchOnMQTT(matchModel, bPrefixWithJsonLength, oTimerInfo);
     }

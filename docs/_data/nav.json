@@ -36,7 +36,7 @@
         "title": "Social",
         "pages": [
             { "title": "Sharing         ", "url" : "4.1.sharing"          },
-            { "title": "Transfer        ", "url" : "4.4.transfer.nfc"     },
+            { "title": "-Transfer       ", "url" : "4.4.transfer.nfc"     },
             { "title": "Storage/Review  ", "url" : "4.2.storage"          },
             { "title": "ClubSite        ", "url" : "4.7.club.website"     }
         ]
@@ -46,8 +46,9 @@
         "pages": [
             { "title": "LiveScore       ", "url" : "5.1.livescore"        },
             { "title": "ChromeCast      ", "url" : "5.2.chromecast"       },
+            { "title": "MQTT            ", "url" : "5.5.mqtt.md"          },
             { "title": "Remote          ", "url" : "5.3.bluetooth.mirror.md" },
-            { "title": "FCM             ", "url" : "5.4.fcm.md" }
+            { "title": "FCM             ", "url" : "5.4.fcm.md"           }
         ]
     },
     {

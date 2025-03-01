@@ -57,11 +57,13 @@ public class PersistHelper {
         }
         File fStore = matchModel.getStoreAs(PreviousMatchSelector.getArchiveDir(context));
         boolean bAtLeastOneGameFinished = matchModel.getNrOfFinishedGames() > 0;
+        boolean bDurationExceeded2Minutes = matchModel.getDurationInMinutes() >= 2;
 
         Feature continueRecentMatch = PreferenceValues.continueRecentMatch(context);
-        boolean bPossiblyContinueThisMatchAsRecent = ( (continueRecentMatch != Feature.DoNotUse) && StaticMatchSelector.matchIsFrom(matchModel.getSource()));
+        boolean bIsFromMyList       = StaticMatchSelector.matchIsFrom(matchModel.getSource());
+        boolean bPossiblyContinueThisMatchAsRecent = ( (continueRecentMatch != Feature.DoNotUse) && bIsFromMyList);
 
-        if ( bForceStore || bAtLeastOneGameFinished || bPossiblyContinueThisMatchAsRecent ) {
+        if ( bForceStore || bAtLeastOneGameFinished || bDurationExceeded2Minutes || bPossiblyContinueThisMatchAsRecent ) {
             FileUtil.writeTo(fStore, sJson);
         }
         return fStore;

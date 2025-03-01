@@ -404,16 +404,32 @@ public class PreferenceValues extends RWValues
     }
 */
 
+    public static boolean isScoreboardInPresentationView(Context context) {
+        if ( context instanceof ScoreBoard && ViewUtil.isLandscapeOrientation(context) ) {
+            EnumSet<LandscapeLayoutPreference> esFullScreenFor = EnumSet.of(LandscapeLayoutPreference.Presentation1, LandscapeLayoutPreference.Presentation2, LandscapeLayoutPreference.Presentation3);
+            LandscapeLayoutPreference landscapeLayout = getLandscapeLayout(context);
+            return esFullScreenFor.contains( landscapeLayout );
+        }
+        return false;
+    }
+
     public static boolean showActionBar(Context context) {
         boolean bDefault = context.getResources().getBoolean(R.bool.showActionBar_default);
         if ( ViewUtil.isWearable(context) ) {
             bDefault = false;
+        }
+        if ( isScoreboardInPresentationView(context) ) {
+            return false;
         }
         return getBoolean(PreferenceKeys.showActionBar, context, bDefault);
 //        return getBoolean(PreferenceKeys.showActionBar, context, R.bool.showActionBar_default);
     }
 
     public static boolean showFullScreen(Context context) {
+        // return true when in landscape AND getLandscapeLayout() = presentation#
+        if ( isScoreboardInPresentationView(context) ) {
+            return true;
+        }
         return getBoolean(PreferenceKeys.showFullScreen, context, R.bool.showFullScreen_default);
     }
 
@@ -1813,16 +1829,24 @@ public class PreferenceValues extends RWValues
             }
         }
 
-        if ( bAlreadyExists == false ) {
+        String sMsg;
+        if ( bAlreadyExists ) {
+            sMsg = "Already exists as feed: " + iNewActiveFeedIndex;
+        } else {
             iNewActiveFeedIndex = 0;
+            //urlsList.addFirst(newEntry); // this seems to work
             urlsList.add(iNewActiveFeedIndex, newEntry);
-            Log.d(TAG, "Inserted as first feedPostUrls entry: " + newEntry);
+            sMsg = "Inserted as first feedPostUrls entry: " + newEntry;
         }
+        Log.d(TAG, sMsg);
+        if ( currentDateIsTestDate() ) {
+            //MyDialogBuilder.dialogWithOkOnly(context, sMsg);
+        }
+        //Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show(); // TMP: comment out
 
         // create new value to store in preferences
         _storeFeedURLsConfig(context, urlsList);
         if ( bMakeActive ) {
-            //setString(PreferenceKeys.feedPostUrl, context, sNewName);
             setActiveFeedNr(context, iNewActiveFeedIndex);
         }
     }
@@ -1925,9 +1949,9 @@ public class PreferenceValues extends RWValues
         return eReturn;
     }
 
-    public static void setActiveFeedNr(Context context, int iNr) {
+    public static boolean setActiveFeedNr(Context context, int iNr) {
         mActiveFeedValues = null;
-        PreferenceValues.setNumber(PreferenceKeys.feedPostUrl, context, iNr);
+        return PreferenceValues.setNumber(PreferenceKeys.feedPostUrl, context, iNr);
     }
 
     private static Map<URLsKeys, String> mActiveFeedValues = null;
@@ -2130,15 +2154,16 @@ public class PreferenceValues extends RWValues
                 // very first install/run
 
                 if ( currentDateIsTestDate() ) {
-                    // to allow adb monkey test it without the showcase/quickintro coming into the way
+                    // to allow adb to monkey test it without the showcase/quick intro coming into the way
                     return StartupAction.None;
                 }
                 if ( ViewUtil.isWearable(context) ) {
                     return StartupAction.None;
                 }
 
-                return StartupAction.QuickIntro;
-
+                if ( PreferenceValues.isPublicApp(context) ) {
+                    return StartupAction.QuickIntro;
+                }
             }
             if ( (versionCodeForChangeLogCheck == 436) && Brand.isNotSquash() ) {
                 // spanish introduced: set announcement language to spanish

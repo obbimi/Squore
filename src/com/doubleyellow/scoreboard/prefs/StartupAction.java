@@ -41,7 +41,7 @@ public enum StartupAction {
     ChangeLog         (R.id.sb_change_log   ),
     ShowTimer         (R.id.sb_timer        ),
     ShowStoredmatches (R.id.sb_stored_matches),
-    BLEDevices        (R.id.sb_ble_devices),
+    //BLEDevices        (R.id.sb_ble_devices),
     //PlayDemo          (R.id.sb_demo),
     ;
 

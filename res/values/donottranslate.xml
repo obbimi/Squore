@@ -101,7 +101,8 @@
     <string name="handicapFormat_default">None</string>
     <string name="feedFeedsURL_default">/feed/feeds.php</string>
     <string name="FlagsURLs_default"><![CDATA[/img/flag/%1$s
-\nhttp://www.geognos.com/api/en/countries/flag/%1$s.png]]>
+\nhttp://www.geognos.com/api/en/countries/flag/%1$s.png
+\nhttp://localhost/img/flag/%1$s]]>
     </string>
 
     <string-array name="changeSidesWhen_GSM_DefaultValues">

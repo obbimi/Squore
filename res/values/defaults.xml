@@ -210,6 +210,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="useSinglesMatch__Default">true</bool>
     <bool name="useInjuryTimers__Squash">true</bool>
     <bool name="usePlayerTimeoutTimers__Squash">false</bool>
+    <bool name="showLiveScore__Default">true</bool>
     <bool name="usePowerPlay__Squash">true</bool>
     <bool name="usePowerPlay__Default">false</bool>
     <bool name="usePlayerTimeoutTimers__Default">false</bool>

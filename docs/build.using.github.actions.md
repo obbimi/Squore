@@ -28,8 +28,6 @@ For each brand:
 
 - Check with the android app [Obtainium](https://github.com/ImranR98/Obtainium) that updates are available.
 
-Publish Released APK to Google > Run workflow 
-
 ## Deploy to Google
 
 - Goto [actions](https://github.com/obbimi/Squore/actions)
@@ -44,6 +42,11 @@ Publish Released APK to Google > Run workflow
       - [Squore     ](https://play.google.com/console/u/0/developers/5046226336743383720/app/4972255383319852172/releases/overview)
       - [Tabletennis](https://play.google.com/console/u/0/developers/5046226336743383720/app/4975506867766261096/releases/overview)
       - [TennisPadel](https://play.google.com/console/u/0/developers/5046226336743383720/app/4972207514792479457/releases/overview)
+    - choose
+      - 'Edit' (arrow)
+      - "next', choose previous or give new release notes
+      - 'Save'
+      - 'Send for review'
 
 ## Troubleshooting
 
