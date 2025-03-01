@@ -873,15 +873,24 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             if ( intent != null ) {
                 bundle = intent.getBundleExtra(PreferenceKeys.class.getSimpleName());
             }
-/*
-            boolean bTestInvocation = false; // TODO: temp should be false
+
+            boolean bTestInvocation = false; // && PreferenceValues.currentDateIsTestDate(); // TODO: temp should be false
             if ( bundle == null && bTestInvocation ) {
-                List<String> lFixedMatches = PreferenceValues.getMatchList(this);
-                if ( ListUtil.isEmpty(lFixedMatches)) {
-                    bundle = new Bundle();
-                    bundle.putString(PreferenceKeys.matchList.toString(), "|-De Vaart|Bogaarts, Jolan - Van Parys, Matthias|");
-                    bundle.putString(PreferenceKeys.StartupAction.toString(), StartupAction.ForceSelectMatch.toString());
+                bundle = new Bundle();
+                //bundle.putString(PreferenceKeys.matchList.toString(), "|-De Vaart|Bogaarts, Jolan - Van Parys, Matthias|");
+                //bundle.putString(PreferenceKeys.StartupAction.toString(), StartupAction.ForceSelectMatch.toString());
+
+                String sFeedName       = "Double Yellow Boxen";
+                String sFeedMatchesURL = "http://boxen.double-yellow.be/matches.json.php";
+                String sFeedPlayersUrl = "http://boxen.double-yellow.be/players.txt.php";
+                String sUrls =
+                             URLsKeys.Name        + "=" + sFeedName           + "\n"
+                           + URLsKeys.FeedMatches + "=" + sFeedMatchesURL     + "\n";
+                if ( sFeedPlayersUrl != null ) {
+                    sUrls += URLsKeys.FeedPlayers + "=" + sFeedPlayersUrl     + "\n";
                 }
+                bundle.putString(PreferenceKeys.feedPostUrls.toString(), sUrls);
+                bundle.putString(PreferenceKeys.StartupAction.toString(), StartupAction.SelectFeedMatch.toString());
             }
 
             // Get values from the intent that started this scoreBoard
