@@ -350,6 +350,8 @@ public enum PreferenceKeys {
             MQTTBrokerURL_Custom,
         MQTTPublishJoinerLeaverTopic,
         MQTTPublishTopicMatch,
+        MQTTPublishTopicUnloadMatch,
+        MQTTSubscribeTopic_newMatch,
             MQTTSkipJsonKeys,
         MQTTPublishTopicChange,
         MQTTSubscribeTopicChange,

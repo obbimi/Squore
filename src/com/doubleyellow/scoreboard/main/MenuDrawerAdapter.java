@@ -77,7 +77,7 @@ class MenuDrawerAdapter extends BaseAdapter implements ListView.OnItemClickListe
         startSection(R.string.goto_help );
             addItem(R.id.sb_quick_intro         , R.string.Quick_intro             , android.R.drawable.ic_dialog_info         );
             addItem(R.id.sb_help                , R.string.goto_help               , android.R.drawable.ic_menu_help           );
-            addItem(R.id.sb_official_rules      , iOfficialRulesResId              , android.R.drawable.ic_menu_search         );
+            addItem(R.id.sb_official_rules      , iOfficialRulesResId              , android.R.drawable.ic_menu_search    , R.bool.showLiveScore__Default     );
             addItem(R.id.sb_live_score          , R.string.Live_Score              ,         R.drawable.ic_action_web_site, R.bool.showLiveScore__Default     );
             addItem(R.id.sb_feedback            , R.string.cmd_feedback            ,         R.drawable.ic_action_import_export);
         startSection(R.string.pref_Other );

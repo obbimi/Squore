@@ -186,16 +186,21 @@ public class MQTTHandler
             }
 
             // listen for 'clients' to request the complete json of a match specifically of this device
-            final String mqttRespondToTopic = getMQTTSubscribeTopicChange(BTMethods.requestCompleteJsonOfMatch.toString());
+            final String mqttRespondToTopic = getMQTTSubscribeTopic_Change(BTMethods.requestCompleteJsonOfMatch.toString());
             if ( StringUtil.isNotEmpty(mqttRespondToTopic) ) {
                 subscribe(mqttRespondToTopic, null);
             }
 
-            final String mqttSubScribeToOtherTopic = getMQTTSubscribeTopicChange(null);
-            if ( StringUtil.isNotEmpty(mqttSubScribeToOtherTopic) ) {
+            final String mqttRespondToTopic_newMatch = getMQTTSubscribeTopic_newMatch();
+            if ( StringUtil.isNotEmpty(mqttRespondToTopic_newMatch) ) {
+                subscribe(mqttRespondToTopic_newMatch, null);
+            }
+
+            final String mqttSubScribeToTopic_Change = getMQTTSubscribeTopic_Change(null);
+            if ( StringUtil.isNotEmpty(mqttSubScribeToTopic_Change) ) {
 
                 // listen for changes on
-                subscribe(mqttSubScribeToOtherTopic, null);
+                subscribe(mqttSubScribeToTopic_Change, null);
             } else {
                 m_context.showInfoMessageOnUiThread(m_context.getString(R.string.sb_MQTT_Connected_to_x, m_sBrokerUrl), 10);
             }
@@ -308,8 +313,8 @@ public class MQTTHandler
         return m_MQTTRole;
     }
 
-    private String getMQTTSubscribeTopicChange(String sMethod) {
-        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopicChange(m_context);
+    private String getMQTTSubscribeTopic_Change(String sMethod) {
+        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic_Change(m_context);
         String sSubTopic = "";
 
         String sDevice = PreferenceValues.getMQTTOtherDeviceId(m_context);
@@ -322,6 +327,13 @@ public class MQTTHandler
             return null;
         }
         return sValue + sSubTopic;
+    }
+
+    private String getMQTTSubscribeTopic_newMatch() {
+        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic_newMatch(m_context);
+
+        String sDevice = PreferenceValues.getMQTTOtherDeviceId(m_context);
+        return doMQTTTopicTranslation(sPlaceholder, sDevice);
     }
 
     public void publishOnMQTT(BTMethods method, Object... args) {
@@ -348,6 +360,11 @@ public class MQTTHandler
         publish(changeTopic, sMessage, false);
     }
 
+    public void publishUnloadMatchOnMQTT(Model matchModel) {
+        String sJson = matchModel.toJsonString(m_context);
+        String matchTopic = getMQTTPublishTopicUnloadMatch();
+        publish(matchTopic, sJson, true);
+    }
     public void publishMatchOnMQTT(Model matchModel, boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
         if ( isConnected() == false ) {
             return;
@@ -365,6 +382,13 @@ public class MQTTHandler
 
     private String getMQTTPublishTopicMatch() {
         String sPlaceholder = PreferenceValues.getMQTTPublishTopicMatch(m_context);
+
+        String sDevice = m_thisDeviceId;
+        String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
+        return sValue;
+    }
+    private String getMQTTPublishTopicUnloadMatch() {
+        String sPlaceholder = PreferenceValues.getMQTTPublishTopicUnloadMatch(m_context);
 
         String sDevice = m_thisDeviceId;
         String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);

@@ -1357,7 +1357,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         Model previous = matchModel;
 
-        if ( fJson == null || matchModel == null ) { // 20140315: invoked from onCreate() after e.g. a dialog or screen orientation switch
+        if ( fJson == null || matchModel == null ) {
             setMatchModel(null);
 
             bReadFromJsonOK = initMatchModel(fJson);
@@ -4424,6 +4424,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         }
                     } else {
                         m.registerListeners(matchModel);
+                        if ( (matchModel != null) && (m_MQTTHandler != null) ) {
+                            m_MQTTHandler.publishUnloadMatchOnMQTT(matchModel);
+                        }
                         setMatchModel(m);
                         setPlayerNames(new String[] { matchModel.getName(Player.A), matchModel.getName(Player.B) });
 

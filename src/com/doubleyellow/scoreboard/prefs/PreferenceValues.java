@@ -997,13 +997,19 @@ public class PreferenceValues extends RWValues
     public static String getMQTTPublishTopicMatch(Context context) {
         return getString(PreferenceKeys.MQTTPublishTopicMatch, R.string.MQTTTopicMatchTemplate__Default, context);
     }
+    public static String getMQTTPublishTopicUnloadMatch(Context context) {
+        return getString(PreferenceKeys.MQTTPublishTopicUnloadMatch, R.string.MQTTTopicUnloadMatchTemplate__Default, context);
+    }
+    public static String getMQTTSubscribeTopic_newMatch(Context context) {
+        return getString(PreferenceKeys.MQTTSubscribeTopic_newMatch, R.string.MQTTTopicNewMatchTemplate__Default, context);
+    }
     public static List<String> getMQTTSkipJsonKeys(Context context) {
         return getStringAsList(context, PreferenceKeys.MQTTSkipJsonKeys, 0);
     }
     public static String getMQTTPublishTopicChange(Context context) {
         return getString(PreferenceKeys.MQTTPublishTopicChange, R.string.MQTTTopicChangeTemplate__Default, context);
     }
-    public static String getMQTTSubscribeTopicChange(Context context) {
+    public static String getMQTTSubscribeTopic_Change(Context context) {
         return getString(PreferenceKeys.MQTTSubscribeTopicChange, R.string.MQTTTopicChangeTemplate__Default, context);
     }
     public static String getMQTTPublishJoinerLeaverTopic(Context context) {
