@@ -117,11 +117,11 @@
                     <item android:id="@+id/sb_toss"                  app:showAsAction="never" android:icon="@drawable/toss_white" android:title="@string/sb_cmd_toss"/>
                     <item android:id="@+id/sb_official_announcement" app:showAsAction="never" android:icon="@drawable/microphone"                     android:title="@string/sb_official_announcement"/>
                     <item android:id="@+id/sb_score_details"         app:showAsAction="never" android:icon="@drawable/ic_action_chart_line"           android:title="@string/sb_score_details" />
-                    <item android:id="@+id/sb_live_score"            app:showAsAction="never"                                                         android:title="@string/Live_Score" android:visible="@bool/showLiveScore__Default"/>
+                    <item android:id="@+id/sb_live_score"            app:showAsAction="never"                                                         android:title="@string/Live_Score"                android:visible="@bool/showLiveScore__Default"/>
                     <item android:id="@+id/sb_possible_conductsA"    app:showAsAction="never" android:icon="@android:drawable/ic_dialog_alert"        android:title="@string/sb_possible_conducts" />
                     <item android:id="@+id/sb_official_rules"        app:showAsAction="never" android:icon="@android:drawable/ic_menu_search"         android:title="@string/sb_official_rules__Squash" android:visible="@bool/isPublicApp__Default" />
 
-                    <item android:id="@+id/sb_fcm_info"              app:showAsAction="never" android:icon="@drawable/dummy"                          android:title="@string/FCM_Info" android:visible="@bool/isPublicApp__Default"/>
+<!--                    <item android:id="@+id/sb_fcm_info"              app:showAsAction="never" android:icon="@drawable/dummy"                          android:title="@string/FCM_Info" android:visible="@bool/isPublicApp__Default"/>-->
                 </menu>
             </item>
 

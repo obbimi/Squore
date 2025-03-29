@@ -41,7 +41,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
-import androidx.core.splashscreen.*;
 import androidx.core.view.InputDeviceCompat;
 import androidx.core.view.MotionEventCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -87,8 +86,8 @@ import com.doubleyellow.scoreboard.dialog.announcement.EndMatchAnnouncement;
 import com.doubleyellow.scoreboard.dialog.announcement.StartGameAnnouncement;
 import com.doubleyellow.scoreboard.feed.Authentication;
 import com.doubleyellow.scoreboard.feed.Preloader;
-import com.doubleyellow.scoreboard.firebase.PusherHandler;
-import com.doubleyellow.scoreboard.firebase.PusherMessagingService;
+//import com.doubleyellow.scoreboard.firebase.PusherHandler;
+//import com.doubleyellow.scoreboard.firebase.PusherMessagingService;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.mqtt.JoinedDevicesListener;
@@ -727,7 +726,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         //onResumeNFC();
         onResumeMQTT();
-        onResumeFCM();
+        //onResumeFCM();
         onResumeBlueTooth();
         onResumeInitBluetoothBLE();
         onResume_BluetoothMediaControlButtons();
@@ -1641,7 +1640,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         stopBlueTooth();
         //stopMQTT();
 
-        PusherHandler.getInstance().cleanup();
+        //PusherHandler.getInstance().cleanup();
 
         destroyBillingProcessor();
     }
@@ -3051,7 +3050,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         String sPostUrl = PreferenceValues.getPostResultToURL(this);
         setMenuItemEnabled(R.id.sb_post_match_result, StringUtil.isNotEmpty(sPostUrl));
 
-        setMenuItemEnabled(R.id.sb_fcm_info, PreferenceValues.isFCMEnabled(this));
+        //setMenuItemEnabled(R.id.sb_fcm_info, PreferenceValues.isFCMEnabled(this));
 
         boolean bStoreMatches = PreferenceValues.saveMatchesForLaterUsage(this);
         setMenuItemsEnabled(new int[] { R.id.sb_stored_matches, R.id.cmd_export_matches, R.id.cmd_import_matches }, bStoreMatches);
@@ -3490,10 +3489,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             } else if (id == R.id.sb_live_score) {
                 showLiveScore();
                 return false;
-            } else if (id == R.id.sb_fcm_info) {
+            } else /*if (id == R.id.sb_fcm_info) {
                 openFCMInfoUrl();
                 return false;
-            } else if (id == R.id.sb_official_rules) {
+            } else*/ if (id == R.id.sb_official_rules) {
                 showOfficialSquashRules();
                 return false;
             } else if (id == R.id.sb_quick_intro) {
@@ -5936,7 +5935,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
                     if ( sFileContent.startsWith("{") && sFileContent.endsWith("}") ) {
                         Log.d(TAG, "Parsing received match...");
-                        if ( EnumSet.of(MessageSource.FirebaseCloudMessage/*, MessageSource.MQTT*/).contains(msgSource) ) {
+                        if ( false /*EnumSet.of(MessageSource.FirebaseCloudMessage).contains(msgSource)*/ ) {
                             Model m = Brand.getModel();
                             m.fromJsonString(sFileContent);
                             boolean bStartNewMatchDialog = StringUtil.areAllNonEmpty(m.getName(Player.A), m.getName(Player.B));
@@ -5960,10 +5959,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                     Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                                 } else {
                                     onActivityResult(iRequestCode, 0 , intent);
+/*
                                     if ( PreferenceValues.showToastMessageForEveryReceivedFCMMessage(this)) {
                                         String sMsg = "New match to ref received by " + msgSource + " message:\n" + sFileContent;
                                         Toast.makeText(this, sMsg, Toast.LENGTH_LONG).show();
                                     }
+*/
                                 }
                             } else {
                                 // TODO: implement other options. e.g. populate 'My List' and open 'My List'
@@ -6403,12 +6404,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             //hidePresentationEndOfGame();
                         }
                         break;
+/*
                     case FirebaseCloudMessage:
                         if ( PreferenceValues.showToastMessageForEveryReceivedFCMMessage(this)) {
                             String sMsg = "Score changed by FCM message: " + readMessage;
                             Toast.makeText(this, sMsg, Toast.LENGTH_SHORT).show();
                         }
                         break;
+*/
                     case BluetoothLE:
                         break;
                     case MQTT:
@@ -6956,6 +6959,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ----------------------------------------------------
     // --- control via Firebase/Pusher messages       -----
     // ----------------------------------------------------
+/*
     private void onResumeFCM() {
         if ( ViewUtil.isWearable(this)  ) { return; }
 
@@ -6989,6 +6993,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             pusherHandler.cleanup();
         }
     }
+*/
 
     // ----------------------------------------------------
     // --- MQTT                                       -----

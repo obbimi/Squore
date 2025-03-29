@@ -19,7 +19,7 @@ package com.doubleyellow.scoreboard.bluetooth;
 public enum MessageSource {
     BluetoothMirror,
     Wearable,
-    FirebaseCloudMessage,
+    //FirebaseCloudMessage,
     BluetoothLE,
     MQTT,
 }

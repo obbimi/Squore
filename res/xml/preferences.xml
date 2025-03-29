@@ -869,6 +869,7 @@
                 />
         </PreferenceCategory>
 
+<!--
         <PreferenceCategory android:title="@string/pref_FCM" android:key="FCMPrefs">
             <CheckBoxPreference android:key="FCMEnabled"
                 android:icon="@drawable/dummy"
@@ -889,6 +890,7 @@
                 android:defaultValue="@bool/showToastMessageForEveryReceivedFCMMessage_default"
                 />
         </PreferenceCategory>
+-->
 
     </PreferenceScreen>
 

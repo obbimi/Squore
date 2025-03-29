@@ -501,6 +501,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         settingsFragment.setEnabledForPrefKeys(ppEnabled, PreferenceKeys.numberOfPowerPlaysPerPlayerPerMatch);
                         break;
                     }
+/*
                     case FCMEnabled:
                         // if no FCM device id yet, generate one
                         String sFCMDeviceId = PreferenceValues.getFCMDeviceId(Preferences.this);
@@ -517,6 +518,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         }
                         settingsFragment.setEnabledForPrefKeys(fcmEnabled, PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, PreferenceKeys.liveScoreDeviceId);
                         break;
+*/
                     case UseBluetoothLE:
                         boolean bUse = PreferenceValues.useBluetoothLE(Preferences.this);
                         break;
@@ -965,10 +967,12 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                 }
             }
 
+/*
             // FCM
             if ( PreferenceValues.isFCMEnabled(getActivity()) == false ) {
                 setEnabledForPrefKeys(false, PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, PreferenceKeys.liveScoreDeviceId);
             }
+*/
 
             ListPreference lpTargetDir = (ListPreference) findPreference(PreferenceKeys.targetDirForImportExport);
             if ( lpTargetDir != null ) {

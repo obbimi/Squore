@@ -70,10 +70,6 @@ class MenuDrawerAdapter extends BaseAdapter implements ListView.OnItemClickListe
             addItem(R.id.sb_injury_timer        , R.string.sb_injury_timer         ,         R.drawable.timer               , R.bool.useInjuryTimers__Squash);
             addItem(R.id.sb_player_timeout_timer, R.string.sb_player_timeout_timer ,         R.drawable.timer               , R.bool.usePlayerTimeoutTimers__Squash);
             addItem(R.id.sb_score_details       , R.string.sb_score_details        ,         R.drawable.ic_action_chart_line);
-        if ( false && PreferenceValues.isFCMEnabled(scoreBoard)) {
-            // TODO: allow disable/enable on items in menudrawer
-            addItem(R.id.sb_fcm_info, R.string.FCM_Info, R.drawable.dummy);
-        }
         startSection(R.string.goto_help );
             addItem(R.id.sb_quick_intro         , R.string.Quick_intro             , android.R.drawable.ic_dialog_info         );
             addItem(R.id.sb_help                , R.string.goto_help               , android.R.drawable.ic_menu_help           );

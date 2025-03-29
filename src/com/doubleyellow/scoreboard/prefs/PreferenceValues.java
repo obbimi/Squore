@@ -552,12 +552,14 @@ public class PreferenceValues extends RWValues
     public static String getLiveScoreDeviceId(Context context) {
         return getDeviceId(PreferenceKeys.liveScoreDeviceId, context, true);
     }
+/*
     public static boolean isFCMEnabled(Context context) {
         return getBoolean(PreferenceKeys.FCMEnabled, context, R.bool.FCMEnabled_default);
     }
     public static boolean showToastMessageForEveryReceivedFCMMessage(Context context) {
         return getBoolean(PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, context, R.bool.showToastMessageForEveryReceivedFCMMessage_default);
     }
+*/
     public static String getFCMDeviceId(Context context) {
         return getDeviceId(PreferenceKeys.liveScoreDeviceId, context, true);
     }

@@ -36,7 +36,7 @@ public class ScoreButtonListener extends ScoreBoardListener implements View.OnCl
         if ( getMatchModel().isPossibleGameBallFor(player) && (scoreBoard.bGameEndingHasBeenCancelledThisGame == false) ) {
             // score will go to game-end, and most likely a dialog will be build and show.
             // Prevent any accidental score changes while dialog is about to be shown.
-            // Mainly to prevent odd behaviour of the app for when people are 'quickly' entering a score by tapping rappidly on score buttons
+            // Mainly to prevent odd behaviour of the app for when people are 'quickly' entering a score by tapping rapidly on score buttons
             scoreBoard.disableScoreButton(view);
         }
         if ( scoreBoard.dialogManager.dismissIfTwoTimerView() /*cancelTimer()*/ ) {

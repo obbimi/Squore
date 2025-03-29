@@ -284,9 +284,11 @@ public enum PreferenceKeys {
         postEveryChangeToSupportLiveScore,
         turnOnLiveScoringForMatchesFromFeed,
 
+/*
     FCMPrefs,
         FCMEnabled,
         showToastMessageForEveryReceivedFCMMessage,
+*/
 
     /* not really preferences but makes them manageable from 'parent' app */
     FromParent,
