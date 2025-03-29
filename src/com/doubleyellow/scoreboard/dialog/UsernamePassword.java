@@ -40,6 +40,7 @@ import com.doubleyellow.util.StringUtil;
 public class UsernamePassword extends BaseAlertDialog {
 
     private static final String NAME_PREFKEY = "Name";
+    private static final String URL_PREFKEY  = "URL";
 
     public UsernamePassword(Context context, ScoreBoard scoreBoard) {
         super(context, null, scoreBoard);
@@ -54,12 +55,14 @@ public class UsernamePassword extends BaseAlertDialog {
     @Override public boolean init(Bundle outState) {
         Authentication authentication = Authentication.valueOf(outState.getString(Authentication.class.getName()));
         String sName = outState.getString(NAME_PREFKEY);
-        init(sName, authentication);
+        String sPostURL = outState.getString(URL_PREFKEY);
+        init(sName, sPostURL, authentication);
         show();
         return true;
     }
 
     private String         m_sName          = null;
+    private String         m_sPostURL       = null;
     private Authentication m_authentication = Authentication.None;
 
     @Override public void show() {
@@ -71,7 +74,12 @@ public class UsernamePassword extends BaseAlertDialog {
         etUsername = new EditText(context);
         etUsername.setInputType(InputType.TYPE_CLASS_TEXT);
         etUsername.setHint(R.string.username);
-        String sUserName = PreferenceValues.getString(getUsernamePrefKey(m_sName), "", context);
+        final String usernamePrefKey    = getUsernamePrefKey();
+        final String usernamePrefKeyURL = getUsernamePrefKeyURL();
+        String sUserName = PreferenceValues.getString(usernamePrefKey, "", context);
+        if (StringUtil.isEmpty(sUserName) ) {
+            sUserName = PreferenceValues.getString(usernamePrefKeyURL, "", context);
+        }
         if (StringUtil.isNotEmpty(sUserName) ) {
             etUsername.setText(sUserName);
         }
@@ -82,7 +90,12 @@ public class UsernamePassword extends BaseAlertDialog {
         etPassword.setTransformationMethod(new MyPasswordTransformationMethod('•', 1));
         etPassword.setHint(R.string.password);
         if ( PreferenceValues.savePasswords(context) ) {
-            String sPassword = PreferenceValues.getString(getPasswordPrefKey(m_sName), "", context);
+            final String passwordPrefKey    = getPasswordPrefKey();
+            final String passwordPrefKeyURL = getPasswordPrefKeyURL();
+            String sPassword = PreferenceValues.getString(passwordPrefKey, "", context);
+            if (StringUtil.isEmpty(sPassword) ) {
+                sPassword = PreferenceValues.getString(passwordPrefKeyURL, "", context);
+            }
             if (StringUtil.isNotEmpty(sPassword) ) {
                 etPassword.setText(sPassword);
             }
@@ -123,16 +136,23 @@ public class UsernamePassword extends BaseAlertDialog {
         }
     }
 
-    public void init(String sName, Authentication authentication) {
+    public void init(String sName, String sPostUrl, Authentication authentication) {
         m_sName          = sName;
+        m_sPostURL       = sPostUrl;
         m_authentication = authentication;
     }
 
-    private String getUsernamePrefKey(String sFeedName) {
-        return sFeedName + "__" + NAME_PREFKEY + "__" + getString(R.string.username);
+    private String getUsernamePrefKey() {
+        return m_sName + "__" + NAME_PREFKEY + "__" + getString(R.string.username);
     }
-    private String getPasswordPrefKey(String sFeedName) {
-        return sFeedName + "__" + NAME_PREFKEY + "__" + getString(R.string.password);
+    private String getPasswordPrefKey() {
+        return m_sName + "__" + NAME_PREFKEY + "__" + getString(R.string.password);
+    }
+    private String getUsernamePrefKeyURL() {
+        return m_sPostURL + "__" + URL_PREFKEY + "__" + getString(R.string.username);
+    }
+    private String getPasswordPrefKeyURL() {
+        return m_sPostURL + "__" + URL_PREFKEY + "__" + getString(R.string.password);
     }
 
     private EditText etUsername = null;
@@ -157,16 +177,21 @@ public class UsernamePassword extends BaseAlertDialog {
                 case BodyParameters:
                 case Basic:
                     if ( areAuthenticationFieldsSpecified() ) {
-                        PreferenceValues.setString(getUsernamePrefKey(m_sName), etUsername.getText().toString(), context);
-                        String passwordPrefKey = getPasswordPrefKey(m_sName);
+                        String sUserName = etUsername.getText().toString();
+                        String sPassword = etPassword.getText().toString();
+                        PreferenceValues.setString(getUsernamePrefKey()   , sUserName, context);
+                        PreferenceValues.setString(getUsernamePrefKeyURL(), sUserName, context);
+                        String passwordPrefKey = getPasswordPrefKey();
                         if ( PreferenceValues.savePasswords(context) ) {
-                            PreferenceValues.setString(passwordPrefKey, etPassword.getText().toString(), context);
+                            PreferenceValues.setString(passwordPrefKey        , sPassword, context);
+                            PreferenceValues.setString(getPasswordPrefKeyURL(), sPassword, context);
                         } else {
                             // remove password, so that if later 'save password' is enable again user still needs to provide it at least once
-                            PreferenceValues.remove(passwordPrefKey, context);
+                            PreferenceValues.remove(passwordPrefKey        , context);
+                            PreferenceValues.remove(getPasswordPrefKeyURL(), context);
                         }
                         // TODO: flexibility: this dialog is not reuasable with this
-                        scoreBoard.postMatchResult(m_authentication, etUsername.getText().toString(), etPassword.getText().toString());
+                        scoreBoard.postMatchResult(m_authentication, sUserName, sPassword);
                         dialog.cancel();
                     } else {
                         // prevent dialog from closing

@@ -4493,13 +4493,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     /** mainly to post actually finished matches to configured target */
     private void postMatchResult() {
         final String feedPostName = PreferenceValues.getFeedPostName(this);
+        final String feedPostURL  = PreferenceValues.getPostResultToURL(this);
         final Authentication authentication = PreferenceValues.getFeedPostAuthentication(this);
         if ( authentication != null ) {
             switch (authentication) {
                 case BodyParameters:
                 case Basic:
                     UsernamePassword usernamePassword = new UsernamePassword(this, this);
-                    usernamePassword.init(feedPostName, authentication);
+                    usernamePassword.init(feedPostName, feedPostURL, authentication);
                     dialogManager.show(usernamePassword);
                     break;
                 case None:
