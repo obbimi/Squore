@@ -103,7 +103,7 @@ android {
         }
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
-    def versionCodeXXX = 552
+    def versionCodeXXX = 553
     productFlavors {
         // versionCodePrefix specifies [min_api_level][bitwise_supported_screensizes s=1,m=2,l=4,xl=8]
         phoneTabletPre24 {
@@ -112,21 +112,21 @@ android {
             targetSdkVersion 34
             multiDexEnabled true // required since using firebase
             versionCode 1915 * 10000 + versionCodeXXX
-            versionName "4.55"
+            versionName "4.56"
         }
         phoneTabletPost25 {
             dimension "devicetype"
             minSdkVersion 25
             targetSdkVersion 34
             versionCode 2315 * 10000 + versionCodeXXX
-            versionName "4.55"
+            versionName "4.56"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 34
             versionCode 2501 * 10000 + versionCodeXXX
-            versionName "4.55"
+            versionName "4.56"
         }
     }
     buildTypes {

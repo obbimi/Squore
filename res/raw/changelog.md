@@ -1,3 +1,9 @@
+## 4.56 (mar 2025)
+
+- feed improvements
+  - storing password for posting result to a website (#81)
+  - prevent invalid scores (#78)
+
 ## 4.55 (jan 2025)
 
 - first version with MQTT capabilities (experimental)
