@@ -1884,6 +1884,9 @@ public abstract class Model implements Serializable
     public String getSource() {
         return m_sSource;
     }
+    public boolean sourceIsHttpFeed() {
+        return m_sSource != null && m_sSource.startsWith("http");
+    }
     public String getSourceID() {
         return m_sSourceID;
     }

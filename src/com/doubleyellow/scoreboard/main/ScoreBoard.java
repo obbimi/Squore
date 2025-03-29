@@ -5523,6 +5523,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // WRAPPER methods to be able to intercept method call to model and communicate it to connected BT device
     //----------------------------------------------------
     private void _changeScore(Player player) {
+        Player winner = matchModel.isPossibleGameVictoryFor();
+        if ( winner != null ) {
+            if ( matchModel.sourceIsHttpFeed() ) {
+                _confirmGameEnding(winner);
+                //iBoard.showInfoMessage("Not changing score. End of game reached", 3);
+                return;
+            }
+        }
         //Log.d(TAG, "Changing score for for model " + matchModel);
         if ( PreferenceValues.blinkFeedbackPerPoint(this) ) {
             int iTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(player);
