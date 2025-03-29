@@ -878,6 +878,10 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             if ( bUseCacheIfPresent == false ) {
                 m_task.setCacheFileToOld(true);
             }
+            int iCacheMaxMinutes = PreferenceValues.getMaxCacheAgeFeeds(context);
+            if ( iCacheMaxMinutes >= 0 ) {
+                m_task.setMaximumReuseCacheTimeMinutes(iCacheMaxMinutes);
+            }
 
             m_task.setContentReceiver(this);
             if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P /* 28 */ ) {
