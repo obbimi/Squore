@@ -3003,7 +3003,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     Menu       mainMenu                   = null;
     private MenuItem[] menuItemsWithOrWithoutText = null;
 
-    /** Populates the scoreBoard's options menu. Called only once for ScoreBoard (but re-invoked if orientation changes) */
+    /** Populates the scoreBoard's options menu. Called only once for ScoreBoard (but re-invoked if orientation changes, or cast menu option R.id.media_route_menu_item is selected) */
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
 

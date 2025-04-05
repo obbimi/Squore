@@ -109,13 +109,14 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         }
         iConstructCastMessagesWhileNotEvenCasting = PreferenceValues.isBrandTesting(m_context)?1:0;
 
-        createCastContext();
-        setUpListeners(m_castContext);
+        if ( createCastContext() ) {
+            setUpListeners(m_castContext);
+        }
 
         //checkPlayServices();
     }
 
-    private void createCastContext() {
+    private boolean createCastContext() {
         if ( m_castContext == null ) {
             try {
                 m_castContext = CastContext.getSharedInstance(); // requires com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME to be specified in Manifest.xml
@@ -146,8 +147,10 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
             } catch (Exception e) {
                 Log.w(TAG, "No casting ..." + e.getMessage());
                 //e.printStackTrace(); // com.google.android.gms.dynamite.DynamiteModule$LoadingException: No acceptable module found. Local version is 0 and remote version is 0 (Samsung S4 with custom ROM 8.1)
+                return false;
             }
         }
+        return true;
     }
 
     private static long lLastDummyContentSend = 0;
@@ -229,6 +232,10 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
         mediaRouteMenuItem.setVisible(true);
         mediaRouteMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        if ( createCastContext() ) {
+            setUpListeners(m_castContext);
+        }
     }
     private MediaRouteSelector   mediaRouteSelector  = null;
 
@@ -268,7 +275,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
 
     private void setUpListeners(CastContext castContext) {
         if ( castContext == null ) {
-            Log.w(TAG, "[setUpListeners] Castcontext = null. Not setting up cast listeners");
+            Log.w(TAG, "[setUpListeners] CastContext = null. Not setting up cast listeners");
             return;
         }
         Log.d(TAG, "[setUpListeners] setting up cast listener on castContext :" + castContext);
@@ -695,12 +702,12 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         }
 
         @Override public void onApplicationStatusChanged() {
-            Log.d(TAG, "onApplicationStatusChanged");
+            Log.d(TAG, "onApplicationStatusChanged"); // not really useful... what changed?!
             super.onApplicationStatusChanged();
         }
 
         @Override public void onApplicationMetadataChanged(ApplicationMetadata applicationMetadata) {
-            Log.d(TAG, "onApplicationMetadataChanged(" + applicationMetadata + ")");
+            Log.d(TAG, "onApplicationMetadataChanged(" + applicationMetadata + ")"); // typically null if session ended
             super.onApplicationMetadataChanged(applicationMetadata); // e.g. holds "My Test Receiver" and value of CUSTOM_RECEIVER_APP_ID_brand_test
         }
 
