@@ -310,6 +310,7 @@ public enum PreferenceKeys {
     targetDirForImportExport,
 
     ChromeCast,
+        showCastButtonInActionBar,
         useCastScreen,
             castScreenLogoUrl,
                 castScreenShowLogo,

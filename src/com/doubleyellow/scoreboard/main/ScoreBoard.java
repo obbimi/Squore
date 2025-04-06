@@ -3011,7 +3011,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         mainMenu = menu;
 
         if ( PreferenceValues.isPublicApp(this) ) {
-            initCastMenu();
+            if ( PreferenceValues.showCastButtonInActionBar(this) ) {
+                initCastMenu();
+            } else {
+                menu.removeItem(R.id.media_route_menu_item);
+            }
         } else {
             menu.removeItem(R.id.media_route_menu_item);
         }
@@ -3155,7 +3159,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         } else if ( matchModel.isLocked() ) {
             lShowIds.add(0, R.id.dyn_new_match);
         } else if ( matchModel.gameHasStarted() == false ) {
-            if ( PreferenceValues.useTimersFeature(this).equals(Feature.Suggest) ) {
+            boolean bTimerIsShowing        = (ScoreBoard.timer != null) && ScoreBoard.timer.isShowing();
+            if ( EnumSet.of(Feature.Suggest, Feature.Automatic).contains(PreferenceValues.useTimersFeature(this)) || bTimerIsShowing ) {
                 // timer buttons is already there as floating
                 lShowIds.add((Integer) R.id.dyn_score_details);
             } else {

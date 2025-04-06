@@ -1114,6 +1114,11 @@
         </PreferenceCategory>
 
         <PreferenceCategory android:title="@string/pref_Category_ChromeCast" android:key="ChromeCast">
+            <CheckBoxPreference android:key="showCastButtonInActionBar"
+                android:icon="@drawable/ic_chromecast"
+                android:title="@string/pref_showCastButtonInActionBar"
+                android:defaultValue="@bool/showCastButtonInActionBar_default"
+                />
             <EditTextPreference android:key="castScreenLogoUrl"
                 android:icon="@drawable/ic_chromecast"
                 android:title="@string/pref_castScreenLogoUrl"

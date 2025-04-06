@@ -1247,6 +1247,14 @@ public class IBoard implements TimerViewContainer
             tvDivision.setTextColor(mColors.get(ColorPrefs.ColorTarget.playerButtonTextColor));
         }
 
+        TextView tvInfoMessage = (TextView) findViewById(R.id.sb_bottom_of_screen_infomessage);
+        if ( tvInfoMessage != null ) {
+            tvInfoMessage.setBackgroundColor(mColors.get(ColorPrefs.ColorTarget.darkest));
+            Drawable drawable = tvInfoMessage.getBackground();
+            drawable.setAlpha(0xCC);
+            tvInfoMessage.setTextColor(mColors.get(ColorPrefs.ColorTarget.white));
+        }
+
         GameHistoryView gameHistory = (GameHistoryView) findViewById(R.id.scorehistorytable);
         if ( gameHistory != null ) {
             gameHistory.setProperties( mColors.get(ColorPrefs.ColorTarget.historyBackgroundColor)

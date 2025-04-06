@@ -1195,6 +1195,9 @@ public class PreferenceValues extends RWValues
             return floatingMessageForGameBallOn(context).contains(ShowOnScreen.OnDevice);
         }
     }
+    public static boolean showCastButtonInActionBar(Context context) {
+        return RWValues.getBoolean(PreferenceKeys.showCastButtonInActionBar, context, R.bool.showCastButtonInActionBar_default);
+    }
     public static int useCastScreen(Context context) {
         return RWValues.getInteger(PreferenceKeys.useCastScreen, context, 0);
     }

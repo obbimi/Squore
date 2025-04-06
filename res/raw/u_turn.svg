@@ -5,12 +5,13 @@
 
     stroke colors: #D3D3D3, #111111
 
+    # guidelines: mine
     export suffix='_black' #111111
     export suffix=''       #D3D3D3
-    convert -background none -size  72x72  u_turn.svg ../drawable-hdpi/u_turn${suffix}.png
-    convert -background none -size  96x96  u_turn.svg ../drawable-xhdpi/u_turn${suffix}.png
-    convert -background none -size 144x144 u_turn.svg ../drawable-xxhdpi/u_turn${suffix}.png
-    convert -background none -size 192x192 u_turn.svg ../drawable-xxxhdpi/u_turn${suffix}.png
+    magick -background none -size  72x72  u_turn.svg ../drawable-hdpi/u_turn${suffix}.png
+    magick -background none -size  96x96  u_turn.svg ../drawable-xhdpi/u_turn${suffix}.png
+    magick -background none -size 144x144 u_turn.svg ../drawable-xxhdpi/u_turn${suffix}.png
+    magick -background none -size 192x192 u_turn.svg ../drawable-xxxhdpi/u_turn${suffix}.png
     -->
 
     <path id="bottom"  stroke-width="10" fill="none" stroke-linecap="round"

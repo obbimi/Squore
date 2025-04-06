@@ -422,6 +422,7 @@
     <string name="pref_DeviceId_use_new__x">Use new: %1$s</string>
 
     <string name="pref_LiveScorePrefs_dialog">Adjust options: Use Share Feature (to Automatic) and Action For Share (to Match Details After Each Point) to optimize live score support</string>
+    <string name="pref_showCastButtonInActionBar">Show Chrome Cast button in action bar</string>
     <string name="pref_Cast_ShowGraphDuringTimer">Show game scores and score graph of last game between games and at end of match</string>
     <string name="pref_castScreenLogoUrl">URL of logo for Cast Screen</string>
     <string name="pref_castScreenShowLogo">Load specified logo image URL on Cast Screen</string>

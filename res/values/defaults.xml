@@ -275,6 +275,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <string name="MQTTBrokerURL_Custom">Custom</string>
     <string name="MQTTBrokerURL_Custom__Default">mqtt://192.168.0.130</string>
 
+    <bool name="showCastButtonInActionBar_default">true</bool>
     <bool name="Cast_ShowGraphDuringTimer_default">true</bool>
     <bool name="castScreenShowLogo_default">true</bool>
     <bool name="castScreenShowSponsor_default">true</bool>
