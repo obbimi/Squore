@@ -560,6 +560,7 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, context, R.bool.showToastMessageForEveryReceivedFCMMessage_default);
     }
 */
+    /** @deprecated */
     public static String getFCMDeviceId(Context context) {
         return getDeviceId(PreferenceKeys.liveScoreDeviceId, context, true);
     }
