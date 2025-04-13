@@ -520,7 +520,7 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                         break;
 */
                     case UseBluetoothLE:
-                        boolean bUse = PreferenceValues.useBluetoothLE(Preferences.this);
+                        //boolean bUse = PreferenceValues.useBluetoothLE(Preferences.this);
                         break;
                     default:
                         //Log.d(TAG, "Not handling case for " + eKey);

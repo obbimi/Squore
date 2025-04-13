@@ -570,7 +570,14 @@ public class PreferenceValues extends RWValues
             sID = DeviceIdPref.generateNewId();
             RWValues.setString(key, context, sID);
         }
+        String sCustomSuffix = getDeviceIdCustomSuffix(context);
+        if ( StringUtil.isNotEmpty(sCustomSuffix) ) {
+            sID = sID + sCustomSuffix;
+        }
         return sID;
+    }
+    private static String getDeviceIdCustomSuffix(Context context) {
+        return getString(PreferenceKeys.liveScoreDeviceId_customSuffix, "", context);
     }
 /*
     public static void initForLiveScoring(Context ctx, boolean bOnlyTemporary) {

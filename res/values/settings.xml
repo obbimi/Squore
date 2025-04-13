@@ -65,6 +65,8 @@
     <string name="pref_MQTTOtherDeviceId_Summary">Unique device id of the device you want to mirror the score for</string>
     <string name="pref_MQTTDeviceId_summary">This ID is used to uniquely identify this device. It should be entered on another device as \'Other device id\' to achieve mirroring the score using MQTT</string>
     <string name="pref_DeviceId">Device Unique Id</string>
+    <string name="pref_DeviceId_customSuffix">Device Unique Id Custom Suffix</string>
+    <string name="pref_DeviceId_customSuffix_summary">To more easily identify different devices used in the same venue</string>
     <string name="pref_Brokers">Brokers</string>
 
     <string name="sb_MQTTSelectBroker">Select broker</string>

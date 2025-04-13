@@ -281,6 +281,7 @@ public enum PreferenceKeys {
     LiveScorePrefs,
         LiveScoreOpenURL,
         liveScoreDeviceId,
+        liveScoreDeviceId_customSuffix,
         postEveryChangeToSupportLiveScore,
         turnOnLiveScoringForMatchesFromFeed,
 

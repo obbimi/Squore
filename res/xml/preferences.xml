@@ -1053,6 +1053,12 @@
                 android:title="@string/pref_DeviceId"
                 android:summary="@string/pref_liveScoreDeviceId_summary"
                 />
+            <EditTextPreference
+                android:key="liveScoreDeviceId_customSuffix"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_DeviceId_customSuffix"
+                android:summary="@string/pref_DeviceId_customSuffix_summary"
+                />
 
         </PreferenceCategory>
 
@@ -1110,6 +1116,12 @@
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_DeviceId"
                 android:summary="@string/pref_MQTTDeviceId_summary"
+                />
+            <EditTextPreference
+                android:key="liveScoreDeviceId_customSuffix"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_DeviceId_customSuffix"
+                android:summary="@string/pref_DeviceId_customSuffix_summary"
                 />
         </PreferenceCategory>
 
