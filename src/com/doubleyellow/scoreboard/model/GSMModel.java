@@ -98,6 +98,10 @@ public class GSMModel extends Model
         return m_bStartTiebreakOneGameEarly;
     }
 
+    public boolean isStartOfTieBreak_nonGSM() {
+        return false;
+    }
+
     //------------------------
     // Final set finish
     //------------------------
@@ -1066,7 +1070,7 @@ public class GSMModel extends Model
 
         // e.g Beach Tennis has this option, Padel is known to use it quite regularly
         int onDeuceNumberZB = m_goldenPointFormat.onDeuceNumber();
-        if ( onDeuceNumberZB >= 0 && (isInTieBreak_TT_RL() == false) ) {
+        if ( onDeuceNumberZB >= 0 ) {
             int maxScore = getMaxScore(gameScore);
             if ( maxScore >= iNrOfPointsToWinGame - 1 ) {
                 int diffScore = getDiffScore(gameScore);

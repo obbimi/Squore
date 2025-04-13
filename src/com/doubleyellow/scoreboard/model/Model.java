@@ -942,7 +942,7 @@ public abstract class Model implements Serializable
         // just recalculate it if it is not yet known. will trigger additional listeners
         Player[] gameBallFor = isPossibleGameBallFor();
 
-        if ( isStartOfTieBreak() ) {
+        if ( isStartOfTieBreak_nonGSM() ) {
             m_iNrOfTiebreaks = Math.min(m_iNrOfTiebreaks+1, ListUtil.size(m_lGameWinner)+1);
             for(OnSpecialScoreChangeListener l: onSpecialScoreChangeListeners) {
                 l.OnTiebreakReached(m_iNrOfTiebreaks);
@@ -3565,7 +3565,7 @@ public abstract class Model implements Serializable
     public int getTiebreakOccurrence() {
         return m_iNrOfTiebreaks;
     }
-    public boolean isStartOfTieBreak()
+    public boolean isStartOfTieBreak_nonGSM()
     {
         Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress();
         int iScoreA = MapUtil.getInt(scoreOfGameInProgress, Player.A, 0);

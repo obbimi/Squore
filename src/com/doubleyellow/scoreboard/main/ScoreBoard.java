@@ -1692,7 +1692,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 bShowSpeakFAB = maxScore == 0;
             }
         } else {
-            bShowSpeakFAB = matchModel.gameHasStarted() == false || matchModel.isStartOfTieBreak() || matchModel.isPossibleGameVictory();
+            bShowSpeakFAB = matchModel.gameHasStarted() == false || matchModel.isStartOfTieBreak_nonGSM() || matchModel.isPossibleGameVictory();
         }
         showMicrophoneFloatButton(bShowSpeakFAB);
     }
@@ -3775,10 +3775,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         String sLivescoreId = PreferenceValues.getLiveScoreDeviceId(this);
         openInBrowser(this, sURL);
     }
-    private void openFCMInfoUrl() {
-        String sFCMDeviceId = PreferenceValues.getFCMDeviceId(this);
-        openInBrowser(this, "fcm/" + sFCMDeviceId + "/help");
-    }
     private void showHelp() {
         openInBrowser(this, "/help");
     }
@@ -4069,7 +4065,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         if ( matchModel.gameHasStarted()==false || matchModel.isPossibleGameVictory() ) {
             _showOfficialStartOrEndOfGameAnnouncement(trigger, bManuallyRequested);
-        } else if ( matchModel.isStartOfTieBreak() ) {
+        } else if ( matchModel.isStartOfTieBreak_nonGSM() ) {
             _showTieBreakDialog(trigger, matchModel.getTiebreakOccurrence() );
         } else {
             if ( trigger == null ) {
