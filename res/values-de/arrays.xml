@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+  <string-array name="DownUp_NrOfServes_DisplayValues">
+    <item>Runter</item>
+    <item>Hoch</item>
+  </string-array>
+  <string-array name="EndMatchManuallyBecause_DisplayValues">
+    <item>Wegen Verletzung zurückgetreten</item>
+    <item>Gesperrt (Spiel durchführen)</item>
+  </string-array>
+  <string-array name="BrokenEquipment_DisplayValues">
+    <item>Gebrochener Ball</item>
+    <item>Gebrochener Schläger</item>
+    <item>Gebrochener Ball</item>
+  </string-array>
+  <string-array name="OrientationPreference_DisplayValues">
+    <item>Landschaft</item>
+    <item>Porträt</item>
+  </string-array>
+  <string-array name="LandscapeLayoutPreference_DisplayValues">
+    <item>Standard</item>
+    <item>Präsentation 1</item>
+    <item>Präsentation 2</item>
+  </string-array>
+  <string-array name="PostDataPreferenceDisplayValues">
+    <item>Veröffentlichen Sie im Textkörper nur JSON-Daten</item>
+    <item>Veröffentlichen Sie im Textkörper nur JSON-Daten</item>
+    <item>Veröffentlichen Sie im Textkörper nur JSON-Daten</item>
+  </string-array>
+  <string-array name="LockState_DisplayValues">
+    <item>Gesperrt (Spiel durchführen)</item>
+    <item>Freigeschaltet</item>
+    <item>Gesperrt (Spiel durchführen)</item>
+    <item>Gesperrt (Spiel durchführen)</item>
+    <item>Gesperrt (Spiel durchführen)</item>
+    <item>Gesperrt (Spiel durchführen)</item>
+    <item>Gesperrt (Spiel durchführen)</item>
+    <item>Gesperrt (Spiel durchführen)</item>
+    <item>Gesperrt (im Ruhestand)</item>
+    <item>Gesperrt (Spiel durchführen)</item>
+    <item>Gesperrt (im Ruhestand)</item>
+    <item>Gesperrt (Spiel durchführen)</item>
+  </string-array>
+  <string-array name="DetermineTextColor_DisplayValues">
+    <item>Automatisch Schwarz oder Weiß auswählen</item>
+    <item>Automatisch aus der Palette auswählen</item>
+    <item>Manuell</item>
+  </string-array>
+  <string-array name="KeepScreenOnWhen_DisplayValues">
+    <item>Stets</item>
+    <item>Das Spiel läuft</item>
+    <item>Niemals</item>
+  </string-array>
+  <string-array name="BackKeyBehaviour_DisplayValues">
+    <item>Zum Beenden zweimal drücken</item>
+    <item>Zum Beenden einmal drücken</item>
+    <item>Bewertung rückgängig machen (bestätigen)</item>
+    <item>Ergebnis rückgängig machen (keine Bestätigung)</item>
+    <item>Aufschlagseite ausblenden</item>
+  </string-array>
+  <string-array name="VolumeKeysBehaviour_DisplayValues">
+    <item>Keiner</item>
+    <item>Punktzahl anpassen</item>
+    <item>Punktzahl anpassen (nur im Hochformat)</item>
+  </string-array>
+  <string-array name="RallyEndStatsPrefs_DisplayValues">
+    <item>Schwingseite (BH/FH)</item>
+    <item>Schlagposition</item>
+    <item>Ballrichtung</item>
+    <item>Flugbahn des Balls</item>
+  </string-array>
+  <string-array name="RacketSide_DisplayValues">
+    <item>Rückhand</item>
+    <item>Vorhand</item>
+  </string-array>
+  <string-array name="BallDirection_DisplayValues">
+    <item>Gerade</item>
+    <item>Kreuzen</item>
+    <item>Prahlerei</item>
+  </string-array>
+  <string-array name="BallTrajectory_DisplayValues">
+    <item>Länge</item>
+    <item>Fallen</item>
+    <item>Lob</item>
+  </string-array>
+  <string-array name="Position_DisplayValues">
+    <item>Front</item>
+    <item>Volley</item>
+    <item>Zurück</item>
+  </string-array>
+  <string-array name="ConductType_DisplayValues">
+    <item>Amtsmissbrauch</item>
+    <item>Obszönität</item>
+    <item>Zeitverschwendung</item>
+    <item>Dissens</item>
+    <item>Amtsmissbrauch</item>
+    <item>Körperkontakt</item>
+    <item>Unsportlich</item>
+    <item>Coaching</item>
+  </string-array>
+  <string-array name="timerViewType_DisplayValues">
+    <item>Popup mit Kreis</item>
+    <item>Zwischen den Punkteschaltflächen (nur Ziffern)</item>
+  </string-array>
+  <string-array name="GroupMatchesByDisplayValues">
+    <item>Ereignis</item>
+    <item>Datum</item>
+  </string-array>
+  <string-array name="SortOrderDisplayValues">
+    <item>Aufsteigend</item>
+    <item>Absteigend</item>
+  </string-array>
+  <string-array name="OnlineSheetActionDisplayValues">
+    <item>Teilen Sie</item>
+    <item>Vorschau</item>
+    <item>Im Browser anzeigen</item>
+    <item>In die Zwischenablage kopieren</item>
+    <item>Vom Server löschen</item>
+  </string-array>
+  <string-array name="FeatureDisplayValues">
+    <item>Nicht vorschlagen</item>
+    <item>Vorschlagen</item>
+    <item>Automatisch beenden</item>
+  </string-array>
+  <string-array name="FeatureDisplayValues_DoAuto">
+    <item>Nicht</item>
+    <item>Vorschlagen</item>
+    <item>Automatisch beenden</item>
+  </string-array>
+  <string-array name="ShareMatchPrefsDisplayValues">
+    <item>Mit Freunden teilen</item>
+    <item>Textübereinstimmungszusammenfassung mit Standardnummer</item>
+    <item>Mit Freunden teilen</item>
+    <item>Textübereinstimmungszusammenfassung mit Standardnummer</item>
+    <item>Spieldetails auf der Site veröffentlichen</item>
+    <item>Ergebnisblatt als Text in E-Mail veröffentlichen</item>
+  </string-array>
+  <string-array name="EndGameDisplayValues">
+    <item>Nicht vorschlagen</item>
+    <item>Vorschlagen</item>
+    <item>Automatisch beenden</item>
+  </string-array>
+  <string-array name="AutoLockContextDisplayValues">
+    <item>Wenn das Spiel beendet ist</item>
+    <item>Wenn das Spiel X Minuten lang unverändert bleibt</item>
+  </string-array>
+  <string-array name="ShowPlayerColorOnDisplayValues">
+    <item>Rahmen der Schaltfläche „Score“</item>
+    <item>Aufschlagseite-Taste</item>
+    <item>Player-Schaltfläche</item>
+    <item>Spielball-Nachricht</item>
+    <item>Spielwertungsdiagramm</item>
+  </string-array>
+  <string-array name="PlayerColorsNewMatchDisplayValues">
+    <item>Keine Farben</item>
+    <item>Aus vorherigem Spiel übernehmen</item>
+    <item>Aus den Einstellungen übernehmen</item>
+  </string-array>
+  <string-array name="ShowCountryAsDisplayValues">
+    <item>Abkürzung im Namen</item>
+    <item>Flagge neben dem Namen (auf dem Gerät)</item>
+    <item>Auf Chrome Cast</item>
+  </string-array>
+  <string-array name="ShowOnScreen_DisplayValues">
+    <item>Auf dem Gerät</item>
+    <item>Auf Chrome Cast</item>
+  </string-array>
+  <string-array name="GameScoresAppearance_DisplayValues">
+    <item>Gesamte Partitur auf dem Gerät anzeigen, Gesamte Partitur auf Chromecast</item>
+    <item>Gesamte Partitur auf dem Gerät anzeigen, Gesamte Partitur auf Chromecast</item>
+    <item>Gesamte Partitur auf dem Gerät anzeigen, Gesamte Partitur auf Chromecast</item>
+    <item>Gesamte Partitur auf dem Gerät anzeigen, Gesamte Partitur auf Chromecast</item>
+  </string-array>
+  <string-array name="ScorelineLayout_DisplayValues">
+    <item>Ziffern rechts</item>
+    <item>Ziffern in der Mitte</item>
+    <item>Aufschlagseite ausblenden</item>
+  </string-array>
+  <string-array name="NewMatchLayout_DisplayValues">
+    <item>Alle Felder (inkl. Land, Verein, Veranstaltung, Schiedsrichter)</item>
+    <item>Minimal (Spielernamen, Format). Größere Schriftart</item>
+  </string-array>
+  <string-array name="ShowAvatarOnDisplayValues">
+    <item>Auf dem Gerät</item>
+    <item>Auf Chrome Cast</item>
+  </string-array>
+  <string-array name="StartupActionDisplayValues">
+    <item>Keiner</item>
+  </string-array>
+  <string-array name="tiebreakFormatDisplayValues">
+    <item>Zwei Punkte</item>
+    <item>Empfänger wählt 1 oder 3</item>
+    <item>Empfänger wählt 1,2 oder 3</item>
+    <item>Empfänger wählt 1 oder 3</item>
+    <item>Plötzlicher Tod</item>
+  </string-array>
+  <string-array name="handicapFormatDisplayValues">
+    <item>Keiner</item>
+    <item>Zu Beginn des Spiels angeben</item>
+    <item>Zu Beginn jedes Spiels angeben</item>
+  </string-array>
+  <string-array name="doublesServeSequence">
+    <item>A1/B1/A2/B2</item>
+    <item>A2/B1/B2 dann A1/A2/B1/B2</item>
+    <item>A1/B1/A1/B1</item>
+    <item>A1/A2/B1/B2</item>
+    <item>A1/B1/A1/B1</item>
+  </string-array>
+  <string-array name="goldenPointFormatDisplayValues">
+    <item>Aus</item>
+    <item>Profi (bei der ersten Zwei)</item>
+    <item>Amateur (Am zweiten Zweier)</item>
+  </string-array>
+  <string-array name="changeSidesWhen_GSM_DisplayValues">
+    <item>Nach ungeraden Spielen</item>
+    <item>Nach geraden Spielen</item>
+    <item>Zwischen den Sätzen</item>
+    <item>Jede 4 Punkte in einem Tiebreak</item>
+    <item>Jede 4 Punkte in einem Tiebreak</item>
+  </string-array>
+</resources>

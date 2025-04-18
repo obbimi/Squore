@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+  <string name="sb_feed">Füttern</string>
+  <string name="sb_select_feed_match">Aus Feed auswählen</string>
+  <string name="back_to_list_of_matches">Zurück zur Liste</string>
+  <string name="Switch_feed_elipses">Schalterzufuhr…</string>
+  <string name="add_new_feed">Neuen öffentlichen Feed auswählen…</string>
+  <string name="feed_x_already_exist_with_name_y">Feed %1$s ist bereits in Ihrer Feedliste unter dem Namen „ %2$s “ enthalten.</string>
+  <string name="Could_not_read_feed_x__y__Using_cached_content_aged_z_minutes">Feed %1$s konnte nicht gelesen werden. 
+ 
+ %2$s 
+ 
+ Zwischengespeicherter Inhalt wird verwendet ( %3$d Minuten alt).</string>
+  <string name="No_matches_in_feed">Keine Übereinstimmungen im Feed</string>
+  <string name="Error_no_feeds_in_feed">Keine Feeds im Feed</string>
+  <string name="No_active_feed">Kein aktiver Feed</string>
+  <string name="Select_one_by_pressing_the_globe_button">Wählen Sie eine aus, indem Sie auf die Schaltfläche „Globus“ klicken.</string>
+</resources>

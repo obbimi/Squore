@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="press_back_again_to_exit_intro">Zum Beenden einmal drücken</string>
+  <string name="scv_got_it">HABE ES</string>
+  <string name="scv_first_run">Möchtest du eine kurze Einführung, um die wichtigsten Funktionen der App kennenzulernen? 
+ 
+ 
+ 
+ Sie zeigt dir, wie du die App in verschiedenen Situationen während mehrerer Phasen eines Spiels verwenden kannst. 
+ 
+ 
+ 
+ Du kannst die Einführung jederzeit abbrechen, indem du auf deinem Gerät die Taste _Zurück_ drückst. 
+ 
+ 
+ 
+ Oder starte sie erneut über das Menü _Hilfe/Kurzeinführung_.</string>
+  <string name="scv_toss">
+ Zu Beginn eines Spiels wird normalerweise ein __Wurf__ durchgeführt. 
+ 
+ 
+ Drücken Sie diese Taste, um: 
+ 
+ 
+ 
+ – das Ergebnis des Wurfs einfach einzugeben 
+ 
+ – die App den Wurf für Sie durchführen zu lassen 
+    </string>
+  <string name="scv_big_buttons">Drücken Sie die großen Tasten, um die von jedem Spieler erzielten Punkte zu verfolgen.</string>
+  <string name="scv_undo_last">
+ 
+ 
+ 
+ Wenn Sie versehentlich einen Punkt für den falschen Spieler eingegeben haben, können Sie dies durch Drücken der Schaltfläche __Rückgängig__ korrigieren. 
+ 
+ 
+ 
+ Sie können den letzten Punktestand auch rückgängig machen, indem Sie mit dem Finger über die Punkteschaltfläche streichen, die Sie versehentlich erhöht haben. 
+    </string>
+  <string name="scv_share_button">Diese Schaltfläche wird angezeigt, sobald ein Spiel beendet ist. Sie ermöglicht Ihnen, das Ergebnis zu teilen. 
+ 
+ 
+ Sie können sie folgendermaßen konfigurieren: 
+ 
+ 
+ 
+ - Einen Link mit allen Spieldetails teilen 
+ 
+ - Eine kurze Zusammenfassung teilen 
+ 
+ - Das Ergebnis auf einer Website veröffentlichen 
+ 
+ - Einen Spielbericht per E-Mail versenden 
+      </string>
+  <string name="scv_toggle_action_bar">Wenn Sie die Aktionsleiste ausblenden möchten (z. B. um den Bildschirm optimal zu nutzen oder aus ästhetischen Gründen), 
+ können Sie das ganz einfach tun: Klicken Sie einfach lange auf die Spielstände. Ein weiterer langer Klick macht sie wieder sichtbar. 
+ 
+ 
+ 
+ Beachten Sie: Wenn Sie die Aktionsleiste ausblenden, ist die Funktion „Rückgängig durch Wischen“ weiterhin verfügbar! 
+          </string>
+  <string name="scv_few_more_good_to_knows">Noch ein paar gute Tipps: 
+ 
+ 
+ 
+ – Sie können pro Spieler ein Land angeben. Die Flaggen der ausgewählten Länder werden angezeigt. 
+ 
+ – Im Hochformat können Sie die Lautstärketasten als „Punkte“-Tasten verwenden. 
+ 
+ – Mit Chrome Cast können Sie den Punktestand ganz einfach auf einem großen Fernsehbildschirm anzeigen. 
+          </string>
+</resources>

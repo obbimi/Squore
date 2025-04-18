@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="scv_side_buttons__Squash">Die __Aufschlagseiten-Buttons__ zeigen an, 
+ 
+ 
+ 
+ – wer aufschlagen soll 
+ 
+ – von welcher Seite (L/R), 
+ 
+ – ob es ein Handout ist (?), 
+ 
+ 
+ Die Seite bzw. der Spieler wechselt automatisch nach jedem eingegebenen Punkt. 
+ 
+ 
+ Bei Bedarf können Sie die Seite/den Spieler durch Antippen wechseln. 
+    </string>
+  <string name="scv_player_buttons_appeal__Squash">Behalten Sie die Entscheidungen zu __Stroke/Yes Let/No Let__ im Auge, indem Sie auf den Namen des Spielers tippen, der ein Let anfordert. 
+ 
+ Geben Sie Ihre Entscheidung in das angezeigte Dialogfeld ein. 
+    </string>
+  <string name="scv_player_buttons_misconduct__Squash">Sie können auch Entscheidungen zu __Verhaltenswarnungen/-schlägen__ verfolgen. 
+ 
+ 
+ 
+ Halten Sie eine Spielertaste gedrückt, um einen Dialog zu _Fehlverhalten_ anzuzeigen.</string>
+  <string name="scv_old_fashioned_scoring__Squash">Zu Ihrer Information wird auf dem Bildschirm ein Wertungsbogen im „alten Stil“ angezeigt. 
+ 
+ 
+ Dieser kann unter „Einstellungen“ deaktiviert werden.</string>
+  <string name="scv_announcement_button__Squash">Diese Schaltfläche wird angezeigt, wenn eine __offizielle Ankündigung__ angebracht ist: 
+ 
+ 
+ 
+ – Beginn des Spiels/Matches 
+ 
+ – Ende des Spiels/Matches 
+ 
+ – Erster Tiebreak 
+ 
+ 
+ Drücken Sie darauf, um die Ankündigung anzuzeigen.</string>
+  <string name="scv_shirt_color__Squash">Wenn Sie zwei Spieler pfeifen, die Sie noch nie zuvor getroffen haben, und sich ihre Namen nur schwer merken können, 
+ können Sie für beide __eine Farbe eingeben__. 
+ 
+ 
+ Klicken Sie lange auf die Schaltfläche für die Aufschlagseite, um eine Farbe auszuwählen.</string>
+  <string name="scv_game_scores__Squash">Hier wird die Anzahl der von jedem Spieler bereits gewonnenen Spiele angezeigt. 
+ 
+ 
+ 
+ Tippen Sie darauf, um die genauen Ergebnisse der vorherigen Spiele anzuzeigen.</string>
+  <string name="scv_timer_button__Squash">Mit dieser Schaltfläche können Sie einen __Timer__ starten. 
+ 
+ 
+ Er wird nur angezeigt, wenn es angebracht ist. 
+ 
+ 
+ 
+ – Aufwärmen 
+ 
+ – Vor Beginn des ersten Spiels 
+ 
+ – Zwischen den Spielen 
+ 
+ 
+ 
+ Wenn Sie während eines Spiels zufällig einen Verletzungstimer benötigen, können Sie ihn über das Menü starten. 
+      </string>
+  <string name="scv_overflow_submenu__Squash">Weitere Optionen sind im Menü verfügbar. Sie können beispielsweise: 
+ 
+ 
+ 
+ - Aussehen und Verhalten der App über „Einstellungen“ anpassen 
+ 
+ - Details zu zuvor gepfiffenen Spielen anzeigen 
+ 
+ - Einen Verletzungstimer starten 
+ 
+ - Alle Ihre gepfiffenen Spiele in eine ZIP-Datei exportieren/importieren 
+ 
+ - Eine ausführliche Hilfeseite für diese App aufrufen 
+ 
+ - Die offiziellen Squash-Regeln einsehen 
+ 
+ - Optionen zum einfachen Aufzeichnen von FH/BH-Gewinner-/Fehlerstatistiken aktivieren (z. B. für Trainer/Ausbilder beim Beobachten der Spiele ihrer Schüler) 
+          </string>
+  <string name="scv_few_more_gui_hints__Squash">Noch ein paar GUI-Hinweise: 
+ 
+ 
+ 
+ __Spieler-Schaltflächen__ 
+ 
+ 
+ 
+ - Berühren Sie mit zwei Fingern, um einen Ball-/Saiten-/Schlägerbruch aufzuzeichnen. 
+ 
+ - Wischen Sie über eine dieser Schaltflächen hin und her, um Spieldetails zu bearbeiten (oder weitere anzugeben). 
+ 
+ - Wischen Sie über den Servernamen nach links, um die Aufschlagseite auf Links zu ändern, dasselbe gilt für Rechts. 
+ 
+ 
+ 
+ __Punkte-Schaltflächen__ 
+ 
+ 
+ 
+ - Berühren Sie beide gleichzeitig, um einen Startpunktstand einzugeben (Schiedsrichter für ein bereits begonnenes Spiel). 
+ 
+ - Berühren Sie beide lange, um das Format des laufenden Spiels überprüfen 
+ 
+ - Wischen Sie diagonal vor und zurück über eine Punkteschaltfläche, um die Punkteanzeige optional neu zu starten (z. B. nachdem Sie die App anderen Clubmitgliedern vorgeführt haben) 
+          </string>
+  <string name="scv_new_match_button__Squash">__Das war\'s. Viel Spaß beim Zerquetschen und Schiedsrichtern.__ 
+ 
+ 
+ Starten Sie ein neues Spiel, indem Sie auf diese Schaltfläche tippen.</string>
+</resources>
