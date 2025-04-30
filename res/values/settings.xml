@@ -52,7 +52,7 @@
     <string name="pref_UseMQTT_Summary">Allow livescore/score mirroring using MQTT publish/subscribe mechanism</string>
     <string name="pref_MQTTBrokerURL">Broker URL</string>
     <string name="pref_MQTTBrokerURL_Custom">Custom Broker URL</string>
-    <string name="pref_MQTTBrokerURL_Summary">Either a public or private broker can be used. By default a public broker without authentication is configured</string>
+    <string name="pref_MQTTBrokerURL_Summary">Either a public or private broker can be used. By default, a public broker without authentication is configured</string>
     <string name="pref_MQTTPublishTopicMatch">Publish Match Topic</string>
     <string name="pref_MQTTPublishTopicMatch_Summary">Topic placeholder when publishing the complete match status in json</string>
     <string name="pref_MQTTPublishJoinerLeaverTopic">Joiner/Leaver Topic</string>
@@ -60,7 +60,7 @@
     <string name="pref_MQTTPublishTopicChange">Publish Change Topic</string>
     <string name="pref_MQTTPublishTopicChange_Summary">Topic placeholder when publishing changes in a match</string>
     <string name="pref_MQTTSubscribeTopicChange">Subscribe Topic</string>
-    <string name="pref_MQTTSubscribeTopicChange_Summary">Topic placeholder when subscribing to changes in a match on an other device</string>
+    <string name="pref_MQTTSubscribeTopicChange_Summary">Topic placeholder when subscribing to changes in a match on another device</string>
     <string name="pref_MQTTOtherDeviceId">Other device id</string>
     <string name="pref_MQTTOtherDeviceId_Summary">Unique device id of the device you want to mirror the score for</string>
     <string name="pref_MQTTDeviceId_summary">This ID is used to uniquely identify this device. It should be entered on another device as \'Other device id\' to achieve mirroring the score using MQTT</string>
@@ -138,7 +138,7 @@
     <string name="pref_hideFlagForSameCountry">Hide flags for same nationality</string>
     <string name="pref_prefetchFlags">Pre-fetch flag images</string>
     <string name="pref_prefetchFlags_summary">Takes between 2 and 3MB of storage</string>
-    <string name="pref_TextSize_summary">Control the textsize of the Squore Board elements</string>
+    <string name="pref_TextSize_summary">Control the text size of the Squore Board elements</string>
     <string name="pref_Statistics">Winner/Error statistics</string>
     <string name="pref_Statistics_summary">App behaviour for recording winners/errors</string>
     <string name="pref_ColorPalette">Color palette</string>
@@ -149,7 +149,7 @@
     <string name="pref_textColorDetermination_summary">Depending on the background color or manually</string>
     <string name="pref_PlayerColor">Player color</string>
     <string name="pref_showPlayerColorOn">Show color of player</string>
-    <string name="pref_showPlayerColorOn_Text">Color the text in stead of the button</string>
+    <string name="pref_showPlayerColorOn_Text">Color the text instead of the button</string>
     <string name="pref_showPlayerColorOn_summary">Determine on which GUI elements de chosen player color is shown</string>
     <string name="pref_PlayerColorsNewMatch">Initial colors of players</string>
     <string name="pref_PlayerColorsNewMatch_summary">What initial colors to use for the 2 players/teams</string>
@@ -177,7 +177,7 @@
     <string name="pref_scorelineLayout">Scoreline Layout</string>
     <string name="pref_showSideButtonsWithinScoreButtons">Side buttons within Score buttons</string>
     <string name="pref_showSideButtonsWithinScoreButtons_summary">To make \'Score buttons\' even larger.</string>
-    <string name="pref_AppealHandGestureIconSize">Iconsize in \'Appeal\' dialog</string>
+    <string name="pref_AppealHandGestureIconSize">Icon size in \'Appeal\' dialog</string>
     <string name="pref_AppealHandGestureIconSize_summary">Size of icon in \'Appeal\' dialog. Set to zero if you do not want to see the icons.</string>
     <string name="pref_newMatchLayout">New match layout</string>
     <string name="pref_newMatchLayout_summary">To have just a limited number of fields to fill, choose \'Simple\'</string>
@@ -233,7 +233,7 @@
     <string name="pref_blinkFeedbackPerPoint">Blink feedback per point</string>
     <string name="pref_numberOfBlinksForFeedbackPerPoint">Number of blinks for feedback per point</string>
     <string name="pref_numberOfBlinksForFeedbackPerPoint_summary">The number of times the score button blinks when the score changed</string>
-    <string name="pref_blinkFeedbackPerPoint_summary">Blink the changes score a few seconds after each score change. Specifically handy if score is controlled remotely.</string>
+    <string name="pref_blinkFeedbackPerPoint_summary">Blink the changed score a few seconds after each score change. Specifically handy if score is controlled remotely.</string>
     <string name="pref_hapticFeedbackPerPoint">Haptic feedback per point</string>
     <string name="pref_hapticFeedbackPerPoint_summary">Vibrate shortly each time a point is added, game is ended or undo action is performed</string>
     <string name="pref_hapticFeedbackOnGameEnd">Haptic feedback on game end</string>
@@ -246,9 +246,9 @@
     <string name="pref_floatingMessageForGameBall__TennisPadel">Show \'set ball\' message</string>
     <string name="pref_floatingMessageForGameBall_summary">Show a \'floating message\' when it is game- or match ball</string>
     <string name="pref_allowForScoringWithBlueToothConnectedMediaControlButtons">Allow scoring via media playback control buttons</string>
-    <string name="pref_allowForScoringWithBlueToothConnectedMediaControlButtons_summary">e.g use \'Previous song\' for scoring for player A, and \'Next song\' for scoring for B, and \'Play/Pause\' for Undo</string>
+    <string name="pref_allowForScoringWithBlueToothConnectedMediaControlButtons_summary">e.g. use \'Previous song\' for scoring for player A, and \'Next song\' for scoring for B, and \'Play/Pause\' for Undo</string>
     <string name="pref_showNewMatchFloatButton">Show \'New Match\' floating button</string>
-    <string name="pref_showNewMatchFloatButton_summary">Show conventient floating button to start a new match (when appropriate)</string>
+    <string name="pref_showNewMatchFloatButton_summary">Show convenient floating button to start a new match (when appropriate)</string>
     <string name="pref_keepScreenOn">Keep screen on</string>
     <string name="pref_keepScreenOn_summary">Prevent screen from going to sleep during referee-ing a match</string>
     <string name="pref_Timers">Timers</string>
@@ -270,7 +270,7 @@
 
     <string name="pref_useSoundNotificationInTimer">Use sound notifications</string>
     <string name="pref_useAudioNotifications">Use audio notifications</string>
-    <string name="pref_useSoundNotificationInTimer_summary">Play notification sound when timer ends (and when 15 seconds are left of pause, and at half time of warm-up)</string>
+    <string name="pref_useSoundNotificationInTimer_summary">Play notification sound when timer ends (and when 15 seconds are left of pause, and at half-time of warm-up)</string>
     <string name="pref_showPauseButtonOnTimer">Show button to pause the timer</string>
     <string name="pref_cancelTimerWhenTimeIsUp">Hide timer when time is up</string>
     <string name="pref_showTimeIsAlreadyUpFor_Chrono">Show tiny chronometer showing how long \'Time!\' is showing</string>
@@ -280,7 +280,7 @@
     <string name="pref_groupArchivedMatchesBy">Group archived matches by</string>
     <string name="pref_sortOrderOfArchivedMatches">Sort order of archived matches</string>
     <string name="pref_useVibrationNotificationInTimer">Use vibration notifications</string>
-    <string name="pref_useVibrationNotificationInTimer_summary">Let device vibrate when timer ends (and when 15 seconds are left of pause, and at half time of warm-up)</string>
+    <string name="pref_useVibrationNotificationInTimer_summary">Let device vibrate when timer ends (and when 15 seconds are left of pause, and at half-time of warm-up)</string>
     <string name="pref_timerWarmup">Number of seconds for warmup</string>
     <string name="pref_timerWarmup_summary">The number of seconds players get for a warm-up on court. Officially 4 minutes: 2 minutes per side</string>
     <string name="pref_timerPauseBetweenGames">The number of seconds between games</string>
@@ -304,7 +304,7 @@
     <string name="pref_handicapFormat">Allow specifying a handicap</string>
     <string name="pref_handicapFormat_summary">To start a score other than 0–0</string>
     <string name="pref_playAllGames">Play all games</string>
-    <string name="pref_playAllGames_summary">Play \'Total-of-x-games\' in stead of \'Best-of-x-games\'</string>
+    <string name="pref_playAllGames_summary">Play \'Total-of-x-games\' instead of \'Best-of-x-games\'</string>
     <string name="pref_PowerPlay">Power Play</string>
     <string name="pref_usePowerPlay">Use \'Power Play\' feature</string>
     <string name="pref_numberOfPowerPlaysPerPlayerPerMatch">Number of Power Plays</string>
@@ -322,7 +322,7 @@
     <string name="pref_wearable_allowScoringWithRotary">Allow Scoring With Wearable Rotary</string>
 
     <string name="pref_web_integration">Internet</string>
-    <string name="pref_web_integration_summary">Feed URLs for match selection. Post match result to web site. Share match result.</string>
+    <string name="pref_web_integration_summary">Feed URLs for match selection. Post match result to website. Share match result.</string>
     <string name="pref_playerList">Player List</string>
     <string name="pref_playerList_summary">For autocomplete when typing in player names</string>
     <string name="pref_clubList">List of clubs</string>
@@ -355,7 +355,7 @@
     <string name="pref_useFeedNameAsEventName_summary">Use the name of the Feed from which you select a match as Event Name for that match</string>
     <string name="pref_useGroupNameAsEventData">Use Group Name as Event Data</string>
     <string name="pref_useGroupNameAsEventData_summary">Use the name of the group from which you select a match as Event Name and Round for that match</string>
-    <string name="pref_feedPostUrl_not_set">You can control what matches appear here by switching Feed by pressing the \'Globe\' button. You can also add your own Feed by providing one ore more URLs in the \'%1$s\' section of the \'%2$s\' screen. Consult the help pages for more info.</string>
+    <string name="pref_feedPostUrl_not_set">You can control what matches appear here by switching Feed by pressing the \'Globe\' button. You can also add your own Feed by providing one or more URLs in the \'%1$s\' section of the \'%2$s\' screen. Consult the help pages for more info.</string>
     <string name="posturl_tip">You can specify to what site the match result is posted. In cooperation with e.g. your squash clubs webmaster, match results can be made available online directly. Consult the help pages for more info.</string>
     <string name="pref_readContactsForAutoCompletion">Use contacts for auto completion</string>
     <string name="pref_readContactsForAutoCompletion_summary">Read names of contacts and use them for \'Auto Complete\' functionality when entering player names.</string>
@@ -373,10 +373,10 @@
     <string name="pref_suggestToPostResult_summary">Suggest to post match result when a match has ended. If unchecked you can still post a match result via \'Post match result to site\'</string>
     <string name="pref_showCompletedMatchesFromFeed">Show completed matches</string>
     <string name="pref_VisibilityOfNewTournaments">Selectability of tournaments</string>
-    <string name="pref_tournamentWasBusy_DaysBack">Tounament end</string>
+    <string name="pref_tournamentWasBusy_DaysBack">Tournament end</string>
     <string name="pref_tournamentWasBusy_DaysBack_summary">The tournament ended maximum x days ago</string>
     <string name="pref_tournamentWillStartIn_DaysAhead">Tournament start</string>
-    <string name="pref_tournamentWillStartIn_DaysAhead_summary">The tournament will starts in x days or less</string>
+    <string name="pref_tournamentWillStartIn_DaysAhead_summary">The tournament will start in x days or less</string>
     <string name="pref_tournamentMaxDuration_InDays">Tournament duration</string>
     <string name="pref_tournamentMaxDuration_InDays_summary">The tournament will last x days at most</string>
     <string name="pref_hideCompletedMatchesFromFeed">Hide completed matches</string>
@@ -384,7 +384,7 @@
     <string name="pref_groupMatchesInFeedByCourt">Group by court</string>
     <string name="pref_groupMatchesInFeedByCourt_summary">A feed may specify on which court a match is (supposed to be) played. If so, and this option is active, matches will be grouped per court</string>
     <string name="pref_removeSeedingAfterMatchSelection">Remove seeding from player names</string>
-    <string name="pref_removeSeedingAfterMatchSelection_summary">Remove eg. the [5/8] seeding string after selecting a match from a feed</string>
+    <string name="pref_removeSeedingAfterMatchSelection_summary">Remove e.g. the [5/8] seeding string after selecting a match from a feed</string>
     <string name="pref_switchToPlayerListIfMatchListOfFeedIsEmpty">Switch to player list if match list of feed is empty</string>
     <string name="pref_smsResultToNr">Default phone number for \'SMS Result\' action</string>
     <string name="pref_smsResultToNr_summary">The phone number that will be pre-filled when you choose menu option \'Share/Message Match Result\'</string>
@@ -442,7 +442,7 @@
     <string name="pref_ShowFeedBackOnBLEButtonsPressedInfoMessages">Show feedback messages</string>
     <string name="pref_ShowFeedBackOnBLEButtonsPressedInfoMessages_summary">Show small messages about buttons being pressed/to be pressed at bottom of the screen</string>
     <string name="pref_NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired">Seconds before notifying BLE Device</string>
-    <string name="pref_NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_summary">Number of seconds before a signal is send to the ble device of the player/team to confirm score (making the device vibrate shortly). Only when scoring with one BLE devices per player/team with \'Score confirmation\'</string>
+    <string name="pref_NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_summary">Number of seconds before a signal is sent to the ble device of the player/team to confirm score (making the device vibrate shortly). Only when scoring with one BLE devices per player/team with \'Score confirmation\'</string>
     <string name="pref_IgnoreAccidentalDoublePress_ThresholdInMilliSeconds">Ignore accidental double press click threshold</string>
     <string name="pref_IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_summary">If a second BLE device click is received from the same button within this number of milliseconds, the second signal will be ignored</string>
     <string name="pref_BluetoothLE_Peripheral1">Peripheral 1</string>
