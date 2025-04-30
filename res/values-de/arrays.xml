@@ -1,221 +1,256 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
-  <string-array name="DownUp_NrOfServes_DisplayValues">
-    <item>Runter</item>
-    <item>Hoch</item>
-  </string-array>
-  <string-array name="EndMatchManuallyBecause_DisplayValues">
-    <item>Wegen Verletzung zurückgetreten</item>
-    <item>Gesperrt (Spiel durchführen)</item>
-  </string-array>
-  <string-array name="BrokenEquipment_DisplayValues">
-    <item>Gebrochener Ball</item>
-    <item>Gebrochener Schläger</item>
-    <item>Gebrochener Ball</item>
-  </string-array>
-  <string-array name="OrientationPreference_DisplayValues">
-    <item>Landschaft</item>
-    <item>Porträt</item>
-  </string-array>
-  <string-array name="LandscapeLayoutPreference_DisplayValues">
-    <item>Standard</item>
-    <item>Präsentation 1</item>
-    <item>Präsentation 2</item>
-  </string-array>
-  <string-array name="PostDataPreferenceDisplayValues">
-    <item>Veröffentlichen Sie im Textkörper nur JSON-Daten</item>
-    <item>Veröffentlichen Sie im Textkörper nur JSON-Daten</item>
-    <item>Veröffentlichen Sie im Textkörper nur JSON-Daten</item>
-  </string-array>
-  <string-array name="LockState_DisplayValues">
-    <item>Gesperrt (Spiel durchführen)</item>
-    <item>Freigeschaltet</item>
-    <item>Gesperrt (Spiel durchführen)</item>
-    <item>Gesperrt (Spiel durchführen)</item>
-    <item>Gesperrt (Spiel durchführen)</item>
-    <item>Gesperrt (Spiel durchführen)</item>
-    <item>Gesperrt (Spiel durchführen)</item>
-    <item>Gesperrt (Spiel durchführen)</item>
-    <item>Gesperrt (im Ruhestand)</item>
-    <item>Gesperrt (Spiel durchführen)</item>
-    <item>Gesperrt (im Ruhestand)</item>
-    <item>Gesperrt (Spiel durchführen)</item>
-  </string-array>
-  <string-array name="DetermineTextColor_DisplayValues">
-    <item>Automatisch Schwarz oder Weiß auswählen</item>
-    <item>Automatisch aus der Palette auswählen</item>
-    <item>Manuell</item>
-  </string-array>
-  <string-array name="KeepScreenOnWhen_DisplayValues">
-    <item>Stets</item>
-    <item>Das Spiel läuft</item>
-    <item>Niemals</item>
-  </string-array>
-  <string-array name="BackKeyBehaviour_DisplayValues">
-    <item>Zum Beenden zweimal drücken</item>
-    <item>Zum Beenden einmal drücken</item>
-    <item>Bewertung rückgängig machen (bestätigen)</item>
-    <item>Ergebnis rückgängig machen (keine Bestätigung)</item>
-    <item>Aufschlagseite ausblenden</item>
-  </string-array>
-  <string-array name="VolumeKeysBehaviour_DisplayValues">
-    <item>Keiner</item>
-    <item>Punktzahl anpassen</item>
-    <item>Punktzahl anpassen (nur im Hochformat)</item>
-  </string-array>
-  <string-array name="RallyEndStatsPrefs_DisplayValues">
-    <item>Schwingseite (BH/FH)</item>
-    <item>Schlagposition</item>
-    <item>Ballrichtung</item>
-    <item>Flugbahn des Balls</item>
-  </string-array>
-  <string-array name="RacketSide_DisplayValues">
-    <item>Rückhand</item>
-    <item>Vorhand</item>
-  </string-array>
-  <string-array name="BallDirection_DisplayValues">
-    <item>Gerade</item>
-    <item>Kreuzen</item>
-    <item>Prahlerei</item>
-  </string-array>
-  <string-array name="BallTrajectory_DisplayValues">
-    <item>Länge</item>
-    <item>Fallen</item>
-    <item>Lob</item>
-  </string-array>
-  <string-array name="Position_DisplayValues">
-    <item>Front</item>
-    <item>Volley</item>
-    <item>Zurück</item>
-  </string-array>
-  <string-array name="ConductType_DisplayValues">
-    <item>Amtsmissbrauch</item>
-    <item>Obszönität</item>
-    <item>Zeitverschwendung</item>
-    <item>Dissens</item>
-    <item>Amtsmissbrauch</item>
-    <item>Körperkontakt</item>
-    <item>Unsportlich</item>
-    <item>Coaching</item>
-  </string-array>
-  <string-array name="timerViewType_DisplayValues">
-    <item>Popup mit Kreis</item>
-    <item>Zwischen den Punkteschaltflächen (nur Ziffern)</item>
-  </string-array>
-  <string-array name="GroupMatchesByDisplayValues">
-    <item>Ereignis</item>
-    <item>Datum</item>
-  </string-array>
-  <string-array name="SortOrderDisplayValues">
-    <item>Aufsteigend</item>
-    <item>Absteigend</item>
-  </string-array>
-  <string-array name="OnlineSheetActionDisplayValues">
-    <item>Teilen Sie</item>
-    <item>Vorschau</item>
-    <item>Im Browser anzeigen</item>
-    <item>In die Zwischenablage kopieren</item>
-    <item>Vom Server löschen</item>
-  </string-array>
-  <string-array name="FeatureDisplayValues">
-    <item>Nicht vorschlagen</item>
-    <item>Vorschlagen</item>
-    <item>Automatisch beenden</item>
-  </string-array>
-  <string-array name="FeatureDisplayValues_DoAuto">
-    <item>Nicht</item>
-    <item>Vorschlagen</item>
-    <item>Automatisch beenden</item>
-  </string-array>
-  <string-array name="ShareMatchPrefsDisplayValues">
-    <item>Mit Freunden teilen</item>
-    <item>Textübereinstimmungszusammenfassung mit Standardnummer</item>
-    <item>Mit Freunden teilen</item>
-    <item>Textübereinstimmungszusammenfassung mit Standardnummer</item>
-    <item>Spieldetails auf der Site veröffentlichen</item>
-    <item>Ergebnisblatt als Text in E-Mail veröffentlichen</item>
-  </string-array>
-  <string-array name="EndGameDisplayValues">
-    <item>Nicht vorschlagen</item>
-    <item>Vorschlagen</item>
-    <item>Automatisch beenden</item>
-  </string-array>
-  <string-array name="AutoLockContextDisplayValues">
-    <item>Wenn das Spiel beendet ist</item>
-    <item>Wenn das Spiel X Minuten lang unverändert bleibt</item>
-  </string-array>
-  <string-array name="ShowPlayerColorOnDisplayValues">
-    <item>Rahmen der Schaltfläche „Score“</item>
-    <item>Aufschlagseite-Taste</item>
-    <item>Player-Schaltfläche</item>
-    <item>Spielball-Nachricht</item>
-    <item>Spielwertungsdiagramm</item>
-  </string-array>
-  <string-array name="PlayerColorsNewMatchDisplayValues">
-    <item>Keine Farben</item>
-    <item>Aus vorherigem Spiel übernehmen</item>
-    <item>Aus den Einstellungen übernehmen</item>
-  </string-array>
-  <string-array name="ShowCountryAsDisplayValues">
-    <item>Abkürzung im Namen</item>
-    <item>Flagge neben dem Namen (auf dem Gerät)</item>
-    <item>Auf Chrome Cast</item>
-  </string-array>
-  <string-array name="ShowOnScreen_DisplayValues">
-    <item>Auf dem Gerät</item>
-    <item>Auf Chrome Cast</item>
-  </string-array>
-  <string-array name="GameScoresAppearance_DisplayValues">
-    <item>Gesamte Partitur auf dem Gerät anzeigen, Gesamte Partitur auf Chromecast</item>
-    <item>Gesamte Partitur auf dem Gerät anzeigen, Gesamte Partitur auf Chromecast</item>
-    <item>Gesamte Partitur auf dem Gerät anzeigen, Gesamte Partitur auf Chromecast</item>
-    <item>Gesamte Partitur auf dem Gerät anzeigen, Gesamte Partitur auf Chromecast</item>
-  </string-array>
-  <string-array name="ScorelineLayout_DisplayValues">
-    <item>Ziffern rechts</item>
-    <item>Ziffern in der Mitte</item>
-    <item>Aufschlagseite ausblenden</item>
-  </string-array>
-  <string-array name="NewMatchLayout_DisplayValues">
-    <item>Alle Felder (inkl. Land, Verein, Veranstaltung, Schiedsrichter)</item>
-    <item>Minimal (Spielernamen, Format). Größere Schriftart</item>
-  </string-array>
-  <string-array name="ShowAvatarOnDisplayValues">
-    <item>Auf dem Gerät</item>
-    <item>Auf Chrome Cast</item>
-  </string-array>
-  <string-array name="StartupActionDisplayValues">
-    <item>Keiner</item>
-  </string-array>
-  <string-array name="tiebreakFormatDisplayValues">
-    <item>Zwei Punkte</item>
-    <item>Empfänger wählt 1 oder 3</item>
-    <item>Empfänger wählt 1,2 oder 3</item>
-    <item>Empfänger wählt 1 oder 3</item>
-    <item>Plötzlicher Tod</item>
-  </string-array>
-  <string-array name="handicapFormatDisplayValues">
-    <item>Keiner</item>
-    <item>Zu Beginn des Spiels angeben</item>
-    <item>Zu Beginn jedes Spiels angeben</item>
-  </string-array>
-  <string-array name="doublesServeSequence">
-    <item>A1/B1/A2/B2</item>
-    <item>A2/B1/B2 dann A1/A2/B1/B2</item>
-    <item>A1/B1/A1/B1</item>
-    <item>A1/A2/B1/B2</item>
-    <item>A1/B1/A1/B1</item>
-  </string-array>
-  <string-array name="goldenPointFormatDisplayValues">
-    <item>Aus</item>
-    <item>Profi (bei der ersten Zwei)</item>
-    <item>Amateur (Am zweiten Zweier)</item>
-  </string-array>
-  <string-array name="changeSidesWhen_GSM_DisplayValues">
-    <item>Nach ungeraden Spielen</item>
-    <item>Nach geraden Spielen</item>
-    <item>Zwischen den Sätzen</item>
-    <item>Jede 4 Punkte in einem Tiebreak</item>
-    <item>Jede 4 Punkte in einem Tiebreak</item>
-  </string-array>
+
+    <!-- display values for java enumeration values -->
+
+    <string-array name="DownUp_NrOfServes_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.DownUp -->
+        <item>runter</item>
+        <item>hoch</item>
+    </string-array>
+    <string-array name="EndMatchManuallyBecause_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.EndMatchManuallyBecause -->
+        <item>Aufgabe wegen Verletzung</item>
+        <item>Strafspiel</item>
+    </string-array>
+    <string-array name="BrokenEquipment_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.BrokenEquipment -->
+        <item>Saite gerissen</item>
+        <item>Schläger defekt</item>
+        <item>Ball defekt</item>
+    </string-array>
+    <string-array name="OrientationPreference_DisplayValues">
+        <item>Querformat</item>
+        <item>Hochformat</item>
+    </string-array>
+    <string-array name="LandscapeLayoutPreference_DisplayValues">
+        <item>Voreinstellung</item>
+        <item>Darstellung 1</item>
+        <item>Darstellung 2</item>
+        <item>Darstellung 3</item>
+    </string-array>
+    <string-array name="PostDataPreferenceDisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.PostDataPreference -->
+        <item>nur die wichtigsten Daten</item>
+        <item>die wichtigsten Daten &amp; JSON={}</item>
+        <item>nur JSON-Daten</item>
+    </string-array>
+    <string-array name="LockState_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.LockState -->
+        <item>freigegeben - unveränderbar</item>
+        <item>freigegeben</item>
+        <item>freigegeben - manuell</item>
+        <item>freigegeben - Ende des letzten Spiels</item>
+        <item>gesperrt - manuell</item>
+        <item>gesperrt - manuell</item>
+        <item>gesperrt - Spielende</item>
+        <item>gesperrt - manuelles Beenden eines Spiels</item>
+        <item>gesperrt - lange Ruhezeit</item>
+        <item>gesperrt - Spielende</item>
+        <item>gesperrt - Aufgabe</item>
+        <item>gesperrt - Strafspiel</item>
+    </string-array>
+    <string-array name="DetermineTextColor_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.DetermineTextColor -->
+        <item>Automatisch schwarz oder weiß wählen</item>
+        <item>Automatisch aus der Palette wählen</item>
+        <item>manuell</item>
+    </string-array>
+    <string-array name="KeepScreenOnWhen_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.KeepScreenOnWhen -->
+        <item>immer</item>
+        <item>während das Spiel läuft</item>
+        <item>nie</item>
+    </string-array>
+    <string-array name="BackKeyBehaviour_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.BackKeyBehaviour -->
+        <item>zum Verlassen zweimal drücken</item>
+        <item>zum Verlassen einmal drücken</item>
+        <item>Punktestand rückgängig machen (bestätigen)</item>
+        <item>Punktestand rückgängig machen (nicht bestätigen)</item>
+        <item>Aufschlagseite wechseln</item>
+    </string-array>
+    <string-array name="VolumeKeysBehaviour_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.VolumeKeysBehaviour -->
+        <item>keine</item>
+        <item>Punktestand ändern</item>
+        <item>Punktestand ändern (nur im Hochformat)</item>
+    </string-array>
+    <string-array name="RallyEndStatsPrefs_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.RallyEndStatsPrefs -->
+        <item>Aufschlagseite (VH/RH)</item>
+        <item>Schlagposition</item>
+        <item>Richtung des Balls</item>
+        <item>Flugbahn des Balls</item>
+    </string-array>
+    <string-array name="RacketSide_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.RacketSide -->
+        <item>Vorhand</item>
+        <item>Rückhand</item>
+    </string-array>
+    <string-array name="BallDirection_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.BallDirection -->
+        <item>Long Line</item>
+        <item>Cross</item>
+        <item>Boast</item>
+    </string-array>
+    <string-array name="BallTrajectory_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.BallTrajectory -->
+        <item>langer Ball</item>
+        <item>Stopp</item>
+        <item>Lob</item>
+    </string-array>
+    <string-array name="Position_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.Position -->
+        <item>Front Court</item>
+        <item>Volley</item>
+        <item>Back Court</item>
+    </string-array>
+    <string-array name="ConductType_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.model.ConductType -->
+        <item>Schlägermissbrauch</item>
+        <item>Obszönität</item>
+        <item>Spielverzögerung</item>
+        <item>Widerspruch</item>
+        <item>Beschimpfung / Beleidigung Offizieller</item>
+        <item>Übermäßiger körperlicher Kontakt</item>
+        <item>Unsportliches Verhalten</item>
+        <item>Coaching</item>
+    </string-array>
+    <string-array name="timerViewType_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.timer.ViewType -->
+        <item>Popup mit Uhr</item>
+        <item>zwischen den Punkten (nur Ziffern)</item>
+    </string-array>
+
+    <string-array name="GroupMatchesByDisplayValues">
+        <item>Veranstaltung</item>
+        <item>Datum</item>
+    </string-array>
+    <string-array name="SortOrderDisplayValues">
+        <item>aufsteigend</item>
+        <item>absteigend</item>
+    </string-array>
+    <string-array name="OnlineSheetActionDisplayValues">
+        <item>Link teilen</item>
+        <item>Vorschau</item>
+        <item>im Browser anzeigen</item>
+        <item>in die Zwischenablage kopieren</item>
+        <item>vom Server löschen</item>
+    </string-array>
+    <string-array name="FeatureDisplayValues">
+        <item>nicht verwenden</item>
+        <item>Verwendung vorschlagen</item>
+        <item>automatisch anzeigen</item>
+    </string-array>
+    <string-array name="FeatureDisplayValues_DoAuto">
+        <item>nein</item>
+        <item>vorschlagen</item>
+        <item>automatisch</item>
+    </string-array>
+    <string-array name="ShareMatchPrefsDisplayValues">
+        <item>Link mit allen Spieldetails teilen</item>
+<!--
+        <item>Share match details after each game</item>
+        <item>Share match details after each half of a game</item>
+        <item>Share match details after each point</item>
+-->
+        <item>Spielzusammenfassung teilen</item>
+        <item>Spielzusammenfassungen teilen</item>
+        <item>Zusammenfassung an die Standardnummer senden</item>
+        <item>Spieldetails an eine URL senden</item>
+        <item>Spielbericht als Text in einer Mail teilen</item>
+    </string-array>
+    <string-array name="EndGameDisplayValues">
+        <item>nicht vorschlagen</item>
+        <item>vorschlagen</item>
+        <item>automatisch beenden</item>
+    </string-array>
+    <string-array name="AutoLockContextDisplayValues">
+        <item>nach Spielende</item>
+        <item>wenn das Spiel X minuten nicht geändert wurde</item>
+    </string-array>
+    <string-array name="ShowPlayerColorOnDisplayValues">
+        <item>Umrahmung der Punkte</item>
+        <item>Schaltfläche der Aufschlagseite</item>
+        <item>Hintergrund des Spielernamens</item>
+        <item>Satzball Meldung</item>
+        <item>Spielstand-Grafik</item>
+        <item>Entscheidungsmeldung</item>
+        <item>Hintergrund der Punkte</item>
+    </string-array>
+    <string-array name="PlayerColorsNewMatchDisplayValues">
+        <item>keine Farben</item>
+        <item>Farben des letzten Spiels</item>
+        <item>Farben aus den Einstellungen</item>
+    </string-array>
+    <string-array name="ShowCountryAsDisplayValues">
+        <item>Abkürzung beim Namen</item>
+        <item>Flagge neben dem Namen (auf dem Gerät)</item>
+        <item>Flagge neben dem Namen (auf Chrome Cast)</item>
+    </string-array>
+    <string-array name="ShowOnScreen_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ShowOnScreen -->
+        <item>auf dem Gerät</item>
+        <item>in ChromeCast</item>
+    </string-array>
+    <string-array name="GameScoresAppearance_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.GameScoresAppearance -->
+        <item>\'kompakt\' auf dem Gerät und Chromecast</item>
+        <item>\'vollständig\' auf dem Gerät und Chromecast</item>
+        <item>\'kompakt\' auf dem Gerät | \'vollständig\' auf Chromecast</item>
+        <item>\'vollständig\' auf dem Gerät | \'kompakt\' Sätze auf Chromecast</item>
+    </string-array>
+    <string-array name="ScorelineLayout_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ScorelineLayout -->
+        <item>rechtsbündig</item>
+        <item>linksbündig</item>
+        <item>Aufschlagseite ausblenden</item>
+    </string-array>
+    <string-array name="NewMatchLayout_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.NewMatchLayout -->
+        <item>alle Felder (inkl. Land, Verein, Veranstaltung, Schiedsrichter)</item>
+        <item>einfach (Spielernamen, Format) - große Schriftart</item>
+    </string-array>
+    <string-array name="ShowAvatarOnDisplayValues">
+        <item>auf dem Gerät</item>
+        <item>auf Chrome Cast</item>
+    </string-array>
+    <string-array name="StartupActionDisplayValues">
+        <item>keine</item>
+        <!-- all other values presume enum names are choosen wisely to represent readable english -->
+    </string-array>
+    <string-array name="tiebreakFormatDisplayValues">
+        <item>zwei Punkte Abstand</item>
+        <item>Rückschläger bestimmt 1 oder 2</item>
+        <item>Rückschläger bestimmt 1,2 oder 3</item>
+        <item>Rückschläger bestimmt 1 oder 3</item> <!-- http://en.allexperts.com/q/Squash-Racquetball-1548/few-rules.htm : US Colleges and PSA old scoring -->
+        <item>Sudden death</item>
+    </string-array>
+    <string-array name="handicapFormatDisplayValues">
+        <item>keines</item>
+        <item>zu Beginn des Spieles festlegen</item>
+        <item>zu Beginn jedes Satzes festlegen</item>
+    </string-array>
+    <string-array name="doublesServeSequence">
+        <item>A1/B1/A2/B2</item>               <!-- DSS_1_1_2_2__8 -->
+        <item>A2/B1/B2 then A1/A2/B1/B2</item> <!-- DSS_2_12_12__6 -->
+        <item>A1/B1/B2 then A1/A2/B1/B2</item> <!-- DSS_1_12_12__6 -->
+        <item>A1/A2/B1/B2</item>               <!-- DSS___12_12__6 -->
+        <item>A1/B1/A1/B1</item>               <!-- DSS___1_1____4 -->
+    </string-array>
+    <string-array name="goldenPointFormatDisplayValues">
+        <item>aus</item>
+        <item>Pro (beim ersten Gleichstand)</item>
+        <item>Amateur (beim zweiten Gleichstand)</item>
+    </string-array>
+
+    <string-array name="changeSidesWhen_GSM_DisplayValues">
+        <!-- Keep in line with com.doubleyellow.scoreboard.prefs.ChangeSidesWhen_GSM -->
+        <item>nach ungeraden Sätzen</item>
+        <item>nach geraden Sätzen</item>
+        <item>zwischen den Sätzen</item>
+        <item>alle 6 Punkte in einem Tiebreak</item>
+        <item>alle 4 Punkte in einem Tiebreak</item>
+    </string-array>
 </resources>

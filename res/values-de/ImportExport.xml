@@ -1,35 +1,33 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
-  <string name="Export">Export</string>
-  <string name="Export_elipses">Export…</string>
-  <string name="Import">Import</string>
-  <string name="Import_elipses">Import…</string>
-  <string name="ImportExport_elipses">Importieren/Exportieren…</string>
-  <string name="Select_file">Datei auswählen</string>
-  <string name="import_matches">Übereinstimmungen importieren</string>
-  <string name="export_matches">Übereinstimmungen exportieren</string>
-  <string name="upload_export_to_server">Export auf den Squore-Server hochladen</string>
-  <string name="upload_to_server_failed__x">Hochladen auf den Squore-Server fehlgeschlagen: %s</string>
-  <string name="uploaded_to_server__x">Auf Squore hochladen OK: 
- 
- %s 
- 
- (URL befindet sich in Ihrer Zwischenablage)</string>
-  <string name="Exported_to_x">Exportiert nach %s</string>
-  <string name="File_x_has_been_imported__Cnt_y">Datei %1$s wurde importiert (# %2$s )</string>
-  <string name="Source_x__Target_y">Quelle: %1$s 
- Ziel: %2$s</string>
-  <string name="Source_x">Quelle: %s</string>
-  <string name="Target_y">Ziel: %s</string>
-  <string name="no_appropriate_zip_files_found_in_x">In %s : Keine Postleitzahl mit Übereinstimmungen gefunden</string>
-  <string name="no_read_rights_for_x">Keine Leserechte für %s</string>
-  <string name="no_write_rights_for_x">Keine Schreibrechte für %s</string>
-  <string name="could_not_determine_external_storage_location">Externer Speicherort konnte nicht ermittelt werden</string>
-  <string name="Archive">Archiv</string>
-  <string name="Delete_file">Datei löschen</string>
-  <string name="Filename">Dateiname</string>
-  <string name="x_stored_in_y">„ %1$s “ gespeichert in „ %2$s “</string>
-  <string name="x_restored_from_y">„ %1$s “ wiederhergestellt von „ %2$s “</string>
-  <string name="could_not_find_file_x">Datei %s konnte nicht gefunden werden.</string>
-  <string name="did_you_already_perform_an_export_of_x">Haben Sie bereits einen Export von %s durchgeführt?</string>
+    <string name="Export">Export</string>
+    <string name="Export_elipses">Export…</string>
+    <string name="Import">Import</string>
+    <string name="Import_elipses">Import…</string>
+    <string name="ImportExport_elipses">Import/Export…</string>
+    <string name="Select_file">Select File</string>
+    <string name="import_matches">Spiele importieren</string>
+    <string name="export_matches">Spiele exportieren</string>
+    <string name="upload_export_to_server">Exportdatei auf den Squore Server laden</string>
+    <string name="upload_to_server_failed__x">Upload zu Squore fehlgeschlagen: %s</string>
+    <string name="uploaded_to_server__x">Upload zu Squore OK:\n\n%s\n\n(URL in der Zwischenablage)</string>
+
+    <string name="Exported_to_x">Exportiert nach %s</string>
+    <string name="File_x_has_been_imported__Cnt_y">File %1$s has been imported (# %2$s)</string>
+    <string name="Source_x__Target_y">Quelle: %1$s\nZiel: %2$s</string>
+    <string name="Source_x">Source: %s</string>
+    <string name="Target_y">Target: %s</string>
+    <string name="no_appropriate_zip_files_found_in_x">Im Verzeichnis \'%s\' wurde keine ZIP-Datei mit Spielen gefunden.</string>
+    <string name="no_read_rights_for_x">No read rights for %s</string>
+    <string name="no_write_rights_for_x">No write rights for %s</string>
+    <string name="could_not_determine_external_storage_location">Could not determine external storage location</string>
+
+    <string name="Archive">Historie</string>
+    <string name="Delete_file">Datei löschen</string>
+    <string name="Filename">Dateiname</string>
+
+    <string name="x_stored_in_y">\'%1$s\' in \'%2$s\' gespeichert</string>
+    <string name="x_restored_from_y">\'%1$s\' aus \'%2$s\' gespeichert</string>
+    <string name="could_not_find_file_x">Could not find file %s.</string>
+    <string name="did_you_already_perform_an_export_of_x">Did you already perform an export of %s?</string>
 </resources>

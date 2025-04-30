@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="lbl_Scoring_PointWhenServing__Squash">Hand-in/Hand-out</string>
+
+    <string name="lbl_marker">Punktrichter</string>
+    <string name="lbl_assessor">Prüfer</string>
+
+    <string name="no_let_abbreviation">kein LET</string>
+    <string name="yes_let_abbreviation">LET</string>
+    <string name="stroke_abbreviation">Ball an</string>
+    <string name="conduct_warning_abbreviation">W</string>
+    <string name="conduct_stroke_abbreviation">S-P</string>
+    <string name="conduct_game_abbreviation">S-SA</string>
+    <string name="conduct_match_abbreviation">S-SP</string>
+    <string name="power_play_won_abbreviation">PPG</string>
+    <string name="power_play_lost_abbreviation">PPV</string>
+
+    <string name="timeout_string_abbreviation">ZEIT</string>
+    <string name="broken_string_abbreviation">SG</string>
+    <string name="broken_ball_abbreviation">BD</string>
+    <string name="broken_racket_abbreviation">SD</string>
+
+    <string name="sb_injury_type">Art der Verletzung</string>
+
+    <string name="sb_did_you_mean_conduct_game">Falls es sich um einen \'Strafsatz\' handelt, dann \'Abbrechen\', anschließend lange auf den Namen des schuldigen Spielers klicken und dann eine entsprechende Auswahl treffen.</string>
+
+    <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-All - Receiver %2$s chooses to play to %3$s or to %4$s</string>
+    <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-All - Receiver %2$s chooses winning score</string>
+
+    <string name="sb_official_rules__Squash">Offizielle Squash Regeln</string>
+    <string name="sb_possible_conducts">mögliche Strafen</string>
+    <string name="sb_self_inflicted_injury">selbst verschuldet</string>
+    <string name="sb_self_inflicted_blood_injury">Blutung - selbst verschuldet</string>
+    <string name="sb_opponent_inflicted_injury">vom Gegner verschuldet</string>
+    <string name="sb_contributed_injury">vom Gegner mitverschuldet</string>
+
+    <!-- source: https://www.worldsquash.org/referees-info/conduct-on-court/ -->
+    <string name="conducts_guidelines_default"><![CDATA[
+\n- Schlägermissbrauch (Schläger, Ball oder anderes Equipment):
+\nGeringfügiges Fehlverhalten  (z.B. Werfen des Schlägers auf den Boden nach Verlieren eines Satzes, den Ball unnötig wegschlagen, nachdem der Satz beendet ist): VERWARNUNG
+\nErhebliches Fehlverhalten  (z.B. absichtliches Zerstören des Schlägers, Werfen des Schlägers an die Wand oder Richtung Gegner, den Ball absichtlich aus dem Court schlagen, den Schläger absichtlich aus dem Court werfen): STRAFPUNKT
+\n
+\n- Hör- oder sichtbare Obszönität:
+\nGeringfügiges Fehlverhalten  (z.B. gemurmelte Flüche, Blasphemie): VERWARNUNG
+\nErhebliches Fehlverhalten  (z.B. hörbare Flüche): STRAFPUNKT
+\n
+\n- Zeiten nicht einhalten, Spielverzögerung:
+\nGeringfügiges Fehlverhalten  (z.B. einige (15) Sekunden zu spät auf dem Court, Zeitverzögerung beim Aufschlag, unerlaubtes Öffnen der Tür): VERWARNUNG
+\nErhebliches Fehlverhalten  (z.B. deutlich zu spät (30 s) auf dem Court, anhaltende Diskussionen mit dem Schiedsrichter, wiederholtes, unerlaubtes Öffnen der Tür): STRAFPUNKT
+\nSchwerwiegendes Fehlverhalten (z.B. deutliches zu spät kommen (45 s) auf dem Court, wiederholte, anhaltende Diskussionen mit dem Schiedsrichter): STRAFSATZ oder STRAFSPIEL
+\n
+\n- Widerspruch gegen Entscheidungen / Meinungsverschiedenheiten:
+\nGeringfügiges Fehlverhalten  (z.B. Infragestellung einer Entscheidung): VERWARNUNG
+\nErhebliches Fehlverhalten  (z.B. anhaltende Infragestellung von Entscheidungen): STRAFPUNKT
+\n
+\n- Beschimpfung / Beleidigung Offizieller:
+\nGeringfügiges Fehlverhalten  (z.B. wenig schmeichelhafte Kommentare gegenüber Offiziellen oder Entscheidungen): VERWARNUNG
+\nErhebliches Fehlverhalten  (z.B. herabsetzende Gestik und ehrverletzende Kommentare gegenüber Offiziellen oder deren Entscheidungen): STRAFPUNKT
+\nSchwerwiegendes Fehlverhalten (z.B. den Ball in Richtung Offizieller oder Publikum schlagen, den Schläger in Richtung Offizieller oder Publikum werfen): STRAFSATZ oder STRAFSPIEL - Abhängig von der Schwere des Fehlverhaltens und der damit verbundenen Gefährdung
+\n
+\n- Übermäßiger körperlicher Kontakt:
+\nDies bedeutet deutlicher oder vorsätzlicher Körperkontakt, übermäßige Schlagbewegung, gefährliches Spiel, inklusive exzessiven Schlägerschwung.
+\nGeringfügiges Fehlverhalten  (z.B. in den Gegner laufen): VERWARNUNG
+\nErhebliches Fehlverhalten  (z.B. körperliche Beeinträchtigung des Gegners): STRAFPUNKT
+\nSchwerwiegendes Fehlverhalten (z.B. vorsätzliche Verletzung des Gegners, gefährliches Spiel, welches dem Gegner Verletzungen zufügt): STRAFSATZ oder STRAFSPIEL - Abhängig von der Schwere des Fehlverhaltens und der Schwere der Verletzung des Gegners
+\n
+\n- Unsportliches Verhalten:
+\nGeringfügiges Fehlverhalten  (z.B. abwertende Bemerkungen zum Gegner): VERWARNUNG
+\nErhebliches Fehlverhalten  (z.B. anhaltende abwertende Bemerkungen über den Gegner, jegliche Versuche, den Gegner einzuschüchtern): STRAFPUNKT
+\nSchwerwiegendes Fehlverhalten (z.B. extrem inakzeptables Verhalten, welches den Sport in Misskredit bring): STRAFSATZ oder STRAFSPIEL - Abhängig von der Schwere des Fehlverhaltens
+\n
+\n- Coaching:
+\nBeim ersten Auftreten: VERWARNUNG
+\nBeim zweiten Auftreten: STRAFPUNKT und Verweis des/der Coachenden vom Court
+\nTritt nach Sanktionen weiterhin kein akzeptables Verhalten ein, muss der Schiedsrichter beim nächsten Auftreten STRAFSATZ oder STRAFSPIEL aussprechen.
+\n
+\n- Wiederholtes und inakzeptables Fehlverhalten:
+\nWenn nach Ansicht des Schiedsrichters ein Spieler, der trotz der oben angeführten Sanktionen weiterhin ein nicht akzeptables Verhalten zeigt, sollte der Schiedsrichter beim nächsten Auftreten dieses Verhaltens entweder die gleiche Sanktion oder eine schärfere als die, die vorher ausgesprochen wurde, anwenden.
+\nWenn jedoch eine VERWARNUNG für ein zweimaliges Fehlverhalten ausgesprochen wurde, muss beim dritten Auftreten (in ähnlicher Form) ein STRAFPUNKT ausgesprochen werden.
+\nBeispiel: Ein Spieler hat bereits eine VERWARNUNG für Widerspruch erhalten. Beim nächsten Widerspruch kann eine weitere VERWARNUNG oder ein STRAFPUNKT ausgesprochen werden. Beim dritten Auftreten muss in jedem Fall ein STRAFPUNKT ausgesprochen werden.
+\n
+    ]]></string>
+</resources>

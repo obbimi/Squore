@@ -1,8 +1,446 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <!-- overall defaults -->
+    <string name="setting_resource_folder" translatable="false">values</string>
+    <string name="timerViewType_default" translatable="false">Inline</string> <!-- Popup or Inline -->
 
-        <string name="OfficialRulesURLs_default__Squash"><![CDATA[/help/rules.of.singles.squash.php
-\nhttps://dsqv.de/wp-content/uploads/2020/02/200228_DSQV_Spielregeln_SRA2020_final.pdf
+    <dimen name="main_button_padding">5dp</dimen>
+    <dimen name="main_button_margin">2dp</dimen>
+
+    <dimen name="txt_smaller">12sp</dimen>
+    <dimen name="txt_small">15sp</dimen>
+    <dimen name="txt_medium">18sp</dimen>
+    <dimen name="txt_normal">22sp</dimen>
+    <dimen name="txt_large">27sp</dimen>
+
+
+    <dimen name="sb_playername_leftpadding">5dp</dimen>
+    <dimen name="sb_playername">36sp</dimen>
+    <dimen name="sb_scorebutton">180sp</dimen>
+    <dimen name="sb_sidebutton">20sp</dimen>
+    <dimen name="sb_history">12sp</dimen>
+
+
+    <!--<dimen name="sb_button_minheight">36dp</dimen>-->
+    <dimen name="sb_button_padding">2dp</dimen>
+    <dimen name="sb_button_radius">30dp</dimen>
+
+    <dimen name="timer_circular_wh">160dp</dimen>
+    <dimen name="timer_circular_stroke_width">8dp</dimen>
+
+<!--
+    <integer name="TextSizeScore_default">180</integer>
+    <integer name="TextSizePlayerName_default">48</integer>
+    <integer name="TextSizeServeSide_default">32</integer>
+-->
+    <integer name="TextSizeHistory_default_pt">24</integer>
+    <integer name="TextSizeHistory_default_ls">18</integer>
+    <integer name="AppealHandGestureIconSize_default">48</integer>
+
+    <integer name="preferWhiteOverBlackThreshold">0</integer>
+
+    <integer name="TextSizeCalls_default">12</integer>
+    <integer name="TextSizeTabStrip">18</integer>
+    <integer name="TextSizeShowCase">14</integer>
+    <integer name="maxNumberOfLinesToUseForGameEndScores">5</integer>
+    <integer name="maxNumberOfPlayersInGroup_default__Default">5</integer>
+    <integer name="maxNumberOfPlayersInGroup_default__Tabletennis">3</integer>
+    <integer name="showChoosenDecisionDuration_Conduct_default">5</integer>
+    <integer name="showChoosenDecisionDuration_Appeal_default">2</integer>
+
+    <integer name="newBallsXGamesUpFront__Default">2</integer>
+    <bool name="showSwapServerMenu__Default">false</bool>
+    <bool name="showSwapServerMenu__Tabletennis">true</bool>
+
+    <!--
+ldpi: Low-density screens; approximately 120dpi.
+mdpi: Medium-density (on traditional HVGA) screens; approximately 160dpi.
+hdpi: High-density screens; approximately 240dpi.
+xhdpi: Extra-high-density screens; approximately 320dpi. Added in API Level 8
+xxhdpi: Extra-extra-high-density screens; approximately 480dpi. Added in API Level 16
+xxxhdpi: Extra-extra-extra-high-density uses (launcher icon only, see the note in Supporting Multiple Screens); approximately 640dpi. Added in API Level 18
+
+// Diede          S6310N      : DisplayMetrics{density=1.0, width= 320, height= 480, scaledDensity=0.85     , xdpi=176.69565, ydpi=176.69565} 480 x 320 px (480 x 320 dp)   / mdpi / Normal screen (http://www.emirweb.com/ScreenDeviceStatistics.php#Header327)
+// Samsung S2+ GT-I9100       : DisplayMetrics{density=1.5, width= 480, height= 800, scaledDensity=1.2750001, xdpi=217.713  , ydpi=207.347}   800 x 480 px (533 x 320 dp)   / hdpi / Normal screen
+// Samsung S2+ GT-I9105P      : DisplayMetrics{density=1.5, width= 480, height= 800, scaledDensity=1.2750001, xdpi=217.713  , ydpi=207.347}   800 x 480 px (533 x 320 dp)   / hdpi / Normal screen
+// Samsung     GT-P5110 Tablet: DisplayMetrics{density=1.0, width= 800, height=1232, scaledDensity=0.9      , xdpi=149.0    , ydpi=149.0}     1280 x 800 px (1280 x 800 dp) / mdpi / XLarge screen (http://www.emirweb.com/ScreenDeviceStatistics.php#Header299)
+// Samsung S4  GT-I9505       :
+           Nexus % xxhdpi : DisplayMetrics{density=3.0, width=1080, height=1776, scaledDensity=3.0      , xdpi=480.0    , ydpi=480.0}
+           Wear                            density=1.5, width=280, height=280, scaledDensity=1.5, xdpi=240.0, ydpi=240.0
+http://developer.android.com/guide/practices/screens_support.html
+
+-->
+    <integer name="gameEndScore_default__Squash">11</integer>
+    <integer name="gameEndScore_default__Badminton">21</integer>
+    <integer name="gameEndScore_default__Tabletennis">11</integer>
+    <integer name="gameEndScore_default__Racketlon">21</integer>
+    <integer name="gameEndScore_default__Racquetball">15</integer>
+    <integer name="gameEndScore_default__TennisPadel">6</integer> <!-- abuse to be used as setEndScore default, gameEndScore is always 4 -->
+
+    <bool name="usePowerPlay_default">false</bool>
+    <integer name="numberOfPowerPlaysPerPlayerPerMatch_default__Squash">2</integer>
+    <integer name="numberOfPowerPlaysPerPlayerPerMatch_default__Badminton">0</integer>
+    <integer name="numberOfPowerPlaysPerPlayerPerMatch_default__Tabletennis">0</integer>
+    <integer name="numberOfPowerPlaysPerPlayerPerMatch_default__Racketlon">0</integer>
+    <integer name="numberOfPowerPlaysPerPlayerPerMatch_default__TennisPadel">0</integer>
+
+    <integer name="numberOfGamesToWin_default__Squash">3</integer>
+    <integer name="numberOfGamesToWin_default__Badminton">2</integer>
+    <integer name="numberOfGamesToWin_default__Tabletennis">4</integer>
+    <integer name="numberOfGamesToWin_default__Racketlon">-1</integer>
+    <integer name="numberOfGamesToWin_default__Racquetball">2</integer>
+    <integer name="numberOfGamesToWin_default__TennisPadel">2</integer> <!-- = number of sets to win default -->
+
+    <string name="endGameSuggestion_default__Squash">Suggest</string>
+    <string name="endGameSuggestion_default__Badminton">Suggest</string>
+    <string name="endGameSuggestion_default__Tabletennis">Suggest</string>
+    <string name="endGameSuggestion_default__Racketlon">Suggest</string>
+    <string name="endGameSuggestion_default__Racquetball">Suggest</string>
+    <string name="endGameSuggestion_default__TennisPadel">Automatic</string>
+    <string name="endGameSuggestion_default__Default">Automatic</string>
+
+    <!--
+        <integer name="numberOfGamesToWinSet_default__TennisPadel">6</integer>
+        <integer name="numberOfSetsToWin_default__TennisPadel">2</integer>
+    -->
+
+    <integer name="timerWarmup_default__Squash">240</integer> <!-- changed from 300 to 240 according to new PSA rules -->
+    <integer name="timerWarmup_default__Badminton">300</integer> <!-- no warmup stuff specified in rules -->
+    <integer name="timerWarmup_default__Tabletennis">120</integer> <!-- two minutes according to rule 3.4.3.1 -->
+    <integer name="timerWarmup_default__Racketlon">180</integer> <!-- not specified in rules -->
+    <integer name="timerWarmup_default__TennisPadel">180</integer> <!-- TODO -->
+
+    <string name="timerWarmup_values_default__Squash">240,300</string>
+    <string name="timerWarmup_values_default__Badminton">120,180,240,300</string>
+    <string name="timerWarmup_values_default__Tabletennis">240,300</string>
+    <string name="timerWarmup_values_default__Racketlon">180,240,300</string>
+    <string name="timerWarmup_values_default__TennisPadel">180,240,300</string> <!-- TODO -->
+
+    <integer-array name="commonEndScores__Squash"><item>9</item><item>11</item><item>15</item></integer-array>
+    <integer-array name="commonEndScores__Badminton"><item>11</item><item>21</item></integer-array>
+    <integer-array name="commonEndScores__Tabletennis"><item>11</item><item>21</item></integer-array>
+    <integer-array name="commonEndScores__Racketlon"><item>11</item><item>21</item></integer-array>
+    <integer-array name="commonEndScores__TennisPadel"><item>4</item><item>6</item></integer-array>
+
+    <integer name="timerPauseBetweenGames_default__Squash">90</integer> <!-- PSA: 120 -->
+    <integer name="timerPauseBetweenGames_default__Badminton">120</integer> <!-- 16.2.2 not exceeding 120 seconds between the first and second game, and between the second and third game shall be allowed in all matches.  -->
+    <integer name="timerPauseBetweenGames_default__Tabletennis">60</integer><!-- 3.4.4.1.1 an interval of up to 1 minute between successive games of an individual match; -->
+    <integer name="timerPauseBetweenGames_default__Racketlon">180</integer>
+    <integer name="timerPauseBetweenGames_default__TennisPadel">60</integer> <!-- TODO -->
+
+    <string name="timerPauseBetweenGames_values_default__Squash">90,120</string>
+    <string name="timerPauseBetweenGames_values_default__Badminton">120,60</string> <!-- 16.2.2 -->
+    <string name="timerPauseBetweenGames_values_default__Tabletennis">60,90</string>
+    <string name="timerPauseBetweenGames_values_default__Racketlon">180,300</string>
+    <string name="timerPauseBetweenGames_values_default__TennisPadel">60,90</string> <!-- TODO -->
+
+    <integer name="timerPauseBetweenGames_reminder_at__Squash">15</integer>
+    <integer name="timerPauseBetweenGames_reminder_at__Badminton">20</integer> <!-- seen during BWF match -->
+    <integer name="timerPauseBetweenGames_reminder_at__Tabletennis">15</integer>
+    <integer name="timerPauseBetweenGames_reminder_at__Racketlon">15</integer>
+    <integer name="timerPauseBetweenGames_reminder_at__TennisPadel">15</integer> <!-- TODO -->
+
+    <integer name="timerInjury_default">180</integer>
+
+    <integer name="speechPitch_default">70</integer> <!-- 0 - 100 -->
+    <integer name="speechRate_default">70</integer> <!-- 0 - 100 -->
+    <integer name="speechPauseBetweenParts_default">500</integer> <!-- 0 - 1000 -->
+    <integer name="speechOverBT_PauseBetweenPlaysToKeepAlive_default">20</integer>
+    <integer name="speechOverBT_speechOverBT_PlayingVolumeToKeepAlive_default">20</integer>
+    <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Squash">false</bool>
+    <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__TennisPadel">true</bool>
+    <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Tabletennis">true</bool>
+    <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Badminton">true</bool>
+    <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Racketlon">true</bool>
+    <bool    name="speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive_default__Default">true</bool>
+
+    <integer name="serveButtonTransparencyNonServer_default__Squash">60</integer> <!-- between 0 and 100 -->
+    <integer name="serveButtonTransparencyNonServer_default__Default">60</integer> <!-- between 0 and 100 -->
+    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Squash">false</bool>
+    <bool name="swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Default">true</bool>
+    <bool name="swapPlayersBetweenGames_default">true</bool>
+    <bool name="useEnglishScoring_default">false</bool>
+    <bool name="playAllGames_default">false</bool>
+    <bool name="keepScreenOn_default">true</bool>
+    <bool name="showWhoServesDialog_default">false</bool>
+<!--
+    <bool name="suggestToEndSet_default">true</bool>
+-->
+    <integer name="numberOfBlinksForFeedbackPerPoint_default">4</integer>
+    <bool name="blinkFeedbackPerPoint_default__Default">false</bool>
+    <bool name="hapticFeedbackPerPoint_default">false</bool>
+    <bool name="hapticFeedbackOnGameEnd_default">false</bool>
+    <bool name="showChoosenDecisionShortly_default">true</bool>
+    <bool name="showScoringHistoryInMainScreen_default">true</bool>
+    <bool name="indicateGameBall_default">true</bool>
+    <bool name="floatingMessageForGameBall_default">true</bool>
+    <bool name="showOfficalAnnouncements_default">false</bool>
+    <bool name="showTimersAutomatically_default">false</bool>
+    <bool name="showDetailsAtEndOfGameAutomatically_default">false</bool>
+    <bool name="showLastGameInfoInTimer_default">true</bool>
+    <bool name="showPauseButtonOnTimer_default">false</bool>
+    <bool name="showHideButtonOnTimer_default">true</bool>
+    <bool name="showCircularCountdownInTimer_default">true</bool>
+    <bool name="cancelTimerWhenTimeIsUp_default">false</bool>
+    <bool name="showTieBreakDialog_default">true</bool>
+    <bool name="showPlayerColorOn_Text_default">false</bool>
+
+    <bool name="showWhoServesFAB_default">true</bool>
+    <bool name="showOfficialAnnouncementsFAB_default">true</bool>
+    <bool name="showTimersFAB_default">true</bool>
+<!--
+    <bool name="longClickScoreButtonTriggersAdjustScore_default">false</bool>
+-->
+    <bool name="allowForScoringWithBlueToothConnectedMediaControlButtons_default">false</bool>
+    <bool name="showNewMatchFloatButton_default">true</bool>
+    <bool name="turnOnLiveScoringForMatchesFromFeed_default">true</bool>
+    <bool name="useSoundNotificationInTimer_default">false</bool>
+    <bool name="useVibrationNotificationInTimer_default">true</bool>
+    <bool name="showAdjustTimeButtonsInTimer_default">true</bool>
+    <bool name="showUseAudioCheckboxInTimer_default">true</bool>
+    <bool name="showTimeIsAlreadyUpFor_Chrono_default">true</bool>
+    <bool name="saveMatchesForLaterUsage_default">true</bool>
+    <bool name="useFeedAndPostFunctionality_default">true</bool>
+    <bool name="useSinglesMatches_default">true</bool>
+    <bool name="useMyListFunctionality__Default">true</bool>
+    <bool name="useWarmup__Default">true</bool>
+    <bool name="useReferees__Default">true</bool>
+    <bool name="useMatchFromFeed__Default">true</bool>
+    <bool name="isPublicApp__Default">true</bool>
+    <bool name="useSinglesMatch__Default">true</bool>
+    <bool name="useInjuryTimers__Squash">true</bool>
+    <bool name="usePlayerTimeoutTimers__Squash">false</bool>
+    <bool name="showLiveScore__Default">true</bool>
+    <bool name="usePowerPlay__Squash">true</bool>
+    <bool name="usePowerPlay__Default">false</bool>
+    <bool name="usePlayerTimeoutTimers__Default">false</bool>
+    <bool name="useInjuryTimers__Default">false</bool>
+    <bool name="allowTrustAllCertificatesAndHosts_default">false</bool>
+    <bool name="sortMatchesByEvent_default">true</bool>
+    <bool name="TextSizeScoreAsBigAsPossible_default">true</bool>
+    <bool name="mailFullScoringSheet_default">true</bool>
+    <bool name="allowNegativeHandicap_default">false</bool>
+    <bool name="showActionBar_default">true</bool>
+    <bool name="showSideButtonsWithinScoreButtons_default">false</bool>
+    <bool name="showTips_default">true</bool>
+    <bool name="showFullScreen_default">false</bool>
+    <bool name="showTextInActionBar_default">true</bool>
+    <bool name="suggestToPostResult_default">true</bool>
+    <bool name="hideCompletedMatchesFromFeed_default">false</bool>
+    <bool name="removeSeedingAfterMatchSelection_default">false</bool>
+    <bool name="useFeedNameAsEventName_default">true</bool>
+    <bool name="groupMatchesInFeedByCourt_default">false</bool>
+    <bool name="useGroupNameAsEventData_default">true</bool>
+    <bool name="savePasswords_default">false</bool>
+    <bool name="readContactsForAutoCompletion_default">false</bool>
+    <bool name="FCMEnabled_default">false</bool>
+    <bool name="showToastMessageForEveryReceivedFCMMessage_default">true</bool>
+
+    <bool name="wearable_syncColorPrefs_default">true</bool>
+    <bool name="wearable_allowScoringWithHardwareButtons_default">true</bool>
+    <bool name="wearable_allowScoringWithRotary_default">true</bool>
+
+    <bool name="BTSync_showFullScreenTimer_default__Squash">false</bool>
+    <bool name="BTSync_showFullScreenTimer_default__Default">true</bool>
+    <bool name="BTSync_keepLROnConnectedDeviceMirrored_default__Squash">false</bool>
+    <bool name="BTSync_keepLROnConnectedDeviceMirrored_default__Default">true</bool>
+
+    <bool name="UseBluetoothLE_default__Squash">false</bool>
+    <bool name="UseBluetoothLE_default__TennisPadel">false</bool>
+    <bool name="UseBluetoothLE_default">false</bool>
+    <string name="pref_BluetoothLE_Config_default__Default">D-SCORE-RX A</string>
+    <bool name="ShowFeedBackOnBLEButtonsPressedInfoMessages_default__Default">true</bool>
+    <integer name="NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default">4</integer>
+    <integer name="IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_default">1500</integer>
+
+    <bool name="UseMQTT_default__Default">false</bool>
+    <string name="MQTTTopicMatchTemplate__Default">double-yellow/${FeedName}/${Brand}/${DeviceId}/match</string> <!-- with feedname for livescore of single event via public broker -->
+    <string name="MQTTTopicUnloadMatchTemplate__Default">double-yellow/${FeedName}/${Brand}/${DeviceId}/unloadmatch</string> <!-- with feedname for livescore of single event via public broker -->
+    <string name="MQTTTopicNewMatchTemplate__Default">double-yellow/${Brand}/${DeviceId}/newMatch</string> <!-- without feedname controlling next match e.g. from computer at tournament table -->
+    <string name="MQTTTopicChangeTemplate__Default">double-yellow/${Brand}/${DeviceId}/change</string>
+    <string name="MQTTPublishJoinerLeaverTopic__Default">double-yellow/${Brand}/JoinerLeaver</string>
+
+    <!-- https://github.com/emqx/blog/blob/main/en/202111/popular-online-public-mqtt-brokers.md -->
+    <string-array name="MQTTBrokerUrls" translatable="false">
+        <item>@string/MQTTBrokerURL_Public__Default</item> <!-- emqx 2025-01-11 ok -->
+        <item>tcp://broker.hivemq.com:1883</item>
+        <item>tcp://mqtt.eclipseprojects.io:1883</item>
+        <item>tcp://test.mosquitto.org:1883</item>
+        <item>tcp://broker-cn.emqx.io:1883</item>
+<!--        <item>tcp://iot.eclipse.org:1883</item>--> <!-- 2025-01-11 NOK -->
+        <item>@string/MQTTBrokerURL_Custom</item>
+    </string-array>
+    <!-- emqx is the most reliable according to biased https://github.com/emqx/blog/blob/main/en/202111/popular-online-public-mqtt-brokers.md -->
+    <string name="MQTTBrokerURL_Public__Default">mqtt://broker.emqx.io</string>
+    <string name="MQTTBrokerURL_Custom">Benutzerdefiniert</string>
+    <string name="MQTTBrokerURL_Custom__Default">mqtt://192.168.0.130</string>
+
+    <bool name="showCastButtonInActionBar_default">true</bool>
+    <bool name="Cast_ShowGraphDuringTimer_default">true</bool>
+    <bool name="castScreenShowLogo_default">true</bool>
+    <bool name="castScreenShowSponsor_default">true</bool>
+    <bool name="prefetchFlags_default">false</bool>
+    <bool name="hideFlagForSameCountry_default">true</bool>
+    <bool name="hideAvatarForSameImage_default">false</bool>
+    <bool name="hideBrandLogoWhenGameInProgress_default">true</bool>
+    <bool name="hideFieldDivisionWhenGameInProgress_default">true</bool>
+
+    <!-- com.doubleyellow.scoreboard.prefs.DetermineTextColor -->
+    <string name="AutoChooseBlackOrWhite__Default">AutoChooseBlackOrWhite</string>
+
+    <string name="pref_ColorTargets_Main_Text_color__Default">Color0</string>
+    <string name="pref_ColorTargets_Player_Button_Text_color__Default">Color0</string>
+    <string name="pref_ColorTargets_Score_Button_Text_color__Default" >Color2</string>
+    <string name="pref_ColorTargets_Serve_Button_Text_color__Default" >Color0</string>
+    <string name="pref_ColorTargets_History_Text_color__Default">Color2</string>
+
+
+    <integer name="numberOfServesPerPlayer_default">2</integer>
+    <integer name="readContactsForAutoCompletion_max_default">500</integer>
+    <integer name="numberOfCharactersBeforeAutocomplete_default">2</integer>
+    <integer name="numberOfCharactersBeforeAutocompleteCountry_default">1</integer> <!-- as low as possible so user realizes directly he can pick the country -->
+    <integer name="maximumCacheAgeFlags_default">10800</integer> <!-- 24 * 60 * 7 = 10800 minutes = one week -->
+    <integer name="maximumCacheAgeFeeds_default">60</integer>
+    <integer name="feedReadTimeout_default">20</integer>
+    <integer name="numberOfMinutesAfterWhichToLockMatch_default">30</integer>
+    <integer name="tournamentWasBusy_DaysBack_default">2</integer>
+    <integer name="tournamentWillStartIn_DaysAhead_default">61</integer> <!-- to be able to follow players list/tournament participants -->
+    <integer name="tournamentMaxDuration_InDays_default">365</integer> <!-- old value was 42 (before starting using leagues) BK teams is e.g. 3 weeks in a row -->
+
+    <!--
+    http://www.psaworldtour.com/page/WorldRankings
+    http://wsaworldtour.com/
+    -->
+    <string name="eventList_default"><![CDATA[Interclub
+\nTournament
+\nClubmatch
 ]]></string>
+    <string translatable="false" name="emptyList_default"/>
+    <string translatable="false" name="emptyString"/>
+    <string name="divisionList_default"><![CDATA[Boys
+\nGirls
+\nMen A
+\nMen B
+\nMen C
+\nWoman A
+\nWoman B
+\nElite
+]]></string>
+    <string name="roundList_default"><![CDATA[Round 1
+\nRound 2
+\nRound 3
+\nQuarter Final
+\nSemi Final
+\nFinal
+]]></string>
+    <!-- ranking updated 20150426 using http://www.squashinfo.com/rankings/wsa and http://www.squashinfo.com/rankings/psa -->
+    <string translatable="false" name="playerList_default"/>
+<!--
+    <string name="playerList_default"><![CDATA[
+\nMohamed Elshorbagy
+\nNick Matthew
+\nGregory Gaultier
+\nAmr Shabana
+\nMiguel Angel Rodriguez
+\nRamy Ashour
+\nTarek Momen
+\nPeter Barker
+\nOmar Mosaad
+\nSimon Rösner
+\nBorja Golan
+\nMarwan Elshorbagy
+\nMathieu Castagnet
+\nStephen Coppinger
+\nDaryl Selby
+\nJames Willstrop
+\nMax Lee
+\nKarim Abdel Gawad
+\nCameron Pilley
+\nNicolas Mueller
+\n
+\nPiëdro Schweertman
+\nLaurens-Jan Anjema
+\nJan Van Den Herrewegen
+\nStefan Casteleyn
+\n
+\nNicol David
+\nRaneem El Welily
+\nAlison Waters
+\nLaura Massaro
+\nNour El Tayeb
+\nNour El Sherbini
+\nCamille Serme
+\nLow Wee Wern
+\nOmneya Abdel Kawy
+\nAmanda Sobhy
+\nDipika Pallikal
+\nAnnie Au
+\nRachael Grinham
+\nEmma Beddoes
+\nSarah-Jane Perry
+\nNouran Gohar
+\nJenny Duncalf
+\nMadeline Perry
+\nSarah Kippax
+\nNicolette Fernandes
+]]></string>
+-->
+    <string name="matchList_default__Squash"><![CDATA[- PSA Tournament > Semi Finals
+\nGregory Gaultier [FRA] - Ramy Ashour [EGY]
+\nNick Matthew (GBR) - Miguel Ángel Rodríguez (COL)
+\n- Tuesday matches with me mates
+\nJames - Richard
+\nRichard - Steven
+\nSteven - James
+\n- South African Open > Doubles
+\nMatthew/Wilstrop - Ashour/Shabana
+\nCastagnet/Gaultier [FRA] - Elshorbagy/Momen [EGY]
+\n
+]]></string>
+
+    <string name="pref_feedPostUrls_default__Squash"><![CDATA[Name=TournamentSoftware 1
+\nFeedMatches=feed/tournamentsoftware.php?nr=1&pm=matches
+\nFeedPlayers=feed/tournamentsoftware.php?nr=1&pm=players
+\n
+\nName=TournamentSoftware 2
+\nFeedMatches=feed/tournamentsoftware.php?nr=2&pm=matches
+\nFeedPlayers=feed/tournamentsoftware.php?nr=2&pm=players
+\n
+\nName=RankedIn 1
+\nFeedMatches=feed/rankedin_tournamentfeed.php?nr=1&pm=matches
+\nFeedPlayers=feed/rankedin_tournamentfeed.php?nr=1&pm=players
+\n
+\nName=RankedIn 2
+\nFeedMatches=feed/rankedin_tournamentfeed.php?nr=2&pm=matches
+\nFeedPlayers=feed/rankedin_tournamentfeed.php?nr=2&pm=players
+\n
+\nName=PSA Tournament 1
+\nFeedMatches=feed/psa.php?nr=1
+\nPostResult=demo/demo.post.matchresult.php?lang=en
+\n
+\nName=PSA Tournament 2
+\nFeedMatches=feed/psa.php?nr=2
+\n
+\nName=Demo URL
+\nFeedMatches=demo/demo.matches.php
+\nFeedPlayers=demo/demo.players.txt
+\nPostResult=demo/demo.post.matchresult.php?lang=en
+\n
+\nName=Demo URL with Authentication
+\nFeedMatches=demo/demo.matches.txt?readfead=no_auth_required
+\nFeedPlayers=demo/demo.players.txt
+\nPostResult=demo/demo.post.matchresult.basic.auth.php?lang=en
+\nAuthentication=Basic
+]]></string>
+    <string name="OfficialRulesURLs_default__Squash"><![CDATA[https://worldsquashofficiating.com/home/rules-of-squash/
+\n/help/rules.of.singles.squash.php
+\nhttp://www.worldsquash.org/wp-content/uploads/2018/11/190101_Rules-of-Singles-Squash-2019-V1-1.pdf
+\nhttp://www.worldsquash.org/ws/wp-content/uploads/2014/11/150101_Doubles-Rules-Final.pdf
+\nhttp://www.worldsquash.org/ws/wp-content/uploads/2014/01/131023_Rules-of-Singles-Squash-2014.pdf
+\nhttp://www.worldsquash.org/ws/wp-content/uploads/2016/05/160503_Injury-Bleeding-Flowchart.pdf
+\nhttps://www.federsquash.it/images/2014-2015/carte-federali/2015-Reg-Incontri-Singolo-Coni.pdf
+\nhttps://dsqv.de/wp-content/uploads/2022/01/DSQV-Squashregeln-2021.pdf
+]]></string>
+    <string name="OfficialRulesURLs_default__Default"></string>
 
 </resources>
