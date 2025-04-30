@@ -988,7 +988,7 @@
             android:icon="@drawable/dummy"
             android:key="shareAction"
             android:title="@string/pref_shareAction"
-            android:summary="@string/pref_shareAction"
+            android:summary="@string/pref_shareAction_summary"
             android:defaultValue="LinkWithFullDetails"
             dy:displayValues="@array/ShareMatchPrefsDisplayValues"
             dy:enumClass="com.doubleyellow.scoreboard.prefs.ShareMatchPrefs"
