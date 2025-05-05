@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
-    <string name="lbl_left">Left</string>
-    <string name="lbl_right">Right</string>
+    <string name="lbl_left">Links</string>
+    <string name="lbl_right">Rechts</string>
 
     <string name="lbl_Scoring">Zählweise</string>
     <string name="lbl_Scoring_PointPerRally">PAR - Point-A-Rally</string>
 
-    <string name="fetching_data">Fetching data…</string>
-    <string name="loading">Loading…</string>
-    <string name="loading_of_x">Loading of %1$s… (%2$s)</string>
-    <string name="posting">Posting…</string>
-    <string name="possible_cause">Possible cause: </string>
-    <string name="could_not_load_feed_x">Could not load Feed (%s)</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="today">Today</string>
-    <string name="tomorrow">Tomorrow</string>
-    <string name="confirm">Confirm</string>
+    <string name="fetching_data">Daten abrufen…</string>
+    <string name="loading">Laden…</string>
+    <string name="loading_of_x">Laden von %1$s… (%2$s)</string>
+    <string name="posting">Posten…</string>
+    <string name="possible_cause">Mögliche Ursache: </string>
+    <string name="could_not_load_feed_x">Feed konnte nicht geladen werden (%s)</string>
+    <string name="yesterday">gestern</string>
+    <string name="today">heute</string>
+    <string name="tomorrow">morgen</string>
+    <string name="confirm">Bestätigen</string>
 
     <!-- buttons -->
     <string name="name">Name</string>

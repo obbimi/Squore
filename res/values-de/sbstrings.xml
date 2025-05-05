@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
-    <string name="sb_remove_last_score_for_x">Remove last score marked for %s ?</string>
+    <string name="sb_remove_last_score_for_x">Letzte markierte Punktzahl entfernen für %s ?</string>
 
-    <string name="Poule">Poule - Multiple matches per player</string>
-    <string name="TeamVsTeam_OneMatchPerPlayer">Team vs Team - One match per team player</string>
-    <string name="TeamVsTeam_XMatchesPlayer">Team vs Team - Multiple matches per team player</string>
+    <string name="Poule">Poule (Gruppe von Mannschaften) - mehrere Spiele pro Spieler</string>
+    <string name="TeamVsTeam_OneMatchPerPlayer">Mannschaft gegen Mannschaft - ein Spiel pro Spieler</string>
+    <string name="TeamVsTeam_XMatchesPlayer">Mannschaft gegen Mannschaft - mehrere Spiele pro Spieler</string>
 
 <!-- <string name="facebook_app_id">504690753001960</string> -->
-    <string name="msg_enter_both_player_names">Please enter both player names</string>
-    <string name="msg_enter_all_player_names">Please enter all player names</string>
-    <string name="msg_enter_authentication_details">Enter authentication details</string>
+    <string name="msg_enter_both_player_names">Spielernamen eingeben</string>
+    <string name="msg_enter_all_player_names">Alle Spielernamen eingeben</string>
+    <string name="msg_enter_authentication_details">Authentifizierungsdaten eingeben</string>
 
     <!-- Score board -->
     <string name="sb_not_a_valid_endscore">Der aktuelle Spielstand scheint kein gültiges Endergebnis zu sein.</string>
-    <string name="sb_start_next_game_confirm_message">Start next game?</string>
+    <string name="sb_start_next_game_confirm_message">Nächstes Spiel beginnen?</string>
     <string name="Quick_intro">kurze Einführung</string>
-    <string name="Start_game">Start game</string>
-    <string name="sb_end_game_and_match_message">End of game and match</string>
-    <string name="sb_enter_player_names">Enter player names</string>
+    <string name="Start_game">Spiel starten</string>
+    <string name="sb_end_game_and_match_message">Ende des Satzes und der Partie</string>
+    <string name="sb_enter_player_names">Spielernamen eingeben</string>
     <string name="hms_delete_all">Alle gespeicherten Resultate löschen?</string>
     <string name="hms_delete_selected">Ausgewählte Resultate löschen?</string>
     <string name="sb_online_sheet_available">Online Spielbericht verfügbar</string>
@@ -105,71 +105,71 @@
     <string name="sb_official_announcement">Offizielle Ansagen</string>
     <!--<string name="sb_untill_next_game">Next game starts in</string>-->
     <string name="sb_remove_match_from_my_list">Spiel \'%s\' von \'meiner Liste\' löschen</string>
-    <string name="sb_delete_item">Delete item \'%s\'</string>
-    <string name="sb_delete_section">Delete section \'%s\'</string>
+    <string name="sb_delete_item">Element löschen \'%s\'</string>
+    <string name="sb_delete_section">Bereich löschen \'%s\'</string>
     <string name="sb_delete_group">Gruppe löschen</string>
-    <string name="sb_edit_item">Edit item \'%s\'</string>
-    <string name="sb_new_item">New \'%s\' item</string>
+    <string name="sb_edit_item">Element bearbeiten \'%s\'</string>
+    <string name="sb_new_item">Neues \'%s\' Element</string>
     <string name="end_game__Default">Spielabbruch</string>
     <string name="end_match">Spielende</string>
-    <string name="sb_match_history">Match history</string>
+    <string name="sb_match_history">Spielhistorie</string>
     <string name="sb_stored_matches">Historie</string>
     <string name="no_matches_selected">keine Spiele ausgewählt</string>
     <string name="sb_recent_matches">aktuelle Spiele</string>
     <string name="sb_preferences">App Einstellungen</string>
     <string name="sb_no_matches_stored">keine gespeicherten Spiele gefunden</string>
     <string name="sb_no_recent_matches_stored">keine gespeicherten, aktuellen Spiele gefunden</string>
-    <string name="match_has_finished">Match has finished</string>
-    <string name="press_again_to_undo_last_score">Press score history again to undo last score</string>
-    <string name="unable_to_interpret_entered_text_as_2_names">Sorry, I was unable to interpret the entered text as 2 separate names</string>
+    <string name="match_has_finished">Spiel ist beendet</string>
+    <string name="press_again_to_undo_last_score">Drücke erneut auf Spielhistorie, um den letzten Spielstand rückgängig zu machen.</string>
+    <string name="unable_to_interpret_entered_text_as_2_names">Der eingegebene Text konnte nicht als 2 getrennte Namen interpretiert werden.</string>
 
-    <string name="total_of_x_games__play_remaining_y_games">Because we play \'Total of %1$d games\' the remaining %2$d games will also be played.</string>
-    <string name="total_of_x_games__play_remaining_last_game">Because we play \'Total of %1$d games\' the last game will also be played.</string>
-    <string name="total_of_x_games_to_y">Total of %1$s games to %2$s</string>
+    <string name="total_of_x_games__play_remaining_y_games">Da \'Alle-von-%1$d-Sätzen\' gespielt wird, werden auch die restlichen %2$d Sätze gespielt.</string>
+    <string name="total_of_x_games__play_remaining_last_game">Da \'Alle-von-%1$d-Sätzen\' gespielt wird, wird der letzte Satz auch noch gespielt.</string>
+    <string name="total_of_x_games_to_y">Alle von %1$s Sätzen bis %2$s</string>
     <string name="total_of_x_games_to_y_1">Total of</string>
 
-    <string name="best_of_x_games_to_y_1">Best of</string>
+    <string name="best_of_x_games_to_y_1">Alle-von</string>
     <string name="best_of_x_games_to_y_2__Default">Satz bis</string>
     <string name="lbl_court__Default">Court</string>
 
     <string name="no_statistics_recorded_for_this_match">Keine Statistiken (Winners/Fehler) für dieses Spiel verfügbar</string>
 
-    <string name="nfc_match_send">Match send!</string>
-    <string name="nfc_something_went_wrong">Something went wrong with transferring match %s</string>
-    <string name="nfc_opening_match">Opening match from NFC beam : \n %1$s - %2$s</string>
-    <string name="nfc_saved_match">Stored match from NFC beam : \n %1$s - %2$s</string>
+    <string name="nfc_match_send">Ergebnis gesendet!</string>
+    <string name="nfc_something_went_wrong">Bei der Übertragung des Ergebnisses ist etwas schief gelaufen %s</string>
+    <string name="nfc_opening_match">Spiel vom NFC Beam öffnen: \n %1$s - %2$s</string>
+    <string name="nfc_saved_match">Gespeichertes Spiel von NFC Beam: \n %1$s - %2$s</string>
 
-    <string name="url_match_show_details">Show details of match from URL: \n %1$s - %2$s</string>
-    <string name="url_match_continue">Opening match from URL: \n %1$s - %2$s</string>
+    <string name="url_match_show_details">Details der Begegnung von URL anzeigen: \n %1$s - %2$s</string>
+    <string name="url_match_continue">Öffnen eines Spiels von URL: \n %1$s - %2$s</string>
 
-    <string name="player_names_swapped">Names of players have been swapped</string>
-    <string name="teams_have_swapped_sides">Teams have swapped sides</string>
+    <string name="player_names_swapped">Die Namen der Spieler wurden getauscht</string>
+    <string name="teams_have_swapped_sides">Mannschaften haben die Seiten gewechselt</string>
 
-    <string name="double_player_names_of_team_x_swapped">Names of double players of team %1$s have been swapped</string>
+    <string name="double_player_names_of_team_x_swapped">Die Namen von Doppelpartner der Mannschaft %1$s wurden vertauscht</string>
     <string name="match_is_locked__unlock_to_allow_modifications">Das Spiel ist gesperrt (%s). Wähle \'Freischalten\', um Änderungen am Spielstand vorzunehmen oder starte ein neues Spiel.</string>
-    <string name="match_is_locked">Das Spiel ist gesperrt (%s). Du kannst ein neues Spiel starten, wenn Du willst.</string>
-    <string name="match_is_now_locked">Match is now locked</string>
-    <string name="match_is__locked">Match is locked</string>
-    <string name="match_is_now_unlocked">Match is now unlocked</string>
+    <string name="match_is_locked">Das Ergebnis ist gesperrt (%s). Du kannst ein neues Spiel starten, wenn Du willst.</string>
+    <string name="match_is_now_locked">Das Ergebnis ist jetzt gesperrt</string>
+    <string name="match_is__locked">Das Ergebnis ist gesperrt</string>
+    <string name="match_is_now_unlocked">Das Ergebnis ist jetzt freigegeben</string>
 
-    <string name="Uncompleted">Uncompleted</string>
-    <string name="Completed">Completed</string>
-    <string name="s1_match_s2_retrieved_from_the_web">%1$s match \'%2$s\' retrieved from the web.</string>
-    <string name="s1_match_s2_received_via_nfc">%1$s match \'%2$s\' received from beam.</string>
-    <string name="what_do_you_want_to_do_with_it">What do you want to do with it?</string>
-    <string name="cmd_store_for_later_usage">Store for later usage</string>
-    <string name="cmd_show_detail">Show match details</string>
-    <string name="cmd_open_match_and_continue">Open and continue scoring</string>
+    <string name="Uncompleted">nicht beendet</string>
+    <string name="Completed">beendet</string>
+    <string name="s1_match_s2_retrieved_from_the_web">Spiel %1$s \'%2$s\' aus dem Internet abgerufen.</string>
+    <string name="s1_match_s2_received_via_nfc">Spiel %1$s \'%2$s\' vom Beam abgerufen.</string>
+    <string name="what_do_you_want_to_do_with_it">Was willst Du damit tun?</string>
+    <string name="cmd_store_for_later_usage">Für spätere Verwendung speichern</string>
+    <string name="cmd_show_detail">Details zum Spiel anzeigen</string>
+    <string name="cmd_open_match_and_continue">Öffnen und fortfahren mit dem Zählen</string>
     <string name="q_use_entered_match_details">eingegebene Spielinformationen verwenden?</string>
 
-    <string name="creating_url_for_sharing_match_details">Creating link for sharing match details…</string>
+    <string name="creating_url_for_sharing_match_details">Link zum Teilen von Spieldetails erstellen…</string>
     <string name="select_reason_and_winner">Grund auswählen und auf den Gewinner klicken</string>
 
     <!-- additional toss options (TT BM TN PD) -->
-    <string name="sb_what_side_will_x_start_to_y">What side/end will %1$s start to %2$s?</string>
-    <string name="sb_on_what_side_of_the_scoreboard_should_player_be">On what side of the Spielstandanzeige should he/she initially be?</string>
-    <string name="sb_on_what_side_of_the_scoreboard_should_team_be">On what side of the Spielstandanzeige should the team initially be?</string>
-    <string name="sb_which_player_of_team_will_start_to_x">Which player will start to %1$s?</string>
+    <string name="sb_what_side_will_x_start_to_y">Auf welcher Seite wird %1$s anfangen zu %2$s?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_player_be">Auf welcher Seite der Spielstandanzeige soll der Spieler zu Beginn stehen?</string>
+    <string name="sb_on_what_side_of_the_scoreboard_should_team_be">Auf welcher Seite der Spielstandanzeige soll die Mannschaft zu Beginn stehen?</string>
+    <string name="sb_which_player_of_team_will_start_to_x">Welcher Spieler wird mit %1$s beginnen?</string>
 
     <string name="timeout">Timeout</string> <!-- TT 3.4.4.2.4 On receiving a valid request for a time-out the umpire shall suspend play and shall hold up a white card with the hand on the side of the player or pair who requested it; the white card or another appropriate marker shall be placed on the court of that player or pair. -->
     <string name="Resume_game">Spiel fortsetzen</string>
@@ -180,11 +180,11 @@
     <string name="left_serveside_single_char">L</string>
     <string name="right_serveside_single_char">R</string>
 
-    <string name="lbl_all_games">All Games</string>
+    <string name="lbl_all_games">Alle Sätze</string>
     <!--<string name="lbl_game">Game</string>-->
     <string name="lbl_players">Spieler</string>
-    <string name="lbl_event_and_players">Event and Players</string>
-    <string name="lbl_player">Player</string>
+    <string name="lbl_event_and_players">Veranstaltung und Spieler</string>
+    <string name="lbl_player">Spieler</string>
     <string name="lbl_player_A">Spieler A</string>
     <string name="lbl_playerA1">Spieler A1</string>
     <string name="lbl_playerA2">Spieler A2</string>
@@ -200,33 +200,33 @@
     <string name="lbl_clubs">Vereine</string>
     <string name="lbl_club_A">Verein A</string>
     <string name="lbl_club_B">Verein B</string>
-    <string name="add_x_matches">Add %d matches</string>
+    <string name="add_x_matches">%d Spiele hinzufügen</string>
     <string name="lbl_event">Veranstaltung</string>
     <string name="lbl_division">Konkurrenz</string>
     <string name="lbl_round">Runde</string>
     <string name="lbl_location">Ort</string>
     <string name="lbl_referee">Schiedsrichter</string>
-    <string name="lbl_versus">vs</string>
+    <string name="lbl_versus">gegen</string>
 
-    <string name="lbl_broken_equipment">Broken equipment reported by %s</string>
-    <string name="point_awarded_to_p">Point awarded to %s</string>
+    <string name="lbl_broken_equipment">Defekte Ausrüstung bei %s</string>
+    <string name="point_awarded_to_p">Punkt vergeben an %s</string>
     <string name="point">Point</string>
     <string name="points">Points</string>
-    <string name="lbl_warning">Warning</string>
+    <string name="lbl_warning">Warnung</string>
 
     <string name="lbl_power_play">Power Play</string>
-    <string name="lbl_power_play_won">Power Play Won</string>
-    <string name="lbl_power_play_lost">Power Play Lost</string>
-    <string name="lbl_power_play_won_by_x">Power Play point awarded to %s</string>
-    <string name="lbl_power_play_lost_by_x">Power Play lost by %s</string>
-    <string name="no_more_power_plays_left__x">No more Power Plays left (%d)</string>
-    <string name="lbl_activate_for">Activate for</string>
-    <string name="lbl_both">Both</string>
+    <string name="lbl_power_play_won">Power Play gewonnen</string>
+    <string name="lbl_power_play_lost">Power Play verloren</string>
+    <string name="lbl_power_play_won_by_x">Power Play Punkt vergeben an %s</string>
+    <string name="lbl_power_play_lost_by_x">Power Play verloren von %s</string>
+    <string name="no_more_power_plays_left__x">Kein verbleibendes Power Play (%d)</string>
+    <string name="lbl_activate_for">Freischalten für</string>
+    <string name="lbl_both">Beide</string>
     <!--
         <string name="last_game__score_x_induration_y_z">Last game: %s in %s %s</string>
         <string name="last_game__score_x_induration_y_z__2lines">Last game: %s\nin %s %s</string>
     -->
-    <string name="game_ended">Game ended</string>
-    <string name="match_ended">Match ended</string>
+    <string name="game_ended">Satzbeendet</string>
+    <string name="match_ended">Spiel beendet</string>
 
 </resources>

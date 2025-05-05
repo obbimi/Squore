@@ -109,18 +109,18 @@
     <string name="pref_Appearance">Aussehen</string>
     <string name="pref_Appearance_summary">Farben | Flaggen | Menüleiste</string>
     <string name="pref_Colors">Farben</string>
-    <string name="pref_Colors_summary">Steuere die Farben der Squore Elemente</string>
+    <string name="pref_Colors_summary">Steuere die Farben der Squore Elemente.</string>
     <string name="pref_Avatars">Spieler Avatar</string>
-    <string name="pref_Avatars_summary">Small player image specified in feed</string>
-    <string name="pref_showAvatarOn">Zeige das Bild</string>
-    <string name="pref_hideAvatarForSameImage">Hide avatar if identical</string>
-    <string name="pref_CountryFlags">Countries/Flags</string>
-    <string name="pref_CountryFlags_summary">Control how country/flags are displayed</string>
+    <string name="pref_Avatars_summary">Im Feed angegebenes kleines Spielerbild.</string>
+    <string name="pref_showAvatarOn">Zeige denAvatar</string>
+    <string name="pref_hideAvatarForSameImage">Avatar ausblenden, wenn identisch</string>
+    <string name="pref_CountryFlags">Länder/Flaggen</string>
+    <string name="pref_CountryFlags_summary">Steuerung der Anzeige von Ländern bzw. Flaggen.</string>
     <string name="pref_showCountryAs">zeige das Land als</string>
     <string name="pref_hideFlagForSameCountry">Flaggen gleicher Nationalität verbergen</string>
     <string name="pref_prefetchFlags">Icons für Flaggen vorab laden</string>
     <string name="pref_prefetchFlags_summary">Benötigt zwischen 2 und 3 MB Speicherplatz.</string>
-    <string name="pref_TextSize_summary">Steuern Sie die Textgröße der Spielstandelemente</string>
+    <string name="pref_TextSize_summary">Steuere die Textgröße der Spielstandelemente</string>
     <string name="pref_Statistics">Winner / Fehler Statistiken</string>
     <string name="pref_Statistics_summary">Verhalten der App bei der Erfassung von Winnern bzw. Fehlern</string>
     <string name="pref_ColorPalette">Farbpalette</string>
@@ -129,8 +129,8 @@
     <string name="pref_ColorTargets_Texts">Texte</string>
     <string name="pref_textColorDetermination">Bestimmen der Textfarbe</string>
     <string name="pref_textColorDetermination_summary">Abhängig von der Hintergrundfarbe oder manuell.</string>
-    <string name="pref_PlayerColor">Player color</string>
-    <string name="pref_showPlayerColorOn">Farbe des Spielers</string>
+    <string name="pref_PlayerColor">Farbe des Spielers</string>
+    <string name="pref_showPlayerColorOn">Zeige die Farbe des Spielers</string>
     <string name="pref_showPlayerColorOn_Text">Einfärben des Textes anstelle der Schaltfläche.</string>
     <string name="pref_showPlayerColorOn_summary">Festlegen, bei welchen Elementen die gewählte Spielerfarbe angezeigt wird (z.B. als Hintergrund des Spielernamens).</string>
     <string name="pref_PlayerColorsNewMatch">Anfangsfarben der Spieler</string>
@@ -146,9 +146,9 @@
     <string name="pref_TextSizeServeSide">Aufschlagseite</string>
     <string name="pref_TextSizeScore">Spielstand</string>
     <string name="pref_TextSizeHistory">Historie</string>
-    <string name="pref_TextSizeScoreAsBigAsPossible">Text des Spielstandes so groß wie mäglich</string>
+    <string name="pref_TextSizeScoreAsBigAsPossible">Text des Spielstandes so groß wie möglich</string>
     <string name="pref_TextSizeScoreAsBigAsPossible_summary">Bei einigen Geräten verschwinden die Ziffern, wenn diese Option verwendet wird.</string>
-    <string name="pref_ActionBar">Action bar</string>
+    <string name="pref_ActionBar">Menüleiste</string>
     <string name="pref_showActionBar">Menüleiste anzeigen</string>
     <string name="pref_showActionBar_summary">Ohne Menüleiste steht mehr Platz zur Verfügung, um das Ergebnis in größerer Schrift darzustellen (Neustart erforderlich).</string>
     <string name="pref_showTextInActionBar">Text in Schaltflächen der Menüleiste anzeigen (z.B. RÜCKGÄNGIG)</string>
@@ -168,17 +168,17 @@
     <string name="pref_BackKeyBehaviour">Verhalten der \'Zurück\' Taste</string>
     <string name="pref_VolumeKeysBehaviour">Verhalten der \'Lautstärke\' Tasten</string>
     <string name="pref_VolumeKeysBehaviour_summary">\'Lauter\' erhöht die Punkte von Spieler A, \'Leiser\' die Punkte von Spieler B</string>
-    <string name="pref_VolumeKeysBehaviour_question">Do you want to use the volume buttons for entering the score with device in portrait orientation?\n(Option can be turned off again in \'Settings/Behaviour\')</string>
+    <string name="pref_VolumeKeysBehaviour_question">Sollen die Lautstärketasten für die Eingabe der Ergebnisse verwendet werden, wenn sich das Gerät im Hochformat befindet?\n (Die Option kann unter \'Einstellungen/Verhalten\' wieder deaktiviert werden)</string>
     <string name="pref_StartupAction">Aktion beim Starten</string>
     <string name="pref_StartupAction_summary">Diese Aktion wird automatisch ausgeführt, wenn die App gestartet wird.</string>
-    <string name="pref_changeSides">Changing Sides/Flipping players</string>
-    <string name="pref_changeSides_short">Change Sides</string>
-    <string name="pref_changeSides_summary">How to reflect/trigger change of sides on Spielstandanzeige</string>
-    <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape">Swap players when device is rotated 180 degrees</string>
-    <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary">Allows to swap players on screen by rotating the device, or showing score to players by flipping device forward towards players</string>
-    <string name="pref_swapPlayersBetweenGames">Swap players at the start of a new game</string>
-    <string name="pref_useChangeSidesFeature">Change sides feature</string>
-    <string name="pref_changeSidesWhen_GSM">When to swap players/teams</string>
+    <string name="pref_changeSides">Seiten / Spieler tauschen</string>
+    <string name="pref_changeSides_short">Seiten tauschen</string>
+    <string name="pref_changeSides_summary">Wie soll ein Seitenwechsel in der Spielstandanzeige angezeigt werden.</string>
+    <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape">Spieler tauschen, wenn das Gerät um 180 Grad gedreht wird</string>
+    <string name="pref_swapPlayersOn180DegreesRotationOfDeviceInLandscape_summary">Ermöglicht den Tausch der Spieler auf dem Bildschirm durch Drehen des Geräts oder die Anzeige des Spielstands für die Spieler durch Drehen des Geräts in Richtung der Spieler.</string>
+    <string name="pref_swapPlayersBetweenGames">Spieler zu Beginn eines neuen Spiels tauschen</string>
+    <string name="pref_useChangeSidesFeature">\'Seitenwechsel\' Feature</string>
+    <string name="pref_changeSidesWhen_GSM">Wann werden Spieler/Teams getauscht?</string>
     <string name="pref_swapPlayersBetweenGames__TennisPadel">Wechsle die Spieler nach jedem ungeraden Satz</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically">Satz-Details automatisch anzeigen</string>
     <string name="pref_showDetailsAtEndOfGameAutomatically__TennisPadel">Set-Details automatisch anzeigen</string>
@@ -188,7 +188,7 @@
     <string name="pref_recordRallyEndStatsAfterEachScore_summary">Dialog um nach jedem Punkt die Winner und Fehler pro Spieler zu erfassen.</string>
     <string name="pref_recordRallyEndStatsDetails">Zu erhebende Daten</string>
     <string name="pref_recordRallyEndStatsDetails_summary">Aufschlagseite (VH/RH), Schlagposition, Richtung des Balles, Flugbahn des Balles</string>
-    <string name="pref_showTips_no_more">Don\'t show \'Tips\' anymore</string>
+    <string name="pref_showTips_no_more">\'Tipps\' nicht noch einmal anzeigen</string>
     <string name="pref_useTossFeature">\'Seitenwahl\' Feature</string>
     <string name="pref_useTossFeature_summary">Entweder \'vorschlagen\', um die Seitenwahl vorzuschlagen, \‚automatisch\‘, um sie direkt zu Beginn des Spiels anzuzeigen oder \'nicht verwenden\'.</string>
     <string name="pref_useShareFeature">\'Teilen\' Feature</string>
@@ -206,7 +206,7 @@
     <string name="pref_officialAnnouncementsLanguage">Ansage Sprache</string>
     <string name="pref_officialAnnouncementsLanguage_summary">Sprache in der \'Ansagen\' vorgeschlagen werden sollen</string>
     <string name="pref_useTimersFeature">\'Timer\' Feature</string>
-    <string name="pref_MatchGameDuration">Satz-/Spieldauer</string>
+    <string name="pref_MatchGameDuration">Satz- und Spieldauer</string>
     <string name="pref_showMatchDurationChronoOn">\'Spieldauer\' anzeigen auf</string>
     <string name="pref_showLastGameDurationChronoOn">\'Satzdauer\' anzeigen auf</string>
     <string name="pref_showLastGameDurationChronoOn__TennisPadel">\'Set-Dauer\' anzeigen auf</string>
@@ -337,8 +337,8 @@
     <string name="pref_useFeedNameAsEventName_summary">Verwende den Namen des Feeds, aus dem das Spiel stammt, als Veranstaltungsnamen für dieses Spiel.</string>
     <string name="pref_useGroupNameAsEventData">Gruppenname als Name des Wettbewerbs</string>
     <string name="pref_useGroupNameAsEventData_summary">Verwende den Namen der Gruppe, aus der das Spiel ausgewählt wurde, als Namen des Wettbewerbs und der Runde für dieses Spiel.</string>
-    <string name="pref_feedPostUrl_not_set">You can control what matches appear here by switching Feed by pressing the \'Globe\' button. You can also add your own Feed by providing one or more URLs in the \'%1$s\' section of the \'%2$s\' screen. Consult the help pages for more info.</string>
-    <string name="posturl_tip">You can specify to what site the match result is posted. In cooperation with e.g. your squash clubs webmaster, match results can be made available online directly. Consult the help pages for more info.</string>
+    <string name="pref_feedPostUrl_not_set">Steuere, welche Treffer hier angezeigt werden, indem Du den Feed durch Drücken der \‚Weltkugel\‘ wechselst.\nDu kannst auch einen eigenen Feed hinzufügen, indem Sie eine oder mehrere URLs im Abschnitt \'%1$s\' des Bildschirms \'%2$s\' angibst.\nWeitere Informationen findest Du auf den Hilfeseiten.</string>
+    <string name="posturl_tip">Gib an, auf welcher Website das Spielergebnis veröffentlicht werden soll.\nIn Zusammenarbeit mit einem Webmaster können Spielergebnisse direkt online verfügbar gemacht werden.\nWeitere Informationen findest Du auf den Hilfeseiten.</string>
     <string name="pref_readContactsForAutoCompletion">Kontakte für die automatische Vervollständigung verwenden</string>
     <string name="pref_readContactsForAutoCompletion_summary">Lesen der Namen aus den Kontakten und Verwendung für die Funktion \'Auto-Vervollständigung\' bei der Eingabe von Spielernamen.</string>
     <string name="pref_readContactsForAutoCompletion_max">Maximale Anzahl der Kontakte für die Auto-Vervollständigung</string>
@@ -353,7 +353,7 @@
     <string name="pref_onlyForContactGroups_summary">Nur Namen meiner Kontakte lesen, die sich in der gewählten Gruppe befinden.</string>
     <string name="pref_suggestToPostResult">Vorschlagen, das Ergebnis zu veröffentlichen</string>
     <string name="pref_suggestToPostResult_summary">Vorschlagen, das Spielergebnis zu posten, wenn ein Spiel beendet ist.\nWenn diese Option daktiviert ist, kannst Du ein Ergebnis über \'Ergebnis posten\' veröffentlichen.</string>
-    <string name="pref_showCompletedMatchesFromFeed">Show completed matches</string>
+    <string name="pref_showCompletedMatchesFromFeed">Abgeschlossene Spiele anzeigen</string>
     <string name="pref_VisibilityOfNewTournaments">Verfügbare Turniere</string>
     <string name="pref_tournamentWasBusy_DaysBack">Turnierende</string>
     <string name="pref_tournamentWasBusy_DaysBack_summary">Anzeigen, wenn das Turnier vor maximal X Tagen endete.</string>
@@ -380,7 +380,7 @@
     <string name="pref_mailResultTo_summary">Die Mail-Adresse, die vorausgefüllt wird, wenn die Menüoption \‚Mail Resultat\‘ gewählt wird.</string>
     <string name="pref_mailFullScoringSheet">Mail mit ausführlichem Spielergebnis</string>
     <string name="pref_mailFullScoringSheet_summary">Die erstellte Mail enthält alle Details des Resultates.</string>
-    <string name="pref_mailResultTo_not_set">You can set a default mail recipient in the \'%1$s\' screen of \'%2$s\'</string>
+    <string name="pref_mailResultTo_not_set">Standard-Mail-Empfänger auf dem Bildschirm \‚%1$s\‘ von \‚%2$s\‘ festlegen.</string>
     <string name="pref_Handicap">Handicap</string>
     <string name="pref_allowNegativeHandicap">Negatives Handicap freischalten</string>
     <string name="pref_allowNegativeHandicap_summary">Erlaube negative Werte als Handicap.</string>
@@ -395,15 +395,15 @@
 
     <string name="pref_FCM">FCM (Firebase Cloud Messaging)</string>
     <string name="FCM_Info">FCM - Info</string>
-    <string name="FCM_Service">Ensure Firebase Cloud messages can be used and interpreted to e.g. change the score</string>
-    <string name="pref_FCMEnabled">FCM - Enable</string>
-    <string name="pref_showToastMessageForEveryReceivedFCMMessage">Show toast for received FCM message</string>
-    <string name="pref_showToastMessageForEveryReceivedFCMMessage_summary">Show a toast message for every received FCM message</string>
-    <string name="pref_FCMEnabled_summary">Allow changing the score on the device by accessing certain URLs. Once enabled use Menu > Show > FCM - Info</string>
+    <string name="FCM_Service">Sicherstellen, dass Firebase Cloud-Meldungen verwendet und interpretiert werden können, um z. B. den Spielstand zu ändern</string>
+    <string name="pref_FCMEnabled">FCM - Aktivieren</string>
+    <string name="pref_showToastMessageForEveryReceivedFCMMessage">Toast für empfangene FCM-Nachricht anzeigen</string>
+    <string name="pref_showToastMessageForEveryReceivedFCMMessage_summary">Toast für jede empfangene FCM Nachricht anzeigen.</string>
+    <string name="pref_FCMEnabled_summary">Erlaubt die Änderung des Spielstands auf dem Gerät durch Zugriff auf bestimmte URLs. Nach der Aktivierung Verwendung im Menü > Anzeigen > FCM - Info.</string>
 <!-- <string name="pref_FCMDeviceId">FCM - Device Unique Id</string> -->
-    <string name="pref_FCMDeviceId_summary">This ID is used to uniquely identify this device. It will be part of the FCM URL (URL that can be used to change the score on this device)</string>
+    <string name="pref_FCMDeviceId_summary">Diese ID wird zur eindeutigen Identifizierung dieses Geräts verwendet.\nSie ist Teil der FCM-URL, die zum Ändern des Spielstands auf diesem Gerät verwendet werden kann.</string>
 
-    <string name="pref_DeviceId_use_new__x">Use new: %1$s</string>
+    <string name="pref_DeviceId_use_new__x">neue Geräte-ID: %1$s</string>
 
     <string name="pref_LiveScorePrefs_dialog">Optionen anpassen:\nSetze \'Teilen\' auf \'automatisch\' und \'Aktion\' auf \'Spiel-Details nach jedem Punkt\', um die Unterstützung von Live-Score zu optimieren.</string>
     <string name="pref_showCastButtonInActionBar">ChromeCast Schaltfläche in der Menüleiste anzeigen</string>
@@ -419,22 +419,22 @@
     <string name="pref_BTSync_showFullScreenTimer">Zeige den Timer als Vollbild auf dem \'Slave\'</string>
 
     <string name="pref_Category_BlueToothLE">Bluetooth LE</string>
-    <string name="pref_UseBluetoothLE">Use Bluetooth LE</string>
-    <string name="pref_UseBluetoothLE_Summary">Allow controlling the score by connected Bluetooth LE devices like D-Score wristbands</string>
-    <string name="pref_ShowFeedBackOnBLEButtonsPressedInfoMessages">Show feedback messages</string>
-    <string name="pref_ShowFeedBackOnBLEButtonsPressedInfoMessages_summary">Show small messages about buttons being pressed/to be pressed at bottom of the screen</string>
-    <string name="pref_NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired">Seconds before notifying BLE Device</string>
-    <string name="pref_NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_summary">Number of seconds before a signal is sent to the ble device of the player/team to confirm score (making the device vibrate shortly). Only when scoring with one BLE devices per player/team with \'Score confirmation\'</string>
-    <string name="pref_IgnoreAccidentalDoublePress_ThresholdInMilliSeconds">Ignore accidental double press click threshold</string>
-    <string name="pref_IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_summary">If a second BLE device click is received from the same button within this number of milliseconds, the second signal will be ignored</string>
-    <string name="pref_BluetoothLE_Peripheral1">Peripheral 1</string>
-    <string name="pref_BluetoothLE_Peripheral2">Peripheral 2</string>
-    <string name="pref_BluetoothLE_Peripheral_Summary">Unique name or MAC address of Peripheral</string>
-    <string name="pref_BluetoothLE_Config">Config to use</string>
-    <string name="pref_BluetoothLE_Config_Summary">Services and Characteristics of device, button logic</string>
-    <string name="pref_BluetoothLE_Devices">BLE Devices</string>
+    <string name="pref_UseBluetoothLE">Bluetooth LE benutzen</string>
+    <string name="pref_UseBluetoothLE_Summary">Ermöglicht die Steuerung des Spielstands durch verbundene Bluetooth LE-Geräte wie D-Score Armbänder.</string>
+    <string name="pref_ShowFeedBackOnBLEButtonsPressedInfoMessages">Rückmeldungen anzeigen</string>
+    <string name="pref_ShowFeedBackOnBLEButtonsPressedInfoMessages_summary">Kleine Meldungen über gedrückte bzw. die zu drückende Tasten am unteren Rand des Bildschirms anzeigen.</string>
+    <string name="pref_NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired">Bestätigung in Sekunden (BLE-Gerät)</string>
+    <string name="pref_NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_summary">Anzahl der Sekunden, bevor ein Signal an das BLE-Gerät des Spielers/Teams gesendet wird, um den Spielstand zu bestätigen, wodurch das Gerät kurz vibriert.\nNur bei der Punktevergabe mit einem BLE-Gerät pro Spieler/Team mit \'Score confirmation\'.</string>
+    <string name="pref_IgnoreAccidentalDoublePress_ThresholdInMilliSeconds">Versehentliche Doppelklick-Schwelle</string>
+    <string name="pref_IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_summary">Wenn innerhalb dieser Anzahl von Millisekunden ein zweiter BLE-Geräteklick von derselben Schaltfläche empfangen wird, wird das zweite Signal ignoriert.</string>
+    <string name="pref_BluetoothLE_Peripheral1">Peripheriegerät 1</string>
+    <string name="pref_BluetoothLE_Peripheral2">Peripheriegerät 2</string>
+    <string name="pref_BluetoothLE_Peripheral_Summary">Eindeutiger Name oder MAC-Adresse des Peripheriegeräts.</string>
+    <string name="pref_BluetoothLE_Config">Gerätekonfiguration</string>
+    <string name="pref_BluetoothLE_Config_Summary">Dienste und Merkmale des Geräts, Tastenlogik.</string>
+    <string name="pref_BluetoothLE_Devices">BLE Geräte</string>
 
-    <string name="for_this_to_take_effect_a_restart_is_required">For this to take effect a restart is required</string>
+    <string name="for_this_to_take_effect_a_restart_is_required">Damit die Änderungen wirksam werden, ist ein Neustart erforderlich</string>
     <string name="pref_reset_title">auf Standardwerte zurücksetzen</string>
     <string name="pref_reset_message">Alle Werte auf ihre Standardwerte zurücksetzen?</string>
     <string name="pref_reset_all">ZURÜCKSETZEN</string>
@@ -443,8 +443,8 @@
     <string name="pref_export_prefs">Einstellungen exportieren</string>
 
     <!-- TT RL -->
-    <string name="pref_numberOfServiceCountUpOrDown">Number of serves. Count</string>
-    <string name="pref_numberOfServiceCountUpOrDown_summary">Down: number of serves left. Up: consecutive serves to be performed</string>
-    <string name="number_of_serves_per_player">Number of serves per player</string>
+    <string name="pref_numberOfServiceCountUpOrDown">Anzahl der Aufschläge. Zählen</string>
+    <string name="pref_numberOfServiceCountUpOrDown_summary">Hoch: Anzahl der verbleibenden Aufschläge.\nRunter: Aufeinander folgende Aufschläge, die durchgeführt werden.</string>
+    <string name="number_of_serves_per_player">Anzahl der Aufschläge pro Spieler</string>
 
 </resources>

@@ -9,7 +9,7 @@
     <string name="yes_let_abbreviation">LET</string>
     <string name="stroke_abbreviation">Ball an</string>
     <string name="conduct_warning_abbreviation">W</string>
-    <string name="conduct_stroke_abbreviation">S-P</string>
+    <string name="conduct_stroke_abbreviation">S-PT</string>
     <string name="conduct_game_abbreviation">S-SA</string>
     <string name="conduct_match_abbreviation">S-SP</string>
     <string name="power_play_won_abbreviation">PPG</string>
@@ -24,8 +24,8 @@
 
     <string name="sb_did_you_mean_conduct_game">Falls es sich um einen \'Strafsatz\' handelt, dann \'Abbrechen\', anschließend lange auf den Namen des schuldigen Spielers klicken und dann eine entsprechende Auswahl treffen.</string>
 
-    <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s-All - Receiver %2$s chooses to play to %3$s or to %4$s</string>
-    <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s-All - Receiver %2$s chooses winning score</string>
+    <string name="sb_tiebreak_receiver_chooses_one_additional_or_not">%1$s beide - Rückschläger %2$s entscheidet bis %3$s oder bis %4$s zu spielen</string>
+    <string name="sb_tiebreak_receiver_chooses_winning_score">%1$s beide - Rückschläger %2$s entscheidet über den Endpunktestand</string>
 
     <string name="sb_official_rules__Squash">Offizielle Squash Regeln</string>
     <string name="sb_possible_conducts">mögliche Strafen</string>

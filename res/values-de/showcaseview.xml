@@ -31,10 +31,10 @@
         \n- das Ergebnis auf einer Webseite veröffentlicht wird
         \n- das Resultat als Mail gesendet wird
       </string>
-    <string name="scv_toggle_action_bar">If you want to __hide the action bar__ (e.g. to maximize screen usage, or for aesthetic reasons)
-        you can easily do so: simply long-click on the __games scores__. Another long-click will make it visible again.
-        \n
-        \nNote that if you hide the action bar, the \'Undo by swiping\' is still available!
+    <string name="scv_toggle_action_bar">Wenn die Menüleiste ausblendet werden soll (z.B. um die Bildschirmnutzung zu maximieren) kann das folgendermassen ermöglicht werden:
+        \n- Lange auf den __Spielstand__ klicken.
+        \n- Ein weiterer langer Klick macht sie wieder sichtbar.
+        \n- Die Funktion \'Rückgängig machen durch Wischen\' immer noch verfügbar, auch wenn Sie die Menüleiste ausgeblendet ist.
     </string>
     <string name="scv_few_more_good_to_knows">Gut zu wissen:
         \n

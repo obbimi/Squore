@@ -1,126 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="ble_start_scan">Start scan</string>
-    <string name="ble_stop_scan">Stop scan</string>
-    <string name="ble_scanning">Scanning</string>
+    <string name="ble_start_scan">Start Scannen</string>
+    <string name="ble_stop_scan">Stopp Scannen</string>
+    <string name="ble_scanning">Scannen</string>
 
-    <string name="ble_change_sides_automated_in_ble_mode">Change sides automated in BLE mode</string>
-    <string name="ble_select_devices_to_use_for_scoring">Select devices you want to use for scoring</string>
-    <string name="ble_connect_and_verify_s">Connect to devices and verify</string>
+    <string name="ble_change_sides_automated_in_ble_mode">Automatischer Seitenwechsel im BLE-Modus</string>
+    <string name="ble_select_devices_to_use_for_scoring">Geräte auswählen, die für den Punktestand verwenden werden</string>
+    <string name="ble_connect_and_verify_s">Mit Geräten verbinden und überprüfen</string>
     <plurals name="ble_connect_and_verify">
-        <item quantity="one">Connect to device and verify</item>
-        <item quantity="other">Connect to devices and verify</item>
+        <item quantity="one">Mit einem Gerät verbinden und überprüfen</item>
+        <item quantity="other">Mit Geräten verbinden und überprüfen</item>
     </plurals>
-    <string name="ble_rename_device">Rename device</string>
-    <string name="ble_cav_poke_device_x">Vibrate device \n%1$s\n configured to be operated by\n%2$s</string>
-    <string name="ble_cav_poke_device_both">Vibrate device \n%1$s\n configured to maintain score for both</string>
+    <string name="ble_rename_device">Gerät umbenennen</string>
+    <string name="ble_cav_poke_device_x">Vibration des Gerätes \n%1$s\n, das von Gerät\n%2$s\ngesteuert wird</string>
+    <string name="ble_cav_poke_device_both">Vibration des Gerätes \n%1$s\n, das so konfiguriert ist, die Punkte an beiden Geräten zu bestimmen</string>
     <plurals name="ble_start_scoring_with_devices">
         <item quantity="zero">@string/ble_select_devices_to_use_for_scoring</item> <!-- never actually use by android -->
-        <item quantity="one">Start scoring for both players with single device</item>
-        <item quantity="other">Start scoring with both selected devices</item>
+        <item quantity="one">Start der Punktevergabe für beide Spieler mit einem einzigen Gerät</item>
+        <item quantity="other">Start der Punktevergabe mit beiden ausgewählten Geräten</item>
     </plurals>
-    <string name="ble_message_x_ignored">Message from BLE ignored (%1$s): %2$s</string>
-    <string name="ble_battery_level">BLE Battery Level of %2$s: %1$d %%</string> <!-- %% is 'escaped' percentage character -->
-    <string name="ble_request_batterylevel">Request battery level</string>
-    <string name="ble_waiting_initiate_score_change_message">Waiting for initiate-score-change by pressing %1$s by either player/team</string>
-    <string name="ble_score_cancelled_by_pressing_y">Score cancelled by pressing %1$s</string>
-    <string name="ble_score_confirmed_by_pressing_y">Score confirmed by pressing %1$s</string>
-    <string name="ble_score_cancelled_via_gui">BLE Score to be confirmed cancelled in GUI</string>
-    <string name="ble_score_cancelled_by_opponent_x_by_pressing_y">Score cancelled by opponent %1$s by pressing %2$s</string>
-    <string name="ble_score_cancelled_by_scoring_team_x_by_pressing_y">Score cancelled by scoring team %1$s by pressing %2$s</string>
-    <string name="ble_score_cancelled_by_initiator_x_by_pressing_y">Score cancelled by initiator %1$s by pressing %2$s</string>
-    <string name="ble_score_confirmed_by_opponent_x_by_pressing_y">Score confirmed by opponent %1$s by pressing %2$s</string>
-    <string name="ble_score_confirmed_by_scoring_team_x_by_pressing_y">Score confirmed by scoring team %1$s by pressing %2$s</string>
-    <string name="ble_player_x_confirm_score_for_y_by_pressing_z">%1$s, confirm score for %2$s by pressing %3$s</string>
-    <string name="ble_player_x_confirm_you_scored_by_pressing_y">%1$s, confirm you scored by pressing %2$s</string>
-    <string name="ble_pressed_X__confirm_score_for_Y_by_pressing_Z">%1$s BLE button pressed: Confirm score for %2$s by pressing %3$s</string>
-    <string name="ble_signalled_x_to_confirm">Signalled %1$s to confirm</string>
-    <string name="ble_score_for_X_changed_by_Y_ble_button_of_Z">Score for %1$s changed by %2$s BLE button of %3$s</string>
-    <string name="ble_score_for_X_changed_by_Y_ble_button_of_Z_ignored__assume_accidental_double_click">IGNORED: Score change for %1$s by %2$s button of %3$s. Assuming it was an accidental double click (threshold : %4$d ms)</string>
-    <string name="ble_undo_last_ignored__assume_accidental_double_click">IGNORED: Undo last. Assuming it was an accidental double click (threshold : %1$d ms)</string>
-    <string name="ble_last_score_for_X_undone_by_ble">Last score for %1$s undone by BLE of %1$s</string>
-    <string name="ble_last_score_for_X_can_not_be_undone_by_ble_of_Y">Last score for %1$s can not be undone by BLE of %2$s</string>
-    <string name="ble_score_for_X_changed_by_Y_ble_button">Score for %1$s changed by %2$s BLE button</string>
+    <string name="ble_message_x_ignored">Meldung von BLE wird ignoriert (%1$s): %2$s</string>
+    <string name="ble_battery_level">BLE Batteriestand von %2$s: %1$d %%</string> <!-- %% is 'escaped' percentage character -->
+    <string name="ble_request_batterylevel">Batteriestand abfragen</string>
+    <string name="ble_waiting_initiate_score_change_message">Warten auf eine Spielstand-Änderung durch Drücken von %1$s durch einen der beiden Spieler/Teams</string>
+    <string name="ble_score_cancelled_by_pressing_y">Spielstand durch Drücken von %1$s abgebrochen</string>
+    <string name="ble_score_confirmed_by_pressing_y">Spielstand durch Drücken von %1$s bestätigt</string>
+    <string name="ble_score_cancelled_via_gui">BLE Spielstand auf der Benutzeroberfläche abgebrochen</string>
+    <string name="ble_score_cancelled_by_opponent_x_by_pressing_y">Spielstand vom Gegner %1$s abgebrochen, durch Drücken von %2$s</string>
+    <string name="ble_score_cancelled_by_scoring_team_x_by_pressing_y">Spielstand von Team %1$s abgebrochen, durch Drücken von %2$s</string>
+    <string name="ble_score_cancelled_by_initiator_x_by_pressing_y">Spielstand vom initiator %1$s abgebrochen, durch Drücken von %2$s</string>
+    <string name="ble_score_confirmed_by_opponent_x_by_pressing_y">Spielstand vom Gegner %1$s bestätigt, durch Drücken von %2$s</string>
+    <string name="ble_score_confirmed_by_scoring_team_x_by_pressing_y">Spielstand von Team %1$s bestätigt, durch Drücken von %2$s</string>
+    <string name="ble_player_x_confirm_score_for_y_by_pressing_z">%1$s, bestätigt den Spielstand für %2$s, durch Drücken von %3$s</string>
+    <string name="ble_player_x_confirm_you_scored_by_pressing_y">%1$s, bestätige Deinen Punkt %2$s</string>
+    <string name="ble_pressed_X__confirm_score_for_Y_by_pressing_Z">%1$s BLE Schaltfläche bestätigt: Spielstand für %2$s, durch Drücken von %3$s</string>
+    <string name="ble_signalled_x_to_confirm">Signalisiert %1$s zur Bestätigung</string>
+    <string name="ble_score_for_X_changed_by_Y_ble_button_of_Z">Spielstand für %1$s geändert durch %2$s BLE Schaltfläche von %3$s</string>
+    <string name="ble_score_for_X_changed_by_Y_ble_button_of_Z_ignored__assume_accidental_double_click">IGNORIERT: Punkteänderung für %1$s durch %2$s Schaltfläche von %3$s. Es wurde angenommen, es war ein versehentlicher Doppelklick (Schwellenwert: %4$d ms)</string>
+    <string name="ble_undo_last_ignored__assume_accidental_double_click">IGNORIERT: letzte Änderung. Es wurde angenommen, es war ein versehentlicher Doppelklick (Schwellenwert: %1$d ms)</string>
+    <string name="ble_last_score_for_X_undone_by_ble">Rückgängig gemachte Änderung des letzten des Spielstandes für %1$s des BLE von %1$s</string>
+    <string name="ble_last_score_for_X_can_not_be_undone_by_ble_of_Y">Letzter Punktestand für %1$s kann nicht durch BLE von %2$s rückgängig gemacht werden</string>
+    <string name="ble_score_for_X_changed_by_Y_ble_button">Punktzahl für %1$s geändert durch %2$s BLE Taste</string>
     <plurals name="ble_ready_for_scoring_with_devices">
-        <item quantity="one">Ready for scoring with the BLE device</item>
-        <item quantity="other">Ready for scoring with both BLE devices</item>
+        <item quantity="one">Bereit zum Scoring mit dem BLE Gerät</item>
+        <item quantity="other">Bereit zum Scoring mit beiden BLE Geräten</item>
     </plurals>
-    <string name="ble_only_one_of_two_devices_connected">Only one of 2 devices connected</string>
-    <string name="ble_Lost_connection_to_a_device">Lost connection to a BLE device</string>
+    <string name="ble_only_one_of_two_devices_connected">Nur eins von zwei Geräten ist verbunden</string>
+    <string name="ble_Lost_connection_to_a_device">Verbindung zu einem BLE Geräten verloren</string>
     <plurals name="ble_connecting_to_devices">
-        <item quantity="one">Connecting to BLE device…</item>
-        <item quantity="other">Connecting to BLE devices…</item>
+        <item quantity="one">Verbinden mit BLE Gerät…</item>
+        <item quantity="other">Verbinden mit BLE Geräten…</item>
     </plurals>
-    <string name="ble_permission_not_granted">The app has not been granted the permission to find nearby devices…</string>
-    <string name="ble_active_config_not_suitable_for_x_devices">Chosen BLE config not suitable to work with %1$s device(s)</string>
-    <string name="ble_devices">Devices</string>
-    <string name="ble_devices_verify">Verify Connected Devices</string>
-    <string name="ble_shortly_vibrate_selected_connected_devices">Shortly vibrate selected connected devices</string>
-    <string name="ble_single_device">Single Device</string>
-    <string name="ble_swap_devices">Swap\u00A0Devices</string>
-    <string name="ble_rescan_for_devices">Re-scan for devices</string>
+    <string name="ble_permission_not_granted">Die App hat keine Erlaubnis erhalten, Geräte in der Nähe zu suchen…</string>
+    <string name="ble_active_config_not_suitable_for_x_devices">Die gewählte BLE Konfiguration ist nicht für die Verwendung mit dem Gerät %1$s geeignet</string>
+    <string name="ble_devices">Geräte</string>
+    <string name="ble_devices_verify">Verbundene Geräte überprüfen</string>
+    <string name="ble_shortly_vibrate_selected_connected_devices">Kurzes Vibrieren ausgewählter verbundener Geräte</string>
+    <string name="ble_single_device">Einzelnes Gerät</string>
+    <string name="ble_swap_devices">Geräte vertauschen</string>
+    <string name="ble_rescan_for_devices">Erneut nach Geräten suchen</string>
 
-    <string name="bt_disconnect">Disconnect</string>
-    <string name="bt_pull_or_push">Choose</string>
-    <string name="bt_pull">Pull</string>
-    <string name="bt_push">Push</string>
-    <string name="bt_pull_in_match_from_device_x_or_push_to">Pull match from device %1$s in (to display on this device), or
-        push match from this device to %1$s (to display there) ?</string>
+    <string name="bt_disconnect">Verbindung trennen</string>
+    <string name="bt_pull_or_push">Auswählen</string>
+    <string name="bt_pull">Ziehen</string>
+    <string name="bt_push">Schieben</string>
+    <string name="bt_pull_in_match_from_device_x_or_push_to">Spiel von Gerät %1$s "ziehen" (zur Anzeige auf diesem Gerät) oder Spiel von diesem Gerät nach %1$s "schieben" (zur Anzeige dort)?</string>
 
-    <string name="bt_match_received_by_X">Match received by %1$s</string>
+    <string name="bt_match_received_by_X">Spiel empfangen von %1$s</string>
     <string name="bt_bluetooth_mirror">Spielstand spiegeln (Bluetooth)</string>
 
     <string name="bt_mqtt_mirror">Spielstand spiegeln (MQTT)</string>
 
-    <string name="bt_connection_to_device_X_was_lost">Bluetooth connection to %s was lost</string>
-    <string name="bt_connected_to_device_X">Connected to device %s</string>
-    <string name="bt_already_connected_to_X">Already connected to %s</string>
+    <string name="bt_connection_to_device_X_was_lost">Bluetooth-Verbindung zu %s wurde unterbrochen</string>
+    <string name="bt_connected_to_device_X">Verbunden mit Gerät %s</string>
+    <string name="bt_already_connected_to_X">Bereits mit %s verbunden</string>
 
-    <string name="bt_app_not_allowed_bluetooth_permission">The app seems not to have your permission to use bluetooth</string>
-    <string name="bt_app_not_allowed_bluetooth_permission_info">Please allow this manually</string>
+    <string name="bt_app_not_allowed_bluetooth_permission">Die App scheint keine Erlaubnis zur Verwendung von Bluetooth zu haben</string>
+    <string name="bt_app_not_allowed_bluetooth_permission_info">Bitte erlaube die Verwendung von Bluetooth manuell</string>
 
-    <string name="bt_unable_to_connect_device_X">Unable to connect device %s</string>
-    <string name="bt_unable_to_connect_device_info"><![CDATA[<html>Ensure that on selected target device %1$s
+    <string name="bt_unable_to_connect_device_X">Gerät %s kann nicht verbunden werden</string>
+    <string name="bt_unable_to_connect_device_info"><![CDATA[<html>Sicherstellen, dass auf dem ausgewählten Zielgerät %1$s
     <ul>
-    <li>bluetooth is turned on</li>
-    <li>this device is (still) listed as paired device</li>
-    <li>%2$s is running</li>
-    <li>%2$s has been granted the \'Location\' permission (e.g. by starting \'Mirror Score\' from the other device)</li>
+    <li>Bluetooth angeschaltet ist</li>
+    <li>dieses Gerät (noch) als gekoppeltes Gerät aufgeführt ist</li>
+    <li>%2$s läuft</li>
+    <li>%2$s die Standortgenehmigung (z. B. durch Starten von \‚Spielstand spielgeln\‘ vom anderen Gerät aus) erhalten hat</li>
     </ul>
 </html>]]></string>
 
     <string name="bt_select_device">Gerät auswählen</string>
     <string name="bt_select_device_for_scoreboard_mirroring">Gerät auswählen, um die Spielstandanzeige zu spiegeln</string>
 
-    <string name="bt_no_bluetooth_on_device">No bluetooth on this device</string>
-    <string name="bt_no_bluetooth_on_device_info">Mirroring score on this device to other device (or vice versa) via bluetooth not possible.</string>
+    <string name="bt_no_bluetooth_on_device">Kein Bluetooth auf diesem Gerät verfügbar</string>
+    <string name="bt_no_bluetooth_on_device_info">Spiegelung des Spielstands auf diesem Gerät auf ein anderes Gerät (oder umgekehrt) über Bluetooth nicht möglich.</string>
 
-    <string name="bt_bluetooth_turning_on_elipses">Turning on Bluetooth …</string>
-    <string name="bt_bluetooth_has_been_turned_on">Bluetooth has been turned on</string>
-    <string name="bt_bluetooth_turning_off_elipses">App %s turned on bluetooth. Turning off bluetooth now…</string>
+    <string name="bt_bluetooth_turning_on_elipses">Bluetooth einschalten…</string>
+    <string name="bt_bluetooth_has_been_turned_on">Bluetooth wurde eingeschaltet</string>
+    <string name="bt_bluetooth_turning_off_elipses">Die App %s hat Bluetooth eingeschaltet. Bluetooth jetzt ausschalten…</string>
 
     <string name="bt_bluetooth_turned_off">Bluetooth ist ausgeschaltet</string>
     <string name="bt_bluetooth_turned_off_info">Bluetooth muss eingeschaltet werden, um die Anzeige auf einem anderen Gerät zu spiegeln.</string>
 
-    <string name="bt_no_paired">No paired devices</string>
-    <string name="bt_how_to_pair_info"><![CDATA[<html>You need to pair this device with another device running %1$s to be able to mirror the Spielstandanzeige screen.
-    Typically this is done by performing steps along the way of:
+    <string name="bt_no_paired">Keine gekoppelten Geräte</string>
+    <string name="bt_how_to_pair_info"><![CDATA[<html>Du musst dieses Gerät mit einem anderen Gerät koppeln, auf dem %1$s läuft, um die Spielstandanzeige spiegeln zu können.
+    Dies geschieht i.d.R. folgendermassen:
 <ul>
-    <li>on both devices, open the bluetooth settings screen</li>
-    <li>ensure that on the target device
+    <li>Öffnen der Bluetooth-Einstellungen auf beiden Geräten</li>
+    <li>Sicherstellen, dass auf dem Zielgerät
         <ul>
-            <li>bluetooth is turned \'On\'</li>
-            <li>the device is (temporary) visible to other devices</li>
+            <li>Bluetooth eingeschaltet ist</li>
+            <li>das Gerät (vorübergehend) für andere Geräte sichtbar ist</li>
         </ul>
     </li>
-    <li>on this device select \'Pair new device\'</li>
-    <li>the target device should show up under \'Available Devices\': select it</li>
-    <li>Confirm the pairing on both devices</li>
+    <li>Wähle auf diesem Gerät \‚Neues Gerät koppeln\‘.</li>
+    <li>Das Zielgerät sollte unter \‚Verfügbare Geräte\‘ angezeigt werden: auswählen</li>
+    <li>Bestätigedie Kopplung auf beiden Geräten</li>
 </ul>
 </html>]]></string>
 
-    <string name="bt_no_appropriate_paired_devices_found">No appropriate paired devices found</string>
+    <string name="bt_no_appropriate_paired_devices_found">Keine geeigneten gekoppelten Geräte gefunden</string>
     <!--<string name="bt_no_appropriate_paired_devices_found_info">This device is only paired with devices that do not support mirroring screens. Please pair this devices with a phone or tablet.</string>-->
 
 </resources>
