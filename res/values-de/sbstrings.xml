@@ -126,9 +126,9 @@
     <string name="total_of_x_games__play_remaining_y_games">Da \'Alle-von-%1$d-Sätzen\' gespielt wird, werden auch die restlichen %2$d Sätze gespielt.</string>
     <string name="total_of_x_games__play_remaining_last_game">Da \'Alle-von-%1$d-Sätzen\' gespielt wird, wird der letzte Satz auch noch gespielt.</string>
     <string name="total_of_x_games_to_y">Alle von %1$s Sätzen bis %2$s</string>
-    <string name="total_of_x_games_to_y_1">Total of</string>
+    <string name="total_of_x_games_to_y_1">Alle von</string>
 
-    <string name="best_of_x_games_to_y_1">Alle-von</string>
+    <string name="best_of_x_games_to_y_1">Best of</string>
     <string name="best_of_x_games_to_y_2__Default">Satz bis</string>
     <string name="lbl_court__Default">Court</string>
 
