@@ -30,8 +30,8 @@
         <item>Spiele wie üblich - TieBreak bis 10</item>
         <item>Keine Spiele - Match TieBreak bis 7</item>
         <item>Keine Spiele - Match TieBreak bis 10</item>
-        <item>Spiele bis 12 - If equal, TieBreak bis 7</item>
-        <item>Spiele bis 12 - If equal, TieBreak bis 10</item>
+        <item>Spiele bis 12 - bei Gleichstand, TieBreak bis 7</item>
+        <item>Spiele bis 12 - bei Gleichstand, TieBreak bis 10</item>
         <item>Kein Tiebreak</item>
     </string-array>
 

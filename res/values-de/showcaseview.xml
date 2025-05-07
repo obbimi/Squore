@@ -16,11 +16,11 @@
         \n  oder
         \n- die Seitenwahl der Spieler einzutragen
     </string>
-    <string name="scv_big_buttons">Drücken der großen Schaltflächen erhöht den Punktestand des jeweiligen Spieler.
+    <string name="scv_big_buttons">Drücken der großen Schaltflächen erhöht den Punktestand des jeweiligen Spielers.
         \nDie Schaltflächen können jederzeit betätigt werden, um den Punktestand zu ändern, auch wenn etwaige Popup-Fenster (Timer, Seitenwahl) angezeigt werden.
         \nDie Popup-Fenster werden dann automatisch ausgeblendet.
         </string>
-    <string name="scv_undo_last">"Wenn Du versehentlich einen Punkt für den falschen Spieler eingegeben hast, kannst Du dies mit der Schaltfläche \'Rückgängig\' korrigieren.
+    <string name="scv_undo_last">"Wenn Du versehentlich einen Punkt für den falschen Spieler eingegeben hast, kannst Du dies mit der Schaltfläche \'RÜCKGÄNGIG\' korrigieren. Die Schaltfläche kann auch mehrmals hintereinander betätigt werden, um mehrere Aktionen rückgängig zu machen.
         \nEine weitere Möglichkeit, die Punkteänderung rückgängig zu machen, besteht darin, mit dem Finger über die Schaltfläche zu streichen, die versehentlich erhöht wurde.
     </string>
     <string name="scv_share_button">Diese Schaltfläche erscheint nach Ende des Spieles. Sie ermöglicht das Teilen des Resultats.

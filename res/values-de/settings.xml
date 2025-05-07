@@ -21,7 +21,7 @@
     <string name="pref_Category_Others">Sonstiges</string>
     <string name="pref_Category_Live_Score_ChromeCast">Live Score / ChromeCast / MQTT / Spiegeln per Bluetooth</string>
     <string name="pref_Category_ChromeCast">ChromeCast</string>
-    <string name="pref_Category_BlueToothSync">BlueTooth Mirror</string>
+    <string name="pref_Category_BlueToothSync">Spiegeln per BlueTooth</string>
     <string name="pref_Category_Directory_for_import_export">Verzeichnis für Import und Export</string>
     <string name="pref_Category_Contacts">Kontakte</string>
     <string name="pref_Category_Event">Veranstaltung</string>
@@ -85,11 +85,11 @@
     <string name="pref_BehaviourConvenience">Komfort</string>
     <string name="pref_BehaviourOfficial">Für den offiziellen Gebrauch</string>
     <string name="pref_Sharing">Teilen</string>
-    <string name="pref_Sharing_summary">Teilen per Facebook, SMS oder Mail</string>
+    <string name="pref_Sharing_summary">Teilen per Facebook, SMS oder Mail.</string>
 
     <!-- Speech -->
     <string name="pref_Speech">Sprachausgabe</string>
-    <string name="pref_Speech_summary">Ansage des Spielstands über Lautsprecher</string>
+    <string name="pref_Speech_summary">Ansage des Spielstands über Lautsprecher.</string>
     <string name="pref_speechPitch">Tonhöhe </string>
     <string name="pref_speechPitch_summary">Kleinere Werte für eine geringere Tonhöhe (0–100).</string>
     <string name="pref_speechRate">Rate</string>
@@ -122,7 +122,7 @@
     <string name="pref_prefetchFlags_summary">Benötigt zwischen 2 und 3 MB Speicherplatz.</string>
     <string name="pref_TextSize_summary">Steuere die Textgröße der Spielstandelemente</string>
     <string name="pref_Statistics">Winner / Fehler Statistiken</string>
-    <string name="pref_Statistics_summary">Verhalten der App bei der Erfassung von Winnern bzw. Fehlern</string>
+    <string name="pref_Statistics_summary">Verhalten der App bei der Erfassung von Winnern bzw. Fehlern.</string>
     <string name="pref_ColorPalette">Farbpalette</string>
     <string name="pref_ColorPalette_summary">Wähle die Farbpatelle, aus denen Du Hintergrund- und Textfarben auswählen kannst.</string>
     <string name="pref_ColorTargets_Backgrounds">Hintergründe</string>
@@ -258,7 +258,7 @@
     <string name="pref_showTimeIsAlreadyUpFor_Chrono">Zeige eine kleine Stoppuhr, die angibt, wie lange \'Zeit!\' angezeigt wird.</string>
     <string name="pref_showAdjustTimeButtonsInTimer">Schaltflächen zum Einstellen der verbleibenden Zeit anzeigen</string>
     <string name="pref_showUseAudioCheckboxInTimer">Audio-Kontrollkästchen im Timer anzeigen</string>
-    <string name="pref_archive_summary">Gruppierung und Sortierung der archivierten Spiele</string>
+    <string name="pref_archive_summary">Gruppierung und Sortierung der archivierten Spiele.</string>
     <string name="pref_groupArchivedMatchesBy">Archivierte Spiele gruppieren nach</string>
     <string name="pref_sortOrderOfArchivedMatches">Sortierung archivierter Spiele</string>
     <string name="pref_useVibrationNotificationInTimer">Haptische Benachrichtigungen verwenden</string>
@@ -296,9 +296,10 @@
     <string name="pref_useEnglishScoring_summary">\'Alte\' Zählweise. Der Spieler kann nur bei eigenem Aufschlag punkten.</string>
     <string name="pref_finalSetFinish">Final Set Finish</string> <!-- Tennis/Padel -->
     <string name="pref_tiebreakFormat">Satzende</string>
-    <string name="pref_tiebreakFormat_summary">Regel, die am Satzende (Tie-Break) angewendet wird. Offiziell sind das zwei Punkte Abstand.</string>
+    <string name="pref_tiebreakFormat_summary">Regel, die am Satzende (Tiebreak) angewendet wird. Offiziell sind das zwei Punkte Abstand.</string>
 
     <string name="pref_web_wearable">Wearable</string>
+    <string name="pref_web_wearable_summary">Einstellungen bei der Verwendung von Wearables (z.B. Smartwatch).</string>
     <string name="pref_wearable_syncColorPrefs">Farbeinstellungen synchronisieren</string>
     <string name="pref_wearable_allowScoringWithHardwareButtons">Ermögliche das Zählen mit den Wearable Knöpfen</string>
     <string name="pref_wearable_allowScoringWithRotary">Ermögliche das Zählen mit dem Wearable Rotary</string>
@@ -385,12 +386,12 @@
     <string name="pref_allowNegativeHandicap">Negatives Handicap freischalten</string>
     <string name="pref_allowNegativeHandicap_summary">Erlaube negative Werte als Handicap.</string>
 
-    <string name="pref_live_score_summary">Optimieren für und Anzeigen von Live-Ergebnissen</string>
+    <string name="pref_live_score_summary">Optimieren für und Anzeigen von Live-Ergebnissen.</string>
     <string name="pref_live_score_url">live?lang=de</string>
     <string name="pref_live_score_url_summary">Nutze diese URL, um alle Spiele zu sehen, die mit der Squore App geteilt wurden (z.B. die eines Turniers).</string>
     <string name="pref_LiveScorePrefs">Live-Score optimieren</string>
     <string name="pref_updateLiveScore">LIVE SCORE aktualisieren</string>
-<!--    <string name="pref_liveScoreDeviceId">Live Score - Device Unique Id</string>-->
+    <!--    <string name="pref_liveScoreDeviceId">Live Score - Device Unique Id</string>-->
     <string name="pref_liveScoreDeviceId_summary">Diese ID kann verwendet werden, um nur Spiele dieses Gerätes auf der Live-Score-Webseite anzuzeigen.</string>
 
     <string name="pref_FCM">FCM (Firebase Cloud Messaging)</string>
@@ -400,7 +401,7 @@
     <string name="pref_showToastMessageForEveryReceivedFCMMessage">Toast für empfangene FCM-Nachricht anzeigen</string>
     <string name="pref_showToastMessageForEveryReceivedFCMMessage_summary">Toast für jede empfangene FCM Nachricht anzeigen.</string>
     <string name="pref_FCMEnabled_summary">Erlaubt die Änderung des Spielstands auf dem Gerät durch Zugriff auf bestimmte URLs. Nach der Aktivierung Verwendung im Menü > Anzeigen > FCM - Info.</string>
-<!-- <string name="pref_FCMDeviceId">FCM - Device Unique Id</string> -->
+    <!-- <string name="pref_FCMDeviceId">FCM - Device Unique Id</string> -->
     <string name="pref_FCMDeviceId_summary">Diese ID wird zur eindeutigen Identifizierung dieses Geräts verwendet.\nSie ist Teil der FCM-URL, die zum Ändern des Spielstands auf diesem Gerät verwendet werden kann.</string>
 
     <string name="pref_DeviceId_use_new__x">neue Geräte-ID: %1$s</string>

@@ -120,6 +120,6 @@
 </html>]]></string>
 
     <string name="bt_no_appropriate_paired_devices_found">Keine geeigneten gekoppelten Geräte gefunden</string>
-    <!--<string name="bt_no_appropriate_paired_devices_found_info">This device is only paired with devices that do not support mirroring screens. Please pair this devices with a phone or tablet.</string>-->
+    <!--<string name="bt_no_appropriate_paired_devices_found_info">This device is only paired with devices that do not support mirroring screens. Please pair these devices with a phone or tablet.</string>-->
 
 </resources>

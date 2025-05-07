@@ -26,7 +26,9 @@
         \n\nEin langer Klick auf die Schaltfläche öffnet die Farbauswahl.</string>
     <string name="scv_game_scores__Squash">Hier wird der Spielstand der bereits absolvierten Sätze angezeigt.
         \n
-        \nTippe darauf, um die genauen Ergebnisse der Sätze dauerhaft anzuzeigen (Punktestand).</string>
+        \nTippe darauf, um zwischen dem genauen Ergebnis der Sätze (Punktestand z.B. 12-14 | 8-11) und dem Spielstand in Sätzen (z.B. 0-2) zu wechseln.
+        \n
+        \nDas zuletzt gewählte Format wird dauerhaft angezeigt.</string>
     <string name="scv_timer_button__Squash">Diese Schaltfläche startet den Timer
         \n\nSie wird nur bei Bedarf angezeigt
         \n- für die Aufwärmphase
@@ -36,14 +38,15 @@
         \nWenn während eines Spiels ein Verletzungstimer benötigt wird, kann dieser über das Menü gestartet werden.
       </string>
     <string name="scv_overflow_submenu__Squash">Weitere Optionen sind über das Menü verfügbar.
-        \n\nDu kannst zum Beispiel:
+        \n\nDu kannst zum Beispiel
         \n- das Aussehen und Verhalten der App über \'Einstellungen\' anpassen
         \n- Details von zuvor geleiteten Spielen anzeigen
         \n- einen Verletzungstimer starten
-        \n- alle geleiteten Spiele in/aus einer Zip-Datei Exportieren bzw. Importieren
-        \n- eine ausführliche Hilfeseite für diese App öffen
+        \n- Spiele aus einer ZIP-Datei importieren
+        \n- alle geleiteten Spiele in eine ZIP-Datei exportieren
+        \n- eine ausführliche Hilfeseite für diese App öffnen
         \n- die offiziellen Squash-Regeln öffnen
-        \n- die Optionen zur einfachen Aufzeichnung von Vorhand/Rückhand- oder Winner/Fehler-Statistiken (z. B. für Trainer) einschalten
+        \n- die Optionen zur Aufzeichnung von Vorhand/Rückhand- oder Winner/Fehler-Statistiken (z.B. für Trainer) einschalten
       </string>
     <string name="scv_few_more_gui_hints__Squash">Ein paar weitere Hinweise zur Benutzeroberfläche:
         \n

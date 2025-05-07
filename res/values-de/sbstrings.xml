@@ -6,7 +6,7 @@
     <string name="TeamVsTeam_OneMatchPerPlayer">Mannschaft gegen Mannschaft - ein Spiel pro Spieler</string>
     <string name="TeamVsTeam_XMatchesPlayer">Mannschaft gegen Mannschaft - mehrere Spiele pro Spieler</string>
 
-<!-- <string name="facebook_app_id">504690753001960</string> -->
+    <!-- <string name="facebook_app_id">504690753001960</string> -->
     <string name="msg_enter_both_player_names">Spielernamen eingeben</string>
     <string name="msg_enter_all_player_names">Alle Spielernamen eingeben</string>
     <string name="msg_enter_authentication_details">Authentifizierungsdaten eingeben</string>
@@ -54,10 +54,10 @@
     <string name="sb_select_match">Select match</string>
     <string name="sb_static_match">meine Liste</string>
     <string name="sb_select_static_match">aus meiner Liste auswählen</string>
-<!--
+    <!--
     <string name="sb_whatsapp_match_summary">Share match result via WhatsApp</string>
     <string name="sb_twitter_match_summary">Share match result via Twitter</string>
--->
+    -->
     <string name="sb_share_match_summary_using_x">Resultat via %s teilen</string>
     <string name="sb_put_match_summary_on_clipboard">Resultat in die Zwischenablage</string>
     <string name="sb_send_match_result">Spieldetails senden</string>

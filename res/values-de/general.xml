@@ -85,7 +85,7 @@
     <string name="send_settings_to_wearable">Einstellungen an Wearable senden</string>
     <string name="do_not_show_this_dialog_anymore">Diesen Dialog nicht mehr anzeigen</string>
     <string name="lbl_fixed">fest</string>
-    <string name="lbl_none">keines</string>
+    <string name="lbl_none">Keiner</string>
 
     <!-- network -->
     <string name="no_fully_functional_connection_error">Kein voll funktionsfähiges Netz. Vielleicht musst Du Dich bei Deonem Provider anmelden oder im WLAN anmelden?</string>
