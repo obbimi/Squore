@@ -1557,6 +1557,7 @@
     <PreferenceScreen android:key="wearable"
                       android:icon="@drawable/wearos"
                       android:title="@string/pref_web_wearable"
+                      android:summary="Settings when using wearables (e.g. smartwatch)."
                       >
         <com.doubleyellow.prefs.EnumListPreference
             android:icon="@drawable/dummy"
