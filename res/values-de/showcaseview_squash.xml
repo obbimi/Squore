@@ -1,119 +1,65 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<resources>
-  <string name="scv_side_buttons__Squash">Die __Aufschlagseiten-Buttons__ zeigen an, 
- 
- 
- 
- – wer aufschlagen soll 
- 
- – von welcher Seite (L/R), 
- 
- – ob es ein Handout ist (?), 
- 
- 
- Die Seite bzw. der Spieler wechselt automatisch nach jedem eingegebenen Punkt. 
- 
- 
- Bei Bedarf können Sie die Seite/den Spieler durch Antippen wechseln. 
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="scv_side_buttons__Squash">Die Schaltflächen für die Aufschlagseite zeigen an
+        \n- wer Aufschlag hat
+        \n- von welcher Seite der Aufschlag ausgeführt wird (L/R)
+        \n- ob es ein Aufschlagwechsel ist (?)
+        \n\nDie Seite bzw. der Spieler wechseln automatisch nach jedem eingegebenen Punkt.
+        \n\nBei Bedarf kannst Du durch Antippen der Schaltflächen die Seite oder den Spieler wechseln.
+        \n\Antippen beim aktuellen Aufschläger ändert die Seite, Antippen beim Rückschläger ändert den Spieler.
     </string>
-  <string name="scv_player_buttons_appeal__Squash">Behalten Sie die Entscheidungen zu __Stroke/Yes Let/No Let__ im Auge, indem Sie auf den Namen des Spielers tippen, der ein Let anfordert. 
- 
- Geben Sie Ihre Entscheidung in das angezeigte Dialogfeld ein. 
+    <string name="scv_player_buttons_appeal__Squash">Behalte den Überblick über Entscheidungen wie \'Ball an\' (Stroke), \'Let\' oder \'kein Let\', in dem Du auf den Namen des Spielers klicks, der ein Let verlangt.
+        \nGib im daraufhin angezeigten Dialogfeld Deine Entscheidung ein.
+        \n\nHinweis: Ein \'Ball an\' erhöht die Punktzahl des jeweiligen Spielers automatisch.
     </string>
-  <string name="scv_player_buttons_misconduct__Squash">Sie können auch Entscheidungen zu __Verhaltenswarnungen/-schlägen__ verfolgen. 
- 
- 
- 
- Halten Sie eine Spielertaste gedrückt, um einen Dialog zu _Fehlverhalten_ anzuzeigen.</string>
-  <string name="scv_old_fashioned_scoring__Squash">Zu Ihrer Information wird auf dem Bildschirm ein Wertungsbogen im „alten Stil“ angezeigt. 
- 
- 
- Dieser kann unter „Einstellungen“ deaktiviert werden.</string>
-  <string name="scv_announcement_button__Squash">Diese Schaltfläche wird angezeigt, wenn eine __offizielle Ankündigung__ angebracht ist: 
- 
- 
- 
- – Beginn des Spiels/Matches 
- 
- – Ende des Spiels/Matches 
- 
- – Erster Tiebreak 
- 
- 
- Drücken Sie darauf, um die Ankündigung anzuzeigen.</string>
-  <string name="scv_shirt_color__Squash">Wenn Sie zwei Spieler pfeifen, die Sie noch nie zuvor getroffen haben, und sich ihre Namen nur schwer merken können, 
- können Sie für beide __eine Farbe eingeben__. 
- 
- 
- Klicken Sie lange auf die Schaltfläche für die Aufschlagseite, um eine Farbe auszuwählen.</string>
-  <string name="scv_game_scores__Squash">Hier wird die Anzahl der von jedem Spieler bereits gewonnenen Spiele angezeigt. 
- 
- 
- 
- Tippen Sie darauf, um die genauen Ergebnisse der vorherigen Spiele anzuzeigen.</string>
-  <string name="scv_timer_button__Squash">Mit dieser Schaltfläche können Sie einen __Timer__ starten. 
- 
- 
- Er wird nur angezeigt, wenn es angebracht ist. 
- 
- 
- 
- – Aufwärmen 
- 
- – Vor Beginn des ersten Spiels 
- 
- – Zwischen den Spielen 
- 
- 
- 
- Wenn Sie während eines Spiels zufällig einen Verletzungstimer benötigen, können Sie ihn über das Menü starten. 
+    <string name="scv_player_buttons_misconduct__Squash">Es ist möglich Verwarnungen, Strafpunkte und Strafsätze festzuhalten.
+        \nEin langer Klick auf den Namen des Spielers öffnet den Verwarnungsdialog.
+        \n\nHinweis: Strafpunkte bzw. Strafsätze erhöhen die Punktzahl / Satzzahl des Gegners automatisch.</string>
+    <string name="scv_old_fashioned_scoring__Squash">Eine Auflistung der Punkte und Entscheidungen, wie früher im Schiedsrichterbogen, ist in der Mitte des Bildschirms zu sehen.
+        \n\nDies Anzeige kann über die Einstellungen ausgeschaltet werden.</string>
+    <string name="scv_announcement_button__Squash">Diese Schaltfläche erscheint, wenn eine Ansage des Schiedsrichters erforderlich ist:
+        \n - zu Beginn des Spieles oder eines Satzes
+        \n - am Ende des Spieles oder eines Satzes
+        \n - bei 10:10 (erster Tiebreak)
+        \n\nDrücke die Schaltfläche, um Dir ein Beispiel anzusehen.</string>
+    <string name="scv_shirt_color__Squash">Wenn Du als Schiedsrichter ein Spiel leitest, die beiden Spieler aber nicht kennst und Dir ihre Namen nicht merken kannst, kannst Du jedem Spieler eine Farbe zuordnen. Es ist hilfreich, wenn die Farbe des Spielers mit der Farbe eines auffälligen Kleidungsstücks (z. B. des Trikots) übereinstimmt.
+        \n\nEin langer Klick auf die Schaltfläche öffnet die Farbauswahl.</string>
+    <string name="scv_game_scores__Squash">Hier wird der Spielstand der bereits absolvierten Sätze angezeigt.
+        \n
+        \nTippe darauf, um zwischen dem genauen Ergebnis der Sätze (Punktestand z.B. 12-14 | 8-11) und dem Spielstand in Sätzen (z.B. 0-2) zu wechseln.
+        \n
+        \nDas zuletzt gewählte Format wird dauerhaft angezeigt.</string>
+    <string name="scv_timer_button__Squash">Diese Schaltfläche startet den Timer
+        \n\nSie wird nur bei Bedarf angezeigt
+        \n- für die Aufwärmphase
+        \n- vor dem 1. Satz
+        \n- zwischen den Sätzen
+        \n
+        \nWenn während eines Spiels ein Verletzungstimer benötigt wird, kann dieser über das Menü gestartet werden.
       </string>
-  <string name="scv_overflow_submenu__Squash">Weitere Optionen sind im Menü verfügbar. Sie können beispielsweise: 
- 
- 
- 
- - Aussehen und Verhalten der App über „Einstellungen“ anpassen 
- 
- - Details zu zuvor gepfiffenen Spielen anzeigen 
- 
- - Einen Verletzungstimer starten 
- 
- - Alle Ihre gepfiffenen Spiele in eine ZIP-Datei exportieren/importieren 
- 
- - Eine ausführliche Hilfeseite für diese App aufrufen 
- 
- - Die offiziellen Squash-Regeln einsehen 
- 
- - Optionen zum einfachen Aufzeichnen von FH/BH-Gewinner-/Fehlerstatistiken aktivieren (z. B. für Trainer/Ausbilder beim Beobachten der Spiele ihrer Schüler) 
-          </string>
-  <string name="scv_few_more_gui_hints__Squash">Noch ein paar GUI-Hinweise: 
- 
- 
- 
- __Spieler-Schaltflächen__ 
- 
- 
- 
- - Berühren Sie mit zwei Fingern, um einen Ball-/Saiten-/Schlägerbruch aufzuzeichnen. 
- 
- - Wischen Sie über eine dieser Schaltflächen hin und her, um Spieldetails zu bearbeiten (oder weitere anzugeben). 
- 
- - Wischen Sie über den Servernamen nach links, um die Aufschlagseite auf Links zu ändern, dasselbe gilt für Rechts. 
- 
- 
- 
- __Punkte-Schaltflächen__ 
- 
- 
- 
- - Berühren Sie beide gleichzeitig, um einen Startpunktstand einzugeben (Schiedsrichter für ein bereits begonnenes Spiel). 
- 
- - Berühren Sie beide lange, um das Format des laufenden Spiels überprüfen 
- 
- - Wischen Sie diagonal vor und zurück über eine Punkteschaltfläche, um die Punkteanzeige optional neu zu starten (z. B. nachdem Sie die App anderen Clubmitgliedern vorgeführt haben) 
-          </string>
-  <string name="scv_new_match_button__Squash">__Das war\'s. Viel Spaß beim Zerquetschen und Schiedsrichtern.__ 
- 
- 
- Starten Sie ein neues Spiel, indem Sie auf diese Schaltfläche tippen.</string>
+    <string name="scv_overflow_submenu__Squash">Weitere Optionen sind über das Menü verfügbar.
+        \n\nDu kannst zum Beispiel
+        \n- das Aussehen und Verhalten der App über \'Einstellungen\' anpassen
+        \n- Details von zuvor geleiteten Spielen anzeigen
+        \n- einen Verletzungstimer starten
+        \n- Spiele aus einer ZIP-Datei importieren
+        \n- alle geleiteten Spiele in eine ZIP-Datei exportieren
+        \n- eine ausführliche Hilfeseite für diese App öffnen
+        \n- die offiziellen Squash-Regeln öffnen
+        \n- die Optionen zur Aufzeichnung von Vorhand/Rückhand- oder Winner/Fehler-Statistiken (z.B. für Trainer) einschalten
+      </string>
+    <string name="scv_few_more_gui_hints__Squash">Ein paar weitere Hinweise zur Benutzeroberfläche:
+        \n
+        \nSchaltflächen für die Spieler
+        \n- Schaltfläche mit zwei Fingern berühren, um einen defektes Equipment festzuhalten.
+        \n- Wische über die Schaltflächen hin und her, um Details zum Spiel zu bearbeiten.
+        \n- Wische nach links über den Namen des Aufschlägers, um die Aufschlagsseite nach links zu wechseln oder umgekehrt.
+        \n
+        \nSchaltflächen für den Spielstand
+        \n- Berühre beide Schaltflächen gleichzeitig, um einen Startpunktestand manuell einzugeben (z.B. wenn Du ein bereits begonnenes Spiel leitest).
+        \n- Langes Tippen beider Schaltflächen, um das Format des Spiels zu prüfen.
+        \n- Wische diagonal hin und her über eine Schaltfläche, um den Spielstand optional neu zu starten (z. B. nach einer Demo der App)
+      </string>
+    <string name="scv_new_match_button__Squash">Das wars. Viel Spass beim Squash und beim Schiedsen.
+        \n\nStarte Dein erstes Spiel durch Drücken der Schaltfläche unten rechts.</string>
 </resources>
