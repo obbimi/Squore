@@ -13,11 +13,14 @@ The following people were so kind to volunteer to translate the app into their p
   - Salvador Martinez
 - Portuguese 
   - Gonçalo Afonso
+- German
+  - Ralph Bieber 
 
 ## User Help and Suggestions
 
-The following users of have made valuable suggestions:
+The following users of have made valuable suggestions for improvements:
 
+- Martin Krafft
 - Marius Flage
 - Saqib Meer
 - Jonathan Webb

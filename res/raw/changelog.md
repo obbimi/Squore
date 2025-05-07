@@ -1,3 +1,7 @@
+## 4.57 (may 2025)
+
+- german translation (Thanks to Ralph Bieber)
+
 ## 4.56 (april 2025)
 
 - feed improvements
