@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="press_back_again_to_exit_intro">\'Zurück\' drücken, um das Intro zu verlassenintro</string>
+    <string name="scv_got_it">VERSTANDEN</string>
+    <string name="scv_first_run">Möchtest Du eine kurze Einführung, um die wichtigsten Funktionen der App kennenzulernen?
+        \n
+        \nEs wird Dir gezeigt, wie Du die App in verschiedenen Situationen während verschiedener Phasen eines Spiels nutzen können.
+        \n
+        \nDu kannst das Intro jederzeit abbrechen, in dem auf \'Zurück\' auf dem Gerät drückst.
+        \n
+        \nOder starte es erneut über das Menü \'Hilfe/kurze Einführung\'.</string>
+    <string name="scv_toss">\nZu Beginn jedes Spieles wird i.d.R eine Seitenwahl durchgeführt.
+        \n
+        \nDrücke diese Schaltfläche um:
+        \n- die Seitenwahl mit der App durchzuführen
+        \n  oder
+        \n- die Seitenwahl der Spieler einzutragen
+    </string>
+    <string name="scv_big_buttons">Drücken der großen Schaltflächen erhöht den Punktestand des jeweiligen Spielers.
+        \nDie Schaltflächen können jederzeit betätigt werden, um den Punktestand zu ändern, auch wenn etwaige Popup-Fenster (Timer, Seitenwahl) angezeigt werden.
+        \nDie Popup-Fenster werden dann automatisch ausgeblendet.
+        </string>
+    <string name="scv_undo_last">"Wenn Du versehentlich einen Punkt für den falschen Spieler eingegeben hast, kannst Du dies mit der Schaltfläche \'RÜCKGÄNGIG\' korrigieren. Die Schaltfläche kann auch mehrmals hintereinander betätigt werden, um mehrere Aktionen rückgängig zu machen.
+        \nEine weitere Möglichkeit, die Punkteänderung rückgängig zu machen, besteht darin, mit dem Finger über die Schaltfläche zu streichen, die versehentlich erhöht wurde.
+    </string>
+    <string name="scv_share_button">Diese Schaltfläche erscheint nach Ende des Spieles. Sie ermöglicht das Teilen des Resultats.
+        \n\nDu kannst ihn so konfigurieren, dass
+        \n
+        \n- ein Link mit allen Details zum Spiel geteilt wird
+        \n- eine kurze Zusammenfassung geteilt wird
+        \n- das Ergebnis auf einer Webseite veröffentlicht wird
+        \n- das Resultat als Mail gesendet wird
+      </string>
+    <string name="scv_toggle_action_bar">Wenn die Menüleiste ausblendet werden soll (z.B. um die Bildschirmnutzung zu maximieren) kann das folgendermassen ermöglicht werden:
+        \n- Lange auf den __Spielstand__ klicken.
+        \n- Ein weiterer langer Klick macht sie wieder sichtbar.
+        \n- Die Funktion \'Rückgängig machen durch Wischen\' immer noch verfügbar, auch wenn Sie die Menüleiste ausgeblendet ist.
+    </string>
+    <string name="scv_few_more_good_to_knows">Gut zu wissen:
+        \n
+        \n- Du kannst den Spielern ein Land zuordnen. Die Flaggen der ausgewählten Länder werden dann entsprechend angezeigt.
+        \n- Im Hochformat können die Lautstärketasten als \'Spielstand\'-Tasten verwendet werden.
+        \n- Mit Chrome Cast kann der Spielstand einfach auf einem großen TV angezeigt werden.
+    </string>
+</resources>

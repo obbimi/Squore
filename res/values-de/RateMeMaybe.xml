@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="rmm_title">Squore bewerten</string>
+    <string name="rmm_message">Du scheinst die App zu mögen, denn Du hast sie bereits %s mal benutzt!\nEs wäre toll, wenn Du Dir etwas Zeit nehmen würdest, um sie zu bewerten.</string>
+    <string name="rmm_later">Vielleicht später</string>
+    <string name="rmm_never">Nein, niemals</string>
+</resources>

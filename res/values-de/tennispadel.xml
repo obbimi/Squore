@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="lbl_game_set_and_match">Spiel, Satz und Sieg</string>
+
+    <string name="oa_golden_point">Golden point</string>
+    <string name="pref_indicateGoldenPoint">\'Golden Point\' in der Punktestandanzeige anzeigen</string>
+
     <string name="oa_deuce">Einstand</string>
+
+    <string name="oa_new_balls_please">Neue Bälle</string>
+    <string name="oa_ballchange_in_1_game">Neue Bälle in 1 Spiel</string>
+    <string name="oa_ballchange_in_x_games">Neue Bälle in %d Spiel</string>
+
     <string name="sb_advantage">Vorteil</string>
+    <string name="sb_no_advantage">Kein Vorteil</string>
+    <string name="lbl_GoldenPoint">Golden Point</string>
+
+    <string name="best_of_x_games_to_y_2__TennisPadel">Spiele bis</string>
+    <string name="sb_official_rules__TennisPadel">Offizielle Regeln</string>
+
+    <string name="OfficialRulesURLs_default__TennisPadel"><![CDATA[https://www.padelfip.com/wp-content/uploads/2017/06/Rules-of-Padel.pdf
+\nhttp://www.padel.com/
+]]></string>
+
+    <string name="sb_FinalSetFinish">Endgültiges Satzende</string>
+    <string name="pref_StartTieBreakOneGameEarly">Tiebreak ein Spiel früher beginnen</string>
+    <string name="pref_StartTieBreakOneGameEarly_CheckUncheckMsg">Tiebreak startet bei %1$d-%1$d</string>
+    <string-array name="finalSetFinishDisplayValues"> <!-- keep in sync with com.doubleyellow.scoreboard.model.FinalSetFinish -->
+        <item>Spiele wie üblich - TieBreak bis 7</item>
+        <item>Spiele wie üblich - TieBreak bis 10</item>
+        <item>Keine Spiele - Match TieBreak bis 7</item>
+        <item>Keine Spiele - Match TieBreak bis 10</item>
+        <item>Spiele bis 12 - bei Gleichstand, TieBreak bis 7</item>
+        <item>Spiele bis 12 - bei Gleichstand, TieBreak bis 10</item>
+        <item>Kein Tiebreak</item>
+    </string-array>
+
+    <string name="sb_NewBalls">Neue Bälle</string>
+    <string-array name="NewBallsDisplayValues"> <!-- keep in sync with com.doubleyellow.scoreboard.model.NewBalls -->
+        <item>Nach den ersten  7, dann nach jedem  9. Spiel</item>
+        <item>Nach den ersten  9, dann nach jedem 11. Spiel</item>
+        <item>Nach den ersten 11, dann nach jedem 13. Spiel</item>
+        <item>Vor Satz 3</item>
+    </string-array>
+
 </resources>
