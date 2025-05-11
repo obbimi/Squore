@@ -23,7 +23,7 @@
 
     <PreferenceScreen
         android:title="@string/pref_Category_BlueToothLE"
-        android:summary="Collection of settings to hopefully make the BLE experience better"
+        android:summary="@string/pref_Category_BlueToothLE_summary"
         android:icon="@android:drawable/stat_sys_data_bluetooth"
         android:key="BluetoothLE">
         <CheckBoxPreference android:key="UseBluetoothLE"
@@ -515,7 +515,7 @@
             <com.doubleyellow.prefs.EnumMultiSelectPreference
                     android:key="showBrandLogoOn"
                     android:title="@string/pref_Show_logo_on_scoreboard"
-                    android:summary="Specify on what screens the logo should be visible"
+                    android:summary="@string/pref_Show_logo_on_scoreboard_summary"
                     android:defaultValue="@array/showBrandLogoOn_DefaultValues"
                     dy:displayValues="@array/ShowOnScreen_DisplayValues"
                     dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
@@ -855,7 +855,7 @@
 
     <PreferenceScreen
         android:title="@string/pref_Category_RemoteControl"
-        android:summary="Collection of settings in relation to remote controlling the score"
+        android:summary="@string/pref_Category_RemoteControl_summary"
         android:icon="@android:drawable/stat_sys_data_bluetooth"
         android:key="RemoteControl">
 
@@ -916,7 +916,7 @@
             />
         <ListPreference android:key="speechVoice"
             android:icon="@android:drawable/ic_lock_silent_mode_off"
-            android:title="Voice to use"
+            android:title="@string/pref_speech_VoiceToUse"
             android:defaultValue=""
             />
 
@@ -1495,7 +1495,6 @@
                                 android:defaultValue="0"
                     />
         </PreferenceCategory>
-        <PreferenceCategory android:summary="Note: an additional more advanced way of have additional AutoComplete values for players names is from a feed. See 'Internet' section and online 'Help'"/>
     </PreferenceScreen>
 
     <PreferenceScreen android:key="myMatches"
@@ -1557,7 +1556,7 @@
     <PreferenceScreen android:key="wearable"
                       android:icon="@drawable/wearos"
                       android:title="@string/pref_web_wearable"
-                      android:summary="Settings when using wearables (e.g. smartwatch)."
+                      android:summary="@string/pref_web_wearable_summary"
                       >
         <com.doubleyellow.prefs.EnumListPreference
             android:icon="@drawable/dummy"
@@ -1743,7 +1742,7 @@
             />
             <CheckBoxPreference android:key="allowTrustAllCertificatesAndHosts"
                 android:icon="@drawable/dummy"
-                android:title="allow Trust All Certificates And Hosts"
+                android:title="@string/allowTrustAllCertificatesAndHosts_title"
                 android:defaultValue="@bool/allowTrustAllCertificatesAndHosts_default"
                 />
         </PreferenceCategory>

@@ -67,6 +67,7 @@
     <string name="cmd_new_matches">New matches</string>
     <string name="cmd_new_matches_with">New matches with</string>
     <string name="cmd_rebuild">Rebuild</string>
+    <string name="cmd_OpenFeedURL">Open feed URL</string>
     <string name="uc_exit">Exit</string>
     <string name="press_back_again_to_exit">Press \'Back\' again to exit</string>
     <string name="goto_help">Help</string>

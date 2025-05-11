@@ -84,7 +84,7 @@
             <item android:id="@+id/close"     app:showAsAction="never" android:icon="@android:drawable/ic_menu_close_clear_cancel"      android:title="@string/cmd_close" />
 
             <!-- trouble shooting -->
-            <item android:id="@+id/open_feed_url" app:showAsAction="never" android:title="Open feed URL" />
+            <item android:id="@+id/open_feed_url" app:showAsAction="never" android:title="@string/cmd_OpenFeedURL" />
         </menu>
     </item>
 </menu>

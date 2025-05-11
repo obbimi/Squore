@@ -89,6 +89,7 @@
     <string name="pref_maximumCacheAgeFlags_summary">In minutes</string>
 
     <string name="pref_Show_logo_on_scoreboard">Show logo on scoreboard</string>
+    <string name="pref_Show_logo_on_scoreboard_summary">Specify on what screens the logo should be visible</string>
     <string name="pref_Hide_logo_when_game_in_progress">Hide logo when game in progress</string>
     <string name="pref_Hide_division_field_when_game_in_progress">Hide division field when game in progress</string>
 
@@ -99,6 +100,7 @@
     <string name="pref_Behaviour">Behaviour</string>
     <string name="pref_Behaviour_summary">Preferred behaviour of visual elements. Official announcements.</string>
     <string name="pref_Category_RemoteControl">Remote Control</string>
+    <string name="pref_Category_RemoteControl_summary">Collection of settings in relation to remote controlling the score</string>
     <string name="pref_MediaPlaybackButtons">Scoring by Media Playback Buttons</string>
     <string name="pref_BehaviourConvenience">Convenience</string>
     <string name="pref_BehaviourOfficial">For official usage</string>
@@ -109,6 +111,7 @@
     <string name="pref_Speech">Speech</string>
     <string name="pref_Speech_summary">Announce score via speakers</string>
     <string name="pref_speechPitch">Pitch</string>
+    <string name="pref_speech_VoiceToUse">Voice to use</string>
     <string name="pref_speechPitch_summary">Lower values for lower voice (0–100)</string>
     <string name="pref_speechRate">Rate</string>
     <string name="pref_speechRate_summary">Lower values for slower speech (0–100)</string>
@@ -322,6 +325,8 @@
     <string name="pref_wearable_allowScoringWithHardwareButtons">Allow Scoring With Wearable Hardware Buttons</string>
     <string name="pref_wearable_allowScoringWithRotary">Allow Scoring With Wearable Rotary</string>
 
+    <string name="allowTrustAllCertificatesAndHosts_title">Allow \'Trust All Certificates And Hosts\'</string>
+
     <string name="pref_web_integration">Internet</string>
     <string name="pref_web_integration_summary">Feed URLs for match selection. Post match result to website. Share match result.</string>
     <string name="pref_playerList">Player List</string>
@@ -438,6 +443,7 @@
     <string name="pref_BTSync_showFullScreenTimer">Show full screen timer on \'Slave\'</string>
 
     <string name="pref_Category_BlueToothLE">Bluetooth LE</string>
+    <string name="pref_Category_BlueToothLE_summary">Collection of settings to improve the BLE experience better</string>
     <string name="pref_UseBluetoothLE">Use Bluetooth LE</string>
     <string name="pref_UseBluetoothLE_Summary">Allow controlling the score by connected Bluetooth LE devices like D-Score wristbands</string>
     <string name="pref_ShowFeedBackOnBLEButtonsPressedInfoMessages">Show feedback messages</string>
