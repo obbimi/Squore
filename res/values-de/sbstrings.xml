@@ -7,7 +7,7 @@
     <string name="TeamVsTeam_XMatchesPlayer">Mannschaft gegen Mannschaft - mehrere Spiele pro Spieler</string>
 
     <!-- <string name="facebook_app_id">504690753001960</string> -->
-    <string name="msg_enter_both_player_names">Spielernamen eingeben</string>
+    <string name="msg_enter_both_player_names">beide Spielernamen eingeben</string>
     <string name="msg_enter_all_player_names">Alle Spielernamen eingeben</string>
     <string name="msg_enter_authentication_details">Authentifizierungsdaten eingeben</string>
 
@@ -50,8 +50,8 @@
     <string name="sb_clear_score_confirm_message">Willst Du den Spielstand wirklich zurücksetzen?</string>
     <string name="sb_clear_score_confirm_message_2">Die Historie des aktuellen Spiels geht verloren.</string>
     <string name="cmd_change_format">Format ändern</string>
-    <string name="please_select_a_value_for_x">Please select a value for \'%1$s\'</string>
-    <string name="sb_select_match">Select match</string>
+    <string name="please_select_a_value_for_x">Wähle einen Wert für \'%1$s\' aus</string>
+    <string name="sb_select_match">Spiel wählen</string>
     <string name="sb_static_match">meine Liste</string>
     <string name="sb_select_static_match">aus meiner Liste auswählen</string>
     <!--
@@ -71,8 +71,8 @@
     <string name="Call">Entscheidung</string>
     <string name="Type">Typ</string>
     <string name="Detail">Details</string>
-    <string name="Home">Home</string>
-    <string name="Away">Away</string>
+    <string name="Home">zu Hause</string>
+    <string name="Away">Auswärts</string>
     <string name="score_sheet">Spielbericht</string>
     <string name="graph_game_x">Diagramm Satz %d</string>
     <string name="graph_x">Diagramm %s</string>
@@ -81,11 +81,11 @@
     <string name="sb_share_matches_summary">mehrere Spiele teilen</string>
     <string name="sb_edit_players">Spielernamen bearbeiten</string>
     <string name="sb_swap_double_players">Doppelpartner vertauschen</string>
-    <string name="sb_swap_server">Swap server</string>
+    <string name="sb_swap_server">Server vertauschen</string>
     <string name="sb_change_sides">Seiten vertauschen</string>
-    <string name="sb_choose_player">For which player?</string>
-    <string name="sb_choose_players">Choose players</string>
-    <string name="sb_choose_team">For which team?</string>
+    <string name="sb_choose_player">Für welchen Spieler?</string>
+    <string name="sb_choose_players">Spieler auswählen</string>
+    <string name="sb_choose_team">Für welche Mannschaft?</string>
     <string name="sb_edit_event_or_player">Begegnung bearbeiten</string>
     <string name="sb_new_match">neues Spiel</string>
     <string name="sb_matches">Spiele</string>
@@ -96,10 +96,10 @@
     <string name="sb_handicap_score">Handicap eintragen</string>
     <string name="sb_sub_share_match">Resultat teilen…</string>
     <string name="sb_timer">Timer</string>
-    <string name="cmd_cancel_timer">Cancel Timer</string>
+    <string name="cmd_cancel_timer">Timer abbrechen</string>
     <string name="sb_nbsp_timer">\u00A0Timer</string> <!-- added non-breaking space in front for action bar -->
     <string name="sb_injury_timer">Verletzungs Timer</string>
-    <string name="sb_player_timeout_timer">Team/Player timeout</string>
+    <string name="sb_player_timeout_timer">Mannschaft/Spieler Zeitüberschreitung</string>
     <string name="sb_score_details">Spiel-Details</string>
     <string name="Live_Score">Live Score</string>
     <string name="sb_official_announcement">Offizielle Ansagen</string>
@@ -210,8 +210,8 @@
 
     <string name="lbl_broken_equipment">Defekte Ausrüstung bei %s</string>
     <string name="point_awarded_to_p">Punkt vergeben an %s</string>
-    <string name="point">Point</string>
-    <string name="points">Points</string>
+    <string name="point">Punkt</string>
+    <string name="points">Punkte</string>
     <string name="lbl_warning">Warnung</string>
 
     <string name="lbl_power_play">Power Play</string>

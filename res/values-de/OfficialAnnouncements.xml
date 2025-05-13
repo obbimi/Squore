@@ -82,5 +82,5 @@
         <item>achter</item>
         <item>neunter</item>
     </string-array>
-    <string name="officialAnnouncementsLanguage_default">en</string>
+    <string name="officialAnnouncementsLanguage_default">de</string>
 </resources>

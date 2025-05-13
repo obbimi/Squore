@@ -70,7 +70,8 @@
     <string name="pref_maximumCacheAgeFlags">Flaggen: maximales Cache-Alter</string>
     <string name="pref_maximumCacheAgeFlags_summary">Maximales Cache-Alter in Minuten.</string>
 
-    <string name="pref_Show_logo_on_scoreboard">Logo in der Spielstandanzeige anzeigen</string>
+    <string name="pref_Show_logo_on_scoreboard">Logo in der Spielstandanzeige</string>
+    <string name="pref_Show_logo_on_scoreboard_summary">Auf welchen Bildschirmen soll das Logo der Spielstandanzeige sichtbar sein.</string>
     <string name="pref_Hide_logo_when_game_in_progress">Logo verbergen, wenn das Spiel läuft</string>
     <string name="pref_Hide_division_field_when_game_in_progress">Spielstandanzeige: Verberge \'Konkurrenz\' während das Spiel läuft</string>
 
@@ -81,6 +82,7 @@
     <string name="pref_Behaviour">Verhalten</string>
     <string name="pref_Behaviour_summary">Bevorzugtes Verhalten von visuellen Elementen | offizielle Ansagen</string>
     <string name="pref_Category_RemoteControl">Fernbedienung</string>
+    <string name="pref_Category_RemoteControl_summary">Einstellungnen im Zusammenhang mit der Fernbedienung des Spielstandes</string>
     <string name="pref_MediaPlaybackButtons">Punktevergabe durch Medienwiedergabe-Tasten</string>
     <string name="pref_BehaviourConvenience">Komfort</string>
     <string name="pref_BehaviourOfficial">Für den offiziellen Gebrauch</string>
@@ -91,6 +93,7 @@
     <string name="pref_Speech">Sprachausgabe</string>
     <string name="pref_Speech_summary">Ansage des Spielstands über Lautsprecher.</string>
     <string name="pref_speechPitch">Tonhöhe </string>
+    <string name="pref_speech_VoiceToUse">Stimme</string>
     <string name="pref_speechPitch_summary">Kleinere Werte für eine geringere Tonhöhe (0–100).</string>
     <string name="pref_speechRate">Rate</string>
     <string name="pref_speechRate_summary">Kleinere Werte für eine langsamere Sprachwiedergabe (0–100).</string>
@@ -142,7 +145,7 @@
         <string name="pref_Colors_TextDynamically_summary">Automatic black or white depending on the chosen background color</string>
     <string name="pref_TextSize">Text Size</string>
     -->
-    <string name="pref_TextSizePlayerName">Spielername</string>
+    <string name="pref_TextSizePlayerName">Spielernamen</string>
     <string name="pref_TextSizeServeSide">Aufschlagseite</string>
     <string name="pref_TextSizeScore">Spielstand</string>
     <string name="pref_TextSizeHistory">Historie</string>
@@ -251,8 +254,8 @@
     <string name="pref_ScreenLayoutPrefs_dialog">Optionen anpassen: seitliche Schaltfläche innerhalb der Punkte, Vollbild, Menüleiste zur Maximierung der Bildschirmnutzung</string>
 
     <string name="pref_useSoundNotificationInTimer">Akustische Benachrichtigungen verwenden</string>
-    <string name="pref_useSoundNotificationInTimer_summary">Abspielen eines Tons\n- wenn der Timer endet\n- wenn noch 15 Sekunden Pause verbleiben\n- zur Halbzeit der Aufwärmphase</string>
     <string name="pref_useAudioNotifications">Use audio notifications</string>
+    <string name="pref_useSoundNotificationInTimer_summary">Abspielen eines Tons\n- wenn der Timer endet\n- wenn noch 15 Sekunden Pause verbleiben\n- zur Halbzeit der Aufwärmphase</string>
     <string name="pref_showPauseButtonOnTimer">Schaltfläche anzeigen, um den Timer anzuhalten</string>
     <string name="pref_cancelTimerWhenTimeIsUp">Timer ausblenden, wenn die Zeit vorüber ist</string>
     <string name="pref_showTimeIsAlreadyUpFor_Chrono">Zeige eine kleine Stoppuhr, die angibt, wie lange \'Zeit!\' angezeigt wird.</string>
@@ -303,6 +306,8 @@
     <string name="pref_wearable_syncColorPrefs">Farbeinstellungen synchronisieren</string>
     <string name="pref_wearable_allowScoringWithHardwareButtons">Ermögliche das Zählen mit den Wearable Knöpfen</string>
     <string name="pref_wearable_allowScoringWithRotary">Ermögliche das Zählen mit dem Wearable Rotary</string>
+
+    <string name="allowTrustAllCertificatesAndHosts_title">\'Allen Zertifikaten und Hosts vertrauen\' zulassen</string>
 
     <string name="pref_web_integration">Internet</string>
     <string name="pref_web_integration_summary">Feed URLs | Spielergebnis auf der Website veröffentlichen | Spielergebnis teilen</string>
@@ -420,6 +425,7 @@
     <string name="pref_BTSync_showFullScreenTimer">Zeige den Timer als Vollbild auf dem \'Slave\'</string>
 
     <string name="pref_Category_BlueToothLE">Bluetooth LE</string>
+    <string name="pref_Category_BlueToothLE_summary">Einstellungen, um das BLE-Erlebnis zu verbessern</string>
     <string name="pref_UseBluetoothLE">Bluetooth LE benutzen</string>
     <string name="pref_UseBluetoothLE_Summary">Ermöglicht die Steuerung des Spielstands durch verbundene Bluetooth LE-Geräte wie D-Score Armbänder.</string>
     <string name="pref_ShowFeedBackOnBLEButtonsPressedInfoMessages">Rückmeldungen anzeigen</string>
