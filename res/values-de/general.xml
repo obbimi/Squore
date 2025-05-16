@@ -67,6 +67,7 @@
     <string name="cmd_new_matches">neue Spiele</string>
     <string name="cmd_new_matches_with">neue Spiele mit</string>
     <string name="cmd_rebuild">Wiederherstellen</string>
+    <string name="cmd_OpenFeedURL">Feed URL öffnen</string>
     <string name="uc_exit">Beenden</string>
     <string name="press_back_again_to_exit">noch einmal \'Zurück\' drücken, zum Beenden</string>
     <string name="goto_help">Hilfe</string>

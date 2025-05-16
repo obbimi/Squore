@@ -45,6 +45,7 @@
         <item>Default</item>
         <item>Presentation 1</item>
         <item>Presentation 2</item>
+        <item>Presentation 3</item>
     </string-array>
     <string-array name="PostDataPreferenceDisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.PostDataPreference -->
@@ -193,6 +194,8 @@
         <item>Player Button</item>
         <item>Game ball Message</item>
         <item>Game Scoring Graph</item>
+        <item>Decision Message</item>
+        <item>Score Background</item>
     </string-array>
     <string-array name="PlayerColorsNewMatchDisplayValues">
         <item>No Colors</item>
