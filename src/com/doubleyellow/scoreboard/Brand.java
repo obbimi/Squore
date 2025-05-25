@@ -31,10 +31,12 @@ import com.doubleyellow.scoreboard.model.ModelFactory;
 import com.doubleyellow.scoreboard.model.SportType;
 import com.doubleyellow.scoreboard.model.TieBreakFormat;
 import com.doubleyellow.scoreboard.prefs.*;
+import com.doubleyellow.util.DateUtil;
 import com.doubleyellow.util.Feature;
 import com.doubleyellow.util.FileUtil;
 import com.doubleyellow.util.JsonUtil;
 import com.doubleyellow.util.ListUtil;
+import com.doubleyellow.util.StringUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -105,7 +107,6 @@ public enum Brand
     }
     private static JSONObject m_mCastConfig = null;
     public static void setCastConfig(JSONObject mCastConfig, File fCacheDir) {
-        //if ( true ) { return; } // TODO: for now don't use webconfig
         m_mCastConfig = mCastConfig;
 
         try {
@@ -115,11 +116,53 @@ public enum Brand
             e.printStackTrace();
         }
     }
+
+    private static final String C_REMOTE_CONFIG_URLS_CACHE_FILE = "RemoteURLsConfig.json";
+    public static JSONObject m_remoteConfigUrls = null;
+    public static final String RemoteConfig_AutoActivate = "AutoActivate";
+    public static JSONObject getRemoteConfigURLs(Context ctx) {
+        if ( m_remoteConfigUrls == null ) {
+            try {
+                File file = new File(ctx.getCacheDir(), C_REMOTE_CONFIG_URLS_CACHE_FILE );
+                if ( file.exists() ) {
+                    String sJson = FileUtil.readFileAsString(file);
+                    m_remoteConfigUrls = new JSONObject(sJson);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return m_remoteConfigUrls;
+    }
+    public static void setRemoteConfigURLs(JSONObject mRemoteUrlsConfig, File fCacheDir, Context ctx) {
+        m_remoteConfigUrls = mRemoteUrlsConfig;
+
+        try {
+            File file = new File(fCacheDir, C_REMOTE_CONFIG_URLS_CACHE_FILE );
+            FileUtil.writeTo(file, mRemoteUrlsConfig.toString());
+
+            final String autoActivate = RemoteConfig_AutoActivate + "-" + DateUtil.getCurrentYYYY_MM_DD(); // yyyy-MM-dd
+            if ( m_remoteConfigUrls.has(autoActivate) ) {
+                String sActive = PreferenceValues.getRemoteSettingsURL(ctx, false);
+                if ( StringUtil.isEmpty(sActive) ) {
+                    String sAutoUse = m_remoteConfigUrls.getString(autoActivate);
+                    if ( m_remoteConfigUrls.has(sAutoUse) ) {
+                        String sActivate = mRemoteUrlsConfig.getString(sAutoUse);
+                        PreferenceValues.setString(PreferenceKeys.RemoteSettingsURL, ctx, sActivate);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private static final String C_CAST_CONFIG_CACHE_FILE = "CastConfig.json";
 
+/*
     public static boolean hasWebConfig() {
         return ( m_mCastConfig != null ) && ( 0 < m_mCastConfig.length() );
     }
+*/
 /*
     public static JSONObject getWebConfig() {
         return m_mCastConfig;

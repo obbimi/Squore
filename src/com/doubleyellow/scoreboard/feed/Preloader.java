@@ -26,9 +26,12 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Util;
+import com.doubleyellow.scoreboard.prefs.ExportImportPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.prefs.URLsKeys;
 import com.doubleyellow.util.*;
+
 import org.json.JSONObject;
 
 import java.util.*;
@@ -44,7 +47,7 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
     private static String TAG = "SB." + Preloader.class.getSimpleName();
     private static Preloader instance = null;
 
-    private Map<Status, String> mStatus2Url = new HashMap<Status, String>();
+    private Map<Status, Object> mStatus2Url = new HashMap<>();
     public static Preloader getInstance(Context context) {
         if ( instance == null ) {
             instance = new Preloader();
@@ -59,10 +62,16 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
     @Override protected Integer doInBackground(Context[] params) {
         m_context = params[0];
 
+        Object remoteSettingsURL = PreferenceValues.getRemoteSettingsURL(m_context, true);
+        if ( remoteSettingsURL == null || String.valueOf(remoteSettingsURL).isEmpty() ) {
+            // just to able to use AutoActivate while developing...
+            remoteSettingsURL = PreferenceKeys.RemoteSettingsURL;
+        }
         mStatus2Url.put(Status.WebConfig        , PreferenceValues.getWebConfigURL  (m_context));
-        mStatus2Url.put(Status.ActiveMatchesFeed, PreferenceValues.getMatchesFeedURL(m_context));
-        mStatus2Url.put(Status.ActivePlayersFeed, PreferenceValues.getPlayersFeedURL(m_context));
-        mStatus2Url.put(Status.FeedOfFeeds      , PreferenceValues.getFeedsFeedURL  (m_context));
+        mStatus2Url.put(Status.RemoteSettings   , remoteSettingsURL);
+        mStatus2Url.put(Status.ActiveMatchesFeed, URLsKeys.FeedMatches);
+        mStatus2Url.put(Status.ActivePlayersFeed, URLsKeys.FeedPlayers);
+        mStatus2Url.put(Status.FeedOfFeeds      , PreferenceKeys.FeedFeedsURL);
 
         doNext(1);
 
@@ -110,7 +119,13 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
         m_status = Status.values()[m_status.ordinal()+iOffSet];
         if ( mStatus2Url.containsKey(m_status) ) {
             // step involves fetching data from internet
-            String sURL = mStatus2Url.get(m_status);
+            Object oValue = mStatus2Url.get(m_status);
+            if ( oValue instanceof PreferenceKeys ) {
+                oValue = PreferenceValues.getString(oValue, null, m_context);
+            } else if ( oValue instanceof URLsKeys ) {
+                oValue = PreferenceValues._getFeedURL(m_context, (URLsKeys) oValue);
+            }
+            String sURL = oValue instanceof String ? String.valueOf(oValue): null;
             if ( StringUtil.isNotEmpty(sURL) ) {
                 sURL = URLFeedTask.prefixWithBaseIfRequired(sURL);
                 URLFeedTask urlFeedTask = new URLFeedTask(m_context, sURL);
@@ -171,6 +186,7 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
       //CountryCache,
         ActivePlayersFeed,
         FeedOfFeeds,
+        RemoteSettings,
         /** TODO: this next one should actually update the 'Name' of some of the defined feeds if they match on URL: ones like tournamentsoftware.com.001.php, tournamentsoftware.com.002.php */
         DynamicFeedNames,
         /** just a bookmark we can jump to if first feedfetching already fails */
@@ -205,6 +221,11 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                             JSONObject castConfig = config.getJSONObject(C_CastConfig);
                             Brand.setCastConfig(castConfig, m_context.getCacheDir());
                         }
+                        final String C_RemoteConfigURLs = "RemoteConfigURLs" + "-" + Brand.brand;
+                        if ( config.has(C_RemoteConfigURLs) ) {
+                            JSONObject remoteUrls = config.getJSONObject(C_RemoteConfigURLs);
+                            Brand.setRemoteConfigURLs(remoteUrls, m_context.getCacheDir(), m_context);
+                        }
                         final String C_HasWearable = "HasWearable" + "-" + Brand.brand;
                         if ( config.has(C_HasWearable) ) {
                             boolean bHasWearable = config.getBoolean(C_HasWearable);
@@ -212,6 +233,15 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                }
+                if ( m_status.equals(Status.RemoteSettings) ) {
+                    try {
+                        ExportImportPrefs.importSettingsFromJSONFromURL(m_context, sContent, sUrl);
+                    } catch (Exception e) {
+                        if ( m_status.equals(Status.RemoteSettings) ) {
+                            ((ScoreBoard)m_context).showInfoMessageOnUiThread( "Could not import remote settings from " + URLFeedTask.shortenUrl(sUrl) + " " + e, 10);
+                        }
                     }
                 }
                 if ( m_status.equals(Status.ActiveMatchesFeed) ) {
@@ -232,6 +262,11 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                 doNext(1);
                 break;
             case FileNotFound:
+                if ( m_context instanceof ScoreBoard) {
+                    if ( m_status.equals(Status.RemoteSettings) ) {
+                        ((ScoreBoard)m_context).showInfoMessageOnUiThread("Could not retrieve remote settings from " + sUrl, 10);
+                    }
+                }
                 doNext(1); // continue with other internet resources that may be available
                 break;
             case LoginToNetworkFirst:

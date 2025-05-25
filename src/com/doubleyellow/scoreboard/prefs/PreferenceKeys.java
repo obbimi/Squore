@@ -96,6 +96,7 @@ public enum PreferenceKeys {
         additionalPostKeyValuePairs,
         postDataPreference,
         maximumCacheAgeFlags,
+        /** in minutes */
         maximumCacheAgeFeeds,
         /** in seconds */
         feedReadTimeout,
@@ -360,4 +361,6 @@ public enum PreferenceKeys {
         MQTTPublishTopicChange,
         MQTTSubscribeTopicChange,
             MQTTOtherDeviceId,
+
+    RemoteSettingsURL,
 }

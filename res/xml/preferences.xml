@@ -1626,6 +1626,12 @@
                                 android:summary="@string/pref_suggestToPostResult_summary"
                                 android:defaultValue="@bool/suggestToPostResult_default"
                     />
+            <CheckBoxPreference android:key="savePasswords"
+                android:icon="@drawable/dummy"
+                                android:title="@string/pref_savePasswords"
+                                android:summary="@string/pref_savePasswords_summary"
+                                android:defaultValue="@bool/savePasswords_default"
+                    />
 
             <CheckBoxPreference android:key="hideCompletedMatchesFromFeed"
                 android:icon="@drawable/dummy"
@@ -1825,6 +1831,13 @@
 
     <PreferenceCategory android:title="@string/pref_Other"
         >
+        <ListPreference
+            android:icon="@drawable/dummy"
+            android:key="RemoteSettingsURL"
+            android:title="@string/pref_RemoteSettingsURL"
+            android:summary="@string/pref_RemoteSettingsURL_summary"
+            android:defaultValue=""
+            />
         <com.doubleyellow.scoreboard.prefs.ExportImportPrefs
                 android:icon="@drawable/import_export_triangle"
                 android:key="exportImportPrefs"

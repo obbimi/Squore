@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -44,6 +45,7 @@ import android.util.TypedValue;
 import android.widget.Toast;
 import com.doubleyellow.android.SystemUtil;
 import com.doubleyellow.android.task.DownloadImageTask;
+import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.android.util.ExportImport;
 import com.doubleyellow.android.util.SimpleELAdapter;
 import com.doubleyellow.android.util.KeyStoreUtil;
@@ -52,6 +54,7 @@ import com.doubleyellow.prefs.EnumListPreference;
 import com.doubleyellow.prefs.EnumMultiSelectPreference;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.model.GoldenPointFormat;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
@@ -65,9 +68,11 @@ import com.doubleyellow.scoreboard.speech.Speak;
 import com.doubleyellow.util.*;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.Executors;
 
 /**
  * Activity that allows user to modify preference values.
@@ -109,10 +114,21 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
     }
 
     private final SPChange spChange = new SPChange();
-    private class SPChange implements SharedPreferences.OnSharedPreferenceChangeListener
+    private class SPChange implements SharedPreferences.OnSharedPreferenceChangeListener, ContentReceiver
     {
         /** To be able to change multiple preferences by code without this listener doing anything */
         private boolean bIgnorePrefChanges = false;
+
+        @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent, String sUrl) {
+            String sRemoteConfigUrl  = PreferenceValues.getRemoteSettingsURL(Preferences.this, false);
+            if ( sUrl.startsWith(sRemoteConfigUrl) ) {
+                try {
+                    ExportImportPrefs.importSettingsFromJSONFromURL(Preferences.this, sContent, sUrl);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         @Override public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
             if ( bIgnorePrefChanges ) {
@@ -522,6 +538,21 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     case UseBluetoothLE:
                         //boolean bUse = PreferenceValues.useBluetoothLE(Preferences.this);
                         break;
+                    case RemoteSettingsURL:
+                        String sUrl = PreferenceValues.getRemoteSettingsURL(Preferences.this, true);
+                        if ( StringUtil.isNotEmpty(sUrl) && sUrl.startsWith("http") ) {
+                            PreferenceValues.setRestartRequired(Preferences.this);
+                            URLFeedTask task = new URLFeedTask(Preferences.this, sUrl);
+                            task.setContentReceiver(this);
+                            if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P /* 28 */ ) {
+                                task.executeOnExecutor(Executors.newSingleThreadExecutor());
+                                Log.d(TAG, "Started download task using Executors.newSingleThreadExecutor... ");
+                            } else {
+                                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                Log.d(TAG, "Started download task ... ");
+                            }
+                        }
+                        break;
                     default:
                         //Log.d(TAG, "Not handling case for " + eKey);
                         break;
@@ -692,6 +723,26 @@ public class Preferences extends Activity /* using XActivity here crashes the ap
                     castScreen.setEntries    (lLetUserSelectFromHR.toArray(new CharSequence[0])); // human readable
                 } else {
                     castScreen.setEnabled(false);
+                }
+            }
+
+            ListPreference remoteSettingsURL = (ListPreference) this.findPreference(PreferenceKeys.RemoteSettingsURL.toString());
+            if ( remoteSettingsURL != null ) {
+                List<CharSequence> lLetUserSelectFrom   = new ArrayList<>();
+                List<CharSequence> lLetUserSelectFromHR = new ArrayList<>();
+                JSONObject jaDisplayIds = Brand.getRemoteConfigURLs(getContext());
+                if ( jaDisplayIds != null ) {
+                    Iterator<String> keys = jaDisplayIds.keys();
+                    while( keys.hasNext() ) {
+                        String sName = keys.next();
+                        if ( sName.startsWith(Brand.RemoteConfig_AutoActivate) ) { continue; }
+                        String sUrl  = jaDisplayIds.optString(sName);
+                        lLetUserSelectFrom  .add(sUrl);
+                        lLetUserSelectFromHR.add(sName);
+                    }
+
+                    remoteSettingsURL.setEntryValues(lLetUserSelectFrom  .toArray(new CharSequence[0])); // actual values
+                    remoteSettingsURL.setEntries    (lLetUserSelectFromHR.toArray(new CharSequence[0])); // human readable
                 }
             }
 

@@ -142,17 +142,21 @@ public class UsernamePassword extends BaseAlertDialog {
         m_authentication = authentication;
     }
 
+    public static String getSettingsSuffix(Context ctx, int iResUnOrPw) {
+        return "__" + StringUtil.removeNonAscii(ctx.getString(iResUnOrPw));
+    }
+
     private String getUsernamePrefKey() {
-        return m_sName + "__" + NAME_PREFKEY + "__" + getString(R.string.username);
+        return m_sName + "__" + NAME_PREFKEY + getSettingsSuffix(context, R.string.username);
     }
     private String getPasswordPrefKey() {
-        return m_sName + "__" + NAME_PREFKEY + "__" + getString(R.string.password);
+        return m_sName + "__" + NAME_PREFKEY + getSettingsSuffix(context, R.string.password);
     }
     private String getUsernamePrefKeyURL() {
-        return m_sPostURL + "__" + URL_PREFKEY + "__" + getString(R.string.username);
+        return m_sPostURL + "__" + URL_PREFKEY + getSettingsSuffix(context, R.string.username);
     }
     private String getPasswordPrefKeyURL() {
-        return m_sPostURL + "__" + URL_PREFKEY + "__" + getString(R.string.password);
+        return m_sPostURL + "__" + URL_PREFKEY + getSettingsSuffix(context, R.string.password);
     }
 
     private EditText etUsername = null;

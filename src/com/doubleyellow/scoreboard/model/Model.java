@@ -3323,7 +3323,7 @@ public abstract class Model implements Serializable
                 final WifiInfo wifiInfo = wifiManager.getConnectionInfo(); // ACCESS_WIFI_STATE
 
                 //final String bssid                   = wifiInfo.getBSSID(); // usually very similar if connected to the same SSID but now per definition equal (incemented by 1 or 2 ...)
-                final String androidDeviceMacAddress = wifiInfo.getMacAddress();
+                //final String androidDeviceMacAddress = wifiInfo.getMacAddress();
                 String ssid                          = wifiInfo.getSSID(); // ssid of the wifi e.g. TELENETHOMESPOT of telenet-5F3EB
                 if ( StringUtil.isNotEmpty(ssid) ) {
                     ssid = ssid.replaceAll("[^\\w\\-\\.]", ""); // may e.g hold '<unknown ssid>'
@@ -3331,7 +3331,7 @@ public abstract class Model implements Serializable
                 final int ipAddress = wifiInfo.getIpAddress(); // ipadress assigned to device by e.g. router
                 wifi.put("ipaddress"   , Placeholder.Misc.IntegerToIPAddress.execute(String.valueOf(ipAddress), null, null));
                 wifi.put("ssid"        , ssid); // Typical values... so not useful : "ipaddress":"0.0.0.0","ssid":"unknownssid","mac":"02:00:00:00:00:00"
-                wifi.put("mac"         , androidDeviceMacAddress);
+                //wifi.put("mac"         , androidDeviceMacAddress);
                 JsonUtil.removeEmpty(wifi);
                 metaData.put(JSONKey.wifi.toString(), wifi);
             } catch (Exception e) {

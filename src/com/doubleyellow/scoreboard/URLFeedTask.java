@@ -53,10 +53,17 @@ public class URLFeedTask extends URLTask
 
         String sCC = PreferenceValues.getCountryFromTelephonyOrTimeZone(context);
         if ( StringUtil.isNotEmpty(sCC) ) {
-            String sParamSplitter = sURL.contains("?") ? "&" : "?";
-            sURL = sURL + sParamSplitter + "cc=" + sCC;
+            return addKeyValue(sURL,"cc", sCC);
         }
         return sURL;
+    }
+
+    public static String addKeyValue(String sURL, String sKey, Object oVal) {
+        String sParamSplitter = sURL.contains("?") ? "&" : "?";
+        return sURL + sParamSplitter + sKey + "=" + oVal;
+    }
+    public static String shortenUrl(String sURL) {
+        return sURL.replaceFirst("\\?.*","");
     }
 
     private int iReadTimeoutMS = 30000;

@@ -28,12 +28,18 @@ import android.widget.Toast;
 import com.doubleyellow.android.util.ExportImport;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
+import com.doubleyellow.scoreboard.dialog.UsernamePassword;
+import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.util.DateUtil;
 import com.doubleyellow.util.Enums;
 import com.doubleyellow.util.FileUtil;
+import com.doubleyellow.util.JsonUtil;
 import com.doubleyellow.util.MapUtil;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -79,41 +85,12 @@ public class ExportImportPrefs extends DialogPreference
     private static final String sSettingsExtension_JSON = ".json";
 
     public static String importSettings(Context context, boolean bShowToast) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         File fSettingsJSON = getSettingsBinaryFile(context, true, sSettingsExtension_JSON);
         if ( fSettingsJSON != null && fSettingsJSON.exists() ) {
             try {
                 JSONObject joSettings = new JSONObject(FileUtil.readFileAsString(fSettingsJSON));
-                SharedPreferences.Editor editor = preferences.edit();
-                Iterator<String> keys = joSettings.keys();
-                while( keys.hasNext() ) {
-                    String sKey = keys.next();
-                    Object oBUValue = joSettings.get(sKey);
-                    if ( oBUValue instanceof String ) {
-                        editor.putString(sKey, (String) oBUValue);
-                    } else if ( oBUValue instanceof Boolean ) {
-                        editor.putBoolean(sKey, (Boolean) oBUValue);
-                    } else if ( oBUValue instanceof Integer ) {
-                        editor.putInt(sKey, (Integer) oBUValue);
-                    } else if ( oBUValue instanceof JSONArray) {
-                        JSONArray ar = (JSONArray) oBUValue;
-                        Set<String> setValues = new HashSet<>();
-                        for (int i = 0; i < ar.length(); i++) {
-                            setValues.add(ar.getString(i));
-                        }
-                        editor.putStringSet(sKey, setValues);
-                    } else if ( oBUValue instanceof Double ) {
-                        editor.putFloat(sKey, Float.parseFloat(oBUValue.toString()));
-                    } else if ( oBUValue instanceof Float ) {
-                        editor.putFloat(sKey, (Float) oBUValue);
-                    } else if ( oBUValue instanceof Long ) {
-                        editor.putLong(sKey, (Long) oBUValue);
-                    } else {
-                        Log.w(TAG, String.format("Could not import %s=%s of type %s", sKey, oBUValue, oBUValue.getClass().getName()));
-                    }
-                }
-                editor.commit();
+                importSettingsFromJSON(context, joSettings);
                 String sMsg = context.getString(R.string.x_restored_from_y, context.getString(R.string.sb_preferences), fSettingsJSON.getAbsolutePath());
                 if ( bShowToast ) {
                     Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
@@ -139,6 +116,7 @@ public class ExportImportPrefs extends DialogPreference
             return null;
         }
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         for( String sKey: buAll.keySet() ) {
             Object oBUValue = buAll.get(sKey);
@@ -171,10 +149,135 @@ public class ExportImportPrefs extends DialogPreference
         return sMsg;
     }
 
-    public static void exportSettings(Context context) {
+    public static void importSettingsFromJSONFromURL(Context context, String sContent, String sUrl) throws JSONException {
+        sContent = sContent.trim();
+        JSONObject joRemoteConfig = new JSONObject(sContent);
+
+        // TEMP CODE WHILE DEVELOPING
+        if (DateUtil.getCurrentYYYY_MM_DD().equals("2025-05-26") ) {
+            joRemoteConfig.remove(PreferenceKeys.UseMQTT.toString());
+        }
+
+        JSONObject joCurrent      = ExportImportPrefs.getCurrentSettings(context);
+        Map mCurrent = JsonUtil.toMap(joCurrent);
+            mCurrent.remove(PreferenceKeys.RemoteSettingsURL.toString());
+            mCurrent = MapUtil.filterKeys(mCurrent, ".+" + UsernamePassword.getSettingsSuffix(context, R.string.username), Enums.Match.Remove);
+            mCurrent = MapUtil.filterKeys(mCurrent, ".+" + UsernamePassword.getSettingsSuffix(context, R.string.password), Enums.Match.Remove);
+        Map mRemote  = JsonUtil.toMap(joRemoteConfig);
+        cleanBrandBased(mRemote); //
+
+        Map<MapUtil.mapDiff, Map> mapDiff = MapUtil.getMapDiff(mCurrent, mRemote);
+        Map mInserts = mapDiff.get(MapUtil.mapDiff.insert);
+        Map mUpdates = mapDiff.get(MapUtil.mapDiff.update);
+        Map mToBeOverwritten = MapUtil.filterKeys(mCurrent, mUpdates.keySet(), MapUtil.Overlay.Keep);
+        Map mDeletes = mapDiff.get(MapUtil.mapDiff.delete);
+        Log.w(TAG, "TODO: settings diff " + mapDiff);
+        int iChanges = mUpdates.size() + mInserts.size();
+
+        String sMsg;
+        int iMsgDuration = 10;
+        sUrl = URLFeedTask.shortenUrl(sUrl);
+        if ( iChanges > 0  ) {
+            ExportImportPrefs.importSettingsFromJSON(context, joRemoteConfig);
+            if ( joRemoteConfig.has(PreferenceKeys.feedPostUrls.toString()) ) {
+                PreferenceValues.setMatchesFeedURLUnchanged(false);
+            }
+            sMsg = context.getString(R.string.pref_RemoteConfig_X_SettingChanged, iChanges, sUrl);
+            iMsgDuration = 10;
+        } else {
+            sMsg = context.getString(R.string.pref_RemoteConfig_NoSettingChanges, sUrl);
+            iMsgDuration = 3;
+        }
+        if ( context instanceof ScoreBoard) {
+            ((ScoreBoard)context).showInfoMessageOnUiThread(sMsg, iMsgDuration);
+        }
+
+        // TODO: feedPostUrl=<a number>, if specified feedPostUrls should be there as well
+    }
+    public static void importSettingsFromJSON(Context context, JSONObject joSettings) throws JSONException
+    {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        Iterator<String> keys = joSettings.keys();
+        while( keys.hasNext() ) {
+            String sKey = keys.next();
+            Object oBUValue = joSettings.get(sKey);
+            if ( oBUValue instanceof String ) {
+                editor.putString(sKey, (String) oBUValue);
+            } else if ( oBUValue instanceof Boolean ) {
+                editor.putBoolean(sKey, (Boolean) oBUValue);
+            } else if ( oBUValue instanceof Integer ) {
+                editor.putInt(sKey, (Integer) oBUValue);
+            } else if ( oBUValue instanceof JSONArray) {
+                JSONArray ar = (JSONArray) oBUValue;
+                Set<String> setValues = new HashSet<>();
+                for (int i = 0; i < ar.length(); i++) {
+                    setValues.add(ar.getString(i));
+                }
+                editor.putStringSet(sKey, setValues);
+            } else if ( oBUValue instanceof Double ) {
+                editor.putFloat(sKey, Float.parseFloat(oBUValue.toString()));
+            } else if ( oBUValue instanceof Float ) {
+                editor.putFloat(sKey, (Float) oBUValue);
+            } else if ( oBUValue instanceof Long ) {
+                editor.putLong(sKey, (Long) oBUValue);
+            } else {
+                Log.w(TAG, String.format("Could not import %s=%s of type %s", sKey, oBUValue, oBUValue.getClass().getName()));
+            }
+        }
+        editor.commit();
+    }
+
+    public static JSONObject getCurrentSettings(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         Map<String, ?> buAll = preferences.getAll();
 
+        TreeMap tmSettings = new TreeMap(buAll); // get stuff 'sorted'
+        cleanBrandBased(tmSettings);
+
+        JSONObject joSettings = new JSONObject(tmSettings);
+        return joSettings;
+    }
+
+    public static void cleanBrandBased(Map tmSettings) {
+        tmSettings = MapUtil.filterKeys(tmSettings, ".*\\.RunCount", Enums.Match.Remove);
+        // some specials
+        tmSettings = MapUtil.filterKeys(tmSettings, ".*(BLE|BluetoothLE).*", Enums.Match.Remove);
+
+        if (Brand.isGameSetMatch()) {
+            for (PreferenceKeys key : Preferences.NONGameSetMatch_SpecificPrefs) {
+                tmSettings.remove(key.toString());
+            }
+        } else {
+            for (PreferenceKeys key : Preferences.GameSetMatch_SpecificPrefs) {
+                tmSettings.remove(key.toString());
+            }
+        }
+        if (Brand.supportsTimeout() == false) {
+            tmSettings.remove(PreferenceKeys.autoShowGamePausedDialogAfterXPoints.toString());
+            tmSettings.remove(PreferenceKeys.autoShowModeActivationDialog.toString());
+            tmSettings.remove(PreferenceKeys.showModeDialogAfterXMins.toString());
+            tmSettings.remove(PreferenceKeys.showGamePausedDialog.toString());
+            tmSettings.remove(PreferenceKeys.timerTowelingDown.toString());
+        }
+        if ( Brand.isSquash() ) {
+            tmSettings.remove(PreferenceKeys.swapPlayersBetweenGames.toString());
+            tmSettings.remove(PreferenceKeys.swapPlayersHalfwayGame.toString());
+            tmSettings.remove(PreferenceKeys.useChangeSidesFeature.toString());
+        }
+        if ( Brand.isTabletennis() == false ) {
+            tmSettings.remove(PreferenceKeys.numberOfServesPerPlayer.toString());
+            tmSettings.remove(PreferenceKeys.numberOfServiceCountUpOrDown.toString());
+        }
+        tmSettings.remove(PreferenceKeys.targetDirForImportExport.toString());
+        tmSettings.remove(PreferenceKeys.OfficialSquashRulesURLs.toString());
+        tmSettings.remove(PreferenceKeys.squoreBrand.toString());
+        tmSettings.remove(PreferenceKeys.viewedChangelogVersion.toString());
+        tmSettings.remove(PreferenceKeys.onlyForContactGroups.toString());
+        tmSettings.remove(PreferenceKeys.liveScoreDeviceId.toString()); // if used for transferring settings, we do not want to devices having the same id
+    }
+
+    public static void exportSettings(Context context) {
         File fSettingsJson = getSettingsBinaryFile(context, false, sSettingsExtension_JSON);
         try {
             if ( fSettingsJson == null ) {
@@ -182,32 +285,7 @@ public class ExportImportPrefs extends DialogPreference
                 Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
                 return;
             }
-            TreeMap tmSettings = new TreeMap(buAll); // get stuff 'sorted'
-            tmSettings = MapUtil.filterKeys(tmSettings, ".*\\.RunCount", Enums.Match.Remove);
-            // some specials
-            tmSettings = MapUtil.filterKeys(tmSettings, ".*(BLE|BluetoothLE).*", Enums.Match.Remove);
-            if ( Brand.isGameSetMatch() ) {
-                for(PreferenceKeys key: Preferences.NONGameSetMatch_SpecificPrefs) {
-                    tmSettings.remove(key.toString());
-                }
-            } else {
-                for(PreferenceKeys key: Preferences.GameSetMatch_SpecificPrefs) {
-                    tmSettings.remove(key.toString());
-                }
-            }
-            if ( Brand.supportsTimeout() == false ) {
-                tmSettings.remove(PreferenceKeys.autoShowGamePausedDialogAfterXPoints.toString());
-                tmSettings.remove(PreferenceKeys.autoShowModeActivationDialog.toString());
-                tmSettings.remove(PreferenceKeys.showModeDialogAfterXMins.toString());
-                tmSettings.remove(PreferenceKeys.showGamePausedDialog.toString());
-                tmSettings.remove(PreferenceKeys.timerTowelingDown.toString());
-            }
-            tmSettings.remove(PreferenceKeys.OfficialSquashRulesURLs.toString());
-            tmSettings.remove(PreferenceKeys.squoreBrand.toString());
-            tmSettings.remove(PreferenceKeys.viewedChangelogVersion.toString());
-            tmSettings.remove(PreferenceKeys.liveScoreDeviceId.toString()); // if used for transferring settings, we do not want to devices having the same id
-
-            JSONObject joSettings = new JSONObject(tmSettings);
+            JSONObject joSettings = getCurrentSettings(context);
             FileUtil.writeTo(fSettingsJson, joSettings.toString(2));
 
             String sMsg = context.getString(R.string.x_stored_in_y, context.getString(R.string.sb_preferences), fSettingsJson.getAbsolutePath());

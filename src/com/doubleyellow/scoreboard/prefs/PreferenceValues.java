@@ -28,6 +28,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.*;
@@ -44,6 +46,7 @@ import androidx.annotation.RequiresApi;
 
 import com.doubleyellow.android.task.DownloadImageTask;
 import com.doubleyellow.android.task.URLTask;
+import com.doubleyellow.android.util.AndroidPlaceholder;
 import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.prefs.OrientationPreference;
@@ -1722,13 +1725,13 @@ public class PreferenceValues extends RWValues
         return sUrl;
     }
     public static String getMatchesFeedURL(Context context) {
-        String sUrl = getFeedPostDetail(context, URLsKeys.FeedMatches);
-               sUrl = URLFeedTask.prefixWithBaseIfRequired(sUrl);
-               sUrl = URLFeedTask.addCountryCodeAsParameter(sUrl, context);
-        return sUrl;
+        return _getFeedURL(context, URLsKeys.FeedMatches);
     }
     public static String getPlayersFeedURL(Context context) {
-        String sUrl = getFeedPostDetail(context, URLsKeys.FeedPlayers);
+        return _getFeedURL(context, URLsKeys.FeedPlayers);
+    }
+    public static String _getFeedURL(Context context, URLsKeys urLsKeys) {
+        String sUrl = getFeedPostDetail(context, urLsKeys);
                sUrl = URLFeedTask.prefixWithBaseIfRequired(sUrl);
                sUrl = URLFeedTask.addCountryCodeAsParameter(sUrl, context);
         return sUrl;
@@ -2099,6 +2102,10 @@ public class PreferenceValues extends RWValues
     public static boolean getMatchesFeedURLUnchanged() {
         return bFeedsAreUnChanged;
     }
+    public static void setMatchesFeedURLUnchanged(boolean b) {
+        bFeedsAreUnChanged = b;
+        mActiveFeedValues = null;
+    }
 
     public static boolean getFixedMatchesAreUnChanged() {
         return bFixedMatchesAreUnChanged;
@@ -2254,7 +2261,6 @@ public class PreferenceValues extends RWValues
                 continue;
             }
             if ( entry == null ) {
-                addEntryToList(entry, entries, mName2SizeOfStoredAlready);
                 entry = new HashMap<URLsKeys, String>();
             }
 
@@ -2592,6 +2598,32 @@ public class PreferenceValues extends RWValues
     }
     public static boolean initializeForScoringWithMediaControlButtons(Context context) {
         return getBoolean(PreferenceKeys.allowForScoringWithBlueToothConnectedMediaControlButtons, context, false);
+    }
+
+    public static String getIpAddress(Context context) {
+        try {
+            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            final WifiInfo wifiInfo = wifiManager.getConnectionInfo(); // ACCESS_WIFI_STATE
+            final int ipAddress = wifiInfo.getIpAddress(); // ipadress assigned to device by e.g. router
+            String sIp = Placeholder.Misc.IntegerToIPAddress.execute(String.valueOf(ipAddress), null, null);
+            return sIp;
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public static String getRemoteSettingsURL(Context context, boolean bAddParams) {
+        String sUrl = getString(PreferenceKeys.RemoteSettingsURL, 0, context);
+        if ( bAddParams ) {
+            Map m = MapUtil.getMap("countryCode", PreferenceValues.getCountryFromTelephonyOrTimeZone(context)
+                                  ,"versionCode"      , PreferenceValues.getAppVersionCode(context)
+                                  ,"ipAddress"        , PreferenceValues.getIpAddress(context)
+                                  ,PreferenceKeys.liveScoreDeviceId.toString() , PreferenceValues.getLiveScoreDeviceId(context)
+            );
+            AndroidPlaceholder placeholder = new AndroidPlaceholder(TAG);
+            sUrl = placeholder.translate(sUrl, m);
+        }
+        return sUrl;
     }
 
     public static String getCountryFromTelephonyOrTimeZone(Context context) {

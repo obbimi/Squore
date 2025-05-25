@@ -406,8 +406,30 @@ public class ColorPrefs
                         String[] lHeaders     = StringUtil.singleCharacterSplit(lDefaultClrs[0]);
                         String[] lNewColors   = context.getResources().getStringArray(R.array.colorSchema_new);
                         PersistedListOfMaps.appendEntries(plomColors, Arrays.asList(lHeaders), lNewColors, iUserSelectedColorSchemeName + 1);
+
+                        // remove duplicate names
+                        Map<String,Integer> mName2Pos = new HashMap<>();
+                        List<Integer> lEntriesToDelete = new ArrayList<>();
+                        list = plomColors.getContent();
+                        final String sPrimaryKey = lHeaders[0].trim();
+                        for(int i=0; i< list.size(); i++) {
+                            Map<String, String> mEntry = list.get(i);
+                            String sName = mEntry.get(sPrimaryKey);
+                            if ( mName2Pos.containsKey(sName) ) {
+                                lEntriesToDelete.add(0, i); // bigger numbers first
+                            } else {
+                                mName2Pos.put(sName, i);
+                            }
+                        }
+                        if ( lEntriesToDelete.size() > 0 ) {
+                            for(Integer iDelete: lEntriesToDelete ) {
+                                plomColors.delete(iDelete);
+                            }
+                            plomColors = new PersistedListOfMaps(file, null);
+                        }
                     }
                     new_colors_have_been_added = true;
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
