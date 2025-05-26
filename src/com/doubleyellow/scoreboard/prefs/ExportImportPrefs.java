@@ -207,7 +207,8 @@ public class ExportImportPrefs extends DialogPreference
             } else if ( oBUValue instanceof Boolean ) {
                 editor.putBoolean(sKey, (Boolean) oBUValue);
             } else if ( oBUValue instanceof Integer ) {
-                editor.putInt(sKey, (Integer) oBUValue);
+                editor.putString(sKey, String.valueOf(oBUValue));
+                //editor.putInt(sKey, (Integer) oBUValue);
             } else if ( oBUValue instanceof JSONArray) {
                 JSONArray ar = (JSONArray) oBUValue;
                 Set<String> setValues = new HashSet<>();
@@ -216,11 +217,14 @@ public class ExportImportPrefs extends DialogPreference
                 }
                 editor.putStringSet(sKey, setValues);
             } else if ( oBUValue instanceof Double ) {
-                editor.putFloat(sKey, Float.parseFloat(oBUValue.toString()));
+                //editor.putFloat(sKey, Float.parseFloat(oBUValue.toString()));
+                editor.putInt(sKey, (int) Math.round((double) oBUValue));
             } else if ( oBUValue instanceof Float ) {
-                editor.putFloat(sKey, (Float) oBUValue);
+                //editor.putFloat(sKey, (Float) oBUValue);
+                editor.putInt(sKey, Math.round((float) oBUValue));
             } else if ( oBUValue instanceof Long ) {
-                editor.putLong(sKey, (Long) oBUValue);
+                //editor.putLong(sKey, (Long) oBUValue);
+                editor.putInt(sKey, Integer.parseInt(String.valueOf(oBUValue)));
             } else {
                 Log.w(TAG, String.format("Could not import %s=%s of type %s", sKey, oBUValue, oBUValue.getClass().getName()));
             }
