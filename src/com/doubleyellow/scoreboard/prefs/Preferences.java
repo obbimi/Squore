@@ -79,7 +79,7 @@ import java.util.concurrent.Executors;
  * See also:
  * - res/xml/preferences.xml
  */
-public class Preferences extends Activity /* using XActivity here crashes the app */ {
+public class Preferences extends Activity {
 
   //public static final int TEXTSIZE_UNIT = TypedValue.COMPLEX_UNIT_DIP;
   //public static final int TEXTSIZE_UNIT = TypedValue.COMPLEX_UNIT_SP;

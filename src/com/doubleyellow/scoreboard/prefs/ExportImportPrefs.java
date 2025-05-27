@@ -201,7 +201,41 @@ public class ExportImportPrefs extends DialogPreference
         Iterator<String> keys = joSettings.keys();
         while( keys.hasNext() ) {
             String sKey = keys.next();
+            if ( sKey.startsWith("-") ) { continue; }
+
             Object oBUValue = joSettings.get(sKey);
+            PreferenceKeys prefKey = null;
+            try {
+                prefKey = PreferenceKeys.valueOf(sKey);
+                Class clazz = prefKey.getType();
+                if ( clazz != null ) {
+                    if ( clazz.equals(Integer.class) ) {
+                        //editor.putInt( sKey, Integer.parseInt(String.valueOf(oBUValue)));
+                        editor.putString( sKey, String.valueOf(oBUValue)); // to ensure EditTextPreference.onSetInitialValue(), that always seems to get String value even for inputType=number, does not give a ClassCastException
+                        continue;
+                    } else if ( clazz.equals(Boolean.class) ) {
+                        editor.putBoolean( sKey, Boolean.parseBoolean(String.valueOf(oBUValue)));
+                        continue;
+                    } else if ( clazz.equals(String.class) ) {
+                        if ( oBUValue == null ) {
+                            editor.putString( sKey, "");
+                        } else {
+                            editor.putString( sKey, String.valueOf(oBUValue));
+                        }
+                        continue;
+                    } else if ( clazz.isEnum() ) {
+                        editor.putString(sKey, String.valueOf(oBUValue));
+                        continue;
+                    }
+                }
+            } catch (Exception e) {
+                if ( prefKey != null ) {
+                    e.printStackTrace(); // TMP
+                } else {
+                    Log.d(TAG, "Key not one of PreferenceKeys " + sKey);
+                }
+            }
+
             if ( oBUValue instanceof String ) {
                 editor.putString(sKey, (String) oBUValue);
             } else if ( oBUValue instanceof Boolean ) {
@@ -210,6 +244,7 @@ public class ExportImportPrefs extends DialogPreference
                 editor.putString(sKey, String.valueOf(oBUValue));
                 //editor.putInt(sKey, (Integer) oBUValue);
             } else if ( oBUValue instanceof JSONArray) {
+                // e.g. EnumSet
                 JSONArray ar = (JSONArray) oBUValue;
                 Set<String> setValues = new HashSet<>();
                 for (int i = 0; i < ar.length(); i++) {
