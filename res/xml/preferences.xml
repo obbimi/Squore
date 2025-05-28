@@ -21,6 +21,14 @@
                   xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:dy="http://double-yellow.be">
 
+    <ListPreference
+        android:icon="@drawable/ic_action_web_site"
+        android:key="RemoteSettingsURL"
+        android:title="@string/pref_RemoteSettingsURL"
+        android:summary="@string/pref_RemoteSettingsURL_summary"
+        android:defaultValue=""
+        />
+
     <PreferenceScreen
         android:title="@string/pref_Category_BlueToothLE"
         android:summary="@string/pref_Category_BlueToothLE_summary"
@@ -1829,10 +1837,14 @@
     </PreferenceScreen>
 
 
-    <PreferenceCategory android:title="@string/pref_Other"
+    <PreferenceScreen
+        android:key="ImportExportReset"
+        android:title="@string/pref_ImportExportReset"
+        android:summary="@string/pref_ImportExportReset_summary"
+        android:icon="@drawable/settings_reset"
         >
         <ListPreference
-            android:icon="@drawable/dummy"
+            android:icon="@drawable/ic_action_web_site"
             android:key="RemoteSettingsURL"
             android:title="@string/pref_RemoteSettingsURL"
             android:summary="@string/pref_RemoteSettingsURL_summary"
@@ -1859,5 +1871,5 @@
                 android:persistent="false"
                 />
 
-    </PreferenceCategory>
+    </PreferenceScreen>
 </PreferenceScreen>

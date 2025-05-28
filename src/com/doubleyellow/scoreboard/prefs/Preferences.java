@@ -85,7 +85,7 @@ public class Preferences extends Activity {
   //public static final int TEXTSIZE_UNIT = TypedValue.COMPLEX_UNIT_SP;
     public static final int TEXTSIZE_UNIT = TypedValue.COMPLEX_UNIT_PX; // 20140325
 
-    private SettingsFragment settingsFragment = new SettingsFragment();
+    private final SettingsFragment settingsFragment = new SettingsFragment();
 
     private static final String TAG = "SB." + Preferences.class.getSimpleName();
 
@@ -120,12 +120,17 @@ public class Preferences extends Activity {
         private boolean bIgnorePrefChanges = false;
 
         @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent, String sUrl) {
-            String sRemoteConfigUrl  = PreferenceValues.getRemoteSettingsURL(Preferences.this, false);
-            if ( sUrl.startsWith(sRemoteConfigUrl) ) {
-                try {
-                    ExportImportPrefs.importSettingsFromJSONFromURL(Preferences.this, sContent, sUrl);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            String sRemoteConfigUrl = PreferenceValues.getRemoteSettingsURL(Preferences.this, false);
+            if ( sUrl.startsWith(URLFeedTask.shortenUrl(sRemoteConfigUrl) ) ) {
+                if ( result.equals(FetchResult.OK) ) {
+                    try {
+                        ExportImportPrefs.importSettingsFromJSONFromURL(Preferences.this, sContent, sUrl);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(Preferences.this, String.format("Could not import (all) content from %s", sUrl), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(Preferences.this, String.format("Could not fetch content from %s", sUrl), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -726,7 +731,9 @@ public class Preferences extends Activity {
                 }
             }
 
-            ListPreference remoteSettingsURL = (ListPreference) this.findPreference(PreferenceKeys.RemoteSettingsURL.toString());
+            PreferenceScreen psRoot = (PreferenceScreen) this.findPreference(PreferenceKeys.SBPreferences); // root
+
+            ListPreference remoteSettingsURL = (ListPreference) psRoot.findPreference(PreferenceKeys.RemoteSettingsURL.toString());
             if ( remoteSettingsURL != null ) {
                 List<CharSequence> lLetUserSelectFrom   = new ArrayList<>();
                 List<CharSequence> lLetUserSelectFromHR = new ArrayList<>();
@@ -740,9 +747,21 @@ public class Preferences extends Activity {
                         lLetUserSelectFrom  .add(sUrl);
                         lLetUserSelectFromHR.add(sName);
                     }
+                    lLetUserSelectFrom  .add("");
+                    lLetUserSelectFromHR.add(getString(R.string.lbl_none));
 
                     remoteSettingsURL.setEntryValues(lLetUserSelectFrom  .toArray(new CharSequence[0])); // actual values
                     remoteSettingsURL.setEntries    (lLetUserSelectFromHR.toArray(new CharSequence[0])); // human readable
+                    if ( StringUtil.isEmpty(PreferenceValues.getRemoteSettingsURL(getContext(), false)) ) {
+                        hideRemovePreference(psRoot, remoteSettingsURL);
+                    }
+
+                    PreferenceGroup pgImpExpReset = (PreferenceGroup) this.findPreference(PreferenceKeys.ImportExportReset);
+                    if ( pgImpExpReset != null ) {
+                        remoteSettingsURL = (ListPreference) pgImpExpReset.findPreference(PreferenceKeys.RemoteSettingsURL.toString());
+                        remoteSettingsURL.setEntryValues(lLetUserSelectFrom  .toArray(new CharSequence[0])); // actual values
+                        remoteSettingsURL.setEntries    (lLetUserSelectFromHR.toArray(new CharSequence[0])); // human readable
+                    }
                 }
             }
 
@@ -790,13 +809,12 @@ public class Preferences extends Activity {
                 }
             }
 
-            PreferenceScreen ps     = (PreferenceScreen) this.findPreference(PreferenceKeys.SBPreferences); // root
-            PreferenceGroup  psgBeh = (PreferenceGroup)    ps.findPreference(PreferenceKeys.Behaviour.toString());
+            PreferenceGroup  psgBeh = (PreferenceGroup)    psRoot.findPreference(PreferenceKeys.Behaviour.toString());
             if ( Brand.isNotSquash() ) {
-                hideRemovePreference(ps, PreferenceKeys.statistics);
-                hideRemovePreference(ps, PreferenceKeys.MatchFormat);
+                hideRemovePreference(psRoot, PreferenceKeys.statistics);
+                hideRemovePreference(psRoot, PreferenceKeys.MatchFormat);
 
-                PreferenceGroup psgApp = (PreferenceGroup) ps.findPreference(PreferenceKeys.Appearance.toString());
+                PreferenceGroup psgApp = (PreferenceGroup) psRoot.findPreference(PreferenceKeys.Appearance.toString());
               //hideRemovePreference(psgApp, PreferenceKeys.showScoringHistoryInMainScreenOn); // not really for racketlon and tabletennis
                 hideRemovePreference(psgApp, PreferenceKeys.AppealHandGestureIconSize       ); // not really for racketlon and tabletennis
                 hideRemovePreference(psgApp, PreferenceKeys.scorelineLayout);                  // not interesting enough for racketlon, badminton and tabletennis
@@ -828,7 +846,7 @@ public class Preferences extends Activity {
                 hideRemovePreference(psgBeh, PreferenceKeys.swapPlayersBetweenGames);
                 hideRemovePreference(psgBeh, PreferenceKeys.swapPlayersHalfwayGame);
             } else {
-                PreferenceGroup psgMF = (PreferenceGroup) ps.findPreference(PreferenceKeys.MatchFormat.toString());
+                PreferenceGroup psgMF = (PreferenceGroup) psRoot.findPreference(PreferenceKeys.MatchFormat.toString());
                 for(PreferenceKeys key: GameSetMatch_SpecificPrefs ) {
                     hideRemovePreference(psgMF, key);
                     hideRemovePreference(psgBeh, key);
@@ -857,8 +875,8 @@ public class Preferences extends Activity {
                     pTimerTowelingDown.setEnabled(fShowGamePausedDialog.equals(Feature.DoNotUse) == false);
                 }
             } else {
-                hideRemovePreference(ps, PreferenceKeys.modeUsageCategory);
-                hideRemovePreference(ps, PreferenceKeys.pauseGame);
+                hideRemovePreference(psRoot, PreferenceKeys.modeUsageCategory);
+                hideRemovePreference(psRoot, PreferenceKeys.pauseGame);
             }
 
             // initialize for downloading flags and setting correct dimensions

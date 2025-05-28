@@ -219,7 +219,7 @@ public enum PreferenceKeys {
         /** = numberOfSetsToWin for GSMModel */
         numberOfGamesToWinMatch(Integer.class), // also used as JSONKey
             /** special case: not best-of-x, but total-of-x games */
-            playAllGames(null),
+            playAllGames(Boolean.class),
         /* = numberOfGamesToWinSet for GSMModel model */
         numberOfPointsToWinGame(Integer.class), // also used as JSONKey
         /** tabletennis specific */
@@ -373,7 +373,8 @@ public enum PreferenceKeys {
         MQTTSubscribeTopicChange(String.class),
             MQTTOtherDeviceId(String.class),
 
-    RemoteSettingsURL(String.class),
+    ImportExportReset(null),
+        RemoteSettingsURL(String.class),
     ;
     private Class clazz = String.class;
     PreferenceKeys(Class c) {

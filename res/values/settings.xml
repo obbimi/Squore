@@ -19,13 +19,16 @@
 -->
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
 
+    <string name="pref_ImportExportReset">Import/Export/Reset Settings</string>
+    <string name="pref_ImportExportReset_summary">Import settings from a backup, from an URL, or reset to default</string>
+
     <string name="pref_RemoteSettingsURL">Remote Settings URL</string>
-    <string name="pref_RemoteSettingsURL_summary">URL from which to fetch settings. Typically used to more easily have all devices for a certain event use the same settings.</string>
+    <string name="pref_RemoteSettingsURL_summary">URL from which to fetch settings. Typically used to more easily have all devices for a certain event or league use the same settings.</string>
     <string name="pref_savePasswords">Save password</string>
     <string name="pref_savePasswords_summary">When POSTing to a website requires a password, you can let the app save the password for easy of use</string>
-    <string name="pref_RemoteConfig_NoSettingChanges">No setting changes based on\n
+    <string name="pref_RemoteConfig_NoSettingChanges">No (new) setting changes based on\n
 %1$s</string>
-    <string name="pref_RemoteConfig_X_SettingChanged">Changed %1$s settings based on\n
+    <string name="pref_RemoteConfig_X_SettingChanged">Changed %1$d settings based on\n
 %2$s</string>
 
     <string name="pref_ColorTargets_Background">Background</string>

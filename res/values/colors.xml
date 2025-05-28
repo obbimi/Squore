@@ -107,12 +107,16 @@
         <item>|Grey-Scale Dark       |#666666|#444444|#222222|#000000|</item>
         <item>|Monochrome Black      |#000000|#000000|#000000|#000000|</item>
         <item>|Monochrome White      |#ffffff|#ffffff|#ffffff|#ffffff|</item>
+        <item>|DSQV                  |#F7DC42|#000000|#ffffff|#E2000E|</item><!--yellow|black|white|red| -->
+        <item>|DSQV2                 |#000001|#E2000E|#F7DC42|#ffffff|</item><!--black|red|yellow|white| -->
     </string-array>
     <color name="background_default__Squash">#4CA3D9</color>
     <color name="background_default_tp__Squash">#CC4CA3D9</color>
 <!--    <color name="background_default__Squash">@android:color/transparent</color>-->
 
     <string-array name="colorSchema_new"  translatable="false">
+        <item>|DSQV                  |#F7DC42|#000000|#ffffff|#E2000E|</item><!--yellow|black|white|red| -->
+        <item>|DSQV2                 |#000001|#E2000E|#F7DC42|#ffffff|</item><!--black|red|yellow|white| -->
     </string-array>
     <string-array name="ColorSchema_XXX"  translatable="false">
         <item>|name        |Color1 |Color2 |Color3 |</item>

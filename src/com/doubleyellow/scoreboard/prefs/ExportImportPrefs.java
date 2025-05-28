@@ -174,6 +174,17 @@ public class ExportImportPrefs extends DialogPreference
         Log.w(TAG, "TODO: settings diff " + mapDiff);
         int iChanges = mUpdates.size() + mInserts.size();
 
+        if ( mUpdates.size() > 0 && mUpdates.size() < 10 ) {
+            // dirty trick do NOT report on changes if they are not actually changes but one map contains an int value and the other a string value
+            for(Object oKey: mUpdates.keySet() ) {
+                Object oValNew = mUpdates.get(oKey);
+                Object oValOld = mToBeOverwritten.get(oKey);
+                if ( String.valueOf(oValOld).equals(String.valueOf(oValNew))) {
+                    iChanges--;
+                }
+            }
+        }
+
         String sMsg;
         int iMsgDuration = 10;
         sUrl = URLFeedTask.shortenUrl(sUrl);
@@ -190,6 +201,8 @@ public class ExportImportPrefs extends DialogPreference
         }
         if ( context instanceof ScoreBoard) {
             ((ScoreBoard)context).showInfoMessageOnUiThread(sMsg, iMsgDuration);
+        } else {
+            Toast.makeText(context, sMsg, Toast.LENGTH_SHORT).show();
         }
 
         // TODO: feedPostUrl=<a number>, if specified feedPostUrls should be there as well
