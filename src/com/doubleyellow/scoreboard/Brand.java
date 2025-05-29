@@ -141,11 +141,15 @@ public enum Brand
             File file = new File(fCacheDir, C_REMOTE_CONFIG_URLS_CACHE_FILE );
             FileUtil.writeTo(file, mRemoteUrlsConfig.toString());
 
-            final String autoActivate = RemoteConfig_AutoActivate + "-" + DateUtil.getCurrentYYYY_MM_DD(); // yyyy-MM-dd
-            if ( m_remoteConfigUrls.has(autoActivate) ) {
-                String sActive = PreferenceValues.getRemoteSettingsURL(ctx, false);
-                if ( StringUtil.isEmpty(sActive) ) {
-                    String sAutoUse = m_remoteConfigUrls.getString(autoActivate);
+            String sActive = PreferenceValues.getRemoteSettingsURL(ctx, false);
+            if ( StringUtil.isEmpty(sActive) ) {
+                final String autoActivate1 = RemoteConfig_AutoActivate + "-" + DateUtil.getCurrentYYYY_MM_DD(); // yyyy-MM-dd
+                final String autoActivate2= RemoteConfig_AutoActivate;
+                String sAutoUse = m_remoteConfigUrls.optString(autoActivate1);
+                if ( StringUtil.isNotEmpty(sAutoUse) ) {
+                    sAutoUse = m_remoteConfigUrls.optString(autoActivate2);
+                }
+                if ( StringUtil.isNotEmpty(sAutoUse) ) {
                     if ( m_remoteConfigUrls.has(sAutoUse) ) {
                         String sActivate = mRemoteUrlsConfig.getString(sAutoUse);
                         PreferenceValues.setString(PreferenceKeys.RemoteSettingsURL, ctx, sActivate);

@@ -208,6 +208,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="useMatchFromFeed__Default">true</bool>
     <bool name="isPublicApp__Default">true</bool>
     <bool name="useSinglesMatch__Default">true</bool>
+    <bool name="useDoublesMatch__Default">true</bool>
     <bool name="useInjuryTimers__Squash">true</bool>
     <bool name="usePlayerTimeoutTimers__Squash">false</bool>
     <bool name="showLiveScore__Default">true</bool>

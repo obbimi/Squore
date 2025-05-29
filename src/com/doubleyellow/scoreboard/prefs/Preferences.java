@@ -549,6 +549,10 @@ public class Preferences extends Activity {
                             PreferenceValues.setRestartRequired(Preferences.this);
                             URLFeedTask task = new URLFeedTask(Preferences.this, sUrl);
                             task.setContentReceiver(this);
+                            int iCacheMaxMinutes = PreferenceValues.getMaxCacheAgeFeeds(Preferences.this);
+                            if ( iCacheMaxMinutes >= 0 ) {
+                                task.setMaximumReuseCacheTimeMinutes(iCacheMaxMinutes);
+                            }
                             if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P /* 28 */ ) {
                                 task.executeOnExecutor(Executors.newSingleThreadExecutor());
                                 Log.d(TAG, "Started download task using Executors.newSingleThreadExecutor... ");
@@ -556,6 +560,14 @@ public class Preferences extends Activity {
                                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                 Log.d(TAG, "Started download task ... ");
                             }
+                        } else {
+                            // clear some setting that can not be controlled from the settings screen
+                            EnumSet<PreferenceKeys> keysToReset = EnumSet.of
+                                    ( PreferenceKeys.hideMenuItems
+                                    , PreferenceKeys.useDoublesMatchesTab
+                                    , PreferenceKeys.useSinglesMatchesTab
+                            );
+                            PreferenceValues.remove(keysToReset, Preferences.this);
                         }
                         break;
                     default:

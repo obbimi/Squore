@@ -18,6 +18,7 @@
 package com.doubleyellow.scoreboard.prefs;
 
 import com.doubleyellow.scoreboard.archive.GroupMatchesBy;
+import com.doubleyellow.scoreboard.match.MatchTabbed;
 import com.doubleyellow.scoreboard.model.DoublesServeSequence;
 import com.doubleyellow.scoreboard.model.FinalSetFinish;
 import com.doubleyellow.scoreboard.model.GoldenPointFormat;
@@ -127,10 +128,11 @@ public enum PreferenceKeys {
         groupMatchesInFeedByCourt(Boolean.class),
         hideCompletedMatchesFromFeed(Boolean.class),
 
-        refereeList(null),
-            refereeName(String.class),
-            markerName(String.class),
-            assessorName(String.class),
+        useReferees(Boolean.class),
+            refereeList(null),
+                refereeName(String.class),
+                markerName(String.class),
+                assessorName(String.class),
         playerList(null),
         myMatches(null),
             matchList(null),
@@ -314,7 +316,7 @@ public enum PreferenceKeys {
         iconForPostMatchResultToSite(String.class),
         captionForEmailMatchResult(String.class),
 
-    MatchTabbed_defaultTab(String.class),
+    MatchTabbed_defaultTab(MatchTabbed.SelectTab.class),
     ArchiveTabbed_defaultTab(String.class),
 
     groupArchivedMatchesBy(GroupMatchesBy.class),
@@ -375,6 +377,12 @@ public enum PreferenceKeys {
 
     ImportExportReset(null),
         RemoteSettingsURL(String.class),
+
+    useSinglesMatchesTab(Boolean.class),
+    useDoublesMatchesTab(Boolean.class),
+    useMyListFunctionality(Boolean.class),
+
+    hideMenuItems(null)
     ;
     private Class clazz = String.class;
     PreferenceKeys(Class c) {

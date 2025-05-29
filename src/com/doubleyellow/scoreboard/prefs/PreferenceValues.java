@@ -944,9 +944,13 @@ public class PreferenceValues extends RWValues
         int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useFeedAndPostFunctionality_default);
         return getBoolean(PreferenceKeys.useFeedAndPostFunctionality, context, iResBrandSpecific);
     }
-    public static boolean useSinglesMatches(Context context) {
+    public static boolean useSinglesMatchesTab(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useSinglesMatch__Default);
-        return context.getResources().getBoolean(iResBrandSpecific);
+        return getBoolean(PreferenceKeys.useSinglesMatchesTab, context, iResBrandSpecific);
+    }
+    public static boolean useDoublesMatchesTab(Context context) {
+        int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useDoublesMatch__Default);
+        return getBoolean(PreferenceKeys.useDoublesMatchesTab, context, iResBrandSpecific);
     }
     public static boolean isPublicApp(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.isPublicApp__Default);
@@ -954,7 +958,7 @@ public class PreferenceValues extends RWValues
     }
     public static boolean useMyListFunctionality(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useMyListFunctionality__Default);
-        return context.getResources().getBoolean(iResBrandSpecific);
+        return getBoolean(PreferenceKeys.useMyListFunctionality, context, iResBrandSpecific);
     }
     public static boolean useWarmup(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useWarmup__Default);
@@ -962,7 +966,7 @@ public class PreferenceValues extends RWValues
     }
     public static boolean useReferees(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useReferees__Default);
-        return context.getResources().getBoolean(iResBrandSpecific);
+        return getBoolean(PreferenceKeys.useReferees, context, iResBrandSpecific);
     }
     public static String getBLEBridge_ClassName(Context context) {
         int iBLEBridge_ClassName_defaultResId = PreferenceValues.getSportTypeSpecificResId(context, R.string.BLEBridge_ClassName__Squash, R.string.BLEBridge_ClassName__Default);
@@ -2243,6 +2247,27 @@ public class PreferenceValues extends RWValues
         textColors.setEnabled(bEnable);
     }
 
+    public static List<Integer> getMenuItemsToHide(Context context) {
+        List<Integer> lReturn = new ArrayList<>();
+        Set<String> hideMenuItems = PreferenceValues.getStringSet(PreferenceKeys.hideMenuItems, new LinkedHashSet(), context);
+        if (ListUtil.isEmpty(hideMenuItems) ) { return lReturn; }
+
+        for(String sMenuItem: hideMenuItems ) {
+            sMenuItem = sMenuItem.replace("R.id.", "");
+            int iResId = context.getResources().getIdentifier(sMenuItem, "id", context.getPackageName());
+            if ( iResId != 0 ) {
+                lReturn.add(iResId);
+            }
+        }
+        return lReturn;
+    }
+
+    public static void remove(EnumSet<PreferenceKeys> keys, Context context) {
+        for(PreferenceKeys key : keys) {
+            PreferenceValues.remove(key.toString(), context);
+        }
+    }
+
     public static List<Map<URLsKeys, String>> getUrlsList(String s, Context context) {
         if ( StringUtil.isEmpty(s) || "-".equals(s.trim())) { return null; }
 
@@ -2429,6 +2454,7 @@ public class PreferenceValues extends RWValues
         return m_lAllGroups;
     }
 
+/*
     private static void logCurrentRecord(Cursor cursor) {
         StringBuilder sb = new StringBuilder("\n");
         for(int i=0; i< cursor.getColumnCount(); i++) {
@@ -2436,6 +2462,7 @@ public class PreferenceValues extends RWValues
         }
         Log.d(TAG, sb.toString());
     }
+*/
 
     private static List<String> m_lAllContactNames = new ArrayList<String>();
     private static List<String> getContacts(Context context, int iDisableOnFirstRunIfMoreThan, int iAlwaysStopAfterCnt ) {

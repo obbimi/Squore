@@ -32,64 +32,86 @@ import android.widget.TextView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.ListUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 class MenuDrawerAdapter extends BaseAdapter implements ListView.OnItemClickListener, View.OnClickListener, DrawerLayout.DrawerListener {
     public static final boolean m_bHideDrawerItemsFromOldMenu = false; // TODO: maybe later
     private static final String TAG = "SB." + MenuDrawerAdapter.class.getSimpleName();
-    private List<Integer> id2Seq    = new ArrayList<>();
+    private List<Integer> l_idSequence    = new ArrayList<>();
     private final LinkedHashMap<Integer,Integer> id2String = new LinkedHashMap<>();
     private final SparseIntArray id2Image  = new SparseIntArray();
     private LayoutInflater inflater  = null;
 
     ScoreBoard scoreBoard = null;
+    List<Integer> hideMenuItems = null;
     MenuDrawerAdapter(ScoreBoard scoreBoard) {
-        this.scoreBoard = scoreBoard;
+        this.scoreBoard    = scoreBoard;
+        this.hideMenuItems = PreferenceValues.getMenuItemsToHide(scoreBoard);
 
         inflater = (LayoutInflater)scoreBoard.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         int iOfficialRulesResId = PreferenceValues.getSportTypeSpecificResId(scoreBoard, R.string.sb_official_rules__Squash, 0);
-        startSection(R.string.uc_new   );
-            addItem(R.id.sb_enter_singles_match , R.string.sb_new_singles_match    ,         R.drawable.circled_plus          , R.bool.useSinglesMatch__Default   );
-            addItem(R.id.sb_select_static_match , R.string.sb_select_static_match  ,         R.drawable.ic_action_view_as_list, R.bool.useMyListFunctionality__Default);
-            addItem(R.id.sb_select_feed_match   , R.string.sb_select_feed_match    ,         R.drawable.ic_action_web_site    , R.bool.useMatchFromFeed__Default  );
-            addItem(R.id.sb_enter_doubles_match , R.string.sb_new_doubles_match    ,         R.drawable.circled_plus          );
-        startSection(R.string.uc_edit   );
+        if ( startSection(R.string.uc_new, R.id.uc_new ) ) {
+            addItem(R.id.sb_enter_singles_match , R.string.sb_new_singles_match    ,         R.drawable.circled_plus          , PreferenceKeys.useSinglesMatchesTab       , R.bool.useSinglesMatch__Default   );
+            addItem(R.id.sb_select_static_match , R.string.sb_select_static_match  ,         R.drawable.ic_action_view_as_list, PreferenceKeys.useMyListFunctionality     , R.bool.useMyListFunctionality__Default);
+            addItem(R.id.sb_select_feed_match   , R.string.sb_select_feed_match    ,         R.drawable.ic_action_web_site    , PreferenceKeys.useFeedAndPostFunctionality, R.bool.useMatchFromFeed__Default  );
+            addItem(R.id.sb_enter_doubles_match , R.string.sb_new_doubles_match    ,         R.drawable.circled_plus          , PreferenceKeys.useSinglesMatchesTab       , R.bool.useDoublesMatch__Default );
+        }
+
+        if ( startSection(R.string.uc_edit, R.id.uc_edit   ) ) {
             addItem(R.id.sb_clear_score         , R.string.sb_clear_score          ,         R.drawable.circle_2arrows   );
             addItem(R.id.sb_adjust_score        , R.string.sb_adjust_score         , android.R.drawable.ic_menu_edit        );
             addItem(R.id.sb_edit_event_or_player, R.string.sb_edit_event_or_player , android.R.drawable.ic_menu_edit        );
             addItem(R.id.change_match_format    , R.string.pref_MatchFormat        ,         R.drawable.ic_action_mouse     );
-        startSection(R.string.uc_show   );
+        }
+        if ( startSection(R.string.uc_show, R.id.uc_show   ) ) {
             addItem(R.id.sb_toss                , R.string.sb_cmd_toss             ,         R.drawable.toss_white          );
             addItem(R.id.sb_timer               , R.string.sb_timer                ,         R.drawable.timer               );
             addItem(R.id.sb_injury_timer        , R.string.sb_injury_timer         ,         R.drawable.timer               , R.bool.useInjuryTimers__Squash);
             addItem(R.id.sb_player_timeout_timer, R.string.sb_player_timeout_timer ,         R.drawable.timer               , R.bool.usePlayerTimeoutTimers__Squash);
             addItem(R.id.sb_score_details       , R.string.sb_score_details        ,         R.drawable.ic_action_chart_line);
-        startSection(R.string.goto_help );
+        }
+        if ( startSection(R.string.goto_help, R.id.sb_sub_help ) ) {
             addItem(R.id.sb_quick_intro         , R.string.Quick_intro             , android.R.drawable.ic_dialog_info         );
             addItem(R.id.sb_help                , R.string.goto_help               , android.R.drawable.ic_menu_help           );
             addItem(R.id.sb_official_rules      , iOfficialRulesResId              , android.R.drawable.ic_menu_search    , R.bool.showLiveScore__Default     );
             addItem(R.id.sb_live_score          , R.string.Live_Score              ,         R.drawable.ic_action_web_site, R.bool.showLiveScore__Default     );
             addItem(R.id.sb_feedback            , R.string.cmd_feedback            ,         R.drawable.ic_action_import_export);
-        startSection(R.string.pref_Other );
+        }
+        if ( startSection(R.string.pref_Other, 0 ) ) {
             addItem(R.id.sb_settings            , R.string.settings                , R.drawable.ic_action_settings    );
             addItem(R.id.sb_stored_matches      , R.string.sb_stored_matches       , R.drawable.ic_action_view_as_list);
-        startSection(R.string.ImportExport_elipses );
+        }
+        if ( startSection(R.string.ImportExport_elipses, R.id.uc_import_export ) ) {
             addItem(R.id.cmd_import_matches     , R.string.import_matches          , android.R.drawable.stat_sys_download);
             addItem(R.id.cmd_export_matches     , R.string.export_matches          , android.R.drawable.ic_menu_upload);
+        }
 
-        if ( ListUtil.size(id2Seq) == 0 ) {
-            id2Seq.addAll(id2String.keySet());
+        if (ListUtil.isNotEmpty(hideMenuItems) ) {
+            for(Integer iMenuItemId: hideMenuItems ) {
+                id2String.remove(iMenuItemId);
+            }
+        }
+
+        if ( ListUtil.size(l_idSequence) == 0 ) {
+            l_idSequence.addAll(id2String.keySet());
         }
     }
 
-    private void startSection(int iCaptionId) {
+    private boolean startSection(int iCaptionId, int iIdInMainMenu) {
+        if ( this.hideMenuItems.contains(iIdInMainMenu) ) {
+            return false;
+        }
         id2String.put(iCaptionId, iCaptionId);
+        return true;
     }
     private void addItem(int iActionId, int iCaptionId, int iImageId) {
         addItem(iActionId, iCaptionId, iImageId, 0);
@@ -118,23 +140,46 @@ class MenuDrawerAdapter extends BaseAdapter implements ListView.OnItemClickListe
         }
 */
     }
+    private void addItem(int iActionId, int iCaptionId, int iImageId, PreferenceKeys prefBoolean, int iShowResidDefault) {
+        if ( prefBoolean != null ) {
+            boolean bShow = PreferenceValues.getBoolean(prefBoolean, scoreBoard, iShowResidDefault);
+            if ( bShow == false ) {
+                Log.d(TAG, "Specifically not showing " + scoreBoard.getResources().getResourceName(iActionId) );
+                return;
+            }
+        }
+        if ( iCaptionId == 0 ) {
+            // e.g. for Tennis AND Padel rules... menu option
+            return;
+        }
+        id2String.put(iActionId , iCaptionId);
+        if ( iImageId != 0 ) {
+            id2Image .put(iActionId , iImageId  );
+        }
+/*
+        if ( m_bHideDrawerItemsFromOldMenu && (mainMenu != null) ) {
+            // does not work if menu not yet inflated
+            ViewUtil.hideMenuItemForEver(mainMenu, iActionId);
+        }
+*/
+    }
 
     @Override public int getCount() {
-        return id2Seq.size();
+        return l_idSequence.size();
     }
 
     @Override public Object getItem(int position) {
-        return id2Seq.get(position);
+        return l_idSequence.get(position);
     }
 
     @Override public long getItemId(int position) {
-        return id2Seq.get(position);
+        return l_idSequence.get(position);
     }
 
     @Override public View getView(int position, View convertView, ViewGroup parent) {
         View view;
 
-        int iId = id2Seq.get(position);
+        int iId = l_idSequence.get(position);
         Integer iResImage = id2Image.get(iId);
         int iResIdTxt = id2String.get(iId);
 
@@ -163,7 +208,7 @@ class MenuDrawerAdapter extends BaseAdapter implements ListView.OnItemClickListe
     }
 
     @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        scoreBoard.handleDrawerMenuItem(id2Seq.get(position));
+        scoreBoard.handleDrawerMenuItem(l_idSequence.get(position));
     }
 
     //

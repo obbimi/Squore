@@ -3017,6 +3017,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 menu.removeItem(R.id.media_route_menu_item);
             }
         } else {
+            // DScore...
             menu.removeItem(R.id.media_route_menu_item);
         }
 
@@ -3102,6 +3103,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         } else {
             setMenuItemVisibility(R.id.tt_activate_mode  , false );
             setMenuItemVisibility(R.id.tt_deactivate_mode, false);
+        }
+
+        List<Integer> hideMenuItems = PreferenceValues.getMenuItemsToHide(this);
+        if (ListUtil.isNotEmpty(hideMenuItems) ) {
+            for(Integer iMenuItemId: hideMenuItems ) {
+                setMenuItemVisibility(iMenuItemId, false);
+            }
         }
 
         return true;

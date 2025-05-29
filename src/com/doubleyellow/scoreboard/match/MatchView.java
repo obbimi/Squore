@@ -725,7 +725,7 @@ public class MatchView extends ScrollView
         spGameEndScore = (Spinner) findViewById(R.id.spGameEndScore);
         initGameEndScore(context, spGameEndScore, iGameEndPref, 2, txtPlayerA, cbStartTieBreakOnGameEarlyGSM);
 
-        int max = Math.max(iNrOfGamesToWinPref, 11);
+        int max = Math.max(iNrOfGamesToWinPref, MatchView.MAX_NR_OF_GAMES_TO_WIN);
 /*
         npNumberOfGamesToWin = (NumberPicker) findViewById(R.id.npNumberOfGamesToWin);
 
@@ -1206,6 +1206,7 @@ public class MatchView extends ScrollView
         });
     }
 
+    public static final int MAX_NR_OF_GAMES_TO_WIN = 50;
     /** Invoked from EditFormat as well. For GSM this is number of sets to win match */
     public static void initNumberOfGamesToWin(Context context, Spinner spNumberOfGamesToWin, int iNrOfGamesToWinPref, int max, TextView refTxtSize) {
         if ( spNumberOfGamesToWin == null ) { return; }

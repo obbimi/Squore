@@ -132,6 +132,10 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                 if ( m_status.equals(Status.FeedOfFeeds) ) {
                     urlFeedTask.setNrForUserAgent(PreferenceValues.getRunCount(m_context, PreferenceKeys.FeedFeedsURL));
                 }
+                int iCacheMaxMinutes = PreferenceValues.getMaxCacheAgeFeeds(m_context);
+                if ( iCacheMaxMinutes >= 0 ) {
+                    urlFeedTask.setMaximumReuseCacheTimeMinutes(iCacheMaxMinutes);
+                }
                 urlFeedTask.setContentReceiver(this);
                 setFetching(true);
                 urlFeedTask.execute();

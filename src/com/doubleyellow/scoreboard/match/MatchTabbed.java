@@ -610,8 +610,11 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
         if ( PreferenceValues.useFeedAndPostFunctionality(this) == false /*StringUtil.isEmpty(sFeedUrl)*/ ) {
             actualTabsToShow.remove(SelectTab.Feed);
         }
-        if ( PreferenceValues.useSinglesMatches(this) == false ) {
+        if ( PreferenceValues.useSinglesMatchesTab(this) == false ) {
             actualTabsToShow.remove(SelectTab.Manual);
+        }
+        if ( PreferenceValues.useDoublesMatchesTab(this) == false ) {
+            actualTabsToShow.remove(SelectTab.ManualDbl);
         }
         if ( PreferenceValues.useMyListFunctionality(this) == false ) {
             actualTabsToShow.remove(SelectTab.Mine);
