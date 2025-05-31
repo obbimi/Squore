@@ -1,6 +1,8 @@
-## 4.57 (may 2025)
+## 4.57 (may/june 2025)
 
 - german translation (Thanks to Ralph Bieber)
+- You can now use and URL from which to fetch settings. 
+  - Typically used to more easily have all devices for a certain event or league use the same settings.
 
 ## 4.56 (april 2025)
 
