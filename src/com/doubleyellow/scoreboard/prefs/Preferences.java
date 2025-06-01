@@ -771,8 +771,16 @@ public class Preferences extends Activity {
                     PreferenceGroup pgImpExpReset = (PreferenceGroup) this.findPreference(PreferenceKeys.ImportExportReset);
                     if ( pgImpExpReset != null ) {
                         remoteSettingsURL = (ListPreference) pgImpExpReset.findPreference(PreferenceKeys.RemoteSettingsURL.toString());
-                        remoteSettingsURL.setEntryValues(lLetUserSelectFrom  .toArray(new CharSequence[0])); // actual values
-                        remoteSettingsURL.setEntries    (lLetUserSelectFromHR.toArray(new CharSequence[0])); // human readable
+                        if ( remoteSettingsURL != null ) {
+                            remoteSettingsURL.setEntryValues(lLetUserSelectFrom  .toArray(new CharSequence[0])); // actual values
+                            remoteSettingsURL.setEntries    (lLetUserSelectFromHR.toArray(new CharSequence[0])); // human readable
+                        }
+                    }
+                } else {
+                    hideRemovePreference(psRoot, remoteSettingsURL);
+                    PreferenceGroup pgImpExpReset = (PreferenceGroup) this.findPreference(PreferenceKeys.ImportExportReset);
+                    if ( pgImpExpReset != null ) {
+                        hideRemovePreference(pgImpExpReset, PreferenceKeys.RemoteSettingsURL);
                     }
                 }
             }

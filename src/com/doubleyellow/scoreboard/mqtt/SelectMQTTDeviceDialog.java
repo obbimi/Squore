@@ -183,7 +183,7 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
                 //    PreferenceValues.setBoolean(PreferenceKeys.BTSync_keepLROnConnectedDeviceMirrored, context, cbLRMirror.isChecked());
                 //}
                 String sOtherDeviceChecked = sovDevices.getChecked();
-                if ( sOtherDeviceChecked != null && sOtherDeviceChecked.matches("[A-Z0-9]{6,8}") && (sOtherDeviceChecked.equals(getString(R.string.lbl_none)) == false) ) {
+                if ( sOtherDeviceChecked != null && sOtherDeviceChecked.matches("^[A-Z0-9]{6,8}.*") && (sOtherDeviceChecked.equals(getString(R.string.lbl_none)) == false) ) {
                     PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, sOtherDeviceChecked);
                 } else {
                     PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, "");

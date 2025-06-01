@@ -317,13 +317,16 @@ public class MQTTHandler
         String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic_Change(m_context);
         String sSubTopic = "";
 
-        String sDevice = PreferenceValues.getMQTTOtherDeviceId(m_context);
+        String sDevice = null;
         if ( BTMethods.requestCompleteJsonOfMatch.toString().equals(sMethod) ) {
             sDevice = "+"; // m_thisDeviceId;
             sSubTopic = MQTT_TOPIC_CONCAT_CHAR + sMethod;
+        } else {
+            sDevice = PreferenceValues.getMQTTOtherDeviceId(m_context);
         }
         String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
         if ( StringUtil.isEmpty(sValue) ) {
+            Log.w(TAG, "Error in translation? " + sPlaceholder + " " + sDevice);
             return null;
         }
         return sValue + sSubTopic;

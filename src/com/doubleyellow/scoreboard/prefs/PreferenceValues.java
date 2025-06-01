@@ -1033,7 +1033,7 @@ public class PreferenceValues extends RWValues
         return getString(PreferenceKeys.MQTTPublishJoinerLeaverTopic, R.string.MQTTPublishJoinerLeaverTopic__Default, context);
     }
     public static String getMQTTOtherDeviceId(Context context) {
-        return getString(PreferenceKeys.MQTTOtherDeviceId, "", context).toUpperCase();
+        return getString(PreferenceKeys.MQTTOtherDeviceId, "", context)/*.toUpperCase()*/; // remove toUpperCase since customSuffix is allowed
     }
 
     public static boolean allowTrustAllCertificatesAndHosts(Context context) {
