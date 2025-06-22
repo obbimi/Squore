@@ -101,7 +101,7 @@ public class EditFormat extends BaseAlertDialog {
         ColorPrefs.setColors(vg, ColorPrefs.Tags.item);
 
         int iNrOfGamesToWinPref = PreferenceValues.numberOfGamesToWinMatch(context);
-        int max = Math.max(iNrOfGamesToWinPref, 11);
+        int max = Math.max(iNrOfGamesToWinPref, MatchView.MAX_NR_OF_GAMES_TO_WIN);
         spNumberOfGamesToWin = (Spinner) vg.findViewById(R.id.spNumberOfGamesToWin);
         MatchView.initNumberOfGamesToWin(context, spNumberOfGamesToWin, matchModel.getNrOfGamesToWinMatch(), max, null);
 

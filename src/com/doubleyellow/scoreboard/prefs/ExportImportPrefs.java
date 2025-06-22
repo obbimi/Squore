@@ -163,7 +163,12 @@ public class ExportImportPrefs extends DialogPreference
             mCurrent.remove(PreferenceKeys.RemoteSettingsURL.toString());
             mCurrent = MapUtil.filterKeys(mCurrent, ".+" + UsernamePassword.getSettingsSuffix(context, R.string.username), Enums.Match.Remove);
             mCurrent = MapUtil.filterKeys(mCurrent, ".+" + UsernamePassword.getSettingsSuffix(context, R.string.password), Enums.Match.Remove);
+
         Map mRemote  = JsonUtil.toMap(joRemoteConfig);
+        if ( PreferenceValues.currentDateIsTestDate() ) {
+            mCurrent = new TreeMap(mCurrent);
+            mRemote  = new TreeMap(mRemote);
+        }
         cleanBrandBased(mRemote); //
 
         Map<MapUtil.mapDiff, Map> mapDiff = MapUtil.getMapDiff(mCurrent, mRemote);

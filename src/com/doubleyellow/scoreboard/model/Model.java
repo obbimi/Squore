@@ -320,7 +320,7 @@ public abstract class Model implements Serializable
 
             Set<Player>                         m_currentRallyIsPowerPlayFor = new HashSet<>();
             Map<Player, Integer>                m_player2NrOfPowerPlaysUsed  = new HashMap<>();
-            int                                 m_maxNrOfPowerPlays          = 2; // TODO : configurable
+            int                                 m_maxNrOfPowerPlays          = 2;
 
     private Map<Player, String>                 m_player2Name           = new HashMap<Player, String>();
     private Map<Player, String>                 m_player2Id             = new HashMap<Player, String>();
@@ -2679,7 +2679,7 @@ public abstract class Model implements Serializable
 
             // powerplay
             if ( joMatch.has(JSONKey.maxNrOfPowerPlays.toString()) ) {
-                m_maxNrOfPowerPlays = joMatch.getInt(JSONKey.maxNrOfPowerPlays.toString());
+                m_maxNrOfPowerPlays   = joMatch.getInt(JSONKey.maxNrOfPowerPlays.toString());
                 JSONObject jsonObject = joMatch.optJSONObject(JSONKey.nrOfPowerPlaysUsed.toString());
                 m_player2NrOfPowerPlaysUsed.clear();
                 if ( jsonObject != null ) {
@@ -2698,6 +2698,8 @@ public abstract class Model implements Serializable
                         m_currentRallyIsPowerPlayFor.add(Player.valueOf(sPlayer));
                     }
                 }
+            } else {
+                m_maxNrOfPowerPlays = 0;
             }
 
             // read conduct types
@@ -3323,14 +3325,14 @@ public abstract class Model implements Serializable
                 final WifiInfo wifiInfo = wifiManager.getConnectionInfo(); // ACCESS_WIFI_STATE
 
                 //final String bssid                   = wifiInfo.getBSSID(); // usually very similar if connected to the same SSID but now per definition equal (incemented by 1 or 2 ...)
-                //final String androidDeviceMacAddress = wifiInfo.getMacAddress();
+                //final String androidDeviceMacAddress = wifiInfo.getMacAddress(); // typically not allowed, only privileged apps
                 String ssid                          = wifiInfo.getSSID(); // ssid of the wifi e.g. TELENETHOMESPOT of telenet-5F3EB
-                if ( StringUtil.isNotEmpty(ssid) ) {
+                if ( StringUtil.isNotEmpty(ssid) && ssid.equalsIgnoreCase(WifiManager.UNKNOWN_SSID) == false ) {
                     ssid = ssid.replaceAll("[^\\w\\-\\.]", ""); // may e.g hold '<unknown ssid>'
+                    wifi.put("ssid"        , ssid); // Typical values... so not useful : "ipaddress":"0.0.0.0","ssid":"unknownssid","mac":"02:00:00:00:00:00"
                 }
                 final int ipAddress = wifiInfo.getIpAddress(); // ipadress assigned to device by e.g. router
                 wifi.put("ipaddress"   , Placeholder.Misc.IntegerToIPAddress.execute(String.valueOf(ipAddress), null, null));
-                wifi.put("ssid"        , ssid); // Typical values... so not useful : "ipaddress":"0.0.0.0","ssid":"unknownssid","mac":"02:00:00:00:00:00"
                 //wifi.put("mac"         , androidDeviceMacAddress);
                 JsonUtil.removeEmpty(wifi);
                 metaData.put(JSONKey.wifi.toString(), wifi);
