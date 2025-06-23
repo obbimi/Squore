@@ -117,7 +117,7 @@ android {
         }
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
-    def versionCodeXXX = 561
+    def versionCodeXXX = 562
     productFlavors {
         // versionCodePrefix specifies [min_api_level][bitwise_supported_screensizes s=1,m=2,l=4,xl=8]
         phoneTabletPre24 {
@@ -182,6 +182,8 @@ android {
 dependencies {
 
     implementation 'com.google.android.material:material:1.12.0'
+
+    implementation 'androidx.datastore:datastore-preferences:1.1.7' // TODO: migrate from SharedPreferences to DataStore
 
     //implementation "androidx.compose.material3:material3:1.3.1"
     //implementation "androidx.compose.material3:material3-window-size-class:1.3.1"
