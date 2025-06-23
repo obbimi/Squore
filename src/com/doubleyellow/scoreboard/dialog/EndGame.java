@@ -153,19 +153,17 @@ public class EndGame extends BaseAlertDialog
                     //,BTN_CHANGE_MATCH_FORMAT, android.R.drawable.ic_menu_close_clear_cancel
             );
         } else {
-            onShowListener = new DialogInterface.OnShowListener() {
-                @Override public void onShow(DialogInterface dialog) {
-                    triggerButtonLayoutAPI28(dialog, BTN_END_GAME_PLUS_TIMER);
+            onShowListener = dialog -> {
+                if ( dialog instanceof BaseAlertDialog ) {
+                    ((BaseAlertDialog)dialog).triggerButtonLayoutAPI28(dialog, BTN_END_GAME_PLUS_TIMER);
                 }
             };
         }
 
         adb.setOnKeyListener(getOnBackKeyListener(/*BTN_END_GAME*/));
-        adb.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override public void onDismiss(DialogInterface dialog) {
-                scoreBoard.triggerEvent(ScoreBoard.SBEvent.endGameDialogEnded, EndGame.this);
-                scoreBoard.enableScoreButtons();
-            }
+        adb.setOnDismissListener(dialog -> {
+            scoreBoard.triggerEvent(ScoreBoard.SBEvent.endGameDialogEnded, EndGame.this);
+            scoreBoard.enableScoreButtons();
         });
         dialog = adb.show(onShowListener);
     }

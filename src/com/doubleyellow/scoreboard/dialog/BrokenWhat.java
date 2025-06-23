@@ -57,7 +57,11 @@ public class BrokenWhat extends BaseAlertDialog
 
         LayoutInflater myLayout = LayoutInflater.from(context);
         final View view = myLayout.inflate(R.layout.broken_equipement, null);
-        sv = (SelectEnumView) view.findViewById(R.id.selectBrokenEquipment);
+        sv = view.findViewById(R.id.selectBrokenEquipment);
+
+        Map<ColorPrefs.ColorTarget, Integer> target2colorMapping = ColorPrefs.getTarget2colorMapping(context);
+        Integer color = target2colorMapping.get(ColorPrefs.ColorTarget.middlest);
+        sv.setBackgroundColor(color);
 
         // add a view with all possible Conducts and let user choose one
         //sv = new SelectEnumView(context, BrokenEquipment.class);

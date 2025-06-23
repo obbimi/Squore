@@ -66,12 +66,12 @@ public class SideToss extends BaseAlertDialog
             sTitle   = context.getString(R.string.sb_what_side_will_x_start_to_y, sServer, getString(R.string.sb_serve  )  );
         }
         int iResMessage = matchModel.isDoubles() ? R.string.sb_on_what_side_of_the_scoreboard_should_team_be : R.string.sb_on_what_side_of_the_scoreboard_should_player_be;
-        setTitle         (sTitle);
-        setMessage       ("(" + getString(iResMessage) + ")");
-        setIcon          (R.drawable.change_sides);
-        setPositiveButton(getString(R.string.lbl_left), dialogClickListener);
-         //setNeutralButton (R.string.sb_cmd_toss, null)
-        setNegativeButton(getString(R.string.lbl_right), dialogClickListener);
+        adb.setTitle         (sTitle);
+        adb.setMessage       ("(" + getString(iResMessage) + ")");
+        adb.setIcon          (R.drawable.change_sides);
+        adb.setPositiveButton(getString(R.string.lbl_left), dialogClickListener);
+         //adb.setNeutralButton (R.string.sb_cmd_toss, null)
+        adb.setNegativeButton(getString(R.string.lbl_right), dialogClickListener);
         adb.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override public boolean onKey(DialogInterface dialogI, int keyCode, KeyEvent event) {
                 int action  = event.getAction();
@@ -100,7 +100,7 @@ public class SideToss extends BaseAlertDialog
                 scoreBoard.triggerEvent(ScoreBoard.SBEvent.sideTossDialogEnded, SideToss.this);
             }
         });
-        dialog = create();
+        create();
         dialog.setOnShowListener(new ButtonUpdater(context));
         dialog.show();
     }

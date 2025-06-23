@@ -53,7 +53,7 @@ class ScoreBoardTouchListener extends ScoreBoardListener implements SimpleGestur
                 if (ScoreBoard.getMatchModel().isDoubles()) {
                     handleMenuItem(R.id.pl_show_conduct, player);
                 } else {
-                    scoreBoard.showBrokenEquipment(player);
+                    handleMenuItem(R.id.sb_broken_equipment, player);
                 }
             } else {
                 handleMenuItem(R.id.sb_change_sides);

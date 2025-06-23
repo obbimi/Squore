@@ -3583,6 +3583,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             } else if (id == R.id.sb_toss || id == R.id.float_toss) {
                 _showWhoServesDialog();
                 return false;
+            } else if (id == R.id.sb_broken_equipment) {
+                Player p = Player.A;
+                if (ctx != null && ctx.length == 1 && ctx[0] instanceof Player) {
+                    p = (Player) ctx[0];
+                }
+                showBrokenEquipment(p);
             } else if (id == R.id.sb_official_announcement) {
                 _showOfficialAnnouncement(AnnouncementTrigger.Manual, true);
                 return false;

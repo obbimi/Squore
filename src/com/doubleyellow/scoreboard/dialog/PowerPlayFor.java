@@ -55,16 +55,16 @@ public class PowerPlayFor extends BaseAlertDialog
                 .setMessage(R.string.lbl_activate_for)
                 ;
         if ( iLeftForA > 0 ) {
-            setPositiveButton(sPlayerA + " (#" + iLeftForA + ")", listener);
+            adb.setPositiveButton(sPlayerA + " (#" + iLeftForA + ")", listener);
         }
         if ( iLeftForA > 0 && iLeftForB > 0 ) {
-            setNeutralButton (R.string.lbl_both   , listener);
+            adb.setNeutralButton (R.string.lbl_both   , listener);
         } else if ( iLeftForA + iLeftForB == 0 ) {
-            setMessage(getString(R.string.no_more_power_plays_left__x, matchModel.getNrOfPowerPlaysPerMatch()));
-            setNeutralButton (R.string.cmd_cancel, null);
+            adb.setMessage(getString(R.string.no_more_power_plays_left__x, matchModel.getNrOfPowerPlaysPerMatch()));
+            adb.setNeutralButton (R.string.cmd_cancel, null);
         }
         if ( iLeftForB > 0 ) {
-            setNegativeButton(sPlayerB + " (#" + iLeftForB + ")", listener);
+            adb.setNegativeButton(sPlayerB + " (#" + iLeftForB + ")", listener);
         }
 
         //LayoutInflater myLayout = LayoutInflater.from(context);

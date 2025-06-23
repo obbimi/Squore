@@ -19,14 +19,13 @@ package com.doubleyellow.scoreboard.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
 import android.view.View;
+
+import com.doubleyellow.android.view.EnumSpinner;
 import com.doubleyellow.android.view.SelectEnumView;
-import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.main.*;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Call;
@@ -35,7 +34,6 @@ import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
-import com.doubleyellow.util.ColorUtil;
 
 import java.util.Map;
 // TODO: with new dialog theme in portrait ... buttons not visible
@@ -57,6 +55,7 @@ public class Conduct extends BaseAlertDialog
 
     private Player missbehavingPlayer = null;
     private SelectEnumView<ConductType> sv;
+    private EnumSpinner<ConductType> enumSpinner;
 
     @Override public void show() {
         String name_no_nbsp = matchModel.getName_no_nbsp(missbehavingPlayer, false);
@@ -84,7 +83,8 @@ public class Conduct extends BaseAlertDialog
         // set background color to 'middlest' so that dark circles and white text are visible
         Map<ColorPrefs.ColorTarget, Integer> target2colorMapping = ColorPrefs.getTarget2colorMapping(context);
         Integer color = target2colorMapping.get(ColorPrefs.ColorTarget.middlest);
-        sv.setBackgroundColor(color);
+        if ( sv          != null ) sv.setBackgroundColor(color);
+        if ( enumSpinner != null ) enumSpinner.setBackgroundColor(color);
 
         // add a view with all possible Conducts and let user choose one
         //sv = new SelectEnumView(context, ConductType.class);
@@ -110,7 +110,14 @@ public class Conduct extends BaseAlertDialog
     public static final int BTN_CONDUCT_STROKE  = DialogInterface.BUTTON_NEUTRAL ;
     public static final int BTN_CONDUCT_GAME    = DialogInterface.BUTTON_NEGATIVE;
     @Override public void handleButtonClick(int which) {
-        ConductType conductType = sv.getChecked();
+        ConductType conductType;
+        if ( sv != null ) {
+            conductType = sv.getChecked();
+        } else if ( enumSpinner != null ) {
+            conductType = enumSpinner.getSelectedEnum();
+        } else {
+            return;
+        }
         Call call = null;
         switch (which) {
             case BTN_CONDUCT_STROKE : call = Call.CS; break;

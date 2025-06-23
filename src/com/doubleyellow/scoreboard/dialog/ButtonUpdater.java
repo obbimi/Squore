@@ -51,8 +51,10 @@ public class ButtonUpdater implements DialogInterface.OnShowListener {
     public static void setPlayerColor(Integer iColor) {
         if ( iColor == null ) { return; }
         iPlayerButtonColor = iColor; //ColorPrefs.getTarget2colorMapping(context).get(ColorPrefs.ColorTarget.playerButtonBackgroundColor);
-        iaColorNeutral     = new int[] { DialogInterface.BUTTON_NEUTRAL, iPlayerButtonColor };
-        iaColorAll         = new int[] { DialogInterface.BUTTON_POSITIVE, iPlayerButtonColor ,DialogInterface.BUTTON_NEGATIVE, iPlayerButtonColor ,DialogInterface.BUTTON_NEUTRAL, iPlayerButtonColor };
+        iaColorNeutral     = new int[] { DialogInterface.BUTTON_NEUTRAL , iPlayerButtonColor };
+        iaColorAll         = new int[] { DialogInterface.BUTTON_POSITIVE, iPlayerButtonColor
+                                       , DialogInterface.BUTTON_NEGATIVE, iPlayerButtonColor
+                                       , DialogInterface.BUTTON_NEUTRAL , iPlayerButtonColor };
     }
     private int[]   iaButton2ImageId = null;
     private int[]   iaButton2Color   = null;

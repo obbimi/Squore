@@ -61,20 +61,20 @@ public class ServerToss extends BaseAlertDialog
         String sPlayerB = matchModel.getName(Player.B);
         if ( Brand.supportChooseServeOrReceive() ) {
             if ( isWearable() ) {
-                setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive));
+                adb.setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive));
             } else {
-                setTitle(R.string.sb_cmd_toss);
-                setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive) + "\n"
+                adb.setTitle(R.string.sb_cmd_toss);
+                adb.setMessage(getString(R.string.sb_serve) + " / " + getString(R.string.sb_receive) + "\n"
                              + getString(R.string.choose_winner_of_toss_or_perform_toss)  ); // for gotoStage_ChooseServeReceive() we need to set something for the message that is set there to be visible
             }
         }
         if ( isNotWearable() ) {
-            setIcon          (R.drawable.toss_white);
-            setTitle         (R.string.sb_who_will_start_to_serve);
+            adb.setIcon          (R.drawable.toss_white);
+            adb.setTitle         (R.string.sb_who_will_start_to_serve);
         }
-        setPositiveButton(sPlayerA            , null);
-        setNeutralButton (R.string.sb_cmd_toss, null);
-        setNegativeButton(sPlayerB            , null);
+        adb.setPositiveButton(sPlayerA            , null);
+        adb.setNeutralButton (R.string.sb_cmd_toss, null);
+        adb.setNegativeButton(sPlayerB            , null);
         adb.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override public boolean onKey(DialogInterface dialogI, int keyCode, KeyEvent event) {
                 int action  = event.getAction();
@@ -106,7 +106,7 @@ public class ServerToss extends BaseAlertDialog
         try {
             OnShowListener listener = new OnShowListener(context, ButtonUpdater.iaColorNeutral);
             //dialog = adb.show(listener, true); // have had report that this throws android.view.WindowManager$BadTokenException, everything automated?: warmup timer+toss dialog
-            dialog = create();
+            create();
             dialog.setOnShowListener(listener);
             dialog.show();
         } catch (Exception e) {
@@ -193,7 +193,6 @@ public class ServerToss extends BaseAlertDialog
         @Override public void onShow(DialogInterface dialogInterface) {
             super.onShow(dialogInterface);
 
-            AlertDialog alertDialog = (AlertDialog) dialogInterface;
             final Button btnToss = getButton(BTN_DO_TOSS);
             if ( btnToss == null ) {
                 return;
@@ -264,12 +263,12 @@ public class ServerToss extends BaseAlertDialog
         // change buttons in 'serve' and 'receive', winner may choose to receive
         String sWinnerOfToss = matchModel.getName(m_winnerOfToss);
         if ( isWearable() ) {
-            setTitle(0);
-            setIcon(0);
-            setMessage(getString(R.string.sb_toss_won_by_x, sWinnerOfToss) + "\n" + getString(R.string.sb_players_choice));
+            adb.setTitle(0);
+            adb.setIcon(0);
+            adb.setMessage(getString(R.string.sb_toss_won_by_x, sWinnerOfToss) + "\n" + getString(R.string.sb_players_choice));
         } else {
-            setTitle  (getString(R.string.sb_toss_won_by_x, sWinnerOfToss));
-            setMessage(getString(R.string.sb_players_choice));
+            adb.setTitle  (getString(R.string.sb_toss_won_by_x, sWinnerOfToss));
+            adb.setMessage(getString(R.string.sb_players_choice));
         }
         btnToss.setVisibility(VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE);
         btnA.setEnabled(true); btnA.setText(R.string.sb_serve);

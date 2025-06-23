@@ -79,10 +79,10 @@ public class StartEndAnnouncement extends BaseAlertDialog
         if ( ListUtil.size(messages) == 0 ) { return; }
 
         int iResIdCaption = bIncludeToServe && (matchModel.matchHasEnded()==false) ? R.string.cmd_start : R.string.cmd_ok;
-        setIcon(R.drawable.microphone);
-        setTitle(messages.remove(0));
-        setMessage(ListUtil.join(messages, "\n\n"));
-        setPositiveButton(getString(iResIdCaption), onClickListener);
+        adb.setIcon(R.drawable.microphone);
+        adb.setTitle(messages.remove(0));
+        adb.setMessage(ListUtil.join(messages, "\n\n"));
+        adb.setPositiveButton(getString(iResIdCaption), onClickListener);
         adb.setOnKeyListener(getOnBackKeyListener(DialogInterface.BUTTON_POSITIVE)); // 20161228 change from NEUTRAL to POSITIVE so that start of game gets 'set' no mather how dialog is dismissed
 
         Feature featureUseTimers = PreferenceValues.useTimersFeature(context);
@@ -108,7 +108,7 @@ public class StartEndAnnouncement extends BaseAlertDialog
 
         // in a try catch to prevent crashing if somehow scoreBoard is not showing any longer
         try {
-            dialog = create();
+            create();
             dialog.setOnShowListener(new ButtonUpdater(context));
             dialog.show();
         } catch (Exception e) {
