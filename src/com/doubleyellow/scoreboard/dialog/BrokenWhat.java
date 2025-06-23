@@ -28,6 +28,9 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.BrokenEquipment;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+
+import java.util.Map;
 
 public class BrokenWhat extends BaseAlertDialog
 {
