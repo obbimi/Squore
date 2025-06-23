@@ -208,6 +208,7 @@
     <string name="lbl_referee">Referee</string>
     <string name="lbl_versus">vs</string>
 
+    <string name="menu_broken_equipment">Broken equipment</string>
     <string name="lbl_broken_equipment">Broken equipment reported by %s</string>
     <string name="point_awarded_to_p">Point awarded to %s</string>
     <string name="point">Point</string>
