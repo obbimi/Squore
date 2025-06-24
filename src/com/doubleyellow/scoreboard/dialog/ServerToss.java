@@ -17,23 +17,28 @@
 
 package com.doubleyellow.scoreboard.dialog;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.doubleyellow.android.util.ColorUtil;
+import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.util.Direction;
 
 /**
  * Dialog in which the referee can either
@@ -72,16 +77,62 @@ public class ServerToss extends BaseAlertDialog
             adb.setIcon          (R.drawable.toss_white);
             adb.setTitle         (R.string.sb_who_will_start_to_serve);
         }
-        adb.setPositiveButton(sPlayerA            , null);
-        adb.setNeutralButton (R.string.sb_cmd_toss, null);
-        adb.setNegativeButton(sPlayerB            , null);
-        adb.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override public boolean onKey(DialogInterface dialogI, int keyCode, KeyEvent event) {
+
+        if ( true ) {
+            int iIconSize = (int) PreferenceValues.getAppealHandGestureIconSize(context);
+            int iSize = iIconSize * 2;
+            Direction dIconPosition = Direction.N; // center
+            LinearLayout.LayoutParams llParamsPlayerNames = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, iSize);
+            LinearLayout.LayoutParams llParamsToss        = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, iSize);
+
+            LinearLayout ll = new LinearLayout(context);
+            int       iOrientation  = LinearLayout.VERTICAL;
+            int iMargin = iIconSize / 10; // margin between the 3 buttons
+            if ( ViewUtil.isLandscapeOrientation(context) ) {
+                llParamsPlayerNames = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                llParamsToss        = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, iSize);
+                iOrientation  = LinearLayout.HORIZONTAL;
+                llParamsPlayerNames.setMargins(iMargin, iMargin, iMargin, iMargin);
+                llParamsToss       .setMargins(iMargin, iMargin, iMargin, iMargin);
+            } else {
+                llParamsPlayerNames.setMargins(iMargin, iMargin, iMargin, iMargin);
+                llParamsToss       .setMargins(iMargin, iMargin, iMargin, iMargin);
+            }
+            ll.setOrientation(iOrientation);
+            llParamsPlayerNames.weight = 1;
+            llParamsToss       .weight = 1;
+
+            int iResId_Toss  = R.drawable.toss_black;
+            int iResId_None  = 0; //R.drawable.dummy;
+            //int iIconSizeNone = 0;
+            Integer iBG = ColorPrefs.getTarget2colorMapping(context).get(ColorPrefs.ColorTarget.backgroundColor);
+            if ( iBG != null ) {
+                // if we use a dark background ... switch to the light gesture icons
+                int blackOrWhiteFor = ColorUtil.getBlackOrWhiteFor(iBG);
+                if ( blackOrWhiteFor == Color.WHITE ) {
+                    iResId_Toss = R.drawable.toss_white;
+                }
+            }
+            final TextView vPlayerA = getActionView(sPlayerA            , BTN_A_WINS_TOSS, iResId_None, iSize, dIconPosition);
+            final TextView vTos     = getActionView(R.string.sb_cmd_toss, BTN_DO_TOSS    , iResId_Toss, iIconSize, Direction.N);
+            final TextView vPlayerB = getActionView(sPlayerB            , BTN_B_WINS_TOSS, iResId_None, iSize, dIconPosition);
+            ll.addView(vPlayerA, llParamsPlayerNames);
+            ll.addView(vTos    , llParamsToss);
+            ll.addView(vPlayerB, llParamsPlayerNames);
+            adb.setView(ll);
+
+            vTos.setOnClickListener(onClickTossListener);
+
+            ColorPrefs.setColor(ll);
+        } else {
+            adb.setPositiveButton(sPlayerA            , null);
+            adb.setNeutralButton (R.string.sb_cmd_toss, null);
+            adb.setNegativeButton(sPlayerB            , null);
+            adb.setOnKeyListener((dialogI, keyCode, event) -> {
                 int action  = event.getAction();
                 if (keyCode == KeyEvent.KEYCODE_BACK /* = 4 */ && action == KeyEvent.ACTION_UP) {
-                    AlertDialog dialog = (AlertDialog) dialogI;
-                    final Button btnA = getButton(BTN_A_WINS_TOSS);
-                    final Button btnB = getButton(BTN_B_WINS_TOSS);
+                    final TextView btnA = getButton(BTN_A_WINS_TOSS);
+                    final TextView btnB = getButton(BTN_B_WINS_TOSS);
                     if ( btnA.isEnabled() == false ) {
                         // toss is performed and B was selected
                         handleButtonClick(BTN_B_WINS_TOSS);
@@ -95,14 +146,11 @@ public class ServerToss extends BaseAlertDialog
                     return true;
                 }
                 return false;
-            }
-        });
+            });
+        }
 
-        adb.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override public void onDismiss(DialogInterface dialog) {
-                scoreBoard.triggerEvent(ScoreBoard.SBEvent.tossDialogEnded, ServerToss.this);
-            }
-        });
+
+        adb.setOnDismissListener(dialog -> scoreBoard.triggerEvent(ScoreBoard.SBEvent.tossDialogEnded, ServerToss.this));
         try {
             OnShowListener listener = new OnShowListener(context, ButtonUpdater.iaColorNeutral);
             //dialog = adb.show(listener, true); // have had report that this throws android.view.WindowManager$BadTokenException, everything automated?: warmup timer+toss dialog
@@ -125,11 +173,7 @@ public class ServerToss extends BaseAlertDialog
         }
     };
 
-    private View.OnClickListener onClickTossListener = new View.OnClickListener() {
-        @Override public void onClick(View view) {
-            simulateToss();
-        }
-    };
+    private final View.OnClickListener onClickTossListener = view -> simulateToss();
 
 
     public              int BTN_SERVE       = DialogInterface.BUTTON_POSITIVE;
@@ -143,7 +187,7 @@ public class ServerToss extends BaseAlertDialog
 
     private static final int VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE = View.INVISIBLE;
     @Override public void handleButtonClick(int which) {
-        final Button btnToss = getButton(BTN_DO_TOSS );
+        final TextView btnToss = getButton(BTN_DO_TOSS );
         if (    Brand.supportChooseServeOrReceive()
              && getButton(BTN_DO_TOSS).getVisibility() == VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE
            )
@@ -175,8 +219,8 @@ public class ServerToss extends BaseAlertDialog
             // optionally go to next 'stage' of dialog
             if ( m_winnerOfToss != null ) {
                 if ( Brand.supportChooseServeOrReceive() ) {
-                    final Button btnA = getButton(BTN_A_WINS_TOSS);
-                    final Button btnB = getButton(BTN_B_WINS_TOSS);
+                    final TextView btnA = getButton(BTN_A_WINS_TOSS);
+                    final TextView btnB = getButton(BTN_B_WINS_TOSS);
                     gotoStage_ChooseServeReceive(btnToss, btnA, btnB);
                 } else {
                     this.dismiss();
@@ -193,7 +237,7 @@ public class ServerToss extends BaseAlertDialog
         @Override public void onShow(DialogInterface dialogInterface) {
             super.onShow(dialogInterface);
 
-            final Button btnToss = getButton(BTN_DO_TOSS);
+            final TextView btnToss = getButton(BTN_DO_TOSS);
             if ( btnToss == null ) {
                 return;
             }
@@ -216,9 +260,10 @@ public class ServerToss extends BaseAlertDialog
     }
 
     private void simulateToss() {
-        final Button btnToss = getButton(BTN_DO_TOSS );
-        final Button btnA    = getButton(BTN_A_WINS_TOSS);
-        final Button btnB    = getButton(BTN_B_WINS_TOSS);
+        final TextView btnToss = getButton(BTN_DO_TOSS );
+        final TextView btnA    = getButton(BTN_A_WINS_TOSS);
+        final TextView btnB    = getButton(BTN_B_WINS_TOSS);
+        //m_lButtons
         btnToss.setEnabled(false);
         if ( (btnA == null) || (btnB == null) ) return;
 
@@ -258,7 +303,7 @@ public class ServerToss extends BaseAlertDialog
         countDownTimer.start();
     }
 
-    private void gotoStage_ChooseServeReceive(Button btnToss, Button btnA, Button btnB) {
+    private void gotoStage_ChooseServeReceive(TextView btnToss, TextView btnA, TextView btnB) {
         // show message who won the toss
         // change buttons in 'serve' and 'receive', winner may choose to receive
         String sWinnerOfToss = matchModel.getName(m_winnerOfToss);
@@ -276,7 +321,7 @@ public class ServerToss extends BaseAlertDialog
     }
 
     /** for newer theme this should be switched for consistency */
-    @Override protected boolean swapPosNegButtons(Context context) {
+    @Override public boolean swapPosNegButtons(Context context) {
         if ( MyDialogBuilder.isUsingNewerTheme(context) == false ) { return false; }
         BTN_SERVE       = DialogInterface.BUTTON_NEGATIVE;
         BTN_RECEIVE     = DialogInterface.BUTTON_POSITIVE;

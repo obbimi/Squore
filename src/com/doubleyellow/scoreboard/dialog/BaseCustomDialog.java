@@ -22,7 +22,6 @@ import com.doubleyellow.util.StringUtil;
  */
 public abstract class BaseCustomDialog extends BaseAlertDialog {
 
-    protected AlertDialog.Builder adb;
     private View      customLayout = null;
     private TextView  txtTitle;
     private TextView  txtMessage;
@@ -34,7 +33,6 @@ public abstract class BaseCustomDialog extends BaseAlertDialog {
     public BaseCustomDialog(Context context, Model matchModel, ScoreBoard scoreBoard) {
         super(context, matchModel, scoreBoard);
 
-        adb = new AlertDialog.Builder(context, MyDialogBuilder.getDialogTheme(context));
         customLayout = LayoutInflater.from(context).inflate(R.layout.custom_dialog,null);
         adb.setView(customLayout);
 
@@ -53,12 +51,12 @@ public abstract class BaseCustomDialog extends BaseAlertDialog {
         btnNegative.setVisibility(View.INVISIBLE);
     }
 
-    @Override AlertDialog.Builder setTitle(String s) {
+    public Object setTitle(String s) {
         txtTitle.setText(s);
         txtTitle.setVisibility(StringUtil.isEmpty(s) ? View.GONE: View.VISIBLE);
         return adb; //.setTitle(iRes);
     }
-    @Override AlertDialog.Builder setTitle(int iRes) {
+    public Object setTitle(int iRes) {
         if ( iRes == 0 ) {
             txtTitle.setText("");
             txtTitle.setVisibility(View.GONE);
@@ -69,7 +67,7 @@ public abstract class BaseCustomDialog extends BaseAlertDialog {
 
         return adb; //.setTitle(iRes);
     }
-    @Override AlertDialog.Builder setIcon(final int iRes) {
+    Object setIcon(final int iRes) {
         if ( iRes == 0 ) {
             //imgIcon.setImageResource(null);
             imgIcon.setVisibility(View.GONE);
@@ -92,12 +90,12 @@ public abstract class BaseCustomDialog extends BaseAlertDialog {
         }
         return adb; //.setIcon(iRes);
     }
-    @Override AlertDialog.Builder setMessage(String s) {
+    Object setMessage(String s) {
         txtMessage.setText(s);
         txtMessage.setVisibility(View.VISIBLE);
         return adb; //.setMessage(s);
     }
-    @Override AlertDialog.Builder setPositiveButton(String s, DialogInterface.OnClickListener onClickListener) {
+    Object setPositiveButton(String s, DialogInterface.OnClickListener onClickListener) {
         btnPositive.setText(s);
         btnPositive.setVisibility(View.VISIBLE);
         if ( onClickListener != null ) {
@@ -105,7 +103,7 @@ public abstract class BaseCustomDialog extends BaseAlertDialog {
         }
         return adb; //.setPositiveButton(s, onClickListener);
     }
-    @Override AlertDialog.Builder setNegativeButton(String s, DialogInterface.OnClickListener onClickListener) {
+    Object setNegativeButton(String s, DialogInterface.OnClickListener onClickListener) {
         btnNegative.setText(s);
         btnNegative.setVisibility(View.VISIBLE);
         if ( onClickListener != null ) {
@@ -113,19 +111,19 @@ public abstract class BaseCustomDialog extends BaseAlertDialog {
         }
         return adb;
     }
-    @Override AlertDialog.Builder setNeutralButton(int i, DialogInterface.OnClickListener onClickListener) {
+    Object setNeutralButton(int i, DialogInterface.OnClickListener onClickListener) {
         btnNeutral.setText(i);
         btnNeutral.setVisibility(View.VISIBLE);
         return adb; //.setNeutralButton(s, onClickListener);
     }
 
-    @Override public AlertDialog create() {
+    public DialogInterface create() {
         dialog = adb.create();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         return dialog;
     }
 
-    @Override protected Button getButton(/*AlertDialog alertDialog, */int iButton) {
+    @Override public TextView getButton(/*AlertDialog alertDialog, */int iButton) {
         switch (iButton) {
             case DialogInterface.BUTTON_POSITIVE:
                 return btnPositive;
