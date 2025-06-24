@@ -12,6 +12,11 @@ name: Build APK & Create Release
 on:
   workflow_dispatch: # run manually
     inputs:
+      branch:
+        description: The branch for which to build
+        type: string
+        default: master
+        required: true
       release_in_draft:
         description: Leave the release in draft
         type: boolean
@@ -39,6 +44,7 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v4.1.7
       with:
+        ref: ${{ inputs.branch }}
         repository: obbimi/Squore # overwrite the default ${{ github.repository }}. Our java code/resources is always in the Squore repo
         #ref: main
 
@@ -80,7 +86,7 @@ jobs:
           ${androidhome}/build-tools/$(ls ${androidhome}/build-tools/ | tail -1)/apksigner sign --ks apksign.keystore --ks-pass pass:"${KEYSTORE_PASSWORD}" --out "${signedFn}" "${unsignedFn}"
         done
         rm -v apksign.keystore
-        find . -name *.apk
+        find . -name *.apk -ls
 
     - name: Upload .apk to /releases
       uses: ncipollo/release-action@v1
