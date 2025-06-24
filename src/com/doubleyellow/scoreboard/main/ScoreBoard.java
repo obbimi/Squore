@@ -4641,7 +4641,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     public int childActivityRequestCode() {
         return m_iChildActivityRequestCode;
     }
-    private synchronized boolean addToDialogStack(BaseAlertDialog dialog) {
+    private synchronized boolean addToDialogStack(IBaseAlertDialog dialog) {
 /*
         if ( BTRole.Slave.equals(m_blueToothRole) ) {
             Log.w(TAG, "Not adding dialog to stack for BT Slave : " + dialog.getClass().getName());

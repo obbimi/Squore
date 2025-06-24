@@ -22,7 +22,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.widget.Button;
+import android.widget.TextView;
 /*
 import android.os.CountDownTimer;
 import android.view.View;
@@ -77,8 +77,8 @@ public class SideToss extends BaseAlertDialog
                 int action  = event.getAction();
                 if (keyCode == KeyEvent.KEYCODE_BACK /* = 4 */ && action == KeyEvent.ACTION_UP) {
                     AlertDialog dialog = (AlertDialog) dialogI;
-                    final Button btnLeft  = getButton(BTN_LOOSER_OF_TOSS_STARTS_LEFT);
-                    final Button btnRight = getButton(BTN_LOOSER_OF_TOSS_STARTS_RIGHT);
+                    final TextView btnLeft  = getButton(BTN_LOOSER_OF_TOSS_STARTS_LEFT);
+                    final TextView btnRight = getButton(BTN_LOOSER_OF_TOSS_STARTS_RIGHT);
                     if ( btnLeft.isEnabled() == false ) {
                         // toss is performed and RIGHT was selected
                         handleButtonClick(BTN_LOOSER_OF_TOSS_STARTS_RIGHT);

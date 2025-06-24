@@ -20,12 +20,11 @@ package com.doubleyellow.scoreboard.main;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import com.doubleyellow.scoreboard.dialog.BaseAlertDialog;
 import com.doubleyellow.scoreboard.dialog.ChildActivity;
 import com.doubleyellow.scoreboard.dialog.GenericMessageDialog;
+import com.doubleyellow.scoreboard.dialog.IBaseAlertDialog;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.timer.TwoTimerView;
-import com.doubleyellow.scoreboard.vico.IBoard;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
 
@@ -46,8 +45,8 @@ public class DialogManager {
     }
     private DialogManager() { }
 
-    public BaseAlertDialog baseDialog  = null;
-    private List<BaseAlertDialog> baseDialogs = new ArrayList<BaseAlertDialog>();
+    public IBaseAlertDialog baseDialog  = null;
+    private List<IBaseAlertDialog> baseDialogs = new ArrayList<IBaseAlertDialog>();
 
     public void showMessageDialog(Context context, String sTitle, String sMessage) {
         GenericMessageDialog dialog = new GenericMessageDialog(context);
@@ -55,18 +54,18 @@ public class DialogManager {
         addToDialogStack(dialog);
     }
 
-    public synchronized void show(BaseAlertDialog dialog) {
+    public synchronized void show(IBaseAlertDialog dialog) {
         dialog.show();
         baseDialog = dialog;
     }
     /** returns true if dialog was added to the stack, false if the dialog was already on the stack or blocked from adding to the stack */
-    public synchronized boolean addToDialogStack(BaseAlertDialog dialog) {
+    public synchronized boolean addToDialogStack(IBaseAlertDialog dialog) {
         //if ( IBoard.getBlockToasts() ) { return false; } // commented out 20200108 in order to have DoublesFirstServer not be 'blocked' when DialogTimerView is showing
 
         boolean bAlreadyOnTheStack = false;
         if ( baseDialogs.size() > 0 ) {
             // check if somehow a second dialog is added to the stack that is already their, do not add it
-            for(BaseAlertDialog queuedDialog: baseDialogs) {
+            for(IBaseAlertDialog queuedDialog: baseDialogs) {
                 if ( queuedDialog.getClass().equals(dialog.getClass()) ) {
                     Log.w(TAG, "dialog already on the stack " + dialog.getClass() + "( stack size: " + ListUtil.size(baseDialogs) + ")");
                     bAlreadyOnTheStack = true;
@@ -106,7 +105,7 @@ public class DialogManager {
     public synchronized void showNextDialog() {
         // remove the one last shown from the stack
         if ( ListUtil.isNotEmpty(baseDialogs) ) {
-            BaseAlertDialog previous = baseDialogs.remove(0);
+            IBaseAlertDialog previous = baseDialogs.remove(0);
             Log.d(TAG, "previous dialog removed from the stack " + previous);
             baseDialog = null;
         }
@@ -135,6 +134,8 @@ public class DialogManager {
     public boolean removeDialog(Object o) {
         if ( o instanceof BaseAlertDialog ) {
             BaseAlertDialog bad = (BaseAlertDialog) o;
+        if ( o instanceof IBaseAlertDialog ) {
+            IBaseAlertDialog bad = (IBaseAlertDialog) o;
             boolean remove = baseDialogs.remove(bad);
             if ( remove ) {
                 Log.v(TAG, "dialog removed from the stack " + bad.getClass());
@@ -170,13 +171,13 @@ public class DialogManager {
                 Constructor   constructor  = constructors[0];
                 switch(constructor.getParameterTypes().length) {
                     case 3:
-                        baseDialog = (BaseAlertDialog) constructor.newInstance(context, matchModel, scoreBoard);
+                        baseDialog = (IBaseAlertDialog) constructor.newInstance(context, matchModel, scoreBoard);
                         break;
                     case 2:
-                        baseDialog = (BaseAlertDialog) constructor.newInstance(context, matchModel);
+                        baseDialog = (IBaseAlertDialog) constructor.newInstance(context, matchModel);
                         break;
                     case 1:
-                        baseDialog = (BaseAlertDialog) constructor.newInstance(context);
+                        baseDialog = (IBaseAlertDialog) constructor.newInstance(context);
                         break;
                 }
 

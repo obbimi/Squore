@@ -17,6 +17,7 @@
 
 package com.doubleyellow.scoreboard.dialog;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -64,6 +65,10 @@ public abstract class BaseMessageDialog extends BaseAlertDialog
                 .setTitle(m_sTitle)
                 .setPositiveButton(R.string.cmd_ok, null)
                 .show();
-        ViewUtil.setPackageIcon(context, dialog);
+
+        Object oDialog = dialog;
+        if ( oDialog instanceof android.app.AlertDialog ) {
+            ViewUtil.setPackageIcon(context, (AlertDialog) oDialog);
+        }
     }
 }

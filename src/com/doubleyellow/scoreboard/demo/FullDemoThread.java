@@ -198,7 +198,7 @@ public class FullDemoThread extends DemoThread {
     }
 
     private static DrawTouch       prevDrawTouch   = null;
-    private static BaseAlertDialog prevDialog      = null;
+    private static IBaseAlertDialog prevDialog      = null;
     private static MenuHandler     prevMenuHandler = null;
   //private static ActionBar       prevActionbar   = null;
     private static int             prevActionId    = 0;
@@ -348,8 +348,8 @@ public class FullDemoThread extends DemoThread {
                         if ( bHandled == false ) {
                             if ( scoreBoard.isDialogShowing() ) {
                                 prevDialog = DialogManager.getInstance().baseDialog;
-                                if ( prevDialog != null ) {
-                                    prevDialog.drawTouch(lv.actionId, Color.BLUE);
+                                if ( prevDialog instanceof BaseAlertDialog ) {
+                                    ((BaseAlertDialog)prevDialog).drawTouch(lv.actionId, Color.BLUE);
                                 }
                                 prevActionId = lv.actionId;
                                 //scoreBoard.baseDialog.handleButtonClick(lv.actionId);

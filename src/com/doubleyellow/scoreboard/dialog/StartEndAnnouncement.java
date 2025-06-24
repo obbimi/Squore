@@ -22,7 +22,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
@@ -93,7 +93,7 @@ public class StartEndAnnouncement extends BaseAlertDialog
             CountDownTimer countDownTimer = new CountDownTimer(iAutoCloseInXToStartTimer * 1000, 1000) {
                 @Override public void onTick(long millisUntilFinished) {
                     // give some feedback
-                    Button btnOK = getButton(DialogInterface.BUTTON_POSITIVE);
+                    TextView btnOK = getButton(DialogInterface.BUTTON_POSITIVE);
                     String sCaption = btnOK.getText().toString().replaceFirst("\\(\\d+\\)", "").trim();
                     sCaption += " (" + Integer.toString((int)(millisUntilFinished/1000))  + ")";
                     btnOK.setText(sCaption);

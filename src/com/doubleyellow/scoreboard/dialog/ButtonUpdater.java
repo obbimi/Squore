@@ -80,11 +80,10 @@ public class ButtonUpdater implements DialogInterface.OnShowListener {
         this.iaButton2Color   = iaColorAll;
     }
     @Override public void onShow(DialogInterface dialogInterface) {
-        AlertDialog dialog = (AlertDialog) dialogInterface;
 
         if ( iaButton2ImageId != null) {
             for (int i = 0; i < iaButton2ImageId.length; i += 2) {
-                Button button = dialog.getButton(iaButton2ImageId[i]);
+                Button button = getButton(dialogInterface, iaButton2ImageId[i]);
                 if (button == null) {
                     return;
                 }
@@ -99,39 +98,42 @@ public class ButtonUpdater implements DialogInterface.OnShowListener {
                 //button.setCompoundDrawablePadding();
             }
         }
-        for (int i = 0; i < iaButtonAll.length; i++) {
-            Button button = dialog.getButton(iaButtonAll[i]);
-            if ( button != null ) {
-                ColorUtil.resetBackground(button);
-            }
-        }
-        if ( iaButton2Color != null ) {
-            for (int i = 0; i < iaButton2Color.length; i += 2) {
-                Button button = dialog.getButton(iaButton2Color[i]);
-                if ( button == null ) {
-                    continue;
+        if ( dialogInterface instanceof android.app.AlertDialog ) {
+            for (int i = 0; i < iaButtonAll.length; i++) {
+                Button button = getButton(dialogInterface, iaButtonAll[i]);
+                if ( button != null ) {
+                    ColorUtil.resetBackground(button);
                 }
-                int iColor = iaButton2Color[i + 1];
-                boolean bDontUseBackground = MyDialogBuilder.isUsingNewerTheme(context);
-                ColorUtil.setBackground(button, iColor, bDontUseBackground);
-                button.setTextColor(ColorUtil.getBlackOrWhiteFor(iColor));
+            }
+            if ( iaButton2Color != null ) {
+                for (int i = 0; i < iaButton2Color.length; i += 2) {
+                    Button button = getButton(dialogInterface, iaButton2Color[i]);
+                    if ( button == null ) {
+                        continue;
+                    }
+                    int iColor = iaButton2Color[i + 1];
+                    boolean bDontUseBackground = MyDialogBuilder.isUsingNewerTheme(context);
+                    ColorUtil.setBackground(button, iColor, bDontUseBackground);
+                    button.setTextColor(ColorUtil.getBlackOrWhiteFor(iColor));
 
-                if ( iColor == iPlayerButtonColor ) {
-                    // TODO: only set background color of buttonbar to black of iPlayerButtonColor is not to dark
-                    ViewParent parent = button.getParent();
-                    if (parent instanceof ViewGroup) {
-                        ViewGroup vg = (ViewGroup) parent;
-                        if ( MyDialogBuilder.isUsingNewerTheme(context) == false ) {
-                            ColorUtil.setBackground(vg, Color.BLACK); // TODO: improve not for Android TV?! what is the default 'theme'?
+                    if ( iColor == iPlayerButtonColor ) {
+                        // TODO: only set background color of buttonbar to black of iPlayerButtonColor is not to dark
+                        ViewParent parent = button.getParent();
+                        if (parent instanceof ViewGroup) {
+                            ViewGroup vg = (ViewGroup) parent;
+                            if ( MyDialogBuilder.isUsingNewerTheme(context) == false ) {
+                                ColorUtil.setBackground(vg, Color.BLACK); // TODO: improve not for Android TV?! what is the default 'theme'?
+                            }
                         }
                     }
                 }
             }
         }
+/*
         if ( false && ViewUtil.isWearable(context) ) {
             float fMultiplyFactorForWearable = 0.75f;
             for (int i = 0; i < iaButtonAll.length; i++) {
-                Button button = dialog.getButton(iaButtonAll[i]);
+                Button button = getButton(dialogInterface, iaButtonAll[i]);
                 if ( button != null ) {
                     reduceTextSize(fMultiplyFactorForWearable, button);
                 }
@@ -140,6 +142,20 @@ public class ButtonUpdater implements DialogInterface.OnShowListener {
             if ( tv != null ) {
                 reduceTextSize(fMultiplyFactorForWearable, tv);
             }
+        }
+*/
+    }
+
+    private Button getButton(DialogInterface di, int iWhich) {
+        if ( di instanceof android.app.AlertDialog ) {
+            // legacy
+            android.app.AlertDialog dialog = (AlertDialog) di;
+            return dialog.getButton(iWhich);
+        } else if ( di instanceof androidx.appcompat.app.AlertDialog ) {
+            androidx.appcompat.app.AlertDialog dialog = (androidx.appcompat.app.AlertDialog) di;
+            return dialog.getButton(iWhich);
+        } else {
+            return null;
         }
     }
 
