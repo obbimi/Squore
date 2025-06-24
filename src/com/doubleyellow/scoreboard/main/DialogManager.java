@@ -132,8 +132,6 @@ public class DialogManager {
         return bNonTimerDialogShowing || bTimerIsShowing;
     }
     public boolean removeDialog(Object o) {
-        if ( o instanceof BaseAlertDialog ) {
-            BaseAlertDialog bad = (BaseAlertDialog) o;
         if ( o instanceof IBaseAlertDialog ) {
             IBaseAlertDialog bad = (IBaseAlertDialog) o;
             boolean remove = baseDialogs.remove(bad);
