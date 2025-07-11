@@ -15,7 +15,8 @@ buildscript {
         // gradle-wrapper.properties may contain 8.2
         //classpath "com.android.tools.build:gradle:7.4.2" // almost succeeds
         //classpath "com.android.tools.build:gradle:8.4.2" // requires gradle 8.7 in wrapper
-        classpath "com.android.tools.build:gradle:8.6.1" // requires android-studio 2024.2, does not work with the 2023.3.1 version
+        classpath 'com.android.tools.build:gradle:8.11.1'
+        // requires android-studio 2024.2, does not work with the 2023.3.1 version
         // NOTE: Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements
 
         // added for firebase to parse google-services.secrets.json
@@ -61,20 +62,6 @@ android {
     // buildToolsVersion not required for gradle 3.0.0 and higher (e.g. when using wrapper)
     //buildToolsVersion '28.0.3'
 
-    lintOptions {
-        disable 'MissingTranslation'
-        checkReleaseBuilds false // to get rid of com.android.tools.lint.client.api.Vendor error
-        // Or, if you prefer, you can continue to check for errors in release builds, but continue the build even when errors are found:
-        abortOnError false
-        //deprecation true
-
-        // Normally lint will analyze all dependencies along with each module; this ensures
-        // that lint can correctly (for example) determine if a resource declared in a library
-        // is unused; checking only the library in isolation would not be able to identify this
-        // problem. However, this leads to quite a bit of extra computation; a library is
-        // analyzed repeatedly, for each module that it is used in.
-        //checkDependencies false
-    }
     defaultConfig {
         // must match (or be larger than) minSdkVersion of AndroidBase
         // https://www.androidpolice.com/2018/10/28/android-platform-distribution-numbers-updated-october-pie-still-missing/
@@ -174,8 +161,13 @@ android {
         }
 */
     }
-    aaptOptions {
+    androidResources {
         ignoreAssetsPattern '_gh_pages'
+    }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'MissingTranslation'
     }
 }
 

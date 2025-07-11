@@ -63,10 +63,7 @@ import java.util.TreeMap;
  * double-yellow/${FeedName}/#                                                             for live-score of multiple matches
  *
  * Subscribe to
- * double-yellow/${FeedName}/${BrandOrSport}/${otherdeviceid}                              for mirroring a fixed device (being slave), receiving commands or complete match model as json
- * double-yellow/${FeedName}/${BrandOrSport}/${deviceid}/requestCompleteJsonOfMatch        for mirroring a fixed device (master), to react to a request of a slave to sync the entire match model
- * double-yellow/${FeedName}/${BrandOrSport}/+                                             for livescore of multiple matches of single sport
- * double-yellow/${FeedName}/#                                                             for livescore of multiple matches
+ * double-yellow/${BrandOrSport}/${DeviceId}/newMatch                                      to allow 'send' new match to this device from tournament table
  *
  * 'FeedName' (optional) to allow using a public broker like 'tcp://broker.hivemq.com:1883' and ensure you only receive info from a certain subset of matches
  * 'BrandOrSport' (optional) to allow subscribing only to a squash matches or only badminton matches

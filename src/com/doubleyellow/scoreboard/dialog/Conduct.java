@@ -77,7 +77,8 @@ public class Conduct extends BaseAlertDialog
 
         LayoutInflater myLayout = LayoutInflater.from(context);
         final View view = myLayout.inflate(R.layout.conduct, null);
-        sv = (SelectEnumView<ConductType>) view.findViewById(R.id.selectConductType);
+        sv          = view.findViewById(R.id.selectConductType);
+        enumSpinner = view.findViewById(R.id.selectConductType_spinner);
 
         // radiobutton has dark edge... on dark background ... hard to see
         // set background color to 'middlest' so that dark circles and white text are visible

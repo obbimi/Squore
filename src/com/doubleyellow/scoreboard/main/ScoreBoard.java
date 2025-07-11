@@ -3286,6 +3286,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     return false;
                 }
                 Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
+                //Intent settingsActivity = new Intent(getBaseContext(), XPreferences.class);
                 startActivityForResult(settingsActivity, id);
                 return true;
             } else if (id == R.id.dyn_speak) {
