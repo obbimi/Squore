@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.doubleyellow.android.view.EnumSpinner
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/selectConductType_spinner"
+        app:enum_class="com.doubleyellow.scoreboard.model.ConductType"
+        app:enum_display_values="@array/ConductType_DisplayValues"
+        android:background="@color/dy_dark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
