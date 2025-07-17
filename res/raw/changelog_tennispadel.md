@@ -1,3 +1,8 @@
+## 4.58 (july 2025)
+
+- target sdk 35 enforced by google
+- minor improvements
+ 
 ## 4.55 (jan 2025)
 
 - first version with MQTT capabilities (experimental)

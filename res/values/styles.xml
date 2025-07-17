@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 <!--    <style name="Theme.App" parent="@android:style/Theme.DeviceDefault" />-->
 
 <!--    <style name="Theme.SBSplashScreen" parent="Theme.SplashScreen.Common">-->
@@ -70,6 +70,9 @@
         was a test for wrapping EditText views in a com.google.android.material.textfield.TextInputLayout
 -->
     <style name="SBTheme" parent="Theme.AppCompat">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:ignore="NewApi">true</item> <!-- introduced to suppress edge-to-edge default of sdk 35 -->
+
+
         <!-- added when starting to inherit from Theme.AppCompat (for before 5.0 only?) -->
 <!--
         <item name="colorAccent">@android:color/holo_blue_dark</item>

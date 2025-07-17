@@ -1,3 +1,8 @@
+## 4.58 (july 2025)
+
+- target sdk 35 enforced by google
+- minor improvements
+
 ## 4.53 (sept 2023)
 
 - allow to change 'match date' for 'Stored matches'

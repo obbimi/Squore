@@ -110,24 +110,24 @@ android {
         phoneTabletPre24 {
             dimension "devicetype"
             minSdkVersion 21 // increased to 21 for WearOS splashscreen dependency
-            targetSdkVersion 34 // if moving to 35, be aware of layout 'sliding under' status bar (android 15 'feature' wanting to use more of the screen)
+            targetSdkVersion 35 // if moving to 35, be aware of layout 'sliding under' status bar (android 15 'feature' wanting to use more of the screen)
             multiDexEnabled true // required since using firebase
             versionCode 1915 * 10000 + versionCodeXXX
-            versionName "4.56"
+            versionName "4.58"
         }
         phoneTabletPost25 {
             dimension "devicetype"
             minSdkVersion 25
-            targetSdkVersion 34
+            targetSdkVersion 35
             versionCode 2315 * 10000 + versionCodeXXX
-            versionName "4.56"
+            versionName "4.58"
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
-            targetSdkVersion 34
+            targetSdkVersion 35
             versionCode 2501 * 10000 + versionCodeXXX
-            versionName "4.56"
+            versionName "4.58"
         }
     }
     buildTypes {
