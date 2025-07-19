@@ -1,5 +1,5 @@
 # written in such a way that it is only needed in the obbimi/Squore repo to publish releases for Squore and all derivatives
-name: Upload apk's from a github release to Google Playstore as draft
+name: Upload apk's from a github release to Google Play Store as draft
 run-name: Upload ${{ inputs.brand }} release ${{ inputs.version }} assets to Play Store
 
 on:
