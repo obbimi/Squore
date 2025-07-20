@@ -75,6 +75,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <string name="RemoteSettingsURL_default__Tabletennis">><![CDATA[http://scoretabletennis/settings?cc=${countryCode}&version=${versionCode}&ip=${ipAddress}&device_id=${liveScoreDeviceId}]]></string>
     <string name="RemoteSettingsURL_default__Racketlon">><![CDATA[http://scoreracketlon/settings?cc=${countryCode}&version=${versionCode}&ip=${ipAddress}&device_id=${liveScoreDeviceId}]]></string>
     <string name="RemoteSettingsURL_default__TennisPadel">><![CDATA[http://scoretennispadel/settings?cc=${countryCode}&version=${versionCode}&ip=${ipAddress}&device_id=${liveScoreDeviceId}]]></string>
+    <string name="RemoteSettingsURL_default__Default"></string>
 
 
     <integer name="gameEndScore_default__Squash">11</integer>
@@ -282,6 +283,8 @@ http://developer.android.com/guide/practices/screens_support.html
     <string name="MQTTBrokerURL_Public__Default">mqtt://broker.emqx.io</string>
     <string name="MQTTBrokerURL_Custom">Custom</string>
     <string name="MQTTBrokerURL_Custom__Default">mqtt://192.168.0.130</string>
+<!--    <string name="MQTTBrokerURL_Custom__Default">mqtt://172.18.0.1</string>-->
+<!--    <string name="MQTTBrokerURL_Custom__Default">mqtt://172.31.29.222</string>-->
 
     <bool name="showCastButtonInActionBar_default">true</bool>
     <bool name="Cast_ShowGraphDuringTimer_default">true</bool>
