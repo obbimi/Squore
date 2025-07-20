@@ -257,6 +257,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="UseBluetoothLE_default__Squash">false</bool>
     <bool name="UseBluetoothLE_default__TennisPadel">false</bool>
     <bool name="UseBluetoothLE_default">false</bool>
+    <bool name="UseBluetoothLE_default__Default">false</bool>
     <string name="pref_BluetoothLE_Config_default__Default">D-SCORE-RX A</string>
     <bool name="ShowFeedBackOnBLEButtonsPressedInfoMessages_default__Default">true</bool>
     <integer name="NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default">4</integer>
