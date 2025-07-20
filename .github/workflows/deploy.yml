@@ -9,7 +9,13 @@ on:
         description: 'The brand to deploy: Squore/TennisPadel/Tabletennis/Badminton/Racketlon'
         default: "Squore"
         required: true
-        type: string
+        type: choice
+        options:
+          - Badminton
+          - Squore
+          - Tabletennis
+          - TennisPadel
+          - Racketlon
       version:
         description: 'The version to deploy: Last 3 digits of versionCode. A release named Release.${version} must exist and publicly accessible for the brand'
         default: "543" # TODO: can this default automatically be updated on a commit containing build.gradle with a new value for versionCodeXXX
