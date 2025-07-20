@@ -36,7 +36,6 @@ import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 
 import java.util.Map;
-// TODO: with new dialog theme in portrait ... buttons not visible
 public class Conduct extends BaseAlertDialog
 {
     public Conduct(Context context, Model matchModel, ScoreBoard scoreBoard) {

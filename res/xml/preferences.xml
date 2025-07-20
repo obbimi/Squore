@@ -1850,6 +1850,12 @@
             android:summary="@string/pref_RemoteSettingsURL_summary"
             android:defaultValue=""
             />
+        <EditTextPreference android:key="RemoteSettingsURL_Default"
+            android:title="@string/pref_RemoteSettingsURL_Default"
+            android:summary="@string/pref_RemoteSettingsURL_Default_summary"
+            android:inputType="textUri"
+            android:defaultValue="@string/RemoteSettingsURL_default__Squash"
+            />
         <com.doubleyellow.scoreboard.prefs.ExportImportPrefs
                 android:icon="@drawable/import_export_triangle"
                 android:key="exportImportPrefs"

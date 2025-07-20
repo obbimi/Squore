@@ -2166,7 +2166,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2025-02-19"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2025-07-21"; // auto adjusted by shell script 'clean.and.assemble.sh'
     public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) <= 0;
     }
@@ -2639,8 +2639,16 @@ public class PreferenceValues extends RWValues
         }
     }
 
+    public static String getRemoteSettingsURL_Default(Context context) {
+        int ResDefault = PreferenceValues.getSportTypeSpecificResId(context, R.string.RemoteSettingsURL_default__Squash);
+        return getString(PreferenceKeys.RemoteSettingsURL_Default, ResDefault, context);
+    }
+
     public static String getRemoteSettingsURL(Context context, boolean bAddParams) {
         String sUrl = getString(PreferenceKeys.RemoteSettingsURL, 0, context);
+        if ( StringUtil.isEmpty(sUrl) ) {
+            sUrl = getRemoteSettingsURL_Default(context);
+        }
         if ( bAddParams ) {
             Map m = MapUtil.getMap("countryCode", PreferenceValues.getCountryFromTelephonyOrTimeZone(context)
                                   ,"versionCode"      , PreferenceValues.getAppVersionCode(context)

@@ -70,6 +70,13 @@ xxxhdpi: Extra-extra-extra-high-density uses (launcher icon only, see the note i
 http://developer.android.com/guide/practices/screens_support.html
 
 -->
+    <string name="RemoteSettingsURL_default__Squash">><![CDATA[http://squore/settings?cc=${countryCode}&version=${versionCode}&ip=${ipAddress}&device_id=${liveScoreDeviceId}]]></string>
+    <string name="RemoteSettingsURL_default__Badminton">><![CDATA[http://scorebadminton/settings?cc=${countryCode}&version=${versionCode}&ip=${ipAddress}&device_id=${liveScoreDeviceId}]]></string>
+    <string name="RemoteSettingsURL_default__Tabletennis">><![CDATA[http://scoretabletennis/settings?cc=${countryCode}&version=${versionCode}&ip=${ipAddress}&device_id=${liveScoreDeviceId}]]></string>
+    <string name="RemoteSettingsURL_default__Racketlon">><![CDATA[http://scoreracketlon/settings?cc=${countryCode}&version=${versionCode}&ip=${ipAddress}&device_id=${liveScoreDeviceId}]]></string>
+    <string name="RemoteSettingsURL_default__TennisPadel">><![CDATA[http://scoretennispadel/settings?cc=${countryCode}&version=${versionCode}&ip=${ipAddress}&device_id=${liveScoreDeviceId}]]></string>
+
+
     <integer name="gameEndScore_default__Squash">11</integer>
     <integer name="gameEndScore_default__Badminton">21</integer>
     <integer name="gameEndScore_default__Tabletennis">11</integer>

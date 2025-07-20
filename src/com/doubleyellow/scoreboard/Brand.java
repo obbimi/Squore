@@ -144,7 +144,7 @@ public enum Brand
             String sActive = PreferenceValues.getRemoteSettingsURL(ctx, false);
             if ( StringUtil.isEmpty(sActive) ) {
                 final String autoActivate1 = RemoteConfig_AutoActivate + "-" + DateUtil.getCurrentYYYY_MM_DD(); // yyyy-MM-dd
-                final String autoActivate2= RemoteConfig_AutoActivate;
+                final String autoActivate2 = RemoteConfig_AutoActivate;
                 String sAutoUse = m_remoteConfigUrls.optString(autoActivate1);
                 if ( StringUtil.isNotEmpty(sAutoUse) ) {
                     sAutoUse = m_remoteConfigUrls.optString(autoActivate2);
@@ -451,6 +451,7 @@ public enum Brand
     /** uuid of pusher beam https://dashboard.pusher.com/beams/instances */
     public static UUID   getUUIDPusher()           { return UUID.fromString(Brand.sSharedPusherId);}
 
+/*
     public final static String ENABLE_BLE_PRODUCT_ID = ".enable_ble";
     public static String getBillingPublicKey() {
         if ( isGameSetMatch() ) {
@@ -459,6 +460,7 @@ public enum Brand
         }
         return null;
     }
+*/
 
     public static int getImageViewResId()          { return brand.imageViewResId;}
     public static int getLogoResId()               { return brand.iLogoResId;}

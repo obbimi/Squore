@@ -749,7 +749,8 @@ public class Preferences extends Activity {
             if ( remoteSettingsURL != null ) {
                 List<CharSequence> lLetUserSelectFrom   = new ArrayList<>();
                 List<CharSequence> lLetUserSelectFromHR = new ArrayList<>();
-                JSONObject jaDisplayIds = Brand.getRemoteConfigURLs(getContext());
+                Context context = getContext();
+                JSONObject jaDisplayIds = Brand.getRemoteConfigURLs(context);
                 if ( jaDisplayIds != null ) {
                     Iterator<String> keys = jaDisplayIds.keys();
                     while( keys.hasNext() ) {
@@ -759,12 +760,18 @@ public class Preferences extends Activity {
                         lLetUserSelectFrom  .add(sUrl);
                         lLetUserSelectFromHR.add(sName);
                     }
+                    String sDefaultUrl = PreferenceValues.getRemoteSettingsURL_Default(context);
+                    if ( StringUtil.isNotEmpty(sDefaultUrl) ) {
+                        lLetUserSelectFrom.add(sDefaultUrl);
+                        lLetUserSelectFromHR.add(getString(R.string.lbl_default));
+                    }
+
                     lLetUserSelectFrom  .add("");
                     lLetUserSelectFromHR.add(getString(R.string.lbl_none));
 
                     remoteSettingsURL.setEntryValues(lLetUserSelectFrom  .toArray(new CharSequence[0])); // actual values
                     remoteSettingsURL.setEntries    (lLetUserSelectFromHR.toArray(new CharSequence[0])); // human readable
-                    if ( StringUtil.isEmpty(PreferenceValues.getRemoteSettingsURL(getContext(), false)) ) {
+                    if ( StringUtil.isEmpty(PreferenceValues.getRemoteSettingsURL(context, false)) ) {
                         hideRemovePreference(psRoot, remoteSettingsURL);
                     }
 

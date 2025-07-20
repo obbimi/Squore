@@ -50,8 +50,8 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
-import com.anjlab.android.iab.v3.PurchaseInfo;
-import com.anjlab.android.iab.v3.BillingProcessor;
+//import com.anjlab.android.iab.v3.PurchaseInfo;
+//import com.anjlab.android.iab.v3.BillingProcessor;
 
 import com.doubleyellow.android.SystemUtil;
 import com.doubleyellow.android.util.ContentReceiver;
@@ -1642,7 +1642,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         //PusherHandler.getInstance().cleanup();
 
-        destroyBillingProcessor();
+        //destroyBillingProcessor();
     }
 
     private void createNotificationTimer() {
@@ -1669,8 +1669,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ----------------------------------------------------
 
     /** Does not seem to work so well if app started for debugging. But when started from home screen it seems to work fine (android 7) */
-    private void doRestart() {
+    public void doRestart() {
         super.recreate();
+    }
+    public void askToRestart(List<String> lMessages) {
+        RestartApp restartApp = new RestartApp(this, getMatchModel(), this);
+        restartApp.init(lMessages);
+        dialogManager.addToDialogStack(restartApp);
     }
 
     // ----------------------------------------------------
@@ -3612,10 +3617,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 return false;
             } else if (id == R.id.sb_download_posted_to_squore_matches) {// http://squore.double-yellow.be/make.matches.zip.php
                 handleMenuItem(R.id.sb_download_zip, URLFeedTask.prefixWithBaseIfRequired("/matches.zip"), ZipType.SquoreAll);
+/*
             } else if (id == R.id.sb_purchase_ble) {
                 String sProductId = getPackageName() + Brand.ENABLE_BLE_PRODUCT_ID;
                 purchaseProduct(sProductId);
                 return true;
+*/
             } else if (id == R.id.sb_ble_devices) {
                 if ( m_bleConfigHandler != null ) {
                     persist(false);
@@ -7161,6 +7168,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // --- in-app purchases / Billing                 -----
     // ----------------------------------------------------
 
+/*
     private BillingProcessor m_billingProcessor = null;
     private String m_sProductToByAfterInit = null;
 
@@ -7169,21 +7177,19 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( StringUtil.isEmpty(sBrandBillingLicenseKey) ) { return false; }
         if ( m_billingProcessor == null ) {
             m_billingProcessor = new BillingProcessor(this, sBrandBillingLicenseKey, new BillingProcessor.IBillingHandler() {
-                /** Called when requested PRODUCT ID was successfully purchased */
+                // Called when requested PRODUCT ID was successfully purchased
                 @Override public void onProductPurchased(@NonNull String productId, @Nullable PurchaseInfo details) {
                     Log.d(TAG, String.format("product id %s was successfully purchased", productId));
                 }
 
-                /** Called when purchase history was restored and the list of all owned PRODUCT ID's was loaded from Google Play */
+                // Called when purchase history was restored and the list of all owned PRODUCT ID's was loaded from Google Play
                 @Override public void onPurchaseHistoryRestored() {
                     Log.d(TAG, "onPurchaseHistoryRestored has been called");
                 }
 
-                /**
-                 * Called when some error occurred. See Constants class for more details.
-                 * Note - this includes handling the case where the user canceled the buy dialog:
-                 * errorCode = Constants.BILLING_RESPONSE_RESULT_USER_CANCELED
-                 */
+                 // Called when some error occurred. See Constants class for more details.
+                 // Note - this includes handling the case where the user canceled the buy dialog:
+                 // errorCode = Constants.BILLING_RESPONSE_RESULT_USER_CANCELED
                 @Override public void onBillingError(int errorCode, @Nullable Throwable error) {
                     Log.d(TAG, "onBillingError has been called: " + errorCode);
                     if ( error != null ) {
@@ -7195,7 +7201,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     }
                 }
 
-                /** Called when BillingProcessor was initialized and it's ready to purchase */
+                // Called when BillingProcessor was initialized and it's ready to purchase
                 @Override public void onBillingInitialized() {
                     Log.d(TAG, "onBillingInitialized has been called");
                     m_billingProcessor.loadOwnedPurchasesFromGoogleAsync(new BillingProcessor.IPurchasesResponseListener() {
@@ -7237,7 +7243,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( m_billingProcessor == null ) { return false; }
         return m_billingProcessor.isPurchased(sProductId);
     }
-    /** call this method to undo the payment and restore the free version */
+    // call this method to undo the payment and restore the free version
     private void resetPayment(String sProductId) {
         if ( m_billingProcessor == null ) { return; }
         m_billingProcessor.consumePurchaseAsync(sProductId, new BillingProcessor.IPurchasesResponseListener() {
@@ -7256,4 +7262,5 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             m_billingProcessor = null;
         }
     }
+*/
 }

@@ -104,7 +104,7 @@ android {
         }
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
-    def versionCodeXXX = 562
+    def versionCodeXXX = 563
     productFlavors {
         // versionCodePrefix specifies [min_api_level][bitwise_supported_screensizes s=1,m=2,l=4,xl=8]
         phoneTabletPre24 {
@@ -253,7 +253,7 @@ dependencies {
     //implementation 'androidx.legacy:legacy-support-v4:1.0.0' // required by 'new' paho
 
     // open source library for in-app-purchasing implementation
-    implementation 'com.anjlab.android.iab.v3:library:2.2.0'
+    //implementation 'com.anjlab.android.iab.v3:library:2.2.0'
     //implementation 'com.anjlab.android.iab.v3:library:2.2.0' // somehow gives error/conflict complaining about 6.1.0 in manifest
     //implementation 'com.android.billingclient:billing:6.1.0'
 

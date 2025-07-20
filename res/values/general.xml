@@ -87,6 +87,7 @@
     <string name="do_not_show_this_dialog_anymore">Do not show this dialog anymore</string>
     <string name="lbl_fixed">Fixed</string>
     <string name="lbl_none">None</string>
+    <string name="lbl_default">Default</string>
 
     <!-- network -->
     <string name="no_fully_functional_connection_error">No fully functional network. Maybe you need to login to your provider?</string>

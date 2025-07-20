@@ -188,7 +188,9 @@
                     <item android:id="@+id/sb_download_zip"          app:showAsAction="never"                                       android:title="Download zip" android:visible="false" />
 
                     <item android:id="@+id/sb_open_store_on_wearable" app:showAsAction="never" android:icon="@drawable/wearos" android:title="Open PlayStore On Wearable" android:visible="true" />
+<!--
                     <item android:id="@+id/sb_purchase_ble"           app:showAsAction="never" android:icon="@android:drawable/stat_sys_data_bluetooth" android:title="Enable remote scoring with BLE devices" android:visible="false" />
+-->
                 </menu>
             </item>
 

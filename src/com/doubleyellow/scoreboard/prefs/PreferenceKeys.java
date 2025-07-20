@@ -377,6 +377,7 @@ public enum PreferenceKeys {
 
     ImportExportReset(null),
         RemoteSettingsURL(String.class),
+        RemoteSettingsURL_Default(String.class),
 
     useSinglesMatchesTab(Boolean.class),
     useDoublesMatchesTab(Boolean.class),

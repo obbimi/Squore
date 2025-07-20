@@ -43,8 +43,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -169,6 +171,7 @@ public class ExportImportPrefs extends DialogPreference
             mCurrent = new TreeMap(mCurrent);
             mRemote  = new TreeMap(mRemote);
         }
+        mRemote = MapUtil.filterKeys(mRemote, "^-.+", Enums.Match.Remove);
         cleanBrandBased(mRemote); //
 
         Map<MapUtil.mapDiff, Map> mapDiff = MapUtil.getMapDiff(mCurrent, mRemote);
@@ -186,6 +189,8 @@ public class ExportImportPrefs extends DialogPreference
                 Object oValOld = mToBeOverwritten.get(oKey);
                 if ( String.valueOf(oValOld).equals(String.valueOf(oValNew))) {
                     iChanges--;
+                } else {
+                    Log.d(TAG, String.format("Actual change %s ? %s != %s", oKey, oValNew, oValOld));
                 }
             }
         }
@@ -208,6 +213,26 @@ public class ExportImportPrefs extends DialogPreference
             ((ScoreBoard)context).showInfoMessageOnUiThread(sMsg, iMsgDuration);
         } else {
             Toast.makeText(context, sMsg, Toast.LENGTH_SHORT).show();
+        }
+        if ( iChanges > 0 ) {
+            int restartAppIfChangesDetected = joRemoteConfig.optInt("restartAppIfChangesDetected", 1);
+            switch (restartAppIfChangesDetected) {
+                case 1:
+                    if ( context instanceof ScoreBoard) {
+                        List<String> lMessages = new ArrayList<>();
+                        lMessages.add(sMsg);
+                        lMessages.add("Restart the app manually to have settings take effect");
+                        ((ScoreBoard)context).askToRestart(lMessages);
+                    }
+                    break;
+                case 2:
+                    if ( context instanceof ScoreBoard) {
+                        ((ScoreBoard)context).doRestart();
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         // TODO: feedPostUrl=<a number>, if specified feedPostUrls should be there as well
