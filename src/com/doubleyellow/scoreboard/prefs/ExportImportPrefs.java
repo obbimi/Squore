@@ -402,12 +402,16 @@ public class ExportImportPrefs extends DialogPreference
         String sDefaultUrl = PreferenceValues.getRemoteSettingsURL_Default(context, true);
         String sMsg = null;
         if ( sUrl.startsWith(sDefaultUrl) ) {
-            sMsg = context.getString(R.string.could_not_load_x_settings_y, context.getString(R.string.lbl_default), sUrl);
+            sMsg = context.getString(R.string.could_not_load_x_settings_y, context.getString(R.string.lbl_default), sDefaultUrl);
             Log.d(TAG, sMsg);
-            if ( PreferenceValues.currentDateIsTestDate() ) {
-                sMsg = "TEMP " + sMsg;
+            if ( PreferenceValues.getRemoteSettingsURL_AlwaysShowLoadErrors(context) ) {
+                // show message anyways. User configured it like that
             } else {
-                sMsg = null;
+                if ( PreferenceValues.currentDateIsTestDate() ) {
+                    sMsg = "TEMP " + sMsg;
+                } else {
+                    sMsg = null;
+                }
             }
         } else {
             sMsg = context.getString(R.string.could_not_load_x_settings_y, "", sUrl);

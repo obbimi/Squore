@@ -1843,20 +1843,7 @@
         android:summary="@string/pref_ImportExportReset_summary"
         android:icon="@drawable/settings_reset"
         >
-        <ListPreference
-            android:icon="@drawable/ic_action_web_site"
-            android:key="RemoteSettingsURL"
-            android:title="@string/pref_RemoteSettingsURL"
-            android:summary="@string/pref_RemoteSettingsURL_summary"
-            android:defaultValue=""
-            />
-        <EditTextPreference android:key="RemoteSettingsURL_Default"
-            android:icon="@drawable/ic_action_web_site"
-            android:title="@string/pref_RemoteSettingsURL_Default"
-            android:summary="@string/pref_RemoteSettingsURL_Default_summary"
-            android:inputType="textUri"
-            android:defaultValue="@string/RemoteSettingsURL_default__Squash"
-            />
+
         <com.doubleyellow.scoreboard.prefs.ExportImportPrefs
                 android:icon="@drawable/import_export_triangle"
                 android:key="exportImportPrefs"
@@ -1877,6 +1864,29 @@
                 android:negativeButtonText="@string/pref_reset_no_keep"
                 android:persistent="false"
                 />
+
+        <PreferenceCategory android:title="@string/pref_RemoteSettings" android:key="RemoteSettings">
+            <ListPreference
+                android:icon="@drawable/ic_action_web_site"
+                android:key="RemoteSettingsURL"
+                android:title="@string/pref_RemoteSettingsURL"
+                android:summary="@string/pref_RemoteSettingsURL_summary"
+                android:defaultValue=""
+                />
+            <EditTextPreference android:key="RemoteSettingsURL_Default"
+                android:icon="@drawable/ic_action_web_site"
+                android:title="@string/pref_RemoteSettingsURL_Default"
+                android:summary="@string/pref_RemoteSettingsURL_Default_summary"
+                android:inputType="textUri"
+                android:defaultValue="@string/RemoteSettingsURL_default__Squash"
+                />
+            <CheckBoxPreference android:key="RemoteSettingsURL_AlwaysShowLoadErrors"
+                android:title="@string/pref_RemoteSettingsURL_AlwaysShowLoadErrors"
+                android:summary="@string/pref_RemoteSettingsURL_AlwaysShowLoadErrors_Summary"
+                android:icon="@drawable/ic_action_web_site"
+                android:defaultValue="false"
+                />
+        </PreferenceCategory>
 
     </PreferenceScreen>
 </PreferenceScreen>

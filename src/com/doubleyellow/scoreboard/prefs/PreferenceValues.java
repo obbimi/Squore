@@ -2665,6 +2665,9 @@ public class PreferenceValues extends RWValues
         }
         return sUrl;
     }
+    public static boolean getRemoteSettingsURL_AlwaysShowLoadErrors(Context context) {
+        return getBoolean(PreferenceKeys.RemoteSettingsURL_AlwaysShowLoadErrors, context, false);
+    }
 
     public static String getCountryFromTelephonyOrTimeZone(Context context) {
         String networkCountryIso = null;
