@@ -163,7 +163,7 @@ public class ExportImportPrefs extends DialogPreference
             joRemoteConfig.remove(PreferenceKeys.UseMQTT.toString());
         }
 
-        JSONObject joCurrent      = ExportImportPrefs.getCurrentSettings(context);
+        JSONObject joCurrent = getCurrentSettings(context);
         Map mCurrent = JsonUtil.toMap(joCurrent);
             mCurrent.remove(PreferenceKeys.RemoteSettingsURL.toString());
             mCurrent = MapUtil.filterKeys(mCurrent, ".+" + UsernamePassword.getSettingsSuffix(context, R.string.username), Enums.Match.Remove);
@@ -175,7 +175,7 @@ public class ExportImportPrefs extends DialogPreference
             mRemote  = new TreeMap(mRemote);
         }
         mRemote = MapUtil.filterKeys(mRemote, "^-.+", Enums.Match.Remove);
-        cleanBrandBased(mRemote); //
+        int iRemoved = cleanBrandBased(mRemote);
 
         Map<MapUtil.mapDiff, Map> mapDiff = MapUtil.getMapDiff(mCurrent, mRemote);
         Map mInserts = mapDiff.get(MapUtil.mapDiff.insert);
@@ -202,7 +202,7 @@ public class ExportImportPrefs extends DialogPreference
         int iMsgDuration = 10;
         sUrl = URLFeedTask.shortenUrl(sUrl);
         if ( iChanges > 0  ) {
-            ExportImportPrefs.importSettingsFromJSON(context, joRemoteConfig);
+            importSettingsFromJSON(context, joRemoteConfig);
             if ( joRemoteConfig.has(PreferenceKeys.feedPostUrls.toString()) ) {
                 PreferenceValues.setMatchesFeedURLUnchanged(false);
             }
@@ -244,10 +244,17 @@ public class ExportImportPrefs extends DialogPreference
     {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
+
+        List<String> lSettingsToIgnore = getSettingsToIgnore();
+
         Iterator<String> keys = joSettings.keys();
         while( keys.hasNext() ) {
             String sKey = keys.next();
             if ( sKey.startsWith("-") ) { continue; }
+            if ( lSettingsToIgnore.contains(sKey) ) {
+                Log.d(TAG, "NOT importing " + sKey);
+                continue;
+            }
 
             Object oBUValue = joSettings.get(sKey);
             PreferenceKeys prefKey = null;
@@ -318,48 +325,64 @@ public class ExportImportPrefs extends DialogPreference
         Map<String, ?> buAll = preferences.getAll();
 
         TreeMap tmSettings = new TreeMap(buAll); // get stuff 'sorted'
-        cleanBrandBased(tmSettings);
+        int iRemoved = cleanBrandBased(tmSettings);
 
         JSONObject joSettings = new JSONObject(tmSettings);
         return joSettings;
     }
 
-    public static void cleanBrandBased(Map tmSettings) {
-        tmSettings = MapUtil.filterKeys(tmSettings, ".*\\.RunCount", Enums.Match.Remove);
-        // some specials
-        tmSettings = MapUtil.filterKeys(tmSettings, ".*(BLE|BluetoothLE).*", Enums.Match.Remove);
+    public static int cleanBrandBased(Map tmSettings) {
+        int iSizeBefore = MapUtil.size(tmSettings);
 
+        Map mToRemove1 = MapUtil.filterKeys(tmSettings, ".*\\.RunCount", Enums.Match.Keep);
+        // some specials
+        Map mToRemove2 = MapUtil.filterKeys(tmSettings, ".*(BLE|BluetoothLE).*", Enums.Match.Keep);
+
+        MapUtil.removeAll(tmSettings, mToRemove1);
+        MapUtil.removeAll(tmSettings, mToRemove2);
+
+        List<String> lToRemove = getSettingsToIgnore();
+
+        MapUtil.removeAll(tmSettings, lToRemove);
+
+        return iSizeBefore - MapUtil.size(tmSettings);
+    }
+
+    private static List<String> getSettingsToIgnore() {
+        List<String> lToRemove = new ArrayList<>();
         if (Brand.isGameSetMatch()) {
             for (PreferenceKeys key : Preferences.NONGameSetMatch_SpecificPrefs) {
-                tmSettings.remove(key.toString());
+                lToRemove.add(key.toString());
             }
         } else {
             for (PreferenceKeys key : Preferences.GameSetMatch_SpecificPrefs) {
-                tmSettings.remove(key.toString());
+                lToRemove.add(key.toString());
             }
         }
         if (Brand.supportsTimeout() == false) {
-            tmSettings.remove(PreferenceKeys.autoShowGamePausedDialogAfterXPoints.toString());
-            tmSettings.remove(PreferenceKeys.autoShowModeActivationDialog.toString());
-            tmSettings.remove(PreferenceKeys.showModeDialogAfterXMins.toString());
-            tmSettings.remove(PreferenceKeys.showGamePausedDialog.toString());
-            tmSettings.remove(PreferenceKeys.timerTowelingDown.toString());
+            lToRemove.add(PreferenceKeys.autoShowGamePausedDialogAfterXPoints.toString());
+            lToRemove.add(PreferenceKeys.autoShowModeActivationDialog        .toString());
+            lToRemove.add(PreferenceKeys.showModeDialogAfterXMins            .toString());
+            lToRemove.add(PreferenceKeys.showGamePausedDialog                .toString());
+            lToRemove.add(PreferenceKeys.timerTowelingDown                   .toString());
         }
         if ( Brand.isSquash() ) {
-            tmSettings.remove(PreferenceKeys.swapPlayersBetweenGames.toString());
-            tmSettings.remove(PreferenceKeys.swapPlayersHalfwayGame.toString());
-            tmSettings.remove(PreferenceKeys.useChangeSidesFeature.toString());
+            lToRemove.add(PreferenceKeys.swapPlayersBetweenGames.toString());
+            lToRemove.add(PreferenceKeys.swapPlayersHalfwayGame .toString());
+            lToRemove.add(PreferenceKeys.useChangeSidesFeature  .toString());
         }
         if ( Brand.isTabletennis() == false ) {
-            tmSettings.remove(PreferenceKeys.numberOfServesPerPlayer.toString());
-            tmSettings.remove(PreferenceKeys.numberOfServiceCountUpOrDown.toString());
+            lToRemove.add(PreferenceKeys.numberOfServesPerPlayer     .toString());
+            lToRemove.add(PreferenceKeys.numberOfServiceCountUpOrDown.toString());
         }
-        tmSettings.remove(PreferenceKeys.targetDirForImportExport.toString());
-        tmSettings.remove(PreferenceKeys.OfficialSquashRulesURLs.toString());
-        tmSettings.remove(PreferenceKeys.squoreBrand.toString());
-        tmSettings.remove(PreferenceKeys.viewedChangelogVersion.toString());
-        tmSettings.remove(PreferenceKeys.onlyForContactGroups.toString());
-        tmSettings.remove(PreferenceKeys.liveScoreDeviceId.toString()); // if used for transferring settings, we do not want to devices having the same id
+        lToRemove.add(PreferenceKeys.targetDirForImportExport.toString());
+        lToRemove.add(PreferenceKeys.OfficialSquashRulesURLs .toString());
+        lToRemove.add(PreferenceKeys.squoreBrand             .toString());
+        lToRemove.add(PreferenceKeys.viewedChangelogVersion  .toString());
+        lToRemove.add(PreferenceKeys.onlyForContactGroups    .toString());
+        lToRemove.add(PreferenceKeys.liveScoreDeviceId       .toString()); // if used for transferring settings, we do not want to devices having the same id
+        
+        return lToRemove;
     }
 
     public static void exportSettings(Context context) {
