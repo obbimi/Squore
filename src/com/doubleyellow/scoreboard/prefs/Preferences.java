@@ -760,7 +760,8 @@ public class Preferences extends Activity {
                         lLetUserSelectFrom  .add(sUrl);
                         lLetUserSelectFromHR.add(sName);
                     }
-                    String sDefaultUrl = PreferenceValues.getRemoteSettingsURL_Default(context);
+                    String sDefaultUrl = PreferenceValues.getRemoteSettingsURL_Default(context, false);
+                    String sDefaultUrlNp = PreferenceValues.getRemoteSettingsURL_Default(context, true);
                     if ( StringUtil.isNotEmpty(sDefaultUrl) ) {
                         lLetUserSelectFrom.add(sDefaultUrl);
                         lLetUserSelectFromHR.add(getString(R.string.lbl_default));
@@ -771,7 +772,8 @@ public class Preferences extends Activity {
 
                     remoteSettingsURL.setEntryValues(lLetUserSelectFrom  .toArray(new CharSequence[0])); // actual values
                     remoteSettingsURL.setEntries    (lLetUserSelectFromHR.toArray(new CharSequence[0])); // human readable
-                    if ( StringUtil.isEmpty(PreferenceValues.getRemoteSettingsURL(context, false)) ) {
+                    String sRemoteSettingsURL = PreferenceValues.getRemoteSettingsURL(context, false);
+                    if ( StringUtil.isEmpty(sRemoteSettingsURL) || sRemoteSettingsURL.startsWith(sDefaultUrlNp) ) {
                         hideRemovePreference(psRoot, remoteSettingsURL);
                     }
 

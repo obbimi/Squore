@@ -2639,15 +2639,20 @@ public class PreferenceValues extends RWValues
         }
     }
 
-    public static String getRemoteSettingsURL_Default(Context context) {
+    public static String getRemoteSettingsURL_Default(Context context, boolean bStripParams) {
         int ResDefault = PreferenceValues.getSportTypeSpecificResId(context, R.string.RemoteSettingsURL_default__Squash);
-        return getString(PreferenceKeys.RemoteSettingsURL_Default, ResDefault, context);
+        String sDefaultUrl = getString(PreferenceKeys.RemoteSettingsURL_Default, ResDefault, context);
+
+        if ( bStripParams && StringUtil.isNotEmpty(sDefaultUrl) && sDefaultUrl.contains("?") ) {
+            sDefaultUrl = sDefaultUrl.substring(0, sDefaultUrl.indexOf("?"));
+        }
+        return sDefaultUrl;
     }
 
     public static String getRemoteSettingsURL(Context context, boolean bAddParams) {
         String sUrl = getString(PreferenceKeys.RemoteSettingsURL, 0, context);
         if ( StringUtil.isEmpty(sUrl) ) {
-            sUrl = getRemoteSettingsURL_Default(context);
+            sUrl = getRemoteSettingsURL_Default(context, false);
         }
         if ( bAddParams ) {
             Map m = MapUtil.getMap("countryCode", PreferenceValues.getCountryFromTelephonyOrTimeZone(context)

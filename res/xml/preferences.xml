@@ -1851,6 +1851,7 @@
             android:defaultValue=""
             />
         <EditTextPreference android:key="RemoteSettingsURL_Default"
+            android:icon="@drawable/ic_action_web_site"
             android:title="@string/pref_RemoteSettingsURL_Default"
             android:summary="@string/pref_RemoteSettingsURL_Default_summary"
             android:inputType="textUri"

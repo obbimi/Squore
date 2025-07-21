@@ -307,10 +307,7 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
 
     private boolean remoteSettingsErrorFeedback(FetchResult result, String sUrl) {
         if ( m_context instanceof ScoreBoard) {
-            String sDefaultUrl = PreferenceValues.getRemoteSettingsURL_Default(m_context);
-            if ( StringUtil.isNotEmpty(sDefaultUrl) && sDefaultUrl.contains("?") ) {
-                sDefaultUrl = sDefaultUrl.substring(0, sDefaultUrl.indexOf("?"));
-            }
+            String sDefaultUrl = PreferenceValues.getRemoteSettingsURL_Default(m_context, true);
             if ( sUrl.startsWith(sDefaultUrl) ) {
                 String sMsg = "Could not retrieve remote settings from default " + sDefaultUrl;
                 Log.d(TAG, sMsg);
