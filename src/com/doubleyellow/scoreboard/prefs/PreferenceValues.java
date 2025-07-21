@@ -2166,7 +2166,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2025-07-21"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2025-07-22"; // auto adjusted by shell script 'clean.and.assemble.sh'
     public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) <= 0;
     }
@@ -2643,8 +2643,8 @@ public class PreferenceValues extends RWValues
         int ResDefault = PreferenceValues.getSportTypeSpecificResId(context, R.string.RemoteSettingsURL_default__Squash);
         String sDefaultUrl = getString(PreferenceKeys.RemoteSettingsURL_Default, ResDefault, context);
 
-        if ( bStripParams && StringUtil.isNotEmpty(sDefaultUrl) && sDefaultUrl.contains("?") ) {
-            sDefaultUrl = sDefaultUrl.substring(0, sDefaultUrl.indexOf("?"));
+        if ( bStripParams && StringUtil.isNotEmpty(sDefaultUrl) ) {
+            sDefaultUrl = URLFeedTask.shortenUrl(sDefaultUrl);
         }
         return sDefaultUrl;
     }

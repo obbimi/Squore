@@ -25,6 +25,8 @@ import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.android.util.ExportImport;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
@@ -37,6 +39,7 @@ import com.doubleyellow.util.Enums;
 import com.doubleyellow.util.FileUtil;
 import com.doubleyellow.util.JsonUtil;
 import com.doubleyellow.util.MapUtil;
+import com.doubleyellow.util.StringUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -393,6 +396,30 @@ public class ExportImportPrefs extends DialogPreference
             return null;
         }
         return new File(externalStorageDirectory, Brand.getShortName(context) + ".settings" + sExtension);
+    }
+
+    public static void remoteSettingsErrorFeedback(Context context, ContentReceiver.FetchResult result, String sUrl) {
+        String sDefaultUrl = PreferenceValues.getRemoteSettingsURL_Default(context, true);
+        String sMsg = null;
+        if ( sUrl.startsWith(sDefaultUrl) ) {
+            sMsg = context.getString(R.string.could_not_load_x_settings_y, context.getString(R.string.lbl_default), sUrl);
+            Log.d(TAG, sMsg);
+            if ( PreferenceValues.currentDateIsTestDate() ) {
+                sMsg = "TEMP " + sMsg;
+            } else {
+                sMsg = null;
+            }
+        } else {
+            sMsg = context.getString(R.string.could_not_load_x_settings_y, "", sUrl);
+        }
+
+        if (StringUtil.isNotEmpty(sMsg) ) {
+            if ( context instanceof ScoreBoard) {
+                ((ScoreBoard)context).showInfoMessageOnUiThread(sMsg, 10);
+            } else {
+                Toast.makeText(context, sMsg, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 }

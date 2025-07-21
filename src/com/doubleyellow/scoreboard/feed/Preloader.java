@@ -204,7 +204,14 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
     // echo -n 'YourSquore1h03v320210208-2330' | md5sum
     @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent, String sUrl) {
         setFetching(false);
-        Log.d(TAG, "Fetching done for " + m_status + " (result:" + result + ")");
+        if ( result.equals(FetchResult.OK) ) {
+            Log.d(TAG, "Fetching done for " + m_status + " (result:" + result + ")");
+        } else {
+            Log.w(TAG, "Fetching failed for " + sUrl);
+            if ( m_status.equals(Status.RemoteSettings) ) {
+                ExportImportPrefs.remoteSettingsErrorFeedback(m_context, result, sUrl);
+            }
+        }
         switch (result) {
             case OK:
                 Log.i(TAG, String.format("Fetched %s (cache age %s)", m_status, lCacheAge));
@@ -266,9 +273,6 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                 doNext(1);
                 break;
             case FileNotFound:
-                if ( m_status.equals(Status.RemoteSettings) ) {
-                    remoteSettingsErrorFeedback(result, sUrl);
-                }
                 doNext(1); // continue with other internet resources that may be available
                 break;
             case LoginToNetworkFirst:
@@ -293,9 +297,6 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
             case NoNetwork:
             case UnexpectedContent:
             case UnexpectedError:
-                if ( m_status.equals(Status.RemoteSettings) ) {
-                    remoteSettingsErrorFeedback(result, sUrl);
-                }
                 m_status = Status.NoConnection;
                 doNext(1); // do stuff that does not require an internet connection like caching contacts
                 break;
@@ -303,24 +304,6 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                 m_status = Status.NoConnection;
                 break;
         }
-    }
-
-    private boolean remoteSettingsErrorFeedback(FetchResult result, String sUrl) {
-        if ( m_context instanceof ScoreBoard) {
-            String sDefaultUrl = PreferenceValues.getRemoteSettingsURL_Default(m_context, true);
-            if ( sUrl.startsWith(sDefaultUrl) ) {
-                String sMsg = "Could not retrieve remote settings from default " + sDefaultUrl;
-                Log.d(TAG, sMsg);
-                if ( PreferenceValues.currentDateIsTestDate() ) {
-                    ((ScoreBoard)m_context).showInfoMessageOnUiThread("TEMP " + sMsg, 10);
-                }
-                return false;
-            } else {
-                ((ScoreBoard)m_context).showInfoMessageOnUiThread("Could not retrieve remote settings from " + sUrl, 10);
-                return true;
-            }
-        }
-        return false;
     }
 
     private class DownloadFlags implements Runnable

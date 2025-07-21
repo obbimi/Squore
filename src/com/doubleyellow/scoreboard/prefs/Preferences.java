@@ -130,7 +130,7 @@ public class Preferences extends Activity {
                         Toast.makeText(Preferences.this, String.format("Could not import (all) content from %s", sUrl), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(Preferences.this, String.format("Could not fetch content from %s", sUrl), Toast.LENGTH_SHORT).show();
+                    ExportImportPrefs.remoteSettingsErrorFeedback(Preferences.this, result, sUrl);
                 }
             }
         }

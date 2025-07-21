@@ -105,12 +105,17 @@ android {
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
     def versionCodeXXX = 564
+
+    // if moving to >=35, be aware of layout 'sliding under' status bar (android 15 'feature' wanting to use more of the screen)
+    // in 35 this can still be mitigated by using 'android:windowOptOutEdgeToEdgeEnforcement'
+    // in 36 it does not seem possible to mitigate that easily
+    def targetSdkXX = 35
     productFlavors {
         // versionCodePrefix specifies [min_api_level][bitwise_supported_screensizes s=1,m=2,l=4,xl=8]
         phoneTabletPre24 {
             dimension "devicetype"
             minSdkVersion 21 // increased to 21 for WearOS splashscreen dependency
-            targetSdkVersion 36 // if moving to 35, be aware of layout 'sliding under' status bar (android 15 'feature' wanting to use more of the screen)
+            targetSdkVersion targetSdkXX
             multiDexEnabled true // required since using firebase
             versionCode 1915 * 10000 + versionCodeXXX
             versionName "4.58"
@@ -118,7 +123,7 @@ android {
         phoneTabletPost25 {
             dimension "devicetype"
             minSdkVersion 25
-            targetSdkVersion 36
+            targetSdkVersion targetSdkXX
             versionCode 2315 * 10000 + versionCodeXXX
             versionName "4.58"
         }
