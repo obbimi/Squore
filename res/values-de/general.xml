@@ -12,6 +12,7 @@
     <string name="posting">Posten…</string>
     <string name="possible_cause">Mögliche Ursache: </string>
     <string name="could_not_load_feed_x">Feed konnte nicht geladen werden (%s)</string>
+    <string name="could_not_load_x_settings_y">%1$s Einstellungen konnte nicht geladen werden (%2$s)</string>
     <string name="yesterday">gestern</string>
     <string name="today">heute</string>
     <string name="tomorrow">morgen</string>

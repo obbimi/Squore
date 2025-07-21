@@ -12,6 +12,7 @@
     <string name="posting">Posting…</string>
     <string name="possible_cause">Possible cause: </string>
     <string name="could_not_load_feed_x">Could not load Feed (%s)</string>
+    <string name="could_not_load_x_settings_y">Could not load %1$s settings from %2$s</string>
     <string name="yesterday">Yesterday</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>

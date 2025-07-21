@@ -205,7 +205,7 @@
         -->
     </style>
 
-    <style name="SBPreferencesTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+    <style name="SBPreferencesTheme" parent="Theme.AppCompat">
         <!-- simply by specifying this, but not modifying anything the preference screen uses the (very readable) styling of all other prefences screens of the phone -->
 
         <!-- only influences text in popup windows (multi en single line text) and next to 'text size' slidebars. But not in the description of the preferences -->
