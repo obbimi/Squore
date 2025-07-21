@@ -4,6 +4,8 @@
 #export JAVA_HOME=/usr/lib/jvm/java-10-openjdk
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 export JAVA_HOME=/usr/lib/jvm/java-22-jdk
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
 #export JAVA_HOME=/osshare/software/oracle/java-8-oracle
 if [[ ! -e $JAVA_HOME ]]; then
     # ubuntu shell
