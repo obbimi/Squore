@@ -65,6 +65,7 @@ class OnVolumeButtonPressHandler extends ScoreBoardListener {
 
     private void showActivateDialog(final Context context) {
         if ( iDialogPresentedCnt > 1 ) { return; }
+        if ( scoreBoard == null ) { return; }
         if ( scoreBoard.isLandscape() ) { return; }
 
         // user pressed dialog button short after one another: present choice to turn on entering score using volume buttons
