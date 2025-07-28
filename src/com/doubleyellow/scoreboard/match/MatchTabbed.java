@@ -207,13 +207,17 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
         return true;
     }
 
-    @Override public void notify(FeedMatchSelector.FeedStatus fsOld, FeedMatchSelector.FeedStatus fsNew) {
+    @Override public void notify(FeedMatchSelector.FeedStatus fsOld, FeedMatchSelector.FeedStatus fsNew, boolean bUpdateCheckableMenuItems) {
         ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.show_matches_from_feed}, fsNew.equals(FeedMatchSelector.FeedStatus.showingPlayers));
 
         final boolean bShowingMatches = fsNew.equals(FeedMatchSelector.FeedStatus.showingMatches);
         ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.show_players_from_feed     }, bShowingMatches);
         ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.uc_hide_matches_with_result}, bShowingMatches);
         ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.uc_group_matches_by_court  }, bShowingMatches); // TODO: disable/hide option if NO courts in feed
+
+        if ( (menu != null) &&  bUpdateCheckableMenuItems ) {
+            toggleMenuItems(menu, defaultTab);
+        }
     }
 
     /** Toggle visibility of certain menu items based on the active tab */
@@ -393,6 +397,7 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
             if (menuItemId == R.id.uc_group_matches_by_court) {
                 prefKey = PreferenceKeys.groupMatchesInFeedByCourt;
             }
+            PreferenceValues.removeOverwrite(prefKey);
             PreferenceValues.setBoolean(prefKey, this, bNewChecked);
 
             // now refresh: try without reloading data from the URL

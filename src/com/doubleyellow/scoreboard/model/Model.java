@@ -2789,7 +2789,12 @@ public abstract class Model implements Serializable
                 if ( joMatch.has( JSONKey.winnerBecauseOf.toString() ) ) {
                     m_winnerBecauseOf = JsonUtil.getEnum(joMatch, JSONKey.winnerBecauseOf, Player.class, null);
                     if ( lockState != null && lockState.isEndMatchManually() ) {
-                        m_EndMatchManuallyBecause = lockState.equals(LockState.LockedEndOfMatchConduct) ? EndMatchManuallyBecause.ConductMatch : EndMatchManuallyBecause.RetiredBecauseOfInjury;
+                        m_EndMatchManuallyBecause = lockState.equals(LockState.LockedEndOfMatchConduct)
+                                                  ? EndMatchManuallyBecause.ConductMatch
+                                                  : (lockState.equals(LockState.LockedEndOfMatchTimeBased)
+                                                    ? EndMatchManuallyBecause.TimeIsUp
+                                                    : EndMatchManuallyBecause.RetiredBecauseOfInjury
+                                                  );
                     }
                 }
             } else if ( matchHasEnded() ) {

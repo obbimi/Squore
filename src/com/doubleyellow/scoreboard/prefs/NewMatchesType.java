@@ -23,6 +23,7 @@ public enum NewMatchesType {
     Poule                       (1, R.string.Poule                       ),
     TeamVsTeam_OneMatchPerPlayer(2, R.string.TeamVsTeam_OneMatchPerPlayer), /* Squash */
     TeamVsTeam_XMatchesPlayer   (2, R.string.TeamVsTeam_XMatchesPlayer   ), /* Tabletennis */
+    RotatingDoublePartners      (1, R.string.RotatingDoublePartners      ), /* Tennis/Padel/Tabletennis */
     ;
     private int m_iGroups = 1;
     private int m_iResId  = 0;

@@ -89,11 +89,11 @@ public class StaticMatchSelector extends ExpandableMatchSelector
 
         final int iNrOfGroups = newMatchesType==null?1:newMatchesType.getNumberOfGroups();
 
-        final List<List<TextView>> llTextViews = new ArrayList<List<TextView>>();
-        llTextViews.add(new ArrayList<TextView>());
+        final List<List<TextView>> llTextViews = new ArrayList<>();
+        llTextViews.add(new ArrayList<>());
         if ( iNrOfGroups == 2 ) {
             // add additional array of txt views
-            llTextViews.add(new ArrayList<TextView>());
+            llTextViews.add(new ArrayList<>());
         }
 
         for(int g = 1; g <= iNrOfGroups; g++) {
@@ -103,7 +103,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                 // this allows the cursor to have the color of the text
                 // PlayerTextView txt = new PlayerTextView(activity);
                 PlayerTextView txt = (PlayerTextView) myLayout.inflate(R.layout.playertextview_default, null);
-                txt.setHint(getString(R.string.lbl_player_x, ((iNrOfGroups==2)?(g==1?"A":"B") :"") + String.valueOf(i)));
+                txt.setHint(getString(R.string.lbl_player_x, ((iNrOfGroups==2)?(g==1?"A":"B") :"") + i));
                 txt.setTag(ColorPrefs.Tags.item);
                 txt.setText("");
                 //int type = txt.getInputType() | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
@@ -234,6 +234,9 @@ public class StaticMatchSelector extends ExpandableMatchSelector
             iMaxNonEmpty = Math.max(iMaxNonEmpty, iNonEmpty);
         }
         btnOk.setEnabled(iMinNonEmpty >= 2);
+        if ( newMatchesType.equals(NewMatchesType.RotatingDoublePartners) ) {
+            btnOk.setEnabled(iMinNonEmpty >= 4);
+        }
 
         if ( newMatchesType == null ) {
             btnOk.setText(R.string.cmd_ok);
@@ -256,6 +259,10 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                     } else {
                         btnOk.setText(R.string.cmd_ok);
                     }
+                    break;
+                case RotatingDoublePartners:
+                    // TODO
+                    btnOk.setText(R.string.cmd_ok);
                     break;
             }
         }
@@ -284,15 +291,24 @@ public class StaticMatchSelector extends ExpandableMatchSelector
         txtNrOfPlayers.setHint(PreferenceValues.maxNumberOfPlayersInGroup(context) + " : " + getString(R.string.pref_maxNumberOfPlayersInGroup) );
 
         // allow to choose between 'poule' vs 'team vs team'
-        final SelectEnumView sevType;
+        final SelectEnumView<NewMatchesType> sevType;
         if ( bIsEditExistingGroupName ) {
             sevType = null;
         } else {
             NewMatchesType newMatchesTypeDefault = PreferenceValues.getNewMatchesType(context);
             sevType = new SelectEnumView(context, NewMatchesType.class, newMatchesTypeDefault, 1);
             ll.addView(sevType);
+            sevType.setOnCheckedChangeListener((group, checkedId) -> {
+                NewMatchesType checked = sevType.getChecked();
+                Log.d(TAG, "Clicked on " + checked + " " + checkedId );
+                //txtNrOfPlayers.setEnabled(checked.equals(NewMatchesType.RotatingDoublePartners)==false);
+                txtNrOfPlayers.setVisibility(checked.equals(NewMatchesType.RotatingDoublePartners)?View.INVISIBLE:View.VISIBLE);
+            });
 
             ll.addView(txtNrOfPlayers);
+            if ( NewMatchesType.RotatingDoublePartners.equals(newMatchesTypeDefault) ) {
+                txtNrOfPlayers.setVisibility(View.INVISIBLE);
+            }
         }
 
         AlertDialog.Builder ab = new MyDialogBuilder(context);
@@ -310,7 +326,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                             } else {
                                 NewMatchesType newMatchesType = null;
                                 if ( sevType != null ) {
-                                    newMatchesType = (NewMatchesType) sevType.getChecked();
+                                    newMatchesType = sevType.getChecked();
                                 }
                                 if ( NewMatchesType.Poule.equals(newMatchesType) ) {
                                     lFixedMatches.add(0, HEADER_PREFIX + sNewHeader);
@@ -318,18 +334,21 @@ public class StaticMatchSelector extends ExpandableMatchSelector
                                 }
 
                                 // after adding a new group assume at least a match will be added
-                                String sNrOfMatches = txtNrOfPlayers.getText().toString();
-                                if ( StringUtil.isEmpty(sNrOfMatches) ) {
+                                String sNrOfPlayers = txtNrOfPlayers.getText().toString();
+                                if ( StringUtil.isEmpty(sNrOfPlayers) ) {
                                     int iUseNrAsInHint = PreferenceValues.maxNumberOfPlayersInGroup(context);
-                                    sNrOfMatches = String.valueOf(iUseNrAsInHint);
+                                    sNrOfPlayers = String.valueOf(iUseNrAsInHint);
                                 }
                                 Integer iNrOfNamesToEnter = 4;
-                                if ( StringUtil.isInteger(sNrOfMatches) ) {
-                                    iNrOfNamesToEnter = Integer.valueOf(sNrOfMatches);
+                                if ( StringUtil.isInteger(sNrOfPlayers) ) {
+                                    iNrOfNamesToEnter = Integer.valueOf(sNrOfPlayers);
                                 }
                                 iNrOfNamesToEnter = Math.max(iNrOfNamesToEnter, 2);
+                                if ( NewMatchesType.RotatingDoublePartners.equals(newMatchesType) ) {
+                                    iNrOfNamesToEnter = 4;
+                                }
 
-                                PreferenceValues.setEnum(PreferenceKeys.NewMatchesType, context, newMatchesType);
+                                PreferenceValues.setEnum  (PreferenceKeys.NewMatchesType           , context, newMatchesType);
                                 PreferenceValues.setNumber(PreferenceKeys.maxNumberOfPlayersInGroup, context, iNrOfNamesToEnter);
                                 editMatch(sNewHeader, "", false, newMatchesType, iNrOfNamesToEnter );
                             }

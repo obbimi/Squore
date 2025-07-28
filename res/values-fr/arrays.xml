@@ -41,6 +41,7 @@
         <item>Partager le matche terminé</item>
         <item>Verrouillé (Retired)</item>
         <item>Verrouillé (Conduct Match)</item>
+        <item>Verrouillé (Le temps s\'est écoulé)</item>
     </string-array>
     <string-array name="DetermineTextColor_DisplayValues">
         <item>Choisir automatiquement blanc ou noir</item>

@@ -1403,7 +1403,8 @@ public class PreferenceValues extends RWValues
         if ( key.equals(PreferenceKeys.matchList) ) {
             int iResDefault = getSportTypeSpecificResId(context, R.string.matchList_default__Squash);
             String sMatchListDefault = context.getString(iResDefault);
-            if ( isBrandTesting(context) ) {
+            if ( isBrandTesting(context) && currentDateIsTestDate() ) {
+                Toast.makeText(context, "In brand testing mode. Reverting back to default list", Toast.LENGTH_SHORT).show();
                 values = sMatchListDefault;
             }
 

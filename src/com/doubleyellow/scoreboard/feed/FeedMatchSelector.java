@@ -158,6 +158,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             if ( MapUtil.isNotEmpty(mFeedPrefOverwrites) ) {
                 PreferenceValues.setOverwrites(mFeedPrefOverwrites);
                 m_bHideCompletedMatches = PreferenceValues.hideCompletedMatchesFromFeed(context);
+                changeAndNotify(m_feedStatus, true);
             }
         }
         return MapUtil.size(mFeedPrefOverwrites);
@@ -781,7 +782,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 fsNew = FeedStatus.loadingMatches;
             }
         }
-        changeAndNotify(fsNew);
+        changeAndNotify(fsNew, false);
 
         m_joFeedConfig = null; // ensure feed config ( if present ) is re-read
         m_sDisplayFormat_Matches = DisplayFormat_MatchDefault;
@@ -825,10 +826,10 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             String sURLMatches = PreferenceValues.getMatchesFeedURL(context);
             String sURLPlayers = PreferenceValues.getPlayersFeedURL(context);
             if ( m_feedStatus.isShowingPlayers() ) {
-                changeAndNotify(FeedStatus.loadingPlayers);
+                changeAndNotify(FeedStatus.loadingPlayers, false);
                 m_sLastFetchedURL = sURLPlayers;
             } else {
-                changeAndNotify(FeedStatus.loadingMatches);
+                changeAndNotify(FeedStatus.loadingMatches, false);
                 m_sLastFetchedURL = sURLMatches;
             }
 /*
@@ -923,10 +924,10 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 switch (m_feedStatus) {
                     case loadingMatches:
                         m_bHideCompletedMatches = PreferenceValues.hideCompletedMatchesFromFeed(context);
-                        changeAndNotify(FeedStatus.showingMatches);
+                        changeAndNotify(FeedStatus.showingMatches, false);
                         break;
                     case loadingPlayers:
-                        changeAndNotify(FeedStatus.showingPlayers);
+                        changeAndNotify(FeedStatus.showingPlayers, false);
                         break;
                 }
             } else {
@@ -1454,17 +1455,17 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     }
 
     public interface FeedStatusChangedListerer {
-        void notify(FeedStatus fsOld, FeedStatus fsNew);
+        void notify(FeedStatus fsOld, FeedStatus fsNew, boolean bUpdateCheckableMenuItems);
     }
     private List<FeedStatusChangedListerer> lChangeListeners = new ArrayList<>();
     public void registerFeedChangeListener(FeedStatusChangedListerer l) {
         lChangeListeners.add(l);
     }
-    private void changeAndNotify(FeedStatus fsNew) {
+    private void changeAndNotify(FeedStatus fsNew, boolean bUpdateCheckableMenuItems) {
         FeedStatus fsOld = m_feedStatus;
         m_feedStatus = fsNew;
         for ( FeedStatusChangedListerer l: lChangeListeners ) {
-            l.notify(fsOld, m_feedStatus);
+            l.notify(fsOld, m_feedStatus, bUpdateCheckableMenuItems);
         }
     }
 }

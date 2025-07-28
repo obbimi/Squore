@@ -1764,6 +1764,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // -----------------timer button           ------------
     // ----------------------------------------------------
 
+    private boolean gsmDoNotShowTimer() {
+        int nrOfFinishedGames = matchModel.getNrOfFinishedGames();
+        return (nrOfFinishedGames > 0) && (nrOfFinishedGames % 2 == 0);
+    }
+
     private FloatingActionButton timerButton = null;
     private void updateTimerFloatButton() {
         if ( matchModel == null ) { return; }
@@ -1772,8 +1777,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             // do not show timer button when it is gummiarm point
             bShowTimerFAB = false;
         }
-        int nrOfFinishedGames = matchModel.getNrOfFinishedGames();
-        if ( bShowTimerFAB && Brand.isGameSetMatch() && (nrOfFinishedGames > 0) && (nrOfFinishedGames % 2 == 0) ) {
+        if ( bShowTimerFAB && Brand.isGameSetMatch() && gsmDoNotShowTimer() ) {
             // correction: do not show timer button after even nr of games
             bShowTimerFAB = false;
         }
@@ -2339,7 +2343,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             iBoard.updateScore(p, iTotal);
             iBoard.updateScoreHistory(iDelta == 1);
             if ( bInitializingModelListeners == false ) {
-                cancelTimer();
+                if ( iDelta != 0 /* change score or undo */ ) {
+                    cancelTimer();
+                }
             }
             if ( iDelta != 1 ) {
                 updateTimerFloatButton();
@@ -2629,7 +2635,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 LockState lockState = matchModel.getLockState();
                 if ( lockState.equals(LockState.UnlockedManual) == false || matchModel.getName(Player.A).equals("Shaun") || Brand.isNotSquash() ) {
                     LockState newLS = endMatchManuallyBecause!=null
-                                    ? (endMatchManuallyBecause.equals(EndMatchManuallyBecause.ConductMatch)?LockState.LockedEndOfMatchConduct:LockState.LockedEndOfMatchRetired)
+                                    ? (endMatchManuallyBecause.equals(EndMatchManuallyBecause.ConductMatch)?LockState.LockedEndOfMatchConduct:((endMatchManuallyBecause.equals(EndMatchManuallyBecause.RetiredBecauseOfInjury)?LockState.LockedEndOfMatchRetired:LockState.LockedEndOfMatchTimeBased)))
                                     : LockState.LockedEndOfMatch;
                     matchModel.setLockState(newLS);
                     bLockStateChanged = true;
@@ -3825,6 +3831,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     private void autoShowTimer(Type timerType) {
         if ( PreferenceValues.useTimersFeature(this).equals(Feature.Automatic) == false) {
+            return;
+        }
+        if ( Brand.isGameSetMatch() && gsmDoNotShowTimer() ) {
+            // correction: do not show timer button after even nr of games
             return;
         }
         TwoTimerView twoTimerView = getTwoTimerView(timerType);
@@ -5591,9 +5601,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         LockState current = matchModel.getLockState();
         LockState lsNew   = LockState.UnlockedManual;
         if ( (
-                (LockState.LockedIdleTime == current)
-                        || (LockState.LockedEndOfMatchRetired == current)
-                        || (LockState.LockedEndOfMatchConduct == current)
+                (LockState.LockedIdleTime            == current)
+             || (LockState.LockedEndOfMatchRetired   == current)
+             || (LockState.LockedEndOfMatchConduct   == current)
+             || (LockState.LockedEndOfMatchTimeBased == current)
         )
                 &&
                 (matchModel.matchHasEnded()==false)

@@ -4,6 +4,7 @@
         <!-- Keep in line with com.doubleyellow.scoreboard.model.EndMatchManuallyBecause -->
         <item>Opgave wegens blessure</item>
         <item>Conduct Match</item>
+        <item>Tijd is om</item>
     </string-array>
     <string-array name="BrokenEquipment_DisplayValues">
         <item>Gesprongen snaren</item>
@@ -20,7 +21,6 @@
         <item>Post enkel json in body</item>
     </string-array>
     <string-array name="LockState_DisplayValues">
-
         <item>Ontgrendeld (Onveranderbaar)</item>
         <item>Ontgrendeld</item>
         <item>Ontgrendeld (Manueel)</item>
@@ -33,6 +33,7 @@
         <item>Gedeelde beëindigde wedstrijd</item>
         <item>Vergrendeld (Opgave)</item>
         <item>Vergrendeld (Conduct Match)</item>
+        <item>Vergrendeld (Tijd is om)</item>
     </string-array>
     <string-array name="DetermineTextColor_DisplayValues">
         <item>Automatisch zwart of wit kiezen</item>

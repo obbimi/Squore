@@ -181,6 +181,51 @@ public class DialogOnClickListener implements DialogInterface.OnClickListener
 
                             break;
                         }
+                        case RotatingDoublePartners: {
+                            List<String> lMatches = new ArrayList<>();
+
+                            List<TextView> lTextViews = m_llTextViews.get(0);
+                            List<int[]> lPairs    = new ArrayList<>();
+                            lPairs.add(new int[] { 1,2 ,3,4 }); // -5 ==
+                            lPairs.add(new int[] { 1,2 ,3,5 }); // -4
+                            lPairs.add(new int[] { 1,2 ,4,5 }); // -3
+
+                            lPairs.add(new int[] { 1,3 ,2,4 }); // -5 ==
+                            lPairs.add(new int[] { 1,3 ,2,5 }); // -4
+                            lPairs.add(new int[] { 1,3 ,4,5 }); // -3
+
+                            lPairs.add(new int[] { 1,4, 2,3 }); // -5 ==
+                            lPairs.add(new int[] { 1,4 ,2,5 }); // -3
+                            lPairs.add(new int[] { 1,4 ,3,5 }); // -2
+
+                            lPairs.add(new int[] { 1,5 ,2,3 }); // -4
+                            lPairs.add(new int[] { 1,5 ,2,4 }); // -3
+                            lPairs.add(new int[] { 1,5 ,3,4 }); // -2
+
+                            lPairs.add(new int[] { 2,3 ,4,5 }); // -1
+                            lPairs.add(new int[] { 2,4 ,3,5 }); // -1
+                            lPairs.add(new int[] { 2,5 ,3,4 }); // -1
+                            for(int m=0; m< lPairs.size(); m++) {
+                                int[] iDblPlayers = lPairs.get(m);
+                                List<String> lPlayers = new ArrayList<>();
+                                for(int i=0; i < iDblPlayers.length; i++) {
+                                    int iPlayer = iDblPlayers[i] - 1;
+                                    if ( iPlayer < lTextViews.size() ) {
+                                        lPlayers.add(lTextViews.get(iPlayer).getText().toString().trim());
+                                    }
+                                }
+                                ListUtil.removeEmpty(lPlayers);
+                                if ( ListUtil.size(lPlayers) != 4 ) { continue; }
+                                String sTeam1 = lPlayers.get(0) + "/" + lPlayers.get(1);
+                                String sTeam2 = lPlayers.get(2) + "/" + lPlayers.get(3);
+                                lMatches.add(sTeam1 + " - " + sTeam2);
+                            }
+                            if ( ListUtil.isNotEmpty(lMatches) ) {
+                                addGroupWithMatches(m_sToHeader, lMatches);
+                            }
+
+                            break;
+                        }
                     }
                 }
 

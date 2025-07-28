@@ -12,6 +12,7 @@
         <!-- Keep in line with com.doubleyellow.scoreboard.model.EndMatchManuallyBecause -->
         <item>Aufgabe wegen Verletzung</item>
         <item>Strafspiel</item>
+        <item>Die Zeit ist um</item>
     </string-array>
     <string-array name="BrokenEquipment_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.model.BrokenEquipment -->

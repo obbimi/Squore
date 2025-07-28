@@ -841,6 +841,10 @@ public class IBoard implements TimerViewContainer
                     int[] iViewIds = new int[] { R.id.btn_gameswon1, R.id.btn_gameswon2, R.id.space_scoregame_scorepnt
                                                , R.id.btn_side1    , R.id.btn_side2
                                                };
+                    if ( gsmModel.isDoubles() ) {
+                        // serve side buttons are not used
+                        iViewIds = new int[] { R.id.btn_gameswon1, R.id.btn_gameswon2, R.id.space_scoregame_scorepnt };
+                    }
                     int iGoneOrVisible = gsmModel.matchHasEnded() ? View.GONE : View.VISIBLE;
                     for(int i:iViewIds) {
                         View v = m_vRoot.findViewById(i);

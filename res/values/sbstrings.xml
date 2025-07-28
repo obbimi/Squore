@@ -5,6 +5,7 @@
     <string name="Poule">Poule - Multiple matches per player</string>
     <string name="TeamVsTeam_OneMatchPerPlayer">Team vs Team - One match per team player</string>
     <string name="TeamVsTeam_XMatchesPlayer">Team vs Team - Multiple matches per team player</string>
+    <string name="RotatingDoublePartners">Doubles - 4 players rotating partners</string>
 
 <!-- <string name="facebook_app_id">504690753001960</string> -->
     <string name="msg_enter_both_player_names">Please enter both player names</string>

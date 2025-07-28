@@ -32,6 +32,7 @@ public enum LockState {
     SharedEndedMatch       (true , false, false, false),
     LockedEndOfMatchRetired(true , true , true , true ), // for 'End Match' menu option
     LockedEndOfMatchConduct(true , true , true , true ), // for 'End Match' menu option
+    LockedEndOfMatchTimeBased(true , false , false , true ), // for 'End Match' menu option
     ;
     // Hidden is a special locked state for shared matches that can only be set using the web interface. It is for hiding 'accidentally published' or 'faulty published' matches. Not used in the app
 
