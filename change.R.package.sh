@@ -224,7 +224,12 @@ if [[ -n "${parentBrand}" ]]; then
     correctSportSpecificResource ${toSuffix} ${parentBrand}
 fi
 if [[ "${tobranded}" = "Padel" || "${parentBrand}" = "Padel" ]]; then
+    # e.g. WinnerPadel
     correctSportSpecificResource Padel TennisPadel
+    correctSportSpecificResource       TennisPadel Default
+fi
+if [[ "${tobranded}" != "TennisPadel" || "${parentBrand}" = "TennisPadel" ]]; then
+    # e.g. DScore
     correctSportSpecificResource       TennisPadel Default
 fi
 
