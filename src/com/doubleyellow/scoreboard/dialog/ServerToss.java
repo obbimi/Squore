@@ -311,9 +311,16 @@ public class ServerToss extends BaseAlertDialog
             adb.setTitle(0);
             adb.setIcon(0);
             adb.setMessage(getString(R.string.sb_toss_won_by_x, sWinnerOfToss) + "\n" + getString(R.string.sb_players_choice));
+
+            dialog.setTitle(0);
+            dialog.setIcon(0);
+            dialog.setMessage(getString(R.string.sb_toss_won_by_x, sWinnerOfToss) + "\n" + getString(R.string.sb_players_choice));
         } else {
-            adb.setTitle  (getString(R.string.sb_toss_won_by_x, sWinnerOfToss));
-            adb.setMessage(getString(R.string.sb_players_choice));
+            adb.setTitle     (getString(R.string.sb_toss_won_by_x, sWinnerOfToss));
+            adb.setMessage   (getString(R.string.sb_players_choice));
+
+            dialog.setTitle  (getString(R.string.sb_toss_won_by_x, sWinnerOfToss));
+            dialog.setMessage(getString(R.string.sb_players_choice));
         }
         btnToss.setVisibility(VISIBILITY_TOSS_BUTTON_FOR_TT_SIDE_RECEIVE);
         btnA.setEnabled(true); btnA.setText(R.string.sb_serve);
