@@ -34,12 +34,14 @@
         android:summary="@string/pref_Category_BlueToothLE_summary"
         android:icon="@android:drawable/stat_sys_data_bluetooth"
         android:key="BluetoothLE">
+<!--
         <CheckBoxPreference android:key="UseBluetoothLE"
             android:title="@string/pref_UseBluetoothLE"
             android:summary="@string/pref_UseBluetoothLE_Summary"
             android:icon="@android:drawable/stat_sys_data_bluetooth"
             android:defaultValue="@bool/UseBluetoothLE_default__Squash"
             />
+-->
         <ListPreference android:key="BluetoothLE_Config"
             android:icon="@android:drawable/stat_sys_data_bluetooth"
             android:title="@string/pref_BluetoothLE_Config"

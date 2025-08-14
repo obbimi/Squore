@@ -5434,8 +5434,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 try {
                     Class clazz = Class.forName(sClass);
                     m_bleConfigHandler = (BLEBridge) clazz.newInstance();
+                    PreferenceValues.setOverwrite(PreferenceKeys.UseBluetoothLE, true);
                 } catch (Exception e) {
                     Log.e(TAG, sClass, e);
+                    PreferenceValues.setString(PreferenceKeys.BLEBridge_ClassName, this, "");
                 }
             }
         }
