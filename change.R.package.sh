@@ -65,6 +65,7 @@ function correctSportSpecificResource {
     # list all renamed USED resource names and ...
     for res in $(grep -E -r '@(array|bool|fraction|integer|integer-array|string|string-array|color).*__[A-Z][A-Za-z]+' * | perl -ne 's~.*@(array|bool|fraction|integer|integer-array|string|string-array|color)\/(\w+__\w+).*~$2~; print' | sort -u); do
         # ... check that the appropriate res definition exists
+        echo -n '.'
         if grep -E -q -R "name=.${res}." *; then
             if echo ${res} | grep -q "__${from}"; then
                 nrOfOccurrencesAsExpr=$(grep -E -h -c -r "@.*${res}" * | grep -E -v '^0$' | xargs | sed -e 's/\ /+/g')
@@ -231,6 +232,10 @@ fi
 if [[ "${tobranded}" != "TennisPadel" && "${parentBrand}" = "TennisPadel" ]]; then
     # e.g. DScore
     correctSportSpecificResource       TennisPadel Default
+fi
+if [[ "${tobranded}" != "Tabletennis" && "${parentBrand}" = "Tabletennis" ]]; then
+    # e.g. DScoreTT
+    correctSportSpecificResource       Tabletennis Default
 fi
 
 if [[ -e correctSportSpecificResource.txt && -n "$(grep 'to Default' correctSportSpecificResource.txt)" ]]; then
