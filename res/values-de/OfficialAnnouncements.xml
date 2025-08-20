@@ -13,15 +13,15 @@
     <string name="sb_receive">Rückschlag</string>
     <string name="oa_love_all">NULL zu NULL</string>
 
-    <string name="oa_game_NamePlayerX__TennisPadel">Satz %s</string> <!-- spoken text -->
+    <string name="oa_game_NamePlayerX__TennisPadel">Spiel %s</string> <!-- spoken text -->
     <string name="oa_game_to_x">Satz an %s</string>
     <string name="oa_match_to_x">Spiel an %s</string>
     <string name="oa_1_game_all">Eins beide in Sätzen</string>
     <string name="oa_x_games_all">%s beide in Sätzen</string>
-    <string name="oa_1_game_all__TennisPadel">Eins beide in Sätzen</string>
-    <string name="oa_x_games_all__TennisPadel">%s beide in Sätzen</string>
-    <string name="oa_x_sets_all__TennisPadel">%s Sets beide</string>
-    <string name="oa_1_set_all__TennisPadel">Eins beide in Sets</string>
+    <string name="oa_1_game_all__TennisPadel">Eins beide</string>
+    <string name="oa_x_games_all__TennisPadel">%s beide</string>
+    <string name="oa_x_sets_all__TennisPadel">%s Sätzen beide</string>
+    <string name="oa_1_set_all__TennisPadel">Eins beide in Sätzen</string>
     <string name="oa_a_wins_set_b_xGamesToy__TennisPadel">%1$s gewinnt Satz %2$d %3$s</string>
     <!--<string name="oa_x_leads_n_against_y">%s leads %s against %s</string>-->
     <!--<string name="oa_x_wins_n_against_y">%s wins %s against %s</string>-->
@@ -39,15 +39,17 @@
 
     <string name="oa_game">Satz</string>
     <string name="oa_games">Sätze</string>
-    <string name="oa_game__TennisPadel">Satz</string>
-    <string name="oa_games__TennisPadel">Sätze</string>
+    <string name="oa_game__TennisPadel">Spiel</string>
+    <string name="oa_games__TennisPadel">Spielen</string>
     <string name="oa_gameball">Satzball</string>
     <string name="oa_matchball">Spielball</string>
     <string name="oa_match">Spiel</string>
+    <string name="oa_match__TennisPadel">Match</string>
+<!--<string name="oa_match__TennisPadel">Zieg</string>-->
 
     <string name="oa_set">Satz</string>
     <string name="oa_sets">Sätze</string>
-    <string name="oa_set_ball">Spielball</string>
+    <string name="oa_set_ball">Satzball</string>
 
     <string name="oa_n_all__or__n_equal">%d beide</string>
     <string name="oa_player_needs_2_clear_points">Spieler gewinnt mit 2 Punkten Vorsprung</string>
