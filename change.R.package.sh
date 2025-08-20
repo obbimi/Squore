@@ -237,6 +237,10 @@ if [[ "${tobranded}" != "Tabletennis" && "${parentBrand}" = "Tabletennis" ]]; th
     # e.g. DScoreTT
     correctSportSpecificResource       Tabletennis Default
 fi
+if [[ "${tobranded}" != "Badminton" && "${parentBrand}" = "Badminton" ]]; then
+    # e.g. DScoreTT
+    correctSportSpecificResource       Badminton Default
+fi
 
 if [[ -e correctSportSpecificResource.txt && -n "$(grep 'to Default' correctSportSpecificResource.txt)" ]]; then
     echo "To Default already happened"
