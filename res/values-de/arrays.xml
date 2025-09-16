@@ -50,6 +50,7 @@
         <item>gesperrt - Spielende</item>
         <item>gesperrt - Aufgabe</item>
         <item>gesperrt - Strafspiel</item>
+        <item>gesperrt - Zeit ist um</item>
     </string-array>
     <string-array name="DetermineTextColor_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.DetermineTextColor -->

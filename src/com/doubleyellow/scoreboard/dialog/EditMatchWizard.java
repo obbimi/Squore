@@ -166,6 +166,8 @@ public class EditMatchWizard extends BaseAlertDialog
 
                     llBestOf1.addView(tbBestOf_or_TotalOf, lpCC);
                     llBestOf.addView(llBestOf1);
+
+                    tbBestOf_or_TotalOf.setOnLongClickListener(m_nextOnLongClick);
                 }
             }
             LinearLayout llBestOf2 = new LinearLayout(context);
@@ -197,6 +199,7 @@ public class EditMatchWizard extends BaseAlertDialog
 
                 if ( Brand.isRacketlon() == false ) {
                     llBestOf2.addView(tbTotalNrOfGames, lpCC);
+                    tbTotalNrOfGames.setOnLongClickListener(m_nextOnLongClick);
                 }
             }
 
@@ -220,6 +223,7 @@ public class EditMatchWizard extends BaseAlertDialog
 
                 llBestOf2.addView(otNrOfPointsToWinGame, lpCC);
                 llBestOf.addView(llBestOf2);
+                otNrOfPointsToWinGame.setOnLongClickListener(m_nextOnLongClick);
             }
 
             lControls.add(llBestOf);
@@ -231,18 +235,21 @@ public class EditMatchWizard extends BaseAlertDialog
 
             if ( Brand.isGameSetMatch() )
             {
+                // final set finish
                 String[] fsfDescriptions = context.getResources().getStringArray(R.array.finalSetFinishDisplayValues);
                 List<String> lValues = new ArrayList<>();
                 for(String sDescription: fsfDescriptions ) {
                     lValues.add(getString(R.string.pref_finalSetFinish) + ": " + sDescription);
                 }
-                SelectObjectToggle<String> tbBestOf_or_TotalOf = new SelectObjectToggle<String>(context, lValues);
-                tbBestOf_or_TotalOf.setTag(PreferenceKeys.finalSetFinish);
+                SelectObjectToggle<String> tbFinalSetFinish = new SelectObjectToggle<String>(context, lValues);
+                tbFinalSetFinish.setTag(PreferenceKeys.finalSetFinish);
                 GSMModel gsmModel = (GSMModel) matchModel;
                 FinalSetFinish finalSetFinish = gsmModel.getFinalSetFinish();
-                tbBestOf_or_TotalOf.setSelectedIndex(finalSetFinish.ordinal());
+                tbFinalSetFinish.setSelectedIndex(finalSetFinish.ordinal());
 
-                llBrandSpecific.addView(tbBestOf_or_TotalOf, lpCC);
+                llBrandSpecific.addView(tbFinalSetFinish, lpCC);
+
+                tbFinalSetFinish.setOnLongClickListener(m_nextOnLongClick);
             }
             if ( Brand.isGameSetMatch() )
             {
@@ -259,6 +266,8 @@ public class EditMatchWizard extends BaseAlertDialog
                 tbGoldenPoint.setSelectedIndex(goldenPointFormat.ordinal());
 
                 llBrandSpecific.addView(tbGoldenPoint, lpCC);
+
+                tbGoldenPoint.setOnLongClickListener(m_nextOnLongClick);
             }
             if ( Brand.isRacketlon() ) {
                 // initial discipline
@@ -274,6 +283,7 @@ public class EditMatchWizard extends BaseAlertDialog
                 tbFirstDiscipline.setSelectedIndex(disciplineSequence.iterator().next().ordinal());
 
                 llBrandSpecific.addView(tbFirstDiscipline, lpCC);
+                tbFirstDiscipline.setOnLongClickListener(m_nextOnLongClick);
             }
             if ( Brand.isSquash() ) {
                 // english scoring
@@ -284,8 +294,8 @@ public class EditMatchWizard extends BaseAlertDialog
                 SelectObjectToggle<String> tbHandInHandOut = new SelectObjectToggle<String>(context, lValues);
                 tbHandInHandOut.setTag(PreferenceKeys.useHandInHandOutScoring);
                 tbHandInHandOut.setSelectedIndex(matchModel.isEnglishScoring() ? 1 : 0);
-
                 llBrandSpecific.addView(tbHandInHandOut, lpCC);
+                tbHandInHandOut.setOnLongClickListener(m_nextOnLongClick);
             }
 
             if ( llBrandSpecific.getChildCount() > 0 ) {
@@ -455,4 +465,11 @@ public class EditMatchWizard extends BaseAlertDialog
         // there is only the 'Next' button
         //super.handleButtonClick(which);
     }
+
+    private View.OnLongClickListener m_nextOnLongClick = new View.OnLongClickListener() {
+        @Override public boolean onLongClick(View v) {
+            storeAndShowNext(1);
+            return true;
+        }
+    };
 }

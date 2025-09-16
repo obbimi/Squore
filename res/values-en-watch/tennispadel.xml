@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- shorter values to not cover to much of the screen -->
+    <string-array name="goldenPointFormatDisplayValues">
+        <item>Off</item>
+        <item>Pro</item>
+        <item>Amateur</item>
+    </string-array>
+</resources>

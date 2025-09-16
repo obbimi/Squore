@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- shorter values to not cover to much of the screen -->
+    <string name="lbl_GoldenPoint">Punto de oro</string>
+    <string-array name="goldenPointFormatDisplayValues">
+        <item>No usar</item>
+        <item>Pro</item>
+        <item>Aficionado</item>
+    </string-array>
+</resources>

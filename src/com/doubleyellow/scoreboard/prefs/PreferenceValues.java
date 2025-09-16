@@ -168,6 +168,9 @@ public class PreferenceValues extends RWValues
     }
 
     public static Brand getOverwriteBrand(Context ctx) {
+        if ( currentDateIsTestDate() && ViewUtil.isWearable(ctx) ) {
+            return Brand.TennisPadel; // e.g. for wearable testing
+        }
         return RWValues.getEnum(PreferenceKeys.squoreBrand, ctx, Brand.class, Brand.Squore);
     }
 
