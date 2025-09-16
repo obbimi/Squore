@@ -17,8 +17,8 @@ on:
           - TennisPadel
           - Racketlon
       version:
-        description: 'The version to deploy: Last 3 digits of versionCode. A release named Release.${version} must exist and publicly accessible for the brand'
-        default: "543" # TODO: can this default automatically be updated on a commit containing build.gradle with a new value for versionCodeXXX
+        description: 'The version to deploy: Last 3 digits of versionCode. A release named ${version} must exist and publicly accessible for the brand'
+        default: "573" # TODO: use 'latest' or can this default automatically be updated on a commit containing build.gradle with a new value for versionCodeXXX
         required: true
         type: string
       #releasePrefix:
@@ -47,7 +47,6 @@ jobs:
         aaptPath=$(find ${androidhome}/build-tools -name aapt | sort | tail -1)
         version=${{ inputs.version }}
         brand=${{ inputs.brand }}
-        releasePrefix=
 
         # github contains a release for wearOs as well, but 1) google does not accept it for the moment, 2) should be in a different google release anyway
         apkversions="phoneTabletPost25 phoneTabletPre24"
@@ -57,7 +56,7 @@ jobs:
           fn=${brand}.${version}-${apkversion}-release-signed.apk
           filenames="${fn},${filenames}"
           # download file
-          wget --quiet -O ${fn} https://github.com/obbimi/${brand}/releases/download/${releasePrefix}${version}/${fn}
+          wget --quiet -O ${fn} https://github.com/obbimi/${brand}/releases/download/${version}/${fn}
           # extract info from apk
           PKG=$(${aaptPath} d badging ${fn} | grep pack | tr ' ' '\n' | grep -E ^name= | cut -d "'" -f 2)
           echo "packageName=$PKG" >> $GITHUB_OUTPUT

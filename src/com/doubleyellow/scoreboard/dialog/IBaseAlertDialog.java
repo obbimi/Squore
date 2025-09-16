@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.util.TypedValue;
@@ -149,8 +150,14 @@ public abstract class IBaseAlertDialog {
     }
 
     public TextView getButton(/*AlertDialog alertDialog, */int iButton) {
-        if ( m_lButtons.contains(iButton) ) {
-            return m_lButtons.get(iButton);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if ( m_lButtons.contains(iButton) ) {
+                return m_lButtons.get(iButton);
+            }
+        } else {
+            if ( m_lButtons.indexOfKey(iButton) >= 0  ) {
+                return m_lButtons.get(iButton);
+            }
         }
         return getDialogButton(iButton);
     }

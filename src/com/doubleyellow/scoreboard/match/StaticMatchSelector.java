@@ -234,7 +234,7 @@ public class StaticMatchSelector extends ExpandableMatchSelector
             iMaxNonEmpty = Math.max(iMaxNonEmpty, iNonEmpty);
         }
         btnOk.setEnabled(iMinNonEmpty >= 2);
-        if ( newMatchesType.equals(NewMatchesType.RotatingDoublePartners) ) {
+        if ( NewMatchesType.RotatingDoublePartners.equals(newMatchesType) ) {
             btnOk.setEnabled(iMinNonEmpty >= 4);
         }
 

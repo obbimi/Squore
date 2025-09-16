@@ -287,7 +287,12 @@ public class MQTTHandler
         message.setPayload(msg.getBytes());
         message.setQos(MQTT_QOS);
         message.setRetained(bRetain);
-        mqttClient.publish(topic, message, null, defaultCbPublish);
+        try {
+            mqttClient.publish(topic, message, null, defaultCbPublish);
+        } catch (Exception e) {
+            // Seen in playstore: java.lang.IllegalArgumentException
+            Log.e(TAG, e.getMessage(), e);
+        }
     }
 
 

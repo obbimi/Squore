@@ -7165,6 +7165,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
         }
         if ( bChanged ) {
+            if ( MapUtil.size(m_mJoinedDevices) > 50 ) {
+                m_mJoinedDevices.clear();
+            }
             Log.i(TAG, "I now know about " + m_mJoinedDevices);
             if ( joinedDevicesListener != null ) {
                 runOnUiThread(() -> joinedDevicesListener.updatedTo(new LinkedHashSet<>(m_mJoinedDevices.keySet()) , sFromDevice));

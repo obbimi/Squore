@@ -535,7 +535,7 @@ public class Speak
 
     private void gameBall(Model model)
     {
-        //if ( Brand.isNotSquash() ) { return; }
+        if ( Brand.isTabletennis() ) { return; }
 
         Player[] possibleGameBallFor = model.isPossibleGameBallFor();
         Boolean bIsGameball = (possibleGameBallFor != null) && (possibleGameBallFor.length != 0);
@@ -572,6 +572,8 @@ public class Speak
     //------------------------------
 
     public void setTimerMessage(String s) {
+        if ( Brand.isTabletennis() ) { return; }
+
         if ( isStarted() == false ) { return; }
         if ( isEnabled() == false ) { return; }
 
