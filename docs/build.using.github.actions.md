@@ -31,9 +31,9 @@ For each brand:
 ## Deploy to Google
 
 - Goto [actions](https://github.com/obbimi/Squore/actions)
-  - Choose [Publish Released APK to Google](https://github.com/obbimi/Squore/actions/workflows/deploy.yml) > Run workflow
+  - Choose [Upload apk's from a github release to Google Play Store as draft](https://github.com/obbimi/Squore/actions/workflows/deploy.yml) > Run workflow
   - provide 'Brand' and 'VersionCode'
-  - Runs for less than a minute
+  - Runs for less than a minute (several runs can be started simultaneously)
 - Goto [Play Console](https://play.google.com/console/u/0/developers/5046226336743383720/app-list)
   - Select the Correct app (Brand) and go to
     - Test and Release > Release overview
@@ -45,8 +45,8 @@ For each brand:
     - choose
       - 'Edit' (arrow)
       - "next', choose previous or give new release notes
-      - 'Save'
-      - 'Send for review'
+      - 'Save', followed by 'Go to overview'
+      - 'Send change for review'
 
 ## Troubleshooting
 

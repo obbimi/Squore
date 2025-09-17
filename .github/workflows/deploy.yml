@@ -18,7 +18,7 @@ on:
           - Racketlon
       version:
         description: 'The version to deploy: Last 3 digits of versionCode. A release named ${version} must exist and publicly accessible for the brand'
-        default: "573" # TODO: use 'latest' or can this default automatically be updated on a commit containing build.gradle with a new value for versionCodeXXX
+        default: "latest" # TODO: use 'latest' or can this default automatically be updated on a commit containing build.gradle with a new value for versionCodeXXX
         required: true
         type: string
       #releasePrefix:
@@ -42,11 +42,16 @@ jobs:
     - name: Download from /releases
       id: download_apk_extract_info
       run: |
-        #set -x
-        androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
-        aaptPath=$(find ${androidhome}/build-tools -name aapt | sort | tail -1)
+        set -x
         version=${{ inputs.version }}
         brand=${{ inputs.brand }}
+        if [[ "$version" == "latest" ]]; then
+          version=$(curl -s -i https://github.com/obbimi/${brand}/releases/latest | grep -i location | cut -d '/' -f 8 | tr -d '\n' | tr -d '\r')
+        fi
+        echo "version=$version" >> $GITHUB_OUTPUT
+
+        androidhome="${ANDROID_HOME:-${ANDROID_SDK}}"
+        aaptPath=$(find ${androidhome}/build-tools -name aapt | sort | tail -1)
 
         # github contains a release for wearOs as well, but 1) google does not accept it for the moment, 2) should be in a different google release anyway
         apkversions="phoneTabletPost25 phoneTabletPre24"
@@ -72,7 +77,7 @@ jobs:
         packageName : ${{ steps.download_apk_extract_info.outputs.packageName }}
         releaseFiles: ${{ steps.download_apk_extract_info.outputs.filenames }}
         track: beta # alpha,beta,internal or production
-        releaseName : ${{ inputs.version }} # if not specified typically derived from versionCode/versionName
+        releaseName : ${{ steps.download_apk_extract_info.outputs.version }} # if not specified typically derived from versionCode/versionName
         #changesNotSentForReview: true # does not seem to work or not allowed anymore by Google
         # existingEditId: # A valid, unpublished Edit ID
         status: draft
