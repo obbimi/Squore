@@ -45,7 +45,8 @@ public class ShowcaseSequenceItemChangeListener extends ScoreBoardListener imple
     @Override public void beforeShow(int position, int iDeltaNotUsed, int iViewId, int iResId) {
         Log.d(TAG, "beforeShow:: highlight view " + scoreBoard.getResourceEntryName(iViewId) + ", display text " + scoreBoard.getResourceEntryName(iResId));
 
-        Model matchModel = getMatchModel();
+        final Model matchModel = getMatchModel();
+        if ( matchModel == null ) { return; }
 
         if ( /*(position == 1) &&*/ (iViewId == R.id.float_toss) ) {
             PreferenceValues.setOverwrite(PreferenceKeys.useTossFeature                     , Feature.Suggest.toString());

@@ -2,6 +2,7 @@
 
 - target sdk 35 enforced by google
 - minor improvements
+- Allow quickly adding matches for 'rotating doubles'
  
 ## 4.55 (jan 2025)
 

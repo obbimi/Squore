@@ -1092,8 +1092,8 @@ public abstract class Model implements Serializable
                 this.m_player2TimeoutInfo.remove(slRemoved.getCallTargetPlayer());
             }
             // get score BEFORE undo
-            Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress(); // TMP NOTE: returns 0-0 of new set if moving back into previous set for GSM model
-                                                                                     // does not match with slRemoved
+            final Map<Player, Integer> scoreOfGameInProgress = getScoreOfGameInProgress(); // TMP NOTE: returns 0-0 of new set if moving back into previous set for GSM model
+                                                                                           // does not match with slRemoved
             if ( (slRemoved != null) && slRemoved.isCall() ) {
                 // usually only a 'just let' or 'conduct warning'
                 if ( slRemoved.call.isConduct() ) {
@@ -1133,12 +1133,15 @@ public abstract class Model implements Serializable
                             iDelta = 0;
                         }
                     }
-                    int iReducedScore = MapUtil.increaseCounter(scoreOfGameInProgress, removeScoringPlayer, iDelta); // TODO: not below zero
-                    if ( iReducedScore < 0 ) {
-                        Log.w(TAG, "Should not happen"); scoreOfGameInProgress.put(removeScoringPlayer, 0);
-                    }
-                    for (OnScoreChangeListener l : onScoreChangeListeners) {
-                        l.OnScoreChange(removeScoringPlayer, iReducedScore, iDelta, null);
+                    if ( scoreOfGameInProgress != null ) {
+                        int iReducedScore = MapUtil.increaseCounter(scoreOfGameInProgress, removeScoringPlayer, iDelta); // TODO: not below zero
+                        if ( iReducedScore < 0 ) {
+                            Log.w(TAG, "Should not happen");
+                            scoreOfGameInProgress.put(removeScoringPlayer, 0);
+                        }
+                        for (OnScoreChangeListener l : onScoreChangeListeners) {
+                            l.OnScoreChange(removeScoringPlayer, iReducedScore, iDelta, null);
+                        }
                     }
                     if ( ListUtil.isNotEmpty(m_currentRallyIsPowerPlayFor) ) {
                         List<Player> lProcess = new ArrayList<>(m_currentRallyIsPowerPlayFor);

@@ -3879,7 +3879,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
     }
     /** Invoked by TwoTimerView and interpretReceivedMessage() */
-    public void _showTimer(Type timerType, boolean bAutoTriggered, ViewType viewType, Integer iInitialSecs) {
+    public synchronized void _showTimer(Type timerType, boolean bAutoTriggered, ViewType viewType, Integer iInitialSecs) {
         if ( iInitialSecs == null ) {
             iInitialSecs = PreferenceValues.getInteger(timerType.getPrefKey(), this, timerType.getDefaultSecs());
         }
@@ -7035,7 +7035,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // --- MQTT                                       -----
     // ----------------------------------------------------
     public static MQTTHandler m_MQTTHandler = null;
-    public void onResumeMQTT() {
+    public synchronized void onResumeMQTT() {
         if ( cdtReconnect != null ) {
             cdtReconnect.cancel();
             cdtReconnect = null;
@@ -7119,7 +7119,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         runOnUiThread(() -> iBoard.updateMQTTConnectionStatusIcon(visibility, nrOfWhat));
     }
 
-    public void stopMQTT() {
+    public synchronized void stopMQTT() {
         if ( cdtReconnect != null ) {
             cdtReconnect.cancel();
             cdtReconnect = null;

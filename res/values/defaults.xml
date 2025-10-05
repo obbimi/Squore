@@ -130,7 +130,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <integer-array name="commonEndScores__Racketlon"><item>11</item><item>21</item></integer-array>
     <integer-array name="commonEndScores__TennisPadel"><item>4</item><item>6</item></integer-array>
 
-    <integer name="timerPauseBetweenGames_default__Squash">90</integer> <!-- PSA: 120 -->
+    <integer name="timerPauseBetweenGames_default__Squash">120</integer> <!-- PSA: 120, sept 2025: 120 always -->
     <integer name="timerPauseBetweenGames_default__Badminton">120</integer> <!-- 16.2.2 not exceeding 120 seconds between the first and second game, and between the second and third game shall be allowed in all matches.  -->
     <integer name="timerPauseBetweenGames_default__Tabletennis">60</integer><!-- 3.4.4.1.1 an interval of up to 1 minute between successive games of an individual match; -->
     <integer name="timerPauseBetweenGames_default__Racketlon">180</integer>

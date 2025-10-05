@@ -46,7 +46,7 @@ public class DialogManager {
     private DialogManager() { }
 
     public IBaseAlertDialog baseDialog  = null;
-    private List<IBaseAlertDialog> baseDialogs = new ArrayList<IBaseAlertDialog>();
+    private final List<IBaseAlertDialog> baseDialogs = new ArrayList<>();
 
     public void showMessageDialog(Context context, String sTitle, String sMessage) {
         GenericMessageDialog dialog = new GenericMessageDialog(context);
@@ -59,7 +59,7 @@ public class DialogManager {
         baseDialog = dialog;
     }
     /** returns true if dialog was added to the stack, false if the dialog was already on the stack or blocked from adding to the stack */
-    public synchronized boolean addToDialogStack(IBaseAlertDialog dialog) {
+    public synchronized boolean addToDialogStack(final IBaseAlertDialog dialog) {
         //if ( IBoard.getBlockToasts() ) { return false; } // commented out 20200108 in order to have DoublesFirstServer not be 'blocked' when DialogTimerView is showing
 
         boolean bAlreadyOnTheStack = false;
@@ -78,7 +78,7 @@ public class DialogManager {
                 baseDialogs.remove(0);// e.g. for the EndGame dialog or ChildActivity
             }
         }
-        if ( bAlreadyOnTheStack == false ) {
+        if ( bAlreadyOnTheStack == false && (dialog != null) ) {
             baseDialogs.add(dialog);
             if ( baseDialogs.size() == 1 ) {
                 dialog.show();
