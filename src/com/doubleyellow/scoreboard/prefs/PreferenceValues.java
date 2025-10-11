@@ -971,6 +971,9 @@ public class PreferenceValues extends RWValues
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useReferees__Default);
         return getBoolean(PreferenceKeys.useReferees, context, iResBrandSpecific);
     }
+    public static boolean useEventPreviousValuesAsDefault(Context context) {
+        return getBoolean(PreferenceKeys.useEventPreviousValuesAsDefault, context, true);
+    }
     public static String getBLEBridge_ClassName(Context context) {
         int iBLEBridge_ClassName_defaultResId = PreferenceValues.getSportTypeSpecificResId(context, R.string.BLEBridge_ClassName__Squash, R.string.BLEBridge_ClassName__Default);
         String sClass = PreferenceValues.getString(PreferenceKeys.BLEBridge_ClassName, iBLEBridge_ClassName_defaultResId, context);

@@ -148,6 +148,7 @@ public enum PreferenceKeys {
         readContactsForAutoCompletion_max(Integer.class),
         onlyForContactGroups(Integer.class),
 
+    useEventPreviousValuesAsDefault(Boolean.class),
     eventList(null),
         eventLast(String.class),
     divisionList(null),

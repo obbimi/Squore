@@ -2068,10 +2068,10 @@ public abstract class Model implements Serializable
         return false;
     }
     public boolean setPlayerCountry(Player player, String sCountry) {
-        if ( StringUtil.isNotEmpty(sCountry) ) {
-            sCountry = sCountry.trim().toUpperCase();
-        } else {
+        if ( StringUtil.isEmpty(sCountry) || sCountry.equals(S_IGNORE_NULL_VALUE) ) {
             sCountry = "";
+        } else {
+            sCountry = sCountry.trim().toUpperCase();
         }
         String sPrevious = m_player2Country.put(player, sCountry);
         if ( sCountry.equals(sPrevious) == false ) {
@@ -2095,10 +2095,10 @@ public abstract class Model implements Serializable
     }
 
     public boolean setPlayerClub(Player player, String sClub) {
-        if ( StringUtil.isNotEmpty(sClub) ) {
-            sClub = sClub.trim();
-        } else {
+        if ( StringUtil.isEmpty(sClub) || sClub.equals(S_IGNORE_NULL_VALUE) ) {
             sClub = "";
+        } else {
+            sClub = sClub.trim();
         }
         String sPrevious = m_player2Club.put(player, sClub);
         if ( sClub.equals(sPrevious) == false ) {
@@ -2161,7 +2161,7 @@ public abstract class Model implements Serializable
 
     private String m_sCourt  = "";
     public boolean setCourt(String sCourt) {
-        if ( sCourt == null ) { sCourt   = ""; }
+        if ( sCourt == null || sCourt.equals(S_IGNORE_NULL_VALUE) ) { sCourt   = ""; }
         sCourt = sCourt.trim();
         boolean bCourtChanged = m_sCourt.equals(sCourt) == false;
         if ( bCourtChanged ) {
@@ -2181,10 +2181,10 @@ public abstract class Model implements Serializable
     private String m_sEventRound    = "";
     private String m_sEventLocation = "";
     public boolean setEvent(String sName, String sDivision, String sRound, String sLocation) {
-        if ( sName     == null ) { sName     = ""; }
-        if ( sDivision == null ) { sDivision = ""; }
-        if ( sRound    == null ) { sRound    = ""; }
-        if ( sLocation == null ) { sLocation = ""; }
+        if ( sName     == null || sName    .equals(S_IGNORE_NULL_VALUE) ) { sName     = ""; }
+        if ( sDivision == null || sDivision.equals(S_IGNORE_NULL_VALUE) ) { sDivision = ""; }
+        if ( sRound    == null || sRound   .equals(S_IGNORE_NULL_VALUE) ) { sRound    = ""; }
+        if ( sLocation == null || sLocation.equals(S_IGNORE_NULL_VALUE) ) { sLocation = ""; }
         sName     = sName    .trim();
         sDivision = sDivision.trim();
         sRound    = sRound   .trim();
@@ -2478,7 +2478,7 @@ public abstract class Model implements Serializable
             JSONObject joPlayers = joMatch.optJSONObject(JSONKey.players.toString());
             if ( JsonUtil.isEmpty(joPlayers) ) { return null; } // should not be possible, but we might have imported a corrupt file into our 'stored matches'
             for(Player p: getPlayers() ) {
-                String sPlayer = joPlayers.optString(p.toString(), ""); // allow one of players to be empty for communication match details by having only selected single player
+                String sPlayer = joPlayers.optString(p.toString()); // allow one of players to be empty for communication match details by having only selected single player
                 m_player2Name.put(p, sPlayer);
                 setPlayerName(p, sPlayer); // just for trimming (and setting it to dirty if if trimming was required)
             }
@@ -2638,7 +2638,7 @@ public abstract class Model implements Serializable
                 if ( JsonUtil.isNotEmpty(joCountries) ) {
                     for (Player p : getPlayers()) {
                         if ( joCountries.has(p.toString()) ) {
-                            String sCountryCode = joCountries.getString(p.toString());
+                            String sCountryCode = joCountries.optString(p.toString());
                             m_player2Country.put(p, sCountryCode.toUpperCase());
                         }
                     }
@@ -2648,7 +2648,7 @@ public abstract class Model implements Serializable
                 if ( JsonUtil.isNotEmpty(joClubs) ) {
                     for (Player p : getPlayers()) {
                         if ( joClubs.has(p.toString()) ) {
-                            String sClub = joClubs.getString(p.toString());
+                            String sClub = joClubs.optString(p.toString());
                             m_player2Club.put(p, sClub);
                         }
                     }
@@ -2658,7 +2658,7 @@ public abstract class Model implements Serializable
                 if ( JsonUtil.isNotEmpty(joAvatars) ) {
                     for (Player p : getPlayers()) {
                         if ( joAvatars.has(p.toString()) ) {
-                            String sAvatar = joAvatars.getString(p.toString());
+                            String sAvatar = joAvatars.optString(p.toString());
                             m_player2Avatar.put(p, sAvatar);
                         }
                     }
@@ -4587,4 +4587,5 @@ public abstract class Model implements Serializable
         return (m_sMode == null);
     }
 
+    private static final String S_IGNORE_NULL_VALUE = JSONObject.NULL.toString(); // "null"
 }

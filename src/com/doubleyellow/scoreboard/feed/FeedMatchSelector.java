@@ -350,11 +350,13 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 }
                 if ( StringUtil.isEmpty(CountryUtil.getIso2(sCountry1)) && StringUtil.isNotEmpty( CountryUtil.getIso2(sClub1)) ) {
                     // swap country and club
-                    String sTmp = sClub1; sClub1 = sCountry1; sCountry1 = sTmp;
+                    String sTmp = sClub1;
+                                  sClub1 = sCountry1;
+                           sCountry1 = sTmp;
                 }
                 model.setPlayerName   (Player.A, sPlayer1.trim() );
-                model.setPlayerCountry(Player.A, sCountry1 ); // can be a club abbreviation too
-                model.setPlayerClub   (Player.A, sClub1 ); // can be a country abbreviation too
+                model.setPlayerCountry(Player.A, sCountry1 );
+                model.setPlayerClub   (Player.A, sClub1 );
             } else {
                 String sDateTime      = m.group( 1);
                 String sPlayer1       = m.group( 2);
@@ -399,10 +401,10 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
                 model.setPlayerName   (Player.A, sPlayer1.trim() );
                 model.setPlayerName   (Player.B, sPlayer2.trim() );
-                model.setPlayerCountry(Player.A, sCountry1 ); // can be a club abbreviation too
-                model.setPlayerCountry(Player.B, sCountry2 ); // can be a club abbreviation too
-                model.setPlayerClub   (Player.A, sClub1 ); // can be a country abbreviation too
-                model.setPlayerClub   (Player.B, sClub2 ); // can be a country abbreviation too
+                model.setPlayerCountry(Player.A, sCountry1 );
+                model.setPlayerCountry(Player.B, sCountry2 );
+                model.setPlayerClub   (Player.A, sClub1 );
+                model.setPlayerClub   (Player.B, sClub2 );
                 if ( StringUtil.isNotEmpty(sDateTime) ) {
                     sDateTime = sDateTime.replaceAll("\\s*:\\s*$", "");
                     model.setUnparsedDate(sDateTime);
@@ -636,8 +638,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         if ( MapUtil.isNotEmpty(feedPostDetail) && feedPostDetail.containsKey(URLsKeys.Country) ) {
             sLocation = (StringUtil.isNotEmpty(sLocation)? (sLocation + ", ") :"") + feedPostDetail.get(URLsKeys.Country);
         }
-        String sFieldDivision = null;
-        String sEventRound    = null;
+        String sFieldDivision = "";
+        String sEventRound    = "";
         if ( StringUtil.isNotEmpty(sGroup) && (appearsToBeADate(sGroup) == false) ) {
             // make educated guess
             if( appearsToBeARound(sGroup) ) {
@@ -649,10 +651,11 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         if ( joMatch != null ) {
             String sSourceID = joMatch.optString(JSONKey.sourceID.toString()); // not preferred, should be used internally for model only
                    sSourceID = joMatch.optString(JSONKey.id      .toString(), sSourceID);
-            if ( sSourceID != null ) {
+            if ( StringUtil.isNotEmpty(sSourceID) ) {
                 model.setSource(null, sSourceID);
             }
-            model.setCourt(joMatch.optString(JSONKey.court.toString()));
+            String sCourt = joMatch.optString(JSONKey.court.toString());
+            model.setCourt(sCourt);
 
             sEventName     = joMatch.optString(JSONKey.name    .toString(), sEventName);
             sFieldDivision = joMatch.optString(JSONKey.division.toString(), sFieldDivision); // field?

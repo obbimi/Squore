@@ -50,7 +50,6 @@ public class DeviceIdPref extends MultiPrefsDialog
 
     @Override public void getPreferencesToSet(Map<PreferenceKeys, Object> mReturn, boolean bPositive) {
         if ( bPositive ) {
-            //PreferenceKeys preferenceKeys = PreferenceKeys.liveScoreDeviceId;
             PreferenceKeys preferenceKeys = PreferenceKeys.valueOf(getKey());
             mReturn.put(preferenceKeys, sDeviceIdNew);
         }

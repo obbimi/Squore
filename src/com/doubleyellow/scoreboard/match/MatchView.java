@@ -105,22 +105,23 @@ public class MatchView extends ScrollView
 
     void setEvent(String sName, String sDivision, String sRound, String sLocation, String sCourt, String sSourceID) {
         boolean bFocusOnIfEmpty = false;
+        boolean bUseLastValuesAsDefault = PreferenceValues.useEventPreviousValuesAsDefault(getContext());
         txtEventName.setText(sName);
         if ( ViewUtil.areAllNonEmpty(txtEventName) ) {
             if (bFocusOnIfEmpty) requestFocusFor(txtEventDivision);
         }
+        txtEventDivision.useLastValueAsDefault(bUseLastValuesAsDefault && StringUtil.isEmpty(sName)); // only fill division with previous if name was also not specified
         txtEventDivision.setText(sDivision);
-        txtEventDivision.useLastValueAsDefault(StringUtil.isEmpty(sName)); // only fill division with previous if name was also not specified
         if ( ViewUtil.areAllNonEmpty(txtEventName, txtEventDivision) ) {
             if (bFocusOnIfEmpty) requestFocusFor(txtEventRound);
         }
+        txtEventRound.useLastValueAsDefault(bUseLastValuesAsDefault && StringUtil.isEmpty(sName)); // only fill round with previous if name was also not specified
         txtEventRound.setText(sRound);
-        txtEventRound.useLastValueAsDefault(StringUtil.isEmpty(sName)); // only fill round with previous if name was also not specified
         if ( ViewUtil.areAllNonEmpty(txtEventName, txtEventDivision, txtEventRound) ) {
             if (bFocusOnIfEmpty) requestFocusFor(txtEventLocation);
         }
+        txtEventLocation.useLastValueAsDefault(bUseLastValuesAsDefault && StringUtil.isEmpty(sName)); // only fill location with previous if name was also not specified
         txtEventLocation.setText(sLocation);
-        txtEventLocation.useLastValueAsDefault(StringUtil.isEmpty(sName)); // only fill location with previous if name was also not specified
         if ( ViewUtil.areAllNonEmpty(txtEventName, txtEventDivision, txtEventRound, txtEventLocation) ) {
             requestFocusFor(txtPlayerA);
         }
@@ -130,7 +131,7 @@ public class MatchView extends ScrollView
         }
 
         if ( txtCourt != null ) {
-            txtCourt.useLastValueAsDefault(StringUtil.isEmpty(sName)); // only fill court with previous if name was also not specified
+            txtCourt.useLastValueAsDefault(bUseLastValuesAsDefault && StringUtil.isEmpty(sName)); // only fill court with previous if name was also not specified
             txtCourt.setText(sCourt);
         }
         if ( txtEventID != null ) {
