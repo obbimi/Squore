@@ -1595,11 +1595,15 @@ public class PreferenceValues extends RWValues
     public static int numberOfCharactersBeforeAutocompleteCountry(Context context) {
         return getIntegerR(PreferenceKeys.numberOfCharactersBeforeAutocompleteCountry, context, R.integer.numberOfCharactersBeforeAutocompleteCountry_default);
     }
-    public static int getPauseDuration(Context context) {
-        return getIntegerR(PreferenceKeys.timerPauseBetweenGames, context, R.integer.timerPauseBetweenGames_default__Squash);
-    }
+
     public static int getWarmupDuration(Context context) {
         return getIntegerR(PreferenceKeys.timerWarmup, context, R.integer.timerWarmup_default__Squash);
+    }
+    public static int getPauseDurationBeforeFirstGame(Context context) {
+        return getIntegerR(PreferenceKeys.timerPauseBeforeFirstGame, context, R.integer.timerPauseBeforeFirstGame_default__Squash);
+    }
+    public static int getPauseDuration(Context context) {
+        return getIntegerR(PreferenceKeys.timerPauseBetweenGames, context, R.integer.timerPauseBetweenGames_default__Squash);
     }
 
     private static boolean bFixedMatchesAreUnChanged = true;

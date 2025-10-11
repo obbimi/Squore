@@ -125,7 +125,8 @@ public class DialogTimerView implements TimerView
             }
         }
         if ( PreferenceValues.showTimeIsAlreadyUpFor_Chrono(scoreBoard) ) {
-            if ( (chronometer != null) && (ScoreBoard.timer != null) && Type.UntilStartOfNextGame.equals(Timer.timerType) ) {
+            EnumSet<Type> esTimerTypes = EnumSet.of(Type.UntilStartOfFirstGame, Type.UntilStartOfNextGame);
+            if ( (chronometer != null) && (ScoreBoard.timer != null) && esTimerTypes.contains(Timer.timerType) ) {
                 chronometer.setVisibility(View.VISIBLE);
                 chronometer.setBase(ScoreBoard.timer.getToLateBase());
                 chronometer.start();
@@ -270,7 +271,8 @@ public class DialogTimerView implements TimerView
 
         AlertDialog.Builder db = new MyDialogBuilder(scoreBoard);
         int iResIDCancelCaption = R.string.cmd_cancel_timer;
-        if ( Type.UntilStartOfNextGame.equals(Timer.timerType) ) {
+        EnumSet<Type> esTimerTypes = EnumSet.of(Type.UntilStartOfFirstGame, Type.UntilStartOfNextGame);
+        if ( esTimerTypes.contains(Timer.timerType) ) {
             iResIDCancelCaption = R.string.Start_game;
         } else if (EnumSet.of(Type.TowelingDown, Type.Timeout).contains(Timer.timerType) ) {
             iResIDCancelCaption = R.string.Resume_game;

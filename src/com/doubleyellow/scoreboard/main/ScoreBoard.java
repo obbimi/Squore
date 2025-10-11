@@ -2565,7 +2565,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     }
                     autoShowGameDetails();
                     autoShowHandicap();
-                    autoShowTimer(Type.UntilStartOfNextGame);
+                    if ( matchModel.hasStarted() ) {
+                        autoShowTimer(Type.UntilStartOfNextGame);
+                    } else {
+                        autoShowTimer(Type.UntilStartOfFirstGame);
+                    }
                     autoShowOfficialAnnouncement(AnnouncementTrigger.StartOfGame);
                 } else {
                     autoShowGameDetails();
@@ -2829,7 +2833,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 autoShowTimer(Type.Warmup);
                 autoShowHandicap();
                 autoShowTossDialog();
-                autoShowTimer(Type.UntilStartOfNextGame);
+                autoShowTimer(Type.UntilStartOfFirstGame);
                 autoShowOfficialAnnouncement(AnnouncementTrigger.StartOfGame);
                 updatePowerPlayIcons();
                 if ( PreferenceValues.keepScreenOnWhen(ScoreBoard.this).equals(KeepScreenOnWhen.MatchIsInProgress) ) {
@@ -2894,7 +2898,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, timerType, iCtx);
                 }
                 //viewType  = (ViewType) ctx2;
-                if ( EnumSet.of(Type.UntilStartOfNextGame, Type.Warmup).contains(timerType) ) {
+                if ( EnumSet.of(Type.UntilStartOfFirstGame, Type.UntilStartOfNextGame, Type.Warmup).contains(timerType) ) {
                     if ( (matchModel != null) && matchModel.gameHasStarted() == false ) {
                         timestampStartOfGame(GameTiming.ChangedBy.TimerEnded);
                     }
@@ -3562,7 +3566,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     }
                 } else {
                     // toggle between the 2 with Warmup first
-                    lastTimerType = Type.Warmup.equals(lastTimerType) ? Type.UntilStartOfNextGame : Type.Warmup;
+                    lastTimerType = Type.Warmup.equals(lastTimerType) ? Type.UntilStartOfFirstGame : Type.Warmup;
                 }
                 showTimer(lastTimerType, false);
                 return true;
@@ -3852,8 +3856,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             case TowelingDown:
                 twoTimerView = new GamePausedTimerView(this, matchModel);
                 break;
+            case UntilStartOfFirstGame:
             case UntilStartOfNextGame:
-                twoTimerView = new PauseTimerView(this, matchModel);
+                twoTimerView = new PauseTimerView(this, matchModel, timerType);
                 break;
             case ContributedInjury:
             case OpponentInflictedInjury:
@@ -3899,6 +3904,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 case Warmup:
                     timer = new Timer(this, timerType, iInitialSecs, iResumeAt, iInitialSecs / 2, bAutoTriggered);
                     break;
+                case UntilStartOfFirstGame:
                 case UntilStartOfNextGame:
                     if (matchModel.matchHasEnded() /*&& (PreferenceValues.showOfficialAnnouncements(this)==false)*/) {
                         iBoard.showToast(R.string.match_has_finished);
@@ -3939,7 +3945,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
         }
 
-        EnumSet<Type> esTimerTypes = EnumSet.of(Type.UntilStartOfNextGame, Type.Timeout);
+        EnumSet<Type> esTimerTypes = EnumSet.of(Type.UntilStartOfFirstGame, Type.UntilStartOfNextGame, Type.Timeout);
         if ( (matchModel != null) && "Iddo T".equals(matchModel.getName(Player.A)) ) {
             // TESTING
             if ( isLandscape() && esTimerTypes.contains(timerType) ) {

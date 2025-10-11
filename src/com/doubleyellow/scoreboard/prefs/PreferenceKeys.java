@@ -177,6 +177,8 @@ public enum PreferenceKeys {
         cancelTimerWhenTimeIsUp(Boolean.class),
         timerWarmup(Integer.class),
         timerWarmup_values(null),
+        timerPauseBeforeFirstGame(Integer.class),
+        timerPauseBeforeFirstGame_values(null),
         timerPauseBetweenGames(Integer.class),
         timerPauseBetweenGames_values(null),
       //timerInjury(null),

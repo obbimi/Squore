@@ -31,8 +31,9 @@ import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
  *      - Opponent Inflicted
  */
 public enum Type {
-    Warmup                  (PreferenceKeys.timerWarmup                  , 300  , R.string.oal_warmup                    , R.string.oa_halftime ),
-    UntilStartOfNextGame    (PreferenceKeys.timerPauseBetweenGames       ,  90  , R.string.oal_pause                     , R.string.oa_fifteen_seconds ), // PSA: 120
+    Warmup                  (PreferenceKeys.timerWarmup                  , 240 , R.string.oal_warmup                    , R.string.oa_halftime ),
+    UntilStartOfFirstGame   (PreferenceKeys.timerPauseBeforeFirstGame    ,  60 , R.string.oal_pause                     , R.string.oa_fifteen_seconds ), // PSA: 120
+    UntilStartOfNextGame    (PreferenceKeys.timerPauseBetweenGames       , 120 , R.string.oal_pause                     , R.string.oa_fifteen_seconds ), // PSA: 120
 
     // squash
     SelfInflictedInjury     (PreferenceKeys.timerSelfInflictedInjury     ,  3*60, R.string.sb_self_inflicted_injury      , R.string.oa_fifteen_seconds ), // 14.3.1

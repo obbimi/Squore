@@ -22,11 +22,12 @@ import com.doubleyellow.scoreboard.model.Model;
 
 public class PauseTimerView extends TwoTimerView
 {
-    public PauseTimerView(ScoreBoard scoreBoard, Model matchModel) {
+    public PauseTimerView(ScoreBoard scoreBoard, Model matchModel, Type timerType) {
         super(scoreBoard, matchModel);
+        m_timerType = timerType;
     }
 
     @Override public void init(boolean bAutoTriggered) {
-        super.init(Type.UntilStartOfNextGame, bAutoTriggered);
+        super.init(m_timerType, bAutoTriggered);
     }
 }

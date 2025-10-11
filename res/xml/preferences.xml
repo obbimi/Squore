@@ -1263,6 +1263,19 @@
                 android:summary="@string/pref_timerWarmup_values_summary"
                 android:defaultValue="@string/timerWarmup_values_default__Squash"
                 />
+            <EditTextPreference android:key="timerPauseBeforeFirstGame"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_timerPauseBeforeFirstGame"
+                android:summary="@string/pref_timerPauseBeforeFirstGame_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/timerPauseBeforeFirstGame_default__Squash"
+                />
+            <EditTextPreference android:key="timerPauseBeforeFirstGame_values"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_timerPauseBeforeFirstGame_values"
+                android:summary="@string/pref_timerPauseBeforeFirstGame_values_summary"
+                android:defaultValue="@string/timerPauseBeforeFirstGame_values_default__Squash"
+                />
             <EditTextPreference android:key="timerPauseBetweenGames"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_timerPauseBetweenGames"

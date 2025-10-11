@@ -130,11 +130,23 @@ http://developer.android.com/guide/practices/screens_support.html
     <integer-array name="commonEndScores__Racketlon"><item>11</item><item>21</item></integer-array>
     <integer-array name="commonEndScores__TennisPadel"><item>4</item><item>6</item></integer-array>
 
-    <integer name="timerPauseBetweenGames_default__Squash">120</integer> <!-- PSA: 120, sept 2025: 120 always -->
+    <integer name="timerPauseBeforeFirstGame_default__Squash">60</integer>
+    <integer name="timerPauseBeforeFirstGame_default__Badminton">120</integer>
+    <integer name="timerPauseBeforeFirstGame_default__Tabletennis">60</integer>
+    <integer name="timerPauseBeforeFirstGame_default__Racketlon">180</integer>
+    <integer name="timerPauseBeforeFirstGame_default__TennisPadel">60</integer>
+
+    <integer name="timerPauseBetweenGames_default__Squash">120</integer> <!-- PSA: 120, sept 2025: 60 before first, 120 between games -->
     <integer name="timerPauseBetweenGames_default__Badminton">120</integer> <!-- 16.2.2 not exceeding 120 seconds between the first and second game, and between the second and third game shall be allowed in all matches.  -->
     <integer name="timerPauseBetweenGames_default__Tabletennis">60</integer><!-- 3.4.4.1.1 an interval of up to 1 minute between successive games of an individual match; -->
     <integer name="timerPauseBetweenGames_default__Racketlon">180</integer>
     <integer name="timerPauseBetweenGames_default__TennisPadel">60</integer> <!-- TODO -->
+
+    <string name="timerPauseBeforeFirstGame_values_default__Squash">60,90</string>
+    <string name="timerPauseBeforeFirstGame_values_default__Badminton">60,90</string>
+    <string name="timerPauseBeforeFirstGame_values_default__Tabletennis">60,90</string>
+    <string name="timerPauseBeforeFirstGame_values_default__Racketlon">60,90</string>
+    <string name="timerPauseBeforeFirstGame_values_default__TennisPadel">60,90</string>
 
     <string name="timerPauseBetweenGames_values_default__Squash">90,120</string>
     <string name="timerPauseBetweenGames_values_default__Badminton">120,60</string> <!-- 16.2.2 -->
@@ -446,10 +458,8 @@ http://developer.android.com/guide/practices/screens_support.html
 ]]></string>
     <string name="OfficialRulesURLs_default__Squash"><![CDATA[https://worldsquashofficiating.com/home/rules-of-squash/
 \n/help/rules.of.singles.squash.php
-\nhttp://www.worldsquash.org/wp-content/uploads/2018/11/190101_Rules-of-Singles-Squash-2019-V1-1.pdf
-\nhttp://www.worldsquash.org/ws/wp-content/uploads/2014/11/150101_Doubles-Rules-Final.pdf
-\nhttp://www.worldsquash.org/ws/wp-content/uploads/2014/01/131023_Rules-of-Singles-Squash-2014.pdf
-\nhttp://www.worldsquash.org/ws/wp-content/uploads/2016/05/160503_Injury-Bleeding-Flowchart.pdf
+\nhttps://www.worldsquash.sport/wp-content/uploads/2025/07/250901_World-Squash-Rules-of-Singles-Squash-2025-V1.2.2.pdf
+\nhttps://www.worldsquash.sport/wp-content/uploads/2022/03/2022-International-Doubles-Squash-Rules-V2.pdf
 \nhttps://www.federsquash.it/images/2014-2015/carte-federali/2015-Reg-Incontri-Singolo-Coni.pdf
 \nhttps://dsqv.de/wp-content/uploads/2022/01/DSQV-Squashregeln-2021.pdf
 ]]></string>

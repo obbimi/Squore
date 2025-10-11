@@ -618,6 +618,9 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             if ( joMatch.has(PreferenceKeys.timerPauseBetweenGames.toString() ) ) {
                 PreferenceValues.setOverwrite(PreferenceKeys.timerPauseBetweenGames, joMatch.getInt(PreferenceKeys.timerPauseBetweenGames.toString()));
             }
+            if ( joMatch.has(PreferenceKeys.timerPauseBeforeFirstGame.toString() ) ) {
+                PreferenceValues.setOverwrite(PreferenceKeys.timerPauseBeforeFirstGame, joMatch.getInt(PreferenceKeys.timerPauseBeforeFirstGame.toString()));
+            }
         } catch (Exception e) {
         }
     }

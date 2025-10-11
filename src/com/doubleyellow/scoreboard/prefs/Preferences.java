@@ -340,6 +340,9 @@ public class Preferences extends Activity {
                     case timerWarmup_values:
                         syncAndClean_warmupValues(Preferences.this);
                         break;
+                    case timerPauseBeforeFirstGame:
+                        syncAndClean_pauseBeforeFirstGameValues(Preferences.this);
+                        break;
                     case timerPauseBetweenGames:
                         syncAndClean_pauseBetweenGamesValues(Preferences.this);
                         break;
@@ -1007,6 +1010,10 @@ public class Preferences extends Activity {
 
             // consistency in timer values
           //EditTextPreference timerPauseBetweenGames        = (EditTextPreference) this.findPreference(PreferenceKeys.timerPauseBetweenGames);
+            EditTextPreference timerPauseBeforeFirstGame_values = (EditTextPreference) this.findPreference(PreferenceKeys.timerPauseBeforeFirstGame_values);
+            if ( timerPauseBeforeFirstGame_values != null ) {
+                syncAndClean_pauseBeforeFirstGameValues(getActivity());
+            }
             EditTextPreference timerPauseBetweenGames_values = (EditTextPreference) this.findPreference(PreferenceKeys.timerPauseBetweenGames_values);
             if ( timerPauseBetweenGames_values != null ) {
                 syncAndClean_pauseBetweenGamesValues(getActivity());
@@ -1294,8 +1301,14 @@ public class Preferences extends Activity {
                                               , PreferenceKeys.timerWarmup_values, R.string.timerWarmup_values_default__Squash);
     }
     public static List<String> syncAndClean_pauseBetweenGamesValues(Context ctx) {
-        return syncAndClean_durationValues(ctx, PreferenceKeys.timerPauseBetweenGames       , R.integer.timerPauseBetweenGames_default__Squash
-                                              , PreferenceKeys.timerPauseBetweenGames_values, R.string.timerPauseBetweenGames_values_default__Squash);
+        return syncAndClean_durationValues(ctx, PreferenceKeys.timerPauseBetweenGames          , R.integer.timerPauseBetweenGames_default__Squash
+                                              , PreferenceKeys.timerPauseBetweenGames_values   , R.string.timerPauseBetweenGames_values_default__Squash
+                                              );
+    }
+    public static List<String> syncAndClean_pauseBeforeFirstGameValues(Context ctx) {
+        return syncAndClean_durationValues(ctx, PreferenceKeys.timerPauseBeforeFirstGame          , R.integer.timerPauseBeforeFirstGame_default__Squash
+                                              , PreferenceKeys.timerPauseBeforeFirstGame_values   , R.string.timerPauseBeforeFirstGame_values_default__Squash
+                                              );
     }
     private static List<String> syncAndClean_durationValues(Context ctx, PreferenceKeys pref, int iResDefaultValue, PreferenceKeys prefMV, int iResDefaultValues) {
         int iResDefault = PreferenceValues.getSportTypeSpecificResId(ctx, iResDefaultValues);
