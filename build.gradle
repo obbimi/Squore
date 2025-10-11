@@ -104,7 +104,7 @@ android {
         }
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
-    def versionCodeXXX = 575
+    def versionCodeXXX = 576
 
     // if moving to >=35, be aware of layout 'sliding under' status bar (android 15 'feature' wanting to use more of the screen)
     // in 35 this can still be mitigated by using 'android:windowOptOutEdgeToEdgeEnforcement'
