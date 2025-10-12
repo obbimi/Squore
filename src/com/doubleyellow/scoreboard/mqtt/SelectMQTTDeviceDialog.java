@@ -20,7 +20,6 @@ package com.doubleyellow.scoreboard.mqtt;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -193,12 +192,15 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
 
                 break;
             case DialogInterface.BUTTON_NEUTRAL:
+                scoreBoard.stopMQTT();
+                scoreBoard.doDelayedMQTTReconnect("", 1, 1);
                 break;
             case DialogInterface.BUTTON_NEGATIVE:
                 PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, "");
+                PreferenceValues.setBoolean(PreferenceKeys.UseMQTT, context, false);
 
                 scoreBoard.stopMQTT();
-                scoreBoard.doDelayedMQTTReconnect("", 1, 1);
+                //scoreBoard.doDelayedMQTTReconnect("", 1, 1);
 
                 break;
         }

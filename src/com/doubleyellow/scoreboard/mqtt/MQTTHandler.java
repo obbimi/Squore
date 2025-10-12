@@ -99,18 +99,22 @@ public class MQTTHandler
     }
 
 
-    public void reinit(ScoreBoard context, IBoard iBoard) {
+    private MQTTStatus m_status = null;
+
+    public void reinit(ScoreBoard context, IBoard iBoard, MQTTStatus status) {
         m_context = context;
-        m_iBoard = iBoard;
+        m_iBoard  = iBoard;
+        m_status  = status;
 
         defaultCbPublish    .reinit(context);
         defaultCbDisconnect .reinit(context);
         defaultCbUnSubscribe.reinit(context);
     }
 
-    public MQTTHandler(ScoreBoard context, IBoard iBoard, String serverURI) {
-        m_context    = context;
-        m_iBoard     = iBoard;
+    public MQTTHandler(ScoreBoard context, IBoard iBoard, String serverURI, MQTTStatus status) {
+        m_context = context;
+        m_iBoard  = iBoard;
+        m_status  = status;
 
         // the library we use does not like 'mqtt://' urls without a port. Convert it to a tcp:// version
         if ( serverURI.startsWith("mqtt") ) {
@@ -182,27 +186,34 @@ public class MQTTHandler
                 //publish(m_joinerLeaverTopic, JoinerLeaver.join  + "(" + m_thisDeviceId + ")");
             }
 
-            // listen for 'clients' to request the complete json of a match specifically of this device
-            final String mqttRespondToTopic = getMQTTSubscribeTopic_Change(BTMethods.requestCompleteJsonOfMatch.toString());
-            if ( StringUtil.isNotEmpty(mqttRespondToTopic) ) {
-                subscribe(mqttRespondToTopic, null);
-            }
-
-            final String mqttRespondToTopic_newMatch = getMQTTSubscribeTopic_newMatch();
-            if ( StringUtil.isNotEmpty(mqttRespondToTopic_newMatch) ) {
-                subscribe(mqttRespondToTopic_newMatch, null);
-            }
-
-            final String mqttSubScribeToTopic_Change = getMQTTSubscribeTopic_Change(null);
-            if ( StringUtil.isNotEmpty(mqttSubScribeToTopic_Change) ) {
-
-                // listen for changes on
-                subscribe(mqttSubScribeToTopic_Change, null);
+            if ( m_status.equals(MQTTStatus.OpenSelectDeviceDialog) ) {
+                // not interested in other actions just yet
             } else {
-                m_context.showInfoMessageOnUiThread(m_context.getString(R.string.sb_MQTT_Connected_to_x, m_sBrokerUrl), 10);
-            }
-            if ( m_context.m_liveScoreShare ) {
-                publishMatchOnMQTT(ScoreBoard.getMatchModel(), false, null);
+                // listen for 'clients' to request the complete json of a match specifically of this device
+                final String mqttRespondToTopic = getMQTTSubscribeTopic_Change(BTMethods.requestCompleteJsonOfMatch.toString());
+                if ( StringUtil.isNotEmpty(mqttRespondToTopic) ) {
+                    Log.d(TAG, "Subscribing to " + mqttRespondToTopic);
+                    subscribe(mqttRespondToTopic, null);
+                }
+
+                final String mqttRespondToTopic_newMatch = getMQTTSubscribeTopic_newMatch();
+                if ( StringUtil.isNotEmpty(mqttRespondToTopic_newMatch) ) {
+                    Log.d(TAG, "Subscribing to " + mqttRespondToTopic_newMatch);
+                    subscribe(mqttRespondToTopic_newMatch, null);
+                }
+
+                final String mqttSubScribeToTopic_Change = getMQTTSubscribeTopic_Change(null);
+                if ( StringUtil.isNotEmpty(mqttSubScribeToTopic_Change) ) {
+
+                    // listen for changes on
+                    Log.d(TAG, "Subscribing to " + mqttSubScribeToTopic_Change);
+                    subscribe(mqttSubScribeToTopic_Change, null);
+                } else {
+                    m_context.showInfoMessageOnUiThread(m_context.getString(R.string.sb_MQTT_Connected_to_x, m_sBrokerUrl), 10);
+                }
+                if ( m_context.m_liveScoreShare ) {
+                    publishMatchOnMQTT(ScoreBoard.getMatchModel(), false, null);
+                }
             }
         }
 

@@ -725,7 +725,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         initScoreHistory();
 
         //onResumeNFC();
-        onResumeMQTT();
+        onResumeMQTT(MQTTStatus.OnActivityResume);
         //onResumeFCM();
         onResumeBlueTooth();
         onResumeInitBluetoothBLE();
@@ -2954,7 +2954,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     boolean bShowFS = PreferenceValues.BTSync_showFullScreenTimer(this);
                     writeMethodToBluetoothDelayed(BTMethods.updatePreference, PreferenceKeys.BTSync_showFullScreenTimer, bShowFS);
                 }
-                // fall through
+                dialogManager.removeDialog(ctx);
+                break;
             case restartScoreDialogEnded:
             case endMatchDialogEnded: // fall through
             case endGameDialogEnded: {
@@ -4283,7 +4284,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         case MQTTOtherDeviceId:           // fall through
                             if ( bMQTTRestarted == false ) {
                                 stopMQTT();
-                                onResumeMQTT();
+                                onResumeMQTT(MQTTStatus.OnChangedSettings);
                                 bMQTTRestarted = true;
                             }
                             break;
@@ -6467,7 +6468,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                 publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, PreferenceValues.getMQTTOtherDeviceId(this), sModelScore);
                             } else if ( sModelScore.matches("[0-1]-[0-1]") ) { // best of x to y: increase to y+1 on slave
                                 // at start of new game always re-request entire model
-                                //publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, PreferenceValues.getMQTTOtherDeviceId(this));
+                                publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, PreferenceValues.getMQTTOtherDeviceId(this));
                             }
                             //hidePresentationEndOfGame();
                         }
@@ -7041,7 +7042,22 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // --- MQTT                                       -----
     // ----------------------------------------------------
     public static MQTTHandler m_MQTTHandler = null;
-    public synchronized void onResumeMQTT() {
+    public synchronized void onResumeMQTT(MQTTStatus eStatus) {
+        Log.d(TAG, "MQTTStatus : " + eStatus);
+/*
+        switch (eStatus) {
+            case Delayed:
+                break;
+            case IconClick:
+                break;
+            case OnActivityResume:
+                break;
+            case OpenSelectDeviceDialog:
+                break;
+            case CloseSelectDeviceDialog:
+                break;
+        }
+*/
         if ( cdtReconnect != null ) {
             cdtReconnect.cancel();
             cdtReconnect = null;
@@ -7056,9 +7072,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             return;
         }
         if ( m_MQTTHandler == null ) {
-            m_MQTTHandler = new MQTTHandler(this, iBoard, sBrokerUrl);
+            m_MQTTHandler = new MQTTHandler(this, iBoard, sBrokerUrl, eStatus);
         } else {
-            m_MQTTHandler.reinit(this, iBoard);
+            m_MQTTHandler.reinit(this, iBoard, eStatus);
         }
         if ( m_MQTTHandler.isConnected() ) {
             updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 1);
@@ -7073,7 +7089,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     if ( m_MQTTHandler != null /*&& m_MQTTHandler.isConnected()*/ ) {
                         stopMQTT();
                     } else {
-                        onResumeMQTT();
+                        onResumeMQTT(MQTTStatus.IconClick);
                     }
                 });
                 tvMqttInfo.setOnLongClickListener(v -> {
@@ -7086,7 +7102,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
     }
 
-    public boolean doDelayedMQTTReconnect(String sMsg, int iReconnectInSeconds, int iReconnectAttempt) {
+    public boolean doDelayedMQTTReconnect(final String sMsg, int iReconnectInSeconds, int iReconnectAttempt) {
         if ( cdtReconnect != null ) { return false; }
         runOnUiThread(() -> {
             showInfoMessageOnUiThread("(%1$d) " + sMsg + " Reconnecting in %1$d (# " + iReconnectAttempt + ")", iReconnectInSeconds);
@@ -7105,7 +7121,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         @Override public void onFinish() {
             cdtReconnect = null;
-            onResumeMQTT();
+            onResumeMQTT(MQTTStatus.Delayed);
         }
         @Override public void onTick(long millisUntilFinished) {
             //int iLeft = (int) millisUntilFinished / 1000;
@@ -7140,7 +7156,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     private void setupMQTTControl() {
         if ( m_MQTTHandler == null ) {
             PreferenceValues.setBoolean(PreferenceKeys.UseMQTT, this, true);
-            onResumeMQTT();
+            onResumeMQTT(MQTTStatus.OpenSelectDeviceDialog);
         }
         SelectMQTTDeviceDialog selectDevice = new SelectMQTTDeviceDialog(this, matchModel, this);
         addToDialogStack(selectDevice);
