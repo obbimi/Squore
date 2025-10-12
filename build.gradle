@@ -105,6 +105,7 @@ android {
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
     def versionCodeXXX = 576
+    def versionNameXDotYY = "4.59"
 
     // if moving to >=35, be aware of layout 'sliding under' status bar (android 15 'feature' wanting to use more of the screen)
     // in 35 this can still be mitigated by using 'android:windowOptOutEdgeToEdgeEnforcement'
@@ -118,21 +119,21 @@ android {
             targetSdkVersion targetSdkXX
             multiDexEnabled true // required since using firebase
             versionCode 1915 * 10000 + versionCodeXXX
-            versionName "4.58"
+            versionName versionNameXDotYY
         }
         phoneTabletPost25 {
             dimension "devicetype"
             minSdkVersion 25
             targetSdkVersion targetSdkXX
             versionCode 2315 * 10000 + versionCodeXXX
-            versionName "4.58"
+            versionName versionNameXDotYY
         }
         wearOs {
             dimension "devicetype"
             minSdkVersion 25    // 25 for Wear2.0 (23 would suffice for Wear1.0)
             targetSdkVersion 36
             versionCode 2501 * 10000 + versionCodeXXX
-            versionName "4.58"
+            versionName versionNameXDotYY
         }
     }
     buildTypes {

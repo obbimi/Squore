@@ -1,3 +1,11 @@
+## 4.59 (okt 2025)
+
+- support new WSF rules for pause before games
+  - 60 seconds between warmup and start of first game
+  - 120 seconds between games
+- minor improvements
+
+
 ## 4.58 (july 2025)
 
 - target sdk 35 enforced by google 

@@ -92,6 +92,7 @@ import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.mqtt.JoinedDevicesListener;
 import com.doubleyellow.scoreboard.mqtt.MQTTHandler;
+import com.doubleyellow.scoreboard.mqtt.MQTTStatus;
 import com.doubleyellow.scoreboard.mqtt.SelectMQTTDeviceDialog;
 import com.doubleyellow.scoreboard.share.MatchModelPoster;
 import com.doubleyellow.scoreboard.share.ResultPoster;
