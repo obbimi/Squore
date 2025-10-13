@@ -382,7 +382,7 @@ public class ExportImportPrefs extends DialogPreference
             lToRemove.add(PreferenceKeys.numberOfServiceCountUpOrDown.toString());
         }
         lToRemove.add(PreferenceKeys.targetDirForImportExport.toString());
-        lToRemove.add(PreferenceKeys.OfficialSquashRulesURLs .toString());
+      //lToRemove.add(PreferenceKeys.OfficialRulesURLs       .toString());
         lToRemove.add(PreferenceKeys.squoreBrand             .toString());
         lToRemove.add(PreferenceKeys.viewedChangelogVersion  .toString());
         lToRemove.add(PreferenceKeys.onlyForContactGroups    .toString());
