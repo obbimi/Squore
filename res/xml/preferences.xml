@@ -801,7 +801,7 @@
                 />
             <EditTextPreference
                 android:icon="@drawable/dummy"
-                android:key="OfficialSquashRulesURLs"
+                android:key="OfficialRulesURLs"
                 android:title="@string/pref_OfficialSquashRulesURLs"
                 android:summary="@string/pref_OfficialSquashRulesURLs_summary"
                 android:inputType="textMultiLine"
@@ -1715,7 +1715,7 @@
                                 android:summary="@string/pref_prefetchFlags_summary"
                                 android:defaultValue="@bool/prefetchFlags_default"
             />
-            <EditTextPreference android:key="OfficialSquashRulesURLs"
+            <EditTextPreference android:key="OfficialRulesURLs"
                 android:icon="@drawable/dummy"
                                 android:title="@string/pref_OfficialSquashRulesURLs"
                                 android:summary="@string/pref_OfficialSquashRulesURLs_summary"

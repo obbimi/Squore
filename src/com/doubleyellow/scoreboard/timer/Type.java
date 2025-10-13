@@ -29,6 +29,8 @@ import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
  *      - Self Inflicted (Blood)
  *      - Contributed
  *      - Opponent Inflicted
+ *
+ * Note: for proper livescore support these values are also in 'live.ajax.js' of squore.double-yellow.be
  */
 public enum Type {
     Warmup                  (PreferenceKeys.timerWarmup                  , 240 , R.string.oal_warmup                    , R.string.oa_halftime ),

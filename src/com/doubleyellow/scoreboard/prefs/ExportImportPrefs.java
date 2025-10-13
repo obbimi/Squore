@@ -34,10 +34,10 @@ import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.dialog.UsernamePassword;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
-import com.doubleyellow.util.DateUtil;
 import com.doubleyellow.util.Enums;
 import com.doubleyellow.util.FileUtil;
 import com.doubleyellow.util.JsonUtil;
+import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.StringUtil;
 
@@ -47,6 +47,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -159,13 +160,13 @@ public class ExportImportPrefs extends DialogPreference
         JSONObject joRemoteConfig = new JSONObject(sContent);
 
         // TEMP CODE WHILE DEVELOPING
-        if (DateUtil.getCurrentYYYY_MM_DD().equals("2025-05-26") ) {
+        if ( PreferenceValues.currentDateIsTestDate() ) {
             joRemoteConfig.remove(PreferenceKeys.UseMQTT.toString());
         }
 
         JSONObject joCurrent = getCurrentSettings(context);
         Map mCurrent = JsonUtil.toMap(joCurrent);
-            mCurrent.remove(PreferenceKeys.RemoteSettingsURL.toString());
+          //mCurrent.remove(PreferenceKeys.RemoteSettingsURL.toString()); // maddock uses some subsequent re-set of the settings URL to have slightly different settings per device
             mCurrent = MapUtil.filterKeys(mCurrent, ".+" + UsernamePassword.getSettingsSuffix(context, R.string.username), Enums.Match.Remove);
             mCurrent = MapUtil.filterKeys(mCurrent, ".+" + UsernamePassword.getSettingsSuffix(context, R.string.password), Enums.Match.Remove);
 
@@ -174,7 +175,8 @@ public class ExportImportPrefs extends DialogPreference
             mCurrent = new TreeMap(mCurrent);
             mRemote  = new TreeMap(mRemote);
         }
-        mRemote = MapUtil.filterKeys(mRemote, "^-.+", Enums.Match.Remove);
+        mRemote = MapUtil.filterKeys(mRemote, "^-.+", Enums.Match.Remove); // allow playing around with settings, marking them as ignore by prefixing with a dash
+        int iTrimmed = trimValues(mRemote);
         int iRemoved = cleanBrandBased(mRemote);
 
         Map<MapUtil.mapDiff, Map> mapDiff = MapUtil.getMapDiff(mCurrent, mRemote);
@@ -207,6 +209,9 @@ public class ExportImportPrefs extends DialogPreference
                 PreferenceValues.setMatchesFeedURLUnchanged(false);
             }
             sMsg = context.getString(R.string.pref_RemoteConfig_X_SettingChanged, iChanges, sUrl);
+            if ( iChanges < 5 ) {
+                sMsg = sMsg + "\n\n" + ListUtil.join(mToBeOverwritten.keySet(), "\n") ;
+            }
             iMsgDuration = 10;
         } else {
             sMsg = context.getString(R.string.pref_RemoteConfig_NoSettingChanges, sUrl);
@@ -343,7 +348,8 @@ public class ExportImportPrefs extends DialogPreference
 
         List<String> lToRemove = getSettingsToIgnore();
 
-        MapUtil.removeAll(tmSettings, lToRemove);
+        int iRemoved = MapUtil.removeAll(tmSettings, lToRemove);
+        Log.d(TAG, String.format("Removed %d settings to ignore", iRemoved));
 
         return iSizeBefore - MapUtil.size(tmSettings);
     }
@@ -449,4 +455,25 @@ public class ExportImportPrefs extends DialogPreference
         }
     }
 
+    public static int trimValues(Map mInput) {
+        if ( MapUtil.isEmpty(mInput) ) {
+            return 0;
+        }
+        Map mTrimmed = new HashMap();
+        for(Object oKey: mInput.keySet()) {
+            Object oVal = mInput.get(oKey);
+            if ( oVal instanceof String ) {
+                String sVal = (String) oVal;
+                String sValTrimmed = sVal.trim();
+                if ( sValTrimmed.length() != sVal.length() ) {
+                    mTrimmed.put(oKey, sValTrimmed);
+                }
+            }
+        }
+        if ( MapUtil.isNotEmpty(mTrimmed) ) {
+            mInput.putAll(mTrimmed);
+            return mTrimmed.size();
+        }
+        return 0;
+    }
 }

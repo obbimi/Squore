@@ -1954,7 +1954,7 @@ public class PreferenceValues extends RWValues
 
     public static String getOfficialSquashRulesURL(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.string.OfficialRulesURLs_default__Squash);
-        return getFirstOfList(PreferenceKeys.OfficialSquashRulesURLs, iResDefault, context);
+        return getFirstOfList(PreferenceKeys.OfficialRulesURLs, iResDefault, context);
     }
 
     public static String getFeedPostName(Context context) {

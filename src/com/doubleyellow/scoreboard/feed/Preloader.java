@@ -297,7 +297,9 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
             case NoNetwork:
             case UnexpectedContent:
             case UnexpectedError:
-                m_status = Status.NoConnection;
+                if ( EnumSet.of(Status.RemoteSettings, Status.ActiveMatchesFeed, Status.ActivePlayersFeed).contains(m_status) == false ) {
+                    m_status = Status.NoConnection;
+                }
                 doNext(1); // do stuff that does not require an internet connection like caching contacts
                 break;
             default:

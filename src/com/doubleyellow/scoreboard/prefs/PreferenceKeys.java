@@ -141,7 +141,7 @@ public enum PreferenceKeys {
 
         matchListValidUntill(null),
 
-        OfficialSquashRulesURLs(null),
+        OfficialRulesURLs(String.class),
 
     Contacts(null),
         readContactsForAutoCompletion(Boolean.class),
