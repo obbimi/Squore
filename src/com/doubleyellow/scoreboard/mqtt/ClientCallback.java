@@ -22,6 +22,7 @@ import com.doubleyellow.scoreboard.bluetooth.BTMethods;
 import com.doubleyellow.scoreboard.bluetooth.BTRole;
 import com.doubleyellow.scoreboard.bluetooth.MessageSource;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.util.DateUtil;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -52,10 +53,13 @@ public class ClientCallback implements MqttCallback
         String msg = String.format("MQTT Received: %s [%s]", message.toString(), topic );
         //Log.d(TAG, msg);
 
-        if ( topic.endsWith(PreferenceValues.getLiveScoreDeviceId(m_handler.m_context)) ) {
+        if ( topic.matches(".*\\b" + PreferenceValues.getLiveScoreDeviceId(m_handler.m_context) + "\\b.*") ) {
             // show but ignore for further processing, messages published by this device itself
             m_handler.m_context.showInfoMessageOnUiThread(msg, 1);
         } else {
+            m_handler.stats.increaseCounter(topic +".receive.count");
+            m_handler.stats.put            (topic + ".receive.last", DateUtil.getCurrentHHMMSS());
+
             String sPayload = new String(message.getPayload());
             long lNow = System.currentTimeMillis();
             if ( m_MQTTmessageReceived.containsKey(sPayload) ) {

@@ -372,6 +372,7 @@ public enum PreferenceKeys {
         MQTTPublishJoinerLeaverTopic(String.class),
         MQTTPublishTopicMatch(String.class),
         MQTTPublishTopicUnloadMatch(String.class),
+        MQTTPublishTopicBatteryLevel(Integer.class),
         MQTTSubscribeTopic_newMatch(String.class),
             MQTTSkipJsonKeys(null),
         MQTTPublishTopicChange(String.class),

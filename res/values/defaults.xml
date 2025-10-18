@@ -278,6 +278,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="UseMQTT_default__Default">false</bool>
     <string name="MQTTTopicMatchTemplate__Default">double-yellow/${FeedName}/${Brand}/${DeviceId}/match</string> <!-- with feedname for livescore of single event via public broker -->
     <string name="MQTTTopicUnloadMatchTemplate__Default">double-yellow/${FeedName}/${Brand}/${DeviceId}/unloadmatch</string> <!-- with feedname for livescore of single event via public broker -->
+    <string name="MQTTTopicBatteryLevelTemplate__Default">double-yellow/${Brand}/${DeviceId}/batterylevel</string>
     <string name="MQTTTopicNewMatchTemplate__Default">double-yellow/${Brand}/${DeviceId}/newMatch</string> <!-- without feedname controlling next match e.g. from computer at tournament table -->
     <string name="MQTTTopicChangeTemplate__Default">double-yellow/${Brand}/${DeviceId}/change</string>
     <string name="MQTTPublishJoinerLeaverTopic__Default">double-yellow/${Brand}/JoinerLeaver</string>

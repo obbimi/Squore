@@ -93,6 +93,7 @@ import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.mqtt.JoinedDevicesListener;
 import com.doubleyellow.scoreboard.mqtt.MQTTHandler;
 import com.doubleyellow.scoreboard.mqtt.MQTTStatus;
+import com.doubleyellow.scoreboard.mqtt.MQTTStatusDialog;
 import com.doubleyellow.scoreboard.mqtt.SelectMQTTDeviceDialog;
 import com.doubleyellow.scoreboard.share.MatchModelPoster;
 import com.doubleyellow.scoreboard.share.ResultPoster;
@@ -2817,7 +2818,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         mirrorDeviceSelectionClosed,
         //rallyEndStatsClosed,
         //specifyHandicapClosed,
-        //dialogClosed,
+        dialogClosed,
     }
 
     /** This method is focused at handling gui related events */
@@ -2973,6 +2974,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 //enableScoreButton();
                 break;
             }
+            case dialogClosed: {
+                dialogManager.removeDialog(ctx);
+                break;
+            }
 /*
             case editFormatDialogEnded: {
                 showNextDialog();
@@ -2983,10 +2988,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 break;
             }
             case specifyHandicapClosed: {
-                showNextDialog();
-                break;
-            }
-            case dialogClosed: {
                 showNextDialog();
                 break;
             }
@@ -3372,6 +3373,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 setupBluetoothControl(true);
             } else if (id == R.id.sb_mqtt_mirror) {
                 setupMQTTControl();
+            } else if (id == R.id.sb_mqtt_subscriptions) {
+                showMQTTSubscriptions();
+            //} else if (id == R.id.sb_mqtt_mirror_autostart) {
+            //    doDelayedMQTTReconnect("Auto starting mqtt mirror mode", 1,1);
             } else if (id == R.id.dyn_undo_last || id == R.id.sb_undo_last || id == R.id.float_undo_last) {
                 return undoLast();
             } else if (id == R.id.sb_undo_last_for_non_scorer) {

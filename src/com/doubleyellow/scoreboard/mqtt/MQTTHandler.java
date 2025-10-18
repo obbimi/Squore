@@ -27,10 +27,14 @@ import com.doubleyellow.scoreboard.bluetooth.BTMethods;
 import com.doubleyellow.scoreboard.bluetooth.BTRole;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.model.JSONKey;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.util.BatteryInfo;
 import com.doubleyellow.scoreboard.vico.IBoard;
+import com.doubleyellow.util.DateUtil;
 import com.doubleyellow.util.MapUtil;
+import com.doubleyellow.util.Params;
 import com.doubleyellow.util.Placeholder;
 import com.doubleyellow.util.StringUtil;
 
@@ -287,13 +291,20 @@ public class MQTTHandler
     public Set<String> getSubscriptionTopics() {
         return m_lSubscriptions.keySet();
     }
+    public Params getStats() {
+        return stats;
+    }
 
+    public final Params stats = new Params();
 
-    public void publish(String topic, String msg, boolean bRetain) {
+    void publish(String topic, String msg, boolean bRetain) {
         if ( topic == null ) {
             Log.w(TAG, "Topic can not be null");
             return;
         }
+        stats.put            (topic + ".publish.last", DateUtil.getCurrentHHMMSS());
+        stats.increaseCounter(topic + ".publish.count");
+
         MqttMessage message = new MqttMessage();
         message.setPayload(msg.getBytes());
         message.setQos(MQTT_QOS);
@@ -304,8 +315,19 @@ public class MQTTHandler
             // Seen in playstore: java.lang.IllegalArgumentException
             Log.e(TAG, e.getMessage(), e);
         }
-    }
 
+        long lNow = System.currentTimeMillis();
+        if ( lNow - lBatteryStatusLastSend > 60 * 1000 ) {
+            lBatteryStatusLastSend = lNow;
+            Map<String, Object> info = BatteryInfo.getInfo(m_context);
+            if  ( MapUtil.isNotEmpty(info) ) {
+                String sTopicPH = PreferenceValues.getMQTTPublishTopicBatteryLevel(m_context);
+                String sTopic = doMQTTTopicTranslation(sTopicPH, m_thisDeviceId);
+                publish(sTopic, "" + info.get(JSONKey.batteryPercentage.toString()), false);
+            }
+        }
+    }
+    private long lBatteryStatusLastSend = 0L;
 
     private BTRole m_MQTTRole = null;
     void changeMQTTRole(BTRole role) {

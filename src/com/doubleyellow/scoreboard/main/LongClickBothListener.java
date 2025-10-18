@@ -65,13 +65,7 @@ public class LongClickBothListener extends ScoreBoardListener implements TouchBo
                 scoreBoard.iBoard.showMessage(sCurrentTime, 3);
             } else {
                 if ( scoreBoard.m_MQTTHandler != null ) {
-                    Set<String> subscriptionTopics = scoreBoard.m_MQTTHandler.getSubscriptionTopics();
-                    if ( ListUtil.isNotEmpty(subscriptionTopics) ) {
-                        for(String sTopic: subscriptionTopics ) {
-                            Toast.makeText(scoreBoard, sTopic, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    return true;
+                    return handleMenuItem(R.id.sb_mqtt_subscriptions);
                 }
                 if ( matchModel.hasStarted() ) {
                     return handleMenuItem(R.id.sb_match_format);

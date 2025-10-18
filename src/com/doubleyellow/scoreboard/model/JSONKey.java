@@ -95,6 +95,8 @@ public enum JSONKey {
 		additionalPostParams,
 	wifi,
 	device,
+		batteryPercentage,
+		batteryCharging,
 
   //player,    // duplicate
 	  //name,  // duplicate

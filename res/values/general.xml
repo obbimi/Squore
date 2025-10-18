@@ -37,6 +37,8 @@
     <string name="cmd_yes">Yes</string>
     <string name="cmd_no">No</string>
     <string name="cmd_ok">OK</string>
+    <string name="cmd_stop_temp">Stop Temporary</string>
+    <string name="cmd_stop_mqtt">Stop MQTT</string>
     <string name="cmd_start">Start</string>
     <string name="cmd_automatic">Automatic</string>
     <string name="cmd_suggest">Suggest</string>
