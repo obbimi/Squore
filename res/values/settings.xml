@@ -95,6 +95,8 @@
     <string name="sb_MQTT_Connection_to_x_failed_y">ERROR: MQTT Connection to %1$s failed: %2$s</string>
     <string name="sb_MQTT_Subscription_to_x_failed_y">ERROR: MQTT Subscription to %1$s failed: %2$s</string>
     <string name="sb_MQTT_Subscribed_to_x">MQTT Subscribed to %1$s</string>
+    <string name="sb_mqtt_mirror_as_slave">Act as slave</string>
+    <string name="sb_mqtt_publish_as_master">Act as master</string>
 
     <string name="pref_feedFeedsURL">feedFeedsURL</string>
     <string name="pref_feedFeedsURL_summary">For developers only</string>

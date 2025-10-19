@@ -18,11 +18,15 @@
 package com.doubleyellow.scoreboard.mqtt;
 
 public enum MQTTStatus {
-    Delayed,
     IconClick,
     OnActivityResume,
     OnChangedSettings,
     OpenSelectDeviceDialog,
+    BrokerChangeInDialog,
+    BecomeSlave,
+    BecomeMaster,
     CloseSelectDeviceDialog,
+
+    RetryConnection,
 
 }

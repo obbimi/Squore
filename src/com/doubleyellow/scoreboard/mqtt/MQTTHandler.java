@@ -27,7 +27,6 @@ import com.doubleyellow.scoreboard.bluetooth.BTMethods;
 import com.doubleyellow.scoreboard.bluetooth.BTRole;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
-import com.doubleyellow.scoreboard.model.JSONKey;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.util.BatteryInfo;
@@ -91,6 +90,8 @@ public class MQTTHandler
 
             final String     m_joinerLeaverTopic;
             final String     m_thisDeviceId;
+            final String     m_otherDeviceId;
+    private int m_iPublishDeviceInfoEveryXSeconds = 60;
 
     enum JoinerLeaver {
         join,
@@ -136,6 +137,16 @@ public class MQTTHandler
         m_sBrokerUrl = serverURI;
 
         m_thisDeviceId  = PreferenceValues.getLiveScoreDeviceId(context);
+        m_otherDeviceId = PreferenceValues.getMQTTOtherDeviceId(context);
+        if ( EnumSet.of(MQTTStatus.OnActivityResume).contains(m_status) ) {
+            if ( StringUtil.isNotEmpty(m_otherDeviceId) ) {
+                m_status = MQTTStatus.BecomeSlave;
+            } else {
+                m_status = MQTTStatus.BecomeMaster;
+            }
+        }
+
+        m_iPublishDeviceInfoEveryXSeconds = PreferenceValues.mqttPublishDeviceInfoEveryXSeconds(m_context);
 
         String clientID = /*Brand.getShortName(context) + "." +*/ m_thisDeviceId;
         m_joinerLeaverTopic = doMQTTTopicTranslation(PreferenceValues.getMQTTPublishJoinerLeaverTopic(context), null) ;
@@ -193,25 +204,35 @@ public class MQTTHandler
             if ( m_status.equals(MQTTStatus.OpenSelectDeviceDialog) ) {
                 // not interested in other actions just yet
             } else {
-                // listen for 'clients' to request the complete json of a match specifically of this device
-                final String mqttRespondToTopic = getMQTTSubscribeTopic_Change(BTMethods.requestCompleteJsonOfMatch.toString());
-                if ( StringUtil.isNotEmpty(mqttRespondToTopic) ) {
-                    Log.d(TAG, "Subscribing to " + mqttRespondToTopic);
-                    subscribe(mqttRespondToTopic, null);
+                if ( EnumSet.of(MQTTStatus.BecomeSlave, MQTTStatus.BecomeMaster).contains(m_status) ) {
+                    // listen for 'clients' to request the complete json of a match specifically of this device
+                    // for now do this for both master and slave
+                    final String mqttRespondToTopic = getMQTTSubscribeTopic_Change(BTMethods.requestCompleteJsonOfMatch.toString());
+                    if ( StringUtil.isNotEmpty(mqttRespondToTopic) ) {
+                        Log.d(TAG, "Subscribing to " + mqttRespondToTopic);
+                        subscribe(mqttRespondToTopic, null);
+                    }
                 }
 
-                final String mqttRespondToTopic_newMatch = getMQTTSubscribeTopic_newMatch();
-                if ( StringUtil.isNotEmpty(mqttRespondToTopic_newMatch) ) {
-                    Log.d(TAG, "Subscribing to " + mqttRespondToTopic_newMatch);
-                    subscribe(mqttRespondToTopic_newMatch, null);
+                if ( EnumSet.of(MQTTStatus.BecomeMaster).contains(m_status) ) {
+                    final String mqttRespondToTopic_newMatch = getMQTTSubscribeTopic_newMatch();
+                    if ( StringUtil.isNotEmpty(mqttRespondToTopic_newMatch) ) {
+                        Log.d(TAG, "Subscribing to " + mqttRespondToTopic_newMatch);
+                        subscribe(mqttRespondToTopic_newMatch, null);
+                    }
                 }
 
                 final String mqttSubScribeToTopic_Change = getMQTTSubscribeTopic_Change(null);
                 if ( StringUtil.isNotEmpty(mqttSubScribeToTopic_Change) ) {
 
-                    // listen for changes on
-                    Log.d(TAG, "Subscribing to " + mqttSubScribeToTopic_Change);
-                    subscribe(mqttSubScribeToTopic_Change, null);
+                    if ( EnumSet.of(MQTTStatus.BecomeSlave).contains(m_status) ) {
+                        // listen for changes on
+                        Log.d(TAG, "Subscribing to " + mqttSubScribeToTopic_Change);
+                        subscribe(mqttSubScribeToTopic_Change, null);
+
+                        changeMQTTRole(BTRole.Slave);
+                        publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, m_otherDeviceId);
+                    }
                 } else {
                     m_context.showInfoMessageOnUiThread(m_context.getString(R.string.sb_MQTT_Connected_to_x, m_sBrokerUrl), 10);
                 }
@@ -233,7 +254,7 @@ public class MQTTHandler
             stop();
 
             if ( m_iReconnectAttempts < 10 ) {
-                if ( m_context.doDelayedMQTTReconnect(sMsg,11, m_iReconnectAttempts)  ) {
+                if ( m_context.doDelayedMQTTReconnect(sMsg,11, m_iReconnectAttempts, MQTTStatus.RetryConnection)  ) {
                     m_iReconnectAttempts++;
                 }
             } else {
@@ -295,15 +316,34 @@ public class MQTTHandler
         return stats;
     }
 
-    public final Params stats = new Params();
+    private final Params stats = new Params();
+    public void updateStats(String sTopic, String sPublishOrReceive) {
+        this.stats.increaseCounter(sTopic + "." + sPublishOrReceive + ".count");
+        this.stats.put            (sTopic + "." + sPublishOrReceive +  ".last", DateUtil.getCurrentHHMMSS());
+
+        this.publishBatteryStatus();
+    }
+
+    private long lBatteryStatusLastSend = 0L;
+    private void publishBatteryStatus() {
+        long lNow = System.currentTimeMillis();
+        if ( lNow - lBatteryStatusLastSend > m_iPublishDeviceInfoEveryXSeconds * 1000L ) {
+            lBatteryStatusLastSend = lNow;
+            Map<String, Object> info = BatteryInfo.getInfo(m_context);
+            if  ( MapUtil.isNotEmpty(info) ) {
+                String sTopicPH = PreferenceValues.getMQTTPublishTopicDeviceInfo(m_context);
+                String sTopic = doMQTTTopicTranslation(sTopicPH, m_thisDeviceId);
+                publish(sTopic, (new JSONObject(info)).toString(), false);
+            }
+        }
+    }
 
     void publish(String topic, String msg, boolean bRetain) {
         if ( topic == null ) {
             Log.w(TAG, "Topic can not be null");
             return;
         }
-        stats.put            (topic + ".publish.last", DateUtil.getCurrentHHMMSS());
-        stats.increaseCounter(topic + ".publish.count");
+        this.updateStats(topic, "publish");
 
         MqttMessage message = new MqttMessage();
         message.setPayload(msg.getBytes());
@@ -316,18 +356,7 @@ public class MQTTHandler
             Log.e(TAG, e.getMessage(), e);
         }
 
-        long lNow = System.currentTimeMillis();
-        if ( lNow - lBatteryStatusLastSend > 60 * 1000 ) {
-            lBatteryStatusLastSend = lNow;
-            Map<String, Object> info = BatteryInfo.getInfo(m_context);
-            if  ( MapUtil.isNotEmpty(info) ) {
-                String sTopicPH = PreferenceValues.getMQTTPublishTopicBatteryLevel(m_context);
-                String sTopic = doMQTTTopicTranslation(sTopicPH, m_thisDeviceId);
-                publish(sTopic, "" + info.get(JSONKey.batteryPercentage.toString()), false);
-            }
-        }
     }
-    private long lBatteryStatusLastSend = 0L;
 
     private BTRole m_MQTTRole = null;
     void changeMQTTRole(BTRole role) {
@@ -357,7 +386,7 @@ public class MQTTHandler
             sDevice = "+"; // m_thisDeviceId;
             sSubTopic = MQTT_TOPIC_CONCAT_CHAR + sMethod;
         } else {
-            sDevice = PreferenceValues.getMQTTOtherDeviceId(m_context);
+            sDevice = m_otherDeviceId;
         }
         String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
         if ( StringUtil.isEmpty(sValue) ) {
@@ -370,8 +399,7 @@ public class MQTTHandler
     private String getMQTTSubscribeTopic_newMatch() {
         String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic_newMatch(m_context);
 
-        String sDevice = PreferenceValues.getMQTTOtherDeviceId(m_context);
-        return doMQTTTopicTranslation(sPlaceholder, sDevice);
+        return doMQTTTopicTranslation(sPlaceholder, m_otherDeviceId);
     }
 
     public void publishOnMQTT(BTMethods method, Object... args) {
@@ -438,7 +466,7 @@ public class MQTTHandler
 
         String sDevice = m_thisDeviceId;
         if ( bUseOtherDeviceId ) {
-            sDevice = PreferenceValues.getMQTTOtherDeviceId(m_context);
+            sDevice = m_otherDeviceId;
         }
         String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
         return sValue;

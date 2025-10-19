@@ -57,8 +57,7 @@ public class ClientCallback implements MqttCallback
             // show but ignore for further processing, messages published by this device itself
             m_handler.m_context.showInfoMessageOnUiThread(msg, 1);
         } else {
-            m_handler.stats.increaseCounter(topic +".receive.count");
-            m_handler.stats.put            (topic + ".receive.last", DateUtil.getCurrentHHMMSS());
+            m_handler.updateStats(topic, "receive");
 
             String sPayload = new String(message.getPayload());
             long lNow = System.currentTimeMillis();
@@ -113,7 +112,7 @@ public class ClientCallback implements MqttCallback
             if ( cause.getCause() != null ) {
                 cause = cause.getCause();
             }
-            m_handler.m_context.doDelayedMQTTReconnect(String.format("W: MQTT tcp to broker %s lost: %s.", m_handler.m_sBrokerUrl, cause), 10, 1);
+            m_handler.m_context.doDelayedMQTTReconnect(String.format("W: MQTT tcp to broker %s lost: %s.", m_handler.m_sBrokerUrl, cause), 10, 1, MQTTStatus.RetryConnection);
         }
     }
     @Override public void deliveryComplete(IMqttDeliveryToken token) {

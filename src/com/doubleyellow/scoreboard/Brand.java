@@ -302,6 +302,7 @@ public enum Brand
             PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default__Racketlon);
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
+            PreferenceValues.setNumber   (PreferenceKeys.timerPauseBeforeFirstGame       , ctx, 180);
             PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 180);
             PreferenceValues.setNumber   (PreferenceKeys.timerWarmup                     , ctx, 180);
             PreferenceValues.setBoolean  (PreferenceKeys.showTips                        , ctx, false);
@@ -312,6 +313,7 @@ public enum Brand
             PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default__Tabletennis);
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
+            PreferenceValues.setNumber   (PreferenceKeys.timerPauseBeforeFirstGame       , ctx, 60);
             PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 60);
             PreferenceValues.setNumber   (PreferenceKeys.timerWarmup                     , ctx, 120);
             PreferenceValues.setBoolean  (PreferenceKeys.showTips                        , ctx, false);
@@ -323,6 +325,7 @@ public enum Brand
             PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default__Badminton);
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
+            PreferenceValues.setNumber   (PreferenceKeys.timerPauseBeforeFirstGame       , ctx, 60);
             PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 60);
             PreferenceValues.setNumber   (PreferenceKeys.timerWarmup                     , ctx, 120);
             PreferenceValues.setBoolean  (PreferenceKeys.showTips                        , ctx, false);
@@ -334,6 +337,7 @@ public enum Brand
             PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default__Racquetball); // last decisive game to 11
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.DoNotUse);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.SuddenDeath);
+            //PreferenceValues.setNumber   (PreferenceKeys.timerPauseBeforeFirstGame       , ctx, 60);
             //PreferenceValues.setNumber   (PreferenceKeys.timerPauseBetweenGames          , ctx, 60);
             //PreferenceValues.setNumber   (PreferenceKeys.timerWarmup                     , ctx, 120);
             PreferenceValues.setBoolean  (PreferenceKeys.showTips                        , ctx, false);
@@ -345,6 +349,7 @@ public enum Brand
             PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default__Squash);
             PreferenceValues.setEnum     (PreferenceKeys.useOfficialAnnouncementsFeature , ctx, Feature.Suggest);
             PreferenceValues.setEnum     (PreferenceKeys.tieBreakFormat                  , ctx, TieBreakFormat.TwoClearPoints);
+            PreferenceValues.setNumberR  (PreferenceKeys.timerPauseBeforeFirstGame       , ctx, R.integer.timerPauseBeforeFirstGame_default__Squash);
             PreferenceValues.setNumberR  (PreferenceKeys.timerPauseBetweenGames          , ctx, R.integer.timerPauseBetweenGames_default__Squash);
             PreferenceValues.setNumberR  (PreferenceKeys.timerWarmup                     , ctx, R.integer.timerWarmup_default__Squash);
             PreferenceValues.setStringSet(PreferenceKeys.showScoringHistoryInMainScreenOn, EnumSet.of(ShowOnScreen.OnDevice), ctx); // show the scoring history

@@ -20,6 +20,7 @@ package com.doubleyellow.scoreboard.mqtt;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,8 +45,11 @@ import java.util.Set;
 public class SelectMQTTDeviceDialog extends BaseAlertDialog {
     private static final String TAG = "SB." + SelectMQTTDeviceDialog.class.getSimpleName();
 
+    private String S_NONE = null;
+
     public SelectMQTTDeviceDialog(Context context, Model matchModel, ScoreBoard scoreBoard) {
         super(context, matchModel, scoreBoard);
+        S_NONE = getString(R.string.lbl_none);
     }
 
     @Override
@@ -64,8 +68,8 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
         adb.setTitle(getString(R.string.bt_select_device))
                 .setIcon(R.drawable.mqtt)
                 .setMessage(R.string.bt_select_device_for_scoreboard_mirroring)
-                .setPositiveButton(android.R.string.ok, listener)
-                .setNeutralButton(android.R.string.cancel, listener)
+                .setPositiveButton(R.string.sb_mqtt_mirror_as_slave, listener)
+                .setNeutralButton(R.string.sb_mqtt_publish_as_master, listener)
                 .setNegativeButton(R.string.lbl_none, listener)
         ;
 
@@ -122,7 +126,7 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
         sovBrokers.setOnCheckedChangeListener((group, checkedId) -> {
             scoreBoard.stopMQTT();
             PreferenceValues.setString(PreferenceKeys.MQTTBrokerURL, context, sovBrokers.getChecked());
-            scoreBoard.doDelayedMQTTReconnect("", 1, 1);
+            scoreBoard.doDelayedMQTTReconnect("", 1, 1, MQTTStatus.BrokerChangeInDialog);
         });
         ll.addView(getTextView(R.string.sb_MQTTSelectBroker));
         ll.addView(sovBrokers);
@@ -160,11 +164,23 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
             lPairedDevicesChecked.add(sPreviouslyConnected);
             sCheckedDevice = sPreviouslyConnected;
         }
-        lPairedDevicesChecked.add(getString(R.string.lbl_none));
+        lPairedDevicesChecked.add(S_NONE);
 
         List<String> l = new ArrayList<>(lPairedDevicesChecked);
         sovDevices = new SelectObjectView<>(context, l, sCheckedDevice);
         ColorPrefs.setColors(sovDevices, ColorPrefs.Tags.item);
+
+        sovDevices.setOnCheckedChangeListener((group, checkedId) -> {
+            final Button btnMirrorAsSlave = dialog.getButton(MIRROR_AS_SLAVE);
+            String sOtherDeviceChecked = sovDevices.getChecked();
+            btnMirrorAsSlave.setEnabled(sOtherDeviceChecked != null && sOtherDeviceChecked.equalsIgnoreCase(S_NONE)==false);
+        });
+
+        if ( dialog != null ) {
+            final Button btnMirrorAsSlave = dialog.getButton(MIRROR_AS_SLAVE);
+            btnMirrorAsSlave.setEnabled(sCheckedDevice != null && sCheckedDevice.equalsIgnoreCase(S_NONE)==false);
+        }
+
         return sovDevices;
     }
 
@@ -174,28 +190,33 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
 
     private DialogInterface.OnClickListener listener = (dialog, which) -> handleButtonClick(which);
 
+    private final int MIRROR_AS_SLAVE = DialogInterface.BUTTON_POSITIVE;
+    private final int PUBLISH_AS_MASTER = DialogInterface.BUTTON_NEUTRAL;
+    private final int TURN_OF_MQTT = DialogInterface.BUTTON_NEGATIVE;
+
     @Override public void handleButtonClick(int which) {
 
         switch (which) {
-            case DialogInterface.BUTTON_POSITIVE:
+            case MIRROR_AS_SLAVE:
                 //if ( cbLRMirror != null ) {
                 //    PreferenceValues.setBoolean(PreferenceKeys.BTSync_keepLROnConnectedDeviceMirrored, context, cbLRMirror.isChecked());
                 //}
                 String sOtherDeviceChecked = sovDevices.getChecked();
-                if ( sOtherDeviceChecked != null && sOtherDeviceChecked.matches("^[A-Z0-9]{6,8}.*") && (sOtherDeviceChecked.equals(getString(R.string.lbl_none)) == false) ) {
+                if ( sOtherDeviceChecked != null && sOtherDeviceChecked.matches("^[A-Z0-9]{6,8}.*") && (sOtherDeviceChecked.equals(S_NONE) == false) ) {
                     PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, sOtherDeviceChecked);
                 } else {
                     PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, "");
                 }
                 scoreBoard.stopMQTT();
-                scoreBoard.doDelayedMQTTReconnect("", 1, 1);
+                scoreBoard.doDelayedMQTTReconnect("", 1, 1, MQTTStatus.BecomeSlave);
 
                 break;
-            case DialogInterface.BUTTON_NEUTRAL:
+            case PUBLISH_AS_MASTER:
+                PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, "");
                 scoreBoard.stopMQTT();
-                scoreBoard.doDelayedMQTTReconnect("", 1, 1);
+                scoreBoard.doDelayedMQTTReconnect("", 1, 1, MQTTStatus.BecomeMaster);
                 break;
-            case DialogInterface.BUTTON_NEGATIVE:
+            case TURN_OF_MQTT:
                 PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, "");
                 PreferenceValues.setBoolean(PreferenceKeys.UseMQTT, context, false);
 

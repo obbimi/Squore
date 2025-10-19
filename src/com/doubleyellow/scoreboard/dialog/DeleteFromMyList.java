@@ -68,11 +68,7 @@ public class DeleteFromMyList extends BaseAlertDialog
         }
     }
 
-    private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-        @Override public void onClick(DialogInterface dialog, int which) {
-            handleButtonClick(which);
-        }
-    };
+    private final DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> handleButtonClick(which);
 
     public static final int DELETE_MATCH = DialogInterface.BUTTON_POSITIVE;
     public static final int KEEP_MATCH   = DialogInterface.BUTTON_NEGATIVE;

@@ -1023,9 +1023,13 @@ public class PreferenceValues extends RWValues
     public static String getMQTTPublishTopicUnloadMatch(Context context) {
         return getString(PreferenceKeys.MQTTPublishTopicUnloadMatch, R.string.MQTTTopicUnloadMatchTemplate__Default, context);
     }
-    public static String getMQTTPublishTopicBatteryLevel(Context context) {
-        return getString(PreferenceKeys.MQTTPublishTopicBatteryLevel, R.string.MQTTTopicBatteryLevelTemplate__Default, context);
+    public static String getMQTTPublishTopicDeviceInfo(Context context) {
+        return getString(PreferenceKeys.MQTTPublishTopicDeviceInfo, R.string.MQTTTopicDeviceInfoTemplate__Default, context);
     }
+    public static int mqttPublishDeviceInfoEveryXSeconds(Context context) {
+        return getInteger(PreferenceKeys.MQTTPublishDeviceInfo_EveryXSeconds, context, 60);
+    }
+
     public static String getMQTTSubscribeTopic_newMatch(Context context) {
         return getString(PreferenceKeys.MQTTSubscribeTopic_newMatch, R.string.MQTTTopicNewMatchTemplate__Default, context);
     }
