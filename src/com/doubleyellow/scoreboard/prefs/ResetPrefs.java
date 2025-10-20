@@ -27,7 +27,6 @@ import android.util.AttributeSet;
 
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.R;
-import com.doubleyellow.scoreboard.main.ScoreBoard;
 
 public class ResetPrefs extends DialogPreference
 {
@@ -70,9 +69,12 @@ public class ResetPrefs extends DialogPreference
     static void resetToDefaults(Context context, int iRes) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
+        String sRetainRandomValue = preferences.getString(PreferenceKeys.liveScoreDeviceId.toString(), null);
+
         SharedPreferences.Editor preferencesEditor = preferences.edit();
         //Clear all the saved preference values.
         preferencesEditor.clear();
+        preferencesEditor.putString(PreferenceKeys.liveScoreDeviceId.toString(), sRetainRandomValue);
         //Commit all changes.
         preferencesEditor.commit();
 
