@@ -181,9 +181,6 @@ public class Export extends BaseAlertDialog implements HttpUploadFileTask.Upload
 
             // store file on the server
             String sUrl = URLFeedTask.prefixWithBaseIfRequired("upload.file.php");
-            if ( Util.isMyDevice(context) ) {
-                //sUrl = "http://192.168.0.114/upload.file.php";
-            }
             HttpUploadFileTask task = new HttpUploadFileTask(sUrl, "uploaded_file", URLTask.getMyUserAgentString(context));
             task.setUploadResultHandler(this);
             task.execute(file);

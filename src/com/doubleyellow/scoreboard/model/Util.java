@@ -17,10 +17,7 @@
 
 package com.doubleyellow.scoreboard.model;
 
-import java.net.NetworkInterface;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
@@ -29,11 +26,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.doubleyellow.android.util.ContentUtil;
 import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.prefs.DownUp;
@@ -92,7 +87,7 @@ public class Util {
 
     /** returns a filename to save screenshot to, if conditions have been met. If not returns null (= don't take automated screenshot) */
     public static String filenameForAutomaticScreenshot(Context ctx, Model model, ShowOnScreen screenType, int iMinScore, int iMaxScore, String sFormat) {
-        if ( /*(Brand.brand!=Brand.Squore) &&*/ isMyDevice(ctx) ) {
+        if ( PreferenceValues.currentDateIsTestDate() ) {
             if ( sFormat != null ) {
                 return String.format(sFormat, Brand.brand, screenType);
             }
@@ -104,44 +99,6 @@ public class Util {
             }
         }
         return null;
-    }
-
-    private static Boolean bIsMyDevice = null;
-    public static boolean isMyDevice(Context ctx) {
-        String address = getMacAddr();
-
-        if ( bIsMyDevice == null ) {
-            boolean appInstalled = ContentUtil.isAppInstalled(ctx, "com.doubleyellow");
-            boolean bIsMacAddress = "8C:F5:A3:F1:F1:96".equals(address);
-            bIsMyDevice = MY_DEVICE_MODEL.contains(Build.MODEL) && appInstalled && bIsMacAddress;
-        }
-        return bIsMyDevice;
-    }
-
-    public static String getMacAddr() {
-        try {
-            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for (NetworkInterface nif : all) {
-                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
-
-                byte[] macBytes = nif.getHardwareAddress();
-                if (macBytes == null) {
-                    return "";
-                }
-
-                StringBuilder res1 = new StringBuilder();
-                for (byte b : macBytes) {
-                    res1.append(String.format("%02X:",b));
-                }
-
-                if (res1.length() > 0) {
-                    res1.deleteCharAt(res1.length() - 1);
-                }
-                return res1.toString();
-            }
-        } catch (Exception ex) {
-        }
-        return "02:00:00:00:00:00";
     }
 
     public static Object getServeSideCharacter(Context context, Model matchModel, ServeSide serveSide, boolean bIsHandout) {

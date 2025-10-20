@@ -58,6 +58,7 @@ import java.util.TreeMap;
  * Publish to
  * double-yellow/${FeedName}/${BrandOrSport}/${DeviceId}                                   publish commands (acting as master) that slave should execute keep score in sync
  * double-yellow/${FeedName}/${BrandOrSport}/${OtherDeviceId}/requestCompleteJsonOfMatch   for mirroring a fixed device (acting as slave), when model appears out of sync
+ * double-yellow/${FeedName}/${BrandOrSport}/${DeviceId}/match                             for live-score support
  *
  * Subscribe to
  * double-yellow/${FeedName}/${BrandOrSport}/${OtherDeviceId}                              for mirroring a fixed device (being slave), receiving commands or complete match model as json
@@ -94,8 +95,8 @@ public class MQTTHandler
     private int m_iPublishDeviceInfoEveryXSeconds = 60;
 
     enum JoinerLeaver {
-        join,
-        thanksForJoining,
+        join,             // 'publish' : first parameter 'this device id'
+        thanksForJoining, // 'publish' : first parameter 'this device id', second parameter 'just joined other device'
         leave
     }
     enum TopicPlaceholder {

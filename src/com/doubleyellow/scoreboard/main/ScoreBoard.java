@@ -461,13 +461,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     e.printStackTrace();
                 }
             }
-
-            int iRunCount = PreferenceValues.getRunCount(this, PreferenceKeys.OrientationPreference);
-            if ( iRunCount <= 3 ) {
-                if ( Util.isMyDevice(this) ) {
-                    RWValues.setStringIfCurrentlyNotSet(PreferenceKeys.refereeName, this, "Iddo H");
-                }
-            }
         } else {
             int iRunCount = PreferenceValues.getRunCount(this, PreferenceKeys.OrientationPreference);
             if ( iRunCount <= 1 ) {

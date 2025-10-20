@@ -41,7 +41,7 @@ public enum BTMethods {
     restartScore(false),
     toggleGameScoreView(false),
 
-    requestCompleteJsonOfMatch(false),
+    requestCompleteJsonOfMatch(false), // first parameter is deviceId of match we are interested in
     jsonMatchReceived(false),
     requestCountryFlag(false),
 
