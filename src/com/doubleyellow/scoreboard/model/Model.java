@@ -28,6 +28,7 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.util.BatteryInfo;
 import com.doubleyellow.scoreboard.util.ListWrapper;
 import com.doubleyellow.util.*;
 import org.json.JSONArray;
