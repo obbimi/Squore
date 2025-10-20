@@ -6465,7 +6465,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             if ( sModelScore.equals(sScoreReceived) == false ) {
                                 Log.d(TAG, String.format("Scores don't match: received %s , here %s", sScoreReceived, sModelScore));
                                 publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, PreferenceValues.getMQTTOtherDeviceId(this), sModelScore);
-                            } else if ( sModelScore.matches("[0-1]-[0-1]") ) { // best of x to y: increase to y+1 on slave
+                            } else if ( sModelScore.matches("(0-0|0-1|1-0)") ) { // best of x to y: increase to y+1 on slave
                                 // at start of new game always re-request entire model
                                 publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, PreferenceValues.getMQTTOtherDeviceId(this));
                             }

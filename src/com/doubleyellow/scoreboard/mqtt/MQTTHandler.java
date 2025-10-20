@@ -27,6 +27,7 @@ import com.doubleyellow.scoreboard.bluetooth.BTMethods;
 import com.doubleyellow.scoreboard.bluetooth.BTRole;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.model.JSONKey;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.util.BatteryInfo;
@@ -197,7 +198,7 @@ public class MQTTHandler
             Log.d(TAG, "Connected made visible to user in icon");
 
             if ( StringUtil.isNotEmpty(m_joinerLeaverTopic) ) {
-                subscribe(m_joinerLeaverTopic, JoinerLeaver.join  + "(" + m_thisDeviceId + ")");
+                subscribe(m_joinerLeaverTopic, JoinerLeaver.join  + "(" + m_thisDeviceId + "," + m_status + ")");
                 Log.d(TAG, "Subscribing to " + m_joinerLeaverTopic);
                 //publish(m_joinerLeaverTopic, JoinerLeaver.join  + "(" + m_thisDeviceId + ")");
             }
@@ -334,15 +335,16 @@ public class MQTTHandler
             if  ( MapUtil.isNotEmpty(info) ) {
                 String sTopicPH = PreferenceValues.getMQTTPublishTopicDeviceInfo(m_context);
                 String sTopic = doMQTTTopicTranslation(sTopicPH, m_thisDeviceId);
+                info.put(JSONKey.device.toString(), m_thisDeviceId);
                 publish(sTopic, (new JSONObject(info)).toString(), false);
             }
         }
     }
 
-    void publish(String topic, String msg, boolean bRetain) {
+    boolean publish(String topic, String msg, boolean bRetain) {
         if ( topic == null ) {
             Log.w(TAG, "Topic can not be null");
-            return;
+            return false;
         }
         this.updateStats(topic, "publish");
 
@@ -352,11 +354,12 @@ public class MQTTHandler
         message.setRetained(bRetain);
         try {
             mqttClient.publish(topic, message, null, defaultCbPublish);
+            return true;
         } catch (Exception e) {
             // Seen in playstore: java.lang.IllegalArgumentException
             Log.e(TAG, e.getMessage(), e);
+            return false;
         }
-
     }
 
     private BTRole m_MQTTRole = null;
@@ -403,9 +406,17 @@ public class MQTTHandler
         return doMQTTTopicTranslation(sPlaceholder, m_otherDeviceId);
     }
 
-    public void publishOnMQTT(BTMethods method, Object... args) {
+    public boolean publishOnMQTT(BTMethods method, Object... args) {
         if ( isConnected() == false ) {
-            return;
+            return false;
+        }
+
+        if ( MQTTStatus.BecomeSlave.equals(m_status) ) {
+            // do only publish subset of methods
+            if ( EnumSet.of(BTMethods.changeScore, BTMethods.timestampStartOfGame, BTMethods.startTimer, BTMethods.cancelTimer).contains(method) ) {
+                Log.d(TAG, "Not publishing as slave : " + method);
+                return false;
+            }
         }
 
         if ( BTMethods.changeScore.equals(method) ) {
@@ -424,7 +435,7 @@ public class MQTTHandler
         if ( bUseOtherDeviceId ) {
             changeTopic += MQTT_TOPIC_CONCAT_CHAR + method;
         }
-        publish(changeTopic, sMessage, false);
+        return publish(changeTopic, sMessage, false);
     }
 
     public void publishUnloadMatchOnMQTT(Model matchModel) {
@@ -432,9 +443,13 @@ public class MQTTHandler
         String matchTopic = getMQTTPublishTopicUnloadMatch();
         publish(matchTopic, sJson, true);
     }
-    public void publishMatchOnMQTT(Model matchModel, boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
+    public boolean publishMatchOnMQTT(Model matchModel, boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
         if ( isConnected() == false ) {
-            return;
+            return false;
+        }
+        if ( MQTTStatus.BecomeSlave.equals(m_status) ) {
+            Log.d(TAG, "Not publishing match as slave : " + bPrefixWithJsonLength + " " + oTimerInfo);
+            return false;
         }
         List<String> lSkipKeys = bPrefixWithJsonLength ? null : PreferenceValues.getMQTTSkipJsonKeys(m_context);
         String matchTopic = getMQTTPublishTopicMatch();
@@ -444,7 +459,7 @@ public class MQTTHandler
             sJson = sJson.length() + ":" + sJson;
             matchTopic = getMQTTPublishTopicChange(false);
         }
-        publish(matchTopic, sJson, true);
+        return publish(matchTopic, sJson, true);
     }
 
     private String getMQTTPublishTopicMatch() {

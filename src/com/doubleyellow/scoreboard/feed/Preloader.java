@@ -223,7 +223,7 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                                                                                , config.optString(Evaluation.Config.ValidUntil          + "-" + Brand.brand)
                                                                                , config.optString(Evaluation.Config.BrandValidUntilHash + "-" + Brand.brand)
                                                                                , SHARED_SECRET
-                                                                               , Util.isMyDevice(m_context)  );
+                                                                               , false  );
                             Log.d(TAG, "Evaluation result " + eval);
                             ScoreBoard.brandedVersionValidation = eval;
                         }

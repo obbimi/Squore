@@ -77,13 +77,18 @@ public class ClientCallback implements MqttCallback
                 String[] saMethodNArgs = sPayload.trim().split("[\\(\\),]");
                 String sMethod     = saMethodNArgs[0];
                 String sFromDevice = saMethodNArgs[1];
+                String sOtherArg   = saMethodNArgs.length>2?saMethodNArgs[2]:null;
 
                 if ( sMethod.matches("(" + MQTTHandler.JoinerLeaver.join + "|" + MQTTHandler.JoinerLeaver.thanksForJoining +")" ) ) {
                     if ( sFromDevice.equals(m_handler.m_thisDeviceId) ) { return; }
                     if ( m_handler.m_context.updateJoinedDevices(sFromDevice, true) ) {
                         if ( sMethod.equals(MQTTHandler.JoinerLeaver.join.toString() ) ) {
                             // let new joiner know we joined in the past
-                            m_handler.publish(m_handler.m_joinerLeaverTopic, MQTTHandler.JoinerLeaver.thanksForJoining  + "(" + m_handler.m_thisDeviceId + ")", false);
+                            m_handler.publish(m_handler.m_joinerLeaverTopic, MQTTHandler.JoinerLeaver.thanksForJoining  + "(" + m_handler.m_thisDeviceId + "," + sFromDevice + ")", false);
+
+                            if ( sFromDevice.equals(m_handler.m_otherDeviceId) ) {
+                                m_handler.publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, sFromDevice);
+                            }
                         }
                     }
                 } else if ( sPayload.startsWith(MQTTHandler.JoinerLeaver.leave.toString()) ) {

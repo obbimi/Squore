@@ -3328,6 +3328,14 @@ public abstract class Model implements Serializable
                 e.printStackTrace();
             }
             try {
+                Map mInfo = BatteryInfo.getInfo(context);
+                if ( MapUtil.isNotEmpty(mInfo) ) {
+                    metaData.put(JSONKey.device.toString(), mInfo);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
                 JSONObject wifi = new JSONObject();
                 WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
                 final WifiInfo wifiInfo = wifiManager.getConnectionInfo(); // ACCESS_WIFI_STATE
