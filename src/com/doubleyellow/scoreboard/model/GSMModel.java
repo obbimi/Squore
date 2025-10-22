@@ -1068,9 +1068,9 @@ public class GSMModel extends Model
         final int iNrOfPointsToWinGame = _getNrOfPointsToWinGame();
         Player[] playersGB = getNoneOfPlayers();
 
-        // e.g Beach Tennis has this option, Padel is known to use it quite regularly
         int onDeuceNumberZB = m_goldenPointFormat.onDeuceNumber();
         if ( onDeuceNumberZB >= 0 ) {
+            // e.g Beach Tennis has this option, Padel is known to use it quite regularly
             int maxScore = getMaxScore(gameScore);
             if ( maxScore >= iNrOfPointsToWinGame - 1 ) {
                 int diffScore = getDiffScore(gameScore);
@@ -1082,8 +1082,10 @@ public class GSMModel extends Model
                             if ( diffScore >= 2 ) {
                                 playersGB = new Player[] { pLeader };
                             } else if ( diffScore == 1 ) {
-                                if ( maxScore >= iNrOfPointsToWinGame + onDeuceNumberZB ) {
-                                    playersGB =  new Player[] { pLeader } ;
+                                if ( isTieBreakGame() ) {
+                                    playersGB = getNoneOfPlayers();
+                                } else if ( maxScore >= iNrOfPointsToWinGame + onDeuceNumberZB ) {
+                                    playersGB =  new Player[] { pLeader };
                                 } else {
                                     playersGB = getNoneOfPlayers();
                                 }
@@ -1095,7 +1097,9 @@ public class GSMModel extends Model
                             if ( diffScore >= 1 ) {
                                 playersGB = new Player[] { pLeader };
                             } else if ( diffScore == 0 ) {
-                                if ( maxScore >= iNrOfPointsToWinGame - 1 + onDeuceNumberZB ) {
+                                if ( isTieBreakGame() ) {
+                                    playersGB = getNoneOfPlayers();
+                                } else if ( maxScore >= iNrOfPointsToWinGame - 1 + onDeuceNumberZB ) {
                                     playersGB = getPlayers();
                                 }
                             }
