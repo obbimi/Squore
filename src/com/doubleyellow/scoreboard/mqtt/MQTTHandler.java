@@ -24,7 +24,6 @@ import androidx.annotation.Nullable;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.bluetooth.BTMethods;
-import com.doubleyellow.scoreboard.bluetooth.BTRole;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.JSONKey;
@@ -91,8 +90,8 @@ public class MQTTHandler
             final String     m_sBrokerUrl;
 
             final String     m_joinerLeaverTopic;
-            final String     m_thisDeviceId;
-            final String     m_otherDeviceId;
+            String     m_thisDeviceId;
+            String     m_otherDeviceId;
     private int m_iPublishDeviceInfoEveryXSeconds = 60;
 
     enum JoinerLeaver {
@@ -113,6 +112,7 @@ public class MQTTHandler
         m_context = context;
         m_iBoard  = iBoard;
         m_status  = status;
+        deriveRoleFromSettings(context);
 
         defaultCbPublish    .reinit(context);
         defaultCbDisconnect .reinit(context);
@@ -139,15 +139,7 @@ public class MQTTHandler
         }
         m_sBrokerUrl = serverURI;
 
-        m_thisDeviceId  = PreferenceValues.getLiveScoreDeviceId(context);
-        m_otherDeviceId = PreferenceValues.getMQTTOtherDeviceId(context);
-        if ( EnumSet.of(MQTTStatus.OnActivityResume).contains(m_status) ) {
-            if ( StringUtil.isNotEmpty(m_otherDeviceId) ) {
-                m_status = MQTTStatus.BecomeSlave;
-            } else {
-                m_status = MQTTStatus.BecomeMaster;
-            }
-        }
+        deriveRoleFromSettings(context);
 
         m_iPublishDeviceInfoEveryXSeconds = PreferenceValues.mqttPublishDeviceInfoEveryXSeconds(m_context);
 
@@ -182,6 +174,18 @@ public class MQTTHandler
         connectCallback      = new ConnectCallback();
     }
 
+    private void deriveRoleFromSettings(ScoreBoard context) {
+        m_thisDeviceId  = PreferenceValues.getLiveScoreDeviceId(context);
+        m_otherDeviceId = PreferenceValues.getMQTTOtherDeviceId(context);
+        if ( EnumSet.of(MQTTStatus.OnActivityResume, MQTTStatus.CloseSelectDeviceDialog).contains(m_status) ) {
+            if ( StringUtil.isNotEmpty(m_otherDeviceId) ) {
+                m_role = MQTTRole.Slave;
+            } else {
+                m_role = MQTTRole.Master;
+            }
+        }
+    }
+
     /**
      * Subscribe to certain topics when connection was successful.
      * Try reconnecting if connection failed.
@@ -207,7 +211,7 @@ public class MQTTHandler
             if ( m_status.equals(MQTTStatus.OpenSelectDeviceDialog) ) {
                 // not interested in other actions just yet
             } else {
-                if ( EnumSet.of(MQTTStatus.BecomeSlave, MQTTStatus.BecomeMaster).contains(m_status) ) {
+                if ( EnumSet.of(MQTTRole.Slave, MQTTRole.Master).contains(m_role) ) {
                     // listen for 'clients' to request the complete json of a match specifically of this device
                     // for now do this for both master and slave
                     final String mqttRespondToTopic = getMQTTSubscribeTopic_Change(BTMethods.requestCompleteJsonOfMatch.toString());
@@ -233,7 +237,7 @@ public class MQTTHandler
                         Log.d(TAG, "Subscribing to " + mqttSubScribeToTopic_Change);
                         subscribe(mqttSubScribeToTopic_Change, null);
 
-                        changeMQTTRole(BTRole.Slave);
+                        //changeMQTTRole(MQTTRole.Slave);
                         publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, m_otherDeviceId);
                     }
                 } else {
@@ -363,23 +367,24 @@ public class MQTTHandler
         }
     }
 
-    private BTRole m_MQTTRole = null;
-    void changeMQTTRole(BTRole role) {
+/*
+    void changeMQTTRole(MQTTRole role) {
         if ( role.equals(m_MQTTRole) ) {
             return;
         }
-        if ( role.equals(BTRole.Slave) ) {
-            PreferenceValues.setOverwrites(m_context.mBtPrefSlaveSettings);
+        if ( role.equals(MQTTRole.Slave) ) {
+            PreferenceValues.setOverwrites(ScoreBoard.mBtPrefSlaveSettings);
         }
-        if ( role.equals(BTRole.Master) ) {
-            PreferenceValues.removeOverwrites(m_context.mBtPrefSlaveSettings.keySet());
+        if ( role.equals(MQTTRole.Master) ) {
+            PreferenceValues.removeOverwrites(ScoreBoard.mBtPrefSlaveSettings.keySet());
         }
-        m_MQTTRole = role;
+        m_role = role;
         m_context.showInfoMessageOnUiThread("MQTT role " + m_MQTTRole, 2);
     }
+*/
 
-    public BTRole getRole() {
-        return m_MQTTRole;
+    public MQTTRole getRole() {
+        return m_role;
     }
 
     private String getMQTTSubscribeTopic_Change(String sMethod) {
@@ -423,7 +428,7 @@ public class MQTTHandler
         if ( BTMethods.changeScore.equals(method) ) {
             // TODO: only change role if we know someone is listening and therefor will be slave
             //  List<String> lOthers = ListUtil.filter(m_lSubscriptions, "/change", Enums.Match.Keep);
-            changeMQTTRole(BTRole.Master);
+            //changeMQTTRole(MQTTRole.Master);
         }
 
         StringBuilder sb = new StringBuilder();

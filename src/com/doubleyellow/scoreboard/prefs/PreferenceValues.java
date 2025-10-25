@@ -997,6 +997,9 @@ public class PreferenceValues extends RWValues
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.UseMQTT_default__Default);
         return getBoolean(PreferenceKeys.UseMQTT, context, iResBrandSpecific);
     }
+    public static boolean disableInputWhenMQTTSlave(Context ctx) {
+        return getBoolean(PreferenceKeys.MQTTDisableInputWhenSlave, ctx, R.bool.MQTTDisableInputWhenSlave_default);
+    }
     public static String getMQTTBrokerURL(Context context) {
         String sCustom = getMQTTBrokerURL_Custom(context);
         String sOneOfList = getString(PreferenceKeys.MQTTBrokerURL, null, context);

@@ -59,7 +59,7 @@ public class MQTTStatusDialog extends BaseAlertDialog {
         String subTopics = ListUtil.join(lSubscriptionTopics, "\n");
         String sJoinedDevices = ListUtil.join(lJoinedDevices, "\n");
         //String sPublishStats = MapUtil.toNiceString(scoreBoard.m_MQTTHandler.getStats(), 0, true, MapUtil.Sort.ByKey);
-        List<String> lStats = MapUtil.map2listOfStrings(scoreBoard.m_MQTTHandler.getStats(), "%s = %s");
+        List<String> lStats = MapUtil.map2listOfStrings(ScoreBoard.m_MQTTHandler.getStats(), "%s = %s");
 
         int iPrefixLength = 1;
         String sPrefix = "";
@@ -81,6 +81,7 @@ public class MQTTStatusDialog extends BaseAlertDialog {
            .setTitle(getString(R.string.pref_Category_MQTT) + ": " + PreferenceValues.getLiveScoreDeviceId(context) + ": " + sPrefix)
            .setMessage("Subscriptions:\n" + subTopics
                    + "\n\nOther: " + mqttOtherDeviceId
+                   + "\n\nRole: " + ScoreBoard.m_MQTTHandler.getRole()
                    + "\n\nStats:\n" + sPublishStats
                    + "\n\nSeen Devices:\n"
                    + sJoinedDevices

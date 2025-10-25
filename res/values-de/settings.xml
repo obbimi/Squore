@@ -53,7 +53,7 @@
 
     <string name="sb_MQTTSelectBroker">Broker auswählen</string>
     <string name="sb_MQTTSelectOtherDeviceId">andere Geräte-ID auswählen</string>
-    <string name="sb_ThisDeviceId">ID dieses Gerätes</string>
+    <string name="sb_ThisDeviceId">ID dieses Gerätes: </string>
     <string name="sb_MQTT_NoJoinedDevicesYet">keine verbundenen Geräte gefunden</string>
     <string name="sb_MQTT_TurnedOff_ToManyFailedReconnectAttempts">MQTT nach zu vielen fehlgeschlagenen Wiederverbindungsversuchen abgeschalten</string>
     <string name="sb_MQTT_Connected_to_x">MQTT verbunden mit %1$s</string>

@@ -1109,6 +1109,12 @@
                 android:summary="@string/pref_MQTTPublishTopicMatch_Summary"
                 android:defaultValue="@string/MQTTTopicMatchTemplate__Default"
                 />
+            <EditTextPreference android:key="MQTTPublishTopicDeviceInfo"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_MQTTPublishTopicDeviceInfo"
+                android:summary="@string/pref_MQTTPublishTopicDeviceInfo_Summary"
+                android:defaultValue="@string/MQTTTopicDeviceInfoTemplate__Default"
+                />
             <EditTextPreference android:key="MQTTSubscribeTopicChange"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_MQTTSubscribeTopicChange"

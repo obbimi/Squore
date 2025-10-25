@@ -19,10 +19,8 @@ package com.doubleyellow.scoreboard.mqtt;
 import android.util.Log;
 
 import com.doubleyellow.scoreboard.bluetooth.BTMethods;
-import com.doubleyellow.scoreboard.bluetooth.BTRole;
 import com.doubleyellow.scoreboard.bluetooth.MessageSource;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
-import com.doubleyellow.util.DateUtil;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -97,10 +95,6 @@ public class ClientCallback implements MqttCallback
                 return;
             }
 
-
-            if ( sPayload.startsWith(BTMethods.changeScore.toString()) ) {
-                m_handler.changeMQTTRole(BTRole.Slave);
-            }
             m_MQTTmessageReceived.put(sPayload, lNow);
             m_handler.m_context.interpretReceivedMessageOnUiThread(sPayload, MessageSource.MQTT);
         }

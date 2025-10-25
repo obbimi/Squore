@@ -379,6 +379,7 @@ public enum PreferenceKeys {
         MQTTPublishTopicChange(String.class),
         MQTTSubscribeTopicChange(String.class),
             MQTTOtherDeviceId(String.class),
+        MQTTDisableInputWhenSlave(Boolean.class),
 
     ImportExportReset(null),
         RemoteSettingsURL(String.class),
