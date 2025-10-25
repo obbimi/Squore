@@ -7166,6 +7166,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             m_MQTTHandler = null; // required ?
         }
         m_mJoinedDevices.clear();
+        if ( joinedDevicesListener != null ) {
+            runOnUiThread(() -> joinedDevicesListener.updatedTo(new LinkedHashSet<>(m_mJoinedDevices.keySet()) , null));
+        }
     }
 
     private void setupMQTTControl() {

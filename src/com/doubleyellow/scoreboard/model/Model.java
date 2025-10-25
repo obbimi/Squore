@@ -3331,7 +3331,7 @@ public abstract class Model implements Serializable
             try {
                 Map mInfo = BatteryInfo.getInfo(context);
                 if ( MapUtil.isNotEmpty(mInfo) ) {
-                    metaData.put(JSONKey.device.toString(), mInfo);
+                    metaData.put(JSONKey.device.toString(), new JSONObject(mInfo));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
