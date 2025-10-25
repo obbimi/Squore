@@ -92,6 +92,7 @@ import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.mqtt.JoinedDevicesListener;
 import com.doubleyellow.scoreboard.mqtt.MQTTHandler;
+import com.doubleyellow.scoreboard.mqtt.MQTTRole;
 import com.doubleyellow.scoreboard.mqtt.MQTTStatus;
 import com.doubleyellow.scoreboard.mqtt.MQTTStatusDialog;
 import com.doubleyellow.scoreboard.mqtt.SelectMQTTDeviceDialog;
@@ -3721,6 +3722,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             iBoard.showToast(String.format("Sorry, %s can no longer be used (%s)", Brand.getShortName(this), brandedVersionValidation));
             return true;
         }
+        if ( ScoreBoard.m_MQTTHandler != null ) {
+            MQTTRole role = ScoreBoard.m_MQTTHandler.getRole();
+            if ( MQTTRole.Slave.equals(role) && PreferenceValues.disableInputWhenMQTTSlave(this) ) {
+                String sOtherDevice = PreferenceValues.getMQTTOtherDeviceId(this);
+                iBoard.showInfoMessage(getString(R.string.sb_mqtt_match_is_x_for_y, role, sOtherDevice), 3);
+                return true;
+            }
+        }
         if ( (matchModel == null) || (matchModel.isLocked() == false) ) { return false; }
         if ( bIgnoreForConduct ) {
             if ( matchModel.getLockState().AllowRecordingConduct() ) {
@@ -7157,8 +7166,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             cdtReconnect = null;
         }
         if ( m_MQTTHandler != null ) {
-            BTRole role = m_MQTTHandler.getRole();
-            if ( BTRole.Slave.equals(role) ) {
+            MQTTRole role = m_MQTTHandler.getRole();
+            if ( MQTTRole.Slave.equals(role) ) {
                 // TODO: if this device was mirroring an other, ensure changing the score will not push to livescore
                 PreferenceValues.initForNoLiveScoring(this);
             }

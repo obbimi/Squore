@@ -72,6 +72,8 @@
     <string name="pref_MQTTBrokerURL_Summary">Either a public or private broker can be used. By default, a public broker without authentication is configured</string>
     <string name="pref_MQTTPublishTopicMatch">Publish Match Topic</string>
     <string name="pref_MQTTPublishTopicMatch_Summary">Topic placeholder when publishing the complete match status in json</string>
+    <string name="pref_MQTTPublishTopicDeviceInfo">Publish Device Info</string>
+    <string name="pref_MQTTPublishTopicDeviceInfo_Summary">Topic placeholder when publishing device info like battery status</string>
     <string name="pref_MQTTPublishJoinerLeaverTopic">Joiner/Leaver Topic</string>
     <string name="pref_MQTTPublishJoinerLeaverTopic_Summary">Topic placeholder when publishing devices joining/leaving the mqtt broker</string>
     <string name="pref_MQTTPublishTopicChange">Publish Change Topic</string>
@@ -88,15 +90,16 @@
 
     <string name="sb_MQTTSelectBroker">Select broker</string>
     <string name="sb_MQTTSelectOtherDeviceId">Select other device id</string>
-    <string name="sb_ThisDeviceId">This Device Unique Id</string>
+    <string name="sb_ThisDeviceId">This Device Unique Id: </string>
     <string name="sb_MQTT_NoJoinedDevicesYet">No joined devices detected yet</string>
     <string name="sb_MQTT_TurnedOff_ToManyFailedReconnectAttempts">Turned off MQTT after to many failed reconnect attempts</string>
     <string name="sb_MQTT_Connected_to_x">MQTT Connected to %1$s</string>
     <string name="sb_MQTT_Connection_to_x_failed_y">ERROR: MQTT Connection to %1$s failed: %2$s</string>
     <string name="sb_MQTT_Subscription_to_x_failed_y">ERROR: MQTT Subscription to %1$s failed: %2$s</string>
     <string name="sb_MQTT_Subscribed_to_x">MQTT Subscribed to %1$s</string>
-    <string name="sb_mqtt_mirror_as_slave">Act as slave</string>
+    <string name="sb_mqtt_mirror_as_slave">Act as slave of %1$s</string>
     <string name="sb_mqtt_publish_as_master">Act as master</string>
+    <string name="sb_mqtt_match_is_x_for_y">Match is MQTT %1$s for %2$s</string>
 
     <string name="pref_feedFeedsURL">feedFeedsURL</string>
     <string name="pref_feedFeedsURL_summary">For developers only</string>

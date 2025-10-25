@@ -276,6 +276,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <integer name="IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_default">1500</integer>
 
     <bool name="UseMQTT_default__Default">false</bool>
+    <bool name="MQTTDisableInputWhenSlave_default">true</bool>
     <string name="MQTTTopicMatchTemplate__Default">double-yellow/${FeedName}/${Brand}/${DeviceId}/match</string> <!-- with feedname for livescore of single event via public broker -->
     <string name="MQTTTopicUnloadMatchTemplate__Default">double-yellow/${FeedName}/${Brand}/${DeviceId}/unloadmatch</string> <!-- with feedname for livescore of single event via public broker -->
     <string name="MQTTTopicDeviceInfoTemplate__Default">double-yellow/${Brand}/${DeviceId}/deviceInfo</string>
