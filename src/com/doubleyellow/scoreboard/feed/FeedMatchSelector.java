@@ -135,12 +135,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     mFeedPrefOverwrites.put(key, sValue);
                 } catch (Exception e) {
                     // in stead of a PreferenceKeys it can also be a subset of URLsKeys
+                    Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
                     URLsKeys[] keys = new URLsKeys[] { URLsKeys.PostResult, URLsKeys.LiveScoreUrl };
                     for(URLsKeys key: keys) {
                         if ( sPref.equals( key.toString() ) ) {
-                            Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
                             String sCurrent = feedPostDetail.get(key);
-                            if ( sValue.equals(sCurrent) == false ) {
+                            if ( sValue.equals(sCurrent) == false && StringUtil.isNotEmpty(sValue) ) {
                                 feedPostDetail.put(key, sValue);
                                 PreferenceValues.addOrReplaceNewFeedURL(context, feedPostDetail, true, true);
                             }
