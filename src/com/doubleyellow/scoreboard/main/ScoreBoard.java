@@ -3568,7 +3568,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     // toggle between the 2 with Warmup first
                     lastTimerType = Type.Warmup.equals(lastTimerType) ? Type.UntilStartOfFirstGame : Type.Warmup;
                 }
-                showTimer(lastTimerType, false);
+                boolean bAutoTriggered = false;
+                if (ctx != null && ctx.length == 1 && ctx[0] instanceof Boolean) {
+                    bAutoTriggered = (boolean) ctx[0];
+                }
+
+                showTimer(lastTimerType, bAutoTriggered);
                 return true;
             } else if (id == R.id.sb_player_timeout_timer) {
                 _showPlayerTimeoutPlayerChooser();
@@ -3841,9 +3846,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             // correction: do not show timer button after even nr of games
             return;
         }
-        TwoTimerView twoTimerView = getTwoTimerView(timerType);
-        twoTimerView.init(true);
-        addToDialogStack(twoTimerView);
+        if ( lastTimerType == null && timerType.equals(Type.Warmup) ) {
+            handleMenuItem(R.id.sb_timer, true);
+        } else {
+            TwoTimerView twoTimerView = getTwoTimerView(timerType);
+            twoTimerView.init(true);
+            addToDialogStack(twoTimerView);
+        }
     }
 
     private TwoTimerView getTwoTimerView(Type timerType) {
