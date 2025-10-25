@@ -79,7 +79,12 @@ public class MQTTStatusDialog extends BaseAlertDialog {
         String mqttOtherDeviceId = PreferenceValues.getMQTTOtherDeviceId(context);
         adb.setIcon   (R.drawable.mqtt)
            .setTitle(getString(R.string.pref_Category_MQTT) + ": " + PreferenceValues.getLiveScoreDeviceId(context) + ": " + sPrefix)
-           .setMessage("Subscriptions:\n" + subTopics + "\n\nStats:\n" + sPublishStats + "\n\nDevices:\n" + sJoinedDevices + "\n\nOther: " + mqttOtherDeviceId)
+           .setMessage("Subscriptions:\n" + subTopics
+                   + "\n\nOther: " + mqttOtherDeviceId
+                   + "\n\nStats:\n" + sPublishStats
+                   + "\n\nSeen Devices:\n"
+                   + sJoinedDevices
+           )
            .setPositiveButton(R.string.cmd_ok       , dialogClickListener)
            .setNeutralButton (R.string.cmd_stop_temp, dialogClickListener)
            .setNegativeButton(R.string.cmd_stop_mqtt, dialogClickListener)

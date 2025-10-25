@@ -107,6 +107,7 @@ public class MQTTHandler
 
 
     private MQTTStatus m_status = null;
+    private MQTTRole   m_role   = null;
 
     public void reinit(ScoreBoard context, IBoard iBoard, MQTTStatus status) {
         m_context = context;
@@ -216,7 +217,7 @@ public class MQTTHandler
                     }
                 }
 
-                if ( EnumSet.of(MQTTStatus.BecomeMaster).contains(m_status) ) {
+                if ( EnumSet.of(MQTTRole.Master).contains(m_role) ) {
                     final String mqttRespondToTopic_newMatch = getMQTTSubscribeTopic_newMatch();
                     if ( StringUtil.isNotEmpty(mqttRespondToTopic_newMatch) ) {
                         Log.d(TAG, "Subscribing to " + mqttRespondToTopic_newMatch);
@@ -227,7 +228,7 @@ public class MQTTHandler
                 final String mqttSubScribeToTopic_Change = getMQTTSubscribeTopic_Change(null);
                 if ( StringUtil.isNotEmpty(mqttSubScribeToTopic_Change) ) {
 
-                    if ( EnumSet.of(MQTTStatus.BecomeSlave).contains(m_status) ) {
+                    if ( EnumSet.of(MQTTRole.Slave).contains(m_role) ) {
                         // listen for changes on
                         Log.d(TAG, "Subscribing to " + mqttSubScribeToTopic_Change);
                         subscribe(mqttSubScribeToTopic_Change, null);
@@ -411,7 +412,7 @@ public class MQTTHandler
             return false;
         }
 
-        if ( MQTTStatus.BecomeSlave.equals(m_status) ) {
+        if ( MQTTRole.Slave.equals(m_role) ) {
             // do only publish subset of methods
             if ( EnumSet.of(BTMethods.changeScore, BTMethods.timestampStartOfGame, BTMethods.startTimer, BTMethods.cancelTimer).contains(method) ) {
                 Log.d(TAG, "Not publishing as slave : " + method);
@@ -447,7 +448,7 @@ public class MQTTHandler
         if ( isConnected() == false ) {
             return false;
         }
-        if ( MQTTStatus.BecomeSlave.equals(m_status) ) {
+        if ( MQTTRole.Slave.equals(m_role) ) {
             Log.d(TAG, "Not publishing match as slave : " + bPrefixWithJsonLength + " " + oTimerInfo);
             return false;
         }

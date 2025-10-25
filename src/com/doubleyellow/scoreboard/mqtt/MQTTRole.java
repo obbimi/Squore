@@ -14,17 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.doubleyellow.scoreboard.mqtt;
 
-public enum MQTTStatus {
-    IconClick,
-    OnActivityResume,
-    OnChangedSettings,
-    OpenSelectDeviceDialog,
-    BrokerChangeInDialog,
-    CloseSelectDeviceDialog,
-
-    RetryConnection,
-
+public enum MQTTRole {
+    None,
+    Discovery,
+    Master,
+    Slave,
 }
