@@ -2222,9 +2222,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             // automatically semi-lock the model (unless it was already manually unlocked)
             if ( matchModel.matchHasEnded() ) {
                 if (PreferenceValues.lockMatchMV(ScoreBoard.this).contains(AutoLockContext.AtEndOfMatch)) {
-                    if (matchModel.getLockState().equals(LockState.UnlockedManual) == false) {
-                        matchModel.setLockState(LockState.UnlockedEndOfFinalGame);
-                    }
+                    matchModel.setLockState(LockState.UnlockedEndOfFinalGame);
                 }
             }
 
