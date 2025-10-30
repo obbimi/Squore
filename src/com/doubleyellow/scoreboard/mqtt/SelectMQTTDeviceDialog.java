@@ -96,7 +96,7 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
         mqttRoleIsSlaveButton.setText(defaultRole.toString());
         ll.addView(mqttRoleIsSlaveButton);
         mqttRoleIsSlaveButton.setOnCheckedChangeListener((buttonView, checkedIsSlave) -> {
-            llDevices.setVisibility(checkedIsSlave ? View.VISIBLE : View.INVISIBLE);
+            llDevices.setVisibility(checkedIsSlave ? View.VISIBLE : View.GONE);
         });
 
         // add a view with all possible devices and let user choose one
@@ -109,7 +109,7 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
             sovDevices = refreshSelectList(lNew);
             llDevices.addView(sovDevices);
         } );
-        llDevices.setVisibility(isSlave ? View.VISIBLE : View.INVISIBLE);
+        llDevices.setVisibility(isSlave ? View.VISIBLE : View.GONE);
 
         int iNoIconSize = PreferenceValues.getAppealHandGestureIconSize(context); // Yeghh: used to size the text...
 

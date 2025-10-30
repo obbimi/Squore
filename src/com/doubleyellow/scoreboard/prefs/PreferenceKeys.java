@@ -56,7 +56,7 @@ public enum PreferenceKeys {
         showTips(Boolean.class),
         /** @Deprecated */
         lockMatch(null),
-        lockMatchMV(null),
+        lockMatchMV(AutoLockContext.class),
             numberOfMinutesAfterWhichToLockMatch(Integer.class),
         BackKeyBehaviour(BackKeyBehaviour.class),
         VolumeKeysBehaviour(VolumeKeysBehaviour.class),

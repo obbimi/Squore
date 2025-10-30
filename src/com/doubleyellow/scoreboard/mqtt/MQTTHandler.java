@@ -28,6 +28,7 @@ import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.JSONKey;
 import com.doubleyellow.scoreboard.model.Model;
+import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.util.BatteryInfo;
 import com.doubleyellow.scoreboard.vico.IBoard;
@@ -211,7 +212,7 @@ public class MQTTHandler
             if ( m_status.equals(MQTTStatus.OpenSelectDeviceDialog) ) {
                 // not interested in other actions just yet
             } else {
-                if ( EnumSet.of(MQTTRole.Slave, MQTTRole.Master).contains(m_role) ) {
+                if ( true /*EnumSet.of(MQTTRole.Slave, MQTTRole.Master).contains(m_role)*/ ) {
                     // listen for 'clients' to request the complete json of a match specifically of this device
                     // for now do this for both master and slave
                     final String mqttRespondToTopic = getMQTTSubscribeTopic_Change(BTMethods.requestCompleteJsonOfMatch.toString());
@@ -265,6 +266,7 @@ public class MQTTHandler
                     m_iReconnectAttempts++;
                 }
             } else {
+                PreferenceValues.setOverwrite(PreferenceKeys.UseMQTT, false);
                 m_context.stopMQTT();
                 m_context.updateMQTTConnectionStatusIconOnUiThread(View.INVISIBLE, -1);
                 m_context.showInfoMessageOnUiThread(m_context.getString(R.string.sb_MQTT_TurnedOff_ToManyFailedReconnectAttempts), 10);

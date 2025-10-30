@@ -1564,7 +1564,7 @@ public class PreferenceValues extends RWValues
             return getInteger(PreferenceKeys.timerWarmup, context, 300);
         }
         public static int timerPauseBetweenGames(Context context) {
-            return getInteger(PreferenceKeys.timerPauseBetweenGames, context, 90);
+            return getInteger(PreferenceKeys.timerPauseBetweenGames, context, 120);
         }
     */
     public static HandicapFormat getHandicapFormat(Context context) {
