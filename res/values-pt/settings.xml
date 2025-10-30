@@ -209,7 +209,7 @@
     <string name="pref_timerWarmup">Número de segundos para aquecimento</string>
     <string name="pref_timerWarmup_summary">O número de segundos que os jogadores têm para um aquecimento no campo. Oficialmente 4 minutos: 2 minutos de cada lado</string>
     <string name="pref_timerPauseBetweenGames">O número de segundos entre os jogos</string>
-    <string name="pref_timerPauseBetweenGames_summary">O número de segundos antes do próximo jogo começar. Oficialmente, 90 segundos. (PSA: 120)</string>
+    <string name="pref_timerPauseBetweenGames_summary">O número de segundos antes do próximo jogo começar. Oficialmente, 120 segundos.</string>
     <string name="pref_timerPauseBetweenGames_values">Valores selecionáveis para o tempo entre os jogos</string>
     <string name="pref_timerPauseBetweenGames_values_summary">Valores selecionáveis no início de uma nova partida para o número de segundos entre os jogos dessa partida (normalmente 90 ou 120)</string>
     <string name="pref_timerWarmup_values">Valores selecionáveis para aquecimento</string>

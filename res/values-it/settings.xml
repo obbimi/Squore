@@ -214,7 +214,7 @@
     <string name="pref_timerWarmup">Numero di secondi per il riscaldamento</string>
     <string name="pref_timerWarmup_summary">Il numero di secondi che i giocatori hanno per riscaldarsi in campo. Ufficialmente 4 minuti: 2 minuti per lato</string>
     <string name="pref_timerPauseBetweenGames">Il numero di secondi tra un gioco e l\'altro</string>
-    <string name="pref_timerPauseBetweenGames_summary">Il numero di secondi prima che il prossimo gioco deve iniziare. Ufficialmente 90 secondi. (PSA: 120)</string>
+    <string name="pref_timerPauseBetweenGames_summary">Il numero di secondi prima che il prossimo gioco deve iniziare. Ufficialmente 120 secondi.</string>
     <string name="pref_timerPauseBetweenGames_values">Valori selezionabili per il tempo tra un gioco e l\'altro</string>
     <string name="pref_timerPauseBetweenGames_values_summary">Valori selezionabili all\'inizio d\'un nuovo incontro per il numero dei secondi tra un gioco e l\'altro di quel incontro (in genere 90 o 120)</string>
     <string name="pref_timerWarmup_values">Valori selezionabili per il riscaldamento</string>

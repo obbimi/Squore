@@ -269,7 +269,7 @@
     <string name="pref_timerWarmup">Zeit Aufwärmphase</string>
     <string name="pref_timerWarmup_summary">Zeit für die Aufwärmphase in Sekunden.\nOffiziell: 240 Sekunden; 120 pro Seite.</string>
     <string name="pref_timerPauseBetweenGames">Zeit Satzpausen</string>
-    <string name="pref_timerPauseBetweenGames_summary">Zeit für die Satzpausen.\nOffiziell: 90 Sekunden (PSA: 120).</string>
+    <string name="pref_timerPauseBetweenGames_summary">Zeit für die Satzpausen.\nOffiziell: 120 Sekunden.</string>
     <string name="pref_timerPauseBetweenGames_values">Zeiten der Satzpause</string>
     <string name="pref_timerPauseBetweenGames_values_summary">Auswahlliste für die Zeiten der Satzpause (normalerweise 90 oder 120).</string>
     <string name="pref_timerWarmup_values">Zeiten der Aufwärmphase</string>

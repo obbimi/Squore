@@ -228,7 +228,7 @@
     <string name="pref_timerWarmup">Aantal seconden voor warm-up</string>
     <string name="pref_timerWarmup_summary">Het aantal seconden spelers krijgen voor on-court warming-up. Officieel 4 minuten: 2 minuten per kant</string>
     <string name="pref_timerPauseBetweenGames">Aantal seconden rust tussen games</string>
-    <string name="pref_timerPauseBetweenGames_summary">Het aantal seconden dat de spelers mogen rusten tussen 2 games. Officieel 90 seconden. (PSA: 120)</string>
+    <string name="pref_timerPauseBetweenGames_summary">Het aantal seconden dat de spelers mogen rusten tussen 2 games. Officieel 120 seconden.</string>
     <string name="pref_timerPauseBetweenGames_values">Waarden voor de tijd tussen 2 games</string>
     <string name="pref_timerPauseBetweenGames_values_summary">Selecteerbare waarden bij aanvang van een match voor het aantal seconden tussen 2 games (standaard 90 of 120)</string>
     <string name="pref_timerWarmup_values">Selecteerbare waarden voor warmup</string>

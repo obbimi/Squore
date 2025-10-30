@@ -236,7 +236,7 @@ Deje que el dispositivo vibre cuando termine el temporizador (y cuando queden 15
     <string name="pref_timerWarmup">Número de segundos para el calentamiento.</string>
     <string name="pref_timerWarmup_summary">La cantidad de segundos que los jugadores obtienen para un calentamiento en la pista. Oficialmente 4 minutos: 2 minutos por lado</string>
     <string name="pref_timerPauseBetweenGames">El número de segundos entre juegos</string>
-    <string name="pref_timerPauseBetweenGames_summary">El número de segundos antes de que comience el próximo juego. Oficialmente 90 segundos. (PSA: 120)</string>
+    <string name="pref_timerPauseBetweenGames_summary">El número de segundos antes de que comience el próximo juego. Oficialmente 120 segundos.</string>
     <string name="pref_timerPauseBetweenGames_values">Valores seleccionables para el tiempo entre juegos</string>
     <string name="pref_timerPauseBetweenGames_values_summary">
 Valores seleccionables al comienzo de una nueva partida para la cantidad de segundos entre juegos para esa partida (generalmente 90 o 120)</string>
