@@ -4696,6 +4696,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         ChangeLog changeLog = new ChangeLog(this);
         show(changeLog);
     }
+    private synchronized void show(IBaseAlertDialog dialog) {
+        persist(false);
+        dialogManager.show(dialog);
+    }
 
     private void showCredits() {
         Credits credits = new Credits(this);

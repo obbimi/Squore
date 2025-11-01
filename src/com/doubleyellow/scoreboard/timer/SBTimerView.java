@@ -191,7 +191,8 @@ public class SBTimerView implements TimerView
                     Timer.countDownTimer.stop();
                 }
                 if ( scoreBoard != null ) {
-                    scoreBoard.triggerEvent(ScoreBoard.SBEvent.timerCancelled, ScoreBoard.timer.timerType);
+                    scoreBoard.cancelTimer();
+                    //scoreBoard.triggerEvent(ScoreBoard.SBEvent.timerCancelled, ScoreBoard.timer.timerType);
                 }
             } else {
                 onClick(view);
