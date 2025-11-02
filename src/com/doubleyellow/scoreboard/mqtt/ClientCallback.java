@@ -19,7 +19,6 @@ package com.doubleyellow.scoreboard.mqtt;
 import android.util.Log;
 
 import com.doubleyellow.scoreboard.bluetooth.BTMethods;
-import com.doubleyellow.scoreboard.bluetooth.MessageSource;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -30,7 +29,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClientCallback implements MqttCallback
+class ClientCallback implements MqttCallback
 {
     private ClientCallback() {
 
@@ -51,7 +50,13 @@ public class ClientCallback implements MqttCallback
         String msg = String.format("MQTT Received: %s [%s]", message.toString(), topic );
         //Log.d(TAG, msg);
 
-        if ( topic.matches(".*\\b" + PreferenceValues.getLiveScoreDeviceId(m_handler.m_context) + "\\b.*") ) {
+        MQTTAction mqttAction = null;
+        String sNewMatchTopicEnd = PreferenceValues.getMQTTSubscribeTopic_newMatch(m_handler.m_context).replaceFirst(".*/", "");
+        if ( topic.endsWith(sNewMatchTopicEnd) ) {
+            mqttAction = MQTTAction.newMatch;
+        }
+
+        if ( mqttAction == null && topic.matches(".*\\b" + PreferenceValues.getLiveScoreDeviceId(m_handler.m_context) + "\\b.*") ) {
             // show but ignore for further processing, messages published by this device itself
             m_handler.m_context.showInfoMessageOnUiThread(msg, 1);
         } else {
@@ -96,7 +101,7 @@ public class ClientCallback implements MqttCallback
             }
 
             m_MQTTmessageReceived.put(sPayload, lNow);
-            m_handler.m_context.interpretReceivedMessageOnUiThread(sPayload, MessageSource.MQTT);
+            m_handler.m_context.interpretReceivedMessageOnUiThread(sPayload, mqttAction, topic);
         }
     }
 

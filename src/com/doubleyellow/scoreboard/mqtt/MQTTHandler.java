@@ -348,7 +348,7 @@ public class MQTTHandler
         }
     }
 
-    boolean publish(String topic, String msg, boolean bRetain) {
+    public boolean publish(String topic, String msg, boolean bRetain) {
         if ( topic == null ) {
             Log.w(TAG, "Topic can not be null");
             return false;
@@ -411,7 +411,7 @@ public class MQTTHandler
     private String getMQTTSubscribeTopic_newMatch() {
         String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic_newMatch(m_context);
 
-        return doMQTTTopicTranslation(sPlaceholder, m_otherDeviceId);
+        return doMQTTTopicTranslation(sPlaceholder, m_thisDeviceId);
     }
 
     public boolean publishOnMQTT(BTMethods method, Object... args) {

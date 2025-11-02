@@ -210,7 +210,10 @@ public class ExportImportPrefs extends DialogPreference
             }
             sMsg = context.getString(R.string.pref_RemoteConfig_X_SettingChanged, iChanges, sUrl);
             if ( iChanges < 5 ) {
-                sMsg = sMsg + "\n\n" + ListUtil.join(mToBeOverwritten.keySet(), "\n") ;
+                sMsg = sMsg + "\n\n" + ListUtil.join(mToBeOverwritten.keySet(), "\n");
+                if ( MapUtil.size(mToBeOverwritten) < iChanges ) {
+                    sMsg = sMsg + "\n" + ListUtil.join(mInserts.keySet(), "\n");
+                }
             }
             iMsgDuration = 10;
         } else {

@@ -91,6 +91,7 @@ import com.doubleyellow.scoreboard.feed.Preloader;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.mqtt.JoinedDevicesListener;
+import com.doubleyellow.scoreboard.mqtt.MQTTAction;
 import com.doubleyellow.scoreboard.mqtt.MQTTHandler;
 import com.doubleyellow.scoreboard.mqtt.MQTTRole;
 import com.doubleyellow.scoreboard.mqtt.MQTTStatus;
@@ -2631,7 +2632,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             EnumSet<AutoLockContext> autoLockContexts = PreferenceValues.lockMatchMV(ScoreBoard.this);
             if ( autoLockContexts.contains(AutoLockContext.AtEndOfMatch) ) {
                 LockState lockState = matchModel.getLockState();
-                if ( lockState.equals(LockState.UnlockedManual) == false || matchModel.getName(Player.A).equals("Shaun") || Brand.isNotSquash() ) {
+                if ( lockState.equals(LockState.UnlockedManual) == false || Brand.isNotSquash() ) {
                     LockState newLS = endMatchManuallyBecause!=null
                                     ? (endMatchManuallyBecause.equals(EndMatchManuallyBecause.ConductMatch)?LockState.LockedEndOfMatchConduct:((endMatchManuallyBecause.equals(EndMatchManuallyBecause.RetiredBecauseOfInjury)?LockState.LockedEndOfMatchRetired:LockState.LockedEndOfMatchTimeBased)))
                                     : LockState.LockedEndOfMatch;
@@ -5963,11 +5964,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     private int           iReceivingBTFileLength = 0;
     /** Buffer with file content */
     private StringBuilder sbReceivingBTFile      = new StringBuilder();
+    public synchronized void interpretReceivedMessageOnUiThread(String readMessage, MQTTAction mqttAction, String sTopic) {
+        runOnUiThread(() -> interpretReceivedMessage(readMessage, MessageSource.MQTT, mqttAction, sTopic));
+    }
     public synchronized void interpretReceivedMessageOnUiThread(String readMessage, MessageSource source) {
-        runOnUiThread(() -> interpretReceivedMessage(readMessage, source));
+        runOnUiThread(() -> interpretReceivedMessage(readMessage, source, null, null));
     }
     /** Invoked by BluetoothHandler, BLEHandler, WearableHelper.MessageListener and PusherHandler */
-    public synchronized void interpretReceivedMessage(String readMessage, MessageSource msgSource) {
+    public synchronized void interpretReceivedMessage(String readMessage, MessageSource msgSource, MQTTAction mqttAction, String sTopic) {
 
         if ( readMessage.startsWith(BTMethods.requestCompleteJsonOfMatch.toString())) {
             // don't blindly pass on this type of message to wearable
@@ -5980,6 +5984,47 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             } else {
                 // message did not come from wearable: also pass on to wearable
                 sendMessageToWearables(readMessage);
+            }
+        }
+
+        if ( msgSource.equals(MessageSource.MQTT) ) {
+            String sThisDeviceId = PreferenceValues.getLiveScoreDeviceId(this);
+            switch (mqttAction) {
+                case newMatch:
+                    final String accepted = "accepted";
+                    Map<String, Object> mResponse = new HashMap<>();
+                    try {
+                        persist(false);
+                        mResponse.put(JSONKey.device.toString(), sThisDeviceId);
+                        if ( matchModel.hasStarted() && matchModel.matchHasEnded() == false ) {
+                            mResponse.put(accepted, false);
+                            mResponse.put(JSONKey.Message.toString(), "Match in progress: " + matchModel.getName(Player.A) + "-" + matchModel.getName(Player.B) + ". Current score: " + matchModel.getGameScores());
+                        } else {
+                            // first see if it is valid json
+                            JSONObject joMatch = new JSONObject(readMessage);
+
+                            // check if most important key exists
+                            if ( joMatch.has(JSONKey.players.toString()) == false ) {
+                                throw new JSONException(String.format("JSON of %1$s must at least specify '%2$s', "
+                                                + "optionally also '%3$s', '%4$s' and '%5$s', all with subkeys A and B. Additionally allowed: 'court', 'event.(name|division|round|location)'  "
+                                        , mqttAction
+                                        , JSONKey.players, JSONKey.clubs, JSONKey.colors, JSONKey.countries));
+                            }
+                            Intent intent = new Intent();
+                            intent.putExtra(IntentKeys.NewMatch.toString(), readMessage);
+                            Match.dontShow();
+                            onActivityResult(0, 0, intent);
+                            mResponse.put(accepted, true);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        mResponse.put(accepted, false);
+                        mResponse.put(JSONKey.Message.toString(), e.getMessage());
+                    }
+                    m_MQTTHandler.publish(sTopic.replace("/" + sThisDeviceId, ""), (new JSONObject(mResponse)).toString(), false);
+                    return;
+                default:
+                    break;
             }
         }
 
