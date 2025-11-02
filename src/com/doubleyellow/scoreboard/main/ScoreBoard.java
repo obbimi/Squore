@@ -2861,6 +2861,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     timestampStartOfGame(GameTiming.ChangedBy.TimerStarted);
                 }
                 if ( (bInitializingModelListeners == false) && m_liveScoreShare ) {
+                    if ( m_delayedModelPoster != null ) {
+                        m_delayedModelPoster.cancel();
+                        m_delayedModelPoster = null;
+                    }
                     Type timerType = (Type) ctx;
                     postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, timerType, iCtx);
                 }
@@ -4586,7 +4590,15 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         @Override public void onFinish() {
             Log.d(TAG, "Posting/Publishing ... ");
-            postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, null, -1);
+            if ( ScoreBoard.timer != null ) {
+                int secondsLeft = ScoreBoard.timer.getSecondsLeft();
+                if ( secondsLeft == -1 ) {
+                    secondsLeft = ScoreBoard.timer.timerType.getDefaultSecs();
+                }
+                postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, ScoreBoard.timer.timerType, secondsLeft);
+            } else {
+                postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, null, -1);
+            }
         }
     }
     private DelayedModelPoster m_delayedModelPoster = null;
