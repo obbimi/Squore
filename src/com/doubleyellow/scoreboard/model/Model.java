@@ -1057,9 +1057,15 @@ public abstract class Model implements Serializable
 
         return true;
     }
-    public synchronized void undoLast() {
+    private boolean m_bIsUndo = false;
+    private void setForUndo(boolean b) {
+        if ( b != m_bIsUndo ) {
+            m_bIsUndo = b;
+        }
+    }
 
-        setDirty(true); // ensure gameball etc must be recalculated
+    public synchronized void undoLast() {
+        setDirty(true, true); // ensure gameball etc must be recalculated
 
         switch (m_halfwayStatus) {
             case Exactly:
@@ -3056,14 +3062,15 @@ public abstract class Model implements Serializable
 
         if ( oSettings == null ) {
             // next few are only for 'livescore' to be able to show server, serveside and optionally handout. Not used when reading back in the model
-            jsonObject.put(JSONKey.server   .toString(), getServer());
-            jsonObject.put(JSONKey.serveSide.toString(), getNextServeSide(getServer()));
             if ( this instanceof SquashModel ) {
-                jsonObject.put(JSONKey.isHandOut   .toString(), isLastPointHandout());
+                jsonObject.put(JSONKey.isHandOut.toString(), isLastPointHandout());
             }
             Player[] possibleMatchBallFor = isPossibleMatchBallFor();
-            jsonObject.put(JSONKey.isGameBall  .toString(), isPossibleGameBallFor(Player.A) || isPossibleGameBallFor(Player.B));
-            jsonObject.put(JSONKey.isMatchBall .toString(), (possibleMatchBallFor != null) && (possibleMatchBallFor.length!=0) );
+            jsonObject.put(JSONKey.server     .toString(), getServer());
+            jsonObject.put(JSONKey.serveSide  .toString(), getNextServeSide(getServer()));
+            jsonObject.put(JSONKey.isGameBall .toString(), isPossibleGameBallFor(Player.A) || isPossibleGameBallFor(Player.B));
+            jsonObject.put(JSONKey.isMatchBall.toString(), (possibleMatchBallFor != null) && (possibleMatchBallFor.length!=0) );
+            jsonObject.put(JSONKey.isUndo     .toString(), m_bIsUndo);
 
             if ( oTimerInfo != null ) {
                 jsonObject.put(JSONKey.timerInfo.toString(), oTimerInfo);
@@ -3828,6 +3835,9 @@ public abstract class Model implements Serializable
     }
     /** ensure certain inner members (player having matchball, player having gameball) are recalculated */
     protected void setDirty(boolean bScoreRelated) {
+        setDirty(bScoreRelated, null);
+    }
+    protected void setDirty(boolean bScoreRelated, Boolean bForUndo) {
         m_iDirty++;
         if ( m_bReadingJsonInProgress ) {
             // speed up the reading
@@ -3840,6 +3850,11 @@ public abstract class Model implements Serializable
 
             m_sResultFast = null;
             clearPossibleGSM();
+        }
+        if ( bForUndo != null ) {
+            setForUndo(bForUndo);
+        } else if ( bScoreRelated) {
+            setForUndo(false);
         }
 
         if ( false && bScoreRelated ) {

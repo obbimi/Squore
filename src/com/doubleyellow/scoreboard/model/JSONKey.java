@@ -29,6 +29,7 @@ public enum JSONKey {
 		isGameBall,
 		isMatchBall,
 		isVictoryFor,
+		isUndo,
 	referee,
 		markers,
 		assessors,
