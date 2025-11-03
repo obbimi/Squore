@@ -26,6 +26,7 @@ import android.webkit.WebView;
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
+import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.util.StringUtil;
 
@@ -149,7 +150,9 @@ public class MyDialogBuilder extends AlertDialog.Builder {
             if ( sMsg.trim().toLowerCase().endsWith("html>") ) {
                 try {
                     WebView wv = new WebView(context); // seen this crash because of unclear reasons on android5
-                    wv.loadData(sMsg, "text/html; charset=utf-8", "UTF-8");
+                    //wv.loadData(sMsg, "text/html; charset=utf-8", "UTF-8"); // css not displayed
+                    //wv.loadData(sMsg, "text/html", "UTF-8"); // css not displayed
+                    wv.loadDataWithBaseURL(URLFeedTask.prefixWithBaseIfRequired("/"), sMsg, "text/html; charset=utf-8", "UTF-8", null); // allows css
                     ab.setView(wv);
                 } catch (Exception e) {
                     Log.w(TAG, "Could not initialize webview");
