@@ -152,6 +152,7 @@
     <string name="match_is_now_locked">Match is now locked</string>
     <string name="match_is__locked">Match is locked</string>
     <string name="match_is_now_unlocked">Match is now unlocked</string>
+    <string name="match_has_ended__increasing_score_not_allowed">Match has ended. Score can not be increased.</string>
 
     <string name="Uncompleted">Uncompleted</string>
     <string name="Completed">Completed</string>

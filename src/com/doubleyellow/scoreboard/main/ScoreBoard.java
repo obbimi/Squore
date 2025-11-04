@@ -3718,13 +3718,15 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         startActivity(matchHistory);
     }
 
-    public static Evaluation.ValidationResult brandedVersionValidation = Evaluation.ValidationResult.OK;
+    //public static Evaluation.ValidationResult brandedVersionValidation = Evaluation.ValidationResult.OK;
 
     private boolean warnModelIsLocked(boolean bIgnoreForConduct, int iBlockingActionId, Object... ctx) {
+/*
         if ( (brandedVersionValidation != Evaluation.ValidationResult.OK) && (brandedVersionValidation != Evaluation.ValidationResult.NoDate) ) {
             iBoard.showToast(String.format("Sorry, %s can no longer be used (%s)", Brand.getShortName(this), brandedVersionValidation));
             return true;
         }
+*/
         if ( ScoreBoard.m_MQTTHandler != null ) {
             MQTTRole role = ScoreBoard.m_MQTTHandler.getRole();
             if ( MQTTRole.Slave.equals(role) && PreferenceValues.disableInputWhenMQTTSlave(this) ) {
@@ -3733,13 +3735,26 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 return true;
             }
         }
-        if ( (matchModel == null) || (matchModel.isLocked() == false) ) { return false; }
+        if ( (matchModel == null) || (matchModel.isLocked() == false) ) {
+            if ( matchModel != null && matchModel.matchHasEnded() ) {
+                if ( matchModel.sourceIsHttpFeed()
+                 && (  iBlockingActionId == R.id.pl_change_score
+                    || iBlockingActionId == R.id.pl_show_appeal
+                    )
+                ) {
+                    iBoard.showInfoMessage(getString(R.string.match_has_ended__increasing_score_not_allowed), 3);
+                    return true;
+                }
+            }
+            return false;
+        }
+        final LockState lockState = matchModel.getLockState();
         if ( bIgnoreForConduct ) {
-            if ( matchModel.getLockState().AllowRecordingConduct() ) {
+            if ( lockState.AllowRecordingConduct() ) {
                 return false;
             }
         }
-        if ( matchModel.getLockState().equals(LockState.LockedManualGUI)) {
+        if ( lockState.equals(LockState.LockedManualGUI)) {
             iBoard.showToast(R.string.match_is__locked);
         } else {
             LockedMatch lockedMatch = new LockedMatch(this, matchModel, this);
@@ -5658,7 +5673,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     private boolean undoLast() {
-        if ( warnModelIsLocked() ) { return false; }
+        if ( warnModelIsLocked(R.id.sb_undo_last) ) { return false; }
         if ( matchModel == null ) { return false; }
         enableScoreButton(matchModel.getServer());
         matchModel.undoLast();
