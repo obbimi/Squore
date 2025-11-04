@@ -71,7 +71,9 @@
     <string name="pref_MQTTBrokerURL_Custom">Custom Broker URL</string>
     <string name="pref_MQTTBrokerURL_Summary">Either a public or private broker can be used. By default, a public broker without authentication is configured</string>
     <string name="pref_MQTTPublishTopicMatch">Publish Match Topic</string>
+    <string name="pref_MQTTPublishTopicUnloadMatch">Unload Match Topic</string>
     <string name="pref_MQTTPublishTopicMatch_Summary">Topic placeholder when publishing the complete match status in json</string>
+    <string name="pref_MQTTPublishTopicUnloadMatch_Summary">Topic placeholder when unloading a match (before starting an other)</string>
     <string name="pref_MQTTPublishTopicDeviceInfo">Publish Device Info</string>
     <string name="pref_MQTTPublishTopicDeviceInfo_Summary">Topic placeholder when publishing device info like battery status</string>
     <string name="pref_MQTTPublishJoinerLeaverTopic">Joiner/Leaver Topic</string>
