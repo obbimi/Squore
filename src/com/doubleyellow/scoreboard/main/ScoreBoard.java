@@ -631,6 +631,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         m_bHapticFeedbackPerPoint  = PreferenceValues.hapticFeedbackPerPoint(ScoreBoard.this);
         m_bHapticFeedbackOnGameEnd = PreferenceValues.hapticFeedbackOnGameEnd(ScoreBoard.this);
+        m_autoLockContexts         = PreferenceValues.lockMatchMV(this);
+        m_iLockAfterXMinutes       = PreferenceValues.numberOfMinutesAfterWhichToLockMatch(this);
 
         initColors();
         initCountries();
@@ -1442,10 +1444,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             if ( fJson != null && fJson.exists() ) {
                 try {
                     bReadFromJsonOK = matchModel.fromJsonString(fJson);
-                    if ( PreferenceValues.lockMatchMV(this).contains(AutoLockContext.WhenMatchIsUnchangeForX_Minutes)) {
-                        final int iMinutes = PreferenceValues.numberOfMinutesAfterWhichToLockMatch(this);
-                        if ( iMinutes > 0 ) {
-                            matchModel.lockIfUnchangedFor(iMinutes);
+                    if ( m_autoLockContexts.contains(AutoLockContext.WhenMatchIsUnchangeForX_Minutes)) {
+                        if ( m_iLockAfterXMinutes > 0 ) {
+                            matchModel.lockIfUnchangedFor(m_iLockAfterXMinutes);
                         }
                     }
                     iBoard.setModel(matchModel);
@@ -3720,6 +3721,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     //public static Evaluation.ValidationResult brandedVersionValidation = Evaluation.ValidationResult.OK;
 
+    private EnumSet<AutoLockContext> m_autoLockContexts   = EnumSet.of(AutoLockContext.AtEndOfMatch);
+    private int                      m_iLockAfterXMinutes = 10;
+
     private boolean warnModelIsLocked(boolean bIgnoreForConduct, int iBlockingActionId, Object... ctx) {
 /*
         if ( (brandedVersionValidation != Evaluation.ValidationResult.OK) && (brandedVersionValidation != Evaluation.ValidationResult.NoDate) ) {
@@ -3735,6 +3739,15 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 return true;
             }
         }
+        if ( (matchModel == null) || (matchModel.isLocked() == false) ) {
+            // check if we want to lock it because of idle time
+            if ( m_autoLockContexts.contains(AutoLockContext.WhenMatchIsUnchangeForX_Minutes)) {
+                if ( m_iLockAfterXMinutes > 0 ) {
+                    matchModel.lockIfUnchangedFor(m_iLockAfterXMinutes);
+                }
+            }
+        }
+
         if ( (matchModel == null) || (matchModel.isLocked() == false) ) {
             if ( matchModel != null && matchModel.matchHasEnded() ) {
                 if ( matchModel.sourceIsHttpFeed()
@@ -4286,6 +4299,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 for(PreferenceKeys changeKey: lChangedSetting ) {
                     switch (changeKey) {
                         case blinkFeedbackPerPoint:
+                        case numberOfMinutesAfterWhichToLockMatch:
+                            m_iLockAfterXMinutes       = PreferenceValues.numberOfMinutesAfterWhichToLockMatch(this);
+                            break;
                         case numberOfBlinksForFeedbackPerPoint:
                             if ( m_timerScoreChangedFeedBack != null ) {
                                 m_timerScoreChangedFeedBack.myCancel();

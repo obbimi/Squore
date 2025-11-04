@@ -2221,7 +2221,8 @@ public abstract class Model implements Serializable
             // already locked... don't change to LockedIdleTime if already locked
             return;
         }
-        final long iNrOfMinutesUnchanged = DateUtil.convertToMinutes(System.currentTimeMillis() - m_tsLastJsonOperation);
+        long lDiffInMilliSecs = System.currentTimeMillis() - m_tsLastJsonOperation;
+        final long iNrOfMinutesUnchanged = DateUtil.convertToMinutes(lDiffInMilliSecs);
         if ( (iNrOfMinutesUnchanged > iMinNrOfMinutesUnchanged) && hasStarted() ) {
             setLockState(LockState.LockedIdleTime);
         }
@@ -2279,7 +2280,7 @@ public abstract class Model implements Serializable
             return false;
         }
         JSONObject jo    = fromJsonString(sJson, bStopAfterEventNamesDateTimeResult);
-        m_tsLastJsonOperation = f.lastModified();
+        m_tsLastJsonOperation = Math.max(f.lastModified(),m_tsLastJsonOperation);
         return (jo != null);
     }
 
@@ -3937,8 +3938,11 @@ public abstract class Model implements Serializable
             return;
         }
 
-        if (  m_lockState.equals(lockState) == false ) {
+        if ( m_lockState.equals(lockState) ) {
+            return;
+        } else {
             setDirty(false);
+            m_tsLastJsonOperation = System.currentTimeMillis();
         }
         LockState old = m_lockState;
         m_lockState = lockState;
