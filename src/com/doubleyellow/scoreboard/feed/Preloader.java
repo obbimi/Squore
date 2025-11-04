@@ -218,6 +218,7 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                 if ( m_status.equals(Status.WebConfig) ) {
                     try {
                         JSONObject config = new JSONObject(sContent);
+/*
                         if ( Brand.Squore.equals(Brand.brand) ) {
                             Evaluation.ValidationResult eval = Evaluation.check( Brand.brand.toString()
                                                                                , config.optString(Evaluation.Config.ValidUntil          + "-" + Brand.brand)
@@ -227,6 +228,7 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                             Log.d(TAG, "Evaluation result " + eval);
                             ScoreBoard.brandedVersionValidation = eval;
                         }
+*/
                         final String C_CastConfig = "CastConfig";
                         if ( config.has(C_CastConfig) ) {
                             JSONObject castConfig = config.getJSONObject(C_CastConfig);
