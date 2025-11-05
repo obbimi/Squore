@@ -227,6 +227,12 @@
         <item>Digits in the middle</item>
         <item>Hide serve side</item>
     </string-array>
+    <string-array name="kioskMode_DisplayValues">
+        <item>Not used</item>
+        <item>Matches From Single Feed</item>
+        <item>Published MQTT Matches Only</item>
+        <item>Manual Matches Only</item>
+    </string-array>
     <string-array name="NewMatchLayout_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.NewMatchLayout -->
         <item>All fields (incl. country, club, event, referee)</item>

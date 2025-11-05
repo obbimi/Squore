@@ -29,6 +29,7 @@ import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.TabletennisModel;
 import com.doubleyellow.scoreboard.prefs.BackKeyBehaviour;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+import com.doubleyellow.scoreboard.prefs.KioskMode;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.vico.IBoard;
@@ -90,9 +91,19 @@ class ServerSideButtonListener extends ScoreBoardListener implements View.OnClic
                         //, R.id.android_language
                 };
                 int iToggled = ViewUtil.setMenuItemsVisibility(scoreBoard.mainMenu, iMenuIds, true);
-                if ( iMenuIds[0] == R.id.sb_ble_devices ) {
+
+                if ( scoreBoard.m_bleConfigHandler != null ) {
                     scoreBoard.m_bleConfigHandler.promoteAppToUseBLE();
                 }
+                KioskMode kioskMode = PreferenceValues.getKioskMode(scoreBoard);
+                if ( ! kioskMode.equals(KioskMode.NotUsed) ) {
+                    PreferenceValues.setEnum(PreferenceKeys.kioskMode, scoreBoard, KioskMode.NotUsed);
+                    scoreBoard.showInfoMessage("Abandoning kiosk mode...", 5);
+                    //scoreBoard.doRestart(); // don't restart if e.g. RemoteSettings url is used. It might go straight back in kioskmode.
+                    scoreBoard.reinitMenu();
+                    return;
+                }
+
                 if ( iToggled > 1 ) {
                     Toast.makeText(scoreBoard, String.format("Additional %d menu items made available", iToggled), Toast.LENGTH_LONG).show();
                     ScoreBoard.Mode newMode = scoreBoard.m_mode; // toggleDemoMode(null);

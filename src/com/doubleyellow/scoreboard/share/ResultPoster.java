@@ -276,8 +276,8 @@ public class ResultPoster implements ContentReceiver
 
 {
   "result": "NOK",
-  "title": "Dunham server warning",
-  "message": "A result for match X was already stored. Keeping initial result"
+  "title": "Your server warning",
+  "message": "<html><body>A result for <b>match X</b> was already stored. Keeping initial result</body></html>"
 }
 */
             } catch (JSONException e) {

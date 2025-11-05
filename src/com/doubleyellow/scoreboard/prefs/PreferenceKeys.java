@@ -390,7 +390,8 @@ public enum PreferenceKeys {
     useDoublesMatchesTab(Boolean.class),
     useMyListFunctionality(Boolean.class),
 
-    hideMenuItems(null)
+    kioskMode(KioskMode.class),
+    hideMenuItems(null),
     ;
     private Class clazz = String.class;
     PreferenceKeys(Class c) {

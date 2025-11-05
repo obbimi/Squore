@@ -1948,7 +1948,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
     private void showNewMatchFloatButton(boolean bVisible) {
         if ( PreferenceValues.showNewMatchFloatButton(this) == false ) {
-            if ( newMatchButton != null ) { newMatchButton.setHidden(true); }
+            if ( newMatchButton != null ) {
+                newMatchButton.setHidden(true);
+            }
+            return;
         }
 
         int iActionId   = R.id.float_new_match;
@@ -3025,7 +3028,15 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         inflater.inflate(R.menu.mainmenu, menu);
         mainMenu = menu;
+        return reinitMenu(menu);
+    }
+    public boolean reinitMenu() {
+        MenuInflater inflater = getMenuInflater();
 
+        inflater.inflate(R.menu.mainmenu, mainMenu);
+        return reinitMenu(mainMenu);
+    }
+    private boolean reinitMenu(Menu menu) {
         if ( PreferenceValues.isPublicApp(this) ) {
             if ( PreferenceValues.showCastButtonInActionBar(this) ) {
                 initCastMenu();
@@ -3253,6 +3264,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
     }
     private void setMenuItemVisibility(int iId, boolean bVisible) {
+        if ( bVisible ) {
+            if ( PreferenceValues.getKioskMode(this).hideMenuItems().contains(iId) ) {
+                Log.d(TAG, "Not showing because of kioskmode " + this.getResources().getResourceName(iId));
+                return;
+            }
+        }
         boolean bShowTextInActionBar = PreferenceValues.showTextInActionBar(this);
         ViewUtil.setMenuItemVisibility(mainMenu, iId, bVisible, bShowTextInActionBar);
     }

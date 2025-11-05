@@ -206,6 +206,10 @@
     <string name="pref_showSideButtonsWithinScoreButtons_summary">To make \'Score buttons\' even larger.</string>
     <string name="pref_AppealHandGestureIconSize">Icon size in \'Appeal\' dialog</string>
     <string name="pref_AppealHandGestureIconSize_summary">Size of icon in \'Appeal\' dialog. Set to zero if you do not want to see the icons.</string>
+
+    <string name="pref_kioskMode">Kiosk Mode</string>
+    <string name="pref_kioskMode_summary">Setting to make certain menu items invisible by default</string>
+
     <string name="pref_newMatchLayout">New match layout</string>
     <string name="pref_newMatchLayout_summary">To have just a limited number of fields to fill, choose \'Simple\'</string>
     <string name="pref_showChoosenDecisionShortly">Show decision as message</string>

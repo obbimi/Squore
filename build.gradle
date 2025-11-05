@@ -105,7 +105,7 @@ android {
         }
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
-    def versionCodeXXX = 581
+    def versionCodeXXX = 582
     def versionNameXDotYY = "4.59"
 
     // if moving to >=35, be aware of layout 'sliding under' status bar (android 15 'feature' wanting to use more of the screen)
@@ -180,7 +180,7 @@ android {
 
 dependencies {
 
-    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'com.google.android.material:material:1.13.0'
 
     implementation 'androidx.datastore:datastore-preferences:1.1.7' // TODO: migrate from SharedPreferences to DataStore
 
@@ -193,7 +193,7 @@ dependencies {
     // uncommenting this while in Android Studio creates a subdir AndroidBase with an .iml file in it
 
     implementation 'androidx.wear:wear:1.3.0'       // minSdk=23 for 1.[0-2].0
-    implementation 'androidx.wear:wear-input:1.1.0' // minSdk=25
+    implementation 'androidx.wear:wear-input:1.2.0' // minSdk=25
 
     //wearOsImplementation 'androidx.wear:wear:1.0.0' // needs minSdkVersion=23
     //implementation 'com.android.support:wear:28.0.0' // needs minSdkVersion=23
@@ -205,19 +205,19 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     // moving from 1.3.1 to 1.4.0 makes e.g. Wear OS in emulator fail, 1.7.0 made build fail it seems (20250105)
 
   //implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 
     // Wear OS requires a splash screen: https://developer.android.com/design/ui/wear/guides/behaviors-and-patterns/launch#branded
     //implementation 'androidx.core:core-splashscreen:1.1.0-alpha02'
-    implementation 'androidx.core:core-splashscreen:1.0.1'
+    implementation 'androidx.core:core-splashscreen:1.2.0'
 
     // ChromeCast (new with Custom Receiver)
-    phoneTabletPre24Implementation 'com.google.android.gms:play-services-cast-framework:22.0.0'
-    phoneTabletPost25Implementation 'com.google.android.gms:play-services-cast-framework:22.0.0'
-    wearOsImplementation 'com.google.android.gms:play-services-cast-framework:22.0.0'
+    phoneTabletPre24Implementation 'com.google.android.gms:play-services-cast-framework:22.2.0'
+    phoneTabletPost25Implementation 'com.google.android.gms:play-services-cast-framework:22.2.0'
+    wearOsImplementation 'com.google.android.gms:play-services-cast-framework:22.2.0'
     // wearOs can not cast but to run it still needs 'Implementation' to not have 'ClassNotFound' exceptions
 
     // allow communication between handheld device and wearable

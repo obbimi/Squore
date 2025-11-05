@@ -77,6 +77,7 @@
     <string name="scorelineLayout_default__Default">HideServeSide</string>
 
     <string name="newMatchLayout_default">AllFields</string>
+    <string name="kioskMode_default">NotUsed</string>
     <string name="groupArchivedMatchesBy_default">Date</string>
     <string name="sortOrderOfArchivedMatches_default">Descending</string>
     <string name="BackKeyBehaviour_default">PressTwiceToExit</string>

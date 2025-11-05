@@ -48,10 +48,12 @@ import com.doubleyellow.scoreboard.feed.FeedFeedSelector;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
+import com.doubleyellow.scoreboard.prefs.KioskMode;
 import com.doubleyellow.scoreboard.prefs.NewMatchLayout;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.view.ExpandableListUtil;
+import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
 import com.doubleyellow.util.MenuHandler;
 import com.doubleyellow.android.util.SimpleELAdapter;
@@ -107,88 +109,6 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
         Fragment fragment = (Fragment) mAdapter.instantiateItem(viewPager, actualTabsToShow.indexOf(tab) /*tab.ordinal()*/); // triggers tabsadapter.getItem(int) to be invoked
         return fragment;
     }
-/*
-    private Map<SelectTab, Fragment> mFragments = new HashMap<>();
-    private Fragment getFragment(SelectTab tab) {
-        if ( mFragments.containsKey(tab) == false ) {
-            try {
-                Fragment fragment = (Fragment) tab.clazz.newInstance();
-                Fragment fragment2 = (Fragment) mAdapter.instantiateItem(viewPager, tab.ordinal());
-                mFragments.put(tab, fragment);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return mFragments.get(tab);
-    }
-*/
-
-    // ----------------------------------------------------
-    // --------------------- NDEF/NFC/AndroidBeam ---------
-    // ----------------------------------------------------
-
-/*
-    private NfcAdapter mNfcAdapter;
-    private void registerNfc() {
-        if ( getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC) == false ) {
-            return;
-        }
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if ( mNfcAdapter == null ) {
-            //Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show();
-            return;
-        }
-        // Register callback
-        mNfcAdapter.setNdefPushMessageCallback(this, this);
-    }
-
-    @Override public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
-        String      packageName       = this.getPackageName();
-        String      text              = getNdefJsonString(this);
-        NdefRecord  mimeRecord        = ScoreBoard.createMimeRecord("application/" + "json", text.getBytes());
-        NdefRecord  applicationRecord = NdefRecord.createApplicationRecord(packageName);
-        NdefMessage msg               = new NdefMessage(new NdefRecord[]{mimeRecord, applicationRecord});
-        return msg;
-    }
-
-    private String getNdefJsonString(Context context) {
-        JSONObject joSetting = new JSONObject();
-        try {
-            switch (defaultTab) {
-                case Feed:
-                    int iUrlIndex = PreferenceValues.getInteger(PreferenceKeys.feedPostUrl, context, 0);
-                    String sUrls = PreferenceValues.getString(PreferenceKeys.feedPostUrls, "", context);
-                    List<Map<URLsKeys, String>> urlsList = PreferenceValues.getUrlsList(sUrls, context);
-                    if ( urlsList.size() > iUrlIndex ) {
-                        Map<URLsKeys, String> mCommunicate = urlsList.get(iUrlIndex);
-                        //JSONObject oFeed = new JSONObject(mCommunicate);
-                        //joSetting.put(PreferenceKeys.feedPostUrls.toString(), oFeed);
-
-                        String sTmp = URLsKeys.Name + "=" + mCommunicate.get(URLsKeys.Name)       + "\n"
-                                    + URLsKeys.FeedMatches + "=" + mCommunicate.get(URLsKeys.FeedMatches) + "\n";
-                        if ( mCommunicate.get(URLsKeys.FeedPlayers) != null ) {
-                            sTmp    += URLsKeys.FeedPlayers + "=" + mCommunicate.get(URLsKeys.FeedPlayers) + "\n";
-                        }
-                        if ( mCommunicate.get(URLsKeys.PostResult) != null ) {
-                            sTmp    += URLsKeys.PostResult + "=" + mCommunicate.get(URLsKeys.PostResult) + "\n";
-                            if ( mCommunicate.get(URLsKeys.PostData) != null ) {
-                                sTmp    += URLsKeys.PostData + "=" + mCommunicate.get(URLsKeys.PostData) + "\n";
-                            }
-                        }
-                        joSetting.put(PreferenceKeys.feedPostUrls.toString(), sTmp);
-                    }
-                    break;
-                case Mine:
-                    String sMatches = PreferenceValues.getString(PreferenceKeys.matchList, "",context);
-                    joSetting.put(PreferenceKeys.matchList.toString(), "|" + sMatches.replaceAll("\n", "|") + "|");
-                    break;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return joSetting.toString();
-    }
-*/
 
     private Menu menu = null;
     /** Populates the options menu. */
@@ -226,13 +146,6 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
                                                         , R.id.sort_group_names
                                                         }
                                             , SelectTab.Mine.equals(forTab));
-/*
-        MenuItem miNewGroup = menu.findItem(R.id.new_group);
-        miNewGroup.setVisible(SelectTab.Mine.equals(forTab));
-
-        MenuItem miSortGroup = menu.findItem(R.id.sort_group_names);
-        miSortGroup.setVisible(SelectTab.Mine.equals(forTab));
-*/
 
         ViewUtil.setMenuItemsVisibility(menu, new int[] { R.id.uc_switch_feed
                                                         , R.id.uc_hide_matches_with_result
@@ -245,20 +158,6 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
         boolean bChecked2 = PreferenceValues.groupMatchesInFeedByCourt(this);
         ViewUtil.checkMenuItem(menu, R.id.uc_group_matches_by_court, bChecked2);
 
-/*
-        MenuItem miSwitchFeed = menu.findItem(R.id.uc_switch_feed);
-        miSwitchFeed.setVisible(SelectTab.Feed.equals(forTab));
-
-        MenuItem miHideShowFinished = menu.findItem(R.id.uc_hide_matches_with_result);
-        miHideShowFinished.setVisible(SelectTab.Feed.equals(forTab));
-
-        MenuItem miAddNewFeed = menu.findItem(R.id.uc_add_new_feed);
-        miAddNewFeed.setVisible(SelectTab.Feed.equals(forTab));
-
-        ViewUtil.checkMenuItem(miHideShowFinished, bChecked);
-*/
-        //int iNewResId = bChecked?R.string.pref_showCompletedMatchesFromFeed:R.string.pref_hideCompletedMatchesFromFeed;
-        //miHideShowFinished.setTitle(iNewResId); // we do this because checking/unchecking is not visible?!
 
         ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.mt_cmd_ok
                                                        , R.id.mt_clear_event_fields
@@ -291,23 +190,15 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
             ViewUtil.setMenuItemVisibility(menu, R.id.mt_matchlayout_simple, NewMatchLayout.AllFields.equals(newMatchLayout));
             ViewUtil.setMenuItemVisibility(menu, R.id.mt_matchlayout_all   , NewMatchLayout.Simple   .equals(newMatchLayout));
         }
-/*
-        MenuItem miOK = menu.findItem(R.id.mt_cmd_ok);
-        miOK.setVisible(manualTabs.contains(forTab));
-*/
 
-        //MenuItem miRefresh = menu.findItem(R.id.mt_refresh);
-        //miRefresh.setVisible(manualTabs.contains(forTab) == false);
+        // keep certain menu items invisible in kioskmode
+        KioskMode kioskMode = PreferenceValues.getKioskMode(this);
+        for(int iHide: kioskMode.hideMenuItems() ) {
+            if ( ViewUtil.hideMenuItemForEver(menu, iHide) ) {
+                Log.d(TAG, "Hiding because of kiosk mode " + getResources().getResourceName(iHide));
+            }
+        }
 
-        //ViewUtil.setMenuItemsVisibility(menu, new int[]{R.id.cmd_delete_all, R.id.mt_cmd_import, R.id.mt_cmd_export}, SelectTab.Previous.equals(forTab));
-/*
-        MenuItem miDeleteAll = menu.findItem(R.id.cmd_delete_all);
-        miDeleteAll.setVisible(SelectTab.Previous.equals(forTab));
-        MenuItem miImport = menu.findItem(R.id.mt_cmd_import);
-        miImport.setVisible(SelectTab.Previous.equals(forTab));
-        MenuItem miExport = menu.findItem(R.id.mt_cmd_export);
-        miExport.setVisible(SelectTab.Previous.equals(forTab));
-*/
         if ( manualTabs.contains(forTab) == false ) {
             ViewUtil.hideKeyboardIfVisible(this);
         }
@@ -642,6 +533,10 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
                     defaultTab = SelectTab.Manual;
                 }
             }
+        }
+        if (ListUtil.isEmpty(actualTabsToShow) ) {
+            // e.g. in certain kiosk modes
+            return;
         }
         if ( actualTabsToShow.contains(defaultTab) == false ) {
             defaultTab = actualTabsToShow.get(0);

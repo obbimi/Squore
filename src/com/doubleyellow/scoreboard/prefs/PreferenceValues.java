@@ -904,6 +904,11 @@ public class PreferenceValues extends RWValues
     }
 
     public static boolean showNewMatchFloatButton(Context context) {
+        KioskMode kioskMode = getKioskMode(context);
+        if ( kioskMode.hideMenuItems().contains(R.id.dyn_new_match) ) {
+            return false;
+        }
+
         return getBoolean(PreferenceKeys.showNewMatchFloatButton, context, R.bool.showNewMatchFloatButton_default);
     }
     public static boolean useSoundNotificationInTimer(Context context) {
@@ -940,7 +945,15 @@ public class PreferenceValues extends RWValues
         int iResDefault = getSportTypeSpecificResId(context, R.string.scorelineLayout_default__Squash);
         return getEnum(PreferenceKeys.scorelineLayout, context, ScorelineLayout.class, iResDefault);
     }
+    public static boolean isPublicApp(Context context) {
+        int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.isPublicApp__Default);
+        return context.getResources().getBoolean(iResBrandSpecific);
+    }
     public static boolean useFeedAndPostFunctionality(Context context) {
+        KioskMode kioskMode = getKioskMode(context);
+        if ( ! kioskMode.equals(KioskMode.NotUsed) ) {
+            return ! kioskMode.hideMenuItems().contains(R.id.sb_select_feed_match);
+        }
         if ( Brand.isGameSetMatch() && currentDateIsTestDate() ) {
             return false;
         }
@@ -948,18 +961,27 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.useFeedAndPostFunctionality, context, iResBrandSpecific);
     }
     public static boolean useSinglesMatchesTab(Context context) {
+        KioskMode kioskMode = getKioskMode(context);
+        if ( ! kioskMode.equals(KioskMode.NotUsed) ) {
+            return ! kioskMode.hideMenuItems().contains(R.id.sb_enter_singles_match);
+        }
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useSinglesMatch__Default);
         return getBoolean(PreferenceKeys.useSinglesMatchesTab, context, iResBrandSpecific);
     }
     public static boolean useDoublesMatchesTab(Context context) {
+        KioskMode kioskMode = getKioskMode(context);
+        if ( ! kioskMode.equals(KioskMode.NotUsed) ) {
+            return ! kioskMode.hideMenuItems().contains(R.id.sb_enter_doubles_match);
+        }
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useDoublesMatch__Default);
         return getBoolean(PreferenceKeys.useDoublesMatchesTab, context, iResBrandSpecific);
     }
-    public static boolean isPublicApp(Context context) {
-        int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.isPublicApp__Default);
-        return context.getResources().getBoolean(iResBrandSpecific);
-    }
     public static boolean useMyListFunctionality(Context context) {
+        KioskMode kioskMode = getKioskMode(context);
+        if ( ! kioskMode.equals(KioskMode.NotUsed) ) {
+            return ! kioskMode.hideMenuItems().contains(R.id.sb_select_static_match);
+        }
+
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useMyListFunctionality__Default);
         return getBoolean(PreferenceKeys.useMyListFunctionality, context, iResBrandSpecific);
     }
@@ -2268,7 +2290,20 @@ public class PreferenceValues extends RWValues
         textColors.setEnabled(bEnable);
     }
 
+    public static KioskMode getKioskMode(Context context) {
+        KioskMode anEnum = getEnum(PreferenceKeys.kioskMode, context, KioskMode.class, KioskMode.NotUsed);
+        if ( anEnum == null ) {
+            return KioskMode.NotUsed;
+        }
+        return anEnum;
+    }
+
     public static List<Integer> getMenuItemsToHide(Context context) {
+        KioskMode kioskMode = getKioskMode(context);
+        if ( ! kioskMode.equals(KioskMode.NotUsed) ) {
+            return kioskMode.hideMenuItems();
+        }
+
         List<Integer> lReturn = new ArrayList<>();
         Set<String> hideMenuItems = PreferenceValues.getStringSet(PreferenceKeys.hideMenuItems, new LinkedHashSet(), context);
         if (ListUtil.isEmpty(hideMenuItems) ) { return lReturn; }

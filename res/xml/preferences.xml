@@ -459,6 +459,16 @@
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.NewMatchLayout"
                 />
 
+            <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/dummy"
+                android:key="kioskMode"
+                android:title="@string/pref_kioskMode"
+                android:summary="@string/pref_kioskMode_summary"
+                android:defaultValue="@string/kioskMode_default"
+                dy:displayValues="@array/kioskMode_DisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.prefs.KioskMode"
+                />
+
         </PreferenceCategory>
 
         <PreferenceCategory android:key="Flags"

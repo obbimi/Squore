@@ -28,6 +28,7 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.match.Match;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 
 /**
  * Dialog that is shown if user wants to restart the score.
@@ -46,7 +47,9 @@ public class RestartScore extends BaseAlertDialog
         return true;
     }
     @Override public void show() {
-        if ( isNotWearable() ) {
+        if ( isNotWearable()
+            && ! PreferenceValues.getKioskMode(context).hideMenuItems().contains(R.id.change_match_format)
+        ) {
             adb.setNeutralButton (R.string.cmd_change_format, dialogClickListener);
         }
         String sMessage = getString(R.string.sb_clear_score_confirm_message);
@@ -61,11 +64,7 @@ public class RestartScore extends BaseAlertDialog
         dialog = adb.show();
     }
 
-    private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-        @Override public void onClick(DialogInterface dialog, int which) {
-            handleButtonClick(which);
-        }
-    };
+    private DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> handleButtonClick(which);
 
     public static final int BTN_RESTART              = DialogInterface.BUTTON_POSITIVE;
     public static final int BTN_RESTART_CHANGEFORMAT = DialogInterface.BUTTON_NEUTRAL;
