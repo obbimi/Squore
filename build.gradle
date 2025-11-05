@@ -116,7 +116,7 @@ android {
         // versionCodePrefix specifies [min_api_level][bitwise_supported_screensizes s=1,m=2,l=4,xl=8]
         phoneTabletPre24 {
             dimension "devicetype"
-            minSdkVersion 21 // increased to 21 for WearOS splashscreen dependency
+            minSdkVersion 23 // increased to 23 for play-services-cast-framework:22.2.0
             targetSdkVersion targetSdkXX
             multiDexEnabled true // required since using firebase
             versionCode 1915 * 10000 + versionCodeXXX
