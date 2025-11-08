@@ -31,6 +31,7 @@ import com.doubleyellow.util.Enums;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.util.MapUtil;
+import com.doubleyellow.util.StringUtil;
 
 import java.util.Collection;
 import java.util.List;
@@ -80,11 +81,11 @@ public class MQTTStatusDialog extends BaseAlertDialog {
         adb.setIcon   (R.drawable.mqtt)
            .setTitle(getString(R.string.pref_Category_MQTT) + ": " + PreferenceValues.getLiveScoreDeviceId(context) + ": " + sPrefix)
            .setMessage("Subscriptions:\n" + subTopics
-                   + "\n\nOther: " + mqttOtherDeviceId
                    + "\n\nRole: " + ScoreBoard.m_MQTTHandler.getRole()
+                   + "\n\nOther Device: " + (StringUtil.isNotEmpty(mqttOtherDeviceId)?mqttOtherDeviceId:"-")
+                   + "\nBroker: " + PreferenceValues.getMQTTBrokerURL(context)
                    + "\n\nStats:\n" + sPublishStats
-                   + "\n\nSeen Devices:\n"
-                   + sJoinedDevices
+                   + "\n\nSeen Devices:\n" + sJoinedDevices
            )
            .setPositiveButton(R.string.cmd_ok       , dialogClickListener)
            .setNeutralButton (R.string.cmd_stop_temp, dialogClickListener)

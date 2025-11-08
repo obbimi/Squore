@@ -21,7 +21,20 @@ import com.doubleyellow.scoreboard.R;
 import java.util.Arrays;
 import java.util.List;
 
-/** setting to control how much menu/buttons are made invisible to not overwhelm the end user */
+/**
+ * Use {@link PreferenceKeys#kioskMode}
+ * setting to control that certain menu items/buttons are made invisible to not overwhelm the end user
+ * <br/>
+ * Fine-tuning of visible menu items/buttons can be done by specifying additional settings
+ * <ul>
+ *     <li>{@link PreferenceKeys#hideMenuItems}, hiding additional menu items</li>
+ *     <li>{@link PreferenceKeys#showMenuItems}, showing menu items you DON'T want to be hidden by the kiosk mode setting</li>
+ * </ul>
+ * <br/>
+ * Values in hide/show Menu items should be an array of strings referring to 'id' values of mainmenu.xml
+ * E.g. "showMenuItems": [ "sb_settings" ]
+ * E.g. "hideMenuItems": [ "sb_exit" ]
+ **/
 public enum KioskMode {
     NotUsed(new Integer[]{}),
     MatchesFromSingleFeed_1( new Integer[]

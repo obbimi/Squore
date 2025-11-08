@@ -668,6 +668,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     public boolean m_liveScoreShare = false;
+    public List<Integer> m_iMenuItemsToHide = new ArrayList<>();
 
     /**
      * e.g. after settings screen has been entered and closed, matchdetails have been viewed.
@@ -698,6 +699,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         m_bHapticFeedbackPerPoint  = PreferenceValues.hapticFeedbackPerPoint(this);
         m_bHapticFeedbackOnGameEnd = PreferenceValues.hapticFeedbackOnGameEnd(this);
         m_liveScoreShare           = PreferenceValues.isConfiguredForLiveScore(this);
+        m_iMenuItemsToHide         = PreferenceValues.getMenuItemsToHide(this);
 
         updateMicrophoneFloatButton();
         updatePowerPlayIcons();
@@ -2425,6 +2427,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 showNewMatchFloatButton(false);
                 showAppropriateMenuItemInActionBar();
             }
+            if ( m_liveScoreShare ) {
+                shareScoreSheetDelayed(600);
+            }
         }
     }
 
@@ -3031,6 +3036,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         return reinitMenu(menu);
     }
     public boolean reinitMenu() {
+        m_iMenuItemsToHide = PreferenceValues.getMenuItemsToHide(this);
+
         MenuInflater inflater = getMenuInflater();
 
         inflater.inflate(R.menu.mainmenu, mainMenu);
@@ -3265,7 +3272,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
     private void setMenuItemVisibility(int iId, boolean bVisible) {
         if ( bVisible ) {
-            if ( PreferenceValues.getKioskMode(this).hideMenuItems().contains(iId) ) {
+            if ( m_iMenuItemsToHide.contains(iId) ) {
                 Log.d(TAG, "Not showing because of kioskmode " + this.getResources().getResourceName(iId));
                 return;
             }

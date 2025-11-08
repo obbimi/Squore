@@ -48,7 +48,7 @@ public class RestartScore extends BaseAlertDialog
     }
     @Override public void show() {
         if ( isNotWearable()
-            && ! PreferenceValues.getKioskMode(context).hideMenuItems().contains(R.id.change_match_format)
+            && ! scoreBoard.m_iMenuItemsToHide.contains(R.id.change_match_format)
         ) {
             adb.setNeutralButton (R.string.cmd_change_format, dialogClickListener);
         }

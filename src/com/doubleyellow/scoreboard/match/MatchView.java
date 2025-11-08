@@ -53,6 +53,7 @@ import com.doubleyellow.util.JsonUtil;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
 import com.doubleyellow.view.NextFocusDownListener;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
 
@@ -564,6 +565,18 @@ public class MatchView extends ScrollView
      **/
     private Model   m_model      = null;
 
+    private EditText getEditText(int id) {
+        View v = findViewById(id);
+        if ( v instanceof EditText ) {
+            return (EditText) v;
+        }
+        if ( v instanceof com.google.android.material.textfield.TextInputLayout ) {
+            com.google.android.material.textfield.TextInputLayout til = (TextInputLayout) v;
+            return til.getEditText();
+        }
+        return null;
+    }
+
     /**
      * @param model is null when used on MatchFragment
      */
@@ -612,10 +625,10 @@ public class MatchView extends ScrollView
         tvsReferee = new View[]{txtRefereeName,txtMarkerName,txtAssessorName, spAnnouncementLanguage};
 
         if ( bIsDoubles ) {
-            txtPlayerA  = (EditText) findViewById(R.id.match_playerA1);
-            txtPlayerA2 = (EditText) findViewById(R.id.match_playerA2);
-            txtPlayerB  = (EditText) findViewById(R.id.match_playerB1);
-            txtPlayerB2 = (EditText) findViewById(R.id.match_playerB2);
+            txtPlayerA  = getEditText(R.id.match_playerA1);
+            txtPlayerA2 = getEditText(R.id.match_playerA2);
+            txtPlayerB  = getEditText(R.id.match_playerB1);
+            txtPlayerB2 = getEditText(R.id.match_playerB2);
 
             if ( txtPlayerA instanceof PlayerTextView) {
                 PlayerTextView ptvA = (PlayerTextView) txtPlayerA;
@@ -628,8 +641,8 @@ public class MatchView extends ScrollView
             tvsPlayers  = new TextView[]{txtPlayerA,txtPlayerA2,txtPlayerB,txtPlayerB2};
             clearPlayerFields();
         } else {
-            txtPlayerA = (EditText) findViewById(R.id.match_playerA);
-            txtPlayerB = (EditText) findViewById(R.id.match_playerB);
+            txtPlayerA = getEditText(R.id.match_playerA);
+            txtPlayerB = getEditText(R.id.match_playerB);
             tvsPlayers = new TextView[]{txtPlayerA,txtPlayerB};
             clearPlayerFields();
         }

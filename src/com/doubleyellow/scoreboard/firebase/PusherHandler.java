@@ -83,7 +83,7 @@ public class PusherHandler implements FCMHandler
     {
         m_scoreBoard = scoreBoard;
 
-        String sInterest = PreferenceValues.getFCMDeviceId(scoreBoard) + "@" + scoreBoard.getPackageName();
+        String sInterest = PreferenceValues.getLiveScoreDeviceId(scoreBoard) + "@" + scoreBoard.getPackageName();
         Log.d(TAG, "Interest :" + sInterest);
 
         try {

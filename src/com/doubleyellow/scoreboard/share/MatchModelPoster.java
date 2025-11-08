@@ -47,6 +47,8 @@ import java.util.Map;
  * Helper class for posting the match model to the main website.
  * To share a match result/support livescore.
  *
+ * Note that the 'model' might be posted to a third party location as well, if 'LiveScoreUrl' is configured.
+ *
  * A simple php that might receive the post may look like (see bottom of this class)
  */
 public class MatchModelPoster implements ContentReceiver

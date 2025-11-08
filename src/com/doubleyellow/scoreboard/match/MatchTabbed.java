@@ -191,9 +191,9 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
             ViewUtil.setMenuItemVisibility(menu, R.id.mt_matchlayout_all   , NewMatchLayout.Simple   .equals(newMatchLayout));
         }
 
-        // keep certain menu items invisible in kioskmode
-        KioskMode kioskMode = PreferenceValues.getKioskMode(this);
-        for(int iHide: kioskMode.hideMenuItems() ) {
+        // keep certain menu items invisible if preferences say so
+        List<Integer> hideMenuItems = PreferenceValues.getMenuItemsToHide(this);
+        for(int iHide: hideMenuItems) {
             if ( ViewUtil.hideMenuItemForEver(menu, iHide) ) {
                 Log.d(TAG, "Hiding because of kiosk mode " + getResources().getResourceName(iHide));
             }

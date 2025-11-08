@@ -392,6 +392,7 @@ public enum PreferenceKeys {
 
     kioskMode(KioskMode.class),
     hideMenuItems(null),
+    showMenuItems(null),
     ;
     private Class clazz = String.class;
     PreferenceKeys(Class c) {

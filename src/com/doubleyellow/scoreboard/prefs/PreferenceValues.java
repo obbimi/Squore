@@ -566,10 +566,6 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.showToastMessageForEveryReceivedFCMMessage, context, R.bool.showToastMessageForEveryReceivedFCMMessage_default);
     }
 */
-    /** @deprecated */
-    public static String getFCMDeviceId(Context context) {
-        return getDeviceId(PreferenceKeys.liveScoreDeviceId, context, true);
-    }
     private static String getDeviceId(PreferenceKeys key, Context context, boolean bGenerateIfNull) {
         String sID = RWValues.getString(key, null, context);
         if ( bGenerateIfNull && StringUtil.isEmpty(sID) ) {
@@ -2299,23 +2295,38 @@ public class PreferenceValues extends RWValues
     }
 
     public static List<Integer> getMenuItemsToHide(Context context) {
+        List<Integer> lReturn = new ArrayList<>();
+
         KioskMode kioskMode = getKioskMode(context);
         if ( ! kioskMode.equals(KioskMode.NotUsed) ) {
-            return kioskMode.hideMenuItems();
+            lReturn.addAll(kioskMode.hideMenuItems());
         }
 
-        List<Integer> lReturn = new ArrayList<>();
-        Set<String> hideMenuItems = PreferenceValues.getStringSet(PreferenceKeys.hideMenuItems, new LinkedHashSet(), context);
-        if (ListUtil.isEmpty(hideMenuItems) ) { return lReturn; }
-
-        for(String sMenuItem: hideMenuItems ) {
-            sMenuItem = sMenuItem.replace("R.id.", "");
-            int iResId = context.getResources().getIdentifier(sMenuItem, "id", context.getPackageName());
-            if ( iResId != 0 ) {
-                lReturn.add(iResId);
+        Set<String> hideMenuItems = PreferenceValues.getStringSet(PreferenceKeys.hideMenuItems, new HashSet<String>(), context);
+        if (ListUtil.isNotEmpty(hideMenuItems) ) {
+            for(String sMenuItem: hideMenuItems ) {
+                int iResId = convertToResourceId(sMenuItem, context);
+                if ( iResId != 0 ) {
+                    lReturn.add((Integer) iResId);
+                }
             }
         }
+        Set<String> showMenuItems = PreferenceValues.getStringSet(PreferenceKeys.showMenuItems, new HashSet<String>(), context);
+        if (ListUtil.isNotEmpty(showMenuItems) ) {
+            for(String sMenuItem: showMenuItems ) {
+                int iResId = convertToResourceId(sMenuItem, context);
+                if ( iResId != 0 ) {
+                    lReturn.remove((Integer) iResId);
+                }
+            }
+        }
+
         return lReturn;
+    }
+    private static int convertToResourceId(String sMenuItem, Context context) {
+        sMenuItem = sMenuItem.replace("R.id.", "");
+        int iResId = context.getResources().getIdentifier(sMenuItem, "id", context.getPackageName());
+        return iResId;
     }
 
     public static void remove(EnumSet<PreferenceKeys> keys, Context context) {
