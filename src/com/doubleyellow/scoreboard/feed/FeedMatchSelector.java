@@ -1217,6 +1217,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             if ( m_bGroupByCourt ) {
                 super.sortItems(SortOrder.Ascending); // TODO: Improve. This only sorts on 'display', we want to sort more detailed on/by date/time
             }
+
+            final Model matchModel = ScoreBoard.getMatchModel();
+            final boolean bAppModelIsFinished = matchModel != null && matchModel.matchHasEnded();
+            final String sLastInApp_Url = matchModel == null ? null : (matchModel.getName(Player.A) + "__" + matchModel.getName(Player.B));
+            final String sLastInApp_Id  = matchModel == null ? null :matchModel.getSourceID();
+
             for ( int f=0; f < matches.length(); f++ ) {
                 Object o = matches.get(f);
                 if ( o instanceof JSONObject == false ) {
@@ -1262,6 +1268,25 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     case showingMatches: {
                         if ( m_bHideCompletedMatches ) {
                             if ( StringUtil.isEmpty(sResult) ) {
+                                if ( bAppModelIsFinished ) {
+                                    String sFeedId = joMatch.optString(JSONKey.id.toString());
+                                    if ( StringUtil.isEmpty(sFeedId) ) {
+                                        JSONObject joMeta = joMatch.optJSONObject(JSONKey.metadata.toString());
+                                        if ( joMeta != null ) {
+                                            sFeedId = joMeta.optString(JSONKey.sourceID.toString());
+                                        }
+                                    }
+                                    if ( StringUtil.isNotEmpty(sFeedId) ) {
+                                        if ( sFeedId.equals(sLastInApp_Id ) ) {
+                                            continue;
+                                        }
+                                    } else {
+                                        String sFeedMatch_Url = joMatch.optString(Player.A.toString()) + "__" + joMatch.optString(Player.B.toString());
+                                        if ( sLastInApp_Url.equals(sFeedMatch_Url ) ) {
+                                            continue;
+                                        }
+                                    }
+                                }
                                 super.addItem(sRoundOrDivisionOrCourt, sDisplayName, joMatch);
                             }
                         } else {
