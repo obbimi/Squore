@@ -6042,7 +6042,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
         }
 
-        if ( msgSource.equals(MessageSource.MQTT) ) {
+        if ( msgSource.equals(MessageSource.MQTT) && (mqttAction != null) ) {
             String sThisDeviceId = PreferenceValues.getLiveScoreDeviceId(this);
             switch (mqttAction) {
                 case newMatch:

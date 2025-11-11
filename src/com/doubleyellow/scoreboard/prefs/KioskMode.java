@@ -23,7 +23,9 @@ import java.util.List;
 
 /**
  * Use {@link PreferenceKeys#kioskMode}
- * setting to control that certain menu items/buttons are made invisible to not overwhelm the end user
+ * setting to control that certain menu items/buttons are made invisible in order to not overwhelm the end user
+ * <br/>
+ * It should be set to one of the enum values of {@link KioskMode}
  * <br/>
  * Fine-tuning of visible menu items/buttons can be done by specifying additional settings
  * <ul>
