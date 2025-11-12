@@ -68,7 +68,7 @@ import java.util.TreeMap;
  * double-yellow/${FeedName}/#                                                             for live-score of multiple matches
  *
  * Subscribe to
- * double-yellow/${BrandOrSport}/${DeviceId}/newMatch                                      to allow 'send' new match to this device from tournament table
+ * double-yellow/${BrandOrSport}/${DeviceId}/remoteControl                                      to allow 'send' new match to this device from tournament table
  *
  * 'FeedName' (optional) to allow using a public broker like 'tcp://broker.hivemq.com:1883' and ensure you only receive info from a certain subset of matches
  * 'BrandOrSport' (optional) to allow subscribing only to a squash matches or only badminton matches
@@ -223,10 +223,10 @@ public class MQTTHandler
                 }
 
                 if ( EnumSet.of(MQTTRole.Master).contains(m_role) ) {
-                    final String mqttRespondToTopic_newMatch = getMQTTSubscribeTopic_newMatch();
-                    if ( StringUtil.isNotEmpty(mqttRespondToTopic_newMatch) ) {
-                        Log.d(TAG, "Subscribing to " + mqttRespondToTopic_newMatch);
-                        subscribe(mqttRespondToTopic_newMatch, null);
+                    final String mqttRespondToTopic_remoteControl = getMQTTSubscribeTopic_remoteControl();
+                    if ( StringUtil.isNotEmpty(mqttRespondToTopic_remoteControl) ) {
+                        Log.d(TAG, "Subscribing to " + mqttRespondToTopic_remoteControl);
+                        subscribe(mqttRespondToTopic_remoteControl, null);
                     }
                 }
 
@@ -408,8 +408,8 @@ public class MQTTHandler
         return sValue + sSubTopic;
     }
 
-    private String getMQTTSubscribeTopic_newMatch() {
-        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic_newMatch(m_context);
+    public String getMQTTSubscribeTopic_remoteControl() {
+        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic_remoteControl(m_context);
 
         return doMQTTTopicTranslation(sPlaceholder, m_thisDeviceId);
     }

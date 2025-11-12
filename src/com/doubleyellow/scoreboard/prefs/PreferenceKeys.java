@@ -374,7 +374,7 @@ public enum PreferenceKeys {
         MQTTPublishTopicUnloadMatch(String.class),
         MQTTPublishTopicDeviceInfo(String.class),
         MQTTPublishDeviceInfo_EveryXSeconds(Integer.class),
-        MQTTSubscribeTopic_newMatch(String.class),
+        MQTTSubscribeTopic_remoteControl(String.class),
             MQTTSkipJsonKeys(null),
         MQTTPublishTopicChange(String.class),
         MQTTSubscribeTopicChange(String.class),

@@ -33,7 +33,7 @@ import java.util.List;
  *     <li>{@link PreferenceKeys#showMenuItems}, showing menu items you DON'T want to be hidden by the kiosk mode setting</li>
  * </ul>
  * <br/>
- * Values in hide/show Menu items should be an array of strings referring to 'id' values of mainmenu.xml
+ * Values in hide/show Menu items should be an array of strings referring to 'id' values of mainmenu.xml (main activity) or matchtabbedmenu.xml (new match activity)
  * E.g. "showMenuItems": [ "sb_settings" ]
  * E.g. "hideMenuItems": [ "sb_exit" ]
  **/
@@ -66,7 +66,8 @@ public enum KioskMode {
 
           , R.id.uc_switch_feed
           , R.id.uc_add_new_feed
-          , R.id.open_feed_url
+          , R.id.mt_open_feed_url
+          , R.id.mt_close
           }),
     PublishedMQTTMatchesOnly_1( new Integer[]
           { R.id.media_route_menu_item
@@ -98,7 +99,8 @@ public enum KioskMode {
 
           , R.id.uc_switch_feed
           , R.id.uc_add_new_feed
-          , R.id.open_feed_url
+          , R.id.mt_open_feed_url
+          , R.id.mt_close
           }),
     ManualMatchesOnly1( new Integer[]
           { R.id.media_route_menu_item

@@ -1051,8 +1051,8 @@ public class PreferenceValues extends RWValues
         return getInteger(PreferenceKeys.MQTTPublishDeviceInfo_EveryXSeconds, context, 60);
     }
 
-    public static String getMQTTSubscribeTopic_newMatch(Context context) {
-        return getString(PreferenceKeys.MQTTSubscribeTopic_newMatch, R.string.MQTTTopicNewMatchTemplate__Default, context);
+    public static String getMQTTSubscribeTopic_remoteControl(Context context) {
+        return getString(PreferenceKeys.MQTTSubscribeTopic_remoteControl, R.string.MQTTTopicRemoteControlTemplate__Default, context);
     }
     public static List<String> getMQTTSkipJsonKeys(Context context) {
         return getStringAsList(context, PreferenceKeys.MQTTSkipJsonKeys, 0);

@@ -181,7 +181,7 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
         ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.show_matches_from_feed }, SelectTab.Feed.equals(forTab) && StringUtil.isNotEmpty(PreferenceValues.getMatchesFeedURL(this)));
         ViewUtil.setMenuItemsVisibility(menu, new int[]{ R.id.mt_filter
                                                        , R.id.uc_group_matches_by_court
-                                                       , R.id.open_feed_url
+                                                       , R.id.mt_open_feed_url
                                                        }
                                             , SelectTab.Feed.equals(forTab));
 
@@ -194,7 +194,7 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
         // keep certain menu items invisible if preferences say so
         List<Integer> hideMenuItems = PreferenceValues.getMenuItemsToHide(this);
         for(int iHide: hideMenuItems) {
-            if ( ViewUtil.hideMenuItemForEver(menu, iHide) ) {
+            if ( ViewUtil.setMenuItemVisibility(menu, iHide, false, false) ) {
                 Log.d(TAG, "Hiding because of kiosk mode " + getResources().getResourceName(iHide));
             }
         }
@@ -271,7 +271,7 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
             Intent ff = new Intent(this, FeedFeedSelector.class);
             startActivityForResult(ff, 1); // see onActivityResult
             return true;
-        } else if (menuItemId == R.id.open_feed_url) {
+        } else if (menuItemId == R.id.mt_open_feed_url) {
             String sURL = PreferenceValues.getMatchesFeedURL(this);
             ScoreBoard.openInBrowser(this, sURL);
             return true;

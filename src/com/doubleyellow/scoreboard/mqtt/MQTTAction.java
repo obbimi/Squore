@@ -19,6 +19,6 @@ package com.doubleyellow.scoreboard.mqtt;
 public enum MQTTAction {
     /** start a new match on a target device */
     newMatch,
-    /** alert a referee with a message. E.g. wrong match selected */
-    alert,
+    /** inform a referee with a message. E.g. wrong match selected */
+    message,
 }

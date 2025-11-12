@@ -475,9 +475,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         // initialize the country util from json in resources (res folder)
         initCountryList();
 
-        if ( PreferenceValues.useFeedAndPostFunctionality(this) ) {
-            Preloader preloader = Preloader.getInstance(this);
-        }
+        Preloader preloader = Preloader.getInstance(this);
 
         dialogManager = DialogManager.getInstance();
 
@@ -6044,16 +6042,19 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         if ( msgSource.equals(MessageSource.MQTT) && (mqttAction != null) ) {
             String sThisDeviceId = PreferenceValues.getLiveScoreDeviceId(this);
+            Map<String, Object> mResponse = new HashMap<>();
+            mResponse.put(JSONKey.device.toString(), sThisDeviceId);
+            final String accepted = "accepted";
+            mResponse.put(accepted, true);
+
             switch (mqttAction) {
                 case newMatch:
-                    final String accepted = "accepted";
-                    Map<String, Object> mResponse = new HashMap<>();
                     try {
                         persist(false);
-                        mResponse.put(JSONKey.device.toString(), sThisDeviceId);
                         if ( matchModel.hasStarted() && matchModel.matchHasEnded() == false ) {
                             mResponse.put(accepted, false);
-                            mResponse.put(JSONKey.Message.toString(), "Match in progress: " + matchModel.getName(Player.A) + "-" + matchModel.getName(Player.B) + ". Current score: " + matchModel.getGameScores());
+                            String sMsg = "Match in progress: " + matchModel.getName(Player.A) + "-" + matchModel.getName(Player.B) + ". Current score: " + matchModel.getGameScores() + ". Started: " + matchModel.getMatchStartTimeHH_Colon_MM();
+                            mResponse.put(JSONKey.Message.toString(), sMsg);
                         } else {
                             // first see if it is valid json
                             JSONObject joMatch = new JSONObject(readMessage);
@@ -6069,8 +6070,21 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             intent.putExtra(IntentKeys.NewMatch.toString(), readMessage);
                             Match.dontShow();
                             onActivityResult(0, 0, intent);
-                            mResponse.put(accepted, true);
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        mResponse.put(accepted, false);
+                        mResponse.put(JSONKey.Message.toString(), e.getMessage());
+                    }
+                    m_MQTTHandler.publish(sTopic.replace("/" + sThisDeviceId, ""), (new JSONObject(mResponse)).toString(), false);
+                    return;
+                case message:
+                    try {
+                        JSONObject joMessage = new JSONObject(readMessage);
+                        String sMsg = joMessage.getString(JSONKey.Message.toString());
+                        int iDurationInSeconds = joMessage.optInt(JSONKey.Duration.toString(), 15);
+                        showInfoMessage(sMsg, iDurationInSeconds);
+                        mResponse.put(JSONKey.Duration.toString(), iDurationInSeconds);
                     } catch (Exception e) {
                         e.printStackTrace();
                         mResponse.put(accepted, false);

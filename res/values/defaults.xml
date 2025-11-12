@@ -281,7 +281,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <string name="MQTTTopicMatchTemplate__Default">double-yellow/${FeedName}/${Brand}/${DeviceId}/match</string>
     <string name="MQTTTopicUnloadMatchTemplate__Default">double-yellow/${FeedName}/${Brand}/${DeviceId}/unloadMatch</string>
     <string name="MQTTTopicDeviceInfoTemplate__Default">double-yellow/${Brand}/${DeviceId}/deviceInfo</string>
-    <string name="MQTTTopicNewMatchTemplate__Default">double-yellow/${Brand}/${DeviceId}/newMatch</string>
+    <string name="MQTTTopicRemoteControlTemplate__Default">double-yellow/${Brand}/${DeviceId}/remoteControl</string>
     <string name="MQTTTopicChangeTemplate__Default">double-yellow/${Brand}/${DeviceId}/change</string>
 
     <!-- https://github.com/emqx/blog/blob/main/en/202111/popular-online-public-mqtt-brokers.md -->

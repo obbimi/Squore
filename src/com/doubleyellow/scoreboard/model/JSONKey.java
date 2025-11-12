@@ -112,5 +112,6 @@ public enum JSONKey {
 	    avatar,
 
 	Message,
+	Duration,
 }
 
