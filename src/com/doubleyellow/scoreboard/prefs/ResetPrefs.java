@@ -67,6 +67,8 @@ public class ResetPrefs extends DialogPreference
     }
 
     static void resetToDefaults(Context context, int iRes) {
+        Preferences.bIgnorePrefChanges = true;
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         String sRetainRandomValue = preferences.getString(PreferenceKeys.liveScoreDeviceId.toString(), null);
@@ -80,6 +82,8 @@ public class ResetPrefs extends DialogPreference
 
         //Read the default values and set them as the current values.
         PreferenceManager.setDefaultValues(context, iRes, true);
+
+        Preferences.bIgnorePrefChanges = false;
     }
 
 }

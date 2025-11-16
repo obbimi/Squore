@@ -113,11 +113,12 @@ public class Preferences extends Activity {
         settingsFragment.getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(spChange);
     }
 
+    public static boolean bIgnorePrefChanges = false;
+
     private final SPChange spChange = new SPChange();
     private class SPChange implements SharedPreferences.OnSharedPreferenceChangeListener, ContentReceiver
     {
         /** To be able to change multiple preferences by code without this listener doing anything */
-        private boolean bIgnorePrefChanges = false;
 
         @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent, String sUrl) {
             String sRemoteConfigUrl = PreferenceValues.getRemoteSettingsURL(Preferences.this, false);
@@ -156,7 +157,6 @@ public class Preferences extends Activity {
                     case squoreBrand:
                         Brand brand = RWValues.getEnum(PreferenceKeys.squoreBrand, Preferences.this, Brand.class, Brand.Squore);
                         if ( Brand.brand != brand ) {
-                            this.bIgnorePrefChanges = true;
                             ResetPrefs.resetToDefaults(Preferences.this, R.xml.preferences);
                             RWValues.setEnum(PreferenceKeys.squoreBrand, Preferences.this, brand);
                             Brand.setBrandPrefs(Preferences.this);
@@ -166,7 +166,6 @@ public class Preferences extends Activity {
                             //ContentUtil.clearCache(Preferences.this);
                             DynamicListPreference.deleteCacheFile(Preferences.this, PreferenceKeys.colorSchema.toString());
 
-                            this.bIgnorePrefChanges = false;
                             setModelDirty();
                         }
                         break;
