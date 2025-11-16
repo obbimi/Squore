@@ -188,6 +188,9 @@ public class ExportImportPrefs extends DialogPreference
         //Log.w(TAG, "TODO: settings diff " + mapDiff);
         Map mUpserts = new HashMap(mInserts);
         mUpserts.putAll(mUpdates);
+        if ( PreferenceValues.currentDateIsTestDate() ) {
+            mUpserts.remove(PreferenceKeys.kioskMode.name());
+        }
 
         int iChanges = mUpserts.size();
 
@@ -225,10 +228,7 @@ public class ExportImportPrefs extends DialogPreference
 
             sMsg = context.getString(R.string.pref_RemoteConfig_X_SettingChanged, iChanges, sUrl);
             if ( iChanges < 5 ) {
-                sMsg = sMsg + "\n\n" + ListUtil.join(mToBeOverwritten.keySet(), "\n");
-                if ( MapUtil.size(mToBeOverwritten) < iChanges ) {
-                    sMsg = sMsg + "\n" + ListUtil.join(mInserts.keySet(), "\n");
-                }
+                sMsg = sMsg + "\n\n" + ListUtil.join(mUpserts.keySet(), "\n");
             }
             iMsgDuration = 20;
         } else {
@@ -236,7 +236,7 @@ public class ExportImportPrefs extends DialogPreference
             iMsgDuration = 3;
         }
         if ( context instanceof ScoreBoard) {
-            ((ScoreBoard)context).showInfoMessageOnUiThread(sMsg, iMsgDuration);
+            ((ScoreBoard)context).showInfoMessageOnUiThread(StringUtil.normalize(sMsg.replace('\n', ' ')) , iMsgDuration);
         } else {
             Toast.makeText(context, sMsg, Toast.LENGTH_SHORT).show();
         }
@@ -264,7 +264,7 @@ public class ExportImportPrefs extends DialogPreference
         // TODO: feedPostUrl=<a number>, if specified feedPostUrls should be there as well
         return iChanges;
     }
-    public static boolean importSettingsFromJSON(Context context, JSONObject joSettings) throws JSONException
+    private static boolean importSettingsFromJSON(Context context, JSONObject joSettings) throws JSONException
     {
         boolean bRestartRequired = false;
 
@@ -339,7 +339,9 @@ public class ExportImportPrefs extends DialogPreference
                 JSONArray ar = (JSONArray) oBUValue;
                 Set<String> setValues = new HashSet<>();
                 for (int i = 0; i < ar.length(); i++) {
-                    setValues.add(ar.getString(i));
+                    String sValue = ar.getString(i);
+                    //if ( sValue.startsWith("-") ) { continue; }
+                    setValues.add(sValue);
                 }
                 editor.putStringSet(sKey, setValues);
             } else if ( oBUValue instanceof Double ) {

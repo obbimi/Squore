@@ -383,7 +383,7 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
             return true;
         } else if (menuItemId == R.id.sb_overflow_submenu) {
             return false;
-        } else if (menuItemId == R.id.close) {
+        } else if (menuItemId == R.id.mt_close) {
             this.finish();
             return true;
         }
