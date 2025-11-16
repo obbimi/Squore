@@ -97,7 +97,7 @@ class ServerSideButtonListener extends ScoreBoardListener implements View.OnClic
                 }
                 KioskMode kioskMode = PreferenceValues.getKioskMode(scoreBoard);
                 if ( ! kioskMode.equals(KioskMode.NotUsed) ) {
-                    PreferenceValues.setEnum(PreferenceKeys.kioskMode, scoreBoard, KioskMode.NotUsed);
+                    PreferenceValues.setKioskMode(scoreBoard, KioskMode.NotUsed);
                     scoreBoard.showInfoMessage("Abandoning kiosk mode...", 5);
                     //scoreBoard.doRestart(); // don't restart if e.g. RemoteSettings url is used. It might go straight back in kioskmode.
                     scoreBoard.reinitMenu();

@@ -39,6 +39,7 @@ import com.doubleyellow.util.FileUtil;
 import com.doubleyellow.util.JsonUtil;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
+import com.doubleyellow.util.Params;
 import com.doubleyellow.util.StringUtil;
 
 import org.json.JSONArray;
@@ -155,14 +156,9 @@ public class ExportImportPrefs extends DialogPreference
         return sMsg;
     }
 
-    public static void importSettingsFromJSONFromURL(Context context, String sContent, String sUrl) throws JSONException {
+    public static int importSettingsFromJSONFromURL(Context context, String sContent, String sUrl) throws JSONException {
         sContent = sContent.trim();
         JSONObject joRemoteConfig = new JSONObject(sContent);
-
-        // TEMP CODE WHILE DEVELOPING
-        if ( PreferenceValues.currentDateIsTestDate() ) {
-            joRemoteConfig.remove(PreferenceKeys.UseMQTT.toString());
-        }
 
         JSONObject joCurrent = getCurrentSettings(context);
         Map mCurrent = JsonUtil.toMap(joCurrent);
@@ -182,10 +178,18 @@ public class ExportImportPrefs extends DialogPreference
         Map<MapUtil.mapDiff, Map> mapDiff = MapUtil.getMapDiff(mCurrent, mRemote);
         Map mInserts = mapDiff.get(MapUtil.mapDiff.insert);
         Map mUpdates = mapDiff.get(MapUtil.mapDiff.update);
+/*
+        if ( MapUtil.isNotEmpty(mUpdates) ) {
+            Map mUpdates2 = getUpdates(mRemote, mCurrent);
+        }
+*/
         Map mToBeOverwritten = MapUtil.filterKeys(mCurrent, mUpdates.keySet(), MapUtil.Overlay.Keep);
-        Map mDeletes = mapDiff.get(MapUtil.mapDiff.delete);
-        Log.w(TAG, "TODO: settings diff " + mapDiff);
-        int iChanges = mUpdates.size() + mInserts.size();
+        //Map mDeletes = mapDiff.get(MapUtil.mapDiff.delete);
+        //Log.w(TAG, "TODO: settings diff " + mapDiff);
+        Map mUpserts = new HashMap(mInserts);
+        mUpserts.putAll(mUpdates);
+
+        int iChanges = mUpserts.size();
 
         if ( mUpdates.size() > 0 && mUpdates.size() < 10 ) {
             // dirty trick do NOT report on changes if they are not actually changes but one map contains an int value and the other a string value
@@ -203,11 +207,22 @@ public class ExportImportPrefs extends DialogPreference
         String sMsg;
         int iMsgDuration = 10;
         sUrl = URLFeedTask.shortenUrl(sUrl);
+        boolean bRestartRequired = false;
         if ( iChanges > 0  ) {
-            importSettingsFromJSON(context, joRemoteConfig);
-            if ( joRemoteConfig.has(PreferenceKeys.feedPostUrls.toString()) ) {
+            JSONObject joUpsertSettings = new JSONObject(mUpserts);
+            bRestartRequired = importSettingsFromJSON(context, joUpsertSettings);
+
+            // special cases
+            if ( joUpsertSettings.has(PreferenceKeys.feedPostUrls.toString()) ) {
                 PreferenceValues.setMatchesFeedURLUnchanged(false);
             }
+            if ( joUpsertSettings.has(PreferenceKeys.showActionBar.toString()) ) {
+                ScoreBoard.bUseActionBar = null;
+                if ( context instanceof ScoreBoard) {
+                    ((ScoreBoard)context).initShowActionBar();
+                }
+            }
+
             sMsg = context.getString(R.string.pref_RemoteConfig_X_SettingChanged, iChanges, sUrl);
             if ( iChanges < 5 ) {
                 sMsg = sMsg + "\n\n" + ListUtil.join(mToBeOverwritten.keySet(), "\n");
@@ -215,7 +230,7 @@ public class ExportImportPrefs extends DialogPreference
                     sMsg = sMsg + "\n" + ListUtil.join(mInserts.keySet(), "\n");
                 }
             }
-            iMsgDuration = 10;
+            iMsgDuration = 20;
         } else {
             sMsg = context.getString(R.string.pref_RemoteConfig_NoSettingChanges, sUrl);
             iMsgDuration = 3;
@@ -225,7 +240,7 @@ public class ExportImportPrefs extends DialogPreference
         } else {
             Toast.makeText(context, sMsg, Toast.LENGTH_SHORT).show();
         }
-        if ( iChanges > 0 ) {
+        if ( bRestartRequired ) {
             int restartAppIfChangesDetected = joRemoteConfig.optInt("restartAppIfChangesDetected", 1);
             switch (restartAppIfChangesDetected) {
                 case 1:
@@ -247,9 +262,12 @@ public class ExportImportPrefs extends DialogPreference
         }
 
         // TODO: feedPostUrl=<a number>, if specified feedPostUrls should be there as well
+        return iChanges;
     }
-    public static void importSettingsFromJSON(Context context, JSONObject joSettings) throws JSONException
+    public static boolean importSettingsFromJSON(Context context, JSONObject joSettings) throws JSONException
     {
+        boolean bRestartRequired = false;
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
 
@@ -268,6 +286,8 @@ public class ExportImportPrefs extends DialogPreference
             PreferenceKeys prefKey = null;
             try {
                 prefKey = PreferenceKeys.valueOf(sKey);
+                bRestartRequired = bRestartRequired || prefKey.restartRequired();
+
                 Class clazz = prefKey.getType();
                 if ( clazz != null ) {
                     if ( clazz.equals(Integer.class) ) {
@@ -285,7 +305,17 @@ public class ExportImportPrefs extends DialogPreference
                         }
                         continue;
                     } else if ( clazz.isEnum() ) {
-                        editor.putString(sKey, String.valueOf(oBUValue));
+                        Class<? extends Enum> eClazz = (Class<Enum>) clazz;
+                        Object oValue = Params.getEnumValueFromString(eClazz, String.valueOf(oBUValue));
+                        if ( oValue == null && oBUValue instanceof Boolean ) {
+                            // assume first enum value turns something 'off'
+                            oValue = eClazz.getEnumConstants()[0];
+                        }
+                        if ( oValue != null ) {
+                            editor.putString(sKey, String.valueOf(oValue) );
+                        } else {
+                            Log.w(TAG, String.format("Invalid enum value in remote settings %s=%s", sKey, oBUValue));
+                        }
                         continue;
                     }
                 }
@@ -326,6 +356,8 @@ public class ExportImportPrefs extends DialogPreference
             }
         }
         editor.commit();
+
+        return bRestartRequired;
     }
 
     public static JSONObject getCurrentSettings(Context context) {

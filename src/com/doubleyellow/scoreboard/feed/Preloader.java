@@ -183,14 +183,16 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
 
     private boolean m_bFetching = false;
     private Status m_status = Status.NotStarted;
-    public enum Status {
+    private enum Status {
         NotStarted,
+        /** always first */
         WebConfig,
+        /** always second */
+        RemoteSettings,
         ActiveMatchesFeed,
       //CountryCache,
         ActivePlayersFeed,
         FeedOfFeeds,
-        RemoteSettings,
         /** TODO: this next one should actually update the 'Name' of some of the defined feeds if they match on URL: ones like tournamentsoftware.com.001.php, tournamentsoftware.com.002.php */
         DynamicFeedNames,
         /** just a bookmark we can jump to if first feedfetching already fails */
@@ -247,17 +249,18 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-                if ( m_status.equals(Status.RemoteSettings) ) {
+                } else if ( m_status.equals(Status.RemoteSettings) ) {
                     try {
-                        ExportImportPrefs.importSettingsFromJSONFromURL(m_context, sContent, sUrl);
+                        int iChanges = ExportImportPrefs.importSettingsFromJSONFromURL(m_context, sContent, sUrl);
+                        if ( iChanges > 0 ) {
+                            return; // prevent doNext(1)
+                        }
                     } catch (Exception e) {
                         if ( m_status.equals(Status.RemoteSettings) ) {
                             ((ScoreBoard)m_context).showInfoMessageOnUiThread( "Could not import remote settings from " + URLFeedTask.shortenUrl(sUrl) + " " + e, 10);
                         }
                     }
-                }
-                if ( m_status.equals(Status.ActiveMatchesFeed) ) {
+                } else if ( m_status.equals(Status.ActiveMatchesFeed) ) {
                     // if we only receive a header for the feed, or empty content, try another
                     sContent = sContent.trim();
                     if (StringUtil.isEmpty(sContent) || sContent.matches("^\\[.+\\]$")) {

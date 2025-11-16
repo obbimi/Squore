@@ -149,6 +149,9 @@ public class Preferences extends Activity {
             boolean bReinitColors = false;
             if ( eKey != null ) {
                 m_lSettingsChanged.add(eKey);
+                if ( eKey.restartRequired() ) {
+                    PreferenceValues.setRestartRequired(Preferences.this);
+                }
                 switch (eKey) {
                     case squoreBrand:
                         Brand brand = RWValues.getEnum(PreferenceKeys.squoreBrand, Preferences.this, Brand.class, Brand.Squore);
@@ -165,11 +168,9 @@ public class Preferences extends Activity {
 
                             this.bIgnorePrefChanges = false;
                             setModelDirty();
-                            PreferenceValues.setRestartRequired(Preferences.this);
                         }
                         break;
                     case LandscapeLayoutPreference:
-                        //PreferenceValues.setRestartRequired(Preferences.this);
                         break;
                     case showBrandLogoOn: {
                             boolean bEnabled = ListUtil.isNotEmpty(PreferenceValues.showBrandLogoOn(Preferences.this));
@@ -262,7 +263,6 @@ public class Preferences extends Activity {
                     case prefetchFlags:            // fall through
                     case swapPlayersOn180DegreesRotationOfDeviceInLandscape: // fall through
                         setModelDirty();
-                        //PreferenceValues.setRestartRequired(Preferences.this);
                         break;
                     case smsResultToNr: break;
 
@@ -549,7 +549,6 @@ public class Preferences extends Activity {
                     case RemoteSettingsURL:
                         String sUrl = PreferenceValues.getRemoteSettingsURL(Preferences.this, true);
                         if ( StringUtil.isNotEmpty(sUrl) && sUrl.startsWith("http") ) {
-                            PreferenceValues.setRestartRequired(Preferences.this);
                             URLFeedTask task = new URLFeedTask(Preferences.this, sUrl);
                             task.setContentReceiver(this);
                             int iCacheMaxMinutes = PreferenceValues.getMaxCacheAgeFeeds(Preferences.this);

@@ -2286,6 +2286,9 @@ public class PreferenceValues extends RWValues
         textColors.setEnabled(bEnable);
     }
 
+    public static boolean setKioskMode(Context context, KioskMode kioskMode) {
+        return PreferenceValues.setEnum(PreferenceKeys.kioskMode, context, kioskMode);
+    }
     public static KioskMode getKioskMode(Context context) {
         KioskMode anEnum = getEnum(PreferenceKeys.kioskMode, context, KioskMode.class, KioskMode.NotUsed);
         if ( anEnum == null ) {

@@ -1309,7 +1309,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ------------------------------------------------------
     // refresh GUI elements
     // ------------------------------------------------------
-    private void initShowActionBar() {
+    public void initShowActionBar() {
         if ( bUseActionBar == null || bUseActionBar.equals(ToggleResult.nothing) ) {
             bUseActionBar = PreferenceValues.showActionBar(this)? ToggleResult.setToTrue : ToggleResult.setToFalse;
         }
@@ -1567,7 +1567,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     private void initActionBarSettings(MenuItem[] menuitems) {
         if ( menuitems == null ) { return; }
-        if ( this.bUseActionBar != ToggleResult.setToTrue ) { return; }
+        if ( ScoreBoard.bUseActionBar != ToggleResult.setToTrue ) { return; }
         boolean bShowTextInActionBar = PreferenceValues.showTextInActionBar(this);
         for( MenuItem menuItem: menuitems ) {
             if ( menuItem == null ) { continue; }

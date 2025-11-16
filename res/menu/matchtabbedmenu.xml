@@ -36,7 +36,7 @@
             android:id="@+id/sb_overflow_submenu"
             android:icon="@drawable/ic_action_overflow"
             android:title="@string/uc_more"
-            app:showAsAction="ifRoom">
+            app:showAsAction="always">
 
         <!-- move menu items below here if you want to simulate overflow even for devices that do normally do not have it (because the have a hardware menu button) -->
         <menu>
