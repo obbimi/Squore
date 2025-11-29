@@ -1135,7 +1135,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     boolean bFeedPropertiesChanged = false;
 
                     if ( StringUtil.isNotEmpty(sActualNameFromFeed) ) {
-                        if ( sActualNameFromFeed.equals(sCurrentName) == false ) {
+                        if ( sActualNameFromFeed.equals(sCurrentName) == false && sCurrentName.startsWith(sActualNameFromFeed) == false && sActualNameFromFeed.startsWith(sCurrentName) ) {
                             feedPostDetail.put(URLsKeys.Name, sActualNameFromFeed);
                             bFeedPropertiesChanged = true;
                         }

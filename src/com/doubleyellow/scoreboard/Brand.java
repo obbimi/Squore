@@ -297,6 +297,11 @@ public enum Brand
     }
 
     public static void setSportPrefs(Context ctx) {
+        String sUrl = PreferenceValues.getRemoteSettingsURL(ctx, false);
+        if (StringUtil.isNotEmpty(sUrl) ) {
+            return;
+        }
+
         if ( isRacketlon() ) {
             PreferenceValues.setNumber   (PreferenceKeys.numberOfGamesToWinMatch         , ctx, 4); // TODO: not applicable. only total number of points matter
             PreferenceValues.setNumberR  (PreferenceKeys.numberOfPointsToWinGame         , ctx, R.integer.gameEndScore_default__Racketlon);

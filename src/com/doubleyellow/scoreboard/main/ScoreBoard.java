@@ -4671,9 +4671,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         postMatchModel(context, matchModel, true, false, oTimerInfo);
         publishMatchOnMQTT(matchModel, false, oTimerInfo);
     }
+/*
     public static void postMatchModel(Context context, Model matchModel, boolean bAllowEndGameIfApplicable, boolean bFromMenu, Type timerType, int iSecsTotal) {
         postMatchModel(context, matchModel, bAllowEndGameIfApplicable, bFromMenu, getTimerInfo(timerType, iSecsTotal));
     }
+*/
     public static void postMatchModel(Context context, Model matchModel, boolean bAllowEndGameIfApplicable, boolean bFromMenu, JSONObject oTimerInfo) {
         if ( matchModel == null) { return; }
         if ( oTimerInfo != null ) { matchModel.setShareURL(null); } // ensure repost for livescore, even though score has not changed

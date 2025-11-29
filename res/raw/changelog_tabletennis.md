@@ -1,3 +1,9 @@
+## 4.59 (nov 2025)
+
+- remote control via media button: option to choose between
+  - Player Fixed : Previous Song = A, Next Is B (default), and
+  - Side Fixed : Previous Song = Player On Left Or Top - Next Is Player On Right or Bottom
+
 ## 4.58 (july 2025)
 
 - target sdk 35 enforced by google
