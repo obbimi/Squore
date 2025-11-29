@@ -6991,11 +6991,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_NEXT         , "KEYCODE_MEDIA_NEXT         ");
         msMediaPlayBackDesc.put(KeyEvent.KEYCODE_MEDIA_FAST_FORWARD , "KEYCODE_MEDIA_FAST_FORWARD ");
     }
-    private MediaSession ms = null;
+    private MediaSession m_mediaSession = null;
     private void onPause_BluetoothMediaControlButtons() {
-        if ( ms != null ) {
-            ms.release();
-            ms = null;
+        if ( m_mediaSession != null ) {
+            m_mediaSession.release();
+            m_mediaSession = null;
         }
     }
     private boolean onResume_BluetoothMediaControlButtons() {
@@ -7007,8 +7007,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         // https://stackoverflow.com/questions/54414333/mediasession-onmediabuttonevent-works-for-a-few-seconds-then-quits-android
         // work if bluetooth connection is already established
 
-        if ( ms == null ) {
-            ms = new MediaSession(getApplicationContext(), getPackageName());
+        if ( m_mediaSession == null ) {
+            m_mediaSession = new MediaSession(getApplicationContext(), getPackageName());
 
             // this is required or else some for some devices some buttons presses don't make it here (e.g. Plantronic headphone)
             PlaybackState.Builder mStateBuilder = new PlaybackState.Builder()
@@ -7021,10 +7021,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                );
 //          mStateBuilder.setState(PlaybackState.STATE_PLAYING, 0, 1);
             PlaybackState playbackState = mStateBuilder.build();
-            ms.setPlaybackState(playbackState);
+            m_mediaSession.setPlaybackState(playbackState);
 //          ms.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS); // no longer required according to documentation
 
-            ms.setCallback(new MediaSession.Callback() {
+            m_mediaSession.setCallback(new MediaSession.Callback() {
                 boolean bHandleNextDown = true;
                 @Override public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
                     Bundle   extras   = mediaButtonIntent.getExtras();
@@ -7078,6 +7078,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                     } else {
                                         boolean bIsBack = (keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS) || (keyCode == KeyEvent.KEYCODE_MEDIA_REWIND)|| (keyCode == KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD)|| (keyCode == KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD);
                                         Player player = bIsBack ? Player.A : Player.B;
+                                        if ( PreferenceValues.mediaControlMode(ScoreBoard.this).equals(MediaControlMode.PreviousSongIsPlayerOnLeftOrTop_NextSongIsPlayerOnRightOrBottom)) {
+                                            player = bIsBack ? IBoard.m_firstPlayerOnScreen : IBoard.m_firstPlayerOnScreen.getOther();
+                                        }
                                         handleMenuItem(R.id.pl_change_score, player);
                                         return true;
                                     }
@@ -7120,7 +7123,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 */
             });
 
-            ms.setActive(true);
+            m_mediaSession.setActive(true);
         }
 
         try {

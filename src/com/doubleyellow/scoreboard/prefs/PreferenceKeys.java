@@ -343,6 +343,7 @@ public enum PreferenceKeys {
         lastConnectedBluetoothDevice(null, false),
     /** e.g use 'Previous song' for scoring for player A, and 'Next song' for scoring for B, and play/pause for 'Undo' */
     allowForScoringWithBlueToothConnectedMediaControlButtons(Boolean.class, false),
+        mediaControlMode(MediaControlMode.class, false),
 
     wearable_(null, false),
         wearable_syncColorPrefs(Boolean.class, false),

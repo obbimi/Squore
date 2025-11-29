@@ -95,6 +95,7 @@
     <string name="showGamePausedDialog_default">Suggest</string>
     <string name="useChangeSidesFeature_default__Default">Suggest</string>
     <string name="KeepScreenOnWhen_default">MatchIsInProgress</string>
+    <string name="MediaControlMode_default">PreviousSongIsPlayerA_NextSongIsPlayerB</string>
     <string name="VolumeKeysBehaviour_default">None</string>
     <string name="useSpeechFeature_default__Default">DoNotUse</string>
     <string name="LandscapeLayoutPreference_default__Default">Default</string>

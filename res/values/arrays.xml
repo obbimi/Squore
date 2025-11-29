@@ -76,6 +76,10 @@
         <item>Automatically choose from palette</item>
         <item>Manually</item>
     </string-array>
+    <string-array name="MediaControlMode_DisplayValues">
+        <item>Player Fixed : Previous Song = A, Next Is B</item>
+        <item>Side Fixed : Previous Song = Player On Left Or Top - Next Is Player On Right or Bottom</item>
+    </string-array>
     <string-array name="KeepScreenOnWhen_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.KeepScreenOnWhen -->
         <item>Always</item>

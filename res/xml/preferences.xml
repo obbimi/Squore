@@ -571,6 +571,16 @@
                 android:summary="@string/pref_allowForScoringWithBlueToothConnectedMediaControlButtons_summary"
                 android:defaultValue="@bool/allowForScoringWithBlueToothConnectedMediaControlButtons_default"
                 />
+            <com.doubleyellow.prefs.EnumListPreference
+                    android:icon="@drawable/dummy"
+                    android:key="mediaControlMode"
+                    android:title="@string/pref_MediaControlMode"
+                    android:summary="@string/pref_MediaControlMode_summary"
+                    android:defaultValue="@string/MediaControlMode_default"
+                    dy:displayValues="@array/MediaControlMode_DisplayValues"
+                    dy:enumClass="com.doubleyellow.scoreboard.prefs.MediaControlMode"
+            />
+
         </PreferenceCategory>
 
         <CheckBoxPreference android:key="blinkFeedbackPerPoint"
@@ -888,6 +898,16 @@
                 android:defaultValue="@bool/allowForScoringWithBlueToothConnectedMediaControlButtons_default"
                 />
         </PreferenceCategory>
+
+        <com.doubleyellow.prefs.EnumListPreference
+            android:icon="@drawable/dummy"
+            android:key="mediaControlMode"
+            android:title="@string/pref_MediaControlMode"
+            android:summary="@string/pref_MediaControlMode_summary"
+            android:defaultValue="@string/MediaControlMode_default"
+            dy:displayValues="@array/MediaControlMode_DisplayValues"
+            dy:enumClass="com.doubleyellow.scoreboard.prefs.MediaControlMode"
+        />
 
 <!--
         <PreferenceCategory android:title="@string/pref_FCM" android:key="FCMPrefs">

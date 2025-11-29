@@ -2696,6 +2696,9 @@ public class PreferenceValues extends RWValues
     public static boolean initializeForScoringWithMediaControlButtons(Context context) {
         return getBoolean(PreferenceKeys.allowForScoringWithBlueToothConnectedMediaControlButtons, context, false);
     }
+    public static MediaControlMode mediaControlMode(Context context) {
+        return getEnum(PreferenceKeys.mediaControlMode, context, MediaControlMode.class, R.string.MediaControlMode_default);
+    }
 
     public static String getIpAddress(Context context) {
         try {
