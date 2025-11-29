@@ -236,6 +236,22 @@ public class ScoreLine implements Serializable
     public String toString() {
         return ListUtil.join(this.toStringList(), "");
     }
+
+    // only for 'call' scorelines: mainly for livescore page A:ST, B:NL, A:YL etc
+    public String toCallString4() {
+        if ( this.callTargetPlayer == null ) { return null; }
+        StringBuilder sb = new StringBuilder();
+        sb.append(callTargetPlayer).append(":");
+        if ( call != null ) {
+            sb.append(call);
+        } else if ( equipment != null ) {
+            sb.append(equipment);
+        } else if ( misc != null ) {
+            sb.append(misc);
+        }
+        return sb.toString();
+    }
+
     public String toString6() {
         StringBuilder sb = new StringBuilder();
         if ( this.callTargetPlayer != null ) {

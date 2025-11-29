@@ -138,18 +138,18 @@ public abstract class Model implements Serializable
         void OnBrokenEquipmentChanged(BrokenEquipment equipment, Player affectedPlayer);
     }
 
-    transient private List<OnScoreChangeListener>        onScoreChangeListeners          = new ArrayList<OnScoreChangeListener>();
-    transient private List<OnPlayerChangeListener>       onPlayerChangeListeners         = new ArrayList<OnPlayerChangeListener>();
-    transient private List<OnServeSideChangeListener>    onServeSideChangeListener       = new ArrayList<OnServeSideChangeListener>();
-    transient private List<OnSpecialScoreChangeListener> onSpecialScoreChangeListeners   = new ArrayList<OnSpecialScoreChangeListener>();
-    transient private List<OnGameEndListener>            onGameEndListeners              = new ArrayList<OnGameEndListener>();
-    transient         List<OnMatchEndListener>           onMatchEndListeners             = new ArrayList<OnMatchEndListener>();
-    transient private List<OnCallChangeListener>         onCallChangeListeners           = new ArrayList<OnCallChangeListener>();
-    transient         List<OnComplexChangeListener>      onComplexChangeListeners        = new ArrayList<OnComplexChangeListener>();
-    transient private List<OnBrokenEquipmentListener>    onBrokenEquipmentListeners      = new ArrayList<OnBrokenEquipmentListener>();
-    transient private List<OnPowerPlayChangeListener>    onPowerPlayChangeListener       = new ArrayList<>();
-    transient private List<OnLockChangeListener>         onLockChangeListeners           = new ArrayList<OnLockChangeListener>();
-    transient private List<GameTiming.OnTimingChangedListener> onTimingChangedListeners  = new ArrayList<GameTiming.OnTimingChangedListener>();
+    transient private List<OnScoreChangeListener>              onScoreChangeListeners        = new ArrayList<OnScoreChangeListener>();
+    transient private List<OnPlayerChangeListener>             onPlayerChangeListeners       = new ArrayList<OnPlayerChangeListener>();
+    transient private List<OnServeSideChangeListener>          onServeSideChangeListener     = new ArrayList<OnServeSideChangeListener>();
+    transient private List<OnSpecialScoreChangeListener>       onSpecialScoreChangeListeners = new ArrayList<OnSpecialScoreChangeListener>();
+    transient private List<OnGameEndListener>                  onGameEndListeners            = new ArrayList<OnGameEndListener>();
+    transient         List<OnMatchEndListener>                 onMatchEndListeners           = new ArrayList<OnMatchEndListener>();
+    transient private List<OnCallChangeListener>               onCallChangeListeners         = new ArrayList<OnCallChangeListener>();
+    transient         List<OnComplexChangeListener>            onComplexChangeListeners      = new ArrayList<OnComplexChangeListener>();
+    transient private List<OnBrokenEquipmentListener>          onBrokenEquipmentListeners    = new ArrayList<OnBrokenEquipmentListener>();
+    transient private List<OnPowerPlayChangeListener>          onPowerPlayChangeListener     = new ArrayList<>();
+    transient private List<OnLockChangeListener>               onLockChangeListeners         = new ArrayList<OnLockChangeListener>();
+    transient private List<GameTiming.OnTimingChangedListener> onTimingChangedListeners      = new ArrayList<GameTiming.OnTimingChangedListener>();
 
     public int clearListeners(String sClassNameFilter) {
         int iCnt = 0;
@@ -3072,6 +3072,21 @@ public abstract class Model implements Serializable
             jsonObject.put(JSONKey.isGameBall .toString(), isPossibleGameBallFor(Player.A) || isPossibleGameBallFor(Player.B));
             jsonObject.put(JSONKey.isMatchBall.toString(), (possibleMatchBallFor != null) && (possibleMatchBallFor.length!=0) );
             jsonObject.put(JSONKey.isUndo     .toString(), m_bIsUndo);
+
+            // lastScorer and lastCall is mainly for livescore page
+            Player lastScorer = getLastScorer();
+            if ( lastScorer != null ) {
+                jsonObject.put(JSONKey.lastScorer.toString(), lastScorer);
+            }
+            ScoreLine lastCall = getLastCall();
+            if ( lastCall != null ) {
+                String sLastCall = lastCall.toCallString4();
+                jsonObject.put(JSONKey.lastCall.toString(), sLastCall);
+            }
+            if ( this instanceof GSMModel ) {
+                boolean tieBreakGame = ((GSMModel) this).isTieBreakGame();
+                jsonObject.put(JSONKey.isTieBreak.toString(), tieBreakGame);
+            }
 
             if ( oTimerInfo != null ) {
                 jsonObject.put(JSONKey.timerInfo.toString(), oTimerInfo);
