@@ -265,7 +265,7 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                     sContent = sContent.trim();
                     if (StringUtil.isEmpty(sContent) || sContent.matches("^\\[.+\\]$")) {
                         // no matches from the current feed
-                        final int iFeedPostUrlIdx = PreferenceValues.getInteger(PreferenceKeys.feedPostUrl, m_context, 0);
+                        final int iFeedPostUrlIdx = PreferenceValues._getInteger(PreferenceKeys.feedPostUrl, m_context, 0);
                         if ( iFeedPostUrlIdx == 0) {
                             if ( PreferenceValues.getMatchesFeedURLUnchanged() ) {
                                 PreferenceValues.setActiveFeedNr(m_context, 1);

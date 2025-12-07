@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -840,7 +839,7 @@ public class MatchView extends ScrollView
             if ( m_model != null ) {
                 tbBestOf_or_TotalOf.setChecked(m_model.playAllGames());
             } else {
-                tbBestOf_or_TotalOf.setChecked(PreferenceValues.getBoolean(PreferenceKeys.playAllGames, context, R.bool.playAllGames_default));
+                tbBestOf_or_TotalOf.setChecked(PreferenceValues.playAllGames(context));
             }
         }
 

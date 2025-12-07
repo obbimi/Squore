@@ -82,7 +82,7 @@ public class SelectFeed extends BaseAlertDialog
 
         final ArrayList<String> alNames = new ArrayList<>(lNames);
         String sCurrentFeedName = PreferenceValues.getMatchesFeedName(context);
-        int iIndexPref = PreferenceValues.getInteger(PreferenceKeys.feedPostUrl, context, 0);
+        int iIndexPref = PreferenceValues._getInteger(PreferenceKeys.feedPostUrl, context, 0);
         int iIndexList = alNames.indexOf(sCurrentFeedName);
         if ( (iIndexList == -1) && (iIndexPref != -1) ) {
             sCurrentFeedName = ListUtil.size(alNames) > iIndexPref ? alNames.get(iIndexPref): sCurrentFeedName;

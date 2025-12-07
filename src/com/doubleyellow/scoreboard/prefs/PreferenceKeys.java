@@ -29,6 +29,9 @@ import com.doubleyellow.scoreboard.timer.ViewType;
 import com.doubleyellow.util.Feature;
 import com.doubleyellow.util.SortOrder;
 
+import java.util.EnumSet;
+import java.util.List;
+
 /**
  * Collection of keys used to store preferences
  */
@@ -40,7 +43,7 @@ public enum PreferenceKeys {
         continueRecentMatch(Feature.class, false),
         endGameSuggestion(Feature.class, false),
         /* @Deprecated */
-        OrientationPreference(null /*EnumSet<com.doubleyellow.prefs.OrientationPreference.class>*/, true),
+        OrientationPreference(EnumSet.class, true),
             LandscapeLayoutPreference(com.doubleyellow.scoreboard.prefs.LandscapeLayoutPreference.class, false),
         showActionBar(Boolean.class, false),
         showFullScreen(Boolean.class, false),
@@ -54,18 +57,18 @@ public enum PreferenceKeys {
         NewMatchesType(NewMatchesType.class, false),
             maxNumberOfPlayersInGroup(Integer.class, false),
         showTips(Boolean.class, false),
-        lockMatchMV(AutoLockContext.class, false),
+        lockMatchMV(EnumSet.class, false),
             numberOfMinutesAfterWhichToLockMatch(Integer.class, false),
         BackKeyBehaviour(BackKeyBehaviour.class, false),
         VolumeKeysBehaviour(VolumeKeysBehaviour.class, false),
-        showFieldDivisionOn(null, false),
+        showFieldDivisionOn(EnumSet.class, false),
         hideFieldDivisionWhenGameInProgress(Boolean.class, false),
 
         changeSides(null, false),
             /** @Deprecated boolean */
             swapPlayersBetweenGames(Boolean.class, false),
             swapPlayersHalfwayGame(Feature.class, false),
-            changeSidesWhen_GSM(null, false),
+            changeSidesWhen_GSM(EnumSet.class, false),
             useChangeSidesFeature(Feature.class, false),
             swapPlayersOn180DegreesRotationOfDeviceInLandscape(Boolean.class, false),
         /* Tabletennis: Expedite system */
@@ -80,7 +83,7 @@ public enum PreferenceKeys {
         numberOfServiceCountUpOrDown(DownUp.class, false),
     statistics(null, false),
         recordRallyEndStatsAfterEachScore(Feature.class, false),
-        recordRallyEndStatsDetails(null, false),
+        recordRallyEndStatsDetails(EnumSet.class, false),
 
     Sharing(null, false),
         smsResultToNr(String.class, false),
@@ -102,7 +105,7 @@ public enum PreferenceKeys {
             tournamentMaxDuration_InDays(Integer.class, false),
             removeSeedingAfterMatchSelection(Boolean.class, false),
             switchToPlayerListIfMatchListOfFeedIsEmpty(Feature.class, false),
-            myUsedFeedTypes(null, false),
+            myUsedFeedTypes(List.class, false),
         additionalPostKeyValuePairs(String.class, false),
         postDataPreference(PostDataPreference.class, false),
         maximumCacheAgeFlags(Integer.class, false),
@@ -127,11 +130,11 @@ public enum PreferenceKeys {
         hideCompletedMatchesFromFeed(Boolean.class, false),
 
         useReferees(Boolean.class, false),
-            refereeList(null, false),
+            refereeList(List.class, false),
                 refereeName(String.class, false),
                 markerName(String.class, false),
                 assessorName(String.class, false),
-        playerList(null, false),
+        playerList(List.class, false),
         myMatches(null, false),
             matchList(null, false),
             removeMatchFromMyListWhenSelected(Feature.class, false),
@@ -163,7 +166,7 @@ public enum PreferenceKeys {
 
     Brand(null, false),
         squoreBrand(Brand.clazz, true),
-        showBrandLogoOn(null, false),
+        showBrandLogoOn(EnumSet.class, false),
         hideBrandLogoWhenGameInProgress(Boolean.class, false),
     showNewMatchFloatButton(Boolean.class, false),
     Timers(null, false),
@@ -193,8 +196,8 @@ public enum PreferenceKeys {
         showUseAudioCheckboxInTimer(Boolean.class, false),
         timerViewType(ViewType.class, false),
         showTimeIsAlreadyUpFor_Chrono(Boolean.class, false),
-        showMatchDurationChronoOn(null, false),
-        showLastGameDurationChronoOn(null, false),
+        showMatchDurationChronoOn(EnumSet.class, false),
+        showLastGameDurationChronoOn(EnumSet.class, false),
     //showWhoServesDialog(null, false),
     useTossFeature(Feature.class, false),
     useSpeechFeature(Feature.class, false),
@@ -230,7 +233,7 @@ public enum PreferenceKeys {
         useHandInHandOutScoring(Boolean.class, false),
         tieBreakFormat(TieBreakFormat.class, false),
         /** Racketlon specific */
-        disciplineSequence(null, false),
+        disciplineSequence(EnumSet.class, false),
 
         doublesServeSequence(DoublesServeSequence.class, false),
         /** to start with a score other than 0-0 */
@@ -253,19 +256,19 @@ public enum PreferenceKeys {
         indicateGameBall(Boolean.class, false),
         indicateGoldenPoint(null, false),
         //floatingMessageForGameBall(null, false),
-        floatingMessageForGameBallOn(null, false),
+        floatingMessageForGameBallOn(EnumSet.class, false),
         //keepScreenOn(null, false),
         keepScreenOnWhen(KeepScreenOnWhen.class, false),
         //showScoringHistoryInMainScreen(null, false),
-        showScoringHistoryInMainScreenOn(null, false),
+        showScoringHistoryInMainScreenOn(EnumSet.class, false),
 
         AppealHandGestureIconSize(Integer.class, false),
         showChoosenDecisionShortly(Boolean.class, false),
             showChoosenDecisionDuration_Appeal(null, false),
             showChoosenDecisionDuration_Conduct(null, false),
-        showAvatarOn(null, false),
+        showAvatarOn(EnumSet.class, false),
             hideAvatarForSameImage(Boolean.class, false),
-        showCountryAs(null, false),
+        showCountryAs(EnumSet.class, false),
             hideFlagForSameCountry(Boolean.class, false),
 
     Appearance(null, false),
@@ -282,7 +285,7 @@ public enum PreferenceKeys {
         //textColorDynamically(null, false),
         textColorDetermination(DetermineTextColor.class, false),
         textColors(null, false),
-        showPlayerColorOn(null, false),
+        showPlayerColorOn(EnumSet.class, false),
             PlayerColorsNewMatch(PlayerColorsNewMatch.class, false),
                 PlayerColorsNewMatchA(String.class, false),
                 PlayerColorsNewMatchB(String.class, false),
@@ -295,7 +298,7 @@ public enum PreferenceKeys {
 
     LiveScorePrefs(null, false),
         LiveScoreOpenURL(null, false),
-        liveScoreDeviceId(null, false),
+        liveScoreDeviceId(String.class, false),
         liveScoreDeviceId_customSuffix(String.class, false),
         postEveryChangeToSupportLiveScore(Boolean.class, false),
         turnOnLiveScoringForMatchesFromFeed(Boolean.class, false),
@@ -389,7 +392,7 @@ public enum PreferenceKeys {
     useDoublesMatchesTab(Boolean.class, false),
     useMyListFunctionality(Boolean.class, false),
 
-    kioskMode(KioskMode.class, false),
+    kioskMode(KioskMode.class, true),
     hideMenuItems(null, false),
     showMenuItems(null, false),
     ;

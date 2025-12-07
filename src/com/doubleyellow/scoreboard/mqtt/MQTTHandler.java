@@ -184,6 +184,7 @@ public class MQTTHandler
             } else {
                 m_role = MQTTRole.Master;
             }
+            PreferenceValues.setRole(m_role);
         }
     }
 
@@ -451,13 +452,14 @@ public class MQTTHandler
         String matchTopic = getMQTTPublishTopicUnloadMatch();
         publish(matchTopic, sJson, true);
     }
-    public boolean publishMatchOnMQTT(Model matchModel, boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
+
+    public MQTTRole publishMatchOnMQTT(Model matchModel, boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
         if ( isConnected() == false ) {
-            return false;
+            return null;
         }
         if ( MQTTRole.Slave.equals(m_role) ) {
             Log.d(TAG, "Not publishing match as slave : " + bPrefixWithJsonLength + " " + oTimerInfo);
-            return false;
+            return m_role;
         }
         List<String> lSkipKeys = bPrefixWithJsonLength ? null : PreferenceValues.getMQTTSkipJsonKeys(m_context);
         String matchTopic = getMQTTPublishTopicMatch();
@@ -467,7 +469,11 @@ public class MQTTHandler
             sJson = sJson.length() + ":" + sJson;
             matchTopic = getMQTTPublishTopicChange(false);
         }
-        return publish(matchTopic, sJson, true);
+        if ( publish(matchTopic, sJson, true) ) {
+            return m_role;
+        } else {
+            return null;
+        }
     }
 
     private String getMQTTPublishTopicMatch() {

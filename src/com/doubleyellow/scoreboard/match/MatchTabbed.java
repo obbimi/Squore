@@ -28,11 +28,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
-import android.nfc.NfcAdapter;
-import android.nfc.NfcEvent;
 import android.os.Bundle;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
@@ -48,7 +43,6 @@ import com.doubleyellow.scoreboard.feed.FeedFeedSelector;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
-import com.doubleyellow.scoreboard.prefs.KioskMode;
 import com.doubleyellow.scoreboard.prefs.NewMatchLayout;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -525,7 +519,7 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
 */
 
         if ( defaultTab == null ) {
-            defaultTab = PreferenceValues.getEnum(PreferenceKeys.MatchTabbed_defaultTab, this, SelectTab.class, SelectTab.Manual);
+            defaultTab = PreferenceValues._getEnum(PreferenceKeys.MatchTabbed_defaultTab, this, SelectTab.class, SelectTab.Manual);
 
             if ( defaultTab.equals(SelectTab.Feed) ) {
                 boolean bFeedIsNoLongerValid = false; // TODO: if feed no longer valid... e.g. make

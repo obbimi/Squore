@@ -2134,7 +2134,7 @@ public class IBoard implements TimerViewContainer
         String         sMsg                = getCallMessage(call, appealingOrMisbehaving, appealingOrMisbehaving, conductType, matchModel);
         int            iDurationDefaultRes = call.isConduct() ? R.integer.showChoosenDecisionDuration_Conduct_default : R.integer.showChoosenDecisionDuration_Appeal_default;
         PreferenceKeys keys                = call.isConduct() ? PreferenceKeys.showChoosenDecisionDuration_Conduct    : PreferenceKeys.showChoosenDecisionDuration_Appeal;
-        int            iMessageDuration    = PreferenceValues.getInteger(keys, context, context.getResources().getInteger(iDurationDefaultRes));
+        int            iMessageDuration    = PreferenceValues.getIntegerR(keys, context, iDurationDefaultRes);
         //int            iSize               = PreferenceValues.getCallResultMessageTextSize(context);
 
         showDecisionMessage(appealingOrMisbehaving, call, sMsg, iMessageDuration);

@@ -515,14 +515,6 @@ public abstract class Model implements Serializable
     // serve side/sequence
     //-------------------------------
 
-    public static Map<String, DoublesServeSequence> mOldDSS2New = new HashMap<>(); // apk 127
-    static {
-        mOldDSS2New.put("ABXY", DoublesServeSequence.A1A2B1B2);
-        mOldDSS2New.put("BXYA", DoublesServeSequence.A2B1B2_then_A1A2B1B2);
-        mOldDSS2New.put("AXBY", DoublesServeSequence.A1B1A2B2);
-        mOldDSS2New.put("AXAX", DoublesServeSequence.A1B1A1B1);
-    }
-
     public abstract boolean setDoublesServeSequence(DoublesServeSequence dsq);
     abstract DoublesServeSequence getDoubleServeSequence(int iGameZB);
 
@@ -2576,13 +2568,7 @@ public abstract class Model implements Serializable
 
                     if ( joFormat.has(JSONKey.doublesServeSequence.toString()) ) {
                         String ss = joFormat.getString(JSONKey.doublesServeSequence.toString());
-                        DoublesServeSequence dsq;
-                        if ( Model.mOldDSS2New.containsKey(ss) ) {
-                            dsq = Model.mOldDSS2New.get(ss);
-                            Log.w(TAG, String.format("Translated old %s to new %s", ss, dsq));
-                        } else {
-                            dsq = DoublesServeSequence.valueOf(ss);
-                        }
+                        DoublesServeSequence dsq = DoublesServeSequence.valueOf(ss);
                         _setDoublesServeSequence(dsq);
                     }
 

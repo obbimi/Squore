@@ -148,7 +148,7 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
         // pre-select
         // - first device, or
         // - previously selected device
-        String sPreviouslyConnected = null; // PreferenceValues.getMQTTOtherDeviceId(context);
+        String sPreviouslyConnected = PreferenceValues.getMQTTOtherDeviceId(context);
         String sCheckedDevice = null;
         if ( ListUtil.isEmpty(lPairedDevicesChecked) ) {
             // improve: show message now devices yet
@@ -209,7 +209,7 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
                 if ( selected && isValidSelection(sOtherDeviceChecked) ) {
                     PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, sOtherDeviceChecked);
                 } else {
-                    PreferenceValues.setString(PreferenceKeys.MQTTOtherDeviceId, context, "");
+                    PreferenceValues.clearMQTTOtherDeviceId(context);
                 }
                 scoreBoard.stopMQTT();
                 scoreBoard.doDelayedMQTTReconnect("", 1, 1, MQTTStatus.CloseSelectDeviceDialog);

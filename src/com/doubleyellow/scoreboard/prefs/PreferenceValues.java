@@ -55,11 +55,13 @@ import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.archive.GroupMatchesBy;
+import com.doubleyellow.scoreboard.bluetooth.BTRole;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.feed.Authentication;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
+import com.doubleyellow.scoreboard.mqtt.MQTTRole;
 import com.doubleyellow.scoreboard.speech.Speak;
 import com.doubleyellow.scoreboard.timer.ViewType;
 import com.doubleyellow.scoreboard.view.PreferenceCheckBox;
@@ -171,15 +173,15 @@ public class PreferenceValues extends RWValues
         if ( currentDateIsTestDate() && ViewUtil.isWearable(ctx) ) {
             return Brand.valueOf("TennisPadel"); // e.g. for wearable testing
         }
-        return RWValues.getEnum(PreferenceKeys.squoreBrand, ctx, Brand.class, Brand.Squore);
+        return _getEnum(PreferenceKeys.squoreBrand, ctx, Brand.class, Brand.Squore);
     }
 
     static EnumSet<ShowOnScreen> showBrandLogoOn(Context context) {
-        return getEnumSet(PreferenceKeys.showBrandLogoOn, context, ShowOnScreen.class, EnumSet.of(ShowOnScreen.OnChromeCast));
+        return _getEnumSet(PreferenceKeys.showBrandLogoOn, context, ShowOnScreen.class, EnumSet.of(ShowOnScreen.OnChromeCast));
     }
     public static EnumSet<Sport> getDisciplineSequence(Context context) {
         // TODO:
-        return getEnumSet(PreferenceKeys.disciplineSequence, context, Sport.class, EnumSet.allOf(Sport.class));
+        return _getEnumSet(PreferenceKeys.disciplineSequence, context, Sport.class, EnumSet.allOf(Sport.class));
     }
     public static Set<ShowOnScreen> toggleMatchGameDurationChronoVisibility(Context context) {
         EnumSet<ShowOnScreen> showOnScreens = PreferenceValues.showLastGameDurationChronoOn(context);
@@ -194,23 +196,23 @@ public class PreferenceValues extends RWValues
             // to allow monkey testing via adb. on screen time prevents uiautomation to dump screen layout
             return EnumSet.of(ShowOnScreen.OnChromeCast);
         }
-        return getEnumSet(PreferenceKeys.showMatchDurationChronoOn, context, ShowOnScreen.class, EnumSet.allOf(ShowOnScreen.class));
+        return _getEnumSet(PreferenceKeys.showMatchDurationChronoOn, context, ShowOnScreen.class, EnumSet.allOf(ShowOnScreen.class));
     }
     public static EnumSet<ShowOnScreen> showLastGameDurationChronoOn(Context context) {
         if ( currentDateIsTestDate() ) {
             // to allow monkey testing via adb. on screen time prevents uiautomation to dump screen layout
             return EnumSet.of(ShowOnScreen.OnChromeCast);
         }
-        return getEnumSet(PreferenceKeys.showLastGameDurationChronoOn, context, ShowOnScreen.class, EnumSet.allOf(ShowOnScreen.class));
+        return _getEnumSet(PreferenceKeys.showLastGameDurationChronoOn, context, ShowOnScreen.class, EnumSet.allOf(ShowOnScreen.class));
     }
     static EnumSet<ShowOnScreen> showFieldDivisionOn(Context context) {
-        return getEnumSet(PreferenceKeys.showFieldDivisionOn, context, ShowOnScreen.class, EnumSet.allOf(ShowOnScreen.class));
+        return _getEnumSet(PreferenceKeys.showFieldDivisionOn, context, ShowOnScreen.class, EnumSet.allOf(ShowOnScreen.class));
     }
     public static boolean hideBrandLogoWhenGameInProgress(Context context) {
-        return getBoolean(PreferenceKeys.hideBrandLogoWhenGameInProgress, context, R.bool.hideBrandLogoWhenGameInProgress_default);
+        return _getBoolean(PreferenceKeys.hideBrandLogoWhenGameInProgress, context, R.bool.hideBrandLogoWhenGameInProgress_default);
     }
     public static boolean hideFieldDivisionWhenGameInProgress(Context context) {
-        return getBoolean(PreferenceKeys.hideFieldDivisionWhenGameInProgress, context, R.bool.hideFieldDivisionWhenGameInProgress_default);
+        return _getBoolean(PreferenceKeys.hideFieldDivisionWhenGameInProgress, context, R.bool.hideFieldDivisionWhenGameInProgress_default);
     }
     public static boolean showBrandLogo(Context context, boolean bIsPresentation) {
         EnumSet<ShowOnScreen> showOnScreens = showBrandLogoOn(context);
@@ -261,7 +263,7 @@ public class PreferenceValues extends RWValues
         int iResDefault = getSportTypeSpecificResId(context, R.integer.serveButtonTransparencyNonServer_default__Squash);
 
         // get user preference value ( must be between 0 and 100 )
-        int i0To100Stored = getIntegerR(PreferenceKeys.serveButtonTransparencyNonServer, context, iResDefault);
+        int i0To100Stored = _getIntegerR(PreferenceKeys.serveButtonTransparencyNonServer, context, iResDefault);
         int i0To100 = i0To100Stored;
             i0To100 = Math.max(  0, i0To100);
             i0To100 = Math.min(100, i0To100);
@@ -273,7 +275,7 @@ public class PreferenceValues extends RWValues
         return i0To255;
     }
     public static int getAppealHandGestureIconSize(Context context) {
-        int iIconSize = getIntegerR(PreferenceKeys.AppealHandGestureIconSize, context, R.integer.AppealHandGestureIconSize_default);
+        int iIconSize = _getIntegerR(PreferenceKeys.AppealHandGestureIconSize, context, R.integer.AppealHandGestureIconSize_default);
         if ( iIconSize == context.getResources().getInteger(R.integer.AppealHandGestureIconSize_default) && (iIconSize != 0) ) {
             iIconSize = ViewUtil.getScreenHeightWidthMinimum(context) / 6;
             setNumber(PreferenceKeys.AppealHandGestureIconSize, context, iIconSize);
@@ -281,7 +283,7 @@ public class PreferenceValues extends RWValues
         return iIconSize;
     }
     public static boolean showChoosenDecisionShortly(Context context) {
-        return getBoolean(PreferenceKeys.showChoosenDecisionShortly, context, R.bool.showChoosenDecisionShortly_default);
+        return _getBoolean(PreferenceKeys.showChoosenDecisionShortly, context, R.bool.showChoosenDecisionShortly_default);
     }
 /*
     public static boolean getTextSizeScoreAsBigAsPossible(Context context) {
@@ -311,7 +313,7 @@ public class PreferenceValues extends RWValues
 */
 
     public static DetermineTextColor getTextColorDetermination(Context context) {
-        return getEnum(PreferenceKeys.textColorDetermination, context, DetermineTextColor.class, DetermineTextColor.AutoChooseBlackOrWhite);
+        return _getEnum(PreferenceKeys.textColorDetermination, context, DetermineTextColor.class, DetermineTextColor.AutoChooseBlackOrWhite);
     }
 
 /*
@@ -353,47 +355,47 @@ public class PreferenceValues extends RWValues
 */
 
     public static TieBreakFormat getTiebreakFormat(Context context) {
-        return getEnum(PreferenceKeys.tieBreakFormat, context, TieBreakFormat.class, TieBreakFormat.TwoClearPoints);
+        return _getEnum(PreferenceKeys.tieBreakFormat, context, TieBreakFormat.class, TieBreakFormat.TwoClearPoints);
     }
     public static FinalSetFinish getFinalSetFinish(Context context) {
-        return getEnum(PreferenceKeys.finalSetFinish, context, FinalSetFinish.class, FinalSetFinish.TieBreakTo7);
+        return _getEnum(PreferenceKeys.finalSetFinish, context, FinalSetFinish.class, FinalSetFinish.TieBreakTo7);
     }
     public static NewBalls getNewBalls(Context context) {
-        return getEnum(PreferenceKeys.newBalls, context, NewBalls.class, NewBalls.AfterFirst9ThenEach11);
+        return _getEnum(PreferenceKeys.newBalls, context, NewBalls.class, NewBalls.AfterFirst9ThenEach11);
     }
     public static int newBallsXGamesUpFront(Context context) {
-        return getIntegerR(PreferenceKeys.newBallsXGamesUpFront, context, R.integer.newBallsXGamesUpFront__Default);
+        return _getIntegerR(PreferenceKeys.newBallsXGamesUpFront, context, R.integer.newBallsXGamesUpFront__Default);
     }
     public static NewMatchLayout getNewMatchLayout(Context context) {
         if ( ViewUtil.isWearable(context) ) {
             //return NewMatchLayout.Simple; // font to big
         }
-        return getEnum(PreferenceKeys.newMatchLayout, context, NewMatchLayout.class, R.string.newMatchLayout_default);
+        return _getEnum(PreferenceKeys.newMatchLayout, context, NewMatchLayout.class, R.string.newMatchLayout_default);
     }
     public static GameScoresAppearance getGameScoresAppearance(Context context) {
         if ( Brand.isRacketlon() || Brand.isGameSetMatch() ) {
             return GameScoresAppearance.ShowFullScore;
         }
-        return getEnum(PreferenceKeys.gameScoresAppearance, context, GameScoresAppearance.class, GameScoresAppearance.ShowGamesWon);
+        return _getEnum(PreferenceKeys.gameScoresAppearance, context, GameScoresAppearance.class, GameScoresAppearance.ShowGamesWon);
     }
     public static LandscapeLayoutPreference getLandscapeLayout(Context context) {
         LandscapeLayoutPreference def = LandscapeLayoutPreference.Default;
         if ( Brand.isRacketlon() || Brand.isGameSetMatch() ) {
             def = LandscapeLayoutPreference.Default;
         }
-        return getEnum(PreferenceKeys.LandscapeLayoutPreference, context, LandscapeLayoutPreference.class, def);
+        return _getEnum(PreferenceKeys.LandscapeLayoutPreference, context, LandscapeLayoutPreference.class, def);
     }
     public static DoublesServeSequence getDoublesServeSequence(Context context) {
         DoublesServeSequence dssDefault = DoublesServeSequence.values()[0];
-        return getEnum(PreferenceKeys.doublesServeSequence, context, DoublesServeSequence.class, dssDefault, Model.mOldDSS2New);
+        return _getEnum(PreferenceKeys.doublesServeSequence, context, DoublesServeSequence.class, dssDefault);
     }
     public static EnumSet<OrientationPreference> getOrientationPreference(Context context) {
         String[] values = context.getResources().getStringArray(R.array.OrientationPreferenceDefaultValues);
         EnumSet<OrientationPreference> eValues = EnumSet.copyOf(ListUtil.toEnumValues(Arrays.asList(values), OrientationPreference.class));
-        return getEnumSet(PreferenceKeys.OrientationPreference, context, OrientationPreference.class, eValues);
+        return _getEnumSet(PreferenceKeys.OrientationPreference, context, OrientationPreference.class, eValues);
     }
     public static EnumSet<ShowOnScreen> showScoringHistoryInMainScreenOn(Context context) {
-        return getEnumSet(PreferenceKeys.showScoringHistoryInMainScreenOn, context, ShowOnScreen.class, EnumSet.of(ShowOnScreen.OnDevice));
+        return _getEnumSet(PreferenceKeys.showScoringHistoryInMainScreenOn, context, ShowOnScreen.class, EnumSet.of(ShowOnScreen.OnDevice));
     }
 
     public static boolean showScoringHistoryInMainScreen(Context context, boolean bIsPresentation) {
@@ -436,81 +438,81 @@ public class PreferenceValues extends RWValues
         if ( isScoreboardInPresentationView(context) ) {
             return true;
         }
-        return getBoolean(PreferenceKeys.showFullScreen, context, R.bool.showFullScreen_default);
+        return _getBoolean(PreferenceKeys.showFullScreen, context, R.bool.showFullScreen_default);
     }
 
     public static boolean showTextInActionBar(Context context) {
-        return getBoolean(PreferenceKeys.showTextInActionBar, context, R.bool.showTextInActionBar_default);
+        return _getBoolean(PreferenceKeys.showTextInActionBar, context, R.bool.showTextInActionBar_default);
     }
 
     public static boolean blinkFeedbackPerPoint(Context context) {
-        return getBoolean(PreferenceKeys.blinkFeedbackPerPoint, context, R.bool.blinkFeedbackPerPoint_default__Default);
+        return _getBoolean(PreferenceKeys.blinkFeedbackPerPoint, context, R.bool.blinkFeedbackPerPoint_default__Default);
     }
     public static int numberOfBlinksForFeedbackPerPoint(Context context) {
-        return getInteger(PreferenceKeys.numberOfBlinksForFeedbackPerPoint, context, R.integer.numberOfBlinksForFeedbackPerPoint_default);
+        return _getInteger(PreferenceKeys.numberOfBlinksForFeedbackPerPoint, context, R.integer.numberOfBlinksForFeedbackPerPoint_default);
     }
     public static boolean hapticFeedbackPerPoint(Context context) {
-        return getBoolean(PreferenceKeys.hapticFeedbackPerPoint, context, R.bool.hapticFeedbackPerPoint_default);
+        return _getBoolean(PreferenceKeys.hapticFeedbackPerPoint, context, R.bool.hapticFeedbackPerPoint_default);
     }
 
     public static boolean hapticFeedbackOnGameEnd(Context context) {
-        return getBoolean(PreferenceKeys.hapticFeedbackOnGameEnd, context, R.bool.hapticFeedbackOnGameEnd_default);
+        return _getBoolean(PreferenceKeys.hapticFeedbackOnGameEnd, context, R.bool.hapticFeedbackOnGameEnd_default);
     }
 
     public static boolean showDetailsAtEndOfGameAutomatically(Context context) {
-        return getBoolean(PreferenceKeys.showDetailsAtEndOfGameAutomatically, context, R.bool.showDetailsAtEndOfGameAutomatically_default);
+        return _getBoolean(PreferenceKeys.showDetailsAtEndOfGameAutomatically, context, R.bool.showDetailsAtEndOfGameAutomatically_default);
     }
 
     public static boolean showLastGameInfoInTimer(Context context) {
-        return getBoolean(PreferenceKeys.showLastGameInfoInTimer, context, R.bool.showLastGameInfoInTimer_default);
+        return _getBoolean(PreferenceKeys.showLastGameInfoInTimer, context, R.bool.showLastGameInfoInTimer_default);
     }
 
     public static boolean showPauseButtonOnTimer(Context context) {
-        return getBoolean(PreferenceKeys.showPauseButtonOnTimer, context, R.bool.showPauseButtonOnTimer_default);
+        return _getBoolean(PreferenceKeys.showPauseButtonOnTimer, context, R.bool.showPauseButtonOnTimer_default);
     }
 
     public static boolean showHideButtonOnTimer(Context context) {
-        return getBoolean(PreferenceKeys.showHideButtonOnTimer, context, R.bool.showHideButtonOnTimer_default);
+        return _getBoolean(PreferenceKeys.showHideButtonOnTimer, context, R.bool.showHideButtonOnTimer_default);
     }
 
     public static boolean showCircularCountdownInTimer(Context context) {
-        return getBoolean(PreferenceKeys.showCircularCountdownInTimer, context, R.bool.showCircularCountdownInTimer_default);
+        return _getBoolean(PreferenceKeys.showCircularCountdownInTimer, context, R.bool.showCircularCountdownInTimer_default);
     }
 
     public static boolean cancelTimerWhenTimeIsUp(Context context) {
-        return getBoolean(PreferenceKeys.cancelTimerWhenTimeIsUp, context, R.bool.cancelTimerWhenTimeIsUp_default);
+        return _getBoolean(PreferenceKeys.cancelTimerWhenTimeIsUp, context, R.bool.cancelTimerWhenTimeIsUp_default);
     }
     public static ViewType timerViewType(Context context) {
-        return getEnum(PreferenceKeys.timerViewType, context, ViewType.class, R.string.timerViewType_default);
+        return _getEnum(PreferenceKeys.timerViewType, context, ViewType.class, R.string.timerViewType_default);
     }
     public static boolean setTimerViewType(Context context, ViewType viewType) {
         return PreferenceValues.setEnum(PreferenceKeys.timerViewType, context, viewType);
     }
     public static Feature useTossFeature(Context context) {
-        return getEnum(PreferenceKeys.useTossFeature, context, Feature.class, R.string.useTossFeature_default);
+        return _getEnum(PreferenceKeys.useTossFeature, context, Feature.class, R.string.useTossFeature_default);
     }
     public static Feature removeMatchFromMyListWhenSelected(Context context) {
-        return getEnum(PreferenceKeys.removeMatchFromMyListWhenSelected, context, Feature.class, Feature.DoNotUse);
+        return _getEnum(PreferenceKeys.removeMatchFromMyListWhenSelected, context, Feature.class, Feature.DoNotUse);
     }
     public static Feature useShareFeature(Context context) {
         if ( ViewUtil.isWearable(context) ) {
             return Feature.DoNotUse;
         }
-        return getEnum(PreferenceKeys.useShareFeature, context, Feature.class, R.string.useShareFeature_default);
+        return _getEnum(PreferenceKeys.useShareFeature, context, Feature.class, R.string.useShareFeature_default);
     }
     public static Feature useSpeechFeature(Context context) {
-        return getEnum(PreferenceKeys.useSpeechFeature, context, Feature.class, R.string.useSpeechFeature_default__Default);
+        return _getEnum(PreferenceKeys.useSpeechFeature, context, Feature.class, R.string.useSpeechFeature_default__Default);
     }
     public static boolean useFeatureYesNo(Feature f) {
         return EnumSet.of(Feature.Suggest, Feature.Automatic).contains(f);
         //return getBoolean(PreferenceKeys.useSpeechFeature, context, false);
     }
     public static float getSpeechPitch(Context context) {
-        int iValue0To100 = getIntegerR(PreferenceKeys.speechPitch, context, R.integer.speechPitch_default);
+        int iValue0To100 = _getIntegerR(PreferenceKeys.speechPitch, context, R.integer.speechPitch_default);
         return zeroToHundredToFloat0To1(iValue0To100);
     }
     public static float getSpeechRate(Context context) {
-        int iValue0To100 = getIntegerR(PreferenceKeys.speechRate, context, R.integer.speechRate_default);
+        int iValue0To100 = _getIntegerR(PreferenceKeys.speechRate, context, R.integer.speechRate_default);
         return zeroToHundredToFloat0To1(iValue0To100);
     }
     public static boolean speechOverBT_PlayWhiteNoiseSoundFileToKeepAlive(Context context) {
@@ -527,18 +529,18 @@ public class PreferenceValues extends RWValues
         return S_AUDIOURL;
     }
     public static int speechOverBT_PauseBetweenPlaysToKeepAlive(Context context) {
-        return getIntegerR(PreferenceKeys.speechOverBT_PauseBetweenPlaysToKeepAlive, context, R.integer.speechOverBT_PauseBetweenPlaysToKeepAlive_default);
+        return _getIntegerR(PreferenceKeys.speechOverBT_PauseBetweenPlaysToKeepAlive, context, R.integer.speechOverBT_PauseBetweenPlaysToKeepAlive_default);
     }
     public static int speechOverBT_PlayingVolumeToKeepAlive(Context context) {
-        return getIntegerR(PreferenceKeys.speechOverBT_PlayingVolumeToKeepAlive, context, R.integer.speechOverBT_speechOverBT_PlayingVolumeToKeepAlive_default);
+        return _getIntegerR(PreferenceKeys.speechOverBT_PlayingVolumeToKeepAlive, context, R.integer.speechOverBT_speechOverBT_PlayingVolumeToKeepAlive_default);
     }
     public static String getSpeechVoice(Context context) {
-        String sVoice = getString(PreferenceKeys.speechVoice, null, context);
+        String sVoice = _getString(PreferenceKeys.speechVoice, null, context);
         return sVoice;
     }
 
     public static int getSpeechPauseBetweenWords(Context context) {
-        int iValueMS = getIntegerR(PreferenceKeys.speechPauseBetweenParts, context, R.integer.speechPauseBetweenParts_default);
+        int iValueMS = _getIntegerR(PreferenceKeys.speechPauseBetweenParts, context, R.integer.speechPauseBetweenParts_default);
         return iValueMS;
     }
 
@@ -549,11 +551,11 @@ public class PreferenceValues extends RWValues
     }
 
     public static ShareMatchPrefs getShareAction(Context context) {
-        return getEnum(PreferenceKeys.shareAction, context, ShareMatchPrefs.class, ShareMatchPrefs.LinkWithFullDetails);
+        return _getEnum(PreferenceKeys.shareAction, context, ShareMatchPrefs.class, ShareMatchPrefs.LinkWithFullDetails);
     }
     public static Feature useOfficialAnnouncementsFeature(Context context) {
         int iRes = getSportTypeSpecificResId(context, R.string.useOfficialAnnouncementsFeature_default__Squash);
-        return getEnum(PreferenceKeys.useOfficialAnnouncementsFeature, context, Feature.class, iRes);
+        return _getEnum(PreferenceKeys.useOfficialAnnouncementsFeature, context, Feature.class, iRes);
     }
     public static String getLiveScoreDeviceId(Context context) {
         return getDeviceId(PreferenceKeys.liveScoreDeviceId, context, true);
@@ -567,10 +569,10 @@ public class PreferenceValues extends RWValues
     }
 */
     private static String getDeviceId(PreferenceKeys key, Context context, boolean bGenerateIfNull) {
-        String sID = RWValues.getString(key, null, context);
+        String sID = _getString(key, null, context);
         if ( bGenerateIfNull && StringUtil.isEmpty(sID) ) {
             sID = DeviceIdPref.generateNewId();
-            RWValues.setString(key, context, sID);
+            setString(key, context, sID);
         }
         String sCustomSuffix = getDeviceIdCustomSuffix(context);
         if ( StringUtil.isNotEmpty(sCustomSuffix) ) {
@@ -579,7 +581,7 @@ public class PreferenceValues extends RWValues
         return sID;
     }
     private static String getDeviceIdCustomSuffix(Context context) {
-        return getString(PreferenceKeys.liveScoreDeviceId_customSuffix, "", context);
+        return _getString(PreferenceKeys.liveScoreDeviceId_customSuffix, "", context);
     }
 /*
     public static void initForLiveScoring(Context ctx, boolean bOnlyTemporary) {
@@ -636,15 +638,15 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.postEveryChangeToSupportLiveScore, ctx, false);
     }
     public static boolean turnOnLiveScoringForMatchesFromFeed(Context ctx) {
-        return getBoolean(PreferenceKeys.turnOnLiveScoringForMatchesFromFeed, ctx, R.bool.turnOnLiveScoringForMatchesFromFeed_default);
+        return _getBoolean(PreferenceKeys.turnOnLiveScoringForMatchesFromFeed, ctx, R.bool.turnOnLiveScoringForMatchesFromFeed_default);
     }
 
     // TODO: add to preferences.xml
     public static Feature switchToPlayerListIfMatchListOfFeedIsEmpty(Context context) {
-        return getEnum(PreferenceKeys.switchToPlayerListIfMatchListOfFeedIsEmpty, context, Feature.class, Feature.Suggest);
+        return _getEnum(PreferenceKeys.switchToPlayerListIfMatchListOfFeedIsEmpty, context, Feature.class, Feature.Suggest);
     }
     public static AnnouncementLanguage officialAnnouncementsLanguage(Context context) {
-        return getEnum(PreferenceKeys.officialAnnouncementsLanguage, context, AnnouncementLanguage.class, R.string.officialAnnouncementsLanguage_default);
+        return _getEnum(PreferenceKeys.officialAnnouncementsLanguage, context, AnnouncementLanguage.class, R.string.officialAnnouncementsLanguage_default);
     }
     public static Locale announcementsLocale(Context context) {
         AnnouncementLanguage language =officialAnnouncementsLanguage(context);
@@ -890,13 +892,13 @@ public class PreferenceValues extends RWValues
     }
 
     public static Feature useTimersFeature(Context context) {
-        return getEnum(PreferenceKeys.useTimersFeature, context, Feature.class, R.string.useTimersFeature_default__Default);
+        return _getEnum(PreferenceKeys.useTimersFeature, context, Feature.class, R.string.useTimersFeature_default__Default);
     }
     public static BackKeyBehaviour backKeyBehaviour(Context context) {
-        return getEnum(PreferenceKeys.BackKeyBehaviour, context, BackKeyBehaviour.class, R.string.BackKeyBehaviour_default);
+        return _getEnum(PreferenceKeys.BackKeyBehaviour, context, BackKeyBehaviour.class, R.string.BackKeyBehaviour_default);
     }
     public static VolumeKeysBehaviour volumeKeysBehaviour(Context context) {
-        return getEnum(PreferenceKeys.VolumeKeysBehaviour, context, VolumeKeysBehaviour.class, R.string.VolumeKeysBehaviour_default);
+        return _getEnum(PreferenceKeys.VolumeKeysBehaviour, context, VolumeKeysBehaviour.class, R.string.VolumeKeysBehaviour_default);
     }
 
     public static boolean showNewMatchFloatButton(Context context) {
@@ -905,26 +907,26 @@ public class PreferenceValues extends RWValues
             return false;
         }
 
-        return getBoolean(PreferenceKeys.showNewMatchFloatButton, context, R.bool.showNewMatchFloatButton_default);
+        return _getBoolean(PreferenceKeys.showNewMatchFloatButton, context, R.bool.showNewMatchFloatButton_default);
     }
     public static boolean useSoundNotificationInTimer(Context context) {
-        return getBoolean(PreferenceKeys.useSoundNotificationInTimer, context, R.bool.useSoundNotificationInTimer_default);
+        return _getBoolean(PreferenceKeys.useSoundNotificationInTimer, context, R.bool.useSoundNotificationInTimer_default);
     }
     public static boolean useVibrationNotificationInTimer(Context context) {
-        return getBoolean(PreferenceKeys.useVibrationNotificationInTimer, context, R.bool.useVibrationNotificationInTimer_default);
+        return _getBoolean(PreferenceKeys.useVibrationNotificationInTimer, context, R.bool.useVibrationNotificationInTimer_default);
     }
     public static boolean showAdjustTimeButtonsInTimer(Context context) {
-        return getBoolean(PreferenceKeys.showAdjustTimeButtonsInTimer, context, R.bool.showAdjustTimeButtonsInTimer_default);
+        return _getBoolean(PreferenceKeys.showAdjustTimeButtonsInTimer, context, R.bool.showAdjustTimeButtonsInTimer_default);
     }
     public static boolean showUseAudioCheckboxInTimer(Context context) {
-        return getBoolean(PreferenceKeys.showUseAudioCheckboxInTimer, context, R.bool.showUseAudioCheckboxInTimer_default);
+        return _getBoolean(PreferenceKeys.showUseAudioCheckboxInTimer, context, R.bool.showUseAudioCheckboxInTimer_default);
     }
     public static boolean showTimeIsAlreadyUpFor_Chrono(Context context) {
-        return getBoolean(PreferenceKeys.showTimeIsAlreadyUpFor_Chrono, context, R.bool.showTimeIsAlreadyUpFor_Chrono_default);
+        return _getBoolean(PreferenceKeys.showTimeIsAlreadyUpFor_Chrono, context, R.bool.showTimeIsAlreadyUpFor_Chrono_default);
     }
 
     public static boolean saveMatchesForLaterUsage(Context context) {
-        return getBoolean(PreferenceKeys.saveMatchesForLaterUsage, context, R.bool.saveMatchesForLaterUsage_default);
+        return _getBoolean(PreferenceKeys.saveMatchesForLaterUsage, context, R.bool.saveMatchesForLaterUsage_default);
     }
 /*
     public static boolean archivedMatchesInSeparateActivity(Context context) {
@@ -932,14 +934,14 @@ public class PreferenceValues extends RWValues
     }
 */
     public static SortOrder sortOrderOfArchivedMatches(Context context) {
-        return getEnum(PreferenceKeys.sortOrderOfArchivedMatches, context, SortOrder.class, R.string.sortOrderOfArchivedMatches_default);
+        return _getEnum(PreferenceKeys.sortOrderOfArchivedMatches, context, SortOrder.class, R.string.sortOrderOfArchivedMatches_default);
     }
     public static GroupMatchesBy groupArchivedMatchesBy(Context context) {
-        return getEnum(PreferenceKeys.groupArchivedMatchesBy, context, GroupMatchesBy.class, R.string.groupArchivedMatchesBy_default);
+        return _getEnum(PreferenceKeys.groupArchivedMatchesBy, context, GroupMatchesBy.class, R.string.groupArchivedMatchesBy_default);
     }
     public static ScorelineLayout getScorelineLayout(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.string.scorelineLayout_default__Squash);
-        return getEnum(PreferenceKeys.scorelineLayout, context, ScorelineLayout.class, iResDefault);
+        return _getEnum(PreferenceKeys.scorelineLayout, context, ScorelineLayout.class, iResDefault);
     }
     public static boolean isPublicApp(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.isPublicApp__Default);
@@ -954,7 +956,7 @@ public class PreferenceValues extends RWValues
             return false;
         }
         int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useFeedAndPostFunctionality_default);
-        return getBoolean(PreferenceKeys.useFeedAndPostFunctionality, context, iResBrandSpecific);
+        return _getBoolean(PreferenceKeys.useFeedAndPostFunctionality, context, iResBrandSpecific);
     }
     public static boolean useSinglesMatchesTab(Context context) {
         KioskMode kioskMode = getKioskMode(context);
@@ -962,7 +964,7 @@ public class PreferenceValues extends RWValues
             return ! kioskMode.hideMenuItems().contains(R.id.sb_enter_singles_match);
         }
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useSinglesMatch__Default);
-        return getBoolean(PreferenceKeys.useSinglesMatchesTab, context, iResBrandSpecific);
+        return _getBoolean(PreferenceKeys.useSinglesMatchesTab, context, iResBrandSpecific);
     }
     public static boolean useDoublesMatchesTab(Context context) {
         KioskMode kioskMode = getKioskMode(context);
@@ -970,7 +972,7 @@ public class PreferenceValues extends RWValues
             return ! kioskMode.hideMenuItems().contains(R.id.sb_enter_doubles_match);
         }
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useDoublesMatch__Default);
-        return getBoolean(PreferenceKeys.useDoublesMatchesTab, context, iResBrandSpecific);
+        return _getBoolean(PreferenceKeys.useDoublesMatchesTab, context, iResBrandSpecific);
     }
     public static boolean useMyListFunctionality(Context context) {
         KioskMode kioskMode = getKioskMode(context);
@@ -979,7 +981,7 @@ public class PreferenceValues extends RWValues
         }
 
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useMyListFunctionality__Default);
-        return getBoolean(PreferenceKeys.useMyListFunctionality, context, iResBrandSpecific);
+        return _getBoolean(PreferenceKeys.useMyListFunctionality, context, iResBrandSpecific);
     }
     public static boolean useWarmup(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useWarmup__Default);
@@ -987,40 +989,40 @@ public class PreferenceValues extends RWValues
     }
     public static boolean useReferees(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useReferees__Default);
-        return getBoolean(PreferenceKeys.useReferees, context, iResBrandSpecific);
+        return _getBoolean(PreferenceKeys.useReferees, context, iResBrandSpecific);
     }
     public static boolean useEventPreviousValuesAsDefault(Context context) {
         return getBoolean(PreferenceKeys.useEventPreviousValuesAsDefault, context, true);
     }
     public static String getBLEBridge_ClassName(Context context) {
         int iBLEBridge_ClassName_defaultResId = PreferenceValues.getSportTypeSpecificResId(context, R.string.BLEBridge_ClassName__Squash, R.string.BLEBridge_ClassName__Default);
-        String sClass = PreferenceValues.getString(PreferenceKeys.BLEBridge_ClassName, iBLEBridge_ClassName_defaultResId, context);
+        String sClass = PreferenceValues._getString(PreferenceKeys.BLEBridge_ClassName, iBLEBridge_ClassName_defaultResId, context);
         return sClass;
     }
     public static boolean useBluetoothLE(Context context) {
         int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.UseBluetoothLE_default);
-        return getBoolean(PreferenceKeys.UseBluetoothLE, context, iResBrandSpecific);
+        return _getBoolean(PreferenceKeys.UseBluetoothLE, context, iResBrandSpecific);
     }
     public static boolean showFeedBackOnBLEButtonsPressedInfoMessages(Context context) {
-        return getBoolean(PreferenceKeys.ShowFeedBackOnBLEButtonsPressedInfoMessages, context, R.bool.ShowFeedBackOnBLEButtonsPressedInfoMessages_default__Default);
+        return _getBoolean(PreferenceKeys.ShowFeedBackOnBLEButtonsPressedInfoMessages, context, R.bool.ShowFeedBackOnBLEButtonsPressedInfoMessages_default__Default);
     }
     public static int nrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired(Context context) {
-        return getInteger(PreferenceKeys.NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired, context, R.integer.NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default);
+        return _getInteger(PreferenceKeys.NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired, context, R.integer.NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired_default);
     }
     public static int IgnoreAccidentalDoublePress_ThresholdInMilliSeconds(Context context) {
-        return getInteger(PreferenceKeys.IgnoreAccidentalDoublePress_ThresholdInMilliSeconds, context, R.integer.IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_default);
+        return _getInteger(PreferenceKeys.IgnoreAccidentalDoublePress_ThresholdInMilliSeconds, context, R.integer.IgnoreAccidentalDoublePress_ThresholdInMilliSeconds_default);
     }
 
     public static boolean useMQTT(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.UseMQTT_default__Default);
-        return getBoolean(PreferenceKeys.UseMQTT, context, iResBrandSpecific);
+        return _getBoolean(PreferenceKeys.UseMQTT, context, iResBrandSpecific);
     }
     public static boolean disableInputWhenMQTTSlave(Context ctx) {
-        return getBoolean(PreferenceKeys.MQTTDisableInputWhenSlave, ctx, R.bool.MQTTDisableInputWhenSlave_default);
+        return _getBoolean(PreferenceKeys.MQTTDisableInputWhenSlave, ctx, R.bool.MQTTDisableInputWhenSlave_default);
     }
     public static String getMQTTBrokerURL(Context context) {
         String sCustom = getMQTTBrokerURL_Custom(context);
-        String sOneOfList = getString(PreferenceKeys.MQTTBrokerURL, null, context);
+        String sOneOfList = _getString(PreferenceKeys.MQTTBrokerURL, null, context);
         String[] saValues = context.getResources().getStringArray(R.array.MQTTBrokerUrls);
         String sCustomSelected = saValues[saValues.length - 1]; // TODO: dangerous assumption
         if ( StringUtil.isEmpty(sOneOfList) ) {
@@ -1035,46 +1037,49 @@ public class PreferenceValues extends RWValues
     }
 
     public static String getMQTTBrokerURL_Custom(Context context) {
-        return getString(PreferenceKeys.MQTTBrokerURL_Custom, R.string.MQTTBrokerURL_Custom__Default, context);
+        return _getString(PreferenceKeys.MQTTBrokerURL_Custom, R.string.MQTTBrokerURL_Custom__Default, context);
     }
 
     public static String getMQTTPublishTopicMatch(Context context) {
-        return getString(PreferenceKeys.MQTTPublishTopicMatch, R.string.MQTTTopicMatchTemplate__Default, context);
+        return _getString(PreferenceKeys.MQTTPublishTopicMatch, R.string.MQTTTopicMatchTemplate__Default, context);
     }
     public static String getMQTTPublishTopicUnloadMatch(Context context) {
-        return getString(PreferenceKeys.MQTTPublishTopicUnloadMatch, R.string.MQTTTopicUnloadMatchTemplate__Default, context);
+        return _getString(PreferenceKeys.MQTTPublishTopicUnloadMatch, R.string.MQTTTopicUnloadMatchTemplate__Default, context);
     }
     public static String getMQTTPublishTopicDeviceInfo(Context context) {
-        return getString(PreferenceKeys.MQTTPublishTopicDeviceInfo, R.string.MQTTTopicDeviceInfoTemplate__Default, context);
+        return _getString(PreferenceKeys.MQTTPublishTopicDeviceInfo, R.string.MQTTTopicDeviceInfoTemplate__Default, context);
     }
     public static int mqttPublishDeviceInfoEveryXSeconds(Context context) {
-        return getInteger(PreferenceKeys.MQTTPublishDeviceInfo_EveryXSeconds, context, 60);
+        return _getInteger(PreferenceKeys.MQTTPublishDeviceInfo_EveryXSeconds, context, 60);
     }
 
     public static String getMQTTSubscribeTopic_remoteControl(Context context) {
-        return getString(PreferenceKeys.MQTTSubscribeTopic_remoteControl, R.string.MQTTTopicRemoteControlTemplate__Default, context);
+        return _getString(PreferenceKeys.MQTTSubscribeTopic_remoteControl, R.string.MQTTTopicRemoteControlTemplate__Default, context);
     }
     public static List<String> getMQTTSkipJsonKeys(Context context) {
         return getStringAsList(context, PreferenceKeys.MQTTSkipJsonKeys, 0);
     }
     public static String getMQTTPublishTopicChange(Context context) {
-        return getString(PreferenceKeys.MQTTPublishTopicChange, R.string.MQTTTopicChangeTemplate__Default, context);
+        return _getString(PreferenceKeys.MQTTPublishTopicChange, R.string.MQTTTopicChangeTemplate__Default, context);
     }
     public static String getMQTTSubscribeTopic_Change(Context context) {
-        return getString(PreferenceKeys.MQTTSubscribeTopicChange, R.string.MQTTTopicChangeTemplate__Default, context);
+        return _getString(PreferenceKeys.MQTTSubscribeTopicChange, R.string.MQTTTopicChangeTemplate__Default, context);
     }
     public static String getMQTTPublishJoinerLeaverTopic(Context context) {
-        return getString(PreferenceKeys.MQTTPublishJoinerLeaverTopic, R.string.MQTTPublishJoinerLeaverTopic__Default, context);
+        return _getString(PreferenceKeys.MQTTPublishJoinerLeaverTopic, R.string.MQTTPublishJoinerLeaverTopic__Default, context);
     }
     public static String getMQTTOtherDeviceId(Context context) {
-        return getString(PreferenceKeys.MQTTOtherDeviceId, "", context)/*.toUpperCase()*/; // remove toUpperCase since customSuffix is allowed
+        return _getString(PreferenceKeys.MQTTOtherDeviceId, "", context)/*.toUpperCase()*/; // remove toUpperCase since customSuffix is allowed
+    }
+    public static boolean clearMQTTOtherDeviceId(Context context) {
+        return setString(PreferenceKeys.MQTTOtherDeviceId, context, "")/*.toUpperCase()*/; // remove toUpperCase since customSuffix is allowed
     }
 
     public static boolean allowTrustAllCertificatesAndHosts(Context context) {
-        return getBoolean(PreferenceKeys.allowTrustAllCertificatesAndHosts, context, R.bool.allowTrustAllCertificatesAndHosts_default);
+        return _getBoolean(PreferenceKeys.allowTrustAllCertificatesAndHosts, context, R.bool.allowTrustAllCertificatesAndHosts_default);
     }
     public static Feature recordRallyEndStatsAfterEachScore(Context context) {
-        return getEnum(PreferenceKeys.recordRallyEndStatsAfterEachScore, context, Feature.class, Feature.DoNotUse);
+        return _getEnum(PreferenceKeys.recordRallyEndStatsAfterEachScore, context, Feature.class, Feature.DoNotUse);
     }
     // TODO: add to preference screen if more options become available
 /*
@@ -1088,36 +1093,36 @@ public class PreferenceValues extends RWValues
     }
 */
     public static EnumSet<AutoLockContext> lockMatchMV(Context context) {
-        return getEnumSet(PreferenceKeys.lockMatchMV, context, AutoLockContext.class, EnumSet.allOf(AutoLockContext.class));
+        return _getEnumSet(PreferenceKeys.lockMatchMV, context, AutoLockContext.class, EnumSet.allOf(AutoLockContext.class));
     }
     public static EnumSet<ShowPlayerColorOn> showPlayerColorOn(Context context) {
-        return getEnumSet(PreferenceKeys.showPlayerColorOn, context, ShowPlayerColorOn.class, EnumSet.allOf(ShowPlayerColorOn.class)); // ShowPlayerColorOn__Default
+        return _getEnumSet(PreferenceKeys.showPlayerColorOn, context, ShowPlayerColorOn.class, EnumSet.allOf(ShowPlayerColorOn.class)); // ShowPlayerColorOn__Default
     }
     public static PlayerColorsNewMatch playerColorsNewMatch(Context context) {
-        return getEnum(PreferenceKeys.PlayerColorsNewMatch, context, PlayerColorsNewMatch.class, R.string.PlayerColorsNewMatch__Default);
+        return _getEnum(PreferenceKeys.PlayerColorsNewMatch, context, PlayerColorsNewMatch.class, R.string.PlayerColorsNewMatch__Default);
     }
     public static boolean showPlayerColorOn_Text(Context context) {
-        return getBoolean(PreferenceKeys.showPlayerColorOn_Text, context, R.bool.showPlayerColorOn_Text_default);
+        return _getBoolean(PreferenceKeys.showPlayerColorOn_Text, context, R.bool.showPlayerColorOn_Text_default);
     }
     public static EnumSet<ShowCountryAs> showCountryAs(Context context) {
         EnumSet<ShowCountryAs> esDefault = EnumSet.of(ShowCountryAs.FlagNextToNameOnDevice, ShowCountryAs.FlagNextToNameChromeCast); // ShowCountryAs_DefaultValues in xml takes precedence
-        return getEnumSet(PreferenceKeys.showCountryAs, context, ShowCountryAs.class, esDefault);
+        return _getEnumSet(PreferenceKeys.showCountryAs, context, ShowCountryAs.class, esDefault);
     }
     public static EnumSet<ShowAvatarOn> showAvatarOn(Context context) {
-        return getEnumSet(PreferenceKeys.showAvatarOn, context, ShowAvatarOn.class, EnumSet.of(ShowAvatarOn.OnDevice, ShowAvatarOn.OnChromeCast));
+        return _getEnumSet(PreferenceKeys.showAvatarOn, context, ShowAvatarOn.class, EnumSet.of(ShowAvatarOn.OnDevice, ShowAvatarOn.OnChromeCast));
     }
     public static int getPreferWhiteOverBlackThreshold(Context context) {
         int iResDef = getSportSpecificSuffixedResId(context, R.integer.preferWhiteOverBlackThreshold);
         return getIntegerR(ColorPrefs.ColorTarget.preferWhiteOverBlackThreshold, context, iResDef);
     }
     public static boolean hideFlagForSameCountry(Context context) {
-        return getBoolean(PreferenceKeys.hideFlagForSameCountry, context, R.bool.hideFlagForSameCountry_default);
+        return _getBoolean(PreferenceKeys.hideFlagForSameCountry, context, R.bool.hideFlagForSameCountry_default);
     }
     public static boolean hideAvatarForSameImage(Context context) {
-        return getBoolean(PreferenceKeys.hideAvatarForSameImage, context, R.bool.hideAvatarForSameImage_default);
+        return _getBoolean(PreferenceKeys.hideAvatarForSameImage, context, R.bool.hideAvatarForSameImage_default);
     }
     public static boolean prefetchFlags(Context context) {
-        return getBoolean(PreferenceKeys.prefetchFlags, context, R.bool.prefetchFlags_default);
+        return _getBoolean(PreferenceKeys.prefetchFlags, context, R.bool.prefetchFlags_default);
     }
     public static boolean useFlags(Context context) {
         final EnumSet<ShowCountryAs> showCountryAs = showCountryAs(context);
@@ -1135,90 +1140,90 @@ public class PreferenceValues extends RWValues
     public static EnumSet<RallyEndStatsPrefs> recordRallyEndStatsDetails(Context context) {
         String[] values = context.getResources().getStringArray(R.array.RallyEndStatsPrefsDefaultValues);
         EnumSet<RallyEndStatsPrefs> eValues = EnumSet.copyOf(ListUtil.toEnumValues(Arrays.asList(values), RallyEndStatsPrefs.class));
-        return getEnumSet(PreferenceKeys.recordRallyEndStatsDetails, context, RallyEndStatsPrefs.class, eValues);
+        return _getEnumSet(PreferenceKeys.recordRallyEndStatsDetails, context, RallyEndStatsPrefs.class, eValues);
     }
     public static int numberOfMinutesAfterWhichToLockMatch(Context context) {
-        return getIntegerR(PreferenceKeys.numberOfMinutesAfterWhichToLockMatch, context, R.integer.numberOfMinutesAfterWhichToLockMatch_default);
+        return _getIntegerR(PreferenceKeys.numberOfMinutesAfterWhichToLockMatch, context, R.integer.numberOfMinutesAfterWhichToLockMatch_default);
     }
     public static NewMatchesType getNewMatchesType(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.string.NewMatchesType_default__Squash);
-        return getEnum(PreferenceKeys.NewMatchesType, context, NewMatchesType.class, iResDefault);
+        return _getEnum(PreferenceKeys.NewMatchesType, context, NewMatchesType.class, iResDefault);
     }
     public static int maxNumberOfPlayersInGroup(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.integer.maxNumberOfPlayersInGroup_default__Default);
-        return getIntegerR(PreferenceKeys.maxNumberOfPlayersInGroup, context, iResDefault);
+        return _getIntegerR(PreferenceKeys.maxNumberOfPlayersInGroup, context, iResDefault);
     }
     public static int getTournamentWasBusy_DaysBack(Context context) {
-        return getIntegerR(PreferenceKeys.tournamentWasBusy_DaysBack, context, R.integer.tournamentWasBusy_DaysBack_default);
+        return _getIntegerR(PreferenceKeys.tournamentWasBusy_DaysBack, context, R.integer.tournamentWasBusy_DaysBack_default);
     }
     public static int getTournamentWillStartIn_DaysAhead(Context context) {
-        return getIntegerR(PreferenceKeys.tournamentWillStartIn_DaysAhead, context, R.integer.tournamentWillStartIn_DaysAhead_default);
+        return _getIntegerR(PreferenceKeys.tournamentWillStartIn_DaysAhead, context, R.integer.tournamentWillStartIn_DaysAhead_default);
     }
     public static int getTournamentMaxDuration_InDays(Context context) {
-        return getIntegerR(PreferenceKeys.tournamentMaxDuration_InDays, context, R.integer.tournamentMaxDuration_InDays_default);
+        return _getIntegerR(PreferenceKeys.tournamentMaxDuration_InDays, context, R.integer.tournamentMaxDuration_InDays_default);
     }
     public static Feature endGameSuggestion(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.string.endGameSuggestion_default__Squash);
-        return getEnum(PreferenceKeys.endGameSuggestion, context, Feature.class, iResDefault);
+        return _getEnum(PreferenceKeys.endGameSuggestion, context, Feature.class, iResDefault);
     }
     /** for tabletennis and racketlon, not squash */
     public static boolean swapPlayersOn180DegreesRotationOfDeviceInLandscape(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.bool.swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Squash);
-        return getBoolean(PreferenceKeys.swapPlayersOn180DegreesRotationOfDeviceInLandscape, context, iResDefault);
+        return _getBoolean(PreferenceKeys.swapPlayersOn180DegreesRotationOfDeviceInLandscape, context, iResDefault);
     }
     /** @Deprecated for tabletennis, not squash or racketlon */
     public static boolean swapSidesBetweenGames(Context context) {
-        return getBoolean(PreferenceKeys.swapPlayersBetweenGames, context, R.bool.swapPlayersBetweenGames_default);
+        return _getBoolean(PreferenceKeys.swapPlayersBetweenGames, context, R.bool.swapPlayersBetweenGames_default);
     }
     public static EnumSet<ChangeSidesWhen_GSM> changeSidesWhen_GSM(Context context) {
         EnumSet<ChangeSidesWhen_GSM> defaultValues = EnumSet.of( ChangeSidesWhen_GSM.AfterOddGames
                                                                , ChangeSidesWhen_GSM.EverySixPointsInTiebreak
                                                                );
-        return getEnumSet(PreferenceKeys.changeSidesWhen_GSM, context, ChangeSidesWhen_GSM.class, defaultValues);
+        return _getEnumSet(PreferenceKeys.changeSidesWhen_GSM, context, ChangeSidesWhen_GSM.class, defaultValues);
     }
     public static Feature useChangeSidesFeature(Context context) {
-        return getEnum(PreferenceKeys.useChangeSidesFeature, context, Feature.class, R.string.useChangeSidesFeature_default__Default);
+        return _getEnum(PreferenceKeys.useChangeSidesFeature, context, Feature.class, R.string.useChangeSidesFeature_default__Default);
     }
     /** for tabletennis, not squash or racketlon */
     public static Feature showGamePausedDialog(Context context) {
-        return getEnum(PreferenceKeys.showGamePausedDialog, context, Feature.class, R.string.showGamePausedDialog_default);
+        return _getEnum(PreferenceKeys.showGamePausedDialog, context, Feature.class, R.string.showGamePausedDialog_default);
     }
     public static int autoShowGamePausedDialogAfterXPoints(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.integer.autoShowGamePausedDialogAfterXPoints_default);
-        return getIntegerR(PreferenceKeys.autoShowGamePausedDialogAfterXPoints, context, iResDefault);
+        return _getIntegerR(PreferenceKeys.autoShowGamePausedDialogAfterXPoints, context, iResDefault);
     }
     public static boolean autoShowModeActivationDialog(Context context) {
         return getBoolean(PreferenceKeys.autoShowModeActivationDialog, context, false);
     }
     public static int showModeDialogAfterXMins(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.integer.showModeDialogAfterXMins_default__Squash);
-        return getIntegerR(PreferenceKeys.showModeDialogAfterXMins, context, iResDefault);
+        return _getIntegerR(PreferenceKeys.showModeDialogAfterXMins, context, iResDefault);
     }
 
     /** not for squash, for racketlon (all but squash, except for doubles), for tabletennis in last game */
     public static Feature swapSidesHalfwayGame(Context context) {
-        return getEnum(PreferenceKeys.swapPlayersHalfwayGame, context, Feature.class, R.string.swapPlayersHalfwayGame_default);
+        return _getEnum(PreferenceKeys.swapPlayersHalfwayGame, context, Feature.class, R.string.swapPlayersHalfwayGame_default);
     }
     public static DownUp numberOfServiceCountUpOrDown(Context context) {
-        return getEnum(PreferenceKeys.numberOfServiceCountUpOrDown, context, DownUp.class, DownUp.Down);
+        return _getEnum(PreferenceKeys.numberOfServiceCountUpOrDown, context, DownUp.class, DownUp.Down);
     }
     public static Feature continueRecentMatch(Context context) {
-        return getEnum(PreferenceKeys.continueRecentMatch, context, Feature.class, Feature.Automatic);
+        return _getEnum(PreferenceKeys.continueRecentMatch, context, Feature.class, Feature.Automatic);
     }
     public static boolean useHandInHandOutScoring(Context context) {
-        return getBoolean(PreferenceKeys.useHandInHandOutScoring, context, R.bool.useEnglishScoring_default);
+        return _getBoolean(PreferenceKeys.useHandInHandOutScoring, context, R.bool.useEnglishScoring_default);
     }
     public static GoldenPointFormat goldenPointFormat(Context context) {
         // for backwards compatibility
         GoldenPointFormat goldenPointFormatDefault = useGroupNameAsEventData(context) ? GoldenPointFormat.OnFirstDeuce : GoldenPointFormat.None;
-        return getEnum(PreferenceKeys.goldenPointFormat, context, GoldenPointFormat.class, goldenPointFormatDefault);
+        return _getEnum(PreferenceKeys.goldenPointFormat, context, GoldenPointFormat.class, goldenPointFormatDefault);
     }
     public static boolean startTiebreakOneGameEarly(Context context) {
         // TODO: add to Preferences.xml ?
         return getBoolean(PreferenceKeys.StartTiebreakOneGameEarly, context, false);
     }
     public static KeepScreenOnWhen keepScreenOnWhen(Context context) {
-        return getEnum(PreferenceKeys.keepScreenOnWhen, context, KeepScreenOnWhen.class, KeepScreenOnWhen.MatchIsInProgress);
+        return _getEnum(PreferenceKeys.keepScreenOnWhen, context, KeepScreenOnWhen.class, KeepScreenOnWhen.MatchIsInProgress);
     }
 /*
     private static boolean keepScreenOn(Context context) {
@@ -1226,7 +1231,7 @@ public class PreferenceValues extends RWValues
     }
 */
     public static boolean indicateGameBall(Context context) {
-        return getBoolean(PreferenceKeys.indicateGameBall, context, R.bool.indicateGameBall_default);
+        return _getBoolean(PreferenceKeys.indicateGameBall, context, R.bool.indicateGameBall_default);
     }
 /*
     public static boolean floatingMessageForGameBall(Context context) {
@@ -1235,7 +1240,7 @@ public class PreferenceValues extends RWValues
 */
     private static EnumSet<ShowOnScreen> floatingMessageForGameBallOn(Context context) {
         int iRes = R.array.floatingMessageForGameBallOn_DefaultValues__Squash; // value used in preferences.xml and therefor used
-        return getEnumSet(PreferenceKeys.floatingMessageForGameBallOn, context, ShowOnScreen.class, EnumSet.of(ShowOnScreen.OnDevice, ShowOnScreen.OnChromeCast));
+        return _getEnumSet(PreferenceKeys.floatingMessageForGameBallOn, context, ShowOnScreen.class, EnumSet.of(ShowOnScreen.OnDevice, ShowOnScreen.OnChromeCast));
     }
     public static boolean floatingMessageForGameBall(Context context, boolean bIsPresentation) {
         if ( bIsPresentation ) {
@@ -1245,22 +1250,22 @@ public class PreferenceValues extends RWValues
         }
     }
     public static boolean showCastButtonInActionBar(Context context) {
-        return RWValues.getBoolean(PreferenceKeys.showCastButtonInActionBar, context, R.bool.showCastButtonInActionBar_default);
+        return _getBoolean(PreferenceKeys.showCastButtonInActionBar, context, R.bool.showCastButtonInActionBar_default);
     }
     public static int useCastScreen(Context context) {
-        return RWValues.getInteger(PreferenceKeys.useCastScreen, context, 0);
+        return _getInteger(PreferenceKeys.useCastScreen, context, 0);
     }
     public static String castScreenLogoUrl(Context context) {
-        return RWValues.getString(PreferenceKeys.castScreenLogoUrl, "", context);
+        return _getString(PreferenceKeys.castScreenLogoUrl, "", context);
     }
     public static boolean castScreenShowLogo(Context context) {
-        return RWValues.getBoolean(PreferenceKeys.castScreenShowLogo, context, R.bool.castScreenShowLogo_default);
+        return _getBoolean(PreferenceKeys.castScreenShowLogo, context, R.bool.castScreenShowLogo_default);
     }
     public static String castScreenSponsorUrl(Context context) {
-        return RWValues.getString(PreferenceKeys.castScreenSponsorUrl, "", context);
+        return _getString(PreferenceKeys.castScreenSponsorUrl, "", context);
     }
     public static boolean castScreenShowSponsor(Context context) {
-        return RWValues.getBoolean(PreferenceKeys.castScreenShowSponsor, context, R.bool.castScreenShowSponsor_default);
+        return _getBoolean(PreferenceKeys.castScreenShowSponsor, context, R.bool.castScreenShowSponsor_default);
     }
 /*
     public static boolean Cast_ShowGraphDuringTimer(Context context) {
@@ -1270,23 +1275,23 @@ public class PreferenceValues extends RWValues
 
     public static boolean BTSync_keepLROnConnectedDeviceMirrored(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.bool.BTSync_keepLROnConnectedDeviceMirrored_default__Squash);
-        return getBoolean(PreferenceKeys.BTSync_keepLROnConnectedDeviceMirrored, context, iResDefault);
+        return _getBoolean(PreferenceKeys.BTSync_keepLROnConnectedDeviceMirrored, context, iResDefault);
     }
     public static boolean BTSync_showFullScreenTimer(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.bool.BTSync_showFullScreenTimer_default__Squash);
-        return getBoolean(PreferenceKeys.BTSync_showFullScreenTimer, context, iResDefault);
+        return _getBoolean(PreferenceKeys.BTSync_showFullScreenTimer, context, iResDefault);
     }
     public static boolean wearable_syncColorPrefs(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.bool.wearable_syncColorPrefs_default);
-        return getBoolean(PreferenceKeys.wearable_syncColorPrefs, context, iResDefault);
+        return _getBoolean(PreferenceKeys.wearable_syncColorPrefs, context, iResDefault);
     }
     public static boolean wearable_allowScoringWithHardwareButtons(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.bool.wearable_allowScoringWithHardwareButtons_default);
-        return getBoolean(PreferenceKeys.wearable_allowScoringWithHardwareButtons, context, iResDefault);
+        return _getBoolean(PreferenceKeys.wearable_allowScoringWithHardwareButtons, context, iResDefault);
     }
     public static boolean wearable_allowScoringWithRotary(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.bool.wearable_allowScoringWithRotary_default);
-        return getBoolean(PreferenceKeys.wearable_allowScoringWithRotary, context, iResDefault);
+        return _getBoolean(PreferenceKeys.wearable_allowScoringWithRotary, context, iResDefault);
     }
 /*
     public static boolean showGraphDuringTimer(Context context, boolean bIsPresentation) {
@@ -1303,7 +1308,7 @@ public class PreferenceValues extends RWValues
 */
 
     private static boolean readContactsForAutoCompletion(Context context) {
-        boolean bReadContactsPref = getBoolean(PreferenceKeys.readContactsForAutoCompletion, context, R.bool.readContactsForAutoCompletion_default);
+        boolean bReadContactsPref = _getBoolean(PreferenceKeys.readContactsForAutoCompletion, context, R.bool.readContactsForAutoCompletion_default);
         Permission bHasPermission  = doesUserHavePermissionToReadContacts(context, false);
 /*
         if ( bReadContactsPref && (bHasPermission == null) ) {
@@ -1363,13 +1368,13 @@ public class PreferenceValues extends RWValues
     }
 
     public static boolean allowNegativeHandicap(Context context) {
-        return getBoolean(PreferenceKeys.allowNegativeHandicap, context, R.bool.allowNegativeHandicap_default);
+        return _getBoolean(PreferenceKeys.allowNegativeHandicap, context, R.bool.allowNegativeHandicap_default);
     }
     private static List<String> getAllowedContacts(Context context) {
         if ( readContactsForAutoCompletion(context) == false ) { return null; }
 
-        int iGroupId = getInteger(PreferenceKeys.onlyForContactGroups, context, -1);
-        int iMaxNrOfContacts = getIntegerR(PreferenceKeys.readContactsForAutoCompletion_max, context, R.integer.readContactsForAutoCompletion_max_default);
+        int iGroupId         = _getInteger (PreferenceKeys.onlyForContactGroups, context, -1);
+        int iMaxNrOfContacts = _getIntegerR(PreferenceKeys.readContactsForAutoCompletion_max, context, R.integer.readContactsForAutoCompletion_max_default);
         List<String> contacts = null;
         if ( iGroupId <= 0 ) {
             contacts = getContacts(context, 500, iMaxNrOfContacts);
@@ -1430,7 +1435,7 @@ public class PreferenceValues extends RWValues
     }
 
     public static List<String> getStringAsList(Context context, PreferenceKeys key, int iDefault) {
-        String values = getString(key, iDefault, context);
+        String values = _getString(key, iDefault, context);
         if ( StringUtil.isEmpty(values) ) {
             return new ArrayList<String>();
         }
@@ -1561,20 +1566,20 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.disableEditPlayerNames, context, false);
     }
     public static String ow_captionForSelectNewMatch(Context context) {
-        return getString(PreferenceKeys.captionForSelectNewMatch, R.string.sb_select_feed_match, context);
+        return _getString(PreferenceKeys.captionForSelectNewMatch, R.string.sb_select_feed_match, context);
     }
 	*/
     public static String ow_captionForMessageMatchResult(Context context) {
-        return getString(PreferenceKeys.captionForMessageMatchResult, R.string.sb_send_match_result, context);
+        return _getString(PreferenceKeys.captionForMessageMatchResult, R.string.sb_send_match_result, context);
     }
     public static String ow_captionForPostMatchResultToSite(Context context) {
-        return getString(PreferenceKeys.captionForPostMatchResultToSite, R.string.sb_post_match_result, context);
+        return _getString(PreferenceKeys.captionForPostMatchResultToSite, R.string.sb_post_match_result, context);
     }
     public static String ow_iconForPostMatchResultToSite(Context context) {
-        return getString(PreferenceKeys.iconForPostMatchResultToSite, null, context);
+        return _getString(PreferenceKeys.iconForPostMatchResultToSite, null, context);
     }
     public static String ow_captionForEmailMatchResult(Context context) {
-        return getString(PreferenceKeys.captionForEmailMatchResult, R.string.sb_email_match_result, context);
+        return _getString(PreferenceKeys.captionForEmailMatchResult, R.string.sb_email_match_result, context);
     }
 
     /*  invoked via getInt with the appropriate key
@@ -1586,21 +1591,24 @@ public class PreferenceValues extends RWValues
         }
     */
     public static HandicapFormat getHandicapFormat(Context context) {
-        return getEnum(PreferenceKeys.handicapFormat, context, HandicapFormat.class, R.string.handicapFormat_default);
+        return _getEnum(PreferenceKeys.handicapFormat, context, HandicapFormat.class, R.string.handicapFormat_default);
     }
     public static int numberOfGamesToWinMatch(Context context) {
-        int iMax = getIntegerR(PreferenceKeys.numberOfGamesToWinMatch, context, R.integer.numberOfGamesToWin_default__Squash);
+        int iMax = _getIntegerR(PreferenceKeys.numberOfGamesToWinMatch, context, R.integer.numberOfGamesToWin_default__Squash);
         if ( iMax > 999 || (iMax < 1 /*&& iMax != -1*/ ) ) { // -1 means not used, like in racketlon
             iMax = 999;
             setNumber(PreferenceKeys.numberOfGamesToWinMatch, context, iMax);
         }
         return iMax;
     }
+    public static boolean playAllGames(Context context) {
+        return _getBoolean(PreferenceKeys.playAllGames, context, R.bool.playAllGames_default);
+    }
     public static int numberOfServesPerPlayer(Context context) {
-        return getIntegerR(PreferenceKeys.numberOfServesPerPlayer, context, R.integer.numberOfServesPerPlayer_default);
+        return _getIntegerR(PreferenceKeys.numberOfServesPerPlayer, context, R.integer.numberOfServesPerPlayer_default);
     }
     public static int numberOfPointsToWinGame(Context context) {
-        int iMax = getIntegerR(PreferenceKeys.numberOfPointsToWinGame, context, R.integer.gameEndScore_default__Squash);
+        int iMax = _getIntegerR(PreferenceKeys.numberOfPointsToWinGame, context, R.integer.gameEndScore_default__Squash);
         if ( iMax > 9999 ) {
             iMax = 9999;
             setNumber(PreferenceKeys.numberOfPointsToWinGame, context, iMax);
@@ -1612,26 +1620,26 @@ public class PreferenceValues extends RWValues
         return iMax;
     }
     public static boolean usePowerPlay(Context context) {
-        return getBoolean(PreferenceKeys.usePowerPlay, context, R.bool.usePowerPlay_default);
+        return _getBoolean(PreferenceKeys.usePowerPlay, context, R.bool.usePowerPlay_default);
     }
     public static int numberOfPowerPlaysPerPlayerPerMatch(Context context) {
-        return getIntegerR(PreferenceKeys.numberOfPowerPlaysPerPlayerPerMatch, context, R.integer.numberOfPowerPlaysPerPlayerPerMatch_default__Squash);
+        return _getIntegerR(PreferenceKeys.numberOfPowerPlaysPerPlayerPerMatch, context, R.integer.numberOfPowerPlaysPerPlayerPerMatch_default__Squash);
     }
     public static int numberOfCharactersBeforeAutocomplete(Context context) {
-        return getIntegerR(PreferenceKeys.numberOfCharactersBeforeAutocomplete, context, R.integer.numberOfCharactersBeforeAutocomplete_default);
+        return _getIntegerR(PreferenceKeys.numberOfCharactersBeforeAutocomplete, context, R.integer.numberOfCharactersBeforeAutocomplete_default);
     }
     public static int numberOfCharactersBeforeAutocompleteCountry(Context context) {
-        return getIntegerR(PreferenceKeys.numberOfCharactersBeforeAutocompleteCountry, context, R.integer.numberOfCharactersBeforeAutocompleteCountry_default);
+        return _getIntegerR(PreferenceKeys.numberOfCharactersBeforeAutocompleteCountry, context, R.integer.numberOfCharactersBeforeAutocompleteCountry_default);
     }
 
     public static int getWarmupDuration(Context context) {
-        return getIntegerR(PreferenceKeys.timerWarmup, context, R.integer.timerWarmup_default__Squash);
+        return _getIntegerR(PreferenceKeys.timerWarmup, context, R.integer.timerWarmup_default__Squash);
     }
     public static int getPauseDurationBeforeFirstGame(Context context) {
-        return getIntegerR(PreferenceKeys.timerPauseBeforeFirstGame, context, R.integer.timerPauseBeforeFirstGame_default__Squash);
+        return _getIntegerR(PreferenceKeys.timerPauseBeforeFirstGame, context, R.integer.timerPauseBeforeFirstGame_default__Squash);
     }
     public static int getPauseDuration(Context context) {
-        return getIntegerR(PreferenceKeys.timerPauseBetweenGames, context, R.integer.timerPauseBetweenGames_default__Squash);
+        return _getIntegerR(PreferenceKeys.timerPauseBetweenGames, context, R.integer.timerPauseBetweenGames_default__Squash);
     }
 
     private static boolean bFixedMatchesAreUnChanged = true;
@@ -1640,10 +1648,10 @@ public class PreferenceValues extends RWValues
         return getFeedPostDetail(context, URLsKeys.Name);
     }
     public static boolean removeSeedingAfterMatchSelection(Context context) {
-        return getBoolean(PreferenceKeys.removeSeedingAfterMatchSelection, context, R.bool.removeSeedingAfterMatchSelection_default);
+        return _getBoolean(PreferenceKeys.removeSeedingAfterMatchSelection, context, R.bool.removeSeedingAfterMatchSelection_default);
     }
     public static String getFeedsFeedURL(Context context) {
-        return getString(PreferenceKeys.FeedFeedsURL, R.string.feedFeedsURL_default, context);
+        return _getString(PreferenceKeys.FeedFeedsURL, R.string.feedFeedsURL_default, context);
     }
 
     public static boolean hasInternetConnection(Context context) {
@@ -1754,13 +1762,13 @@ public class PreferenceValues extends RWValues
         return sUrl;
     }
     private static int getMaxCacheAgeFlags(Context context) {
-        return getInteger(PreferenceKeys.maximumCacheAgeFlags, context, R.integer.maximumCacheAgeFlags_default);
+        return _getInteger(PreferenceKeys.maximumCacheAgeFlags, context, R.integer.maximumCacheAgeFlags_default);
     }
     public static int getMaxCacheAgeFeeds(Context context) {
-        return getInteger(PreferenceKeys.maximumCacheAgeFeeds, context, R.integer.maximumCacheAgeFeeds_default);
+        return _getInteger(PreferenceKeys.maximumCacheAgeFeeds, context, R.integer.maximumCacheAgeFeeds_default);
     }
     public static int getFeedReadTimeout(Context context) {
-        return getInteger(PreferenceKeys.feedReadTimeout, context, R.integer.feedReadTimeout_default); // in seconds
+        return _getInteger(PreferenceKeys.feedReadTimeout, context, R.integer.feedReadTimeout_default); // in seconds
     }
     public static String getWebConfigURL(Context context) {
         String sUrl = "config.php";
@@ -1786,7 +1794,7 @@ public class PreferenceValues extends RWValues
         return getFeedPostDetail(context, URLsKeys.LiveScoreUrl);
     }
     private static PostDataPreference getPostDataPreference(Context context) {
-        return getEnum(PreferenceKeys.postDataPreference, context, PostDataPreference.class, PostDataPreference.Basic);
+        return _getEnum(PreferenceKeys.postDataPreference, context, PostDataPreference.class, PostDataPreference.Basic);
     }
 
     public static boolean guessShareAction(String sModelSource, Context context) {
@@ -1834,6 +1842,21 @@ public class PreferenceValues extends RWValues
             setBoolean(PreferenceKeys.showLastGameInfoInTimer, context, Boolean.valueOf(mOverwrite.remove(PreferenceKeys.showLastGameInfoInTimer.toString())));
             //setString(PreferenceKeys.showTimersAutomatically, context, mOverwrite.get(PreferenceKeys.showTimersAutomatically));
         }
+        EnumSet<PreferenceKeys> set = EnumSet.allOf(PreferenceKeys.class);
+        for(PreferenceKeys key: set) {
+            if ( mOverwrite.containsKey(key.toString()) ) {
+                if ( key.getType().equals(Boolean.class) ) {
+                    setBoolean(key, context, Boolean.valueOf(mOverwrite.remove(key.toString())));
+                } else if ( key.getType().equals(String.class) ) {
+                    setString(key, context, mOverwrite.remove(key.toString()));
+                } else if ( key.getType().equals(Integer.class) ) {
+                    setNumber(key, context, Integer.parseInt(mOverwrite.remove(key.toString())));
+                } else {
+                    Log.d(TAG, "TODO " + key);
+                }
+            }
+        }
+
 /*
         if ( mOverwrite.containsKey(PreferenceKeys.showTimersAutomatically.toString()) ) {
             setBoolean(PreferenceKeys.showTimersAutomatically, context, Boolean.valueOf(mOverwrite.get(PreferenceKeys.showTimersAutomatically)));
@@ -1866,7 +1889,7 @@ public class PreferenceValues extends RWValues
         addOrReplaceNewFeedURL(context, newEntry, bAllowReplace, bMakeActive);
     }
     public static void addOrReplaceNewFeedURL(Context context, Map<URLsKeys, String> newEntry, boolean bAllowReplace, boolean bMakeActive) {
-        String sCurrentURLs = getString(PreferenceKeys.feedPostUrls, "", context);
+        String sCurrentURLs = _getString(PreferenceKeys.feedPostUrls, "", context);
         List<Map<URLsKeys, String>> urlsList = getUrlsList(sCurrentURLs, context);
         if ( urlsList == null ) {
             urlsList = new ArrayList<>();
@@ -1929,14 +1952,14 @@ public class PreferenceValues extends RWValues
     public static boolean deleteFeedURL(Context context, String sName2Delete) {
         boolean bDeleted = false;
 
-        String sCurrentURLs = getString(PreferenceKeys.feedPostUrls, "", context);
+        String sCurrentURLs = _getString(PreferenceKeys.feedPostUrls, "", context);
         List<Map<URLsKeys, String>> urlsList = getUrlsList(sCurrentURLs, context);
         if ( urlsList == null ) {
             urlsList = new ArrayList<Map<URLsKeys, String>>();
         }
 
         // create new value to store in preferences
-        int iActive = getInteger(PreferenceKeys.feedPostUrl, context, -1);
+        int iActive = _getInteger(PreferenceKeys.feedPostUrl, context, -1);
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < urlsList.size(); i++) {
             Map<URLsKeys, String> existing = urlsList.get(i);
@@ -2038,7 +2061,7 @@ public class PreferenceValues extends RWValues
         }
 */
 
-        String sUrls = getString(PreferenceKeys.feedPostUrls, "", context);
+        String sUrls = _getString(PreferenceKeys.feedPostUrls, "", context);
         List<Map<URLsKeys, String>> urlsList = getUrlsList(sUrls, context);
 
         int iStringSize = StringUtil.size(sUrls);
@@ -2048,7 +2071,7 @@ public class PreferenceValues extends RWValues
             Log.d(TAG, "Refreshing config for feeds. From size " + iStringSize + " to " + iNewStringSize);
         }
 
-        int iIndex = getInteger(PreferenceKeys.feedPostUrl, context, 0);
+        int iIndex = _getInteger(PreferenceKeys.feedPostUrl, context, 0);
         if ( (iIndex >= 0) && ListUtil.size(urlsList) > iIndex ) {
             entry = urlsList.get(iIndex);
         }
@@ -2099,7 +2122,7 @@ public class PreferenceValues extends RWValues
 
     public static Map<String,String> getFeedPostDetailMap(Context context, URLsKeys key, URLsKeys value, boolean bSortKey) {
 
-        String sUrls = getString(PreferenceKeys.feedPostUrls, "", context);
+        String sUrls = _getString(PreferenceKeys.feedPostUrls, "", context);
         List<Map<URLsKeys, String>> urlsList = getUrlsList(sUrls, context);
 
         Class<? extends Map> c = LinkedHashMap.class;
@@ -2127,15 +2150,23 @@ public class PreferenceValues extends RWValues
         setOverwrites(values);
     }
 */
-    public static void setOverwrites(Map<PreferenceKeys, String> values) {
-        if ( values == null ) { return; }
+
+    /** set 'in memory' settings: only for as long as the app is running...: typically for Feed settings */
+    public static int setOverwrites(Map<PreferenceKeys, String> values) {
+        if ( values == null ) { return 0; }
+        int iOverwritten = 0;
         for(PreferenceKeys key: values.keySet() ) {
-            setOverwrite(key, values.get(key));
+            if ( setOverwrite(key, values.get(key)) ) {
+                iOverwritten++;
+            };
         }
+        return iOverwritten;
     }
-    public static void setOverwrite(PreferenceKeys key, String sValue) {
-        RWValues.setOverwrite(key, sValue);
+    private static boolean setOverwrite(PreferenceKeys key, String sValue) {
+        String sOldOverwrite = RWValues.setOverwrite(key, sValue);
         bFeedsAreUnChanged = false;
+
+        return sValue.equals(sOldOverwrite) == false;
     }
     public static <T extends Enum<T>> void setOverwrite(PreferenceKeys key, T eValue) {
         RWValues.setOverwrite(key, String.valueOf(eValue));
@@ -2155,29 +2186,29 @@ public class PreferenceValues extends RWValues
     }
 
     public static String getDefaultSMSTo(Context context) {
-        return getString(PreferenceKeys.smsResultToNr, "", context);
+        return _getString(PreferenceKeys.smsResultToNr, "", context);
     }
 
     public static String getRefereeName(Context context) {
-        return getString(PreferenceKeys.refereeName, "", context);
+        return _getString(PreferenceKeys.refereeName, "", context);
     }
     public static String getMarkerName(Context context) {
-        return getString(PreferenceKeys.markerName, "", context);
+        return _getString(PreferenceKeys.markerName, "", context);
     }
     public static String getAssessorName(Context context) {
-        return getString(PreferenceKeys.assessorName, "", context);
+        return _getString(PreferenceKeys.assessorName, "", context);
     }
 
     public static String getDefaultMailTo(Context context) {
-        return getString(PreferenceKeys.mailResultTo, "", context);
+        return _getString(PreferenceKeys.mailResultTo, "", context);
     }
 
     public static String getAdditionalPostKeyValuePairs(Context context) {
-        return getString(PreferenceKeys.additionalPostKeyValuePairs, "", context); // not a preference for now, only used from 'parent' app
+        return _getString(PreferenceKeys.additionalPostKeyValuePairs, "", context); // not a preference for now, only used from 'parent' app
     }
 
     public static boolean mailFullScoringSheet(Context context) {
-        return getBoolean(PreferenceKeys.mailFullScoringSheet, context, R.bool.mailFullScoringSheet_default);
+        return _getBoolean(PreferenceKeys.mailFullScoringSheet, context, R.bool.mailFullScoringSheet_default);
     }
 
     /** returns configured directory. But if external and (no longer) writable, the internal storage dir is returned */
@@ -2186,7 +2217,7 @@ public class PreferenceValues extends RWValues
 
       //File storageDirectory = Environment.getExternalStorageDirectory();
         File storageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-        String sDir = getString(PreferenceKeys.targetDirForImportExport, (storageDirectory != null ? storageDirectory.getAbsolutePath() : null), context);
+        String sDir = _getString(PreferenceKeys.targetDirForImportExport, (storageDirectory != null ? storageDirectory.getAbsolutePath() : null), context);
         if ( StringUtil.isEmpty(sDir) ) {
             return null;
         }
@@ -2215,7 +2246,7 @@ public class PreferenceValues extends RWValues
         //current version
         int versionCodeForChangeLogCheck = getVersionCodeForChangeLogCheck(context); // actually uses version name with e.g. dots removed
         //version where changelog has been viewed
-        int viewedChangelogVersion = getInteger(PreferenceKeys.viewedChangelogVersion, context, 0);
+        int viewedChangelogVersion = _getInteger(PreferenceKeys.viewedChangelogVersion, context, 0);
 
         if ( viewedChangelogVersion < versionCodeForChangeLogCheck ) {
             setNumber(PreferenceKeys.viewedChangelogVersion, context, versionCodeForChangeLogCheck);
@@ -2251,7 +2282,7 @@ public class PreferenceValues extends RWValues
             return StartupAction.ChangeLog;
         }
 
-        String s = getString(PreferenceKeys.StartupAction, StartupAction.None.toString(), context);
+        String s = _getString(PreferenceKeys.StartupAction, StartupAction.None.toString(), context);
         StartupAction startupAction = null;
         try {
             startupAction = StartupAction.valueOf(s);
@@ -2262,23 +2293,23 @@ public class PreferenceValues extends RWValues
     }
 
     public static boolean hideCompletedMatchesFromFeed(Context context) {
-        return getBoolean(PreferenceKeys.hideCompletedMatchesFromFeed, context, R.bool.hideCompletedMatchesFromFeed_default);
+        return _getBoolean(PreferenceKeys.hideCompletedMatchesFromFeed, context, R.bool.hideCompletedMatchesFromFeed_default);
     }
     public static boolean autoSuggestToPostResult(Context context) {
-        return getBoolean(PreferenceKeys.autoSuggestToPostResult, context, R.bool.suggestToPostResult_default);
+        return _getBoolean(PreferenceKeys.autoSuggestToPostResult, context, R.bool.suggestToPostResult_default);
     }
     public static boolean useFeedNameAsEventName(Context context) {
-        return getBoolean(PreferenceKeys.useFeedNameAsEventName, context, R.bool.useFeedNameAsEventName_default);
+        return _getBoolean(PreferenceKeys.useFeedNameAsEventName, context, R.bool.useFeedNameAsEventName_default);
     }
     public static boolean groupMatchesInFeedByCourt(Context context) {
-        return getBoolean(PreferenceKeys.groupMatchesInFeedByCourt, context, R.bool.groupMatchesInFeedByCourt_default);
+        return _getBoolean(PreferenceKeys.groupMatchesInFeedByCourt, context, R.bool.groupMatchesInFeedByCourt_default);
     }
     // TODO: in pref screen
     public static boolean useGroupNameAsEventData(Context context) {
-        return getBoolean(PreferenceKeys.useGroupNameAsEventData, context, R.bool.useGroupNameAsEventData_default);
+        return _getBoolean(PreferenceKeys.useGroupNameAsEventData, context, R.bool.useGroupNameAsEventData_default);
     }
     public static boolean savePasswords(Context context) {
-        return getBoolean(PreferenceKeys.savePasswords, context, R.bool.savePasswords_default);
+        return _getBoolean(PreferenceKeys.savePasswords, context, R.bool.savePasswords_default);
     }
 
     static void initTextColors(PreferenceGroup textColors, boolean bEnable) {
@@ -2290,7 +2321,7 @@ public class PreferenceValues extends RWValues
         return PreferenceValues.setEnum(PreferenceKeys.kioskMode, context, kioskMode);
     }
     public static KioskMode getKioskMode(Context context) {
-        KioskMode anEnum = getEnum(PreferenceKeys.kioskMode, context, KioskMode.class, KioskMode.NotUsed);
+        KioskMode anEnum = _getEnum(PreferenceKeys.kioskMode, context, KioskMode.class, KioskMode.NotUsed);
         if ( anEnum == null ) {
             return KioskMode.NotUsed;
         }
@@ -2435,7 +2466,7 @@ public class PreferenceValues extends RWValues
         if ( ScoreBoard.isInDemoMode()    ) { return false; }
         if ( StringUtil.isEmpty(sMessage) ) { return false; } // should not happen but maybe a translation is missing/empty
 
-        if ( getBoolean(PreferenceKeys.showTips, context, R.bool.showTips_default) == false ) {
+        if ( _getBoolean(PreferenceKeys.showTips, context, R.bool.showTips_default) == false ) {
             return false;
         }
 
@@ -2697,7 +2728,7 @@ public class PreferenceValues extends RWValues
         return getBoolean(PreferenceKeys.allowForScoringWithBlueToothConnectedMediaControlButtons, context, false);
     }
     public static MediaControlMode mediaControlMode(Context context) {
-        return getEnum(PreferenceKeys.mediaControlMode, context, MediaControlMode.class, R.string.MediaControlMode_default);
+        return _getEnum(PreferenceKeys.mediaControlMode, context, MediaControlMode.class, R.string.MediaControlMode_default);
     }
 
     public static String getIpAddress(Context context) {
@@ -2714,7 +2745,7 @@ public class PreferenceValues extends RWValues
 
     public static String getRemoteSettingsURL_Default(Context context, boolean bStripParams) {
         int ResDefault = PreferenceValues.getSportTypeSpecificResId(context, R.string.RemoteSettingsURL_default__Squash);
-        String sDefaultUrl = getString(PreferenceKeys.RemoteSettingsURL_Default, ResDefault, context);
+        String sDefaultUrl = _getString(PreferenceKeys.RemoteSettingsURL_Default, ResDefault, context);
 
         if ( bStripParams && StringUtil.isNotEmpty(sDefaultUrl) ) {
             sDefaultUrl = URLFeedTask.shortenUrl(sDefaultUrl);
@@ -2723,7 +2754,7 @@ public class PreferenceValues extends RWValues
     }
 
     public static String getRemoteSettingsURL(Context context, boolean bAddParams) {
-        String sUrl = getString(PreferenceKeys.RemoteSettingsURL, 0, context);
+        String sUrl = _getString(PreferenceKeys.RemoteSettingsURL, 0, context);
         if ( StringUtil.isEmpty(sUrl) ) {
             sUrl = getRemoteSettingsURL_Default(context, false);
         }
@@ -2768,7 +2799,7 @@ public class PreferenceValues extends RWValues
         String sJson = ContentUtil.readRaw(context, iResIdOfJson);
         try {
             JSONObject config = new JSONObject(sJson);
-            //String sBLEConfig = PreferenceValues.getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config_default__Default      , context);
+            //String sBLEConfig = _getString(PreferenceKeys.BluetoothLE_Config       , R.string.pref_BluetoothLE_Config_default__Default      , context);
 
             List<CharSequence> lReturn = new ArrayList<>();
             Iterator<String> keys = config.keys();
@@ -2827,5 +2858,198 @@ public class PreferenceValues extends RWValues
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static String m_sRoleKey = null;
+    public static void setRole(Object value) {
+        m_sRoleKey = role2key(value);
+    }
+
+    private static String _getString(PreferenceKeys key, int iResourceDefault, Context context) {
+        String sDefault = null;
+        if (iResourceDefault != 0) {
+            sDefault = context.getString(iResourceDefault);
+        }
+        return _getString(key, sDefault, context);
+    }
+    private static String _getString(PreferenceKeys key, String sDefault, Context context) {
+        String sOW = RWValues.getOverwritten(key);
+        Object oRm = getRemoteSetting(key);
+        String sRo = (String) getForRole(key);
+        String sPr = RWValues.getString(key.toString(), sDefault, context);
+        if ( StringUtil.isNotEmpty(sOW) ) {
+            return sOW;
+        }
+        if ( oRm != null  ) {
+            return oRm.toString();
+        }
+        if ( StringUtil.isNotEmpty(sRo) ) {
+            return sRo;
+        }
+        return sPr;
+    }
+    private static <T extends Enum<T>> T _getEnum(PreferenceKeys key, Context context, Class<T> enumClass, int iResIdDefault) {
+        String sDefault = "";
+        if (iResIdDefault != 0) {
+            sDefault = context.getString(iResIdDefault);
+        }
+
+        T enumDefault = Params.getEnumValueFromString(enumClass, sDefault);
+        return (T)_getEnum(key, context, enumClass, enumDefault);
+    }
+    public static <T extends Enum<T>> T _getEnum(PreferenceKeys key, Context context, Class<T> enumClass, T eDefault) {
+        String sOW = RWValues.getOverwritten(key);
+        Object oRm = getRemoteSetting(key);
+        Object oRo = getForRole(key);
+        String sPr = RWValues.getString(key.toString(), eDefault!=null?eDefault.toString():null, context);
+        if ( StringUtil.isNotEmpty(sOW) ) {
+            return Params.getEnumValueFromString(enumClass, sOW);
+        }
+        if ( oRm != null  ) {
+            String sRm = oRm.toString();
+            T eEnum = Params.getEnumValueFromString(enumClass, sRm);
+            if ( eEnum != null ) {
+                return eEnum;
+            }
+        }
+        if ( oRo != null ) {
+            return (T) oRo;
+        }
+        //RWValues.getEnum(key, context, enumClass, eDefault, null);
+        return Params.getEnumValueFromString(enumClass, sPr);
+    }
+    private static <T extends Enum<T>> EnumSet<T> _getEnumSet(PreferenceKeys key, Context context, Class<T> enumClass, EnumSet<T> eDefault) {
+        String sOW = RWValues.getOverwritten(key);
+        Object oRm = getRemoteSetting(key);
+        Object oRo = getForRole(key);
+
+        List<String> values = null;
+        if ( StringUtil.isNotEmpty(sOW) ) {
+            values = Arrays.asList(StringUtil.singleCharacterSplit(sOW));
+        }
+        if ( oRm != null  ) {
+            if ( oRm instanceof String ) {
+                values = new ArrayList<>();
+                values.add((String) oRm);
+            } else if ( oRm instanceof List ) {
+                values = (List<String>) oRm;
+            }
+        }
+        if (ListUtil.isNotEmpty(values)) {
+            Set<T> enumValues = ListUtil.toEnumValues(values, enumClass);
+            if (enumValues != null && enumValues.size() != 0) {
+                return EnumSet.copyOf(enumValues);
+            } else {
+                return EnumSet.noneOf(enumClass);
+            }
+        }
+
+        if ( oRo != null ) {
+            return (EnumSet<T>) oRo;
+        }
+        EnumSet<T> esPr = RWValues.getEnumSet(key, context, enumClass, eDefault);
+        return esPr;
+    }
+    private static int _getIntegerR(PreferenceKeys key, Context context, int iResourceDefault) {
+        int iDefault = 0;
+
+        try {
+            iDefault = context.getResources().getInteger(iResourceDefault);
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return _getInteger(key, context, iDefault);
+    }
+    public static int _getInteger(PreferenceKeys key, Context context, int iDefault) {
+        String sOW = RWValues.getOverwritten(key);
+        Object oRm = getRemoteSetting(key);
+        Object oRo = getForRole(key);
+        if ( StringUtil.isNotEmpty(sOW) && StringUtil.isInteger(sOW) ) {
+            return Integer.parseInt(sOW);
+        }
+        if ( oRm != null ) {
+            String sRm = String.valueOf(oRm);
+            if ( StringUtil.isInteger(sRm) ) {
+                return Integer.parseInt(sRm);
+            }
+        }
+        if ( oRo != null ) {
+            String sRo = String.valueOf(oRo);
+            if ( StringUtil.isInteger(sRo) ) {
+                return Integer.parseInt(sRo);
+            }
+        }
+        return RWValues.getInteger(key, context, iDefault);
+    }
+
+    public static boolean _getBoolean(PreferenceKeys key, Context context, int iResourceDefault) {
+        String sOW = RWValues.getOverwritten(key);
+        Object oRm = getRemoteSetting(key);
+        Object oRo = getForRole(key);
+        if ( StringUtil.isNotEmpty(sOW) ) {
+            return Boolean.parseBoolean(sOW); // TODO: improve
+        }
+        if ( oRm != null ) {
+            if ( oRm instanceof Boolean ) {
+                return (boolean) oRm;
+            }
+            String sRm = String.valueOf(oRm);
+            return Boolean.parseBoolean(sRm);
+        }
+        if ( oRo != null ) {
+            if ( oRo instanceof Boolean ) {
+                return (boolean) oRo;
+            }
+            String sRo = String.valueOf(oRo);
+            return Boolean.parseBoolean(sRo);
+        }
+        return RWValues.getBoolean(key, context, iResourceDefault);
+    }
+
+    private static Object getForRole(PreferenceKeys key) {
+         Map<PreferenceKeys, Object> mRoleSpecific = mRolePrefs.get(m_sRoleKey);
+         if ( mRoleSpecific == null ) { return null; }
+         Object oRoleSpecific = mRoleSpecific.get(key);
+         return oRoleSpecific;
+    }
+
+    private static final Map<String, Map<PreferenceKeys, Object>> mRolePrefs = new HashMap<>();
+    private static final Map<PreferenceKeys, Object> mPrefSlaveSettings = new HashMap<>();
+    static {
+        mPrefSlaveSettings.put(PreferenceKeys.useOfficialAnnouncementsFeature  , Feature.DoNotUse );
+        mPrefSlaveSettings.put(PreferenceKeys.useShareFeature                  , Feature.DoNotUse );
+        mPrefSlaveSettings.put(PreferenceKeys.useTimersFeature                 , Feature.DoNotUse );
+        mPrefSlaveSettings.put(PreferenceKeys.endGameSuggestion                , Feature.DoNotUse );
+        mPrefSlaveSettings.put(PreferenceKeys.useSoundNotificationInTimer      , false            );
+        mPrefSlaveSettings.put(PreferenceKeys.useVibrationNotificationInTimer  , false            );
+        mPrefSlaveSettings.put(PreferenceKeys.timerViewType                    , ViewType.Inline  );
+        mPrefSlaveSettings.put(PreferenceKeys.blinkFeedbackPerPoint            , true             );
+        mPrefSlaveSettings.put(PreferenceKeys.numberOfBlinksForFeedbackPerPoint, 4                );
+        mPrefSlaveSettings.put(PreferenceKeys.showActionBar                    , false);
+        mPrefSlaveSettings.put(PreferenceKeys.OrientationPreference            , EnumSet.of(OrientationPreference.Landscape));
+        mPrefSlaveSettings.put(PreferenceKeys.LandscapeLayoutPreference        , LandscapeLayoutPreference.Presentation1);
+        mPrefSlaveSettings.put(PreferenceKeys.postEveryChangeToSupportLiveScore, false); // assume Master will do this
+
+        mRolePrefs.put(role2key(MQTTRole.Slave), mPrefSlaveSettings);
+        mRolePrefs.put(role2key(BTRole  .Slave), mPrefSlaveSettings);
+    }
+    private static String role2key(Object o) {
+        if ( o == null ) { return null; }
+        return o.getClass().getName() + "#" + o;
+    }
+
+    /** store settings retrieved remotely. */
+    private static JSONObject m_joRemoteConfig = null;
+    public static void setRemoteSettings(JSONObject remoteSettings) {
+        m_joRemoteConfig = remoteSettings;
+    }
+    private static Object getRemoteSetting(PreferenceKeys key) {
+        if ( m_joRemoteConfig == null) { return null; }
+        Object value = m_joRemoteConfig.opt(key.toString());
+
+        // TODO: check class
+
+        return value;
     }
 }

@@ -17,7 +17,6 @@
 
 package com.doubleyellow.scoreboard.main;
 
-import android.annotation.SuppressLint;
 import android.app.*;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -37,7 +36,6 @@ import android.os.*;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -3037,6 +3035,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         m_iMenuItemsToHide = PreferenceValues.getMenuItemsToHide(this);
 
         MenuInflater inflater = getMenuInflater();
+        //mainMenu.removeItem(R.id.sb_overflow_submenu);
 
         inflater.inflate(R.menu.mainmenu, mainMenu);
         return reinitMenu(mainMenu);
@@ -4419,6 +4418,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             startActivityForResult(nm, R.id.sb_edit_event_or_player);
                             return;
                         } else {
+                            if ( PreferenceValues.useMQTT(this) && m_MQTTHandler != null ) {
+                                if ( MQTTRole.Slave.equals(m_MQTTHandler.getRole() ) ) {
+                                    PreferenceValues.clearMQTTOtherDeviceId(this);
+                                    m_MQTTHandler.stop();
+                                    //m_MQTTHandler.reinit(this, iBoard, MQTTStatus.OnActivityResume);
+                                }
+                            }
+
                             // see if we have to set colors
                             PlayerColorsNewMatch playerColorsNewMatch = PreferenceValues.playerColorsNewMatch(this);
                             for(Player p : Player.values() ) {
@@ -4668,8 +4675,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     /** invoked on: GameEndReached, GameEnded, FirstPointChange, GameIsHalfway, ScoreChange. Mainly for livescore */
     public void postMatchModel_publishOnMQTT(Context context, Model matchModel, Type timerType, int iSecsTotal) {
         JSONObject oTimerInfo = getTimerInfo(timerType, iSecsTotal);
+        MQTTRole mqttRole = publishMatchOnMQTT(matchModel, false, oTimerInfo);
+        if ( MQTTRole.Slave.equals(mqttRole) ) {
+            Log.d(TAG, "Not http posting as mqtt slave");
+            return;
+        }
         postMatchModel(context, matchModel, true, false, oTimerInfo);
-        publishMatchOnMQTT(matchModel, false, oTimerInfo);
     }
 /*
     public static void postMatchModel(Context context, Model matchModel, boolean bAllowEndGameIfApplicable, boolean bFromMenu, Type timerType, int iSecsTotal) {
@@ -5471,7 +5482,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             matchModel.changeScore(player);
             iTmpTxtOnElementDuringFeedback = 0;
         } else {
-            // score will be changed by timer ending the visual feedback. No longer used... idea was to show 'game' or 'set' for a few seconds when a point ended the game/set
+            // score will be changed by timer ending the visual feedback.
+            // No longer used... idea was to show 'game' or 'set' for a few seconds when a point ended the game/set
         }
         if ( m_timerScoreChangedFeedBack == null ) {
             int numberOfBlinksForFeedbackPerPoint = PreferenceValues.numberOfBlinksForFeedbackPerPoint(this);
@@ -5847,27 +5859,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         iBoard.setBluetoothIconVisibility(visibility);
     }
-    public static Map<PreferenceKeys, String> mBtPrefSlaveSettings = new HashMap<>();
-    static {
-        mBtPrefSlaveSettings.put(PreferenceKeys.useOfficialAnnouncementsFeature, String.valueOf(Feature.DoNotUse ));
-        mBtPrefSlaveSettings.put(PreferenceKeys.useShareFeature                , String.valueOf(Feature.DoNotUse ));
-        mBtPrefSlaveSettings.put(PreferenceKeys.useTimersFeature               , String.valueOf(Feature.DoNotUse ));
-        mBtPrefSlaveSettings.put(PreferenceKeys.endGameSuggestion              , String.valueOf(Feature.DoNotUse ));
-        mBtPrefSlaveSettings.put(PreferenceKeys.useSoundNotificationInTimer    , String.valueOf(false            ));
-        mBtPrefSlaveSettings.put(PreferenceKeys.useVibrationNotificationInTimer, String.valueOf(false            ));
-        mBtPrefSlaveSettings.put(PreferenceKeys.timerViewType                  , String.valueOf(ViewType.Inline  ));
-    }
+
     public  static BTRole                  m_blueToothRole            = BTRole.Equal;
     public void setBluetoothRole(BTRole role, Object oReason) {
-        switch (role) {
-            case Slave:
-                // disable automatic showing of dialogs
-                PreferenceValues.setOverwrites(mBtPrefSlaveSettings);
-                break;
-            default:
-                PreferenceValues.removeOverwrites(mBtPrefSlaveSettings);
-                break;
-        }
+        PreferenceValues.setRole(role);
         if ( role.equals(m_blueToothRole) == false ) {
             String sMsg = String.format("Bluetooth connection. Device switched from %s to %s (%s)", m_blueToothRole, role, oReason);
             //Toast.makeText(this, sMsg, Toast.LENGTH_SHORT).show();
@@ -6331,15 +6326,24 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             }
                             String sScoreReceived = saMethodNArgs[saMethodNArgs.length - 1];
                             String sModelScore    = matchModel.getScore(Player.A) + "-" + matchModel.getScore(Player.B);
+                            boolean bDoChangeScoreInModel = false;
                             if ( sScoreReceived.equals("0-0") && sModelScore.equals("0-0") ) {
                                 // if endGame=automatic changeScore might be send to set score to 0-0, but if slave already changed to 0-0, ignore
                                 Log.w(TAG, String.format("Ignoring %s", btMethod));
                             } else if ((sScoreReceived.equals("1-0") || sScoreReceived.equals("0-1")) && matchModel.isPossibleGameVictory()) {
                                 // assume end game was not yet performed here on 'mirrored' device
                                 matchModel.endGame();
-                                matchModel.changeScore(player);
+                                bDoChangeScoreInModel = true;
                             } else {
-                                matchModel.changeScore(player);
+                                bDoChangeScoreInModel = true;
+                            }
+                            if ( bDoChangeScoreInModel ) {
+                                if ( PreferenceValues.blinkFeedbackPerPoint(this) ) {
+                                    int iTmpTxtOnElementDuringFeedback = getTxtOnElementDuringFeedback(player);
+                                    startVisualFeedbackForScoreChange(player, iTmpTxtOnElementDuringFeedback);
+                                } else {
+                                    matchModel.changeScore(player);
+                                }
                             }
                         }
                         break;
@@ -7285,9 +7289,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( m_MQTTHandler == null ) { return; }
         m_MQTTHandler.publishOnMQTT(method, args);
     }
-    private void publishMatchOnMQTT(Model matchModel, boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
-        if ( m_MQTTHandler == null ) { return; }
-        m_MQTTHandler.publishMatchOnMQTT(matchModel, bPrefixWithJsonLength, oTimerInfo);
+    private MQTTRole publishMatchOnMQTT(Model matchModel, boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
+        if ( m_MQTTHandler == null ) { return null; }
+        return m_MQTTHandler.publishMatchOnMQTT(matchModel, bPrefixWithJsonLength, oTimerInfo);
     }
     public void updateMQTTConnectionStatusIconOnUiThread(int visibility, int nrOfWhat) {
         runOnUiThread(() -> iBoard.updateMQTTConnectionStatusIcon(visibility, nrOfWhat));
@@ -7301,7 +7305,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( m_MQTTHandler != null ) {
             MQTTRole role = m_MQTTHandler.getRole();
             if ( MQTTRole.Slave.equals(role) ) {
-                // TODO: if this device was mirroring an other, ensure changing the score will not push to livescore
+                // if this device was mirroring an other, ensure changing the score will not push to livescore
                 PreferenceValues.initForNoLiveScoring(this);
             }
             m_MQTTHandler.stop();

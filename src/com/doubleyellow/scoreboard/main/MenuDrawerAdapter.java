@@ -37,10 +37,8 @@ import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.util.ListUtil;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 class MenuDrawerAdapter extends BaseAdapter implements ListView.OnItemClickListener, View.OnClickListener, DrawerLayout.DrawerListener {
     public static final boolean m_bHideDrawerItemsFromOldMenu = false; // TODO: maybe later
@@ -142,7 +140,7 @@ class MenuDrawerAdapter extends BaseAdapter implements ListView.OnItemClickListe
     }
     private void addItem(int iActionId, int iCaptionId, int iImageId, PreferenceKeys prefBoolean, int iShowResidDefault) {
         if ( prefBoolean != null ) {
-            boolean bShow = PreferenceValues.getBoolean(prefBoolean, scoreBoard, iShowResidDefault);
+            boolean bShow = PreferenceValues._getBoolean(prefBoolean, scoreBoard, iShowResidDefault);
             if ( bShow == false ) {
                 Log.d(TAG, "Specifically not showing " + scoreBoard.getResources().getResourceName(iActionId) );
                 return;

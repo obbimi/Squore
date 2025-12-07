@@ -1437,6 +1437,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 //translate old (legacy) keys (all lower and/or with underscores) to new more consistent camelCase ones
                 .replaceAll("\"team_players\"", JSONKey.teamPlayers.toString())
                 .replaceAll("\"teamid\""      , JSONKey.teamId.toString())
+                .replaceAll("\"a\""           , Player.A.toString())
+                .replaceAll("\"b\""           , Player.B.toString())
         ;
         if ( sContentFixed.equals(sContent) == false ) {
             return sContentFixed;

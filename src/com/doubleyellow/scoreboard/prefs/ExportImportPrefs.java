@@ -162,11 +162,13 @@ public class ExportImportPrefs extends DialogPreference
 
         JSONObject joCurrent = getCurrentSettings(context);
         Map mCurrent = JsonUtil.toMap(joCurrent);
-          //mCurrent.remove(PreferenceKeys.RemoteSettingsURL.toString()); // maddock uses some subsequent re-set of the settings URL to have slightly different settings per device
+          //mCurrent.remove(PreferenceKeys.RemoteSettingsURL.toString()); // madduck uses some subsequent re-set of the settings URL to have slightly different settings per device
             mCurrent = MapUtil.filterKeys(mCurrent, ".+" + UsernamePassword.getSettingsSuffix(context, R.string.username), Enums.Match.Remove);
             mCurrent = MapUtil.filterKeys(mCurrent, ".+" + UsernamePassword.getSettingsSuffix(context, R.string.password), Enums.Match.Remove);
 
         Map mRemote  = JsonUtil.toMap(joRemoteConfig);
+        PreferenceValues.setRemoteSettings(joRemoteConfig);
+
         if ( PreferenceValues.currentDateIsTestDate() ) {
             mCurrent = new TreeMap(mCurrent);
             mRemote  = new TreeMap(mRemote);
@@ -513,4 +515,26 @@ public class ExportImportPrefs extends DialogPreference
         }
         return 0;
     }
+
+/*
+    public static Map getUpdates(Map mNew, Map mOld) {
+        if (mNew == null) {
+            return null;
+        } else {
+            HashMap mDiffValues = new HashMap();
+
+            for(Object oKey : mNew.keySet()) {
+                if (mOld != null && mOld.containsKey(oKey)) {
+                    Object oOldValue = mOld.get(oKey);
+                    Object oNewValue = mNew.get(oKey);
+                    if ((oOldValue != null || oNewValue != null) && (oOldValue == null || !oOldValue.equals(oNewValue))) {
+                        mDiffValues.put(oKey, oNewValue);
+                    }
+                }
+            }
+
+            return mDiffValues;
+        }
+    }
+*/
 }

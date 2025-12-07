@@ -272,7 +272,7 @@ public class ArchiveTabbed extends XActivity implements /*NfcAdapter.CreateNdefM
         }
 
         if ( defaultTab == null ) {
-            defaultTab = PreferenceValues.getEnum(PreferenceKeys.ArchiveTabbed_defaultTab, this, SelectTab.class, SelectTab.Previous);
+            defaultTab = PreferenceValues._getEnum(PreferenceKeys.ArchiveTabbed_defaultTab, this, SelectTab.class, SelectTab.Previous);
         }
         if ( (actualTabsToShow.contains(defaultTab) == false) && (actualTabsToShow.size() > 0)) {
             defaultTab = actualTabsToShow.get(0);
