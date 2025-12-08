@@ -1664,10 +1664,21 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // --------------- restart ------------------------
     // ----------------------------------------------------
 
-    /** Does not seem to work so well if app started for debugging. But when started from home screen it seems to work fine (android 7) */
     public void doRestart() {
-        super.recreate();
+        RestartMode restartMode = PreferenceValues.restartMode(this);
+        Log.i(TAG, "Restart mode : " + restartMode);
+        switch (restartMode) {
+            case Activity_recreate:
+                Preloader preloader = Preloader.getInstance(this);
+                // Does not seem to work so well if app started for debugging. But when started from home screen it seems to work fine (android 7)
+                super.recreate();
+                break;
+            case System_exit:
+                System.exit(0);
+                break;
+        }
     }
+
     public void askToRestart(List<String> lMessages) {
         RestartApp restartApp = new RestartApp(this, getMatchModel(), this);
         restartApp.init(lMessages);
@@ -4650,13 +4661,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             //Log.d(TAG, "Waiting ... " + millisUntilFinished);
         }
         @Override public void onFinish() {
-            Log.d(TAG, "Posting/Publishing ... ");
+            Log.d(TAG, "Posting/MQTT Publishing ... ");
             if ( ScoreBoard.timer != null ) {
                 int secondsLeft = ScoreBoard.timer.getSecondsLeft();
                 if ( secondsLeft == -1 ) {
-                    secondsLeft = ScoreBoard.timer.timerType.getDefaultSecs();
+                    secondsLeft = Timer.timerType.getDefaultSecs();
                 }
-                postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, ScoreBoard.timer.timerType, secondsLeft);
+                postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, Timer.timerType, secondsLeft);
             } else {
                 postMatchModel_publishOnMQTT(ScoreBoard.this, matchModel, null, -1);
             }
@@ -5464,7 +5475,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             m_guiElementToUseForFocus        = guiElementToUseForFocus;
             m_player                         = p;
             m_iTmpTxtOnElementDuringFeedback = iTmpTxtOnElementDuringFeedback;
-            Log.i(TAG, "m_iTmpTxtOnElementDuringFeedback : " + m_iTmpTxtOnElementDuringFeedback);
+            //Log.d(TAG, "m_iTmpTxtOnElementDuringFeedback : " + m_iTmpTxtOnElementDuringFeedback);
             super.start();
         }
         @Override public void doOnTick(int m_iInvocationCnt, long millisUntilFinished) {

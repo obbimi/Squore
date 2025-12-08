@@ -91,13 +91,14 @@ public class ExportImportPrefs extends DialogPreference
     private static final String sSettingsExtension_BIN  = ".bin";
     private static final String sSettingsExtension_JSON = ".json";
 
+    /** restore from backup */
     public static String importSettings(Context context, boolean bShowToast) {
 
         File fSettingsJSON = getSettingsBinaryFile(context, true, sSettingsExtension_JSON);
         if ( fSettingsJSON != null && fSettingsJSON.exists() ) {
             try {
                 JSONObject joSettings = new JSONObject(FileUtil.readFileAsString(fSettingsJSON));
-                importSettingsFromJSON(context, joSettings);
+                importSettingsFromJSON(context, joSettings, false);
                 String sMsg = context.getString(R.string.x_restored_from_y, context.getString(R.string.sb_preferences), fSettingsJSON.getAbsolutePath());
                 if ( bShowToast ) {
                     Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
@@ -215,7 +216,7 @@ public class ExportImportPrefs extends DialogPreference
         boolean bRestartRequired = false;
         if ( iChanges > 0  ) {
             JSONObject joUpsertSettings = new JSONObject(mUpserts);
-            bRestartRequired = importSettingsFromJSON(context, joUpsertSettings);
+            bRestartRequired = importSettingsFromJSON(context, joUpsertSettings, joRemoteConfig.optBoolean(PreferenceKeysSpecial.donNotPersistRemoteSettings.toString()));
 
             // special cases
             if ( joUpsertSettings.has(PreferenceKeys.feedPostUrls.toString()) ) {
@@ -243,30 +244,33 @@ public class ExportImportPrefs extends DialogPreference
             Toast.makeText(context, sMsg, Toast.LENGTH_SHORT).show();
         }
         if ( bRestartRequired ) {
-            int restartAppIfChangesDetected = joRemoteConfig.optInt("restartAppIfChangesDetected", 1);
-            switch (restartAppIfChangesDetected) {
-                case 1:
-                    if ( context instanceof ScoreBoard) {
+            if ( context instanceof ScoreBoard ) {
+                int restartAppIfChangesDetected = joRemoteConfig.optInt(PreferenceKeysSpecial.restartAppIfChangesDetected.toString(), 1);
+                ScoreBoard scoreBoard = (ScoreBoard) context;
+                switch (restartAppIfChangesDetected) {
+                    case 1:
                         List<String> lMessages = new ArrayList<>();
                         lMessages.add(sMsg);
-                        lMessages.add("Restart the app manually to have settings take effect");
-                        ((ScoreBoard)context).askToRestart(lMessages);
-                    }
-                    break;
-                case 2:
-                    if ( context instanceof ScoreBoard) {
-                        ((ScoreBoard)context).doRestart();
-                    }
-                    break;
-                default:
-                    break;
+                        lMessages.add("Restart the app manually to have the changed settings take effect");
+                        scoreBoard.askToRestart(lMessages);
+                        break;
+                    case 2:
+                        scoreBoard.doRestart();
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                Log.w(TAG, "??"); // e.g. from settings screen
             }
         }
 
         // TODO: feedPostUrl=<a number>, if specified feedPostUrls should be there as well
         return iChanges;
     }
-    private static boolean importSettingsFromJSON(Context context, JSONObject joSettings) throws JSONException
+
+    /** used by both 'import settings' and 'remote settings' */
+    private static boolean importSettingsFromJSON(Context context, JSONObject joSettings, boolean bDoNotPersist) throws JSONException
     {
         boolean bRestartRequired = false;
 
@@ -359,7 +363,11 @@ public class ExportImportPrefs extends DialogPreference
                 Log.w(TAG, String.format("Could not import %s=%s of type %s", sKey, oBUValue, oBUValue.getClass().getName()));
             }
         }
-        editor.commit();
+        if ( bDoNotPersist ) {
+            //editor.undo(); // no real suitable method available
+        } else {
+            editor.commit();
+        }
 
         return bRestartRequired;
     }

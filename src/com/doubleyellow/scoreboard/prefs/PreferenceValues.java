@@ -176,6 +176,9 @@ public class PreferenceValues extends RWValues
         return _getEnum(PreferenceKeys.squoreBrand, ctx, Brand.class, Brand.Squore);
     }
 
+    public static RestartMode restartMode(Context context) {
+        return _getEnum(PreferenceKeys.restartMode, context, RestartMode.class, RestartMode.System_exit);
+    }
     static EnumSet<ShowOnScreen> showBrandLogoOn(Context context) {
         return _getEnumSet(PreferenceKeys.showBrandLogoOn, context, ShowOnScreen.class, EnumSet.of(ShowOnScreen.OnChromeCast));
     }

@@ -395,6 +395,9 @@ public enum PreferenceKeys {
     kioskMode(KioskMode.class, true),
     hideMenuItems(null, false),
     showMenuItems(null, false),
+
+    restartMode(RestartMode.class, false),
+
     ;
     private Class clazz = String.class;
     private boolean bRestartRequired = false;

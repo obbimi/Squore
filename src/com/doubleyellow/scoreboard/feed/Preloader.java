@@ -25,7 +25,6 @@ import com.doubleyellow.android.util.KeyStoreUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
-import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.prefs.ExportImportPrefs;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -177,9 +176,6 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
             //Log.i(TAG, String.format("No next %s ", m_status));
         }
     }
-    public Status getPreloadStatus() {
-        return m_status;
-    }
 
     private boolean m_bFetching = false;
     private Status m_status = Status.NotStarted;
@@ -253,6 +249,7 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
                     try {
                         int iChanges = ExportImportPrefs.importSettingsFromJSONFromURL(m_context, sContent, sUrl);
                         if ( iChanges > 0 ) {
+                            m_status = Status.Done;
                             return; // prevent doNext(1)
                         }
                     } catch (Exception e) {

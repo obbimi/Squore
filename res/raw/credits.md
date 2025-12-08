@@ -37,6 +37,12 @@ The following users of have made valuable suggestions for improvements:
 
 ## Credits
 
+### MQTT
+
+MQTT capabilities of this app have been made possible because of the following github library:
+
+- <https://github.com/hannesa2/paho.mqtt.android>
+ 
 ### Autoresize textview
 
 The big score buttons in the mainscreen:

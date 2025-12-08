@@ -107,7 +107,7 @@ public class CastHelper implements com.doubleyellow.scoreboard.cast.ICastHelper
         if ( m_sMessageNamespace == null ) {
             m_sMessageNamespace = m_context.getPackageName();
         }
-        iConstructCastMessagesWhileNotEvenCasting = PreferenceValues.isBrandTesting(m_context)?1:0;
+        iConstructCastMessagesWhileNotEvenCasting = PreferenceValues.currentDateIsTestDate()?1:0;
 
         if ( createCastContext() ) {
             setUpListeners(m_castContext);

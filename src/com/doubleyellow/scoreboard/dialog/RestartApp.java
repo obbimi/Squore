@@ -59,7 +59,7 @@ public class RestartApp extends BaseAlertDialog
         dialog = adb.show();
     }
 
-    private DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> handleButtonClick(which);
+    private final DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> handleButtonClick(which);
 
     public static final int BTN_RESTART              = DialogInterface.BUTTON_POSITIVE;
     public static final int BTN_NO_RESTART           = DialogInterface.BUTTON_NEGATIVE;
@@ -67,7 +67,7 @@ public class RestartApp extends BaseAlertDialog
         dialog.dismiss();
         switch ( which ) {
             case BTN_RESTART:
-                System.exit(0);
+                scoreBoard.doRestart();
                 break;
             case BTN_NO_RESTART:
                 break;

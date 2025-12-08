@@ -45,6 +45,7 @@ import com.doubleyellow.scoreboard.match.MatchTabbed;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
+import com.doubleyellow.scoreboard.prefs.PreferenceKeysSpecial;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.android.task.URLTask;
 import com.doubleyellow.android.util.ContentReceiver;
@@ -159,6 +160,10 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 PreferenceValues.setOverwrites(mFeedPrefOverwrites);
                 m_bHideCompletedMatches = PreferenceValues.hideCompletedMatchesFromFeed(context);
                 changeAndNotify(m_feedStatus, true);
+
+                if ( m_joFeedConfig.optBoolean(PreferenceKeysSpecial.persistFeedSettings.toString()) ) {
+                    PreferenceValues.interpretOverwrites(context);
+                }
             }
         }
         return MapUtil.size(mFeedPrefOverwrites);
