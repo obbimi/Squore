@@ -18,7 +18,7 @@ package com.doubleyellow.scoreboard.prefs;
 
 public enum PreferenceKeysSpecial {
     restartAppIfChangesDetected(Integer.class),
-    donNotPersistRemoteSettings(Boolean.class),
+    doNotPersistRemoteSettings(Boolean.class),
     persistFeedSettings(Boolean.class),
     ;
     private Class clazz = String.class;

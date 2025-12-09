@@ -216,7 +216,7 @@ public class ExportImportPrefs extends DialogPreference
         boolean bRestartRequired = false;
         if ( iChanges > 0  ) {
             JSONObject joUpsertSettings = new JSONObject(mUpserts);
-            bRestartRequired = importSettingsFromJSON(context, joUpsertSettings, joRemoteConfig.optBoolean(PreferenceKeysSpecial.donNotPersistRemoteSettings.toString()));
+            bRestartRequired = importSettingsFromJSON(context, joUpsertSettings, joRemoteConfig.optBoolean(PreferenceKeysSpecial.doNotPersistRemoteSettings.toString()));
 
             // special cases
             if ( joUpsertSettings.has(PreferenceKeys.feedPostUrls.toString()) ) {
@@ -283,6 +283,7 @@ public class ExportImportPrefs extends DialogPreference
         while( keys.hasNext() ) {
             String sKey = keys.next();
             if ( sKey.startsWith("-") ) { continue; }
+            if ( sKey.startsWith("_") ) { continue; }
             if ( lSettingsToIgnore.contains(sKey) ) {
                 Log.d(TAG, "NOT importing " + sKey);
                 continue;

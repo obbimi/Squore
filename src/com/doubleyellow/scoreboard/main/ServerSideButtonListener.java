@@ -96,17 +96,22 @@ class ServerSideButtonListener extends ScoreBoardListener implements View.OnClic
                     scoreBoard.m_bleConfigHandler.promoteAppToUseBLE();
                 }
                 KioskMode kioskMode = PreferenceValues.getKioskMode(scoreBoard);
-                if ( ! kioskMode.equals(KioskMode.NotUsed) ) {
-                    PreferenceValues.setKioskMode(scoreBoard, KioskMode.NotUsed);
-                    scoreBoard.showInfoMessage("Abandoning kiosk mode...", 5);
-                    //scoreBoard.doRestart(); // don't restart if e.g. RemoteSettings url is used. It might go straight back in kioskmode.
-                    scoreBoard.reinitMenu();
+                if ( ! KioskMode.NotUsed.equals(kioskMode) ) {
+                    if ( PreferenceValues.hasRemoteSetting(PreferenceKeys.kioskMode) ) {
+                        // don't restart if e.g. RemoteSettings url is used. It might go straight back in kioskMode.
+                        //PreferenceValues.setKioskMode(scoreBoard, KioskMode.NotUsed);
+                        PreferenceValues.setOverwrite(PreferenceKeys.kioskMode, KioskMode.NotUsed.toString());
+                        scoreBoard.showInfoMessage("Abandoning kiosk mode...", 5);
+                        scoreBoard.reinitMenu();
+                    } else {
+                        scoreBoard.doRestart();
+                    }
                     return;
                 }
 
                 if ( iToggled > 1 ) {
                     Toast.makeText(scoreBoard, String.format("Additional %d menu items made available", iToggled), Toast.LENGTH_LONG).show();
-                    ScoreBoard.Mode newMode = scoreBoard.m_mode; // toggleDemoMode(null);
+                    ScoreBoard.Mode newMode = ScoreBoard.m_mode; // toggleDemoMode(null);
                     if ( newMode.equals(ScoreBoard.Mode.ScreenShots) ) {
                         PreferenceValues.setEnum   (PreferenceKeys.BackKeyBehaviour            , scoreBoard, BackKeyBehaviour.UndoScoreNoConfirm); // for adb demo/screenshots script
                         PreferenceValues.setBoolean(PreferenceKeys.showFullScreen              , scoreBoard, true);                         // for adb demo/screenshots script

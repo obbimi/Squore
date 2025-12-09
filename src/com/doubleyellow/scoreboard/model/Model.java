@@ -2238,7 +2238,7 @@ public abstract class Model implements Serializable
         if ( StringUtil.isNotEmpty(url) ) {
             Log.d(TAG, "Share URL         : " + url);
         } else if (StringUtil.isNotEmpty(m_shareUrl)) {
-            Log.w(TAG, "Share URL emptied : " + url);
+            //Log.w(TAG, "Share URL emptied : " + url);
         }
         m_shareUrl = url;
     }

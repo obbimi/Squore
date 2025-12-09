@@ -47,6 +47,8 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
     private static Preloader instance = null;
 
     private Map<Status, Object> mStatus2Url = new HashMap<>();
+    private Object remoteSettingsURL = null;
+
     public static Preloader getInstance(Context context) {
         if ( instance == null ) {
             instance = new Preloader();
@@ -61,7 +63,9 @@ public class Preloader extends AsyncTask<Context, Void, Integer> implements Cont
     @Override protected Integer doInBackground(Context[] params) {
         m_context = params[0];
 
-        Object remoteSettingsURL = PreferenceValues.getRemoteSettingsURL(m_context, true);
+        if ( remoteSettingsURL == null ) {
+            remoteSettingsURL = PreferenceValues.getRemoteSettingsURL(m_context, true);
+        }
         if ( remoteSettingsURL == null || String.valueOf(remoteSettingsURL).isEmpty() ) {
             // just to able to use AutoActivate while developing...
             remoteSettingsURL = PreferenceKeys.RemoteSettingsURL;

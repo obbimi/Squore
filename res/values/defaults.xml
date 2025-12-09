@@ -75,6 +75,7 @@ http://developer.android.com/guide/practices/screens_support.html
     <string name="RemoteSettingsURL_default__Tabletennis"><![CDATA[http://scoretabletennis/settings?cc=${countryCode}&version=${versionCode}&ip=${ipAddress}&device_id=${liveScoreDeviceId}]]></string>
     <string name="RemoteSettingsURL_default__Racketlon"><![CDATA[http://scoreracketlon/settings?cc=${countryCode}&version=${versionCode}&ip=${ipAddress}&device_id=${liveScoreDeviceId}]]></string>
     <string name="RemoteSettingsURL_default__TennisPadel"><![CDATA[http://scoretennispadel/settings?cc=${countryCode}&version=${versionCode}&ip=${ipAddress}&device_id=${liveScoreDeviceId}]]></string>
+    <string name="RemoteSettingsURL_default__SquoreRedirect_test"><![CDATA[https://squore.double-yellow.be/Squore.settings.301.ihoeve.json]]></string>
     <string name="RemoteSettingsURL_default__Default"></string>
 
 

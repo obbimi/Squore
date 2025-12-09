@@ -67,6 +67,7 @@ import com.doubleyellow.scoreboard.timer.ViewType;
 import com.doubleyellow.scoreboard.view.PreferenceCheckBox;
 import com.doubleyellow.util.*;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -177,7 +178,7 @@ public class PreferenceValues extends RWValues
     }
 
     public static RestartMode restartMode(Context context) {
-        return _getEnum(PreferenceKeys.restartMode, context, RestartMode.class, RestartMode.System_exit);
+        return _getEnum(PreferenceKeys.restartMode, context, RestartMode.class, RestartMode.Activity_recreate);
     }
     static EnumSet<ShowOnScreen> showBrandLogoOn(Context context) {
         return _getEnumSet(PreferenceKeys.showBrandLogoOn, context, ShowOnScreen.class, EnumSet.of(ShowOnScreen.OnChromeCast));
@@ -2321,6 +2322,9 @@ public class PreferenceValues extends RWValues
     }
 
     public static boolean setKioskMode(Context context, KioskMode kioskMode) {
+        if ( m_joRemoteConfig != null ) {
+            m_joRemoteConfig.remove(PreferenceKeys.kioskMode.name());
+        }
         return PreferenceValues.setEnum(PreferenceKeys.kioskMode, context, kioskMode);
     }
     public static KioskMode getKioskMode(Context context) {
@@ -2339,7 +2343,7 @@ public class PreferenceValues extends RWValues
             lReturn.addAll(kioskMode.hideMenuItems());
         }
 
-        Set<String> hideMenuItems = PreferenceValues.getStringSet(PreferenceKeys.hideMenuItems, new HashSet<String>(), context);
+        Set<String> hideMenuItems = PreferenceValues._getStringSet(PreferenceKeys.hideMenuItems, new HashSet<String>(), context);
         if (ListUtil.isNotEmpty(hideMenuItems) ) {
             for(String sMenuItem: hideMenuItems ) {
                 int iResId = convertToResourceId(sMenuItem, context);
@@ -2348,7 +2352,7 @@ public class PreferenceValues extends RWValues
                 }
             }
         }
-        Set<String> showMenuItems = PreferenceValues.getStringSet(PreferenceKeys.showMenuItems, new HashSet<String>(), context);
+        Set<String> showMenuItems = PreferenceValues._getStringSet(PreferenceKeys.showMenuItems, new HashSet<String>(), context);
         if (ListUtil.isNotEmpty(showMenuItems) ) {
             for(String sMenuItem: showMenuItems ) {
                 int iResId = convertToResourceId(sMenuItem, context);
@@ -2747,8 +2751,15 @@ public class PreferenceValues extends RWValues
     }
 
     public static String getRemoteSettingsURL_Default(Context context, boolean bStripParams) {
-        int ResDefault = PreferenceValues.getSportTypeSpecificResId(context, R.string.RemoteSettingsURL_default__Squash);
-        String sDefaultUrl = _getString(PreferenceKeys.RemoteSettingsURL_Default, ResDefault, context);
+        int iResDefault = PreferenceValues.getSportTypeSpecificResId(context, R.string.RemoteSettingsURL_default__Squash);
+        if ( currentDateIsTestDate() ) {
+            String sDefaultUrl = _getString(PreferenceKeys.RemoteSettingsURL_Default, iResDefault, context);
+            if ( sDefaultUrl.equals(context.getString(R.string.RemoteSettingsURL_default__Squash) ) ) {
+                String sTmpForTesting = context.getString(R.string.RemoteSettingsURL_default__SquoreRedirect_test);
+                setString(PreferenceKeys.RemoteSettingsURL_Default, context, sTmpForTesting);
+            }
+        }
+        String sDefaultUrl = _getString(PreferenceKeys.RemoteSettingsURL_Default, iResDefault, context);
 
         if ( bStripParams && StringUtil.isNotEmpty(sDefaultUrl) ) {
             sDefaultUrl = URLFeedTask.shortenUrl(sDefaultUrl);
@@ -2762,10 +2773,10 @@ public class PreferenceValues extends RWValues
             sUrl = getRemoteSettingsURL_Default(context, false);
         }
         if ( bAddParams ) {
-            Map m = MapUtil.getMap("countryCode", PreferenceValues.getCountryFromTelephonyOrTimeZone(context)
-                                  ,"versionCode"      , PreferenceValues.getAppVersionCode(context)
-                                  ,"ipAddress"        , PreferenceValues.getIpAddress(context)
-                                  ,PreferenceKeys.liveScoreDeviceId.toString() , PreferenceValues.getLiveScoreDeviceId(context)
+            Map m = MapUtil.getMap("countryCode"                              , PreferenceValues.getCountryFromTelephonyOrTimeZone(context)
+                                  ,"versionCode"                              , PreferenceValues.getAppVersionCode(context)
+                                  ,"ipAddress"                                , PreferenceValues.getIpAddress(context)
+                                  ,PreferenceKeys.liveScoreDeviceId.toString(), PreferenceValues.getLiveScoreDeviceId(context)
             );
             AndroidPlaceholder placeholder = new AndroidPlaceholder(TAG);
             sUrl = placeholder.translate(sUrl, m);
@@ -3009,6 +3020,16 @@ public class PreferenceValues extends RWValues
         }
         return RWValues.getBoolean(key, context, iResourceDefault);
     }
+    private static Set<String> _getStringSet(PreferenceKeys key, Set sDefault, Context context) {
+        Object oRm = getRemoteSetting(key);
+        if ( oRm instanceof List ) {
+            return (Set<String>) oRm;
+        }
+        if ( oRm instanceof JSONArray ) {
+            return new HashSet<>(JsonUtil.asListOfStrings((JSONArray) oRm));
+        }
+        return RWValues.getStringSet(key, sDefault, context);
+    }
 
     private static Object getForRole(PreferenceKeys key) {
          Map<PreferenceKeys, Object> mRoleSpecific = mRolePrefs.get(m_sRoleKey);
@@ -3046,6 +3067,9 @@ public class PreferenceValues extends RWValues
     private static JSONObject m_joRemoteConfig = null;
     public static void setRemoteSettings(JSONObject remoteSettings) {
         m_joRemoteConfig = remoteSettings;
+    }
+    public static boolean hasRemoteSetting(PreferenceKeys key) {
+        return getRemoteSetting(key) != null;
     }
     private static Object getRemoteSetting(PreferenceKeys key) {
         if ( m_joRemoteConfig == null) { return null; }
