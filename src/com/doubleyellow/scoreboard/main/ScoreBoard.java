@@ -82,7 +82,7 @@ import com.doubleyellow.scoreboard.dialog.Handicap;
 import com.doubleyellow.scoreboard.dialog.announcement.EndGameAnnouncement;
 import com.doubleyellow.scoreboard.dialog.announcement.EndMatchAnnouncement;
 import com.doubleyellow.scoreboard.dialog.announcement.StartGameAnnouncement;
-import com.doubleyellow.scoreboard.dialog.material.MDDialogFragment;
+//import com.doubleyellow.scoreboard.dialog.material.MDDialogFragment;
 import com.doubleyellow.scoreboard.feed.Authentication;
 import com.doubleyellow.scoreboard.feed.Preloader;
 //import com.doubleyellow.scoreboard.firebase.PusherHandler;
@@ -4788,6 +4788,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 */
         return dialogManager.addToDialogStack(dialog);
     }
+    private synchronized void show(BaseAlertDialog dialog) {
+        dialogManager.show(dialog);
+    }
+/*
     private synchronized void show(MDDialogFragment dialog) {
         //dialogManager.show(dialog);
         if ( true ) {
@@ -4824,6 +4828,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         androidx.fragment.app.DialogFragment newFragment = com.doubleyellow.scoreboard.dialog.material.MyDialogFragment.newInstance(mStackLevel);
         newFragment.show(ft, "dialog");
     }
+*/
 
     private void showChangeLog() {
         ChangeLog changeLog = new ChangeLog(this);
