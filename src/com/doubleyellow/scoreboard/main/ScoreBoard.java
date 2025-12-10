@@ -663,8 +663,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
     }
 
-    public boolean m_liveScoreShare = false;
-    public List<Integer> m_iMenuItemsToHide = new ArrayList<>();
+    public  boolean m_liveScoreShare = false;
+    private int     m_iDefaultDelayMS  = 600;
+    public  List<Integer> m_iMenuItemsToHide = new ArrayList<>();
 
     /**
      * e.g. after settings screen has been entered and closed, matchdetails have been viewed.
@@ -722,7 +723,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         initScoreHistory();
 
         //onResumeNFC();
-        onResumeMQTT(MQTTStatus.OnActivityResume, false);
+        try {
+            onResumeMQTT(MQTTStatus.OnActivityResume, false);
+        } catch (Exception e) {
+            Log.e(TAG, "Could not continue with MQTT", e);
+        }
         //onResumeFCM();
         onResumeBlueTooth();
         onResumeInitBluetoothBLE();
@@ -2382,7 +2387,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             if ( (bInitializingModelListeners == false) && ( (iTotal != 0) || (iDelta == -1) ) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
                 //shareScoreSheet(ScoreBoard.this, matchModel, false);
                 // start timer to post in e.g. x seconds. Restart this timer as soon as another point is scored
-                shareScoreSheetDelayed(600);
+                shareScoreSheetDelayed(m_iDefaultDelayMS);
             }
 
             if ( (iDelta == 1) ) {
@@ -2435,7 +2440,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 showAppropriateMenuItemInActionBar();
             }
             if ( m_liveScoreShare ) {
-                shareScoreSheetDelayed(600);
+                shareScoreSheetDelayed(m_iDefaultDelayMS);
             }
         }
     }
@@ -2516,6 +2521,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         @Override public void OnServeSideChange(Player p, DoublesServe doublesServe, ServeSide serveSide, boolean bIsHandout, boolean bForUndo) {
             if ( p == null ) { return; } // normally only e.g. for undo's of 'altered' scores
             iBoard.updateServeSide(p           ,doublesServe   , serveSide, bIsHandout);
+            shareScoreSheetDelayed(m_iDefaultDelayMS);
             if ( Brand.supportChooseServeOrReceive() == false ) {
                 // remove any indication on receiver side
                 iBoard.updateReceiver(p.getOther(), DoublesServe.NA);
@@ -3961,7 +3967,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         // ensure the match shows up in the list of live score a.s.a.p. so e.g. when warmup timer is started
         if ( bAutoTriggered && (matchModel != null) && ( matchModel.hasStarted() == false ) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
-            shareScoreSheetDelayed(1000);
+            shareScoreSheetDelayed(m_iDefaultDelayMS);
         }
     }
     /** Invoked by TwoTimerView and interpretReceivedMessage() */
@@ -4124,7 +4130,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         // ensure the match shows up in the list of live score a.s.a.p. so e.g. when toss dialog is started
         if ( ( matchModel.hasStarted() == false ) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
-            shareScoreSheetDelayed(1000);
+            shareScoreSheetDelayed(m_iDefaultDelayMS);
         }
 
         if ( Brand.supportChooseSide() ) {
