@@ -72,6 +72,8 @@
     <style name="SBTheme" parent="Theme.AppCompat">
         <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:ignore="NewApi">true</item> <!-- introduced to suppress edge-to-edge default of sdk 35 -->
 
+        <!-- required by MyMDDialogBuilder if NOT extending 'Theme.MaterialComponents' -->
+        <item name="colorSurface">@android:color/black</item>
 
         <!-- added when starting to inherit from Theme.AppCompat (for before 5.0 only?) -->
 <!--

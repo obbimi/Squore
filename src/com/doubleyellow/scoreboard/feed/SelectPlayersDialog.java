@@ -275,15 +275,14 @@ public class SelectPlayersDialog extends BaseAlertDialog
         // add the teams last because it may be a long list
         llRoot.addView(llTeams);
 
-        AlertDialog.Builder ab = new MyDialogBuilder(context);
-        ab.setTitle(R.string.sb_choose_players)
+        adb.setTitle(R.string.sb_choose_players)
                 .setView(llRoot)
                 .setNeutralButton (R.string.cmd_cancel, null)
                 .setPositiveButton(R.string.cmd_ok    , null);
 
-        dialog = ab.create();
+        dialog = adb.create();
         dialog.show();
-        Button btnOK = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        TextView btnOK = getButton(DialogInterface.BUTTON_POSITIVE);
         btnOK.setOnClickListener(onClickListener);
 
         if ( OKButtonActionForMandatoryPostParam.Disable.equals(eOKButtonAction) ) {

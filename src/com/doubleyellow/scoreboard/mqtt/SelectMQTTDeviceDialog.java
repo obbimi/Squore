@@ -27,6 +27,7 @@ import android.widget.ToggleButton;
 import com.doubleyellow.android.view.SelectObjectView;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.BaseAlertDialog;
+import com.doubleyellow.scoreboard.dialog.material.MDBaseAlertDialog;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
@@ -40,7 +41,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class SelectMQTTDeviceDialog extends BaseAlertDialog {
+public class SelectMQTTDeviceDialog extends MDBaseAlertDialog
+{
     private static final String TAG = "SB." + SelectMQTTDeviceDialog.class.getSimpleName();
 
     private String S_NONE = null;
@@ -52,13 +54,11 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
         S_NONE_DETECTED = getString(R.string.sb_MQTT_NoJoinedDevicesYet);
     }
 
-    @Override
-    public boolean storeState(Bundle outState) {
+    @Override public boolean storeState(Bundle outState) {
         return true;
     }
 
-    @Override
-    public boolean init(Bundle outState) {
+    @Override public boolean init(Bundle outState) {
         return true;
     }
 
@@ -75,7 +75,6 @@ public class SelectMQTTDeviceDialog extends BaseAlertDialog {
                 .setNegativeButton(R.string.lbl_none, listener)
         ;
 
-        // the checkboxes
         final LinearLayout ll = new LinearLayout(context);
         ll.setOrientation(LinearLayout.VERTICAL);
 
