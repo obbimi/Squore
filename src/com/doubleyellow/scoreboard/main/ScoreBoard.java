@@ -82,6 +82,7 @@ import com.doubleyellow.scoreboard.dialog.Handicap;
 import com.doubleyellow.scoreboard.dialog.announcement.EndGameAnnouncement;
 import com.doubleyellow.scoreboard.dialog.announcement.EndMatchAnnouncement;
 import com.doubleyellow.scoreboard.dialog.announcement.StartGameAnnouncement;
+import com.doubleyellow.scoreboard.dialog.material.MDDialogFragment;
 import com.doubleyellow.scoreboard.feed.Authentication;
 import com.doubleyellow.scoreboard.feed.Preloader;
 //import com.doubleyellow.scoreboard.firebase.PusherHandler;
@@ -2521,7 +2522,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         @Override public void OnServeSideChange(Player p, DoublesServe doublesServe, ServeSide serveSide, boolean bIsHandout, boolean bForUndo) {
             if ( p == null ) { return; } // normally only e.g. for undo's of 'altered' scores
             iBoard.updateServeSide(p           ,doublesServe   , serveSide, bIsHandout);
-            shareScoreSheetDelayed(m_iDefaultDelayMS);
+            if ( m_liveScoreShare ) {
+                shareScoreSheetDelayed(m_iDefaultDelayMS);
+            }
             if ( Brand.supportChooseServeOrReceive() == false ) {
                 // remove any indication on receiver side
                 iBoard.updateReceiver(p.getOther(), DoublesServe.NA);
@@ -4785,9 +4788,43 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 */
         return dialogManager.addToDialogStack(dialog);
     }
-    private synchronized void show(BaseAlertDialog dialog) {
-        dialogManager.show(dialog);
+    private synchronized void show(MDDialogFragment dialog) {
+        //dialogManager.show(dialog);
+        if ( true ) {
+            dialog.show(getSupportFragmentManager(), dialog.getClass().getSimpleName());
+        } else {
+            androidx.fragment.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            androidx.fragment.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+            // Create and show the dialog.
+            //androidx.fragment.app.DialogFragment newFragment = com.doubleyellow.scoreboard.dialog.material.MyDialogFragment.newInstance(mStackLevel);
+            dialog.show(ft, dialog.getClass().getSimpleName());
+        }
+
     }
+
+    private int mStackLevel = 0;
+    public void showMyDialog() {
+        mStackLevel++;
+
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        androidx.fragment.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        androidx.fragment.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        androidx.fragment.app.DialogFragment newFragment = com.doubleyellow.scoreboard.dialog.material.MyDialogFragment.newInstance(mStackLevel);
+        newFragment.show(ft, "dialog");
+    }
+
     private void showChangeLog() {
         ChangeLog changeLog = new ChangeLog(this);
         show(changeLog);
