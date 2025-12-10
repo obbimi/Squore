@@ -290,16 +290,18 @@ http://developer.android.com/guide/practices/screens_support.html
         <item>@string/MQTTBrokerURL_Public__Default</item>
         <!--<item>tcp://broker.hivemq.com:1883</item>--> <!-- nok 2025-10-22 -->
 <!--        <item>tcp://mqtt.eclipseprojects.io:1883</item>-->
-        <item>mqtt://broker.emqx.io</item>
+<!--        <item>mqtt://broker.emqx.io</item>-->
         <item>tcp://test.mosquitto.org:1883</item>
-        <item>tcp://broker-cn.emqx.io:1883</item>
+<!--        <item>tcp://broker-cn.emqx.io:1883</item> in fact this is the same server as broker.emqx.io-->
 <!--        <item>tcp://iot.eclipse.org:1883</item>--> <!-- 2025-01-11 NOK -->
         <item>@string/MQTTBrokerURL_Custom</item>
     </string-array>
     <!-- emqx is the most reliable according to biased https://github.com/emqx/blog/blob/main/en/202111/popular-online-public-mqtt-brokers.md -->
-    <string name="MQTTBrokerURL_Public__Default">mqtt://test.mosquitto.org</string> <!-- 2025-11-11 ok, also for wss in browser -->
+    <!--<string name="MQTTBrokerURL_Public__Default">mqtt://test.mosquitto.org</string>--> <!-- 2025-11-25 Nok, also for wss in browser -->
+    <string name="MQTTBrokerURL_Public__Default">mqtt://broker.emqx.io</string> <!-- 2025-11-11 ok, also for wss in browser -->
     <string name="MQTTBrokerURL_Custom">Custom</string>
-    <string name="MQTTBrokerURL_Custom__Default">mqtt://192.168.0.130</string>
+<!--    <string name="MQTTBrokerURL_Custom__Default">mqtt://192.168.0.130</string>-->
+    <string name="MQTTBrokerURL_Custom__Default">mqtt://192.168.0.211</string>
 <!--    <string name="MQTTBrokerURL_Custom__Default">mqtt://172.18.0.1</string>-->
 <!--    <string name="MQTTBrokerURL_Custom__Default">mqtt://172.31.29.222</string>-->
 
