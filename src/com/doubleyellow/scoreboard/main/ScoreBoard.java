@@ -1412,9 +1412,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
         }
         if ( (previous != null) && (previous != matchModel) ) {
+            eInitModelListeners_Status = ActionStatus.InProgress;
             matchModel.registerListeners(previous); // mainly for listeners for in progress ChromeCast...
+            eInitModelListeners_Status = ActionStatus.Done;
         } else {
-            bInitializedModelListeners = false;
+            eInitModelListeners_Status = ActionStatus.NotStarted;
             initModelListeners();
         }
 
@@ -2120,12 +2122,17 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ----------------------------------------------------
     // -----------------model change listeners ------------
     // ----------------------------------------------------
-    private boolean bInitializedModelListeners  = false;
-    private boolean bInitializingModelListeners = false;
+    private enum ActionStatus {
+        NotStarted,
+        InProgress,
+        Done,
+    }
+    private ActionStatus eInitModelListeners_Status = ActionStatus.NotStarted;
+
     private void initModelListeners() {
         if ( matchModel == null ) { return; }
-        if ( bInitializedModelListeners ) { return; }
-        bInitializingModelListeners = true;
+        if ( eInitModelListeners_Status.equals(ActionStatus.NotStarted) == false ) { return; }
+
         GameHistoryView.dontShowForToManyPoints(matchModel.getMaxScore() + matchModel.getMinScore());
         matchModel.clearListeners(".*" + this.getClass().getSimpleName() + ".*"); // remove listeners e.g. from this activity instance that was created for another orientation
         matchModel.registerListener(new ScoreChangeListener());
@@ -2143,8 +2150,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
       //matchModel.registerListener(new ScoreLinesChangeListener());
 
         //dbgmsg("Model listeners registered", 0, 0);
-        bInitializingModelListeners = false;
-        bInitializedModelListeners  = true;
+        eInitModelListeners_Status = ActionStatus.Done;
     }
 
     // ----------------------------------------------------
@@ -2223,13 +2229,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
 
         @Override public void OnTiebreakReached(int iOccurrenceCount) {
-            if ( bInitializingModelListeners ) { return; }
+            if ( eInitModelListeners_Status.equals(ActionStatus.InProgress) ) { return; }
             if ( autoShowTieBreakDialog(iOccurrenceCount) == false ) {
                 showMicrophoneFloatButton(true);
             }
         }
         @Override public void OnGameEndReached(Player leadingPlayer) {
-            if ( bInitializingModelListeners ) { return; }
+            if ( eInitModelListeners_Status.equals(ActionStatus.InProgress) ) { return; }
             if ( m_bHapticFeedbackOnGameEnd ) {
                 SystemUtil.doVibrate(ScoreBoard.this, 800);
             }
@@ -2356,7 +2362,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
             iBoard.updateScore(p, iTotal);
             iBoard.updateScoreHistory(iDelta == 1);
-            if ( bInitializingModelListeners == false ) {
+            if ( eInitModelListeners_Status.equals(ActionStatus.InProgress) == false ) {
                 if ( iDelta != 0 /* change score or undo */ ) {
                     cancelTimer();
                 }
@@ -2385,7 +2391,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 }
             }
 
-            if ( (bInitializingModelListeners == false) && ( (iTotal != 0) || (iDelta == -1) ) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
+            if ( (eInitModelListeners_Status.equals(ActionStatus.InProgress) == false) && ( (iTotal != 0) || (iDelta == -1) ) && m_liveScoreShare && (matchModel.isLocked() == false) ) {
                 //shareScoreSheet(ScoreBoard.this, matchModel, false);
                 // start timer to post in e.g. x seconds. Restart this timer as soon as another point is scored
                 shareScoreSheetDelayed(m_iDefaultDelayMS);
@@ -2522,7 +2528,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         @Override public void OnServeSideChange(Player p, DoublesServe doublesServe, ServeSide serveSide, boolean bIsHandout, boolean bForUndo) {
             if ( p == null ) { return; } // normally only e.g. for undo's of 'altered' scores
             iBoard.updateServeSide(p           ,doublesServe   , serveSide, bIsHandout);
-            if ( m_liveScoreShare ) {
+            if ( (eInitModelListeners_Status.equals(ActionStatus.InProgress) == false) && m_liveScoreShare ) {
                 shareScoreSheetDelayed(m_iDefaultDelayMS);
             }
             if ( Brand.supportChooseServeOrReceive() == false ) {
@@ -2886,7 +2892,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 if ( (matchModel != null) && matchModel.gameHasStarted() == false ) {
                     timestampStartOfGame(GameTiming.ChangedBy.TimerStarted);
                 }
-                if ( (bInitializingModelListeners == false) && m_liveScoreShare ) {
+                if ( (eInitModelListeners_Status.equals(ActionStatus.InProgress) == false) && m_liveScoreShare ) {
                     if ( m_delayedModelPoster != null ) {
                         m_delayedModelPoster.cancel();
                         m_delayedModelPoster = null;
@@ -4562,7 +4568,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             }
                         }
                     } else {
+                        eInitModelListeners_Status = ActionStatus.InProgress;
                         m.registerListeners(matchModel);
+                        eInitModelListeners_Status = ActionStatus.Done;
                         if ( (matchModel != null) && (m_MQTTHandler != null) ) {
                             m_MQTTHandler.publishUnloadMatchOnMQTT(matchModel);
                         }
