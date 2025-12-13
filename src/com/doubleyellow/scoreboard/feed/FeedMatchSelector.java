@@ -129,11 +129,19 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             Iterator<String> itPrefKeys = m_joFeedConfig.keys();
             while ( itPrefKeys.hasNext() ) {
                 String sPref  = itPrefKeys.next();
-                String sValue = m_joFeedConfig.getString(sPref);
+                Object oValue = m_joFeedConfig.get(sPref);
+                String sValue = oValue.toString();
                 if ( sPref.startsWith("__") ) { continue; }
                 try {
                     PreferenceKeys key = PreferenceKeys.valueOf(sPref);
-                    mFeedPrefOverwrites.put(key, sValue);
+                    if ( key.getType().equals(List.class) ) {
+                        if ( oValue instanceof JSONArray ) {
+                            List<String> lValues = JsonUtil.asListOfStrings((JSONArray) oValue);
+                            mFeedPrefOverwrites.put(key, ListUtil.join(lValues, PreferenceValues.MV_SPLITTER));
+                        }
+                    } else {
+                        mFeedPrefOverwrites.put(key, sValue);
+                    }
                 } catch (Exception e) {
                     // in stead of a PreferenceKeys it can also be a subset of URLsKeys
                     Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);

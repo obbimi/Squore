@@ -1849,14 +1849,29 @@ public class PreferenceValues extends RWValues
         EnumSet<PreferenceKeys> set = EnumSet.allOf(PreferenceKeys.class);
         for(PreferenceKeys key: set) {
             if ( mOverwrite.containsKey(key.toString()) ) {
-                if ( key.getType().equals(Boolean.class) ) {
-                    setBoolean(key, context, Boolean.valueOf(mOverwrite.remove(key.toString())));
-                } else if ( key.getType().equals(String.class) ) {
-                    setString(key, context, mOverwrite.remove(key.toString()));
-                } else if ( key.getType().equals(Integer.class) ) {
-                    setNumber(key, context, Integer.parseInt(mOverwrite.remove(key.toString())));
+                Class type = key.getType();
+                String value = mOverwrite.remove(key.toString());
+                if ( type != null ) {
+                    if ( type.equals(Boolean.class) ) {
+                        setBoolean(key, context, Boolean.parseBoolean(value));
+                    } else if ( type.equals(String.class) ) {
+                        setString(key, context, value);
+                    } else if ( type.equals(Integer.class) ) {
+                        setNumber(key, context, Integer.parseInt(value));
+                    } else if ( type.isEnum() ) {
+                        Enum eValue = Params.getEnumValueFromString(type, value);
+                        if (eValue != null) {
+                            setString(key, context, value);
+                        }
+                    } else if ( type.equals(List.class) ) {
+                        Set lValues = new HashSet();
+                        lValues.add(value);
+                        setStringSet(key, lValues, context);
+                    } else {
+                        Log.d(TAG, "TODO " + key + "=" + value + " of type " + type.getName());
+                    }
                 } else {
-                    Log.d(TAG, "TODO " + key);
+                    Log.d(TAG, "TODO " + key + "=" + value);
                 }
             }
         }

@@ -49,7 +49,7 @@ public enum PreferenceKeys {
         showFullScreen(Boolean.class, false),
         showTextInActionBar(Boolean.class, false),
         blinkFeedbackPerPoint(Boolean.class, false),
-        numberOfBlinksForFeedbackPerPoint(Integer.class, false),
+            numberOfBlinksForFeedbackPerPoint(Integer.class, false),
         hapticFeedbackPerPoint(Boolean.class, false),
         hapticFeedbackOnGameEnd(Boolean.class, false),
         numberOfCharactersBeforeAutocomplete(Integer.class, false),
@@ -250,11 +250,11 @@ public enum PreferenceKeys {
         usePowerPlay(Boolean.class, false),
         numberOfPowerPlaysPerPlayerPerMatch(Integer.class, false),
 
-    StartupAction(null, false),
+    StartupAction(StartupAction.class, false),
 
     Visuals(null, false),
         indicateGameBall(Boolean.class, false),
-        indicateGoldenPoint(null, false),
+        indicateGoldenPoint(Boolean.class, false),
         //floatingMessageForGameBall(null, false),
         floatingMessageForGameBallOn(EnumSet.class, false),
         //keepScreenOn(null, false),
@@ -264,8 +264,8 @@ public enum PreferenceKeys {
 
         AppealHandGestureIconSize(Integer.class, false),
         showChoosenDecisionShortly(Boolean.class, false),
-            showChoosenDecisionDuration_Appeal(null, false),
-            showChoosenDecisionDuration_Conduct(null, false),
+            showChoosenDecisionDuration_Appeal(Integer.class, false),
+            showChoosenDecisionDuration_Conduct(Integer.class, false),
         showAvatarOn(EnumSet.class, false),
             hideAvatarForSameImage(Boolean.class, false),
         showCountryAs(EnumSet.class, false),
@@ -343,7 +343,7 @@ public enum PreferenceKeys {
     BTSync_showFullScreenTimer(Boolean.class, false),
 
     enableScoringByBluetoothConnection(null, false),
-        lastConnectedBluetoothDevice(null, false),
+        lastConnectedBluetoothDevice(String.class, false),
     /** e.g use 'Previous song' for scoring for player A, and 'Next song' for scoring for B, and play/pause for 'Undo' */
     allowForScoringWithBlueToothConnectedMediaControlButtons(Boolean.class, false),
         mediaControlMode(MediaControlMode.class, false),
@@ -358,10 +358,10 @@ public enum PreferenceKeys {
 
     BluetoothLE(null, false),
         UseBluetoothLE(Boolean.class, false),
-        BluetoothLE_Peripheral1(null, false),
-        BluetoothLE_Peripheral2(null, false),
+        BluetoothLE_Peripheral1(String.class, false),
+        BluetoothLE_Peripheral2(String.class, false),
         BluetoothLE_Config(null, false),
-            ShortDescription(null, false),
+            ShortDescription(String.class, false),
         BluetoothLE_AutoReconnect(null, false),
         NrOfSecondsBeforeNotifyingBLEDeviceThatConfirmationIsRequired(Integer.class, false),
         ShowFeedBackOnBLEButtonsPressedInfoMessages(Boolean.class, false),
@@ -377,7 +377,7 @@ public enum PreferenceKeys {
         MQTTPublishTopicDeviceInfo(String.class, false),
         MQTTPublishDeviceInfo_EveryXSeconds(Integer.class, false),
         MQTTSubscribeTopic_remoteControl(String.class, false),
-            MQTTSkipJsonKeys(null, false),
+            MQTTSkipJsonKeys(List.class, false),
         MQTTPublishTopicChange(String.class, false),
         MQTTSubscribeTopicChange(String.class, false),
             MQTTOtherDeviceId(String.class, false),
@@ -393,8 +393,8 @@ public enum PreferenceKeys {
     useMyListFunctionality(Boolean.class, false),
 
     kioskMode(KioskMode.class, true),
-    hideMenuItems(null, false),
-    showMenuItems(null, false),
+    hideMenuItems(List.class, false),
+    showMenuItems(List.class, false),
 
     restartMode(RestartMode.class, false),
 
