@@ -170,7 +170,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 changeAndNotify(m_feedStatus, true);
 
                 if ( m_joFeedConfig.optBoolean(PreferenceKeysSpecial.persistFeedSettings.toString()) ) {
-                    PreferenceValues.interpretOverwrites(context);
+                    PreferenceValues.persistOverwrites(context);
                 }
             }
         }

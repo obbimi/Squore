@@ -149,6 +149,8 @@ public class SelectFeed extends BaseAlertDialog
                         MenuHandler menuHandler = (MenuHandler) context;
                         final Boolean useCache        = Boolean.TRUE;
                         final Boolean resetFeedStatus = Boolean.TRUE;
+                        final Boolean dontReloadYet   = Boolean.TRUE;
+                        menuHandler.handleMenuItem(R.id.show_matches_from_feed, dontReloadYet);
                         menuHandler.handleMenuItem(R.id.refresh, useCache, resetFeedStatus);
                     }
                 }

@@ -876,6 +876,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 bundle = intent.getBundleExtra(PreferenceKeys.class.getSimpleName());
             }
 
+/*
             boolean bTestInvocation = false; // && PreferenceValues.currentDateIsTestDate(); // TODO: temp should be false
             if ( bundle == null && bTestInvocation ) {
                 bundle = new Bundle();
@@ -883,8 +884,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 //bundle.putString(PreferenceKeys.StartupAction.toString(), StartupAction.ForceSelectMatch.toString());
 
                 String sFeedName       = "Double Yellow Boxen";
-                String sFeedMatchesURL = "http://boxen.double-yellow.be/matches.json.php";
-                String sFeedPlayersUrl = "http://boxen.double-yellow.be/players.txt.php";
+                String sFeedMatchesURL = "https://boxen.double-yellow.be/matches.json.php";
+                String sFeedPlayersUrl = "https://boxen.double-yellow.be/players.txt.php";
                 String sUrls =
                              URLsKeys.Name        + "=" + sFeedName           + "\n"
                            + URLsKeys.FeedMatches + "=" + sFeedMatchesURL     + "\n";
@@ -894,6 +895,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 bundle.putString(PreferenceKeys.feedPostUrls.toString(), sUrls);
                 bundle.putString(PreferenceKeys.StartupAction.toString(), StartupAction.SelectFeedMatch.toString());
             }
+*/
 
             // Get values from the intent that started this scoreBoard
             if ( bundle != null ) {
@@ -915,11 +917,21 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                 }
                                 PreferenceValues.addStringToList(this, PreferenceKeys.refereeList, 0, value);
                                 break;
+                            case feedPostUrls:
+                                Map<String, String> mKv = MapUtil.parseToMap(value, "\n", "=");
+                                String sName        = mKv.get(URLsKeys.Name.toString());
+                                String sFeedMatches = mKv.get(URLsKeys.FeedMatches.toString());
+                                PreferenceValues.addOrReplaceNewFeedURL(this, sName, sFeedMatches, null, null, null, true, true);
+                                break;
+                            default:
+                                PreferenceValues.setOverwrite(key, value);
+                                break;
                         }
-                        PreferenceValues.setOverwrite(key, value);
                     }
                 }
-                PreferenceValues.interpretOverwrites(this);
+                if ( false ) {
+                    PreferenceValues.persistOverwrites(this);
+                }
             }
         }
     }

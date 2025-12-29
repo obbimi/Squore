@@ -178,7 +178,7 @@
                     <item android:id="@+id/sb_possible_conductsB"    app:showAsAction="never"  android:icon="@android:drawable/ic_dialog_alert" android:title="@string/sb_possible_conducts" />
                     <item android:id="@id/sb_official_rules"         app:showAsAction="never"  android:icon="@android:drawable/ic_menu_search"  android:title="@string/sb_official_rules__Squash" />
                     <item android:id="@+id/sb_change_log"            app:showAsAction="never"  android:icon="@android:drawable/ic_dialog_info"  android:title="Change Log" />
-                    <item android:id="@+id/sb_credits"               app:showAsAction="never"                                                   android:title="Credits" android:visible="false" />
+                    <item android:id="@+id/sb_credits"               app:showAsAction="never" android:icon="@android:drawable/ic_dialog_info"   android:title="Credits" android:visible="true" />
                     <item android:id="@+id/sb_about"                 app:showAsAction="never" android:icon="@android:drawable/ic_dialog_info"   android:title="@string/about" />
                     <item android:id="@+id/sb_privacy_and_terms"     app:showAsAction="never" android:icon="@android:drawable/ic_dialog_info"   android:title="@string/privacy_and_terms"  android:visible="@bool/isPublicApp__Default" />
                     <item android:id="@+id/sb_mqtt_subscriptions"    app:showAsAction="never"                                                   android:title="MQTT Subscriptions" android:visible="false" />

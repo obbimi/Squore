@@ -336,7 +336,10 @@ public class SelectPlayersDialog extends BaseAlertDialog
                     Map mData = (Map) oData;
                     sName   = (String) mData.get(JSONKey.name.toString());
                     sId     = (String) mData.get(JSONKey.id.toString());
-                    sAvatar = (String) mData.get(JSONKey.avatar.toString());
+                    Object oAvatar = mData.get(JSONKey.avatar.toString());
+                    if ( oAvatar != null ) {
+                        sAvatar = String.valueOf(oAvatar) ;
+                    }
                     if ( StringUtil.isEmpty(sName) ) {
                         sName = mData.get(JSONKey.lastName.toString()) + ", " + mData.get(JSONKey.firstName.toString());
                     }

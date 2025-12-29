@@ -309,9 +309,14 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
                         }
                     }
                     if (menuItemId == R.id.show_matches_from_feed) {
+                        boolean dontTriggerLoad = (item.length > 0 && (item[0] instanceof Boolean) && (Boolean) item[0]);
                         if (fms.getFeedStatus().isShowingPlayers()) {
                             fms.resetFeedStatus(FeedMatchSelector.FeedStatus.loadingMatches);
-                            listAdapter.load(true);
+                            if ( dontTriggerLoad ) {
+                                // typically (re)load will be done from a action following directly after
+                            } else {
+                                listAdapter.load(true);
+                            }
                         }
                     }
                 }

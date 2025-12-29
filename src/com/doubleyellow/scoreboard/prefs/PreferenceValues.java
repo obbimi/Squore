@@ -1827,7 +1827,7 @@ public class PreferenceValues extends RWValues
     /**
      * Actually persist some passed in values
      */
-    public static void interpretOverwrites(Context context) {
+    public static void persistOverwrites(Context context) {
         if ( mOverwrite == null ) { return; }
         if ( mOverwrite.containsKey(PreferenceKeys.feedPostUrls.toString()) ) {
             String sFeedUrlsEntryNew = mOverwrite.remove(PreferenceKeys.feedPostUrls.toString());

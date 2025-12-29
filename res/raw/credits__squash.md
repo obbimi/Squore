@@ -1,16 +1,31 @@
+## Donations
+
+Thanks to every body who made a donation here and there.
+A big special thanks for **Squash in Bayern e.V** for making a substantial donation.
+
 ## Translations
 
 The following people were so kind to volunteer to translate Squore into their preferred language:
 
-- Sébastien Lepley (French)
-- Filip Hurta (Czech)
-- Lior Lotem (Italian)
-- Salvador Martinez (Spanish/Español)
+- French
+  - Sébastien Lepley
+- Czech 
+  - Filip Hurta
+  - Josef Hohenberger (Update)
+- Italian
+  - Lior Lotem
+- Spanish/Español 
+  - Salvador Martinez
+- Portuguese 
+  - Gonçalo Afonso
+- German
+  - Ralph Bieber 
 
 ## User Help and Suggestions
 
-The following users of Squore have made valuable suggestions/help:
+The following users of have made valuable suggestions for improvements:
 
+- Martin Krafft
 - Marius Flage <https://www.youtube.com/user/mflage>
 - Saqib Meer <https://www.facebook.com/samhereforyoualways>
 - Jonathan Webb
@@ -20,9 +35,19 @@ The following users of Squore have made valuable suggestions/help:
 - Jean-Marie Evrard from [Squash Romandie](http://squashromandie.ch)
 - Lior Lotem
 - Salvador Martinez
+- Alexander Asyunkin
+- Steve Smith
+- Baggio Milan
+- Josef Hohenberger
 
 ## Credits
 
+### MQTT
+
+MQTT capabilities of this app have been made possible because of the following github library:
+
+- <https://github.com/hannesa2/paho.mqtt.android>
+ 
 ### Autoresize textview
 
 The big score buttons in the mainscreen:
