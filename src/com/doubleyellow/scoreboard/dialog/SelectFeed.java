@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.RadioGroup;
 
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
@@ -42,11 +41,12 @@ import java.util.*;
  */
 public class SelectFeed extends BaseAlertDialog
 {
-    private String sNone = null;
+    private final String sNone;
     //private String sNewPublicFeed = null;
 
     public SelectFeed(Context context, Model matchModel, ScoreBoard scoreBoard) {
         super(context, matchModel, scoreBoard);
+        sNone = getString(R.string.lbl_none);
     }
 
     @Override public boolean storeState(Bundle outState) {
@@ -60,7 +60,6 @@ public class SelectFeed extends BaseAlertDialog
     private SelectObjectView<String> sv;
 
     @Override public void show() {
-        sNone = getString(R.string.lbl_none);
         //sNewPublicFeed = getString(R.string.add_new_feed);
         adb.setTitle(R.string.Switch_feed_elipses)
                 .setIcon(R.drawable.ic_action_web_site)
@@ -88,16 +87,14 @@ public class SelectFeed extends BaseAlertDialog
             sCurrentFeedName = ListUtil.size(alNames) > iIndexPref ? alNames.get(iIndexPref): sCurrentFeedName;
         }
 
-        sv = new SelectObjectView<String>(context, alNames, sCurrentFeedName);
+        sv = new SelectObjectView<>(context, alNames, sCurrentFeedName);
         ColorPrefs.setColors(sv, ColorPrefs.Tags.item);
         dialog = adb.setView(sv).create();
 
-        sv.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // disable 'Delete' button if 'None' is selected
-                Button btnDelete = dialog.getButton(DELETE);
-                btnDelete.setEnabled(checkedId < ListUtil.size(alNames) - (bAddNone?1:0));
-            }
+        sv.setOnCheckedChangeListener((group, checkedId) -> {
+            // disable 'Delete' button if 'None' is selected
+            Button btnDelete = dialog.getButton(DELETE);
+            btnDelete.setEnabled(checkedId < ListUtil.size(alNames) - (bAddNone?1:0));
         });
 
         dialog.show();
@@ -109,7 +106,7 @@ public class SelectFeed extends BaseAlertDialog
         //return MapUtil.listOfMaps2List(urlsList, URLsKeys.Name);
         Map<String, String> mName2Url = PreferenceValues.getFeedPostDetailMap(context, URLsKeys.Name, URLsKeys.FeedMatches, bSortNames);
         if ( mName2Url == null ) {
-            mName2Url = new TreeMap<String, String>();
+            mName2Url = new TreeMap<>();
         }
         // always add the None
         if ( bAddNoneOption && (mName2Url.containsKey(sNone) == false) ) {
@@ -119,11 +116,7 @@ public class SelectFeed extends BaseAlertDialog
         return mName2Url.keySet();
     }
 
-    private DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-        @Override public void onClick(DialogInterface dialog, int which) {
-            handleButtonClick(which);
-        }
-    };
+    private final DialogInterface.OnClickListener listener = (dialog, which) -> handleButtonClick(which);
 
     private static final int DELETE = DialogInterface.BUTTON_NEGATIVE;
     private static final int SELECT = DialogInterface.BUTTON_POSITIVE;

@@ -45,6 +45,9 @@ public enum URLsKeys {
     /** Typically used for leagues */
     Section,
 
+    HeadersSortOrder,
+    ItemsSortOrder,
+
     /* Json config feed keys */
     config,
         avatarBaseURL,

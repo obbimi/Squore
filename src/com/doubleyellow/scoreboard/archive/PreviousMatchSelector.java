@@ -89,7 +89,7 @@ public class PreviousMatchSelector extends ExpandableMatchSelector
         if ( iExpandedAfterRestore <= 0 ) {
             if ( sortOrder.equals(SortOrder.Ascending) ) {
                 ExpandableListUtil.expandAllOrLast(expandableListView, 1);
-            } else {
+            } else if ( sortOrder.equals(SortOrder.Descending) ) {
                 ExpandableListUtil.expandAllOrFirst(expandableListView, 1);
             }
         }

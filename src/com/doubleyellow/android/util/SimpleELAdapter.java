@@ -102,11 +102,19 @@ public abstract class SimpleELAdapter extends android.widget.BaseExpandableListA
     private   void setItemSorter(Comparator<String> itemSorter) {
         m_itemSorter = itemSorter;
     }
-    protected void sortHeaders(SortOrder sortOrder) {
-        setHeaderSorter(new StringComparator<>(sortOrder));
+    public void sortHeaders(SortOrder sortOrder) {
+        if ( sortOrder == null ) {
+            setHeaderSorter(null);
+        } else {
+            setHeaderSorter(new StringComparator<>(sortOrder));
+        }
     }
-    protected void sortItems(SortOrder sortOrder) {
-        setItemSorter(new StringComparator<>(sortOrder));
+    public void sortItems(SortOrder sortOrder) {
+        if ( sortOrder == null ) {
+            setItemSorter(null);
+        } else {
+            setItemSorter(new StringComparator<>(sortOrder));
+        }
     }
     private transient Comparator<String> m_headerSorter = null;
     private transient Comparator<String> m_itemSorter   = null;

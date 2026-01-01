@@ -62,7 +62,7 @@ import java.util.*;
  * - enter a singles match manually
  * - enter a doubles match manually
  */
-public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMessageCallback,*/ MenuHandler, FeedMatchSelector.FeedStatusChangedListerer {
+public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMessageCallback,*/ MenuHandler, FeedMatchSelector.FeedStatusChangedListener {
 
     private static final String TAG = "SB." + MatchTabbed.class.getSimpleName();
 
@@ -189,7 +189,7 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
         List<Integer> hideMenuItems = PreferenceValues.getMenuItemsToHide(this);
         for(int iHide: hideMenuItems) {
             if ( ViewUtil.setMenuItemVisibility(menu, iHide, false, false) ) {
-                Log.d(TAG, "Hiding because of kiosk mode " + getResources().getResourceName(iHide));
+                Log.d(TAG, "Hiding because of e.g. kiosk mode or externally loaded preferences " + getResources().getResourceName(iHide));
             }
         }
 

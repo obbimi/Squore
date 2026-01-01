@@ -90,7 +90,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
         SETTING_REGEXP = "\\[" + sbAllOpsAsRegExp + "\\s*=\\s*([^\\]]+)\\]";
     }
-    private static final String HEADER_PREFIX_REGEXP = "^\\s*([+-])\\s*(.+)$";
+    private static final String HEADER_PREFIX_REGEXP   = "^\\s*([+-])\\s*(.+)$";
+    private static final String HEADER_PREFIX_EXPANDED = "+";
 
     public static Map<PreferenceKeys, String> mFeedPrefOverwrites = new HashMap<>();
 
@@ -111,6 +112,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     private static final String DisplayFormat_MatchDefault   = "${" + JSONKey.date + "} ${" + JSONKey.time + "} : ${FirstOfList:~${" + Player.A + "}~${A.name}~} [${A.country}] [${A.club}] - " +
                                                                                                                  "${FirstOfList:~${" + Player.B + "}~${B.name}~} [${B.country}] [${B.club}] : ${" + JSONKey.result + "} (${" + JSONKey.id + "})";
     private boolean    m_bHideCompletedMatches = false;
+    private SortOrder  m_headersSortOrder      = SortOrder.Ascending;
+    private SortOrder  m_itemsSortOrder        = SortOrder.Ascending;
 
     private int readFeedConfig(JSONObject joRoot) throws Exception {
         if ( m_joFeedConfig != null ) {
@@ -125,6 +128,25 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             m_sDisplayFormat_Matches = m_joFeedConfig.optString(URLsKeys.Placeholder_Match .toString(), DisplayFormat_MatchDefault);
             m_sDisplayFormat_Players = canonicalizeJsonKeys(m_sDisplayFormat_Players);
             m_sDisplayFormat_Matches = canonicalizeJsonKeys(m_sDisplayFormat_Matches);
+
+            if ( m_joFeedConfig.has(URLsKeys.HeadersSortOrder.toString()) ) {
+                Object oValue = m_joFeedConfig.opt(URLsKeys.HeadersSortOrder.toString());
+                if ( oValue == null || oValue == JSONObject.NULL || String.valueOf(oValue).isEmpty() ) {
+                    m_headersSortOrder = null;
+                } else {
+                    m_headersSortOrder = SortOrder.valueOf(String.valueOf(oValue));
+                }
+                emsAdapter.sortHeaders(m_headersSortOrder);
+            }
+            if ( m_joFeedConfig.has(URLsKeys.ItemsSortOrder.toString()) ) {
+                Object oValue = m_joFeedConfig.opt(URLsKeys.ItemsSortOrder.toString());
+                if ( oValue == null || oValue == JSONObject.NULL || String.valueOf(oValue).isEmpty() ) {
+                    m_itemsSortOrder = null;
+                } else {
+                    m_itemsSortOrder = SortOrder.valueOf(String.valueOf(oValue));
+                }
+                emsAdapter.sortItems(m_itemsSortOrder);
+            }
 
             Iterator<String> itPrefKeys = m_joFeedConfig.keys();
             while ( itPrefKeys.hasNext() ) {
@@ -186,14 +208,14 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     @Override public void onDestroy() {
         Log.d(TAG, "destroying activity");
-        super.onDestroy();
         if ( emsAdapter != null ) {
-            if ( /*emsAdapter.*/m_task != null ) {
+            if ( m_task != null && m_task.isCancelled() == false ) {
                 Log.d(TAG, "Cancelling emsAdapter.m_task");
-                /*emsAdapter.*/m_task.cancel(true);
+                m_task.cancel(true);
             } else {
                 Log.d(TAG, "No m_task to cancel (1)");
             }
+            emsAdapter.cancel();
         } else {
             Log.d(TAG, "No emsadapter to cancel");
         }
@@ -203,6 +225,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         } else {
             Log.d(TAG, "No m_task to cancel (2)");
         }
+        super.onDestroy();
     }
 
     @Override protected void setGuiDefaults(List<String> lExpanded) {
@@ -835,8 +858,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         @Override public void load(boolean bUseCacheIfPresent) {
             this.clear();
 
-            if ( true || m_bGroupByCourt ) {
-                sortHeaders(SortOrder.Ascending);
+            if ( m_headersSortOrder != null ) {
+                sortHeaders(m_headersSortOrder);
             }
 
             if ( context == null ) {
@@ -875,6 +898,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             if ( StringUtil.isEmpty(m_sLastFetchedURL) ) {
                 super.addItem(getString(R.string.No_active_feed), getString(R.string.Select_one_by_pressing_the_globe_button));
                 this.notifyDataSetChanged();
+                int iCleared = PreferenceValues.clearOverwrites();
 
                 // TODO: dialog with 'select feed', 'hide this tab forever' and 'cancel'
                 return;
@@ -1217,12 +1241,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 super.addItem(sSection, sDisplayName, joPlayer);
             }
         }
-        /** Matches only */
+        /** Matches only. Returns a list of 'headers' to expand by default. */
         private void fillMatchListFromJSONArray(final String sDisplayFormat, String sSection, List<String> lExpandedGroups, JSONArray matches) throws JSONException {
             if ( sSection.matches(HEADER_PREFIX_REGEXP) ) {
                 String sPrefix = sSection.replaceAll(HEADER_PREFIX_REGEXP, "$1");
                 sSection = sSection.replaceAll(HEADER_PREFIX_REGEXP, "$2").trim();
-                if ( sPrefix.equals("+") && (lExpandedGroups.contains(sSection) == false) ) {
+                if ( sPrefix.equals(HEADER_PREFIX_EXPANDED) && (lExpandedGroups.contains(sSection) == false) ) {
                     lExpandedGroups.add(sSection);
                 }
             }
@@ -1311,7 +1335,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             }
         }
 
-        /** Matches or players */
+        /** Matches or players. Returns a list of 'headers' to expand by default. */
         private List<String> fillListFlat(String sContent) {
             List<String> lInput = new ArrayList<>(Arrays.asList(sContent.split("\n")));
             ListUtil.removeEmpty(lInput);
@@ -1402,7 +1426,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     if ( sEntry.matches(HEADER_PREFIX_REGEXP) ) {
                         String sPrefix = sEntry.replaceAll(HEADER_PREFIX_REGEXP, "$1");
                         sHeader = sEntry.replaceAll(HEADER_PREFIX_REGEXP, "$2").trim();
-                        if ( sPrefix.equals("+") && (lExpanded.contains(sHeader) == false) ) {
+                        if ( sPrefix.equals(HEADER_PREFIX_EXPANDED) && (lExpanded.contains(sHeader) == false) ) {
                             lExpanded.add(sHeader);
                         }
                         continue;
@@ -1500,17 +1524,17 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         return false;
     }
 
-    public interface FeedStatusChangedListerer {
+    public interface FeedStatusChangedListener {
         void notify(FeedStatus fsOld, FeedStatus fsNew, boolean bUpdateCheckableMenuItems);
     }
-    private List<FeedStatusChangedListerer> lChangeListeners = new ArrayList<>();
-    public void registerFeedChangeListener(FeedStatusChangedListerer l) {
+    private final List<FeedStatusChangedListener> lChangeListeners = new ArrayList<>();
+    public void registerFeedChangeListener(FeedStatusChangedListener l) {
         lChangeListeners.add(l);
     }
     private void changeAndNotify(FeedStatus fsNew, boolean bUpdateCheckableMenuItems) {
         FeedStatus fsOld = m_feedStatus;
         m_feedStatus = fsNew;
-        for ( FeedStatusChangedListerer l: lChangeListeners ) {
+        for ( FeedStatusChangedListener l: lChangeListeners ) {
             l.notify(fsOld, m_feedStatus, bUpdateCheckableMenuItems);
         }
     }
