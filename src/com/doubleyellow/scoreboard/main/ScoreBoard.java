@@ -73,6 +73,7 @@ import com.doubleyellow.scoreboard.bluetooth.MessageSource;
 import com.doubleyellow.scoreboard.bluetooth.SelectDeviceDialog;
 import com.doubleyellow.scoreboard.bluetooth.BLEBridge;
 import com.doubleyellow.scoreboard.bluetooth.BTUtil;
+import com.doubleyellow.scoreboard.bluetooth.StateChangeReceiver;
 import com.doubleyellow.scoreboard.cast.FullScreenTimer;
 import com.doubleyellow.scoreboard.cast.EndOfGameView;
 import com.doubleyellow.scoreboard.cast.framework.CastHelper;
@@ -5424,7 +5425,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // ----------------------------------------------------
     // --------------------- download a zip with matches --
     // ----------------------------------------------------
-    private BroadcastReceiver m_downloadCompleted = new BroadcastReceiver() {
+    private final BroadcastReceiver m_downloadCompleted = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ( DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action) == false ) {
@@ -5434,10 +5435,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
             long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
             DownloadManager.Query query = new DownloadManager.Query();
-            query.setFilterById(enqueue);
+            query.setFilterById(m_downloadId);
             Cursor c = dm.query(query);
             if ( c.moveToFirst() == false ) {
-                Log.w(TAG, "No downloads found?");
+                Log.w(TAG, "No downloads found with specified id?");
                 return;
             }
 
@@ -5490,8 +5491,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
 
             if ( ztDownLoadShortname == ZipType.SquoreAll ) {
-                // http://boxen.double-yellow.be/make.json.zip.php
-                downloadMatchesInZip("http://boxen.double-yellow.be/changes/json.zip", ZipType.DyBoxen);
+                // https://boxen.double-yellow.be/make.json.zip.php
+                downloadMatchesInZip("https://boxen.double-yellow.be/changes/json.zip", ZipType.DyBoxen);
             }
         }
     };
@@ -5500,7 +5501,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         SquoreAll,
         DyBoxen,
     }
-    private long            enqueue             = 0L;
+    private long            m_downloadId        = 0L;
     private ZipType         ztDownLoadShortname = null;
     private DownloadManager dm                  = null;
     private void downloadMatchesInZip(String sURL, ZipType ztDownLoadShortname) {
@@ -5514,7 +5515,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         this.ztDownLoadShortname = ztDownLoadShortname;
         Uri uri = Uri.parse(sURL);
         DownloadManager.Request request = new DownloadManager.Request(uri);
-        enqueue = dm.enqueue(request);
+        m_downloadId = dm.enqueue(request);
     }
 
     // ----------------------------------------------------
@@ -5685,30 +5686,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     /** Listens to state changes in Bluetooth setting of device ON/OFF */
-    private final BroadcastReceiver mBTStateChangeReceiver = new BroadcastReceiver() {
-        @Override public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-
-            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-                switch (state) {
-                    case BluetoothAdapter.STATE_OFF:
-                    case BluetoothAdapter.STATE_TURNING_OFF:
-                        if ( mBluetoothControlService != null ) {
-                            mBluetoothControlService = null;
-                        }
-                        break;
-                    case BluetoothAdapter.STATE_ON:
-                        mBluetoothControlService = new BluetoothControlService(Brand.getUUID(), Brand.getShortName(ScoreBoard.this));
-                        mBluetoothControlService.setHandler(mBluetoothHandler);
-                        mBluetoothControlService.breakConnectionAndListenForNew();
-                        break;
-                    case BluetoothAdapter.STATE_TURNING_ON:
-                        break;
-                }
-            }
-        }
-    };
+    private final BroadcastReceiver mBTStateChangeReceiver = new StateChangeReceiver();
 
     private void onResumeBlueTooth() {
         if ( mBluetoothAdapter == null ) {
@@ -5934,7 +5912,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     /**
      * The Handler that gets information back from the BluetoothControlService
      */
-    private final BluetoothHandler mBluetoothHandler = new BluetoothHandler(this);
+    public final BluetoothHandler mBluetoothHandler = new BluetoothHandler(this);
+    public static BluetoothControlService mBluetoothControlService   = null;
 
     public void setBluetoothIconVisibility(int visibility) {
         if ( iBoard == null ) {
@@ -6827,7 +6806,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
     }
 
-    private static BluetoothControlService mBluetoothControlService   = null;
+
     /**
      * Establish connection with other device
      */

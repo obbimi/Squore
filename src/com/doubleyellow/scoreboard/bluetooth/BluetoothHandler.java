@@ -37,7 +37,7 @@ public class BluetoothHandler extends Handler
 {
     private static final String TAG = "SB." + BluetoothHandler.class.getSimpleName();
 
-    private ScoreBoard sb = null;
+    private final ScoreBoard sb;
     public BluetoothHandler(ScoreBoard scoreBoard) {
         super(Looper.getMainLooper());
         sb = scoreBoard;
@@ -51,7 +51,7 @@ public class BluetoothHandler extends Handler
                 storeBTDeviceConnectedTo(msg.obj);
                 switch (btState) {
                     case CONNECTED:
-                        if ( BTRole.Master.equals(sb.m_blueToothRole) ) {
+                        if ( BTRole.Master.equals(ScoreBoard.m_blueToothRole) ) {
                             // show dialog to request to pull in match from other device, or push match on this device to other
                             sb.pullOrPushMatchOverBluetooth(m_btDeviceOther.getName());
                         } else {
@@ -72,7 +72,7 @@ public class BluetoothHandler extends Handler
                 byte[] writeBuf = (byte[]) msg.obj;
                 String writeMessage = new String(writeBuf);
                 Log.d(TAG, "writeMessage: " + writeMessage);
-                if ( BTRole.Slave.equals(sb.m_blueToothRole)
+                if ( BTRole.Slave.equals(ScoreBoard.m_blueToothRole)
                   && writeMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + "|" + BTMethods.jsonMatchReceived + "|" + BTMethods.requestCountryFlag + ").*") == false
                    )
                 {
@@ -84,7 +84,7 @@ public class BluetoothHandler extends Handler
                 byte[] readBuf = (byte[]) msg.obj;
                 String readMessage = new String(readBuf, 0, msg.arg1); // msg.arg1 contains number of bytes actually having valid info
                 Log.d(TAG, "readMessage: (#" + msg.arg1 + "): " + readMessage);
-                if ( BTRole.Master.equals(sb.m_blueToothRole)
+                if ( BTRole.Master.equals(ScoreBoard.m_blueToothRole)
                   && readMessage.trim().matches("(" + BTMethods.Toast + "|" + BTMethods.requestCompleteJsonOfMatch + "|" + BTMethods.jsonMatchReceived + "|" + BTMethods.requestCountryFlag + ").*") == false
                    )
                 {
