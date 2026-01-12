@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025  Iddo Hoeve
+ * Copyright (C) 2026  Iddo Hoeve
  *
  * Squore is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,9 @@
  */
 package com.doubleyellow.scoreboard.prefs;
 
-public enum PreferenceKeysSpecial {
-    restartAppIfChangesDetected(Integer.class),
-    doNotPersistRemoteSettings(Boolean.class),
-    persistFeedSettings(PersistFeedSettings.class),
-    ;
-    private Class clazz = String.class;
-    PreferenceKeysSpecial(Class c) {
-        this.clazz = c;
-    }
-    public Class getType() {
-        return clazz;
-    }
-
+public enum PersistFeedSettings {
+    Never,
+    OnMatchSelection,
+    WhenUserOpensPreferences,
+    Always,
 }

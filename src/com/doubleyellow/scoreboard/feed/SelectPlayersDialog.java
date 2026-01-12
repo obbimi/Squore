@@ -42,11 +42,13 @@ import com.doubleyellow.android.view.SelectObjectView;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.BaseAlertDialog;
-import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.model.JSONKey;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.NamePart;
+import com.doubleyellow.scoreboard.prefs.PersistFeedSettings;
+import com.doubleyellow.scoreboard.prefs.PreferenceKeysSpecial;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.URLsKeys;
 import com.doubleyellow.util.HVD;
 import com.doubleyellow.util.JsonUtil;
@@ -394,6 +396,11 @@ public class SelectPlayersDialog extends BaseAlertDialog
             }
             matchModel.setAdditionalPostParams(sSplitter + sbAdditionalPP + sSplitter);
             m_feedMatchSelector.finishWithPopulatedModel(matchModel);
+
+            String persistFeedSettings = PreferenceValues.getSpecialValue(PreferenceKeysSpecial.persistFeedSettings);
+            if (PersistFeedSettings.OnMatchSelection.toString().equalsIgnoreCase(persistFeedSettings) ) {
+                PreferenceValues.persistOverwrites(context);
+            }
         }
     };
 

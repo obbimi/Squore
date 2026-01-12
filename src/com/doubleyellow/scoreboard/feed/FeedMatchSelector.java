@@ -44,6 +44,7 @@ import com.doubleyellow.scoreboard.match.Match;
 import com.doubleyellow.scoreboard.match.MatchTabbed;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
+import com.doubleyellow.scoreboard.prefs.PersistFeedSettings;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeysSpecial;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -148,6 +149,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 emsAdapter.sortItems(m_itemsSortOrder);
             }
 
+            PreferenceValues.clearSpecialValues();
+
             Iterator<String> itPrefKeys = m_joFeedConfig.keys();
             while ( itPrefKeys.hasNext() ) {
                 String sPref  = itPrefKeys.next();
@@ -165,12 +168,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         mFeedPrefOverwrites.put(key, sValue);
                     }
                 } catch (Exception e) {
-                    // in stead of a PreferenceKeys it can also be a subset of URLsKeys
-                    Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
-                    URLsKeys[] keys = new URLsKeys[] { URLsKeys.PostResult, URLsKeys.LiveScoreUrl };
-                    for(URLsKeys key: keys) {
-                        if ( sPref.equals( key.toString() ) ) {
-                            String sCurrent = feedPostDetail.get(key);
+                    try {
+                        URLsKeys key = URLsKeys.valueOf(sPref);
+                        Map<URLsKeys, String> feedPostDetail = PreferenceValues.getFeedPostDetail(context);
+                        // in stead of a PreferenceKeys it can also be a subset of URLsKeys
+                        if ( EnumSet.of(URLsKeys.PostResult, URLsKeys.LiveScoreUrl).contains(key) ) {
+                            String sCurrent = feedPostDetail.get(sPref);
                             if ( sValue.equals(sCurrent) == false && StringUtil.isNotEmpty(sValue) ) {
                                 feedPostDetail.put(key, sValue);
                                 PreferenceValues.addOrReplaceNewFeedURL(context, feedPostDetail, true, true);
@@ -183,6 +186,13 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                                 }
                             }
                         }
+                    } catch (Exception ex) {
+                        try {
+                            PreferenceKeysSpecial keysSpecial = PreferenceKeysSpecial.valueOf(sPref);
+                            PreferenceValues.setSpecialValue(keysSpecial, sValue);
+                        } catch (Exception ex3) {
+                            Log.d(TAG, "Some other type of key " + sPref);
+                        }
                     }
                 }
             }
@@ -191,7 +201,8 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 m_bHideCompletedMatches = PreferenceValues.hideCompletedMatchesFromFeed(context);
                 changeAndNotify(m_feedStatus, true);
 
-                if ( m_joFeedConfig.optBoolean(PreferenceKeysSpecial.persistFeedSettings.toString()) ) {
+                String persistFeedSettings = PreferenceValues.getSpecialValue(PreferenceKeysSpecial.persistFeedSettings);
+                if (PersistFeedSettings.Always.toString().equalsIgnoreCase(persistFeedSettings) ) {
                     PreferenceValues.persistOverwrites(context);
                 }
             }
@@ -288,6 +299,10 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             final String NO_PLAYERS_FOR_TEAM_X = "Not presenting dialog to select players. No players found for %s";
             if ( bNamesPopulated ) {
                 // player names already populated
+                String persistFeedSettings = PreferenceValues.getSpecialValue(PreferenceKeysSpecial.persistFeedSettings);
+                if (PersistFeedSettings.OnMatchSelection.toString().equalsIgnoreCase(persistFeedSettings) ) {
+                    PreferenceValues.persistOverwrites(context);
+                }
                 finishWithPopulatedModel(model);
             } else if ( JsonUtil.isEmpty(getTeamPlayers(context, Player.A)) && JsonUtil.isEmpty(getTeamPlayers(context,Player.B)) ) {
                 // not all player names populated, but also no lists to select players from

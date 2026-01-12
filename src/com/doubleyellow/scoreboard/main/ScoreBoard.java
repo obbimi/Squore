@@ -3360,6 +3360,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 if (isWearable()) {
                     return false;
                 }
+                String persistFeedSettings = PreferenceValues.getSpecialValue(PreferenceKeysSpecial.persistFeedSettings);
+                if ( PersistFeedSettings.WhenUserOpensPreferences.toString().equalsIgnoreCase(persistFeedSettings) ) {
+                    PreferenceValues.persistOverwrites(this);
+                }
+
                 Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
                 //Intent settingsActivity = new Intent(getBaseContext(), XPreferences.class);
                 startActivityForResult(settingsActivity, id);

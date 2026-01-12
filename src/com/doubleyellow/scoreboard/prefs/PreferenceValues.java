@@ -1955,6 +1955,7 @@ public class PreferenceValues extends RWValues
         _storeFeedURLsConfig(context, urlsList);
         if ( bMakeActive ) {
             setActiveFeedNr(context, iNewActiveFeedIndex);
+            mActiveFeedValues = newEntry;
         }
     }
 
@@ -2175,12 +2176,27 @@ public class PreferenceValues extends RWValues
         if ( values == null ) { return 0; }
         int iOverwritten = 0;
         for(PreferenceKeys key: values.keySet() ) {
-            if ( setOverwrite(key, values.get(key)) ) {
+            String sValue = values.get(key);
+            if ( setOverwrite(key, sValue) ) {
                 iOverwritten++;
             };
         }
         return iOverwritten;
     }
+
+    public static void setSpecialValue(PreferenceKeysSpecial keysSpecial, String val) {
+        RWValues.setOverwrite(keysSpecial, val);
+    }
+    public static String getSpecialValue(PreferenceKeysSpecial keysSpecial) {
+        String sSpecial = RWValues.getOverwritten(keysSpecial);
+        return sSpecial;
+    }
+    public static void clearSpecialValues() {
+        for(PreferenceKeysSpecial k: PreferenceKeysSpecial.values()) {
+            RWValues.removeOverwrite(k);
+        }
+    }
+
     private static boolean setOverwrite(PreferenceKeys key, String sValue) {
         String sOldOverwrite = RWValues.setOverwrite(key, sValue);
         bFeedsAreUnChanged = false;
@@ -2255,7 +2271,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2025-11-16"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2026-01-11"; // auto adjusted by shell script 'clean.and.assemble.sh'
     public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) <= 0;
     }

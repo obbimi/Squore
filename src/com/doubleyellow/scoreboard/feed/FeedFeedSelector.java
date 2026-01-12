@@ -254,8 +254,8 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
         return true;
     }
 
-    private GroupStatusRecaller m_groupStatusRecaller = GroupStatusRecaller.getInstance(FeedFeedSelector.class.getSimpleName());
-    private ChildClicker m_childClicker = new ChildClicker();
+    private final GroupStatusRecaller m_groupStatusRecaller = GroupStatusRecaller.getInstance(FeedFeedSelector.class.getSimpleName());
+    private final ChildClicker m_childClicker = new ChildClicker();
 
     private class ChildClicker implements ExpandableListView.OnChildClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener, View.OnLongClickListener
     {
@@ -321,6 +321,11 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
             int iCacheInMinutes = -1;
             if ( joType != null) {
                 iCacheInMinutes = joType.optInt(FeedKeys.ReuseCacheForXMinutes.toString(), iCacheInMinutes);
+            }
+
+            int iCleared = PreferenceValues.clearOverwrites();
+            if ( iCleared != 0 ) {
+                Log.d(TAG, String.format("Cleared %d overwrites because switching feed", iCleared));
             }
 
             JSONArray array = loadTypesAdapter.joRoot.optJSONArray(sName);

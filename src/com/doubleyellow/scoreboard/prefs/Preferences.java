@@ -150,6 +150,11 @@ public class Preferences extends Activity {
             boolean bReinitColors = false;
             if ( eKey != null ) {
                 m_lSettingsChanged.add(eKey);
+                String sOldOverwrite = RWValues.removeOverwrite(eKey);
+                if ( sOldOverwrite != null ) {
+                    Log.d(TAG, String.format("No using overwrite value %s = %s", eKey, sOldOverwrite));
+                }
+
                 if ( eKey.restartRequired() ) {
                     PreferenceValues.setRestartRequired(Preferences.this);
                 }

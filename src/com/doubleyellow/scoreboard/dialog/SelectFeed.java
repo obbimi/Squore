@@ -20,6 +20,7 @@ package com.doubleyellow.scoreboard.dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import com.doubleyellow.scoreboard.R;
@@ -41,6 +42,8 @@ import java.util.*;
  */
 public class SelectFeed extends BaseAlertDialog
 {
+    private static final String TAG = "SB." + SelectFeed.class.getSimpleName();
+
     private final String sNone;
     //private String sNewPublicFeed = null;
 
@@ -137,6 +140,11 @@ public class SelectFeed extends BaseAlertDialog
                     if (sCheckedValue.equals(sNone)) {
                         checkedIndex = -1;
                     }
+                    int iCleared = PreferenceValues.clearOverwrites();
+                    if ( iCleared != 0 ) {
+                        Log.d(TAG, String.format("Cleared %d overwrites because switching feed", iCleared));
+                    }
+
                     PreferenceValues.setActiveFeedNr(context, checkedIndex);
                     if (context instanceof MatchTabbed) {
                         MenuHandler menuHandler = (MenuHandler) context;
