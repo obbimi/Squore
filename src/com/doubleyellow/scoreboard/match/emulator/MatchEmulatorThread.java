@@ -48,10 +48,12 @@ public class MatchEmulatorThread extends Thread {
     private final int     iLikelihood_SwitchServeSideOnHandout;
     private final boolean bUseWarmupTimer;
 
-    private final Random r;
-    protected ScoreBoard scoreBoard = null;
-    protected Model matchModel = null;
-    private int iLastRallyDuration;
+    private final Random     r;
+    private final ScoreBoard scoreBoard;
+    private final Model      matchModel;
+
+    private int        iLastRallyDuration;
+    private boolean    bSwitchServeSide = false;
 
     public MatchEmulatorThread(ScoreBoard scoreBoard, Model model
             , int iSpeedupFactor
@@ -112,7 +114,6 @@ public class MatchEmulatorThread extends Thread {
             // get ready for next really/scoreboard action
             pause(12);
 
-            RallyOutcome outcome = randomRallyOutcome();
 
             Handler handler = new Handler(scoreBoard.getMainLooper());
             handler.post(() -> {
@@ -160,15 +161,32 @@ public class MatchEmulatorThread extends Thread {
                     return;
                 }
 
-                long lEmulatedPercentageFromTimeInMs = System.currentTimeMillis() % 100;
                 if ( matchModel.hasStarted() && this.iLikelihood_Undo > 0 ) {
-                    if ( lEmulatedPercentageFromTimeInMs < this.iLikelihood_Undo ) {
+                    long iRnd = r.nextInt(100);
+                    if ( iRnd < this.iLikelihood_Undo ) {
                         scoreBoard.showInfoMessage("Emulated Undo by ref", 5);
                         matchModel.undoLast();
                         return;
                     }
                 }
 
+                if ( matchModel.isLastPointHandout() && (bSwitchServeSide == false) ) {
+                    Player server = matchModel.getServer();
+                    if ( ( this.iLikelihood_SwitchServeSideOnHandout < 0 && Player.A.equals(server) )
+                    ||   ( this.iLikelihood_SwitchServeSideOnHandout > 0 && Player.B.equals(server) )
+                    )
+                    {
+                        long iRnd = r.nextInt(100);
+                        if ( iRnd < Math.abs(this.iLikelihood_SwitchServeSideOnHandout) ) {
+                            scoreBoard.changeSide(server);
+                            bSwitchServeSide = true;
+                            return;
+                        }
+                    }
+                }
+                bSwitchServeSide = false;
+
+                RallyOutcome outcome = randomRallyOutcome();
                 switch (outcome) {
                     case WinPlayerA: {
                         matchModel.changeScore(Player.A);
@@ -206,17 +224,6 @@ public class MatchEmulatorThread extends Thread {
                 String sMsg = String.format("Emulated %s after rally of %d seconds (speedup factor %d)", outcome, iLastRallyDuration, iSpeedUpFactor);
                 scoreBoard.showInfoMessage(sMsg, 5);
 
-                if ( matchModel.isLastPointHandout() ) {
-                    Player server = matchModel.getServer();
-                    if ( ( this.iLikelihood_SwitchServeSideOnHandout < 0 && Player.A.equals(server) )
-                    ||   ( this.iLikelihood_SwitchServeSideOnHandout > 0 && Player.B.equals(server) )
-                       )
-                    {
-                        if ( lEmulatedPercentageFromTimeInMs < Math.abs(this.iLikelihood_SwitchServeSideOnHandout) ) {
-                            scoreBoard.changeSide(server);
-                        }
-                    }
-                }
             });
 
             iLastRallyDuration = (int) randomRallyDuration();

@@ -3719,7 +3719,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 }
                 return true;
             } else if (id == R.id.sb_match_emulator) {
-                setModus(null, Mode.FeedMatchesScoringEmulator);
+                if ( Mode.FeedMatchesScoringEmulator.equals(m_mode) ) {
+                    setModus(null, Mode.Normal);
+                } else {
+                    setModus(null, Mode.FeedMatchesScoringEmulator);
+                }
                 return true;
             } else if (id == R.id.sb_demo) {
                 restartScore();
