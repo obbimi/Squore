@@ -23,6 +23,7 @@ import com.doubleyellow.android.handler.OnClickXTimesHandler;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.demo.Mode;
 import com.doubleyellow.scoreboard.model.DoublesServe;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
@@ -111,8 +112,8 @@ class ServerSideButtonListener extends ScoreBoardListener implements View.OnClic
 
                 if ( iToggled > 1 ) {
                     Toast.makeText(scoreBoard, String.format("Additional %d menu items made available", iToggled), Toast.LENGTH_LONG).show();
-                    ScoreBoard.Mode newMode = ScoreBoard.m_mode; // toggleDemoMode(null);
-                    if ( newMode.equals(ScoreBoard.Mode.ScreenShots) ) {
+                    Mode newMode = ScoreBoard.m_mode; // toggleDemoMode(null);
+                    if ( newMode.equals(Mode.ScreenShots) ) {
                         PreferenceValues.setEnum   (PreferenceKeys.BackKeyBehaviour            , scoreBoard, BackKeyBehaviour.UndoScoreNoConfirm); // for adb demo/screenshots script
                         PreferenceValues.setBoolean(PreferenceKeys.showFullScreen              , scoreBoard, true);                         // for adb demo/screenshots script
                         PreferenceValues.setBoolean(PreferenceKeys.showActionBar               , scoreBoard, false);                        // for adb demo/screenshots script
@@ -123,7 +124,7 @@ class ServerSideButtonListener extends ScoreBoardListener implements View.OnClic
                         PreferenceValues.setBoolean(PreferenceKeys.showAdjustTimeButtonsInTimer, scoreBoard, R.bool.showAdjustTimeButtonsInTimer_default);
                         PreferenceValues.setBoolean(PreferenceKeys.showUseAudioCheckboxInTimer , scoreBoard, R.bool.showUseAudioCheckboxInTimer_default);
                     }
-                    if ( newMode.equals(ScoreBoard.Mode.Debug) ) {
+                    if ( newMode.equals(Mode.Debug) ) {
                         PreferenceValues.setString(PreferenceKeys.FeedFeedsURL, scoreBoard, scoreBoard.getString(R.string.feedFeedsURL_default) + "?suffix=.new");
                         //PreferenceValues.setNumber (PreferenceKeys.viewedChangelogVersion, scoreBoard, PreferenceValues.getAppVersionCode(scoreBoard)-1);
                     }
@@ -159,7 +160,7 @@ class ServerSideButtonListener extends ScoreBoardListener implements View.OnClic
         Player pl = IBoard.m_id2player.get(viewId);
         if ( pl == null ) { return false; }
 
-        if ( scoreBoard.m_mode.equals(ScoreBoard.Mode.ScreenShots) && pl.equals(Player.B) ) {
+        if ( scoreBoard.m_mode.equals(Mode.ScreenShots) && pl.equals(Player.B) ) {
             // switch to a different color schema
             int i = PreferenceValues.getInteger(PreferenceKeys.colorSchema, scoreBoard, 0);
             PreferenceValues.setNumber(PreferenceKeys.colorSchema, scoreBoard, i + 1);

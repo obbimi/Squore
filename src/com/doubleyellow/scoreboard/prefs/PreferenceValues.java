@@ -2184,12 +2184,33 @@ public class PreferenceValues extends RWValues
         return iOverwritten;
     }
 
+    /************************************
+     * Special Preference Key/Values
+     ************************************/
     public static void setSpecialValue(PreferenceKeysSpecial keysSpecial, String val) {
         RWValues.setOverwrite(keysSpecial, val);
     }
     public static String getSpecialValue(PreferenceKeysSpecial keysSpecial) {
         String sSpecial = RWValues.getOverwritten(keysSpecial);
         return sSpecial;
+    }
+    public static int getSpecialIntValue(PreferenceKeysSpecial keysSpecial, int iDefault) {
+        String sSpecial = RWValues.getOverwritten(keysSpecial);
+        if ( StringUtil.isInteger(sSpecial) ) {
+            return Integer.parseInt(sSpecial);
+        }
+        return iDefault;
+    }
+    public static boolean getSpecialBooleanValue(PreferenceKeysSpecial keysSpecial, boolean bDefault) {
+        String sSpecial = RWValues.getOverwritten(keysSpecial);
+        if ( StringUtil.isNotEmpty(sSpecial) ) {
+            if ( StringUtil.isInteger(sSpecial) ) {
+                return Integer.parseInt(sSpecial) != 0;
+            } else {
+                return Boolean.parseBoolean(sSpecial);
+            }
+        }
+        return bDefault;
     }
     public static void clearSpecialValues() {
         for(PreferenceKeysSpecial k: PreferenceKeysSpecial.values()) {

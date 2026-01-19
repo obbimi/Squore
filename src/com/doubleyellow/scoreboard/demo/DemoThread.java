@@ -409,7 +409,7 @@ public abstract class DemoThread extends Thread
 
     //InstrumentationTestCase instrumentationTestCase = new InstrumentationTestCase();
     //TouchUtils touchUtils = new TouchUtils();
-    protected void simulateclickOnView(int iResId, DemoMessage demoMessage) {
+    protected void simulateClickOnView(int iResId, DemoMessage demoMessage) {
 
         final int iDiff = iResId < 0?2000:100;
         int iResIdAbs = Math.abs(iResId);
@@ -464,7 +464,7 @@ public abstract class DemoThread extends Thread
                 wait(lMs);
             }
         } catch (InterruptedException e) {
-            Log.e(TAG, "?? " + e); // normally only when thread is deliberatly stopped/interrupted
+            Log.e(TAG, "?? " + e); // normally only when thread is deliberately stopped/interrupted
         }
         //Log.d(TAG, "Resumed");
     }

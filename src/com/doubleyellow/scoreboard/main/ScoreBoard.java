@@ -5024,17 +5024,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     }
 
     // ------------------------------------------------------
-    // demo modus
-    // - TODO: no rotate during demo modus? or ensure new activity is passed on to demo thread
+    // demo modes
+    // - TODO: no rotate during demo modes? or ensure new activity is passed on to demo thread
     // ------------------------------------------------------
-    public enum Mode {
-        Normal,
-        FullAutomatedDemo,
-        ScreenShots,
-        GuidedDemo,
-        Promo,
-        Debug,
-    }
     private Mode toggleDemoMode(DemoThread.DemoMessage demoMessage) {
         Mode modeNew = Mode.values()[(m_mode.ordinal()+1)%Mode.values().length];
 
@@ -5163,7 +5155,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         return promoThread != null;
     }
     public static boolean isInSpecialMode() {
-        return ScoreBoard.m_mode.equals(ScoreBoard.Mode.Normal) == false;
+        return ScoreBoard.m_mode.equals(Mode.Normal) == false;
     }
 
     private static PromoThread promoThread = null;

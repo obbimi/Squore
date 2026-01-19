@@ -26,13 +26,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.core.splashscreen.SplashScreen;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
-import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.android.util.SearchEL;
 import com.doubleyellow.android.view.ViewUtil;
 import com.doubleyellow.scoreboard.R;
@@ -45,14 +43,14 @@ import com.doubleyellow.scoreboard.prefs.URLsKeys;
 import com.doubleyellow.scoreboard.view.ExpandableListUtil;
 import com.doubleyellow.util.*;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.*;
-import java.util.concurrent.Executors;
 
 /**
- * Activity that allows the user to select a item (in this case a feed) from an internet feed
+ * Activity that allows the user to
+ * - first select a category of feeds, then
+ * - select an item (in this case a feed) from that category
  * and add this feed the the list of feeds this app can choose from with FeedMatchSelector
  */
 public class FeedFeedSelector extends XActivity implements MenuHandler
@@ -164,7 +162,7 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
                     loadTypesAdapter.load(false);
                     break;
                 case SelectFeed:
-                    if (showFeedsAdapter != null) {
+                    if ( showFeedsAdapter != null ) {
                         showFeedsAdapter.load(false);
                     }
                     break;
@@ -264,49 +262,6 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
             this.bDisabled = b;
         }
 
-        private void fetchUrls(final JSONArray aUrls, final String sName, final JSONArray arrayMerged, final JSONArray arrayBackup, int iCacheInMinutes) {
-            String sURL = (String) aUrls.remove(0);
-            showProgress(R.string.loading_of_x, sName, sURL);
-            URLFeedTask task = new URLFeedTask(FeedFeedSelector.this, sURL);
-            if ( iCacheInMinutes >= 0 ) {
-                task.setMaximumReuseCacheTimeMinutes(iCacheInMinutes);
-            }
-            task.setContentReceiver(new ContentReceiver() {
-                @Override public void receive(String sJson, FetchResult fetchResult, long lCacheAge, String sLastSuccessfulContent, String sUrl) {
-                    try {
-                        Log.d(TAG, "Fetchresult :" + fetchResult + " (" + aUrls.length() + ")" );
-                        if ( fetchResult.equals(FetchResult.OK) == false ) {
-                            if ( JsonUtil.isNotEmpty(arrayBackup) ) {
-                                JsonUtil.mergeJsonArrays(arrayMerged, arrayBackup);
-                            }
-                        } else {
-                            JSONArray arrayExt = new JSONArray(sJson);
-                            JsonUtil.mergeJsonArrays(arrayMerged, arrayExt);
-                        }
-
-                        if ( aUrls.length() > 0 ) {
-                            fetchUrls(aUrls, sName, arrayMerged, arrayBackup, iCacheInMinutes);
-                        } else {
-                            PreferenceValues.addFeedTypeToMyList(FeedFeedSelector.this, sName);
-                            changeStatus(Status.LoadingFeeds);
-                            showFeedsAdapter = new ShowFeedsAdapter(FeedFeedSelector.this, arrayMerged, sName, m_sortOrder);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        changeStatus(Status.SelectFeed);
-                        Toast.makeText(FeedFeedSelector.this, "Invalid JSON in " + sName, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P /* 28 */ ) {
-                task.executeOnExecutor(Executors.newSingleThreadExecutor());
-                Log.d(TAG, "Started task using Executors.newSingleThreadExecutor... ");
-            } else {
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                Log.d(TAG, "Started task ... ");
-            }
-        }
-
         SortOrder m_sortOrder = SortOrder.Ascending;
 
         @Override public void onClick(View v) {
@@ -330,28 +285,17 @@ public class FeedFeedSelector extends XActivity implements MenuHandler
 
             JSONArray array = loadTypesAdapter.joRoot.optJSONArray(sName);
             if ( loadTypesAdapter.joRoot.has(sName + "." + FeedKeys.URL) ) {
+                PreferenceValues.addFeedTypeToMyList(FeedFeedSelector.this, sName);
+                changeStatus(Status.LoadingFeeds);
+
                 // URL's are specified. Fetch content to have most recent data
-                final Object oUrls = loadTypesAdapter.joRoot.opt(sName + "." + FeedKeys.URL);
-                JSONArray aUrls = new JSONArray();
-                if ( oUrls instanceof String ) {
-                    aUrls.put(oUrls);
-                } else if ( oUrls instanceof JSONArray ) {
-                    // clone the array
-                    String json = ((JSONArray) oUrls).toString();
-                    try {
-                        aUrls = new JSONArray(json);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if ( JsonUtil.isNotEmpty(aUrls) ) {
-                    final JSONArray arrayMerged = new JSONArray();
-                    fetchUrls(aUrls, sName, arrayMerged, array, iCacheInMinutes);
-                }
+                final String sUrl = loadTypesAdapter.joRoot.optString(sName + "." + FeedKeys.URL);
+                showFeedsAdapter = new ShowFeedsAdapter(FeedFeedSelector.this, sName, m_sortOrder, sUrl);
+
             } else if ( JsonUtil.isNotEmpty(array) ) {
                 PreferenceValues.addFeedTypeToMyList(FeedFeedSelector.this, sName);
                 changeStatus(Status.LoadingFeeds);
-                showFeedsAdapter = new ShowFeedsAdapter(FeedFeedSelector.this, array, sName, m_sortOrder);
+                showFeedsAdapter = new ShowFeedsAdapter(FeedFeedSelector.this, sName, m_sortOrder, "???");
             } else {
                 Toast.makeText(FeedFeedSelector.this, "No feeds in " + sName + " ... yet...", Toast.LENGTH_SHORT).show();
             }

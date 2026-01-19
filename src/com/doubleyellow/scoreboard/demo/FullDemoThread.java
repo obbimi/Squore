@@ -376,6 +376,6 @@ public class FullDemoThread extends DemoThread {
 */
         }
 
-        scoreBoard.setModus(null, ScoreBoard.Mode.Normal);
+        scoreBoard.setModus(null, Mode.Normal);
     }
 }

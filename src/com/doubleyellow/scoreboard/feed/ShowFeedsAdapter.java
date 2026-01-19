@@ -21,9 +21,14 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.doubleyellow.android.task.URLTask;
 import com.doubleyellow.android.util.AndroidPlaceholder;
+import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.android.util.SimpleELAdapter;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.URLFeedTask;
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.URLsKeys;
@@ -41,8 +46,9 @@ import java.util.concurrent.Executors;
  *
  * Used by {@link FeedFeedSelector}
  */
-class ShowFeedsAdapter extends SimpleELAdapter {
+class ShowFeedsAdapter extends SimpleELAdapter implements ContentReceiver {
     private String           m_sName            = null;
+    private String           m_sUrl             = null;
 
     private FeedFeedSelector m_feedFeedSelector = null;
     private Context          m_context          = null;
@@ -59,16 +65,16 @@ class ShowFeedsAdapter extends SimpleELAdapter {
     private int m_iNrOfItemsToSelect = 0;
     private boolean m_bFilterOutBasedOnDuration = true;
 
-    ShowFeedsAdapter(FeedFeedSelector feedFeedSelector, JSONArray array, String sName, SortOrder sortOrder) {
+    ShowFeedsAdapter(FeedFeedSelector feedFeedSelector, String sName, SortOrder sortOrder, String sUrl) {
         super(feedFeedSelector.getLayoutInflater(), R.layout.expandable_match_selector_group, R.layout.expandable_match_selector_item, null, false);
         m_sName = sName;
+        m_sUrl  = sUrl;
 
         if ( sName.toLowerCase().contains("league") ) {
             // assume long running
             Log.i(TAG, "Not filtering based on duration for " + sName); // done because old default value 42 might still be set, before league feeds existed
             m_bFilterOutBasedOnDuration = false;
         }
-        m_feeds            = array;
         m_context          = feedFeedSelector;
         m_feedFeedSelector = feedFeedSelector;
 
@@ -80,138 +86,168 @@ class ShowFeedsAdapter extends SimpleELAdapter {
     }
 
     @Override public void load(boolean bUseCacheIfPresent) {
-        this.clear();
-        ShowFeedsTask showFeedsTask = new ShowFeedsTask();
+        if ( StringUtil.isEmpty(m_sUrl) ) {
+            this.receive(null, FetchResult.UnexpectedContent, 0, null, m_sUrl);
+            return;
+        }
+
+        URLTask task = new URLFeedTask(m_context, m_sUrl);
+        if ( bUseCacheIfPresent == false ) {
+            task.setCacheFileToOld(true);
+        }
+
+        task.setContentReceiver(this);
         if ( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P /* 28 */ ) {
-            showFeedsTask.executeOnExecutor(Executors.newSingleThreadExecutor(), m_sName);
-            Log.d(TAG, "Started ShowFeedsTask using Executors.newSingleThreadExecutor... ");
+            task.executeOnExecutor(Executors.newSingleThreadExecutor());
+            Log.d(TAG, "Started download task using Executors.newSingleThreadExecutor... ");
         } else {
-            showFeedsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, m_sName);
-            Log.d(TAG, "Started ShowFeedsTask ... ");
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            Log.d(TAG, "Started download task ... ");
         }
     }
 
-    private JSONArray m_feeds = null;
+    private void _fillList(JSONArray list) {
+        this.clear();
+        List<String> active = __fillList(list);
+        handleActive(list, active);
 
-    private /*static*/ class ShowFeedsTask extends AsyncTask<String, Void, List<String>>
-    {
-        @Override protected List<String> doInBackground(String[] sName) {
-            int iEndWasDaysBackMax     = PreferenceValues.getTournamentWasBusy_DaysBack     (m_context);
-            int iStartIsDaysAheadMax   = PreferenceValues.getTournamentWillStartIn_DaysAhead(m_context);
-            int iDurationInDaysMaxPref = PreferenceValues.getTournamentMaxDuration_InDays   (m_context);
-         // Range minMaxDurationInDaysFeeds = new Range(0,0);
+    }
 
-            List<String> lGroupsWithActive = new ArrayList<String>();
+    @Override public void receive(String sContent, ContentReceiver.FetchResult result, long lCacheAge, String sLastSuccessfulContent, String sUrlOfResult) {
+        Log.i(TAG, String.format("Fetched (cache age %d, new size %d cached size %d)", lCacheAge, StringUtil.size(sContent), StringUtil.size(sLastSuccessfulContent)));
 
-            m_iNrAlreadyFinished = m_iNrToFarInFuture = m_iNrRunningToLong = 0;
+        if ( result == FetchResult.OK ) {
+            try {
+                JSONArray feeds = new JSONArray(sContent); // TODO
+                _fillList(feeds);
+                notifyDataSetChanged();
+                m_feedFeedSelector.changeStatus(Status.SelectFeed);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            m_feedFeedSelector.changeStatus(Status.SelectFeed);
+            _fillList(new JSONArray());
+            Toast.makeText(m_context, "Could not fetch content from " + sUrlOfResult, Toast.LENGTH_SHORT).show();
+        }
+    }
 
-            for ( int f = 0; f < m_feeds.length(); f++ ) {
+    private List<String> __fillList(JSONArray list) {
+        int iEndWasDaysBackMax     = PreferenceValues.getTournamentWasBusy_DaysBack     (m_context);
+        int iStartIsDaysAheadMax   = PreferenceValues.getTournamentWillStartIn_DaysAhead(m_context);
+        int iDurationInDaysMaxPref = PreferenceValues.getTournamentMaxDuration_InDays   (m_context);
+     // Range minMaxDurationInDaysFeeds = new Range(0,0);
 
-                JSONObject joFeed = null;
-                try {
-                    joFeed = m_feeds.getJSONObject(f);
+        List<String> lGroupsWithActive = new ArrayList<String>();
 
-                    // add country if only countrycode is specified
-                    if ( JsonUtil.isNotEmpty(joFeed) && joFeed.has( URLsKeys.CountryCode.toString() ) ) {
-                        String sCountryCode = joFeed.getString(URLsKeys.CountryCode.toString());
-                        String sLang        = PreferenceValues.officialAnnouncementsLanguage(m_context).toString(); // RWValues.getDeviceLanguage(ctx)
-                        String sCountryName = CountryUtil.addFullCountry("%s%s", ""  , sCountryCode, sLang);
-                        if ( StringUtil.isNotEmpty(sCountryName) ) {
-                            joFeed.put(URLsKeys.Country.toString(), sCountryName);
-                        }
+        m_iNrAlreadyFinished = m_iNrToFarInFuture = m_iNrRunningToLong = 0;
+
+        for ( int f = 0; f < list.length(); f++ ) {
+
+            JSONObject joFeed = null;
+            try {
+                joFeed = list.getJSONObject(f);
+
+                // add country if only countrycode is specified
+                if ( JsonUtil.isNotEmpty(joFeed) && joFeed.has( URLsKeys.CountryCode.toString() ) ) {
+                    String sCountryCode = joFeed.getString(URLsKeys.CountryCode.toString());
+                    String sLang        = PreferenceValues.officialAnnouncementsLanguage(m_context).toString(); // RWValues.getDeviceLanguage(ctx)
+                    String sCountryName = CountryUtil.addFullCountry("%s%s", ""  , sCountryCode, sLang);
+                    if ( StringUtil.isNotEmpty(sCountryName) ) {
+                        joFeed.put(URLsKeys.Country.toString(), sCountryName);
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    continue;
                 }
-
-                String sRange = placeholder.translate(sRangeFormat, joFeed);
-                       sRange = placeholder.removeUntranslated(sRange);
-                Range range = null;
-                try {
-                    range = Range.parse(sRange);
-                } catch (IllegalArgumentException e) {
-                    //e.printStackTrace(); // happens if e.g. valid to is empty
-                }
-
-                if ( range != null ) {
-                    if ( range.getMaximum() < (-1 * iEndWasDaysBackMax) ) {
-                        m_iNrAlreadyFinished++;
-                        Log.d(TAG, "Skipping already finished " + joFeed);
-                        continue;
-                    }
-                    if ( range.getMinimum() > iStartIsDaysAheadMax ) {
-                        m_iNrToFarInFuture++;
-                        //Log.d(TAG, String.format("Skipping not starting within %s ", iStartIsDaysAheadMax) + joFeed);
-                        continue;
-                    }
-                    if ( m_bFilterOutBasedOnDuration ) {
-                        if ( (iDurationInDaysMaxPref > 0) && (range.getSize() > iDurationInDaysMaxPref) ) {
-                            m_iNrRunningToLong++;
-                            //Log.d(TAG, String.format("Skipping running longer than %s ", iDurationInDaysMax) + joFeed);
-                            continue;
-                        }
-                    }
-                    if ( (m_iNrOfItemsToSelect == 0) && joFeed.has(URLsKeys.Section.toString()) ) {
-                        // assume all entries will have Section specified
-                        sGroupByFormat = "${" + URLsKeys.Section + "}";
-                    }
-                    String sHeader = placeholder.translate(sGroupByFormat, joFeed);
-                           sHeader = placeholder.removeUntranslated(sHeader);
-                    if ( StringUtil.isEmpty(sHeader) ) {
-                        sHeader = m_context.getString(R.string.pref_Other);
-                    }
-
-                    // TODO: filter out those the user has already selected??
-
-                    String sDisplayName = placeholder.translate(sDisplayFormat, joFeed);
-                           sDisplayName = placeholder.removeUntranslated(sDisplayName);
-
-                    if ( sDisplayName.startsWith(sHeader.trim()) && sDisplayName.length() > sHeader.trim().length() ) {
-                        // if display name starts with same string as header, remove the header from the display name
-                        sDisplayName = sDisplayName.substring(sHeader.trim().length());
-                    }
-                    sDisplayName = sDisplayName.replaceFirst("^[\\s-:]+", ""); // remove characters from start
-                    sDisplayName = sDisplayName.replaceFirst("[\\s-:]+$", ""); // remove characters from end
-                    if ( sDisplayName.trim().isEmpty() ) {
-                        // e.g. when Region and Name are specified as exactly the same
-                        sDisplayName = sHeader;
-                    }
-
-                    if ( range.isIn(0) ) {
-                        // in progress: also make them appear first in alphabetically sorted list
-                        sDisplayName = "* " + sDisplayName;
-                        lGroupsWithActive.add(sHeader);
-                    }
-                    ShowFeedsAdapter.this.addItem(sHeader, sDisplayName, joFeed);
-                    m_iNrOfItemsToSelect++;
-                } else {
-                    // should not happen
-                    Log.w(TAG, "could not determine range for " + joFeed);
-                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                continue;
             }
 
-            return lGroupsWithActive;
+            String sRange = placeholder.translate(sRangeFormat, joFeed);
+                   sRange = placeholder.removeUntranslated(sRange);
+            Range range = null;
+            try {
+                range = Range.parse(sRange);
+            } catch (IllegalArgumentException e) {
+                //e.printStackTrace(); // happens if e.g. valid to is empty
+            }
+
+            if ( range != null ) {
+                if ( range.getMaximum() < (-1 * iEndWasDaysBackMax) ) {
+                    m_iNrAlreadyFinished++;
+                    Log.d(TAG, "Skipping already finished " + joFeed);
+                    continue;
+                }
+                if ( range.getMinimum() > iStartIsDaysAheadMax ) {
+                    m_iNrToFarInFuture++;
+                    //Log.d(TAG, String.format("Skipping not starting within %s ", iStartIsDaysAheadMax) + joFeed);
+                    continue;
+                }
+                if ( m_bFilterOutBasedOnDuration ) {
+                    if ( (iDurationInDaysMaxPref > 0) && (range.getSize() > iDurationInDaysMaxPref) ) {
+                        m_iNrRunningToLong++;
+                        //Log.d(TAG, String.format("Skipping running longer than %s ", iDurationInDaysMax) + joFeed);
+                        continue;
+                    }
+                }
+                if ( (m_iNrOfItemsToSelect == 0) && joFeed.has(URLsKeys.Section.toString()) ) {
+                    // assume all entries will have Section specified
+                    sGroupByFormat = "${" + URLsKeys.Section + "}";
+                }
+                String sHeader = placeholder.translate(sGroupByFormat, joFeed);
+                       sHeader = placeholder.removeUntranslated(sHeader);
+                if ( StringUtil.isEmpty(sHeader) ) {
+                    sHeader = m_context.getString(R.string.pref_Other);
+                }
+
+                // TODO: filter out those the user has already selected??
+
+                String sDisplayName = placeholder.translate(sDisplayFormat, joFeed);
+                       sDisplayName = placeholder.removeUntranslated(sDisplayName);
+
+                if ( sDisplayName.startsWith(sHeader.trim()) && sDisplayName.length() > sHeader.trim().length() ) {
+                    // if display name starts with same string as header, remove the header from the display name
+                    sDisplayName = sDisplayName.substring(sHeader.trim().length());
+                }
+                sDisplayName = sDisplayName.replaceFirst("^[\\s-:]+", ""); // remove characters from start
+                sDisplayName = sDisplayName.replaceFirst("[\\s-:]+$", ""); // remove characters from end
+                if ( sDisplayName.trim().isEmpty() ) {
+                    // e.g. when Region and Name are specified as exactly the same
+                    sDisplayName = sHeader;
+                }
+
+                if ( range.isIn(0) ) {
+                    // in progress: also make them appear first in alphabetically sorted list
+                    sDisplayName = "* " + sDisplayName;
+                    lGroupsWithActive.add(sHeader);
+                }
+                ShowFeedsAdapter.this.addItem(sHeader, sDisplayName, joFeed);
+                m_iNrOfItemsToSelect++;
+            } else {
+                // should not happen
+                Log.w(TAG, "could not determine range for " + joFeed);
+            }
         }
 
-        @Override protected void onPostExecute(List<String> lGroupsWithActive) {
-            ShowFeedsAdapter.this.m_feedFeedSelector.postLoad(m_sName, lGroupsWithActive);
-            if ( m_iNrOfItemsToSelect == 0 ) {
-                if ( m_iNrAlreadyFinished + m_iNrToFarInFuture + m_iNrRunningToLong > 0 ) {
-                    String sMsg = String.format("None of the %s entries presented for selection with your current preferences...", JsonUtil.size(m_feeds)); /*String.format("No entries found starting in %s days.", tournamentWillStartIn_daysAhead)*/;
-                    if ( m_iNrAlreadyFinished > 0 ) {
-                        sMsg += String.format("\n%s entries found that are already finished.", m_iNrAlreadyFinished);
-                    }
-                    if ( m_iNrToFarInFuture > 0 ) {
-                        int tournamentWillStartIn_daysAhead = PreferenceValues.getTournamentWillStartIn_DaysAhead(m_context);
-                        sMsg += String.format("\n%s entries found starting in more than %s days.", m_iNrToFarInFuture, tournamentWillStartIn_daysAhead);
-                    }
-                    if ( m_iNrRunningToLong > 0 ) {
-                        int iDurationInDaysMax              = PreferenceValues.getTournamentMaxDuration_InDays(m_context);
-                        sMsg += String.format("\n%s entries found running for more than %s days.", m_iNrRunningToLong, iDurationInDaysMax);
-                    }
-                    MyDialogBuilder.dialogWithOkOnly(m_context, sMsg);
+        return lGroupsWithActive;
+    }
+
+    private void handleActive(JSONArray feeds, List<String> lGroupsWithActive) {
+        ShowFeedsAdapter.this.m_feedFeedSelector.postLoad(m_sName, lGroupsWithActive);
+        if ( m_iNrOfItemsToSelect == 0 ) {
+            if ( m_iNrAlreadyFinished + m_iNrToFarInFuture + m_iNrRunningToLong > 0 ) {
+                String sMsg = String.format("None of the %s entries presented for selection with your current preferences...", JsonUtil.size(feeds)); /*String.format("No entries found starting in %s days.", tournamentWillStartIn_daysAhead)*/
+                if ( m_iNrAlreadyFinished > 0 ) {
+                    sMsg += String.format("\n%s entries found that are already finished.", m_iNrAlreadyFinished);
                 }
+                if ( m_iNrToFarInFuture > 0 ) {
+                    int tournamentWillStartIn_daysAhead = PreferenceValues.getTournamentWillStartIn_DaysAhead(m_context);
+                    sMsg += String.format("\n%s entries found starting in more than %s days.", m_iNrToFarInFuture, tournamentWillStartIn_daysAhead);
+                }
+                if ( m_iNrRunningToLong > 0 ) {
+                    int iDurationInDaysMax              = PreferenceValues.getTournamentMaxDuration_InDays(m_context);
+                    sMsg += String.format("\n%s entries found running for more than %s days.", m_iNrRunningToLong, iDurationInDaysMax);
+                }
+                MyDialogBuilder.dialogWithOkOnly(m_context, sMsg);
             }
         }
     }
