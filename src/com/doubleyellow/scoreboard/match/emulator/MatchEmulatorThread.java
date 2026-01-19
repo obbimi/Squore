@@ -1,0 +1,257 @@
+/*
+ * Copyright (C) 2026  Iddo Hoeve
+ *
+ * Squore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.doubleyellow.scoreboard.match.emulator;
+
+import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+
+import com.doubleyellow.scoreboard.dialog.EndGame;
+import com.doubleyellow.scoreboard.dialog.IBaseAlertDialog;
+import com.doubleyellow.scoreboard.main.DialogManager;
+import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.model.Call;
+import com.doubleyellow.scoreboard.model.Model;
+import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.timer.TwoTimerView;
+import com.doubleyellow.scoreboard.timer.Type;
+import com.doubleyellow.scoreboard.timer.ViewType;
+
+import java.util.Random;
+
+/**
+ * Helps in emulating a Match being scored.
+ *
+ * Mainly to help in testing complex setup with multiple devices, livescore MQTT, tcboard
+ */
+public class MatchEmulatorThread extends Thread {
+
+    private static final String TAG = "SB." + MatchEmulatorThread.class.getSimpleName();
+
+    private final int     iSpeedUpFactor;
+    private final int     iLikelihood_Undo;
+    private final int     iLikelihood_SwitchServeSideOnHandout;
+    private final boolean bUseWarmupTimer;
+
+    private final Random r;
+    protected ScoreBoard scoreBoard = null;
+    protected Model matchModel = null;
+    private int iLastRallyDuration;
+
+    public MatchEmulatorThread(ScoreBoard scoreBoard, Model model
+            , int iSpeedupFactor
+            , int iLikelihoodAppeal
+            , int iLikelihoodPlayerAWinsRally
+            , int iRallyDuration_Average
+            , int iRallyDuration_Deviation
+            , int iLikelihood_Undo
+            , int iLikelihood_SwitchServeSideOnHandout
+            , boolean bUseWarmupTimer
+            ) {
+        this.iSpeedUpFactor = iSpeedupFactor;
+        this.bUseWarmupTimer = bUseWarmupTimer;
+        boundaries = new int[8];
+        boundaries[1] = (100 - iLikelihoodAppeal);
+        boundaries[0] = boundaries[1] * iLikelihoodPlayerAWinsRally / 100;
+        for(int i=2; i<=7; i++) {
+            boundaries[i] = boundaries[i-1] + iLikelihoodAppeal / 6;
+        }
+
+        this.iRallyDuration_AverageAndDeviation = new int[] { iRallyDuration_Average, iRallyDuration_Deviation};
+
+        r = new Random(System.currentTimeMillis());
+
+        this.scoreBoard = scoreBoard;
+        this.matchModel = model;
+        this.iLikelihood_Undo = iLikelihood_Undo;
+        this.iLikelihood_SwitchServeSideOnHandout = iLikelihood_SwitchServeSideOnHandout;
+    }
+    private final int[] iRallyDuration_AverageAndDeviation;
+
+  //private int[] boundaries = new int[] { 35, 70, 75, 80, 85, 90, 95, 100 };
+  //private int[] boundaries = new int[] { 41, 82, 85, 88, 91, 94, 97, 100 };
+    private final int[] boundaries;
+    private enum RallyOutcome {
+        WinPlayerA,               // 35
+        WinPlayerB,               // 70
+        AppealPlayerA_Stroke,     // 75
+        AppealPlayerA_YesLet,     // 80
+        AppealPlayerA_NoLet,      // 85
+        AppealPlayerB_Stroke,     // 90
+        AppealPlayerB_YesLet,     // 95
+        AppealPlayerB_NoLet,      // 100
+    }
+
+    @Override public void run() {
+        Looper.prepare();
+        emulateMatchScore();
+    }
+
+    private boolean bKeepLooping = false;
+    private boolean bWarmupTimerStarted = false;
+
+    private void emulateMatchScore() {
+        bKeepLooping = true;
+
+        while(bKeepLooping) {
+            // get ready for next really/scoreboard action
+            pause(12);
+
+            RallyOutcome outcome = randomRallyOutcome();
+
+            Handler handler = new Handler(scoreBoard.getMainLooper());
+            handler.post(() -> {
+                if ( scoreBoard.isDialogShowing() ) {
+                    try {
+                        DialogManager dialogManager = DialogManager.getInstance();
+
+                        IBaseAlertDialog baseDialog = dialogManager.baseDialog;
+                        if ( baseDialog == null ) {
+                            boolean bTimerIsShowing        = (ScoreBoard.timer != null) && ScoreBoard.timer.isShowing();
+                            Log.d(TAG, "bTimerIsShowing : " + bTimerIsShowing);
+                        } else {
+                            if ( baseDialog instanceof EndGame ) {
+                                EndGame endGame = (EndGame) baseDialog;
+                                endGame.handleButtonClick(EndGame.BTN_END_GAME_PLUS_TIMER);
+                            } else if ( baseDialog instanceof TwoTimerView /* WarmupTimerView, PauseTimerView, ... */ ) {
+                                // wait for timer to end
+                                return;
+                            } else {
+                                baseDialog.handleButtonClick(DialogInterface.BUTTON_POSITIVE);
+                            }
+                            baseDialog.dismiss();
+                            return;
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+                } else {
+                    if ( bUseWarmupTimer && ( ! matchModel.hasStarted() ) && (! bWarmupTimerStarted) ) {
+                        bWarmupTimerStarted = true;
+                        scoreBoard._showTimer(Type.Warmup, false, ViewType.Inline, null);
+                        return;
+                    }
+                }
+                if ( ScoreBoard.timer != null && ScoreBoard.timer.isShowing() ) {
+                    if ( ScoreBoard.timer.getSecondsLeft() > 0 ) {
+                        return;
+                    } else {
+                        Log.d(TAG, "No more seconds left in timer");
+                    }
+                }
+                if ( matchModel.matchHasEnded() ) {
+                    bWarmupTimerStarted = false;
+                    bKeepLooping = false;
+                    return;
+                }
+
+                long lEmulatedPercentageFromTimeInMs = System.currentTimeMillis() % 100;
+                if ( matchModel.hasStarted() && this.iLikelihood_Undo > 0 ) {
+                    if ( lEmulatedPercentageFromTimeInMs < this.iLikelihood_Undo ) {
+                        scoreBoard.showInfoMessage("Emulated Undo by ref", 5);
+                        matchModel.undoLast();
+                        return;
+                    }
+                }
+
+                switch (outcome) {
+                    case WinPlayerA: {
+                        matchModel.changeScore(Player.A);
+                        break;
+                    }
+                    case WinPlayerB: {
+                        matchModel.changeScore(Player.B);
+                        break;
+                    }
+                    case AppealPlayerA_Stroke: {
+                        matchModel.recordAppealAndCall(Player.A, Call.ST);
+                        break;
+                    }
+                    case AppealPlayerA_YesLet: {
+                        matchModel.recordAppealAndCall(Player.A, Call.YL);
+                        break;
+                    }
+                    case AppealPlayerA_NoLet: {
+                        matchModel.recordAppealAndCall(Player.A, Call.NL);
+                        break;
+                    }
+                    case AppealPlayerB_Stroke: {
+                        matchModel.recordAppealAndCall(Player.B, Call.ST);
+                        break;
+                    }
+                    case AppealPlayerB_YesLet: {
+                        matchModel.recordAppealAndCall(Player.B, Call.YL);
+                        break;
+                    }
+                    case AppealPlayerB_NoLet: {
+                        matchModel.recordAppealAndCall(Player.B, Call.NL);
+                        break;
+                    }
+                }
+                String sMsg = String.format("Emulated %s after rally of %d seconds (speedup factor %d)", outcome, iLastRallyDuration, iSpeedUpFactor);
+                scoreBoard.showInfoMessage(sMsg, 5);
+
+                if ( matchModel.isLastPointHandout() ) {
+                    Player server = matchModel.getServer();
+                    if ( ( this.iLikelihood_SwitchServeSideOnHandout < 0 && Player.A.equals(server) )
+                    ||   ( this.iLikelihood_SwitchServeSideOnHandout > 0 && Player.B.equals(server) )
+                       )
+                    {
+                        if ( lEmulatedPercentageFromTimeInMs < Math.abs(this.iLikelihood_SwitchServeSideOnHandout) ) {
+                            scoreBoard.changeSide(server);
+                        }
+                    }
+                }
+            });
+
+            iLastRallyDuration = (int) randomRallyDuration();
+            pause(iLastRallyDuration);
+        }
+    }
+    public void stopLoop() {
+        bKeepLooping = false;
+    }
+
+    private double randomRallyDuration() {
+        double v = r.nextGaussian();
+        double v1 = v * iRallyDuration_AverageAndDeviation[1] + iRallyDuration_AverageAndDeviation[0];
+        return Math.max(2, v1);
+    }
+
+    private RallyOutcome randomRallyOutcome() {
+        int iOutcome = r.nextInt(100);
+        for( RallyOutcome ro : RallyOutcome.values() ) {
+            if ( iOutcome <= boundaries[ro.ordinal()] ) {
+                return ro;
+            }
+        }
+        return RallyOutcome.WinPlayerA;
+    }
+
+    private void pause(int lSeconds) {
+        try {
+            synchronized (this) {
+                //Log.d(TAG, "Waiting...");
+                wait(lSeconds * 1000L / iSpeedUpFactor);
+            }
+        } catch (InterruptedException e) {
+            //Log.e(TAG, "?? " + e); // normally only when thread is deliberately stopped/interrupted
+        }
+        //Log.d(TAG, "Resumed");
+    }
+}

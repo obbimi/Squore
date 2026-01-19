@@ -88,6 +88,7 @@ import com.doubleyellow.scoreboard.feed.Authentication;
 import com.doubleyellow.scoreboard.feed.Preloader;
 //import com.doubleyellow.scoreboard.firebase.PusherHandler;
 //import com.doubleyellow.scoreboard.firebase.PusherMessagingService;
+import com.doubleyellow.scoreboard.match.emulator.MatchEmulatorThread;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.mqtt.JoinedDevicesListener;
@@ -3091,6 +3092,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             menu.removeItem(R.id.media_route_menu_item);
         }
 
+        boolean bShowEmulatorMenuItem = PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_SpeedUpFactor, -1) != -1;
+        setMenuItemVisibility(R.id.sb_match_emulator, bShowEmulatorMenuItem);
+
 /*
         if ( MenuDrawerAdapter.m_bHideDrawerItemsFromOldMenu && (MenuDrawerAdapter.id2String.isEmpty() == false) ) {
             for(Integer iId: MenuDrawerAdapter.id2String.keySet() ) {
@@ -3713,6 +3717,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     persist(false);
                     m_bleConfigHandler.selectBleDevices();
                 }
+                return true;
+            } else if (id == R.id.sb_match_emulator) {
+                setModus(null, Mode.FeedMatchesScoringEmulator);
                 return true;
             } else if (id == R.id.sb_demo) {
                 restartScore();
@@ -5039,6 +5046,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         stopDemoMode();
         stopPromoMode();
+        stopMatchEmulatorMode();
         switch (mode) {
             case Normal:
                 Timer.iSpeedUpFactor = 1;
@@ -5059,6 +5067,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             case FullAutomatedDemo:
                 startDemoMode(demoMessage, mode);
                 break;
+            case FeedMatchesScoringEmulator:
+                startMatchEmulatorThread();
+                break;
 
         }
         if ( mode != Mode.Normal ){
@@ -5068,6 +5079,33 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             PreferenceValues.addStringsToList(this, PreferenceKeys.clubList, clubs);
         }
         Toast.makeText(ScoreBoard.this, String.format("Your in %s mode now", m_mode), Toast.LENGTH_LONG).show();
+    }
+
+    public static MatchEmulatorThread matchEmulatorThread = null;
+    private void startMatchEmulatorThread() {
+        //handleMenuItem(R.id.sb_clear_score); // TODO: load from active feed
+        persist(false);
+
+        Timer.iSpeedUpFactor = PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_SpeedUpFactor, 1);
+        matchEmulatorThread = new MatchEmulatorThread(this, getMatchModel()
+                , Timer.iSpeedUpFactor
+                , PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_LikelihoodAppeal          , 12)
+                , PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_LikelihoodPlayerAWinsRally, 60)
+                , PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_RallyDuration_Average     , 20)
+                , PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_RallyDuration_Deviation   , 10)
+                , PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_LikelihoodUndoRequiredByRef   , 5)
+                , PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_LikelihoodSwitchServeSideOnHandout, 10)
+                , PreferenceValues.getSpecialBooleanValue(PreferenceKeysSpecial.emulate_StartWarmupTimer      , false)
+                );
+        matchEmulatorThread.start();
+    }
+    private void stopMatchEmulatorMode() {
+        if (matchEmulatorThread != null) {
+            matchEmulatorThread.stopLoop();
+            matchEmulatorThread.interrupt();
+            matchEmulatorThread = null;
+            Toast.makeText(this, "matchEmulatorThread stopped", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static DemoThread demoThread = null;

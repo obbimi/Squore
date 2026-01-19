@@ -20,6 +20,23 @@ public enum PreferenceKeysSpecial {
     restartAppIfChangesDetected(Integer.class),
     doNotPersistRemoteSettings(Boolean.class),
     persistFeedSettings(PersistFeedSettings.class),
+
+    /** e.g  1 for normal speed, 10 to emulate time is going 10x faster */
+    emulate_SpeedUpFactor(Integer.class),
+    /** e.g  6, 12, or 18 percent */
+    emulate_LikelihoodAppeal(Integer.class),
+    /** e.g  45, 50, 55 percent */
+    emulate_LikelihoodPlayerAWinsRally(Integer.class),
+    /** e.g  20 or 30 seconds */
+    emulate_RallyDuration_Average(Integer.class),
+    /** e.g  10 (around half of the average) */
+    emulate_RallyDuration_Deviation(Integer.class),
+    /** e.g true or 1 to have it emulate a warmup timer */
+    emulate_StartWarmupTimer(Boolean.class),
+    /** */
+    emulate_LikelihoodSwitchServeSideOnHandout(Integer.class),
+    /** */
+    emulate_LikelihoodUndoRequiredByRef(Integer.class),
     ;
     private Class clazz = String.class;
     PreferenceKeysSpecial(Class c) {
