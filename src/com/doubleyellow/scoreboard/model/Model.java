@@ -2831,7 +2831,10 @@ public abstract class Model implements Serializable
             return null;
         } finally {
             m_bReadingJsonInProgress = false;
-            setDirty(true);
+            if ( bStopAfterEventNamesDateTimeResult ) {
+            } else {
+                setDirty(true); // why was this again?
+            }
         }
     }
     protected List<GameTiming> gameTimingFromJson(JSONArray timings) throws JSONException {

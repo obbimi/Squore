@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025  Iddo Hoeve
+ * Copyright (C) 2026  Iddo Hoeve
  *
  * Squore is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,27 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.doubleyellow.scoreboard.prefs;
+package com.doubleyellow.scoreboard.match.emulator;
 
-import java.util.Map;
-
-public enum PreferenceKeysSpecial {
-    restartAppIfChangesDetected(Integer.class),
-    doNotPersistRemoteSettings(Boolean.class),
-    persistFeedSettings(PersistFeedSettings.class),
-
-    emulate_Config(Map.class),
-    /** automatically start emulation when match is selected to-be-reffed */
-    emulate_StartOnMatchSelection(Boolean.class),
-    /** automatically start next match when match is finished */
-    emulate_AutoLoadNextMatch(Boolean.class),
+public enum Keys {
+    /** e.g  1 for normal speed, 10 to emulate time is going 10x faster */
+    SpeedUpFactor(Integer.class),
+    /** e.g  6, 12, or 18 percent */
+    LikelihoodAppeal(Integer.class),
+    /** e.g  45, 50, 55 percent */
+    LikelihoodPlayerAWinsRally(Integer.class),
+    /** e.g  20 or 30 seconds */
+    RallyDuration_Average(Integer.class),
+    /** e.g  10 (around half of the average) */
+    RallyDuration_Deviation(Integer.class),
+    /** e.g true or 1 to have it emulate a warmup timer */
+    StartWarmupTimer(Boolean.class),
+    /** */
+    LikelihoodSwitchServeSideOnHandout(Integer.class),
+    /** */
+    LikelihoodUndoRequiredByRef(Integer.class),
     ;
+
     private Class clazz = String.class;
-    PreferenceKeysSpecial(Class c) {
+    Keys(Class c) {
         this.clazz = c;
     }
     public Class getType() {
         return clazz;
     }
-
 }

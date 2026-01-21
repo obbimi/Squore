@@ -85,6 +85,7 @@ import com.doubleyellow.scoreboard.dialog.announcement.EndMatchAnnouncement;
 import com.doubleyellow.scoreboard.dialog.announcement.StartGameAnnouncement;
 //import com.doubleyellow.scoreboard.dialog.material.MDDialogFragment;
 import com.doubleyellow.scoreboard.feed.Authentication;
+import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.feed.Preloader;
 //import com.doubleyellow.scoreboard.firebase.PusherHandler;
 //import com.doubleyellow.scoreboard.firebase.PusherMessagingService;
@@ -775,6 +776,10 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         if ( PreferenceValues.swapPlayersOn180DegreesRotationOfDeviceInLandscape(this) && isLandscape() ) {
             initForSwapPlayersOn180Rotation();
+        }
+
+        if ( PreferenceValues.getSpecialBooleanValue(PreferenceKeysSpecial.emulate_StartOnMatchSelection, false) ) {
+            startMatchEmulatorThread();
         }
     }
 
@@ -3092,7 +3097,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             menu.removeItem(R.id.media_route_menu_item);
         }
 
-        boolean bShowEmulatorMenuItem = PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_SpeedUpFactor, -1) != -1;
+        boolean bShowEmulatorMenuItem = StringUtil.isNotEmpty(PreferenceValues.getSpecialValue(PreferenceKeysSpecial.emulate_Config));
         setMenuItemVisibility(R.id.sb_match_emulator, bShowEmulatorMenuItem);
 
 /*
@@ -3496,7 +3501,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 if (isWearable()) {
                     return false;
                 }
+                AutoSelectItem eAutoSelectNextMatch = AutoSelectItem.None;
+                if (ctx != null && ctx.length == 1 && ctx[0] instanceof AutoSelectItem) {
+                    eAutoSelectNextMatch = (AutoSelectItem) ctx[0];
+                }
                 MatchTabbed.setDefaultTab(MatchTabbed.SelectTab.Feed);
+                FeedMatchSelector.autoSelectNextFeedMatch(eAutoSelectNextMatch);
                 Intent nm = new Intent(this, MatchTabbed.class);
                 startActivityForResult(nm, id); // see onActivityResult()
                 return true;
@@ -5050,7 +5060,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         stopDemoMode();
         stopPromoMode();
-        stopMatchEmulatorMode();
+        stopMatchEmulatorMode(false);
         switch (mode) {
             case Normal:
                 Timer.iSpeedUpFactor = 1;
@@ -5090,25 +5100,38 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         //handleMenuItem(R.id.sb_clear_score); // TODO: load from active feed
         persist(false);
 
-        Timer.iSpeedUpFactor = PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_SpeedUpFactor, 1);
-        matchEmulatorThread = new MatchEmulatorThread(this, getMatchModel()
-                , Timer.iSpeedUpFactor
-                , PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_LikelihoodAppeal          , 12)
-                , PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_LikelihoodPlayerAWinsRally, 60)
-                , PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_RallyDuration_Average     , 20)
-                , PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_RallyDuration_Deviation   , 10)
-                , PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_LikelihoodUndoRequiredByRef   , 5)
-                , PreferenceValues.getSpecialIntValue(PreferenceKeysSpecial.emulate_LikelihoodSwitchServeSideOnHandout, 10)
-                , PreferenceValues.getSpecialBooleanValue(PreferenceKeysSpecial.emulate_StartWarmupTimer      , false)
-                );
+        Map mEmulateSettings = new HashMap();
+        String sEmulate = PreferenceValues.getOverwritten(PreferenceKeysSpecial.emulate_Config.name());
+        if ( StringUtil.isNotEmpty(sEmulate) ) {
+            try {
+                JSONObject object = new JSONObject(sEmulate);
+                mEmulateSettings = new HashMap(JsonUtil.toMap(object));
+            } catch (JSONException e) {
+                Log.w(TAG, "Could not parse " + sEmulate);
+            }
+        }
+        matchEmulatorThread = new MatchEmulatorThread(this, getMatchModel(), mEmulateSettings);
         matchEmulatorThread.start();
     }
-    private void stopMatchEmulatorMode() {
+    public void stopMatchEmulatorMode(boolean bMatchFinished) {
         if (matchEmulatorThread != null) {
             matchEmulatorThread.stopLoop();
             matchEmulatorThread.interrupt();
             matchEmulatorThread = null;
-            Toast.makeText(this, "matchEmulatorThread stopped", Toast.LENGTH_SHORT).show();
+            if ( bMatchFinished ) {
+                String autoSelectNextMatch = PreferenceValues.getSpecialValue(PreferenceKeysSpecial.emulate_AutoLoadNextMatch);
+                if ( StringUtil.isNotEmpty(autoSelectNextMatch ) ) {
+                    try {
+                        AutoSelectItem eAutoSelectNextMatch = AutoSelectItem.valueOf(autoSelectNextMatch);
+                        if ( eAutoSelectNextMatch != AutoSelectItem.None ) {
+                            handleMenuItem(R.id.sb_select_feed_match, eAutoSelectNextMatch);
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            } else {
+                Toast.makeText(this, "matchEmulatorThread stopped", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -5234,6 +5257,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( isInDemoMode() ) {
             demoThread.setActivity(activity);
             demoThread.setModel   (matchModel);
+        }
+        if ( matchEmulatorThread != null && activity instanceof ScoreBoard ) {
+            matchEmulatorThread.init((ScoreBoard) activity, matchModel);
         }
         if ( isInPromoMode() ) {
             promoThread.setActivity(activity);

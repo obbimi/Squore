@@ -28,10 +28,15 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Call;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.timer.Timer;
 import com.doubleyellow.scoreboard.timer.TwoTimerView;
 import com.doubleyellow.scoreboard.timer.Type;
 import com.doubleyellow.scoreboard.timer.ViewType;
+import com.doubleyellow.util.Feature;
+import com.doubleyellow.util.Params;
 
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -43,46 +48,51 @@ public class MatchEmulatorThread extends Thread {
 
     private static final String TAG = "SB." + MatchEmulatorThread.class.getSimpleName();
 
-    private final int     iSpeedUpFactor;
     private final int     iLikelihood_Undo;
     private final int     iLikelihood_SwitchServeSideOnHandout;
     private final boolean bUseWarmupTimer;
 
     private final Random     r;
-    private final ScoreBoard scoreBoard;
-    private final Model      matchModel;
+    private       ScoreBoard scoreBoard;
+    private       Model      matchModel;
 
     private int        iLastRallyDuration;
     private boolean    bSwitchServeSide = false;
 
-    public MatchEmulatorThread(ScoreBoard scoreBoard, Model model
-            , int iSpeedupFactor
-            , int iLikelihoodAppeal
-            , int iLikelihoodPlayerAWinsRally
-            , int iRallyDuration_Average
-            , int iRallyDuration_Deviation
-            , int iLikelihood_Undo
-            , int iLikelihood_SwitchServeSideOnHandout
-            , boolean bUseWarmupTimer
-            ) {
-        this.iSpeedUpFactor = iSpeedupFactor;
-        this.bUseWarmupTimer = bUseWarmupTimer;
+    private Params m_settings = null;
+    public MatchEmulatorThread(ScoreBoard scoreBoard, Model model, Map mSettings) {
+
+        m_settings = new Params(mSettings);
+
+        Timer.iSpeedUpFactor = m_settings.getOptionalInt(Keys.SpeedUpFactor, 1);
+
+        this.bUseWarmupTimer = m_settings.getOptionalBoolean(Keys.StartWarmupTimer      , false);
         boundaries = new int[8];
+
+        int iLikelihoodAppeal           = m_settings.getOptionalInt(Keys.LikelihoodAppeal          , 12);
+        int iLikelihoodPlayerAWinsRally = m_settings.getOptionalInt(Keys.LikelihoodPlayerAWinsRally, 60);
         boundaries[1] = (100 - iLikelihoodAppeal);
         boundaries[0] = boundaries[1] * iLikelihoodPlayerAWinsRally / 100;
         for(int i=2; i<=7; i++) {
             boundaries[i] = boundaries[i-1] + iLikelihoodAppeal / 6;
         }
 
-        this.iRallyDuration_AverageAndDeviation = new int[] { iRallyDuration_Average, iRallyDuration_Deviation};
+        this.iRallyDuration_AverageAndDeviation = new int[] { m_settings.getOptionalInt(Keys.RallyDuration_Average     , 20)
+                                                            , m_settings.getOptionalInt(Keys.RallyDuration_Deviation   , 10)};
 
         r = new Random(System.currentTimeMillis());
 
+        this.init(scoreBoard, model);
+
+        this.iLikelihood_Undo                     = m_settings.getOptionalInt(Keys.LikelihoodUndoRequiredByRef   , 5);
+        this.iLikelihood_SwitchServeSideOnHandout = m_settings.getOptionalInt(Keys.LikelihoodSwitchServeSideOnHandout, 10);
+    }
+
+    public void init(ScoreBoard scoreBoard, Model model) {
         this.scoreBoard = scoreBoard;
         this.matchModel = model;
-        this.iLikelihood_Undo = iLikelihood_Undo;
-        this.iLikelihood_SwitchServeSideOnHandout = iLikelihood_SwitchServeSideOnHandout;
     }
+
     private final int[] iRallyDuration_AverageAndDeviation;
 
   //private int[] boundaries = new int[] { 35, 70, 75, 80, 85, 90, 95, 100 };
@@ -142,7 +152,7 @@ public class MatchEmulatorThread extends Thread {
                         Log.e(TAG, e.getMessage(), e);
                     }
                 } else {
-                    if ( bUseWarmupTimer && ( ! matchModel.hasStarted() ) && (! bWarmupTimerStarted) ) {
+                    if ( bUseWarmupTimer && ( ! matchModel.hasStarted() ) && (! bWarmupTimerStarted) && PreferenceValues.useTimersFeature(scoreBoard)!= Feature.DoNotUse) {
                         bWarmupTimerStarted = true;
                         scoreBoard._showTimer(Type.Warmup, false, ViewType.Inline, null);
                         return;
@@ -221,7 +231,7 @@ public class MatchEmulatorThread extends Thread {
                         break;
                     }
                 }
-                String sMsg = String.format("Emulated %s after rally of %d seconds (speedup factor %d)", outcome, iLastRallyDuration, iSpeedUpFactor);
+                String sMsg = String.format("Emulated %s after rally of %d seconds (speedup factor %d)", outcome, iLastRallyDuration, Timer.iSpeedUpFactor);
                 scoreBoard.showInfoMessage(sMsg, 5);
 
             });
@@ -229,6 +239,8 @@ public class MatchEmulatorThread extends Thread {
             iLastRallyDuration = (int) randomRallyDuration();
             pause(iLastRallyDuration);
         }
+
+        scoreBoard.stopMatchEmulatorMode(matchModel.matchHasEnded());
     }
     public void stopLoop() {
         bKeepLooping = false;
@@ -254,7 +266,7 @@ public class MatchEmulatorThread extends Thread {
         try {
             synchronized (this) {
                 //Log.d(TAG, "Waiting...");
-                wait(lSeconds * 1000L / iSpeedUpFactor);
+                wait(lSeconds * 1000L / Timer.iSpeedUpFactor);
             }
         } catch (InterruptedException e) {
             //Log.e(TAG, "?? " + e); // normally only when thread is deliberately stopped/interrupted

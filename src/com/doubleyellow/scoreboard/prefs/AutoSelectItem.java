@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025  Iddo Hoeve
+ * Copyright (C) 2026  Iddo Hoeve
  *
  * Squore is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,9 @@
  */
 package com.doubleyellow.scoreboard.prefs;
 
-import java.util.Map;
-
-public enum PreferenceKeysSpecial {
-    restartAppIfChangesDetected(Integer.class),
-    doNotPersistRemoteSettings(Boolean.class),
-    persistFeedSettings(PersistFeedSettings.class),
-
-    emulate_Config(Map.class),
-    /** automatically start emulation when match is selected to-be-reffed */
-    emulate_StartOnMatchSelection(Boolean.class),
-    /** automatically start next match when match is finished */
-    emulate_AutoLoadNextMatch(Boolean.class),
-    ;
-    private Class clazz = String.class;
-    PreferenceKeysSpecial(Class c) {
-        this.clazz = c;
-    }
-    public Class getType() {
-        return clazz;
-    }
-
+public enum AutoSelectItem {
+    None,
+    First,
+    Next,
+    Last,
 }

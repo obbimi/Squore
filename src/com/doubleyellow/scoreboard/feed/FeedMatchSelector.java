@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -44,6 +45,7 @@ import com.doubleyellow.scoreboard.match.Match;
 import com.doubleyellow.scoreboard.match.MatchTabbed;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
+import com.doubleyellow.scoreboard.prefs.AutoSelectItem;
 import com.doubleyellow.scoreboard.prefs.PersistFeedSettings;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeysSpecial;
@@ -273,7 +275,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
     private class ChildClickListener implements ExpandableListView.OnChildClickListener
     {
-        @Override public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+        @Override public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long idNotUsed) {
             if ( m_bDisabled ) {
                 Log.d(TAG, "On click listener disabled");
                 return false;
@@ -1026,7 +1028,18 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 }
                 if ( sUseContent != null ) {
                     lExpandedGroups = fillList(sUseContent.trim());
-                    FeedMatchSelector.this.onChildClickListener.setDisabled( m_feedStatus.allowSelectionForMatch() == false );
+                    boolean allowSelectionForMatch = m_feedStatus.allowSelectionForMatch();
+                    if ( allowSelectionForMatch ) {
+                        FeedMatchSelector.this.onChildClickListener.setDisabled( false );
+                        if ( m_feedStatus.equals(FeedStatus.showingMatches) ) {
+                            if ( eAutoSelectNextFeedMatch != AutoSelectItem.None ) {
+                                AutoSelectMatchTimer autoSelectMatchTimer = new AutoSelectMatchTimer();
+                                autoSelectMatchTimer.start();
+                            }
+                        }
+                    } else {
+                        FeedMatchSelector.this.onChildClickListener.setDisabled( true );
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -1552,5 +1565,46 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         for ( FeedStatusChangedListener l: lChangeListeners ) {
             l.notify(fsOld, m_feedStatus, bUpdateCheckableMenuItems);
         }
+    }
+
+    private static AutoSelectItem eAutoSelectNextFeedMatch = AutoSelectItem.None;
+    private static int iNextToAutoSelect        = -2;
+    public static void autoSelectNextFeedMatch(AutoSelectItem v) {
+        eAutoSelectNextFeedMatch = v;
+        switch ( eAutoSelectNextFeedMatch ) {
+            case None:
+                iNextToAutoSelect = -2;
+                break;
+            case First:
+                iNextToAutoSelect = 0;
+                break;
+            case Next:
+                if ( iNextToAutoSelect < 0 ) {
+                    iNextToAutoSelect = 0;
+                }
+                break;
+            case Last:
+                iNextToAutoSelect = -1;
+                break;
+        }
+    }
+
+    private class AutoSelectMatchTimer extends CountDownTimer {
+        AutoSelectMatchTimer() {
+            super(3000, 500);
+        }
+        @Override public void onFinish() {
+            boolean bResult = onChildClickListener.onChildClick(expandableListView, null, 0, iNextToAutoSelect, 0);
+            if ( bResult ) {
+                if ( eAutoSelectNextFeedMatch == AutoSelectItem.Next ) {
+                    iNextToAutoSelect++;
+                } else {
+                    String sMsg = String.format("Could not auto load next match %s (%d) ...", eAutoSelectNextFeedMatch.toString(), iNextToAutoSelect);
+                    Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+        @Override public void onTick(long millisUntilFinished) {}
     }
 }
