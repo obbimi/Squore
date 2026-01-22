@@ -777,10 +777,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( PreferenceValues.swapPlayersOn180DegreesRotationOfDeviceInLandscape(this) && isLandscape() ) {
             initForSwapPlayersOn180Rotation();
         }
-
-        if ( PreferenceValues.getSpecialBooleanValue(PreferenceKeysSpecial.emulate_StartOnMatchSelection, false) ) {
-            startMatchEmulatorThread();
-        }
     }
 
     private long lLastRotaryEventHandled = 0L;
@@ -4005,7 +4001,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         return twoTimerView;
     }
 
-    private static Type lastTimerType = null;
+    public static Type lastTimerType = null;
 
     /** invoked for menu item, or closing injury type dialog */
     private void showTimer(Type timerType, boolean bAutoTriggered) {
@@ -4617,6 +4613,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         setPlayerNames(new String[] { matchModel.getName(Player.A), matchModel.getName(Player.B) });
 
                         initScoreBoard(null);
+
+                        if ( PreferenceValues.getSpecialBooleanValue(PreferenceKeysSpecial.emulate_StartOnMatchSelection, false) ) {
+                            cancelTimer();
+                            startMatchEmulatorThread();
+                        }
                     }
 
                     //setModelForCast(matchModel);
@@ -5095,10 +5096,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         Toast.makeText(ScoreBoard.this, String.format("Your in %s mode now", m_mode), Toast.LENGTH_LONG).show();
     }
 
-    public static MatchEmulatorThread matchEmulatorThread = null;
+    private MatchEmulatorThread matchEmulatorThread = null;
+
     private void startMatchEmulatorThread() {
+        if ( matchEmulatorThread != null ) { return; }
+
         //handleMenuItem(R.id.sb_clear_score); // TODO: load from active feed
-        persist(false);
+        //persist(false);
 
         Map mEmulateSettings = new HashMap();
         String sEmulate = PreferenceValues.getOverwritten(PreferenceKeysSpecial.emulate_Config.name());
@@ -5110,28 +5114,35 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 Log.w(TAG, "Could not parse " + sEmulate);
             }
         }
-        matchEmulatorThread = new MatchEmulatorThread(this, getMatchModel(), mEmulateSettings);
+        matchEmulatorThread = new MatchEmulatorThread();
+        matchEmulatorThread.init(this, getMatchModel(), mEmulateSettings);
         matchEmulatorThread.start();
     }
-    public void stopMatchEmulatorMode(boolean bMatchFinished) {
-        if (matchEmulatorThread != null) {
-            matchEmulatorThread.stopLoop();
-            matchEmulatorThread.interrupt();
-            matchEmulatorThread = null;
-            if ( bMatchFinished ) {
-                String autoSelectNextMatch = PreferenceValues.getSpecialValue(PreferenceKeysSpecial.emulate_AutoLoadNextMatch);
-                if ( StringUtil.isNotEmpty(autoSelectNextMatch ) ) {
-                    try {
-                        AutoSelectItem eAutoSelectNextMatch = AutoSelectItem.valueOf(autoSelectNextMatch);
-                        if ( eAutoSelectNextMatch != AutoSelectItem.None ) {
-                            handleMenuItem(R.id.sb_select_feed_match, eAutoSelectNextMatch);
-                        }
-                    } catch (Exception e) {
+
+    private static boolean bRestartEmulatorMode = false;
+
+    public boolean stopMatchEmulatorMode(boolean bMatchFinished) {
+        Timer.iSpeedUpFactor = 1;
+        if (matchEmulatorThread == null) { return false; }
+
+        matchEmulatorThread.stopLoop();
+        matchEmulatorThread.interrupt();
+        matchEmulatorThread = null;
+        if ( bMatchFinished ) {
+            String autoSelectNextMatch = PreferenceValues.getSpecialValue(PreferenceKeysSpecial.emulate_AutoLoadNextMatch);
+            if ( StringUtil.isNotEmpty(autoSelectNextMatch ) ) {
+                try {
+                    AutoSelectItem eAutoSelectNextMatch = AutoSelectItem.valueOf(autoSelectNextMatch);
+                    if ( eAutoSelectNextMatch != AutoSelectItem.None ) {
+                        handleMenuItem(R.id.sb_select_feed_match, eAutoSelectNextMatch);
                     }
+                } catch (Exception e) {
                 }
-            } else {
-                Toast.makeText(this, "matchEmulatorThread stopped", Toast.LENGTH_SHORT).show();
             }
+            return false;
+        } else {
+            Toast.makeText(this, "matchEmulatorThread stopped", Toast.LENGTH_SHORT).show();
+            return true;
         }
     }
 
@@ -5258,8 +5269,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             demoThread.setActivity(activity);
             demoThread.setModel   (matchModel);
         }
-        if ( matchEmulatorThread != null && activity instanceof ScoreBoard ) {
-            matchEmulatorThread.init((ScoreBoard) activity, matchModel);
+        if ( bRestartEmulatorMode && activity instanceof ScoreBoard ) {
+            ((ScoreBoard)activity).startMatchEmulatorThread();
         }
         if ( isInPromoMode() ) {
             promoThread.setActivity(activity);
@@ -5287,6 +5298,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     /** invoked e.g. when orientation switches and when child activity is launched */
     @Override protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        bRestartEmulatorMode = stopMatchEmulatorMode(false);
 
         dialogManager.saveInstanceState(outState);
 

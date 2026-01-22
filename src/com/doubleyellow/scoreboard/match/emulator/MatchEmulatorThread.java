@@ -21,6 +21,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.EndGame;
 import com.doubleyellow.scoreboard.dialog.IBaseAlertDialog;
 import com.doubleyellow.scoreboard.main.DialogManager;
@@ -32,7 +33,6 @@ import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.timer.Timer;
 import com.doubleyellow.scoreboard.timer.TwoTimerView;
 import com.doubleyellow.scoreboard.timer.Type;
-import com.doubleyellow.scoreboard.timer.ViewType;
 import com.doubleyellow.util.Feature;
 import com.doubleyellow.util.Params;
 
@@ -48,25 +48,42 @@ public class MatchEmulatorThread extends Thread {
 
     private static final String TAG = "SB." + MatchEmulatorThread.class.getSimpleName();
 
-    private final int     iLikelihood_Undo;
-    private final int     iLikelihood_SwitchServeSideOnHandout;
-    private final boolean bUseWarmupTimer;
+    private int     iLikelihood_Undo;
+    private int     iLikelihood_SwitchServeSideOnHandout;
 
-    private final Random     r;
-    private       ScoreBoard scoreBoard;
-    private       Model      matchModel;
+    private Random     r;
+    private ScoreBoard scoreBoard;
+    private Model      matchModel;
 
     private int        iLastRallyDuration;
     private boolean    bSwitchServeSide = false;
 
     private Params m_settings = null;
-    public MatchEmulatorThread(ScoreBoard scoreBoard, Model model, Map mSettings) {
+
+/*
+    private static MatchEmulatorThread instance = null;
+    public static MatchEmulatorThread getInstance() {
+        if ( instance == null ) {
+            instance = new MatchEmulatorThread();
+        }
+        return instance;
+    }
+    private MatchEmulatorThread() {}
+*/
+
+    public void init(ScoreBoard scoreBoard, Model model) {
+        init(scoreBoard, model, null);
+    }
+    public void init(ScoreBoard scoreBoard, Model model, Map mSettings) {
+        this.scoreBoard = scoreBoard;
+        this.matchModel = model;
+        if ( mSettings == null ) { return; }
 
         m_settings = new Params(mSettings);
 
         Timer.iSpeedUpFactor = m_settings.getOptionalInt(Keys.SpeedUpFactor, 1);
 
-        this.bUseWarmupTimer = m_settings.getOptionalBoolean(Keys.StartWarmupTimer      , false);
+        //bUseWarmupTimer = m_settings.getOptionalBoolean(Keys.StartWarmupTimer      , false);
         boundaries = new int[8];
 
         int iLikelihoodAppeal           = m_settings.getOptionalInt(Keys.LikelihoodAppeal          , 12);
@@ -82,22 +99,16 @@ public class MatchEmulatorThread extends Thread {
 
         r = new Random(System.currentTimeMillis());
 
-        this.init(scoreBoard, model);
 
         this.iLikelihood_Undo                     = m_settings.getOptionalInt(Keys.LikelihoodUndoRequiredByRef   , 5);
         this.iLikelihood_SwitchServeSideOnHandout = m_settings.getOptionalInt(Keys.LikelihoodSwitchServeSideOnHandout, 10);
     }
 
-    public void init(ScoreBoard scoreBoard, Model model) {
-        this.scoreBoard = scoreBoard;
-        this.matchModel = model;
-    }
-
-    private final int[] iRallyDuration_AverageAndDeviation;
+    private int[] iRallyDuration_AverageAndDeviation;
 
   //private int[] boundaries = new int[] { 35, 70, 75, 80, 85, 90, 95, 100 };
   //private int[] boundaries = new int[] { 41, 82, 85, 88, 91, 94, 97, 100 };
-    private final int[] boundaries;
+    private int[] boundaries;
     private enum RallyOutcome {
         WinPlayerA,               // 35
         WinPlayerB,               // 70
@@ -115,7 +126,8 @@ public class MatchEmulatorThread extends Thread {
     }
 
     private boolean bKeepLooping = false;
-    private boolean bWarmupTimerStarted = false;
+
+    private static long iHandlerLooperEnteredLast = System.currentTimeMillis();
 
     private void emulateMatchScore() {
         bKeepLooping = true;
@@ -124,9 +136,10 @@ public class MatchEmulatorThread extends Thread {
             // get ready for next really/scoreboard action
             pause(12);
 
-
             Handler handler = new Handler(scoreBoard.getMainLooper());
             handler.post(() -> {
+                iHandlerLooperEnteredLast = System.currentTimeMillis();
+
                 if ( scoreBoard.isDialogShowing() ) {
                     try {
                         DialogManager dialogManager = DialogManager.getInstance();
@@ -138,10 +151,18 @@ public class MatchEmulatorThread extends Thread {
                         } else {
                             if ( baseDialog instanceof EndGame ) {
                                 EndGame endGame = (EndGame) baseDialog;
-                                endGame.handleButtonClick(EndGame.BTN_END_GAME_PLUS_TIMER);
+                                if ( PreferenceValues.useTimersFeature(scoreBoard) == Feature.Suggest ) {
+                                    endGame.handleButtonClick(EndGame.BTN_END_GAME_PLUS_TIMER);
+                                } else {
+                                    baseDialog.handleButtonClick(EndGame.BTN_END_GAME);
+                                }
                             } else if ( baseDialog instanceof TwoTimerView /* WarmupTimerView, PauseTimerView, ... */ ) {
-                                // wait for timer to end
-                                return;
+                                if ( ScoreBoard.timer.getSecondsLeft() > 0 ) {
+                                    // wait for timer to end
+                                    return;
+                                } else {
+                                    Log.d(TAG, "No more seconds left in timer 1");
+                                }
                             } else {
                                 baseDialog.handleButtonClick(DialogInterface.BUTTON_POSITIVE);
                             }
@@ -152,9 +173,9 @@ public class MatchEmulatorThread extends Thread {
                         Log.e(TAG, e.getMessage(), e);
                     }
                 } else {
-                    if ( bUseWarmupTimer && ( ! matchModel.hasStarted() ) && (! bWarmupTimerStarted) && PreferenceValues.useTimersFeature(scoreBoard)!= Feature.DoNotUse) {
-                        bWarmupTimerStarted = true;
-                        scoreBoard._showTimer(Type.Warmup, false, ViewType.Inline, null);
+                    if ( ( ! matchModel.hasStarted() ) && ScoreBoard.lastTimerType != Type.UntilStartOfFirstGame && PreferenceValues.useTimersFeature(scoreBoard)!= Feature.DoNotUse) {
+                        scoreBoard.handleMenuItem(R.id.dyn_timer);
+                        //scoreBoard._showTimer(Type.Warmup, false, ViewType.Inline, null);
                         return;
                     }
                 }
@@ -162,12 +183,11 @@ public class MatchEmulatorThread extends Thread {
                     if ( ScoreBoard.timer.getSecondsLeft() > 0 ) {
                         return;
                     } else {
-                        Log.d(TAG, "No more seconds left in timer");
+                        Log.d(TAG, "No more seconds left in timer 2");
                     }
                 }
                 if ( matchModel.matchHasEnded() ) {
-                    bWarmupTimerStarted = false;
-                    bKeepLooping = false;
+                    stopLoop();
                     return;
                 }
 
@@ -235,6 +255,12 @@ public class MatchEmulatorThread extends Thread {
                 scoreBoard.showInfoMessage(sMsg, 5);
 
             });
+
+            if ( (System.currentTimeMillis() - iHandlerLooperEnteredLast > 30000) ) {
+                Log.w(TAG, "Breaking out of emulator. Something went wrong?!");
+                stopLoop();
+                break;
+            }
 
             iLastRallyDuration = (int) randomRallyDuration();
             pause(iLastRallyDuration);

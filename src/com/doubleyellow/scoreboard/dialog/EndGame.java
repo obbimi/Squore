@@ -103,7 +103,7 @@ public class EndGame extends BaseAlertDialog
             if ( bAutoShowTimer ) {
                 // start a timer to autoclose this dialog
                 int iAutoCloseInXToStartTimer = 16;
-                CountDownTimer countDownTimer = new CountDownTimer(iAutoCloseInXToStartTimer * 1000, 1000) {
+                cdAutoClose = new CountDownTimer(iAutoCloseInXToStartTimer * 1000, 1000) {
                     @Override public void onTick(long millisUntilFinished) {
                         // give some feedback
                         Button btnOK = dialog.getButton(BTN_END_GAME);
@@ -117,7 +117,7 @@ public class EndGame extends BaseAlertDialog
                         handleButtonClick(BTN_END_GAME_PLUS_TIMER);
                     }
                 };
-                countDownTimer.start();
+                cdAutoClose.start();
             }
         }
 
@@ -286,7 +286,13 @@ public class EndGame extends BaseAlertDialog
             racketlonModel.setDiscipline(iSetZBJustFinished + 1, sport);
         }
     }
+
+    private CountDownTimer cdAutoClose = null;
+
     @Override public void handleButtonClick(int which) {
+        if ( cdAutoClose != null ) {
+            cdAutoClose.cancel();
+        }
         dialog.dismiss();
         switch ( which ) {
             case BTN_END_GAME:

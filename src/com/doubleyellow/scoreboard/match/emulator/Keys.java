@@ -27,8 +27,6 @@ public enum Keys {
     RallyDuration_Average(Integer.class),
     /** e.g  10 (around half of the average) */
     RallyDuration_Deviation(Integer.class),
-    /** e.g true or 1 to have it emulate a warmup timer */
-    StartWarmupTimer(Boolean.class),
     /** */
     LikelihoodSwitchServeSideOnHandout(Integer.class),
     /** */

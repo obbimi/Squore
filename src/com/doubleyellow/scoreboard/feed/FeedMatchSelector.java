@@ -341,6 +341,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
 
         Intent intent = new Intent();
         intent.putExtra(IntentKeys.NewMatch.toString(), model.toJsonString(null)); // this is read by ScoreBoard.onActivityResult
+        if ( activity == null ) { return; }
         activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
     }

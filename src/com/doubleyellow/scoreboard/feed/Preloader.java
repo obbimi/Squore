@@ -43,7 +43,7 @@ import java.util.*;
  */
 public class Preloader extends AsyncTask<Context, Void, Integer> implements ContentReceiver
 {
-    private static String TAG = "SB." + Preloader.class.getSimpleName();
+    private static final String TAG = "SB." + Preloader.class.getSimpleName();
     private static Preloader instance = null;
 
     private Map<Status, Object> mStatus2Url = new HashMap<>();
