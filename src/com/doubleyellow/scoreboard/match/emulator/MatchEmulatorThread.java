@@ -48,8 +48,8 @@ public class MatchEmulatorThread extends Thread {
 
     private static final String TAG = "SB." + MatchEmulatorThread.class.getSimpleName();
 
-    private int     iLikelihood_Undo;
-    private int     iLikelihood_SwitchServeSideOnHandout;
+    private int        iLikelihood_Undo;
+    private int        iLikelihood_SwitchServeSideOnHandout;
 
     private Random     r;
     private ScoreBoard scoreBoard;
@@ -58,7 +58,7 @@ public class MatchEmulatorThread extends Thread {
     private int        iLastRallyDuration;
     private boolean    bSwitchServeSide = false;
 
-    private Params m_settings = null;
+    private Params     m_settings = null;
 
 /*
     private static MatchEmulatorThread instance = null;
@@ -94,21 +94,18 @@ public class MatchEmulatorThread extends Thread {
             boundaries[i] = boundaries[i-1] + iLikelihoodAppeal / 6;
         }
 
-        this.iRallyDuration_AverageAndDeviation = new int[] { m_settings.getOptionalInt(Keys.RallyDuration_Average     , 20)
-                                                            , m_settings.getOptionalInt(Keys.RallyDuration_Deviation   , 10)};
+        iRallyDuration_AverageAndDeviation = new int[] { m_settings.getOptionalInt(Keys.RallyDuration_Average     , 20)
+                                                       , m_settings.getOptionalInt(Keys.RallyDuration_Deviation   , 10)};
 
         r = new Random(System.currentTimeMillis());
 
-
-        this.iLikelihood_Undo                     = m_settings.getOptionalInt(Keys.LikelihoodUndoRequiredByRef   , 5);
-        this.iLikelihood_SwitchServeSideOnHandout = m_settings.getOptionalInt(Keys.LikelihoodSwitchServeSideOnHandout, 10);
+        iLikelihood_Undo                     = m_settings.getOptionalInt(Keys.LikelihoodUndoRequiredByRef   , 5);
+        iLikelihood_SwitchServeSideOnHandout = m_settings.getOptionalInt(Keys.LikelihoodSwitchServeSideOnHandout, 10);
     }
 
     private int[] iRallyDuration_AverageAndDeviation;
 
-  //private int[] boundaries = new int[] { 35, 70, 75, 80, 85, 90, 95, 100 };
-  //private int[] boundaries = new int[] { 41, 82, 85, 88, 91, 94, 97, 100 };
-    private int[] boundaries;
+    private int[] boundaries; // based on 'init' values can be something like  { 35, 70, 75, 80, 85, 90, 95, 100 } or { 41, 82, 85, 88, 91, 94, 97, 100 }
     private enum RallyOutcome {
         WinPlayerA,               // 35
         WinPlayerB,               // 70
@@ -272,6 +269,13 @@ public class MatchEmulatorThread extends Thread {
         bKeepLooping = false;
     }
 
+    /**
+     * Assuming it follows a normal distribution:
+     * <br/>
+     * Around 68% of values are within 1 standard deviation from the mean.
+     * Around 95% of values are within 2 standard deviations from the mean.
+     * Around 99.7% of values are within 3 standard deviations from the mean.
+     **/
     private double randomRallyDuration() {
         double v = r.nextGaussian();
         double v1 = v * iRallyDuration_AverageAndDeviation[1] + iRallyDuration_AverageAndDeviation[0];

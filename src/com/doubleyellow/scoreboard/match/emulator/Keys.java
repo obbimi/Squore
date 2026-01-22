@@ -17,16 +17,19 @@
 package com.doubleyellow.scoreboard.match.emulator;
 
 public enum Keys {
-    /** e.g  1 for normal speed, 10 to emulate time is going 10x faster */
+    /** e.g  1 for normal speed, 10 to emulate time is going 10x faster, etc */
     SpeedUpFactor(Integer.class),
-    /** e.g  6, 12, or 18 percent */
+
+    /** e.g  Value between 1 and 99. E.g. 6, 12, or 18 percent */
     LikelihoodAppeal(Integer.class),
-    /** e.g  45, 50, 55 percent */
+    /** Value between 1 and 99 e.g  45, 50, 55 percent */
     LikelihoodPlayerAWinsRally(Integer.class),
-    /** e.g  20 or 30 seconds */
+
+    /** e.g Average or Mean, In seconds, e.g. 20 or 30 seconds */
     RallyDuration_Average(Integer.class),
-    /** e.g  10 (around half of the average) */
+    /** e.g Standard Deviation In seconds. E.g. 10 (typically around half of the average) */
     RallyDuration_Deviation(Integer.class),
+
     /** */
     LikelihoodSwitchServeSideOnHandout(Integer.class),
     /** */

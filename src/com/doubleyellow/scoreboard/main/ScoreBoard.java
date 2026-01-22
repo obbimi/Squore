@@ -3046,6 +3046,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         timer.cancel();
         timer = null;
         Timer.removeTimerView(false, dialogTimerView);
+        Timer.removeTimerView(false, iBoard.getTimerView());
         dialogTimerView = null;
         this.triggerEvent(SBEvent.timerCancelled, type);
 
@@ -4615,7 +4616,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         initScoreBoard(null);
 
                         if ( PreferenceValues.getSpecialBooleanValue(PreferenceKeysSpecial.emulate_StartOnMatchSelection, false) ) {
-                            cancelTimer();
                             startMatchEmulatorThread();
                         }
                     }
@@ -5100,6 +5100,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     private void startMatchEmulatorThread() {
         if ( matchEmulatorThread != null ) { return; }
+        cancelTimer();
+        dialogManager.clearDialogs();
+        lastTimerType = null;
 
         //handleMenuItem(R.id.sb_clear_score); // TODO: load from active feed
         //persist(false);
