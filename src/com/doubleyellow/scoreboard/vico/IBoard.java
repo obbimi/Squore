@@ -1438,7 +1438,7 @@ public class IBoard implements TimerViewContainer
         final TextView tvBLEInfo = (TextView) findViewById(R.id.sb_bottom_of_screen_infomessage);
         if ( tvBLEInfo != null ) {
             if ( StringUtil.isNotEmpty(sMsg) ) {
-                Log.d(TAG, "showInfoMessage " + sMsg);
+                //Log.v(TAG, "showInfoMessage " + sMsg);
                 String sMsgFormatted = null;
                 try {
                     sMsgFormatted = String.format(sMsg, iMessageDurationSecs);

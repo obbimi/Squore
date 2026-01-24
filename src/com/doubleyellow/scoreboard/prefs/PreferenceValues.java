@@ -171,9 +171,11 @@ public class PreferenceValues extends RWValues
     }
 
     public static Brand getOverwriteBrand(Context ctx) {
+/*
         if ( currentDateIsTestDate() && ViewUtil.isWearable(ctx) ) {
             return Brand.valueOf("TennisPadel"); // e.g. for wearable testing
         }
+*/
         return _getEnum(PreferenceKeys.squoreBrand, ctx, Brand.class, Brand.Squore);
     }
 
@@ -196,17 +198,21 @@ public class PreferenceValues extends RWValues
     }
 
     static EnumSet<ShowOnScreen> showMatchDurationChronoOn(Context context) {
+/*
         if ( currentDateIsTestDate() ) {
             // to allow monkey testing via adb. on screen time prevents uiautomation to dump screen layout
             return EnumSet.of(ShowOnScreen.OnChromeCast);
         }
+*/
         return _getEnumSet(PreferenceKeys.showMatchDurationChronoOn, context, ShowOnScreen.class, EnumSet.allOf(ShowOnScreen.class));
     }
     public static EnumSet<ShowOnScreen> showLastGameDurationChronoOn(Context context) {
+/*
         if ( currentDateIsTestDate() ) {
             // to allow monkey testing via adb. on screen time prevents uiautomation to dump screen layout
             return EnumSet.of(ShowOnScreen.OnChromeCast);
         }
+*/
         return _getEnumSet(PreferenceKeys.showLastGameDurationChronoOn, context, ShowOnScreen.class, EnumSet.allOf(ShowOnScreen.class));
     }
     static EnumSet<ShowOnScreen> showFieldDivisionOn(Context context) {
@@ -1946,9 +1952,6 @@ public class PreferenceValues extends RWValues
             sMsg = "Inserted as first feedPostUrls entry: " + newEntry;
         }
         Log.d(TAG, sMsg);
-        if ( currentDateIsTestDate() ) {
-            //MyDialogBuilder.dialogWithOkOnly(context, sMsg);
-        }
         //Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show(); // TMP: comment out
 
         // create new value to store in preferences
@@ -2217,6 +2220,25 @@ public class PreferenceValues extends RWValues
             RWValues.removeOverwrite(k);
         }
     }
+
+    public static boolean isInEmulationMode() {
+        return StringUtil.isNotEmpty(getSpecialValue(PreferenceKeysSpecial.emulate_Config));
+    }
+    public static Params getEmulateSettings() {
+        Params mEmulateSettings = new Params();
+      //String sEmulate = PreferenceValues.getOverwritten(PreferenceKeysSpecial.emulate_Config.name());
+        String sEmulate = PreferenceValues.getSpecialValue(PreferenceKeysSpecial.emulate_Config);
+        if ( StringUtil.isNotEmpty(sEmulate) ) {
+            try {
+                JSONObject object = new JSONObject(sEmulate);
+                mEmulateSettings.putAll(JsonUtil.toMap(object));
+            } catch (JSONException e) {
+                Log.w(TAG, "Could not parse " + sEmulate);
+            }
+        }
+        return mEmulateSettings;
+    }
+
 
     private static boolean setOverwrite(PreferenceKeys key, String sValue) {
         String sOldOverwrite = RWValues.setOverwrite(key, sValue);

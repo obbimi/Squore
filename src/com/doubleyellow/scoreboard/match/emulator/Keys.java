@@ -16,14 +16,19 @@
  */
 package com.doubleyellow.scoreboard.match.emulator;
 
+import java.util.List;
+
+/**
+ * Key values to be specified in feeds under Config.emulate_Config
+ */
 public enum Keys {
     /** e.g  1 for normal speed, 10 to emulate time is going 10x faster, etc */
     SpeedUpFactor(Integer.class),
 
     /** e.g  Value between 1 and 99. E.g. 6, 12, or 18 percent */
     LikelihoodAppeal(Integer.class),
-    /** Value between 1 and 99 e.g  45, 50, 55 percent */
-    LikelihoodPlayerAWinsRally(Integer.class),
+    /** List of values between 1 and 99 e.g  45, 50, 55 percent */
+    LikelihoodPlayerAWinsRallyInGameX(List.class),
 
     /** e.g Average or Mean, In seconds, e.g. 20 or 30 seconds */
     RallyDuration_Average(Integer.class),
@@ -34,6 +39,9 @@ public enum Keys {
     LikelihoodSwitchServeSideOnHandout(Integer.class),
     /** */
     LikelihoodUndoRequiredByRef(Integer.class),
+
+    PreferenceKeysToRotatePerMatch(List.class),
+    ShowInfoMessagesAboutSimulation(Boolean.class),
     ;
 
     private Class clazz = String.class;

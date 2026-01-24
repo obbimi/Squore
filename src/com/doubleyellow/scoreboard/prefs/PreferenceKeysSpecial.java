@@ -27,7 +27,7 @@ public enum PreferenceKeysSpecial {
     /** automatically start emulation when match is selected to-be-reffed */
     emulate_StartOnMatchSelection(Boolean.class),
     /** automatically start next match when match is finished */
-    emulate_AutoLoadNextMatch(Boolean.class),
+    emulate_AutoLoadNextMatch(AutoSelectItem.class),
     ;
     private Class clazz = String.class;
     PreferenceKeysSpecial(Class c) {

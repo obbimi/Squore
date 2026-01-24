@@ -189,7 +189,7 @@ public class MatchModelPoster implements ContentReceiver
     }
 
     private void presentChoiceOrToast(String sShowURL, boolean bFromMenu) {
-        Log.d(TAG, "Presenting choice...");
+        //Log.v(TAG, "Presenting choice...");
         if ( bFromMenu == false ) {
             // presume auto triggered
             if ( m_bAutoShareTriggeredForliveScore ) {

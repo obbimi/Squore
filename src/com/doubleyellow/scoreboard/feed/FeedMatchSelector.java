@@ -43,6 +43,7 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.match.ExpandableMatchSelector;
 import com.doubleyellow.scoreboard.match.Match;
 import com.doubleyellow.scoreboard.match.MatchTabbed;
+import com.doubleyellow.scoreboard.match.emulator.Keys;
 import com.doubleyellow.scoreboard.model.*;
 import com.doubleyellow.scoreboard.model.Util;
 import com.doubleyellow.scoreboard.prefs.AutoSelectItem;
@@ -193,7 +194,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                             PreferenceKeysSpecial keysSpecial = PreferenceKeysSpecial.valueOf(sPref);
                             PreferenceValues.setSpecialValue(keysSpecial, sValue);
                         } catch (Exception ex3) {
-                            Log.d(TAG, "Some other type of key " + sPref);
+                            //Log.v(TAG, "Some other type of key " + sPref);
                         }
                     }
                 }
@@ -271,7 +272,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         return onChildClickListener;
     }
 
-    private ChildClickListener onChildClickListener = new ChildClickListener();
+    private final ChildClickListener onChildClickListener = new ChildClickListener();
 
     private class ChildClickListener implements ExpandableListView.OnChildClickListener
     {
@@ -279,6 +280,12 @@ public class FeedMatchSelector extends ExpandableMatchSelector
             if ( m_bDisabled ) {
                 Log.d(TAG, "On click listener disabled");
                 return false;
+            }
+            if ( idNotUsed != ON_ITEM_CLICK_ID_FROM_EMULATION) {
+                if ( groupPosition == 0 ) {
+                    iNextGroupToAutoSelectFrom = groupPosition;
+                    iNextToAutoSelect = childPosition + 1;
+                }
             }
             final Model model = Brand.getModel();
 
@@ -291,6 +298,10 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                 JSONObject joMatch = (JSONObject) oMatch;
                 bNamesPopulated = populateModelFromJSON(model, joMatch, sGroup, feedPostName);
             } else {
+                Log.d(TAG, String.format("No JSONObject for group,child = %d,%d", groupPosition, childPosition));
+                if ( v == null ) {
+                    return false;
+                }
                 String sText = SimpleELAdapter.getText(v);
                 if ( populateModelFromString(model, sText, sGroup, feedPostName) ) {
                     return false;
@@ -1032,10 +1043,14 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                     boolean allowSelectionForMatch = m_feedStatus.allowSelectionForMatch();
                     if ( allowSelectionForMatch ) {
                         FeedMatchSelector.this.onChildClickListener.setDisabled( false );
-                        if ( m_feedStatus.equals(FeedStatus.showingMatches) ) {
-                            if ( eAutoSelectNextFeedMatch != AutoSelectItem.None ) {
+                        adaptPrefValuesForNextMatch();
+
+                        if ( eAutoSelectNextFeedMatch != AutoSelectItem.None ) {
+                            if ( m_feedStatus.equals(FeedStatus.showingMatches) ) {
                                 AutoSelectMatchTimer autoSelectMatchTimer = new AutoSelectMatchTimer();
                                 autoSelectMatchTimer.start();
+                            } else {
+                                Log.w(TAG, "Not autoselecting next match because of status " + m_feedStatus);
                             }
                         }
                     } else {
@@ -1568,18 +1583,28 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         }
     }
 
+    // =============================================
+    // EMULATION
+    // =============================================
+
+    private static final Map<PreferenceKeys, String> mPrefKeysInitialStatus = new HashMap<>();
+    private static final LinkedHashMap<PreferenceKeys, String> mPrefKeysRotationStatus = new LinkedHashMap<>();
     private static AutoSelectItem eAutoSelectNextFeedMatch = AutoSelectItem.None;
-    private static int iNextToAutoSelect        = -2;
+    private static final int NEXT_TO_AUTO_SELECT_NOT_USED    = -2;
+    private static int iNextGroupToAutoSelectFrom = 0;
+    private static int iNextToAutoSelect        = NEXT_TO_AUTO_SELECT_NOT_USED;
     public static void autoSelectNextFeedMatch(AutoSelectItem v) {
         eAutoSelectNextFeedMatch = v;
         switch ( eAutoSelectNextFeedMatch ) {
             case None:
-                iNextToAutoSelect = -2;
+                iNextToAutoSelect = NEXT_TO_AUTO_SELECT_NOT_USED;
                 break;
             case First:
                 iNextToAutoSelect = 0;
                 break;
             case Next:
+                // fallthrough
+            case NextLoopBackToFirstAfterLast:
                 if ( iNextToAutoSelect < 0 ) {
                     iNextToAutoSelect = 0;
                 }
@@ -1590,18 +1615,118 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         }
     }
 
+    private void adaptPrefValuesForNextMatch() {
+        Params emulateSettings = PreferenceValues.getEmulateSettings();
+        if ( emulateSettings != null ) {
+            List<String> lSettingsToRotate = emulateSettings.getOptionalList(Keys.PreferenceKeysToRotatePerMatch);
+            if ( ListUtil.isNotEmpty(lSettingsToRotate) ) {
+                for(String sTmpPrefKey : lSettingsToRotate ) {
+                    PreferenceKeys prefKey = null;
+                    try {
+                        prefKey = PreferenceKeys.valueOf(sTmpPrefKey);
+                    } catch (Exception e) {
+                        continue;
+                    }
+                    Class clazz = prefKey.getType();
+                    if ( clazz.isEnum() ) {
+                        if ( mPrefKeysRotationStatus.containsKey(prefKey) ) {
+                            String sValue = mPrefKeysRotationStatus.get(prefKey);
+                            Enum enumValueFromString = Params.getEnumValueFromString(clazz, sValue);
+                            if ( enumValueFromString != null ) {
+                                Enum nextEnum = ListUtil.getNextEnum(enumValueFromString);
+                                if ( nextEnum.ordinal() == 0 ) {
+                                    // move to next prefkey
+                                    // clear all 'previous' prefkey we already looped over so we restart looping over them next time around
+                                    mPrefKeysRotationStatus.put(prefKey, nextEnum.toString());
+                                    resetPreviousPrefKeys(sTmpPrefKey, lSettingsToRotate);
+
+                                    continue;
+                                } else {
+                                    mPrefKeysRotationStatus.put(prefKey, nextEnum.toString());
+                                    break;
+                                }
+                            } else {
+                                Log.w(TAG, String.format("What happened? %s is not right value for enum class %s", sValue, clazz.getName()));
+                            }
+                        } else {
+                            Object[] enumConstants = clazz.getEnumConstants();
+                            if ( enumConstants != null ) {
+                                String sInitial = enumConstants[0].toString();
+                                mPrefKeysRotationStatus.put(prefKey, sInitial);
+                                mPrefKeysInitialStatus.put(prefKey, sInitial);
+                                //break;
+                            }
+                        }
+                    } else if ( Boolean.class == clazz ) {
+                        if ( mPrefKeysRotationStatus.containsKey(prefKey) ) {
+                            String sValue = mPrefKeysRotationStatus.get(prefKey);
+                            Boolean bCurrent = Boolean.parseBoolean(sValue);
+                            Boolean bNext = ! bCurrent;
+                            if ( bNext.equals(Boolean.FALSE) ) {
+                                // move to next prefkey
+                                // clear all 'previous' prefkey we already looped over so we restart looping over them next time around
+                                mPrefKeysRotationStatus.put(prefKey, bNext.toString());
+                                resetPreviousPrefKeys(sTmpPrefKey, lSettingsToRotate);
+
+                                continue;
+                            } else {
+                                mPrefKeysRotationStatus.put(prefKey, bNext.toString());
+                                break;
+                            }
+                        } else {
+                            String sInitial = String.valueOf(false);
+                            mPrefKeysRotationStatus.put(prefKey, sInitial);
+                            mPrefKeysInitialStatus.put(prefKey, sInitial);
+                            //break;
+                        }
+                    }
+                }
+
+                String sMsg = "Emulating next match config: " + mPrefKeysRotationStatus;
+                Log.w(TAG, sMsg);
+                if ( context instanceof ScoreBoard ) {
+                    ((ScoreBoard)context).showInfoMessage(sMsg, 10);
+                }
+
+                //Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+                PreferenceValues.setOverwrites(mPrefKeysRotationStatus);
+                //PreferenceValues.persistOverwrites(context);
+            }
+        }
+    }
+
+    private static void resetPreviousPrefKeys(String sUpToExcluding, List<String> lSettingsToRotate) {
+        for(String sTmpPrefKeyToReset : lSettingsToRotate) {
+            if ( sTmpPrefKeyToReset.equals(sUpToExcluding) ) { break; }
+            try {
+                PreferenceKeys key = PreferenceKeys.valueOf(sTmpPrefKeyToReset);
+                String initialValue = mPrefKeysInitialStatus.get(key);
+                mPrefKeysRotationStatus.put(key, initialValue);
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private static final int ON_ITEM_CLICK_ID_FROM_EMULATION = -9;
     private class AutoSelectMatchTimer extends CountDownTimer {
         AutoSelectMatchTimer() {
             super(3000, 500);
         }
         @Override public void onFinish() {
-            boolean bResult = onChildClickListener.onChildClick(expandableListView, null, 0, iNextToAutoSelect, 0);
+            boolean bResult = onChildClickListener.onChildClick(expandableListView, null, iNextGroupToAutoSelectFrom, iNextToAutoSelect, ON_ITEM_CLICK_ID_FROM_EMULATION);
             if ( bResult ) {
-                if ( eAutoSelectNextFeedMatch == AutoSelectItem.Next ) {
+                if ( EnumSet.of(AutoSelectItem.Next, AutoSelectItem.NextLoopBackToFirstAfterLast).contains(eAutoSelectNextFeedMatch) ) {
                     iNextToAutoSelect++;
                 } else {
                     String sMsg = String.format("Could not auto load next match %s (%d) ...", eAutoSelectNextFeedMatch.toString(), iNextToAutoSelect);
                     Toast.makeText(context, sMsg, Toast.LENGTH_LONG).show();
+                }
+            } else {
+                if ( EnumSet.of(AutoSelectItem.NextLoopBackToFirstAfterLast).contains(eAutoSelectNextFeedMatch) && iNextToAutoSelect > 0 ) {
+                    iNextToAutoSelect = 0;
+                    bResult = onChildClickListener.onChildClick(expandableListView, null, iNextGroupToAutoSelectFrom, iNextToAutoSelect, ON_ITEM_CLICK_ID_FROM_EMULATION);
+                } else {
+                    mPrefKeysRotationStatus.clear();
                 }
             }
         }

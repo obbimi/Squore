@@ -151,7 +151,7 @@ public class MQTTHandler
         //mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK); // uses MqttDefaultFilePersistence and seems to throw MqttPersistenceException
         mqttClient = new MqttAndroidClient(context, serverURI, clientID, Ack.AUTO_ACK, new MemoryPersistence(), true, 1);
 
-        if ( PreferenceValues.currentDateIsTestDate() ) {
+        if ( false && PreferenceValues.currentDateIsTestDate() ) {
             mqttClient.setTraceCallback(new MqttTraceHandler() {
                 @Override public void traceDebug(@Nullable String s) {
                     Log.d("MqttTraceHandler", s);

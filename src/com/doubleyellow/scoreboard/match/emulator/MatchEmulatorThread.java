@@ -36,6 +36,7 @@ import com.doubleyellow.scoreboard.timer.Type;
 import com.doubleyellow.util.Feature;
 import com.doubleyellow.util.Params;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -50,6 +51,7 @@ public class MatchEmulatorThread extends Thread {
 
     private int        iLikelihood_Undo;
     private int        iLikelihood_SwitchServeSideOnHandout;
+    private int[]      iaLikelihoodPlayerAWinsRally;
 
     private Random     r;
     private ScoreBoard scoreBoard;
@@ -86,9 +88,21 @@ public class MatchEmulatorThread extends Thread {
         //bUseWarmupTimer = m_settings.getOptionalBoolean(Keys.StartWarmupTimer      , false);
         boundaries = new int[8];
 
+        Object oLikelihoodPlayerAWinsRallyInGameX = m_settings.get(Keys.LikelihoodPlayerAWinsRallyInGameX);
+        if ( oLikelihoodPlayerAWinsRallyInGameX instanceof Integer ) {
+            iaLikelihoodPlayerAWinsRally = new int[] { (Integer) oLikelihoodPlayerAWinsRallyInGameX };
+        } else if ( oLikelihoodPlayerAWinsRallyInGameX instanceof List ) {
+            List lTmp = (List) oLikelihoodPlayerAWinsRallyInGameX;
+            iaLikelihoodPlayerAWinsRally = new int[lTmp.size()];
+            for (int i = 0; i < lTmp.size(); i++) {
+                iaLikelihoodPlayerAWinsRally[i] = Integer.parseInt(String.valueOf(lTmp.get(i)));
+            }
+        }
+
         int iLikelihoodAppeal           = m_settings.getOptionalInt(Keys.LikelihoodAppeal          , 12);
-        int iLikelihoodPlayerAWinsRally = m_settings.getOptionalInt(Keys.LikelihoodPlayerAWinsRally, 60);
         boundaries[1] = (100 - iLikelihoodAppeal);
+        int gameNrInProgressZB = model.getGameNrInProgress() - 1;
+        int iLikelihoodPlayerAWinsRally = iaLikelihoodPlayerAWinsRally[Math.min(iaLikelihoodPlayerAWinsRally.length -1, gameNrInProgressZB)];
         boundaries[0] = boundaries[1] * iLikelihoodPlayerAWinsRally / 100;
         for(int i=2; i<=7; i++) {
             boundaries[i] = boundaries[i-1] + iLikelihoodAppeal / 6;
@@ -101,6 +115,8 @@ public class MatchEmulatorThread extends Thread {
 
         iLikelihood_Undo                     = m_settings.getOptionalInt(Keys.LikelihoodUndoRequiredByRef   , 5);
         iLikelihood_SwitchServeSideOnHandout = m_settings.getOptionalInt(Keys.LikelihoodSwitchServeSideOnHandout, 10);
+
+        bShowInfoMessageOnBoard = m_settings.getOptionalBoolean(Keys.ShowInfoMessagesAboutSimulation, bShowInfoMessageOnBoard);
     }
 
     private int[] iRallyDuration_AverageAndDeviation;
@@ -175,6 +191,12 @@ public class MatchEmulatorThread extends Thread {
                         //scoreBoard._showTimer(Type.Warmup, false, ViewType.Inline, null);
                         return;
                     }
+                    if ( PreferenceValues.endGameSuggestion(scoreBoard).equals(Feature.DoNotUse) && matchModel.isPossibleGameVictory() ) {
+                        Player possibleGameVictoryFor = matchModel.isPossibleGameVictoryFor();
+                        //scoreBoard.handleMenuItem(R.id.dyn_end_game);
+                        scoreBoard.endGame(false);
+                        return;
+                    }
                 }
                 if ( ScoreBoard.timer != null && ScoreBoard.timer.isShowing() ) {
                     if ( ScoreBoard.timer.getSecondsLeft() > 0 ) {
@@ -191,7 +213,7 @@ public class MatchEmulatorThread extends Thread {
                 if ( matchModel.hasStarted() && this.iLikelihood_Undo > 0 ) {
                     long iRnd = r.nextInt(100);
                     if ( iRnd < this.iLikelihood_Undo ) {
-                        scoreBoard.showInfoMessage("Emulated Undo by ref", 5);
+                        showInfoMessageOnBoard("Emulated Undo by ref", 5);
                         matchModel.undoLast();
                         return;
                     }
@@ -212,6 +234,13 @@ public class MatchEmulatorThread extends Thread {
                     }
                 }
                 bSwitchServeSide = false;
+
+                int gameNrInProgressZB = this.matchModel.getGameNrInProgress() - 1;
+                int iLikelihoodPlayerAWinsRally = iaLikelihoodPlayerAWinsRally[Math.min(iaLikelihoodPlayerAWinsRally.length -1, gameNrInProgressZB)];
+                int iNewBoundary0 = boundaries[1] * iLikelihoodPlayerAWinsRally / 100;
+                if ( iNewBoundary0 != boundaries[0] ) {
+                    boundaries[0] = iNewBoundary0;
+                }
 
                 RallyOutcome outcome = randomRallyOutcome();
                 switch (outcome) {
@@ -249,11 +278,12 @@ public class MatchEmulatorThread extends Thread {
                     }
                 }
                 String sMsg = String.format("Emulated %s after rally of %d seconds (speedup factor %d)", outcome, iLastRallyDuration, Timer.iSpeedUpFactor);
-                scoreBoard.showInfoMessage(sMsg, 5);
+                showInfoMessageOnBoard(sMsg, 5);
 
             });
 
-            if ( (System.currentTimeMillis() - iHandlerLooperEnteredLast > 30000) ) {
+            int iBreakOutAfterSecs = PreferenceValues.currentDateIsTestDate() ? 300 : 30;
+            if ( (System.currentTimeMillis() - iHandlerLooperEnteredLast > iBreakOutAfterSecs * 1000 ) ) {
                 Log.w(TAG, "Breaking out of emulator. Something went wrong?!");
                 stopLoop();
                 break;
@@ -290,6 +320,12 @@ public class MatchEmulatorThread extends Thread {
             }
         }
         return RallyOutcome.WinPlayerA;
+    }
+
+    private boolean bShowInfoMessageOnBoard = false;
+    private void showInfoMessageOnBoard(String s, int i) {
+        if ( bShowInfoMessageOnBoard == false ) { return; }
+        scoreBoard.showInfoMessage(s,i);
     }
 
     private void pause(int lSeconds) {

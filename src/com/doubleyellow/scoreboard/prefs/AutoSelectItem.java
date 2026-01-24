@@ -20,5 +20,6 @@ public enum AutoSelectItem {
     None,
     First,
     Next,
+    NextLoopBackToFirstAfterLast,
     Last,
 }

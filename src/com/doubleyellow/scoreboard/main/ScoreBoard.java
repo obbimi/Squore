@@ -3094,7 +3094,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             menu.removeItem(R.id.media_route_menu_item);
         }
 
-        boolean bShowEmulatorMenuItem = StringUtil.isNotEmpty(PreferenceValues.getSpecialValue(PreferenceKeysSpecial.emulate_Config));
+        boolean bShowEmulatorMenuItem = PreferenceValues.isInEmulationMode();
         setMenuItemVisibility(R.id.sb_match_emulator, bShowEmulatorMenuItem);
 
 /*
@@ -7180,9 +7180,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     String sDesc   = msMediaPlayBackDesc.get(keyCode);
                     String sMsg    = String.format("[onMediaButtonEvent] %s %s (%d)", sDesc, sUpDown, keyCode);
                     Log.i(TAG, sMsg);
-                    if ( PreferenceValues.currentDateIsTestDate() ) {
-                        //Toast.makeText(ScoreBoard.this, sMsg,Toast.LENGTH_LONG ).show();
-                    }
                     if ( keyEvent.getAction() == KeyEvent.ACTION_DOWN ) {
                         switch (keyCode) {
                             case KeyEvent.KEYCODE_MEDIA_STOP:
@@ -7357,6 +7354,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
         if ( PreferenceValues.useMQTT(this) == false ) {
             updateMQTTConnectionStatusIconOnUiThread(View.INVISIBLE, -1);
+            stopMQTT();
             return;
         }
         final String sBrokerUrl = PreferenceValues.getMQTTBrokerURL(this);
