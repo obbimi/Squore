@@ -106,7 +106,7 @@ public class DialogManager {
         // remove the one last shown from the stack
         if ( ListUtil.isNotEmpty(baseDialogs) ) {
             IBaseAlertDialog previous = baseDialogs.remove(0);
-            Log.d(TAG, "previous dialog removed from the stack " + previous);
+          //Log.d(TAG, "previous dialog removed from the stack " + previous);
             baseDialog = null;
         }
         if ( ListUtil.isNotEmpty(baseDialogs) ) {

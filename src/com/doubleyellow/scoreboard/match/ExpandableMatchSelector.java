@@ -142,7 +142,7 @@ public abstract class ExpandableMatchSelector extends Fragment
     }
 
     @Override public void onDestroy() {
-        Log.d(TAG, "Destroying ");
+        //Log.d(TAG, "Destroying ");
         super.onDestroy();
     }
 

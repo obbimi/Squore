@@ -144,6 +144,7 @@ public class MatchEmulatorThread extends Thread {
             handler.post(() -> {
                 iHandlerLooperEnteredLast = System.currentTimeMillis();
 
+                Feature useTimersFeature = PreferenceValues.useTimersFeature(scoreBoard);
                 if ( scoreBoard.isDialogShowing() ) {
                     try {
                         DialogManager dialogManager = DialogManager.getInstance();
@@ -151,11 +152,15 @@ public class MatchEmulatorThread extends Thread {
                         IBaseAlertDialog baseDialog = dialogManager.baseDialog;
                         if ( baseDialog == null ) {
                             boolean bTimerIsShowing        = (ScoreBoard.timer != null) && ScoreBoard.timer.isShowing();
-                            Log.d(TAG, "bTimerIsShowing : " + bTimerIsShowing);
+                            //Log.d(TAG, "bTimerIsShowing : " + bTimerIsShowing + ScoreBoard.lastTimerType);
+                            if ( bTimerIsShowing && ScoreBoard.timer.getSecondsLeft() > 0 ) {
+                                // wait for timer to end
+                                return;
+                            }
                         } else {
                             if ( baseDialog instanceof EndGame ) {
                                 EndGame endGame = (EndGame) baseDialog;
-                                if ( PreferenceValues.useTimersFeature(scoreBoard) == Feature.Suggest ) {
+                                if ( useTimersFeature == Feature.Suggest ) {
                                     endGame.handleButtonClick(EndGame.BTN_END_GAME_PLUS_TIMER);
                                 } else {
                                     baseDialog.handleButtonClick(EndGame.BTN_END_GAME);
@@ -165,7 +170,7 @@ public class MatchEmulatorThread extends Thread {
                                     // wait for timer to end
                                     return;
                                 } else {
-                                    Log.d(TAG, "No more seconds left in timer 1");
+                                    //Log.d(TAG, "No more seconds left in timer 1");
                                 }
                             } else if (baseDialog instanceof Appeal ) {
                                 int iRnd = random.nextInt(3); // TODO: allow e.g. decision YL to be less common
@@ -179,24 +184,28 @@ public class MatchEmulatorThread extends Thread {
                     } catch (Exception e) {
                         Log.e(TAG, e.getMessage(), e);
                     }
-                } else {
-                    if ( ( ! matchModel.hasStarted() ) && ScoreBoard.lastTimerType != Type.UntilStartOfFirstGame && PreferenceValues.useTimersFeature(scoreBoard)!= Feature.DoNotUse) {
-                        scoreBoard.handleMenuItem(R.id.dyn_timer);
-                        //scoreBoard._showTimer(Type.Warmup, false, ViewType.Inline, null);
-                        return;
-                    }
-                    if ( PreferenceValues.endGameSuggestion(scoreBoard).equals(Feature.DoNotUse) && matchModel.isPossibleGameVictory() ) {
-                        Player possibleGameVictoryFor = matchModel.isPossibleGameVictoryFor();
-                        scoreBoard.handleMenuItem(R.id.dyn_end_game);
-                        //scoreBoard.endGame(false);
+                }
+
+                if ( ! matchModel.hasStarted() ) {
+                    if (  ScoreBoard.lastTimerType != Type.UntilStartOfFirstGame
+                       && useTimersFeature != Feature.DoNotUse
+                       ) {
+                        scoreBoard.handleMenuItem(R.id.dyn_timer, useTimersFeature.equals(Feature.Automatic));
                         return;
                     }
                 }
+                if ( PreferenceValues.endGameSuggestion(scoreBoard).equals(Feature.DoNotUse) && matchModel.isPossibleGameVictory() ) {
+                    Player possibleGameVictoryFor = matchModel.isPossibleGameVictoryFor();
+                    scoreBoard.handleMenuItem(R.id.dyn_end_game);
+                    //scoreBoard.endGame(false);
+                    return;
+                }
+
                 if ( ScoreBoard.timer != null && ScoreBoard.timer.isShowing() ) {
                     if ( ScoreBoard.timer.getSecondsLeft() > 0 ) {
                         return;
                     } else {
-                        Log.d(TAG, "No more seconds left in timer 2");
+                        //Log.d(TAG, "No more seconds left in timer 2");
                     }
                 }
                 if ( matchModel.matchHasEnded() ) {

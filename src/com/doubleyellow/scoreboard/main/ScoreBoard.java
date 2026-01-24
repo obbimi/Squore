@@ -4069,7 +4069,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             showFullScreenTimer();
         } else {
             if ( fullScreenTimer == null ) {
-                Log.d(TAG, "Showing normal timer(s)");
+              //Log.d(TAG, "Showing normal timer(s)");
                 Timer.addTimerView(iBoard.isPresentation(), iBoard); // always add this one, so it is always up to date if the Popup one is made hidden
                 if ( viewType.equals(ViewType.Popup) ) {
                     Timer.addTimerView(false, getDialogTimerView()); // this will actually trigger the dialog to open
@@ -4119,7 +4119,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         int presentationFrameVisibility = presentationFrame.getVisibility();
 
         boolean pEndOfGameViewShowing = (presentationFrameVisibility == View.VISIBLE);
-        Log.d(TAG, "[hidePresentationEndOfGame] pEndOfGameViewShowing " + pEndOfGameViewShowing);
+      //Log.d(TAG, "[hidePresentationEndOfGame] pEndOfGameViewShowing " + pEndOfGameViewShowing);
         if ( pEndOfGameViewShowing ) {
             presentationFrame.setVisibility(View.GONE);
             findViewById(R.id.content_frame).setVisibility(View.VISIBLE);
@@ -4718,7 +4718,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             //Log.d(TAG, "Waiting ... " + millisUntilFinished);
         }
         @Override public void onFinish() {
-            Log.d(TAG, "Posting/MQTT Publishing ... ");
+            //Log.d(TAG, "Posting/MQTT Publishing ... ");
             if ( ScoreBoard.timer != null ) {
                 int secondsLeft = ScoreBoard.timer.getSecondsLeft();
                 if ( secondsLeft == -1 ) {

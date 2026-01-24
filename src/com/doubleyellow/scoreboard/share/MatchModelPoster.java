@@ -146,7 +146,7 @@ public class MatchModelPoster implements ContentReceiver
 
     private String sShowURL = null;
     @Override public void receive(String sContent, FetchResult result, long lCacheAge, String sLastSuccessfulContent, String sPostUrl) {
-        Log.i(TAG, result + " Content : " + sContent);
+      //Log.i(TAG, result + " Content : " + sContent);
 
         if ( result.equals(FetchResult.OK) ) {
             //Toast.makeText(this.context, sContent, Toast.LENGTH_LONG).show();
@@ -163,7 +163,9 @@ public class MatchModelPoster implements ContentReceiver
             if ( sPostUrl != null && sPostUrl.startsWith(brandBaseURL) ) {
                 sShowURL = brandBaseURL + "/" + this.sName;
                 m_model.setShareURL(sShowURL);
-                Log.i(TAG, "Match shared. " + sShowURL);
+                if ( PreferenceValues.isConfiguredForLiveScore(m_context) == false ) {
+                    Log.i(TAG, "Match shared. " + sShowURL);
+                }
             }
             presentChoiceOrToast(sShowURL, m_bFromMenu);
         } else {

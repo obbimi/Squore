@@ -221,7 +221,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
     }
 
     @Override public void onDestroy() {
-        Log.d(TAG, "destroying activity");
+        //Log.d(TAG, "destroying activity");
         if ( emsAdapter != null ) {
             if ( m_task != null && m_task.isCancelled() == false ) {
                 Log.d(TAG, "Cancelling emsAdapter.m_task");

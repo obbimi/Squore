@@ -419,7 +419,7 @@ public abstract class Model implements Serializable
 
     final List<Map<Player, Integer>> getPlayer2EndPointsOfGames() {
         if ( m_lPlayer2EndPointsOfGames == null ) {
-            ListWrapper<Map<Player, Integer>> l = new ListWrapper<Map<Player, Integer>>(true);
+            ListWrapper<Map<Player, Integer>> l = new ListWrapper<Map<Player, Integer>>(false);
             l.setName("Set 1");
             setPlayer2EndPointsOfGames(l);
         }
@@ -2236,7 +2236,7 @@ public abstract class Model implements Serializable
     }
     public void setShareURL(String url) {
         if ( StringUtil.isNotEmpty(url) ) {
-            Log.d(TAG, "Share URL         : " + url);
+            //Log.d(TAG, "Share URL         : " + url);
         } else if (StringUtil.isNotEmpty(m_shareUrl)) {
             //Log.w(TAG, "Share URL emptied : " + url);
         }
@@ -2988,7 +2988,7 @@ public abstract class Model implements Serializable
     private Map<Player, Integer> getPlayer2EndPointsNewGame() {
         Map<Player, Integer> scoreOfGameInProgress = getZeroZeroMap();
         if ( matchHasEnded() ) {
-            Log.d(TAG, "Not adding handicap score for finished match");
+          //Log.v(TAG, "Not adding handicap score for finished match");
         } else {
             Map<Player, Integer> startScoreOfGameInProgress = getStartScoreOfGameInProgress();
             scoreOfGameInProgress.put(Player.A, MapUtil.getInt(startScoreOfGameInProgress, Player.A, 0));
@@ -3680,7 +3680,7 @@ public abstract class Model implements Serializable
         boolean bGameBallFor_Unchanged = bGameBallFor_Unchanged0 || bGameBallFor_Unchanged1 || bGameBallFor_Unchanged2;
 
         if ( bGameBallFor_Unchanged == false ) {
-            Log.v(TAG, String.format("Gameball %s changed from %s to %s", when, getPlayersAsList(gameballForOld), getPlayersAsList(gameballForNew)));
+          //Log.v(TAG, String.format("Gameball %s changed from %s to %s", when, getPlayersAsList(gameballForOld), getPlayersAsList(gameballForNew)));
         }
 
         if ( when.equals(When.ScoreOneMorePoint) && (bGameBallFor_Unchanged == false) ) {

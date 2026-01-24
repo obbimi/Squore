@@ -1925,7 +1925,7 @@ public class IBoard implements TimerViewContainer
         if ( gameBallFor == null ) {
             gameBallFor = matchModel.isPossibleGameBallFor();
             bShow       = ListUtil.isNotEmpty(gameBallFor);
-            Log.v(TAG, "Update game ball message - recalculated " + Arrays.asList(gameBallFor));
+          //Log.v(TAG, "Update game ball message - recalculated " + Arrays.asList(gameBallFor));
         }
         //Log.d(TAG, "updateGameBallMessage [" + sContext + "] " + Arrays.asList(gameBallFor) + " ==> show : " + bShow);
 /*
