@@ -22,11 +22,11 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.dialog.Appeal;
 import com.doubleyellow.scoreboard.dialog.EndGame;
 import com.doubleyellow.scoreboard.dialog.IBaseAlertDialog;
 import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
-import com.doubleyellow.scoreboard.model.Call;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -51,9 +51,10 @@ public class MatchEmulatorThread extends Thread {
 
     private int        iLikelihood_Undo;
     private int        iLikelihood_SwitchServeSideOnHandout;
-    private int[]      iaLikelihoodPlayerAWinsRally;
+    private int[]      iaLikelihoodPlayerAWinsRally = new int[] { 50 };
+    private int[]      iaLikelihoodPlayerXMakesAppeal = new int[] {3,3};
 
-    private Random     r;
+    private Random     random;
     private ScoreBoard scoreBoard;
     private Model      matchModel;
 
@@ -61,17 +62,6 @@ public class MatchEmulatorThread extends Thread {
     private boolean    bSwitchServeSide = false;
 
     private Params     m_settings = null;
-
-/*
-    private static MatchEmulatorThread instance = null;
-    public static MatchEmulatorThread getInstance() {
-        if ( instance == null ) {
-            instance = new MatchEmulatorThread();
-        }
-        return instance;
-    }
-    private MatchEmulatorThread() {}
-*/
 
     public void init(ScoreBoard scoreBoard, Model model) {
         init(scoreBoard, model, null);
@@ -85,33 +75,36 @@ public class MatchEmulatorThread extends Thread {
 
         Timer.iSpeedUpFactor = m_settings.getOptionalInt(Keys.SpeedUpFactor, 1);
 
-        //bUseWarmupTimer = m_settings.getOptionalBoolean(Keys.StartWarmupTimer      , false);
-        boundaries = new int[8];
+        boundaries = new int[RallyOutcome.values().length];
 
         Object oLikelihoodPlayerAWinsRallyInGameX = m_settings.get(Keys.LikelihoodPlayerAWinsRallyInGameX);
         if ( oLikelihoodPlayerAWinsRallyInGameX instanceof Integer ) {
             iaLikelihoodPlayerAWinsRally = new int[] { (Integer) oLikelihoodPlayerAWinsRallyInGameX };
         } else if ( oLikelihoodPlayerAWinsRallyInGameX instanceof List ) {
             List lTmp = (List) oLikelihoodPlayerAWinsRallyInGameX;
-            iaLikelihoodPlayerAWinsRally = new int[lTmp.size()];
-            for (int i = 0; i < lTmp.size(); i++) {
-                iaLikelihoodPlayerAWinsRally[i] = Integer.parseInt(String.valueOf(lTmp.get(i)));
-            }
+            iaLikelihoodPlayerAWinsRally = convertToListOfInts(lTmp);
         }
 
-        int iLikelihoodAppeal           = m_settings.getOptionalInt(Keys.LikelihoodAppeal          , 12);
-        boundaries[1] = (100 - iLikelihoodAppeal);
+        Object oLikelihoodPlayerMakesAppeal = m_settings.get(Keys.LikelihoodPlayersMakeAppeal);
+        if ( oLikelihoodPlayerMakesAppeal instanceof Integer ) {
+            Integer iLikelihoodEitherPlayerMakesAppeal = (Integer) oLikelihoodPlayerMakesAppeal;
+            iaLikelihoodPlayerXMakesAppeal = new int[] {iLikelihoodEitherPlayerMakesAppeal, iLikelihoodEitherPlayerMakesAppeal};
+        } else if ( oLikelihoodPlayerMakesAppeal instanceof List ) {
+            List lTmp = (List) oLikelihoodPlayerMakesAppeal;
+            iaLikelihoodPlayerXMakesAppeal = convertToListOfInts(lTmp);
+        }
+
         int gameNrInProgressZB = model.getGameNrInProgress() - 1;
         int iLikelihoodPlayerAWinsRally = iaLikelihoodPlayerAWinsRally[Math.min(iaLikelihoodPlayerAWinsRally.length -1, gameNrInProgressZB)];
-        boundaries[0] = boundaries[1] * iLikelihoodPlayerAWinsRally / 100;
-        for(int i=2; i<=7; i++) {
-            boundaries[i] = boundaries[i-1] + iLikelihoodAppeal / 6;
-        }
+        boundaries[RallyOutcome.WinPlayerA   .ordinal()] = iLikelihoodPlayerAWinsRally;
+        boundaries[RallyOutcome.WinPlayerB   .ordinal()] = 100;
+        boundaries[RallyOutcome.AppealPlayerA.ordinal()] = 100 + iaLikelihoodPlayerXMakesAppeal[0];
+        boundaries[RallyOutcome.AppealPlayerB.ordinal()] = 100 + iaLikelihoodPlayerXMakesAppeal[0] + iaLikelihoodPlayerXMakesAppeal[1];
 
         iRallyDuration_AverageAndDeviation = new int[] { m_settings.getOptionalInt(Keys.RallyDuration_Average     , 20)
                                                        , m_settings.getOptionalInt(Keys.RallyDuration_Deviation   , 10)};
 
-        r = new Random(System.currentTimeMillis());
+        random = new Random(System.currentTimeMillis());
 
         iLikelihood_Undo                     = m_settings.getOptionalInt(Keys.LikelihoodUndoRequiredByRef   , 5);
         iLikelihood_SwitchServeSideOnHandout = m_settings.getOptionalInt(Keys.LikelihoodSwitchServeSideOnHandout, 10);
@@ -119,19 +112,17 @@ public class MatchEmulatorThread extends Thread {
         bShowInfoMessageOnBoard = m_settings.getOptionalBoolean(Keys.ShowInfoMessagesAboutSimulation, bShowInfoMessageOnBoard);
     }
 
+    private int[] convertToListOfInts(List lTmp) {
+        int[] iaReturn = new int[lTmp.size()];
+        for (int i = 0; i < lTmp.size(); i++) {
+            iaReturn[i] = Integer.parseInt(String.valueOf(lTmp.get(i)));
+        }
+        return iaReturn;
+    }
+
     private int[] iRallyDuration_AverageAndDeviation;
 
-    private int[] boundaries; // based on 'init' values can be something like  { 35, 70, 75, 80, 85, 90, 95, 100 } or { 41, 82, 85, 88, 91, 94, 97, 100 }
-    private enum RallyOutcome {
-        WinPlayerA,               // 35
-        WinPlayerB,               // 70
-        AppealPlayerA_Stroke,     // 75
-        AppealPlayerA_YesLet,     // 80
-        AppealPlayerA_NoLet,      // 85
-        AppealPlayerB_Stroke,     // 90
-        AppealPlayerB_YesLet,     // 95
-        AppealPlayerB_NoLet,      // 100
-    }
+    private int[] boundaries; // based on 'init' values can be something like  { 40, 100, 10, 2 }
 
     @Override public void run() {
         Looper.prepare();
@@ -176,6 +167,9 @@ public class MatchEmulatorThread extends Thread {
                                 } else {
                                     Log.d(TAG, "No more seconds left in timer 1");
                                 }
+                            } else if (baseDialog instanceof Appeal ) {
+                                int iRnd = random.nextInt(3); // TODO: allow e.g. decision YL to be less common
+                                baseDialog.handleButtonClick(Appeal.BTN_YES_LET + iRnd); // -3, -2 or -1
                             } else {
                                 baseDialog.handleButtonClick(DialogInterface.BUTTON_POSITIVE);
                             }
@@ -193,8 +187,8 @@ public class MatchEmulatorThread extends Thread {
                     }
                     if ( PreferenceValues.endGameSuggestion(scoreBoard).equals(Feature.DoNotUse) && matchModel.isPossibleGameVictory() ) {
                         Player possibleGameVictoryFor = matchModel.isPossibleGameVictoryFor();
-                        //scoreBoard.handleMenuItem(R.id.dyn_end_game);
-                        scoreBoard.endGame(false);
+                        scoreBoard.handleMenuItem(R.id.dyn_end_game);
+                        //scoreBoard.endGame(false);
                         return;
                     }
                 }
@@ -211,10 +205,10 @@ public class MatchEmulatorThread extends Thread {
                 }
 
                 if ( matchModel.hasStarted() && this.iLikelihood_Undo > 0 ) {
-                    long iRnd = r.nextInt(100);
+                    int iRnd = random.nextInt(100);
                     if ( iRnd < this.iLikelihood_Undo ) {
                         showInfoMessageOnBoard("Emulated Undo by ref", 5);
-                        matchModel.undoLast();
+                        scoreBoard.handleMenuItem(R.id.dyn_undo_last);
                         return;
                     }
                 }
@@ -225,7 +219,7 @@ public class MatchEmulatorThread extends Thread {
                     ||   ( this.iLikelihood_SwitchServeSideOnHandout > 0 && Player.B.equals(server) )
                     )
                     {
-                        long iRnd = r.nextInt(100);
+                        int iRnd = random.nextInt(100);
                         if ( iRnd < Math.abs(this.iLikelihood_SwitchServeSideOnHandout) ) {
                             scoreBoard.changeSide(server);
                             bSwitchServeSide = true;
@@ -237,43 +231,20 @@ public class MatchEmulatorThread extends Thread {
 
                 int gameNrInProgressZB = this.matchModel.getGameNrInProgress() - 1;
                 int iLikelihoodPlayerAWinsRally = iaLikelihoodPlayerAWinsRally[Math.min(iaLikelihoodPlayerAWinsRally.length -1, gameNrInProgressZB)];
-                int iNewBoundary0 = boundaries[1] * iLikelihoodPlayerAWinsRally / 100;
-                if ( iNewBoundary0 != boundaries[0] ) {
-                    boundaries[0] = iNewBoundary0;
+                if ( iLikelihoodPlayerAWinsRally != boundaries[RallyOutcome.WinPlayerA.ordinal()] ) {
+                    boundaries[RallyOutcome.WinPlayerA.ordinal()] = iLikelihoodPlayerAWinsRally;
                 }
 
                 RallyOutcome outcome = randomRallyOutcome();
                 switch (outcome) {
-                    case WinPlayerA: {
-                        matchModel.changeScore(Player.A);
-                        break;
-                    }
+                    case WinPlayerA:
                     case WinPlayerB: {
-                        matchModel.changeScore(Player.B);
+                        scoreBoard.handleMenuItem(R.id.pl_change_score, outcome.getPlayer());
                         break;
                     }
-                    case AppealPlayerA_Stroke: {
-                        matchModel.recordAppealAndCall(Player.A, Call.ST);
-                        break;
-                    }
-                    case AppealPlayerA_YesLet: {
-                        matchModel.recordAppealAndCall(Player.A, Call.YL);
-                        break;
-                    }
-                    case AppealPlayerA_NoLet: {
-                        matchModel.recordAppealAndCall(Player.A, Call.NL);
-                        break;
-                    }
-                    case AppealPlayerB_Stroke: {
-                        matchModel.recordAppealAndCall(Player.B, Call.ST);
-                        break;
-                    }
-                    case AppealPlayerB_YesLet: {
-                        matchModel.recordAppealAndCall(Player.B, Call.YL);
-                        break;
-                    }
-                    case AppealPlayerB_NoLet: {
-                        matchModel.recordAppealAndCall(Player.B, Call.NL);
+                    case AppealPlayerA:
+                    case AppealPlayerB: {
+                        scoreBoard.handleMenuItem(R.id.pl_show_appeal, outcome.getPlayer());
                         break;
                     }
                 }
@@ -307,13 +278,13 @@ public class MatchEmulatorThread extends Thread {
      * Around 99.7% of values are within 3 standard deviations from the mean.
      **/
     private double randomRallyDuration() {
-        double v = r.nextGaussian();
+        double v = random.nextGaussian();
         double v1 = v * iRallyDuration_AverageAndDeviation[1] + iRallyDuration_AverageAndDeviation[0];
         return Math.max(2, v1);
     }
 
     private RallyOutcome randomRallyOutcome() {
-        int iOutcome = r.nextInt(100);
+        int iOutcome = random.nextInt(boundaries[boundaries.length-1]);
         for( RallyOutcome ro : RallyOutcome.values() ) {
             if ( iOutcome <= boundaries[ro.ordinal()] ) {
                 return ro;
@@ -331,12 +302,9 @@ public class MatchEmulatorThread extends Thread {
     private void pause(int lSeconds) {
         try {
             synchronized (this) {
-                //Log.d(TAG, "Waiting...");
                 wait(lSeconds * 1000L / Timer.iSpeedUpFactor);
             }
         } catch (InterruptedException e) {
-            //Log.e(TAG, "?? " + e); // normally only when thread is deliberately stopped/interrupted
         }
-        //Log.d(TAG, "Resumed");
     }
 }

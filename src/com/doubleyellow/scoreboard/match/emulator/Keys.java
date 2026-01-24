@@ -25,9 +25,9 @@ public enum Keys {
     /** e.g  1 for normal speed, 10 to emulate time is going 10x faster, etc */
     SpeedUpFactor(Integer.class),
 
-    /** e.g  Value between 1 and 99. E.g. 6, 12, or 18 percent */
-    LikelihoodAppeal(Integer.class),
-    /** List of values between 1 and 99 e.g  45, 50, 55 percent */
+    /** e.g  array with two integer values (or single integer if values are equal for both players) */
+    LikelihoodPlayersMakeAppeal(List.class),
+    /** List of values between 1 and 99 e.g  45, 50, 55 percent, may be smaller than (minimum) number of games played. Last value valid for remaining games */
     LikelihoodPlayerAWinsRallyInGameX(List.class),
 
     /** e.g Average or Mean, In seconds, e.g. 20 or 30 seconds */

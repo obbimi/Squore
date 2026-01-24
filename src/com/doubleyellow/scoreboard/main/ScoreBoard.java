@@ -5107,16 +5107,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         //handleMenuItem(R.id.sb_clear_score); // TODO: load from active feed
         //persist(false);
 
-        Map mEmulateSettings = new HashMap();
-        String sEmulate = PreferenceValues.getOverwritten(PreferenceKeysSpecial.emulate_Config.name());
-        if ( StringUtil.isNotEmpty(sEmulate) ) {
-            try {
-                JSONObject object = new JSONObject(sEmulate);
-                mEmulateSettings = new HashMap(JsonUtil.toMap(object));
-            } catch (JSONException e) {
-                Log.w(TAG, "Could not parse " + sEmulate);
-            }
-        }
+        Params mEmulateSettings = PreferenceValues.getEmulateSettings();
         matchEmulatorThread = new MatchEmulatorThread();
         matchEmulatorThread.init(this, getMatchModel(), mEmulateSettings);
         matchEmulatorThread.start();

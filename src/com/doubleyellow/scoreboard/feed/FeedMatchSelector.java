@@ -1619,6 +1619,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
         Params emulateSettings = PreferenceValues.getEmulateSettings();
         if ( emulateSettings != null ) {
             List<String> lSettingsToRotate = emulateSettings.getOptionalList(Keys.PreferenceKeysToRotatePerMatch);
+            lSettingsToRotate = ListUtil.filter(lSettingsToRotate, "^-.*", Enums.Match.Remove);
             if ( ListUtil.isNotEmpty(lSettingsToRotate) ) {
                 for(String sTmpPrefKey : lSettingsToRotate ) {
                     PreferenceKeys prefKey = null;
