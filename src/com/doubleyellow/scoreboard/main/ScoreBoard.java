@@ -879,8 +879,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 bundle = intent.getBundleExtra(PreferenceKeys.class.getSimpleName());
             }
 
-/*
-            boolean bTestInvocation = false; // && PreferenceValues.currentDateIsTestDate(); // TODO: temp should be false
+            boolean bTestInvocation = false; //PreferenceValues.currentDateIsTestDate(); // TODO: temp should be false
             if ( bundle == null && bTestInvocation ) {
                 bundle = new Bundle();
                 //bundle.putString(PreferenceKeys.matchList.toString(), "|-De Vaart|Bogaarts, Jolan - Van Parys, Matthias|");
@@ -888,17 +887,20 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
                 String sFeedName       = "Double Yellow Boxen";
                 String sFeedMatchesURL = "https://boxen.double-yellow.be/matches.json.php";
-                String sFeedPlayersUrl = "https://boxen.double-yellow.be/players.txt.php";
+                String sFeedPlayersUrl = null; // "https://boxen.double-yellow.be/players.txt.php";
+                String sFeedPostUrl    = "https://boxen.double-yellow.be/storematchresult_app.php";
                 String sUrls =
                              URLsKeys.Name        + "=" + sFeedName           + "\n"
                            + URLsKeys.FeedMatches + "=" + sFeedMatchesURL     + "\n";
                 if ( sFeedPlayersUrl != null ) {
                     sUrls += URLsKeys.FeedPlayers + "=" + sFeedPlayersUrl     + "\n";
                 }
+                if ( sFeedPostUrl != null ) {
+                    sUrls += URLsKeys.PostResult + "=" + sFeedPostUrl         + "\n";
+                }
                 bundle.putString(PreferenceKeys.feedPostUrls.toString(), sUrls);
                 bundle.putString(PreferenceKeys.StartupAction.toString(), StartupAction.SelectFeedMatch.toString());
             }
-*/
 
             // Get values from the intent that started this scoreBoard
             if ( bundle != null ) {
@@ -924,7 +926,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                 Map<String, String> mKv = MapUtil.parseToMap(value, "\n", "=");
                                 String sName        = mKv.get(URLsKeys.Name.toString());
                                 String sFeedMatches = mKv.get(URLsKeys.FeedMatches.toString());
-                                PreferenceValues.addOrReplaceNewFeedURL(this, sName, sFeedMatches, null, null, null, true, true);
+                                String sFeedPlayers = mKv.get(URLsKeys.FeedPlayers.toString());
+                                String sPostURL     = mKv.get(URLsKeys.PostResult.toString());
+                                PreferenceValues.addOrReplaceNewFeedURL(this, sName, sFeedMatches, sFeedPlayers, sPostURL, null, true, true);
                                 break;
                             default:
                                 PreferenceValues.setOverwrite(key, value);

@@ -3403,10 +3403,10 @@ public abstract class Model implements Serializable
                 timing.put(JSONKey.end  .toString(), gameTiming.getEnd());
             } else {
                 long lEnd = gameTiming.getEnd();
-                if ( (lEnd > lStart) || ListUtil.isNotEmpty(getGameScoreHistory()) ) {
+              //if ( (lEnd > lStart) || ListUtil.isNotEmpty(getGameScoreHistory()) ) { // 2026-02-01: removed check
                     timing.put(JSONKey.start.toString(), DateUtil.formatDate2String(lStart, jsonTimeFormat));
                     timing.put(JSONKey.end  .toString(), DateUtil.formatDate2String(lEnd  , jsonTimeFormat));
-                }
+              //}
             }
 
             List<Integer> lScoreTimings = gameTiming.getScoreTimings();

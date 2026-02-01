@@ -485,8 +485,10 @@ public class IBoard implements TimerViewContainer
             } else {
                 long lElapsedSinceBoot = SystemClock.elapsedRealtime();
                 long lBootTime         = System.currentTimeMillis() - lElapsedSinceBoot;
-              //Log.d(TAG, "lBootTime at " + lBootTime + " " + new Date(lBootTime).toString());
-                long lStartTime        = matchModel.getLastGameStart();
+              //Log.d(TAG, "lBootTime at " + lBootTime + " " + new Date(lBootTime));
+                long lStartTimeLastGame = matchModel.getLastGameStart();
+                Date dStartTimeLastGame = new Date(lStartTimeLastGame);
+              //Log.d(TAG, "lStartTime at " + lStartTimeLastGame + " " + dStartTimeLastGame);
                 long lPauseInProgress = 0L;
                 if ( m_lStoppedAt != 0L ) {
                     // if e.g. screen rotates while toweling down timer was running
@@ -494,12 +496,12 @@ public class IBoard implements TimerViewContainer
                     Log.d(TAG, "Pause In Progress " + lPauseInProgress + " " + DateUtil.convertDurationToHHMMSS_Colon(lPauseInProgress));
                 }
                 Long lPaused = m_lGameXWasPausedDuration.get(iGameNrZeroBased+1);
-                long calculatedBase    = lStartTime - lBootTime + (lPaused==null?0L:lPaused) + lPauseInProgress ;
+                long calculatedBase    = lStartTimeLastGame - lBootTime + (lPaused==null?0L:lPaused) + lPauseInProgress ;
                 if ( calculatedBase < 0 ) {
                     Log.w(TAG, "calculatedBase < 0 (" + calculatedBase + "). Using 0 ...");
                 }
                 long base = roundToNearest1000(calculatedBase);
-                tvGameTime.setBase(base);
+                tvGameTime.setBase(base); // Set the time that the count-up timer is in reference to.
                 if ( lPauseInProgress == 0 ) {
                     tvGameTime.start();
                 }

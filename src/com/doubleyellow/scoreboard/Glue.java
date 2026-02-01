@@ -90,11 +90,11 @@ public class Glue
         return _startScoreBoard(extraInfo);
     }
 
-    /** Eg. invoked from the 'Double Yellow' app. */
+    /** Eg. invoked from the 'Double Yellow' app. See also ScoreBoard.handleStartedFromOtherApp() */
     public boolean startSquoreBoard( String  sFeedName
                                    , String  sFeedMatchesURL
                                    , String  sFeedPlayersUrl
-                                 //, String  sPostMatchResultURL
+                                   , String  sPostMatchResultURL
                                  //, String  sPostData
                                    , String  sUserKey
                                    , String  sUserName
@@ -112,6 +112,9 @@ public class Glue
                    + URLsKeys.FeedMatches + "=" + sFeedMatchesURL     + "\n";
         if ( sFeedPlayersUrl != null ) {
             sUrls += URLsKeys.FeedPlayers + "=" + sFeedPlayersUrl     + "\n";
+        }
+        if ( sPostMatchResultURL != null ) {
+            sUrls += URLsKeys.PostResult + "=" + sPostMatchResultURL  + "\n";
         }
         extraInfo.put(PreferenceKeys.feedPostUrls.toString(), sUrls);
         if (sUserName != null && !sUserName.trim().isEmpty()) {
