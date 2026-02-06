@@ -76,7 +76,16 @@ public class ResetPrefs extends DialogPreference
         SharedPreferences.Editor preferencesEditor = preferences.edit();
         //Clear all the saved preference values.
         preferencesEditor.clear();
-        preferencesEditor.putString(PreferenceKeys.liveScoreDeviceId.toString(), sRetainRandomValue);
+
+        //======================
+        // retain a few settings
+        //======================
+
+        // retain livescoreid... if it is actually being used it is an annoyance if it changes
+        preferencesEditor.putString(PreferenceKeys.liveScoreDeviceId     .toString(), sRetainRandomValue);
+        // remember user used app before, so e.g. don't start 'showcase' again
+        preferencesEditor.putInt   (PreferenceKeys.viewedChangelogVersion.toString(), RWValues.getVersionCodeForChangeLogCheck(context));
+
         //Commit all changes.
         preferencesEditor.commit();
 

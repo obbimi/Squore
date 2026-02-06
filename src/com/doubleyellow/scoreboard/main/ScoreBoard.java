@@ -5688,7 +5688,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     m_bleConfigHandler = (BLEBridge) clazz.newInstance();
                     PreferenceValues.setOverwrite(PreferenceKeys.UseBluetoothLE, true);
                 } catch (Exception e) {
-                    Log.e(TAG, sClass, e);
+                    //Log.e(TAG, sClass, e);
                     PreferenceValues.setString(PreferenceKeys.BLEBridge_ClassName, this, "");
                 }
             }
@@ -6903,7 +6903,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     // --------------------- Wearable ---------------------
     // ----------------------------------------------------
     private static boolean isScreenRound(Context context) {
-        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.M /* 23 */ ) { return false; }
         return context.getResources().getConfiguration().isScreenRound();
     }
 
@@ -6917,8 +6916,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     private WearableHelper m_wearableHelper = null;
     private static boolean m_bNoWearablePossible = false;
     private void onResumeWearable() {
-        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.M /* 23 */ ) { return; }
-
         if ( m_wearableHelper == null ) {
             try {
                 Class.forName("com.google.android.gms.wearable.Wearable");

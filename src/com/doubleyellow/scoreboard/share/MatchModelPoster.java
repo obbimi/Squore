@@ -36,6 +36,7 @@ import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.ShareMatchPrefs;
+import com.doubleyellow.scoreboard.timer.Timer;
 import com.doubleyellow.util.*;
 import org.json.JSONObject;
 
