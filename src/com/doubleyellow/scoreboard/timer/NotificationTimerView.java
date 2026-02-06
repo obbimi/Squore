@@ -76,10 +76,8 @@ public class NotificationTimerView implements TimerView
         if ( bmIcon != null ) {
             builder.setLargeIcon(bmIcon);
         } else {
-            if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M /* 23 */ ) {
-                Icon icon = Icon.createWithResource(ctx, R.drawable.logo_brand_squore /*Brand.getLogoResId()*/);
-                builder.setLargeIcon(icon);
-            }
+            Icon icon = Icon.createWithResource(ctx, R.drawable.logo_brand_squore /*Brand.getLogoResId()*/);
+            builder.setLargeIcon(icon);
         }
     }
 

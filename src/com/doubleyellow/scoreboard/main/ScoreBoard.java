@@ -5529,27 +5529,17 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             }
 
             String sError = null;
-            if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.M /* 23 */ ) {
-                String uriLocal      = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)); // not the original but uri on device
-              //lMessages.add("local uri:" + uriLocal);
-                ContentResolver cs   = getContentResolver();
-                Uri             uri  = Uri.parse(uriLocal);
-                try {
-                    ParcelFileDescriptor fileDescriptor = cs.openFileDescriptor(uri, "r");
-                    FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(fileDescriptor);
-                    sError = FileUtil.copyFile(stream, fMyFile);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    sError = e.getMessage();
-                }
-            } else {
-                String localFilePath = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME)); // deprecated in android 7
-                lMessages.add("Download complete: " + localFilePath + " (download id:" + downloadId + ")");
-
-                File f = new File(localFilePath);
-                Log.i(TAG, "Handling " + localFilePath);
-
-                sError = FileUtil.copyFile(f, fMyFile);
+            String uriLocal      = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)); // not the original but uri on device
+          //lMessages.add("local uri:" + uriLocal);
+            ContentResolver cs   = getContentResolver();
+            Uri             uri  = Uri.parse(uriLocal);
+            try {
+                ParcelFileDescriptor fileDescriptor = cs.openFileDescriptor(uri, "r");
+                FileInputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(fileDescriptor);
+                sError = FileUtil.copyFile(stream, fMyFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+                sError = e.getMessage();
             }
 
             if ( StringUtil.isEmpty(sError) ) {

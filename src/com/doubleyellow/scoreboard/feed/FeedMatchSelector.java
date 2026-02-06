@@ -1016,7 +1016,7 @@ public class FeedMatchSelector extends ExpandableMatchSelector
                         if ( result.equals(FetchResult.Cancelled) == false ) {
                             String sMsg = getResources().getString(R.string.Could_not_read_feed_x__y__Using_cached_content_aged_z_minutes, m_sLastFetchedURL, result, DateUtil.convertToMinutes(lCacheAge));
                             DialogManager dialogManager = DialogManager.getInstance();
-                            dialogManager.showMessageDialog(context, "Internet", sMsg);
+                            dialogManager.showMessageDialog(context, "Internet", sMsg, true);
                         }
                         sUseContent = sLastSuccessfulContent;
                     } else {

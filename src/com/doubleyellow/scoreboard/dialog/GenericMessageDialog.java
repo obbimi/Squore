@@ -19,8 +19,6 @@ package com.doubleyellow.scoreboard.dialog;
 
 import android.content.Context;
 import android.os.Bundle;
-import com.doubleyellow.scoreboard.R;
-import com.doubleyellow.scoreboard.model.Player;
 
 /**
  * Dialog that simply shows a title and a message.
@@ -28,8 +26,8 @@ import com.doubleyellow.scoreboard.model.Player;
  */
 public class GenericMessageDialog extends BaseMessageDialog
 {
-    public GenericMessageDialog(Context context) {
-        super(context);
+    public GenericMessageDialog(Context context, boolean bIsAlert) {
+        super(context, bIsAlert);
     }
     public void init(String sTitle, String sMessage) {
         m_sMessage = sMessage;

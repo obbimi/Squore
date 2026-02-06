@@ -73,13 +73,9 @@ public class EditMatchDate extends BaseAlertDialog
             view = myLayout.inflate(R.layout.edit_match_date, null);
             datePicker = view.findViewById(R.id.datePicker);
             timePicker = view.findViewById(R.id.timePicker);
-            if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M /* 23 */ ) {
-                timePicker.setIs24HourView(true);
-                timePicker.setHour(matchDate.getHours());
-                timePicker.setMinute(matchDate.getMinutes());
-            } else {
-                timePicker.setVisibility(View.GONE);
-            }
+            timePicker.setIs24HourView(true);
+            timePicker.setHour(matchDate.getHours());
+            timePicker.setMinute(matchDate.getMinutes());
         } else {
             ScrollView sv = new ScrollView(context);
             final LinearLayout ll = new LinearLayout(context);
@@ -88,12 +84,10 @@ public class EditMatchDate extends BaseAlertDialog
 
             datePicker = new DatePicker(context);
             ll.addView(datePicker);
-            if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M /* 23 */ ) {
-                timePicker = new TimePicker(context);
-                timePicker.setHour(matchDate.getHours());
-                timePicker.setMinute(matchDate.getMinutes());
-                ll.addView(timePicker);
-            }
+            timePicker = new TimePicker(context);
+            timePicker.setHour(matchDate.getHours());
+            timePicker.setMinute(matchDate.getMinutes());
+            ll.addView(timePicker);
             sv.addView(ll);
             view = sv;
         }
@@ -126,7 +120,7 @@ public class EditMatchDate extends BaseAlertDialog
                     int iYear       = datePicker.getYear() - 1900;
                     int iMonth      = datePicker.getMonth();
                     int iDayOfMonth = datePicker.getDayOfMonth();
-                    if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M /* 23 */ && (timePicker != null) ) {
+                    if ( timePicker != null ) {
                         matchDate = new Date(iYear, iMonth, iDayOfMonth, timePicker.getHour(), timePicker.getMinute());
                     } else {
                         matchDate = new Date(iYear, iMonth, iDayOfMonth);

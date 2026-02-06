@@ -112,14 +112,8 @@ public class ResultSender {
                 intent = new Intent(Intent.ACTION_SEND);
                 intent.putExtra(Intent.EXTRA_SUBJECT, sSubject);
                 if ( bHtmlEmailPossible && sMsg.indexOf("<") > 0 && sMsg.indexOf(">") > 0 ) {
-                    Spanned spanned;
+                    Spanned spanned = Html.fromHtml(sMsg, Html.FROM_HTML_MODE_COMPACT);
                     //sMsg = "<html><body><b>Iddo<b><i>Hoeve</i><a href='http://squore.double-yellow.be/'>link</a></body></html>";
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ) {
-                        spanned = Html.fromHtml(sMsg, Html.FROM_HTML_MODE_COMPACT);
-                    } else {
-                        spanned = Html.fromHtml(sMsg);
-                        // deprecated
-                    }
                     switch (m_iRoundRobin) {
                         case 0:
                             intent.setType("text/html"); // must send spanned element, not String

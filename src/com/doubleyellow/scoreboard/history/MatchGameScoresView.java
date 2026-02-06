@@ -844,10 +844,8 @@ public class MatchGameScoresView extends LinearLayout
             bgColorLoser  = attrs.getAttributeResourceValue(APPLICATION_NS, "bgColorLoser" , bgColorLoser);
             bgColorWinner = attrs.getAttributeResourceValue(APPLICATION_NS, "bgColorWinner", bgColorWinner);
 
-            if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M /* 23 */ ) {
-                bgColorLoser  = getResources().getColor(bgColorLoser, null);
-                bgColorWinner = getResources().getColor(bgColorWinner, null);
-            }
+            bgColorLoser  = getResources().getColor(bgColorLoser, null);
+            bgColorWinner = getResources().getColor(bgColorWinner, null);
         } catch (Throwable e) {
         }
     }

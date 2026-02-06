@@ -17,23 +17,32 @@
 
 package com.doubleyellow.scoreboard.dialog;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import com.doubleyellow.android.view.ViewUtil;
+import android.webkit.WebView;
+
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.android.view.MarkDownView;
+import com.doubleyellow.scoreboard.URLFeedTask;
 
 public abstract class BaseMessageDialog extends BaseAlertDialog
 {
+    private final String TAG = BaseMessageDialog.class.getSimpleName();
+
     protected int m_mdWebViewResId = 0;
     protected int m_iMessageId     = 0;
     protected String m_sTitle      = null;
     protected String m_sMessage    = null;
+    protected boolean m_bIsAlert   = false;
 
-    public BaseMessageDialog(Context context) {
+    public BaseMessageDialog(Context context, boolean bIsAlert) {
         super(context, null, null);
+        m_bIsAlert = bIsAlert;
+    }
+    public BaseMessageDialog(Context context) {
+        this(context, false);
     }
 
     @Override public boolean storeState(Bundle outState) {
@@ -55,20 +64,36 @@ public abstract class BaseMessageDialog extends BaseAlertDialog
         if ( view != null ) {
             adb.setView(view);
         }
-        if ( m_sMessage != null ) {
-            adb.setMessage(m_sMessage);
-        }
         if ( m_iMessageId != 0 ) {
             adb.setMessage(m_iMessageId);
         }
+        if ( m_sMessage != null && m_sMessage.trim().toLowerCase().endsWith("html>") ) {
+            try {
+                WebView wv = new WebView(context); // seen this crash because of unclear reasons on android5
+                //wv.loadData(sMsg, "text/html; charset=utf-8", "UTF-8"); // css not displayed
+                //wv.loadData(sMsg, "text/html", "UTF-8"); // css not displayed
+                wv.loadDataWithBaseURL(URLFeedTask.prefixWithBaseIfRequired("/"), m_sMessage, "text/html; charset=utf-8", "UTF-8", null); // allows css
+                adb.setView(wv);
+            } catch (Exception e) {
+                Log.w(TAG, "Could not initialize webview");
+                adb.setMessage(m_sMessage);
+            }
+        } else {
+            adb.setMessage(m_sMessage);
+        }
+
+        adb.setIcon(m_bIsAlert? android.R.drawable.ic_dialog_alert: android.R.drawable.ic_dialog_info);
+
         dialog = adb
                 .setTitle(m_sTitle)
                 .setPositiveButton(R.string.cmd_ok, null)
                 .show();
 
+/*
         Object oDialog = dialog;
         if ( oDialog instanceof android.app.AlertDialog ) {
             ViewUtil.setPackageIcon(context, (AlertDialog) oDialog);
         }
+*/
     }
 }

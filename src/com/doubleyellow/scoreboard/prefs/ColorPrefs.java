@@ -769,10 +769,8 @@ public class ColorPrefs
                                         mTarget2Color.get(ColorTarget.playerButtonBackgroundColor)
                                 }
                         );
-                        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP /* 21 */ ) {
-                            aSwitch.getThumbDrawable().setTintList(buttonStates);
-                            aSwitch.getTrackDrawable().setTintList(buttonStates);
-                        }
+                        aSwitch.getThumbDrawable().setTintList(buttonStates);
+                        aSwitch.getTrackDrawable().setTintList(buttonStates);
 /*
                         aSwitch.setSwitchTextAppearance();
                         aSwitch.setTextAppearance();

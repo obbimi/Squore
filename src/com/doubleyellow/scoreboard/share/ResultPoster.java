@@ -24,6 +24,7 @@ import android.util.Log;
 
 import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.feed.Authentication;
+import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.EndMatchManuallyBecause;
 import com.doubleyellow.scoreboard.model.JSONKey;
@@ -286,7 +287,14 @@ public class ResultPoster implements ContentReceiver
         }
 
         scoreBoard.hideProgress();
-        MyDialogBuilder.dialogWithOkOnly(scoreBoard, sTitle, sMessage, bResultOK==false);
+
+        if ( false ) {
+            // display optional html in result
+            MyDialogBuilder.dialogWithOkOnly(scoreBoard, sTitle, sMessage, bResultOK==false);
+        } else {
+            DialogManager dialogManager = DialogManager.getInstance();
+            dialogManager.showMessageDialog(scoreBoard, sTitle, sMessage, bResultOK==false);
+        }
 /*
         if ( result.equals(FetchResult.OK) ) {
             if ( sContent.contains("demo.post.") ) {

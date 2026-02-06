@@ -356,16 +356,11 @@ class ShowTypesAdapter extends BaseAdapter implements ContentReceiver
             {
                 Resources res    = context.getResources();
                 Configuration resCfg = res.getConfiguration();
-                if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.N /* 24 */ ) {
-                    LocaleList locales = resCfg.getLocales();
-                    if ( locales.isEmpty() == false ) {
-                        for(int i=0; i<locales.size();i++) {
-                            lLocales.add(locales.get(i));
-                        }
+                LocaleList locales = resCfg.getLocales();
+                if ( locales.isEmpty() == false ) {
+                    for(int i=0; i<locales.size();i++) {
+                        lLocales.add(locales.get(i));
                     }
-                } else {
-                    Locale deviceLocale = RWValues.getDeviceLocale(context);
-                    lLocales.add(deviceLocale);
                 }
             }
             if ( ListUtil.isNotEmpty(lLocales) ) {

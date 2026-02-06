@@ -48,8 +48,11 @@ public class DialogManager {
     public IBaseAlertDialog baseDialog  = null;
     private final List<IBaseAlertDialog> baseDialogs = new ArrayList<>();
 
-    public void showMessageDialog(Context context, String sTitle, String sMessage) {
-        GenericMessageDialog dialog = new GenericMessageDialog(context);
+    public void showMessageDialog(Context context, String sTitle, String sMessage, boolean bIsAlert) {
+        GenericMessageDialog dialog = new GenericMessageDialog(context, bIsAlert);
+        if ( sTitle == null  ) {
+            sTitle = "";
+        }
         dialog.init(sTitle, sMessage);
         addToDialogStack(dialog);
     }

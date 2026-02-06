@@ -173,7 +173,7 @@ public class MatchModelPoster implements ContentReceiver
                 String sTitle = "Sharing failed";
                 String sMess  = String.format("Something went wrong while preparing link for sharing. Sorry. Please try again later. (%s)", result);
                 DialogManager dialogManager = DialogManager.getInstance();
-                dialogManager.showMessageDialog(m_context, sTitle, sMess);
+                dialogManager.showMessageDialog(m_context, sTitle, sMess, true);
 /*
                 if ( m_context instanceof ScoreBoard ) {
                     ScoreBoard scoreBoard = (ScoreBoard) m_context;
@@ -199,7 +199,7 @@ public class MatchModelPoster implements ContentReceiver
                 if ( (m_model.getMaxScore() + m_model.getMinScore()) % 5 == 0  ) {
                     if ( m_context instanceof ScoreBoard ) {
                         ScoreBoard sb = (ScoreBoard) m_context;
-                        sb.showInfoMessage(R.string.sb_online_sheet_updated, 5);
+                        sb.showInfoMessage(R.string.sb_online_sheet_updated, Math.max(5 / Timer.iSpeedUpFactor, 1));
                     } else {
                         Toast.makeText(m_context, R.string.sb_online_sheet_updated, Toast.LENGTH_SHORT).show();
                     }

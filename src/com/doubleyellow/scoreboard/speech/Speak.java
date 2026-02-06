@@ -650,15 +650,10 @@ public class Speak
     private int m_iErrorCount = 0;
     private void speak(String sText, SpeechType type) {
         try {
-            if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP /* 21 */ ) {
-                Bundle bundle = new Bundle();
-                bundle.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 1.0f); // between 0 and 1
-                bundle.putFloat(TextToSpeech.Engine.KEY_PARAM_PAN   , 0.0f); // between -1 and 1
-                m_textToSpeech.speak(sText, TextToSpeech.QUEUE_ADD, bundle, type.toString());
-
-            } else {
-                m_textToSpeech.speak(sText, TextToSpeech.QUEUE_ADD, null);
-            }
+            Bundle bundle = new Bundle();
+            bundle.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 1.0f); // between 0 and 1
+            bundle.putFloat(TextToSpeech.Engine.KEY_PARAM_PAN   , 0.0f); // between -1 and 1
+            m_textToSpeech.speak(sText, TextToSpeech.QUEUE_ADD, bundle, type.toString());
             m_iErrorCount = 0;
         } catch (Exception e) {
             e.printStackTrace();

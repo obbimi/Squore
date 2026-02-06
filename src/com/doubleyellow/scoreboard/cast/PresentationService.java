@@ -36,7 +36,6 @@ import java.util.Map;
  * Used by Squash and Racketlon version.
  * Badminton and Tabletennis use new way of casting
  */
-@TargetApi(Build.VERSION_CODES.KITKAT)
 public class PresentationService extends CastRemoteDisplayLocalService
 {
     private static final String TAG = "SB.PresentationService";
