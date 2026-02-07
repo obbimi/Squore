@@ -116,5 +116,6 @@ public enum JSONKey {
 
 	Message,
 	Duration,
+	Force,
 }
 

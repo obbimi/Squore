@@ -42,6 +42,9 @@ import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.feed.FeedFeedSelector;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
+import com.doubleyellow.scoreboard.mqtt.MQTTAction;
+import com.doubleyellow.scoreboard.mqtt.MQTTHandler;
+import com.doubleyellow.scoreboard.mqtt.MQTTRemoteActionReceiver;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.NewMatchLayout;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
@@ -62,7 +65,7 @@ import java.util.*;
  * - enter a singles match manually
  * - enter a doubles match manually
  */
-public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMessageCallback,*/ MenuHandler, FeedMatchSelector.FeedStatusChangedListener {
+public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMessageCallback,*/ MenuHandler, FeedMatchSelector.FeedStatusChangedListener, MQTTRemoteActionReceiver {
 
     private static final String TAG = "SB." + MatchTabbed.class.getSimpleName();
 
@@ -472,6 +475,7 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
 
     @Override protected void onStop() {
         super.onStop();
+        MQTTHandler.removeActionReceiver(this);
         try {
             persist(this);
         } catch (Exception e) {
@@ -577,6 +581,8 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
         //registerNfc();
 
         ScoreBoard.updateDemoThread(this);
+
+        MQTTHandler.addActionReceiver(this);
     }
 
 /*
@@ -747,4 +753,22 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
         }
     }
 
+    @Override public void interpretMQTTReceivedMessage(String readMessage, MQTTAction mqttAction, String sTopic) {
+        switch (mqttAction) {
+            case newMatch:
+            case newMatch_Force:
+                Object oErrorMsg = MQTTHandler.acceptAction(mqttAction, readMessage);
+                if ( oErrorMsg instanceof String == false ) {
+                    //this.finish();
+                    runOnUiThread(this::finish);
+                }
+                break;
+            case message:
+                break;
+        }
+    }
+
+    @Override public void updateMQTTConnectionStatus(int visibility, int nrOfWhat) {
+        //Log.d(TAG, "Nothing here");
+    }
 }

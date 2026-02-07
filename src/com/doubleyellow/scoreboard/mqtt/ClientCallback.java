@@ -54,7 +54,7 @@ class ClientCallback implements MqttCallback
         String msg = String.format("MQTT Received: %s [%s]", message.toString(), topic );
         //Log.d(TAG, msg);
 
-        final String sThisDeviceId = PreferenceValues.getLiveScoreDeviceId(m_handler.m_context);
+        final String sThisDeviceId = PreferenceValues.getLiveScoreDeviceId(m_handler.m_scoreboard);
         MQTTAction mqttAction = null;
         final String sPayload = new String(message.getPayload());
 
@@ -65,6 +65,9 @@ class ClientCallback implements MqttCallback
                 JSONObject joPayload = new JSONObject(sPayload);
                 if ( joPayload.has(JSONKey.players.toString()) ) {
                     mqttAction = MQTTAction.newMatch;
+                    if ( joPayload.optBoolean(JSONKey.Force.toString(), false) ) {
+                        mqttAction = MQTTAction.newMatch_Force;
+                    }
                 } else if ( joPayload.has(JSONKey.Message.toString()) ) {
                     mqttAction = MQTTAction.message;
                 }
@@ -77,7 +80,7 @@ class ClientCallback implements MqttCallback
 
         if ( mqttAction == null && topic.matches(".*\\b" + sThisDeviceId + "\\b.*") ) {
             // show but ignore for further processing, messages published by this device itself
-            m_handler.m_context.showInfoMessageOnUiThread(msg, 1);
+            m_handler.m_scoreboard.showInfoMessageOnUiThread(msg, 1);
         } else {
             m_handler.updateStats(topic, "receive");
 
@@ -89,7 +92,7 @@ class ClientCallback implements MqttCallback
                     m_iDuplicateCount++;
                     Log.w(TAG, String.format("IGNORE MQTT duplicate(%d): %s", m_iDuplicateCount, sPayload));
                     if ( m_iDuplicateCount < 16 ) {
-                        m_handler.m_context.showInfoMessageOnUiThread("IGNORE MQTT duplicate: " + sPayload, 2);
+                        m_handler.m_scoreboard.showInfoMessageOnUiThread("IGNORE MQTT duplicate: " + sPayload, 2);
                     }
                     return;
                 }
@@ -102,7 +105,7 @@ class ClientCallback implements MqttCallback
 
                 if ( sMethod.matches("(" + MQTTHandler.JoinerLeaver.join + "|" + MQTTHandler.JoinerLeaver.thanksForJoining +")" ) ) {
                     if ( sFromDevice.equals(m_handler.m_thisDeviceId) ) { return; }
-                    if ( m_handler.m_context.updateJoinedDevices(sFromDevice, true) ) {
+                    if ( m_handler.m_scoreboard.updateJoinedDevices(sFromDevice, true) ) {
                         if ( sMethod.equals(MQTTHandler.JoinerLeaver.join.toString() ) ) {
                             // let new joiner know we joined in the past
                             m_handler.publish(m_handler.m_joinerLeaverTopic, MQTTHandler.JoinerLeaver.thanksForJoining  + "(" + m_handler.m_thisDeviceId + "," + sFromDevice + ")", false);
@@ -113,13 +116,13 @@ class ClientCallback implements MqttCallback
                         }
                     }
                 } else if ( sPayload.startsWith(MQTTHandler.JoinerLeaver.leave.toString()) ) {
-                    m_handler.m_context.updateJoinedDevices(sFromDevice, false);
+                    m_handler.m_scoreboard.updateJoinedDevices(sFromDevice, false);
                 }
                 return;
             }
 
             m_MQTTmessageReceived.put(sPayload, lNow);
-            m_handler.m_context.interpretReceivedMessageOnUiThread(sPayload, mqttAction, topic);
+            m_handler.interpretReceivedMessageOnUiThread(sPayload, mqttAction, topic);
         }
     }
 
@@ -134,7 +137,7 @@ class ClientCallback implements MqttCallback
             if ( cause.getCause() != null ) {
                 cause = cause.getCause();
             }
-            m_handler.m_context.doDelayedMQTTReconnect(String.format("W: MQTT tcp to broker %s lost: %s.", m_handler.m_sBrokerUrl, cause), 10, 1, MQTTStatus.RetryConnection);
+            m_handler.m_scoreboard.doDelayedMQTTReconnect(String.format("W: MQTT tcp to broker %s lost: %s.", m_handler.m_sBrokerUrl, cause), 10, 1, MQTTStatus.RetryConnection);
         }
     }
     @Override public void deliveryComplete(IMqttDeliveryToken token) {

@@ -56,7 +56,8 @@
 
         <menu>
             <item android:id="@+id/sb_ble_devices"           app:showAsAction="never" android:icon="@android:drawable/stat_sys_data_bluetooth" android:title="@string/pref_BluetoothLE_Devices" android:visible="false" />
-            <item android:id="@+id/sb_match_emulator"        app:showAsAction="never" android:icon="@drawable/ic_action_chart_line"            android:title="Start emulate scoring of match" android:visible="false" />
+            <item android:id="@+id/sb_match_emulator_start"  app:showAsAction="never" android:icon="@drawable/ic_action_chart_line"            android:title="Start emulate scoring of match" android:visible="false" />
+            <item android:id="@+id/sb_match_emulator_stop"   app:showAsAction="never" android:icon="@drawable/ic_action_chart_line"            android:title="Stop emulation" android:visible="false" />
             <item
                     android:id="@+id/uc_new"
                     android:icon="@drawable/circled_plus"

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025  Iddo Hoeve
+ * Copyright (C) 2026  Iddo Hoeve
  *
  * Squore is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,7 @@
  */
 package com.doubleyellow.scoreboard.mqtt;
 
-public enum MQTTAction {
-    /** start a new match on a target device */
-    newMatch,
-    /** start a new match on a target device, ignore status of current match */
-    newMatch_Force,
-    /** inform a referee with a message. E.g. wrong match selected */
-    message,
+public interface MQTTRemoteActionReceiver {
+    void interpretMQTTReceivedMessage(String readMessage, MQTTAction mqttAction, String sTopic);
+    void updateMQTTConnectionStatus(int visibility, int nrOfWhat);
 }

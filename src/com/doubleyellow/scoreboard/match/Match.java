@@ -34,6 +34,9 @@ import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
 import com.doubleyellow.scoreboard.model.ModelFactory;
 import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.mqtt.MQTTAction;
+import com.doubleyellow.scoreboard.mqtt.MQTTHandler;
+import com.doubleyellow.scoreboard.mqtt.MQTTRemoteActionReceiver;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.NewMatchLayout;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
@@ -60,7 +63,7 @@ import java.io.Serializable;
  *
  * Uses the MatchView view.
  */
-public class Match extends XActivity implements MenuHandler
+public class Match extends XActivity implements MenuHandler, MQTTRemoteActionReceiver
 {
     private static boolean m_bShowAfterMatchSelection = true;
     public static boolean showAfterMatchSelection() {
@@ -174,6 +177,7 @@ public class Match extends XActivity implements MenuHandler
         }
         vMatchView.initPlayerColors();
         ScoreBoard.updateDemoThread(this);
+        MQTTHandler.addActionReceiver(this);
     }
 
     public boolean handleMenuItem(int menuItemId, Object... ctx) {
@@ -273,5 +277,29 @@ public class Match extends XActivity implements MenuHandler
                     .setNeutralButton (iResIdCancel    , listener)
                     .show();
         }
+    }
+
+    @Override public void interpretMQTTReceivedMessage(String readMessage, MQTTAction mqttAction, String sTopic) {
+        switch (mqttAction) {
+            case newMatch:
+            case newMatch_Force:
+                Object oErrorMsg = MQTTHandler.acceptAction(mqttAction, readMessage);
+                if ( oErrorMsg instanceof String == false ) {
+                    //this.finish();
+                    runOnUiThread(this::finish);
+                }
+                break;
+            case message:
+                break;
+        }
+    }
+
+    @Override public void updateMQTTConnectionStatus(int visibility, int nrOfWhat) {
+        //Log.d(TAG, "Nothing here");
+    }
+
+    @Override protected void onStop() {
+        super.onStop();
+        MQTTHandler.removeActionReceiver(this);
     }
 }

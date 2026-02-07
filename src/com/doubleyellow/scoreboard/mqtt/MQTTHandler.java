@@ -28,6 +28,7 @@ import com.doubleyellow.scoreboard.dialog.MyDialogBuilder;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.JSONKey;
 import com.doubleyellow.scoreboard.model.Model;
+import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.util.BatteryInfo;
@@ -45,6 +46,7 @@ import info.mqtt.android.service.MqttTraceHandler;
 
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -86,7 +88,7 @@ public class MQTTHandler
     private final MQTTActionListener defaultCbUnSubscribe;
     private final ConnectCallback    connectCallback     ;
     private final SubscribeCallback  defaultSubscribe    ;
-                  ScoreBoard m_context    = null;
+                  ScoreBoard m_scoreboard = null;
                   IBoard     m_iBoard     = null;
             final String     m_sBrokerUrl;
 
@@ -110,7 +112,7 @@ public class MQTTHandler
     private MQTTRole   m_role   = null;
 
     public void reinit(ScoreBoard context, IBoard iBoard, MQTTStatus status) {
-        m_context = context;
+        m_scoreboard = context;
         m_iBoard  = iBoard;
         m_status  = status;
         deriveRoleFromSettings(context);
@@ -118,12 +120,16 @@ public class MQTTHandler
         defaultCbPublish    .reinit(context);
         defaultCbDisconnect .reinit(context);
         defaultCbUnSubscribe.reinit(context);
+
+        addActionReceiver(context);
     }
 
     public MQTTHandler(ScoreBoard context, IBoard iBoard, String serverURI, MQTTStatus status) {
-        m_context = context;
-        m_iBoard  = iBoard;
-        m_status  = status;
+        m_scoreboard = context;
+        m_iBoard     = iBoard;
+        m_status     = status;
+
+        addActionReceiver(context);
 
         // the library we use does not like 'mqtt://' urls without a port. Convert it to a tcp:// version
         if ( serverURI.startsWith("mqtt") ) {
@@ -142,7 +148,7 @@ public class MQTTHandler
 
         deriveRoleFromSettings(context);
 
-        m_iPublishDeviceInfoEveryXSeconds = PreferenceValues.mqttPublishDeviceInfoEveryXSeconds(m_context);
+        m_iPublishDeviceInfoEveryXSeconds = PreferenceValues.mqttPublishDeviceInfoEveryXSeconds(m_scoreboard);
 
         String clientID = /*Brand.getShortName(context) + "." +*/ m_thisDeviceId;
         m_joinerLeaverTopic = doMQTTTopicTranslation(PreferenceValues.getMQTTPublishJoinerLeaverTopic(context), null) ;
@@ -201,7 +207,7 @@ public class MQTTHandler
             mqttClient.setCallback(callback); // pass on published messages to a topic this device is subscribed to, to this callback
             Log.d(TAG, "Connected");
 
-            m_context.updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 1);
+            updateMQTTConnectionStatus(View.VISIBLE, 1);
             Log.d(TAG, "Connected made visible to user in icon");
 
             if ( StringUtil.isNotEmpty(m_joinerLeaverTopic) ) {
@@ -243,9 +249,9 @@ public class MQTTHandler
                         publishOnMQTT(BTMethods.requestCompleteJsonOfMatch, m_otherDeviceId);
                     }
                 } else {
-                    m_context.showInfoMessageOnUiThread(m_context.getString(R.string.sb_MQTT_Connected_to_x, m_sBrokerUrl), 10);
+                    m_scoreboard.showInfoMessageOnUiThread(m_scoreboard.getString(R.string.sb_MQTT_Connected_to_x, m_sBrokerUrl), 10);
                 }
-                if ( m_context.m_liveScoreShare ) {
+                if ( m_scoreboard.m_liveScoreShare ) {
                     publishMatchOnMQTT(ScoreBoard.getMatchModel(), false, null);
                 }
             }
@@ -259,18 +265,18 @@ public class MQTTHandler
             }
             Log.w(TAG, "onFailure " + sException + " " + this);
 
-            String sMsg = m_context.getString(R.string.sb_MQTT_Connection_to_x_failed_y, m_sBrokerUrl, sException);
+            String sMsg = m_scoreboard.getString(R.string.sb_MQTT_Connection_to_x_failed_y, m_sBrokerUrl, sException);
             stop();
 
             if ( m_iReconnectAttempts < 10 ) {
-                if ( m_context.doDelayedMQTTReconnect(sMsg,11, m_iReconnectAttempts, MQTTStatus.RetryConnection)  ) {
+                if ( m_scoreboard.doDelayedMQTTReconnect(sMsg,11, m_iReconnectAttempts, MQTTStatus.RetryConnection)  ) {
                     m_iReconnectAttempts++;
                 }
             } else {
                 PreferenceValues.setOverwrite(PreferenceKeys.UseMQTT, false);
-                m_context.stopMQTT();
-                m_context.updateMQTTConnectionStatusIconOnUiThread(View.INVISIBLE, -1);
-                m_context.showInfoMessageOnUiThread(m_context.getString(R.string.sb_MQTT_TurnedOff_ToManyFailedReconnectAttempts), 10);
+                m_scoreboard.stopMQTT();
+                updateMQTTConnectionStatus(View.INVISIBLE, -1);
+                m_scoreboard.showInfoMessageOnUiThread(m_scoreboard.getString(R.string.sb_MQTT_TurnedOff_ToManyFailedReconnectAttempts), 10);
             }
         }
 
@@ -286,7 +292,7 @@ public class MQTTHandler
     }
 
     public void stop() {
-        m_context.updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 0);
+        updateMQTTConnectionStatus(View.VISIBLE, 0);
         if ( isConnected() ) {
             publish(m_joinerLeaverTopic, JoinerLeaver.leave + "(" + m_thisDeviceId + ")", false);
             //unsubscribe("#");
@@ -339,9 +345,9 @@ public class MQTTHandler
         long lNow = System.currentTimeMillis();
         if ( lNow - lBatteryStatusLastSend > m_iPublishDeviceInfoEveryXSeconds * 1000L ) {
             lBatteryStatusLastSend = lNow;
-            Map<String, Object> info = BatteryInfo.getInfo(m_context);
+            Map<String, Object> info = BatteryInfo.getInfo(m_scoreboard);
             if  ( MapUtil.isNotEmpty(info) ) {
-                String sTopicPH = PreferenceValues.getMQTTPublishTopicDeviceInfo(m_context);
+                String sTopicPH = PreferenceValues.getMQTTPublishTopicDeviceInfo(m_scoreboard);
                 String sTopic = doMQTTTopicTranslation(sTopicPH, m_thisDeviceId);
                 info.put(JSONKey.device.toString(), m_thisDeviceId);
                 publish(sTopic, (new JSONObject(info)).toString(), false);
@@ -382,7 +388,7 @@ public class MQTTHandler
             PreferenceValues.removeOverwrites(ScoreBoard.mBtPrefSlaveSettings.keySet());
         }
         m_role = role;
-        m_context.showInfoMessageOnUiThread("MQTT role " + m_MQTTRole, 2);
+        m_scoreboard.showInfoMessageOnUiThread("MQTT role " + m_MQTTRole, 2);
     }
 */
 
@@ -391,7 +397,7 @@ public class MQTTHandler
     }
 
     private String getMQTTSubscribeTopic_Change(String sMethod) {
-        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic_Change(m_context);
+        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic_Change(m_scoreboard);
         String sSubTopic = "";
 
         String sDevice = null;
@@ -410,7 +416,7 @@ public class MQTTHandler
     }
 
     public String getMQTTSubscribeTopic_remoteControl() {
-        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic_remoteControl(m_context);
+        String sPlaceholder = PreferenceValues.getMQTTSubscribeTopic_remoteControl(m_scoreboard);
 
         return doMQTTTopicTranslation(sPlaceholder, m_thisDeviceId);
     }
@@ -435,7 +441,7 @@ public class MQTTHandler
         }
 
         StringBuilder sb = new StringBuilder();
-        m_context.addMethodAndArgs(sb, method, args);
+        m_scoreboard.addMethodAndArgs(sb, method, args);
         final String sMessage = sb.toString();
 
         //Log.d(TAG, "About to write BT message " + sMessage.trim());
@@ -448,7 +454,7 @@ public class MQTTHandler
     }
 
     public void publishUnloadMatchOnMQTT(Model matchModel) {
-        String sJson = matchModel.toJsonString(m_context);
+        String sJson = matchModel.toJsonString(m_scoreboard);
         String matchTopic = getMQTTPublishTopicUnloadMatch();
         publish(matchTopic, sJson, true);
     }
@@ -461,9 +467,9 @@ public class MQTTHandler
             Log.d(TAG, "Not publishing match as slave : " + bPrefixWithJsonLength + " " + oTimerInfo);
             return m_role;
         }
-        List<String> lSkipKeys = bPrefixWithJsonLength ? null : PreferenceValues.getMQTTSkipJsonKeys(m_context);
+        List<String> lSkipKeys = bPrefixWithJsonLength ? null : PreferenceValues.getMQTTSkipJsonKeys(m_scoreboard);
         String matchTopic = getMQTTPublishTopicMatch();
-        String sJson = matchModel.toJsonString(m_context, null, oTimerInfo, lSkipKeys);
+        String sJson = matchModel.toJsonString(m_scoreboard, null, oTimerInfo, lSkipKeys);
         if ( bPrefixWithJsonLength ) {
             // typically so the published data is the same as for bluetooth mirror messages
             sJson = sJson.length() + ":" + sJson;
@@ -477,14 +483,14 @@ public class MQTTHandler
     }
 
     private String getMQTTPublishTopicMatch() {
-        String sPlaceholder = PreferenceValues.getMQTTPublishTopicMatch(m_context);
+        String sPlaceholder = PreferenceValues.getMQTTPublishTopicMatch(m_scoreboard);
 
         String sDevice = m_thisDeviceId;
         String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
         return sValue;
     }
     private String getMQTTPublishTopicUnloadMatch() {
-        String sPlaceholder = PreferenceValues.getMQTTPublishTopicUnloadMatch(m_context);
+        String sPlaceholder = PreferenceValues.getMQTTPublishTopicUnloadMatch(m_scoreboard);
 
         String sDevice = m_thisDeviceId;
         String sValue = doMQTTTopicTranslation(sPlaceholder, sDevice);
@@ -492,7 +498,7 @@ public class MQTTHandler
     }
 
     private String getMQTTPublishTopicChange(boolean bUseOtherDeviceId) {
-        String sPlaceholder = PreferenceValues.getMQTTPublishTopicChange(m_context);
+        String sPlaceholder = PreferenceValues.getMQTTPublishTopicChange(m_scoreboard);
 
         String sDevice = m_thisDeviceId;
         if ( bUseOtherDeviceId ) {
@@ -509,14 +515,14 @@ public class MQTTHandler
         }
         String sEvent = "";
         if ( sPlaceholder.contains("${" + TopicPlaceholder.FeedName + "}") ) {
-            sEvent = PreferenceValues.getMatchesFeedName(m_context);
+            sEvent = PreferenceValues.getMatchesFeedName(m_scoreboard);
             if ( StringUtil.isNotEmpty(sEvent) ) {
                 sEvent = sEvent.replaceAll("[^0-9A-Za-z_-]", "");
             }
         }
 
         Map mValues = MapUtil.getMap
-                ("Brand", Brand.getShortName(m_context)
+                ("Brand", Brand.getShortName(m_scoreboard)
                 , TopicPlaceholder.DeviceId.toString(), sDeviceId
                 , TopicPlaceholder.FeedName.toString(), sEvent
                 );
@@ -529,15 +535,94 @@ public class MQTTHandler
     }
     private static final String MQTT_TOPIC_CONCAT_CHAR = "_";
 
+    private final static Map<String, MQTTRemoteActionReceiver> m_actionReceivers = new HashMap<>();
+    public static void addActionReceiver(MQTTRemoteActionReceiver actionReceiver) {
+        m_actionReceivers.put(actionReceiver.getClass().getSimpleName(), actionReceiver);
+    }
+    public static void removeActionReceiver(MQTTRemoteActionReceiver actionReceiver) {
+        m_actionReceivers.remove(actionReceiver.getClass().getSimpleName());
+    }
+    public void interpretReceivedMessageOnUiThread(String readMessage, MQTTAction mqttAction, String sTopic) {
+        for(MQTTRemoteActionReceiver actionReceiver:m_actionReceivers.values()) {
+            actionReceiver.interpretMQTTReceivedMessage(readMessage, mqttAction, sTopic);
+        }
+    }
+    private void updateMQTTConnectionStatus(int visibility, int nrOfWhat) {
+        for(MQTTRemoteActionReceiver actionReceiver:m_actionReceivers.values()) {
+            actionReceiver.updateMQTTConnectionStatus(visibility, nrOfWhat);
+        }
+    }
+
+    /** returns a string message if NOT accepted, a JSONObject if accepted */
+    public static Object acceptAction(MQTTAction mqttAction, String message) {
+        if ( mqttAction.equals(MQTTAction.message) ) {
+            JSONObject joMessage = null;
+            try {
+                joMessage = new JSONObject(message);
+                if ( joMessage.has(JSONKey.Message.toString()) == false ) {
+                    return String.format("To send a message your JSON should at least have a key %1$s. Optionally also a key %2$s", JSONKey.Message.toString(), JSONKey.Duration.toString());
+                }
+            } catch (JSONException e) {
+                return e.getMessage();
+            }
+            return joMessage;
+        }
+        boolean bCheckMessageIsValidMatch = false;
+        if ( mqttAction.equals(MQTTAction.newMatch_Force) ) {
+            bCheckMessageIsValidMatch = true;
+        }
+        if ( mqttAction.equals(MQTTAction.newMatch) ) {
+            bCheckMessageIsValidMatch = true;
+            Model matchModel = ScoreBoard.getMatchModel();
+            boolean bMatchInProgress = matchModel != null && (matchModel.hasStarted()) && (matchModel.matchHasEnded() == false);
+            if ( bMatchInProgress ) {
+                return "Match in progress: " + matchModel.getName(Player.A) + "-" + matchModel.getName(Player.B) + ". "
+                     + "Current score: " + matchModel.getGameScores() + ". "
+                     + "Started: " + matchModel.getMatchStartTimeHH_Colon_MM();
+            }
+        }
+        if ( bCheckMessageIsValidMatch ) {
+            try {
+                JSONObject joMatch = new JSONObject(message);
+
+                boolean bInvalid = false;
+
+                // check if most important key exists
+                if ( joMatch.has(JSONKey.players.toString()) ) {
+                    JSONObject joPlayers = joMatch.getJSONObject(JSONKey.players.toString());
+                    if ( joPlayers.has(Player.A.toString()) && joPlayers.has(Player.B.toString()) ) {
+
+                    } else {
+                        bInvalid = true;
+                    }
+                } else {
+                    bInvalid = true;
+                }
+                if ( bInvalid ) {
+                    return String.format("JSON of %1$s must at least specify '%2$s', "
+                                    + "optionally also '%3$s', '%4$s' and '%5$s', all with subkeys A and B. Additionally allowed: 'court', 'event.(name|division|round|location)'  "
+                            , mqttAction
+                            , JSONKey.players
+                            , JSONKey.clubs, JSONKey.colors, JSONKey.countries);
+                }
+
+                return joMatch;
+            } catch (JSONException e) {
+                return e.getMessage();
+            }
+        }
+        return null;
+    }
+
     private class SubscribeCallback implements IMqttActionListener
     {
         Map<String,String> m_mOnSubscribeSuccessPublish = new HashMap<>();
 
         @Override public void onSuccess(IMqttToken token) {
             String[] topics = token.getTopics();
-            String sMsg = m_context.getString(R.string.sb_MQTT_Subscribed_to_x, shorten(topics));
-            m_context.showInfoMessageOnUiThread(sMsg, 10);
-            m_context.updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 1);
+            String sMsg = m_scoreboard.getString(R.string.sb_MQTT_Subscribed_to_x, shorten(topics));
+            m_scoreboard.showInfoMessageOnUiThread(sMsg, 10);
+            updateMQTTConnectionStatus(View.VISIBLE, 1);
             for (int i = 0; i < topics.length; i++) {
                 String topic = topics[i];
                 m_lSubscriptions.put(topic, System.currentTimeMillis());
@@ -549,8 +634,8 @@ public class MQTTHandler
         }
 
         @Override public void onFailure(IMqttToken token, Throwable exception) {
-            String sMsg = m_context.getString(R.string.sb_MQTT_Subscription_to_x_failed_y, shorten(token.getTopics()), exception.toString());
-            MyDialogBuilder.dialogWithOkOnly(m_context, m_context.getString(R.string.pref_Category_MQTT) , sMsg, true);
+            String sMsg = m_scoreboard.getString(R.string.sb_MQTT_Subscription_to_x_failed_y, shorten(token.getTopics()), exception.toString());
+            MyDialogBuilder.dialogWithOkOnly(m_scoreboard, m_scoreboard.getString(R.string.pref_Category_MQTT) , sMsg, true);
         }
     }
 
@@ -558,6 +643,6 @@ public class MQTTHandler
         return shorten(new String[] { s });
     }
     private String shorten(String [] sa) {
-        return Arrays.toString(sa).replaceAll("[\\[\\]]", "").replaceAll("double-yellow/" + Brand.getShortName(m_context), "");
+        return Arrays.toString(sa).replaceAll("[\\[\\]]", "").replaceAll("double-yellow/" + Brand.getShortName(m_scoreboard), "");
     }
 }

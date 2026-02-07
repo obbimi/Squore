@@ -96,6 +96,7 @@ import com.doubleyellow.scoreboard.mqtt.JoinedDevicesListener;
 import com.doubleyellow.scoreboard.mqtt.MQTTAction;
 import com.doubleyellow.scoreboard.mqtt.MQTTHandler;
 import com.doubleyellow.scoreboard.mqtt.MQTTRole;
+import com.doubleyellow.scoreboard.mqtt.MQTTRemoteActionReceiver;
 import com.doubleyellow.scoreboard.mqtt.MQTTStatus;
 import com.doubleyellow.scoreboard.mqtt.MQTTStatusDialog;
 import com.doubleyellow.scoreboard.mqtt.SelectMQTTDeviceDialog;
@@ -141,7 +142,7 @@ import androidx.wear.input.WearableButtons; // requires api >= 25
 /**
  * The main Activity of the scoreboard app.
  */
-public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback,*/ MenuHandler, DrawTouch
+public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback,*/ MenuHandler, DrawTouch, MQTTRemoteActionReceiver
 {
     private static final String TAG = "SB." + ScoreBoard.class.getSimpleName();
 
@@ -3099,7 +3100,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
 
         boolean bShowEmulatorMenuItem = PreferenceValues.isInEmulationMode();
-        setMenuItemVisibility(R.id.sb_match_emulator, bShowEmulatorMenuItem);
+        setMenuItemVisibility(R.id.sb_match_emulator_start, bShowEmulatorMenuItem && m_mode.equals(Mode.FeedMatchesScoringEmulator) == false);
+        setMenuItemVisibility(R.id.sb_match_emulator_stop , bShowEmulatorMenuItem && m_mode.equals(Mode.FeedMatchesScoringEmulator) == true);
 
 /*
         if ( MenuDrawerAdapter.m_bHideDrawerItemsFromOldMenu && (MenuDrawerAdapter.id2String.isEmpty() == false) ) {
@@ -3729,12 +3731,19 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     m_bleConfigHandler.selectBleDevices();
                 }
                 return true;
-            } else if (id == R.id.sb_match_emulator) {
-                if ( Mode.FeedMatchesScoringEmulator.equals(m_mode) ) {
-                    setModus(null, Mode.Normal);
-                } else {
-                    setModus(null, Mode.FeedMatchesScoringEmulator);
+            } else if (id == R.id.sb_match_emulator_start) {
+                setModus(null, Mode.FeedMatchesScoringEmulator);
+                setMenuItemVisibility(R.id.sb_match_emulator_start, false);
+                setMenuItemVisibility(R.id.sb_match_emulator_stop , true);
+                return true;
+            } else if (id == R.id.sb_match_emulator_stop) {
+                boolean bMatchEnded = false;
+                if ( ctx != null && ctx.length == 1 && ctx[0] instanceof Boolean ) {
+                    bMatchEnded = (Boolean) ctx[0];
                 }
+                stopMatchEmulatorMode(bMatchEnded);
+                setMenuItemVisibility(R.id.sb_match_emulator_start, true);
+                setMenuItemVisibility(R.id.sb_match_emulator_stop , false);
                 return true;
             } else if (id == R.id.sb_demo) {
                 restartScore();
@@ -4620,7 +4629,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         initScoreBoard(null);
 
                         if ( PreferenceValues.getSpecialBooleanValue(PreferenceKeysSpecial.emulate_StartOnMatchSelection, false) ) {
-                            startMatchEmulatorThread();
+                            handleMenuItem(R.id.sb_match_emulator_start);
                         }
                     }
 
@@ -6138,9 +6147,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     private int           iReceivingBTFileLength = 0;
     /** Buffer with file content */
     private StringBuilder sbReceivingBTFile      = new StringBuilder();
-    public synchronized void interpretReceivedMessageOnUiThread(String readMessage, MQTTAction mqttAction, String sTopic) {
+    @Override public synchronized void interpretMQTTReceivedMessage(String readMessage, MQTTAction mqttAction, String sTopic) {
         runOnUiThread(() -> interpretReceivedMessage(readMessage, MessageSource.MQTT, mqttAction, sTopic));
     }
+    @Override public void updateMQTTConnectionStatus(int visibility, int nrOfWhat) {
+        runOnUiThread(() -> iBoard.updateMQTTConnectionStatusIcon(visibility, nrOfWhat));
+    }
+
     public synchronized void interpretReceivedMessageOnUiThread(String readMessage, MessageSource source) {
         runOnUiThread(() -> interpretReceivedMessage(readMessage, source, null, null));
     }
@@ -6166,51 +6179,37 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             Map<String, Object> mResponse = new HashMap<>();
             mResponse.put(JSONKey.device.toString(), sThisDeviceId);
             final String accepted = "accepted";
+            final String action = "action";
             mResponse.put(accepted, true);
+            mResponse.put(action, mqttAction.toString());
 
+            Object oAcceptAction = MQTTHandler.acceptAction(mqttAction, readMessage);
+            if ( oAcceptAction instanceof String ) {
+                mResponse.put(accepted, false);
+                mResponse.put(JSONKey.Message.toString(), oAcceptAction);
+                m_MQTTHandler.publish(sTopic.replace("/" + sThisDeviceId, ""), (new JSONObject(mResponse)).toString(), false);
+                return;
+            }
             switch (mqttAction) {
                 case newMatch:
-                    try {
-                        persist(false);
-                        if ( matchModel.hasStarted() && matchModel.matchHasEnded() == false ) {
-                            mResponse.put(accepted, false);
-                            String sMsg = "Match in progress: " + matchModel.getName(Player.A) + "-" + matchModel.getName(Player.B) + ". Current score: " + matchModel.getGameScores() + ". Started: " + matchModel.getMatchStartTimeHH_Colon_MM();
-                            mResponse.put(JSONKey.Message.toString(), sMsg);
-                        } else {
-                            // first see if it is valid json
-                            JSONObject joMatch = new JSONObject(readMessage);
+                case newMatch_Force:
+                    persist(false);
 
-                            // check if most important key exists
-                            if ( joMatch.has(JSONKey.players.toString()) == false ) {
-                                throw new JSONException(String.format("JSON of %1$s must at least specify '%2$s', "
-                                                + "optionally also '%3$s', '%4$s' and '%5$s', all with subkeys A and B. Additionally allowed: 'court', 'event.(name|division|round|location)'  "
-                                        , mqttAction
-                                        , JSONKey.players, JSONKey.clubs, JSONKey.colors, JSONKey.countries));
-                            }
-                            Intent intent = new Intent();
-                            intent.putExtra(IntentKeys.NewMatch.toString(), readMessage);
-                            Match.dontShow();
-                            onActivityResult(0, 0, intent);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        mResponse.put(accepted, false);
-                        mResponse.put(JSONKey.Message.toString(), e.getMessage());
-                    }
+                    // first see if it is valid json
+                    JSONObject joMatch = (JSONObject) oAcceptAction;
+                    Intent intent = new Intent();
+                    intent.putExtra(IntentKeys.NewMatch.toString(), readMessage);
+                    Match.dontShow();
+                    onActivityResult(0, 0, intent);
+
                     m_MQTTHandler.publish(sTopic.replace("/" + sThisDeviceId, ""), (new JSONObject(mResponse)).toString(), false);
                     return;
                 case message:
-                    try {
-                        JSONObject joMessage = new JSONObject(readMessage);
-                        String sMsg = joMessage.getString(JSONKey.Message.toString());
-                        int iDurationInSeconds = joMessage.optInt(JSONKey.Duration.toString(), 15);
-                        showInfoMessage(sMsg, iDurationInSeconds);
-                        mResponse.put(JSONKey.Duration.toString(), iDurationInSeconds);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        mResponse.put(accepted, false);
-                        mResponse.put(JSONKey.Message.toString(), e.getMessage());
-                    }
+                    JSONObject joMessage = (JSONObject) oAcceptAction;
+                    String sMsg = joMessage.optString(JSONKey.Message.toString());
+                    int iDurationInSeconds = joMessage.optInt(JSONKey.Duration.toString(), 15);
+                    showInfoMessage(sMsg, iDurationInSeconds);
+                    mResponse.put(JSONKey.Duration.toString(), iDurationInSeconds);
                     m_MQTTHandler.publish(sTopic.replace("/" + sThisDeviceId, ""), (new JSONObject(mResponse)).toString(), false);
                     return;
                 default:
@@ -7335,13 +7334,13 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             cdtReconnect = null;
         }
         if ( PreferenceValues.useMQTT(this) == false ) {
-            updateMQTTConnectionStatusIconOnUiThread(View.INVISIBLE, -1);
+            iBoard.updateMQTTConnectionStatusIcon(View.INVISIBLE, -1);
             stopMQTT();
             return;
         }
         final String sBrokerUrl = PreferenceValues.getMQTTBrokerURL(this);
         if ( StringUtil.isEmpty(sBrokerUrl) ) {
-            updateMQTTConnectionStatusIconOnUiThread(View.INVISIBLE, -1);
+            iBoard.updateMQTTConnectionStatusIcon(View.INVISIBLE, -1);
             return;
         }
         if ( m_MQTTHandler == null ) {
@@ -7350,7 +7349,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             m_MQTTHandler.reinit(this, iBoard, eStatus);
         }
         if ( m_MQTTHandler.isConnected() ) {
-            updateMQTTConnectionStatusIconOnUiThread(View.VISIBLE, 1);
+            iBoard.updateMQTTConnectionStatusIcon(View.VISIBLE, 1);
         } else {
             showInfoMessageOnUiThread(String.format("MQTT Connecting to %s ...", sBrokerUrl), 10);
             m_MQTTHandler.connect("", ""); // TODO: work with broker that requires to provide credentials
@@ -7411,9 +7410,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     private MQTTRole publishMatchOnMQTT(Model matchModel, boolean bPrefixWithJsonLength, JSONObject oTimerInfo) {
         if ( m_MQTTHandler == null ) { return null; }
         return m_MQTTHandler.publishMatchOnMQTT(matchModel, bPrefixWithJsonLength, oTimerInfo);
-    }
-    public void updateMQTTConnectionStatusIconOnUiThread(int visibility, int nrOfWhat) {
-        runOnUiThread(() -> iBoard.updateMQTTConnectionStatusIcon(visibility, nrOfWhat));
     }
 
     public synchronized void stopMQTT() {

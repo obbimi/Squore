@@ -25,6 +25,7 @@ import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.dialog.Appeal;
 import com.doubleyellow.scoreboard.dialog.EndGame;
 import com.doubleyellow.scoreboard.dialog.IBaseAlertDialog;
+import com.doubleyellow.scoreboard.dialog.LockedMatch;
 import com.doubleyellow.scoreboard.main.DialogManager;
 import com.doubleyellow.scoreboard.main.ScoreBoard;
 import com.doubleyellow.scoreboard.model.Model;
@@ -158,7 +159,9 @@ public class MatchEmulatorThread extends Thread {
                                 return;
                             }
                         } else {
-                            if ( baseDialog instanceof EndGame ) {
+                            if ( baseDialog instanceof LockedMatch) {
+                                bKeepLooping = false;
+                            } else if ( baseDialog instanceof EndGame ) {
                                 EndGame endGame = (EndGame) baseDialog;
                                 if ( useTimersFeature == Feature.Suggest ) {
                                     endGame.handleButtonClick(EndGame.BTN_END_GAME_PLUS_TIMER);
@@ -273,7 +276,7 @@ public class MatchEmulatorThread extends Thread {
             pause(iLastRallyDuration);
         }
 
-        scoreBoard.stopMatchEmulatorMode(matchModel.matchHasEnded());
+        scoreBoard.handleMenuItem(R.id.sb_match_emulator_stop, matchModel.matchHasEnded());
     }
     public void stopLoop() {
         bKeepLooping = false;
