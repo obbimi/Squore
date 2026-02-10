@@ -591,7 +591,8 @@ public class PreferenceValues extends RWValues
         return sID;
     }
     private static String getDeviceIdCustomSuffix(Context context) {
-        return _getString(PreferenceKeys.liveScoreDeviceId_customSuffix, "", context);
+        String sDefault = getRefereeName(context).replaceAll("\\s", "");
+        return _getString(PreferenceKeys.liveScoreDeviceId_customSuffix, sDefault, context);
     }
 /*
     public static void initForLiveScoring(Context ctx, boolean bOnlyTemporary) {

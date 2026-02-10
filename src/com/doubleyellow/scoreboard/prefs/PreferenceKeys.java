@@ -303,6 +303,9 @@ public enum PreferenceKeys {
         postEveryChangeToSupportLiveScore(Boolean.class, false),
         turnOnLiveScoringForMatchesFromFeed(Boolean.class, false),
 
+    /** typically initialized by 'remote settings' to give e.g. a device a unique custom identifier */
+    customData(String.class, false),
+
 /*
     FCMPrefs(null, false),
         FCMEnabled(null, false),

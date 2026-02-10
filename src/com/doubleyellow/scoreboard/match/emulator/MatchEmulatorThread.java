@@ -276,7 +276,7 @@ public class MatchEmulatorThread extends Thread {
             pause(iLastRallyDuration);
         }
 
-        scoreBoard.handleMenuItem(R.id.sb_match_emulator_stop, matchModel.matchHasEnded());
+        scoreBoard.handleMenuItemOnUiThread(R.id.sb_match_emulator_stop, matchModel.matchHasEnded());
     }
     public void stopLoop() {
         bKeepLooping = false;

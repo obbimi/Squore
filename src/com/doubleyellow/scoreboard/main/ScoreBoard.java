@@ -5940,6 +5940,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         writeMethodToBluetooth(BTMethods.toggleGameScoreView);
     }
 
+    public synchronized void handleMenuItemOnUiThread(final int id, final Object... ctx) {
+        runOnUiThread(() -> handleMenuItem(id, ctx));
+    }
     public synchronized void showInfoMessageOnUiThread(final String sMsg, int iMessageDurationSecs) {
         runOnUiThread(() -> iBoard.showInfoMessage(sMsg, iMessageDurationSecs));
     }

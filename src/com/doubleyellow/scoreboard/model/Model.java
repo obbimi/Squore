@@ -3311,6 +3311,15 @@ public abstract class Model implements Serializable
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            try {
+                String customData = PreferenceValues.getString(PreferenceKeys.customData, "", context);
+                if ( StringUtil.isNotEmpty(customData) ) {
+                    jsonObject.put(PreferenceKeys.customData.toString(), customData);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         JSONObject metaData = new JSONObject();
