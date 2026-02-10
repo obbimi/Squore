@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.doubleyellow.android.util.ContentReceiver;
 import com.doubleyellow.android.util.ExportImport;
+import com.doubleyellow.prefs.RWValues;
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.URLFeedTask;
@@ -244,6 +245,9 @@ public class ExportImportPrefs extends DialogPreference
             Toast.makeText(context, sMsg, Toast.LENGTH_SHORT).show();
         }
         if ( bRestartRequired ) {
+            // user is experienced user, so e.g. don't start 'showcase' again
+            PreferenceValues.setNumber(PreferenceKeys.viewedChangelogVersion, context, RWValues.getVersionCodeForChangeLogCheck(context));
+
             if ( context instanceof ScoreBoard ) {
                 int restartAppIfChangesDetected = joRemoteConfig.optInt(PreferenceKeysSpecial.restartAppIfChangesDetected.toString(), 1);
                 ScoreBoard scoreBoard = (ScoreBoard) context;
