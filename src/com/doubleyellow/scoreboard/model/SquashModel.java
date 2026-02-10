@@ -87,6 +87,18 @@ public class SquashModel extends Model {
             }
         }
         setLastPointWasHandout(false);
+
+        if ( isDoubles() ) {
+            if ( lastValidWithServer != null ) {
+                DoublesServe doubleInOut       = m_prevScoreline2DoublesServe.get(lastValidWithServer.toString());
+                Player       doubleTeamToServe = m_prevScoreline2ServingTeam.get(lastValidWithServer.toString());
+                if ( m_in_out.equals(doubleInOut) && m_pServer.equals(doubleTeamToServe) ) {
+                    // all good already
+                } else {
+                    setServerAndSide(doubleTeamToServe, lastValidWithServer.getServeSide(), doubleInOut, true);
+                }
+            }
+        }
     }
 
     //-------------------------------

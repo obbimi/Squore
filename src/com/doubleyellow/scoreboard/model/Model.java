@@ -348,8 +348,8 @@ public abstract class Model implements Serializable
     // Serve side/sequence
     //------------------------
             ServeSide                           m_nextServeSide         = ServeSide.R;
-    private Player                              m_pServer               = Player.A;
-    private boolean                             m_bLastPointWasHandout  = true;
+            Player                              m_pServer               = Player.A;
+            boolean                             m_bLastPointWasHandout  = true;
 
     //------------------------
     // Double Serve side/sequence
@@ -359,6 +359,9 @@ public abstract class Model implements Serializable
             DoublesServe                        m_in_out_receiver       = DoublesServe.NA;
     // fixed per match in e.g. squash, might vary per set in e.g. racketlon
             DoublesServeSequence                m_doubleServeSequence   = DoublesServeSequence.NA;
+
+    Map<String, DoublesServe> m_prevScoreline2DoublesServe = new HashMap<>();
+    Map<String, Player      > m_prevScoreline2ServingTeam  = new HashMap<>();
 
     //------------------------
     // Points history
@@ -879,6 +882,12 @@ public abstract class Model implements Serializable
             // also record a timestamp (nr of seconds since start of game)
             gameTimingCurrent.addTiming();
         }
+
+        if ( isDoubles() ) {
+            m_prevScoreline2DoublesServe.put(slCall.toString(), m_in_out);
+            m_prevScoreline2ServingTeam .put(slCall.toString(), m_pServer);
+        }
+
         setDirty(true);
     }
 
@@ -3786,7 +3795,7 @@ public abstract class Model implements Serializable
             return isPossibleMatchVictoryFor()!=null;
         }
     }
-
+    /** Typically is set to -1 and increased if handout. If equal to zero it is the 'first' handout within the team */
     private int m_iHandoutCountDoubles = -1;
     protected void handout(Player scorer, boolean bScoreChangeTrue_bNewGameFalse) {
         if ( this.isDoubles() ) {
