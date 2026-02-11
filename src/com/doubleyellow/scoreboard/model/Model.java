@@ -3313,8 +3313,8 @@ public abstract class Model implements Serializable
             }
 
             try {
-                String customData = PreferenceValues.getString(PreferenceKeys.customData, "", context);
-                if ( StringUtil.isNotEmpty(customData) ) {
+                Object customData = PreferenceValues.getCustomData(context);
+                if ( customData != null ) {
                     jsonObject.put(PreferenceKeys.customData.toString(), customData);
                 }
             } catch (Exception e) {

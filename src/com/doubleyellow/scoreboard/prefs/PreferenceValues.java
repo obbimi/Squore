@@ -570,6 +570,21 @@ public class PreferenceValues extends RWValues
     public static String getLiveScoreDeviceId(Context context) {
         return getDeviceId(PreferenceKeys.liveScoreDeviceId, context, true);
     }
+    public static Object getCustomData(Context context) {
+        String sCustomData = RWValues.getString(PreferenceKeys.customData, null, context);
+        if ( StringUtil.isEmpty(sCustomData) ) {
+            return null;
+        }
+        if ( sCustomData.startsWith("{") ) {
+            try {
+                Object oCustomData = new JSONObject(sCustomData);
+                return oCustomData;
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        }
+        return sCustomData;
+    }
 /*
     public static boolean isFCMEnabled(Context context) {
         return getBoolean(PreferenceKeys.FCMEnabled, context, R.bool.FCMEnabled_default);
@@ -592,6 +607,9 @@ public class PreferenceValues extends RWValues
     }
     private static String getDeviceIdCustomSuffix(Context context) {
         String sDefault = getRefereeName(context).replaceAll("\\s", "");
+        if ( StringUtil.isNotEmpty(sDefault) ) {
+            sDefault = "_" + sDefault;
+        }
         return _getString(PreferenceKeys.liveScoreDeviceId_customSuffix, sDefault, context);
     }
 /*

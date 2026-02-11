@@ -350,6 +350,10 @@ public class MQTTHandler
                 String sTopicPH = PreferenceValues.getMQTTPublishTopicDeviceInfo(m_scoreboard);
                 String sTopic = doMQTTTopicTranslation(sTopicPH, m_thisDeviceId);
                 info.put(JSONKey.device.toString(), m_thisDeviceId);
+                Object oCustomData = PreferenceValues.getCustomData(m_scoreboard);
+                if ( oCustomData != null ) {
+                    info.put(PreferenceKeys.customData.toString(), oCustomData);
+                }
                 publish(sTopic, (new JSONObject(info)).toString(), false);
             }
         }
