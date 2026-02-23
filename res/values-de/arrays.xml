@@ -245,6 +245,7 @@
         <item>aus</item>
         <item>Pro (beim ersten Gleichstand)</item>
         <item>Amateur (beim zweiten Gleichstand)</item>
+        <item>Star (beim dritten Gleichstand)</item>
     </string-array>
 
     <string-array name="changeSidesWhen_GSM_DisplayValues">

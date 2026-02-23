@@ -248,6 +248,7 @@
         <item>Não usar</item>
         <item>Pro (Primeiro Iguais)</item>
         <item>Amateur (Segundo Iguais)</item>
+        <item>Estrelas (Terceiro Iguais)</item>
     </string-array>
 
     <string-array name="changeSidesWhen_GSM_DisplayValues">

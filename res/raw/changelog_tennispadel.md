@@ -1,10 +1,14 @@
-## 4.58 (july 2025)
+## 4.59 (Feb 2026)
+
+- Add option to play golden point 'only' after third deuce a.k.a. in Padel as 'Star Point'
+
+## 4.58 (July 2025)
 
 - target sdk 35 enforced by google
 - minor improvements
 - Allow quickly adding matches for 'rotating doubles'
  
-## 4.55 (jan 2025)
+## 4.55 (Jan 2025)
 
 - first version with MQTT capabilities (experimental)
   - Score mirroring can be achieved (similar functionality as Bluetooth-mirror)
@@ -14,7 +18,7 @@
   - Allow the 'slave' device of a mirrored pair to have a 'presentation' layout when in landscape orientation
     - showing complete score more pleasing to the eye
 
-## 4.53 (dec 2023)
+## 4.53 (Dec 2023)
  
 - Experimental: allow scoring by using a specific keys on bluetooth connected keyboard
   - Pg Up  , A : score point for player A
@@ -26,19 +30,19 @@
   - Match/Set duration incorrect values at end of match
   - Correct server indication if sets ends in 7-5
    
-## 4.53 (august 2023)
+## 4.53 (August 2023)
 
 - additional setting for 'Golden Point': 
   - Off
   - Pro (On First Deuce)
   - Amateur (On Second Deuce)
 
-## 4.52 (july 2023)
+## 4.52 (July 2023)
 
 - add option to 'Changes Sides' setting called 'After First Point In Tiebreak'
   - This allows to, combined with 'Every 4 Point In a Tiebreak', to configure the so called 'Coman' tiebreak
 
-## 4.51 (march 2023)
+## 4.51 (March 2023)
 
 - minor improvements for working with feeds
 - bugfix for posting result to website (totalpointsplayer1, totalpointsplayer2) 
@@ -49,7 +53,7 @@
   - long press both score buttons 
 - added a few missing Czech translations (thanks to Josef Hohenberger)
 
-## 4.49 (july 2022)
+## 4.49 (July 2022)
 
 Improvements in:
 
@@ -57,14 +61,14 @@ Improvements in:
 - Allow indication for when it is time for 'New balls': additional optin
   - After First 11, Then Each 13th game
 
-## 4.49 (may 2022)
+## 4.49 (May 2022)
 
 Improvements in:
 
 - 'Speech' during tiebreak
 - Fields in 'New match with larger font' screen
 
-## 4.48 (may 2022)
+## 4.48 (May 2022)
 
 Allow indication for when it is time for 'New balls'
 
@@ -78,14 +82,14 @@ Improvements for
 - Spoken scores (speech)
 - Dialogs on android television
 
-## 4.47 (april 2022)
+## 4.47 (April 2022)
 
 Improvements in 
 
 - Scoring via media playback control buttons (bluetooth)
 - My List and default match format
 
-## 4.47 (march 2022)
+## 4.47 (March 2022)
 
 - Improvements
     - show floating message when Golden Point is played
@@ -195,4 +199,3 @@ Improvements in
 - TODO
   - Online Help pages
   - revisit 'Shared scoresheet'
-

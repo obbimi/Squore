@@ -198,6 +198,7 @@
         <item>Uit</item>
         <item>Pro (Op Eerste Deuce)</item>
         <item>Amateur (Op Tweede Deuce)</item>
+        <item>Ster (Op Derde Deuce)</item>
     </string-array>
 
     <string-array name="changeSidesWhen_GSM_DisplayValues">

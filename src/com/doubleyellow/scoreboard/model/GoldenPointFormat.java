@@ -16,10 +16,14 @@
  */
 package com.doubleyellow.scoreboard.model;
 
+/**
+ * Display Names are in @string-array/goldenPointFormatDisplayValues
+ */
 public enum GoldenPointFormat {
     None(-1),
     OnFirstDeuce(0),
-    OnSecondDeuce(1)
+    OnSecondDeuce(1),
+    OnThirdDeuce(2)
     ;
     private int m_iOnWhichDeuce = 0;
     GoldenPointFormat(int iOnWhichDeuce) {

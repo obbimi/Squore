@@ -231,6 +231,7 @@
         <item>Nepoužívat</item>
         <item>Pro (první Deuce)</item>
         <item>Amateur (druhý Deuce)</item>
+        <item>Star (třetí Deuce)</item>
     </string-array>
 
     <string-array name="changeSidesWhen_GSM_DisplayValues">

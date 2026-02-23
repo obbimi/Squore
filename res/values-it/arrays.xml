@@ -241,6 +241,7 @@
         <item>Non usare</item>
         <item>Pro (Primo Deuce)</item>
         <item>Amateur (Secondo Deuce)</item>
+        <item>Stella (Terzo Deuce)</item>
     </string-array>
     <string-array name="doublesServeSequence">
         <item>A1/B1/A2/B2</item>               <!-- DSS_1_1_2_2__8 -->

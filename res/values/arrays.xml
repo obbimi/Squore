@@ -273,6 +273,7 @@
         <item>Off</item>
         <item>Pro (On First Deuce)</item>
         <item>Amateur (On Second Deuce)</item>
+        <item>Star (On Third Deuce)</item>
     </string-array>
 
     <string-array name="changeSidesWhen_GSM_DisplayValues">
