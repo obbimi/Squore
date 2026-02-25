@@ -32,8 +32,9 @@ For each brand:
 
 - Goto [actions](https://github.com/obbimi/Squore/actions)
   - Choose [Upload apk's from a github release to Google Play Store as draft](https://github.com/obbimi/Squore/actions/workflows/deploy.yml) > Run workflow
-  - provide 'Brand' and 'VersionCode'
-  - Runs for less than a minute (several runs can be started simultaneously)
+  - provide 'Brand' and 'Version' to deploy (Version should typically be 'latest')
+    - Runs for less than a minute 
+    - Several runs can be started simultaneously
 - Goto [Play Console](https://play.google.com/console/u/0/developers/5046226336743383720/app-list)
   - Select the Correct app (Brand) and go to
     - Test and Release > Release overview
@@ -43,7 +44,7 @@ For each brand:
       - [Tabletennis](https://play.google.com/console/u/0/developers/5046226336743383720/app/4975506867766261096/releases/overview)
       - [TennisPadel](https://play.google.com/console/u/0/developers/5046226336743383720/app/4972207514792479457/releases/overview)
     - choose
-      - 'Edit' (arrow)
+      - 'Edit release' (right pointing arrow)
       - "next', choose previous or give new release notes
       - 'Save', followed by 'Go to overview'
       - 'Send change for review'
