@@ -388,6 +388,7 @@
                 dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
             <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/dummy"
                 android:key="gameScoresAppearance"
                 android:title="@string/pref_gameScoresAppearance"
                 android:summary="@string/pref_gameScoresAppearance_summary"
@@ -527,12 +528,14 @@
 
         <PreferenceCategory android:title="@string/pref_Category_Brand" android:key="Brand">
             <com.doubleyellow.prefs.EnumListPreference
+                android:icon="@drawable/dummy"
                 android:key="squoreBrand"
                 android:title="@string/pref_Category_Brand"
                 android:defaultValue="Squore"
                 dy:enumClass="com.doubleyellow.scoreboard.Brand"
             />
             <com.doubleyellow.prefs.EnumMultiSelectPreference
+                    android:icon="@drawable/dummy"
                     android:key="showBrandLogoOn"
                     android:title="@string/pref_Show_logo_on_scoreboard"
                     android:summary="@string/pref_Show_logo_on_scoreboard_summary"
@@ -541,6 +544,7 @@
                     dy:enumClass="com.doubleyellow.scoreboard.prefs.ShowOnScreen"
             />
             <CheckBoxPreference android:key="hideBrandLogoWhenGameInProgress"
+                                android:icon="@drawable/dummy"
                                 android:title="@string/pref_Hide_logo_when_game_in_progress"
                                 android:defaultValue="@bool/hideBrandLogoWhenGameInProgress_default"
             />

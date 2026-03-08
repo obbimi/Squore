@@ -3835,7 +3835,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 return true;
             }
         }
-        if ( (matchModel == null) || (matchModel.isLocked() == false) ) {
+        if ( (matchModel != null) && (matchModel.isLocked() == false) ) {
             // check if we want to lock it because of idle time
             if ( m_autoLockContexts.contains(AutoLockContext.WhenMatchIsUnchangeForX_Minutes)) {
                 if ( m_iLockAfterXMinutes > 0 ) {
@@ -4987,6 +4987,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             ShareMatchPrefs prefs = PreferenceValues.getShareAction(this);
             if ( ShareMatchPrefs.PostResult.equals(prefs) ) {
                 // match will be automatically posted, do not show the 'suggest' dialog
+                return;
+            }
+        }
+        if ( ScoreBoard.m_MQTTHandler != null ) {
+            MQTTRole role = ScoreBoard.m_MQTTHandler.getRole();
+            if ( MQTTRole.Slave.equals(role) && PreferenceValues.disableInputWhenMQTTSlave(this) ) {
+                Log.w(TAG, "No posting match result in MQTT slave mode");
+                // no posting as slave
                 return;
             }
         }

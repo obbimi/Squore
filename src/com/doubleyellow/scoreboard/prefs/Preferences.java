@@ -809,13 +809,17 @@ public class Preferences extends Activity {
                 if ( PreferenceValues.isBrandedExecutable(getActivity()) && Brand.isNotSquash() ) {
                     // plain racketlon or tabletennis versions
                     //psAppearance.removePreference(psBrandCategory);
-                    psAppearance.removePreference(psBrandSelectList);
+                    if ( ! psAppearance.removePreference(psBrandSelectList) ) {
+                        psBrandCategory.removePreference(psBrandSelectList);
+                    }
                 } else if ( (Brand.values().length <= 1) && PreferenceValues.isUnbrandedExecutable(getActivity()) ) {
                     // remove option to change anything brand related if unbranded executable and other possible brands commented out
                     //psBrandCategory.removeAll(); // only if removing somehow does not work
                     //this.getPreferenceScreen().removePreference(psBrandCategory);
                     //psAppearance.removePreference(psBrandCategory);
-                    psAppearance.removePreference(psBrandSelectList);
+                    if ( ! psAppearance.removePreference(psBrandSelectList) ) {
+                        psBrandCategory.removePreference(psBrandSelectList);
+                    }
                 } else {
                     if ( PreferenceValues.isBrandedExecutable(getActivity()) ) {
                         // for a branded version, do not support changing the brand

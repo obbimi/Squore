@@ -105,6 +105,8 @@ class ServerSideButtonListener extends ScoreBoardListener implements View.OnClic
                         scoreBoard.showInfoMessage("Abandoning kiosk mode...", 5);
                         scoreBoard.reinitMenu();
                     } else {
+                        PreferenceValues.setEnum(PreferenceKeys.kioskMode, scoreBoard, KioskMode.NotUsed);
+                        scoreBoard.showInfoMessage("Abandoning kiosk mode...", 5);
                         scoreBoard.doRestart();
                     }
                     return;

@@ -159,6 +159,7 @@ public class PreferenceValues extends RWValues
         String packageName = ctx.getPackageName();
         return packageName.matches("com\\.doubleyellow\\..+");
     }
+    /** e.g. DScore/WinnerPadel */
     public static boolean isBrandedExecutable(Context ctx) {
         return isUnbrandedExecutable(ctx) == false;
     }
