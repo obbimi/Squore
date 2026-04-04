@@ -727,7 +727,16 @@ public class GSMModel extends Model
 
     public long getSetDuration(int setNr1B) {
         if ( setNr1B == 1 ) {
-            return super.getDuration();
+            long iDuration = super.getDuration();
+            if ( iDuration == 0 && ListUtil.isNotEmpty(m_lGamesTiming_PerSet) ) {
+                List<GameTiming> gameTimings = m_lGamesTiming_PerSet.get(0);
+                if ( ListUtil.isNotEmpty(gameTimings) ) {
+                    GameTiming gtFirst = gameTimings.get(0);
+                    GameTiming gtLast  = ListUtil.getLast(gameTimings);
+                    iDuration = gtLast.getEnd() - gtFirst.getStart();
+                }
+            }
+            return iDuration;
         } else {
             long lDuration = 0; // TODO: use this?
             if ( setNr1B > 1 && setNr1B - 1 < ListUtil.size(m_lGamesTiming_PerSet) ) {

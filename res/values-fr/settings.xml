@@ -227,6 +227,7 @@
     <string name="pref_playAllGames_summary">Jou \'Total-of-x-games\' au lieu de \'Best-of-x-games\'</string> <!-- TODO -->
     <string name="pref_useEnglishScoring">Score en points indirects</string>
     <string name="pref_useEnglishScoring_summary">\'Ancien\' format de score. Le joueur ne marque que sur son service.</string>
+    <string name="pref_finalSetFinish">Fin du set final</string> <!-- Tennis/Padel -->
 	<string name="pref_tiebreakFormat">Format de tie-break</string>
     <string name="pref_tiebreakFormat_summary">Quelle règle suivre en cas de tie-break ?</string>
     <string name="pref_web_integration">Internet</string>

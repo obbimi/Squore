@@ -2357,6 +2357,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 if ( playersWhen.contains(ChangeSidesWhen_GSM.AfterFirstPointInTiebreak) == false ) {
                     showChangeSideFloatButton(false);
                 }
+                // ensure set duration of set in progress is displayed
+                iBoard.updateSetDurationChrono();
             } else {
                 showChangeSideFloatButton(false);
             }
@@ -4369,7 +4371,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         super.onActivityResult(requestCode_MenuId, resultCode, data);
 
         if ( requestCode_MenuId == R.id.sb_ble_devices ) {
-            m_bleConfigHandler.selectBleDevices_handleResult(resultCode ==  RESULT_OK, data);
+            if ( m_bleConfigHandler != null ) {
+                m_bleConfigHandler.selectBleDevices_handleResult(resultCode ==  RESULT_OK, data);
+            }
             ActionBar xActionBar = getXActionBar();
             if ( xActionBar != null && xActionBar.isShowing() && (PreferenceValues.showActionBar(this) == false) ) {
                 // action bar made visible temporary by pressing 'back'

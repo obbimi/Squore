@@ -70,4 +70,7 @@
         <item>neuvième</item>
     </string-array>
     <string name="officialAnnouncementsLanguage_default">fr</string>
+
+    <string name="oa_set">set</string>
+    <string name="oa_set_ball">Balle de set</string>
 </resources>

@@ -385,6 +385,21 @@ public class IBoard implements TimerViewContainer
 
         if ( bShowSetTimer ) {
             GSMModel matchModel = (GSMModel) this.matchModel;
+
+            if ( matchModel.hasStarted() ) {
+                List<Map<Player, Integer>> gameScoresIncludingInProgress = matchModel.getGameScoresIncludingInProgress();
+                if ( ListUtil.isEmpty(gameScoresIncludingInProgress)) {
+                    showDurationOfLastSet(tvSetTime);
+                    return;
+                } else {
+                    Map<Player, Integer> mLast = ListUtil.getLast(gameScoresIncludingInProgress);
+                    if ( gameScoresIncludingInProgress.size() == 1 && MapUtil.getMaxValue(mLast) == 0 ) {
+                        showDurationOfLastSet(tvSetTime);
+                        return;
+                    }
+                }
+            }
+
             int setNrInProgress1B = matchModel.getSetNrInProgress();
             String sFormat = getSetDurationFormat(setNrInProgress1B);
             tvSetTime.setFormat(sFormat);
@@ -569,7 +584,7 @@ public class IBoard implements TimerViewContainer
         if ( Brand.isGameSetMatch() == false ) { return; }
 
         GSMModel matchModel = (GSMModel) this.matchModel;
-        int setNrInProgress1B = matchModel.getSetNrInProgress();
+        int setNrInProgress1B = matchModel.getSetCountHistory().size() - 1;
         String sFormat = getSetDurationFormat(setNrInProgress1B);
         //tvSetTime.setFormat(sFormat);
 

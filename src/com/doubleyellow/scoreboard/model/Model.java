@@ -2769,6 +2769,8 @@ public abstract class Model implements Serializable
                     SportType sport = this.getSport();
                     if ( EnumSet.of(SportType.Racketlon, SportType.Tabletennis).contains(sport) ) {
                         this.determineServerAndSide_TT_RL(false, sport);
+                    } else if ( EnumSet.of(SportType.TennisPadel).contains(sport) ) {
+                        serverAndSideFromModel(joMatch);
                     } else {
                         setServerAndSide(scoringPlayer, nextServeSide, null);
                     }
@@ -2776,17 +2778,7 @@ public abstract class Model implements Serializable
                     //call or broken equipment
                 }
             } else {
-                if ( joMatch.has(JSONKey.server.toString()) ) {
-                    String s = joMatch.getString(JSONKey.server.toString());
-                    Player pServer = Player.valueOf(s);
-                    ServeSide side = null;
-                    if ( joMatch.has(JSONKey.serveSide.toString()) ) {
-                        String ss = joMatch.getString(JSONKey.serveSide.toString());
-                        side = ServeSide.valueOf(ss);
-                    }
-
-                    setServerAndSide(pServer, side, null);
-                }
+                serverAndSideFromModel(joMatch);
             }
 
             if ( joMatch.has(JSONKey.lockState.toString()) ) {
@@ -2846,6 +2838,25 @@ public abstract class Model implements Serializable
             }
         }
     }
+
+    private int serverAndSideFromModel(JSONObject joMatch) throws JSONException {
+        int iKeysFound = 0;
+        if ( joMatch.has(JSONKey.server.toString()) ) {
+            iKeysFound++;
+            String s = joMatch.getString(JSONKey.server.toString());
+            Player pServer = Player.valueOf(s);
+            ServeSide side = null;
+            if ( joMatch.has(JSONKey.serveSide.toString()) ) {
+                iKeysFound++;
+                String ss = joMatch.getString(JSONKey.serveSide.toString());
+                side = ServeSide.valueOf(ss);
+            }
+
+            setServerAndSide(pServer, side, null);
+        }
+        return iKeysFound;
+    }
+
     protected List<GameTiming> gameTimingFromJson(JSONArray timings) throws JSONException {
         ListWrapper<GameTiming> lGameTimings = new ListWrapper<>(false);
         lGameTimings.setName("Set 1");

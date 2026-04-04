@@ -645,6 +645,18 @@ public class Speak
         if ( (sOld == null) || (sOld.equals(sNew) == false) ) {
             m_sText[type.ordinal()] = sNew;
         }
+        for(int iType = type.ordinal() + 1; iType < m_sText.length; iType++ ) {
+            if ( StringUtil.isNotEmpty(m_sText[iType]) ) {
+                m_sText[iType] = null;
+            }
+        }
+        if ( m_textToSpeech.isSpeaking() ) {
+            // empty the speach queue assuming it as about a score that is no longer applicable, already changed
+            Bundle bundle = new Bundle();
+            bundle.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 1.0f); // between 0 and 1
+            bundle.putFloat(TextToSpeech.Engine.KEY_PARAM_PAN   , 0.0f); // between -1 and 1
+            m_textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, bundle, type.toString());
+        }
     }
 
     private int m_iErrorCount = 0;

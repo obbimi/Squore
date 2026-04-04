@@ -2978,7 +2978,11 @@ public class PreferenceValues extends RWValues
         if (iResourceDefault != 0) {
             sDefault = context.getString(iResourceDefault);
         }
-        return _getString(key, sDefault, context);
+        String s = _getString(key, sDefault, context);
+        if ( currentDateIsTestDate() && StringUtil.isEmpty(s) && StringUtil.isNotEmpty(sDefault) ) {
+            return sDefault;
+        }
+        return s;
     }
     private static String _getString(PreferenceKeys key, String sDefault, Context context) {
         String sOW = RWValues.getOverwritten(key);
@@ -3003,6 +3007,9 @@ public class PreferenceValues extends RWValues
         }
 
         T enumDefault = Params.getEnumValueFromString(enumClass, sDefault);
+        if ( isBrandTesting(context) && enumDefault != null ) {
+            return enumDefault;
+        }
         return (T)_getEnum(key, context, enumClass, enumDefault);
     }
     public static <T extends Enum<T>> T _getEnum(PreferenceKeys key, Context context, Class<T> enumClass, T eDefault) {

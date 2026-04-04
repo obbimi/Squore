@@ -1,3 +1,11 @@
+## 4.60 (April 2026)
+
+- Fix bugs
+  - Serve side incorrect after orientation change
+- Improvements
+  - Text to Speech
+  - Set timers 
+
 ## 4.59 (Feb 2026)
 
 - Add option to play golden point 'only' after third deuce a.k.a. in Padel as 'Star Point'
