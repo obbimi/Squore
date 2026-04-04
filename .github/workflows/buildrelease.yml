@@ -37,13 +37,13 @@ jobs:
 
     - name: Setup Java JDK
       uses:
-        actions/setup-java@v4.2.1
+        actions/setup-java@v5.2.0
       with:
         java-version: 17
         distribution: 'adopt'
 
     - name: Checkout the code
-      uses: actions/checkout@v4.1.7
+      uses: actions/checkout@v6.0.2
       with:
         ref: ${{ inputs.branch }}
         repository: obbimi/Squore # overwrite the default ${{ github.repository }}. Our java code/resources is always in the Squore repo
@@ -94,7 +94,7 @@ jobs:
         find . -name *.apk -ls
 
     - name: Upload .apk to /releases
-      uses: ncipollo/release-action@v1
+      uses: ncipollo/release-action@v1.21.0
       with:
         draft: ${{ inputs.release_in_draft }} # Sets the release as a draft instead of publishing it, allowing you to make any edits needed before publishing
         token: ${{ secrets.GH_ACCESS_TOKEN }}
