@@ -554,7 +554,7 @@ public class Speak
                 Player[] possibleSetBallFor = gsmModel.isPossibleSetVictoryFor();
                 Boolean bIsSetBall = (possibleSetBallFor != null) && (possibleSetBallFor.length != 0);
                 if ( bIsSetBall ) {
-                    sText = getResourceString(R.string.oa_set_ball);
+                    sText = getResourceString(R.string.oa_set_point);
                 }
             }
 

@@ -480,7 +480,7 @@ public enum Brand
     /** For now only used for Splash screen. Constructor specifies the color resource id. But this method already returns the actual color */
 
     public static int getGameSetBallPoint_ResourceId() {
-        return ( Brand.isRacketlon() || Brand.isGameSetMatch() ) ? R.string.oa_set_ball : ( Brand.isBadminton()? R.string.oa_gamepoint : R.string.oa_gameball );
+        return ( Brand.isRacketlon() || Brand.isGameSetMatch() ) ? R.string.oa_set_point : ( Brand.isBadminton()? R.string.oa_gamepoint : R.string.oa_gameball );
     }
 
     public static void toggleBrand(Context context) {

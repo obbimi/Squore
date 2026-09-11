@@ -43,7 +43,7 @@
 
     <string name="oa_set">set</string>
     <string name="oa_sets">sets</string>
-    <string name="oa_set_ball">Setbol</string>
+    <string name="oa_set_point">Setbol</string>
 
     <string name="oa_n_all__or__n_equal">%d oba</string>
     <string name="oa_player_needs_2_clear_points">Hráč musí vyhrát o dva body</string>

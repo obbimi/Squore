@@ -766,7 +766,7 @@ public class Preferences extends Activity {
                         lLetUserSelectFrom  .add(sUrl);
                         lLetUserSelectFromHR.add(sName);
                     }
-                    String sDefaultUrl = PreferenceValues.getRemoteSettingsURL_Default(context, false);
+                    String sDefaultUrl   = PreferenceValues.getRemoteSettingsURL_Default(context, false);
                     String sDefaultUrlNp = PreferenceValues.getRemoteSettingsURL_Default(context, true);
                     if ( StringUtil.isNotEmpty(sDefaultUrl) ) {
                         lLetUserSelectFrom.add(sDefaultUrl);

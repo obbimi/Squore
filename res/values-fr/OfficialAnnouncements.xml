@@ -72,5 +72,5 @@
     <string name="officialAnnouncementsLanguage_default">fr</string>
 
     <string name="oa_set">set</string>
-    <string name="oa_set_ball">Balle de set</string>
+    <string name="oa_set_point">Balle de set</string>
 </resources>

@@ -116,7 +116,7 @@ public class PlayersButton extends PercentRelativeLayout implements DrawTouch
             m_bIsDoubles = bIsDoubles;
         }
 
-        String[] saPlayers = new String[] {players};
+        String[] saPlayers = new String[] { players };
         if ( bIsDoubles ) {
             saPlayers = StringUtil.singleCharacterSplit("/" + players + "/"); // TODO: improve
         }

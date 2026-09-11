@@ -48,7 +48,7 @@
 
     <string name="oa_set">set</string>
     <string name="oa_sets">sets</string>
-    <string name="oa_set_ball">Set ball</string>
+    <string name="oa_set_point">Set point</string>
 
     <string name="oa_n_all__or__n_equal">%d All</string>
     <string name="oa_player_needs_2_clear_points">A player must win by two points</string>

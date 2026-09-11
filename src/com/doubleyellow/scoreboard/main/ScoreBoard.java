@@ -41,6 +41,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.InputDeviceCompat;
 import androidx.core.view.MotionEventCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.util.Base64;
@@ -273,6 +275,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( actionBar.isShowing() ) {
             ScoreBoard.bUseActionBar = ToggleResult.setToFalse;
             actionBar.hide();
+            doSdk36FixForActionBar();
         } else {
             ScoreBoard.bUseActionBar = ToggleResult.setToTrue;
             //RWValues.setBoolean(PreferenceKeys.showActionBar, ScoreBoard.this, true);
@@ -281,6 +284,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             initActionBarSettings(menuItemsWithOrWithoutText);
             showAppropriateMenuItemInActionBar();
             PreferenceValues.removeOverwrite(PreferenceKeys.showActionBar);
+
+            doSdk36FixForActionBar();
         }
         return bUseActionBar;
     }
@@ -1330,6 +1335,23 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         }
 
     }
+
+    private void doSdk36FixForActionBar() {
+        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA /* 36 */ ) {
+            return;
+        }
+
+        // attempt at solving
+        // https://medium.com/@dileepapeiris5/resolve-layout-overlap-issues-after-upgrading-to-android-target-sdk-35-required-by-google-from-cd6c5f18fa25
+        final View rootView = findViewById(android.R.id.content);
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
+            int typeMask = WindowInsetsCompat.Type.navigationBars() | WindowInsetsCompat.Type.statusBars();
+            androidx.core.graphics.Insets innerPadding = insets.getInsets(typeMask);
+            rootView.setPadding(innerPadding.left, innerPadding.top, innerPadding.right, innerPadding.bottom);
+            return insets;
+        });
+    }
+
     // ------------------------------------------------------
     // refresh GUI elements
     // ------------------------------------------------------
@@ -1344,17 +1366,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( actionBar != null ) {
             switch (bUseActionBar) {
                 case setToTrue:
-                    //final Point displayPoint = ViewUtil.getDisplayPoint(this);
-                    //if ( displayPoint.x > 320 && displayPoint.y > 320 ) {
                     actionBar.show();
-                    //if ( requestWindowFeature(Window.FEATURE_ACTION_BAR) ) {
-                    //}
-                    //} else {
-                    // presume Wear OS
-                    //}
+                    doSdk36FixForActionBar();
                     break;
                 case setToFalse:
                     actionBar.hide();
+                    doSdk36FixForActionBar();
                     break;
             }
         }
@@ -1737,7 +1754,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         showMicrophoneFloatButton(bShowSpeakFAB);
     }
     private void showMicrophoneFloatButton(boolean bVisible) {
-        if ( PreferenceValues.useOfficialAnnouncementsFeature(this).equals(Feature.DoNotUse) ) {
+        Feature feature = PreferenceValues.useOfficialAnnouncementsFeature(this);
+        if ( feature.equals(Feature.DoNotUse) ) {
             if ( speakButton != null ) { speakButton.setHidden(true); }
             return;
         }

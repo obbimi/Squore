@@ -1,5 +1,6 @@
 // export ANDROID_HOME=/osshare/software/google/android-sdk-linux
 apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 //apply plugin: 'com.google.gms.google-services' // for firebase, comment out for custom branded version of the app that are not in google-services.secrets.json
 buildscript {
     // required for using gradle i.s.o. gradlew
@@ -16,7 +17,8 @@ buildscript {
         //classpath "com.android.tools.build:gradle:7.4.2" // almost succeeds
         //classpath "com.android.tools.build:gradle:8.4.2" // requires gradle 8.7 in wrapper
         //classpath 'com.android.tools.build:gradle:8.11.1'
-        classpath 'com.android.tools.build:gradle:8.13.2'
+        classpath 'com.android.tools.build:gradle:9.4.0'
+        classpath 'org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.2.10'
         // requires android-studio 2024.2, does not work with the 2023.3.1 version
         // NOTE: Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements
 
@@ -105,13 +107,13 @@ android {
         }
     }
     flavorDimensions "devicetype" // actual flavors use camelCase with first letter lowercase
-    def versionCodeXXX = 596
+    def versionCodeXXX = 597
     def versionNameXDotYY = "4.60"
 
     // if moving to >=35, be aware of layout 'sliding under' status bar (android 15 'feature' wanting to use more of the screen)
     // in 35 this can still be mitigated by using 'android:windowOptOutEdgeToEdgeEnforcement'
     // in 36 it does not seem possible to mitigate that easily
-    def targetSdkXX = 35
+    def targetSdkXX = 36
     productFlavors {
         // versionCodePrefix specifies [min_api_level][bitwise_supported_screensizes s=1,m=2,l=4,xl=8]
         phoneTabletPre24 {
@@ -180,9 +182,9 @@ android {
 
 dependencies {
 
-    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'com.google.android.material:material:1.14.0'
 
-    implementation 'androidx.datastore:datastore-preferences:1.2.0' // TODO: migrate from SharedPreferences to DataStore
+    implementation 'androidx.datastore:datastore-preferences:1.2.1' // TODO: migrate from SharedPreferences to DataStore
 
     //implementation "androidx.compose.material3:material3:1.3.1"
     //implementation "androidx.compose.material3:material3-window-size-class:1.3.1"
@@ -192,7 +194,7 @@ dependencies {
     implementation 'com.doubleyellow:AndroidBase@aar'
     // uncommenting this while in Android Studio creates a subdir AndroidBase with an .iml file in it
 
-    implementation 'androidx.wear:wear:1.3.0'       // minSdk=23 for 1.[0-2].0
+    implementation 'androidx.wear:wear:1.4.0'       // minSdk=23 for 1.[0-2].0
     implementation 'androidx.wear:wear-input:1.2.0' // minSdk=25
 
     //wearOsImplementation 'androidx.wear:wear:1.0.0' // needs minSdkVersion=23
@@ -202,10 +204,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar']) // AndroidBase and Graph
 
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.2'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
-    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.appcompat:appcompat:1.8.0'
     // moving from 1.3.1 to 1.4.0 makes e.g. Wear OS in emulator fail, 1.7.0 made build fail it seems (20250105)
 
   //implementation 'androidx.legacy:legacy-support-v13:1.0.0'
@@ -215,16 +217,16 @@ dependencies {
     implementation 'androidx.core:core-splashscreen:1.2.0'
 
     // ChromeCast (new with Custom Receiver)
-    phoneTabletPre24Implementation 'com.google.android.gms:play-services-cast-framework:22.2.0'
-    phoneTabletPost25Implementation 'com.google.android.gms:play-services-cast-framework:22.2.0'
-    wearOsImplementation 'com.google.android.gms:play-services-cast-framework:22.2.0'
+    phoneTabletPre24Implementation 'com.google.android.gms:play-services-cast-framework:22.3.1'
+    phoneTabletPost25Implementation 'com.google.android.gms:play-services-cast-framework:22.3.1'
+    wearOsImplementation 'com.google.android.gms:play-services-cast-framework:22.3.1'
     // wearOs can not cast but to run it still needs 'Implementation' to not have 'ClassNotFound' exceptions
 
     // allow communication between handheld device and wearable
-    phoneTabletPre24CompileOnly 'com.google.android.gms:play-services-wearable:19.0.0'
+    phoneTabletPre24CompileOnly 'com.google.android.gms:play-services-wearable:20.0.1'
     // compileOnly is good enough for API < 23
-    phoneTabletPost25Implementation 'com.google.android.gms:play-services-wearable:19.0.0'
-    wearOsImplementation 'com.google.android.gms:play-services-wearable:19.0.0'
+    phoneTabletPost25Implementation 'com.google.android.gms:play-services-wearable:20.0.1'
+    wearOsImplementation 'com.google.android.gms:play-services-wearable:20.0.1'
 
     phoneTabletPre24CompileOnly       'com.google.android.support:wearable:2.9.0'
     phoneTabletPost25Implementation   'com.google.android.support:wearable:2.9.0'

@@ -49,7 +49,7 @@
 
     <string name="oa_set">Satz</string>
     <string name="oa_sets">Sätze</string>
-    <string name="oa_set_ball">Satzball</string>
+    <string name="oa_set_point">Satzball</string>
 
     <string name="oa_n_all__or__n_equal">%d beide</string>
     <string name="oa_player_needs_2_clear_points">Spieler gewinnt mit 2 Punkten Vorsprung</string>
