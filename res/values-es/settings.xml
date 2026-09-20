@@ -210,8 +210,8 @@ Mantener la pantalla encendida</string>
     <string name="pref_MatchFormat">Formato de partido</string>
     <string name="pref_MatchFormat_summary">Número de juegos para jugar, a cuántos puntos, mecanismo de puntuación</string>
     <string name="pref_showLastGameInfoInTimer">Mostrar información de los últimos juegos en el diálogo del tiempo</string>
-    <string name="pref_OfficialSquashRulesURLs">Reglas oficiales de squash URLs</string>
-    <string name="pref_OfficialSquashRulesURLs_summary">La primera de las URL se usa desde \'Mostrar/Reglas oficiales de squash\' opción de menú</string>
+    <string name="pref_OfficialRulesURLs">Reglas oficiales URLs</string>
+    <string name="pref_OfficialRulesURLs_summary">La primera de las URL se usa desde \'Mostrar/Reglas oficiales\' opción de menú</string>
     <string name="pref_FlagsURLs">Banderas URLs</string>
     <string name="pref_FlagsURLs_summary">La primera de las URL se usa para recuperar banderas si se especifican países.</string>
     <string name="pref_AutomateAsMuchAsPossible">Automatización</string>

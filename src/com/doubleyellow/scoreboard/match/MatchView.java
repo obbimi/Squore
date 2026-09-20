@@ -175,6 +175,7 @@ public class MatchView extends ScrollView
         lToggleFormatViews.add(R.id.llFinalSetFinish);
         lToggleFormatViews.add(R.id.llNewBalls);
         lToggleFormatViews.add(R.id.llPauseDuration);
+        lToggleFormatViews.add(R.id.llPauseDurationBetweenSets);
         lToggleFormatViews.add(R.id.llScoringType);
         lToggleFormatViews.add(R.id.llLiveScore);
         if ( m_bIsDoubles ) {
@@ -205,6 +206,7 @@ public class MatchView extends ScrollView
         if ( Brand.isGameSetMatch() == false ) {
             lToggleFormatViews.remove((Integer) R.id.llFinalSetFinish );
             lToggleFormatViews.remove((Integer) R.id.llNewBalls );
+            lToggleFormatViews.remove((Integer) R.id.llPauseDurationBetweenSets );
         }
 
 /*
@@ -297,6 +299,7 @@ public class MatchView extends ScrollView
             }
         } else {
             ViewUtil.hideViewsForEver(this, R.id.llFinalSetFinish);
+            ViewUtil.hideViewsForEver(this, R.id.llPauseDurationBetweenSets);
             ViewUtil.hideViewsForEver(this, R.id.llNewBalls);
             ViewUtil.hideViewsForEver(this, R.id.llChangesSidesWhen);
             ViewUtil.hideViewsForEver(this, R.id.llScoringTypeGSM);
@@ -423,8 +426,13 @@ public class MatchView extends ScrollView
     private Spinner              spDisciplineStart;
     private Spinner              spWarmupDuration;
     private ToggleButton         cbWarmupDuration; /* If only 2 options available */
+
     private Spinner              spPauseDuration;
     private ToggleButton         cbPauseDuration; /* If only 2 options available */
+
+    private Spinner              spPauseDurationBetweenSets;
+    private ToggleButton         cbPauseDurationBetweenSets; /* If only 2 options available */
+
     private ToggleButton         tbBestOf_or_TotalOf;
     private Spinner              spAnnouncementLanguage;
     private Spinner              spDoublesServeSequence;
@@ -827,7 +835,17 @@ public class MatchView extends ScrollView
             spPauseDuration = (Spinner)      findViewById(R.id.spPauseDuration);
             iTotNrOfValuesToSelectFrom += initDuration(context, cbPauseDuration, spPauseDuration, txtPlayerA, lValues, iDuration);
         }
-        if ( iTotNrOfValuesToSelectFrom <= 2 ) {
+        if ( Brand.isGameSetMatch() ) {
+            List<String> lValues = Preferences.syncAndClean_pauseBetweenSetsValues(context);
+            int iDuration = PreferenceValues.getPauseDurationBetweenSets(context);
+
+            cbPauseDurationBetweenSets = (ToggleButton) findViewById(R.id.cbPauseDurationBetweenSets);
+            spPauseDurationBetweenSets = (Spinner)      findViewById(R.id.spPauseDurationBetweenSets);
+            iTotNrOfValuesToSelectFrom += initDuration(context, cbPauseDurationBetweenSets, spPauseDurationBetweenSets, txtPlayerA, lValues, iDuration);
+        }
+
+        int iHideIfValuesToSelectFromIsLessThen = Brand.isGameSetMatch() ? 3 : 2;
+        if ( iTotNrOfValuesToSelectFrom <= iHideIfValuesToSelectFromIsLessThen ) {
             ViewParent parent = spPauseDuration.getParent();
             if ( parent instanceof ViewGroup) {
                 ((ViewGroup) parent).setVisibility(GONE);
@@ -1490,6 +1508,9 @@ public class MatchView extends ScrollView
 
         getValueFromSelectListOrToggleAndStoreAsPref(getContext(), cbWarmupDuration, spWarmupDuration, PreferenceKeys.timerWarmup           , PreferenceValues.getWarmupDuration(getContext()));
         getValueFromSelectListOrToggleAndStoreAsPref(getContext(), cbPauseDuration, spPauseDuration  , PreferenceKeys.timerPauseBetweenGames, PreferenceValues.getPauseDuration (getContext()));
+        if ( Brand.isGameSetMatch() ) {
+            getValueFromSelectListOrToggleAndStoreAsPref(getContext(), cbPauseDurationBetweenSets, spPauseDurationBetweenSets  , PreferenceKeys.timerPauseBetweenSets, PreferenceValues.getPauseDurationBetweenSets (getContext()));
+        }
 
         if ( tbBestOf_or_TotalOf != null ) {
             m.setPlayAllGames(tbBestOf_or_TotalOf.isChecked());

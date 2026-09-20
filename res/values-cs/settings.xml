@@ -212,8 +212,8 @@
     <string name="pref_MatchFormat">Formát zápasu</string>
     <string name="pref_MatchFormat_summary">Na kolik setů, do kolika bodů, způsob bodování</string>
     <string name="pref_showLastGameInfoInTimer">Zobrazovat poslední sety v okně časomíry</string>
-    <string name="pref_OfficialSquashRulesURLs">Odkazy na oficiální pravidla squashe</string>
-    <string name="pref_OfficialSquashRulesURLs_summary">První odkaz se použije při volbě \'Zobrazit oficiální pravidla squashe\' v menu</string>
+    <string name="pref_OfficialRulesURLs">Odkazy na oficiální pravidla</string>
+    <string name="pref_OfficialRulesURLs_summary">První odkaz se použije při volbě \'Zobrazit oficiální pravidla\' v menu</string>
     <string name="pref_FlagsURLs">Odkazy na obrázky vlaječek</string>
     <string name="pref_FlagsURLs_summary">První z odkazů se použije pro stažení obrázků vlaječek, pokud jsou u hráčů uvedeny země</string>
     <string name="pref_AutomateAsMuchAsPossible">Automatizace úkonů</string>

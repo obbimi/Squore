@@ -111,6 +111,7 @@ import com.doubleyellow.scoreboard.timer.*;
 import com.doubleyellow.scoreboard.timer.Timer;
 import com.doubleyellow.scoreboard.history.MatchHistory;
 import com.doubleyellow.scoreboard.match.*;
+import com.doubleyellow.scoreboard.util.SDKUtil;
 import com.doubleyellow.scoreboard.vico.IBoard;
 import com.doubleyellow.scoreboard.vico.FocusEffect;
 import com.doubleyellow.scoreboard.view.GameHistoryView;
@@ -275,7 +276,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         if ( actionBar.isShowing() ) {
             ScoreBoard.bUseActionBar = ToggleResult.setToFalse;
             actionBar.hide();
-            doSdk36FixForActionBar();
+            SDKUtil.doSdk36FixForActionBar(this);
         } else {
             ScoreBoard.bUseActionBar = ToggleResult.setToTrue;
             //RWValues.setBoolean(PreferenceKeys.showActionBar, ScoreBoard.this, true);
@@ -285,7 +286,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             showAppropriateMenuItemInActionBar();
             PreferenceValues.removeOverwrite(PreferenceKeys.showActionBar);
 
-            doSdk36FixForActionBar();
+            SDKUtil.doSdk36FixForActionBar(this);
         }
         return bUseActionBar;
     }
@@ -1336,22 +1337,6 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     }
 
-    private void doSdk36FixForActionBar() {
-        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA /* 36 */ ) {
-            return;
-        }
-
-        // attempt at solving
-        // https://medium.com/@dileepapeiris5/resolve-layout-overlap-issues-after-upgrading-to-android-target-sdk-35-required-by-google-from-cd6c5f18fa25
-        final View rootView = findViewById(android.R.id.content);
-        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
-            int typeMask = WindowInsetsCompat.Type.navigationBars() | WindowInsetsCompat.Type.statusBars();
-            androidx.core.graphics.Insets innerPadding = insets.getInsets(typeMask);
-            rootView.setPadding(innerPadding.left, innerPadding.top, innerPadding.right, innerPadding.bottom);
-            return insets;
-        });
-    }
-
     // ------------------------------------------------------
     // refresh GUI elements
     // ------------------------------------------------------
@@ -1367,11 +1352,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             switch (bUseActionBar) {
                 case setToTrue:
                     actionBar.show();
-                    doSdk36FixForActionBar();
+                    SDKUtil.doSdk36FixForActionBar(this);
                     break;
                 case setToFalse:
                     actionBar.hide();
-                    doSdk36FixForActionBar();
+                    SDKUtil.doSdk36FixForActionBar(this);
                     break;
             }
         }
@@ -2208,6 +2193,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                ) {
                 swapSides_BOP(null);
             }
+
+            m_gsmNextTimerType = Type.UntilStartOfNextSet;
         }
 
         @Override public void OnXPointsPlayedInTiebreak(int iTotalPoints) {
@@ -2377,6 +2364,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 }
                 // ensure set duration of set in progress is displayed
                 iBoard.updateSetDurationChrono();
+
+                m_gsmNextTimerType = Type.UntilStartOfNextGame;
             } else {
                 showChangeSideFloatButton(false);
             }
@@ -2632,7 +2621,11 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     autoShowGameDetails();
                     autoShowHandicap();
                     if ( matchModel.hasStarted() ) {
-                        autoShowTimer(Type.UntilStartOfNextGame);
+                        if ( Brand.isGameSetMatch() ) {
+                            autoShowTimer(m_gsmNextTimerType);
+                        } else {
+                            autoShowTimer(Type.UntilStartOfNextGame);
+                        }
                     } else {
                         autoShowTimer(Type.UntilStartOfFirstGame);
                     }
@@ -3671,6 +3664,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                             lastTimerType = Type.TowelingDown;
                         }
                     }
+                    if ( Brand.isGameSetMatch() ) {
+                        lastTimerType = m_gsmNextTimerType;
+                    }
                 } else {
                     // toggle between the 2 with Warmup first
                     lastTimerType = Type.Warmup.equals(lastTimerType) ? Type.UntilStartOfFirstGame : Type.Warmup;
@@ -4023,6 +4019,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 break;
             case UntilStartOfFirstGame:
             case UntilStartOfNextGame:
+            case UntilStartOfNextSet:
                 twoTimerView = new PauseTimerView(this, matchModel, timerType);
                 break;
             case ContributedInjury:
@@ -4071,6 +4068,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                     break;
                 case UntilStartOfFirstGame:
                 case UntilStartOfNextGame:
+                case UntilStartOfNextSet:
                     if (matchModel.matchHasEnded() /*&& (PreferenceValues.showOfficialAnnouncements(this)==false)*/) {
                         iBoard.showToast(R.string.match_has_finished);
                         return;
@@ -4629,13 +4627,14 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
                         bChanged = matchModel.setNrOfPointsToWinGame(m.getNrOfPointsToWinGame());
                         bChanged = matchModel.setNrOfGamesToWinMatch(m.getNrOfGamesToWinMatch());
-                        bChanged = matchModel.setTiebreakFormat(m.getTiebreakFormat());
+                        bChanged = matchModel.setTiebreakFormat     (m.getTiebreakFormat());
                         if ( Brand.isGameSetMatch() ) {
                             GSMModel gsmModel = (GSMModel) m;
                             // only allow if final set is not yet started
                             GSMModel gsmInProgress = (GSMModel) matchModel;
                             if ( gsmInProgress.isFinalSet() == false ) {
                                 gsmInProgress.setFinalSetFinish(gsmModel.getFinalSetFinish());
+                                gsmInProgress.setNewBalls(gsmModel.getNewBalls());
                             }
                         }
                     } else {
@@ -5050,6 +5049,8 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
     // made static in preparation to be able to have feedback about the timer status child activity like MatchHistory
     public static Timer timer = null;
+
+    private Type m_gsmNextTimerType = Type.UntilStartOfNextGame;
 
     private DialogTimerView dialogTimerView;
     public DialogTimerView getDialogTimerView() {

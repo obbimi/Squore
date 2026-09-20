@@ -58,7 +58,7 @@ public class GSMModel extends Model
 
     /** Padel, tennis like scoring only */
     public interface OnSetChangeListener extends OnModelChangeListener {
-        /** invoked each time a the score change implies 'SetBall' change: i.e. now having setball, or no-longer having setball */
+        /** invoked each time the score change implies 'SetBall' change: i.e. now having setball, or no-longer having setball */
         void OnSetBallChange(Player[] players, boolean bHasSetBall);
         /** actually ended set and preparing for new one */
         void OnSetEnded(Player winningPlayer);
@@ -515,6 +515,9 @@ public class GSMModel extends Model
             return iInXGames;
         } else {
             int iAtStartOfSetX = newBalls.atStartOfSetX();
+            if ( iAtStartOfSetX == GSMModel.NOT_APPLICABLE ) {
+                return GSMModel.NOT_APPLICABLE;
+            }
             int iSetInProgress = getSetNrInProgress();
             if ( iSetInProgress == iAtStartOfSetX ) {
                 iInXGames = 0;

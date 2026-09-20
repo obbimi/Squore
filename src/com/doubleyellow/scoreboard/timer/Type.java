@@ -34,36 +34,39 @@ import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
  */
 public enum Type {
     Warmup                  (PreferenceKeys.timerWarmup                  , 240 , R.string.oal_warmup                    , R.string.oa_halftime ),
-    UntilStartOfFirstGame   (PreferenceKeys.timerPauseBeforeFirstGame    ,  60 , R.string.oal_pause                     , R.string.oa_fifteen_seconds ), // PSA: 120
-    UntilStartOfNextGame    (PreferenceKeys.timerPauseBetweenGames       , 120 , R.string.oal_pause                     , R.string.oa_fifteen_seconds ), // PSA: 120
+    UntilStartOfFirstGame   (PreferenceKeys.timerPauseBeforeFirstGame    ,  60 , R.string.oal_pause                     , R.string.oa_xx_seconds_EM ), // PSA: 120
+    UntilStartOfNextGame    (PreferenceKeys.timerPauseBetweenGames       , 120 , R.string.oal_pause                     , R.string.oa_xx_seconds_EM ), // PSA: 120
+
+    // padel
+    UntilStartOfNextSet     (PreferenceKeys.timerPauseBetweenSets        , 120 , R.string.oal_pause                     , R.string.oa_xx_seconds_EM ),
 
     // squash
-    SelfInflictedInjury     (PreferenceKeys.timerSelfInflictedInjury     ,  3*60, R.string.sb_self_inflicted_injury      , R.string.oa_fifteen_seconds ), // 14.3.1
-    SelfInflictedBloodInjury(PreferenceKeys.timerSelfInflictedBloodInjury,  5*60, R.string.sb_self_inflicted_blood_injury, R.string.oa_fifteen_seconds ), // 14.4.1 (blood)
-    ContributedInjury       (PreferenceKeys.timerContributedInjury       , 15*60, R.string.sb_contributed_injury         , R.string.oa_fifteen_seconds ),
-    OpponentInflictedInjury (PreferenceKeys.timerOpponentInflictedInjury , 15*60, R.string.sb_opponent_inflicted_injury  , R.string.oa_fifteen_seconds ),
+    SelfInflictedInjury     (PreferenceKeys.timerSelfInflictedInjury     ,  3*60, R.string.sb_self_inflicted_injury      , R.string.oa_xx_seconds_EM ), // 14.3.1
+    SelfInflictedBloodInjury(PreferenceKeys.timerSelfInflictedBloodInjury,  5*60, R.string.sb_self_inflicted_blood_injury, R.string.oa_xx_seconds_EM ), // 14.4.1 (blood)
+    ContributedInjury       (PreferenceKeys.timerContributedInjury       , 15*60, R.string.sb_contributed_injury         , R.string.oa_xx_seconds_EM ),
+    OpponentInflictedInjury (PreferenceKeys.timerOpponentInflictedInjury , 15*60, R.string.sb_opponent_inflicted_injury  , R.string.oa_xx_seconds_EM ),
     // tabletennis
-    TowelingDown            (PreferenceKeys.timerTowelingDown            , 60   , R.string.toweling_down                 , R.string.oa_fifteen_seconds ),
-    Timeout                 (PreferenceKeys.timerTimeout                 , 60   , R.string.timeout                       , R.string.oa_fifteen_seconds ),
+    TowelingDown            (PreferenceKeys.timerTowelingDown            , 60   , R.string.toweling_down                 , R.string.oa_xx_seconds_EM ),
+    Timeout                 (PreferenceKeys.timerTimeout                 , 60   , R.string.timeout                       , R.string.oa_xx_seconds_EM ),
     ;
     private final int            iSecs;
 //  private final int[]          iR;
     private final int            iNameResId;
-    private final int            iHalftTimeMsgResId;
+    private final int            iHalfTimeMsgResId;
     private final PreferenceKeys key;
     Type(PreferenceKeys key, int iSecs, int iR1, int iR2) {
       //this.iR    = new int[] { iR1, iR2 };
         this.key   = key;
         this.iSecs = iSecs;
         this.iNameResId = iR1;
-        this.iHalftTimeMsgResId = iR2;
+        this.iHalfTimeMsgResId = iR2;
     }
 
     public int getNameResId() {
         return this.iNameResId;
     }
-    public int getHalftTimeMsgResId() {
-        return this.iHalftTimeMsgResId;
+    public int getHalfTimeMsgResId() {
+        return this.iHalfTimeMsgResId;
     }
     public int getDefaultSecs() {
         return this.iSecs;

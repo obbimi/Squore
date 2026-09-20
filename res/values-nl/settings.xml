@@ -203,8 +203,8 @@
     <string name="pref_MatchFormat">Wedstrijd Format</string>
     <string name="pref_MatchFormat_summary">Hoeveel games spelen, tot hoeveel punten. Score mechanisme</string>
     <string name="pref_showLastGameInfoInTimer">Toon info van laatste games in timer scherm</string>
-    <string name="pref_OfficialSquashRulesURLs">Officiele squash regels URLs</string>
-    <string name="pref_OfficialSquashRulesURLs_summary">De eerste van de URLs wordt gebruikt voor de \'Toon/Officiele squash regels\' menu option</string>
+    <string name="pref_OfficialRulesURLs">Officiele regels URLs</string>
+    <string name="pref_OfficialRulesURLs_summary">De eerste van de URLs wordt gebruikt voor de \'Toon/Officiele regels\' menu option</string>
     <string name="pref_FlagsURLs">Vlaggen URLs</string>
     <string name="pref_FlagsURLs_summary">De eerste van de URLs wordt gebruikt voor tonen van vlaggen als landen per speler zijn gespecifieerd</string>
     <string name="pref_AutomateAsMuchAsPossible">Automatiseren</string>

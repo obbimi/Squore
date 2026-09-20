@@ -40,6 +40,7 @@ import com.doubleyellow.scoreboard.mqtt.MQTTRemoteActionReceiver;
 import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.NewMatchLayout;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.util.SDKUtil;
 import com.doubleyellow.util.MenuHandler;
 import com.doubleyellow.util.StringUtil;
 
@@ -54,9 +55,9 @@ import java.io.Serializable;
  * - event details
  * - name of the referee
  * - what match format the match is played in
- * - whether or not to use timers
- * - whether or not to official announcements
- * - whether or not to use a handicap system
+ * - whether to use timers
+ * - whether to official announcements
+ * - whether to use a handicap system
  *
  * Used after a match is selected from 'Feed' or 'My matches'
  * Also used to 'edit' a match properties.
@@ -93,6 +94,9 @@ public class Match extends XActivity implements MenuHandler, MQTTRemoteActionRec
         if ( actionBar != null ) {
             actionBar.setHomeButtonEnabled(true);
         }
+
+        SDKUtil.doSdk36FixForActionBar(this);
+
 
         boolean bIsDoubles = false;
         String sA          = null;

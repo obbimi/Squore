@@ -184,8 +184,8 @@
     <string name="pref_MatchFormat">Formato de encontro</string>
     <string name="pref_MatchFormat_summary">Número de jogos para jogar, até quantos pontos, mecanismo de pontuação</string>
     <string name="pref_showLastGameInfoInTimer">Mostrar informações dos últimos jogos na caixa de diálogo do cronômetro</string>
-    <string name="pref_OfficialSquashRulesURLs">URLs de regras oficiais de squash</string>
-    <string name="pref_OfficialSquashRulesURLs_summary">Primeiro, um dos URLs é usado na opção de menu \'Mostrar/Regras oficiais de squash\'</string>
+    <string name="pref_OfficialRulesURLs">URLs de regras oficiais</string>
+    <string name="pref_OfficialRulesURLs_summary">Primeiro, um dos URLs é usado na opção de menu \'Mostrar/Regras oficiais\'</string>
     <string name="pref_FlagsURLs">Sinalizadores de URLs</string>
     <string name="pref_FlagsURLs_summary">Primeiro, um dos URLs é usado para recuperar sinalizadores se os países forem especificados.</string>
     <string name="pref_AutomateAsMuchAsPossible">Automação</string>

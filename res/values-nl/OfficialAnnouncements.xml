@@ -46,7 +46,7 @@
     <string name="oa_player_needs_2_clear_points">Een speler moet winnen met twee punten verschil</string>
 
     <string name="oa_change_sides">Wisselen van kant</string>
-    <string name="oa_fifteen_seconds">%s seconden!</string>
+    <string name="oa_xx_seconds_EM">%s seconden!</string>
 
     <string name="oa_decision_colon">Beslissing :</string>
     <string name="oa_yes_let">Yes Let</string>

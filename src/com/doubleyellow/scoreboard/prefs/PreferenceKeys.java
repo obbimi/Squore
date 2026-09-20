@@ -182,6 +182,8 @@ public enum PreferenceKeys {
         timerPauseBeforeFirstGame_values(null, false),
         timerPauseBetweenGames(Integer.class, false),
         timerPauseBetweenGames_values(null, false),
+        timerPauseBetweenSets(Integer.class, false),
+        timerPauseBetweenSets_values(Integer.class, false),
       //timerInjury(null, false),
             timerSelfInflictedInjury(null, false),
             timerSelfInflictedBloodInjury(null, false),

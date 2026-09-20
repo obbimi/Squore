@@ -41,6 +41,7 @@
         <item>After First  9, Then Each 11th game</item>
         <item>After First 11, Then Each 13th game</item>
         <item>Before Set 3</item>
+        <item>Never</item>
     </string-array>
 
 </resources>

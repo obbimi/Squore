@@ -65,6 +65,7 @@ import com.doubleyellow.scoreboard.model.NewBalls;
 import com.doubleyellow.scoreboard.model.Player;
 import com.doubleyellow.scoreboard.model.TieBreakFormat;
 import com.doubleyellow.scoreboard.speech.Speak;
+import com.doubleyellow.scoreboard.util.SDKUtil;
 import com.doubleyellow.util.*;
 
 import org.json.JSONArray;
@@ -93,6 +94,8 @@ public class Preferences extends Activity {
         super.onCreate(savedInstanceState);
 
         ScoreBoard.initAllowedOrientation(this);
+
+        SDKUtil.doSdk36FixForActionBar(this);
 
         // Display the fragment as the main content.
         FragmentManager     mFragmentManager     = getFragmentManager();
@@ -352,6 +355,9 @@ public class Preferences extends Activity {
                         break;
                     case timerPauseBetweenGames_values:
                         syncAndClean_pauseBetweenGamesValues(Preferences.this);
+                        break;
+                    case timerPauseBetweenSets_values:
+                        syncAndClean_pauseBetweenSetsValues(Preferences.this);
                         break;
                     case endGameSuggestion:
                         break;
@@ -918,6 +924,27 @@ public class Preferences extends Activity {
                 hideRemovePreference(psRoot, PreferenceKeys.pauseGame);
             }
 
+            if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA /* 36 */ ) {
+                // since sdk36: add a dummy to each preference screen to prevent 'top preference' from being under 'status' bar
+                int iCnt = psRoot.getPreferenceCount();
+                PreferenceValues.setString("dummy_sdk36", getContext(), "");
+                for (int i = 0; i < iCnt; i++) {
+                    Preference preference = psRoot.getPreference(i);
+                    if ( preference instanceof PreferenceScreen ) {
+                        EditTextPreference dummy = new EditTextPreference(getContext());
+                        dummy.setEnabled(false);
+                        dummy.setText("--");
+                        dummy.setIcon(R.drawable.dummy);
+                      //dummy.setKey("dummy_sdk36_" + i);
+                        dummy.setKey("dummy_sdk36");
+                        dummy.setOrder(-1);
+                        PreferenceScreen preferenceScreen = (PreferenceScreen) preference;
+                        preferenceScreen.addPreference(dummy); // grmph. No way to add them at the top?
+                    }
+                }
+            }
+
+
             // initialize for downloading flags and setting correct dimensions
 
             Preference.OnPreferenceClickListener countryFlagInstaller = new Preference.OnPreferenceClickListener() {
@@ -1024,6 +1051,10 @@ public class Preferences extends Activity {
             EditTextPreference timerPauseBetweenGames_values = (EditTextPreference) this.findPreference(PreferenceKeys.timerPauseBetweenGames_values);
             if ( timerPauseBetweenGames_values != null ) {
                 syncAndClean_pauseBetweenGamesValues(getActivity());
+            }
+            EditTextPreference timerPauseBetweenSets_values = (EditTextPreference) this.findPreference(PreferenceKeys.timerPauseBetweenSets_values);
+            if ( timerPauseBetweenSets_values != null ) {
+                syncAndClean_pauseBetweenSetsValues(getActivity());
             }
 
             //CheckBoxPreference dynamic    = (CheckBoxPreference) this.findPreference(PreferenceKeys.textColorDynamically);
@@ -1312,6 +1343,11 @@ public class Preferences extends Activity {
                                               , PreferenceKeys.timerPauseBetweenGames_values   , R.string.timerPauseBetweenGames_values_default__Squash
                                               );
     }
+    public static List<String> syncAndClean_pauseBetweenSetsValues(Context ctx) {
+        return syncAndClean_durationValues(ctx, PreferenceKeys.timerPauseBetweenSets          , R.integer.timerPauseBetweenSets_default
+                                              , PreferenceKeys.timerPauseBetweenSets_values   , R.string.timerPauseBetweenSets_values_default
+                                              );
+    }
     public static List<String> syncAndClean_pauseBeforeFirstGameValues(Context ctx) {
         return syncAndClean_durationValues(ctx, PreferenceKeys.timerPauseBeforeFirstGame          , R.integer.timerPauseBeforeFirstGame_default__Squash
                                               , PreferenceKeys.timerPauseBeforeFirstGame_values   , R.string.timerPauseBeforeFirstGame_values_default__Squash
@@ -1384,6 +1420,8 @@ public class Preferences extends Activity {
             , PreferenceKeys.finalSetFinish
             , PreferenceKeys.newBalls
             , PreferenceKeys.indicateGoldenPoint
+            , PreferenceKeys.timerPauseBetweenSets
+            , PreferenceKeys.timerPauseBetweenSets_values
             );
     public static Set<PreferenceKeys> NONGameSetMatch_SpecificPrefs = Set.of
             ( PreferenceKeys.indicateGameBall

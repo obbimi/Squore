@@ -55,7 +55,7 @@
     <string name="oa_player_needs_2_clear_points">Spieler gewinnt mit 2 Punkten Vorsprung</string>
 
     <string name="oa_change_sides">Seitenwechsel!</string>
-    <string name="oa_fifteen_seconds">%s Sekunden!</string>
+    <string name="oa_xx_seconds_EM">%s Sekunden!</string>
 
     <string name="oa_decision_colon">Entscheidung:</string>
     <string name="oa_yes_let">Let</string>

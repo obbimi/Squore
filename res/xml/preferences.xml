@@ -826,8 +826,8 @@
             <EditTextPreference
                 android:icon="@drawable/dummy"
                 android:key="OfficialRulesURLs"
-                android:title="@string/pref_OfficialSquashRulesURLs"
-                android:summary="@string/pref_OfficialSquashRulesURLs_summary"
+                android:title="@string/pref_OfficialRulesURLs"
+                android:summary="@string/pref_OfficialRulesURLs_summary"
                 android:inputType="textMultiLine"
                 android:defaultValue="@string/OfficialRulesURLs_default__Squash"
                 />
@@ -1316,6 +1316,7 @@
                 android:inputType="number"
                 android:defaultValue="@integer/timerPauseBeforeFirstGame_default__Squash"
                 />
+
             <EditTextPreference android:key="timerPauseBeforeFirstGame_values"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_timerPauseBeforeFirstGame_values"
@@ -1335,6 +1336,21 @@
                 android:summary="@string/pref_timerPauseBetweenGames_values_summary"
                 android:defaultValue="@string/timerPauseBetweenGames_values_default__Squash"
                 />
+
+            <EditTextPreference android:key="timerPauseBetweenSets"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_timerPauseBetweenSets"
+                android:summary="@string/pref_timerPauseBetweenSets_summary"
+                android:inputType="number"
+                android:defaultValue="@integer/timerPauseBetweenSets_default"
+                />
+            <EditTextPreference android:key="timerPauseBetweenSets_values"
+                android:icon="@drawable/dummy"
+                android:title="@string/pref_timerPauseBetweenSets_values"
+                android:summary="@string/pref_timerPauseBetweenSets_values_summary"
+                android:defaultValue="@string/timerPauseBetweenSets_values_default"
+                />
+
             <CheckBoxPreference android:key="showTimeIsAlreadyUpFor_Chrono"
                 android:icon="@drawable/dummy"
                 android:title="@string/pref_showTimeIsAlreadyUpFor_Chrono"
@@ -1763,8 +1779,8 @@
             />
             <EditTextPreference android:key="OfficialRulesURLs"
                 android:icon="@drawable/dummy"
-                                android:title="@string/pref_OfficialSquashRulesURLs"
-                                android:summary="@string/pref_OfficialSquashRulesURLs_summary"
+                                android:title="@string/pref_OfficialRulesURLs"
+                                android:summary="@string/pref_OfficialRulesURLs_summary"
                                 android:inputType="textMultiLine"
                                 android:defaultValue="@string/OfficialRulesURLs_default__Squash"
                     />

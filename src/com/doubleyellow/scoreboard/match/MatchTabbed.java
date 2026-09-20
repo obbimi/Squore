@@ -572,6 +572,8 @@ public class MatchTabbed extends XActivity implements /*NfcAdapter.CreateNdefMes
 
         setHomeButtonEnabledOnActionBar();
 
+        SDKUtil.doSdk36FixForActionBar(this);
+
         titleStrip.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getResources().getInteger(R.integer.TextSizeTabStrip) );
         ColorPrefs.setColor(titleStrip);
 

@@ -49,7 +49,7 @@
     <string name="oa_player_needs_2_clear_points">Hráč musí vyhrát o dva body</string>
 
     <string name="oa_change_sides">Změnit stranu!</string>
-    <string name="oa_fifteen_seconds">%s sekund!</string>
+    <string name="oa_xx_seconds_EM">%s sekund!</string>
 
     <string name="oa_decision_colon">Rozhodnutí :</string>
     <string name="oa_yes_let">Yes Let</string>

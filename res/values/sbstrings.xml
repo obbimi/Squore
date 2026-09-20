@@ -27,6 +27,7 @@
     <string name="sb_Duration_Warmup_and_Pauses">Duration Warmup &amp; Pause (s)</string>
     <string name="sb_Duration_Warmup">Duration Warmup</string>
     <string name="sb_Duration__and_Pauses">Pause</string>
+    <string name="sb_Duration__and_Between_Sets">Between Sets</string>
     <string name="sb_tiebreak">Tie Break</string>
     <string name="sb_who_will_start_to_serve">Who will start to serve?</string>
     <string name="sb_cmd_toss">Toss</string>

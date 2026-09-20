@@ -54,7 +54,7 @@
     <string name="oa_player_needs_2_clear_points">A player must win by two points</string>
 
     <string name="oa_change_sides">Change sides!</string>
-    <string name="oa_fifteen_seconds">%s seconds!</string>
+    <string name="oa_xx_seconds_EM">%s seconds!</string>
 
     <string name="oa_decision_colon">Decision :</string>
     <string name="oa_yes_let">Yes Let</string>

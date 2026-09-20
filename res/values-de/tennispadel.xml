@@ -41,6 +41,7 @@
         <item>Nach den ersten  9, dann nach jedem 11. Spiel</item>
         <item>Nach den ersten 11, dann nach jedem 13. Spiel</item>
         <item>Vor Satz 3</item>
+        <item>Niemals</item>
     </string-array>
 
 </resources>

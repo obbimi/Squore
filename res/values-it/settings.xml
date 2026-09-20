@@ -189,8 +189,8 @@
     <string name="pref_MatchFormat">Formato Incontro</string>
     <string name="pref_MatchFormat_summary">Numero dei giochi, a quale punteggio, meccanismo di punteggio</string>
     <string name="pref_showLastGameInfoInTimer">Mostra informazione degli ultimi giochi nel dialogo del cronometro</string>
-    <string name="pref_OfficialSquashRulesURLs">URLs Regolamento ufficiale Squash</string>
-    <string name="pref_OfficialSquashRulesURLs_summary">Il primo degli URL è preso dall\'opzione del menu \'Mostra/Reglamento ufficiale squash\'</string>
+    <string name="pref_OfficialRulesURLs">URLs Regolamento ufficiale</string>
+    <string name="pref_OfficialRulesURLs_summary">Il primo degli URL è preso dall\'opzione del menu \'Mostra/Reglamento ufficiale\'</string>
     <string name="pref_FlagsURLs">URLs Bandiere</string>
     <string name="pref_FlagsURLs_summary">Il primo degli URL sarà usato per recuperare le bandiere se le nazioni sono specificate.</string>
     <string name="pref_AutomateAsMuchAsPossible">Automazione</string>

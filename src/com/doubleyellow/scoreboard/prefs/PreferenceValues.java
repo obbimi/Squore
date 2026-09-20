@@ -827,7 +827,7 @@ public class PreferenceValues extends RWValues
             R.string.oa_player_needs_2_clear_points,
             R.string.oa_halftime,
             R.string.oa_change_sides,
-            R.string.oa_fifteen_seconds,
+            R.string.oa_xx_seconds_EM,
             R.string.oa_decision_colon,
             R.string.oa_yes_let,
             R.string.oa_no_let,
@@ -1670,6 +1670,9 @@ public class PreferenceValues extends RWValues
     }
     public static int getPauseDuration(Context context) {
         return _getIntegerR(PreferenceKeys.timerPauseBetweenGames, context, R.integer.timerPauseBetweenGames_default__Squash);
+    }
+    public static int getPauseDurationBetweenSets(Context context) {
+        return _getIntegerR(PreferenceKeys.timerPauseBetweenSets, context, R.integer.timerPauseBetweenSets_default);
     }
 
     private static boolean bFixedMatchesAreUnChanged = true;

@@ -183,8 +183,8 @@
     <string name="pref_MatchFormat">Format de match</string>
     <string name="pref_MatchFormat_summary">Nombre de jeux à jouer, combien de points, mécanisme de marque</string>
     <string name="pref_showLastGameInfoInTimer">Afficher les informations du dernier jeu dans la fenêtre de chronométrage</string>
-    <string name="pref_OfficialSquashRulesURLs">Lien des règles officielles</string>
-    <string name="pref_OfficialSquashRulesURLs_summary">Le premier des liens du menu \'Afficher règles officielles\' est utilisé</string>
+    <string name="pref_OfficialRulesURLs">Lien des règles officielles</string>
+    <string name="pref_OfficialRulesURLs_summary">Le premier des liens du menu \'Afficher règles officielles\' est utilisé</string>
     <string name="pref_FlagsURLs">Lien Drapeaux</string> <!-- TODO -->
     <string name="pref_FlagsURLs_summary">Le premier des liens est utilisé pour obtenir des drapeaux</string> <!-- TODO -->
     <string name="pref_AutomateAsMuchAsPossible">Automatisation</string>

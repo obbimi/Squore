@@ -82,7 +82,7 @@ public class Timer
         Timer.scoreBoard      = scoreBoard;
         this.autoTriggered   = bAutoTriggered;
 
-        int iReminderMsgId = timerType.getHalftTimeMsgResId();
+        int iReminderMsgId = timerType.getHalfTimeMsgResId();
         if ( iReminderMsgId != 0 ) {
             Timer.sReminderText = PreferenceValues.getOAString(scoreBoard, iReminderMsgId, formatTime(iReminderAt, true)) ;
         } else {

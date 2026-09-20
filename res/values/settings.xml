@@ -292,8 +292,8 @@
     <string name="pref_MatchFormat">Match Format</string>
     <string name="pref_MatchFormat_summary">Number of games to play, to how many points, scoring mechanism</string>
     <string name="pref_showLastGameInfoInTimer">Show info of last games in timer dialog</string>
-    <string name="pref_OfficialSquashRulesURLs">Official squash rules URLs</string>
-    <string name="pref_OfficialSquashRulesURLs_summary">First one of the URLs is used from \'Show/Official squash rules\' menu option</string>
+    <string name="pref_OfficialRulesURLs">Official rules URLs</string>
+    <string name="pref_OfficialRulesURLs_summary">First one of the URLs is used from \'Show/Official rules\' menu option</string>
     <string name="pref_FlagsURLs">Flags URLs</string>
     <string name="pref_FlagsURLs_summary">First one of the URLs is used to retrieve flags if countries are specified.</string>
     <string name="pref_AutomateAsMuchAsPossible">Automation</string>
@@ -320,10 +320,17 @@
     <string name="pref_timerPauseBeforeFirstGame_summary">The number of seconds before the first game must start. Officially 60 seconds</string>
     <string name="pref_timerPauseBeforeFirstGame_values">Selectable values for time before first game</string>
     <string name="pref_timerPauseBeforeFirstGame_values_summary">Selectable values at the start of a new match for the number of seconds before the first game starts (typically 60 or 90)</string>
+
     <string name="pref_timerPauseBetweenGames">The number of seconds between games</string>
-    <string name="pref_timerPauseBetweenGames_summary">The number of seconds before the next game must start. Officially 120</string>
+    <string name="pref_timerPauseBetweenGames_summary">The number of seconds before the next game must start.</string>
     <string name="pref_timerPauseBetweenGames_values">Selectable values for time between games</string>
     <string name="pref_timerPauseBetweenGames_values_summary">Selectable values at the start of a new match for the number of seconds between games for that match (typically 90 or 120)</string>
+
+    <string name="pref_timerPauseBetweenSets">The number of seconds between sets</string>
+    <string name="pref_timerPauseBetweenSets_summary">The number of seconds before the next set must start.</string>
+    <string name="pref_timerPauseBetweenSets_values">Selectable values for time between sets</string>
+    <string name="pref_timerPauseBetweenSets_values_summary">Selectable values at the start of a new match for the number of seconds between sets for that match (typically 90 or 120)</string>
+
     <string name="pref_timerWarmup_values">Selectable values for warmup</string>
     <string name="pref_timerWarmup_values_summary">Selectable values for warmup at the start of a new match</string>
     <string name="pref_timerInjury">The number of seconds to recover from an injury</string>

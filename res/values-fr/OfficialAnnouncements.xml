@@ -40,7 +40,7 @@
     <string name="oa_player_needs_2_clear_points">2 points d\'écart</string>
 
     <string name="oa_change_sides">Changer de côté !</string>
-    <string name="oa_fifteen_seconds">%s secondes !</string>
+    <string name="oa_xx_seconds_EM">%s secondes !</string>
 
     <string name="oa_decision_colon">Décision :</string>
     <string name="oa_yes_let">Oui let</string>

@@ -244,8 +244,8 @@
     <string name="pref_MatchFormat">Spielformat</string>
     <string name="pref_MatchFormat_summary">Anzahl der zu spielenden Sätze | Anzahl der Punkte | Zählweise</string>
     <string name="pref_showLastGameInfoInTimer">Info über den letzten Satz im Timer-Dialog anzeigen</string>
-    <string name="pref_OfficialSquashRulesURLs">Offizielle Squash Regeln - URLs</string>
-    <string name="pref_OfficialSquashRulesURLs_summary">Die erste URL wird im Menü \'Offizielle Squash Regeln\' verwendet.</string>
+    <string name="pref_OfficialRulesURLs">Offizielle Regeln - URLs</string>
+    <string name="pref_OfficialRulesURLs_summary">Die erste URL wird im Menü \'Offizielle Regeln\' verwendet.</string>
     <string name="pref_FlagsURLs">Flaggen URLs</string>
     <string name="pref_FlagsURLs_summary">URL von der die Icons der Flaggen ausgelesen werden.\nDie erste URL wird zum Abrufen von Flaggen verwendet, wenn Länder angegeben sind.</string>
     <string name="pref_AutomateAsMuchAsPossible">Automatisierung</string>

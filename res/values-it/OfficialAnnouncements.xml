@@ -44,7 +44,7 @@
     <string name="oa_player_needs_2_clear_points">Due punti di vantaggio per vincere il gioco</string>
 
     <string name="oa_change_sides">Cambia lato!</string>
-    <string name="oa_fifteen_seconds">%s secondi!</string>
+    <string name="oa_xx_seconds_EM">%s secondi!</string>
 
     <string name="oa_decision_colon">Decisione :</string>
     <string name="oa_yes_let">Sì Let</string>
