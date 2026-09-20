@@ -49,6 +49,7 @@ import com.doubleyellow.scoreboard.prefs.ColorPrefs;
 import com.doubleyellow.scoreboard.prefs.NewMatchLayout;
 import com.doubleyellow.scoreboard.prefs.PreferenceKeys;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.util.SDKUtil;
 import com.doubleyellow.scoreboard.view.ExpandableListUtil;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.MapUtil;
