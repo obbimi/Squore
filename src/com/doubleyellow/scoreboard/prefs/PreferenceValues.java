@@ -425,7 +425,11 @@ public class PreferenceValues extends RWValues
 
     public static boolean isScoreboardInPresentationView(Context context) {
         if ( context instanceof ScoreBoard && ViewUtil.isLandscapeOrientation(context) ) {
-            EnumSet<LandscapeLayoutPreference> esFullScreenFor = EnumSet.of(LandscapeLayoutPreference.Presentation1, LandscapeLayoutPreference.Presentation2, LandscapeLayoutPreference.Presentation3);
+            EnumSet<LandscapeLayoutPreference> esFullScreenFor = EnumSet.of
+                    ( LandscapeLayoutPreference.Presentation1
+                    , LandscapeLayoutPreference.Presentation2
+                    , LandscapeLayoutPreference.Presentation3
+            );
             LandscapeLayoutPreference landscapeLayout = getLandscapeLayout(context);
             return esFullScreenFor.contains( landscapeLayout );
         }
@@ -1016,6 +1020,10 @@ public class PreferenceValues extends RWValues
     public static boolean useWarmup(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useWarmup__Default);
         return context.getResources().getBoolean(iResBrandSpecific);
+    }
+    public static boolean noDetailedGameScoring(Context context) {
+        int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.noDetailedGameScoring__Default);
+        return _getBoolean(PreferenceKeys.noDetailedGameScoring, context, iResBrandSpecific);
     }
     public static boolean useReferees(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useReferees__Default);
@@ -2337,7 +2345,7 @@ public class PreferenceValues extends RWValues
         return fDir;
     }
 
-    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2026-01-11"; // auto adjusted by shell script 'clean.and.assemble.sh'
+    private static final String NO_SHOWCASE_FOR_VERSION_BEFORE = "2026-10-03"; // auto adjusted by shell script 'clean.and.assemble.sh'... which I do not use anymore
     public static boolean currentDateIsTestDate() {
         return DateUtil.getCurrentYYYY_MM_DD().compareTo(NO_SHOWCASE_FOR_VERSION_BEFORE) <= 0;
     }

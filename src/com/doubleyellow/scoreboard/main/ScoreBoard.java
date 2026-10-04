@@ -36,6 +36,7 @@ import android.os.*;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -435,6 +436,15 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
     /** onCreate() is followed by onstart() onresume(). Also called after orientation change */
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Register your back handler
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA /* 36 */ ) {
+            getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override public void handleOnBackPressed() {
+                    handleBackPressed();
+                }
+            });
+        }
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -5842,6 +5852,21 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             matchModel.changeScore(player);
         }
         writeMethodToBluetooth(BTMethods.changeScore, player);
+
+        if ( PreferenceValues.noDetailedGameScoring(this) ) {
+            _increaseScoreUntilGameIsDone(player, false);
+        }
+    }
+
+    private void _increaseScoreUntilGameIsDone(Player p, boolean bModelOnly) {
+        // continue to change the score until game has ended
+        while( matchModel.gameHasStarted() ) {
+            if ( bModelOnly ) {
+                matchModel.changeScore(p);
+            } else {
+                _changeScore(p);
+            }
+        }
     }
 
     public void setPlayerColor(Player player, String sColor) {
@@ -6500,6 +6525,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                                     startVisualFeedbackForScoreChange(player, iTmpTxtOnElementDuringFeedback);
                                 } else {
                                     matchModel.changeScore(player);
+                                    if ( PreferenceValues.noDetailedGameScoring(this) ) {
+                                        _increaseScoreUntilGameIsDone(player, true);
+                                    }
                                 }
                             }
                         }

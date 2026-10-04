@@ -267,18 +267,20 @@ public class PlayersButton extends PercentRelativeLayout implements DrawTouch
             b.setText(saPlayers[n]);
         }
 
-        if ( bIsDoubles == false ) {
+        if ( bIsDoubles ) {
+            LandscapeLayoutPreference landscapeLayout = PreferenceValues.getLandscapeLayout(getContext());
+            if ( ViewUtil.isLandscapeOrientation(getContext()) && landscapeLayout.equals(LandscapeLayoutPreference.Default) == false ) {
+                hideServeSideButtons();
+            }
+        } else {
             if ( nameButtons.size() == 2 ) {
-                // ensure, if previous match was a double, than second player name TextView is now invisible
+                // ensure, if previous match was a doubles match, than second player name TextView is now invisible
                 nameButtons.get(1).setVisibility(GONE);
             }
 
             if ( ListUtil.size(serveButtons) > 0 ) {
                 // no serve buttons for singles (TODO: via preferences)
-                serveButtons.get(0).setVisibility(GONE);
-                if ( serveButtons.size() == 2 ) {
-                    serveButtons.get(1).setVisibility(GONE);
-                }
+                hideServeSideButtons();
             }
         }
 
@@ -287,6 +289,13 @@ public class PlayersButton extends PercentRelativeLayout implements DrawTouch
         }
         if ( DoublesServe.NA.equals(m_doublesReceiver) == false) {
             setReceiver(m_doublesReceiver, p);
+        }
+    }
+
+    private void hideServeSideButtons() {
+        serveButtons.get(0).setVisibility(GONE);
+        if ( serveButtons.size() == 2 ) {
+            serveButtons.get(1).setVisibility(GONE);
         }
     }
 

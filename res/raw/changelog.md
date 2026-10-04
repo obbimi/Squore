@@ -1,3 +1,7 @@
+## 4.61 (okt 2026)
+
+- target sdk36 (forced by Google)
+
 ## 4.59 (okt 2025)
 
 - support new WSF rules for pause before games

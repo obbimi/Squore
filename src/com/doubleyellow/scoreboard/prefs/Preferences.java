@@ -195,6 +195,7 @@ public class Preferences extends Activity {
                         }
                         break;
                     case hideBrandLogoWhenGameInProgress:
+                    case hideFieldDivisionWhenGameInProgress:
                         setModelDirty();
                         break;
                     case showFieldDivisionOn: {
@@ -202,9 +203,6 @@ public class Preferences extends Activity {
                             settingsFragment.setEnabledForPrefKeys(bEnabled, PreferenceKeys.hideFieldDivisionWhenGameInProgress);
                             setModelDirty();
                         }
-                        break;
-                    case hideFieldDivisionWhenGameInProgress:
-                        setModelDirty();
                         break;
                     case textColorDetermination:
                         setModelDirty();
@@ -1404,15 +1402,11 @@ public class Preferences extends Activity {
         return lReturn;
     }
 
-    private static List<String> m_lWearableSettingsChanged = new ArrayList<>();
+    private static final List<String> m_lWearableSettingsChanged = new ArrayList<>();
     public static List<String> getWearableSettingsChanged() {
         List<String> lReturn = new ArrayList<>(m_lWearableSettingsChanged);
         m_lWearableSettingsChanged.clear();
         return lReturn;
-    }
-
-    private void clearPPA() {
-        getPackageManager().clearPackagePreferredActivities(getPackageName());
     }
 
     public static Set<PreferenceKeys> GameSetMatch_SpecificPrefs = Set.of
@@ -1422,6 +1416,7 @@ public class Preferences extends Activity {
             , PreferenceKeys.indicateGoldenPoint
             , PreferenceKeys.timerPauseBetweenSets
             , PreferenceKeys.timerPauseBetweenSets_values
+            , PreferenceKeys.noDetailedGameScoring
             );
     public static Set<PreferenceKeys> NONGameSetMatch_SpecificPrefs = Set.of
             ( PreferenceKeys.indicateGameBall

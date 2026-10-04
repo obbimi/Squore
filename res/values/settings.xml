@@ -262,6 +262,10 @@
     <string name="pref_showFieldDivisionOn">Show \'Field or Division\' on</string>
     <string name="pref_timerViewType">Type of timer</string>
     <string name="pref_blinkFeedbackPerPoint">Blink feedback per point</string>
+
+    <string name="pref_noDetailedGameScoring">No detailed game scoring</string>
+    <string name="pref_noDetailedGameScoring_summary">Single click for score change will immediately increase number of games won. Designed for landscape orientation with \'presentation\' layout for landscape.</string>
+
     <string name="pref_numberOfBlinksForFeedbackPerPoint">Number of blinks for feedback per point</string>
     <string name="pref_numberOfBlinksForFeedbackPerPoint_summary">The number of times the score button blinks when the score changed</string>
     <string name="pref_blinkFeedbackPerPoint_summary">Blink the changed score a few seconds after each score change. Specifically handy if score is controlled remotely.</string>

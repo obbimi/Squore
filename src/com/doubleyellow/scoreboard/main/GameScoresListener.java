@@ -23,6 +23,9 @@ import androidx.appcompat.app.ActionBar;
 
 import com.doubleyellow.scoreboard.Brand;
 import com.doubleyellow.scoreboard.R;
+import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
+import com.doubleyellow.scoreboard.vico.IBoard;
 
 class GameScoresListener extends ScoreBoardListener implements View.OnLongClickListener, View.OnClickListener
 {
@@ -35,7 +38,13 @@ class GameScoresListener extends ScoreBoardListener implements View.OnLongClickL
     private long lActionBarToggledAt = 0L;
     @Override public void onClick(View view) {
         if ( Brand.isGameSetMatch() ) {
-            scoreBoard.toggleSetScoreView();
+            if ( PreferenceValues.noDetailedGameScoring(scoreBoard) ) {
+                // detail score button might not be visible (e.g. presentation screen)
+                Player player = IBoard.m_id2player.get(view.getId());
+                scoreBoard.handleMenuItem(R.id.pl_change_score, player);
+            } else {
+                scoreBoard.toggleSetScoreView();
+            }
         } else if ( Brand.isRacketlon() == false ) {
             scoreBoard.toggleGameScoreView();
         } else {

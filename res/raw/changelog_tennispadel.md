@@ -1,3 +1,11 @@
+## 4.61 (okt 2026)
+
+- target sdk36 (forced by Google)
+- timer improvements
+  - allow different timer duration 
+    - between games
+    - between sets
+
 ## 4.60 (April 2026)
 
 - Fix bugs

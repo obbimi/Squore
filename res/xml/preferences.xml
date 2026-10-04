@@ -29,8 +29,7 @@
         android:defaultValue=""
         />
 
-    <PreferenceScreen
-        android:title="@string/pref_Category_BlueToothLE"
+    <PreferenceScreen android:title="@string/pref_Category_BlueToothLE"
         android:summary="@string/pref_Category_BlueToothLE_summary"
         android:icon="@android:drawable/stat_sys_data_bluetooth"
         android:key="BluetoothLE">
@@ -103,6 +102,12 @@
                 dy:interval="1"
                 android:defaultValue="@integer/numberOfBlinksForFeedbackPerPoint_default"
                 android:max="16"
+                />
+            <CheckBoxPreference android:key="noDetailedGameScoring"
+                android:title="@string/pref_noDetailedGameScoring"
+                android:icon="@drawable/dummy"
+                android:summary="@string/pref_noDetailedGameScoring_summary"
+                android:defaultValue="@bool/noDetailedGameScoring__Default"
                 />
             <com.doubleyellow.prefs.EnumListPreference android:key="useSpeechFeature"
                 android:title="@string/pref_Speech"
@@ -871,6 +876,13 @@
                     dy:displayValues="@array/FeatureDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
                     />
+            <CheckBoxPreference android:key="noDetailedGameScoring"
+                android:title="@string/pref_noDetailedGameScoring"
+                android:icon="@drawable/dummy"
+                android:summary="@string/pref_noDetailedGameScoring_summary"
+                android:defaultValue="@bool/noDetailedGameScoring__Default"
+                />
+
             <CheckBoxPreference android:key="hapticFeedbackPerPoint"
                                 android:title="@string/pref_hapticFeedbackPerPoint"
                                 android:icon="@drawable/ic_lock_silent_mode_vibrate"

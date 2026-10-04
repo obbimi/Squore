@@ -132,6 +132,15 @@ public class IBoard implements TimerViewContainer
         m_id2player          .put(R.id.btn_score2  , pFirst.getOther());
         m_id2player          .put(R.id.btn_side2   , pFirst.getOther());
 
+        m_id2player          .put(R.id.btn_gameswon1       , pFirst);
+        m_id2player          .put(R.id.btn_gameswon2       , pFirst.getOther());
+        m_id2player          .put(R.id.btn_gameset1_detail1, pFirst);
+        m_id2player          .put(R.id.btn_gameset1_detail2, pFirst.getOther());
+        m_id2player          .put(R.id.btn_gameset2_detail1, pFirst);
+        m_id2player          .put(R.id.btn_gameset2_detail2, pFirst.getOther());
+        m_id2player          .put(R.id.btn_gameset3_detail1, pFirst);
+        m_id2player          .put(R.id.btn_gameset3_detail2, pFirst.getOther());
+
         return m_firstPlayerOnScreen;
     }
 
@@ -773,6 +782,11 @@ public class IBoard implements TimerViewContainer
 
             //final int iVisibilityIfNotUsed = View.INVISIBLE;
             final int iVisibilityIfNotUsed = View.GONE; // TODO
+
+            int[] iaPointScores = new int[] { R.id.btn_score1, R.id.btn_score2 };
+            if ( PreferenceValues.noDetailedGameScoring(context) ) {
+                ViewUtil.hideViews(m_vRoot, iaPointScores[0], iaPointScores[1]);
+            }
 
             if ( Brand.isGameSetMatch() ) {
                 GSMModel gsmModel = (GSMModel) matchModel;
