@@ -33,6 +33,7 @@ import com.doubleyellow.demo.DrawTouch;
 import com.doubleyellow.scoreboard.feed.FeedMatchSelector;
 import com.doubleyellow.scoreboard.model.JSONKey;
 import com.doubleyellow.scoreboard.model.Player;
+import com.doubleyellow.scoreboard.prefs.LandscapeLayoutPreference;
 import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 import com.doubleyellow.scoreboard.prefs.ShowCountryAs;
 import com.doubleyellow.util.Direction;
@@ -45,6 +46,7 @@ import com.doubleyellow.scoreboard.model.DoublesServe;
 import com.doubleyellow.scoreboard.model.ServeSide;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -120,6 +122,18 @@ public class PlayersButton extends PercentRelativeLayout implements DrawTouch
         if ( bIsDoubles ) {
             saPlayers = StringUtil.singleCharacterSplit("/" + players + "/"); // TODO: improve
         }
+
+        int shortenPlayerNamesToMaxLength = PreferenceValues.shortenPlayerNamesToMaxLength(getContext());
+        if ( shortenPlayerNamesToMaxLength > 0 ) {
+            for (int i = 0; i < saPlayers.length; i++) {
+                String sToShorten = saPlayers[i];
+                if ( sToShorten.length() <= shortenPlayerNamesToMaxLength) {
+                    continue;
+                }
+                doShorten(sToShorten, saPlayers, i);
+            }
+        }
+
 
         for ( int n=0; n < saPlayers.length; n++ ) {
             // portrait and first in landscape: flag, avatar, name, serve
@@ -301,6 +315,44 @@ public class PlayersButton extends PercentRelativeLayout implements DrawTouch
 
     private Set<ShowCountryAs> lHasCountry = EnumSet.noneOf(ShowCountryAs.class);
     private boolean bHasClub    = false;
+
+    private void doShorten(String sToShorten, String[] saPlayers, int i) {
+        int preferredNamePart             = PreferenceValues.shortenPlayerNamesPreferredPart(getContext()); // -1, 0, 1
+        int shortenPlayerNamesToMaxLength = PreferenceValues.shortenPlayerNamesToMaxLength(getContext());
+
+        String[] saParts = sToShorten.split("\\s+");
+
+        String[] saNewParts = new String[saParts.length];
+        Arrays.fill(saNewParts, "");
+
+        // make preferred part (if applicable) of name as long as possible
+        if ( preferredNamePart != -1 ) {
+            preferredNamePart = Math.min(preferredNamePart, saParts.length);
+            saNewParts[preferredNamePart] = saParts[preferredNamePart];
+            if ( saNewParts[preferredNamePart].length() > shortenPlayerNamesToMaxLength ) {
+                saNewParts[preferredNamePart] = saNewParts[preferredNamePart].substring(0, shortenPlayerNamesToMaxLength);
+            }
+        }
+        saPlayers[i] = ListUtil.join(Arrays.asList(saNewParts), " ").trim();
+        if ( saPlayers[i].length() >= shortenPlayerNamesToMaxLength) {
+            return;
+        }
+
+        // extend other parts of name as long as we have space to do so
+        for (int j = 0; j < sToShorten.length(); j++) {
+            int iPart = j % saNewParts.length;
+            String sPart = saParts[iPart];
+            int iCurrentLength = saNewParts[iPart].length();
+            if ( sPart.length() > iCurrentLength ) {
+                saNewParts[iPart] = sPart.substring(0, iCurrentLength + 1);
+            }
+            saPlayers[i] = ListUtil.join(Arrays.asList(saNewParts), " ").trim();
+            if ( saPlayers[i].length() >= shortenPlayerNamesToMaxLength) {
+                break;
+            }
+        }
+        saPlayers[i] = ListUtil.join(Arrays.asList(saNewParts), " ");
+    }
 
     public void setCountry(String sCountryCode, boolean bShowAsText, boolean bShowFlag) {
         for ( TextView tv : nameButtons ) {
