@@ -405,6 +405,9 @@ public enum PreferenceKeys {
 
     restartMode(RestartMode.class, false),
 
+    shortenPlayerNamesToMaxLength(Integer.class, false),
+    shortenPlayerNamesPreferredPart(Integer.class, false),
+
     ;
     private Class clazz = String.class;
     private boolean bRestartRequired = false;

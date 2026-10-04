@@ -192,6 +192,7 @@ http://developer.android.com/guide/practices/screens_support.html
 -->
     <integer name="numberOfBlinksForFeedbackPerPoint_default">4</integer>
     <bool name="blinkFeedbackPerPoint_default__Default">false</bool>
+    <integer name="shortenPlayerNamesToMaxLength_default__Default">0</integer>
     <bool name="hapticFeedbackPerPoint_default">false</bool>
     <bool name="hapticFeedbackOnGameEnd_default">false</bool>
     <bool name="showChoosenDecisionShortly_default">true</bool>

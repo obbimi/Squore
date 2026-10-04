@@ -459,6 +459,17 @@ public class PreferenceValues extends RWValues
     public static boolean showTextInActionBar(Context context) {
         return _getBoolean(PreferenceKeys.showTextInActionBar, context, R.bool.showTextInActionBar_default);
     }
+    public static int shortenPlayerNamesToMaxLength(Context context) {
+        int iResDefault = getSportTypeSpecificResId(context, R.integer.shortenPlayerNamesToMaxLength_default__Default);
+        int iValue = _getInteger(PreferenceKeys.shortenPlayerNamesToMaxLength, context, iResDefault);
+        if ( iValue > 20 ) {
+            iValue = 20;
+        }
+        return iValue;
+    }
+    public static int shortenPlayerNamesPreferredPart(Context context) {
+        return getInteger(PreferenceKeys.shortenPlayerNamesPreferredPart, context, -1);
+    }
 
     public static boolean blinkFeedbackPerPoint(Context context) {
         return _getBoolean(PreferenceKeys.blinkFeedbackPerPoint, context, R.bool.blinkFeedbackPerPoint_default__Default);
@@ -926,6 +937,11 @@ public class PreferenceValues extends RWValues
     }
 
     public static Feature useTimersFeature(Context context) {
+        if (isInEmulationMode()) {
+            //return Feature.Suggest; // end game dialog has 'start timer' option if timer feature enabled
+            //return Feature.DoNotUse;
+            //return Feature.Automatic;
+        }
         return _getEnum(PreferenceKeys.useTimersFeature, context, Feature.class, R.string.useTimersFeature_default__Default);
     }
     public static BackKeyBehaviour backKeyBehaviour(Context context) {
@@ -986,9 +1002,11 @@ public class PreferenceValues extends RWValues
         if ( ! kioskMode.equals(KioskMode.NotUsed) ) {
             return ! kioskMode.hideMenuItems().contains(R.id.sb_select_feed_match);
         }
+/*
         if ( Brand.isGameSetMatch() && currentDateIsTestDate() ) {
             return false;
         }
+*/
         int iResBrandSpecific = getSportSpecificSuffixedResId(context, R.bool.useFeedAndPostFunctionality_default);
         return _getBoolean(PreferenceKeys.useFeedAndPostFunctionality, context, iResBrandSpecific);
     }
@@ -1201,9 +1219,15 @@ public class PreferenceValues extends RWValues
         return _getIntegerR(PreferenceKeys.tournamentMaxDuration_InDays, context, R.integer.tournamentMaxDuration_InDays_default);
     }
     public static Feature endGameSuggestion(Context context) {
+        if (isInEmulationMode()) {
+            //return Feature.Automatic;  // no dialog at all
+            //return Feature.Suggest;
+            //return Feature.DoNotUse; // makes game not end at all in simulation mode
+        }
         int iResDefault = getSportTypeSpecificResId(context, R.string.endGameSuggestion_default__Squash);
         return _getEnum(PreferenceKeys.endGameSuggestion, context, Feature.class, iResDefault);
     }
+
     /** for tabletennis and racketlon, not squash */
     public static boolean swapPlayersOn180DegreesRotationOfDeviceInLandscape(Context context) {
         int iResDefault = getSportTypeSpecificResId(context, R.bool.swapPlayersOn180DegreesRotationOfDeviceInLandscape_default__Squash);
@@ -2440,6 +2464,21 @@ public class PreferenceValues extends RWValues
         return anEnum;
     }
 
+    public static List<Integer> getMenuItemsToShow(Context context) {
+        List<Integer> lReturn = new ArrayList<>();
+
+        Set<String> showMenuItems = PreferenceValues._getStringSet(PreferenceKeys.showMenuItems, new HashSet<String>(), context);
+        if (ListUtil.isNotEmpty(showMenuItems) ) {
+            for(String sMenuItem: showMenuItems ) {
+                int iResId = convertToResourceId(sMenuItem, context);
+                if ( iResId != 0 ) {
+                    lReturn.remove((Integer) iResId);
+                }
+            }
+        }
+
+        return lReturn;
+    }
     public static List<Integer> getMenuItemsToHide(Context context) {
         List<Integer> lReturn = new ArrayList<>();
 
@@ -2857,7 +2896,7 @@ public class PreferenceValues extends RWValues
 
     public static String getRemoteSettingsURL_Default(Context context, boolean bStripParams) {
         int iResDefault = PreferenceValues.getSportTypeSpecificResId(context, R.string.RemoteSettingsURL_default__Squash);
-        if ( currentDateIsTestDate() ) {
+        if ( false && currentDateIsTestDate() ) {
             String sDefaultUrl = _getString(PreferenceKeys.RemoteSettingsURL_Default, iResDefault, context);
             if ( sDefaultUrl.equals(context.getString(R.string.RemoteSettingsURL_default__Squash) ) ) {
                 String sTmpForTesting = context.getString(R.string.RemoteSettingsURL_default__SquoreRedirect_test);
@@ -3019,7 +3058,7 @@ public class PreferenceValues extends RWValues
 
         T enumDefault = Params.getEnumValueFromString(enumClass, sDefault);
         if ( isBrandTesting(context) && enumDefault != null ) {
-            return enumDefault;
+            //return enumDefault; // 2026-07-10: why not, re-enable in testing
         }
         return (T)_getEnum(key, context, enumClass, enumDefault);
     }

@@ -39,7 +39,6 @@ import com.doubleyellow.scoreboard.prefs.ShowCountryAs;
 import com.doubleyellow.util.Direction;
 import com.doubleyellow.util.ListUtil;
 import com.doubleyellow.util.StringUtil;
-import androidx.percentlayout.widget.PercentRelativeLayout;
 
 import com.doubleyellow.scoreboard.R;
 import com.doubleyellow.scoreboard.model.DoublesServe;
