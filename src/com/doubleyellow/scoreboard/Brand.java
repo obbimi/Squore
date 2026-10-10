@@ -296,6 +296,22 @@ public enum Brand
         //ColorPrefs.activeColorSchema(ctx, Brand.brand.getREColorPalette());
     }
 
+    public static void setTestPrefs(Context ctx) {
+
+        if ( PreferenceValues.currentDateIsTestDate() ) {
+            // to allow adb to monkey test it without the showcase/quick intro coming into the way
+            //PreferenceValues.setString(PreferenceKeys.StartupAction, ctx, StartupAction.None.toString());
+
+            String sDefaultUrl = PreferenceValues.getString(PreferenceKeys.RemoteSettingsURL_Default, R.string.RemoteSettingsURL_default__Squash, ctx);
+            if ( sDefaultUrl.equals(ctx.getString(R.string.RemoteSettingsURL_default__Squash) ) ) {
+                String sTmpForTesting = ctx.getString(R.string.RemoteSettingsURL_default__SquoreRedirect_test);
+                sTmpForTesting = ctx.getString(R.string.RemoteSettingsURL_default__SquoreTest01);
+                sTmpForTesting = ctx.getString(R.string.RemoteSettingsURL_default__SquoreSettingsPhp);
+                PreferenceValues.setString(PreferenceKeys.RemoteSettingsURL_Default, ctx, sTmpForTesting);
+            }
+        }
+    }
+
     public static void setSportPrefs(Context ctx) {
         String sUrl = PreferenceValues.getRemoteSettingsURL(ctx, false);
         if (StringUtil.isNotEmpty(sUrl) ) {

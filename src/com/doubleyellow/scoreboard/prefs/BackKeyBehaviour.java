@@ -23,4 +23,5 @@ public enum BackKeyBehaviour {
     UndoScore,
     UndoScoreNoConfirm,
     ToggleServeSide,
+    AndroidDefault,
 }

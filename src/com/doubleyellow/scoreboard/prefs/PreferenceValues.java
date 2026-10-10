@@ -1504,7 +1504,7 @@ public class PreferenceValues extends RWValues
         if ( key.equals(PreferenceKeys.matchList) ) {
             int iResDefault = getSportTypeSpecificResId(context, R.string.matchList_default__Squash);
             String sMatchListDefault = context.getString(iResDefault);
-            if ( isBrandTesting(context) && currentDateIsTestDate() ) {
+            if ( false && isBrandTesting(context) && currentDateIsTestDate() ) {
                 Toast.makeText(context, "In brand testing mode. Reverting back to default list", Toast.LENGTH_SHORT).show();
                 values = sMatchListDefault;
             }
@@ -2386,27 +2386,13 @@ public class PreferenceValues extends RWValues
             if ( viewedChangelogVersion == 0 ) {
                 // very first install/run
 
-                if ( currentDateIsTestDate() ) {
-                    // to allow adb to monkey test it without the showcase/quick intro coming into the way
-                    return StartupAction.None;
-                }
                 if ( ViewUtil.isWearable(context) ) {
                     return StartupAction.None;
                 }
 
                 if ( PreferenceValues.isPublicApp(context) ) {
-                    return StartupAction.QuickIntro;
-                }
-            }
-            if ( (versionCodeForChangeLogCheck == 436) && Brand.isNotSquash() ) {
-                // spanish introduced: set announcement language to spanish
-                AnnouncementLanguage language = officialAnnouncementsLanguage(context);
-                String deviceLanguage = RWValues.getDeviceLanguage(context);
-                Log.d(TAG, "CURRENT AnnouncementLanguage: " + language +"CURRENT deviceLanguage: " + deviceLanguage);
-                if ( announcementLanguageDeviates(context) ) {
-                    if ( "es".equals(deviceLanguage) ) {
-                        Log.d(TAG, "Changing announcement language");
-                        setAnnouncementLanguage(AnnouncementLanguage.es, context);
+                    if ( PreferenceValues.getBoolean(PreferenceKeys.showTips, context, true) ) {
+                        return StartupAction.QuickIntro;
                     }
                 }
             }
@@ -2462,6 +2448,9 @@ public class PreferenceValues extends RWValues
             return KioskMode.NotUsed;
         }
         return anEnum;
+    }
+    public static boolean isInKioskMode(Context context) {
+        return ! KioskMode.NotUsed.equals(getKioskMode(context));
     }
 
     public static List<Integer> getMenuItemsToShow(Context context) {
@@ -2612,12 +2601,12 @@ public class PreferenceValues extends RWValues
     }
 
     public static boolean showTip(Context context, PreferenceKeys preferenceKey, String sMessage, boolean bAsToast) {
-        // do not show popup tips while we are in demo mode
         if ( ViewUtil.isWearable(context) ) { return false; }
-        if ( ScoreBoard.isInDemoMode()    ) { return false; }
+        if ( ScoreBoard.isInDemoMode()    ) { return false; } // do not show popup tips while we are in demo mode
+        if ( isInKioskMode(context)       ) { return false; }
         if ( StringUtil.isEmpty(sMessage) ) { return false; } // should not happen but maybe a translation is missing/empty
 
-        if ( _getBoolean(PreferenceKeys.showTips, context, R.bool.showTips_default) == false ) {
+        if ( ! _getBoolean(PreferenceKeys.showTips, context, R.bool.showTips_default) ) {
             return false;
         }
 
@@ -2896,13 +2885,6 @@ public class PreferenceValues extends RWValues
 
     public static String getRemoteSettingsURL_Default(Context context, boolean bStripParams) {
         int iResDefault = PreferenceValues.getSportTypeSpecificResId(context, R.string.RemoteSettingsURL_default__Squash);
-        if ( false && currentDateIsTestDate() ) {
-            String sDefaultUrl = _getString(PreferenceKeys.RemoteSettingsURL_Default, iResDefault, context);
-            if ( sDefaultUrl.equals(context.getString(R.string.RemoteSettingsURL_default__Squash) ) ) {
-                String sTmpForTesting = context.getString(R.string.RemoteSettingsURL_default__SquoreRedirect_test);
-                setString(PreferenceKeys.RemoteSettingsURL_Default, context, sTmpForTesting);
-            }
-        }
         String sDefaultUrl = _getString(PreferenceKeys.RemoteSettingsURL_Default, iResDefault, context);
 
         if ( bStripParams && StringUtil.isNotEmpty(sDefaultUrl) ) {
@@ -3029,7 +3011,7 @@ public class PreferenceValues extends RWValues
             sDefault = context.getString(iResourceDefault);
         }
         String s = _getString(key, sDefault, context);
-        if ( currentDateIsTestDate() && StringUtil.isEmpty(s) && StringUtil.isNotEmpty(sDefault) ) {
+        if ( false && currentDateIsTestDate() && StringUtil.isEmpty(s) && StringUtil.isNotEmpty(sDefault) ) {
             return sDefault;
         }
         return s;

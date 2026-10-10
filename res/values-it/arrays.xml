@@ -81,6 +81,7 @@
         <item>Annulla punteggio (conferma)</item>
         <item>Annulla punteggio (senza conferma)</item>
         <item>Cambia lato di servizio</item>
+        <item>Android Default</item>
     </string-array>
     <string-array name="VolumeKeysBehaviour_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.VolumeKeysBehaviour -->

@@ -439,29 +439,23 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
 
         // Register your back handler
         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA /* 36 */ ) {
-            getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-                @Override public void handleOnBackPressed() {
-                    handleBackPressed();
-                }
-            });
-        }
-
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
-        //onResume_BluetoothMediaControlButtons();
-
-        // one-of correct incorrect default
-        if ( Brand.isSquash() ) {
-            if ( PreferenceValues.getAppVersionCode(this) == 156 ) {
-                int iVersionRunCount = PreferenceValues.getVersionRunCount(this);
-                if ( iVersionRunCount < 3 ) {
-                    PreferenceValues.setBoolean(PreferenceKeys.swapPlayersOn180DegreesRotationOfDeviceInLandscape, this, false);
-                }
+            BackKeyBehaviour backKeyBehaviour = PreferenceValues.backKeyBehaviour(this);
+            if ( BackKeyBehaviour.AndroidDefault.equals(backKeyBehaviour) == false) {
+                getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                    @Override public void handleOnBackPressed() {
+                        handleBackPressed();
+                    }
+                });
             }
         }
 
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        Brand.setTestPrefs(this);
+
+        //onResume_BluetoothMediaControlButtons();
+
         if ( PreferenceValues.isRunningInMainCodeBase(this) ) {
-            // if we are running as unbranded but one ore more other brand values are uncommented
+            // if we are running as unbranded but one or more other brand values are uncommented
             if ( PreferenceValues.isBrandTesting(this) ) {
                 Brand overwriteBrand = PreferenceValues.getOverwriteBrand(this);
                 if ( overwriteBrand.equals(Brand.Squore) == false ) {
@@ -989,6 +983,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                 return;
             }
             BackKeyBehaviour backKeyBehaviour = PreferenceValues.backKeyBehaviour(this);
+            if ( backKeyBehaviour.equals(BackKeyBehaviour.AndroidDefault)) { return; }
 
             // if there is nothing to undo, fall back to 'default'
             if ( backKeyBehaviour.toString().startsWith(BackKeyBehaviour.UndoScore.toString()) ) {
@@ -1020,8 +1015,9 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
                         onBackPressHandler = new OnBackPressExitHandler();
                     }
                     if (onBackPressHandler.handle(this, getString(R.string.press_back_again_to_exit))) {
-                        super.onBackPressed();
+                        //super.onBackPressed();
                         m_bURLReceived = false;
+                        handleMenuItem(R.id.sb_exit);
                     }
                     break;
                 }
@@ -1244,7 +1240,7 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
         return "-?- " + iViewId;
     }
 
-    void cancelShowCase() {
+    public void cancelShowCase() {
         if ( scSequence != null ) {
             scSequence.stop();
             scSequence = null;

@@ -59,6 +59,7 @@
         <item>Annuler dernière saisie (avec confirmation)</item>
         <item>Annuler dernière saisie (sans confirmer)</item>
         <item>Inverse le côté de service</item>
+        <item>Android Default</item>
     </string-array>
     <string-array name="VolumeKeysBehaviour_DisplayValues">
         <item>Aucun</item>

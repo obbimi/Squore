@@ -81,6 +81,7 @@
         <item>Reverter resultado (confirmar)</item>
         <item>Reverter resultado (não confirmar)</item>
         <item>Alterar o lado do serviço</item>
+        <item>Android Default</item>
     </string-array>
     <string-array name="VolumeKeysBehaviour_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.VolumeKeysBehaviour -->

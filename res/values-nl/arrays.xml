@@ -51,6 +51,7 @@
         <item>Score ongedaan maken (met bevestiging)</item>
         <item>Score ongedaan maken (geen bevestiging)</item>
         <item>Wissel opslag kant</item>
+        <item>Android Default</item>
     </string-array>
     <string-array name="VolumeKeysBehaviour_DisplayValues">
         <item>Geen</item>

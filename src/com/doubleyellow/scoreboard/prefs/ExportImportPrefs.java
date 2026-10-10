@@ -192,7 +192,7 @@ public class ExportImportPrefs extends DialogPreference
         //Log.w(TAG, "TODO: settings diff " + mapDiff);
         Map mUpserts = new HashMap(mInserts);
         mUpserts.putAll(mUpdates);
-        if ( PreferenceValues.currentDateIsTestDate() ) {
+        if ( false && PreferenceValues.currentDateIsTestDate() ) {
             mUpserts.remove(PreferenceKeys.kioskMode.name());
         }
 
@@ -205,6 +205,7 @@ public class ExportImportPrefs extends DialogPreference
                 Object oValOld = mToBeOverwritten.get(oKey);
                 if ( String.valueOf(oValOld).equals(String.valueOf(oValNew))) {
                     iChanges--;
+                    mUpserts.remove(oKey);
                 } else {
                     Log.d(TAG, String.format("Actual change %s ? %s != %s", oKey, oValNew, oValOld));
                 }
@@ -251,6 +252,7 @@ public class ExportImportPrefs extends DialogPreference
             if ( context instanceof ScoreBoard ) {
                 int restartAppIfChangesDetected = joRemoteConfig.optInt(PreferenceKeysSpecial.restartAppIfChangesDetected.toString(), 1);
                 ScoreBoard scoreBoard = (ScoreBoard) context;
+                scoreBoard.cancelShowCase();
                 switch (restartAppIfChangesDetected) {
                     case 1:
                         List<String> lMessages = new ArrayList<>();
@@ -486,7 +488,7 @@ public class ExportImportPrefs extends DialogPreference
             sMsg = context.getString(R.string.could_not_load_x_settings_y, context.getString(R.string.lbl_default), sDefaultUrl);
             Log.d(TAG, sMsg);
             if ( PreferenceValues.getRemoteSettingsURL_AlwaysShowLoadErrors(context) ) {
-                // show message anyways. User configured it like that
+                // show message anyway. User configured it like that
             } else {
                 if ( PreferenceValues.currentDateIsTestDate() ) {
                     sMsg = "TEMP " + sMsg;

@@ -62,6 +62,7 @@
         <item>Zpět (skóre), s potvrzením</item>
         <item>Zpět (skóre), bez potvrzení</item>
         <item>Změnit stranu podávání</item>
+        <item>Android Default</item>
     </string-array>
     <string-array name="VolumeKeysBehaviour_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.VolumeKeysBehaviour -->

@@ -93,6 +93,7 @@
         <item>Undo score (confirm)</item>
         <item>Undo score (no confirm)</item>
         <item>Toggle serve side</item>
+        <item>Android Default</item>
     </string-array>
     <string-array name="VolumeKeysBehaviour_DisplayValues">
         <!-- Keep in line with com.doubleyellow.scoreboard.prefs.VolumeKeysBehaviour -->
