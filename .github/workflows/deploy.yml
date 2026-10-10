@@ -76,7 +76,7 @@ jobs:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         packageName : ${{ steps.download_apk_extract_info.outputs.packageName }}
         releaseFiles: ${{ steps.download_apk_extract_info.outputs.filenames }}
-        track: beta # alpha,beta,internal or production
+        tracks: beta # alpha,beta,internal or production
         releaseName : ${{ steps.download_apk_extract_info.outputs.version }} # if not specified typically derived from versionCode/versionName
         #changesNotSentForReview: true # does not seem to work or not allowed anymore by Google
         # existingEditId: # A valid, unpublished Edit ID
