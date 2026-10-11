@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.doubleyellow.android.view.Orientation;
 import com.doubleyellow.android.view.ViewUtil;
+import com.doubleyellow.scoreboard.util.SDKUtil;
 
 public abstract class XActivity extends /*Activity*/ AppCompatActivity /* For Implementing ChromeCast: just the button?! */ {
 
@@ -64,6 +65,9 @@ public abstract class XActivity extends /*Activity*/ AppCompatActivity /* For Im
             //Log.w(TAG, "setOnExitAnimationListener");
             splashScreenViewProvider.remove();
         });
+
+        SDKUtil.doSdk36FixForActionBar(this);
+
         super.onCreate(savedInstanceState);
     }
     //----------------------------------------------------

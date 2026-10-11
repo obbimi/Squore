@@ -5,7 +5,7 @@
 For each brand:
 
 - Goto [actions](https://github.com/obbimi/Squore/actions)
-  - Choose 'Build APK & Create Release' (buildrelease.yml) > Run workflow (on master)
+  - Choose 'Build APK & Create Releases' (`buildrelease.yml`) > Run workflow (on master)
   - Wait ... (Runs for about 5 minutes)
 - Check [release](https://github.com/obbimi/Squore/releases) 
   - ensure to be signed in since just created release is in Draft and not publicly visible
@@ -48,6 +48,13 @@ For each brand:
       - "next', choose previous or give new release notes
       - 'Save', followed by 'Go to overview'
       - 'Send change for review'
+- Promote release
+  - Go to 'Open testing' and select 'Promote release'
+    - [Badminton  ](https://play.google.com/console/u/0/developers/5046226336743383720/app/4974076001360456618/tracks/open-testing)
+    - [Squore     ](https://play.google.com/console/u/0/developers/5046226336743383720/app/4972255383319852172/tracks/open-testing)
+    - [Tabletennis](https://play.google.com/console/u/0/developers/5046226336743383720/app/4975506867766261096/tracks/open-testing)
+    - [TennisPadel](https://play.google.com/console/u/0/developers/5046226336743383720/app/4972207514792479457/tracks/open-testing)
+
 
 ## Troubleshooting
 

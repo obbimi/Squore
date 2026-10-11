@@ -43,7 +43,7 @@ jobs:
         distribution: 'adopt'
 
     - name: Checkout the code
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@v7.0.1
       with:
         ref: ${{ inputs.branch }}
         repository: obbimi/Squore # overwrite the default ${{ github.repository }}. Our java code/resources is always in the Squore repo

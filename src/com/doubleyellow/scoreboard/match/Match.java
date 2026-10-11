@@ -95,9 +95,6 @@ public class Match extends XActivity implements MenuHandler, MQTTRemoteActionRec
             actionBar.setHomeButtonEnabled(true);
         }
 
-        SDKUtil.doSdk36FixForActionBar(this);
-
-
         boolean bIsDoubles = false;
         String sA          = null;
         String sB          = null;

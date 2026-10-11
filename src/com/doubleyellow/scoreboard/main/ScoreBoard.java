@@ -1358,13 +1358,12 @@ public class ScoreBoard extends XActivity implements /*NfcAdapter.CreateNdefMess
             switch (bUseActionBar) {
                 case setToTrue:
                     actionBar.show();
-                    SDKUtil.doSdk36FixForActionBar(this);
                     break;
                 case setToFalse:
                     actionBar.hide();
-                    SDKUtil.doSdk36FixForActionBar(this);
                     break;
             }
+            SDKUtil.doSdk36FixForActionBar(this);
         }
         setHomeButtonEnabledOnActionBar();
     }
