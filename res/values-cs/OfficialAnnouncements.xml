@@ -78,5 +78,16 @@
         <item>osmý</item>
         <item>devátý</item>
     </string-array>
+    <string-array name="OneTwoThreeFourFive">
+        <item>jedna</item>
+        <item>dvě</item>
+        <item>tři</item>
+        <item>čtyři</item>
+        <item>pět</item>
+        <item>šest</item>
+        <item>sedm</item>
+        <item>osm</item>
+        <item>devět</item>
+    </string-array>
     <string name="officialAnnouncementsLanguage_default">cs</string>
 </resources>

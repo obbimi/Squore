@@ -43,6 +43,7 @@
     <string name="oa_games__TennisPadel">games</string>
     <string name="oa_gameball">Game ball</string>
     <string name="oa_matchball">Match ball</string>
+    <string name="oa_matchball__TennisPadel">Match ball</string>
     <string name="oa_match">Match</string>
     <string name="oa_match__TennisPadel">Match</string>
 
@@ -82,6 +83,17 @@
         <item>seventh</item>
         <item>eight</item>
         <item>ninth</item>
+    </string-array>
+    <string-array name="OneTwoThreeFourFive">
+        <item>one</item>
+        <item>two</item>
+        <item>three</item>
+        <item>four</item>
+        <item>five</item>
+        <item>six</item>
+        <item>seven</item>
+        <item>eight</item>
+        <item>nine</item>
     </string-array>
     <string name="officialAnnouncementsLanguage_default">en</string>
 </resources>

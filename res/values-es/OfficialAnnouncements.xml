@@ -89,6 +89,17 @@
         <item>octavo</item>
         <item>noveno</item>
     </string-array>
+    <string-array name="OneTwoThreeFourFive">
+        <item>uno</item>
+        <item>dos</item>
+        <item>tres</item>
+        <item>cuatro</item>
+        <item>cinco</item>
+        <item>seis</item>
+        <item>siete</item>
+        <item>ocho</item>
+        <item>nueve</item>
+    </string-array>
     <string name="officialAnnouncementsLanguage_default">es</string>
 
 <!--

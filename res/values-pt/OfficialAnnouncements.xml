@@ -62,5 +62,16 @@
         <item>oito</item>
         <item>nono</item>
     </string-array>
+    <string-array name="OneTwoThreeFourFive">
+        <item>um</item>
+        <item>dois</item>
+        <item>três</item>
+        <item>quatro</item>
+        <item>cinco</item>
+        <item>seis</item>
+        <item>sete</item>
+        <item>oito</item>
+        <item>nove</item>
+    </string-array>
     <string name="officialAnnouncementsLanguage_default">pt</string>
 </resources>

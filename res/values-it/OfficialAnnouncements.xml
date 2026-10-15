@@ -39,6 +39,9 @@
     <string name="oa_games__TennisPadel">giochi</string>
     <string name="oa_gameball">Palla del gioco</string>
     <string name="oa_matchball">Palla dell\'incontro</string>
+    <string name="oa_matchball__TennisPadel">Match ball</string>
+    <string name="oa_set_point">Set point</string>
+    <string name="oa_a_wins_set_b_xGamesToy__TennisPadel">%1$s vince set %2$d %3$s</string>
 
     <string name="oa_n_all__or__n_equal">%d Pari</string>
     <string name="oa_player_needs_2_clear_points">Due punti di vantaggio per vincere il gioco</string>
@@ -72,6 +75,17 @@
         <item>settimo</item>
         <item>ottavo</item>
         <item>nono</item>
+    </string-array>
+    <string-array name="OneTwoThreeFourFive">
+        <item>uno</item>
+        <item>due</item>
+        <item>tre</item>
+        <item>quattro</item>
+        <item>cinque</item>
+        <item>sei</item>
+        <item>sette</item>
+        <item>otto</item>
+        <item>nove</item>
     </string-array>
     <string name="officialAnnouncementsLanguage_default">it</string>
 </resources>

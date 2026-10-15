@@ -69,6 +69,17 @@
         <item>huitième</item>
         <item>neuvième</item>
     </string-array>
+    <string-array name="OneTwoThreeFourFive">
+        <item>un</item>
+        <item>deux</item>
+        <item>trois</item>
+        <item>quatre</item>
+        <item>cinq</item>
+        <item>six</item>
+        <item>sept</item>
+        <item>huit</item>
+        <item>neuf</item>
+    </string-array>
     <string name="officialAnnouncementsLanguage_default">fr</string>
 
     <string name="oa_set">set</string>

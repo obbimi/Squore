@@ -84,5 +84,16 @@
         <item>achter</item>
         <item>neunter</item>
     </string-array>
+    <string-array name="OneTwoThreeFourFive">
+        <item>eins</item>
+        <item>zwei</item>
+        <item>drei</item>
+        <item>vier</item>
+        <item>fünf</item>
+        <item>sechs</item>
+        <item>sieben</item>
+        <item>acht</item>
+        <item>neun</item>
+    </string-array>
     <string name="officialAnnouncementsLanguage_default">de</string>
 </resources>

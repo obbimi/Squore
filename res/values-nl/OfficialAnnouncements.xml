@@ -75,5 +75,16 @@
         <item>achtste</item>
         <item>negende</item>
     </string-array>
+    <string-array name="OneTwoThreeFourFive">
+        <item>één</item>
+        <item>twee</item>
+        <item>drie</item>
+        <item>vier</item>
+        <item>vijf</item>
+        <item>zes</item>
+        <item>zeven</item>
+        <item>acht</item>
+        <item>negen</item>
+    </string-array>
     <string name="officialAnnouncementsLanguage_default">nl</string>
 </resources>

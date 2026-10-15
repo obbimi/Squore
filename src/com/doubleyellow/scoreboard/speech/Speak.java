@@ -465,8 +465,11 @@ public class Speak
                 if ( model.matchHasEnded() ) {
                     // 0-0 no longer needs to be announced
                 } else {
-                    setTextToSpeak(SpeechType.ScoreServer, sServer);
-                    setTextToSpeak(SpeechType.ScoreReceiver, sXAll__or_sXEqual);
+                    if ( gsmModel == null || model.hasStarted() == false ) {
+                        // do not announce zero-zero for TennisPadel
+                        setTextToSpeak(SpeechType.ScoreServer, sServer);
+                        setTextToSpeak(SpeechType.ScoreReceiver, sXAll__or_sXEqual);
+                    }
                 }
             }
         } else {
@@ -625,6 +628,12 @@ public class Speak
         Resources resources = PreferenceValues.newResources(m_context.getResources(), m_locale);
         return resources.getString(p, args);
     }
+    /** get text array from correct locale */
+    private String[] getResourceStringArray(int p) {
+        p = PreferenceValues.getSportSpecificSuffixedResId(m_context, p);
+        Resources resources = PreferenceValues.newResources(m_context.getResources(), m_locale);
+        return resources.getStringArray(p);
+    }
     private String x_GamesTo_y(int iGamesLeader, int iGamesTrailer, int iResIdGameOrSet, int iResIdGamesOrSets, Context ctx) {
         return iGamesLeader
                 + " " + (iGamesLeader==1?getResourceString(iResIdGameOrSet):getResourceString(iResIdGamesOrSets))
@@ -665,6 +674,19 @@ public class Speak
             Bundle bundle = new Bundle();
             bundle.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 1.0f); // between 0 and 1
             bundle.putFloat(TextToSpeech.Engine.KEY_PARAM_PAN   , 0.0f); // between -1 and 1
+
+            if ( sText.matches(".*\\d set .*") ) {
+                // In e.g. Italian this seems to become 'x September' because a number followed by 'set' is seen as a date
+                try {
+                    String[] sNrsAsText = getResourceStringArray(R.array.OneTwoThreeFourFive);
+                    String sNr = sText.replaceAll(".*(\\d) set .*", "$1");
+                    int    iNr = Integer.parseInt(sNr);
+                    sNr = sNrsAsText[iNr-1];
+                    sText = sText.replaceAll("(.*)(\\d)( set)(.*)", "$1 " + sNr + "$3 $4");
+                } catch (Exception e) {
+                }
+            }
+
             m_textToSpeech.speak(sText, TextToSpeech.QUEUE_ADD, bundle, type.toString());
             m_iErrorCount = 0;
         } catch (Exception e) {

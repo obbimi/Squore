@@ -2,4 +2,6 @@
 <resources>
     <string name="oa_deuce">Parità</string>  <!--Deuce is used as well-->
     <string name="sb_advantage">Vantaggio</string>
+    <string name="oa_matchpoint">Match point</string>
+    <string name="oa_matchpoint__TennisPadel">Match point</string>
 </resources>
