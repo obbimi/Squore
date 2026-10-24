@@ -373,7 +373,7 @@ public enum PreferenceKeys {
         IgnoreAccidentalDoublePress_ThresholdInMilliSeconds(Integer.class, false),
         BLEBridge_ClassName(String.class, false),
 
-    noDetailedGameScoring(Boolean.class, false),
+    detailedGameScoring(Boolean.class, false),
 
     UseMQTT(Boolean.class, false),
         MQTTBrokerURL(String.class, false),

@@ -654,6 +654,7 @@ public class GSMModel extends Model
     //-------------------------------
 
     public long getSetStart(int setNr1B) {
+        if ( setNr1B < 1 ) { return 0; }
 /*
         if ( setNr1B == 1 ) {
             return super.getMatchStart();

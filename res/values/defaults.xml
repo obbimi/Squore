@@ -231,7 +231,11 @@ http://developer.android.com/guide/practices/screens_support.html
     <bool name="useSinglesMatches_default">true</bool>
     <bool name="useMyListFunctionality__Default">true</bool>
     <bool name="useWarmup__Default">true</bool>
-    <bool name="noDetailedGameScoring__Default">false</bool>
+
+    <string name="DetailedGameScoring__Default">Always</string>
+    <integer name="detailedGameScoringVisibility__Default">0</integer> <!-- = @integer/detailedGameScoringVisibility__Default ==> 8 = GONE, 4= invisible, 0 = visible -->
+    <!--<string name="noDetailedGameScoringVisibility__Default2">visible</string>--> <!-- works in design mode, not in run mode 8 = GONE, 4= invisible, 0 = visible -->
+
     <bool name="useReferees__Default">true</bool>
     <bool name="useMatchFromFeed__Default">true</bool>
     <bool name="isPublicApp__Default">true</bool>

@@ -52,6 +52,25 @@
         app:layout_constraintWidth_percent="@fraction/ls_fr_horizontal_margin_4x"
         />
 
+    <Space android:id="@+id/space_pilar_right1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/background_default__Squash"
+        app:layout_constraintBottom_toTopOf="@id/space_centerright"
+        app:layout_constraintStart_toStartOf="@id/space_centerright"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        app:layout_constraintWidth_percent="@fraction/ls_fr_horizontal_margin_4x"
+        />
+    <Space android:id="@+id/space_pilar_right2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/background_default__Squash"
+        app:layout_constraintTop_toBottomOf="@id/space_centerright"
+        app:layout_constraintStart_toStartOf="@id/space_centerright"
+        app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_height_2x"
+        app:layout_constraintWidth_percent="@fraction/ls_fr_horizontal_margin_4x"
+        />
+
     <!-- POINTS score buttons -->
     <com.doubleyellow.android.view.AutoResizeTextView
         style="@style/SBButton"
@@ -61,6 +80,7 @@
         app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_extraheight_2x"
         app:layout_constraintDimensionRatio="@string/lsp_ratio_score"
         android:text="@string/winning_gamescore__Squash"
+        android:visibility="@integer/detailedGameScoringVisibility__Default"
         android:clickable="true"
         android:includeFontPadding="false"
         android:layout_width="0dp" android:layout_height="0dp"
@@ -73,6 +93,7 @@
         app:layout_constraintHeight_percent="@fraction/lsp_fr_mainrow_extraheight_2x"
         app:layout_constraintDimensionRatio="@string/lsp_ratio_score"
         android:text="@string/non_winning_gamescore__Squash"
+        android:visibility="@integer/detailedGameScoringVisibility__Default"
         android:clickable="true"
         android:includeFontPadding="false"
         android:layout_width="0dp" android:layout_height="0dp"

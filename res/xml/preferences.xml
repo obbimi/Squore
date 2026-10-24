@@ -103,11 +103,14 @@
                 android:defaultValue="@integer/numberOfBlinksForFeedbackPerPoint_default"
                 android:max="16"
                 />
-            <CheckBoxPreference android:key="noDetailedGameScoring"
-                android:title="@string/pref_noDetailedGameScoring"
+            <com.doubleyellow.prefs.EnumListPreference
+                android:key="detailedGameScoring"
+                android:title="@string/pref_detailedGameScoring"
+                android:summary="@string/pref_detailedGameScoring_summary"
                 android:icon="@drawable/dummy"
-                android:summary="@string/pref_noDetailedGameScoring_summary"
-                android:defaultValue="@bool/noDetailedGameScoring__Default"
+                android:defaultValue="@string/DetailedGameScoring__Default"
+                dy:displayValues="@array/DetailedGameScoring_DisplayValues"
+                dy:enumClass="com.doubleyellow.scoreboard.model.DetailedGameScoring"
                 />
             <com.doubleyellow.prefs.EnumListPreference android:key="useSpeechFeature"
                 android:title="@string/pref_Speech"

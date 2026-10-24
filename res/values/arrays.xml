@@ -168,6 +168,9 @@
         <item>Suggest usage</item>
         <item>Show automatically</item>
     </string-array>
+    <string-array name="DetailedGameScoring_DisplayValues">
+        <item>Always</item>
+    </string-array>
     <string-array name="FeatureDisplayValues_DoAuto">
         <item>Don\'t</item>
         <item>Suggest</item>

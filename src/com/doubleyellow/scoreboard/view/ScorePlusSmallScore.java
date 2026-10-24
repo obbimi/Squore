@@ -2,6 +2,7 @@ package com.doubleyellow.scoreboard.view;
 
 import com.doubleyellow.android.util.ColorUtil;
 import com.doubleyellow.android.view.AutoResizeTextView;
+import com.doubleyellow.scoreboard.prefs.PreferenceValues;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -71,7 +72,11 @@ public class ScorePlusSmallScore extends AutoResizeTextView {
 
     @Override public void setTag(Object tag) {
         if ( tag instanceof Integer ) {
-            setSmallScore((int) tag, null);
+            if ( tag.equals(0) && PreferenceValues.noDetailedGameScoring(getContext()) ) {
+                // assume not a reliable number
+            } else {
+                setSmallScore((int) tag, null);
+            }
         } else {
             super.setTag(tag);
         }

@@ -42,7 +42,11 @@ import java.util.Map;
  * For now these are
  * - Double Yellow app
  *
- * winmerge C:\code\gitlab\DYBoxen\src\main\java\com\doubleyellow\scoreboard\Glue.java C:\code\github\Squore\src\com\doubleyellow\scoreboard\Glue.java
+ * winmerge C:\code\github\Squore\src\com\doubleyellow\scoreboard\Glue.java   C:\code\gitlab\DYBoxen\src\main\java\com\doubleyellow\scoreboard\Glue.java
+ *
+ * cp /mnt/c/code/github/Squore/src/com/doubleyellow/scoreboard/Glue.java                /mnt/c/code/gitlab/DYBoxen/src/main/java/com/doubleyellow/scoreboard/.
+ * cp /mnt/c/code/github/Squore/src/com/doubleyellow/scoreboard/prefs/StartupAction.java /mnt/c/code/gitlab/DYBoxen/src/main/java/com/doubleyellow/scoreboard/prefs/.
+ * cp /mnt/c/code/github/Squore/src/com/doubleyellow/scoreboard/prefs/URLsKeys.java      /mnt/c/code/gitlab/DYBoxen/src/main/java/com/doubleyellow/scoreboard/prefs/.
  **/
 public class Glue
 {

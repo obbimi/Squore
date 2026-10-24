@@ -1039,9 +1039,23 @@ public class PreferenceValues extends RWValues
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useWarmup__Default);
         return context.getResources().getBoolean(iResBrandSpecific);
     }
+    public static DetailedGameScoring getDetailedGameScoring(Context context) {
+        int iRes = getSportTypeSpecificResId(context, R.string.DetailedGameScoring__Default);
+        return _getEnum(PreferenceKeys.detailedGameScoring, context, DetailedGameScoring.class, iRes);
+    }
     public static boolean noDetailedGameScoring(Context context) {
-        int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.noDetailedGameScoring__Default);
-        return _getBoolean(PreferenceKeys.noDetailedGameScoring, context, iResBrandSpecific);
+        DetailedGameScoring detailedGameScoring = getDetailedGameScoring(context);
+        if ( detailedGameScoring == null ) { return false; }
+
+        boolean landscapeOrientation = ViewUtil.isLandscapeOrientation(context);
+        if ( landscapeOrientation && detailedGameScoring.equals(DetailedGameScoring.NotInLandscape) ) {
+            return true;
+        }
+        boolean isInPres = PreferenceValues.isScoreboardInPresentationView(context);
+        if ( isInPres && detailedGameScoring.equals(DetailedGameScoring.NotInPresentation) ) {
+            return true;
+        }
+        return false;
     }
     public static boolean useReferees(Context context) {
         int iResBrandSpecific = getSportTypeSpecificResId(context, R.bool.useReferees__Default);

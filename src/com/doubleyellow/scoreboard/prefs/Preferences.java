@@ -1416,7 +1416,7 @@ public class Preferences extends Activity {
             , PreferenceKeys.indicateGoldenPoint
             , PreferenceKeys.timerPauseBetweenSets
             , PreferenceKeys.timerPauseBetweenSets_values
-            , PreferenceKeys.noDetailedGameScoring
+            , PreferenceKeys.detailedGameScoring
             );
     public static Set<PreferenceKeys> NONGameSetMatch_SpecificPrefs = Set.of
             ( PreferenceKeys.indicateGameBall
