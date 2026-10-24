@@ -879,12 +879,15 @@
                     dy:displayValues="@array/FeatureDisplayValues"
                     dy:enumClass="com.doubleyellow.util.Feature"
                     />
-            <CheckBoxPreference android:key="noDetailedGameScoring"
-                android:title="@string/pref_noDetailedGameScoring"
-                android:icon="@drawable/dummy"
-                android:summary="@string/pref_noDetailedGameScoring_summary"
-                android:defaultValue="@bool/noDetailedGameScoring__Default"
-                />
+            <com.doubleyellow.prefs.EnumListPreference
+                    android:key="detailedGameScoring"
+                    android:title="@string/pref_detailedGameScoring"
+                    android:summary="@string/pref_detailedGameScoring_summary"
+                    android:icon="@drawable/dummy"
+                    android:defaultValue="@string/DetailedGameScoring__Default"
+                    dy:displayValues="@array/DetailedGameScoring_DisplayValues"
+                    dy:enumClass="com.doubleyellow.scoreboard.model.DetailedGameScoring"
+                    />
 
             <CheckBoxPreference android:key="hapticFeedbackPerPoint"
                                 android:title="@string/pref_hapticFeedbackPerPoint"
